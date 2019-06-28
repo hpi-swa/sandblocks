@@ -7,8 +7,8 @@
 	"commentStamp" : "",
 	"instvars" : [
 		 ],
-	"name" : "SBSignature",
+	"name" : "SBBlockLayout",
 	"pools" : [
 		 ],
-	"super" : "Morph",
+	"super" : "LayoutPolicy",
 	"type" : "normal" }

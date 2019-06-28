@@ -4,7 +4,7 @@ initialize
 	super initialize.
 	
 	bindings := SBBlock new
-		changeTableLayout;
+		layoutPolicy: SBExpressionLayout new;
 		listDirection: #leftToRight;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
@@ -13,7 +13,7 @@ initialize
 	temporaries := SBTemporaries new.
 	
 	self
-		changeTableLayout;
+		layoutPolicy: SBBlockLayout new;
 		color: Color random;
 		cellPositioning: #topLeft;
 		listDirection: #topToBottom;

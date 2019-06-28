@@ -4,7 +4,7 @@ initialize
 	super initialize.
 	
 	self
-		changeTableLayout;
+		layoutPolicy: SBExpressionLayout new;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		listDirection: #leftToRight

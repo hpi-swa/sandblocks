@@ -3,10 +3,11 @@ initialize
 
 	super initialize.
 	
-	self changeTableLayout.
+	self layoutPolicy: SBExpressionLayout new.
 	self listDirection: #leftToRight.
 	self hResizing: #shrinkWrap.
 	self vResizing: #shrinkWrap.
+	self cellInset: 2.
 	
 	signature := SBSignature new.
 	self addMorphBack: signature

@@ -2,6 +2,8 @@
 	"class" : {
 		 },
 	"instance" : {
-		"initialize" : "tobe 6/28/2019 16:46",
+		"color" : "tobe 6/28/2019 23:41",
+		"initialize" : "tobe 6/28/2019 23:45",
+		"minExtent" : "tobe 6/28/2019 23:35",
 		"signature:values:" : "tobe 6/26/2019 18:49",
 		"writeSourceOn:" : "tobe 6/28/2019 21:54" } }

@@ -3,8 +3,10 @@ initialize
 
 	super initialize.
 	
-	self changeTableLayout.
-	"self layoutPolicy: SBMessageLayout new."
+	"self changeTableLayout."
+	self layoutPolicy: SBKeywordMessageLayout new.
 	self vResizing: #shrinkWrap.
 	self hResizing: #shrinkWrap.
-	self listDirection: #leftToRight
+	self listDirection: #leftToRight.
+	self cellInset: 2.
+	self color: Color transparent
