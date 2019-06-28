@@ -1,0 +1,11 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"handlesMouseDown:" : "tobe 6/28/2019 20:34",
+		"initialize" : "tobe 6/26/2019 20:01",
+		"mouseDown:" : "tobe 6/28/2019 20:34",
+		"receiver:" : "tobe 6/26/2019 20:01",
+		"receiver:selector:arguments:" : "tobe 6/26/2019 19:46",
+		"signature" : "tobe 6/26/2019 20:27",
+		"writeSourceOn:" : "tobe 6/28/2019 18:18" } }

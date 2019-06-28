@@ -1,0 +1,18 @@
+{
+	"class" : {
+		"registerWatch:" : "tobe 6/28/2019 18:35",
+		"registry" : "tobe 6/28/2019 18:34",
+		"report:for:" : "tobe 6/28/2019 18:37" },
+	"instance" : {
+		"doubleClick:" : "tobe 6/28/2019 21:13",
+		"drawOn:" : "tobe 6/28/2019 18:30",
+		"expression" : "tobe 6/28/2019 18:24",
+		"expression:" : "tobe 6/28/2019 18:29",
+		"handlesMouseDown:" : "tobe 6/28/2019 21:12",
+		"identifier" : "tobe 6/28/2019 18:23",
+		"identifier:" : "tobe 6/28/2019 18:38",
+		"initialize" : "tobe 6/28/2019 18:33",
+		"mouseDown:" : "tobe 6/28/2019 21:12",
+		"report:for:" : "tobe 6/28/2019 21:08",
+		"reportValue:" : "tobe 6/28/2019 18:38",
+		"writeSourceOn:" : "tobe 6/28/2019 18:24" } }

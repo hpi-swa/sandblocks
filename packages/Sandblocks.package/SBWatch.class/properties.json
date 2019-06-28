@@ -1,0 +1,16 @@
+{
+	"category" : "Sandblocks",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"Registry" ],
+	"commentStamp" : "",
+	"instvars" : [
+		"identifier",
+		"expression",
+		"display" ],
+	"name" : "SBWatch",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

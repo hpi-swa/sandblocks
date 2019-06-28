@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"selection" ],
+	"name" : "SBEditor",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

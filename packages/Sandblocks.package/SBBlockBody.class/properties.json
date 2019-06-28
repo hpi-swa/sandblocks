@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"temporaries",
+		"bindings" ],
+	"name" : "SBBlockBody",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

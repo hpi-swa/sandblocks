@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"signature",
+		"receiver" ],
+	"name" : "SBMessageSend",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }
