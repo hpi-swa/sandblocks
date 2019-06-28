@@ -1,4 +1,13 @@
 as yet unclassified
 select: aBlock
 
-	selection := aBlock
+	| previousSelection |
+	previousSelection := selection.
+	aBlock == previousSelection
+		ifTrue: [
+			selection := nil.
+			previousSelection ifNotNil: #changed]
+		ifFalse: [
+			selection := aBlock.
+			previousSelection ifNotNil: #changed.
+			selection changed]

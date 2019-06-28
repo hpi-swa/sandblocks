@@ -3,5 +3,8 @@
 		 },
 	"instance" : {
 		"color" : "tobe 6/26/2019 20:25",
+		"drawOn:" : "tobe 6/28/2019 22:02",
 		"fillStyle" : "tobe 6/26/2019 20:23",
-		"initialize" : "tobe 6/26/2019 20:20" } }
+		"handlesMouseDown:" : "tobe 6/28/2019 22:02",
+		"initialize" : "tobe 6/26/2019 20:20",
+		"mouseDown:" : "tobe 6/28/2019 22:03" } }

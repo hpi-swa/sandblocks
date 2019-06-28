@@ -9,4 +9,4 @@ initialize
 		cellInset: 4;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		addMorphBack: (display := StringMorph new contents: 'Hello')
+		addMorphBack: (display := StringMorph new color: Color white; contents: '...')

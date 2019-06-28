@@ -3,9 +3,11 @@ initialize
 
 	super initialize.
 	
-	self changeTableLayout.
-	self listDirection: #topToBottom.
-	self vResizing: #shrinkWrap; hResizing: #shrinkWrap.
+	self
+		changeTableLayout;
+		listDirection: #topToBottom;
+		cellPositioning: #topLeft;
+		vResizing: #shrinkWrap; hResizing: #shrinkWrap.
 	
 	signature := SBSignature new.
 	self addMorphBack: signature

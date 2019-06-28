@@ -15,6 +15,7 @@ initialize
 	self
 		changeTableLayout;
 		color: Color random;
+		cellPositioning: #topLeft;
 		listDirection: #topToBottom;
 		vResizing: #shrinkWrap; hResizing: #shrinkWrap;
 		addMorphBack: bindings;

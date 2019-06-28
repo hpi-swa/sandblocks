@@ -10,5 +10,5 @@
 	"name" : "SBNumber",
 	"pools" : [
 		 ],
-	"super" : "SBTextMorph",
+	"super" : "SBLiteral",
 	"type" : "normal" }

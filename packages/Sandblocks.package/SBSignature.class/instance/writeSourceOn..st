@@ -1,9 +1,12 @@
 as yet unclassified
 writeSourceOn: aStream
 
+	| i |
+	i :=  0.
 	self submorphs
 		do: [:m |
-			(m isKindOf: SBTextMorph)
+			i even
 				ifTrue: [aStream nextPutAll: m contents]
-				ifFalse: [m writeSourceOn: aStream]]
+				ifFalse: [m writeSourceOn: aStream].
+			i := i + 1]
 		separatedBy: [aStream space]
