@@ -1,4 +1,7 @@
 as yet unclassified
 save
 
-	self methodClass compile: self sourceString asText
+	| text |
+	text := self sourceString.
+	Smalltalk at: #PPPPrinter ifPresent: [:p | text := p format: text].
+	self methodClass compile: text asText
