@@ -3,11 +3,14 @@ initialize
 
 	super initialize.
 	
-	bindings := SBBlock new
+	bindings := Morph new
+		color: Color transparent;
 		layoutPolicy: SBExpressionLayout new;
 		listDirection: #leftToRight;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
+		layoutInset: 2;
+		cellInset: 2;
 		extent: 0 @ 0;
 		yourself.
 	temporaries := SBTemporaries new.

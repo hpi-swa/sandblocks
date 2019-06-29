@@ -8,4 +8,4 @@ initialize
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		listDirection: #leftToRight;
-		addMorphBack: (StringMorph new contents: '^ ')
+		addMorphBack: (SBStringMorph new contents: '^ ')

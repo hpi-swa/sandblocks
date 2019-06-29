@@ -5,5 +5,5 @@ binding: aBlock value: anotherBlock
 	value  := anotherBlock.
 	
 	self addMorphBack: binding.
-	self addMorphBack: (StringMorph new contents: ':=').
+	self addMorphBack: (SBStringMorph new contents: ':=').
 	self addMorphBack: value

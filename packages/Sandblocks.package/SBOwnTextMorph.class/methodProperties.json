@@ -1,0 +1,27 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"color" : "tobe 6/29/2019 12:25",
+		"contents" : "tobe 6/29/2019 12:16",
+		"contents:" : "tobe 6/29/2019 18:26",
+		"cursor" : "tobe 6/29/2019 12:33",
+		"cursor:" : "tobe 6/29/2019 12:40",
+		"deleteAfterCursor" : "tobe 6/29/2019 16:35",
+		"deleteBeforeCursor" : "tobe 6/29/2019 18:46",
+		"drawOn:" : "tobe 6/29/2019 16:28",
+		"emphasis" : "tobe 6/29/2019 12:55",
+		"emphasis:" : "tobe 6/29/2019 12:54",
+		"fontToUse" : "tobe 6/29/2019 12:57",
+		"handlesKeyboard:" : "tobe 6/29/2019 14:38",
+		"handlesMouseDown:" : "tobe 6/29/2019 14:39",
+		"initialize" : "tobe 6/29/2019 16:16",
+		"insertCharacter:" : "tobe 6/29/2019 16:30",
+		"keyDown:" : "tobe 6/29/2019 12:27",
+		"keyStroke:" : "tobe 6/29/2019 18:37",
+		"keyboardFocusChange:" : "tobe 6/29/2019 12:47",
+		"minExtent" : "tobe 6/29/2019 16:40",
+		"mouseDown:" : "tobe 6/29/2019 12:34",
+		"moveCursorTo:" : "tobe 6/29/2019 12:41",
+		"stopEditing" : "tobe 6/29/2019 18:26",
+		"wantsKeyboardFocus" : "tobe 6/29/2019 14:38" } }

@@ -1,0 +1,16 @@
+{
+	"category" : "Sandblocks",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"cursor",
+		"contents",
+		"emphasis" ],
+	"name" : "SBOwnTextMorph",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }

@@ -1,4 +1,4 @@
 as yet unclassified
 name: aString
 
-	label contents: aString
+	self contents: aString

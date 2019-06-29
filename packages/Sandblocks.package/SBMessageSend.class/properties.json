@@ -6,8 +6,7 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"signature",
-		"receiver" ],
+		"signature" ],
 	"name" : "SBMessageSend",
 	"pools" : [
 		 ],

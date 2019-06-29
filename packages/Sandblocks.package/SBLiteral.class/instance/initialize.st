@@ -4,7 +4,7 @@ initialize
 	super initialize.
 	
 	self
-		addMorphBack: (text := SBTextMorph new);
+		addMorphBack: (text := SBOwnTextMorph new);
 		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap

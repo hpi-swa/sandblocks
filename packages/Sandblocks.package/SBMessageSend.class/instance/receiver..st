@@ -1,6 +1,5 @@
 as yet unclassified
 receiver: aBlock
 
-	receiver ifNotNil: [self removeMorph: receiver].
-	receiver := aBlock.
-	self addMorph: receiver
+	self submorphCount > 1 ifTrue: [self firstSubmorph delete].
+	self addMorph: aBlock

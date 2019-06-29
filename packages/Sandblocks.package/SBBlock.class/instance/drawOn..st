@@ -1,6 +1,10 @@
 as yet unclassified
 drawOn: aCanvas
 
+	aCanvas fillRectangle: self bounds color: self color.
+	
+	self valid
+		ifFalse: [aCanvas frameRectangle: self bounds width: 4 color: Color red].
+	
 	self sandblockEditor selection = self
-		ifTrue: [aCanvas frameAndFillRectangle: self bounds fillColor: self color borderWidth: 2 borderColor: Color white]
-		ifFalse: [aCanvas fillRectangle: self bounds color: self color]
+		ifTrue: [aCanvas frameRectangle: self bounds color: Color white]

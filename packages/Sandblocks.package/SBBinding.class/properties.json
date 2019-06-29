@@ -6,9 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"label" ],
+		 ],
 	"name" : "SBBinding",
 	"pools" : [
 		 ],
-	"super" : "SBBlock",
+	"super" : "SBLiteral",
 	"type" : "normal" }

@@ -10,8 +10,8 @@ layout: aMorph in: aRectangle
 		valueExtent := value minExtent.
 		rowHeight := nameExtent y max: valueExtent y.
 		
-		name bounds: (aRectangle left + self indent @ (y + (rowHeight - nameExtent y / 2)) extent: nameExtent).
-		value bounds: (aRectangle left + self indent + aMorph cellInset + nameExtent x @ (y + (rowHeight - valueExtent y / 2)) extent: valueExtent).
+		name bounds: (aRectangle left + self indent @ (y + (rowHeight - nameExtent y / 2) rounded) extent: nameExtent).
+		value bounds: (aRectangle left + self indent + aMorph cellInset + nameExtent x @ (y + (rowHeight - valueExtent y / 2) rounded) extent: valueExtent).
 		y := y + (nameExtent y max: valueExtent y)].
 	
 	"trailingExtent := aMorph lastSubmorph minExtent.

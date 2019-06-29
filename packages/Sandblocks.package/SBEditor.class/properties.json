@@ -6,7 +6,11 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"selection" ],
+		"selection",
+		"undoStack",
+		"redoStack",
+		"currentInput",
+		"currentInputCommand" ],
 	"name" : "SBEditor",
 	"pools" : [
 		 ],

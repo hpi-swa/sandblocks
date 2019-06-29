@@ -8,4 +8,6 @@ initialize
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		listDirection: #leftToRight;
+		layoutInset: 2;
+		cellInset: 2;
 		extent: 0 @ 0

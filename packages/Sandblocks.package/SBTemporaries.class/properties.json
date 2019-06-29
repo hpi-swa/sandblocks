@@ -10,5 +10,5 @@
 	"name" : "SBTemporaries",
 	"pools" : [
 		 ],
-	"super" : "SBBlock",
+	"super" : "Morph",
 	"type" : "normal" }

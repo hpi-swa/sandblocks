@@ -4,4 +4,8 @@
 	"instance" : {
 		"contents" : "tobe 6/28/2019 22:05",
 		"contents:" : "tobe 6/28/2019 21:56",
-		"initialize" : "tobe 6/28/2019 21:57" } }
+		"initialize" : "tobe 6/29/2019 12:23",
+		"keyStroke:" : "tobe 6/29/2019 18:36",
+		"moveCursorTo:" : "tobe 6/29/2019 18:41",
+		"startInputAt:replacingContents:" : "tobe 6/29/2019 18:23",
+		"stopEditing" : "tobe 6/29/2019 18:26" } }

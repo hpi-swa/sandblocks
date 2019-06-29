@@ -2,8 +2,11 @@
 	"class" : {
 		 },
 	"instance" : {
+		"color" : "tobe 6/29/2019 11:05",
+		"drawOn:" : "tobe 6/29/2019 11:01",
 		"initialize" : "tobe 6/26/2019 19:07",
 		"keyDown:" : "tobe 6/28/2019 21:11",
-		"keyStroke:" : "tobe 6/26/2019 18:58",
+		"keyStroke:" : "tobe 6/29/2019 09:56",
 		"keyboardFocusChange:" : "tobe 6/26/2019 19:09",
-		"minHeight" : "tobe 6/28/2019 16:40" } }
+		"minHeight" : "tobe 6/28/2019 16:40",
+		"selectUp" : "tobe 6/29/2019 09:57" } }

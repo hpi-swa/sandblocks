@@ -2,10 +2,17 @@
 	"class" : {
 		 },
 	"instance" : {
-		"color" : "tobe 6/26/2019 20:25",
-		"drawOn:" : "tobe 6/28/2019 22:02",
+		"color" : "tobe 6/29/2019 16:54",
+		"containingSandblock" : "tobe 6/29/2019 09:56",
+		"containingStatement" : "tobe 6/29/2019 17:03",
+		"drawOn:" : "tobe 6/29/2019 17:09",
 		"fillStyle" : "tobe 6/26/2019 20:23",
+		"firstInput" : "tobe 6/29/2019 16:14",
 		"handlesMouseDown:" : "tobe 6/28/2019 22:02",
 		"initialize" : "tobe 6/26/2019 20:20",
 		"minExtent" : "tobe 6/28/2019 23:27",
-		"mouseDown:" : "tobe 6/28/2019 22:03" } }
+		"mouseDown:" : "tobe 6/29/2019 09:57",
+		"select" : "tobe 6/29/2019 09:57",
+		"sourceString" : "tobe 6/29/2019 10:02",
+		"startInputAt:replacingContents:" : "tobe 6/29/2019 18:22",
+		"valid" : "tobe 6/29/2019 13:16" } }

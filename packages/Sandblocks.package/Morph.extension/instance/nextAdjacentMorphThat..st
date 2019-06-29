@@ -1,9 +1,9 @@
 *Sandblocks
-nextAdjacentFocusMorph
+nextAdjacentMorphThat: aBlock
 
 	| next |
 	next  := self.
 	[
 	next := next submorphAfter.
 	next  ifNil: [^ nil].
-	next firstMorphThatWantsFocus ifNotNil: [:m | ^ m]] repeat
+	(next firstMorphThat: aBlock) ifNotNil: [:m | ^ m]] repeat
