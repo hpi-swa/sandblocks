@@ -1,4 +1,5 @@
 as yet unclassified
 undo
 
-	morph contents: previousText
+	oldMorph = newMorph ifFalse: [newMorph replaceBy: oldMorph].
+	oldMorph contents: previousText

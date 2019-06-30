@@ -10,7 +10,9 @@
 		"undoStack",
 		"redoStack",
 		"currentInput",
-		"currentInputCommand" ],
+		"currentInputCommand",
+		"copyBuffer",
+		"copyBufferPreview" ],
 	"name" : "SBEditor",
 	"pools" : [
 		 ],

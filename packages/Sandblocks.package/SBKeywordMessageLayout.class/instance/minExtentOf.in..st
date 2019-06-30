@@ -10,6 +10,6 @@ minExtentOf: aMorph in: aRectangle
 		valueExtent := value minExtent.
 		
 		x := x max: self indent + nameExtent x + valueExtent x + aMorph cellInset.
-		y := y + (nameExtent y max: valueExtent y)].
+		y := y + aMorph cellInset + (nameExtent y max: valueExtent y)].
 	
 	^ x @ y

@@ -3,7 +3,7 @@ startInputAt: aNumber replacingContents: aBoolean
 
 	| cmd |
 	cmd := SBInputCommand new
-		morph: self;
+		oldMorph: self;
 		previousText: self contents;
 		yourself.
 	

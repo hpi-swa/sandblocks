@@ -6,10 +6,10 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"unknown",
-		"newText",
-		"replacer" ],
-	"name" : "SBInputToUnknownCommand",
+		"outer",
+		"inner",
+		"wrap" ],
+	"name" : "SBWrapCommand",
 	"pools" : [
 		 ],
 	"super" : "SBCommand",

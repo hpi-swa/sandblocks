@@ -5,8 +5,9 @@ do
 	targetOldIndex := targetOldOwner submorphIndexOf: target.
 	
 	replacerOldOwner := replacer owner.
-	replacerOldIndex := replacerOldOwner submorphIndexOf: replacer.
+	replacerOldOwner ifNotNil: [
+		replacerOldIndex := replacerOldOwner submorphIndexOf: replacer].
 	
 	target owner removeMorph: target.
-	replacer owner removeMorph: replacer.
+	replacerOldOwner ifNotNil: [:o | o removeMorph: replacer].
 	targetOldOwner addMorph: replacer asElementNumber: targetOldIndex

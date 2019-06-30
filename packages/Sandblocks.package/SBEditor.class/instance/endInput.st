@@ -4,9 +4,11 @@ endInput
 	currentInput ifNil: [^ self].
 	
 	currentInput stopEditing.
-	currentInputCommand newText: currentInput contents.
+	currentInputCommand
+		newText: currentInput contents;
+		newMorph: currentInput.
 	
-	currentInputCommand newText ~= currentInputCommand previousText ifTrue: [
+	currentInputCommand hasChange ifTrue: [
 		self do: currentInputCommand].
 	
 	currentInput := nil.

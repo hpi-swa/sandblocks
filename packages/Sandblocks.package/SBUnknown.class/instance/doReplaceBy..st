@@ -1,9 +1,7 @@
 as yet unclassified
-replaceBy: aMorph
+doReplaceBy: aMorph
 
-	super replaceBy: aMorph.
-	currentCmd replacer: aMorph.
-	currentCmd := nil.
+	self replaceBy: aMorph.
 	
 	aMorph moveCursorTo: 9e8.
 	aMorph sandblockEditor replaceInput: aMorph

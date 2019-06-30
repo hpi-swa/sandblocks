@@ -6,9 +6,10 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"morph",
 		"previousText",
-		"newText" ],
+		"newText",
+		"oldMorph",
+		"newMorph" ],
 	"name" : "SBInputCommand",
 	"pools" : [
 		 ],

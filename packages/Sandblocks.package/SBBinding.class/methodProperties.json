@@ -2,6 +2,10 @@
 	"class" : {
 		 },
 	"instance" : {
+		"initialize" : "tobe 6/30/2019 12:13",
+		"isBlockBinding" : "tobe 6/30/2019 12:09",
+		"isBlockBinding:" : "tobe 6/30/2019 12:09",
 		"name:" : "tobe 6/29/2019 18:57",
+		"prefix" : "tobe 6/30/2019 12:52",
 		"valid" : "tobe 6/29/2019 19:27",
 		"writeSourceOn:" : "tobe 6/29/2019 18:57" } }
