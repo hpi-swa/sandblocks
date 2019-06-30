@@ -2,7 +2,7 @@ as yet unclassified
 drawPrefix: aString on: aCanvas
 
 	| font width |
-	font := TextStyle defaultFont.
+	font := self fontToUse.
 	width := font widthOfString: aString.
 	aCanvas
 		drawString: aString

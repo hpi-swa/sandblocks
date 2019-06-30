@@ -2,8 +2,12 @@
 	"class" : {
 		 },
 	"instance" : {
-		"initialize" : "tobe 6/30/2019 12:12",
+		"addCommandRequest" : "tobe 6/30/2019 21:34",
+		"initialize" : "tobe 6/30/2019 22:26",
+		"minExtent" : "tobe 6/30/2019 20:56",
 		"prefix" : "tobe 6/30/2019 12:51",
-		"spaceForPrefix" : "tobe 6/30/2019 12:53",
+		"printOn:" : "tobe 6/30/2019 13:33",
+		"spaceForPrefix" : "tobe 6/30/2019 19:31",
 		"type:contents:" : "tobe 6/26/2019 19:52",
+		"valid" : "tobe 6/30/2019 21:31",
 		"writeSourceOn:" : "tobe 6/28/2019 17:03" } }

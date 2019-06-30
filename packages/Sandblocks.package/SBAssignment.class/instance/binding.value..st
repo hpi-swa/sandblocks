@@ -4,6 +4,7 @@ binding: aBlock value: anotherBlock
 	binding := aBlock.
 	value  := anotherBlock.
 	
+	self removeAllMorphs.
 	self addMorphBack: binding.
 	self addMorphBack: (SBStringMorph new contents: ':=').
 	self addMorphBack: value

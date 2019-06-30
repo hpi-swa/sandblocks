@@ -1,4 +1,4 @@
 as yet unclassified
 select
 
-	self sandblockEditor select: self
+	self sandblockEditor selectClick: self

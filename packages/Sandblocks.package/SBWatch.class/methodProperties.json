@@ -4,6 +4,7 @@
 		"registry" : "tobe 6/28/2019 18:34",
 		"report:for:" : "tobe 6/28/2019 18:37" },
 	"instance" : {
+		"childSandblocks" : "tobe 6/30/2019 20:39",
 		"click:" : "tobe 6/30/2019 13:00",
 		"doubleClick:" : "tobe 6/28/2019 21:13",
 		"drawOn:" : "tobe 6/30/2019 13:01",
@@ -12,8 +13,11 @@
 		"handlesMouseDown:" : "tobe 6/28/2019 21:12",
 		"identifier" : "tobe 6/28/2019 18:23",
 		"identifier:" : "tobe 6/28/2019 18:38",
-		"initialize" : "tobe 6/29/2019 11:07",
+		"initialize" : "tobe 6/30/2019 22:26",
 		"mouseDown:" : "tobe 6/28/2019 21:12",
+		"newIdentifier" : "tobe 6/30/2019 13:35",
+		"printOn:" : "tobe 6/30/2019 13:32",
 		"report:for:" : "tobe 6/28/2019 21:08",
 		"reportValue:" : "tobe 6/28/2019 22:07",
+		"veryDeepCopyWith:" : "tobe 6/30/2019 13:40",
 		"writeSourceOn:" : "tobe 6/28/2019 22:06" } }

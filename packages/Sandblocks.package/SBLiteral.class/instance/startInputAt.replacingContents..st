@@ -7,7 +7,8 @@ startInputAt: aNumber replacingContents: aBoolean
 		previousText: self contents;
 		yourself.
 	
-	text moveCursorTo: aNumber.
-	aBoolean ifTrue: [self contents: ''].
+	aBoolean
+		ifTrue: [self replaceWithUnknown]
+		ifFalse: [self moveCursorTo: aNumber].
 	
 	^ cmd

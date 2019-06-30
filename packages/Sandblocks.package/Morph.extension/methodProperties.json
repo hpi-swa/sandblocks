@@ -6,7 +6,10 @@
 		"firstMorphThat:" : "tobe 6/29/2019 10:30",
 		"focusNextMorph:" : "tobe 6/29/2019 10:36",
 		"focusPreviousMorph:" : "tobe 6/29/2019 10:37",
+		"isSandblock" : "tobe 6/30/2019 17:44",
 		"lastMorphThat:" : "tobe 6/29/2019 10:30",
+		"morphAfterThat:" : "tobe 6/30/2019 17:49",
+		"morphBeforeThat:" : "tobe 6/30/2019 17:50",
 		"nextAdjacentMorphThat:" : "tobe 6/29/2019 10:30",
 		"nextMorphThat:" : "tobe 6/29/2019 10:35",
 		"parentSandblock" : "tobe 6/29/2019 14:23",
@@ -15,4 +18,4 @@
 		"replaceBy:" : "tobe 6/29/2019 14:09",
 		"reverseAllMorphsDo:" : "tobe 6/26/2019 18:55",
 		"sandblockEditor" : "tobe 6/28/2019 20:59",
-		"sandblockForegroundColor" : "tobe 6/30/2019 12:04" } }
+		"sandblockForegroundColor" : "tobe 6/30/2019 20:24" } }

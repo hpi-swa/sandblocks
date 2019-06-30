@@ -4,8 +4,7 @@ initialize
 	super initialize.
 	
 	self
-		changeTableLayout;
+		layoutPolicy: SBHorizontalLayout new;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		listDirection: #leftToRight;
 		addMorphBack: (SBStringMorph new contents: '^ ')

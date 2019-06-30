@@ -4,8 +4,7 @@ initialize
 	super initialize.
 	
 	self
-		changeTableLayout;
-		listDirection: #topToBottom;
+		layoutPolicy: SBVerticalLayout new;
 		cellPositioning: #topLeft;
 		vResizing: #shrinkWrap; hResizing: #shrinkWrap.
 	

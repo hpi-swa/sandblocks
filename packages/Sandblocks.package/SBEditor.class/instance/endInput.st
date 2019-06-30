@@ -4,13 +4,11 @@ endInput
 	currentInput ifNil: [^ self].
 	
 	modeLabel contents: 'NORMAL'.
-	currentInput stopEditing.
-	currentInputCommand
-		newText: currentInput contents;
-		newMorph: currentInput.
+	currentInput stopEditing: currentInputCommand.
 	
-	currentInputCommand hasChange ifTrue: [
-		self do: currentInputCommand].
+	currentInputCommand hasChange
+		ifTrue: [self do: currentInputCommand]
+		ifFalse: [undoStack last shouldMergeWithNext: false].
 	
 	currentInput := nil.
 	currentInputCommand := nil.

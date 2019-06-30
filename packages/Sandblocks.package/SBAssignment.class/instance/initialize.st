@@ -4,7 +4,7 @@ initialize
 	super initialize.
 	
 	self
-		layoutPolicy: SBExpressionLayout new;
+		layoutPolicy: SBHorizontalLayout new;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		listDirection: #leftToRight

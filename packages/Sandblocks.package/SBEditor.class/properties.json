@@ -14,7 +14,9 @@
 		"copyBuffer",
 		"copyBufferPreview",
 		"modeLabel",
-		"unsavedChanges" ],
+		"unsavedChanges",
+		"selectionLabel",
+		"selectionDownHistory" ],
 	"name" : "SBEditor",
 	"pools" : [
 		 ],

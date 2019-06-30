@@ -3,7 +3,7 @@ initialize
 
 	super initialize.
 	
-	self layoutPolicy: SBExpressionLayout new.
+	self layoutPolicy: SBHorizontalLayout new.
 	self listDirection: #leftToRight.
 	self hResizing: #shrinkWrap.
 	self vResizing: #shrinkWrap.

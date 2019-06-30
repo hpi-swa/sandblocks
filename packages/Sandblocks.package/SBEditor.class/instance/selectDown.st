@@ -1,4 +1,11 @@
-actions
+selection
 selectDown
 
-	self select: self selection owner containingSandblock
+	| next |
+	" try to follow our steps back down "
+	next := selectionDownHistory ifEmpty: [] ifNotEmpty: #removeLast.
+	(self selection childSandblocks includes: next) ifFalse: [
+		selectionDownHistory removeAll.
+		next := self selection firstMorphThat: #isSandblock].
+	
+	next ifNotNil: [self select: next]

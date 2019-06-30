@@ -1,4 +1,4 @@
 as yet unclassified
-doIn: aEditor
+undo
 
 	^ self subclassResponsibility

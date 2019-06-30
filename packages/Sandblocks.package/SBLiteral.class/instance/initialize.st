@@ -5,6 +5,6 @@ initialize
 	
 	self
 		addMorphBack: (text := SBOwnTextMorph new);
-		changeTableLayout;
+		layoutPolicy: SBVerticalLayout new;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap

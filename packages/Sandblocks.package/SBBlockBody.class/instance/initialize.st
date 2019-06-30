@@ -5,7 +5,7 @@ initialize
 	
 	bindings := Morph new
 		color: Color transparent;
-		layoutPolicy: SBExpressionLayout new;
+		layoutPolicy: SBHorizontalLayout new;
 		listDirection: #leftToRight;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
@@ -16,7 +16,7 @@ initialize
 	temporaries := SBTemporaries new.
 	
 	self
-		layoutPolicy: SBBlockLayout new;
+		layoutPolicy: SBVerticalLayout new;
 		color: Color random;
 		cellPositioning: #topLeft;
 		listDirection: #topToBottom;

@@ -1,7 +1,7 @@
 actions
 watchExpression: aBlock
 
-	| watch |
-	watch := SBWatch new identifier: Random new nextValue.
-	aBlock owner replaceSubmorph: aBlock by: watch.
-	watch expression: aBlock
+	self do: (SBWrapCommand new
+		outer: SBWatch new newIdentifier;
+		inner: aBlock;
+		wrap: [:outer :inner | outer expression: inner])

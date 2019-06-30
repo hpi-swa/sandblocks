@@ -1,5 +1,7 @@
 as yet unclassified
 method: aMethodBlock
 
+	self method isSandblock ifTrue: [self method delete].
+	
 	self addMorphFront: aMethodBlock.
-	unsavedChanges := false
+	self resetState

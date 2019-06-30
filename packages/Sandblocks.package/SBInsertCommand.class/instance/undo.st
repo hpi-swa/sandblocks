@@ -1,4 +1,8 @@
 as yet unclassified
 undo
 
-	container removeMorph: morph
+	index := container submorphIndexOf: morph.
+	container removeMorph: morph.
+	^ container hasSubmorphs
+		ifTrue: [container submorphs at: (index clampLow: 1 high: container submorphCount)]
+		ifFalse: [nil]

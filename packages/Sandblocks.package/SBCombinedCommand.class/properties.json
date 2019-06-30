@@ -6,9 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		 ],
-	"name" : "SBExpressionLayout",
+		"commands" ],
+	"name" : "SBCombinedCommand",
 	"pools" : [
 		 ],
-	"super" : "LayoutPolicy",
+	"super" : "SBCommand",
 	"type" : "normal" }

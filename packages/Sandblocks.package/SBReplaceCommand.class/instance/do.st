@@ -10,4 +10,6 @@ do
 	
 	target owner removeMorph: target.
 	replacerOldOwner ifNotNil: [:o | o removeMorph: replacer].
-	targetOldOwner addMorph: replacer asElementNumber: targetOldIndex
+	targetOldOwner addMorph: replacer asElementNumber: targetOldIndex.
+	
+	^ replacer

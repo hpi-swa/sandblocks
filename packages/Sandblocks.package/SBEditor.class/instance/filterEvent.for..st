@@ -1,16 +1,20 @@
 events
 filterEvent: anEvent for: aMorph
 
-
-	anEvent type == #keystroke ifTrue: [
-		(self processGlobalShortcut: anEvent) ifTrue: [^ anEvent ignore]].
+	(anEvent type == #keystroke or:
+	" shift-tab, for some reason is never reported on linux in keyStroke "
+	[anEvent type == #keyDown and: [anEvent shiftPressed] and: [anEvent keyCharacter = Character tab]]) ifFalse: [^ anEvent].
 	
-	selection ifNotNil: [
-		(anEvent type == #keyDown and: [anEvent shiftPressed and: [anEvent keyCharacter = Character tab]]) ifTrue: [		
-			self selectPrevious.
-			^ anEvent ignore].
+	currentInput ifNotNil: [
+		anEvent keyCharacter = Character escape
+			ifTrue: [self endInput]
+			ifFalse: [currentInput keyStroke: anEvent].
+		^ anEvent ignore].
 		
-		anEvent type ==  #keystroke
-			ifTrue: [self processSelectionShortcut: anEvent. ^ anEvent ignore]].
+	(self processGlobalShortcut: anEvent) ifTrue: [^ anEvent ignore].
+	
+	selection ifNotNil: [		
+		self processSelectionShortcut: anEvent.
+		^ anEvent ignore].
 	
 	^ anEvent

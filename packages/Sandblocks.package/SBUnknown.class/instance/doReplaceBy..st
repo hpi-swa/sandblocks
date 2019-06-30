@@ -1,6 +1,7 @@
 as yet unclassified
 doReplaceBy: aMorph
 
+	self stopEditing.
 	self replaceBy: aMorph.
 	
 	aMorph moveCursorTo: 9e8.

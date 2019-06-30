@@ -2,8 +2,7 @@ as yet unclassified
 openFor: aMethod
 
 	| editor |
-	editor := self new
-		method: (Parser new parse: aMethod getSource class: aMethod methodClass) asSandblock.
+	editor := self new compiledMethod: aMethod.
 	
 	editor openInWindow openAsTool.
 	^ editor

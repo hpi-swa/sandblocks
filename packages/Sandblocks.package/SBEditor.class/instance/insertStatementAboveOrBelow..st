@@ -12,9 +12,7 @@ insertStatementAboveOrBelow: anAboveBoolean
 			ifTrue: [index] ifFalse: [index + 1]);
 		container: currentStatement owner;
 		morph: newStatement;
+		shouldMergeWithNext: true;
 		yourself).
 	
-	self select: newStatement.
-	
-	self flag: #todo. "merge this two into one undoable action"
-	self startInput: newStatement at: 1 replacing: false
+	self startInput: newStatement at: 1 replacingContents: false

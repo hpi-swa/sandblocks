@@ -5,5 +5,6 @@ initialize
 	
 	self
 		color: Color transparent;
-		layoutInset: 2;
-		cellInset: 2
+		layoutInset: 2 * self scalingFactor;
+		cellInset: 2 * self scalingFactor;
+		extent: 0 @ 0

@@ -1,4 +1,5 @@
 accessing
 undo
 
-	outer replaceBy: inner
+	outer replaceBy: inner.
+	^ inner

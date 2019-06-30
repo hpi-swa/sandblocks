@@ -4,10 +4,10 @@ initialize
 	super initialize.
 	
 	self
-		changeTableLayout;
+		layoutPolicy: SBHorizontalLayout new;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
-		listDirection: #leftToRight;
 		layoutInset: 2;
+		color: Color transparent;
 		cellInset: 2;
 		extent: 0 @ 0

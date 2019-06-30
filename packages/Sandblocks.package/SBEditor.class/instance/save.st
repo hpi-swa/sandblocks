@@ -2,4 +2,4 @@ actions
 save
 
 	self unsavedChanges: false.
-	self submorphs second save
+	self method save

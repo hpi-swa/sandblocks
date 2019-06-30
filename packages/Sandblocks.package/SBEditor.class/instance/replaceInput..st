@@ -4,4 +4,4 @@ replaceInput: aMorph
 
 	self assert: currentInput notNil.
 	currentInput := aMorph.
-	self select: aMorph
+	self select: aMorph containingSandblock

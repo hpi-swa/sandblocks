@@ -2,7 +2,7 @@ as yet unclassified
 layout: aMorph in: aRectangle
 
 	| y rowHeight |
-	aMorph submorphCount <= self breakLimit ifTrue: [^ SBExpressionLayout new layout: aMorph in: aRectangle].
+	aMorph submorphCount <= self breakLimit ifTrue: [^ SBHorizontalLayout new layout: aMorph in: aRectangle].
 	
 	y := aRectangle top.
 	aMorph submorphs pairsDo: [:name :value | | nameExtent valueExtent |

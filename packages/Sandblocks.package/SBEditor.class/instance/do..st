@@ -2,6 +2,11 @@ actions
 do: aCommand
 
 	self unsavedChanges: true.
-	undoStack addLast: aCommand.
+	
+	(undoStack notEmpty and: [undoStack last shouldMergeWithNext])
+		ifTrue: [undoStack addLast: (SBCombinedCommand new commands: {undoStack removeLast. aCommand})]
+		ifFalse: [undoStack addLast: aCommand].
+	
 	redoStack removeAll.
-	aCommand do
+	
+	self select: aCommand do
