@@ -6,7 +6,7 @@ drawOn: aCanvas
 	self valid
 		ifFalse: [aCanvas frameRectangle: self bounds width: 4 color: Color red].
 	
-	self sandblockEditor selection = self
+	self isSelected
 		ifTrue: [aCanvas frameRectangle: self bounds color: Color white].
 	
 	self prefix ifNotNil: [:p |
