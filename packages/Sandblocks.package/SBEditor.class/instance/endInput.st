@@ -1,8 +1,9 @@
-as yet unclassified
+input
 endInput
 
 	currentInput ifNil: [^ self].
 	
+	modeLabel contents: 'NORMAL'.
 	currentInput stopEditing.
 	currentInputCommand
 		newText: currentInput contents;

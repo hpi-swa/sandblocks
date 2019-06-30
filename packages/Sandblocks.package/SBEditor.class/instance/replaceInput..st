@@ -1,4 +1,4 @@
-as yet unclassified
+input
 replaceInput: aMorph
 	" inform the editor that the current input morph has been replaced by another where input should continue "
 

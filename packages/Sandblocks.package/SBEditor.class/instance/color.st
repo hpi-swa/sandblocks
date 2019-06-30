@@ -1,4 +1,4 @@
-as yet unclassified
+drawing
 color
 
 	^ Color white

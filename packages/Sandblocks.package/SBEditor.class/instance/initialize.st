@@ -1,10 +1,10 @@
-as yet unclassified
+initialize-release
 initialize
 
 	super initialize.
 	
 	self
-		changeProportionalLayout;
+		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		listDirection: #topToBottom.
@@ -12,8 +12,14 @@ initialize
 	undoStack := OrderedCollection new.
 	redoStack  := OrderedCollection new.
 	
-	self
-		addMorph: (copyBufferPreview := ImageMorph new image: (Form extent: self copyBufferPreviewSize))
-		fullFrame: (LayoutFrame fractions: (1 @ 0 extent: 0 @ 0) offsets: (self copyBufferPreviewSize x negated @ 0 extent: self copyBufferPreviewSize)).
-	
+	self addMorph: (Morph new
+		changeTableLayout;
+		vResizing: #rigid;
+		extent: 0 @ self copyBufferPreviewSize y;
+		hResizing: #spaceFill;
+		listDirection: #leftToRight;
+		color: Color transparent;
+		addMorphBack: (modeLabel := StringMorph new contents: 'NORMAL');
+		addMorphBack: (Morph new extent: 0 @ 0; hResizing: #spaceFill; color: Color transparent);
+		addMorphBack: (copyBufferPreview := ImageMorph new image: (Form extent: self copyBufferPreviewSize))).
 	self addKeyboardCaptureFilter: self

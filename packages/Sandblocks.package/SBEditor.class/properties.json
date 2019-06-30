@@ -12,7 +12,9 @@
 		"currentInput",
 		"currentInputCommand",
 		"copyBuffer",
-		"copyBufferPreview" ],
+		"copyBufferPreview",
+		"modeLabel",
+		"unsavedChanges" ],
 	"name" : "SBEditor",
 	"pools" : [
 		 ],

@@ -1,5 +1,8 @@
 as yet unclassified
 setCopyBuffer: aMorph
 
+	| form |
 	copyBuffer := aMorph veryDeepCopy.
-	copyBufferPreview image: (aMorph imageForm scaledIntoFormOfSize: self copyBufferPreviewSize)
+	
+	form := aMorph imageForm.
+	copyBufferPreview image: (form scaledIntoFormOfSize: (self copyBufferPreviewSize min: form extent))

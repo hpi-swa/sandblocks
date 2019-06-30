@@ -1,4 +1,4 @@
-as yet unclassified
+actions
 wrapInMessageSend
 
 	self do: (SBWrapCommand new

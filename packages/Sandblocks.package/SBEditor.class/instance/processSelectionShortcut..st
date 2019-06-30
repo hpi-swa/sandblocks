@@ -1,4 +1,4 @@
-as yet unclassified
+events
 processSelectionShortcut: anEvent
 
 	| char |
@@ -10,8 +10,8 @@ processSelectionShortcut: anEvent
 	
 	(char = Character tab or: [char = $l]) ifTrue: [^ self selectNext].
 	((char = Character tab and: [anEvent shiftPressed]) or: [char = $h]) ifTrue: [^ self selectPrevious].
-	char = Character arrowUp ifTrue: [^ self select: self selection owner containingSandblock].
-	char = Character arrowDown ifTrue: [^ self select: self selection owner containingSandblock].
+	char = Character arrowUp ifTrue: [^ self selectUp].
+	char = Character arrowDown ifTrue: [^ self selectDown].
 	char = $d ifTrue: [^ self do: (SBReplaceCommand target: self selection parentSandblock replacer: self selection)].
 	char = $x ifTrue: [self setCopyBuffer: self selection. ^ self do: (SBReplaceCommand target: self selection replacer: SBUnknown new)].
 	char = $u ifTrue: [^ self undo].
@@ -21,6 +21,7 @@ processSelectionShortcut: anEvent
 	char = $o ifTrue: [^ self insertStatementAboveOrBelow: false].
 	char = $O ifTrue: [^ self insertStatementAboveOrBelow: true].
 	char = Character space ifTrue: [^ self wrapInMessageSend].
+	char = $[ ifTrue: [^ self wrapInBlock].
 	char = $y ifTrue: [^ self setCopyBuffer: self selection].
 	char = $= ifTrue: [^ self replaceWithCopyBuffer].
 	

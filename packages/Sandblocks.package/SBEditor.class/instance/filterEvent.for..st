@@ -1,4 +1,4 @@
-as yet unclassified
+events
 filterEvent: anEvent for: aMorph
 
 
@@ -9,7 +9,7 @@ filterEvent: anEvent for: aMorph
 		(anEvent type == #keyDown and: [anEvent shiftPressed and: [anEvent keyCharacter = Character tab]]) ifTrue: [		
 			self selectPrevious.
 			^ anEvent ignore].
-
+		
 		anEvent type ==  #keystroke
 			ifTrue: [self processSelectionShortcut: anEvent. ^ anEvent ignore]].
 	

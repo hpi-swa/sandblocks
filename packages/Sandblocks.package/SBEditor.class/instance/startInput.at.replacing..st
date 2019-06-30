@@ -1,6 +1,7 @@
-as yet unclassified
+input
 startInput: aMorph at: aNumber replacing: aBoolean
 
 	(aMorph startInputAt: aNumber replacingContents: aBoolean) ifNotNil: [:cmd |
 		currentInput := aMorph.
-		currentInputCommand := cmd]
+		currentInputCommand := cmd.
+		modeLabel contents: 'INSERT']
