@@ -2,6 +2,7 @@
 	"class" : {
 		 },
 	"instance" : {
+		"addCommandRequest" : "tobe 6/30/2019 22:53",
 		"childSandblocks" : "tobe 6/30/2019 19:48",
 		"contents" : "tobe 6/30/2019 14:43",
 		"contents:" : "tobe 6/30/2019 14:45",
@@ -11,6 +12,7 @@
 		"receiver:" : "tobe 6/29/2019 10:03",
 		"receiver:selector:arguments:" : "tobe 6/26/2019 19:46",
 		"selector" : "tobe 6/29/2019 13:27",
+		"selector:arguments:" : "tobe 6/30/2019 22:38",
 		"signature" : "tobe 6/26/2019 20:27",
 		"startInputAt:replacingContents:" : "tobe 6/30/2019 14:44",
 		"stopEditing:" : "tobe 6/30/2019 21:45",

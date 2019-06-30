@@ -6,7 +6,12 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		 ],
+		"previousSelector",
+		"previousArguments",
+		"messageSend",
+		"newSelector",
+		"newArguments",
+		"select" ],
 	"name" : "SBInputMessageCommand",
 	"pools" : [
 		 ],

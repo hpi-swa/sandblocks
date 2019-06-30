@@ -2,4 +2,12 @@
 	"class" : {
 		 },
 	"instance" : {
-		 } }
+		"do" : "tobe 6/30/2019 22:59",
+		"hasChange" : "tobe 6/30/2019 22:43",
+		"messageSend:" : "tobe 6/30/2019 22:38",
+		"newArguments:" : "tobe 6/30/2019 22:41",
+		"newSelector:" : "tobe 6/30/2019 22:40",
+		"previousArguments:" : "tobe 6/30/2019 22:37",
+		"previousSelector:" : "tobe 6/30/2019 22:37",
+		"select:" : "tobe 6/30/2019 22:59",
+		"undo" : "tobe 6/30/2019 22:48" } }

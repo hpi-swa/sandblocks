@@ -8,7 +8,7 @@ endInput
 	
 	currentInputCommand hasChange
 		ifTrue: [self do: currentInputCommand]
-		ifFalse: [undoStack last shouldMergeWithNext: false].
+		ifFalse: [undoStack ifNotEmpty: [undoStack last shouldMergeWithNext: false]].
 	
 	currentInput := nil.
 	currentInputCommand := nil.

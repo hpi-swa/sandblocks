@@ -2,15 +2,20 @@
 	"class" : {
 		 },
 	"instance" : {
+		"addCommandRequest" : "tobe 6/30/2019 22:59",
 		"arguments" : "tobe 6/30/2019 21:42",
 		"childSandblocks" : "tobe 6/30/2019 21:42",
 		"color" : "tobe 6/28/2019 23:41",
 		"initialize" : "tobe 6/28/2019 23:45",
+		"isBinary" : "tobe 6/30/2019 22:55",
+		"isKeyword" : "tobe 6/30/2019 22:55",
+		"isUnary" : "tobe 6/30/2019 22:55",
 		"keyStroke:" : "tobe 6/30/2019 14:50",
 		"minExtent" : "tobe 6/28/2019 23:35",
 		"selector" : "tobe 6/29/2019 14:03",
+		"selector:arguments:" : "tobe 6/30/2019 22:45",
 		"signature:" : "tobe 6/30/2019 14:44",
 		"signature:values:" : "tobe 6/30/2019 11:55",
-		"startInputAt:replacingContents:" : "tobe 6/30/2019 21:41",
-		"stopEditing:" : "tobe 6/30/2019 21:47",
+		"startInputAt:replacingContents:" : "tobe 6/30/2019 22:50",
+		"stopEditing:" : "tobe 6/30/2019 22:41",
 		"writeSourceOn:" : "tobe 6/28/2019 21:54" } }

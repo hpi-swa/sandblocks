@@ -5,7 +5,8 @@ startInputAt: aNumber replacingContents: aBoolean
 	currentInputMessagePart := self firstSubmorph.
 	
 	cmd := SBInputMessageCommand new
-		previousSelector: currentInputMessagePart contents;
+		messageSend: self owner;
+		previousSelector: self selector;
 		previousArguments: self arguments;
 		yourself.
 	
