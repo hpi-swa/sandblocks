@@ -7,6 +7,7 @@ processGlobalShortcut: anEvent
 	(char = $s and: [anEvent commandKeyPressed]) ifTrue: [self save. ^ true].
 	(char = $r and: [anEvent commandKeyPressed]) ifTrue: [self redo. ^ true].
 	char = $u ifTrue: [self undo. ^ true].
+	char = $g ifTrue: [self select: self method. ^ true].
 	
 	anEvent commandKeyPressed ifTrue: [
 		char = $s ifTrue: [self save. ^ true].

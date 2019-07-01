@@ -2,4 +2,4 @@ selection
 selectNext
 
 	selectionDownHistory removeAll.
-	self select: (self selection nextMorphThat: [:m | m isKindOf: SBBlock])
+	self selection nextBlock ifNotNil: [:b | self select: b]

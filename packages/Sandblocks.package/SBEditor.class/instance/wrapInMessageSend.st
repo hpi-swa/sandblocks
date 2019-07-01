@@ -1,8 +1,13 @@
 actions
 wrapInMessageSend
 
+	| msg |
+	msg := SBMessageSend new.
 	self do: (SBWrapCommand new
-		outer: SBMessageSend new;
+		outer: msg;
 		inner: self selection;
+		shouldMergeWithNext: true;
 		wrap: [:outer :inner | outer receiver: inner selector: #'' arguments: #()];
-		yourself)
+		yourself).
+	
+	self startInput: msg at: 1 replacingContents: false

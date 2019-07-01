@@ -1,4 +1,7 @@
 as yet unclassified
 childSandblocks
 
-	^ signature childSandblocks copyWithFirst: self firstSubmorph
+	| children |
+	children := signature childSandblocks.
+	self receiver ifNotNil: [:r | children := children copyWithFirst: r].
+	^ children

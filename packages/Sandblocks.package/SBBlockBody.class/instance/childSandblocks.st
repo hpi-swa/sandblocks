@@ -1,4 +1,4 @@
 converting
 childSandblocks
 
-	^ (self submorphs allButFirst: 2), bindings submorphs, temporaries submorphs
+	^ bindings submorphs, temporaries childSandblocks, (self submorphs allButFirst: 2)

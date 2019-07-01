@@ -4,6 +4,8 @@
 	"instance" : {
 		"addCommandRequest" : "tobe 6/30/2019 23:11",
 		"initialize" : "tobe 6/30/2019 23:04",
+		"isCascade" : "tobe 7/1/2019 07:49",
 		"printOn:" : "tobe 6/30/2019 23:05",
+		"receiver" : "tobe 7/1/2019 07:50",
 		"receiver:messages:" : "tobe 6/30/2019 23:04",
 		"writeSourceOn:" : "tobe 6/30/2019 23:08" } }

@@ -3,13 +3,14 @@
 		 },
 	"instance" : {
 		"addCommandRequest" : "tobe 6/30/2019 22:53",
-		"childSandblocks" : "tobe 6/30/2019 19:48",
+		"childSandblocks" : "tobe 7/1/2019 09:34",
 		"contents" : "tobe 6/30/2019 14:43",
 		"contents:" : "tobe 6/30/2019 14:45",
 		"initialize" : "tobe 6/30/2019 22:26",
 		"keyStroke:" : "tobe 6/30/2019 14:47",
 		"printOn:" : "tobe 6/30/2019 13:30",
-		"receiver:" : "tobe 6/29/2019 10:03",
+		"receiver" : "tobe 7/1/2019 07:55",
+		"receiver:" : "tobe 7/1/2019 07:52",
 		"receiver:selector:arguments:" : "tobe 6/26/2019 19:46",
 		"selector" : "tobe 6/29/2019 13:27",
 		"selector:arguments:" : "tobe 6/30/2019 22:38",
@@ -17,5 +18,6 @@
 		"startInputAt:replacingContents:" : "tobe 6/30/2019 14:44",
 		"stopEditing:" : "tobe 6/30/2019 21:45",
 		"valid" : "tobe 6/29/2019 13:27",
+		"veryDeepCopyWith:" : "tobe 7/1/2019 07:54",
 		"writeSendSourceOn:" : "tobe 6/30/2019 23:07",
 		"writeSourceOn:" : "tobe 6/29/2019 10:02" } }

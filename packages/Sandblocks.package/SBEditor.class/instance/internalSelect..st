@@ -12,4 +12,5 @@ internalSelect: aBlock
 			selection := aBlock.
 			previousSelection ifNotNil: #changed.
 			selection changed.
-			selectionLabel contents: selection printString]
+			selectionLabel contents: selection printString].
+		self changed
