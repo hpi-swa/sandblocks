@@ -1,4 +1,4 @@
 as yet unclassified
-breakLimit
+isBlockBody
 
-	^ 2
+	^ true

@@ -2,6 +2,7 @@ as yet unclassified
 minExtentOf: aMorph in: aRectangle
 
 	| x y |
+	minExtentCache ifNotNil: [^ minExtentCache].
 	aMorph hasSubmorphs ifFalse: [^ 0 @ 0].
 	
 	x := 0.
@@ -12,4 +13,4 @@ minExtentOf: aMorph in: aRectangle
 			aMorph submorphs pairsDo: [:m1 :m2 |
 				x := x max: m1 width + aMorph cellInset + m2 width.
 				y := y + (m1 height max: m2 height)]].
-	^ x @ y
+	^ minExtentCache := x @ y

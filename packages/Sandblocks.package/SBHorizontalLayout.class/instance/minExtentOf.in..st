@@ -2,6 +2,8 @@ as yet unclassified
 minExtentOf: aMorph in: aRectangle
 
 	| minHeight totalWidth |
+	minExtentCache ifNotNil: [^ minExtentCache].
+	
 	minHeight := 0.
 	totalWidth := 0.
 	aMorph submorphsDo: [:m | | extent |
@@ -9,4 +11,4 @@ minExtentOf: aMorph in: aRectangle
 		minHeight := extent y max: minHeight.
 		totalWidth := totalWidth + extent x].
 	
-	^ (totalWidth + (aMorph submorphCount - 1 * aMorph cellInset)) @ minHeight
+	^ minExtentCache := (totalWidth + (aMorph submorphCount - 1 * aMorph cellInset)) @ minHeight

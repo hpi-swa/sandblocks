@@ -3,4 +3,6 @@ expression: aBlock
 
 	expression := aBlock.
 	
-	self addMorph: aBlock
+	self removeAllMorphs.
+	self addMorphBack: aBlock.
+	self switchToPrintDisplay

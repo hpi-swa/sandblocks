@@ -21,10 +21,13 @@ processSelectionShortcut: anEvent
 	char = Character space ifTrue: [^ self wrapInMessageSend].
 	char = $[ ifTrue: [^ self wrapInBlock].
 	char = $y ifTrue: [^ self setCopyBuffer: self selection].
-	char = $= ifTrue: [^ self replaceWithCopyBuffer].
+	char = $r ifTrue: [^ self replaceWithCopyBuffer].
+	char = $p ifTrue: [^ self pasteStatementAboveOrBelow: false].
+	char = $P ifTrue: [^ self pasteStatementAboveOrBelow: true].
 	char = $: ifTrue: [^ self wrapInAssignment].
 	char = ${ ifTrue: [^ self wrapInArrayType: #dynamic].
 	char = $# ifTrue: [^ self wrapInArrayType: #literal].
+	char = $= ifTrue: [^ self extractVariable].
 	
 	anEvent commandKeyPressed ifTrue: [
 		char = $w ifTrue: [^ self watchExpression: self selection]]

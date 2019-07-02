@@ -9,14 +9,15 @@ initialize
 		listDirection: #leftToRight;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		layoutInset: 2;
-		cellInset: 2;
+		layoutInset: 2 * self scalingFactor;
+		cellInset: 2 * self scalingFactor;
 		extent: 0 @ 0;
 		yourself.
+	
 	temporaries := SBTemporaries new.
 	
 	self
-		layoutPolicy: SBVerticalLayout new;
+		layoutPolicy: SBBlockBodyLayout new;
 		color: Color random;
 		cellPositioning: #topLeft;
 		listDirection: #topToBottom;

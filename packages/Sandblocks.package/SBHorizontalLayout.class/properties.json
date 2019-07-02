@@ -10,5 +10,5 @@
 	"name" : "SBHorizontalLayout",
 	"pools" : [
 		 ],
-	"super" : "LayoutPolicy",
+	"super" : "SBLayoutPolicy",
 	"type" : "normal" }

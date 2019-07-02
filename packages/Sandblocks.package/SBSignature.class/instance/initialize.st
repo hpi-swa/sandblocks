@@ -8,5 +8,5 @@ initialize
 	self vResizing: #shrinkWrap.
 	self hResizing: #shrinkWrap.
 	self listDirection: #leftToRight.
-	self cellInset: 2.
+	self cellInset: 2 * self scalingFactor.
 	self color: Color transparent

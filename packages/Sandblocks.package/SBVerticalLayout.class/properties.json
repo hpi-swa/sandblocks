@@ -10,5 +10,5 @@
 	"name" : "SBVerticalLayout",
 	"pools" : [
 		 ],
-	"super" : "LayoutPolicy",
+	"super" : "SBLayoutPolicy",
 	"type" : "normal" }

@@ -10,5 +10,5 @@
 	"name" : "SBKeywordMessageLayout",
 	"pools" : [
 		 ],
-	"super" : "LayoutPolicy",
+	"super" : "SBLayoutPolicy",
 	"type" : "normal" }

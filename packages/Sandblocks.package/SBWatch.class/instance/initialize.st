@@ -4,8 +4,7 @@ initialize
 	super initialize.
 	
 	self
-		layoutPolicy: SBVerticalLayout new;
+		changeTableLayout;
 		cellInset: 4;
 		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap;
-		addMorphBack: (display := SBStringMorph new color: Color white; contents: '...')
+		hResizing: #shrinkWrap

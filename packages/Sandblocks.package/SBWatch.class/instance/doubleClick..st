@@ -1,4 +1,4 @@
 as yet unclassified
 doubleClick: anEvent
 
-	self owner replaceSubmorph: self by: self expression
+	self sandblockEditor do: (SBReplaceCommand new replacer: self expression; target: self)

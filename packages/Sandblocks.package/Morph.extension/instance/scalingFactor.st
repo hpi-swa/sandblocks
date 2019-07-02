@@ -1,4 +1,4 @@
-as yet unclassified
+*Sandblocks
 scalingFactor
 
 	^ (self fontToUse height / 16) ceiling
