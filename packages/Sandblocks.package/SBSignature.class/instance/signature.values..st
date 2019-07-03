@@ -2,7 +2,7 @@ as yet unclassified
 signature: aString values: aCollection
 
 	self removeAllMorphs.
-	(aString keywords ifEmpty: [#('')]) withIndexDo: [:keyword :index |
+	(self extractKeywords: aString) withIndexDo: [:keyword :index |
 		self addMorphBack: (self textMorphFor: keyword).
 		((keyword endsWith: ':') or: [keyword notEmpty & (keyword allSatisfy: #isSpecial)]) ifTrue: [
 			self addMorphBack: (aCollection at: index)]]

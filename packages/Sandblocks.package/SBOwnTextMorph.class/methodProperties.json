@@ -19,6 +19,8 @@
 		"handlesMouseDown:" : "tobe 6/29/2019 14:39",
 		"initialize" : "tobe 6/29/2019 16:16",
 		"insertCharacter:" : "tobe 6/29/2019 16:30",
+		"isCursorAtEnd" : "tobe 7/3/2019 08:03",
+		"isCursorAtStart" : "tobe 7/3/2019 08:03",
 		"keyStroke:" : "tobe 7/1/2019 10:52",
 		"keyboardFocusChange:" : "tobe 6/29/2019 12:47",
 		"minExtent" : "tobe 6/29/2019 16:40",
