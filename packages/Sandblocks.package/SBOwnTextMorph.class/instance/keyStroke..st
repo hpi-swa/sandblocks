@@ -13,6 +13,7 @@ keyStroke: anEvent
 		char = $h ifTrue: [^ self moveCursorTo: self cursor - 1].
 		char = $l ifTrue: [^ self moveCursorTo: self cursor + 1].
 		char = $a ifTrue: [^ self moveCursorTo: 1].
-		char = $e ifTrue: [^ self moveCursorTo: self contents size + 1]].
+		char = $e ifTrue: [^ self moveCursorTo: self contents size + 1].
+		char = $s ifTrue: [^ self contents: '']].
 	
 	self insertCharacter: char

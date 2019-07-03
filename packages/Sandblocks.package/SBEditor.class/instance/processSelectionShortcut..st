@@ -30,4 +30,6 @@ processSelectionShortcut: anEvent
 	char = $= ifTrue: [^ self extractVariable].
 	
 	anEvent commandKeyPressed ifTrue: [
+		char = $c ifTrue: [self copyString].
+		char = $v ifTrue: [self pasteString].
 		char = $w ifTrue: [^ self watchExpression: self selection]]

@@ -5,6 +5,6 @@ veryDeepCopyWith: deepCopier
 	| new |
 	new := super veryDeepCopyWith: deepCopier.
 	self receiver ifNil: [
-		self assert: self owner isCascade.
+		self assert: self isInCascade.
 		new receiver: self owner receiver veryDeepCopy].
 	^ new

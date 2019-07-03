@@ -6,4 +6,7 @@ keyStroke: anEvent
 	(anEvent keyCharacter isSpecial and: [currentInputMessagePart contents isEmpty])
 		ifTrue: [^ self setBinaryMessage: anEvent keyCharacter asString].
 	
+	(anEvent keyCharacter = $+ and: [anEvent controlKeyPressed] and: [self isKeyword]) ifTrue: [
+		^ self addMessagePart: ':' after: currentInputMessagePart submorphAfter focusKeyword: nil].
+	
 	currentInputMessagePart keyStroke: anEvent
