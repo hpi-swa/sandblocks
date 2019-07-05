@@ -4,7 +4,7 @@ drawSubmorphsOn: aCanvas
 	super drawSubmorphsOn: aCanvas.
 	
 	self selection ifNotNil: [
-		aCanvas frameRectangle: (self selection bounds expandBy: 2) width: 2 * self scalingFactor color: Color green].
+		aCanvas frameRectangle: (self selection bounds expandBy: 2) width: 3 * self scalingFactor color: self selection foregroundColor].
 	
 	self unsavedChanges ifTrue: [ | adornment |
 		adornment  := PluggableTextMorph adornmentWithColor: Color orange.

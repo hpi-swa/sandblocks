@@ -16,7 +16,8 @@
 		"modeLabel",
 		"unsavedChanges",
 		"selectionLabel",
-		"selectionDownHistory" ],
+		"selectionDownHistory",
+		"shortcuts" ],
 	"name" : "SBEditor",
 	"pools" : [
 		 ],

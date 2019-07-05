@@ -3,7 +3,7 @@ writeSourceOn: aStream
 
 	self isMethodBody ifFalse: [aStream nextPut: $[].
 	
-	bindings hasSubmorphs ifTrue: [
+	(bindings hasSubmorphs and: [self isMethodBody not]) ifTrue: [
 		bindings submorphsDo: [:m | aStream nextPut: $:. m writeSourceOn: aStream. aStream space].
 		aStream nextPut: $|; space].
 	

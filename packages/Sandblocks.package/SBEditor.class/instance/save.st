@@ -1,5 +1,4 @@
 actions
 save
 
-	self unsavedChanges: false.
-	self method save
+	self method save ifTrue: [self unsavedChanges: false]

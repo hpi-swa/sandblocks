@@ -3,4 +3,4 @@ initialize
 
 	super initialize.
 	
-	isBlockBinding := false
+	text emphasis: TextEmphasis underlined

@@ -3,5 +3,5 @@ prettySourceString
 
 	| text |
 	text := self sourceString.
-	self flag: #todo. "currently no support for partial methods " "Smalltalk at: #PPPPrinter ifPresent: [:p | text := p format: text]."
+	self flag: #todo. "currently no support for partial methods " Smalltalk at: #PPPPrinter ifPresent: [:p | text := p format: text].
 	^ text

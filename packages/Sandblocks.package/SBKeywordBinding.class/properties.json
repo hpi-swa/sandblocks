@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBKeywordBinding",
+	"pools" : [
+		 ],
+	"super" : "SBBinding",
+	"type" : "normal" }

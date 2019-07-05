@@ -8,7 +8,8 @@
 	"instvars" : [
 		"cursor",
 		"contents",
-		"emphasis" ],
+		"emphasis",
+		"suffix" ],
 	"name" : "SBOwnTextMorph",
 	"pools" : [
 		 ],

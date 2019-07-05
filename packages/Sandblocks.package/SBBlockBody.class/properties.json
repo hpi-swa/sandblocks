@@ -7,7 +7,8 @@
 	"commentStamp" : "",
 	"instvars" : [
 		"temporaries",
-		"bindings" ],
+		"bindings",
+		"pc" ],
 	"name" : "SBBlockBody",
 	"pools" : [
 		 ],

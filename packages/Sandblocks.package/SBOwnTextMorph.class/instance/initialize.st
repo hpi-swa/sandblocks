@@ -7,5 +7,6 @@ initialize
 	self extent: 0 @ 0.
 	
 	cursor := 0.
+	suffix := ''.
 	contents := ''.
 	emphasis := TextEmphasis normal

@@ -3,6 +3,9 @@ initialize
 
 	super initialize.
 	
+	unsavedChanges := false.
+	shortcuts := OrderedCollection new.
+	
 	self
 		layoutPolicy: SBVerticalLayout new;
 		vResizing: #shrinkWrap;

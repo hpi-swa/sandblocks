@@ -1,10 +1,7 @@
 as yet unclassified
 binding: aBlock value: anotherBlock
 
-	binding := aBlock.
-	value  := anotherBlock.
-	
 	self removeAllMorphs.
-	self addMorphBack: binding.
+	self addMorphBack: aBlock.
 	self addMorphBack: (SBStringMorph new contents: ':=').
-	self addMorphBack: value
+	self addMorphBack: anotherBlock

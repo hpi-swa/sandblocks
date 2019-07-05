@@ -2,7 +2,7 @@ converting
 writeSourceOn: aStream
 
 	aStream nextPut: $(.
-	binding writeSourceOn: aStream.
+	self submorphs first writeSourceOn: aStream.
 	aStream nextPutAll: ' := '.
-	value writeSourceOn: aStream.
+	self submorphs third writeSourceOn: aStream.
 	aStream nextPut: $)

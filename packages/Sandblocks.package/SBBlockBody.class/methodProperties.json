@@ -3,15 +3,20 @@
 		 },
 	"instance" : {
 		"addTemporaryCommand:" : "tobe 7/2/2019 09:33",
+		"bindingFor:ifPresent:" : "tobe 7/3/2019 14:31",
 		"bindings:" : "tobe 6/28/2019 17:59",
 		"childSandblocks" : "tobe 7/1/2019 10:09",
 		"color" : "tobe 6/26/2019 20:24",
+		"declareTemporaryVariable:" : "tobe 7/5/2019 08:30",
+		"declareTemporaryVariableCommand:" : "tobe 7/5/2019 08:17",
 		"initialize" : "tobe 7/2/2019 22:56",
 		"isBlockBody" : "tobe 7/2/2019 09:12",
 		"isExpression" : "tobe 7/3/2019 08:18",
 		"isMethodBody" : "tobe 6/28/2019 17:18",
+		"pc" : "tobe 7/3/2019 22:17",
+		"pc:" : "tobe 7/3/2019 22:17",
 		"printOn:" : "tobe 6/30/2019 13:32",
 		"statementCount" : "tobe 7/2/2019 22:07",
 		"statements:" : "tobe 6/28/2019 17:18",
 		"temporaries:" : "tobe 6/28/2019 17:21",
-		"writeSourceOn:" : "tobe 6/28/2019 21:22" } }
+		"writeSourceOn:" : "tobe 7/4/2019 10:01" } }

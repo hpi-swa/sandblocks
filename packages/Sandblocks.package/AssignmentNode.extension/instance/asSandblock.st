@@ -1,4 +1,8 @@
 *Sandblocks
 asSandblock
 
-	^ SBAssignment new binding: self variable asSandblock value: self value asSandblock
+	^ SBAssignment new
+		binding: self variable asDeclarationSandblock
+		value: self value asSandblock;
+		pc: self pc;
+		yourself

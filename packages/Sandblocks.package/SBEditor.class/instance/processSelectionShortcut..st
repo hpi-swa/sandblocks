@@ -25,6 +25,7 @@ processSelectionShortcut: anEvent
 	char = $p ifTrue: [^ self pasteStatementAboveOrBelow: false].
 	char = $P ifTrue: [^ self pasteStatementAboveOrBelow: true].
 	char = $: ifTrue: [^ self wrapInAssignment].
+	char = $^ ifTrue: [^ self wrapInReturn].
 	char = ${ ifTrue: [^ self wrapInArrayType: #dynamic].
 	char = $# ifTrue: [^ self wrapInArrayType: #literal].
 	char = $= ifTrue: [^ self extractVariable].

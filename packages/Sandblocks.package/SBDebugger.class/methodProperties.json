@@ -1,0 +1,17 @@
+{
+	"class" : {
+		"example" : "tobe 7/4/2019 07:59" },
+	"instance" : {
+		"context:" : "tobe 7/4/2019 09:10",
+		"currentBlockForPC" : "tobe 7/4/2019 07:27",
+		"drawSubmorphsOn:" : "tobe 7/4/2019 07:37",
+		"initialize" : "tobe 7/4/2019 08:01",
+		"interruptedContext" : "tobe 7/4/2019 07:48",
+		"process:context:" : "tobe 7/4/2019 07:53",
+		"restart" : "tobe 7/4/2019 07:15",
+		"send" : "tobe 7/4/2019 07:51",
+		"shortcut:label:" : "tobe 7/3/2019 22:25",
+		"stepOver" : "tobe 7/4/2019 07:55",
+		"stepThrough" : "tobe 7/3/2019 22:28",
+		"updateTempVariableValues" : "tobe 7/4/2019 07:57",
+		"where" : "tobe 7/4/2019 07:35" } }

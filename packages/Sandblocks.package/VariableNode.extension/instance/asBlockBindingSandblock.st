@@ -1,4 +1,4 @@
 *Sandblocks
 asBlockBindingSandblock
 
-	^ SBBinding new name: self name; isBlockBinding: true; yourself
+	^ SBDeclarationForBlock new name: self name; yourself
