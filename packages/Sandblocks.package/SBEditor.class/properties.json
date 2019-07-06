@@ -17,7 +17,8 @@
 		"unsavedChanges",
 		"selectionLabel",
 		"selectionDownHistory",
-		"shortcuts" ],
+		"shortcuts",
+		"saveAction" ],
 	"name" : "SBEditor",
 	"pools" : [
 		 ],

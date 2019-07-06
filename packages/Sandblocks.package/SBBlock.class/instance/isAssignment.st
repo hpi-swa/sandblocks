@@ -1,4 +1,4 @@
 as yet unclassified
-isExpression
+isAssignment
 
-	^ true
+	^ false

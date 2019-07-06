@@ -8,7 +8,7 @@ extractVariable
 	
 	self do: (SBCombinedCommand new
 		commands: {
-			block addTemporaryCommand: name.
+			block declareTemporaryVariableCommand: name.
 			SBReplaceCommand new target: self selection; replacer: var.
 			SBInsertCommand new container: block; index: 3; morph: self selection.
 			SBWrapCommand new inner: self selection; outer: SBAssignment new; wrap: [:outer :inner | outer binding: var veryDeepCopy value: inner].

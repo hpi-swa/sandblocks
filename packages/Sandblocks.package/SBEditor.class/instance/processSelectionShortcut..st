@@ -29,6 +29,7 @@ processSelectionShortcut: anEvent
 	char = ${ ifTrue: [^ self wrapInArrayType: #dynamic].
 	char = $# ifTrue: [^ self wrapInArrayType: #literal].
 	char = $= ifTrue: [^ self extractVariable].
+	char = $> ifTrue: [^ self extractMethod].
 	
 	anEvent commandKeyPressed ifTrue: [
 		char = $c ifTrue: [self copyString].

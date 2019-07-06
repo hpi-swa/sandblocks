@@ -1,4 +1,6 @@
 actions
 save
 
-	self method save ifTrue: [self unsavedChanges: false]
+	saveAction
+		ifNotNil: [saveAction value]
+		ifNil: [self method save ifTrue: [self unsavedChanges: false]]

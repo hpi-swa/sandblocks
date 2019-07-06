@@ -6,9 +6,10 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		 ],
-	"name" : "SBBinding",
+		"editor",
+		"cancelled" ],
+	"name" : "SBRequestSelector",
 	"pools" : [
 		 ],
-	"super" : "SBName",
+	"super" : "SBBlock",
 	"type" : "normal" }
