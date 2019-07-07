@@ -23,6 +23,9 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $w do: #watchSelection;
 		addSingleSelectionShortcut: $r do: #replaceWithCopyBuffer;
 		addSingleSelectionShortcut: $c do: #changeSelection;
+		addSingleSelectionShortcut: $n command do: #sendersOfIt;
+		addSingleSelectionShortcut: $m command do: #implementorsOfIt;
+		addSingleSelectionShortcut: $b command do: #browseSelection;
 		
 		addMultiSelectionShortcut: Character escape do: #endMultiSelection;
 		addMultiSelectionShortcut: $l do: #selectNext;
@@ -60,4 +63,9 @@ addDefaultShortcuts
 		addInputShortcut: $x command do: [:editor | editor textMorph clear];
 		addInputShortcut: $j command do: [:editor | editor currentInput nextSuggestion];
 		addInputShortcut: $k command do: [:editor | editor currentInput previousSuggestion];
-		addInputShortcut: Character cr do: [:editor | editor currentInput useSuggestion]
+		addInputShortcut: Character cr do: [:editor | editor currentInput useSuggestion];
+		addInputShortcut: $1 command do: [:editor | editor endInputWith: self method arguments first contents];
+		addInputShortcut: $2 command do: [:editor | editor endInputWith: self method arguments second contents];
+		addInputShortcut: $3 command do: [:editor | editor endInputWith: self method arguments third contents];
+		addInputShortcut: $4 command do: [:editor | editor endInputWith: self method arguments fourth contents];
+		addInputShortcut: $5 command do: [:editor | editor endInputWith: self method arguments fifth contents]
