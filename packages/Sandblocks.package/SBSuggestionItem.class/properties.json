@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"selector",
+		"active" ],
+	"name" : "SBSuggestionItem",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }

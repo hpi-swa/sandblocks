@@ -10,11 +10,11 @@ initialize
 		addMorphBack: (editor := SBEditor new
 			vResizing: #spaceFill;
 			hResizing: #spaceFill;
-			addShortcut: [:event | event keyCharacter = $q and: [event commandKeyPressed]] do: [self send];
-			addShortcut: [:event | event keyCharacter = $w and: [event commandKeyPressed]] do: [self stepThrough];
-			addShortcut: [:event | event keyCharacter = $e and: [event commandKeyPressed]] do: [self stepOver];
-			addShortcut: [:event | event keyCharacter = $r and: [event commandKeyPressed]] do: [self restart];
-			addShortcut: [:event | event keyCharacter = $a and: [event commandKeyPressed]] do: [self where]);
+			addCommandShortcut: $q command do: [self send];
+			addCommandShortcut: $w command do: [self stepThrough];
+			addCommandShortcut: $e command do: [self stepOver];
+			addCommandShortcut: $r command do: [self restart];
+			addCommandShortcut: $a command do: [self where]);
 		changeTableLayout;
 		addMorphBack: (SBRow new
 			changeTableLayout;

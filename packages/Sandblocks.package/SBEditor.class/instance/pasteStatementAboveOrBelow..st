@@ -9,6 +9,5 @@ pasteStatementAboveOrBelow: anAboveBoolean
 		index: (anAboveBoolean
 			ifTrue: [index] ifFalse: [index + 1]);
 		container: currentStatement owner;
-		morph: copyBuffer veryDeepCopy;
-		shouldMergeWithNext: true;
+		morph: (copyBuffer isSelection ifTrue: [copyBuffer firstSubmorph] ifFalse: [copyBuffer]) veryDeepCopy;
 		yourself)

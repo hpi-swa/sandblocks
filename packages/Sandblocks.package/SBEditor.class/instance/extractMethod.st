@@ -1,12 +1,25 @@
 actions
 extractMethod
 
-	| selector localBindings |
-	selector := (SBRequestSelector openForSnippet: self selection) ifNil: [^ self].
-	localBindings := self selection resolveLocalBindings.
-	self do: (SBReplaceCommand new
-		target: self selection;
-		replacer: (SBMessageSend new
-			receiver: (SBKeywordBinding new name: 'self')
-			selector: selector
-			arguments: localBindings veryDeepCopy))
+	| localBindings selectorAndArguments |
+	self multiSelectionIsConsecutive ifFalse: [^ self].
+	self doMultiSelection: [:extracting |
+		selectorAndArguments := (SBRequestSelector openForSnippet: extracting) ifNil: [^ self].
+		
+		localBindings := extracting gather: #resolveLocalBindings.
+		localBindings := ((KeyedSet keyBlock: #name) addAll: localBindings; yourself) asArray.
+		
+		SBEditor new
+			method: (SBMethod new
+				selector: selectorAndArguments first
+				arguments: selectorAndArguments second veryDeepCopy
+				class: self method methodClass;
+				body: (SBBlockBody new statements: extracting veryDeepCopy));
+			openInWindow.
+		
+		SBReplaceConsecutiveCommand new
+			targets: extracting;
+			replacer: (SBMessageSend new
+				receiver: (SBKeywordBinding new name: 'self')
+				selector: selectorAndArguments first
+				arguments: localBindings veryDeepCopy)]

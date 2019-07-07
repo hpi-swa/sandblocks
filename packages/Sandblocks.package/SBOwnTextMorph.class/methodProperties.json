@@ -2,6 +2,7 @@
 	"class" : {
 		 },
 	"instance" : {
+		"clear" : "tobe 7/7/2019 11:18",
 		"color" : "tobe 6/30/2019 12:03",
 		"contents" : "tobe 6/29/2019 12:16",
 		"contents:" : "tobe 6/29/2019 18:26",
@@ -26,6 +27,7 @@
 		"keyboardFocusChange:" : "tobe 6/29/2019 12:47",
 		"minExtent" : "tobe 6/29/2019 16:40",
 		"mouseDown:" : "tobe 6/29/2019 12:34",
+		"moveCursor:" : "tobe 7/7/2019 11:16",
 		"moveCursorTo:" : "tobe 6/29/2019 12:41",
 		"stopEditing" : "tobe 6/29/2019 18:26",
 		"suffix" : "tobe 7/3/2019 09:32",

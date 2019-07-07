@@ -1,7 +1,9 @@
 as yet unclassified
-setCopyBuffer: aMorph
+setCopyBuffer: aMorphOrCollection
 
 	| form |
-	copyBuffer := aMorph veryDeepCopy.
-	form := aMorph imageForm.
+	copyBuffer := SBSelection new.
+	(aMorphOrCollection isCollection ifTrue: [aMorphOrCollection] ifFalse: [{aMorphOrCollection}])
+		do: [:m | copyBuffer addMorphBack: m veryDeepCopy].
+	form := copyBuffer imageForm.
 	copyBufferPreview image: ((form scaledIntoFormOfSize: (self copyBufferPreviewSize min: form extent)) collectColors: [:c | c alpha: c alpha * 0.7])

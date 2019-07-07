@@ -1,4 +1,4 @@
 as yet unclassified
 contents: aString
 
-	signature signature: aString
+	signature selector: aString

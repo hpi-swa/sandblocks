@@ -1,4 +1,4 @@
 accessing
 printOn: aStream
 
-	aStream nextPutAll: 'block binding '; nextPutAll: self contents
+	aStream nextPutAll: 'block declaration '; nextPutAll: self contents

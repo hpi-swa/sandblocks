@@ -1,0 +1,4 @@
+accessing
+currentTextMorph
+
+	^ signature currentTextMorph

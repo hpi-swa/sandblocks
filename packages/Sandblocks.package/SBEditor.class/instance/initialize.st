@@ -4,9 +4,15 @@ initialize
 	super initialize.
 	
 	unsavedChanges := false.
-	shortcuts := OrderedCollection new.
+	singleSelectionShortcuts := OrderedCollection new.
+	multiSelectionShortcuts := OrderedCollection new.
+	commandShortcuts := OrderedCollection new.
+	globalShortcuts := OrderedCollection new.
+	inputShortcuts := OrderedCollection new.
+	multiSelection := OrderedCollection new.
 	
 	self
+		addDefaultShortcuts;
 		layoutPolicy: SBVerticalLayout new;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
@@ -20,7 +26,7 @@ initialize
 		hResizing: #spaceFill;
 		listDirection: #leftToRight;
 		color: Color transparent;
-		addMorphBack: (modeLabel := StringMorph new emphasis: TextEmphasis bold emphasisCode; contents: 'NORMAL');
+		addMorphBack: (modeLabel := StringMorph new emphasis: TextEmphasis bold emphasisCode);
 		addMorphBack: (selectionLabel := StringMorph new contents: '');
 		addMorphBack: (Morph new extent: 0 @ 0; hResizing: #spaceFill; color: Color transparent);
 		addMorphBack: (copyBufferPreview := ImageMorph new image: (Form extent: self copyBufferPreviewSize))).

@@ -1,4 +1,4 @@
 as yet unclassified
 selector
 
-	^ cancelled ifTrue: [nil] ifFalse: [editor method selector]
+	^ editor method selector

@@ -3,7 +3,6 @@ endInput
 
 	currentInput ifNil: [^ self].
 	
-	modeLabel contents: 'NORMAL'.
 	currentInput stopEditing: currentInputCommand.
 	
 	currentInputCommand hasChange
@@ -12,3 +11,4 @@ endInput
 	
 	currentInput := nil.
 	currentInputCommand := nil.
+	self mode: #command

@@ -8,4 +8,4 @@ openForSnippet: aBlock
 	
 	[window world notNil] whileTrue: [window outermostWorldMorph doOneCycle].
 	
-	^ request selector
+	^ request cancelled ifTrue: [nil] ifFalse: [{request selector. request arguments}]

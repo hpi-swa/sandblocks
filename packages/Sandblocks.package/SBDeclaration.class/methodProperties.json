@@ -4,5 +4,6 @@
 	"instance" : {
 		"isDeclaration" : "tobe 7/3/2019 15:01",
 		"isExpression" : "tobe 7/3/2019 15:03",
+		"isMethodLocal" : "tobe 7/7/2019 14:02",
 		"printOn:" : "tobe 7/3/2019 15:08",
 		"validBinding" : "tobe 7/3/2019 15:05" } }

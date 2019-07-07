@@ -1,8 +1,9 @@
 actions
 deleteSelection
 
-	self setCopyBuffer: self selection.
+	self setCopyBuffer: self multiSelection.
 	
-	self do: (self selection == self selection containingStatement
-		ifTrue: [SBDeleteCommand new target: self selection]
-		ifFalse: [SBReplaceCommand target: self selection replacer: SBUnknown new])
+	self doMultiSelectionEach: [:selected |
+		selected == selected containingStatement
+			ifTrue: [SBDeleteCommand new target: selected]
+			ifFalse: [SBReplaceCommand target: selected replacer: SBUnknown new]]

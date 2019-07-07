@@ -7,5 +7,5 @@ startInput: aMorph at: aNumber replacingContents: aBoolean
 	(aMorph startInputAt: aNumber replacingContents: aBoolean)
 		ifNotNil: [:cmd |
 			currentInputCommand := cmd.
-			modeLabel contents: 'INSERT']
+			self mode: #input]
 		ifNil: [currentInput := nil]

@@ -10,5 +10,13 @@ keyStroke: anEvent
 	char = Character space ifTrue: [^ self doReplaceBy: (SBMessageSend new receiver: self selector: #'' arguments: #())].
 	char = ${ ifTrue: [^ self doReplaceBy: (SBArray new type: #dynamic contents: {self})].
 	char = $# ifTrue: [^ self doReplaceBy: (SBSymbol new contents: '')].
-	char = $[ ifTrue: [^ self doReplaceBy: (SBBlockBody new statements: {self})].
-	char = $: ifTrue: [^ self doReplaceBy: (SBAssignment new binding: (SBBinding new name: '') value: SBUnknown new)]
+	
+	char = $[ ifTrue: [ 
+		self sandblockEditor
+			endInput;
+			do: (SBWrapCommand new
+				inner: self;
+				outer: SBBlockBody new;
+				shouldMergeWithNext: true;
+				wrap: [:outer :inner | outer statements: {inner}]);
+			startInput: self at: 0 replacingContents: false]

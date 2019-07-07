@@ -1,5 +1,5 @@
 as yet unclassified
 printOn: aStream
 
-	aStream nextPutAll: 'binding '.
+	aStream nextPutAll: 'name '.
 	aStream nextPutAll: self contents

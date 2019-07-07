@@ -1,4 +1,4 @@
 as yet unclassified
 selector: aSymbol arguments: aCollection
 
-	signature signature: aSymbol values: aCollection
+	signature selector: aSymbol arguments: aCollection

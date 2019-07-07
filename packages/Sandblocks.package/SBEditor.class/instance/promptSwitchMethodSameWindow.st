@@ -1,0 +1,4 @@
+actions
+promptSwitchMethodSameWindow
+
+	self promptSwitchMethodNewWindow: false

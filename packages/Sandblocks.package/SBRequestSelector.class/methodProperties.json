@@ -1,9 +1,10 @@
 {
 	"class" : {
-		"openForSnippet:" : "tobe 7/6/2019 08:11" },
+		"openForSnippet:" : "tobe 7/7/2019 13:52" },
 	"instance" : {
+		"arguments" : "tobe 7/6/2019 08:24",
 		"cancelled" : "tobe 7/6/2019 08:10",
 		"color" : "tobe 7/5/2019 09:50",
 		"initialize" : "tobe 7/6/2019 08:10",
-		"selector" : "tobe 7/6/2019 08:12",
-		"setForSnippet:" : "tobe 7/6/2019 07:44" } }
+		"selector" : "tobe 7/7/2019 13:52",
+		"setForSnippet:" : "tobe 7/7/2019 14:10" } }

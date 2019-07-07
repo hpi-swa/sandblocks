@@ -1,12 +1,13 @@
 as yet unclassified
-setForSnippet: aBlock
+setForSnippet: aCollectionOfBlocks
 
 	| arguments |
-	arguments := aBlock resolveLocalBindings.
+	arguments := aCollectionOfBlocks gather: #resolveLocalBindings.
+	arguments := ((KeyedSet keyBlock: #name) addAll: arguments; yourself) asArray.
 	
 	editor method: (SBMethod new
-		signature: (arguments collect: [:arg | ':']) join
-		values: (arguments collect: [:arg | SBDeclaration new name: arg contents])
-		class: aBlock containingMethod methodClass).
-		
+		selector: (arguments collect: [:arg | ':']) join
+		arguments: (arguments collect: [:arg | SBDeclaration new name: arg contents])
+		class: aCollectionOfBlocks first containingMethod methodClass).
+	
 	editor startInput: editor method at: 1 replacingContents: true

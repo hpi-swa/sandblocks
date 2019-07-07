@@ -1,5 +1,5 @@
 as yet unclassified
 receiver: aBlock selector: aSymbol arguments: aCollection
 
-	signature signature: aSymbol values: aCollection.
+	signature selector: aSymbol arguments: aCollection.
 	self receiver: aBlock
