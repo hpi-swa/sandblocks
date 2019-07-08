@@ -10,5 +10,5 @@ completionSuggestionsFor: aString
 						baseClass withAllSuperclassesDo: [:class |
 							class methodsDo: [:m | | sel |
 								sel := m selector asString.
-								(sel beginsWith: aString) ifTrue: [stream nextPut: sel]]]]]]
+								(sel sandblockMatch: aString) ifTrue: [stream nextPut: sel]]]]]]
 		ifNil: [super completionSuggestionsFor: aString]

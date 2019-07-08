@@ -2,7 +2,7 @@ actions
 extractVariable
 
 	| name var block |
-	name := (UIManager default request: 'Name for variable?') ifNil: [^ self].
+	name := (UIManager default request: 'Name for variable?') ifEmpty: [^ self].
 	var := SBBinding new name: name.
 	block := self selection containingBlock.
 	

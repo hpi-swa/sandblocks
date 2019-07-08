@@ -3,7 +3,7 @@ bindingFor: aString ifPresent: aBlock
 
 	signature submorphs detect: [:s | s contents = aString] ifFound: [:s | ^ aBlock value: s] ifNone: [].
 	
-	self methodClass instVarNames detect: [:name | name = aString] ifFound: [:name | ^ aBlock value: (SBDeclarationForInstanceVariable new contents: name; definingClass: self methodClass)] ifNone: [].
+	self instanceVariables detect: [:inst | inst contents = aString] ifFound: [:inst | ^ aBlock value: inst] ifNone: [].
 	
 	Symbol hasInterned: aString ifTrue: [:sym | | binding |
 		binding := self methodClass bindingOf: sym environment: self methodClass environment.

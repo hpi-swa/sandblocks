@@ -3,7 +3,7 @@
 		 },
 	"instance" : {
 		"arguments" : "tobe 7/6/2019 08:24",
-		"bindingFor:ifPresent:" : "tobe 7/7/2019 22:48",
+		"bindingFor:ifPresent:" : "tobe 7/8/2019 17:17",
 		"blockForPC:" : "tobe 7/3/2019 21:39",
 		"blocksForVariableNamed:do:" : "tobe 7/4/2019 07:56",
 		"body" : "tobe 7/5/2019 08:13",
@@ -14,6 +14,7 @@
 		"currentTextMorph" : "tobe 7/7/2019 11:33",
 		"declareTemporary:" : "tobe 7/5/2019 16:16",
 		"initialize" : "tobe 6/30/2019 22:25",
+		"instanceVariables" : "tobe 7/8/2019 17:17",
 		"isMethod" : "tobe 7/3/2019 14:22",
 		"keyStroke:" : "tobe 7/5/2019 16:37",
 		"methodClass" : "tobe 6/28/2019 21:16",

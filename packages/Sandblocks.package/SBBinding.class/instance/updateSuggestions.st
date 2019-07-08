@@ -6,6 +6,6 @@ updateSuggestions
 		ifEmpty: [#()]
 		ifNotEmpty: [:text |
 			text first isUppercase
-				ifTrue: [Smalltalk classNames select: [:cls | cls beginsWith: text]]
-				ifFalse: [#()]].
+				ifTrue: [self uppercaseSuggestions]
+				ifFalse: [self lowercaseSuggestions]].
 	self updateSuggestions: suggestions showNear: self
