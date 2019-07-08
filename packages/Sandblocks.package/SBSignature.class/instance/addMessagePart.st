@@ -5,9 +5,9 @@ addMessagePart
 		currentInputMessagePart contents: currentInputMessagePart contents, $:.
 		^ self addArgumentAndEditAfter: currentInputMessagePart focusKeyword: nil].
 	
-	(self isKeyword and: [(currentInputMessagePart contents occurrencesOf: $:) > 1]) ifTrue: [ | msg | 
+	(self isKeyword and: [(currentInputMessagePart contents occurrencesOf: $:) > 0]) ifTrue: [ | msg | 
 		msg := currentInputMessagePart contentsBeforeCursor.
-		msg last ~= $: ifTrue: [msg := msg, $:].
+		(msg isEmpty or: [msg last] ~= $:) ifTrue: [msg := msg, $:].
 		currentInputMessagePart contents: (currentInputMessagePart contentsAfterCursor withFirstCharacterDownshifted ifEmpty: [':']).
 		^ self
 			addMessagePart: msg

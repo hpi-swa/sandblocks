@@ -1,4 +1,4 @@
-as yet unclassified
+testing
 isSelected
 
 	^ self sandblockEditor selection = self

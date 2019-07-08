@@ -1,14 +1,7 @@
 as yet unclassified
 updateSuggestions
 
-	| suggestions |
-	suggestionMenu ifNil: [
-		suggestionMenu := SBSuggestionMenu new
-			editor: self sandblockEditor;
-			openInWorld;
-			topLeft: signature bottomLeft].
-	
-	suggestions := self receiver completionSuggestionsFor: signature selector.
-	suggestionMenu suggestions: (suggestions first: (20 min: suggestions size)).
-	
-	suggestionMenu resize
+	| selector |
+	self flag: #fixme. " we assume that the user is typing in the first cell and may want to override an existing message "
+	selector := (signature selector splitBy: ':') first.
+	self updateSuggestions: (self receiver completionSuggestionsFor: selector) showNear: signature

@@ -41,6 +41,7 @@ addDefaultShortcuts
 		addMultiSelectionShortcut: $# do: #wrapInLiteralArray;
 		addMultiSelectionShortcut: $v do: #startOrAddToMultiSelection;
 		addMultiSelectionShortcut: $> do: #extractMethod;
+		addMultiSelectionShortcut: $; do: #wrapInCascade;
 		
 		addCommandShortcut: $u do: #undo;
 		addCommandShortcut: $U do: #redo;
@@ -61,8 +62,8 @@ addDefaultShortcuts
 		addInputShortcut: $a command do: [:editor | editor textMorph moveCursorTo: 1];
 		addInputShortcut: $e command do: [:editor | editor textMorph moveCursorTo: 9e8];
 		addInputShortcut: $x command do: [:editor | editor textMorph clear];
-		addInputShortcut: $j command do: [:editor | editor currentInput nextSuggestion];
-		addInputShortcut: $k command do: [:editor | editor currentInput previousSuggestion];
+		addInputShortcut: $j command do: [:editor | editor currentInput suggestionMenuDo: #next];
+		addInputShortcut: $k command do: [:editor | editor currentInput suggestionMenuDo: #previous];
 		addInputShortcut: Character cr do: [:editor | editor currentInput useSuggestion];
 		addInputShortcut: $1 command do: [:editor | editor endInputWith: self method arguments first contents];
 		addInputShortcut: $2 command do: [:editor | editor endInputWith: self method arguments second contents];

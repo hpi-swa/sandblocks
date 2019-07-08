@@ -3,8 +3,11 @@
 		 },
 	"instance" : {
 		"browse" : "tobe 7/7/2019 22:47",
+		"completionSuggestionsFor:" : "tobe 7/8/2019 08:08",
 		"fixActions" : "tobe 7/5/2019 16:15",
 		"isBinding" : "tobe 7/5/2019 16:15",
 		"isExpression" : "tobe 7/5/2019 16:34",
 		"isLeftHandSideOfAssignment" : "tobe 7/5/2019 16:23",
-		"printOn:" : "tobe 7/6/2019 12:14" } }
+		"keyStroke:" : "tobe 7/8/2019 07:58",
+		"printOn:" : "tobe 7/6/2019 12:14",
+		"updateSuggestions" : "tobe 7/8/2019 08:01" } }

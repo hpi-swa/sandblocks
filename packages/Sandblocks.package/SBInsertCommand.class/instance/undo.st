@@ -3,6 +3,6 @@ undo
 
 	index := container submorphIndexOf: morph.
 	container removeMorph: morph.
-	^ (container hasSubmorphs and: [index notNil])
-		ifTrue: [container submorphs at: (index clampLow: 1 high: container submorphCount)]
+	^ (container childSandblocks notEmpty and: [index notNil])
+		ifTrue: [container childSandblocks at: (index clampLow: 1 high: container childSandblocks size)]
 		ifFalse: [nil]

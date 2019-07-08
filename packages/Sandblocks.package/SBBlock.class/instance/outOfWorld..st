@@ -3,4 +3,4 @@ outOfWorld: aWorld
 
 	super outOfWorld: aWorld.
 	
-	suggestionMenu ifNotNil: #delete
+	self removeSuggestionMenu

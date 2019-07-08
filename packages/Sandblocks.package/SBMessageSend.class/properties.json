@@ -7,8 +7,7 @@
 	"commentStamp" : "",
 	"instvars" : [
 		"signature",
-		"pc",
-		"suggestionMenu" ],
+		"pc" ],
 	"name" : "SBMessageSend",
 	"pools" : [
 		 ],

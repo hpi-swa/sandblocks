@@ -1,4 +1,5 @@
 as yet unclassified
 stopEditing
 
-	text stopEditing
+	text stopEditing.
+	self removeSuggestionMenu
