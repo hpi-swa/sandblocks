@@ -1,4 +1,4 @@
 as yet unclassified
 isReserved
 
-	^ ClassBuilder new reservedNames includes: self name
+	^ ClassBuilder new reservedNames includes: self contents

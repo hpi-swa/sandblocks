@@ -24,7 +24,9 @@
 		"globalShortcuts",
 		"commandShortcuts",
 		"singleSelectionShortcuts",
-		"multiSelectionShortcuts" ],
+		"multiSelectionShortcuts",
+		"scroll",
+		"methodContainer" ],
 	"name" : "SBEditor",
 	"pools" : [
 		 ],

@@ -12,22 +12,32 @@ initialize
 	multiSelection := OrderedCollection new.
 	
 	self
+		addKeyboardCaptureFilter: self;
 		addDefaultShortcuts;
-		layoutPolicy: SBVerticalLayout new;
+		
+		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		listDirection: #topToBottom.
+		listDirection: #topToBottom;
+		
+		addMorphBack: (scroll := SBScrollPane new
+			showHScrollBarOnlyWhenNeeded;
+			hResizing: #spaceFill;
+			vResizing: #spaceFill;
+			yourself);
+		
+		addMorphBack: (Morph new
+			changeTableLayout;
+			vResizing: #rigid;
+			cellInset: 8 * self scalingFactor;
+			extent: 0 @ self copyBufferPreviewSize y;
+			hResizing: #spaceFill;
+			listDirection: #leftToRight;
+			color: Color transparent;
+			addMorphBack: (modeLabel := StringMorph new emphasis: TextEmphasis bold emphasisCode);
+			addMorphBack: (selectionLabel := StringMorph new contents: '');
+			addMorphBack: (Morph new extent: 0 @ 0; hResizing: #spaceFill; color: Color transparent);
+			addMorphBack: (copyBufferPreview := ImageMorph new image: (Form extent: self copyBufferPreviewSize));
+			yourself).
 	
-	self addMorph: (Morph new
-		changeTableLayout;
-		vResizing: #rigid;
-		cellInset: 8 * self scalingFactor;
-		extent: 0 @ self copyBufferPreviewSize y;
-		hResizing: #spaceFill;
-		listDirection: #leftToRight;
-		color: Color transparent;
-		addMorphBack: (modeLabel := StringMorph new emphasis: TextEmphasis bold emphasisCode);
-		addMorphBack: (selectionLabel := StringMorph new contents: '');
-		addMorphBack: (Morph new extent: 0 @ 0; hResizing: #spaceFill; color: Color transparent);
-		addMorphBack: (copyBufferPreview := ImageMorph new image: (Form extent: self copyBufferPreviewSize))).
-	self addKeyboardCaptureFilter: self
+	scroll scroller addMorphBack: (methodContainer := SBMethodContainer new editor: self)

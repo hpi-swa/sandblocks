@@ -10,6 +10,7 @@ internalSelect: aBlock
 		ifNotNil: [
 			selection := aBlock.
 			previousSelection ifNotNil: #changed.
-			selection changed].
-	self changed.
+			selection changed.
+			scroll scrollToShow: selection bounds].
+	methodContainer changed.
 	self updateSelectionLabel
