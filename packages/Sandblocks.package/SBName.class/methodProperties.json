@@ -2,14 +2,17 @@
 	"class" : {
 		"new" : "tobe 7/5/2019 16:26" },
 	"instance" : {
+		"assureClass:" : "tobe 7/9/2019 09:30",
 		"isBlockBinding" : "tobe 7/3/2019 15:02",
 		"isDeclaration" : "tobe 7/3/2019 15:02",
 		"isExpression" : "tobe 7/5/2019 16:33",
 		"isLiteral" : "tobe 7/2/2019 09:51",
 		"isMethodArgument" : "tobe 7/7/2019 13:58",
 		"isName" : "tobe 7/5/2019 16:14",
+		"isReserved" : "tobe 7/9/2019 09:30",
 		"isTemporaryVariable" : "tobe 7/5/2019 09:44",
 		"name:" : "tobe 6/29/2019 18:57",
+		"noteNewOwner:" : "tobe 7/9/2019 09:52",
 		"printOn:" : "tobe 7/6/2019 12:14",
 		"resolveBinding" : "tobe 7/3/2019 14:18",
 		"valid" : "tobe 7/3/2019 14:23",

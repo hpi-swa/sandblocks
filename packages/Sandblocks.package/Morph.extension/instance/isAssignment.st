@@ -1,0 +1,4 @@
+*Sandblocks
+isAssignment
+
+	^ false

@@ -3,17 +3,7 @@ initialize
 
 	super initialize.
 	
-	bindings := Morph new
-		color: Color transparent;
-		layoutPolicy: SBHorizontalLayout new;
-		listDirection: #leftToRight;
-		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap;
-		layoutInset: 2 * self scalingFactor;
-		cellInset: 2 * self scalingFactor;
-		extent: 0 @ 0;
-		yourself.
-	
+	bindings := SBBlockBindings new.
 	temporaries := SBTemporaries new.
 	
 	self

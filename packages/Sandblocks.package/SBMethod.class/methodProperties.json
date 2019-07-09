@@ -2,6 +2,7 @@
 	"class" : {
 		 },
 	"instance" : {
+		"addCommandRequest" : "tobe 7/9/2019 09:49",
 		"arguments" : "tobe 7/6/2019 08:24",
 		"bindingFor:ifPresent:" : "tobe 7/8/2019 17:17",
 		"blockForPC:" : "tobe 7/3/2019 21:39",
@@ -9,14 +10,14 @@
 		"body" : "tobe 7/5/2019 08:13",
 		"body:" : "tobe 6/28/2019 17:00",
 		"browse" : "tobe 7/7/2019 23:35",
-		"childSandblocks" : "tobe 7/1/2019 09:52",
+		"childSandblocks" : "tobe 7/9/2019 09:46",
 		"containingMethod" : "tobe 7/3/2019 14:31",
 		"currentTextMorph" : "tobe 7/7/2019 11:33",
 		"declareTemporary:" : "tobe 7/5/2019 16:16",
 		"initialize" : "tobe 6/30/2019 22:25",
-		"instanceVariables" : "tobe 7/8/2019 17:17",
+		"instanceVariables" : "tobe 7/8/2019 17:52",
 		"isMethod" : "tobe 7/3/2019 14:22",
-		"keyStroke:" : "tobe 7/5/2019 16:37",
+		"keyStroke:" : "tobe 7/9/2019 09:48",
 		"methodClass" : "tobe 6/28/2019 21:16",
 		"parentSandblock" : "tobe 7/1/2019 09:54",
 		"printOn:" : "tobe 6/30/2019 13:31",
@@ -27,5 +28,5 @@
 		"selector:arguments:class:" : "tobe 7/6/2019 08:52",
 		"startInputAt:replacingContents:" : "tobe 7/5/2019 16:36",
 		"stopEditing:" : "tobe 7/5/2019 16:37",
-		"tryFix:ifFail:" : "tobe 7/5/2019 07:56",
+		"tryFix:ifFail:" : "tobe 7/8/2019 17:57",
 		"writeSourceOn:" : "tobe 6/28/2019 17:15" } }

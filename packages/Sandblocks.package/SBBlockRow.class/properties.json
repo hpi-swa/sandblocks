@@ -7,8 +7,8 @@
 	"commentStamp" : "",
 	"instvars" : [
 		 ],
-	"name" : "SBTemporaries",
+	"name" : "SBBlockRow",
 	"pools" : [
 		 ],
-	"super" : "SBBlockRow",
+	"super" : "Morph",
 	"type" : "normal" }
