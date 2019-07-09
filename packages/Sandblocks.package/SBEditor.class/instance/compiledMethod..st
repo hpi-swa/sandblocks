@@ -6,5 +6,4 @@ compiledMethod: aMethod
 	" fill out pc "
 	"methodNode generateWithTempNames."
 	
-	self method: methodNode asSandblock.
-	(self ownerThatIsA: SystemWindow) ifNotNil: [:w | w extent: 0 @ 0]
+	self method: methodNode asSandblock

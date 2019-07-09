@@ -2,6 +2,8 @@ actions
 wrapInMessageSend: aString
 
 	| msg |
+	self selection isExpression ifFalse: [^ self].
+	
 	msg := SBMessageSend new.
 	self do: (SBWrapCommand new
 		outer: msg;

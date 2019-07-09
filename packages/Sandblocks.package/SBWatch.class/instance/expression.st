@@ -1,4 +1,4 @@
 as yet unclassified
 expression
 
-	^ expression
+	^ self firstSubmorph

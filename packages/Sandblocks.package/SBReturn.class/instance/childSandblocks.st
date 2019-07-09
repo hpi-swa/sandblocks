@@ -1,4 +1,4 @@
 formatting
 childSandblocks
 
-	^ {self submorphs second}
+	^ self hasSubmorphs ifTrue: [{self firstSubmorph}] ifFalse: [#()]

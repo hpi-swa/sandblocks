@@ -1,4 +1,4 @@
 as yet unclassified
 childSandblocks
 
-	^ {self expression}
+	^ self hasSubmorphs ifTrue: [{self expression}] ifFalse: [#()]

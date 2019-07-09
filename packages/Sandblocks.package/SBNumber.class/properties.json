@@ -6,7 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		 ],
+		"isDown",
+		"lastMousePosition",
+		"oldCursor" ],
 	"name" : "SBNumber",
 	"pools" : [
 		 ],

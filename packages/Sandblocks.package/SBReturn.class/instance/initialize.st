@@ -6,5 +6,4 @@ initialize
 	self
 		layoutPolicy: SBHorizontalLayout new;
 		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap;
-		addMorphBack: (SBStringMorph new contents: '^ ')
+		hResizing: #shrinkWrap

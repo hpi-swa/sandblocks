@@ -1,0 +1,16 @@
+{
+	"category" : "Sandblocks",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"icon",
+		"lastError",
+		"errorIndicator" ],
+	"name" : "SBExample",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

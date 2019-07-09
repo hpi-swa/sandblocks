@@ -5,7 +5,11 @@ scrollToShow: aRectangle
 	r := aRectangle expandBy: self autoScrollMargin.
 	r := Rectangle left: r left right: r right top: (0 max: r top) bottom: (r bottom min: self vTotalScrollRange).
 	
-	r top <= scroller offset y
+	" if the elemnet is too large to feasibly be displayed, just opt out "
+	self flag: #todo. " should at least make sure any part of it is visible "
+	aRectangle height < scroller height ifFalse: [^ self].
+	
+	r top < scroller offset y
 		ifTrue: [scroller offset: 0 @ r top]
 		ifFalse: [
 			r bottom > (scroller offset y + scroller height)

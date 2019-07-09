@@ -1,0 +1,20 @@
+{
+	"class" : {
+		"self:args:" : "tobe 7/9/2019 20:54" },
+	"instance" : {
+		"argumentsBlock" : "tobe 7/9/2019 21:31",
+		"childSandblocks" : "tobe 7/9/2019 21:31",
+		"click:" : "tobe 7/9/2019 21:54",
+		"doubleClick:" : "tobe 7/9/2019 21:56",
+		"drawOn:" : "tobe 7/9/2019 21:21",
+		"drawnColor" : "tobe 7/9/2019 20:57",
+		"initialize" : "tobe 7/9/2019 21:18",
+		"lastError:" : "tobe 7/9/2019 22:35",
+		"mouseDown:" : "tobe 7/9/2019 22:38",
+		"printOn:" : "tobe 7/9/2019 21:06",
+		"run" : "tobe 7/9/2019 22:31",
+		"self:args:" : "tobe 7/9/2019 21:56",
+		"selfBlock" : "tobe 7/9/2019 21:31",
+		"stepTime" : "tobe 7/9/2019 21:33",
+		"updateIcon" : "tobe 7/9/2019 21:56",
+		"writeSourceOn:" : "tobe 7/9/2019 21:50" } }
