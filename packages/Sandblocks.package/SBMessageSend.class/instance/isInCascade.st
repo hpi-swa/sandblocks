@@ -1,4 +1,4 @@
 as yet unclassified
 isInCascade
 
-	^ self owner isCascade
+	^ self owner isCascade and: [self ~= self owner receiver]

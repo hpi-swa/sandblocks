@@ -11,7 +11,8 @@
 		"messageSend",
 		"newSelector",
 		"newArguments",
-		"select" ],
+		"select",
+		"editInputIndex" ],
 	"name" : "SBInputMessageCommand",
 	"pools" : [
 		 ],

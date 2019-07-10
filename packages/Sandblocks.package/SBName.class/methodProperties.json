@@ -2,7 +2,7 @@
 	"class" : {
 		"new" : "tobe 7/5/2019 16:26" },
 	"instance" : {
-		"assureClass:" : "tobe 7/9/2019 09:30",
+		"assureClass:" : "tobe 7/10/2019 12:18",
 		"isBlockBinding" : "tobe 7/3/2019 15:02",
 		"isDeclaration" : "tobe 7/3/2019 15:02",
 		"isExpression" : "tobe 7/5/2019 16:33",
@@ -14,8 +14,6 @@
 		"name:" : "tobe 6/29/2019 18:57",
 		"noteNewOwner:" : "tobe 7/9/2019 17:54",
 		"printOn:" : "tobe 7/6/2019 12:14",
-		"resolveBinding" : "tobe 7/3/2019 14:18",
-		"valid" : "tobe 7/3/2019 14:23",
-		"validBinding" : "tobe 7/3/2019 14:07",
+		"valid" : "tobe 7/10/2019 11:09",
 		"validContents" : "tobe 7/3/2019 14:05",
 		"writeSourceOn:" : "tobe 6/29/2019 18:57" } }

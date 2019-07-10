@@ -3,5 +3,5 @@ containingStatement
 
 	| current |
 	current := self.
-	[current owner ifNil: [^ nil] ifNotNil: [:o | o isKindOf: SBBlockBody]] whileFalse: [current := current owner].
+	[current owner ifNil: [^ nil] ifNotNil: #isBlockBody] whileFalse: [current := current owner].
 	^ current

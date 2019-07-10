@@ -10,5 +10,6 @@ do: aCommand
 	redoStack removeAll.
 	
 	self select: aCommand do.
+	aCommand postDo.
 	
 	self triggerEvent: #change

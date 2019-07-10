@@ -1,0 +1,4 @@
+*Sandblocks
+isStatement
+
+	^ false

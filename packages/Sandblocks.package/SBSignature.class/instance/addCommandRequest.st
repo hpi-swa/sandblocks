@@ -9,8 +9,8 @@ addCommandRequest
 		previousArguments: self arguments;
 		newArguments: self arguments, {arg};
 		messageSend: self;
-		select: arg;
-		shouldMergeWithNext: true.
+		select: self owner;
+		editInputIndex: self arguments size + 1.
 	
 	self isUnary ifTrue: [cmd newSelector: self selector, ':'].
 	self isKeyword ifTrue: [cmd newSelector: self selector, ':'].

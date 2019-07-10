@@ -1,4 +1,4 @@
 converting
 isExpression
 
-	^ true
+	^ self parentSandblock isMethod not

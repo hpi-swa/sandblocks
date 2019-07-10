@@ -2,6 +2,7 @@
 	"class" : {
 		 },
 	"instance" : {
+		"actualReceiver" : "tobe 7/10/2019 11:54",
 		"addCommandRequest" : "tobe 6/30/2019 22:53",
 		"browse" : "tobe 7/7/2019 22:52",
 		"childSandblocks" : "tobe 7/1/2019 09:34",
@@ -10,7 +11,7 @@
 		"currentTextMorph" : "tobe 7/7/2019 11:33",
 		"initialize" : "tobe 7/2/2019 22:32",
 		"isExpression" : "tobe 7/3/2019 08:19",
-		"isInCascade" : "tobe 7/3/2019 08:19",
+		"isInCascade" : "tobe 7/10/2019 11:15",
 		"keyStroke:" : "tobe 7/7/2019 23:27",
 		"noteNewOwner:" : "tobe 7/10/2019 08:27",
 		"pc" : "tobe 7/3/2019 21:29",
@@ -25,7 +26,7 @@
 		"signature" : "tobe 6/26/2019 20:27",
 		"startInputAt:replacingContents:" : "tobe 6/30/2019 14:44",
 		"stopEditing:" : "tobe 7/8/2019 07:47",
-		"updateSuggestions" : "tobe 7/8/2019 17:01",
+		"updateSuggestions" : "tobe 7/10/2019 11:54",
 		"useSuggestion:" : "tobe 7/8/2019 07:55",
 		"valid" : "tobe 6/29/2019 13:27",
 		"veryDeepCopyWith:" : "tobe 7/3/2019 08:19",

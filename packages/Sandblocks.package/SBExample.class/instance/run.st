@@ -16,7 +16,7 @@ run
 		[Compiler evaluate: eval] on: Error do: [:e |
 			processRunning := false.
 			self scheduleLastError: e.
-			currentProcess suspend].
+			Processor activeProcess suspend].
 		self scheduleLastError: nil.
 		currentProcess := nil.
 		processRunning := false
