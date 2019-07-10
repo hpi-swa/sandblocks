@@ -3,6 +3,8 @@ initialize
 
 	super initialize.
 	
+	processRunning := false.
+	
 	self
 		layoutPolicy: SBHorizontalLayout new;
 		layoutInset: 10 * self scalingFactor;

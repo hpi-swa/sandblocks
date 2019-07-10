@@ -8,7 +8,9 @@
 	"instvars" : [
 		"icon",
 		"lastError",
-		"errorIndicator" ],
+		"errorIndicator",
+		"currentProcess",
+		"processRunning" ],
 	"name" : "SBExample",
 	"pools" : [
 		 ],

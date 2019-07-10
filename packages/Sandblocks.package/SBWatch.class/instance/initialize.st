@@ -7,4 +7,5 @@ initialize
 		changeTableLayout;
 		cellInset: 4;
 		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap
+		hResizing: #shrinkWrap;
+		addMorphBack: (display := ECSWatchView new dark: true)

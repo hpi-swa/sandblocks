@@ -1,6 +1,5 @@
 as yet unclassified
 expression: aBlock
 
-	self removeAllMorphs.
-	self addMorphBack: aBlock.
-	self switchToPrintDisplay
+	self submorphCount > 1 ifTrue: [self firstSubmorph delete].
+	self addMorphFront: aBlock
