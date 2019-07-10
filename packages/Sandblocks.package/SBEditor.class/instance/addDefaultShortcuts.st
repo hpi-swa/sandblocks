@@ -43,6 +43,8 @@ addDefaultShortcuts
 		addMultiSelectionShortcut: $> do: #extractMethod;
 		addMultiSelectionShortcut: $; do: #wrapInCascade;
 		
+		addGlobalShortcut: $a command do: #addExample;
+		
 		addCommandShortcut: $u do: #undo;
 		addCommandShortcut: $U do: #redo;
 		addCommandShortcut: $g do: #selectMethod;

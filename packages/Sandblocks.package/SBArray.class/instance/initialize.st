@@ -3,6 +3,8 @@ initialize
 
 	super initialize.
 	
+	type := #dynamic.
+	
 	self
 		layoutPolicy: SBHorizontalLayout new;
 		hResizing: #shrinkWrap;
