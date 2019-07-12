@@ -17,6 +17,9 @@ extractMethod
 				body: (SBBlockBody new statements: extracting veryDeepCopy));
 			openInWindow.
 		
+		localBindings size < selectorAndArguments second size ifTrue: [
+			selectorAndArguments second size - localBindings size timesRepeat: [localBindings := localBindings copyWith: SBUnknown new]].
+		
 		SBReplaceConsecutiveCommand new
 			targets: extracting;
 			replacer: (SBMessageSend new

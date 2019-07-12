@@ -1,7 +1,7 @@
 as yet unclassified
 moveFocusToNextPart: aNumber
 
-	((self arguments notEmpty and: [self submorphCount <= 2]) or: [currentInputMessagePart submorphAfter isUnknown])
+	((self arguments notEmpty and: [self submorphCount <= 2]) or: [currentInputMessagePart submorphAfter ifNotNil: #isUnknown ifNil: [false]])
 		ifTrue: [ | arg |
 			arg := currentInputMessagePart submorphAfter.
 			self containingSandblock sandblockEditor

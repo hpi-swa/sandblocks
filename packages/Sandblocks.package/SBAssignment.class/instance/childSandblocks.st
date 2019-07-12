@@ -1,4 +1,4 @@
 converting
 childSandblocks
 
-	^ {self firstSubmorph. self submorphs third}
+	^ self hasSubmorphs ifTrue: [{self firstSubmorph. self submorphs third}] ifFalse: [#()]

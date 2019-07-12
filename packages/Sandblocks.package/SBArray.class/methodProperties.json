@@ -3,6 +3,8 @@
 		 },
 	"instance" : {
 		"addCommandRequest" : "tobe 6/30/2019 21:34",
+		"changeTypeTo:" : "tobe 7/12/2019 10:16",
+		"codeActions" : "tobe 7/12/2019 10:16",
 		"initialize" : "tobe 7/10/2019 10:39",
 		"isArrayBlock" : "tobe 7/9/2019 21:02",
 		"isExpression" : "tobe 7/3/2019 08:18",
@@ -11,6 +13,8 @@
 		"prefix" : "tobe 6/30/2019 12:51",
 		"printOn:" : "tobe 6/30/2019 13:33",
 		"spaceForPrefix" : "tobe 6/30/2019 19:31",
+		"type" : "tobe 7/12/2019 10:17",
+		"type:" : "tobe 7/12/2019 10:17",
 		"type:contents:" : "tobe 6/26/2019 19:52",
 		"valid" : "tobe 6/30/2019 21:31",
 		"writeSourceOn:" : "tobe 7/3/2019 09:28" } }

@@ -11,6 +11,7 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $s do: #startInputSubstituting;
 		addSingleSelectionShortcut: $o do: #insertStatementBelow;
 		addSingleSelectionShortcut: $O do: #insertStatementAbove;
+		addSingleSelectionShortcut: $, do: #promptCodeAction;
 		addSingleSelectionShortcut: Character space shift do: #wrapAsArgument;
 		addSingleSelectionShortcut: Character space do: #wrapInMessageSend;
 		addSingleSelectionShortcut: $r do: #replaceWithCopyBuffer;
@@ -19,6 +20,7 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $: do: #wrapInAssignment;
 		addSingleSelectionShortcut: $^ do: #wrapInReturn;
 		addSingleSelectionShortcut: $= do: #extractVariable;
+		addSingleSelectionShortcut: $c command do: #copyString;
 		addSingleSelectionShortcut: $v command do: #pasteString;
 		addSingleSelectionShortcut: $w do: #watchSelection;
 		addSingleSelectionShortcut: $r do: #replaceWithCopyBuffer;

@@ -1,4 +1,6 @@
 as yet unclassified
 writeSourceOn: aStream
 
-	indicator color storeOn: aStream
+	aStream nextPut: $(.
+	indicator color printOn: aStream.
+	aStream nextPut: $)

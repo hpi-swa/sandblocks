@@ -8,8 +8,8 @@ asSandblock
 		^ SBExample new self: originalArguments first statements first asSandblock args: originalArguments second statements first asSandblock].
 	
 	(originalReceiver name = 'Color' and: [originalSelector isUnary]) ifTrue: [ | color |
-		color := Color perform: originalSelector.
-		color isColor ifTrue: [^ SBColor new colorContents: color]].
+		((Color respondsTo: originalSelector) and: [(color := Color perform: originalSelector) isColor])
+			ifTrue: [^ SBColor new colorContents: color]].
 	
 	"(originalReceiver name = 'aUniverse' and: [originalSelector == #query:do:]) ifTrue: [
 		^ ECSQuery new query: originalArguments first asSandblock block: originalArguments second asSandblock]."

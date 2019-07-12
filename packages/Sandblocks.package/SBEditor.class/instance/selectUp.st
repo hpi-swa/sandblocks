@@ -1,5 +1,6 @@
 selection
 selectUp
 
-	selectionDownHistory addLast: self selection.
-	self selection parentSandblock ifNotNil: [:b | self select: b]
+	self selection parentSandblock ifNotNil: [:b |
+		selectionDownHistory addLast: self selection.
+		self select: b]

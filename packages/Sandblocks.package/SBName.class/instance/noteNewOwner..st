@@ -6,7 +6,7 @@ noteNewOwner: aMorph
 	self isReserved ifTrue: [^ self assureClass: SBKeywordBinding].
 	aMorph isAssignment ifTrue: [^ self assureClass: SBBinding].
 	aMorph isBlockBody ifTrue: [^ self assureClass: SBBinding].
-	(aMorph owner ifNotNil: #isMethod ifNil: [false]) ifTrue: [^ self assureClass: SBDeclaration].
+	(aMorph owner ifNotNil: #isMethod ifNil: [false]) ifTrue: [^ self assureClass: SBDeclarationForMethodArgument].
 	aMorph isTemporaries ifTrue: [^ self assureClass: SBDeclaration].
 	aMorph isBlockBindings ifTrue: [^ self assureClass: SBDeclarationForBlock].
 	

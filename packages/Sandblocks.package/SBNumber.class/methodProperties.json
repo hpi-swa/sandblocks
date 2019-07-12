@@ -3,7 +3,8 @@
 		 },
 	"instance" : {
 		"initialize" : "tobe 7/9/2019 22:07",
-		"isNumber" : "tobe 7/1/2019 13:30",
+		"isNumberBlock" : "tobe 7/12/2019 10:17",
+		"keyStroke:" : "tobe 7/12/2019 09:31",
 		"mouseDown:" : "tobe 7/9/2019 22:08",
 		"mouseMove:" : "tobe 7/9/2019 22:09",
 		"mouseUp:" : "tobe 7/9/2019 22:07",

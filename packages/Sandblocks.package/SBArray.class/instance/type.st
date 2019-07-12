@@ -1,4 +1,4 @@
 as yet unclassified
-isNumber
+type
 
-	^ true
+	^ type
