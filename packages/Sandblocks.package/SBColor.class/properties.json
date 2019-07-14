@@ -10,5 +10,5 @@
 	"name" : "SBColor",
 	"pools" : [
 		 ],
-	"super" : "SBBlock",
+	"super" : "SBSubstitution",
 	"type" : "normal" }

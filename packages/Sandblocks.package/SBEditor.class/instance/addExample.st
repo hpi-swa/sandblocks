@@ -10,4 +10,6 @@ addExample
 			self: (SBMessageSend new
 				receiver: (SBBinding new contents: self method methodClass name)
 				selector: #new)
-			args: SBArray new))
+			args: (SBArray new
+				type: #dynamic
+				contents: (Array streamContents: [:str | self method arguments size timesRepeat: [str nextPut: SBUnknown new]]))))

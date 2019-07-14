@@ -1,21 +1,11 @@
 *Sandblocks
 asSandblock
 	
-	(originalReceiver name = 'SBWatch' and: [originalSelector = #report:for:]) ifTrue: [
-		^ SBWatch new identifier: originalArguments second key; expression: originalArguments first asSandblock].
+	| send |
+	send := self asMessageSandblock.
 	
-	(originalReceiver name = 'SBExample' and: [originalSelector = #self:args:]) ifTrue: [
-		^ SBExample new self: originalArguments first statements first asSandblock args: originalArguments second statements first asSandblock].
+	SBSubstitution allSubclassesDo: [:substition |
+		(substition matches: send) ifTrue: [
+			^ (substition newFrom: send) pc: self pc]].
 	
-	(originalReceiver name = 'Color' and: [originalSelector isUnary]) ifTrue: [ | color |
-		((Color respondsTo: originalSelector) and: [(color := Color perform: originalSelector) isColor])
-			ifTrue: [^ SBColor new colorContents: color]].
-	
-	"(originalReceiver name = 'aUniverse' and: [originalSelector == #query:do:]) ifTrue: [
-		^ ECSQuery new query: originalArguments first asSandblock block: originalArguments second asSandblock]."
-	
-	^ SBMessageSend new
-		receiver: originalReceiver asSandblock
-		selector: originalSelector
-		arguments: (originalArguments collect: #asSandblock);
-		pc: self pc
+	^ send

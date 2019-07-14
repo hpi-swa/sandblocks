@@ -2,10 +2,12 @@
 	"class" : {
 		 },
 	"instance" : {
+		"acceptChild:" : "tobe 7/14/2019 08:17",
 		"addCommandRequest" : "tobe 7/7/2019 16:18",
 		"bindingFor:ifPresent:" : "tobe 7/10/2019 11:07",
 		"bindings" : "tobe 7/8/2019 17:22",
 		"bindings:" : "tobe 6/28/2019 17:59",
+		"canDeleteChild:" : "tobe 7/13/2019 22:57",
 		"childSandblocks" : "tobe 7/1/2019 10:09",
 		"color" : "tobe 6/26/2019 20:24",
 		"declareTemporaryVariable:" : "tobe 7/5/2019 08:30",
@@ -16,8 +18,10 @@
 		"isMethodBody" : "tobe 6/28/2019 17:18",
 		"pc" : "tobe 7/3/2019 22:17",
 		"pc:" : "tobe 7/3/2019 22:17",
+		"prefix" : "tobe 7/13/2019 21:55",
 		"printOn:" : "tobe 6/30/2019 13:32",
 		"statementCount" : "tobe 7/2/2019 22:07",
+		"statements" : "tobe 7/13/2019 22:42",
 		"statements:" : "tobe 6/28/2019 17:18",
 		"temporaries" : "tobe 7/8/2019 17:22",
 		"temporaries:" : "tobe 6/28/2019 17:21",

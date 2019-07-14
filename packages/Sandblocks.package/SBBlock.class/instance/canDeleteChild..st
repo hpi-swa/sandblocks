@@ -1,0 +1,4 @@
+testing
+canDeleteChild: aBlock
+
+	^ false

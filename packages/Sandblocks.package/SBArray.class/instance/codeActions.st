@@ -1,7 +1,7 @@
 as yet unclassified
 codeActions
 
-	^ {
+	^ super codeActions, {
 		SBCodeAction
 			labeled: 'Change to dynamic array' for: self do: [:node | node changeTypeTo: #dynamic].
 		SBCodeAction

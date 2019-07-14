@@ -1,12 +1,17 @@
 as yet unclassified
 keyStroke: anEvent
 
-	super keyStroke: anEvent.
+	anEvent keyCharacter = $: ifTrue: [ | new |
+		new := SBUnknown new.
+		^ self sandblockEditor
+			endInput;
+			do: (SBWrapCommand new
+				inner: self;
+				outer: SBAssignment new;
+				wrap: [:outer :inner | outer binding: self value: new]);
+			startInput: new at: 0 replacingContents: false].
 	
-	anEvent keyCharacter = $: ifTrue: [^ self sandblockEditor do: (SBWrapCommand new
-		inner: self;
-		outer: SBAssignment new;
-		wrap: [:outer :inner | outer binding: self value: SBUnknown new])].
+	super keyStroke: anEvent.
 	
 	self isReserved ifTrue: [^ self assureClass: SBKeywordBinding].
 	

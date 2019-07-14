@@ -1,13 +1,17 @@
 actions
 pasteStatementAboveOrBelow: anAboveBoolean
 
-	| currentStatement index |
-	currentStatement := self selection containingStatement.
-	index := currentStatement owner submorphIndexOf: currentStatement.
+	| index target adjacent |
+	target := copyBuffer isSelection ifTrue: [copyBuffer firstSubmorph] ifFalse: [copyBuffer].
+	
+	adjacent := self selection.
+	[adjacent parentSandblock acceptChild: target] whileFalse: [adjacent := adjacent parentSandblock].
+	
+	index := adjacent owner submorphIndexOf: adjacent.
 	
 	self do: (SBInsertCommand new
 		index: (anAboveBoolean
 			ifTrue: [index] ifFalse: [index + 1]);
-		container: currentStatement owner;
-		morph: (copyBuffer isSelection ifTrue: [copyBuffer firstSubmorph] ifFalse: [copyBuffer]) veryDeepCopy;
+		container: adjacent owner;
+		morph: target veryDeepCopy;
 		yourself)

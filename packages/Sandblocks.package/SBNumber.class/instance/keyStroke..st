@@ -2,6 +2,5 @@ as yet unclassified
 keyStroke: anEvent
 
 	(anEvent keyCharacter = $- and: [text isCursorAtStart]) ifTrue: [
-		text keyStroke: anEvent.
-		^ self].
+		^ self acceptInputEvent: anEvent].
 	super keyStroke: anEvent

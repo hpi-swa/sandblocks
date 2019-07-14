@@ -7,6 +7,7 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $d do: #deleteAroundSelection;
 		addSingleSelectionShortcut: $+ do: #addElement;
 		addSingleSelectionShortcut: $i do: #startInputAtStart;
+		addSingleSelectionShortcut: $$ do: #selectRightMostBlock;
 		addSingleSelectionShortcut: $a do: #startInputAtEnd;
 		addSingleSelectionShortcut: $s do: #startInputSubstituting;
 		addSingleSelectionShortcut: $o do: #insertStatementBelow;
@@ -45,12 +46,13 @@ addDefaultShortcuts
 		addMultiSelectionShortcut: $> do: #extractMethod;
 		addMultiSelectionShortcut: $; do: #wrapInCascade;
 		
-		addGlobalShortcut: $a command do: #addExample;
-		
+		addCommandShortcut: $a command do: #addExample;
+		addCommandShortcut: $! do: #resizeToFit;
 		addCommandShortcut: $u do: #undo;
 		addCommandShortcut: $U do: #redo;
 		addCommandShortcut: $g do: #selectMethod;
-		addCommandShortcut: $y command do: #promptChangeClass;
+		addCommandShortcut: $Y command do: #promptChangeClassNewWindow;
+		addCommandShortcut: $y command do: #promptChangeClassSameWindow;
 		addCommandShortcut: $l command do: #reset;
 		addCommandShortcut: $s command do: #save;
 		addCommandShortcut: $x command do: #promptSwitchMethodSameWindow;

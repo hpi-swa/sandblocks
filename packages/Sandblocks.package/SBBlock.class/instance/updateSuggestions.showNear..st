@@ -5,7 +5,7 @@ updateSuggestions: aCollection showNear: aMorph
 	
 	self suggestionsMenu
 		editor: self sandblockEditor;
-		suggestions: (aCollection first: (20 min: aCollection size));
+		suggestions: ((aCollection sort: [:a :b | a selector size < b selector size]) first: (20 min: aCollection size));
 		topLeft: aMorph positionInWorld + (0 @ aMorph height);
 		openInWorld;
 		resize

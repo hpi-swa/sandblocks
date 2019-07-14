@@ -6,7 +6,7 @@ initialize
 	type := #dynamic.
 	
 	self
-		layoutPolicy: SBHorizontalLayout new;
+		layoutPolicy: SBArrayLayout new;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		listDirection: #leftToRight;

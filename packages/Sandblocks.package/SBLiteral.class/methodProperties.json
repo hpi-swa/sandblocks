@@ -2,14 +2,16 @@
 	"class" : {
 		 },
 	"instance" : {
+		"acceptInputEvent:" : "tobe 7/13/2019 08:08",
 		"childSandblocks" : "tobe 7/1/2019 08:06",
 		"contents" : "tobe 6/28/2019 22:05",
 		"contents:" : "tobe 6/28/2019 21:56",
+		"contentsChanged" : "tobe 7/13/2019 12:31",
 		"currentTextMorph" : "tobe 7/7/2019 11:33",
-		"initialize" : "tobe 6/30/2019 22:25",
+		"initialize" : "tobe 7/13/2019 12:31",
 		"isExpression" : "tobe 7/3/2019 08:18",
 		"isLiteral" : "tobe 6/30/2019 21:31",
-		"keyStroke:" : "tobe 7/9/2019 09:47",
+		"keyStroke:" : "tobe 7/13/2019 12:33",
 		"moveCursorTo:" : "tobe 6/29/2019 18:41",
 		"replaceWithUnknown" : "tobe 6/30/2019 20:17",
 		"startInputAt:replacingContents:" : "tobe 6/30/2019 20:22",

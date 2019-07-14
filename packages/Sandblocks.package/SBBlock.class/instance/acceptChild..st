@@ -1,0 +1,4 @@
+testing
+acceptChild: aMorph
+
+	^ false

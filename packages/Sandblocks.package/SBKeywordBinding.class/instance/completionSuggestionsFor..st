@@ -12,10 +12,10 @@ completionSuggestionsFor: aString
 	
 	baseClass ifNil: [^ super completionSuggestionsFor: aString].
 	
-	aString size < 2
+	^ aString size < 2
 		ifTrue: [#()]
 		ifFalse: [
-			^ Array streamContents: [:stream |
+			Array streamContents: [:stream |
 				baseClass withAllSuperclassesDo: [:class |
 					class methodsDo: [:m | | sel |
 						sel := m selector asString.

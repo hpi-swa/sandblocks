@@ -14,5 +14,5 @@
 	"name" : "SBExample",
 	"pools" : [
 		 ],
-	"super" : "SBBlock",
+	"super" : "SBSubstitution",
 	"type" : "normal" }

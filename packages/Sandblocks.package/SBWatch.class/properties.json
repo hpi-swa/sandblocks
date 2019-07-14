@@ -12,5 +12,5 @@
 	"name" : "SBWatch",
 	"pools" : [
 		 ],
-	"super" : "SBBlock",
+	"super" : "SBSubstitution",
 	"type" : "normal" }

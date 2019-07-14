@@ -1,5 +1,7 @@
 {
 	"class" : {
+		"matchesReceiver:selector:arguments:" : "tobe 7/13/2019 22:12",
+		"newFromReceiver:selector:arguments:" : "tobe 7/13/2019 22:12",
 		"registerWatch:" : "tobe 6/28/2019 18:35",
 		"registry" : "tobe 6/28/2019 18:34",
 		"report:for:" : "tobe 6/28/2019 18:37" },

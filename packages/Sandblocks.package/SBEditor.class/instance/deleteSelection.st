@@ -4,6 +4,6 @@ deleteSelection
 	self setCopyBuffer: self multiSelection.
 	
 	self doMultiSelectionEach: [:selected |
-		(selected == selected containingStatement or: [selected owner isArrayBlock])
+		(selected parentSandblock canDeleteChild: selected)
 			ifTrue: [SBDeleteCommand new target: selected]
 			ifFalse: [SBReplaceCommand target: selected replacer: SBUnknown new]]

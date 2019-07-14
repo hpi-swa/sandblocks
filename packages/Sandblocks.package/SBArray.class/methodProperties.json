@@ -2,10 +2,12 @@
 	"class" : {
 		 },
 	"instance" : {
+		"acceptChild:" : "tobe 7/14/2019 08:17",
 		"addCommandRequest" : "tobe 6/30/2019 21:34",
+		"canDeleteChild:" : "tobe 7/13/2019 22:56",
 		"changeTypeTo:" : "tobe 7/12/2019 10:16",
-		"codeActions" : "tobe 7/12/2019 10:16",
-		"initialize" : "tobe 7/10/2019 10:39",
+		"codeActions" : "tobe 7/13/2019 22:16",
+		"initialize" : "tobe 7/13/2019 08:15",
 		"isArrayBlock" : "tobe 7/9/2019 21:02",
 		"isExpression" : "tobe 7/3/2019 08:18",
 		"isLiteral" : "tobe 7/8/2019 17:53",
