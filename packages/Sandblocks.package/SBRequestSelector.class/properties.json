@@ -7,7 +7,8 @@
 	"commentStamp" : "",
 	"instvars" : [
 		"editor",
-		"cancelled" ],
+		"cancelled",
+		"colorPolicy" ],
 	"name" : "SBRequestSelector",
 	"pools" : [
 		 ],

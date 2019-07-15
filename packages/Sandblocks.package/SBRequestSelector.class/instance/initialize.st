@@ -4,6 +4,7 @@ initialize
 	super initialize.
 	
 	cancelled := true.
+	colorPolicy := SBDefaultColorPolicy new.
 	
 	self
 		changeTableLayout;

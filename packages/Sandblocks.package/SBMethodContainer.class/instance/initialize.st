@@ -7,4 +7,6 @@ initialize
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		layoutPolicy: SBVerticalLayout new;
-		color: Color transparent
+		color: Color transparent.
+		
+	overlayDrawBlocks := OrderedCollection new

@@ -8,6 +8,7 @@ initialize
 	self
 		color: Color white;
 		addMorphBack: (editor := SBEditor new
+			addOverlayDraw: [:canvas | self drawBlockValuesOn: canvas];
 			minHeight: 400 * self scalingFactor;
 			vResizing: #spaceFill;
 			hResizing: #spaceFill;

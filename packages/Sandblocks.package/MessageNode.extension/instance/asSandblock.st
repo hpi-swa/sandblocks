@@ -4,8 +4,10 @@ asSandblock
 	| send |
 	send := self asMessageSandblock.
 	
-	SBSubstitution allSubclassesDo: [:substition |
-		(substition matches: send) ifTrue: [
-			^ (substition newFrom: send) pc: self pc]].
+	" only if we're not in a cascade ... "
+	send receiver ifNotNil: [
+		SBSubstitution allSubclassesDo: [:substition |
+			(substition matches: send) ifTrue: [
+				^ (substition newFrom: send) pc: self pc]]].
 	
 	^ send

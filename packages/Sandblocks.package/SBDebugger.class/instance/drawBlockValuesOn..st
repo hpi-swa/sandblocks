@@ -1,9 +1,7 @@
 as yet unclassified
-drawSubmorphsOn: aCanvas
+drawBlockValuesOn: aCanvas
 
 	| font |
-	super drawSubmorphsOn: aCanvas.
-	
 	font := self fontToUse.
 	blockValues keysAndValuesDo: [:block :value | | str |
 		str := value printString.

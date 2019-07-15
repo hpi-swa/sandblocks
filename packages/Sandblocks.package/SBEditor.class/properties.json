@@ -26,7 +26,9 @@
 		"singleSelectionShortcuts",
 		"multiSelectionShortcuts",
 		"scroll",
-		"methodContainer" ],
+		"methodContainer",
+		"compiledMethod",
+		"colorPolicy" ],
 	"name" : "SBEditor",
 	"pools" : [
 		 ],
