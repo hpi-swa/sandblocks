@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"text" ],
+	"name" : "SBTextBubble",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

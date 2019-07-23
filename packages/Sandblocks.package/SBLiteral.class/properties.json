@@ -6,7 +6,8 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"text" ],
+		"text",
+		"castToUnknownWhenEmpty" ],
 	"name" : "SBLiteral",
 	"pools" : [
 		 ],

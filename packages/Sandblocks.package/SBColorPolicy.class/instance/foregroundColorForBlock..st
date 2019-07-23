@@ -1,4 +1,4 @@
 as yet unclassified
 foregroundColorForBlock: aBlock
 
-	^ self foregroundColorForColor: (self colorForBlock: aBlock)
+	^ self foregroundColorForColor: aBlock drawnColor

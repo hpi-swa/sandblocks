@@ -1,6 +1,6 @@
 as yet unclassified
 contentsChanged
 
-	text contents ifEmpty: [
+	(castToUnknownWhenEmpty and: [text contents isEmpty]) ifTrue: [
 		self stopEditing.
 		self replaceWithUnknown]

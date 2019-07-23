@@ -8,6 +8,7 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $+ do: #addElement;
 		addSingleSelectionShortcut: $i do: #startInputAtStart;
 		addSingleSelectionShortcut: $$ do: #selectRightMostBlock;
+		addSingleSelectionShortcut: $0 do: #selectLeftMostBlock;
 		addSingleSelectionShortcut: $a do: #startInputAtEnd;
 		addSingleSelectionShortcut: $s do: #startInputSubstituting;
 		addSingleSelectionShortcut: $o do: #insertStatementBelow;
@@ -46,6 +47,7 @@ addDefaultShortcuts
 		addMultiSelectionShortcut: $> do: #extractMethod;
 		addMultiSelectionShortcut: $; do: #wrapInCascade;
 		
+		addCommandShortcut: $, command do: #promptMenu;
 		addCommandShortcut: $a command do: #addExample;
 		addCommandShortcut: $! do: #resizeToFit;
 		addCommandShortcut: $u do: #undo;

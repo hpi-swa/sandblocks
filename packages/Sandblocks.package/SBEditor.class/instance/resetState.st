@@ -6,5 +6,5 @@ resetState
 	selectionDownHistory := OrderedCollection new.
 	unsavedChanges := false.
 	selection := self method.
-	colorPolicy := SBDefaultColorPolicy new.
+	colorPolicy := colorPolicy class new.
 	self mode: #command

@@ -1,0 +1,16 @@
+{
+	"category" : "Sandblocks",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"text",
+		"examples",
+		"exampleLabel" ],
+	"name" : "SBRegex",
+	"pools" : [
+		 ],
+	"super" : "SBSubstitution",
+	"type" : "normal" }

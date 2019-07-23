@@ -1,4 +1,4 @@
 accessing
 isSendToSelf
 
-	^ self receiver isReserved and: [self receiver contents = 'self']
+	^ self receiver isName and: [self receiver isReserved] and: [self receiver contents = 'self']

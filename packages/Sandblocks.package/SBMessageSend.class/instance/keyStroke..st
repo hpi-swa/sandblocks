@@ -5,6 +5,6 @@ keyStroke: anEvent
 		^ self sandblockEditor
 			endInput;
 			wrapInMessageSend: ''].
-
+	
 	signature keyStroke: anEvent.
 	self updateSuggestions

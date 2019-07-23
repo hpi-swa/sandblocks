@@ -1,0 +1,23 @@
+{
+	"class" : {
+		"matches:" : "tobe 7/22/2019 18:50",
+		"newFrom:" : "tobe 7/22/2019 18:52",
+		"regex:examples:" : "tobe 7/22/2019 17:36" },
+	"instance" : {
+		"addCommandRequest" : "tobe 7/22/2019 18:42",
+		"addExample:" : "tobe 7/22/2019 18:51",
+		"childSandblocks" : "tobe 7/22/2019 17:50",
+		"contents" : "tobe 7/22/2019 10:21",
+		"contents:" : "tobe 7/22/2019 17:40",
+		"createExample:" : "tobe 7/22/2019 18:52",
+		"currentTextMorph" : "tobe 7/22/2019 10:21",
+		"initialize" : "tobe 7/22/2019 18:44",
+		"prefix" : "tobe 7/22/2019 10:25",
+		"printOn:" : "tobe 7/22/2019 10:23",
+		"regexMatches:" : "tobe 7/22/2019 18:42",
+		"regexString:examples:" : "tobe 7/22/2019 17:54",
+		"startInputAt:replacingContents:" : "tobe 7/22/2019 18:35",
+		"stopEditing:" : "tobe 7/22/2019 10:21",
+		"toggleExamples" : "tobe 7/22/2019 10:31",
+		"valid" : "tobe 7/22/2019 10:33",
+		"writeSourceOn:" : "tobe 7/23/2019 08:41" } }

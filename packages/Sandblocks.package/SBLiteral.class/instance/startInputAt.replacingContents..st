@@ -8,7 +8,10 @@ startInputAt: aNumber replacingContents: aBoolean
 		yourself.
 	
 	aBoolean
-		ifTrue: [self replaceWithUnknown]
+		ifTrue: [
+			castToUnknownWhenEmpty
+				ifTrue: [self replaceWithUnknown]
+				ifFalse: [self contents: ''; moveCursorTo: 0]]
 		ifFalse: [self moveCursorTo: aNumber].
 	
 	^ cmd

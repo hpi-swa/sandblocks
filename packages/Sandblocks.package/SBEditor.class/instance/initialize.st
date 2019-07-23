@@ -10,6 +10,7 @@ initialize
 	globalShortcuts := OrderedCollection new.
 	inputShortcuts := OrderedCollection new.
 	multiSelection := OrderedCollection new.
+	colorPolicy := SBDefaultColorPolicy new.
 	
 	self
 		addKeyboardCaptureFilter: self;
