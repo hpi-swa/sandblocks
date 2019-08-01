@@ -6,13 +6,14 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"isDown",
-		"lastMousePosition",
-		"scrubbingCommand",
-		"oldCursor",
-		"type" ],
-	"name" : "SBPoint",
+		"backgroundColor",
+		"suboptions",
+		"active",
+		"parentOption",
+		"place",
+		"command" ],
+	"name" : "SBOverlayOption",
 	"pools" : [
 		 ],
-	"super" : "SBSubstitution",
+	"super" : "StringMorph",
 	"type" : "normal" }

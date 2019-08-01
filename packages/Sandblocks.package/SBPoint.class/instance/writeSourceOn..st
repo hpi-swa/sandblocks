@@ -2,5 +2,5 @@ as yet unclassified
 writeSourceOn: aStream
 
 	self firstSubmorph writeSourceOn: aStream.
-	aStream nextPutAll: ' @ '.
+	aStream space; nextPutAll: self messageSelector asString; space.
 	self lastSubmorph writeSourceOn: aStream

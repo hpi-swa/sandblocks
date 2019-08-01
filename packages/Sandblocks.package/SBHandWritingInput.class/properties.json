@@ -6,13 +6,11 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"isDown",
-		"lastMousePosition",
-		"scrubbingCommand",
-		"oldCursor",
-		"type" ],
-	"name" : "SBPoint",
+		"points",
+		"recording",
+		"text" ],
+	"name" : "SBHandWritingInput",
 	"pools" : [
 		 ],
-	"super" : "SBSubstitution",
+	"super" : "Morph",
 	"type" : "normal" }

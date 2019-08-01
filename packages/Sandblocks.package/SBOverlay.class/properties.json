@@ -6,13 +6,10 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"isDown",
-		"lastMousePosition",
-		"scrubbingCommand",
-		"oldCursor",
-		"type" ],
-	"name" : "SBPoint",
+		"activeMorph",
+		"editor" ],
+	"name" : "SBOverlay",
 	"pools" : [
 		 ],
-	"super" : "SBSubstitution",
+	"super" : "Morph",
 	"type" : "normal" }

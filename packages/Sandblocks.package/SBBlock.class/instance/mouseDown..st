@@ -1,4 +1,4 @@
 as yet unclassified
 mouseDown: anEvent
 
-	self select
+	anEvent hand waitForClicksOrDrag: self event: anEvent

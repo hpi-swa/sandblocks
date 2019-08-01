@@ -1,0 +1,16 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"characterFromStrokes:points:" : "tobe 8/1/2019 21:25",
+		"directionFrom:to:" : "tobe 8/1/2019 15:06",
+		"drawOn:" : "tobe 8/1/2019 21:24",
+		"handlesMouseDown:" : "tobe 8/1/2019 14:47",
+		"handlesMouseMove:" : "tobe 8/1/2019 14:47",
+		"initialize" : "tobe 8/1/2019 19:41",
+		"mouseDown:" : "tobe 8/1/2019 14:48",
+		"mouseMove:" : "tobe 8/1/2019 14:47",
+		"mouseUp:" : "tobe 8/1/2019 19:49",
+		"oldCharacterFromStrokes:points:" : "tobe 8/1/2019 20:12",
+		"point:inLeft:of:" : "tobe 8/1/2019 19:37",
+		"point:inUpper:of:" : "tobe 8/1/2019 15:47" } }
