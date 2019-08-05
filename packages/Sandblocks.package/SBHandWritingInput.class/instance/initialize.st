@@ -5,4 +5,6 @@ initialize
 	
 	recording := false.
 	points := OrderedCollection new.
-	text := ''
+	text := ''.
+	
+	self extent: TextStyle defaultFont height asPoint * (40 @ 16)

@@ -11,9 +11,10 @@
 		"active",
 		"parentOption",
 		"place",
-		"command" ],
+		"command",
+		"contents" ],
 	"name" : "SBOverlayOption",
 	"pools" : [
 		 ],
-	"super" : "StringMorph",
+	"super" : "Morph",
 	"type" : "normal" }

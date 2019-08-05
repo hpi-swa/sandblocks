@@ -4,7 +4,7 @@ initialize
 	super initialize.
 	
 	self
-		extent: 200 @ 200;
+		extent: 1 @ 1;
 		color: Color transparent;
 		addMorphBack: (SBOverlayOption new
 			contents: 'Navigation';
@@ -12,51 +12,51 @@ initialize
 				SBOverlayOption new
 					command: #swapLeft;
 					contents: 'Swap left';
-					place: 250 @ 0.
+					place: self optionDistance @ 0.
 				SBOverlayOption new
 					command: #swapRight;
 					contents: 'Swap right';
-					place: -250 @ 0.
+					place: self optionDistance negated @ 0.
 			};
-			center: 100 @ 100; top: 200);
+			center: self center; top: self optionDistance);
 		addMorphBack: (SBOverlayOption new
 			contents: 'Modify';
 			suboptions: {
 				SBOverlayOption new
 					contents: 'Delete';
 					command: #deleteSelection;
-					place: 200 @ -80.
+					place: self optionDistance @ -80.
 				SBOverlayOption new
 					command: #startInputAtStart;
 					contents: 'Insert';
-					place: 200 @ 0.
+					place: self optionDistance @ 0.
 				SBOverlayOption new
 					contents: 'Substitute';
 					command: #startInputSubstituting;
-					place: 200 @ 80.
+					place: self optionDistance @ 80.
 			};
-			center: 100 @ 100; left: 200);
+			center: self center; left: self optionDistance);
 		addMorphBack: (SBOverlayOption new
 			contents: 'Refactor';
 			suboptions: {
 				SBOverlayOption new
 					contents: 'Extract variable';
 					command: #extractVariable;
-					place: -200 @ -50.
+					place: self optionDistance negated @ -50.
 				SBOverlayOption new
 					contents: 'Extract method';
 					command: #extractMethod;
-					place: -200 @ 50
+					place: self optionDistance negated @ 50
 			};
-			center: 100 @ 100; right: 0);
+			center: self center; right: self optionDistance negated);
 		addMorphBack: (SBOverlayOption new
 			contents: 'Replace';
 			suboptions: {
 				SBOverlayOption new
 					contents: 'Swap left';
-					place: 200 @ 0.
+					place: self optionDistance @ 0.
 				SBOverlayOption new
 					contents: 'Swap right';
-					place: -200 @ 0
+					place: self optionDistance negated @ 0
 			};
-			center: 100 @ 100; bottom: 0)
+			center: self center; bottom: self optionDistance negated)

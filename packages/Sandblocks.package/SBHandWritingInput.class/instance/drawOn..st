@@ -1,8 +1,14 @@
 as yet unclassified
 drawOn: aCanvas
 
+	| cursorStart font |
+	font := TextStyle defaultFont.
+	
 	aCanvas fillRectangle: self bounds color: Color white.
-	aCanvas drawString: text at: self topLeft + 4.
+	aCanvas drawString: text at: self topLeft + 4 font: font color: Color black.
+	
+	cursorStart := (font widthOfString: text) @ self top + (self left + 4 @ 4).
+	aCanvas line: cursorStart to: cursorStart + (0 @ font height) width: 2 color: Color red.
 	
 	points overlappingPairsDo: [:start :end | | direction |
 		direction := self directionFrom: start to: end.

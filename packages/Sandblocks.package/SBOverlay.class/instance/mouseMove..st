@@ -2,7 +2,7 @@ as yet unclassified
 mouseMove: anEvent
 
 	| closestMorph |
-	(self center squaredDistanceTo: anEvent position) < (60 ** 2) ifTrue: [
+	(self center squaredDistanceTo: anEvent position) < (self deadzoneDistance ** 2) ifTrue: [
 		activeMorph ifNotNil: [activeMorph active: false].
 		activeMorph := nil.
 		^ self].

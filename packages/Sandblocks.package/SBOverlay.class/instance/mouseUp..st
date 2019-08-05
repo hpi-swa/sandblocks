@@ -3,4 +3,4 @@ mouseUp: anEvent
 
 	self delete.
 	
-	activeMorph ifNotNil: [self sandblockEditor perform: activeMorph command]
+	(activeMorph notNil and: [activeMorph command notNil]) ifTrue: [self sandblockEditor perform: activeMorph command]

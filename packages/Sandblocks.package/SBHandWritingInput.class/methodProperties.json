@@ -2,15 +2,16 @@
 	"class" : {
 		 },
 	"instance" : {
-		"characterFromStrokes:points:" : "tobe 8/1/2019 21:25",
+		"characterFromStrokes:points:" : "tobe 8/4/2019 09:21",
 		"directionFrom:to:" : "tobe 8/1/2019 15:06",
-		"drawOn:" : "tobe 8/1/2019 21:24",
+		"drawOn:" : "tobe 8/1/2019 21:57",
 		"handlesMouseDown:" : "tobe 8/1/2019 14:47",
 		"handlesMouseMove:" : "tobe 8/1/2019 14:47",
-		"initialize" : "tobe 8/1/2019 19:41",
+		"initialize" : "tobe 8/1/2019 21:58",
 		"mouseDown:" : "tobe 8/1/2019 14:48",
 		"mouseMove:" : "tobe 8/1/2019 14:47",
-		"mouseUp:" : "tobe 8/1/2019 19:49",
+		"mouseUp:" : "tobe 8/1/2019 21:42",
 		"oldCharacterFromStrokes:points:" : "tobe 8/1/2019 20:12",
 		"point:inLeft:of:" : "tobe 8/1/2019 19:37",
-		"point:inUpper:of:" : "tobe 8/1/2019 15:47" } }
+		"point:inUpper:of:" : "tobe 8/1/2019 15:47",
+		"smoothingThresholdSquared" : "tobe 8/1/2019 21:42" } }

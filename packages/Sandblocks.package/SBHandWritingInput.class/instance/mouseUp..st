@@ -15,7 +15,7 @@ mouseUp: anEvent
 		stream nextPut: currentPoint.
 		
 		points allButFirstDo: [:point |
-			(currentPoint squaredDistanceTo: point) > 300 ifTrue: [
+			(currentPoint squaredDistanceTo: point) > self smoothingThresholdSquared ifTrue: [
 				currentPoint := point.
 				stream nextPut: currentPoint]]].
 	
