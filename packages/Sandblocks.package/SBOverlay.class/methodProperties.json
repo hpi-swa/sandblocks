@@ -2,10 +2,10 @@
 	"class" : {
 		 },
 	"instance" : {
-		"deadzoneDistance" : "tobe 8/4/2019 09:41",
+		"deadzoneDistance" : "tobe 8/5/2019 13:38",
 		"initialize" : "tobe 8/4/2019 09:40",
 		"mouseMove:" : "tobe 8/4/2019 09:40",
 		"mouseUp:" : "tobe 8/4/2019 09:45",
-		"optionDistance" : "tobe 8/4/2019 09:43",
+		"optionDistance" : "tobe 8/5/2019 13:38",
 		"sandblockEditor" : "tobe 7/28/2019 10:46",
 		"sandblockEditor:" : "tobe 7/28/2019 10:46" } }

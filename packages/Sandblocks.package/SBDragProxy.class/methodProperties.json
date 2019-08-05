@@ -1,0 +1,13 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"connectTo:" : "tobe 8/5/2019 20:59",
+		"drawOn:" : "tobe 8/5/2019 21:15",
+		"initialize" : "tobe 8/5/2019 21:16",
+		"justDroppedInto:event:" : "tobe 8/5/2019 21:33",
+		"line:" : "tobe 8/5/2019 20:46",
+		"line:from:" : "tobe 8/5/2019 21:53",
+		"step" : "tobe 8/5/2019 21:56",
+		"stepTime" : "tobe 8/5/2019 20:52",
+		"valid:" : "tobe 8/5/2019 21:16" } }

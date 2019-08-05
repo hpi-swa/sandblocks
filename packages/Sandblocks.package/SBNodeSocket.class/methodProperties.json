@@ -1,0 +1,17 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"bubbleSize" : "tobe 8/5/2019 20:26",
+		"drawOn:" : "tobe 8/5/2019 20:25",
+		"handlesMouseDown:" : "tobe 8/5/2019 20:25",
+		"handlesMouseOver:" : "tobe 8/5/2019 20:41",
+		"handlesMouseOverDragging:" : "tobe 8/5/2019 21:07",
+		"initialize" : "tobe 8/5/2019 20:25",
+		"mouseDown:" : "tobe 8/5/2019 20:27",
+		"mouseEnter:" : "tobe 8/5/2019 20:41",
+		"mouseEnterDragging:" : "tobe 8/5/2019 22:08",
+		"mouseLeaveDragging:" : "tobe 8/5/2019 22:07",
+		"node" : "tobe 8/5/2019 20:58",
+		"startDrag:" : "tobe 8/5/2019 21:53",
+		"wantsDroppedMorph:event:" : "tobe 8/5/2019 21:05" } }

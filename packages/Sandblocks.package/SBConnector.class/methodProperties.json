@@ -1,0 +1,15 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"connectFrom:to:" : "tobe 8/5/2019 21:19",
+		"drawOn:" : "tobe 8/5/2019 22:09",
+		"end:" : "tobe 8/5/2019 21:53",
+		"handlesMouseMove:" : "tobe 8/5/2019 20:52",
+		"mouseMove:" : "tobe 8/5/2019 20:44",
+		"mouseUp:" : "tobe 8/5/2019 20:36",
+		"outerBounds" : "tobe 8/5/2019 22:06",
+		"rejectsEvent:" : "tobe 8/5/2019 21:32",
+		"start:" : "tobe 8/5/2019 21:54",
+		"startNow:" : "tobe 8/5/2019 21:54",
+		"updateConnection" : "tobe 8/5/2019 21:55" } }

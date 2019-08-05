@@ -1,4 +1,4 @@
 as yet unclassified
 optionDistance
 
-	^ 80
+	^ 80 * self scalingFactor

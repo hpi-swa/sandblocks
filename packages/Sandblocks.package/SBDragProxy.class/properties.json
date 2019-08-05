@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Graph",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"line",
+		"socket" ],
+	"name" : "SBDragProxy",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }
