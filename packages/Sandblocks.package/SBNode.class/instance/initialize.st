@@ -3,11 +3,21 @@ initialize
 
 	super initialize.
 	
+	flowIn := SBNodeSocket new
+		type: #flowIn;
+		when: #connected send: #hasFlowOut: to: self with: true.
+	flowOut := SBNodeSocket new type: #flowOut.
+	isFlowSource := false.
+	
 	self
-		layoutPolicy: SBHorizontalLayout new;
+		changeTableLayout;
+		listDirection: #topToBottom;
+		wrapCentering: #center;
 		cellInset: 8 * self scalingFactor;
-		addMorphBack: (inputs := SBColumn new);
-		addMorphBack: (outputs := SBColum new);
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		layoutInset: 8 * self scalingFactor
+		
+		addMorphBack: (SBRow new
+			changeTableLayout;
+			addMorphBack: (inputs := SBColumn new);
+			addMorphBack: (outputs := SBColum new))

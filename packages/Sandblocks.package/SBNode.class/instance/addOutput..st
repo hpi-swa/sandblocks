@@ -1,9 +1,13 @@
 as yet unclassified
 addOutput: aString
 
-	| label |
-	label := StringMorph new contents: aString.
+	| label socket |
+	label := self newTextMorph contents: aString.
+	socket := SBNodeSocket new
+			type: #output;
+			when: #connected send: #maybeRemoveFlowIn to: self.
 	outputs addMorphBack: (SBRow new
-		cellInset: 6 * self scalingFactor;
+		cellInset: 2 * self scalingFactor;
 		addMorphBack: label;
-		addMorphBack: (SBNodeSocket new color: Color red))
+		addMorphBack: socket).
+	^ socket

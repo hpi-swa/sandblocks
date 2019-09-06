@@ -2,8 +2,20 @@
 	"class" : {
 		 },
 	"instance" : {
-		"addInput:" : "tobe 8/5/2019 20:26",
-		"addOutput:" : "tobe 8/5/2019 20:26",
+		"addInput:" : "tobe 8/9/2019 09:47",
+		"addOutput:" : "tobe 8/9/2019 09:47",
 		"bubbleSize" : "tobe 8/5/2019 20:23",
 		"drawOn:" : "tobe 8/5/2019 20:06",
-		"initialize" : "tobe 8/5/2019 20:22" } }
+		"flowIn" : "tobe 8/9/2019 09:51",
+		"flowOut" : "tobe 8/9/2019 09:51",
+		"hasFlowIn:" : "tobe 8/7/2019 07:58",
+		"hasFlowOut:" : "tobe 8/7/2019 07:28",
+		"initialize" : "tobe 8/7/2019 07:55",
+		"inputs" : "tobe 8/6/2019 20:21",
+		"isFlowSource:" : "tobe 8/7/2019 07:56",
+		"isLink" : "tobe 9/6/2019 11:26",
+		"isNode" : "tobe 9/6/2019 11:26",
+		"maybeRemoveFlowIn" : "tobe 8/7/2019 07:57",
+		"newTextMorph" : "tobe 8/9/2019 09:47",
+		"output" : "tobe 8/9/2019 09:30",
+		"outputs" : "tobe 8/6/2019 20:21" } }

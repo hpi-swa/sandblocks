@@ -1,4 +1,4 @@
 as yet unclassified
 outerBounds
 
-	^ self bounds expandBy: 2 * self scalingFactor
+	^ self bounds expandBy: 20 * self scalingFactor

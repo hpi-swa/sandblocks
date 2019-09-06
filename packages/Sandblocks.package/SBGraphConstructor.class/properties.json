@@ -6,13 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"inputs",
-		"outputs",
-		"flowIn",
-		"flowOut",
-		"isFlowSource" ],
-	"name" : "SBNode",
+		"graph" ],
+	"name" : "SBGraphConstructor",
 	"pools" : [
 		 ],
-	"super" : "Morph",
+	"super" : "ParseNodeVisitor",
 	"type" : "normal" }

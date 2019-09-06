@@ -1,9 +1,11 @@
 as yet unclassified
 addInput: aString
 
-	| label |
-	label := StringMorph new contents: aString.
+	| label socket |
+	label := self newTextMorph contents: aString.
+	socket := SBNodeSocket new type: #input.
 	inputs addMorphBack: (SBRow new
-		cellInset: 6 * self scalingFactor;
-		addMorphBack: (SBNodeSocket new color: Color red);
-		addMorphBack: label)
+		cellInset: 2 * self scalingFactor;
+		addMorphBack: socket;
+		addMorphBack: label).
+	^ socket
