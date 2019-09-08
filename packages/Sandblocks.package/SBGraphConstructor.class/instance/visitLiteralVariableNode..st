@@ -1,4 +1,4 @@
 as yet unclassified
 visitLiteralVariableNode: aNode
 
-	^ self newNode addOutput: aNode name; yourself
+	^ (self newNode: SBLiteralNode) name: aNode name; yourself

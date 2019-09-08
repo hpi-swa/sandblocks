@@ -2,16 +2,15 @@ as yet unclassified
 visitMessageNode: aNode
 
 	| arguments node receiver |
-	receiver := aNode receiver accept: self.
-	arguments := aNode arguments collect: [:arg | arg accept: self].
+	receiver := aNode originalReceiver accept: self.
+	arguments := aNode originalArguments collect: [:arg | arg accept: self].
 	
-	node := self newNode.
-	self connect: receiver output to: (node addInput: (arguments ifEmpty: [aNode selector key] ifNotEmpty: ['self'])).
+	node := self newNode: SBMessageNode.
+	node selector: aNode originalSelector.
+	self connect: receiver outputSockets first to: node inputSockets first.
 	
 	arguments ifNotEmpty: [
-		aNode selector key keywords with: arguments do: [:part :arg |
-			self connect: arg output to: (node addInput: part)]].
-	
-	node addOutput: ''.
+		node inputSockets allButFirst with: arguments do: [:input :arg |
+			self connect: arg outputSockets first to: input]].
 	
 	^ node

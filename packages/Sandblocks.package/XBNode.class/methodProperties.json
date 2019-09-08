@@ -1,0 +1,10 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"addInput:" : "tobe 9/6/2019 12:14",
+		"addOutput:" : "tobe 9/6/2019 12:14",
+		"hasFlowSink" : "tobe 9/6/2019 11:57",
+		"hasFlowSource" : "tobe 9/6/2019 11:57",
+		"initialize" : "tobe 9/6/2019 12:04",
+		"updateContents" : "tobe 9/6/2019 12:14" } }

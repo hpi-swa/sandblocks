@@ -1,0 +1,23 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"acceptDroppingMorph:event:" : "tobe 9/6/2019 18:33",
+		"bubbleSize" : "tobe 8/5/2019 20:26",
+		"connectTo:" : "tobe 8/9/2019 09:42",
+		"drawOn:" : "tobe 9/6/2019 17:43",
+		"handlesMouseDown:" : "tobe 8/5/2019 20:25",
+		"handlesMouseOver:" : "tobe 8/5/2019 20:41",
+		"handlesMouseOverDragging:" : "tobe 8/5/2019 21:07",
+		"initialize" : "tobe 8/6/2019 21:55",
+		"mouseDown:" : "tobe 8/5/2019 20:27",
+		"mouseEnter:" : "tobe 8/5/2019 20:41",
+		"mouseEnterDragging:" : "tobe 8/7/2019 07:39",
+		"mouseLeaveDragging:" : "tobe 8/7/2019 07:40",
+		"node" : "tobe 9/6/2019 17:18",
+		"notifyConnectTo:" : "tobe 9/6/2019 18:33",
+		"notifyDisconnectFrom:" : "tobe 9/6/2019 18:33",
+		"startDrag:" : "tobe 9/8/2019 16:40",
+		"type" : "tobe 8/6/2019 21:54",
+		"type:" : "tobe 8/6/2019 21:54",
+		"wantsDroppedMorph:event:" : "tobe 9/6/2019 17:47" } }

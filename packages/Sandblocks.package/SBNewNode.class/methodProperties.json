@@ -1,0 +1,19 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"autoPlace" : "tobe 9/8/2019 16:20",
+		"autoPlaceInputs" : "tobe 9/8/2019 16:20",
+		"flowInSocket" : "tobe 9/6/2019 17:20",
+		"flowOutSocket" : "tobe 9/8/2019 11:09",
+		"hasFlowIn" : "tobe 9/6/2019 16:42",
+		"hasFlowOut" : "tobe 9/6/2019 16:42",
+		"initialize" : "tobe 9/8/2019 15:21",
+		"inputSockets" : "tobe 9/6/2019 17:04",
+		"inputs" : "tobe 9/6/2019 16:41",
+		"isLink" : "tobe 9/8/2019 16:33",
+		"isNode" : "tobe 9/8/2019 11:21",
+		"merge:withLabels:type:" : "tobe 9/6/2019 17:38",
+		"outputSockets" : "tobe 9/6/2019 17:04",
+		"outputs" : "tobe 9/6/2019 16:41",
+		"update" : "tobe 9/8/2019 15:23" } }

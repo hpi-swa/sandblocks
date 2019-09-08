@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Graph",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"selector",
+		"inCascade" ],
+	"name" : "SBMessageNode",
+	"pools" : [
+		 ],
+	"super" : "SBNewNode",
+	"type" : "normal" }

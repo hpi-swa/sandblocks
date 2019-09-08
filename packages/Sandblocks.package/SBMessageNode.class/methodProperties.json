@@ -1,0 +1,13 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"hasFlowIn" : "tobe 9/6/2019 18:30",
+		"hasFlowOut" : "tobe 9/8/2019 16:06",
+		"inCascade" : "tobe 9/8/2019 16:05",
+		"inCascade:" : "tobe 9/8/2019 16:08",
+		"initialize" : "tobe 9/8/2019 16:08",
+		"inputs" : "tobe 9/8/2019 11:06",
+		"outputs" : "tobe 9/8/2019 11:06",
+		"selector" : "tobe 9/8/2019 11:05",
+		"selector:" : "tobe 9/8/2019 11:03" } }

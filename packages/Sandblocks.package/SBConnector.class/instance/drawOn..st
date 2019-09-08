@@ -6,6 +6,7 @@ drawOn: aCanvas
 		ifTrue: [ | controlHeight |
 			controlHeight := (destination left - source left * 0.5) abs.
 			aCanvas asBalloonCanvas
+				aaLevel: 4;
 				drawBezier3Shape: {
 					source center.
 					source center + (0 @ controlHeight * (source type = #flowIn ifTrue: [-1] ifFalse: [1])).
