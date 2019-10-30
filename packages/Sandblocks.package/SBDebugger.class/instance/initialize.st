@@ -21,7 +21,7 @@ initialize
 		addMorphBack: (SBRow new
 			changeTableLayout;
 			layoutInset: 6 * self scalingFactor;
-			cellInset: 12 * self scalingFactor;
+			cellGap: 12 * self scalingFactor;
 			addMorphBack: (self shortcut: 'ctrl+q' label: 'step into');
 			addMorphBack: (self shortcut: 'ctrl+w' label: 'step through');
 			addMorphBack: (self shortcut: 'ctrl+e' label: 'step over');

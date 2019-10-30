@@ -11,4 +11,4 @@ minExtentOf: aMorph in: aRectangle
 		minHeight := extent y max: minHeight.
 		totalWidth := totalWidth + extent x].
 	
-	^ minExtentCache := (totalWidth + (aMorph submorphCount - 1 * aMorph cellInset)) @ minHeight
+	^ minExtentCache := (totalWidth + (aMorph submorphCount - 1 * aMorph cellGap)) @ minHeight

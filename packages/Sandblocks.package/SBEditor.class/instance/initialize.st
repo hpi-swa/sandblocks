@@ -25,12 +25,14 @@ initialize
 			showHScrollBarOnlyWhenNeeded;
 			hResizing: #spaceFill;
 			vResizing: #spaceFill;
+			cellPositioning: #topLeft;
 			yourself);
 		
 		addMorphBack: (Morph new
 			changeTableLayout;
+			cellPositioning: #topLeft;
 			vResizing: #rigid;
-			cellInset: 8 * self scalingFactor;
+			cellGap: 8 * self scalingFactor;
 			extent: 0 @ self copyBufferPreviewSize y;
 			hResizing: #spaceFill;
 			listDirection: #leftToRight;

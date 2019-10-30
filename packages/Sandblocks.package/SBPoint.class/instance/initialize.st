@@ -4,4 +4,6 @@ initialize
 	super initialize.
 	
 	self
-		layoutPolicy: SBHorizontalLayout new
+		layoutPolicy: SBHorizontalLayout new;
+		vResizing: #shrinkWrap;
+		hResizing: #shrinkWrap

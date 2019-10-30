@@ -10,5 +10,6 @@ initialize
 		hResizing: #shrinkWrap;
 		listDirection: #leftToRight;
 		addMorphBack: (text := SBString new castToUnknownWhenEmpty: false);
-		addMorphBack: ((exampleLabel  := SBStringMorph new contents: ' -- 0 Examples') on: #click send: #toggleExamples to: self);
-		addMorphBack: (examples := SBColum new)
+		addMorphBack: ((exampleLabel  := SBStringMorph new) on: #click send: #toggleExamples to: self);
+		addMorphBack: (examples := SBColum new);
+		updateLabel

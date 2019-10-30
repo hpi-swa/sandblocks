@@ -4,6 +4,6 @@ layoutVertically: aMorph in: aRectangle
 	| y |
 	y := aRectangle top.
 	aMorph submorphs pairsDo: [:messagePart :value |
-		messagePart bounds: (aRectangle left @ y extent: messagePart extent).
-		value bounds: (messagePart right + aMorph cellInset @ y extent: value extent).
+		messagePart layoutInBounds: (aRectangle left @ y extent: messagePart extent).
+		value layoutInBounds: (messagePart right + aMorph cellGap @ y extent: value extent).
 		y := y + (messagePart height max: value height)]

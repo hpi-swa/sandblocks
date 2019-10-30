@@ -1,4 +1,4 @@
 as yet unclassified
 childSandblocks
 
-	^ {text}, examples submorphs
+	^ {text}, (examples owner ifNotNil: [examples submorphs] ifNil: [#()])

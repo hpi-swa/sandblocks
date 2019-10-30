@@ -11,6 +11,6 @@ minExtentOf: aMorph in: aRectangle
 		ifTrue: [aMorph submorphsDo: [:m | x := x + m width. y := y max: m height]]
 		ifFalse: [
 			aMorph submorphs pairsDo: [:m1 :m2 |
-				x := x max: m1 width + aMorph cellInset + m2 width.
+				x := x max: m1 width + aMorph cellGap + m2 width.
 				y := y + (m1 height max: m2 height)]].
 	^ minExtentCache := x @ y

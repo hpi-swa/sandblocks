@@ -10,4 +10,4 @@ initialize
 		layoutInset: 10 * self scalingFactor;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		cellInset: 4 * self scalingFactor
+		cellGap: 4 * self scalingFactor

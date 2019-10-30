@@ -10,6 +10,7 @@ initialize
 		layoutPolicy: SBBlockBodyLayout new;
 		color: Color random;
 		cellPositioning: #topLeft;
+		cellPositioning: #topLeft;
 		listDirection: #topToBottom;
 		vResizing: #shrinkWrap; hResizing: #shrinkWrap;
 		addMorphBack: bindings;

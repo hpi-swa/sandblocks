@@ -5,5 +5,5 @@ layout: aMorph in: aRectangle
 	y := aRectangle top.
 	aMorph submorphsDo: [:m | | extent |
 		extent := m minExtent.
-		m bounds: (aRectangle left @ y extent: extent).
-		y := y + extent y + aMorph cellInset]
+		m layoutInBounds: (aRectangle left @ y extent: extent).
+		y := y + extent y + aMorph cellGap]

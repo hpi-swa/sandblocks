@@ -10,5 +10,5 @@ minExtentOf: aMorph in: aRectangle
 	s := aMorph signature minExtent.
 	
 	^ minExtentCache := (self wantsMultiRow: aMorph)
-		ifTrue: [(r x max: s x + (self indent * aMorph scalingFactor)) @ (r y + s y + (aMorph cellInset * self spaceFactorMultiRow))]
-		ifFalse: [(r x + s x + aMorph cellInset) @ (r y max: s y)]
+		ifTrue: [(r x max: s x + (self indent * aMorph scalingFactor)) @ (r y + s y + (aMorph cellGap * self spaceFactorMultiRow))]
+		ifFalse: [(r x + s x + aMorph cellGap) @ (r y max: s y)]

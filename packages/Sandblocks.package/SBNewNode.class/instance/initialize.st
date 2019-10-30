@@ -14,7 +14,7 @@ initialize
 		color: Color white;
 		addMorphBack: (inOutMorphs := SBRow new
 			changeTableLayout;
-			cellInset: 12;
+			cellGap: 12;
 			addMorphBack: (inputMorphs := SBColum new changeTableLayout);
 			addMorphBack: (outputMorphs := SBColum new changeTableLayout));
 		update

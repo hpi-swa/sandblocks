@@ -13,7 +13,7 @@ initialize
 		changeTableLayout;
 		listDirection: #topToBottom;
 		wrapCentering: #center;
-		cellInset: 8 * self scalingFactor;
+		cellGap: 8 * self scalingFactor;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		

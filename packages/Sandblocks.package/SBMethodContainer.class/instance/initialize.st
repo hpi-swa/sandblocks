@@ -6,6 +6,7 @@ initialize
 	self
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
+		cellPositioning: #topLeft;
 		layoutPolicy: SBVerticalLayout new;
 		color: Color transparent.
 		

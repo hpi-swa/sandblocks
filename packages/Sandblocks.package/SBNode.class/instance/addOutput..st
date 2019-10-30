@@ -7,7 +7,7 @@ addOutput: aString
 			type: #output;
 			when: #connected send: #maybeRemoveFlowIn to: self.
 	outputs addMorphBack: (SBRow new
-		cellInset: 2 * self scalingFactor;
+		cellGap: 2 * self scalingFactor;
 		addMorphBack: label;
 		addMorphBack: socket).
 	^ socket

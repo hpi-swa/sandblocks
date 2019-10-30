@@ -9,6 +9,6 @@ initialize
 		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		cellInset: 0;
+		cellGap: 0;
 		layoutInset: 0;
 		color: Color white

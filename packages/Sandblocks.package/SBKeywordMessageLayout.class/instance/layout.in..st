@@ -10,6 +10,6 @@ layout: aMorph in: aRectangle
 		valueExtent := value minExtent.
 		rowHeight := nameExtent y max: valueExtent y.
 		
-		name bounds: (aRectangle left + aMorph cellInset @ (y + (rowHeight - nameExtent y / 2) rounded) extent: nameExtent).
-		value bounds: (aRectangle left + (aMorph cellInset * 2) + nameExtent x @ (y + (rowHeight - valueExtent y / 2) rounded) extent: valueExtent).
-		y := y + aMorph cellInset + (nameExtent y max: valueExtent y)]
+		name layoutInBounds: (aRectangle left + aMorph cellGap @ (y + (rowHeight - nameExtent y / 2) rounded) extent: nameExtent).
+		value layoutInBounds: (aRectangle left + (aMorph cellGap * 2) + nameExtent x @ (y + (rowHeight - valueExtent y / 2) rounded) extent: valueExtent).
+		y := y + aMorph cellGap + (nameExtent y max: valueExtent y)]

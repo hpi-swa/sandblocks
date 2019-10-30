@@ -3,8 +3,8 @@ initialize
 	
 	super initialize.
 	self
-		vResizing: #'shrinkWrap';
-		hResizing: #'shrinkWrap'.
+		vResizing: #spaceFill;
+		hResizing: #spaceFill.
 	self extent: 0 @ 0.
 	cursor := 0.
 	suffix := ''.

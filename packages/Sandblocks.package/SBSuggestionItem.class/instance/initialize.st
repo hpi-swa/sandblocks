@@ -11,4 +11,4 @@ initialize
 		vResizing: #shrinkWrap;
 		hResizing: #spaceFill;
 		extent: 0 @ 0;
-		cellInset: 4 * self scalingFactor
+		cellGap: 4 * self scalingFactor

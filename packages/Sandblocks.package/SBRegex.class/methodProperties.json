@@ -5,13 +5,13 @@
 		"regex:examples:" : "tobe 7/22/2019 17:36" },
 	"instance" : {
 		"addCommandRequest" : "tobe 7/22/2019 18:42",
-		"addExample:" : "tobe 7/22/2019 18:51",
-		"childSandblocks" : "tobe 7/22/2019 17:50",
+		"addExample:" : "tobe 10/25/2019 23:44",
+		"childSandblocks" : "tobe 10/25/2019 23:58",
 		"contents" : "tobe 7/22/2019 10:21",
 		"contents:" : "tobe 7/22/2019 17:40",
 		"createExample:" : "tobe 7/22/2019 18:52",
 		"currentTextMorph" : "tobe 7/22/2019 10:21",
-		"initialize" : "tobe 7/22/2019 18:44",
+		"initialize" : "tobe 10/25/2019 23:42",
 		"prefix" : "tobe 7/22/2019 10:25",
 		"printOn:" : "tobe 7/22/2019 10:23",
 		"regexMatches:" : "tobe 7/22/2019 18:42",
@@ -19,5 +19,6 @@
 		"startInputAt:replacingContents:" : "tobe 7/22/2019 18:35",
 		"stopEditing:" : "tobe 7/22/2019 10:21",
 		"toggleExamples" : "tobe 7/22/2019 10:31",
+		"updateLabel" : "tobe 10/25/2019 23:44",
 		"valid" : "tobe 7/22/2019 10:33",
 		"writeSourceOn:" : "tobe 7/23/2019 08:41" } }
