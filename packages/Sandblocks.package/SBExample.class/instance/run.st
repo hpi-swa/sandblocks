@@ -1,19 +1,17 @@
 as yet unclassified
 run
 
-	| eval |
 	self containingMethod valid ifFalse: [^ self].
 	processRunning ifTrue: [^ self].
 	currentProcess ifNotNil: #terminate.
 	
-	eval :=  (SBMessageSend new
-		receiver: (SBMessageSend new receiver: self selfBlock veryDeepCopy selector: #value)
-		selector: self containingMethod selector
-		arguments: self argumentsBlock childSandblocks veryDeepCopy) sourceString.
-	
 	processRunning := true.
 	currentProcess := [
-		[Compiler evaluate: eval] on: Error do: [:e |
+		[ | arguments |
+			currentSelf := Compiler evaluate: (SBMessageSend new receiver: self selfBlock veryDeepCopy selector: #value) sourceString.
+			arguments := self argumentsBlock childSandblocks collect: [:block | Compiler evaluate: block sourceString].
+			currentSelf perform: self containingMethod selector asSymbol withArguments: arguments
+		] on: Error do: [:e |
 			processRunning := false.
 			self scheduleLastError: e.
 			Processor activeProcess suspend].

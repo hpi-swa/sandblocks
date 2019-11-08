@@ -1,5 +1,6 @@
 {
 	"class" : {
+		"getAllInMethod:" : "tobe 10/30/2019 14:39",
 		"matches:" : "tobe 7/13/2019 22:41",
 		"newFrom:" : "tobe 7/13/2019 22:42",
 		"self:args:" : "tobe 7/9/2019 20:54" },
@@ -7,6 +8,7 @@
 		"argumentsBlock" : "tobe 7/9/2019 21:31",
 		"childSandblocks" : "tobe 7/9/2019 21:31",
 		"click:" : "tobe 10/29/2019 08:31",
+		"currentSelf" : "tobe 10/30/2019 14:48",
 		"doubleClick:" : "tobe 7/10/2019 10:41",
 		"drawOn:" : "tobe 7/9/2019 21:21",
 		"drawnColor" : "tobe 7/9/2019 20:57",
@@ -16,7 +18,7 @@
 		"mouseDown:" : "tobe 7/10/2019 22:38",
 		"outOfWorld:" : "tobe 7/10/2019 10:32",
 		"printOn:" : "tobe 7/9/2019 21:06",
-		"run" : "tobe 7/10/2019 22:35",
+		"run" : "tobe 10/30/2019 15:59",
 		"scheduleLastError:" : "tobe 7/10/2019 10:20",
 		"self:args:" : "tobe 7/9/2019 21:56",
 		"selfBlock" : "tobe 7/9/2019 21:31",

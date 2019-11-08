@@ -3,16 +3,13 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		 ],
+		"Registry" ],
 	"commentStamp" : "",
 	"instvars" : [
-		"icon",
-		"lastError",
-		"errorIndicator",
-		"currentProcess",
-		"processRunning",
-		"currentSelf" ],
-	"name" : "SBExample",
+		"identifier",
+		"expression",
+		"display" ],
+	"name" : "SBExampleWatch",
 	"pools" : [
 		 ],
 	"super" : "SBSubstitution",
