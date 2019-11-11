@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Watch",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBDisplayBarChart",
+	"pools" : [
+		 ],
+	"super" : "ECSGraphPlot",
+	"type" : "normal" }

@@ -8,4 +8,4 @@ initialize
 		cellGap: 4;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		addMorphBack: (display := ECSWatchView new dark: true)
+		addMorphBack: (display := SBWatchView new dark: true)

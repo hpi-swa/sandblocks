@@ -4,7 +4,7 @@
 		"newFrom:" : "tobe 7/15/2019 17:52",
 		"registerWatch:" : "tobe 6/28/2019 18:35",
 		"registry" : "tobe 6/28/2019 18:34",
-		"report:for:" : "tobe 6/28/2019 18:37" },
+		"report:for:" : "tobe 11/8/2019 14:04" },
 	"instance" : {
 		"childSandblocks" : "tobe 7/10/2019 08:23",
 		"click:" : "tobe 11/8/2019 12:21",
@@ -16,11 +16,12 @@
 		"expression:" : "tobe 7/10/2019 09:49",
 		"identifier" : "tobe 6/28/2019 18:23",
 		"identifier:" : "tobe 6/28/2019 18:38",
-		"initialize" : "tobe 10/16/2019 10:24",
+		"initialize" : "tobe 11/11/2019 15:11",
 		"isExpression" : "tobe 7/3/2019 08:19",
+		"isWatch" : "tobe 11/11/2019 15:02",
 		"mouseDown:" : "tobe 6/28/2019 21:12",
 		"newIdentifier" : "tobe 6/30/2019 13:35",
 		"printOn:" : "tobe 6/30/2019 13:32",
 		"reportValue:" : "tobe 7/10/2019 08:21",
 		"veryDeepCopyWith:" : "tobe 6/30/2019 13:40",
-		"writeSourceOn:" : "tobe 6/28/2019 22:06" } }
+		"writeSourceOn:" : "tobe 11/8/2019 14:01" } }

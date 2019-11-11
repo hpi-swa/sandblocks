@@ -1,0 +1,17 @@
+{
+	"category" : "Sandblocks-Watch",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"display",
+		"lastValue",
+		"dark",
+		"hadValue" ],
+	"name" : "SBWatchView",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }
