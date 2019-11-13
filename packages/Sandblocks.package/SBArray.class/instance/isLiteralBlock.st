@@ -1,4 +1,4 @@
 as yet unclassified
-isLiteral
+isLiteralBlock
 
 	^ type = #literal

@@ -3,6 +3,7 @@ watchTypes
 
 	^ {
 		SBDisplayBarChart.
+		SBDisplayActiveExpression.
 		SBDisplayColor.
 		SBDisplayMorph.
 		SBDisplayPrint.

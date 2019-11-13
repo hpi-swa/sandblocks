@@ -5,6 +5,8 @@ run
 	processRunning ifTrue: [^ self].
 	currentProcess ifNotNil: #terminate.
 	
+	self sendStartNotification.
+	
 	processRunning := true.
 	currentProcess := [
 		[ | arguments |

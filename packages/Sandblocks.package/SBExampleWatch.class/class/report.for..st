@@ -1,13 +1,13 @@
 as yet unclassified
 report: aValue for: aSymbol
 
-	| reg watcher |
-	SBExample allInstances
+	| reg watcher example |
+	example  := SBExample allInstances
 		detect: #isCurrent
-		ifFound: [:example |
-			reg := self registry.
-			watcher := reg at: aSymbol ifAbsent: [^ aValue].
-			watcher ifNil: [reg removeKey: aSymbol] ifNotNil: [watcher reportValue: aValue]]
-		ifNone: [].
+		ifNone: [nil].
+	
+	reg := self registry.
+	watcher := reg at: aSymbol ifAbsent: [^ aValue].
+	watcher ifNil: [reg removeKey: aSymbol] ifNotNil: [watcher reportValue: aValue for: example].
 	
 	^ aValue

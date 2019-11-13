@@ -7,4 +7,4 @@ writeSourceOn: aStream
 	self selfBlock writeSourceOn: aStream.
 	aStream nextPutAll: '] args: ['.
 	self argumentsBlock writeSourceOn: aStream.
-	aStream nextPutAll: '])'
+	aStream nextPutAll: '] label: '''; nextPutAll: nameInput contents; nextPutAll: ''')'

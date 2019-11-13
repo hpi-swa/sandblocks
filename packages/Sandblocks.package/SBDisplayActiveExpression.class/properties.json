@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-ActiveExpression",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"expression" ],
+	"name" : "SBDisplayActiveExpression",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }

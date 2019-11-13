@@ -1,4 +1,4 @@
 as yet unclassified
 self: aBlock args: aCollection
 
-	" marker "
+	" legacy marker, compat "

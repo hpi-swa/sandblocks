@@ -40,7 +40,7 @@ initialize
 			addMorphBack: (modeLabel := StringMorph new emphasis: TextEmphasis bold emphasisCode);
 			addMorphBack: (selectionLabel := StringMorph new contents: '');
 			addMorphBack: (Morph new extent: 0 @ 0; hResizing: #spaceFill; color: Color transparent);
-			addMorphBack: (copyBufferPreview := ImageMorph new image: (Form extent: self copyBufferPreviewSize));
+			addMorphBack: (copyBufferPreview := ImageMorph new image: (Form extent: 1 @ 1));
 			yourself).
 	
 	scroll scroller addMorphBack: (methodContainer := SBMethodContainer new editor: self)

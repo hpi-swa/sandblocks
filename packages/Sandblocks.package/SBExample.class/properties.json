@@ -11,7 +11,8 @@
 		"errorIndicator",
 		"currentProcess",
 		"processRunning",
-		"currentSelf" ],
+		"currentSelf",
+		"nameInput" ],
 	"name" : "SBExample",
 	"pools" : [
 		 ],

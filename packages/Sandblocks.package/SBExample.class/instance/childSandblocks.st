@@ -1,4 +1,4 @@
 as yet unclassified
 childSandblocks
 
-	^ {self selfBlock. self argumentsBlock}
+	^ {nameInput. self selfBlock. self argumentsBlock}

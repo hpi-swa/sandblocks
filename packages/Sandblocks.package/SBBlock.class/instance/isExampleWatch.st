@@ -1,4 +1,4 @@
 testing
-isLiteral
+isExampleWatch
 
 	^ false

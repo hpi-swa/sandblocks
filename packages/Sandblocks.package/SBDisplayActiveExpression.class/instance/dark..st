@@ -1,4 +1,2 @@
 as yet unclassified
-isLiteral
-
-	^ false
+dark: aBoolean
