@@ -2,4 +2,4 @@ as yet unclassified
 printOn: aStream
 
 	aStream nextPutAll: 'watch '.
-	self expression printOn: aStream
+	self hasSubmorphs ifTrue: [self expression printOn: aStream]

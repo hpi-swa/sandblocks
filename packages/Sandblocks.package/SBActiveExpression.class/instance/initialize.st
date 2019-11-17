@@ -9,4 +9,5 @@ initialize
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		listDirection: #leftToRight;
+		cellPositioning: #center;
 		addMorphBack: (SBStringMorph new contents: 'AE: ')

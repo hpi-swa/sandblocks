@@ -20,4 +20,4 @@ run
 		self scheduleLastError: nil.
 		currentProcess := nil.
 		processRunning := false
-	] fork
+	] forkAt: Processor userBackgroundPriority

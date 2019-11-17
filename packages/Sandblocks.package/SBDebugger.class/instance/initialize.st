@@ -16,7 +16,7 @@ initialize
 			addCommandShortcut: $w command do: [:editor | self stepThrough];
 			addCommandShortcut: $e command do: [:editor | self stepOver];
 			addCommandShortcut: $r command do: [:editor | self restart];
-			addCommandShortcut: $a command do: [:editor | self where]);
+			addCommandShortcut: $z command do: [:editor | self where]);
 		changeTableLayout;
 		addMorphBack: (SBRow new
 			changeTableLayout;
