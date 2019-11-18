@@ -5,6 +5,6 @@ resetState
 	redoStack  := OrderedCollection new.
 	selectionDownHistory := OrderedCollection new.
 	unsavedChanges := false.
-	selection := self method.
+	selection := self methods ifNotEmpty: #first.
 	colorPolicy := colorPolicy class new.
 	self mode: #command

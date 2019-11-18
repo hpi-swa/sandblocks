@@ -21,11 +21,9 @@ initialize
 		hResizing: #shrinkWrap;
 		listDirection: #topToBottom;
 		
-		addMorphBack: (scroll := SBScrollPane new
-			showHScrollBarOnlyWhenNeeded;
+		addMorphBack: (scroll := SBEditorCanvas new
 			hResizing: #spaceFill;
 			vResizing: #spaceFill;
-			cellPositioning: #topLeft;
 			yourself);
 		
 		addMorphBack: (Morph new
@@ -41,6 +39,4 @@ initialize
 			addMorphBack: (selectionLabel := StringMorph new contents: '');
 			addMorphBack: (Morph new extent: 0 @ 0; hResizing: #spaceFill; color: Color transparent);
 			addMorphBack: (copyBufferPreview := ImageMorph new image: (Form extent: 1 @ 1));
-			yourself).
-	
-	scroll scroller addMorphBack: (methodContainer := SBMethodContainer new editor: self)
+			yourself)

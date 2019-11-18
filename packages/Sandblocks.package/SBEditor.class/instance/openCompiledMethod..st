@@ -1,5 +1,5 @@
 actions
-compiledMethod: aMethod
+openCompiledMethod: aMethod
 
 	| methodNode class parser source sourceRanges debuggerMap rangeToPC nodeToPC rangeToPCList |
 	"methodNode := aMethod methodNode""Parser new parse: aMethod getSource class: aMethod methodClass".

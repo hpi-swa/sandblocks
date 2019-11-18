@@ -1,8 +1,8 @@
 as yet unclassified
 resizeToFit
 
-	| extent |
+	| extent outer |
 	self fullBounds.
-	extent := scroll extentToFit + self extent - scroll extent + (20 @ 40 * self scalingFactor).
-	((self ownerThatIsA: SystemWindow) ifNil: [self]) extent: extent x @ (extent y min: Display height - (200 * self scalingFactor)).
-	scroll setScrollDeltas
+	outer := (self ownerThatIsA: SystemWindow) ifNil: [self].
+	extent := scroll extentToFit + outer extent - scroll extent + (20 @ 20 * self scalingFactor).
+	outer extent: extent x @ (extent y min: Display height - (100 * self scalingFactor))

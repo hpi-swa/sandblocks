@@ -10,7 +10,7 @@ reportValue: anObject
 				and: [context isMethodContext]]) sender.
 			
 			"self addMorphBack: (SBString new contents: sendingContext asString)"
-			image := ((SBEditor new compiledMethod: sendingContext method) method blockForPC: sendingContext pc) imageForm asMorph
+			image := ((SBEditor new openCompiledMethod: sendingContext method) methods first blockForPC: sendingContext pc) imageForm asMorph
 				vResizing: #shrinkWrap;
 				hResizing: #shrinkWrap;
 				balloonText: (((sendingContext stackOfSize: 5) collect: #asString) joinSeparatedBy: String cr);

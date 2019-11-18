@@ -1,4 +1,4 @@
 as yet unclassified
 method
 
-	^ methodContainer method
+	^ self selection containingMethod
