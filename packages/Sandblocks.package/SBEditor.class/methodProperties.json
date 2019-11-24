@@ -3,7 +3,7 @@
 		"openFor:" : "tobe 7/6/2019 12:08" },
 	"instance" : {
 		"addCommandShortcut:do:" : "tobe 7/7/2019 11:06",
-		"addDefaultShortcuts" : "tobe 11/24/2019 18:15",
+		"addDefaultShortcuts" : "tobe 11/24/2019 22:56",
 		"addElement" : "tobe 6/30/2019 21:36",
 		"addExample" : "tobe 11/23/2019 09:29",
 		"addGlobalShortcut:do:" : "tobe 7/7/2019 11:04",
@@ -42,6 +42,9 @@
 		"filterEvent:for:" : "tobe 7/14/2019 07:14",
 		"implementorsOfIt" : "tobe 7/7/2019 22:35",
 		"initialize" : "tobe 11/21/2019 09:01",
+		"insertLabelAbove" : "tobe 11/24/2019 22:56",
+		"insertLabelAboveOrBelow:" : "tobe 11/24/2019 22:57",
+		"insertLabelBelow" : "tobe 11/24/2019 22:56",
 		"insertStatementAbove" : "tobe 7/7/2019 09:52",
 		"insertStatementAboveOrBelow:" : "tobe 7/7/2019 23:23",
 		"insertStatementBelow" : "tobe 7/7/2019 09:52",

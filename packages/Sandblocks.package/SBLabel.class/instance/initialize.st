@@ -8,4 +8,5 @@ initialize
 		vResizing: #shrinkWrap;
 		changeTableLayout;
 		layoutInset: 8 * self scalingFactor;
-		addMorphBack: (text := SBOwnTextMorph new emphasis: TextEmphasis italic)
+		addMorphBack: (text := SBOwnTextMorph new emphasis: TextEmphasis italic);
+		headingLevel: 0

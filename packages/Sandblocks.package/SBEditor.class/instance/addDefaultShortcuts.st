@@ -11,6 +11,8 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $0 do: #selectLeftMostBlock;
 		addSingleSelectionShortcut: $a do: #startInputAtEnd;
 		addSingleSelectionShortcut: $s do: #startInputSubstituting;
+		addSingleSelectionShortcut: $n do: #insertLabelBelow;
+		addSingleSelectionShortcut: $N do: #insertLabelAbove;
 		addSingleSelectionShortcut: $o do: #insertStatementBelow;
 		addSingleSelectionShortcut: $O do: #insertStatementAbove;
 		addSingleSelectionShortcut: $, do: #promptCodeAction;
