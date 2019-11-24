@@ -9,7 +9,8 @@
 		"cursor",
 		"contents",
 		"emphasis",
-		"suffix" ],
+		"suffix",
+		"font" ],
 	"name" : "SBOwnTextMorph",
 	"pools" : [
 		 ],
