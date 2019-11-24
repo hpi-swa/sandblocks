@@ -6,10 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"scroll",
-		"label" ],
-	"name" : "SBCodeLens",
+		"lastDragPosition" ],
+	"name" : "SBCodeContainer",
 	"pools" : [
 		 ],
-	"super" : "SBCodeContainer",
+	"super" : "SBBlock",
 	"type" : "normal" }

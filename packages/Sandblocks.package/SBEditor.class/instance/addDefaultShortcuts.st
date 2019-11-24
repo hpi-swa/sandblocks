@@ -24,7 +24,8 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $= do: #extractVariable;
 		addSingleSelectionShortcut: $c command do: #copyString;
 		addSingleSelectionShortcut: $v command do: #pasteString;
-		addSingleSelectionShortcut: $w do: #watchSelection;
+		addSingleSelectionShortcut: $w do: #watchSelectionForExample;
+		addSingleSelectionShortcut: $W do: #watchSelection;
 		addSingleSelectionShortcut: $r do: #replaceWithCopyBuffer;
 		addSingleSelectionShortcut: $c do: #changeSelection;
 		addSingleSelectionShortcut: $n command do: #sendersOfIt;

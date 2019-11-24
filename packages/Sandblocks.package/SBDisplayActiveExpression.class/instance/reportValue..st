@@ -8,9 +8,12 @@ reportValue: anObject
 			image := stackDefs first imageForm asMorph
 				vResizing: #shrinkWrap;
 				hResizing: #shrinkWrap;
+				setProperty: #_stack toValue: stackDefs;
 				balloonText: ((stackDefs collect: #stringRepresentation) joinSeparatedBy: String cr);
+				on: #click send: #openStack:event:morph: to: self withValue: stackDefs;
 				yourself.
 			
-			image setProperty: #_stack toValue: stackDefs.
-			image on: #click send: #openStack:event:morph: to: self withValue: stackDefs.
-			self addMorphBack: image]]
+			self addMorphBack: (SBRow new
+				hResizing: #spaceFill;
+				addMorphBack: (SBStringMorph new contents: expression lastValue asString, ' <- '; hResizing: #spaceFill);
+				addMorphBack: image)]]

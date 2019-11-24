@@ -13,5 +13,6 @@ openStack: aCollectionOfStackDefs event: anEvent morph: aMorph
 		methodBlock position: 0 @ y.
 		y := y + methodBlock height].
 	
-	accordion position: aMorph right + 40 @ aMorph top.
-	editor openMorph: accordion
+	accordion position: aMorph containingSandblock codeContainer right + (5 * self scalingFactor) @ aMorph top.
+	editor openMorph: accordion.
+	accordion select

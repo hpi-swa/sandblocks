@@ -1,9 +1,9 @@
 as yet unclassified
-checkExclusiveFocusTo: aMorph
+checkExclusiveFocusTo: aBlock
 
 	| lens |
-	aMorph ifNotNil: [
-		lens := aMorph containingMethod owner owner.
-		lens owner = self ifTrue: [
+	aBlock ifNotNil: [
+		lens := aBlock codeContainer.
+		(lens notNil and: [lens owner = self and: [lens ~= aBlock]]) ifTrue: [
 			lens expand.
 			self submorphsDo: [:morph | morph = lens ifFalse: [morph collapseCompletely]]]]

@@ -4,6 +4,6 @@ exampleStarting: anExample
 	(exampleValues
 		at: anExample
 		ifAbsentPut: [ | display |
-			display := SBExampleValueDisplay new name: anExample name.
+			display := SBExampleValueDisplay new.
 			self addMorphBack: (exampleValues at: anExample put: display).
-			display]) exampleStarting: anExample
+			display]) exampleStarting: anExample; name: anExample label

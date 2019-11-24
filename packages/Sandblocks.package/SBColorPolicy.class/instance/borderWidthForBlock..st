@@ -1,4 +1,4 @@
 as yet unclassified
 borderWidthForBlock: aBlock
 
-	^ 1
+	^ aBlock isMethod ifTrue: [0] ifFalse: [1]

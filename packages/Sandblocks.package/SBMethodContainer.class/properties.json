@@ -7,10 +7,9 @@
 	"commentStamp" : "",
 	"instvars" : [
 		"editor",
-		"overlayDrawBlocks",
-		"lastDragPosition" ],
+		"overlayDrawBlocks" ],
 	"name" : "SBMethodContainer",
 	"pools" : [
 		 ],
-	"super" : "SBBlock",
+	"super" : "SBCodeContainer",
 	"type" : "normal" }

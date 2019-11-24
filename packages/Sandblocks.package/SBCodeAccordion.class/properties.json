@@ -10,5 +10,5 @@
 	"name" : "SBCodeAccordion",
 	"pools" : [
 		 ],
-	"super" : "SBBlock",
+	"super" : "SBCodeContainer",
 	"type" : "normal" }

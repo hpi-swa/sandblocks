@@ -3,18 +3,15 @@ internalSelect: aBlock
 
 	| previousSelection |
 	previousSelection := selection.
-	aBlock
-		ifNil: [
-			selection := nil.
-			previousSelection ifNotNil: #changed]
-		ifNotNil: [
-			selection := aBlock.
-			previousSelection ifNotNil: #changed.
-			selection changed.
-			
-			" sometimes we don't have a layout yet, so wait a frame before we scroll wherever we need to "
-			Project current addDeferredUIMessage: [scroll scrollToShow: selection bounds]].
-	(previousSelection notNil and: [previousSelection owner notNil and: [previousSelection containingMethod ~= (aBlock ifNotNil: #containingMethod)]]) ifTrue: [previousSelection containingMethod changed].
-	aBlock ifNotNil: [aBlock containingMethod owner changed].
-	self triggerEvent: #selectionChanged with: aBlock.
+	selection := aBlock.
+	
+	" sometimes we don't have a layout yet, so wait a frame before we scroll wherever we need to "
+	selection ifNotNil: [
+		selection changed.
+		selection wasSelected.
+		Project current addDeferredUIMessage: [scroll scrollToShow: selection]].
+	
+	previousSelection ifNotNil: #changed.
+	
+	self triggerEvent: #selectionChanged with: selection.
 	self updateSelectionLabel

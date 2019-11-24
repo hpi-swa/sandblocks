@@ -7,7 +7,7 @@ openMethod: aMethodBlock
 		wasEdit: true;
 		index: 1;
 		container: scroll;
-		morph: (SBMethodContainer new position: self position; editor: self; method: aMethodBlock);
+		morph: (SBMethodContainer new position: self position; method: aMethodBlock);
 		yourself).
 	self resetState.
 	self changed: #relabel.

@@ -1,15 +1,19 @@
 {
 	"class" : {
 		"forContext:" : "tobe 11/23/2019 09:37",
-		"forMethod:pc:" : "tobe 11/21/2019 15:00" },
+		"forMethod:pc:" : "tobe 11/24/2019 17:48" },
 	"instance" : {
+		"applyMode:" : "tobe 11/24/2019 17:59",
 		"childSandblocks" : "tobe 11/21/2019 14:32",
-		"collapse" : "tobe 11/23/2019 15:57",
-		"collapseCompletely" : "tobe 11/23/2019 15:49",
-		"drawSubmorphsOn:" : "tobe 11/23/2019 15:56",
-		"expand" : "tobe 11/23/2019 15:56",
+		"collapse" : "tobe 11/24/2019 17:48",
+		"collapseCompletely" : "tobe 11/24/2019 17:48",
+		"drawSubmorphsOn:" : "tobe 11/24/2019 18:06",
+		"expand" : "tobe 11/24/2019 17:47",
 		"fadeSize" : "tobe 11/21/2019 17:23",
-		"focus:" : "tobe 11/23/2019 10:44",
-		"initialize" : "tobe 11/23/2019 15:53",
+		"findMarkedBlock" : "tobe 11/24/2019 17:41",
+		"focus:" : "tobe 11/24/2019 17:48",
+		"initialize" : "tobe 11/24/2019 17:39",
+		"isExpanded" : "tobe 11/24/2019 17:35",
 		"method" : "tobe 11/21/2019 15:11",
-		"method:" : "tobe 11/21/2019 16:43" } }
+		"method:" : "tobe 11/21/2019 16:43",
+		"wasSelected" : "tobe 11/24/2019 17:36" } }
