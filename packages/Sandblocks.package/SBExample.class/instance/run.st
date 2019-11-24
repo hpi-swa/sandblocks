@@ -19,5 +19,6 @@ run
 			Processor activeProcess suspend].
 		self scheduleLastError: nil.
 		currentProcess := nil.
-		processRunning := false
+		processRunning := false.
+		Project current addDeferredUIMessage: [self sendFinishNotification]
 	] forkAt: Processor userBackgroundPriority

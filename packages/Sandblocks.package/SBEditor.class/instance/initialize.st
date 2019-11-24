@@ -39,4 +39,6 @@ initialize
 			addMorphBack: (selectionLabel := StringMorph new contents: '');
 			addMorphBack: (Morph new extent: 0 @ 0; hResizing: #spaceFill; color: Color transparent);
 			addMorphBack: (copyBufferPreview := ImageMorph new image: (Form extent: 1 @ 1));
-			yourself)
+			yourself);
+		
+		resetState

@@ -30,6 +30,7 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $n command do: #sendersOfIt;
 		addSingleSelectionShortcut: $m command do: #implementorsOfIt;
 		addSingleSelectionShortcut: $b command do: #browseSelection;
+		addSingleSelectionShortcut: $q do: #closeSelectedMethod;
 		
 		addMultiSelectionShortcut: Character escape do: #endMultiSelection;
 		addMultiSelectionShortcut: $l do: #selectNext;

@@ -7,6 +7,6 @@ initialize
 		color: Color transparent;
 		changeTableLayout;
 		hResizing: #spaceFill;
-		vResizing: #spaceFill;
+		vResizing: #shrinkWrap;
 		listDirection: #topToBottom;
 		cellGap: 4 * self scalingFactor

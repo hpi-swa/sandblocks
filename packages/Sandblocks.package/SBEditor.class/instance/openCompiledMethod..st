@@ -25,4 +25,4 @@ openCompiledMethod: aMethod
 			methodNode := aMethod methodNode.
 			methodNode generate].
 	
-	self openMethod: methodNode asSandblock
+	^ self openMethod: methodNode asSandblock

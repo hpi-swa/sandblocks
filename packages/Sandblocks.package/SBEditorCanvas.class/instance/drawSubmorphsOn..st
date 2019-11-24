@@ -1,5 +1,7 @@
 as yet unclassified
 drawSubmorphsOn: aCanvas
 
-	aCanvas transformBy: transform clippingTo: self innerBounds during: [:canvas |
-		super drawSubmorphsOn: canvas]
+	super drawSubmorphsOn: aCanvas
+	
+	"aCanvas asBalloonCanvas transformBy: self transform
+		during:[:myCanvas| submorphs reverseDo: [:m | myCanvas fullDrawMorph: m]]"

@@ -3,7 +3,7 @@ self: aBlock args: aCollectionBlock label: aString
 
 	self
 		removeAllMorphs;
-		addMorphBack: (icon := ECSIcon iconPause color: Color white);
+		addMorphBack: (icon := SBIcon iconPause small; color: Color white);
 		addMorphBack: (nameInput := SBTextBubble new contents: aString);
 		addMorphBack: (SBStringMorph new contents: 'self:');
 		addMorphBack: aBlock;

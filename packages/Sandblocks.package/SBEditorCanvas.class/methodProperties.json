@@ -2,9 +2,18 @@
 	"class" : {
 		 },
 	"instance" : {
-		"drawSubmorphsOn:" : "tobe 11/17/2019 20:23",
-		"extentToFit" : "tobe 11/17/2019 21:12",
-		"handlesMouseWheel:" : "tobe 11/17/2019 21:18",
-		"initialize" : "tobe 11/17/2019 21:07",
+		"click:" : "tobe 11/21/2019 09:21",
+		"containsPoint:" : "tobe 11/21/2019 09:21",
+		"drawSubmorphsOn:" : "tobe 11/21/2019 10:05",
+		"extentToFit" : "tobe 11/21/2019 13:08",
+		"handlesMouseDown:" : "tobe 11/21/2019 09:21",
+		"handlesMouseWheel:" : "tobe 11/21/2019 09:49",
+		"initialize" : "tobe 11/21/2019 09:48",
+		"mouseDown:" : "tobe 11/21/2019 09:18",
+		"mouseMove:" : "tobe 11/21/2019 10:08",
+		"mouseUp:" : "tobe 11/21/2019 09:12",
 		"mouseWheel:" : "tobe 11/17/2019 21:45",
-		"scrollToShow:" : "tobe 11/17/2019 20:23" } }
+		"moveViewport:" : "tobe 11/21/2019 09:15",
+		"scrollToShow:" : "tobe 11/17/2019 20:23",
+		"startDrag:" : "tobe 11/21/2019 10:08",
+		"zoomViewport:from:" : "tobe 11/21/2019 10:10" } }

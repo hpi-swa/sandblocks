@@ -1,4 +1,4 @@
 as yet unclassified
 colorPolicy
 
-	^ self sandblockEditor colorPolicy
+	^ self sandblockEditor ifNotNil: #colorPolicy

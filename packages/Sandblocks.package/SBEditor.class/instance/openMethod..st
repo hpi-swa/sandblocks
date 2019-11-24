@@ -3,8 +3,15 @@ openMethod: aMethodBlock
 
 	self okToChange ifFalse: [^ self].
 	
-	scroll addMorphBack: (SBMethodContainer new position: self position; editor: self; method: aMethodBlock).
+	self do: (SBInsertCommand new
+		wasEdit: true;
+		index: 1;
+		container: scroll;
+		morph: (SBMethodContainer new position: self position; editor: self; method: aMethodBlock);
+		yourself).
 	self resetState.
 	self changed: #relabel.
 	
-	self resizeToFit
+	self resizeToFit.
+	
+	^ aMethodBlock

@@ -3,6 +3,8 @@ initialize
 
 	super initialize.
 	
+	marked := false.
+	
 	self
 		color: Color transparent;
 		cellPositioning: #topLeft;

@@ -3,6 +3,7 @@ initialize
 
 	super initialize.
 	
-	transform := MorphicTransform identity.
+	dragging := false.
+	self smoothing: 2.
 	
 	self color: Color white

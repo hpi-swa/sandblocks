@@ -1,4 +1,4 @@
 as yet unclassified
 method
 
-	^ self selection containingMethod
+	^ self selection ifNotNil: #containingMethod ifNil: [self methods first]

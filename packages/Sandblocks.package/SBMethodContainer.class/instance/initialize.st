@@ -8,6 +8,7 @@ initialize
 		hResizing: #shrinkWrap;
 		cellPositioning: #topLeft;
 		layoutPolicy: SBVerticalLayout new;
-		color: Color transparent.
+		color: Color transparent;
+		layoutInset: 0.
 		
 	overlayDrawBlocks := OrderedCollection new

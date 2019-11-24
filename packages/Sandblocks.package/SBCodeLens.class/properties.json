@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"scroll",
+		"label" ],
+	"name" : "SBCodeLens",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

@@ -3,8 +3,10 @@
 		 },
 	"instance" : {
 		"do" : "tobe 6/30/2019 21:15",
-		"initialize" : "tobe 6/30/2019 21:16",
+		"initialize" : "tobe 11/21/2019 08:55",
 		"postDo" : "tobe 7/10/2019 22:47",
 		"shouldMergeWithNext" : "tobe 6/30/2019 21:16",
 		"shouldMergeWithNext:" : "tobe 6/30/2019 21:16",
-		"undo" : "tobe 6/30/2019 21:15" } }
+		"undo" : "tobe 6/30/2019 21:15",
+		"wasEdit" : "tobe 11/21/2019 08:55",
+		"wasEdit:" : "tobe 11/21/2019 08:55" } }

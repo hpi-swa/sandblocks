@@ -3,7 +3,9 @@
 		"matches:" : "tobe 11/11/2019 18:06" },
 	"instance" : {
 		"dark:" : "tobe 11/11/2019 18:33",
+		"exampleFinished:" : "tobe 11/24/2019 15:48",
 		"exampleStarting:" : "tobe 11/11/2019 18:37",
-		"initialize" : "tobe 11/13/2019 17:55",
-		"isExampleWatch" : "tobe 11/11/2019 18:37",
-		"reportValue:" : "tobe 11/17/2019 20:44" } }
+		"initialize" : "tobe 11/21/2019 14:23",
+		"openStack:event:morph:" : "tobe 11/23/2019 09:45",
+		"relevantContextsFrom:" : "tobe 11/24/2019 11:55",
+		"reportValue:" : "tobe 11/24/2019 11:54" } }

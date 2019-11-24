@@ -6,9 +6,11 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"transform" ],
+		"dragging",
+		"lastDragPosition",
+		"dragStartPosition" ],
 	"name" : "SBEditorCanvas",
 	"pools" : [
 		 ],
-	"super" : "Morph",
+	"super" : "TransformMorph",
 	"type" : "normal" }

@@ -3,4 +3,5 @@ initialize
 
 	super initialize.
 	
-	shouldMergeWithNext :=  false
+	shouldMergeWithNext :=  false.
+	wasEdit := true

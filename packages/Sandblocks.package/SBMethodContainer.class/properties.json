@@ -12,5 +12,5 @@
 	"name" : "SBMethodContainer",
 	"pools" : [
 		 ],
-	"super" : "Morph",
+	"super" : "SBBlock",
 	"type" : "normal" }

@@ -2,5 +2,5 @@ as yet unclassified
 extentToFit
 
 	| full |
-	full := Rectangle merging: self submorphs.
+	full := self submorphBounds.
 	^ full extent + ((full origin max: 0 @ 0) - self position)
