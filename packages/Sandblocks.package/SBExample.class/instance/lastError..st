@@ -5,7 +5,7 @@ lastError: anError
 	anError
 		ifNotNil: [
 			errorIndicator ifNil: [
-				self addMorphBack: (errorIndicator := ECSIcon iconFlash large; color: Color orange)]]
+				self addMorphBack: (errorIndicator := SBIcon iconFlash large; color: Color orange)]]
 		ifNil: [
 			errorIndicator ifNotNil: #delete.
 			errorIndicator := nil]

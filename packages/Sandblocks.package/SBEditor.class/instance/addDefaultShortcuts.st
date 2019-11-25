@@ -2,8 +2,8 @@ shortcuts
 addDefaultShortcuts
 
 	self
-		addSingleSelectionShortcut: $H do: #swapLeft;
-		addSingleSelectionShortcut: $L do: #swapRight;
+		addSingleSelectionShortcut: $K do: #swapLeft;
+		addSingleSelectionShortcut: $J do: #swapRight;
 		addSingleSelectionShortcut: $d do: #deleteAroundSelection;
 		addSingleSelectionShortcut: $+ do: #addElement;
 		addSingleSelectionShortcut: $i do: #startInputAtStart;
@@ -39,9 +39,9 @@ addDefaultShortcuts
 		addMultiSelectionShortcut: $l do: #selectNext;
 		addMultiSelectionShortcut: $h do: #selectPrevious;
 		addMultiSelectionShortcut: $k do: #selectUp;
-		addMultiSelectionShortcut: $K do: #selectPreviousStatement;
+		addMultiSelectionShortcut: $H do: #selectPreviousStatement;
 		addMultiSelectionShortcut: $j do: #selectDown;
-		addMultiSelectionShortcut: $J do: #selectNextStatement;
+		addMultiSelectionShortcut: $L do: #selectNextStatement;
 		addMultiSelectionShortcut: $x do: #deleteSelection;
 		addMultiSelectionShortcut: $[ do: #wrapInBlock;
 		addMultiSelectionShortcut: $y do: #copySelection;

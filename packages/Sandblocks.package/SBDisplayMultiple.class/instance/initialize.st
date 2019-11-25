@@ -11,7 +11,7 @@ initialize
 		hResizing: #spaceFill;
 		color: Color transparent;
 		listDirection: #topToBottom;
-		addMorphBack: (ECSRow new
+		addMorphBack: (SBRow new
 			cellInset: (TextStyle defaultFont height / 2) floor;
 			addMorphBack: (countInput := ECSNumberInput new min: 1; onChange: [:num | self count: num]);
 			addMorphBack: (ECSIcon iconBar_chart large; on: #click send: #promptChangeDisplay to: self));

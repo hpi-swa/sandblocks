@@ -1,7 +1,7 @@
 as yet unclassified
 setEmpty
 
-	editor method: (SBMethod new
+	editor openMethod: (SBMethod new
 		selector: ''
 		arguments: #()
 		class: UndefinedObject).

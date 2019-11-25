@@ -7,7 +7,7 @@ fromCache: aNameSymbol ifAbsentPut: aBlock
 	^ self new
 		iconName: aNameSymbol;
 		svg: (cache at: aNameSymbol ifAbsentPut: [
-			ECSTransparentSvgMorph new
+			SBTransparentSvgMorph new
 				createFromSVGDocument: (XMLDOMParser parseDocumentFrom: aBlock value readStream);
 				color: Color transparent;
 				yourself])
