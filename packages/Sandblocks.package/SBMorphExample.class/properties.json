@@ -6,12 +6,11 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"signature",
-		"body",
-		"methodClass",
-		"classPrefix" ],
-	"name" : "SBMethod",
+		"setUp",
+		"view",
+		"cases" ],
+	"name" : "SBMorphExample",
 	"pools" : [
 		 ],
-	"super" : "SBBlock",
+	"super" : "SBSubstitution",
 	"type" : "normal" }

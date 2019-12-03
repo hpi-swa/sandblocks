@@ -9,7 +9,7 @@ addCommandRequest
 		previousArguments: self arguments;
 		newArguments: self arguments, {arg};
 		messageSend: self;
-		select: self owner;
+		select: self parentSandblock;
 		editInputIndex: self arguments size + 1.
 	
 	self isUnary ifTrue: [cmd newSelector: self selector, ':'].

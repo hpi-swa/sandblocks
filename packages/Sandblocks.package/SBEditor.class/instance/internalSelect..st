@@ -5,11 +5,11 @@ internalSelect: aBlock
 	previousSelection := selection.
 	selection := aBlock.
 	
-	" sometimes we don't have a layout yet, so wait a frame before we scroll wherever we need to "
 	selection ifNotNil: [
-		selection changed.
-		selection wasSelected.
-		Project current addDeferredUIMessage: [scroll scrollToShow: selection]].
+		selection
+			changed;
+			wasSelected;
+			ensureVisible].
 	
 	previousSelection ifNotNil: #changed.
 	

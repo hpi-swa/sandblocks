@@ -34,6 +34,7 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $m command do: #implementorsOfIt;
 		addSingleSelectionShortcut: $b command do: #browseSelection;
 		addSingleSelectionShortcut: $q do: #closeSelectedMethod;
+		addSingleSelectionShortcut: $z do: #toggleMethodCollapsed;
 		
 		addMultiSelectionShortcut: Character escape do: #endMultiSelection;
 		addMultiSelectionShortcut: $l do: #selectNext;
@@ -59,7 +60,6 @@ addDefaultShortcuts
 		addCommandShortcut: $g do: #selectMethod;
 		addCommandShortcut: $Y command do: #promptChangeClassNewWindow;
 		addCommandShortcut: $y command do: #promptChangeClassSameWindow;
-		addCommandShortcut: $l command do: #reset;
 		addCommandShortcut: $s command do: #save;
 		addCommandShortcut: $x command do: #promptSwitchMethodSameWindow;
 		addCommandShortcut: $t command do: #promptSwitchMethodNewWindow;
@@ -78,6 +78,7 @@ addDefaultShortcuts
 		addInputShortcut: $j command do: [:editor | editor currentInput suggestionMenuDo: #next];
 		addInputShortcut: $k command do: [:editor | editor currentInput suggestionMenuDo: #previous];
 		addInputShortcut: Character cr do: [:editor | editor currentInput useSuggestion];
+		addInputShortcut: Character tab do: [:editor | editor currentInput useSuggestion];
 		addInputShortcut: $1 command do: [:editor | editor endInputWith: self method arguments first contents];
 		addInputShortcut: $2 command do: [:editor | editor endInputWith: self method arguments second contents];
 		addInputShortcut: $3 command do: [:editor | editor endInputWith: self method arguments third contents];

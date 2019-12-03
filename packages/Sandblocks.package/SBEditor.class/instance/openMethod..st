@@ -12,6 +12,6 @@ openMethod: aMethodBlock
 	self resetState.
 	self changed: #relabel.
 	
-	self resizeToFit.
+	"self resizeToFit."
 	
 	^ aMethodBlock

@@ -6,11 +6,8 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"signature",
-		"body",
-		"methodClass",
-		"classPrefix" ],
-	"name" : "SBMethod",
+		"nameInput" ],
+	"name" : "SBMorphExampleCase",
 	"pools" : [
 		 ],
 	"super" : "SBBlock",
