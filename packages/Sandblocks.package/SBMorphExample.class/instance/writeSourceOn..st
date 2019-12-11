@@ -2,7 +2,7 @@ as yet unclassified
 writeSourceOn: aStream
 
 	aStream nextPutAll: '(SBMorphExample setUp: ['.
-	setUp writeSourceOn: aStream.
+	self setUpMorph writeSourceOn: aStream.
 	aStream nextPutAll: '] cases: '.
 	(SBArray withContents: self cases veryDeepCopy) writeSourceOn: aStream.
 	aStream nextPutAll: ' extent: '.

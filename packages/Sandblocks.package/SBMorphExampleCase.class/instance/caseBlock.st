@@ -1,4 +1,4 @@
 as yet unclassified
 caseBlock
 
-	^ self lastSubmorph
+	^ self submorphs third

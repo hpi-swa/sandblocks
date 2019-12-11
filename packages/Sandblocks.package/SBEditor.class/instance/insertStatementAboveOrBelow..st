@@ -6,7 +6,7 @@ insertStatementAboveOrBelow: anAboveBoolean
 	
 	self selection = self method
 		ifTrue: [
-			self do: (SBInsertCommand new
+			self do: ((SBInsertCommand newFor: self method)
 				index: 3;
 				container: self method body;
 				morph: newStatement;
@@ -16,7 +16,7 @@ insertStatementAboveOrBelow: anAboveBoolean
 			currentStatement := self selection containingStatement.
 			index := currentStatement owner submorphIndexOf: currentStatement.
 	
-			self do: (SBInsertCommand new
+			self do: ((SBInsertCommand newFor: self selection containingMethod)
 				index: (anAboveBoolean
 					ifTrue: [index] ifFalse: [index + 1]);
 				container: currentStatement owner;

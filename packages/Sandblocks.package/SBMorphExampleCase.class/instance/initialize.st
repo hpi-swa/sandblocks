@@ -3,6 +3,8 @@ initialize
 
 	super initialize.
 	
+	status := #notActive.
+	
 	self
 		layoutPolicy: SBHorizontalLayout new;
 		layoutInset: 10 * self scalingFactor;

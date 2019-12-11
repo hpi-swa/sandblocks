@@ -3,7 +3,7 @@ addExample
 
 	self selection ifNotNil: [:selected | selected isExample ifTrue: [^ selected toggleRunning]].
 	
-	self do: (SBInsertCommand new
+	self do: ((SBInsertCommand newFor: self method)
 		container: self method body;
 		index: 3;
 		morph: (SBExample new

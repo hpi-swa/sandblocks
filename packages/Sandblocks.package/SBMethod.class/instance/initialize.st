@@ -7,8 +7,9 @@ initialize
 		layoutPolicy: SBVerticalLayout new;
 		cellPositioning: #topLeft;
 		layoutInset: 8 * self scalingFactor;
-		vResizing: #shrinkWrap; hResizing: #shrinkWrap.
-	
-	self addMorphBack: (SBRow new
-		addMorphBack: (classPrefix := SBStringMorph new);
-		addMorphBack: (signature := SBSignature new))
+		vResizing: #shrinkWrap; hResizing: #shrinkWrap;
+		hasUnsavedChanges: false;
+		
+		addMorphBack: (SBRow new
+			addMorphBack: (classPrefix := SBStringMorph new);
+			addMorphBack: (signature := SBSignature new))

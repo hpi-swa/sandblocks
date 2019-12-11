@@ -5,7 +5,7 @@ wrapInMessageSend: aString
 	self selection isExpression ifFalse: [^ self].
 	
 	msg := SBMessageSend new.
-	self do: (SBWrapCommand new
+	self do: ((SBWrapCommand newFor: self method)
 		outer: msg;
 		inner: self selection;
 		shouldMergeWithNext: true;

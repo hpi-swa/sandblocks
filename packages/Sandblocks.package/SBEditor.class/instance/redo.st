@@ -6,4 +6,4 @@ redo
 		command := redoStack removeLast.
 		undoStack addLast: command.
 		self select: command do.
-		self unsavedChanges: true]
+		self markChangesAfterCommand: command]

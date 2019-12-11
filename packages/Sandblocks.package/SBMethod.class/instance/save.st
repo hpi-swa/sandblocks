@@ -1,10 +1,15 @@
 as yet unclassified
 save
 
-	| text |
+	| text newSelector |
 	self allBlocksDo: [:block |
 		block valid ifFalse: [self tryFix: block ifFail: [^ false]]].
 	
 	text := self prettySourceString.
-	self methodClass compile: text asText.
+	newSelector := self methodClass compile: text asText.
+	currentSelector ~= #'' and: [newSelector ~= currentSelector] ifTrue: [
+		self methodClass removeSelector: currentSelector].
+	currentSelector := newSelector.
+	
+	self hasUnsavedChanges: false.
 	^ true

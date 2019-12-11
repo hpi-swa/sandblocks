@@ -3,7 +3,7 @@ wrapInAssignment
 
 	| binding |
 	binding := SBBinding new.
-	self do: (SBWrapCommand new
+	self do: ((SBWrapCommand newFor: self method)
 		outer: SBAssignment new;
 		inner: self selection;
 		wrap: [:outer :inner | outer binding: binding value: inner];

@@ -9,7 +9,7 @@ pasteStatementAboveOrBelow: anAboveBoolean
 	
 	index := adjacent owner submorphIndexOf: adjacent.
 	
-	self do: (SBInsertCommand new
+	self do: ((SBInsertCommand newFor: self method)
 		index: (anAboveBoolean
 			ifTrue: [index] ifFalse: [index + 1]);
 		container: adjacent owner;

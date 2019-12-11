@@ -1,7 +1,7 @@
 as yet unclassified
 addCommandRequest
 
-	^ SBInsertCommand new
+	^ (SBInsertCommand newFor: self containingMethod)
 		index: self submorphCount + 1;
 		container: self;
 		morph: SBUnknown new;

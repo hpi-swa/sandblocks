@@ -1,8 +1,9 @@
 {
 	"class" : {
-		 },
+		"boldMessageSends" : "tobe 12/3/2019 12:37",
+		"usePango" : "tobe 12/3/2019 14:14" },
 	"instance" : {
-		"borderColorForBlock:" : "tobe 7/14/2019 14:34",
+		"borderColorForBlock:" : "tobe 12/3/2019 13:54",
 		"borderWidthForBlock:" : "tobe 11/24/2019 17:38",
 		"colorForBlock:" : "tobe 7/14/2019 14:18",
 		"foregroundColorForBlock:" : "tobe 7/15/2019 14:40",

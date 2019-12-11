@@ -6,10 +6,9 @@ extractVariable
 	var := SBBinding new name: name.
 	block := self selection containingBlock.
 	
-	self do: (SBCombinedCommand new
-		commands: {
+	self do: (SBCombinedCommand newWith: {
 			block declareTemporaryVariableCommand: name.
-			SBReplaceCommand new target: self selection; replacer: var.
-			SBInsertCommand new container: block; index: 3; morph: self selection.
-			SBWrapCommand new inner: self selection; outer: SBAssignment new; wrap: [:outer :inner | outer binding: var veryDeepCopy value: inner].
+			(SBReplaceCommand newFor: self method) target: self selection; replacer: var.
+			(SBInsertCommand newFor: self method) container: block; index: 3; morph: self selection.
+			(SBWrapCommand newFor: self method) inner: self selection; outer: SBAssignment new; wrap: [:outer :inner | outer binding: var veryDeepCopy value: inner].
 		})

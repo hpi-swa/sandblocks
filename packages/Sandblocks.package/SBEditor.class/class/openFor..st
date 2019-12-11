@@ -1,7 +1,4 @@
 as yet unclassified
-openFor: aMethod
+openFor: aMethodOrClass
 
-	| editor |
-	editor := self new compiledMethod: aMethod.
-	editor openInWindow.
-	^ editor
+	^ (self newFor: aMethodOrClass) openInWindow; yourself

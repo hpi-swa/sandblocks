@@ -1,5 +1,5 @@
 as yet unclassified
 sendStartNotification
 
-	self sandblockEditor allMorphsDo: [:morph |
-		(morph isSandblock and: [morph isExampleWatch]) ifTrue: [morph exampleStarting: self]]
+	self sandblockEditor allBlocksDo: [:morph |
+		morph isExampleWatch ifTrue: [morph exampleStarting: self]]

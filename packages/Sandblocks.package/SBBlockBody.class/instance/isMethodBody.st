@@ -1,4 +1,4 @@
 testing
 isMethodBody
 
-	^ self owner isKindOf: SBMethod
+	^ self parentSandblock isMethod

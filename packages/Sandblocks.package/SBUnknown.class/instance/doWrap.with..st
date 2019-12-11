@@ -3,7 +3,7 @@ doWrap: aBlock with: aNode
 
 	self sandblockEditor
 		endInput;
-		do: (SBWrapCommand new
+		do: ((SBWrapCommand newFor: self containingMethod)
 			inner: self;
 			outer: aNode;
 			shouldMergeWithNext: true;

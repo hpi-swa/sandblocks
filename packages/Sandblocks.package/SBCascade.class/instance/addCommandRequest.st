@@ -1,7 +1,7 @@
 as yet unclassified
 addCommandRequest
 
-	^ SBInsertCommand new
+	^ (SBInsertCommand newFor: self containingMethod)
 		container: self;
 		index: self submorphCount + 1;
 		shouldMergeWithNext: true;

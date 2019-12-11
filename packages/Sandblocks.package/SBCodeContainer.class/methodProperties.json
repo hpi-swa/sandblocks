@@ -2,12 +2,17 @@
 	"class" : {
 		 },
 	"instance" : {
+		"childSandblocks" : "tobe 12/11/2019 20:35",
 		"codeContainer" : "tobe 11/24/2019 17:15",
 		"color" : "tobe 11/24/2019 16:51",
 		"containingMethod" : "tobe 11/24/2019 17:09",
+		"deleteCommandFor:" : "tobe 12/11/2019 22:20",
+		"exampleSameSize" : "tobe 12/11/2019 20:37",
 		"handlesMouseMove:" : "tobe 11/24/2019 16:50",
+		"initialize" : "tobe 12/11/2019 20:39",
+		"isDragging" : "tobe 12/3/2019 14:08",
 		"mouseMove:" : "tobe 11/24/2019 16:48",
 		"mouseUp:" : "tobe 11/24/2019 16:48",
 		"startDrag:" : "tobe 11/24/2019 16:48",
-		"step" : "tobe 12/3/2019 08:58",
+		"step" : "tobe 12/11/2019 21:07",
 		"stepTime" : "tobe 12/3/2019 08:58" } }

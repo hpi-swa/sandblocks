@@ -3,8 +3,4 @@ initialize
 
 	super initialize.
 	
-	self
-		changeTableLayout;
-		layoutInset: 12;
-		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap
+	self layoutInset: 12 * self scalingFactor

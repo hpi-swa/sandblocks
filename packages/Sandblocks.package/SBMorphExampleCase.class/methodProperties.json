@@ -2,11 +2,18 @@
 	"class" : {
 		 },
 	"instance" : {
-		"caseBlock" : "tobe 12/3/2019 10:43",
+		"artefactChanged:" : "tobe 12/11/2019 19:53",
+		"artefactSaved:" : "tobe 12/11/2019 19:44",
+		"caseBlock" : "tobe 12/11/2019 19:38",
 		"childSandblocks" : "tobe 12/3/2019 10:43",
+		"codeActions" : "tobe 12/11/2019 19:43",
 		"evaluateIn:" : "tobe 12/3/2019 10:43",
-		"initialize" : "tobe 12/3/2019 10:30",
-		"name:caseBlock:" : "tobe 12/3/2019 10:37",
+		"initialize" : "tobe 12/11/2019 19:46",
+		"name:caseBlock:" : "tobe 12/11/2019 19:47",
 		"nameInput" : "tobe 12/3/2019 10:57",
-		"run" : "tobe 12/3/2019 10:39",
-		"writeSourceOn:" : "tobe 12/3/2019 10:34" } }
+		"promptChangeStatus" : "tobe 12/11/2019 19:49",
+		"run" : "tobe 12/11/2019 19:58",
+		"status" : "tobe 12/11/2019 19:44",
+		"status:" : "tobe 12/11/2019 19:44",
+		"updateLabel" : "tobe 12/11/2019 19:43",
+		"writeSourceOn:" : "tobe 12/11/2019 19:55" } }

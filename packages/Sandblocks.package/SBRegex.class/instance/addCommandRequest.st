@@ -3,7 +3,7 @@ addCommandRequest
 
 	examples owner ifNil: [self toggleExamples].
 	
-	^ SBInsertCommand new
+	^ (SBInsertCommand newFor: self containingMethod)
 		container: examples;
 		index: (examples submorphCount max: 1);
 		morph: (self createExample: '');

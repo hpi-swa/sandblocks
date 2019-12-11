@@ -4,9 +4,8 @@ initialize
 	super initialize.
 	
 	self
-		changeTableLayout;
 		layoutInset: 8 * self scalingFactor;
-		hResizing: #shrinkWrap;
+		vResizing: #rigid;
 		addMorphBack: (label := SBStringMorph new
 			hResizing: #spaceFill;
 			vResizing: #shrinkWrap;

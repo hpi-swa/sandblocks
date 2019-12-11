@@ -4,10 +4,10 @@ drawOn: aCanvas
 	| font cursorX colorToUse |
 	font := self fontToUse.
 	colorToUse := self color.
-	aCanvas drawString: self contents string at: self position font: font color: colorToUse.
+	self drawString: self contents on: aCanvas at: self position font: font color: colorToUse.
 	
 	suffix ifNotEmpty: [
-		aCanvas drawString: self suffix at: self position x + (font widthOfString: self contents) @ self position y font: font color: colorToUse].
+		self drawString: self suffix on: aCanvas at: self position x + (font widthOfString: self contents) @ self position y font: font color: colorToUse].
 	
 	cursor > 0 ifTrue: [
 		aCanvas clipBy: self bounds during: [:c |

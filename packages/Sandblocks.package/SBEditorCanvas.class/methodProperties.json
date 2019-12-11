@@ -4,6 +4,7 @@
 	"instance" : {
 		"click:" : "tobe 11/21/2019 09:21",
 		"containsPoint:" : "tobe 11/21/2019 09:21",
+		"doubleClick:" : "tobe 12/11/2019 22:05",
 		"drawSubmorphsOn:" : "tobe 11/21/2019 10:05",
 		"extentToFit" : "tobe 11/21/2019 13:08",
 		"handlesMouseDown:" : "tobe 11/21/2019 09:21",
@@ -15,6 +16,6 @@
 		"mouseWheel:" : "tobe 11/17/2019 21:45",
 		"moveViewport:" : "tobe 11/21/2019 09:15",
 		"scrollShowMargin" : "tobe 11/24/2019 18:32",
-		"scrollToShow:" : "tobe 11/24/2019 22:17",
+		"scrollToShow:" : "tobe 12/4/2019 08:43",
 		"startDrag:" : "tobe 11/21/2019 10:08",
 		"zoomViewport:from:" : "tobe 11/21/2019 10:10" } }

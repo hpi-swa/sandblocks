@@ -7,7 +7,7 @@ insertLabelAboveOrBelow: anAboveBoolean
 	currentStatement := self selection containingStatement.
 	index := currentStatement owner submorphIndexOf: currentStatement.
 	
-	self do: (SBInsertCommand new
+	self do: ((SBInsertCommand newFor: self method)
 		index: (anAboveBoolean
 			ifTrue: [index] ifFalse: [index + 1]);
 		container: currentStatement owner;

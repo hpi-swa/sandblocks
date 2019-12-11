@@ -8,6 +8,6 @@ codeActions
 	(SBSubstitution allSubclasses
 		select: [:substition | substition matches: self]
 		thenCollect: [:substitution | SBCodeAction labeled: 'Convert to ', substitution name for: self do: [:node |
-			node sandblockEditor do: (SBReplaceCommand new
+			node sandblockEditor do: ((SBReplaceCommand newFor: self method)
 				target: node;
 				replacer: ((substitution newFrom: self) pc: self pc))]])

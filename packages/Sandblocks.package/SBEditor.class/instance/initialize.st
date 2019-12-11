@@ -3,7 +3,6 @@ initialize
 
 	super initialize.
 	
-	unsavedChanges := false.
 	singleSelectionShortcuts := OrderedCollection new.
 	multiSelectionShortcuts := OrderedCollection new.
 	commandShortcuts := OrderedCollection new.
@@ -16,6 +15,7 @@ initialize
 		addKeyboardCaptureFilter: self;
 		addDefaultShortcuts;
 		
+		extent: 500 asPoint;
 		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;

@@ -3,6 +3,6 @@ runCase: aCase
 
 	view
 		removeAllMorphs;
-		addMorphBack: (setUp evaluate center: view extent // 2).
+		addMorphBack: (self setUpMorph evaluate center: view center).
 	
 	aCase 

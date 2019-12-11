@@ -10,7 +10,7 @@ extractMethod
 		localBindings := ((KeyedSet keyBlock: #name) addAll: localBindings; yourself) asArray.
 		
 		SBEditor new
-			method: (SBMethod new
+			openMethod: (SBMethod new
 				selector: selectorAndArguments first
 				arguments: selectorAndArguments second veryDeepCopy
 				class: self method methodClass;
@@ -20,7 +20,7 @@ extractMethod
 		localBindings size < selectorAndArguments second size ifTrue: [
 			selectorAndArguments second size - localBindings size timesRepeat: [localBindings := localBindings copyWith: SBUnknown new]].
 		
-		SBReplaceConsecutiveCommand new
+		(SBReplaceConsecutiveCommand newFor: self method)
 			targets: extracting;
 			replacer: (SBMessageSend new
 				receiver: (SBKeywordBinding new name: 'self')

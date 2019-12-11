@@ -4,7 +4,7 @@ changeSelection
 	| new |
 	new := SBUnknown new.
 	
-	self do: (SBReplaceCommand new
+	self do: ((SBReplaceCommand newFor: self method)
 		target: self selection;
 		replacer: new;
 		shouldMergeWithNext: true;

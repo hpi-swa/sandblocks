@@ -1,4 +1,5 @@
-as yet unclassified
+actions
 unsavedChanges
 
-	^ unsavedChanges
+	self allBlocksDo: [:block | (block isArtefact and: [block hasUnsavedChanges]) ifTrue: [^ true]].
+	^ false

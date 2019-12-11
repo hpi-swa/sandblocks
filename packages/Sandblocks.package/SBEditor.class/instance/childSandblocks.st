@@ -1,4 +1,4 @@
 actions
 childSandblocks
 
-	^ {self method}
+	^ scroll submorphs

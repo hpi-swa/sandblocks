@@ -9,7 +9,9 @@
 		"signature",
 		"body",
 		"methodClass",
-		"classPrefix" ],
+		"classPrefix",
+		"hasUnsavedChanges",
+		"currentSelector" ],
 	"name" : "SBMethod",
 	"pools" : [
 		 ],

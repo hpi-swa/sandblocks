@@ -5,11 +5,13 @@
 		"setUp:cases:extent:" : "tobe 12/3/2019 09:59" },
 	"instance" : {
 		"addCase:name:" : "tobe 12/3/2019 10:47",
-		"addCommandRequest" : "tobe 12/3/2019 10:58",
+		"addCommandRequest" : "tobe 12/11/2019 17:03",
+		"artefactChanged:" : "tobe 12/11/2019 19:54",
 		"cases" : "tobe 12/3/2019 10:13",
-		"childSandblocks" : "tobe 12/3/2019 10:17",
+		"childSandblocks" : "tobe 12/11/2019 20:26",
 		"drawnColor" : "tobe 12/3/2019 10:48",
 		"initialize" : "tobe 12/3/2019 10:53",
-		"runCase:" : "tobe 12/3/2019 10:51",
-		"setUp:cases:extent:" : "tobe 12/3/2019 10:49",
-		"writeSourceOn:" : "tobe 12/3/2019 10:50" } }
+		"runCase:" : "tobe 12/11/2019 20:26",
+		"setUp:cases:extent:" : "tobe 12/11/2019 20:26",
+		"setUpMorph" : "tobe 12/11/2019 20:25",
+		"writeSourceOn:" : "tobe 12/11/2019 20:26" } }

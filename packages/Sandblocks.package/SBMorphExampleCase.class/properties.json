@@ -6,7 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"nameInput" ],
+		"nameInput",
+		"statusLabel",
+		"status" ],
 	"name" : "SBMorphExampleCase",
 	"pools" : [
 		 ],

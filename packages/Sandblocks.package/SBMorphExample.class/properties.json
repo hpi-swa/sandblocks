@@ -6,7 +6,6 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"setUp",
 		"view",
 		"cases" ],
 	"name" : "SBMorphExample",
