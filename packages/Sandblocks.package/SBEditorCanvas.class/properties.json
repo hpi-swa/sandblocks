@@ -8,7 +8,8 @@
 	"instvars" : [
 		"dragging",
 		"lastDragPosition",
-		"dragStartPosition" ],
+		"dragStartPosition",
+		"dragLeftOverVelocity" ],
 	"name" : "SBEditorCanvas",
 	"pools" : [
 		 ],
