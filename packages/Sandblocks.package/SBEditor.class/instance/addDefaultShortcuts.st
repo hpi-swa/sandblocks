@@ -52,6 +52,7 @@ addDefaultShortcuts
 		addMultiSelectionShortcut: $> do: #extractMethod;
 		addMultiSelectionShortcut: $; do: #wrapInCascade;
 		
+		addCommandShortcut: $1 do: #resetZoom;
 		addCommandShortcut: $f command do: #toggleFullscreen;
 		addCommandShortcut: $, command do: #promptMenu;
 		addCommandShortcut: $a command do: #addExample;

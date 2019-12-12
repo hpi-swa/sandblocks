@@ -1,8 +1,7 @@
 initialize-release
 resetState
 
-	undoStack := OrderedCollection new.
-	redoStack  := OrderedCollection new.
+	self clearUndoStack.
 	selectionDownHistory := OrderedCollection new.
 	selection := self methods ifNotEmpty: #first ifEmpty: [nil].
 	colorPolicy := colorPolicy class new.

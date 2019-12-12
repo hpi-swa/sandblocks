@@ -9,7 +9,8 @@
 		"dragging",
 		"lastDragPosition",
 		"dragStartPosition",
-		"dragLeftOverVelocity" ],
+		"dragLeftOverVelocity",
+		"targetPosition" ],
 	"name" : "SBEditorCanvas",
 	"pools" : [
 		 ],

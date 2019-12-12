@@ -1,4 +1,4 @@
 converting
 childSandblocks
 
-	^ self hasSubmorphs ifTrue: [{self firstSubmorph. self submorphs third}] ifFalse: [#()]
+	^ {self submorphs at: 1 ifAbsent: [nil]. self submorphs at: 3 ifAbsent: [nil]} select: #notNil

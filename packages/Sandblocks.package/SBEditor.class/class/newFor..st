@@ -1,10 +1,12 @@
 as yet unclassified
 newFor: aMethodOrClass
 
-	| editor |
+	| editor method |
 	editor := self new.
 	aMethodOrClass isCompiledCode
-		ifTrue: [editor openCompiledMethod: aMethodOrClass]
-		ifFalse: [aMethodOrClass methodsDo: [:method | editor openCompiledMethod: method]].
+		ifTrue: [method := editor openCompiledMethod: aMethodOrClass]
+		ifFalse: [aMethodOrClass methodsDo: [:compiledMethod | method := editor openCompiledMethod: compiledMethod]].
+	
+	editor clearUndoStack.
 	
 	^ editor

@@ -6,11 +6,9 @@ openMethod: aMethodBlock
 	self do: (SBInsertCommand newNonEdit
 		index: 1;
 		container: scroll;
-		morph: (SBMethodContainer new position: self position; method: aMethodBlock);
+		morph: (SBMethodContainer new method: aMethodBlock; fullBounds; yourself);
 		yourself).
-	self resetState.
-	self changed: #relabel.
 	
-	"self resizeToFit."
+	"self resetState."
 	
 	^ aMethodBlock
