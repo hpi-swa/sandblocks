@@ -4,6 +4,6 @@ replaceWithMessageSend
 	| doIt |
 	doIt := Parser new parse: self sourceString class: nil class noPattern: true notifying: nil ifFail: nil.
 	
-	self sandblockEditor do: ((SBReplaceCommand newFor: self method)
+	self sandblockEditor do: ((SBReplaceCommand newFor: self containingMethod)
 			replacer: (doIt block statements first expr asMessageSandblock pc: self pc);
 			target: self)
