@@ -6,7 +6,7 @@ minExtentOf: aMorph in: aRectangle
 	
 	minHeight := 0.
 	totalWidth := 0.
-	aMorph submorphsDo: [:m | | extent |
+	self layoutMorphsOf: aMorph do: [:m | | extent |
 		extent := m minExtent.
 		minHeight := extent y max: minHeight.
 		totalWidth := totalWidth + extent x].

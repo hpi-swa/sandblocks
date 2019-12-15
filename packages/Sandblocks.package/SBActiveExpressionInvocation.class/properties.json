@@ -1,0 +1,19 @@
+{
+	"category" : "Sandblocks-ActiveExpression",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"stack",
+		"count",
+		"currentStackIndex",
+		"image",
+		"countLabel",
+		"resultLabel" ],
+	"name" : "SBActiveExpressionInvocation",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }

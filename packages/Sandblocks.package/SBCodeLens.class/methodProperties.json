@@ -1,7 +1,8 @@
 {
 	"class" : {
 		"forContext:" : "tobe 11/23/2019 09:37",
-		"forMethod:pc:" : "tobe 11/24/2019 17:48" },
+		"forMethod:pc:" : "tobe 11/24/2019 17:48",
+		"forMethod:selector:" : "tobe 12/15/2019 11:24" },
 	"instance" : {
 		"applyMode:" : "tobe 11/24/2019 17:59",
 		"childSandblocks" : "tobe 11/21/2019 14:32",
