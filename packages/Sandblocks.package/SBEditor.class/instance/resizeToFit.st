@@ -2,6 +2,8 @@ as yet unclassified
 resizeToFit
 
 	| extent outer |
+	self deprecated.
+	
 	self fullBounds.
 	outer := (self ownerThatIsA: SystemWindow) ifNil: [self].
 	extent := scroll extentToFit + outer extent - scroll extent + (20 @ 20 * self scalingFactor).

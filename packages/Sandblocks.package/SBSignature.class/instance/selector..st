@@ -2,7 +2,7 @@ as yet unclassified
 selector: aString
 
 	| currentNum newNum arguments |
-	currentNum := self selector numArgs.
+	currentNum := self numArgs.
 	newNum := aString numArgs.
 	
 	arguments := (self arguments copyFrom: 1 to: (newNum min: currentNum)), (Array streamContents: [:s |

@@ -1,0 +1,4 @@
+testing
+canSwap
+
+	^ self isExpression

@@ -5,9 +5,9 @@ filename: aString
 	filename := aString.
 	
 	[form := Form fromFileNamed: aString] on: Error do: [
-		image visible: false; ignoreLayout: true.
+		image visible: false; disableLayout: true.
 		infoLabel contents: 'invalid image'.
 		^ self].
 	
 	infoLabel contents: form extent asString.
-	image visible: true; ignoreLayout: false; image: (form scaledIntoFormOfSize: 48 asPoint)
+	image visible: true; disableLayout: false; image: (form scaledIntoFormOfSize: 48 asPoint)

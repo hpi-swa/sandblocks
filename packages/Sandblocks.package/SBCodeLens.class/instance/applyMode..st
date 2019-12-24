@@ -1,9 +1,11 @@
 as yet unclassified
 applyMode: aSymbol
 
-	scroll
-		visible: aSymbol ~= #collapse;
-		disableLayout: aSymbol = #collapse.
+	mode  = aSymbol ifTrue: [^ self].
+	mode := aSymbol.
+	
+	self method collapsed: aSymbol = #collapse.
+	scroll hResizing: (aSymbol = #collapse ifTrue: [#shrinkWrap] ifFalse: [#spaceFill]).
 	
 	aSymbol = #focus
 		ifTrue: [ | focus |
@@ -13,7 +15,7 @@ applyMode: aSymbol
 				layoutPolicy: nil.
 			self
 				vResizing: #rigid;
-				height: (focus height + (self fadeSize * 2) min: (scroll firstSubmorph height - scroll offset y)) + label height + (self layoutInset * 2);
+				height: (focus height + (self fadeSize * 2) min: (scroll firstSubmorph height - scroll offset y)) + (self layoutInset * 2);
 				width: scroll firstSubmorph width + (self layoutInset * 2)]
 		ifFalse: [
 			self vResizing: #shrinkWrap.

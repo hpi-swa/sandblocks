@@ -7,7 +7,8 @@
 	"commentStamp" : "",
 	"instvars" : [
 		"name",
-		"class" ],
+		"class",
+		"select" ],
 	"name" : "SBDeclareInstanceVariableCommand",
 	"pools" : [
 		 ],

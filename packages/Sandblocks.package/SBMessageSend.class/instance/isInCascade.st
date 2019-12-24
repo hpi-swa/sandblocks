@@ -1,4 +1,4 @@
 as yet unclassified
 isInCascade
 
-	^ self owner isCascade and: [self ~= self owner receiver]
+	^ self owner isSandblock and: [self owner isCascade and: [self ~= self owner receiver]]

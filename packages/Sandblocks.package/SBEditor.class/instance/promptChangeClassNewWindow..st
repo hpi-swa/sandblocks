@@ -6,6 +6,8 @@ promptChangeClassNewWindow: aBoolean
 	methods := class methodDict keys.
 	
 	method := nil.
+	methods ifEmpty: [^ self].
+	
 	methods size > 1
 		ifTrue: [
 			index := UIManager default chooseFrom: methods.

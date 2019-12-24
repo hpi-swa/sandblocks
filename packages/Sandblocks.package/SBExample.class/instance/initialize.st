@@ -3,6 +3,7 @@ initialize
 
 	super initialize.
 	
+	active := false.
 	processRunning := false.
 	
 	self

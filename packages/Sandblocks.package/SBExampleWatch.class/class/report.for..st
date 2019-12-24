@@ -4,7 +4,7 @@ report: aValue for: aSymbol
 	| reg watchers example |
 	example  := SBExample allInstances
 		detect: #isCurrent
-		ifNone: [nil].
+		ifNone: [^ aValue].
 	
 	reg := self registry.
 	watchers := reg at: aSymbol ifAbsent: [^ aValue].

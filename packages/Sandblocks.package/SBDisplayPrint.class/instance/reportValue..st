@@ -1,4 +1,4 @@
 as yet unclassified
 reportValue: anObject
 
-	self contents: (anObject printStringLimitedTo: 20)
+	self contents: (anObject printStringLimitedTo: 30)

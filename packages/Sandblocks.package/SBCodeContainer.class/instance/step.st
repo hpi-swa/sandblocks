@@ -1,5 +1,6 @@
 as yet unclassified
 step
+	
 	self isDragging
 		ifTrue: [^ self].
 	self owner

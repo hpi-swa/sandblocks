@@ -14,4 +14,9 @@ mode: aSymbol
 		[#selection] -> ['SELECTION'].
 		[#command] -> ['COMMAND']
 	}).
+	bottomPanel color: (mode caseOf: {
+		[#input] -> [Color red alpha: 0.2].
+		[#selection] -> [Color blue alpha: 0.2].
+		[#command] -> [Color white]
+	}).
 	self updateSelectionLabel

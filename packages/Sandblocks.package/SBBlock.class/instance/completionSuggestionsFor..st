@@ -1,4 +1,14 @@
 suggestions
 completionSuggestionsFor: aString
 
-	^ aString size > 2 ifTrue: [Symbol allSymbols select: [:sym | sym asString sandblockMatch:  aString]] ifFalse: [#()]
+	^ aString size > 2
+		ifTrue: [
+			self guessedClass
+				ifNotNil: [:baseClass |
+					Array streamContents: [:stream |
+						baseClass withAllSuperclassesDo: [:class |
+							class methodsDo: [:m | | sel |
+								sel := m selector asString.
+								(sel sandblockMatch: aString) ifTrue: [stream nextPut: sel]]]]]
+				ifNil: [Symbol allSymbols select: [:sym | sym asString sandblockMatch:  aString]]]
+		ifFalse: [#()]

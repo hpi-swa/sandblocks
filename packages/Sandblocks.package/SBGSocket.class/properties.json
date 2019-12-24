@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Example",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"label" ],
+	"name" : "SBGSocket",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }

@@ -12,7 +12,8 @@
 		"currentProcess",
 		"processRunning",
 		"currentSelf",
-		"nameInput" ],
+		"nameInput",
+		"active" ],
 	"name" : "SBExample",
 	"pools" : [
 		 ],

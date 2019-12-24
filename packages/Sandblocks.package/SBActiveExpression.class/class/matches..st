@@ -1,4 +1,6 @@
 as yet unclassified
 matches: aBlock
 
-	^ aBlock receiver isBinding and: [aBlock receiver contents = 'ActiveExpression' and: [aBlock selector = 'on:']]
+	^ aBlock receiver isBinding
+		and: [(#('ActiveExpression' 'SynchronousActiveExpression' 'ManualActiveExpression') includes: aBlock receiver contents)
+		and: [aBlock selector = 'on:']]

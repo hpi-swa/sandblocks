@@ -1,5 +1,6 @@
 as yet unclassified
 focus: aBlock
 
-	aBlock marked: true.
-	self applyMode: #focus
+	aBlock ifNotNil: [
+		aBlock marked: true.
+		self applyMode: #focus]

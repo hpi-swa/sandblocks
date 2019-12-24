@@ -3,4 +3,4 @@ initialize
 
 	super initialize.
 	
-	self layoutInset: 12 * self scalingFactor
+	self layoutInset: 2 * self scalingFactor

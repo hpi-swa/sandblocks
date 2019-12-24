@@ -1,0 +1,18 @@
+{
+	"category" : "Sandblocks-Example",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"sockets",
+		"outputs",
+		"inputs",
+		"outputsAE",
+		"inputsAE" ],
+	"name" : "SBGNode",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }

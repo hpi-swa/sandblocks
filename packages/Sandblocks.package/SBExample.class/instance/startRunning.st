@@ -1,5 +1,6 @@
 as yet unclassified
 startRunning
 
-	self startSteppingSelector: #run.
+	"self startSteppingSelector: #run."
+	active := true.
 	self updateIcon

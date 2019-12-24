@@ -5,5 +5,5 @@ mouseMove: anEvent
 	isDown ifTrue: [
 		delta := anEvent position - lastMousePosition.
 		self flag: #todo. "preserve formatting like base"
-		self contents: (self parsedContents + delta) asString.
+		self contents: self parsedContents + delta.
 		lastMousePosition := anEvent position]

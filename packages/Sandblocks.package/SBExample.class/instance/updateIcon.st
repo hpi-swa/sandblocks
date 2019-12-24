@@ -1,5 +1,5 @@
 as yet unclassified
 updateIcon
 
-	icon changeIconName: ((self isSteppingSelector: #run)
+	icon changeIconName: (self active
 		ifTrue: [#iconPause] ifFalse: [#iconPlay])

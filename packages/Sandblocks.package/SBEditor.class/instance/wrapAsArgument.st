@@ -14,4 +14,4 @@ wrapAsArgument
 				arguments: {inner}];
 		yourself).
 	
-	self startInput: msg at: 0 replacingContents: false
+	self startInput: msg receiver at: 0 replacingContents: false

@@ -27,7 +27,8 @@
 		"scroll",
 		"methodContainer",
 		"compiledMethod",
-		"colorPolicy" ],
+		"colorPolicy",
+		"bottomPanel" ],
 	"name" : "SBEditor",
 	"pools" : [
 		 ],

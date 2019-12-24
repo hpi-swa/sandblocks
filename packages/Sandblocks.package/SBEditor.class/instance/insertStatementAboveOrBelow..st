@@ -3,6 +3,7 @@ insertStatementAboveOrBelow: anAboveBoolean
 
 	| currentStatement index newStatement |
 	newStatement :=  SBUnknown new.
+	self selection isCodeContainer ifTrue: [self select: self selection method].
 	
 	self selection = self method
 		ifTrue: [

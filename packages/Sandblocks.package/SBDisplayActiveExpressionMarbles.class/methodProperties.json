@@ -1,0 +1,12 @@
+{
+	"class" : {
+		"matches:" : "tobe 11/11/2019 18:06" },
+	"instance" : {
+		"dark:" : "tobe 11/11/2019 18:33",
+		"exampleFinished:" : "tobe 11/24/2019 15:48",
+		"exampleStarting:" : "tobe 12/24/2019 12:36",
+		"initialize" : "tobe 12/24/2019 12:27",
+		"openStack:event:morph:" : "tobe 11/24/2019 18:36",
+		"relevantContextsFrom:" : "tobe 12/23/2019 20:35",
+		"reportValue:" : "tobe 12/24/2019 12:52",
+		"updateInterestingCodeLocations" : "tobe 12/15/2019 10:21" } }

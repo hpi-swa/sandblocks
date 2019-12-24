@@ -1,6 +1,6 @@
 as yet unclassified
 toggleRunning
 
-	(self isSteppingSelector: #run)
+	self active
 		ifFalse: [self startRunning]
 		ifTrue: [self stopRunning]

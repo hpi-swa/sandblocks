@@ -1,0 +1,18 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"createStampOfSize:" : "tobe 12/21/2019 20:02",
+		"drawOn:" : "tobe 12/21/2019 17:29",
+		"example" : "tobe 12/21/2019 17:25",
+		"extent:" : "tobe 12/22/2019 14:50",
+		"fillFrom:to:" : "tobe 12/22/2019 14:36",
+		"handleTouchBegin:" : "tobe 12/22/2019 14:49",
+		"handleTouchEnd:" : "tobe 12/22/2019 14:49",
+		"handleTouchUpdate:" : "tobe 12/22/2019 14:52",
+		"handlesMouseDown:" : "tobe 12/21/2019 17:12",
+		"handlesMouseMove:" : "tobe 12/21/2019 17:12",
+		"initialize" : "tobe 12/22/2019 14:51",
+		"mouseDown:" : "tobe 12/21/2019 17:55",
+		"mouseMove:" : "tobe 12/22/2019 14:36",
+		"mouseUp:" : "tobe 12/21/2019 17:36" } }

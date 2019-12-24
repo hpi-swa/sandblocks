@@ -2,6 +2,7 @@ actions
 changeSelection
 
 	| new |
+	self setCopyBuffer: self selection.
 	new := SBUnknown new.
 	
 	self do: ((SBReplaceCommand newFor: self method)

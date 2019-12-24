@@ -7,7 +7,7 @@ save
 	
 	text := self prettySourceString.
 	newSelector := self methodClass compile: text asText.
-	currentSelector ~= #'' and: [newSelector ~= currentSelector] ifTrue: [
+	(currentSelector ~= #'' and: [newSelector ~= currentSelector]) ifTrue: [
 		self methodClass removeSelector: currentSelector].
 	currentSelector := newSelector.
 	

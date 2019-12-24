@@ -26,13 +26,15 @@ initialize
 			vResizing: #spaceFill;
 			yourself);
 		
-		addMorphBack: (Morph new
+		addMorphBack: (bottomPanel := Morph new
 			changeTableLayout;
 			cellPositioning: #topLeft;
 			vResizing: #rigid;
 			cellGap: 8 * self scalingFactor;
 			extent: 0 @ self copyBufferPreviewSize y;
 			hResizing: #spaceFill;
+			wrapCentering: #center;
+			layoutInset: 4 withScalingFactor @ 0;
 			listDirection: #leftToRight;
 			color: Color transparent;
 			addMorphBack: (modeLabel := StringMorph new emphasis: TextEmphasis bold emphasisCode);

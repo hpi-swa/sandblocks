@@ -28,7 +28,7 @@ characterFromStrokes: aCollection points: aPointCollection
 		^ (self point: aPointCollection last inUpper: 0.3 of: aPointCollection) ifTrue: [$O] ifFalse: [$6]].
 	(seq matchesRegex: 'dur?dl?d?r?') ifTrue: [^ $R].
 	" disambiguate against 8 by checking that we ended in a low area "
-	(seq matchesRegex: 'ld?r?d?lu?r?') and: [(self point: aPointCollection last inUpper: 0.3 of: aPointCollection) not] ifTrue: [^ $S].
+	((seq matchesRegex: 'ld?r?d?lu?r?') and: [(self point: aPointCollection last inUpper: 0.3 of: aPointCollection) not]) ifTrue: [^ $S].
 	(seq matchesRegex: 'rd') ifTrue: [
 		^ (self point: aPointCollection last inLeft: 0.6 of: aPointCollection) ifTrue: [$7] ifFalse: [$T]].
 	(seq matchesRegex: 'drud?') ifTrue: [^ $U].

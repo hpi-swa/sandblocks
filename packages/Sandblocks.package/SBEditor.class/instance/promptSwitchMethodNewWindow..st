@@ -3,7 +3,7 @@ promptSwitchMethodNewWindow: aBoolean
 
 	| methods index class |
 	self flag: #todo. " choose class "
-	class := self methods first methodClass.
+	class := self method methodClass.
 	methods := class methodDict keys.
 	index := UIManager default chooseFrom: methods.
 	index > 0 ifTrue: [ | method |

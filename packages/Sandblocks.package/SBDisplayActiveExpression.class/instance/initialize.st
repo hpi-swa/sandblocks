@@ -9,4 +9,5 @@ initialize
 		hResizing: #spaceFill;
 		vResizing: #shrinkWrap;
 		listDirection: #topToBottom;
+		cellPositioning: #topLeft;
 		cellGap: 4 * self scalingFactor

@@ -23,6 +23,7 @@
 		"nextAdjacentMorphThat:" : "tobe 6/29/2019 10:30",
 		"nextMorphThat:" : "tobe 6/29/2019 10:35",
 		"parentSandblock" : "tobe 6/29/2019 14:23",
+		"parentSandblockOrNil" : "tobe 12/15/2019 15:49",
 		"previousAdjacentMorphThat:" : "tobe 6/29/2019 10:32",
 		"previousMorphThat:" : "tobe 6/29/2019 10:35",
 		"replaceBy:" : "tobe 6/29/2019 14:09",
@@ -30,4 +31,5 @@
 		"sandblockEditor" : "tobe 6/28/2019 20:59",
 		"sandblockForegroundColor" : "tobe 7/14/2019 14:36",
 		"scalingFactor" : "tobe 12/3/2019 11:19",
+		"storeOn:" : "tobe 12/15/2019 14:30",
 		"topFirstMorphThat:" : "tobe 7/10/2019 23:18" } }

@@ -2,8 +2,9 @@
 	"class" : {
 		 },
 	"instance" : {
-		"completionSuggestionsFor:" : "tobe 7/13/2019 07:59",
+		"guessedClass" : "tobe 12/21/2019 18:57",
 		"initialize" : "tobe 7/3/2019 15:52",
+		"inputCommandClass" : "tobe 12/21/2019 17:35",
 		"isExpression" : "tobe 7/10/2019 12:17",
 		"printOn:" : "tobe 7/6/2019 12:15",
 		"validBinding" : "tobe 7/3/2019 15:16" } }

@@ -40,8 +40,8 @@ addDefaultShortcuts
 		addMultiSelectionShortcut: $l do: #selectNext;
 		addMultiSelectionShortcut: $h do: #selectPrevious;
 		addMultiSelectionShortcut: $k do: #selectUp;
-		addMultiSelectionShortcut: $H do: #selectPreviousStatement;
 		addMultiSelectionShortcut: $j do: #selectDown;
+		addMultiSelectionShortcut: $H do: #selectPreviousStatement;
 		addMultiSelectionShortcut: $L do: #selectNextStatement;
 		addMultiSelectionShortcut: $x do: #deleteSelection;
 		addMultiSelectionShortcut: $[ do: #wrapInBlock;
@@ -52,11 +52,12 @@ addDefaultShortcuts
 		addMultiSelectionShortcut: $> do: #extractMethod;
 		addMultiSelectionShortcut: $; do: #wrapInCascade;
 		
+		addCommandShortcut: $x command do: #openOpenWindow;
 		addCommandShortcut: $1 do: #resetZoom;
 		addCommandShortcut: $f command do: #toggleFullscreen;
 		addCommandShortcut: $, command do: #promptMenu;
 		addCommandShortcut: $a command do: #addExample;
-		addCommandShortcut: $! do: #resizeToFit;
+		addCommandShortcut: $! do: #refocus;
 		addCommandShortcut: $u do: #undo;
 		addCommandShortcut: $U do: #redo;
 		addCommandShortcut: $g do: #selectMethod;

@@ -1,0 +1,18 @@
+{
+	"category" : "Sandblocks-Drawing",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"drawing",
+		"stampForm",
+		"paintingForm",
+		"lastMousePosition",
+		"lastTouchPositions" ],
+	"name" : "SBDrawCanvas",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }
