@@ -1,6 +1,8 @@
 as yet unclassified
 fillFrom: aPoint to: anotherPoint 
 	| step |
+	self ensurePointReachable: anotherPoint.
+	
 	WorldState canSurrenderToOS: false.
 	step := aPoint = anotherPoint
 				ifTrue: [1]
@@ -18,4 +20,4 @@ fillFrom: aPoint to: anotherPoint
 				clippingBox: paintingForm boundingBox
 				rule: Form blend
 				fillColor: nil].
-	self changed
+	self invalidRect: ((Rectangle encompassing: {aPoint. anotherPoint}) expandBy: stampForm extent // 2)
