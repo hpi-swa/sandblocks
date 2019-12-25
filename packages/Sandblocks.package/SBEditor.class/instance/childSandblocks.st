@@ -1,4 +1,4 @@
 actions
 childSandblocks
 
-	^ scroll submorphs
+	^ scroll submorphs select: #isSandblock

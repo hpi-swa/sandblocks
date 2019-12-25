@@ -13,6 +13,7 @@ keyStroke: anEvent
 	
 	super keyStroke: anEvent.
 	
+	(self contents = 'true' or: [self contents = 'false']) ifTrue: [^ self assureClass: SBBoolean].
 	self isReserved ifTrue: [^ self assureClass: SBKeywordBinding].
 	
 	self updateSuggestions
