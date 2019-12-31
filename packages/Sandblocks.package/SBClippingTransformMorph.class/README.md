@@ -1,0 +1,1 @@
+A SBClippingTransformMorph is a transform morph that only queues drawing commands for children whose bounds are within the visible rectangle. This may cause incorrect drawing for children that draw outside their bounds.

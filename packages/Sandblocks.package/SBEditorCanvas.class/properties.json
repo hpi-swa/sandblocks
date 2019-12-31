@@ -14,5 +14,5 @@
 	"name" : "SBEditorCanvas",
 	"pools" : [
 		 ],
-	"super" : "TransformMorph",
+	"super" : "SBClippingTransformMorph",
 	"type" : "normal" }
