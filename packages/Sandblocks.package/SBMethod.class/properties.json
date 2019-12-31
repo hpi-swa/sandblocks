@@ -11,7 +11,8 @@
 		"methodClass",
 		"classPrefix",
 		"hasUnsavedChanges",
-		"currentSelector" ],
+		"currentSelector",
+		"typeCache" ],
 	"name" : "SBMethod",
 	"pools" : [
 		 ],

@@ -1,0 +1,12 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"editor:" : "tobe 12/31/2019 13:02",
+		"methodReturnConstant:" : "tobe 12/31/2019 17:32",
+		"methodReturnReceiver" : "tobe 12/31/2019 17:32",
+		"methodReturnTop" : "tobe 12/31/2019 17:32",
+		"pushTemporaryVariable:" : "tobe 12/31/2019 17:22",
+		"reportTypeInfo:at:" : "tobe 12/31/2019 17:39",
+		"send:super:numArgs:" : "tobe 12/31/2019 17:22",
+		"simulate:" : "tobe 12/31/2019 09:37" } }

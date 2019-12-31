@@ -1,7 +1,7 @@
 *Sandblocks
 asMethodBodySandblock
 	
-		| s |
+	| s |
 	s := (self statements last class = ReturnNode and: [self statements last expr class = VariableNode and: [self statements last expr key = 'self']])
 		ifTrue: [self statements allButLast]
 		ifFalse: [self statements].
