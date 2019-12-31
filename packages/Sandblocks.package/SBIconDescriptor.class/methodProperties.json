@@ -1,0 +1,16 @@
+{
+	"class" : {
+		"svg:color:size:" : "TB 12/10/2017 01:14" },
+	"instance" : {
+		"=" : "TB 12/10/2017 01:17",
+		"averageColorInQuadOfSize:at:from:" : "TB 4/6/2018 12:14",
+		"color" : "TB 12/10/2017 01:17",
+		"color:" : "TB 12/10/2017 01:15",
+		"correctColorFromPixelValue:" : "TB 4/6/2018 12:03",
+		"downSample:from:" : "TB 4/6/2018 12:05",
+		"hash" : "TB 12/10/2017 01:20",
+		"renderForm" : "TB 5/30/2019 22:27",
+		"size" : "TB 12/10/2017 01:17",
+		"size:" : "TB 12/10/2017 01:15",
+		"svg" : "TB 12/10/2017 01:17",
+		"svg:" : "TB 12/10/2017 01:15" } }

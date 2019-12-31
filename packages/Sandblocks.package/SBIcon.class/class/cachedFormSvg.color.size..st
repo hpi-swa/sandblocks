@@ -7,6 +7,6 @@ cachedFormSvg: anSvg color: aColor size: aNumber
 		factory: [:iconDescriptor | iconDescriptor renderForm]]."
 	
 	cache := FormCache ifNil: [FormCache := Dictionary new].
-	descriptor := (ECSIconDescriptor svg: anSvg color: aColor size: aNumber).
+	descriptor := (SBIconDescriptor svg: anSvg color: aColor size: aNumber).
 	
 	^ cache at: descriptor ifAbsentPut: [descriptor renderForm]
