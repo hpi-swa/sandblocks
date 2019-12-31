@@ -4,7 +4,7 @@ growBy: aPoint
 	| grow |
 	grow := aPoint sign * 50.
 	paintingForm := (Form extent: paintingForm form extent + grow abs depth: 32)
-		fillColor: Color white;
+		"fillColor: Color white;"
 		copyBits: paintingForm boundingBox
 		from: paintingForm
 		at: (grow negated max: 0 @ 0)

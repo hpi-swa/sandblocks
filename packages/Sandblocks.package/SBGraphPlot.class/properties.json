@@ -6,9 +6,11 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		 ],
-	"name" : "SBDisplayBarChart",
+		"data",
+		"label",
+		"labelColor" ],
+	"name" : "SBGraphPlot",
 	"pools" : [
 		 ],
-	"super" : "SBGraphPlot",
+	"super" : "Morph",
 	"type" : "normal" }

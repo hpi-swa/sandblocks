@@ -1,14 +1,14 @@
 {
-	"category" : "Sandblocks-Watch",
+	"category" : "Sandblocks",
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		 ],
+		"Instance" ],
 	"commentStamp" : "",
 	"instvars" : [
-		 ],
-	"name" : "SBDisplayBarChart",
+		"items" ],
+	"name" : "SBWorkspaceHistory",
 	"pools" : [
 		 ],
-	"super" : "SBGraphPlot",
+	"super" : "Object",
 	"type" : "normal" }

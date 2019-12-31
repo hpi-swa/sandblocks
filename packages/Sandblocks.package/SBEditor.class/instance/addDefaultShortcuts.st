@@ -68,6 +68,8 @@ addDefaultShortcuts
 		addCommandShortcut: $t command do: #promptSwitchMethodNewWindow;
 		addCommandShortcut: $e do: #promptNewMethod;
 		addCommandShortcut: Character escape command do: #close;
+		addCommandShortcut: $S command do: #saveWorkspace;
+		addCommandShortcut: $O command do: #promptOpenWorkspace;
 		
 		addInputShortcut: Character escape do: #endInput;
 		addInputShortcut: Character arrowLeft do: [:editor | editor textMorph moveCursor: -1];

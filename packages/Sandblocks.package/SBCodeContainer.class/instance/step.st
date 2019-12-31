@@ -4,8 +4,8 @@ step
 	self isDragging
 		ifTrue: [^ self].
 	self owner
-		submorphsDo: [:morph | (morph ~= self
-					and: [self bounds intersects: morph bounds])
+		submorphsDo: [:morph | (morph preventOcclusion and: [morph ~= self
+					and: [self bounds intersects: morph bounds]])
 				ifTrue: [| speed intersection direction maxSpeed |
 					intersection := self bounds intersect: morph bounds.
 					speed := intersection area.

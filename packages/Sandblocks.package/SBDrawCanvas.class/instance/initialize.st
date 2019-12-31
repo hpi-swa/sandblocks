@@ -1,7 +1,7 @@
 as yet unclassified
 initialize
 	super initialize.
-	paintingForm := (Form extent: 100 asPoint depth: 32) fillColor: Color white.
+	paintingForm := (Form extent: 100 asPoint depth: 32) "fillColor: Color white".
 	stampForm := false
 				ifTrue: [(Form fromFileNamed: '/home/tom/Pictures/brush.png')
 						scaledIntoFormOfSize: 32 asPoint]
