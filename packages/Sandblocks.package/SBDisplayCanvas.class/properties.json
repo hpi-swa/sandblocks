@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Watch",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBDisplayCanvas",
+	"pools" : [
+		 ],
+	"super" : "ImageMorph",
+	"type" : "normal" }

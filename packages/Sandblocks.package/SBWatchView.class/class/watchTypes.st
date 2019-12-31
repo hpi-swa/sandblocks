@@ -7,6 +7,7 @@ watchTypes
 		SBDisplayActiveExpression.
 		SBDisplayColor.
 		SBDisplayMorph.
+		SBDisplayCanvas.
 		SBDisplayForm.
 		SBDisplayPrint.
 		SBDisplayMultiple.
