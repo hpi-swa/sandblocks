@@ -1,6 +1,5 @@
 as yet unclassified
 methodReturnTop
 
-	self reportTypeInfo: currentContext top at: currentContext methodReturnContext.
-	Transcript  showln: {currentContext top. currentContext methodReturnContext}.
+	self reportTypeInfo: currentContext top at: currentContext methodReturnContext sender.
 	^ currentContext methodReturnTop

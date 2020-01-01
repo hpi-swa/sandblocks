@@ -1,12 +1,15 @@
 as yet unclassified
 send: selector super: supered numArgs: numArgs
 
-	| arguments receiver location res |
-	receiver := currentContext at: currentContext stackPtr - numArgs. selector.
-	arguments := (currentContext stackPtr - numArgs + 1 to: currentContext stackPtr) collect: [:index | currentContext at: index].
+	| lookupClass |
+	lookupClass := supered
+		ifTrue: [currentContext method methodClassAssociation value superclass]
+		ifFalse: [currentContext objectClass: currentContext top].
 	
-	"Transcript showln: {currentContext pc - 1. receiver. selector. arguments.}"
-	location := SBCodeContext for: currentContext.
-	res := super send: selector super: supered numArgs: numArgs.
-	currentContext stackPtr > 0 ifTrue: ["editor reportTypeInfo: currentContext top at: location"].
-	^ res
+	(lookupClass lookupSelector: selector) ifNotNil: [:method |
+		method primitive > 0 ifTrue: [ | ret |
+			ret := super send: selector super: supered numArgs: numArgs.
+			self reportTypeInfo: currentContext top at: currentContext.
+			^ ret]].
+	
+	^ super send: selector super: supered numArgs: numArgs

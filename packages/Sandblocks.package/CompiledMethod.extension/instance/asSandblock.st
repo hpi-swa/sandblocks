@@ -1,7 +1,7 @@
 *Sandblocks
 asSandblock
 
-	| methodNode class parser source sourceRanges debuggerMap rangeToPC nodeToPC rangeToPCList |
+	| methodNode class parser source sourceRanges debuggerMap rangeToPC nodeToPC rangeToPCList instructions |
 	true ifTrue: [
 			class := self methodClass.
 			parser := class newParser encoderClass: self encoderClass.
@@ -12,7 +12,10 @@ asSandblock
 			
 			rangeToPCList := (self initialPC to: self endPC) collect: [:pc | (debuggerMap rangeForPC: pc in: self contextIsActiveContext: true) -> pc].
 			rangeToPC := Dictionary new.
-			rangeToPCList do: [:assoc | (rangeToPC includesKey: assoc key) ifFalse: [rangeToPC at: assoc key put: assoc value]].
+			
+			instructions := (InstructionStream on: self).
+			rangeToPCList do: [:assoc | "(rangeToPC includesKey: assoc key) ifFalse:"
+				(instructions pc: assoc value; nextInstruction) selector = #send:super:numArgs: ifTrue: [rangeToPC at: assoc key put: assoc value]].
 			
 			nodeToPC := sourceRanges collect: [:range | rangeToPC at: range ifAbsent: [0]].
 			nodeToPC keysAndValuesDo: [:node :pc | node pc: pc]]
