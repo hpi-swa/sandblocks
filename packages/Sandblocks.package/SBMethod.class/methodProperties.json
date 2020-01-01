@@ -14,6 +14,7 @@
 		"cacheType:for:" : "tobe 1/1/2020 12:30",
 		"childSandblocks" : "tobe 7/9/2019 09:46",
 		"collapsed:" : "tobe 12/15/2019 11:41",
+		"compiledMethod" : "tobe 1/1/2020 15:23",
 		"containingMethod" : "tobe 7/3/2019 14:31",
 		"currentSelector" : "tobe 12/11/2019 22:17",
 		"currentTextMorph" : "tobe 7/7/2019 11:33",
@@ -31,7 +32,7 @@
 		"methodClass" : "tobe 6/28/2019 21:16",
 		"printOn:" : "tobe 6/30/2019 13:31",
 		"proposeCodeActions:for:" : "tobe 7/5/2019 07:55",
-		"saveTryFixing:" : "tobe 1/1/2020 11:33",
+		"saveTryFixing:" : "tobe 1/1/2020 15:21",
 		"selector" : "tobe 6/30/2019 13:31",
 		"selector:arguments:" : "tobe 12/11/2019 21:20",
 		"selector:arguments:class:" : "tobe 12/11/2019 21:17",
@@ -43,5 +44,6 @@
 		"tryFix:ifFail:" : "tobe 7/8/2019 17:57",
 		"typeCache" : "tobe 12/31/2019 09:28",
 		"typeFor:" : "tobe 1/1/2020 11:13",
+		"updatePCs" : "tobe 1/1/2020 15:37",
 		"valid" : "tobe 12/11/2019 22:01",
 		"writeSourceOn:" : "tobe 12/11/2019 22:06" } }

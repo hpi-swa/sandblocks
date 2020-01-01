@@ -12,5 +12,6 @@ saveTryFixing: aBoolean
 		self methodClass removeSelector: currentSelector].
 	currentSelector := newSelector.
 	
+	self updatePCs.
 	self hasUnsavedChanges: false.
 	^ true

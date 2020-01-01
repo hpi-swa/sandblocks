@@ -17,7 +17,7 @@ asSandblock
 					instructions nextInstruction]].
 			rangeToPC := Dictionary new.
 			
-			rangeToPCList do: [:assoc | "(rangeToPC includesKey: assoc key) ifFalse:"
+			rangeToPCList do: [:assoc |
 				(#(storeIntoReceiverVariable: storeIntoTemporaryVariable: popIntoReceiverVariable: popIntoTemporaryVariable: pushClosureCopyNumCopiedValues:numArgs:blockSize: #send:super:numArgs:)
 					includes: (instructions pc: assoc value; nextInstruction) selector)
 						ifTrue: [rangeToPC at: assoc key put: assoc value]].
