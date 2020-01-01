@@ -5,5 +5,5 @@ asSandblock
 		statements: (self statements collect: #asSandblock);
 		temporaries: (self temporaries collect: #asDeclarationSandblock);
 		bindings: (self arguments collect: #asBlockBindingSandblock);
-		pc: self pc;
+		pc: "self pc"closureCreationNode pc;
 		yourself

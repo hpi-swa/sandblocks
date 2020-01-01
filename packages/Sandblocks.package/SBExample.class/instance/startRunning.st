@@ -3,4 +3,5 @@ startRunning
 
 	"self startSteppingSelector: #run."
 	active := true.
-	self updateIcon
+	self updateIcon.
+	self run

@@ -1,8 +1,12 @@
 *Sandblocks
 asMessageSandblock
 
+	| blockReceiver |
+	blockReceiver := originalReceiver asSandblock.
+	blockReceiver pc = 0 ifTrue: [blockReceiver pc: self receiver pc].
+	
 	^ SBMessageSend new
-		receiver: (originalReceiver asSandblock pc: self receiver pc)"(self receiver ifNotNil: #asSandblock)"
+		receiver: blockReceiver
 		selector: originalSelector
 		arguments: (originalArguments collect: #asSandblock);
 		pc: self pc

@@ -10,12 +10,17 @@ asSandblock
 			sourceRanges := parser encoder rawSourceRanges.
 			debuggerMap := self debuggerMap.
 			
-			rangeToPCList := (self initialPC to: self endPC) collect: [:pc | (debuggerMap rangeForPC: pc in: self contextIsActiveContext: true) -> pc].
+			instructions := InstructionStream on: self.
+			rangeToPCList := Array streamContents: [:stream |
+				[instructions atEnd] whileFalse: [
+					stream nextPut: ((debuggerMap rangeForPC: instructions pc in: self contextIsActiveContext: true) -> instructions pc).
+					instructions nextInstruction]].
 			rangeToPC := Dictionary new.
 			
-			instructions := (InstructionStream on: self).
 			rangeToPCList do: [:assoc | "(rangeToPC includesKey: assoc key) ifFalse:"
-				(instructions pc: assoc value; nextInstruction) selector = #send:super:numArgs: ifTrue: [rangeToPC at: assoc key put: assoc value]].
+				(#(pushClosureCopyNumCopiedValues:numArgs:blockSize: #send:super:numArgs:)
+					includes: (instructions pc: assoc value; nextInstruction) selector)
+						ifTrue: [rangeToPC at: assoc key put: assoc value]].
 			
 			nodeToPC := sourceRanges collect: [:range | rangeToPC at: range ifAbsent: [0]].
 			nodeToPC keysAndValuesDo: [:node :pc | node pc: pc]]
