@@ -5,5 +5,6 @@ mouseUp: anEvent
 	isDown := false.
 	oldCursor ifNotNil: #show.
 	
-	self sandblockEditor do: (scrubbingCommand value: self contents).
+	scrubbingCommand oldValue ~= self contents ifTrue: [
+		self sandblockEditor do: (scrubbingCommand value: self contents)].
 	scrubbingCommand := nil
