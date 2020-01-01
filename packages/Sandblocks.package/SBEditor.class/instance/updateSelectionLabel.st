@@ -8,5 +8,5 @@ updateSelectionLabel
 				ifNotNil: [:s |
 					s containingMethod
 						ifNil: [s printString]
-						ifNotNil: ['{1} ({2})' format: {s printString. (s containingMethod typeFor: selection) asString}]]
+						ifNotNil: ['{1} ({2})' format: {s printString. (s guessedClass) asString}]]
 				ifNil: ['']])

@@ -9,7 +9,7 @@ send: selector super: supered numArgs: numArgs
 	(lookupClass lookupSelector: selector) ifNotNil: [:method |
 		method primitive > 0 ifTrue: [ | ret |
 			ret := super send: selector super: supered numArgs: numArgs.
-			self reportTypeInfo: currentContext top at: currentContext.
+			(currentContext isDead not and: [currentContext stackPtr > 0]) ifTrue: [self reportTypeInfo: currentContext top at: currentContext].
 			^ ret]].
 	
 	^ super send: selector super: supered numArgs: numArgs

@@ -28,7 +28,9 @@
 		"methodContainer",
 		"compiledMethod",
 		"colorPolicy",
-		"bottomPanel" ],
+		"bottomPanel",
+		"compileTimeButton",
+		"compileTime" ],
 	"name" : "SBEditor",
 	"pools" : [
 		 ],

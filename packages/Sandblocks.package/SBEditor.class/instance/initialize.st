@@ -10,6 +10,7 @@ initialize
 	inputShortcuts := OrderedCollection new.
 	multiSelection := OrderedCollection new.
 	colorPolicy := SBDefaultColorPolicy new.
+	compileTime := #compileOnSave.
 	
 	self
 		addKeyboardCaptureFilter: self;
@@ -40,6 +41,9 @@ initialize
 			addMorphBack: (modeLabel := StringMorph new emphasis: TextEmphasis bold emphasisCode);
 			addMorphBack: (selectionLabel := StringMorph new contents: '');
 			addMorphBack: (Morph new extent: 0 @ 0; hResizing: #spaceFill; color: Color transparent);
+			addMorphBack: (compileTimeButton := StringMorph new
+				contents: 'Compile on save';
+				on: #click send: #promptChangeCompile to: self);
 			addMorphBack: (copyBufferPreview := ImageMorph new image: (Form extent: 1 @ 1));
 			yourself);
 		

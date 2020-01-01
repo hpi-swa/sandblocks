@@ -8,4 +8,4 @@ collectTypeInfo
 	
 	SBTypeCollectSimulator new
 		editor: self sandblockEditor;
-		simulate: [receiver perform: selector withArguments: arguments]
+		simulate: [[receiver perform: selector withArguments: arguments] on: Error do: []]
