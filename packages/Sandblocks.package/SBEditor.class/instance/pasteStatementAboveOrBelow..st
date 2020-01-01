@@ -2,6 +2,8 @@ actions
 pasteStatementAboveOrBelow: anAboveBoolean
 
 	| index target adjacent |
+	copyBuffer ifNil: [^ self].
+	
 	target := copyBuffer isSelection ifTrue: [copyBuffer firstSubmorph] ifFalse: [copyBuffer].
 	
 	adjacent := self selection.

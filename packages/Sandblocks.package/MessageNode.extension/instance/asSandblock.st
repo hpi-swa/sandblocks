@@ -2,7 +2,7 @@
 asSandblock
 	
 	| send |
-	send := self asMessageSandblock.
+	send := self asSandblockWithoutSubstitution.
 	
 	" only if we're not in a cascade ... "
 	send receiver ifNotNil: [

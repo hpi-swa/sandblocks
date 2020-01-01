@@ -1,0 +1,4 @@
+*Sandblocks
+asSandblockWithoutSubstitution
+
+	^ self asSandblock

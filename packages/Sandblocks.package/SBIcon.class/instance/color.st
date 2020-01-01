@@ -1,4 +1,4 @@
 drawing
 color
 
-	^ self containingSandblock foregroundColor
+	^ color ifNil: [self containingSandblock foregroundColor]

@@ -1,5 +1,5 @@
 *Sandblocks
-asMessageSandblock
+asSandblockWithoutSubstitution
 
 	| blockReceiver |
 	blockReceiver := originalReceiver asSandblock.
