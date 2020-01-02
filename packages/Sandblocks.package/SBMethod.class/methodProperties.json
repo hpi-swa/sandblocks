@@ -26,6 +26,7 @@
 		"initialize" : "tobe 12/7/2019 20:26",
 		"instanceVariables" : "tobe 7/8/2019 17:52",
 		"isArtefact" : "tobe 12/11/2019 17:50",
+		"isClassSide" : "tobe 1/1/2020 19:31",
 		"isCollapsed" : "tobe 12/3/2019 11:09",
 		"isMethod" : "tobe 7/3/2019 14:22",
 		"keyStroke:" : "tobe 7/9/2019 09:48",
@@ -44,6 +45,6 @@
 		"tryFix:ifFail:" : "tobe 7/8/2019 17:57",
 		"typeCache" : "tobe 12/31/2019 09:28",
 		"typeFor:" : "tobe 1/1/2020 11:13",
-		"updatePCs" : "tobe 1/1/2020 15:37",
+		"updatePCs" : "tobe 1/1/2020 19:39",
 		"valid" : "tobe 12/11/2019 22:01",
 		"writeSourceOn:" : "tobe 12/11/2019 22:06" } }

@@ -1,0 +1,18 @@
+{
+	"class" : {
+		"colored:after:" : "tobe 1/1/2020 17:21",
+		"matches:" : "tobe 1/1/2020 17:17",
+		"newFrom:" : "tobe 1/1/2020 17:17" },
+	"instance" : {
+		"changeColor" : "tobe 1/1/2020 17:14",
+		"childSandblocks" : "tobe 1/1/2020 17:17",
+		"colored" : "tobe 1/1/2020 17:15",
+		"colored:" : "tobe 1/1/2020 17:15",
+		"drawnColor" : "tobe 1/1/2020 17:15",
+		"expression" : "tobe 1/1/2020 17:17",
+		"expression:" : "tobe 1/1/2020 17:17",
+		"guessedClass" : "tobe 1/1/2020 17:22",
+		"initialize" : "tobe 1/1/2020 17:21",
+		"isExpression" : "tobe 1/1/2020 17:21",
+		"printOn:" : "tobe 1/1/2020 17:23",
+		"writeSourceOn:" : "tobe 1/1/2020 17:20" } }

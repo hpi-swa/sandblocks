@@ -1,6 +1,8 @@
 as yet unclassified
 postDo
 
+	select ifNil: [select := messageSend containingSandblock].
+	
 	" if we just changed from unary to keyword message, instead of editing the message edit the new argument "
 	(previousSelector asSymbol isUnary and: [newSelector asSymbol isKeyword])
 		ifTrue: [

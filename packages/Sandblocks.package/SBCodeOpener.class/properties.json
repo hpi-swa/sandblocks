@@ -13,7 +13,8 @@
 		"classes",
 		"messages",
 		"currentPanelIndex",
-		"result" ],
+		"result",
+		"showingClassSide" ],
 	"name" : "SBCodeOpener",
 	"pools" : [
 		 ],

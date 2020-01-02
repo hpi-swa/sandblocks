@@ -2,7 +2,7 @@ as yet unclassified
 watchTypes
 
 	^ {
-		SBDisplayBarChart.
+		"SBDisplayBarChart."
 		SBDisplayActiveExpressionMarbles.
 		SBDisplayActiveExpression.
 		SBDisplayColor.
@@ -10,5 +10,6 @@ watchTypes
 		SBDisplayCanvas.
 		SBDisplayForm.
 		SBDisplayPrint.
+		SBDisplayText.
 		SBDisplayMultiple.
 	}

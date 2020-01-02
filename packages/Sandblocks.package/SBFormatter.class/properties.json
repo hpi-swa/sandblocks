@@ -1,0 +1,17 @@
+{
+	"category" : "Sandblocks-Format",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"stream",
+		"indent",
+		"parents",
+		"preFormatCache" ],
+	"name" : "SBFormatter",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

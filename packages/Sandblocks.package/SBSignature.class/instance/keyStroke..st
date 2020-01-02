@@ -3,6 +3,7 @@ keyStroke: anEvent
 
 	| char |
 	char := anEvent keyCharacter.
+	
 	(char = Character tab or: [char = Character space]) ifTrue: [^ self moveFocusToNextPart: (anEvent shiftPressed ifTrue: [-1] ifFalse: [1])].
 	
 	char = $: ifTrue: [^ self addMessagePart].

@@ -1,0 +1,24 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"visitAssignmentNode:" : "tobe 1/2/2020 09:50",
+		"visitBlockNode:" : "tobe 1/2/2020 09:50",
+		"visitBraceNode:" : "tobe 1/2/2020 09:51",
+		"visitCascadeNode:" : "tobe 1/2/2020 09:51",
+		"visitCommentNode:" : "tobe 1/2/2020 09:51",
+		"visitFieldNode:" : "tobe 1/2/2020 09:51",
+		"visitFutureNode:" : "tobe 1/2/2020 09:51",
+		"visitInstanceVariableNode:" : "tobe 1/2/2020 09:51",
+		"visitLiteralNode:" : "tobe 1/2/2020 09:51",
+		"visitLiteralVariableNode:" : "tobe 1/2/2020 09:51",
+		"visitMessageNode:" : "tobe 1/2/2020 09:52",
+		"visitMessageNodeInCascade:" : "tobe 1/2/2020 09:52",
+		"visitMethodNode:" : "tobe 1/2/2020 09:53",
+		"visitNewArrayNode:" : "tobe 1/2/2020 09:53",
+		"visitRemoteTempVectorNode:" : "tobe 1/2/2020 09:53",
+		"visitReturnNode:" : "tobe 1/2/2020 09:53",
+		"visitSelectorNode:" : "tobe 1/2/2020 09:54",
+		"visitTempVariableNode:" : "tobe 1/2/2020 09:54",
+		"visitUndeclaredVariableNode:" : "tobe 1/2/2020 09:54",
+		"visitVariableNode:" : "tobe 1/2/2020 09:54" } }

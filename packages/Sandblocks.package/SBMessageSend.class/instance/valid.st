@@ -1,4 +1,4 @@
 as yet unclassified
 valid
 
-	^ self isDefined
+	^ self contents notEmpty and: [self isDefined]

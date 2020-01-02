@@ -1,14 +1,16 @@
 input
 endInput
 
+	| command input |
 	currentInput ifNil: [^ self].
-	
-	currentInput stopEditing: currentInputCommand.
-	
-	currentInputCommand hasChange
-		ifTrue: [self do: currentInputCommand]
-		ifFalse: [undoStack ifNotEmpty: [undoStack last shouldMergeWithNext: false]].
-	
+	command := currentInputCommand.
+	input := currentInput.
 	currentInput := nil.
 	currentInputCommand := nil.
-	self mode: #command
+	
+	input stopEditing: command.
+	self mode: #command.
+	
+	command hasChange
+		ifTrue: [self do: command]
+		ifFalse: [undoStack ifNotEmpty: [undoStack last shouldMergeWithNext: false]]

@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Format",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "<historical>",
+	"instvars" : [
+		 ],
+	"name" : "SBPrecedenceVisitor",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

@@ -39,4 +39,4 @@ send: selector super: supered numArgs: numArgs
 			
 			^ ret]].
 	
-	^ super send: selector super: supered numArgs: numArgs
+	^ super send: (selector = #halt ifTrue: [#yourself] ifFalse: [selector]) super: supered numArgs: numArgs

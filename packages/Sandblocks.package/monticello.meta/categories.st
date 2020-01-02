@@ -4,3 +4,4 @@ SystemOrganization addCategory: #'Sandblocks-Example'!
 SystemOrganization addCategory: #'Sandblocks-Drawing'!
 SystemOrganization addCategory: #Sandblocks!
 SystemOrganization addCategory: #'Sandblocks-Graph'!
+SystemOrganization addCategory: #'Sandblocks-Format'!

@@ -3,7 +3,8 @@ asSandblockWithoutSubstitution
 
 	| blockReceiver |
 	blockReceiver := originalReceiver asSandblock.
-	blockReceiver pc = 0 ifTrue: [blockReceiver pc: self receiver pc].
+	" the originalReceiver may not have gotten a pc set, so we copy it from the generated receiver "
+	(blockReceiver pc = 0 and: [self receiver notNil]) ifTrue: [blockReceiver pc: self receiver pc].
 	
 	^ SBMessageSend new
 		receiver: blockReceiver

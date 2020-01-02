@@ -7,6 +7,7 @@ initialize
 	selectedClassIndex := 0.
 	selectedMethodIndex := 0.
 	currentPanelIndex := 1.
+	showingClassSide := false.
 	
 	self
 		height: 200;
