@@ -1,0 +1,18 @@
+{
+	"class" : {
+		"matches:" : "tobe 1/2/2020 12:10",
+		"newFrom:" : "tobe 7/15/2019 17:52",
+		"registerWatch:" : "tobe 6/28/2019 18:35",
+		"registry" : "tobe 6/28/2019 18:34",
+		"report:for:" : "tobe 6/28/2019 18:37" },
+	"instance" : {
+		"childSandblocks" : "tobe 1/2/2020 12:08",
+		"color" : "tobe 7/1/2019 13:50",
+		"drawnColor" : "tobe 7/1/2019 13:47",
+		"expression" : "tobe 7/9/2019 21:51",
+		"expression:" : "tobe 7/10/2019 09:49",
+		"guessedClass" : "tobe 1/2/2020 12:08",
+		"initialize" : "tobe 1/2/2020 12:07",
+		"isWatch" : "tobe 11/11/2019 15:15",
+		"printOn:" : "tobe 1/2/2020 12:10",
+		"writeSourceOn:" : "tobe 1/2/2020 12:10" } }
