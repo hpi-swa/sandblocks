@@ -2,7 +2,10 @@
 	"class" : {
 		 },
 	"instance" : {
+		"doubleClick:" : "tobe 1/3/2020 08:07",
 		"guessedClass" : "tobe 1/1/2020 11:05",
 		"parsedContents" : "tobe 12/25/2019 10:19",
+		"parsedContents:" : "tobe 1/3/2020 08:06",
 		"printOn:" : "tobe 12/25/2019 09:21",
-		"startInputAt:replacingContents:" : "tobe 12/25/2019 10:21" } }
+		"startInputAt:replacingContents:" : "tobe 1/3/2020 08:07",
+		"toggle" : "tobe 1/3/2020 08:08" } }

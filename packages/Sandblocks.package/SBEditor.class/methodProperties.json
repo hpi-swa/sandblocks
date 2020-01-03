@@ -4,7 +4,7 @@
 		"openFor:" : "tobe 12/7/2019 19:01" },
 	"instance" : {
 		"addCommandShortcut:do:" : "tobe 7/7/2019 11:06",
-		"addDefaultShortcuts" : "tobe 1/2/2020 08:38",
+		"addDefaultShortcuts" : "tobe 1/3/2020 08:28",
 		"addElement" : "tobe 6/30/2019 21:36",
 		"addExample" : "tobe 1/1/2020 19:33",
 		"addGlobalShortcut:do:" : "tobe 7/7/2019 11:04",
@@ -136,7 +136,7 @@
 		"watchExpression:with:" : "tobe 12/11/2019 17:14",
 		"watchSelection" : "tobe 11/24/2019 18:14",
 		"watchSelectionForExample" : "tobe 11/24/2019 18:14",
-		"wrapAsArgument" : "tobe 12/22/2019 15:31",
+		"wrapAsArgument" : "tobe 1/3/2020 07:42",
 		"wrapInArrayType:" : "tobe 12/11/2019 17:24",
 		"wrapInAssignment" : "tobe 12/11/2019 17:25",
 		"wrapInBlock" : "tobe 12/11/2019 17:25",
@@ -145,4 +145,5 @@
 		"wrapInLiteralArray" : "tobe 7/7/2019 10:00",
 		"wrapInMessageSend" : "tobe 7/5/2019 09:22",
 		"wrapInMessageSend:" : "tobe 12/11/2019 17:25",
-		"wrapInReturn" : "tobe 12/11/2019 17:25" } }
+		"wrapInReturn" : "tobe 12/11/2019 17:25",
+		"wrapInToggledCode" : "tobe 1/3/2020 08:32" } }

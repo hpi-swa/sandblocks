@@ -10,7 +10,7 @@ wrapAsArgument
 		wrap: [:outer :inner |
 			outer
 				receiver: SBUnknown new
-				selector: ':'
+				selector: SBMessageSend placeholderSelector
 				arguments: {inner}];
 		yourself).
 	

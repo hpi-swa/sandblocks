@@ -1,4 +1,4 @@
 as yet unclassified
 drawnColor
 
-	^ Color veryDarkGray
+	^ Color white

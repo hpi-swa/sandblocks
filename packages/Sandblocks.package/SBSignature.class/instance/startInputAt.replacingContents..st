@@ -11,6 +11,6 @@ startInputAt: aNumber replacingContents: aBoolean
 		yourself.
 	
 	currentInputMessagePart moveCursorTo: aNumber.
-	aBoolean ifTrue: [currentInputMessagePart contents: ((currentInputMessagePart contents includes: $:) ifTrue: [':'] ifFalse: [''])].
+	(aBoolean or: [currentInputMessagePart contents = SBMessageSend placeholderSelector]) ifTrue: [currentInputMessagePart contents: ((currentInputMessagePart contents includes: $:) ifTrue: [':'] ifFalse: [''])].
 	
 	^ cmd

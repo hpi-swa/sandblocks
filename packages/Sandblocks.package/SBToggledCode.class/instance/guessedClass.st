@@ -1,4 +1,4 @@
 as yet unclassified
 guessedClass
 
-	^ nil
+	^ self block lastSubmorph guessedClass

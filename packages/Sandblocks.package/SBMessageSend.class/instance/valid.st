@@ -1,4 +1,4 @@
 as yet unclassified
 valid
 
-	^ self contents notEmpty and: [self isDefined]
+	^ self validSelector and: [self isDefined]

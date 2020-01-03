@@ -51,6 +51,7 @@ addDefaultShortcuts
 		addMultiSelectionShortcut: $v do: #startOrAddToMultiSelection;
 		addMultiSelectionShortcut: $> do: #extractMethod;
 		addMultiSelectionShortcut: $; do: #wrapInCascade;
+		addMultiSelectionShortcut: $" do: #wrapInToggledCode;
 		
 		addCommandShortcut: $x command do: #openOpenWindow;
 		addCommandShortcut: $1 do: #resetZoom;

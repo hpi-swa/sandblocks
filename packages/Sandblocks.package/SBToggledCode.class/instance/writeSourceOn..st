@@ -6,5 +6,5 @@ writeSourceOn: aStream
 	aStream nextPutAll: ' active: '.
 	active writeSourceOn: aStream.
 	aStream nextPutAll: ' do: '.
-	self expression writeSourceOn: aStream.
+	self block writeSourceOn: aStream.
 	aStream nextPut: $)
