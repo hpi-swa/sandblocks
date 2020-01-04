@@ -1,4 +1,4 @@
 as yet unclassified
 guessedClass
 
-	^ self block lastSubmorph guessedClass
+	^ self activeBlock ifNotNil: [:block | block lastSubmorph guessedClass]

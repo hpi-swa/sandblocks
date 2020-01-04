@@ -8,7 +8,8 @@
 	"instvars" : [
 		"index",
 		"morph",
-		"container" ],
+		"container",
+		"select" ],
 	"name" : "SBInsertCommand",
 	"pools" : [
 		 ],

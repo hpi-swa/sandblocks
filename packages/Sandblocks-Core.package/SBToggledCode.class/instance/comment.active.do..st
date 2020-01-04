@@ -1,8 +1,8 @@
 as yet unclassified
-comment: aString active: aBoolean do: aBlock
+comment: aString active: aNumber do: aCollection
 
-	active parsedContents: aBoolean.
 	comment contents: aString.
-	previousBlockColor := aBlock valueOfProperty: #sandblockBlockColor.
-	self addMorphBack: aBlock.
-	self update
+	"previousBlockColor := aBlock valueOfProperty: #sandblockBlockColor."
+	aCollection withIndexDo: [:block :index |
+		self addMorphBack: (self buildRowFor: block active: index = aNumber)].
+	self updateSelected

@@ -1,18 +1,22 @@
 {
 	"class" : {
-		"comment:active:do:" : "tobe 1/3/2020 08:13",
+		"comment:active:do:" : "tobe 1/4/2020 23:02",
 		"matches:" : "tobe 1/2/2020 12:10",
-		"newFrom:" : "tobe 1/3/2020 08:11" },
+		"newFrom:" : "tobe 1/4/2020 23:14" },
 	"instance" : {
-		"block" : "tobe 1/3/2020 08:11",
-		"childSandblocks" : "tobe 1/3/2020 08:30",
+		"activeBlock" : "tobe 1/4/2020 23:18",
+		"activeIndex" : "tobe 1/4/2020 23:15",
+		"addCommandRequest" : "tobe 1/4/2020 23:27",
+		"addedMorph:" : "tobe 1/4/2020 23:28",
+		"buildRowFor:active:" : "tobe 1/4/2020 23:33",
+		"childSandblocks" : "tobe 1/4/2020 23:15",
 		"color" : "tobe 7/1/2019 13:50",
-		"comment:active:do:" : "tobe 1/3/2020 08:18",
+		"comment:active:do:" : "tobe 1/4/2020 23:24",
+		"deselectAllBut:" : "tobe 1/4/2020 23:31",
 		"drawnColor" : "tobe 1/3/2020 08:20",
-		"guessedClass" : "tobe 1/3/2020 08:11",
-		"initialize" : "tobe 1/3/2020 08:27",
-		"isWatch" : "tobe 11/11/2019 15:15",
+		"guessedClass" : "tobe 1/4/2020 23:18",
+		"initialize" : "tobe 1/4/2020 23:06",
 		"prefix" : "tobe 1/3/2020 08:27",
 		"printOn:" : "tobe 1/3/2020 08:11",
-		"update" : "tobe 1/3/2020 08:19",
-		"writeSourceOn:" : "tobe 1/3/2020 08:10" } }
+		"updateSelected" : "tobe 1/4/2020 23:31",
+		"writeSourceOn:" : "tobe 1/4/2020 23:28" } }

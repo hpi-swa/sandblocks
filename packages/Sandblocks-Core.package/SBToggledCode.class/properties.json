@@ -3,12 +3,10 @@
 	"classinstvars" : [
 		 ],
 	"classvars" : [
-		"Registry" ],
+		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"comment",
-		"active",
-		"previousBlockColor" ],
+		"comment" ],
 	"name" : "SBToggledCode",
 	"pools" : [
 		 ],

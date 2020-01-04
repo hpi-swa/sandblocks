@@ -1,4 +1,4 @@
 as yet unclassified
-comment: aString active: aBoolean do: aBlock
+comment: aString active: aNumber do: aCollection
 
-	^ aBoolean ifTrue: aBlock ifFalse: [nil]
+	^ aNumber > 0 ifTrue: [(aCollection at: aNumber) value] ifFalse: [nil]
