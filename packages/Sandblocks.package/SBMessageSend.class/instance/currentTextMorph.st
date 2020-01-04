@@ -1,4 +1,0 @@
-accessing
-currentTextMorph
-
-	^ signature currentTextMorph

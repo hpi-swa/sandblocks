@@ -1,4 +1,0 @@
-*Sandblocks
-fontToUse
-
-	^ TextStyle defaultFont

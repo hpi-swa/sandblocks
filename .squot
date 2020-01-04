@@ -1,4 +1,9 @@
 OrderedDictionary {
-	'packages\/Sandblocks.package' : #SquotCypressCodeSerializer,
-	'packages\/BaselineOfSandblocks.package' : #SquotCypressCodeSerializer
+	'packages\/BaselineOfSandblocks.package' : #SquotCypressCodeSerializer,
+	'packages\/Sandblocks-ActiveExpression.package' : #SquotCypressCodeSerializer,
+	'packages\/Sandblocks-Example.package' : #SquotCypressCodeSerializer,
+	'packages\/Sandblocks-Drawing.package' : #SquotCypressCodeSerializer,
+	'packages\/Sandblocks-Format.package' : #SquotCypressCodeSerializer,
+	'packages\/Sandblocks-Graph.package' : #SquotCypressCodeSerializer,
+	'packages\/Sandblocks-Watch.package' : #SquotCypressCodeSerializer
 }

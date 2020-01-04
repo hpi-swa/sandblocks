@@ -1,4 +1,0 @@
-colors
-iconName
-
-	^ iconName

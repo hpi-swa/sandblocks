@@ -1,4 +1,0 @@
-*Sandblocks
-originalSelector
-
-	^ originalSelector

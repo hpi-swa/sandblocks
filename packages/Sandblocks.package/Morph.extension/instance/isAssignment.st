@@ -1,4 +1,0 @@
-*Sandblocks
-isAssignment
-
-	^ false

@@ -1,4 +1,0 @@
-*Sandblocks
-asSandblockWithoutSubstitution
-
-	^ self asSandblock

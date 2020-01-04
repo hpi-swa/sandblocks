@@ -1,4 +1,0 @@
-*Sandblocks
-isStatement
-
-	^ false

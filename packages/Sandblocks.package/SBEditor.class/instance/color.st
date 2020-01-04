@@ -1,4 +1,0 @@
-drawing
-color
-
-	^ Color white

@@ -1,4 +1,0 @@
-*Sandblocks
-isTemporaries
-
-	^ false

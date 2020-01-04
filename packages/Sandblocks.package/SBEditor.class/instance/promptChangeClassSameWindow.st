@@ -1,4 +1,0 @@
-actions
-promptChangeClassSameWindow
-
-	self promptChangeClassNewWindow: false
