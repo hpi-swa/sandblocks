@@ -1,4 +1,5 @@
 as yet unclassified
-colored: aColor after: aBlock
+colored: aColor after: anObject
 
-	^ aBlock
+	SBDisplayActiveExpressionMarbles allInstancesDo: [:marbles | marbles isInWorld ifTrue: [marbles addSyncEvent: aColor]].
+	^ aColor
