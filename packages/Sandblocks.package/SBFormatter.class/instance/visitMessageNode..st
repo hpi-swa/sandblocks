@@ -2,7 +2,8 @@ as yet unclassified
 visitMessageNode: aNode
 
 	| multiLine |
-	((self parentFor: aNode) isKindOf: CascadeNode) ifFalse: [self visitNode: aNode receiver].
+	(((self parentFor: aNode) isKindOf: CascadeNode) not or: [(self parentFor: aNode) receiver = aNode]) ifTrue: [self visitNode: aNode receiver].
+	
 	aNode originalSelector isUnary ifTrue: [
 		^ stream
 			 space;

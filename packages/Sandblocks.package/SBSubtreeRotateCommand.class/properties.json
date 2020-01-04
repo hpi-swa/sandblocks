@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"target",
+		"undoTarget" ],
+	"name" : "SBSubtreeRotateCommand",
+	"pools" : [
+		 ],
+	"super" : "SBCommand",
+	"type" : "normal" }

@@ -4,7 +4,7 @@
 		"openFor:" : "tobe 12/7/2019 19:01" },
 	"instance" : {
 		"addCommandShortcut:do:" : "tobe 7/7/2019 11:06",
-		"addDefaultShortcuts" : "tobe 1/3/2020 08:28",
+		"addDefaultShortcuts" : "tobe 1/4/2020 10:40",
 		"addElement" : "tobe 6/30/2019 21:36",
 		"addExample" : "tobe 1/1/2020 19:33",
 		"addGlobalShortcut:do:" : "tobe 7/7/2019 11:04",
@@ -55,6 +55,7 @@
 		"insertStatementBelow" : "tobe 7/7/2019 09:52",
 		"internalSelect:" : "tobe 12/3/2019 11:38",
 		"labelString" : "tobe 11/17/2019 20:43",
+		"leftRotate" : "tobe 1/4/2020 21:35",
 		"markChangesAfterCommand:" : "tobe 1/1/2020 11:33",
 		"method" : "tobe 12/7/2019 20:35",
 		"methods" : "tobe 1/1/2020 11:18",

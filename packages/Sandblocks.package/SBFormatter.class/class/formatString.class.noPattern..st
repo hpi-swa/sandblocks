@@ -19,8 +19,9 @@ formatString: aString class: aClass noPattern: aBoolean
 	result := formatter contents.
 	SBLabel
 		text: ['Sanity check to not produce invalid code'].
+	
 	self assert: methodNode asString = (Parser new
-				parse: aString
+				parse: result
 				class: aClass
 				noPattern: aBoolean
 				notifying: nil
