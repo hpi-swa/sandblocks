@@ -1,3 +1,4 @@
 OrderedDictionary {
-	'packages\/Sandblocks.package' : #SquotCypressCodeSerializer
+	'packages\/Sandblocks.package' : #SquotCypressCodeSerializer,
+	'packages\/BaselineOfSandblocks.package' : #SquotCypressCodeSerializer
 }

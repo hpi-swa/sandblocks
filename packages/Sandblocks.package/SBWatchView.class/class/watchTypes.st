@@ -3,8 +3,8 @@ watchTypes
 
 	^ {
 		"SBDisplayBarChart."
-		SBDisplayActiveExpressionMarbles.
-		SBDisplayActiveExpression.
+		Smalltalk at: #SBDisplayActiveExpressionMarbles ifAbsent: [nil].
+		Smalltalk at: #SBDisplayActiveExpression ifAbsent: [nil].
 		SBDisplayColor.
 		SBDisplayMorph.
 		SBDisplayCanvas.
@@ -12,4 +12,4 @@ watchTypes
 		SBDisplayPrint.
 		SBDisplayText.
 		SBDisplayMultiple.
-	}
+	} select: #notNil
