@@ -6,7 +6,7 @@ baseline: spec
 			baseline: 'ActiveExpressions' with: [spec repository: 'github:// active-expressions/active-expressions-squeak:master/src'];
 			package: 'SVG-Morphic' with: [spec repository: 'http://www.squeaksource.com/SVGMorph'];
 			
-			package: 'Sandblocks' with: [spec requires: #('SVGMorph')];
+			package: 'Sandblocks' with: [spec requires: #('SVG-Morphic')];
 			package: 'Sandblocks-Watch';
 			package: 'Sandblocks-Drawing';
 			package: 'Sandblocks-Format';
