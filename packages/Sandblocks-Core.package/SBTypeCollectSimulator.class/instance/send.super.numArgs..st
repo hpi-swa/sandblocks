@@ -26,7 +26,7 @@ send: selector super: supered numArgs: numArgs
 						findNode: [:methodMorph | methodMorph arguments at: index]].].
 			self flag: #todo. " other perform: variants "
 			
-			ret := super send: selector super: supered numArgs: numArgs.
+			ret := currentContext send: selector super: supered numArgs: numArgs.
 			(currentContext isDead not and: [currentContext stackPtr > 0]) ifTrue: [self reportTypeInfo: currentContext top at: currentContext].
 			
 			" value:... block closure invocation "
@@ -39,4 +39,4 @@ send: selector super: supered numArgs: numArgs
 			
 			^ ret]].
 	
-	^ super send: (selector = #halt ifTrue: [#yourself] ifFalse: [selector]) super: supered numArgs: numArgs
+	^ currentContext send: (selector = #halt ifTrue: [#yourself] ifFalse: [selector]) super: supered numArgs: numArgs

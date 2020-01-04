@@ -6,9 +6,11 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"editor" ],
+		"editor",
+		"currentContext",
+		"topContext" ],
 	"name" : "SBTypeCollectSimulator",
 	"pools" : [
 		 ],
-	"super" : "AxInstructionSimulator",
+	"super" : "InstructionClient",
 	"type" : "normal" }
