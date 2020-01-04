@@ -1,0 +1,18 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"isDown",
+		"lastMousePosition",
+		"scrubbingCommand",
+		"oldCursor",
+		"type" ],
+	"name" : "SBPoint",
+	"pools" : [
+		 ],
+	"super" : "SBSubstitution",
+	"type" : "normal" }

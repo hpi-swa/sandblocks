@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"bindings" ],
+	"name" : "ECSQuery",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

@@ -1,0 +1,17 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"Registry" ],
+	"commentStamp" : "",
+	"instvars" : [
+		"identifier",
+		"expression",
+		"display",
+		"exampleValues" ],
+	"name" : "SBExampleWatch",
+	"pools" : [
+		 ],
+	"super" : "SBSubstitution",
+	"type" : "normal" }

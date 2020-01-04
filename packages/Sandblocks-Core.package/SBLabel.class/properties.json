@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"headingLevel",
+		"text" ],
+	"name" : "SBLabel",
+	"pools" : [
+		 ],
+	"super" : "SBSubstitution",
+	"type" : "normal" }

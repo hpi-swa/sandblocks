@@ -1,0 +1,16 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"Registry" ],
+	"commentStamp" : "",
+	"instvars" : [
+		"comment",
+		"active",
+		"previousBlockColor" ],
+	"name" : "SBToggledCode",
+	"pools" : [
+		 ],
+	"super" : "SBSubstitution",
+	"type" : "normal" }

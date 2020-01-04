@@ -1,0 +1,19 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"FormCache",
+		"SVGCache" ],
+	"commentStamp" : "<historical>",
+	"instvars" : [
+		"svg",
+		"cachedForm",
+		"svgColor",
+		"iconName",
+		"size" ],
+	"name" : "SBIcon",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }

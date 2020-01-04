@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "tobe 12/31/2019 09:14",
+	"instvars" : [
+		 ],
+	"name" : "SBClippingTransformMorph",
+	"pools" : [
+		 ],
+	"super" : "TransformMorph",
+	"type" : "normal" }

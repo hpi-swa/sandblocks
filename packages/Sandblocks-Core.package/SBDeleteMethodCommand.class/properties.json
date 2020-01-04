@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"method",
+		"oldSource" ],
+	"name" : "SBDeleteMethodCommand",
+	"pools" : [
+		 ],
+	"super" : "SBCommand",
+	"type" : "normal" }

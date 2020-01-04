@@ -1,0 +1,21 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"icon",
+		"lastError",
+		"errorIndicator",
+		"currentProcess",
+		"processRunning",
+		"currentSelf",
+		"nameInput",
+		"active" ],
+	"name" : "SBExample",
+	"pools" : [
+		 ],
+	"super" : "SBSubstitution",
+	"type" : "normal" }

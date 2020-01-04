@@ -1,0 +1,16 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"editor",
+		"cancelled",
+		"colorPolicy" ],
+	"name" : "SBRequestSelector",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

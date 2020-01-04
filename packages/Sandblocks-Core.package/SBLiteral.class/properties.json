@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"text",
+		"castToUnknownWhenEmpty" ],
+	"name" : "SBLiteral",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

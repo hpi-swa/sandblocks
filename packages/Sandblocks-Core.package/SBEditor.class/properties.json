@@ -1,0 +1,38 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"selection",
+		"undoStack",
+		"redoStack",
+		"currentInput",
+		"currentInputCommand",
+		"copyBuffer",
+		"copyBufferPreview",
+		"modeLabel",
+		"selectionLabel",
+		"selectionDownHistory",
+		"saveAction",
+		"multiSelection",
+		"mode",
+		"inputShortcuts",
+		"globalShortcuts",
+		"commandShortcuts",
+		"singleSelectionShortcuts",
+		"multiSelectionShortcuts",
+		"scroll",
+		"methodContainer",
+		"compiledMethod",
+		"colorPolicy",
+		"bottomPanel",
+		"compileTimeButton",
+		"compileTime" ],
+	"name" : "SBEditor",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

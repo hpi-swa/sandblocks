@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"binding" ],
+	"name" : "SBDeclarationForPoolVariable",
+	"pools" : [
+		 ],
+	"super" : "SBDeclaration",
+	"type" : "normal" }

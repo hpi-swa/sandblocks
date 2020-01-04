@@ -1,0 +1,4 @@
+converting
+isArrayBlock
+
+	^ true

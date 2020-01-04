@@ -1,0 +1,18 @@
+{
+	"class" : {
+		"comment:active:do:" : "tobe 1/3/2020 08:13",
+		"matches:" : "tobe 1/2/2020 12:10",
+		"newFrom:" : "tobe 1/3/2020 08:11" },
+	"instance" : {
+		"block" : "tobe 1/3/2020 08:11",
+		"childSandblocks" : "tobe 1/3/2020 08:30",
+		"color" : "tobe 7/1/2019 13:50",
+		"comment:active:do:" : "tobe 1/3/2020 08:18",
+		"drawnColor" : "tobe 1/3/2020 08:20",
+		"guessedClass" : "tobe 1/3/2020 08:11",
+		"initialize" : "tobe 1/3/2020 08:27",
+		"isWatch" : "tobe 11/11/2019 15:15",
+		"prefix" : "tobe 1/3/2020 08:27",
+		"printOn:" : "tobe 1/3/2020 08:11",
+		"update" : "tobe 1/3/2020 08:19",
+		"writeSourceOn:" : "tobe 1/3/2020 08:10" } }

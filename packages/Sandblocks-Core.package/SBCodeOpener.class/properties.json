@@ -1,0 +1,22 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"categories",
+		"selectedCategoryIndex",
+		"selectedClassIndex",
+		"selectedMethodIndex",
+		"classes",
+		"messages",
+		"currentPanelIndex",
+		"result",
+		"showingClassSide" ],
+	"name" : "SBCodeOpener",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }

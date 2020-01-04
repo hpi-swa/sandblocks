@@ -1,0 +1,20 @@
+{
+	"class" : {
+		"forContext:" : "tobe 11/23/2019 09:37",
+		"forMethod:pc:" : "tobe 11/24/2019 17:48",
+		"forMethod:selector:" : "tobe 12/15/2019 11:24" },
+	"instance" : {
+		"applyMode:" : "tobe 12/15/2019 14:56",
+		"childSandblocks" : "tobe 11/21/2019 14:32",
+		"collapse" : "tobe 11/24/2019 17:48",
+		"collapseCompletely" : "tobe 11/24/2019 17:48",
+		"drawSubmorphsOn:" : "tobe 12/15/2019 14:41",
+		"expand" : "tobe 11/24/2019 17:47",
+		"fadeSize" : "tobe 11/21/2019 17:23",
+		"findMarkedBlock" : "tobe 11/24/2019 17:41",
+		"focus:" : "tobe 12/15/2019 11:41",
+		"initialize" : "tobe 12/15/2019 14:52",
+		"isExpanded" : "tobe 11/24/2019 17:35",
+		"method" : "tobe 11/21/2019 15:11",
+		"method:" : "tobe 12/15/2019 11:29",
+		"wasSelected" : "tobe 11/24/2019 17:36" } }

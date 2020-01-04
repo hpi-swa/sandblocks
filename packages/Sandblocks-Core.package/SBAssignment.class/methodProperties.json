@@ -1,0 +1,13 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"binding:value:" : "tobe 7/5/2019 07:38",
+		"childSandblocks" : "tobe 12/12/2019 14:17",
+		"initialize" : "tobe 1/1/2020 11:36",
+		"isAssignment" : "tobe 7/5/2019 16:23",
+		"isExpression" : "tobe 7/3/2019 08:18",
+		"pc" : "tobe 7/3/2019 22:18",
+		"pc:" : "tobe 7/3/2019 22:18",
+		"printOn:" : "tobe 7/14/2019 08:22",
+		"writeSourceOn:" : "tobe 7/5/2019 07:38" } }

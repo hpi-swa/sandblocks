@@ -1,0 +1,21 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"childSandblocks" : "tobe 12/11/2019 20:35",
+		"codeContainer" : "tobe 11/24/2019 17:15",
+		"color" : "tobe 11/24/2019 16:51",
+		"containingMethod" : "tobe 11/24/2019 17:09",
+		"deleteCommandFor:" : "tobe 12/11/2019 22:20",
+		"exampleSameSize" : "tobe 12/11/2019 20:37",
+		"handlesMouseMove:" : "tobe 11/24/2019 16:50",
+		"initialize" : "tobe 12/11/2019 20:39",
+		"isCodeContainer" : "tobe 12/15/2019 18:42",
+		"isDragging" : "tobe 12/3/2019 14:08",
+		"mouseMove:" : "tobe 11/24/2019 16:48",
+		"mouseUp:" : "tobe 11/24/2019 16:48",
+		"openNear:" : "tobe 12/15/2019 11:23",
+		"preventOcclusion" : "tobe 12/27/2019 12:07",
+		"startDrag:" : "tobe 11/24/2019 16:48",
+		"step" : "tobe 12/27/2019 12:08",
+		"stepTime" : "tobe 12/3/2019 08:58" } }

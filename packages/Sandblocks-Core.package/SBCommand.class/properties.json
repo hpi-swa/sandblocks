@@ -1,0 +1,16 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"shouldMergeWithNext",
+		"wasEdit",
+		"artefact" ],
+	"name" : "SBCommand",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

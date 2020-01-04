@@ -1,0 +1,19 @@
+{
+	"class" : {
+		"matches:" : "tobe 7/15/2019 17:54",
+		"newFrom:" : "tobe 7/23/2019 17:35" },
+	"instance" : {
+		"childSandblocks" : "tobe 7/15/2019 17:55",
+		"contents" : "tobe 7/23/2019 17:23",
+		"contents:" : "tobe 7/23/2019 17:23",
+		"guessedClass" : "tobe 12/21/2019 19:00",
+		"initialize" : "tobe 10/16/2019 10:26",
+		"messageSelector" : "tobe 7/23/2019 17:37",
+		"mouseDown:" : "tobe 12/11/2019 17:22",
+		"mouseMove:" : "tobe 1/1/2020 11:34",
+		"mouseUp:" : "tobe 12/31/2019 09:30",
+		"parsedContents" : "tobe 7/15/2019 17:58",
+		"printOn:" : "tobe 7/15/2019 17:57",
+		"type:" : "tobe 7/23/2019 17:38",
+		"writeSourceOn:" : "tobe 1/1/2020 15:08",
+		"x:y:" : "tobe 7/15/2019 17:57" } }

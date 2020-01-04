@@ -1,0 +1,4 @@
+drawing
+color
+
+	^ Color white

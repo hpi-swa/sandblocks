@@ -1,0 +1,17 @@
+{
+	"class" : {
+		"new" : "tobe 12/11/2019 16:55",
+		"newFor:" : "tobe 12/11/2019 17:12",
+		"newNonEdit" : "tobe 12/11/2019 17:04" },
+	"instance" : {
+		"affectedArtefacts" : "tobe 12/11/2019 16:57",
+		"artefact" : "tobe 12/11/2019 16:57",
+		"artefact:" : "tobe 12/11/2019 16:57",
+		"do" : "tobe 6/30/2019 21:15",
+		"initialize" : "tobe 11/21/2019 08:55",
+		"postDo" : "tobe 7/10/2019 22:47",
+		"shouldMergeWithNext" : "tobe 6/30/2019 21:16",
+		"shouldMergeWithNext:" : "tobe 6/30/2019 21:16",
+		"undo" : "tobe 6/30/2019 21:15",
+		"wasEdit" : "tobe 11/21/2019 08:55",
+		"wasEdit:" : "tobe 11/21/2019 08:55" } }

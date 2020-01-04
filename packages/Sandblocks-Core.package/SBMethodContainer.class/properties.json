@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"editor",
+		"overlayDrawBlocks" ],
+	"name" : "SBMethodContainer",
+	"pools" : [
+		 ],
+	"super" : "SBCodeContainer",
+	"type" : "normal" }

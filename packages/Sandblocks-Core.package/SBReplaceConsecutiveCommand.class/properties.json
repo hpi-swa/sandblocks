@@ -1,0 +1,19 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"replacer",
+		"targets",
+		"targetOldOwner",
+		"targetOldIndex",
+		"replacerOldOwner",
+		"replacerOldIndex" ],
+	"name" : "SBReplaceConsecutiveCommand",
+	"pools" : [
+		 ],
+	"super" : "SBCommand",
+	"type" : "normal" }

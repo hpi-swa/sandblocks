@@ -1,0 +1,4 @@
+actions
+insertStatementAbove
+
+	self insertStatementAboveOrBelow: true

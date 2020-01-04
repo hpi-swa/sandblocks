@@ -1,0 +1,17 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"previousText",
+		"newText",
+		"oldMorph",
+		"newMorph" ],
+	"name" : "SBInputCommand",
+	"pools" : [
+		 ],
+	"super" : "SBCommand",
+	"type" : "normal" }

@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"regex" ],
+	"name" : "SBRegexExample",
+	"pools" : [
+		 ],
+	"super" : "SBTextBubble",
+	"type" : "normal" }
