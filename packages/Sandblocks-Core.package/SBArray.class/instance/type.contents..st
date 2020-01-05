@@ -3,6 +3,4 @@ type: aSymbol contents: aCollection
 
 	type := aSymbol.
 	
-	self removeAllMorphs.
-	aCollection do: [:m |
-		self addMorphBack: m]
+	self contents: aCollection
