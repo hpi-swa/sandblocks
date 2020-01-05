@@ -3,7 +3,7 @@
 		 },
 	"instance" : {
 		"categories" : "tobe 12/23/2019 09:33",
-		"classIconAt:" : "tobe 1/1/2020 11:28",
+		"classIconAt:" : "tobe 1/5/2020 12:36",
 		"classes" : "tobe 12/23/2019 08:34",
 		"currentPanel" : "tobe 12/23/2019 09:50",
 		"focus:" : "tobe 12/24/2019 12:19",
@@ -11,7 +11,7 @@
 		"handlesKeyboard:" : "tobe 12/23/2019 09:48",
 		"initialize" : "tobe 1/1/2020 19:22",
 		"keyStroke:" : "tobe 1/1/2020 19:22",
-		"messageIconAt:" : "tobe 1/1/2020 11:27",
+		"messageIconAt:" : "tobe 1/5/2020 12:36",
 		"methods" : "tobe 1/1/2020 19:23",
 		"open" : "tobe 12/23/2019 12:49",
 		"openFor:" : "tobe 12/24/2019 12:19",
@@ -28,4 +28,5 @@
 		"selectedMethodIndex:" : "tobe 12/23/2019 09:29",
 		"showingClassSide" : "tobe 1/1/2020 19:22",
 		"showingClassSide:" : "tobe 1/1/2020 19:28",
-		"systemOrganizer" : "tobe 12/23/2019 08:34" } }
+		"systemOrganizer" : "tobe 12/23/2019 08:34",
+		"toolIconForm:" : "tobe 1/5/2020 12:36" } }

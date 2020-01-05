@@ -5,6 +5,7 @@ reportValue: anObject
 	self flag: #fixme. " fragile "
 	subject := thisContext sender sender sender sender receiver.
 	marbleColor := Color random.
+	colorMapping at: subject put: marbleColor.
 	
 	anObject onChangeDo: [:newValue |  
 		"newInvocation := SBActiveExpressionInvocation new

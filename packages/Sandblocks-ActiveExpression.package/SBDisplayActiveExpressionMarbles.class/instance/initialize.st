@@ -3,6 +3,8 @@ initialize
 
 	super initialize.
 	
+	colorMapping := Dictionary new.
+	
 	self
 		color: Color transparent;
 		changeTableLayout;

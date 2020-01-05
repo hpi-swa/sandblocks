@@ -8,6 +8,7 @@
 		"activeIndex" : "tobe 1/4/2020 23:15",
 		"addCommandRequest" : "tobe 1/4/2020 23:27",
 		"addedMorph:" : "tobe 1/4/2020 23:28",
+		"block" : "tobe 1/3/2020 08:11",
 		"buildRowFor:active:" : "tobe 1/4/2020 23:33",
 		"childSandblocks" : "tobe 1/4/2020 23:15",
 		"color" : "tobe 7/1/2019 13:50",
@@ -17,7 +18,9 @@
 		"drawnColor" : "tobe 1/3/2020 08:20",
 		"guessedClass" : "tobe 1/4/2020 23:41",
 		"initialize" : "tobe 1/4/2020 23:06",
+		"isWatch" : "tobe 11/11/2019 15:15",
 		"prefix" : "tobe 1/3/2020 08:27",
 		"printOn:" : "tobe 1/3/2020 08:11",
+		"update" : "tobe 1/3/2020 08:19",
 		"updateSelected" : "tobe 1/4/2020 23:31",
 		"writeSourceOn:" : "tobe 1/4/2020 23:28" } }

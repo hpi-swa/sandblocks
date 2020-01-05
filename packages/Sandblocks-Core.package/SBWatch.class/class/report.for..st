@@ -4,6 +4,6 @@ report: aValue for: aSymbol
 	| reg watcher |
 	reg := self registry.
 	watcher := reg at: aSymbol ifAbsent: [^ aValue].
-	watcher ifNil: [reg removeKey: aSymbol] ifNotNil: [watcher reportValue: aValue].
+	(watcher isNil or: [watcher isInWorld not]) ifTrue: [reg removeKey: aSymbol] ifFalse: [watcher reportValue: aValue].
 	
 	^ aValue
