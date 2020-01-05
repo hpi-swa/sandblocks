@@ -12,7 +12,10 @@ internalSelect: aBlock
 				wasSelected;
 				ensureVisible].
 		
-		previousSelection ifNotNil: [previousSelection detachDecorators: SBSelectionDecorator].
+		previousSelection ifNotNil: [
+			previousSelection
+				detachDecorators: SBSelectionDecorator;
+				wasDeselected].
 		
 		self triggerEvent: #selectionChanged with: selection.
 		self updateSelectionLabel]
