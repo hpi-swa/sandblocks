@@ -1,4 +1,4 @@
 accessing
 guessedClass
 
-	^ self containingMethod typeFor: self
+	^ self containingArtefact typeFor: self

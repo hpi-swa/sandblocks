@@ -1,4 +1,4 @@
 shortcuts
 toggleMethodCollapsed
 
-	self selection containingMethod ifNotNil: #toggleCollapsed
+	self selection containingArtefact ifNotNil: #toggleCollapsed

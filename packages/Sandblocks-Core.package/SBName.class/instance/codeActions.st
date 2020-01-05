@@ -3,7 +3,7 @@ codeActions
 
 	^ super codeActions, {
 		SBCodeAction labeled: 'Use as message send' for: self do: [:node |
-			node sandblockEditor do: ((SBReplaceCommand newFor: node containingMethod)
+			node sandblockEditor do: ((SBReplaceCommand newFor: node containingArtefact)
 				target: node;
 				replacer: (SBMessageSend new receiver: (SBKeywordBinding new contents: 'self') selector: node contents asSymbol);
 				yourself)]

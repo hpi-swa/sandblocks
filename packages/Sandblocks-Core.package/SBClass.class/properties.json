@@ -9,7 +9,11 @@
 		"className",
 		"superClassName",
 		"instanceVariables",
-		"class" ],
+		"class",
+		"hasUnsavedChanges",
+		"classVariables",
+		"poolDictionaries",
+		"category" ],
 	"name" : "SBClass",
 	"pools" : [
 		 ],

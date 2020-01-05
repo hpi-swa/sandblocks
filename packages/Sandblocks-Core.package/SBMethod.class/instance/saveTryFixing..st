@@ -13,5 +13,4 @@ saveTryFixing: aBoolean
 	currentSelector := newSelector.
 	
 	self updatePCs.
-	self hasUnsavedChanges: false.
 	^ true

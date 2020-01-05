@@ -1,7 +1,7 @@
 as yet unclassified
 run
 
-	self containingMethod valid ifFalse: [^ self].
+	self containingArtefact valid ifFalse: [^ self].
 	processRunning ifTrue: [^ self].
 	currentProcess ifNotNil: #terminate.
 	
@@ -13,7 +13,7 @@ run
 		[ | arguments |
 			currentSelf := self evaluateSelf.
 			arguments := self evaluateArguments.
-			currentSelf perform: self containingMethod selector asSymbol withArguments: arguments
+			currentSelf perform: self containingArtefact selector asSymbol withArguments: arguments
 		] on: Error do: [:e |
 			processRunning := false.
 			self scheduleLastError: e.

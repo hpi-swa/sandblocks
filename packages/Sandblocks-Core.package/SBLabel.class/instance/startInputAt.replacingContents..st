@@ -2,7 +2,7 @@ as yet unclassified
 startInputAt: aNumber replacingContents: aBoolean
 
 	| cmd |
-	cmd := (SBInputCommand newFor: self containingMethod)
+	cmd := (SBInputCommand newFor: self containingArtefact)
 		oldMorph: self;
 		previousText: self contents;
 		yourself.

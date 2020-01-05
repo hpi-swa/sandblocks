@@ -2,7 +2,7 @@ as yet unclassified
 lowercaseSuggestions
 
 	| method |
-	method := self containingMethod.
+	method := self containingArtefact.
 	
 	^ Array streamContents: [:str |
 		self containingBlocksDo: [:block |

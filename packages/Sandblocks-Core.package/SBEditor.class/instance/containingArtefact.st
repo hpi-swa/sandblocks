@@ -1,0 +1,4 @@
+selection
+containingArtefact
+
+	^ nil

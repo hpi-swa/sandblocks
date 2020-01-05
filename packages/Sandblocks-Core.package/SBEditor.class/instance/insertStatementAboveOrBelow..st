@@ -17,7 +17,7 @@ insertStatementAboveOrBelow: anAboveBoolean
 			currentStatement := self selection containingStatement.
 			index := currentStatement owner submorphIndexOf: currentStatement.
 	
-			self do: ((SBInsertCommand newFor: self selection containingMethod)
+			self do: ((SBInsertCommand newFor: self selection containingArtefact)
 				index: (anAboveBoolean
 					ifTrue: [index] ifFalse: [index + 1]);
 				container: currentStatement owner;

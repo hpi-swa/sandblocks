@@ -4,7 +4,7 @@ addCommandRequest
 	| cmd arg |
 	self isBinary ifTrue: [^ nil].
 	arg := SBUnknown new.
-	cmd := (SBInputMessageCommand newFor: self containingSandblock containingMethod)
+	cmd := (SBInputMessageCommand newFor: self containingSandblock containingArtefact)
 		previousSelector: self selector;
 		previousArguments: self arguments;
 		newArguments: self arguments, {arg};

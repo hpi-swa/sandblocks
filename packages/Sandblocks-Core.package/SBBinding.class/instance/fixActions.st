@@ -6,7 +6,7 @@ fixActions
 		ifFalse: [{
 			SBCodeAction
 				labeled: 'Declare method temporary' for: self
-				do: [:node | node containingMethod body declareTemporaryVariable: node contents].
+				do: [:node | node containingArtefact body declareTemporaryVariable: node contents].
 			SBCodeAction
 				labeled: 'Declare block-local variable' for: self
 				do: [:node | node containingBlock declareTemporaryVariable: node contents].

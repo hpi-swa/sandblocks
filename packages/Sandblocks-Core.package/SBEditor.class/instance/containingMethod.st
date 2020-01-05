@@ -1,4 +1,0 @@
-selection
-containingMethod
-
-	^ nil

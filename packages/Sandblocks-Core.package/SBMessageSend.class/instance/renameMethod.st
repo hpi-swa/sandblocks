@@ -4,7 +4,7 @@ renameMethod
 	| selectorAndArguments otherEditor arguments selector |
 	self isSendToSelf ifFalse: [^ self].
 	
-	otherEditor := SBEditor openFor: self containingMethod methodClass >> self selector asSymbol.
+	otherEditor := SBEditor openFor: self containingArtefact methodClass >> self selector asSymbol.
 	selectorAndArguments := (SBRequestSelector openForSelector: self selector arguments: otherEditor method arguments).
 	selector := selectorAndArguments first.
 	arguments := selectorAndArguments second.

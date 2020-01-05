@@ -2,5 +2,7 @@ actions
 open: aMethodOrClass
 
 	aMethodOrClass isBehavior
-		ifTrue: [aMethodOrClass methodsDo: [:compiledMethod | self openCompiledMethod: compiledMethod]]
+		ifTrue: [
+			self openMorphInView: (SBClass new class: aMethodOrClass).
+			aMethodOrClass methodsDo: [:compiledMethod | self openCompiledMethod: compiledMethod]]
 		ifFalse: [self openCompiledMethod: aMethodOrClass]

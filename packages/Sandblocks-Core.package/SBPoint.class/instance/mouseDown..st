@@ -8,7 +8,7 @@ mouseDown: anEvent
 	anEvent hand newMouseFocus: self.
 	isDown := true.
 	lastMousePosition := anEvent position.
-	scrubbingCommand := (SBMutatePropertyCommand newFor: self containingMethod)
+	scrubbingCommand := (SBMutatePropertyCommand newFor: self containingArtefact)
 		oldValue: self contents;
 		selector: #contents;
 		target: self.

@@ -5,7 +5,7 @@ keyStroke: anEvent
 		new := SBUnknown new.
 		^ self sandblockEditor
 			endInput;
-			do: ((SBWrapCommand newFor: self containingMethod)
+			do: ((SBWrapCommand newFor: self containingArtefact)
 				inner: self;
 				outer: SBAssignment new;
 				wrap: [:outer :inner | outer binding: self value: new]);

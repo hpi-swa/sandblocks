@@ -4,7 +4,7 @@ startInputAt: aNumber replacingContents: aBoolean
 	| cmd |
 	currentInputMessagePart := self firstSubmorph.
 	
-	cmd := (SBInputMessageCommand newFor: self containingSandblock containingMethod)
+	cmd := (SBInputMessageCommand newFor: self containingSandblock containingArtefact)
 		messageSend: self containingSandblock;
 		previousSelector: self selector;
 		previousArguments: self arguments;

@@ -6,7 +6,7 @@ updateSelectionLabel
 		ifFalse: [
 			selection
 				ifNotNil: [:s |
-					s containingMethod
+					s containingArtefact
 						ifNil: [s printString]
 						ifNotNil: ['{1} ({2})' format: {s printString. (s guessedClass) asString}]]
 				ifNil: ['']])

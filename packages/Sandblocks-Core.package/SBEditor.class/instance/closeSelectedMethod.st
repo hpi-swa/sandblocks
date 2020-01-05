@@ -1,4 +1,4 @@
 actions
 closeSelectedMethod
 
-	self do: (SBDeleteCommand newNonEdit target: self selection containingMethod owner)
+	self do: (SBDeleteCommand newNonEdit target: self selection containingArtefact owner)

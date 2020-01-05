@@ -1,4 +1,4 @@
 as yet unclassified
 scope
 
-	^ {self containingMethod}
+	^ {self containingArtefact}

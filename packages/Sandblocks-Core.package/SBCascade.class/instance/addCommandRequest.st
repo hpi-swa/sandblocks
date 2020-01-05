@@ -1,7 +1,7 @@
 as yet unclassified
 addCommandRequest
 
-	^ (SBInsertCommand newFor: self containingMethod)
+	^ (SBInsertCommand newFor: self containingArtefact)
 		container: self;
 		index: self submorphCount + 1;
 		shouldMergeWithNext: true;

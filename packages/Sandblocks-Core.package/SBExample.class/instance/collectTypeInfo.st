@@ -4,7 +4,7 @@ collectTypeInfo
 	| arguments receiver selector |
 	receiver := self evaluateSelf.
 	arguments := self evaluateArguments.
-	selector := self containingMethod selector asSymbol.
+	selector := self containingArtefact selector asSymbol.
 	
 	SBTypeCollectSimulator new
 		editor: self sandblockEditor;
