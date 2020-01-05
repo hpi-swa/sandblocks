@@ -2,5 +2,5 @@ as yet unclassified
 focus: aBlock
 
 	aBlock ifNotNil: [
-		aBlock marked: true.
+		aBlock attachDecorator: SBMarkedDecorator new.
 		self applyMode: #focus]

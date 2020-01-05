@@ -3,7 +3,10 @@ startOrAddToMultiSelection
 
 	mode = #selection ifTrue: [
 		^ (multiSelection includes: self selection)
-			ifTrue: [multiSelection remove: self selection]
+			ifTrue: [
+				self selection detachDecorators: SBMultiSelectionDecorator.
+				multiSelection remove: self selection.
+				multiSelection ifEmpty: [self mode: #command]]
 			ifFalse: [self addToMultiSelection]].
 	
 	self addToMultiSelection.

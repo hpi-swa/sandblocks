@@ -6,9 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"decorators" ],
-	"name" : "SBBlock",
+		 ],
+	"name" : "SBMultiSelectionDecorator",
 	"pools" : [
 		 ],
-	"super" : "Morph",
+	"super" : "SBMorphDecorator",
 	"type" : "normal" }

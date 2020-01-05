@@ -4,6 +4,7 @@ initialize
 	super initialize.
 	
 	marked := false.
+	decorators := OrderedCollection new.
 	
 	self
 		color: Color transparent;

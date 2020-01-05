@@ -5,13 +5,14 @@ internalSelect: aBlock
 	previousSelection := selection.
 	selection := aBlock.
 	
-	selection ifNotNil: [
-		selection
-			changed;
-			wasSelected;
-			ensureVisible].
-	
-	previousSelection ifNotNil: #changed.
-	
-	self triggerEvent: #selectionChanged with: selection.
-	self updateSelectionLabel
+	previousSelection ~= selection ifTrue: [
+		selection ifNotNil: [
+			selection
+				attachDecorator: SBSelectionDecorator new;
+				wasSelected;
+				ensureVisible].
+		
+		previousSelection ifNotNil: [previousSelection detachDecorators: SBSelectionDecorator].
+		
+		self triggerEvent: #selectionChanged with: selection.
+		self updateSelectionLabel]
