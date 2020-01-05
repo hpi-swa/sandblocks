@@ -1,0 +1,21 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"max",
+		"step",
+		"min",
+		"isDown",
+		"lastMousePosition",
+		"value",
+		"onChange",
+		"oldCursor" ],
+	"name" : "SBNumberInput",
+	"pools" : [
+		 ],
+	"super" : "TextMorph",
+	"type" : "normal" }

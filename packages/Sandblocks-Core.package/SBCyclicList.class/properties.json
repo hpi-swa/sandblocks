@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"array",
+		"cursor" ],
+	"name" : "SBCyclicList",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

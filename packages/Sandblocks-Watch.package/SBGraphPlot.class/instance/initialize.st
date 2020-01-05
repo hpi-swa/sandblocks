@@ -3,7 +3,7 @@ initialize
 
 	super initialize.
 	
-	data := ECSCyclicList new.
+	data := SBCyclicList new.
 	label := ''.
 	labelColor := Color black.
 	

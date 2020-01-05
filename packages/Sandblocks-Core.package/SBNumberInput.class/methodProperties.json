@@ -1,0 +1,21 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"externalValueUpdate:" : "T 5/17/2019 21:25",
+		"initialize" : "tobe 6/8/2019 13:35",
+		"keyStroke:" : "T 5/16/2019 16:48",
+		"max" : "T 5/11/2019 11:07",
+		"max:" : "T 5/11/2019 11:07",
+		"min" : "T 5/11/2019 11:07",
+		"min:" : "T 5/11/2019 11:07",
+		"mouseDown:" : "TB 5/31/2019 07:09",
+		"mouseMove:" : "T 5/16/2019 16:48",
+		"mouseUp:" : "TB 5/31/2019 07:09",
+		"onChange:" : "T 5/16/2019 16:47",
+		"sendChange" : "cmfcmf 5/31/2019 19:48",
+		"step" : "T 5/11/2019 11:07",
+		"step:" : "T 5/11/2019 11:07",
+		"value" : "T 5/11/2019 11:11",
+		"value:" : "TB 6/2/2019 20:20",
+		"valueWithConstraints:" : "T 5/22/2019 21:46" } }

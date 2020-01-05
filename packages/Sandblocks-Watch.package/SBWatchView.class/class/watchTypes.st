@@ -2,7 +2,7 @@ as yet unclassified
 watchTypes
 
 	^ {
-		"SBDisplayBarChart."
+		SBDisplayBarChart.
 		Smalltalk at: #SBDisplayActiveExpressionMarbles ifAbsent: [nil].
 		Smalltalk at: #SBDisplayActiveExpression ifAbsent: [nil].
 		SBDisplayColor.
