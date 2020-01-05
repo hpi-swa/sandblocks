@@ -4,6 +4,7 @@ minExtentOf: aMorph in: aRectangle
 	| x y |
 	minExtentCache ifNotNil: [^ minExtentCache].
 	
+	(self wantsSingleColumn: aMorph) ifTrue: [^ minExtentCache := SBVerticalLayout new minExtentOf: aMorph in: aRectangle].
 	(self wantsSingleRow: aMorph) ifTrue: [^ minExtentCache := SBHorizontalLayout new minExtentOf: aMorph in: aRectangle].
 	
 	x := aMorph lastSubmorph minExtent x.

@@ -3,7 +3,8 @@
 		 },
 	"instance" : {
 		"indent" : "tobe 6/28/2019 23:01",
-		"layout:in:" : "tobe 10/16/2019 10:21",
-		"minExtentOf:in:" : "tobe 10/21/2019 18:40",
+		"layout:in:" : "tobe 1/5/2020 16:00",
+		"minExtentOf:in:" : "tobe 1/5/2020 16:01",
 		"wantsMultiRow:" : "tobe 1/2/2020 11:37",
+		"wantsSingleColumn:" : "tobe 1/5/2020 16:01",
 		"wantsSingleRow:" : "tobe 7/2/2019 22:13" } }

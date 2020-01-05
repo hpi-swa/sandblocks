@@ -14,4 +14,5 @@ initialize
 		cellPositioning: #topLeft;
 		wrapDirection: #leftToRight;
 		minimumWidth: 200;
+		extent: 0 @ 0;
 		cellGap: 2 * self scalingFactor

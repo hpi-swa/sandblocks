@@ -2,6 +2,7 @@ as yet unclassified
 layout: aMorph in: aRectangle
 
 	| y rowHeight |
+	(self wantsSingleColumn: aMorph) ifTrue: [^ SBVerticalLayout new layout: aMorph in: aRectangle].
 	(self wantsSingleRow: aMorph) ifTrue: [^ SBHorizontalLayout new layout: aMorph in: aRectangle].
 	
 	y := aRectangle top.

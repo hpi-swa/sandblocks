@@ -1,11 +1,9 @@
 as yet unclassified
 reportValue: anObject
 
-	| marbleColor subject |
+	| subject |
 	self flag: #fixme. " fragile "
 	subject := thisContext sender sender sender sender receiver.
-	marbleColor := Color random.
-	colorMapping at: subject put: marbleColor.
 	
 	anObject onChangeDo: [:newValue |  
 		"newInvocation := SBActiveExpressionInvocation new
@@ -14,7 +12,7 @@ reportValue: anObject
 		
 		self addMorphBack: (CircleMorph new
 			extent: 10 asPoint withScalingFactor;
-			color: marbleColor;
+			color: subject sandblockColor;
 			balloonText: newValue asString;
 			on: #click send: #addHalo to: subject;
 			yourself).
