@@ -6,5 +6,6 @@ OrderedDictionary {
 	'packages\/Sandblocks-Format.package' : #SquotCypressCodeSerializer,
 	'packages\/Sandblocks-Graph.package' : #SquotCypressCodeSerializer,
 	'packages\/Sandblocks-Watch.package' : #SquotCypressCodeSerializer,
-	'packages\/Sandblocks-Core.package' : #SquotCypressCodeSerializer
+	'packages\/Sandblocks-Core.package' : #SquotCypressCodeSerializer,
+	'packages\/JumpingCubes.package' : #SquotCypressCodeSerializer
 }
