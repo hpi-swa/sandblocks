@@ -13,7 +13,8 @@
 		"processRunning",
 		"currentSelf",
 		"nameInput",
-		"active" ],
+		"active",
+		"errorDecorator" ],
 	"name" : "SBExample",
 	"pools" : [
 		 ],

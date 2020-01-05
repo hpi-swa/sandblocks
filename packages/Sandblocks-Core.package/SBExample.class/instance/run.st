@@ -5,6 +5,8 @@ run
 	processRunning ifTrue: [^ self].
 	currentProcess ifNotNil: #terminate.
 	
+	errorDecorator ifNotNil: #detach.
+	errorDecorator := nil.
 	self sendStartNotification.
 	self collectTypeInfo.
 	
