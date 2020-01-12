@@ -1,4 +1,4 @@
-actions
+initialize-release
 markChangesAfterCommand: aCommand
 
 	aCommand wasEdit ifTrue: [

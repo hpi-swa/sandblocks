@@ -37,6 +37,8 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $z do: #toggleMethodCollapsed;
 		addSingleSelectionShortcut: $( do: #leftRotate;
 		addSingleSelectionShortcut: $p command do: #evaluateSelection;
+		addSingleSelectionShortcut: $m do: #placeMark;
+		addSingleSelectionShortcut: $' do: #goToMark;
 		
 		addMultiSelectionShortcut: Character escape do: #endMultiSelection;
 		addMultiSelectionShortcut: $l do: #selectNext;

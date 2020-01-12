@@ -1,4 +1,4 @@
 actions
 evaluateSelection
 
-	self selection evaluateWith: self selection containingArtefact
+	(self selection evaluateWith: self selection containingArtefact) explore

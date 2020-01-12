@@ -3,7 +3,7 @@
 		 },
 	"instance" : {
 		"addRow:with:" : "tobe 1/5/2020 22:05",
-		"childSandblocks" : "tobe 1/5/2020 16:21",
+		"childSandblocks" : "tobe 1/12/2020 18:03",
 		"class:" : "tobe 1/5/2020 22:10",
 		"containingArtefact" : "tobe 1/5/2020 16:47",
 		"drawSubmorphsOn:" : "tobe 1/5/2020 21:56",
@@ -12,6 +12,8 @@
 		"hasUnsavedChanges" : "tobe 1/5/2020 21:56",
 		"hasUnsavedChanges:" : "tobe 1/5/2020 21:57",
 		"initialize" : "tobe 1/12/2020 16:20",
+		"instanceVariables" : "tobe 1/12/2020 18:00",
 		"isArtefact" : "tobe 1/5/2020 22:11",
+		"isClassContainer" : "tobe 1/12/2020 17:58",
 		"saveTryFixing:" : "tobe 1/5/2020 22:00",
 		"shownClass" : "tobe 1/5/2020 16:23" } }

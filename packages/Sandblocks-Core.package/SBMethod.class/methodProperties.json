@@ -24,7 +24,7 @@
 		"hasUnsavedChanges" : "tobe 12/7/2019 20:24",
 		"hasUnsavedChanges:" : "tobe 12/7/2019 20:30",
 		"initialize" : "tobe 12/7/2019 20:26",
-		"instanceVariables" : "tobe 7/8/2019 17:52",
+		"instanceVariables" : "tobe 1/12/2020 18:02",
 		"isArtefact" : "tobe 12/11/2019 17:50",
 		"isClassSide" : "tobe 1/1/2020 19:31",
 		"isCollapsed" : "tobe 12/3/2019 11:09",
@@ -46,4 +46,5 @@
 		"typeFor:" : "tobe 1/1/2020 11:13",
 		"updatePCs" : "tobe 1/1/2020 19:39",
 		"valid" : "tobe 12/11/2019 22:01",
+		"wantsInteractiveErrorCorrection" : "tobe 1/12/2020 17:54",
 		"writeSourceOn:" : "tobe 12/11/2019 22:06" } }
