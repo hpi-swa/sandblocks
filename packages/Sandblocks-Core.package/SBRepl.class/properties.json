@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"localBindings",
+		"bindings" ],
+	"name" : "SBRepl",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

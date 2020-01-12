@@ -1,4 +1,4 @@
-shortcuts
+actions
 openOpenWindow
 
 	(self method

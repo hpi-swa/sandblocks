@@ -1,4 +1,4 @@
-shortcuts
+actions
 promptOpenWorkspace
 
 	| workspace items |

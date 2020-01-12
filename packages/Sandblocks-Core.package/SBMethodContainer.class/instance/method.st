@@ -1,4 +1,4 @@
 as yet unclassified
 method
 
-	^ self submorphs ifNotEmpty: #first ifEmpty: [nil]
+	^ self hasSubmorphs ifTrue: [self firstSubmorph] ifFalse: [nil]

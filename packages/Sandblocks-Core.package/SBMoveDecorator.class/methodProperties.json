@@ -1,0 +1,16 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"attached:" : "tobe 1/6/2020 09:15",
+		"detached:" : "tobe 1/6/2020 09:15",
+		"handlesClickOrDrag:" : "tobe 1/6/2020 09:19",
+		"handlesGestureStart:" : "tobe 1/6/2020 09:19",
+		"handlesKeyboard:" : "tobe 1/6/2020 09:19",
+		"initialize" : "tobe 1/6/2020 09:16",
+		"mouseMove:" : "tobe 1/6/2020 09:12",
+		"mouseUp:" : "tobe 1/6/2020 09:13",
+		"preventOcclusion" : "tobe 1/6/2020 09:13",
+		"preventOcclusion:" : "tobe 1/6/2020 09:13",
+		"startDrag:" : "tobe 1/6/2020 09:13",
+		"step" : "tobe 1/6/2020 09:13" } }

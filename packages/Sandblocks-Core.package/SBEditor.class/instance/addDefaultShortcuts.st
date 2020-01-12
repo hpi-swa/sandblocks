@@ -36,6 +36,7 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $q do: #closeSelectedMethod;
 		addSingleSelectionShortcut: $z do: #toggleMethodCollapsed;
 		addSingleSelectionShortcut: $( do: #leftRotate;
+		addSingleSelectionShortcut: $p command do: #evaluateSelection;
 		
 		addMultiSelectionShortcut: Character escape do: #endMultiSelection;
 		addMultiSelectionShortcut: $l do: #selectNext;
@@ -72,6 +73,7 @@ addDefaultShortcuts
 		addCommandShortcut: Character escape command do: #close;
 		addCommandShortcut: $S command do: #saveWorkspace;
 		addCommandShortcut: $O command do: #promptOpenWorkspace;
+		addCommandShortcut: $r command do: #openRepl;
 		
 		addInputShortcut: Character escape do: #endInput;
 		addInputShortcut: Character arrowLeft do: [:editor | editor textMorph moveCursor: -1];

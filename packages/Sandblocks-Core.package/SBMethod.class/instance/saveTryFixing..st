@@ -4,7 +4,7 @@ saveTryFixing: aBoolean
 	| text newSelector |
 	self allBlocksDo: [:block |
 		block valid ifFalse: [
-			aBoolean ifFalse: [^ false] ifTrue: [self tryFix: block ifFail: [^ false]]]].
+			aBoolean ifFalse: [^ false] ifTrue: [block tryFixIfFail: [^ false]]]].
 	
 	text := self prettySourceString.
 	newSelector := self methodClass compile: text asText.

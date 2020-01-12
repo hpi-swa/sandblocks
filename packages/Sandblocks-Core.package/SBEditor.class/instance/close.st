@@ -1,4 +1,4 @@
-shortcuts
+actions
 close
 
 	self containingWindow ifNotNil: #delete.

@@ -9,10 +9,11 @@ send: selector super: supered numArgs: numArgs
 	(lookupClass lookupSelector: selector) ifNotNil: [:method |
 		" report argument types "
 		(currentContext stackPtr - numArgs + 1 to: currentContext stackPtr) withIndexDo: [:stackIndex :index |
-			self
-				reportTypeInfo: (currentContext at: stackIndex)
-				at: (SBCodeContext class: lookupClass selector: selector)
-				findNode: [:methodMorph | methodMorph arguments at: index]].
+			SBCodeContext class: lookupClass selector: selector ifValid: [:location |
+				self
+					reportTypeInfo: (currentContext at: stackIndex)
+					at: location
+					findNode: [:methodMorph | methodMorph arguments at: index]]].
 		
 		" report primitives "
 		method primitive > 0 ifTrue: [ | ret |

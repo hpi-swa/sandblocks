@@ -1,0 +1,20 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"bindingFor:ifPresent:" : "tobe 1/12/2020 16:02",
+		"bindingOf:" : "tobe 1/12/2020 16:06",
+		"body" : "tobe 1/12/2020 12:27",
+		"canDeleteChild:" : "tobe 1/12/2020 16:10",
+		"childSandblocks" : "tobe 1/12/2020 16:08",
+		"containingArtefact" : "tobe 1/12/2020 11:59",
+		"declarations" : "tobe 1/12/2020 16:02",
+		"ensureExpanded" : "tobe 1/12/2020 12:00",
+		"getOrCreateLocalBinding:" : "tobe 1/12/2020 16:04",
+		"hasUnsavedChanges" : "tobe 1/12/2020 12:00",
+		"hasUnsavedChanges:" : "tobe 1/12/2020 12:00",
+		"initialize" : "tobe 1/12/2020 16:07",
+		"methodClass" : "tobe 1/12/2020 12:00",
+		"saveTryFixing:" : "tobe 1/12/2020 16:03",
+		"typeFor:" : "tobe 1/12/2020 12:16",
+		"wantsInteractiveErrorCorrection" : "tobe 1/12/2020 15:18" } }

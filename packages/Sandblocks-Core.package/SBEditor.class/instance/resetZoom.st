@@ -1,4 +1,4 @@
-shortcuts
+actions
 resetZoom
 
 	scroll scale: 1 @ 1.

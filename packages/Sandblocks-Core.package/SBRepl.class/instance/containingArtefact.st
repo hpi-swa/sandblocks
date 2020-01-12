@@ -1,0 +1,4 @@
+artefact protocol
+containingArtefact
+
+	^ self

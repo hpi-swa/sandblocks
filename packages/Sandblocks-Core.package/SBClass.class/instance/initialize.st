@@ -20,4 +20,5 @@ initialize
 		addRow: 'Instance Variables:' with: (instanceVariables := SBArray new);
 		addRow: 'Class Variables:' with: (classVariables := SBArray new);
 		addRow: 'Pool Dictionaries:' with: (poolDictionaries := SBArray new);
-		addRow: 'Category:' with: (category := SBTextBubble new)
+		addRow: 'Category:' with: (category := SBTextBubble new)";
+		attachDecorator: SBMoveDecorator new"
