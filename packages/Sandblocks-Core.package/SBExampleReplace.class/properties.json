@@ -6,10 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"type",
-		"addType" ],
-	"name" : "SBArray",
+		 ],
+	"name" : "SBExampleReplace",
 	"pools" : [
 		 ],
-	"super" : "SBBlock",
+	"super" : "SBSubstitution",
 	"type" : "normal" }

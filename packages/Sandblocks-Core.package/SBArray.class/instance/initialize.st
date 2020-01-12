@@ -4,6 +4,7 @@ initialize
 	super initialize.
 	
 	type := #dynamic.
+	addType := SBUnknown.
 	
 	self
 		layoutPolicy: SBArrayLayout new;
