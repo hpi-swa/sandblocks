@@ -1,5 +1,7 @@
 as yet unclassified
 mouseDown: anEvent
 
-	super mouseDown: anEvent.
+	self eventHandler
+		ifNotNil: [self eventHandler mouseDown: anEvent fromMorph: self].
+	
 	anEvent hand waitForClicksOrDrag: self event: anEvent

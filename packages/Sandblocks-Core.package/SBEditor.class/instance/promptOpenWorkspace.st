@@ -1,8 +1,10 @@
 actions
 promptOpenWorkspace
 
-	| workspace items |
+	| items index |
 	items := SBWorkspaceHistory default items.
-	workspace := (UIManager default chooseFrom: items) ifNil: [^ self] ifNotNil: [:index |
-		self close.
-		(items at: index) open]
+	index := UIManager default chooseFrom: items.
+	index = 0 ifTrue: [^ self].
+	
+	self close.
+	(items at: index) open

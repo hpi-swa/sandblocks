@@ -1,4 +1,4 @@
 input
 labelString
 
-	^ "self method ifNotNil: [:m | m methodClass name, '>>', m selector] ifNil: ["'Sandblocks Editor'"]"
+	^ 'Sandblocks Editor', (workspace ifNotNil: [:w | ' - ', w name] ifNil: [''])

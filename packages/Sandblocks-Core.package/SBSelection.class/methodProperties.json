@@ -3,6 +3,7 @@
 		 },
 	"instance" : {
 		"bindingFor:ifPresent:" : "tobe 1/1/2020 13:48",
+		"blockForClass:ifPresent:ifAbsent:" : "tobe 1/12/2020 18:57",
 		"childSandblocks" : "tobe 7/7/2019 13:46",
 		"colorPolicy" : "tobe 7/14/2019 15:58",
 		"colorPolicy:" : "tobe 7/14/2019 15:58",

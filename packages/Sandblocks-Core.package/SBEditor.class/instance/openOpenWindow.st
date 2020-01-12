@@ -1,6 +1,6 @@
 actions
 openOpenWindow
 
-	(self method
-		ifNotNil: [:m | SBCodeOpener new positionNear: self; openFor: m methodClass >> m selector asSymbol]
-		ifNil: [SBCodeOpener open]) ifNotNil: [:methodOrClass | self open: methodOrClass]
+	((self method notNil and: [(self method methodClass compiledMethodAt: self method selector asSymbol ifAbsent: [nil]) notNil])
+		ifTrue: [SBCodeOpener new positionNear: self; openFor: self method methodClass >> self method selector asSymbol]
+		ifFalse: [SBCodeOpener open]) ifNotNil: [:methodOrClass | self open: methodOrClass]

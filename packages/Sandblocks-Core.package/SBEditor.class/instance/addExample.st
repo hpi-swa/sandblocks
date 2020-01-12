@@ -16,4 +16,4 @@ addExample
 			args: (SBArray new
 				type: #dynamic
 				contents: (Array streamContents: [:str | self method arguments size timesRepeat: [str nextPut: SBUnknown new]]))
-			label: ''))
+			label: 'simple'))

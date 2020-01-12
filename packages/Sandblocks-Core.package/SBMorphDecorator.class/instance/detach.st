@@ -1,4 +1,4 @@
 as yet unclassified
 detach
 
-	self morph detachDecorator: self
+	self morph ifNotNil: [:m | m detachDecorator: self]

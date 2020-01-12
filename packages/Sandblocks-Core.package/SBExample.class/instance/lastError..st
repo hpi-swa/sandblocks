@@ -3,10 +3,14 @@ lastError: anError
 
 	lastError := anError.
 	anError
-		ifNotNil: [ | errorContext |
+		ifNotNil: [
 			errorIndicator ifNil: [self addMorphBack: (errorIndicator := SBIcon iconFlash large; color: Color orange)].
-			errorContext := anError signalerContext findContextSuchThat: [:ctx | ctx method = self containingArtefact compiledMethod].
-			(self containingArtefact blockForPC: errorContext pc - 1) attachDecorator: (errorDecorator := SBErrorDecorator new message: anError asString)]
+			
+			(anError signalerContext
+				findContextSuchThat: [:ctx | ctx method = self containingArtefact compiledMethod])
+				ifNotNil: [:errorContext |
+					(self containingArtefact blockForPC: errorContext previousPc)
+						ifNotNil: [:b | b attachDecorator: (errorDecorator := SBErrorDecorator new message: anError asString)]]]
 		ifNil: [
 			errorIndicator ifNotNil: #delete.
 			errorIndicator := nil]

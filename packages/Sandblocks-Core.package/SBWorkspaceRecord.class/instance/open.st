@@ -2,5 +2,6 @@ accessing
 open
 
 	lastUsed := DateAndTime now.
-	self halt.
-	(Compiler evaluate: self workspaceString) openInWindow
+	(Compiler evaluate: self workspaceString)
+		workspace: self;
+		openInWindow

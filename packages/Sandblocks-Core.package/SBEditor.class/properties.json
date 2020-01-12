@@ -29,7 +29,8 @@
 		"colorPolicy",
 		"bottomPanel",
 		"compileTimeButton",
-		"compileTime" ],
+		"compileTime",
+		"workspace" ],
 	"name" : "SBEditor",
 	"pools" : [
 		 ],
