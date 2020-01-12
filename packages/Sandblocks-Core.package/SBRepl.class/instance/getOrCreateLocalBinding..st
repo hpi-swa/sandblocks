@@ -6,4 +6,5 @@ getOrCreateLocalBinding: aString
 		ifNone: [ | decl |
 			decl := SBDeclarationForLocalVariable new binding: aString -> nil; contents: aString; yourself.
 			bindings addMorphBack: decl.
+			self changed.
 			decl]

@@ -1,3 +1,4 @@
 event handling
 handlesGestureStart: anEvent
-	^ false
+
+	^ true

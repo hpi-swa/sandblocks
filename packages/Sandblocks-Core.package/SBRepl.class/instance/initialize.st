@@ -4,11 +4,13 @@ initialize
 	super initialize.
 	
 	self
+		layoutInset: 8 withScalingFactor;
 		addMorphBack: (SBRow new
 			cellGap: 8 withScalingFactor;
-			addMorphBack: (StringMorph new contents: 'REPL');
+			addMorphBack: (SBTextBubble new layoutInset: 4 withScalingFactor; contents: 'REPL');
 			addMorphBack: (bindings := SBRow new));
 		addMorphBack: SBBlockBody empty;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		changeTableLayout
+		changeTableLayout;
+		attachDecorator: SBMoveDecorator new

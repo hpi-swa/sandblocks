@@ -1,3 +1,4 @@
 event handling
 handlesClickOrDrag: anEvent
-	^ false
+
+	^ true
