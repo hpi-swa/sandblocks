@@ -1,7 +1,8 @@
 as yet unclassified
 initialize
+
 	super initialize.
-	value := 1.
+	value := 2.
 	self color: Color white.
 	self extent: self tileSize.
 	self changeTableLayout.
@@ -11,4 +12,4 @@ initialize
 	self borderStyle: BorderStyle simple.
 	self borderColor: Color black.
 	self borderWidth: 1.
-	self addMorphBack: (label := StringMorph new contents: '1')
+	self addMorphBack: (label := StringMorph new contents: value asString)
