@@ -8,7 +8,8 @@
 	"instvars" : [
 		"selector",
 		"active",
-		"label" ],
+		"label",
+		"completionAction" ],
 	"name" : "SBSuggestionItem",
 	"pools" : [
 		 ],

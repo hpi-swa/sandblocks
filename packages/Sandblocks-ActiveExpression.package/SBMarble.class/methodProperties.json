@@ -1,0 +1,13 @@
+{
+	"class" : {
+		"marbleSize" : "tobe 1/13/2020 10:53" },
+	"instance" : {
+		"closeHover" : "tobe 1/13/2020 10:57",
+		"example" : "tobe 1/13/2020 11:40",
+		"handlesMouseOver:" : "tobe 1/13/2020 11:40",
+		"indicatorBorderWidth" : "tobe 1/13/2020 11:45",
+		"initialize" : "tobe 1/13/2020 11:44",
+		"mouseEnter:" : "tobe 1/13/2020 17:42",
+		"mouseLeave:" : "tobe 1/13/2020 17:42",
+		"openHover" : "tobe 1/13/2020 11:29",
+		"subject:value:" : "tobe 1/13/2020 11:29" } }

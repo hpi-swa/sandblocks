@@ -2,7 +2,8 @@
 	"class" : {
 		"matches:" : "tobe 12/3/2019 10:00",
 		"newFrom:" : "tobe 12/3/2019 10:07",
-		"setUp:cases:extent:" : "tobe 12/3/2019 09:59" },
+		"setUp:cases:extent:" : "tobe 12/3/2019 09:59",
+		"suggestion" : "tobe 1/13/2020 11:18" },
 	"instance" : {
 		"addCase:name:" : "tobe 12/3/2019 10:47",
 		"addCommandRequest" : "tobe 1/5/2020 16:40",
@@ -14,7 +15,7 @@
 		"initialize" : "tobe 12/3/2019 10:53",
 		"isExpression" : "tobe 12/21/2019 19:00",
 		"isMorphExample" : "tobe 12/24/2019 12:32",
-		"runCase:" : "tobe 12/24/2019 12:30",
+		"runCase:" : "tobe 1/13/2020 11:38",
 		"sendStartNotification" : "tobe 12/24/2019 12:35",
 		"setUp:cases:extent:" : "tobe 12/16/2019 14:27",
 		"setUpMorph" : "tobe 12/16/2019 14:27",

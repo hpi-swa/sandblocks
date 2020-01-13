@@ -10,7 +10,7 @@ doubleClick: anEvent
 		openMethod: (method := SBMethod new
 			selector: ''
 			arguments: #()
-			class: (closest ifNotNil: [:container | container method methodClass] ifNil: [UIManager default chooseClassOrTrait]);
+			class: (closest ifNotNil: [:container | container relatedClass] ifNil: [UIManager default chooseClassOrTrait]);
 			body: (SBBlockBody new statements: {SBUnknown new})).
 	
 	method owner center: point.

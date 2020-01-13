@@ -2,4 +2,4 @@ suggestions
 useSuggestion
 
 	self suggestionMenuDo: [:menu |
-		menu activeSelector ifNotNil: [:s | self useSuggestion: s]]
+		menu activeSuggestion ifNotNil: [:s | s useSuggestionOn: self]]

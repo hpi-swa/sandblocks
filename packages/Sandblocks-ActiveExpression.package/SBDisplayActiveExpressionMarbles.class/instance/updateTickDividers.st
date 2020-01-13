@@ -7,6 +7,6 @@ updateTickDividers
 		ifTrue: [
 			self addMorphBack: (Morph new
 				 color: Color lightGray;
-				 extent: 2 @ self marbleSize y;
+				 extent: 2 @ SBMarble marbleSize y;
 				 yourself)].
 	lastTickTime := tickTime

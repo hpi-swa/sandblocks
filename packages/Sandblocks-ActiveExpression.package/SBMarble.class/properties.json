@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-ActiveExpression",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"subject",
+		"subjectIndicator" ],
+	"name" : "SBMarble",
+	"pools" : [
+		 ],
+	"super" : "CircleMorph",
+	"type" : "normal" }
