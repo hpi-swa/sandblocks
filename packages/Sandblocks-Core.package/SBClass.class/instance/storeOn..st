@@ -2,7 +2,7 @@ as yet unclassified
 storeOn: aStream
 
 	aStream
-		nextPut: $);
+		nextPut: $(;
 		nextPutAll: self className;
 		nextPutAll: ' newFor: ';
 		nextPutAll: self shownClass name;
