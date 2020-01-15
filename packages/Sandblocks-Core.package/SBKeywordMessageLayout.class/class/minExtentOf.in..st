@@ -2,10 +2,8 @@ as yet unclassified
 minExtentOf: aMorph in: aRectangle
 
 	| x y |
-	minExtentCache ifNotNil: [^ minExtentCache].
-	
-	(self wantsSingleColumn: aMorph) ifTrue: [^ minExtentCache := SBVerticalLayout new minExtentOf: aMorph in: aRectangle].
-	(self wantsSingleRow: aMorph) ifTrue: [^ minExtentCache := SBHorizontalLayout new minExtentOf: aMorph in: aRectangle].
+	(self wantsSingleColumn: aMorph) ifTrue: [^ SBVerticalLayout minExtentOf: aMorph in: aRectangle].
+	(self wantsSingleRow: aMorph) ifTrue: [^ SBHorizontalLayout minExtentOf: aMorph in: aRectangle].
 	
 	x := aMorph lastSubmorph minExtent x.
 	y := 0.
@@ -16,4 +14,4 @@ minExtentOf: aMorph in: aRectangle
 		x := x max: nameExtent x + valueExtent x + aMorph cellGap.
 		y := y + aMorph cellGap + (nameExtent y max: valueExtent y)].
 	
-	^ minExtentCache := x @ y
+	^ x @ y

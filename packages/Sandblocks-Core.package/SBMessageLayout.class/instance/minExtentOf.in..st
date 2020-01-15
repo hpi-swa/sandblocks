@@ -1,16 +1,24 @@
 as yet unclassified
 minExtentOf: aMorph in: aRectangle
 
-	| x y |
+	| receiver signature receiverExtent signatureExtent |
 	minExtentCache ifNotNil: [^ minExtentCache].
-	aMorph hasSubmorphs ifFalse: [^ 0 @ 0].
 	
-	x := 0.
-	y := 0.
-	aMorph submorphCount < 3
-		ifTrue: [aMorph submorphsDo: [:m | x := x + m width. y := y max: m height]]
-		ifFalse: [
-			aMorph submorphs pairsDo: [:m1 :m2 |
-				x := x max: m1 width + aMorph cellGap + m2 width.
-				y := y + (m1 height max: m2 height)]].
-	^ minExtentCache := x @ y
+	receiver := aMorph receiver ifNil: [^ minExtentCache := SBKeywordMessageLayout minExtentOf: aMorph signature in: aRectangle].
+	signature := aMorph signature.
+	receiverExtent := receiver minExtent.
+	
+	" place in single row "
+	(self wantsSingleRow: receiver signature: signature) ifTrue: [
+		signatureExtent := SBHorizontalLayout new minExtentOf: signature in: aRectangle.
+		^ minExtentCache := (receiverExtent x + aMorph cellGap + signatureExtent x) @ (receiverExtent y max: signatureExtent y)].
+	
+	" place receiver and message part in first row, argument in second "
+	(self wantsReceiverAndMessageRow: aMorph) ifTrue: [ | messageExtent argumentExtent |
+		messageExtent := signature firstSubmorph minExtent.
+		argumentExtent := signature submorphs second minExtent.
+		^ minExtentCache := (receiverExtent x + aMorph cellGap + messageExtent x max: self indent + argumentExtent x) @ ((receiverExtent y max: messageExtent y) + aMorph cellGap + argumentExtent y)].
+	
+	" place receiver in first row, message and argument pairs in subsequent "
+	signatureExtent := SBKeywordMessageLayout minExtentOf: aMorph signature in: aRectangle.
+	^ minExtentCache := (signatureExtent x + self indent max: receiverExtent x) @ (receiverExtent y + aMorph cellGap + signatureExtent y)

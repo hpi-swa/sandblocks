@@ -2,7 +2,8 @@
 	"class" : {
 		 },
 	"instance" : {
-		"layout:in:" : "tobe 6/28/2019 16:09",
-		"layoutHorizontally:in:" : "tobe 10/16/2019 10:22",
-		"layoutVertically:in:" : "tobe 10/16/2019 10:21",
-		"minExtentOf:in:" : "tobe 10/16/2019 10:20" } }
+		"indent" : "tobe 1/15/2020 21:11",
+		"layout:in:" : "tobe 1/15/2020 23:13",
+		"minExtentOf:in:" : "tobe 1/15/2020 23:04",
+		"wantsReceiverAndMessageRow:" : "tobe 1/15/2020 22:51",
+		"wantsSingleRow:signature:" : "tobe 1/15/2020 22:16" } }
