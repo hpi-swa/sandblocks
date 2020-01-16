@@ -34,7 +34,7 @@
 		"detachDecorators:" : "tobe 1/5/2020 22:41",
 		"drawFrame:on:" : "tobe 11/24/2019 17:12",
 		"drawOn:" : "tobe 1/5/2020 22:54",
-		"drawPrefix:on:" : "tobe 7/2/2019 20:53",
+		"drawPrefix:on:" : "tobe 1/16/2020 20:25",
 		"drawSubmorphsOn:" : "tobe 1/5/2020 22:38",
 		"drawnColor" : "tobe 7/14/2019 12:42",
 		"ensureVisible" : "tobe 1/5/2020 16:39",
@@ -49,7 +49,7 @@
 		"handlesMouseDown:" : "tobe 6/28/2019 22:02",
 		"hasDecorator:" : "tobe 1/5/2020 22:45",
 		"hasInput" : "tobe 7/7/2019 23:50",
-		"initialize" : "tobe 1/5/2020 22:37",
+		"initialize" : "tobe 1/16/2020 22:38",
 		"isArrayBlock" : "tobe 7/9/2019 21:02",
 		"isArtefact" : "tobe 12/11/2019 17:50",
 		"isAssignment" : "tobe 7/5/2019 16:23",
@@ -79,7 +79,7 @@
 		"isTemporaries" : "tobe 7/9/2019 09:26",
 		"isUnknown" : "tobe 7/7/2019 17:27",
 		"isWatch" : "tobe 11/11/2019 15:02",
-		"layoutInset" : "tobe 12/3/2019 12:41",
+		"layoutInset" : "tobe 1/16/2020 20:56",
 		"leftMostBlock" : "tobe 7/15/2019 17:38",
 		"minExtent" : "tobe 6/30/2019 22:18",
 		"mouseDown:" : "tobe 1/12/2020 18:38",
@@ -113,4 +113,5 @@
 		"useSuggestion" : "tobe 1/13/2020 11:12",
 		"valid" : "tobe 6/29/2019 13:16",
 		"wasDeselected" : "tobe 1/5/2020 22:58",
-		"wasSelected" : "tobe 11/24/2019 17:21" } }
+		"wasSelected" : "tobe 11/24/2019 17:21",
+		"withDecorator:do:" : "tobe 1/16/2020 23:04" } }

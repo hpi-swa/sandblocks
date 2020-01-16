@@ -8,4 +8,4 @@ updateInsets
 				inset := inset asPoint.
 				self layoutInset: (Rectangle left: 20 * self scalingFactor right: inset x top: inset y bottom: inset y)]]
 		ifNotNil: [
-			self layoutInset isRectangle ifTrue: [self layoutInset: self layoutInset right]]
+			self layoutInset isRectangle ifTrue: [self layoutInset: self layoutInset right @ self layoutInset top]]

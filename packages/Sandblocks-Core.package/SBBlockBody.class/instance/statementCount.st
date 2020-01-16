@@ -1,4 +1,4 @@
 converting
 statementCount
 
-	^ self submorphCount - 2
+	^ self submorphCount - 1

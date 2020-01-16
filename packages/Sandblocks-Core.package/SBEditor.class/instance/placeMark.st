@@ -1,4 +1,8 @@
 actions
 placeMark
 
-	self selection toggleDecorator: SBMarkedDecorator new
+	(self selection hasDecorator: SBMarkedDecorator)
+		ifTrue: [self selection detachDecorators: SBMarkedDecorator]
+		ifFalse: [
+			self waitForLetterDo: [:letter |
+				self selection attachDecorator: (SBMarkedDecorator new letter: letter)]]

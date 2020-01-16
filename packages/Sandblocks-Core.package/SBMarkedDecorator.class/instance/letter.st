@@ -1,4 +1,4 @@
 as yet unclassified
-isMethodBody
+letter
 
-	^ true
+	^ letter

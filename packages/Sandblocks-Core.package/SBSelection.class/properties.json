@@ -6,7 +6,8 @@
 		 ],
 	"commentStamp" : "tobe 7/7/2019 12:39",
 	"instvars" : [
-		"colorPolicy" ],
+		"colorPolicy",
+		"methodClass" ],
 	"name" : "SBSelection",
 	"pools" : [
 		 ],

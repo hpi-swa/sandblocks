@@ -1,4 +1,5 @@
 actions
 goToMark
 
-	self allBlocksDo: [:morph | (morph hasDecorator: SBMarkedDecorator) ifTrue: [^ self select: morph]]
+	self waitForLetterDo: [:letter |
+		self allBlocksDo: [:morph | (morph withDecorator: SBMarkedDecorator do: [:mark | mark letter = letter ifTrue: [^ self select: morph]])]]

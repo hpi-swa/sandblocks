@@ -1,4 +1,4 @@
 as yet unclassified
 statements
 
-	^ self submorphs allButFirst: 2
+	^ self submorphs allButFirst
