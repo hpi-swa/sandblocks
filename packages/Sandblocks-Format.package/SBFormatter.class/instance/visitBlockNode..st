@@ -13,7 +13,7 @@ visitBlockNode: aNode
 					stream nextPutAll: arg name.
 					stream space].
 				stream nextPutAll: '| ']].
-	temporaries := isMethodBlock ifTrue: [(self parentFor: aNode) temporaries] ifFalse: [aNode temporaries].
+	temporaries := isMethodBlock ifTrue: [(self parentFor: aNode) temporaries] ifFalse: [aNode temporaries select: [:t | t scope ~= -2]].
 	temporaries ifNotEmpty: [:temps | 
 		isMethodBlock ifFalse: [stream space].
 		stream nextPutAll: '| '.

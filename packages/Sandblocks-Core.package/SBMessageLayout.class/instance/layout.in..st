@@ -3,8 +3,8 @@ layout: aMorph in: aRectangle
 
 	| receiver signature receiverExtent signatureBounds |
 	receiver := aMorph receiver ifNil: [
-		aMorph signature bounds: aRectangle.
 		SBKeywordMessageLayout layout: aMorph signature in: aRectangle.
+		aMorph signature layoutInBounds: aRectangle positioning: #topLeft.
 		^ self].
 	signature := aMorph signature.
 	receiverExtent := receiver minExtent.
