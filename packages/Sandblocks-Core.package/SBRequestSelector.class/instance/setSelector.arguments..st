@@ -1,7 +1,7 @@
 as yet unclassified
 setSelector: aString arguments: aCollection
 
-	editor method: (SBMethod new
+	editor openMorphInView: (SBMethod new
 		selector: aString
 		arguments: aCollection veryDeepCopy
 		class: UndefinedObject).

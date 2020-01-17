@@ -2,8 +2,10 @@ as yet unclassified
 undo
 
 	| ret usages declaration |
+	didRename ifFalse: [^ super undo].
+	
 	declaration := newMorph bindingFor: newText ifPresent: [:b | b].
 	usages := declaration allUsages, {declaration}.
-	ret := super do.
+	ret := super undo.
 	usages do: [:binding | binding contents: previousText].
 	^ ret

@@ -6,9 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"didRename" ],
-	"name" : "SBBindingRenameCommand",
+		 ],
+	"name" : "SBNoopLayout",
 	"pools" : [
 		 ],
-	"super" : "SBInputCommand",
+	"super" : "SBLayoutPolicy",
 	"type" : "normal" }
