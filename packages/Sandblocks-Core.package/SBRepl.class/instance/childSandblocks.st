@@ -1,4 +1,4 @@
 as yet unclassified
 childSandblocks
 
-	^ bindings submorphs, {self firstSubmorph firstSubmorph. self lastSubmorph}
+	^ {self firstSubmorph firstSubmorph}, bindings submorphs, {self lastSubmorph}

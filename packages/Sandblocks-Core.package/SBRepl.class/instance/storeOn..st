@@ -6,6 +6,8 @@ storeOn: aStream
 	aStream nextPutAll: self className.
 	aStream nextPutAll: ' newFromSource: '.
 	self body prettySourceString storeOn: aStream.
+	aStream nextPutAll: ' named: '.
+	self name storeOn: aStream.
 	aStream nextPutAll: ' at: '.
 	self position storeOn: aStream.
 	aStream nextPut: $)

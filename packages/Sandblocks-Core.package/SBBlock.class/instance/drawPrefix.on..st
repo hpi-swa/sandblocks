@@ -9,4 +9,4 @@ drawPrefix: aString on: aCanvas
 		drawString: aString
 		at: self layoutBounds origin + (self spaceForPrefix negated + ((self spaceForPrefix / 2) - (width / 2)) rounded @ ((self layoutBounds height / 2) - (font height / 2)) rounded)
 		font: font
-		color: (fg = Color white ifTrue: [Color veryLightGray] ifFalse: [fg alpha: 0.5])
+		color: ("fg = Color white ifTrue: [Color veryLightGray] ifFalse: ["fg alpha: 0.5)

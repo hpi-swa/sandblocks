@@ -5,7 +5,7 @@ addExample
 	
 	self do: ((SBInsertCommand newFor: self method)
 		container: self method body;
-		index: 3;
+		index: 2;
 		morph: (SBExample new
 			self: (self method isClassSide
 				ifTrue: [SBBinding new contents: self method methodClass theNonMetaClassName]

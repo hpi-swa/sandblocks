@@ -8,7 +8,7 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $+ do: #addElement;
 		addSingleSelectionShortcut: $i do: #startInputAtStart;
 		addSingleSelectionShortcut: $$ do: #selectRightMostBlock;
-		addSingleSelectionShortcut: $0 do: #selectLeftMostBlock;
+		addSingleSelectionShortcut: $0 asSandblockShortcut, Character home do: #selectContainingArtefact;
 		addSingleSelectionShortcut: $a do: #startInputAtEnd;
 		addSingleSelectionShortcut: $s do: #startInputSubstituting;
 		addSingleSelectionShortcut: $n do: #insertLabelBelow;

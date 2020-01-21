@@ -6,13 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"stream",
-		"indent",
-		"parents",
-		"preFormatCache",
-		"literalLines" ],
-	"name" : "SBFormatter",
+		 ],
+	"name" : "SBFormatterTest",
 	"pools" : [
 		 ],
-	"super" : "Object",
+	"super" : "TestCase",
 	"type" : "normal" }

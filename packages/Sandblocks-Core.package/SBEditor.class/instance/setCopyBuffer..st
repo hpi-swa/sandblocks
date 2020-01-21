@@ -4,7 +4,7 @@ setCopyBuffer: aMorphOrCollection
 	| form list |
 	list := aMorphOrCollection isCollection ifTrue: [aMorphOrCollection] ifFalse: [{aMorphOrCollection}].
 	copyBuffer := SBSelection new
-		methodClass: list first containingArtefact methodClass;
+		methodClass: (list first containingArtefact ifNotNil: #methodClass);
 		colorPolicy: self colorPolicy.
 	
 	list do: [:m | copyBuffer addMorphBack: m veryDeepCopy].

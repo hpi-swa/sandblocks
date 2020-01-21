@@ -20,6 +20,8 @@ formatString: aString class: aClass noPattern: aBoolean
 	SBLabel
 		text: ['Sanity check to not produce invalid code'].
 	
+	methodNode accept: (ParseNodeEnumerator ofBlock: [:n | n comment: nil]).
+	
 	self assert: methodNode asString = (Parser new
 				parse: result
 				class: aClass

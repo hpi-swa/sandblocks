@@ -1,5 +1,6 @@
 {
 	"class" : {
+		"newFromSource:at:" : "tobe 1/18/2020 11:14",
 		"newFromSource:named:" : "tobe 1/12/2020 18:46",
 		"newFromSource:named:at:" : "tobe 1/12/2020 18:59" },
 	"instance" : {
@@ -7,7 +8,7 @@
 		"bindingOf:" : "tobe 1/12/2020 16:06",
 		"body" : "tobe 1/12/2020 12:27",
 		"canDeleteChild:" : "tobe 1/12/2020 16:10",
-		"childSandblocks" : "tobe 1/12/2020 16:49",
+		"childSandblocks" : "tobe 1/18/2020 13:56",
 		"containingArtefact" : "tobe 1/12/2020 11:59",
 		"declarations" : "tobe 1/12/2020 16:02",
 		"ensureExpanded" : "tobe 1/12/2020 12:00",
@@ -17,9 +18,10 @@
 		"hasUnsavedChanges:" : "tobe 1/12/2020 12:00",
 		"initialize" : "tobe 1/12/2020 16:51",
 		"methodClass" : "tobe 1/12/2020 12:00",
+		"name" : "tobe 1/18/2020 11:14",
 		"name:" : "tobe 1/12/2020 18:48",
 		"saveTryFixing:" : "tobe 1/12/2020 16:03",
 		"setFromSource:" : "tobe 1/12/2020 18:42",
-		"storeOn:" : "tobe 1/12/2020 18:59",
+		"storeOn:" : "tobe 1/18/2020 11:14",
 		"typeFor:" : "tobe 1/12/2020 12:16",
 		"wantsInteractiveErrorCorrection" : "tobe 1/12/2020 15:18" } }

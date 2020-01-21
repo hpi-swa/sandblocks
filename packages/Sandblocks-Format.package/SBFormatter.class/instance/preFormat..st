@@ -8,4 +8,4 @@ preFormat: aNode
 			formatter indent: indent.
 			formatter preFormatCache: preFormatCache copy.
 			aNode accept: formatter.
-			{formatter contents. indent}]) first
+			{formatter rawContents. indent. formatter literalLines}]) first
