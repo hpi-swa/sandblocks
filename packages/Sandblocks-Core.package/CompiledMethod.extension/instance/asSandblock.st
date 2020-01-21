@@ -4,7 +4,7 @@ asSandblock
 	| methodNode class parser source sourceRanges debuggerMap rangeToPC nodeToPC rangeToPCList instructions |
 	SBToggledCode
 		comment: 'either extract info from source (1st) or use generated result (may include errors, but might be more accurate)'
-		active: 2
+		active: 1
 		do: {
 			[
 				class := self methodClass.
@@ -27,6 +27,6 @@ asSandblock
 				nodeToPC keysAndValuesDo: [:node :pc | node pc: pc]].
 			[
 				methodNode := self methodNode.
-				"methodNode generate"]
+				methodNode generate]
 		}.
 	^ methodNode asSandblock
