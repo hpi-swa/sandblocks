@@ -1,6 +1,17 @@
 as yet unclassified
 suggestion
 
-	^ [:block | block sandblockEditor do: ((SBReplaceCommand newFor: block containingArtefact)
-		target: block;
-		replacer: (SBMorphExample new setUp: SBBlockBody empty cases: {} extent: 100 asPoint))]
+	^ [:block | | setUp |
+		setUp := SBBlockBody empty.
+		block sandblockEditor selectedArtefact relatedClass ifNotNil: [:class |
+			setUp statements: {SBMessageSend new
+				receiver: (SBBinding new contents: class name)
+				selector: #new}].
+		block sandblockEditor do: ((SBReplaceCommand newFor: block containingArtefact)
+			target: block;
+			replacer: ((SBMorphExample new
+				setUp: setUp
+				cases: {}
+				extent: 300 asPoint)
+					addCase: ((SBBlockBody emptyWithDeclarations: {'m'}) statements: {SBBinding new contents: 'm'}) name: 'example 1');
+					yourself)]

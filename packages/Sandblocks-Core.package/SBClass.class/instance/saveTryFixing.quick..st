@@ -1,5 +1,5 @@
 as yet unclassified
-saveTryFixing: aBoolean
+saveTryFixing: aBoolean quick: aQuickBoolean
 
 	| oldClass environment newClassName |
 	self valid ifFalse: [^ false].

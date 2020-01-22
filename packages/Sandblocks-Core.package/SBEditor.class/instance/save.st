@@ -1,4 +1,4 @@
 actions
 save
 
-	self selection ifNotNil: [self saveTryFixing: true]
+	self selection ifNotNil: [self saveTryFixing: true quick: false]

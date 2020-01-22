@@ -1,5 +1,5 @@
 artefact protocol
-saveTryFixing: aBoolean
+saveTryFixing: aBoolean quick: aQuickBoolean
 
 	self allBlocksDo: [:block |
 		block valid ifFalse: [

@@ -6,11 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"view",
-		"cases",
-		"errorDecorator" ],
-	"name" : "SBMorphExample",
+		 ],
+	"name" : "SBSandboxPasteUpMorph",
 	"pools" : [
 		 ],
-	"super" : "SBSubstitution",
+	"super" : "PasteUpMorph",
 	"type" : "normal" }
