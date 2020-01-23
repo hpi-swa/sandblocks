@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-ActiveExpression",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"AlreadySimulating" ],
+	"commentStamp" : "",
+	"instvars" : [
+		"lastSideEffects" ],
+	"name" : "SBSynchronousActiveExpression",
+	"pools" : [
+		 ],
+	"super" : "SynchronousActiveExpression",
+	"type" : "normal" }

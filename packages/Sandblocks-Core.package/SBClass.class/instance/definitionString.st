@@ -9,7 +9,8 @@ definitionString
 	category: ''{6}''' format: {
 		superClassName contents.
 		className contents.
-		(instanceVariables childSandblocks collect: #contents) joinSeparatedBy: ' '.
-		(classVariables childSandblocks collect: #contents) joinSeparatedBy: ' '.
-		(poolDictionaries childSandblocks collect: #contents) joinSeparatedBy: ' '.
-		category contents}
+		((instanceVariables childSandblocks collect: #contents) joinSeparatedBy: ' ').
+		((classVariables childSandblocks collect: #contents) joinSeparatedBy: ' ').
+		((poolDictionaries childSandblocks collect: #contents) joinSeparatedBy: ' ').
+		category contents
+	}

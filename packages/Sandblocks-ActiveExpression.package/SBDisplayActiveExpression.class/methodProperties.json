@@ -1,11 +1,12 @@
 {
 	"class" : {
-		"matches:" : "tobe 11/11/2019 18:06" },
+		"matches:" : "tobe 1/23/2020 14:45" },
 	"instance" : {
 		"dark:" : "tobe 11/11/2019 18:33",
 		"exampleFinished:" : "tobe 1/23/2020 10:38",
 		"exampleStarting:" : "tobe 1/23/2020 10:38",
-		"initialize" : "tobe 1/23/2020 11:00",
-		"reportValue:" : "tobe 1/23/2020 11:21",
+		"initialize" : "tobe 1/23/2020 22:45",
+		"reportValue:" : "tobe 1/23/2020 23:26",
+		"showSideEffects" : "tobe 1/23/2020 23:18",
 		"showSubscribers" : "tobe 1/23/2020 11:22",
 		"toggleMarbles" : "tobe 1/23/2020 10:58" } }

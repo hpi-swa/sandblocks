@@ -2,7 +2,9 @@ actions
 anyNearbyClass
 
 	| artefact |
-	artefact := (self selection ifNil: [self submorphs first]) containingArtefact.
+	scroll hasSubmorphs ifFalse: [^ nil].
+	
+	artefact := (self selection ifNil: [self methods first]) containingArtefact.
 	artefact isMethod ifTrue: [^ artefact methodClass].
 	artefact isClassContainer ifTrue: [^ artefact shownClass].
 	^ nil

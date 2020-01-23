@@ -18,5 +18,6 @@ initialize
 			cellGap: 8 withScalingFactor;
 			addMorphBack: (SBIcon iconCrosshairs);
 			addMorphBack: (SBIcon iconShare on: #click send: #showSubscribers to: self);
-			addMorphBack: (SBIcon iconSearch_plus on: #click send: #toggleMarbles to: self));
+			addMorphBack: (SBIcon iconSearch_plus on: #click send: #toggleMarbles to: self);
+			addMorphBack: (SBIcon iconFire on: #click send: #showSideEffects to: self));
 		addMorphBack: invocations

@@ -1,6 +1,7 @@
 {
 	"class" : {
 		"newFor:" : "tobe 12/23/2019 13:47",
+		"open" : "tobe 1/23/2020 12:06",
 		"openFor:" : "tobe 12/7/2019 19:01" },
 	"instance" : {
 		"addCommandShortcut:do:" : "tobe 7/7/2019 11:06",
@@ -12,7 +13,7 @@
 		"addMultiSelectionShortcut:do:" : "tobe 7/7/2019 11:20",
 		"addSingleSelectionShortcut:do:" : "tobe 7/7/2019 11:20",
 		"addToMultiSelection" : "tobe 1/5/2020 22:52",
-		"anyNearbyClass" : "tobe 1/12/2020 21:22",
+		"anyNearbyClass" : "tobe 1/23/2020 12:07",
 		"batchedChangeStep" : "tobe 1/22/2020 21:30",
 		"blockForClass:ifPresent:ifAbsent:" : "tobe 1/12/2020 18:00",
 		"browseSelection" : "tobe 7/7/2019 22:42",
