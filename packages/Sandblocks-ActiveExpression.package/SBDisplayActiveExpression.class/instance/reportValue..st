@@ -5,7 +5,7 @@ reportValue: anObject
 		expression := anObject.
 		expression onChangeDo: [ | newInvocation | 
 			newInvocation := SBActiveExpressionInvocation new
-				stack: ((self relevantContextsFrom: thisContext) collect: [:context | SBCodeContext for: context]);
+				stack: (self relevantContextsFrom: thisContext);
 				addInvocation: expression lastValue asString.
 			
 			self submorphs

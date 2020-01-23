@@ -3,6 +3,6 @@ openOpenWindow
 
 	| selected |
 	selected := self selectedArtefact.
-	((selected notNil and: [(selected isMethod and: [selected relatedClass compiledMethodAt: selected selector asSymbol ifAbsent: [nil]]) notNil])
-		ifTrue: [SBCodeOpener new positionNear: self; openFor: selected relatedClass >> selected selector asSymbol]
+	((selected notNil and: [selected artefact isCompiledCode or: [selected artefact isBehavior]])
+		ifTrue: [SBCodeOpener new positionNear: self; openFor: selected artefact]
 		ifFalse: [SBCodeOpener open]) ifNotNil: [:methodOrClass | self open: methodOrClass]

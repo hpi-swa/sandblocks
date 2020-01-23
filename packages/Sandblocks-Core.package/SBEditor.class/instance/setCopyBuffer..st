@@ -7,6 +7,6 @@ setCopyBuffer: aMorphOrCollection
 		methodClass: (list first containingArtefact ifNotNil: #methodClass);
 		colorPolicy: self colorPolicy.
 	
-	list do: [:m | copyBuffer addMorphBack: m veryDeepCopy].
+	list select: [:m | m isCodeContainer not] thenDo: [:m | copyBuffer addMorphBack: m veryDeepCopy].
 	form := copyBuffer imageForm.
 	copyBufferPreview image: ((form scaledIntoFormOfSize: (self copyBufferPreviewSize min: form extent)) collectColors: [:c | c alpha: c alpha * 0.7])
