@@ -1,0 +1,10 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"addInvocation:value:from:" : "tobe 1/23/2020 10:40",
+		"exampleFinished:" : "tobe 1/23/2020 10:38",
+		"exampleStarting:" : "tobe 1/23/2020 10:38",
+		"initialize" : "tobe 1/23/2020 10:54",
+		"relevantContextsFrom:" : "tobe 1/23/2020 10:53",
+		"updateInterestingCodeLocations" : "tobe 1/23/2020 10:23" } }

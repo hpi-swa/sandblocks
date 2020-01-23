@@ -6,14 +6,8 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"stack",
-		"count",
-		"currentStackIndex",
-		"image",
-		"countLabel",
-		"resultLabel",
-		"subject" ],
-	"name" : "SBActiveExpressionInvocation",
+		"lastTickTime" ],
+	"name" : "SBAEMarbles",
 	"pools" : [
 		 ],
 	"super" : "Morph",

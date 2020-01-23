@@ -2,13 +2,11 @@
 	"class" : {
 		"matches:" : "tobe 11/11/2019 18:06" },
 	"instance" : {
+		"addMarble:value:" : "tobe 1/23/2020 10:21",
 		"addSyncEvent:from:with:" : "tobe 1/5/2020 15:44",
-		"dark:" : "tobe 11/11/2019 18:33",
 		"exampleFinished:" : "tobe 11/24/2019 15:48",
 		"exampleStarting:" : "tobe 12/24/2019 12:36",
 		"initialize" : "tobe 1/23/2020 09:38",
 		"marbleSize" : "tobe 1/13/2020 10:40",
-		"openStack:event:morph:" : "tobe 11/24/2019 18:36",
-		"reportValue:" : "tobe 1/13/2020 10:58",
 		"updateInterestingCodeLocations" : "tobe 12/15/2019 10:21",
 		"updateTickDividers" : "tobe 1/13/2020 10:54" } }

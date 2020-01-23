@@ -1,30 +1,15 @@
 as yet unclassified
 reportValue: anObject
 
+	| subject |
 	anObject ~~ expression ifTrue: [
+		self flag: #fixme. " more robust option to find original context? "
+		subject := thisContext sender sender sender sender receiver.
+		
+		self flag: #todo. "break things"
+		"callback ifNotNil: [expression removeCallback: callback]."
+		
 		expression := anObject.
-		expression onChangeDo: [ | newInvocation | 
-			newInvocation := SBActiveExpressionInvocation new
-				stack: (self relevantContextsFrom: thisContext);
-				addInvocation: expression lastValue asString.
-			
-			self submorphs
-				detect: [:invocation | invocation sameLocation: newInvocation]
-				ifFound: [:invocation | invocation addInvocation: expression lastValue asString]
-				ifNone: [
-					self addMorphBack: newInvocation.
-					self updateInterestingCodeLocations].
-			
-			"stackDefs := (self relevantContextsFrom: thisContext) collect: [:context | SBCodeContext for: context].
-			image := stackDefs first imageForm asMorph
-				vResizing: #shrinkWrap;
-				hResizing: #shrinkWrap;
-				setProperty: #_stack toValue: stackDefs;
-				balloonText: ((stackDefs collect: #stringRepresentation) joinSeparatedBy: String cr);
-				on: #click send: #openStack:event:morph: to: self withValue: stackDefs;
-				yourself.
-			
-			self addMorphBack: (SBRow new
-				hResizing: #spaceFill;
-				addMorphBack: (SBStringMorph new contents: expression lastValue asString, ' <- '; hResizing: #spaceFill);
-				addMorphBack: image)"]]
+		expression onChangeDo: (callback := [:newValue |  
+			marbles addMarble: subject value: newValue.
+			invocations addInvocation: thisContext value: newValue from: subject])]

@@ -3,10 +3,9 @@
 		"matches:" : "tobe 11/11/2019 18:06" },
 	"instance" : {
 		"dark:" : "tobe 11/11/2019 18:33",
-		"exampleFinished:" : "tobe 11/24/2019 15:48",
-		"exampleStarting:" : "tobe 1/23/2020 09:57",
-		"initialize" : "tobe 12/15/2019 14:03",
-		"openStack:event:morph:" : "tobe 11/24/2019 18:36",
-		"relevantContextsFrom:" : "tobe 1/23/2020 10:02",
-		"reportValue:" : "tobe 1/23/2020 10:02",
-		"updateInterestingCodeLocations" : "tobe 12/15/2019 10:21" } }
+		"exampleFinished:" : "tobe 1/23/2020 10:38",
+		"exampleStarting:" : "tobe 1/23/2020 10:38",
+		"initialize" : "tobe 1/23/2020 11:00",
+		"reportValue:" : "tobe 1/23/2020 11:21",
+		"showSubscribers" : "tobe 1/23/2020 11:22",
+		"toggleMarbles" : "tobe 1/23/2020 10:58" } }
