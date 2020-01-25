@@ -6,10 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"expression",
+		"expressions",
 		"marbles",
-		"invocations",
-		"callback" ],
+		"invocations" ],
 	"name" : "SBDisplayActiveExpression",
 	"pools" : [
 		 ],

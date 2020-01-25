@@ -1,6 +1,6 @@
 as yet unclassified
 writeSourceOn: aStream
 
-	aStream nextPutAll: '(ActiveExpression on: '.
+	aStream nextPutAll: '(SBSynchronousActiveExpression on: '.
 	self block writeSourceOn: aStream.
 	aStream nextPut: $)

@@ -4,4 +4,4 @@ initialize
 	super initialize.
 	
 	sideEffects := OrderedCollection new.
-	tempObjects := OrderedCollection new
+	tempObjects := IdentitySet new

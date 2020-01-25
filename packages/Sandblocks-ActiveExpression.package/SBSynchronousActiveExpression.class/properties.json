@@ -6,7 +6,8 @@
 		"AlreadySimulating" ],
 	"commentStamp" : "",
 	"instvars" : [
-		"lastSideEffects" ],
+		"lastSideEffects",
+		"subject" ],
 	"name" : "SBSynchronousActiveExpression",
 	"pools" : [
 		 ],

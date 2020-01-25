@@ -1,18 +1,17 @@
 {
 	"class" : {
-		"colored:after:" : "tobe 1/23/2020 10:13",
-		"matches:" : "tobe 1/1/2020 17:17",
-		"newFrom:" : "tobe 1/1/2020 17:17" },
+		"after:" : "tobe 1/25/2020 16:52",
+		"matches:" : "tobe 1/25/2020 16:53",
+		"newFrom:" : "tobe 1/25/2020 16:53",
+		"suggestion" : "tobe 1/25/2020 16:56" },
 	"instance" : {
 		"changeColor" : "tobe 1/1/2020 17:14",
-		"childSandblocks" : "tobe 1/1/2020 17:17",
-		"colored" : "tobe 1/1/2020 17:15",
-		"colored:" : "tobe 1/1/2020 17:15",
+		"childSandblocks" : "tobe 1/25/2020 16:56",
 		"drawnColor" : "tobe 1/1/2020 17:15",
 		"expression" : "tobe 1/1/2020 17:17",
 		"expression:" : "tobe 1/1/2020 17:17",
 		"guessedClass" : "tobe 1/1/2020 17:22",
-		"initialize" : "tobe 1/1/2020 17:21",
+		"initialize" : "tobe 1/25/2020 16:53",
 		"isExpression" : "tobe 1/1/2020 17:21",
 		"printOn:" : "tobe 1/1/2020 17:23",
-		"writeSourceOn:" : "tobe 1/1/2020 17:20" } }
+		"writeSourceOn:" : "tobe 1/25/2020 16:53" } }

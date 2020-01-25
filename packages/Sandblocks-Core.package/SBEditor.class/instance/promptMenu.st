@@ -9,7 +9,7 @@ promptMenu
 				changed.
 			self allMorphsDo: [:morph | morph removeProperty: #sandblockBlockColor]]}.
 		{'Change Compile Method'. [self promptChangeCompile]}.
-		{'New Class'. [self openMorphInView: (SBClass new category: (self anyNearbyClass ifNotNil: #category ifNil: ['UserObjects']))]}
+		{'New Class'. [self addEmptyClass]}
 	}.
 	
 	(UIManager default chooseFrom: (options collect: #first) values: (options collect: #second)) ifNotNil: #value

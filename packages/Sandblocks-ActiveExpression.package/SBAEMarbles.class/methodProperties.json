@@ -2,11 +2,12 @@
 	"class" : {
 		"matches:" : "tobe 11/11/2019 18:06" },
 	"instance" : {
-		"addMarble:value:sideEffects:" : "tobe 1/23/2020 23:24",
-		"addSyncEvent:from:with:" : "tobe 1/5/2020 15:44",
+		"addMarble:value:expression:" : "tobe 1/25/2020 16:02",
+		"addSyncEventFrom:with:" : "tobe 1/25/2020 17:00",
 		"exampleFinished:" : "tobe 11/24/2019 15:48",
 		"exampleStarting:" : "tobe 12/24/2019 12:36",
 		"initialize" : "tobe 1/23/2020 09:38",
 		"marbleSize" : "tobe 1/13/2020 10:40",
+		"selectExpression:event:marble:" : "tobe 1/25/2020 16:03",
 		"updateInterestingCodeLocations" : "tobe 12/15/2019 10:21",
 		"updateTickDividers" : "tobe 1/13/2020 10:54" } }

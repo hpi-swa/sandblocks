@@ -2,7 +2,7 @@ as yet unclassified
 invokeCallback: aBlock oldValue: old newValue: new
 
 	| tracer res |
-	(aBlock homeMethod methodClass = SBDisplayActiveExpression or: [AlreadySimulating == true])
+	AlreadySimulating == true
 		ifTrue: [^ super invokeCallback: aBlock oldValue: old newValue: new].
 	
 	[AlreadySimulating := true.

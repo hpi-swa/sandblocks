@@ -1,5 +1,7 @@
 as yet unclassified
-mouseMove: anEvent 
+mouseMove: anEvent
+
 	drawing
-		ifTrue: [self fillFrom: lastMousePosition to: anEvent position.
+		ifTrue: [
+			self fillFrom: lastMousePosition to: anEvent position.
 			lastMousePosition := anEvent position]

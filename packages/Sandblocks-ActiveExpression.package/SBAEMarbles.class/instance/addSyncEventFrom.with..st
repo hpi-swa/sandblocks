@@ -1,5 +1,5 @@
 as yet unclassified
-addSyncEvent: aColor from: anObject with: aValue
+addSyncEventFrom: anObject with: aValue
 
 	self addMorphBack: (Morph new
 		borderStyle: (SimpleBorder new color: Color black; width: 1);

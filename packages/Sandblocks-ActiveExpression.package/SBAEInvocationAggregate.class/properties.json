@@ -12,8 +12,9 @@
 		"image",
 		"countLabel",
 		"resultLabel",
-		"subject" ],
-	"name" : "SBActiveExpressionInvocation",
+		"subject",
+		"lastSideEffects" ],
+	"name" : "SBAEInvocationAggregate",
 	"pools" : [
 		 ],
 	"super" : "Morph",

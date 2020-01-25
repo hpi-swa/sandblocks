@@ -10,7 +10,8 @@
 		"stampForm",
 		"paintingForm",
 		"lastMousePosition",
-		"lastTouchPositions" ],
+		"lastTouchPositions",
+		"previousHigherPerformance" ],
 	"name" : "SBDrawCanvas",
 	"pools" : [
 		 ],

@@ -2,9 +2,17 @@
 	"class" : {
 		 },
 	"instance" : {
-		"addInvocation:value:from:" : "tobe 1/23/2020 23:04",
+		"addExpression:" : "tobe 1/24/2020 19:21",
+		"addInvocation:value:from:expression:" : "tobe 1/25/2020 17:04",
+		"currentExpression" : "tobe 1/25/2020 11:15",
 		"exampleFinished:" : "tobe 1/23/2020 10:38",
-		"exampleStarting:" : "tobe 1/23/2020 10:38",
-		"initialize" : "tobe 1/23/2020 10:54",
-		"relevantContextsFrom:" : "tobe 1/23/2020 10:53",
-		"updateInterestingCodeLocations" : "tobe 1/23/2020 10:23" } }
+		"exampleStarting:" : "tobe 1/25/2020 11:14",
+		"expressionIndex" : "tobe 1/24/2020 20:52",
+		"expressionIndex:" : "tobe 1/25/2020 16:06",
+		"filterMorph" : "tobe 1/25/2020 16:51",
+		"initialize" : "tobe 1/25/2020 16:18",
+		"relevantContextsFrom:" : "tobe 1/25/2020 20:50",
+		"selectExpression:" : "tobe 1/25/2020 16:04",
+		"showSubscribers" : "tobe 1/25/2020 11:50",
+		"update" : "tobe 1/24/2020 19:08",
+		"updateInterestingCodeLocations:" : "tobe 1/25/2020 17:18" } }

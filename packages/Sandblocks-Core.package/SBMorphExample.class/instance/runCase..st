@@ -12,4 +12,4 @@ runCase: aCase
 		morph ifNotNil: [
 			view addMorphBack: (morph center: view center).
 			aCase evaluateFor: morph in: view]
-	] on: Error do: [:error | ^ self reportError: error].
+	] value"on: Error do: [:error | ^ self reportError: error]."

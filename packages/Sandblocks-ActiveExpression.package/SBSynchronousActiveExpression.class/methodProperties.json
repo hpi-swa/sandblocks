@@ -2,6 +2,8 @@
 	"class" : {
 		 },
 	"instance" : {
-		"invokeCallback:oldValue:newValue:" : "tobe 1/23/2020 23:16",
+		"invokeCallback:oldValue:newValue:" : "tobe 1/25/2020 11:26",
 		"lastSideEffects" : "tobe 1/23/2020 23:11",
-		"propagateChangeFrom:to:" : "tobe 1/23/2020 23:32" } }
+		"propagateChangeFrom:to:" : "tobe 1/23/2020 23:32",
+		"subject" : "tobe 1/25/2020 15:50",
+		"subject:" : "tobe 1/25/2020 15:50" } }

@@ -3,21 +3,25 @@ initialize
 
 	super initialize.
 	
-	marbles := SBAEMarbles new.
-	invocations := SBAEInvocations new.
+	expressions := OrderedDictionary new.
+	invocations := SBAEInvocations new
+		when: #showSubscribers send: #showSubscribersOf: to: self;
+		when: #filterMorph send: #filterMorph to: self;
+		yourself.
+	marbles := SBAEMarbles new
+		when: #selectExpression send: #selectExpression: to: invocations;
+		yourself.
 	
 	self
 		color: Color transparent;
 		changeTableLayout;
+		cellGap: 8 * self scaleFactor;
 		hResizing: #spaceFill;
 		vResizing: #shrinkWrap;
-		listDirection: #topToBottom;
-		cellPositioning: #topLeft;
-		cellGap: 4 * self scalingFactor;
-		addMorphBack: (SBRow new
-			cellGap: 8 withScalingFactor;
-			addMorphBack: (SBIcon iconCrosshairs);
-			addMorphBack: (SBIcon iconShare on: #click send: #showSubscribers to: self);
-			addMorphBack: (SBIcon iconSearch_plus on: #click send: #toggleMarbles to: self);
-			addMorphBack: (SBIcon iconFire on: #click send: #showSideEffects to: self));
+		addMorphBack: marbles;
+		addMorphBack: (Morph new
+			color: Color lightGray;
+			hResizing: #spaceFill;
+			extent: 0 @ 1 withScalingFactor;
+			yourself);
 		addMorphBack: invocations

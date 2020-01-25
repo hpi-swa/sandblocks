@@ -1,5 +1,6 @@
 as yet unclassified
 exampleStarting: anExample
 
-	self removeAllMorphs.
-	self extent: 0 @ 0
+	invocations removeAllMorphs; extent: 0 @ 0.
+	expressions removeAll.
+	self update

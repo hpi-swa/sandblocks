@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-ActiveExpression",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBConstrainedNumberInput",
+	"pools" : [
+		 ],
+	"super" : "SBNumberInput",
+	"type" : "normal" }

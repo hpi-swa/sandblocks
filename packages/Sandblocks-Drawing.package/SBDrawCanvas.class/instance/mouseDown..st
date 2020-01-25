@@ -1,5 +1,7 @@
 as yet unclassified
-mouseDown: anEvent 
+mouseDown: anEvent
+
 	drawing := true.
 	lastMousePosition := anEvent position.
+	self beginDraw.
 	self mouseMove: anEvent
