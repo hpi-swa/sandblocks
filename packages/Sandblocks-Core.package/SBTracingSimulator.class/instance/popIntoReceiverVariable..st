@@ -1,7 +1,7 @@
 as yet unclassified
 popIntoReceiverVariable: offset
 
-	(tempObjects includes: currentContext receiver) ifFalse: [
-		sideEffects add: {currentContext receiver. SBCodeContext for: currentContext}].
+	((tempObjects includes: currentContext receiver) not and: [currentContext receiver class ~~ Context]) ifTrue: [
+		sideEffects add: {currentContext receiver class instVarNameForIndex: offset + 1. currentContext receiver. SBCodeContext for: currentContext}].
 	
 	^ currentContext popIntoReceiverVariable: offset

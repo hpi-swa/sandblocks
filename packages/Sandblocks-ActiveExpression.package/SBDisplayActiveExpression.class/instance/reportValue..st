@@ -7,9 +7,10 @@ reportValue: anObject
 	expr := anObject.
 	anObject subject: subject.
 	
-	expressions at: anObject put: (callback := [:newValue |
+	expressions at: anObject put: (callback := [:newValue :sideEffects |
 		marbles addMarble: subject value: newValue expression: expr.
 		invocations addInvocation: thisContext value: newValue from: subject expression: expr]).
 	
-	anObject onChangeDo: callback.
+	"anObject onChangeDo: callback."
+	anObject afterInvokeDo: callback.
 	invocations addExpression: anObject

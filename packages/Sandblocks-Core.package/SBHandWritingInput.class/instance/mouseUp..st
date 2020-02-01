@@ -31,5 +31,5 @@ mouseUp: anEvent
 	
 	character := self characterFromStrokes: strokes points: points.
 	character ifNotNil: [
-		character = Character backspace ifTrue: [text := text allButLast] ifFalse: [text := text, character]].
+		character = Character backspace ifTrue: [text := text ifNotEmpty: #allButLast] ifFalse: [text := text, character]].
 	self changed

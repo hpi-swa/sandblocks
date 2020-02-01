@@ -21,4 +21,4 @@ initialize
 		addRow: 'Class Variables:' with: (classVariables := SBArray new addType: SBDeclarationForPoolVariable);
 		addRow: 'Pool Dictionaries:' with: (poolDictionaries := SBArray new);
 		addRow: 'Category:' with: (category := SBTextBubble new);
-		attachDecorator: SBMoveDecorator new
+		attachDecorator: (SBMoveDecorator new preventOcclusion: true)

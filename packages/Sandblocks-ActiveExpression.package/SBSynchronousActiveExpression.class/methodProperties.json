@@ -2,8 +2,9 @@
 	"class" : {
 		 },
 	"instance" : {
-		"invokeCallback:oldValue:newValue:" : "tobe 1/25/2020 11:26",
+		"afterInvokeDo:" : "tobe 2/1/2020 16:09",
+		"invokeCallback:oldValue:newValue:" : "tobe 2/1/2020 17:46",
 		"lastSideEffects" : "tobe 1/23/2020 23:11",
-		"propagateChangeFrom:to:" : "tobe 1/23/2020 23:32",
+		"propagateChangeFrom:to:" : "tobe 2/1/2020 17:33",
 		"subject" : "tobe 1/25/2020 15:50",
 		"subject:" : "tobe 1/25/2020 15:50" } }

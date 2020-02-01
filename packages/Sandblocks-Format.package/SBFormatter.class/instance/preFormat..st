@@ -1,9 +1,11 @@
 as yet unclassified
-preFormat: aNode 
+preFormat: aNode
+
 	| formatter |
-	^ (preFormatCache
+	^ ((SBExampleWatch report: preFormatCache for: 760893879)
 		at: aNode
-		ifAbsentPut: [formatter := self class new.
+		ifAbsentPut: [
+			formatter := self class new.
 			formatter parents: parents.
 			formatter indent: indent.
 			formatter preFormatCache: preFormatCache copy.

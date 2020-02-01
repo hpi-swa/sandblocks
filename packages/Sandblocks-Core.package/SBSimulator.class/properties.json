@@ -7,8 +7,7 @@
 	"commentStamp" : "",
 	"instvars" : [
 		"methodMap",
-		"currentContext",
-		"topContext" ],
+		"currentContext" ],
 	"name" : "SBSimulator",
 	"pools" : [
 		 ],

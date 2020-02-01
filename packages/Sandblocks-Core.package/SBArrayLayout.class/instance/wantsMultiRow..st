@@ -7,5 +7,5 @@ wantsMultiRow: aMorph
 	width := 0.
 	aMorph submorphsDo: [:m |
 		width := width + m minExtent x.
-		width > (400 * aMorph scalingFactor) ifTrue: [^ true]].
+		width > (450 * aMorph scalingFactor) ifTrue: [^ true]].
 	^ false

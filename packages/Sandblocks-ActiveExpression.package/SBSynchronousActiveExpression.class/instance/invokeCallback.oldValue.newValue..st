@@ -16,6 +16,6 @@ invokeCallback: aBlock oldValue: old newValue: new
 		aBlock argumentCount = 1 ifTrue: [res := aBlock valueWithArguments: {new}].
 		aBlock argumentCount = 2 ifTrue: [res := aBlock valueWithArguments: {old. new}]].
 	
-	lastSideEffects := tracer sideEffects.
+	lastSideEffects := lastSideEffects, tracer sideEffects.
 	
 	^ res] ensure: [AlreadySimulating := false]

@@ -5,6 +5,8 @@ reportError: anError
 	self clearErrors.
 	
 	editor := self sandblockEditor.
+	
+	header addMorphBack: (errorIcon := SBIcon iconFlash balloonText: anError asString).
 	anError signalerContext findContextSuchThat: [:ctx |
 		editor
 			methodForContext: ctx

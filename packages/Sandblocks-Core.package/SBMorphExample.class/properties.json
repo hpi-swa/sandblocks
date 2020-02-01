@@ -8,7 +8,9 @@
 	"instvars" : [
 		"view",
 		"cases",
-		"errorDecorator" ],
+		"errorDecorator",
+		"header",
+		"errorIcon" ],
 	"name" : "SBMorphExample",
 	"pools" : [
 		 ],

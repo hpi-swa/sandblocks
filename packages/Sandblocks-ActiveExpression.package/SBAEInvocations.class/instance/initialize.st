@@ -27,5 +27,6 @@ initialize
 				min: 1;
 				onChange: [:num | self expressionIndex: num]);
 			addMorphBack: (SBIcon iconCrosshairs on: #click send: #filterMorph to: self);
-			addMorphBack: (SBIcon iconShare on: #click send: #showSubscribers to: self));
+			addMorphBack: (SBIcon iconShare on: #click send: #showSubscribers to: self);
+			addMorphBack: (SBIcon iconSearch on: #click send: #exploreSubject to: self));
 		addMorphBack: (invocations := SBColum new)

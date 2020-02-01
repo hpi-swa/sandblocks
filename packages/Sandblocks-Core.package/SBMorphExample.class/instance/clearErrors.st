@@ -3,4 +3,8 @@ clearErrors
 
 	errorDecorator ifNotNil: [
 		errorDecorator detach.
-		errorDecorator := nil]
+		errorDecorator := nil].
+	
+	errorIcon ifNotNil: [
+		errorIcon delete.
+		errorIcon := nil]

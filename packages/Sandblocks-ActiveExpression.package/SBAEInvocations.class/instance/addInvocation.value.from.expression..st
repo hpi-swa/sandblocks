@@ -1,12 +1,13 @@
 as yet unclassified
 addInvocation: aContext value: anObject from: aSubjectObject expression: anAExpression
 
-	| stack |
+	| stack newInvocation |
 	stack := self relevantContextsFrom: thisContext.
+	newInvocation := SBAEInvocationAggregate new.
 	
 	" defer because we can come here from the simulator, making this very slow "
-	Project current addDeferredUIMessage: [ | index aggregate list newInvocation |
-		newInvocation := SBAEInvocationAggregate new
+	Project current addDeferredUIMessage: [ | index aggregate list |
+		newInvocation
 			 stack: stack;
 			 addInvocation: anObject asString;
 			 subject: aSubjectObject.
@@ -28,5 +29,5 @@ addInvocation: aContext value: anObject from: aSubjectObject expression: anAExpr
 				list addFirst: newInvocation.
 				invocations addMorph: newInvocation.
 				self updateInterestingCodeLocations: list.
-				newInvocation] value.
-		aggregate lastSideEffects: anAExpression lastSideEffects]
+				newInvocation] value].
+	^ newInvocation

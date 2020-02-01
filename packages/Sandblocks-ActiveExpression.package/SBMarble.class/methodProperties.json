@@ -2,11 +2,10 @@
 	"class" : {
 		"marbleSize" : "tobe 1/13/2020 10:53" },
 	"instance" : {
-		"closeHover" : "tobe 1/13/2020 10:57",
 		"example" : "tobe 1/23/2020 23:21",
 		"handlesMouseOver:" : "tobe 1/13/2020 11:40",
 		"indicatorBorderWidth" : "tobe 1/13/2020 11:45",
-		"initialize" : "tobe 1/25/2020 15:53",
+		"initialize" : "tobe 1/31/2020 19:34",
 		"mouseEnter:" : "tobe 1/13/2020 17:42",
 		"mouseLeave:" : "tobe 1/13/2020 17:42",
 		"openHover" : "tobe 1/13/2020 11:29",

@@ -13,7 +13,8 @@
 		"countLabel",
 		"resultLabel",
 		"subject",
-		"lastSideEffects" ],
+		"lastSideEffects",
+		"sideEffectsIcon" ],
 	"name" : "SBAEInvocationAggregate",
 	"pools" : [
 		 ],

@@ -14,5 +14,7 @@ initialize
 		on: #click send: #openStack to: self;
 		addMorphBack: (image := ImageMorph new);
 		addMorphBack: (countLabel := SBBadge new disableLayout: true; visible: false);
-		addMorphBack: (SBIcon iconFire on: #click send: #showSideEffects to: self);
+		addMorphBack: (sideEffectsIcon := SBIcon iconFire
+			on: #click send: #showSideEffects to: self;
+			visible: false);
 		addMorphBack: (resultLabel := SBStringMorph new)

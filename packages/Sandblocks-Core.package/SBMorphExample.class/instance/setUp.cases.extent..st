@@ -1,7 +1,7 @@
 as yet unclassified
 setUp: aBlock cases: aCollectionOfBlocks extent: aPoint
 
-	self addMorph: (SBRow new
+	self addMorph: (header := SBRow new
 		cellGap: 4 * self scalingFactor;
 		addMorphBack: (SBStringMorph new contents: 'Setup:');
 		addMorphBack: (aBlock statements first);
