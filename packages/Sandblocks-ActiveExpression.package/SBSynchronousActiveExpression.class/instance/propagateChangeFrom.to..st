@@ -9,4 +9,4 @@ propagateChangeFrom: oldValue to: newValue
 		self callbacks do: [:each |
 			self invokeCallback: each oldValue: oldValue newValue: newValue].
 		
-		invocation lastSideEffects: lastSideEffects]
+		invocation ifNotNil:[:i | i lastSideEffects: lastSideEffects]]

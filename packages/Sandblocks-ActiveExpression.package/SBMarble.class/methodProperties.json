@@ -2,6 +2,7 @@
 	"class" : {
 		"marbleSize" : "tobe 1/13/2020 10:53" },
 	"instance" : {
+		"balloonHelpDelayTime" : "tobe 2/2/2020 17:12",
 		"drawOn:" : "tobe 2/2/2020 15:03",
 		"example" : "tobe 1/23/2020 23:21",
 		"handlesMouseOver:" : "tobe 1/13/2020 11:40",

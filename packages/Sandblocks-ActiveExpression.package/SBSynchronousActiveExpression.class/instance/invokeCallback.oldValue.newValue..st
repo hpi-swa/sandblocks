@@ -2,10 +2,6 @@ as yet unclassified
 invokeCallback: aBlock oldValue: old newValue: new
 
 	| tracer res |
-	AlreadySimulating == true
-		ifTrue: [^ super invokeCallback: aBlock oldValue: old newValue: new].
-	
-	[AlreadySimulating := true.
 	tracer := SBTracingSimulator new.
 	
 	aBlock argumentCount > 2 ifTrue: [self error: 'Callback requires too many arguments'].
@@ -18,4 +14,4 @@ invokeCallback: aBlock oldValue: old newValue: new
 	
 	lastSideEffects := lastSideEffects, tracer sideEffects.
 	
-	^ res] ensure: [AlreadySimulating := false]
+	^ res

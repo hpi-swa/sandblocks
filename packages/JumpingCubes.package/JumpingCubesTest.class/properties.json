@@ -1,0 +1,14 @@
+{
+	"category" : "JumpingCubes",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "JumpingCubesTest",
+	"pools" : [
+		 ],
+	"super" : "TestCase",
+	"type" : "normal" }

@@ -1,3 +1,4 @@
 as yet unclassified
 incrementValue
-	value := value + 1
+
+	SBActiveExpressionSyncEvent after: (value := value + 1)

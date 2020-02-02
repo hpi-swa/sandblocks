@@ -15,6 +15,6 @@ relevantContextsFrom: aContext
 				max := max - 1.
 				stream nextPut: ((SBCodeContext for: ctx) pc: ctx previousPc)]].
 	
-	self flag: #fixme. " the first invocation had the generated AE check code before its actual invocation. it is currently 10 bytes large, but maybe we can find a more robust way to adjust this? "
-	res ifNotEmpty: [res first pc: res first pc - (res first selector = #splitValue ifTrue: [11] ifFalse: [10])].
+	self flag: #fixme. " the first invocation had the generated AE check code before its actual invocation. maybe we can find a more robust way to adjust this? "
+	res ifNotEmpty: [res first pc: (res first method pcOfReceiverAssignmentBefore: res first pc)].
 	^ res
