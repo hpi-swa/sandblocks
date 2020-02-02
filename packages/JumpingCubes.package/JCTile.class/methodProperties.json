@@ -2,7 +2,7 @@
 	"class" : {
 		 },
 	"instance" : {
-		"findNeighbors" : "tobe 2/2/2020 17:48",
+		"findNeighbors" : "tobe 2/2/2020 20:36",
 		"handlesMouseDown:" : "tobe 12/23/2019 20:20",
 		"incrementValue" : "tobe 2/2/2020 19:24",
 		"initialize" : "tobe 1/25/2020 17:01",
@@ -14,4 +14,4 @@
 		"tilePosition:" : "tobe 2/2/2020 17:14",
 		"tileSize" : "tobe 12/23/2019 16:40",
 		"value" : "tobe 12/23/2019 07:58",
-		"value:" : "tobe 2/1/2020 20:02" } }
+		"value:" : "tobe 2/2/2020 20:31" } }

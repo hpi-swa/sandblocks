@@ -3,6 +3,7 @@
 		 },
 	"instance" : {
 		"initialize" : "tobe 1/25/2020 11:36",
-		"popIntoReceiverVariable:" : "tobe 2/2/2020 19:35",
-		"send:super:numArgs:" : "tobe 2/1/2020 20:30",
+		"popIntoReceiverVariable:" : "tobe 2/2/2020 20:05",
+		"relevantFramesFrom:" : "tobe 2/2/2020 20:35",
+		"send:super:numArgs:" : "tobe 2/2/2020 20:03",
 		"sideEffects" : "tobe 1/23/2020 23:12" } }
