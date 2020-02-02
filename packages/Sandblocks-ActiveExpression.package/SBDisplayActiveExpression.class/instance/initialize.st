@@ -10,6 +10,7 @@ initialize
 		yourself.
 	marbles := SBAEMarbles new
 		when: #selectExpression send: #selectExpression: to: invocations;
+		when: #selectSubject send: #selectSubject: to: invocations;
 		yourself.
 	
 	self

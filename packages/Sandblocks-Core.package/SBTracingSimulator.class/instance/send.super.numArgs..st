@@ -6,7 +6,9 @@ send: selector super: supered numArgs: numArgs
 	(selector == #addInvocation:value:from:expression: or:
 		[selector == #notify:instVarNamed:ofObject:changedFrom:to:inContext:]) ifTrue: [  
 		
-		^ currentContext push: (SBSimulator new simulateContext: (super send: selector super: supered numArgs: numArgs) untilReached: currentContext).
+		"^ currentContext push: (SBSimulator new simulateContext: (super send: selector super: supered numArgs: numArgs) untilReached: currentContext)."
+		res := (super send: selector super: supered numArgs: numArgs) runUntilErrorOrReturnFrom: currentContext.
+		^ res first.
 		"
 		| arguments thisReceiver lookupClass |
 		arguments := Array new: numArgs.

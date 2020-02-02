@@ -8,7 +8,8 @@
 	"instvars" : [
 		"subject",
 		"subjectIndicator",
-		"sideEffects" ],
+		"sideEffects",
+		"isSync" ],
 	"name" : "SBMarble",
 	"pools" : [
 		 ],
