@@ -3,7 +3,10 @@
 		 },
 	"instance" : {
 		"initialize" : "tobe 1/25/2020 11:36",
-		"popIntoReceiverVariable:" : "tobe 2/2/2020 20:05",
+		"popIntoReceiverVariable:" : "tobe 2/2/2020 20:39",
 		"relevantFramesFrom:" : "tobe 2/2/2020 20:35",
-		"send:super:numArgs:" : "tobe 2/2/2020 20:03",
-		"sideEffects" : "tobe 1/23/2020 23:12" } }
+		"reportSideEffectTo:named:value:" : "tobe 2/3/2020 17:54",
+		"send:super:numArgs:" : "tobe 2/3/2020 17:55",
+		"sideEffects" : "tobe 1/23/2020 23:12",
+		"storeIntoReceiverVariable:" : "tobe 2/2/2020 20:39",
+		"trackInstanceVarChange:" : "tobe 2/3/2020 17:31" } }

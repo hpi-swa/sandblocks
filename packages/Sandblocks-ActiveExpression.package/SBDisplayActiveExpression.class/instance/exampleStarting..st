@@ -5,5 +5,5 @@ exampleStarting: anExample
 	marbles exampleStarting: anExample.
 	
 	expressions keysAndValuesDo: [:expression :callback |
-		expression afterInvokeDo: nil].
+		(expressions respondsTo: #afterInvokeDo:) ifTrue: [expression afterInvokeDo: nil]].
 	expressions removeAll
