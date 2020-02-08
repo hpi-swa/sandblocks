@@ -5,7 +5,6 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $K do: #swapLeft;
 		addSingleSelectionShortcut: $J do: #swapRight;
 		addSingleSelectionShortcut: $d do: #deleteAroundSelection;
-		addSingleSelectionShortcut: $+ do: #addElement;
 		addSingleSelectionShortcut: $i do: #startInputAtStart;
 		addSingleSelectionShortcut: $$ do: #selectRightMostBlock;
 		addSingleSelectionShortcut: $0 asSandblockShortcut, Character home do: #selectContainingArtefact;
@@ -39,6 +38,9 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $p command do: #evaluateSelection;
 		addSingleSelectionShortcut: $m do: #placeMark;
 		addSingleSelectionShortcut: $' do: #goToMark;
+		addSingleSelectionShortcut: $+ do: #insertElementAfter;
+		" FIXME: dependent on "
+		addSingleSelectionShortcut: $* do: #insertElementBefore;
 		
 		addMultiSelectionShortcut: Character escape do: #endMultiSelection;
 		addMultiSelectionShortcut: $l do: #selectNext;

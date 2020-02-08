@@ -1,5 +1,5 @@
 as yet unclassified
-addCommandRequest
+insertCommandRequest: anAfterBoolean near: aBlock
 
 	" the user pressed + on us, do we want to do something now? "
 	^ nil

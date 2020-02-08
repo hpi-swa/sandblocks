@@ -9,19 +9,24 @@ send: selector super: supered numArgs: numArgs
 		res := (super send: selector super: supered numArgs: numArgs) runUntilErrorOrReturnFrom: currentContext.
 		^ res first].
 	
-	" find array stores "
-	selector == #at:put: ifTrue: [ | lookupClass receiver method |
-		receiver := currentContext at: currentContext stackPtr - numArgs - 1.
+	(selector == #at:put: or: [selector == #new:]) ifTrue: [ | lookupClass receiver |
+		receiver := currentContext at: currentContext stackPtr - numArgs.
 		lookupClass := supered
 			ifTrue: [currentContext method methodClassAssociation value superclass]
 			ifFalse: [currentContext objectClass: receiver].
-		method := lookupClass lookupSelector: selector.
-		(method notNil and: [method primitive = 61]) ifTrue: [
-			self
-				reportSideEffectTo: receiver
-				named: 'at: ', (currentContext at: currentContext stackPtr - 1)
-				value: (currentContext at: currentContext stackPtr) asString]].
-	
+		(lookupClass lookupSelector: selector) ifNotNil: [:method |
+			" new: "
+			method primitive = 71 ifTrue: [
+				res := super send: selector super: supered numArgs: numArgs.
+				tempObjects add: res top.
+				^ res].
+			" at:put: "
+			(method primitive = 61 and: [(tempObjects includes: receiver) not]) ifTrue: [
+				self
+					reportSideEffectTo: receiver
+					named: 'at: ', (currentContext at: currentContext stackPtr - 1)
+					value: (currentContext at: currentContext stackPtr) asString]]].
+
 	res := super send: selector super: supered numArgs: numArgs.
 	(selector == #basicNew or: [selector == #basicNew:]) ifTrue: [tempObjects add: res top].
 	^ res

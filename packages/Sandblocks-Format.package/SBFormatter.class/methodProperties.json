@@ -1,6 +1,6 @@
 {
 	"class" : {
-		"format:" : "tobe 1/2/2020 12:02",
+		"format:" : "tobe 2/6/2020 11:33",
 		"formatString:class:noPattern:" : "tobe 1/18/2020 12:09" },
 	"instance" : {
 		"blockStatementsOf:" : "tobe 1/13/2020 09:56",
@@ -21,7 +21,7 @@
 		"preFormatCache:" : "tobe 1/2/2020 09:39",
 		"precedenceOf:" : "tobe 1/2/2020 09:55",
 		"rawContents" : "tobe 1/18/2020 12:34",
-		"reindent:" : "tobe 1/2/2020 11:26",
+		"reindent:" : "tobe 2/6/2020 11:32",
 		"stream" : "tobe 1/2/2020 11:02",
 		"visitAssignmentNode:" : "tobe 1/2/2020 10:08",
 		"visitBlockNode:" : "tobe 1/16/2020 11:53",

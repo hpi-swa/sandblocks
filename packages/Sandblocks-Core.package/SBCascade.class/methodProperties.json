@@ -3,10 +3,10 @@
 		 },
 	"instance" : {
 		"acceptChild:" : "tobe 7/14/2019 08:18",
-		"addCommandRequest" : "tobe 1/5/2020 16:39",
 		"canDeleteChild:" : "tobe 7/13/2019 22:58",
 		"guessedClass" : "tobe 12/21/2019 19:26",
 		"initialize" : "tobe 6/30/2019 23:04",
+		"insertCommandRequest:near:" : "tobe 2/8/2020 12:33",
 		"isCascade" : "tobe 7/1/2019 07:49",
 		"isExpression" : "tobe 7/3/2019 08:18",
 		"printOn:" : "tobe 6/30/2019 23:05",

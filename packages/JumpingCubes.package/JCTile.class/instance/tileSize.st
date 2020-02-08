@@ -1,3 +1,4 @@
 as yet unclassified
 tileSize
-	^ 20 asPoint
+
+	^ 30 asPoint

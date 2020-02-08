@@ -6,7 +6,6 @@
 	"instance" : {
 		"activeBlock" : "tobe 1/4/2020 23:41",
 		"activeIndex" : "tobe 1/4/2020 23:15",
-		"addCommandRequest" : "tobe 1/5/2020 16:40",
 		"addedMorph:" : "tobe 1/4/2020 23:28",
 		"block" : "tobe 1/3/2020 08:11",
 		"buildRowFor:active:" : "tobe 1/4/2020 23:33",
@@ -18,6 +17,7 @@
 		"drawnColor" : "tobe 1/3/2020 08:20",
 		"guessedClass" : "tobe 1/4/2020 23:41",
 		"initialize" : "tobe 1/4/2020 23:06",
+		"insertCommandRequest:near:" : "tobe 2/8/2020 13:56",
 		"isWatch" : "tobe 11/11/2019 15:15",
 		"prefix" : "tobe 1/3/2020 08:27",
 		"printOn:" : "tobe 1/3/2020 08:11",

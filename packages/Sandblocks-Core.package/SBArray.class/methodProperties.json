@@ -3,7 +3,6 @@
 		"withContents:" : "tobe 12/3/2019 10:11" },
 	"instance" : {
 		"acceptChild:" : "tobe 7/14/2019 08:17",
-		"addCommandRequest" : "tobe 1/12/2020 20:51",
 		"addType" : "tobe 1/12/2020 20:51",
 		"addType:" : "tobe 1/12/2020 20:51",
 		"canDeleteChild:" : "tobe 7/13/2019 22:56",
@@ -12,6 +11,7 @@
 		"contents:" : "tobe 1/5/2020 16:18",
 		"do:" : "tobe 1/12/2020 18:02",
 		"initialize" : "tobe 1/12/2020 20:51",
+		"insertCommandRequest:near:" : "tobe 2/8/2020 11:11",
 		"isArrayBlock" : "tobe 7/9/2019 21:02",
 		"isExpression" : "tobe 7/3/2019 08:18",
 		"isLiteralBlock" : "tobe 11/13/2019 17:49",

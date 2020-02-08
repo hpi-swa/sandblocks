@@ -2,7 +2,6 @@
 	"class" : {
 		 },
 	"instance" : {
-		"addCommandRequest" : "tobe 7/9/2019 09:49",
 		"arguments" : "tobe 7/6/2019 08:24",
 		"artefact" : "tobe 1/23/2020 09:33",
 		"bindingFor:ifPresent:" : "tobe 12/15/2019 15:56",
@@ -25,6 +24,7 @@
 		"hasUnsavedChanges" : "tobe 12/7/2019 20:24",
 		"hasUnsavedChanges:" : "tobe 12/7/2019 20:30",
 		"initialize" : "tobe 12/7/2019 20:26",
+		"insertCommandRequest:near:" : "tobe 2/8/2020 12:53",
 		"instanceVariables" : "tobe 1/12/2020 18:02",
 		"isArtefact" : "tobe 12/11/2019 17:50",
 		"isClassSide" : "tobe 1/1/2020 19:31",

@@ -5,4 +5,4 @@ stopEditing: aCommand
 		newText: self contents;
 		newMorph: self.
 	
-	text stopEditing
+	text stopEditing: aCommand

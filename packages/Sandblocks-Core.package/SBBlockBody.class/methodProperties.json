@@ -4,7 +4,7 @@
 		"emptyWithDeclarations:" : "tobe 12/3/2019 10:56" },
 	"instance" : {
 		"acceptChild:" : "tobe 7/14/2019 08:17",
-		"addCommandRequest" : "tobe 1/5/2020 16:39",
+		"addBlockArgument" : "tobe 2/8/2020 12:32",
 		"bindingFor:ifPresent:" : "tobe 7/10/2019 11:07",
 		"bindings" : "tobe 7/8/2019 17:22",
 		"bindings:" : "tobe 6/28/2019 17:59",
@@ -15,6 +15,7 @@
 		"evaluateWithArguments:" : "tobe 1/13/2020 11:56",
 		"guessedClass" : "tobe 1/1/2020 14:35",
 		"initialize" : "tobe 1/16/2020 21:03",
+		"insertCommandRequest:near:" : "tobe 2/8/2020 12:29",
 		"isBlockBody" : "tobe 7/2/2019 09:12",
 		"isExpression" : "tobe 7/10/2019 11:13",
 		"isMethodBody" : "tobe 12/11/2019 21:44",

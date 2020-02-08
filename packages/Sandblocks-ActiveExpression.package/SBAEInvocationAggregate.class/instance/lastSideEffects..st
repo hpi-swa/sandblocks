@@ -2,7 +2,12 @@ accessing
 lastSideEffects: aCollection
 
 	lastSideEffects := aCollection.
-	"aCollection ifNotEmpty: [sideEffectsIcon visible: true]."
+	
+	aCollection ifNotEmpty: [
+		self addMorphBack: (SBStringMorph new
+			contents: '      SIDE EFFECTS:';
+			emphasis: TextEmphasis bold emphasisCode;
+			yourself)].
 	
 	aCollection do: [:sideEffect |
 		self addMorphBack: (SBStringMorph new

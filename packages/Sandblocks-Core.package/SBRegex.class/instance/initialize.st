@@ -9,7 +9,7 @@ initialize
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		listDirection: #leftToRight;
-		addMorphBack: (text := SBString new castToUnknownWhenEmpty: false);
+		addMorphBack: (text := SBTextBubble new when: #contentsChanged send: #checkExamples to: self);
 		addMorphBack: ((exampleLabel  := SBStringMorph new) on: #click send: #toggleExamples to: self);
-		addMorphBack: (examples := SBColum new);
+		addMorphBack: ((examples := SBColum new) when: #morphAdded send: #checkExamples to: self);
 		updateLabel

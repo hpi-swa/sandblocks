@@ -1,8 +1,8 @@
 as yet unclassified
-addCommandRequest
+insertCommandRequest: anAfterBoolean near: aBlock
 
 	^ (SBInsertCommand newFor: self containingArtefact)
-		index: self submorphCount + 1;
+		index: (self childSandblocks indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
 		container: self;
 		morph: addType new;
 		shouldMergeWithNext: true;

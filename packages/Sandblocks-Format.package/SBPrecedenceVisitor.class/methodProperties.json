@@ -20,5 +20,6 @@
 		"visitReturnNode:" : "tobe 1/2/2020 09:53",
 		"visitSelectorNode:" : "tobe 1/2/2020 09:54",
 		"visitTempVariableNode:" : "tobe 1/2/2020 09:54",
+		"visitTrackedAssignmentNode:" : "tobe 2/6/2020 11:33",
 		"visitUndeclaredVariableNode:" : "tobe 1/2/2020 09:54",
 		"visitVariableNode:" : "tobe 1/2/2020 09:54" } }

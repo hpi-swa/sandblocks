@@ -14,4 +14,4 @@ example
 					m firstSubmorph simulateMouseUp.
 					self assert: m firstSubmorph value = 1])
 		}
-		extent: 265 @ 245
+		extent: 365 @ 351

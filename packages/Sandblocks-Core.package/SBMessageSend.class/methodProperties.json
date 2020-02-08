@@ -3,7 +3,6 @@
 		"placeholderSelector" : "tobe 1/3/2020 07:45" },
 	"instance" : {
 		"actualReceiver" : "tobe 7/10/2019 11:54",
-		"addCommandRequest" : "tobe 6/30/2019 22:53",
 		"addedMorph:" : "tobe 1/4/2020 21:47",
 		"arguments" : "tobe 7/13/2019 22:28",
 		"browse" : "tobe 7/7/2019 22:52",
@@ -16,6 +15,7 @@
 		"fixActions" : "tobe 1/5/2020 16:40",
 		"guessedClass" : "tobe 1/5/2020 16:40",
 		"initialize" : "tobe 1/17/2020 17:12",
+		"insertCommandRequest:near:" : "tobe 2/8/2020 12:35",
 		"isBinary" : "tobe 1/4/2020 10:21",
 		"isConstructor:for:" : "tobe 1/12/2020 20:16",
 		"isDefined" : "tobe 7/14/2019 07:28",

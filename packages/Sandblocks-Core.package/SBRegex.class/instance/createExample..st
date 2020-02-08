@@ -1,6 +1,7 @@
 as yet unclassified
 createExample: aString
 
-	^ SBRegexExample new
-		regex: self;
-		contents: aString
+	^ SBTextBubble new
+		contents: aString;
+		when: #contentsChanged send: #checkExamples to: self;
+		yourself

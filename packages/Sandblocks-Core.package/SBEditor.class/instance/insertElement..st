@@ -1,8 +1,8 @@
 actions
-addElement
+insertElement: aBoolean
 
 	| cmd |
-	cmd := (self selection insertCommandRequest: true near: self selection childSandblocks first) ifNil: [^ self].
+	cmd := (self selection parentSandblock insertCommandRequest: aBoolean near: self selection) ifNil: [^ self].
 	
 	self do: cmd.
 	
