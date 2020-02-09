@@ -10,6 +10,7 @@ do: aCommand
 	
 	redoStack removeAll.
 	
+	aCommand previousSelection: self selection.
 	self select: aCommand do.
 	aCommand postDo.
 	

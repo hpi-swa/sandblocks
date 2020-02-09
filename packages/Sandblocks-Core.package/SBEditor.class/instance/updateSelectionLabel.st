@@ -4,9 +4,9 @@ updateSelectionLabel
 	selectionLabel contents: (mode = #selection
 		ifTrue: [multiSelection size asString, (' element' asPluralBasedOn: multiSelection)]
 		ifFalse: [
-			(selection notNil and: [selection isInWorld])
+			(self selection notNil and: [self selection isInWorld])
 				ifTrue: [
-					(selection containingArtefact isNil or: [selection guessedClass isNil])
-						ifTrue: [selection printString]
-						ifFalse:  ['{1} ({2})' format: {selection printString. (selection guessedClass) asString}]]
+					(self selection containingArtefact isNil or: [self selection guessedClass isNil])
+						ifTrue: [self selection printString]
+						ifFalse:  ['{1} ({2})' format: {self selection printString. (self selection guessedClass) asString}]]
 				ifFalse: ['']])

@@ -1,21 +1,19 @@
 selection
 internalSelect: aBlock
 
-	| previousSelection |
-	previousSelection := selection.
-	selection := aBlock.
-	
-	previousSelection ~= selection ifTrue: [
+	aBlock ~= selection ifTrue: [ | previousSelection |
+		previousSelection := selection.
+		selection := aBlock.
 		selection ifNotNil: [
 			selection
-				attachDecorator: SBSelectionDecorator new;
-				wasSelected;
-				ensureVisible].
+				 attachDecorator: SBSelectionDecorator new;
+				 wasSelected;
+				 ensureVisible].
 		
 		previousSelection ifNotNil: [
 			previousSelection
-				detachDecorators: SBSelectionDecorator;
-				wasDeselected].
+				 detachDecorators: SBSelectionDecorator;
+				 wasDeselected].
 		
 		self triggerEvent: #selectionChanged with: selection.
 		self updateSelectionLabel]

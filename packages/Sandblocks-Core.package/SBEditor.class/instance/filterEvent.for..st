@@ -13,7 +13,7 @@ filterEvent: anEvent for: aMorph
 		^ anEvent ignore].
 	
 	mode = #command ifTrue: [self processShortcutList: commandShortcuts for: anEvent ifMatched: [^ anEvent ignore]].
-	selection ifNotNil: [
+	self selection ifNotNil: [
 		" every single selection is also considered a single-selection, but not vice versa "
 		self processShortcutList: multiSelectionShortcuts for: anEvent ifMatched: [^ anEvent ignore].
 		mode ~= #selection ifTrue: [self processShortcutList: singleSelectionShortcuts for: anEvent ifMatched: [^ anEvent ignore]]].

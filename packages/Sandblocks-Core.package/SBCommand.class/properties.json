@@ -8,7 +8,8 @@
 	"instvars" : [
 		"shouldMergeWithNext",
 		"wasEdit",
-		"artefact" ],
+		"artefact",
+		"previousSelection" ],
 	"name" : "SBCommand",
 	"pools" : [
 		 ],

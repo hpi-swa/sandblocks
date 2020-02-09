@@ -1,28 +1,31 @@
 actions
 extractMethod
 
-	| localBindings selectorAndArguments |
 	self multiSelectionIsConsecutive ifFalse: [^ self].
-	self doMultiSelection: [:extracting |
-		selectorAndArguments := (SBRequestSelector openForSnippet: extracting) ifNil: [^ self].
-		
+	
+	self doMultiSelection: [:extracting | | arguments localBindings method |
+		self flag: #todo. " consider write vs read access "
 		localBindings := extracting gather: #resolveLocalBindings.
 		localBindings := ((KeyedSet keyBlock: #name) addAll: localBindings; yourself) asArray.
+		arguments := localBindings collect: [:arg | SBDeclaration new name: arg contents].
 		
-		SBEditor new
-			openMethod: (SBMethod new
-				selector: selectorAndArguments first
-				arguments: selectorAndArguments second veryDeepCopy
+		method := SBMethod new
+				selector: (#extracted numArgs: localBindings size)
+				arguments: localBindings veryDeepCopy
 				class: self method methodClass;
-				body: (SBBlockBody new statements: extracting veryDeepCopy));
-			openInWindow.
+				body: SBBlockBody new.
 		
-		localBindings size < selectorAndArguments second size ifTrue: [
-			selectorAndArguments second size - localBindings size timesRepeat: [localBindings := localBindings copyWith: SBUnknown new]].
-		
-		(SBReplaceConsecutiveCommand newFor: self method)
-			targets: extracting;
-			replacer: (SBMessageSend new
-				receiver: (SBKeywordBinding new name: 'self')
-				selector: selectorAndArguments first
-				arguments: localBindings veryDeepCopy)]
+		SBCombinedCommand newWith:
+			{(SBReplaceConsecutiveCommand newFor: self method)
+				targets: extracting;
+				replacer: (SBMessageSend new
+					receiver: (SBKeywordBinding new name: 'self')
+					selector: method selector
+					arguments: arguments veryDeepCopy)},
+			(extracting withIndexCollect: [:stmt :index | (SBInsertCommand newFor: method)
+				container: method body;
+				index: index + 1;
+				morph: stmt;
+				yourself]),
+			{self openMorphInViewCommand: method withContainer}
+		]

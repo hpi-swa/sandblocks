@@ -5,5 +5,6 @@ undo
 	undoStack ifNotEmpty: [
 		command := undoStack removeLast.
 		redoStack addLast: command.
-		self select: command undo.
+		command undo.
+		self select: command previousSelection.
 		self markChangesAfterCommand: command]
