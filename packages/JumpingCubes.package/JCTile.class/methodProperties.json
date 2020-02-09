@@ -2,16 +2,16 @@
 	"class" : {
 		 },
 	"instance" : {
-		"findNeighbors" : "tobe 2/4/2020 17:13",
+		"findNeighbors" : "tobe 2/9/2020 09:18",
 		"handlesMouseDown:" : "tobe 12/23/2019 20:20",
 		"incrementValue" : "tobe 2/4/2020 10:10",
-		"initialize" : "tobe 1/25/2020 17:01",
+		"initialize" : "tobe 2/9/2020 09:19",
 		"mouseDown:" : "tobe 2/3/2020 08:39",
 		"neighborCount" : "tobe 1/25/2020 22:08",
 		"neighboringTiles" : "tobe 2/3/2020 08:39",
-		"splitValue" : "tobe 2/4/2020 17:14",
+		"splitValue" : "tobe 2/9/2020 09:20",
 		"tilePosition" : "tobe 12/23/2019 07:56",
 		"tilePosition:" : "tobe 2/2/2020 17:14",
-		"tileSize" : "tobe 2/4/2020 10:00",
+		"tileSize" : "tobe 2/9/2020 09:20",
 		"value" : "tobe 12/23/2019 07:58",
 		"value:" : "tobe 2/4/2020 09:43" } }

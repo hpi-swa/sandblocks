@@ -1,5 +1,5 @@
 as yet unclassified
 undo
 
-	target perform: selector asMutator with: oldValue.
+	target perform: selector asSimpleSetter with: oldValue.
 	^ target

@@ -1,6 +1,6 @@
 as yet unclassified
 mouseWheel: anEvent
 
-	anEvent commandKeyPressed
+	(anEvent commandKeyPressed and: [dragStartPosition notNil])
 		ifTrue: [self zoomViewport: anEvent wheelDelta y from: dragStartPosition]
 		ifFalse: [self viewportPosition: targetPosition + anEvent wheelDelta negated]

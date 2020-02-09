@@ -3,13 +3,14 @@ initialize
 
 	super initialize.
 	value := 2.
-	self color: Color white.
-	self extent: self tileSize.
-	self changeTableLayout.
-	self cellPositioning: #center.
-	self listCentering: #center.
-	self wrapCentering: #center.
-	self borderStyle: BorderStyle simple.
-	self borderColor: Color black.
-	self borderWidth: 1.
-	self addMorphBack: (label := StringMorph new contents: value asString)
+	self
+		 extent: self tileSize;
+		 changeTableLayout;
+		 cellPositioning: #center;
+		 listCentering: #center;
+		 wrapCentering: #center;
+		 borderStyle: BorderStyle simple;
+		 borderColor: Color black;
+		 borderWidth: 1;
+		 addMorphBack: (label := StringMorph new contents: value asString);
+		 color: Color white
