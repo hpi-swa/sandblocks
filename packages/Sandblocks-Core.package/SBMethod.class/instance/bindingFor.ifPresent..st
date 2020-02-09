@@ -1,7 +1,7 @@
 as yet unclassified
 bindingFor: aString ifPresent: aBlock
 
-	signature childSandblocks detect: [:s | s contents = aString] ifFound: [:s | ^ aBlock value: s] ifNone: [].
+	signature childSandblocksDo: [:s | s contents = aString ifTrue: [^ aBlock value: s]].
 	
 	self instanceVariables detect: [:inst | inst contents = aString] ifFound: [:inst | ^ aBlock value: inst] ifNone: [].
 	

@@ -1,4 +1,7 @@
 converting
 valid
 
-	^ type ~= #literal or: [self childSandblocks allSatisfy: #isLiteralBlock]
+	type = #literal ifFalse: [^ true].
+	
+	self childSandblocksDo: [:b | b isLiteralBlock ifFalse: [^ false]].
+	^ true

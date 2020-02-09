@@ -5,5 +5,5 @@ query: anArray block: aBlock
 	self addMorphBack: (bindings := SBRow new).
 	self addMorphBack: aBlock.
 	
-	anArray childSandblocks do: [:symbol |
+	anArray childSandblocksDo: [:symbol |
 		bindings addMorphBack: (SBDeclarationForBlock new contents: symbol contents withFirstCharacterDownshifted)]

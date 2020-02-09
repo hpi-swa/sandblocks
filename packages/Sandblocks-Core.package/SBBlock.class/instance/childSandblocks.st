@@ -1,4 +1,4 @@
 as yet unclassified
 childSandblocks
 
-	^ self submorphs
+	^ Array streamContents: [:stream | self childSandblocksDo: [:block | stream nextPut: block]]
