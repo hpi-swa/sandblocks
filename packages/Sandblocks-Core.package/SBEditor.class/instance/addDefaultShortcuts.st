@@ -38,8 +38,9 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $p command do: #evaluateSelection;
 		addSingleSelectionShortcut: $m do: #placeMark;
 		addSingleSelectionShortcut: $' do: #goToMark;
+		addSingleSelectionShortcut: $? do: #showUsageInfo;
 		addSingleSelectionShortcut: $+ do: #insertElementAfter;
-		" FIXME: dependent on "
+		" FIXME: dependent on keyboard layout "
 		addSingleSelectionShortcut: $* do: #insertElementBefore;
 		
 		addMultiSelectionShortcut: Character escape do: #endMultiSelection;

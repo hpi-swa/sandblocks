@@ -5,7 +5,7 @@
 		"openFor:" : "tobe 12/7/2019 19:01" },
 	"instance" : {
 		"addCommandShortcut:do:" : "tobe 7/7/2019 11:06",
-		"addDefaultShortcuts" : "tobe 2/8/2020 11:12",
+		"addDefaultShortcuts" : "tobe 2/9/2020 16:24",
 		"addElement" : "tobe 2/8/2020 14:00",
 		"addEmptyClass" : "tobe 1/25/2020 16:14",
 		"addExample" : "tobe 1/18/2020 10:59",
@@ -134,6 +134,7 @@
 		"selection" : "tobe 7/22/2019 18:07",
 		"sendersOfIt" : "tobe 7/7/2019 22:34",
 		"setCopyBuffer:" : "tobe 1/25/2020 16:12",
+		"showUsageInfo" : "tobe 2/9/2020 16:24",
 		"sortedMultiSelection" : "tobe 7/7/2019 13:27",
 		"startInput:at:replacingContents:" : "tobe 7/7/2019 09:29",
 		"startInputAtEnd" : "tobe 7/7/2019 09:52",

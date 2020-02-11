@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"selectorInput" ],
+	"name" : "SBTestCase",
+	"pools" : [
+		 ],
+	"super" : "SBMethodSubstitution",
+	"type" : "normal" }

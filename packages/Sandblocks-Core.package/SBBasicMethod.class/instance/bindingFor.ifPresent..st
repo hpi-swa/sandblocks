@@ -1,8 +1,8 @@
 as yet unclassified
 bindingFor: aString ifPresent: aBlock
 
-	signature childSandblocksDo: [:s | s contents = aString ifTrue: [^ aBlock value: s]].
-	
+	self argumentsDo: [:a | a contents = aString ifTrue: [^ aBlock value: a]].
+
 	self instanceVariables detect: [:inst | inst contents = aString] ifFound: [:inst | ^ aBlock value: inst] ifNone: [].
 	
 	Symbol hasInterned: aString ifTrue: [:sym | | binding |

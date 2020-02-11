@@ -1,10 +1,13 @@
 *Sandblocks-Core
 asSandblock
 
-	^ SBMethod new
-		selector: self selector
-		arguments: (self arguments collect: #asMethodArgumentSandblock)
-		class: self methodClass;
+	| method |
+	method := SBMethod new
 		
-		body: (self block asMethodBodySandblock temporaries: (self temporaries collect: #asSandblock));
-		yourself
+			selector: self selector
+			arguments: (self arguments collect: #asMethodArgumentSandblock)
+			class: self methodClass;
+		 body: (self block asMethodBodySandblock temporaries: (self temporaries collect: #asSandblock));
+		 yourself.
+	SBMethodSubstitution allSubclassesDo: [:substitution | (substitution matches: method) ifTrue: [^ substitution newFrom: method]].
+	^ method

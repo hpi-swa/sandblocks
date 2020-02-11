@@ -1,4 +1,4 @@
 formatting
 childSandblocksDo: aBlock
 
-	aBlock value: self firstSubmorph
+	self hasSubmorphs ifTrue: [aBlock value: self firstSubmorph]

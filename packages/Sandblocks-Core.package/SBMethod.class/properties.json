@@ -7,14 +7,9 @@
 	"commentStamp" : "",
 	"instvars" : [
 		"signature",
-		"body",
-		"methodClass",
-		"classPrefix",
-		"hasUnsavedChanges",
-		"currentSelector",
-		"typeCache" ],
+		"classPrefix" ],
 	"name" : "SBMethod",
 	"pools" : [
 		 ],
-	"super" : "SBBlock",
+	"super" : "SBBasicMethod",
 	"type" : "normal" }
