@@ -1,7 +1,7 @@
 as yet unclassified
 setEmpty
 
-	editor openMethod: (SBMethod new
+	editor openMorphInView: (SBMethod new
 		selector: ''
 		arguments: #()
 		class: UndefinedObject).

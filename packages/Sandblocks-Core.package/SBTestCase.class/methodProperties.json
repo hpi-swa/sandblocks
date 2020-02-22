@@ -4,7 +4,10 @@
 		"newFrom:" : "tobe 2/11/2020 10:29" },
 	"instance" : {
 		"argumentsDo:" : "tobe 2/11/2020 10:25",
+		"clearErrors" : "tobe 2/22/2020 15:12",
 		"currentSelector:" : "tobe 2/11/2020 10:33",
 		"drawnColor" : "tobe 2/11/2020 10:39",
-		"initialize" : "tobe 2/11/2020 10:37",
-		"runTest" : "tobe 2/11/2020 10:47" } }
+		"initialize" : "tobe 2/22/2020 15:16",
+		"reportError:" : "tobe 2/22/2020 15:12",
+		"runTest" : "tobe 2/22/2020 15:12",
+		"writeSignatureSourceOn:" : "tobe 2/22/2020 13:59" } }

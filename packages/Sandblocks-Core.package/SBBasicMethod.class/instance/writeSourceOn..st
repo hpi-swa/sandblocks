@@ -1,6 +1,6 @@
 as yet unclassified
 writeSourceOn: aStream
 
-	signature writeSourceOn: aStream.
+	self writeSignatureSourceOn: aStream.
 	aStream space.
-	body writeSourceOn: aStream
+	self body writeSourceOn: aStream

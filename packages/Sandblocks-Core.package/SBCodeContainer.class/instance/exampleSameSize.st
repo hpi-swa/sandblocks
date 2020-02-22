@@ -2,10 +2,10 @@ as yet unclassified
 exampleSameSize
 	SBMorphExample
 		setUp: [SBEditor new
-				openMorph: (SBCodeContainer new
+				openMorphInView: (SBCodeContainer new
 						addMorph: (Morph new color: Color red));
 				
-				openMorph: (SBCodeContainer new
+				openMorphInView: (SBCodeContainer new
 						addMorph: (Morph new color: Color green));
 				 yourself]
 		cases: {SBMorphExampleCase

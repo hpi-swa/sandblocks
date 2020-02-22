@@ -13,6 +13,7 @@ do
 	activeMorph bindingFor: newText ifPresent: [:b |
 		didRename := false.
 		^ super do].
+	(#('self' 'super' 'thisContext' 'true' 'false' 'nil') includes: newText) ifTrue: [^ super do].
 	
 	didRename := true.
 	usages := declaration allUsages, {declaration}.

@@ -6,6 +6,7 @@
 		"argumentsDo:" : "tobe 2/11/2020 10:24",
 		"artefact" : "tobe 1/23/2020 09:33",
 		"bindingFor:ifPresent:" : "tobe 2/11/2020 10:25",
+		"blockForContext:" : "tobe 2/22/2020 14:55",
 		"blockForPC:" : "tobe 1/1/2020 13:44",
 		"blockForSelector:" : "tobe 12/15/2019 11:24",
 		"blocksForVariableNamed:do:" : "tobe 7/4/2019 07:56",
@@ -25,7 +26,7 @@
 		"ensureExpanded" : "tobe 12/3/2019 11:13",
 		"hasUnsavedChanges" : "tobe 12/7/2019 20:24",
 		"hasUnsavedChanges:" : "tobe 12/7/2019 20:30",
-		"initialize" : "tobe 2/11/2020 10:31",
+		"initialize" : "tobe 2/22/2020 13:46",
 		"insertCommandRequest:near:" : "tobe 2/8/2020 12:53",
 		"instanceVariables" : "tobe 1/12/2020 18:02",
 		"isArtefact" : "tobe 12/11/2019 17:50",
@@ -39,8 +40,6 @@
 		"selector" : "tobe 2/11/2020 10:21",
 		"selector:arguments:" : "tobe 2/11/2020 10:20",
 		"selector:arguments:class:" : "tobe 2/11/2020 10:30",
-		"signature" : "tobe 7/10/2019 23:32",
-		"startInputAt:replacingContents:" : "tobe 7/5/2019 16:36",
 		"stopEditing:" : "tobe 1/13/2020 10:52",
 		"toggleCollapsed" : "tobe 12/3/2019 11:18",
 		"tryFix:ifFail:" : "tobe 7/8/2019 17:57",
@@ -51,4 +50,5 @@
 		"useSuggestion:" : "tobe 1/13/2020 10:52",
 		"valid" : "tobe 12/11/2019 22:01",
 		"wantsInteractiveErrorCorrection" : "tobe 1/12/2020 17:54",
-		"writeSourceOn:" : "tobe 12/11/2019 22:06" } }
+		"writeSignatureSourceOn:" : "tobe 2/22/2020 13:58",
+		"writeSourceOn:" : "tobe 2/22/2020 13:58" } }

@@ -1,4 +1,4 @@
 actions
 compiledMethod: aMethod
 
-	self openMethod: aMethod asSandblock
+	self openMorphInView: aMethod asSandblock

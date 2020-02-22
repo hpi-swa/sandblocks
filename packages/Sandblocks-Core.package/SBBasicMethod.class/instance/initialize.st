@@ -3,4 +3,6 @@ initialize
 
 	super initialize.
 	
-	self hasUnsavedChanges: false
+	self
+		hasUnsavedChanges: false;
+		attachDecorator: (SBMoveDecorator new preventOcclusion: true)
