@@ -13,4 +13,5 @@ saveTryFixing: aBoolean quick: aQuickBoolean
 	self currentSelector: newSelector.
 	
 	aQuickBoolean ifFalse: [self updatePCs].
+	self hasUnsavedChanges: false.
 	^ true

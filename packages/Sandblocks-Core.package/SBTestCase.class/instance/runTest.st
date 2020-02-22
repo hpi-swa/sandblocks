@@ -1,6 +1,7 @@
 as yet unclassified
 runTest
 
+	(self saveTryFixing: true quick: false) ifFalse: [^ self].
 	self clearErrors.
 	[(self methodClass selector: self currentSelector) runCase]
 		on: TestResult failure

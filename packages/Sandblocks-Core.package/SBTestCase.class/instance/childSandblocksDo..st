@@ -1,5 +1,5 @@
 as yet unclassified
 childSandblocksDo: aBlock
 
-	signature childSandblocksDo: aBlock.
+	aBlock value: selectorInput.
 	aBlock value: self body

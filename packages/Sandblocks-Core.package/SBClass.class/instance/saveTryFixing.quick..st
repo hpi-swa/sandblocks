@@ -22,4 +22,5 @@ Is this really what you want to do?') asText makeBoldFrom: 1 to: newClassName si
 		notifying: nil
 		logged: false].
 	
+	self hasUnsavedChanges: false.
 	^ true
