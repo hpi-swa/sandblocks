@@ -27,5 +27,5 @@ extractMethod
 				index: index + 1;
 				morph: stmt;
 				yourself]),
-			{self openMorphInViewCommand: method withContainer}
+			{self openMorphInViewCommand: method}
 		]
