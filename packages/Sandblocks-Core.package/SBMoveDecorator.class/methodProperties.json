@@ -2,7 +2,7 @@
 	"class" : {
 		 },
 	"instance" : {
-		"attached:" : "tobe 1/6/2020 09:15",
+		"attached:" : "tobe 2/22/2020 13:10",
 		"detached:" : "tobe 1/6/2020 09:15",
 		"doubleClick:fromMorph:" : "tobe 1/12/2020 16:24",
 		"doubleClickTimeout:fromMorph:" : "tobe 1/12/2020 16:21",
@@ -16,6 +16,7 @@
 		"handlesMouseStillDown:" : "tobe 1/12/2020 16:19",
 		"handlesMouseWheel:" : "tobe 1/12/2020 16:19",
 		"initialize" : "tobe 1/6/2020 09:16",
+		"isDragging" : "tobe 2/22/2020 13:08",
 		"mouseDown:fromMorph:" : "tobe 1/12/2020 16:25",
 		"mouseEnter:fromMorph:" : "tobe 1/12/2020 16:21",
 		"mouseLeave:fromMorph:" : "tobe 1/12/2020 16:22",
@@ -27,4 +28,5 @@
 		"preventOcclusion:" : "tobe 1/6/2020 09:13",
 		"startDrag:" : "tobe 1/6/2020 09:13",
 		"startDrag:fromMorph:" : "tobe 1/12/2020 16:28",
-		"step" : "tobe 1/6/2020 09:13" } }
+		"step" : "tobe 2/22/2020 13:10",
+		"stepTime" : "tobe 2/22/2020 13:21" } }

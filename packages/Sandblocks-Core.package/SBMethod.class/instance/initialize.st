@@ -11,4 +11,5 @@ initialize
 		
 		addMorphBack: (SBRow new
 			addMorphBack: (classPrefix := SBStringMorph new);
-			addMorphBack: (signature := SBSignature new))
+			addMorphBack: (signature := SBSignature new));
+		attachDecorator: (SBMoveDecorator new preventOcclusion: true)

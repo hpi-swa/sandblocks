@@ -3,4 +3,5 @@ attachDecorator: aDecorator
 
 	decorators add: aDecorator.
 	aDecorator attached: self.
-	self changed
+	self changed.
+	self updateSteppingDecorators

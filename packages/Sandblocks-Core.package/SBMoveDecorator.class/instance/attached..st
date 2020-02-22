@@ -1,4 +1,5 @@
 as yet unclassified
 attached: aMorph
 
-	aMorph eventHandler: self
+	aMorph eventHandler: self.
+	super attached: aMorph

@@ -48,6 +48,10 @@ addDefaultShortcuts
 		addMultiSelectionShortcut: $h do: #selectPrevious;
 		addMultiSelectionShortcut: $k do: #selectUp;
 		addMultiSelectionShortcut: $j do: #selectDown;
+		addMultiSelectionShortcut: $h command do: [:editor | editor selectToplevelTowards: #left];
+		addMultiSelectionShortcut: $j command do: [:editor | editor selectToplevelTowards: #bottom];
+		addMultiSelectionShortcut: $k command do: [:editor | editor selectToplevelTowards: #top];
+		addMultiSelectionShortcut: $l command do: [:editor | editor selectToplevelTowards: #right];
 		addMultiSelectionShortcut: $H do: #selectPreviousStatement;
 		addMultiSelectionShortcut: $L do: #selectNextStatement;
 		addMultiSelectionShortcut: $x do: #deleteSelection;
