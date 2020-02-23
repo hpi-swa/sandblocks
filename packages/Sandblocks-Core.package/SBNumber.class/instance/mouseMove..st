@@ -7,4 +7,4 @@ mouseMove: anEvent
 		self flag: #todo. "preserve formatting like base"
 		self contents: (self parsedContents + delta x) asString.
 		lastMousePosition := anEvent position.
-		self sandblockEditor batchedChangeStep]
+		self sandblockEditor batchedChangeStep: self]

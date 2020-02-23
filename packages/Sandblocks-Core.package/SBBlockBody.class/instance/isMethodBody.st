@@ -1,4 +1,4 @@
 testing
 isMethodBody
 
-	^ self parentSandblock isMethod
+	^ self owner notNil and: [self parentSandblock isMethod]

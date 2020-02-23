@@ -39,6 +39,7 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $m do: #placeMark;
 		addSingleSelectionShortcut: $' do: #goToMark;
 		addSingleSelectionShortcut: $? do: #showUsageInfo;
+		addSingleSelectionShortcut: $. do: #addElement;
 		addSingleSelectionShortcut: $+ do: #insertElementAfter;
 		" FIXME: dependent on keyboard layout "
 		addSingleSelectionShortcut: $* do: #insertElementBefore;
@@ -96,7 +97,7 @@ addDefaultShortcuts
 		addInputShortcut: $x command do: [:editor | editor textMorph clear];
 		addInputShortcut: $j command, Character arrowDown do: [:editor | editor currentInput suggestionMenuDo: #next];
 		addInputShortcut: $k command, Character arrowUp do: [:editor | editor currentInput suggestionMenuDo: #previous];
-		addInputShortcut: Character cr asSandblockShortcut", Character tab" do: [:editor | editor currentInput useSuggestion];
+		addInputShortcut: Character cr asSandblockShortcut do: [:editor | editor currentInput useSuggestion];
 		addInputShortcut: $1 command do: [:editor | editor endInputWith: self method arguments first contents];
 		addInputShortcut: $2 command do: [:editor | editor endInputWith: self method arguments second contents];
 		addInputShortcut: $3 command do: [:editor | editor endInputWith: self method arguments third contents];

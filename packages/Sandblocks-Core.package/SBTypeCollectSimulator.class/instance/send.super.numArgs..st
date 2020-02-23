@@ -18,12 +18,14 @@ send: selector super: supered numArgs: numArgs
 		" report primitives "
 		method primitive > 0 ifTrue: [ | ret |
 			" perform:withArguments "
-			method primitive = 84 ifTrue: [ | actualSelector |
+			method primitive = 84 ifTrue: [ | actualSelector actualReceiver actualClass |
+				actualReceiver := currentContext at: currentContext stackPtr - 2.
 				actualSelector := currentContext at: currentContext stackPtr - 1.
+				actualClass := ((currentContext objectClass: actualReceiver) lookupSelector: actualSelector) methodClass.
 				(currentContext at: currentContext stackPtr) withIndexDo: [:argument :index |
 					self
 						reportTypeInfo: argument
-						at: (SBCodeContext class: lookupClass selector: actualSelector)
+						at: (SBCodeContext class: actualClass selector: actualSelector)
 						findNode: [:methodMorph | methodMorph arguments at: index]].].
 			self flag: #todo. " other perform: variants "
 			

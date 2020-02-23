@@ -8,6 +8,10 @@ initialize
 		vResizing: #shrinkWrap;
 		changeTableLayout;
 		layoutInset: 8 * self scalingFactor;
-		addMorphBack: (view := SBSandboxPasteUpMorph new
-			when: #reportError send: #reportError: to: self);
+		addMorphBack: (TransformMorph new
+			hResizing: #shrinkWrap;
+			vResizing: #shrinkWrap;
+			changeTableLayout;
+			addMorph: (view := SBSandboxPasteUpMorph new
+				when: #reportError send: #reportError: to: self));
 		addMorphBack: (cases := SBColumn new layoutInset: 0)

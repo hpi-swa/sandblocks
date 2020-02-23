@@ -3,7 +3,7 @@ initialize
 
 	super initialize.
 	
-	status := #notActive.
+	status := #manualRestart.
 	
 	self
 		layoutPolicy: SBHorizontalLayout new;

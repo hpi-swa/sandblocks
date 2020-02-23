@@ -1,7 +1,7 @@
 as yet unclassified
 insertCommandRequest: anAfterBoolean near: aBlock
 
-	^ (aBlock isName and: [aBlock isBlockBinding and: [self isMethodBody not]])
+	^ (aBlock notNil and: [aBlock isName and: [aBlock isBlockBinding and: [self isMethodBody not]]])
 		ifTrue: [
 			(SBInsertCommand newFor: self containingArtefact)
 				index: (bindings submorphIndexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);

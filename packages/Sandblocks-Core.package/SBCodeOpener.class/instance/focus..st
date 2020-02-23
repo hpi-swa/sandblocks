@@ -5,7 +5,7 @@ focus: aMethodOrClass
 		ifTrue: [
 			self selectedCategoryIndex: (self categories indexOf: aMethodOrClass category).
 			self selectedClassIndex: (self classes indexOf: aMethodOrClass name).
-			self focusPanel: 2]
+			self focusPanel: 3]
 		ifFalse: [
 			self selectedCategoryIndex: (self categories indexOf: aMethodOrClass methodClass category).
 			self selectedClassIndex: (self classes indexOf: aMethodOrClass methodClass name).

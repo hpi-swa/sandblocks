@@ -6,7 +6,7 @@ initialize
 	castToUnknownWhenEmpty := true.
 	
 	self
-		addMorphBack: (text := SBOwnTextMorph new when: #contentsChanged send: #contentsChanged to: self);
+		addMorphBack: (text := self textMorphClass new when: #contentsChanged send: #contentsChanged to: self);
 		layoutPolicy: SBVerticalLayout new;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap

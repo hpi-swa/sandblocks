@@ -1,7 +1,7 @@
 actions
 pasteStatementAboveOrBelow: anAboveBoolean
 
-	| index target adjacent |
+	| index target adjacent morph |
 	copyBuffer ifNil: [^ self].
 	
 	target := copyBuffer isSelection ifTrue: [copyBuffer firstSubmorph] ifFalse: [copyBuffer].
@@ -10,10 +10,13 @@ pasteStatementAboveOrBelow: anAboveBoolean
 	[adjacent parentSandblock acceptChild: target] whileFalse: [adjacent := adjacent parentSandblock].
 	
 	index := adjacent owner submorphIndexOf: adjacent.
+	morph := target veryDeepCopy.
 	
 	self do: ((SBInsertCommand newFor: self method)
 		index: (anAboveBoolean
 			ifTrue: [index] ifFalse: [index + 1]);
 		container: adjacent owner;
-		morph: target veryDeepCopy;
-		yourself)
+		morph: morph;
+		yourself).
+	
+	morph postDuplicate

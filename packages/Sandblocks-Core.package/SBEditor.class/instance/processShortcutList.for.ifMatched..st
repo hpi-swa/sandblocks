@@ -3,5 +3,5 @@ processShortcutList: aCollection for: anEvent ifMatched: aBlock
 
 	aCollection do: [:def |
 		(def first asOrderedCollection anySatisfy: [:shortcut | shortcut matchesEvent: anEvent]) ifTrue: [
-			def second value: self.
-			^ aBlock value]]
+			" allow handlers to explicitly opt out by returning false "
+			(def second value: self) = false ifFalse: [^ aBlock value]]]

@@ -3,4 +3,4 @@ status: aSymbol
 
 	status := aSymbol.
 	self updateLabel.
-	aSymbol ~= #notActive ifTrue: [self run]
+	aSymbol ~= #manualRestart ifTrue: [self run]

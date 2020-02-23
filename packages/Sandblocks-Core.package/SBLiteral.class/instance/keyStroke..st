@@ -1,7 +1,6 @@
 as yet unclassified
 keyStroke: anEvent
 
-	self flag: #todo. "breaks strings"
 	(anEvent keyCharacter isSpecial or: [anEvent keyCharacter = Character space]) ifTrue: [
 		^ self sandblockEditor
 			endInput;

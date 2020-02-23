@@ -1,6 +1,11 @@
 *Sandblocks-Core
 asSandblock
 
-	^ SBCascade new
-		receiver: self receiver asSandblock
-		messages: (self messages collect: #asCascadePartSandblock)
+	| send |
+	send := self asSandblockWithoutSubstitution.
+	
+	SBSubstitution allSubclassesDo: [:substitution |
+		(substitution matchesCascades and: [substitution matches: send]) ifTrue: [
+			^ (substitution newFrom: send) pc: self pc]].
+	
+	^ send

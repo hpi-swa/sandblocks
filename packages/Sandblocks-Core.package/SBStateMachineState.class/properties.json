@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"name",
+		"label" ],
+	"name" : "SBStateMachineState",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

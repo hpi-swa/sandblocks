@@ -1,0 +1,25 @@
+{
+	"class" : {
+		"connect:align:to:align:" : "tobe 2/23/2020 13:47",
+		"connect:to:" : "tobe 2/23/2020 13:47" },
+	"instance" : {
+		"arrowSize" : "tobe 2/23/2020 18:49",
+		"connect:align:to:align:" : "tobe 2/23/2020 08:07",
+		"connect:to:" : "tobe 2/23/2020 17:33",
+		"controlSize" : "tobe 2/23/2020 08:55",
+		"curvePoints" : "tobe 2/23/2020 22:19",
+		"curvePointsForSelfConnection" : "tobe 2/23/2020 22:26",
+		"drawArrowOn:origin:delta:" : "tobe 2/23/2020 22:24",
+		"drawOn:" : "tobe 2/23/2020 22:24",
+		"endPointsDo:" : "tobe 2/23/2020 18:42",
+		"exampleMorphToMorph" : "tobe 2/23/2020 18:41",
+		"exampleMorphToMorphAlign" : "tobe 2/23/2020 18:40",
+		"exampleMorphToSelf" : "tobe 2/23/2020 22:21",
+		"from" : "tobe 2/23/2020 19:55",
+		"initialize" : "tobe 2/23/2020 22:27",
+		"isSelfConnection" : "tobe 2/23/2020 22:16",
+		"lineType" : "tobe 2/23/2020 22:17",
+		"lineType:" : "tobe 2/23/2020 08:05",
+		"selfConnectionSize" : "tobe 2/23/2020 22:25",
+		"to" : "tobe 2/23/2020 19:55",
+		"update:" : "tobe 2/23/2020 18:09" } }

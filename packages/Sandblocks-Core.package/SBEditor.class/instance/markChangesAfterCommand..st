@@ -1,11 +1,10 @@
 initialize-release
 markChangesAfterCommand: aCommand
 
-	| saved |
-	saved := false.
-	compileTime = #compileOnChange ifTrue: [saved := self saveTryFixing: false quick: false].
-	
 	aCommand wasEdit ifTrue: [
-		aCommand affectedArtefacts do: [:artefact |
+		aCommand affectedArtefacts do: [:artefact | | saved |
+			saved := false.
+			compileTime = #compileOnChange ifTrue: [saved := self save: artefact tryFixing: false quick: false].
+			
 			artefact hasUnsavedChanges: saved not.
 			self allBlocksDo: [:block | block artefactChanged: artefact]]]

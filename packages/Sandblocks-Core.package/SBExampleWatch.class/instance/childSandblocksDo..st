@@ -1,4 +1,4 @@
 as yet unclassified
 childSandblocksDo: aBlock
 
-	self submorphCount = 2 ifTrue: [aBlock value: self expression]
+	self hasSubmorphs ifTrue: [aBlock value: self expression]

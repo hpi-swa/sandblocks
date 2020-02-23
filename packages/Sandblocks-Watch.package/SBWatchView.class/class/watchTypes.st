@@ -6,6 +6,7 @@ watchTypes
 		"Smalltalk at: #SBDisplayActiveExpressionMarbles ifAbsent: [nil]."
 		Smalltalk at: #SBDisplayActiveExpression ifAbsent: [nil].
 		SBDisplayColor.
+		SBDisplayPoint.
 		SBDisplayMorph.
 		SBDisplayCanvas.
 		SBDisplayForm.
