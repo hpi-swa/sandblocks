@@ -4,6 +4,6 @@ initialize
 	super initialize.
 	
 	self
-		layoutInset: 4 * self scalingFactor;
+		layoutInset: 4 withScalingFactor;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap

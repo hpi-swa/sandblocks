@@ -15,13 +15,13 @@ initialize
 	self
 		color: Color transparent;
 		changeTableLayout;
-		cellGap: 8 * self scaleFactor;
+		cellGap: 8 withScalingFactor;
 		hResizing: #spaceFill;
 		vResizing: #shrinkWrap;
 		addMorphBack: marbles;
 		addMorphBack: (Morph new
 			color: Color lightGray;
 			hResizing: #spaceFill;
-			extent: 0 @ 1 withScalingFactor;
+			extent: (0 @ 1) withScalingFactor;
 			yourself);
 		addMorphBack: invocations

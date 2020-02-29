@@ -17,7 +17,7 @@ initialize
 		vResizing: #shrinkWrap;
 		listDirection: #topToBottom;
 		cellPositioning: #topLeft;
-		cellGap: 4 * self scalingFactor;
+		cellGap: 4 withScalingFactor;
 		addMorphBack: (SBRow new
 			cellGap: 8 withScalingFactor;
 			addMorphBack: (marble := SBMarble new);
@@ -25,8 +25,10 @@ initialize
 				color: Color white;
 				value: 1;
 				min: 1;
-				onChange: [:num | self expressionIndex: num]);
-			addMorphBack: (SBIcon iconCrosshairs on: #click send: #filterMorph to: self);
-			addMorphBack: (SBIcon iconShare on: #click send: #showSubscribers to: self);
-			addMorphBack: (SBIcon iconSearch on: #click send: #exploreSubject to: self));
+				onChange: [:num | self expressionIndex: num];
+				yourself);
+			addMorphBack: (SBIcon iconCrosshairs on: #click send: #filterMorph to: self; yourself);
+			addMorphBack: (SBIcon iconShare on: #click send: #showSubscribers to: self; yourself);
+			addMorphBack: (SBIcon iconSearch on: #click send: #exploreSubject to: self; yourself);
+			yourself);
 		addMorphBack: (invocations := SBColum new)

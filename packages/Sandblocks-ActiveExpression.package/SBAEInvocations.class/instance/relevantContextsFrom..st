@@ -10,7 +10,8 @@ relevantContextsFrom: aContext
 	max := 10.
 	res := Array streamContents: [:stream  | | ctx |
 		stream nextPut: (SBCodeContext for: (ctx := sendingContext)).
-		["max > 0"true and: [(ctx := ctx sender) ~~ nil and: [ctx selector ~= #run and: [ctx receiver class ~= SBExample]]]]
+		" go up all the way or until one of our entrypoints is found. inlined for performance "
+		[(ctx := ctx sender) ~~ nil and: [ctx selector ~= #run and: [ctx receiver class ~= SBExample]]]
 			whileTrue: [
 				max := max - 1.
 				stream nextPut: ((SBCodeContext for: ctx) pc: ctx previousPc)]].

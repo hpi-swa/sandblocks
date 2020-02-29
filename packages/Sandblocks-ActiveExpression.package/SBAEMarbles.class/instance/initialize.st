@@ -11,6 +11,6 @@ initialize
 		 listDirection: #leftToRight;
 		 cellPositioning: #topLeft;
 		 wrapDirection: #leftToRight;
-		 minimumWidth: 200;
+		 minimumWidth: 200 withScalingFactor;
 		 extent: 0 @ 0;
-		 cellGap: 2 * self scalingFactor
+		 cellGap: 2 withScalingFactor

@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 color
 
 	^ self containingSandblock foregroundColor
