@@ -1,4 +1,4 @@
-as yet unclassified
+helper
 trackInstanceVarChange: offset
 
 	(tempObjects includes: currentContext receiver) ifFalse: [

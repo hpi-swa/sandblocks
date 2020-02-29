@@ -2,7 +2,7 @@ as yet unclassified
 exampleMorphToMorph
 
 	SBMorphExample
-		setUp: [SBConnectorLine new lineType: #line]
+		setUp: [SBConnectorLine new lineType: #curve]
 		cases: {
 			(SBMorphExampleCase
 				name: 'example 1'

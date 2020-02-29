@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 value: aNumber
 
 	super value: aNumber.

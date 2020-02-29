@@ -1,4 +1,4 @@
-evaluating
+accessing
 value
 
 	^ value

@@ -1,4 +1,4 @@
-as yet unclassified
+event handling
 mouseLeave: anEvent
 
 	subjectIndicator ifNotNil: #delete

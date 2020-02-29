@@ -1,4 +1,4 @@
-as yet unclassified
+drawing
 drawOn: aCanvas
 
 	aCanvas fillRoundRect: self bounds radius: 4 fillStyle: Color darkGray.

@@ -1,4 +1,4 @@
-as yet unclassified
+example callbacks
 exampleStarting: anExample
 
 	self removeAllMorphs.

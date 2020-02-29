@@ -1,4 +1,4 @@
-as yet unclassified
+event handling
 mouseEnter: anEvent
 
 	subjectIndicator ifNotNil: #delete.

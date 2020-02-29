@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 value: anotherObject
 
 	self balloonText: anotherObject asString

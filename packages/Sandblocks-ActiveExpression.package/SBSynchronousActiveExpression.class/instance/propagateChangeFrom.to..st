@@ -1,4 +1,4 @@
-as yet unclassified
+change
 propagateChangeFrom: oldValue to: newValue
 
 	self callbacksEnabled ifTrue: [ | invocation |

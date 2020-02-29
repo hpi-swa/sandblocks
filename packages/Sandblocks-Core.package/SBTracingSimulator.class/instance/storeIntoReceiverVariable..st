@@ -1,4 +1,4 @@
-as yet unclassified
+instruction decoding
 storeIntoReceiverVariable: offset 
 
 	self trackInstanceVarChange: offset.

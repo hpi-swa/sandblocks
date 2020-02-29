@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 addMarble: aMorph value: anObject expression: anExpression
 
 	self updateTickDividers.

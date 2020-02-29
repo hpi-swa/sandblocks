@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 childSandblocksDo: aBlock
 
 	^ self subclassResponsibility

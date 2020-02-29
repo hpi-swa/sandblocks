@@ -1,4 +1,4 @@
-as yet unclassified
+initialization
 initialize
 
 	super initialize.
@@ -11,5 +11,4 @@ initialize
 		cellGap: 6 withScalingFactor;
 		layoutInset: 6 withScalingFactor;
 		cellPositioning: #center;
-		addMorphBack: SBIcon iconExclamation;
-		on: #doubleClick send: #changeColor to: self
+		addMorphBack: SBIcon iconExclamation

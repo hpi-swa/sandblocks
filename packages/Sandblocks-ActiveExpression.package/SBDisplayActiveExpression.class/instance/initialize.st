@@ -1,4 +1,4 @@
-as yet unclassified
+initialization
 initialize
 
 	super initialize.
@@ -6,7 +6,6 @@ initialize
 	expressions := OrderedDictionary new.
 	invocations := SBAEInvocations new
 		when: #showSubscribers send: #showSubscribersOf: to: self;
-		when: #filterMorph send: #filterMorph to: self;
 		yourself.
 	marbles := SBAEMarbles new
 		when: #selectExpression send: #selectExpression: to: invocations;

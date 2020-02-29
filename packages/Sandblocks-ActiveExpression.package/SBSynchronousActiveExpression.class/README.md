@@ -1,0 +1,1 @@
+A SBSynchronousActiveExpression is a subclass of SynchronousActiveExpression that supports some meta information about the active expression. It will also invoke its sideeffect handlers through the SBTracingSimulator to collect all relevant sideeffects.

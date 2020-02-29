@@ -1,4 +1,4 @@
-as yet unclassified
+helper
 updateInterestingCodeLocations: aCollection
 
 	" walk up from each tracked invocation and find the first point where all differ "

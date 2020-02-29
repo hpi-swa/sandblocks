@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 expression: aBlock
 
 	self addMorphBack: aBlock

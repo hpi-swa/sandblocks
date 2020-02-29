@@ -1,4 +1,4 @@
-as yet unclassified
+instruction decoding
 send: selector super: supered numArgs: numArgs
 
 	| res |

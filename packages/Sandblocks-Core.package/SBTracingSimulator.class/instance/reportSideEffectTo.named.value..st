@@ -1,4 +1,4 @@
-as yet unclassified
+helper
 reportSideEffectTo: anObject named: aString value: anotherString
 
 	sideEffects add: {

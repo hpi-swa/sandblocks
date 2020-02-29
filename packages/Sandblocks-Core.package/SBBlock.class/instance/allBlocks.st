@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 allBlocks
 
 	^ Array streamContents: [:stream | self allBlocksDo: [:block | stream nextPut: block]]

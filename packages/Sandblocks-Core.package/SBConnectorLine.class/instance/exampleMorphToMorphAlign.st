@@ -2,7 +2,7 @@ as yet unclassified
 exampleMorphToMorphAlign
 
 	SBMorphExample
-		setUp: [SBConnectorLine new lineType: #line]
+		setUp: [SBConnectorLine new lineType: #curve]
 		cases: {
 			(SBMorphExampleCase
 				name: 'example 1'
@@ -14,6 +14,7 @@ exampleMorphToMorphAlign
 							 position: 88 @ 54)
 						align: #left
 						to: (Morph new
+							 color: Color red;
 							 openInWorld: m owner;
 							 position: 294 @ 150)
 						align: #bottom])

@@ -1,10 +1,8 @@
 as yet unclassified
 findNeighbors
 
-	neighbors := {(0 @ 1). (-1 @ 0). (0 @ -1). (1 @ 0)}
-		collect: [:offset | self owner tileAt: self tilePosition + (SBWatch report: offset for: 874434846)]
-		thenSelect: #notNil.
-	splitAE := SBWatch report: (SBSynchronousActiveExpression on: [value > self neighborCount]) for: 387606253.
+	neighbors := {(0 @ 1). (-1 @ 0). (0 @ -1). (1 @ 0)} collect: [:offset | self owner tileAt: self tilePosition + offset] thenSelect: #notNil.
+	splitAE := SBSynchronousActiveExpression on: [value > self neighborCount].
 	splitAE onChangeDo: [:shouldSplit | shouldSplit ifTrue: [self splitValue]].
-	valueAE := SBWatch report: (SBSynchronousActiveExpression on: [value]) for: 683507325.
+	valueAE := SBSynchronousActiveExpression on: [value].
 	valueAE onChangeDo: [:val | label contents: val asString]

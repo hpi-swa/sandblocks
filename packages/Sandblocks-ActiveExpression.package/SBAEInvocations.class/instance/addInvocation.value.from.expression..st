@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 addInvocation: aContext value: anObject from: aSubjectObject expression: anAExpression
 
 	| stack newInvocation |
@@ -17,7 +17,7 @@ addInvocation: aContext value: anObject from: aSubjectObject expression: anAExpr
 			self expressionIndex: index].
 		
 		list := (expressions atIndex: index) value.
-		aggregate := "DISABLED AGGREGATION
+		aggregate := "DISABLED AGGREGATION: currently, it appears to be a better choice to display all activations so that a user can easily tell the chronological order of activations. Aggregating may make sense as an option later on, if activations are frequent.
 		list
 			detect: [:invocation | invocation sameLocation: newInvocation]
 			ifFound: [:invocation |

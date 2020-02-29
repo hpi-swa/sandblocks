@@ -1,0 +1,1 @@
+A SBMarble marks a single invocation of an active expression. It will keep its value, subject (owner of the active expression) and side effects and will try to highlight the subject when hovered. It can also appear as a synchronous event as triggered by SBActiveExpressionSyncEvent, in which case it will be rectangular rather than circular.

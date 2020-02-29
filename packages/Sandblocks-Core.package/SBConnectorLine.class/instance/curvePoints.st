@@ -9,4 +9,4 @@ curvePoints
 		controlPoint := delta x abs > delta y abs ifTrue: [controlSize @ 0] ifFalse: [0 @ controlSize].
 		fromControl := fromAlign = #none ifTrue: [controlPoint * delta sign negated] ifFalse: [(Point fromSide: fromAlign) * self controlSize].
 		toControl := toAlign = #none ifTrue: [controlPoint * delta sign] ifFalse: [(Point fromSide: toAlign) * self controlSize].
-		{from center. (from center + fromControl). (to center + toControl). to center}]
+		{a. (a + fromControl). (b + toControl). b}]

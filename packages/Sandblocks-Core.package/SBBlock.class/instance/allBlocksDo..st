@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 allBlocksDo: aBlock
 
 	self childSandblocksDo: [:m | m allBlocksDo: aBlock].

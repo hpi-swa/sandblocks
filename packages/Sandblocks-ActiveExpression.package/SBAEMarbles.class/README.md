@@ -1,0 +1,1 @@
+A SBAEMarbles displays a list of SBMarbles. When a marble is clicked, it will request for its active expression to be put into focus, for example by a SBAEInvocations morph. 

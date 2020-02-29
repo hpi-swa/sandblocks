@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 max: aNumber
 
 	max := aNumber

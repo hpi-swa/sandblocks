@@ -1,4 +1,4 @@
-as yet unclassified
+event handling
 doubleClick: anEvent
 
 	(SBExample getAllInMethod: self containingArtefact) do: [:example | | results |

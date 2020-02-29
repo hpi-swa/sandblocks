@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 block
 
 	^ self lastSubmorph

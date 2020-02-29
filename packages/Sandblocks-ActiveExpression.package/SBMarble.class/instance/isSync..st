@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 isSync: aBoolean
 
 	isSync := aBoolean

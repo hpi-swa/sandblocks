@@ -1,4 +1,4 @@
-as yet unclassified
+suggestions
 guessedClass
 
 	^ self expression guessedClass

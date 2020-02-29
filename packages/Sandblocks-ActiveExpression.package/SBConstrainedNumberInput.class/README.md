@@ -1,0 +1,1 @@
+A SBConstrainedNumberInput allows picking a number by scrubbing on the morph. It will display its max value next to the current value.

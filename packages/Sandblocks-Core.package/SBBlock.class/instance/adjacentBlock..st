@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 adjacentBlock: aNumber
 
 	| adjacent index |

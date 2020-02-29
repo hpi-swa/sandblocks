@@ -1,4 +1,4 @@
-as yet unclassified
+callbacks
 showSubscribers
 
 	self triggerEvent: #showSubscribers with: self currentExpression

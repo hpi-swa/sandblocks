@@ -10,7 +10,8 @@
 		"to",
 		"fromAlign",
 		"toAlign",
-		"lineType" ],
+		"lineType",
+		"curveModifier" ],
 	"name" : "SBConnectorLine",
 	"pools" : [
 		 ],

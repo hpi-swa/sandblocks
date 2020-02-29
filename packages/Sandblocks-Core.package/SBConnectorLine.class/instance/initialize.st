@@ -4,4 +4,5 @@ initialize
 	super initialize.
 	lineType := #line.
 	fromAlign := #none.
-	toAlign := #none
+	toAlign := #none.
+	curveModifier := 0

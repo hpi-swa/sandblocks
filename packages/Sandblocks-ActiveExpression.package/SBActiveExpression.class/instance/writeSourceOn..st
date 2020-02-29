@@ -1,4 +1,4 @@
-as yet unclassified
+printing
 writeSourceOn: aStream
 
 	aStream nextPutAll: '(SBSynchronousActiveExpression on: '.
