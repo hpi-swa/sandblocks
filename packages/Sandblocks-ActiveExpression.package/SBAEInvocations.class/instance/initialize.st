@@ -27,8 +27,21 @@ initialize
 				min: 1;
 				onChange: [:num | self expressionIndex: num];
 				yourself);
-			addMorphBack: (SBIcon iconCrosshairs on: #click send: #filterMorph to: self; yourself);
-			addMorphBack: (SBIcon iconShare on: #click send: #showSubscribers to: self; yourself);
-			addMorphBack: (SBIcon iconSearch on: #click send: #exploreSubject to: self; yourself);
+			addMorphBack: (SBIcon iconCrosshairs
+				on: #click send: #filterMorph to: self;
+				balloonText: 'Pick Morph';
+				yourself);
+			addMorphBack: (SBIcon iconAnchor
+				on: #click send: #showDependencies to: self;
+				balloonText: 'Show Dependencies';
+				yourself);
+			addMorphBack: (SBIcon iconShare
+				on: #click send: #showSubscribers to: self;
+				balloonText: 'Show Subscribers';
+				yourself);
+			addMorphBack: (SBIcon iconSearch
+				on: #click send: #exploreSubject to: self;
+				balloonText: 'Explore Subject';
+				yourself);
 			yourself);
 		addMorphBack: (invocations := SBColum new)

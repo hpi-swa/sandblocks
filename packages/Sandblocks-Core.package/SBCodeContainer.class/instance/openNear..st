@@ -2,5 +2,5 @@ as yet unclassified
 openNear: aBlock
 
 	aBlock sandblockEditor openMorphInView: self.
-	self position: aBlock codeContainer right + (5 * self scalingFactor) @ self top.
+	self position: aBlock containingArtefact right + (5 * self scalingFactor) @ self top.
 	self select
