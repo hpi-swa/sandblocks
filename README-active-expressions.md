@@ -35,10 +35,35 @@ These objects we consider as temporary objects.
 When state is changed (meaning a variable changed was assigned a new value or a store into an object happened via `at:put:`), we see if this concerned one of the temporary objects.
 If that is not the case, we consider the change as a relevant sideeffect (meaning persistent after execution of the sideeffect handler finished).
 
+## Approach / Features
+* Single Active Expression
+  - Explore Dependencies ("anchor" icon)
+  - Show subscribing blocks ("share" icon)
+  - Explore "owner" of active expression, if any ("magnifying glass" icon)
+  - List of all activations, their location in the code, their callstack when clicked, the value that the expression evaluated to, and all triggered, relevant (see below) sideeffects
+* Multiple Active Expressions instantiated from one code location
+  - Marble display for each invocation, color-coded by active expression instance
+  - Sync Events: allows inserting synchronous "marbles" into the regular control flow (press "," on any node and select "wrap in marker")
+  - Scrubbing through the list of all active expressions instantiated from this location (will automatically jump to an expression if it triggers a new activation)
+  - Picking a morph and jumping to its active expressions, if any ("crosshair" icon)
+  - On hovering a marble, highlight the owner object of the active expression if it is a morph and show the expression's value at that time
+* Code Navigation
+  - non-overlapping window layout
+  - infite viewport, use touchpad scroll to move
+  - "code accordion": visualization of stack
+  - code opener: ctrl+x to open an overlay to select a method (is keyboard-centric, no support for mouse: use arrow keys to jump categories, ctrl+f to search for class name)
+* Morph Examples
+  - partially sandboxed morph display
+  - catches initialization, test, and drawing errors and displays them on the relevant piece of code
+  - supports restarting manually via "refresh" icon or on each method save (saving can be configured via "cmd+,", "Change compile method" to be on-change or on-save)
+  - "test case" panel to specify instructions to be executed after the morph has been opened
+
 ## Assumptions / Limitations
+* The most important limitation of this implementation is that it only displays the current state and does no further analysis of what may happen in the future (or happened in the past), as a static analysis might. This means that inspecting an active expression right after its creation may for example show that no one subscribes to it. Similarly, the dependencies of an active expression may change depending on the expression itself (`a ifTrue: [b] ifFalse: [c]`).
 * The system assumes that there is only the single, sandboxed instance of the observed application, not more. Otherwise, events from both instances will currently be displayed.
 * The system is not thread-safe, as it directly triggers updates to the tool UI.
 * Color choices are computed using the identity hash of an instance, meaning that there may be duplicate colors or colors that are too similar to be told apart. A workaround to this problem would likely involve a global weak hashmap that rotates distinct colors for each new instance.
+* There is only limited support for temporary and literal variables at the moment. Instance variables are fully supported. This is not a conceptual limitation, it would only require adapting/abstracting various places that assume direct ownership of a variable through an object and matching the other variable notify callbacks (`VarTra:notify:instVarNamed:ofObject:changedFrom:to:inContext:`).
 
 ## Discussion
 The system uses a projectional editor to be able to have a deep, meaningful integration with the program's code. The projectional editor allowed us to quickly prototype various aspects of the system. All aspects should also be generalizable to text-based edtiors, but will require more effort to keep the UI consistent throughout partial or destructive edits of the code.
@@ -70,3 +95,5 @@ This is most of the literature that influenced the design and implementation of 
 ## Source Code
 The relevant parts of the code are found in `packages/Sandblocks-ActiveExpressions.package`. In particular, the main UI element is the SBDisplayActiveExpression that is used inside a SBWatch whenever an active expression is observed.
 All classes in the `Sandblocks-ActiveExpression` have class comments to further explain their intent.
+
+In Sandblocks-Core, the classes relevant to code navigation are primarily the `SBMoveDecorator` and `SBCodeAccordion`. The `SBMorphExample` and `SBMorphExampleCase` are the projections supporting the morph examples.
