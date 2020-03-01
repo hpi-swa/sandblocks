@@ -16,11 +16,17 @@ Our approach to each problem is as follows:
 3. To deal with a large number of instances of an active expression, we display a color-coded marble diagram, allowing programmers to quickly see which instances triggered most often and in what order they have been triggered.
 
 ## Links / Demo
-The sources can be found here: https://github.com/tom95/sandblocks
 
-Installation instructions are here: https://github.com/tom95/sandblocks/blob/master/README.md
+Install via (tested on Squeak5.3-rc3):
+```
+Metacello new
+  baseline: 'Sandblocks';
+  repository: 'github://tom95/Sandblocks:master/packages';
+  load: 'withActiveExpressions'.
+```
 
-An example can be launched via `SBEditor openFor: {JumpingCubes. JCTile}`. Some manual layouting may be required to see all relevant elements. The shortcut "!" will focus the selected window should the editor come up seemingly empty.
+An example can be launched via `SBEditor openFor: {JumpingCubes. JCTile}`. Some manual layouting may be required to see all relevant elements. The shortcut "!" will focus the selected window should the editor come up seemingly empty. "Ctrl+f" will toggle fullscreen for the editor. Yellow mouse button or touchpad scrolling can be used to pan the view.
+
 By clicking on the refresh icon on the `JumpingCubes>>example`, the example will be executed, leading to an error.
 By inspecting the watches on the active expressions in `JCTile>>findNeighbors`, the error can be located to be in `JCTile>>splitValue`, where the value assignment needs to happen before the neighbors get incremented. The order can be changed easily by clicking on the lower statement and pressing "K" to move it up.
 Re-running the example should then result in the correct behavior and the red error bar from the failed assertion disappearing.
@@ -97,3 +103,4 @@ The relevant parts of the code are found in `packages/Sandblocks-ActiveExpressio
 All classes in the `Sandblocks-ActiveExpression` have class comments to further explain their intent.
 
 In Sandblocks-Core, the classes relevant to code navigation are primarily the `SBMoveDecorator` and `SBCodeAccordion`. The `SBMorphExample` and `SBMorphExampleCase` are the projections supporting the morph examples. The `SBEditorCanvas` implements the infinite scrolling viewport.
+
