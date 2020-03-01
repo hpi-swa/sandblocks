@@ -96,4 +96,4 @@ This is most of the literature that influenced the design and implementation of 
 The relevant parts of the code are found in `packages/Sandblocks-ActiveExpressions.package`. In particular, the main UI element is the SBDisplayActiveExpression that is used inside a SBWatch whenever an active expression is observed.
 All classes in the `Sandblocks-ActiveExpression` have class comments to further explain their intent.
 
-In Sandblocks-Core, the classes relevant to code navigation are primarily the `SBMoveDecorator` and `SBCodeAccordion`. The `SBMorphExample` and `SBMorphExampleCase` are the projections supporting the morph examples.
+In Sandblocks-Core, the classes relevant to code navigation are primarily the `SBMoveDecorator` and `SBCodeAccordion`. The `SBMorphExample` and `SBMorphExampleCase` are the projections supporting the morph examples. The `SBEditorCanvas` implements the infinite scrolling viewport.
