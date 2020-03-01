@@ -1,4 +1,4 @@
-as yet unclassified
+viewport
 zoomViewport: aNumber from: aPoint
 
 	self offset: self offset + ((aPoint - self position) * aNumber * self scale * 0.001).

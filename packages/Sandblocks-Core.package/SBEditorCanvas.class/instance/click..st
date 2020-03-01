@@ -1,4 +1,4 @@
-as yet unclassified
+event handling
 click: anEvent
 
 	self sandblockEditor selectClick: nil

@@ -1,4 +1,4 @@
-as yet unclassified
+event handling
 handlesMouseWheel: anEvent
 
 	^ true

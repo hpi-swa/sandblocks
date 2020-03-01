@@ -1,4 +1,4 @@
-as yet unclassified
+viewport
 animateToPosition: aPoint
 
 	targetPosition := aPoint

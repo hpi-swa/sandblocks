@@ -1,4 +1,4 @@
-as yet unclassified
+viewport
 scrollToShow: aMorph
 	
 	| viewport x y target |

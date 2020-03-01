@@ -1,4 +1,4 @@
-as yet unclassified
+event handling
 mouseWheel: anEvent
 
 	(anEvent commandKeyPressed and: [dragStartPosition notNil])

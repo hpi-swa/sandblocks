@@ -1,4 +1,4 @@
-as yet unclassified
+viewport
 basicViewportPosition: aPoint
 
 	self transform: (self transform withOffset: aPoint - self position).

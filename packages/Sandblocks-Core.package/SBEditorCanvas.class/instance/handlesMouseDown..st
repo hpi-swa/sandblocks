@@ -1,4 +1,4 @@
-as yet unclassified
+event handling
 handlesMouseDown: anEvent
 
 	^ true

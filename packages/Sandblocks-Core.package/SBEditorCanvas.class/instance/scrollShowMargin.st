@@ -1,4 +1,4 @@
-as yet unclassified
+constants
 scrollShowMargin
 
 	^ 10 * self scalingFactor

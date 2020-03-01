@@ -1,4 +1,4 @@
-as yet unclassified
+event handling
 doubleClick: anEvent
 
 	| closest method point |
