@@ -10,8 +10,8 @@ baseline: spec
 			package: 'Sandblocks-Watch';
 			package: 'Sandblocks-Drawing';
 			package: 'Sandblocks-Format';
-			package: 'Sandblocks-ActiveExpression' with: [spec requires: #('default' 'ActiveExpressions');
-			package: 'JumpingCubes' with: [spec requires: #('Sandblocks-ActiveExpression')]].
+			package: 'Sandblocks-ActiveExpression' with: [spec requires: #('default' 'ActiveExpressions')];
+			package: 'JumpingCubes' with: [spec requires: #('Sandblocks-ActiveExpression')].
 		spec
 			group: 'default' with: #('Sandblocks-Core' 'Sandblocks-Watch' 'Sandblocks-Format' 'Sandblocks-Drawing');
 			group: 'withActiveExpressions' with: #('Sandblocks-ActiveExpression' 'JumpingCubes')]
