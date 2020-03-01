@@ -1,4 +1,4 @@
-as yet unclassified
+event handling
 startDrag: anEvent
 
 	lastDragPosition := anEvent position

@@ -1,4 +1,4 @@
-event handling
+stepping
 step
 
 	self isDragging ifTrue: [^ self].

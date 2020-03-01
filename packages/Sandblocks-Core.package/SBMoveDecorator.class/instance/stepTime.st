@@ -1,4 +1,4 @@
-event handling
+stepping
 stepTime
 
 	^ self preventOcclusion ifTrue: [1] ifFalse: [-1]

@@ -1,0 +1,1 @@
+A SBCodeLens displays a method and supports collapsing it to just the header or reducing it to just a focused expression with a fadeout around it for context.

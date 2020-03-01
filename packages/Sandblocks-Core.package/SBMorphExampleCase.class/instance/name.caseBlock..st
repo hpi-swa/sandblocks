@@ -1,4 +1,4 @@
-as yet unclassified
+initialization
 name: aString caseBlock: aBlock
 
 	self

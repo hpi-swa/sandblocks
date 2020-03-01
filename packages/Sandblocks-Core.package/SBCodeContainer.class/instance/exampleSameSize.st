@@ -1,4 +1,4 @@
-as yet unclassified
+examples
 exampleSameSize
 	SBMorphExample
 		setUp: [SBEditor new

@@ -1,4 +1,4 @@
-as yet unclassified
+initialization
 openNear: aBlock
 
 	aBlock sandblockEditor openMorphInView: self.

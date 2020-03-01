@@ -1,4 +1,4 @@
-as yet unclassified
+helper
 updateLabel
 
 	statusLabel contents: (status caseOf: {

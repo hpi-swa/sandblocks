@@ -1,4 +1,4 @@
-as yet unclassified
+initialization
 setUp: aBlock cases: aCollectionOfBlocks extent: aPoint
 
 	self addMorph: (header := SBRow new

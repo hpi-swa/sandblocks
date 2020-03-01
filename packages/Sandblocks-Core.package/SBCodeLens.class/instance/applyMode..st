@@ -1,4 +1,4 @@
-as yet unclassified
+helper
 applyMode: aSymbol
 
 	mode  = aSymbol ifTrue: [^ self].

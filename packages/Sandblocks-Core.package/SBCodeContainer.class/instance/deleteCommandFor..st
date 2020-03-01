@@ -1,4 +1,4 @@
-as yet unclassified
+callbacks
 deleteCommandFor: aBlock
 
 	^ SBCombinedCommand newWith: {

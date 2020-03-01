@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 method: aMethod
 
 	scroll addMorphBack: aMethod.

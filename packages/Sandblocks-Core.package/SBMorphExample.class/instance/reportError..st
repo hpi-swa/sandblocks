@@ -1,13 +1,12 @@
-as yet unclassified
+errors
 reportError: anError
 
 	| editor ctx i |
-	self clearErrors.
+	self
+		clearErrors;
+		displayError: anError.
 	
 	editor := self sandblockEditor.
-	
-	header addMorphBack: (errorIcon := SBIcon iconFlash balloonText: anError asString).
-	
 	i := 1.
 	ctx := anError signalerContext.
 	[ctx] whileNotNil: [
@@ -15,7 +14,7 @@ reportError: anError
 		ctx method = (SBMorphExampleCase >> #evaluateFor:in:) ifTrue: [ | caseBlock doItCtx |
 			caseBlock := self cases first caseBlock.
 			doItCtx := anError signalerContext stack at: i - 3.
-			" caseBlock pc - doItCtx method initialPC ? "
+			" this 73 currently is a mystery, but maybe it's caseBlock pc - doItCtx method initialPC ? further investigation needed "
 			(caseBlock containingArtefact blockForPC: doItCtx pc + 73)  ifNotNil: [:b |
 				b attachDecorator: (errorDecorator := SBErrorDecorator new message: anError asString)].
 			^ self].

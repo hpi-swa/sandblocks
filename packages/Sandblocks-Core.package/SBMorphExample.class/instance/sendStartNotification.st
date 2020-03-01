@@ -1,4 +1,4 @@
-as yet unclassified
+helper
 sendStartNotification
 
 	self sandblockEditor allBlocksDo: [:morph |

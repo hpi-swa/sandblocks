@@ -1,0 +1,1 @@
+A SBSandboxPasteUpMorph guards the drawing of its submorphs and triggers an event if any errors were raised while drawing.

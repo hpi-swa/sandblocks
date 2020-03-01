@@ -1,4 +1,4 @@
-as yet unclassified
+drawing
 drawSubmorphsOn: aCanvas
 
 	| bottomOrigin fadeExtent fill |

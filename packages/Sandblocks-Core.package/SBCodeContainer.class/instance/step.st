@@ -1,4 +1,4 @@
-as yet unclassified
+stepping and presenter
 step
 
 	self isDragging ifTrue: [^ self].

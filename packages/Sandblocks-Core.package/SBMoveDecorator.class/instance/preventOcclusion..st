@@ -1,4 +1,4 @@
-as yet unclassified
+accessing
 preventOcclusion: aBoolean
 
 	preventOcclusion := aBoolean
