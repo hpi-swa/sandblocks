@@ -9,5 +9,5 @@ initialize
 		color: Color transparent;
 		cellPositioning: #topLeft;
 		layoutInset: (2 @ 2) withScalingFactor;
-		cellGap: 1 * self scalingFactor;
+		cellGap: 1 withScalingFactor;
 		extent: 0 @ 0

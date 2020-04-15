@@ -1,4 +1,4 @@
 as yet unclassified
 frameSize
 
-	^ 3 * self scalingFactor
+	^ 3 withScalingFactor

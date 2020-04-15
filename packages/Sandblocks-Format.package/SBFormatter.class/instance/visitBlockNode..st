@@ -4,15 +4,14 @@ visitBlockNode: aNode
 	| isMethodBlock startWithNewLine temporaries |
 	SBLabel text: ['TODO: pragmas'].
 	isMethodBlock := (self parentFor: aNode) isKindOf: MethodNode.
-	isMethodBlock
-		ifFalse: [
-			stream nextPut: $[.
-			aNode arguments ifNotEmpty: [:args | 
-				args do: [:arg | 
-					stream nextPut: $:.
-					stream nextPutAll: arg name.
-					stream space].
-				stream nextPutAll: '| ']].
+	isMethodBlock ifFalse: [
+		stream nextPut: $[.
+		aNode arguments ifNotEmpty: [:args | 
+			args do: [:arg | 
+				stream nextPut: $:.
+				stream nextPutAll: arg name.
+				stream space].
+			stream nextPutAll: '| ']].
 	temporaries := isMethodBlock ifTrue: [(self parentFor: aNode) temporaries] ifFalse: [aNode temporaries select: [:t | t scope ~= -2]].
 	temporaries ifNotEmpty: [:temps | 
 		isMethodBlock ifFalse: [stream space].
@@ -24,7 +23,7 @@ visitBlockNode: aNode
 	self
 		indent: (startWithNewLine ifTrue: [1] ifFalse: [0])
 		around: [ | first |
-			startWithNewLine ifTrue: [self newLine].
+			(SBWatch report: startWithNewLine for: 409495141) ifTrue: [self newLine].
 			first := true.
 			(self blockStatementsOf: aNode)
 				do: [:statement | 
@@ -34,10 +33,9 @@ visitBlockNode: aNode
 						active: 0
 						do: {
 							[
-								first
-									ifTrue: [
-										first := false.
-										statement isMessage and: [statement originalReceiver isVariableNode and: [statement originalReceiver key = 'super']]]]
+								first ifTrue: [
+									first := false.
+									statement isMessage and: [statement originalReceiver isVariableNode and: [statement originalReceiver key = 'super']]]]
 						}]
 				separatedBy: [
 					stream nextPut: $..
