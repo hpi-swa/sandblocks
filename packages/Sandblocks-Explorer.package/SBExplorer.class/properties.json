@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Explorer",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"inspector",
+		"object" ],
+	"name" : "SBExplorer",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

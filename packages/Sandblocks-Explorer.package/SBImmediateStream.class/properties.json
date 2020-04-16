@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Explorer",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"block" ],
+	"name" : "SBImmediateStream",
+	"pools" : [
+		 ],
+	"super" : "Stream",
+	"type" : "normal" }

@@ -3,7 +3,7 @@ filterEvent: anEvent for: aMorph
 
 	(anEvent type == #keystroke or:
 	" shift-tab, for some reason is never reported on linux in keyStroke "
-	[anEvent type == #keyDown and: [anEvent shiftPressed] and: [anEvent keyCharacter = Character tab]]) ifFalse: [^ anEvent].
+	["anEvent type == #keyDown and: [anEvent shiftPressed] and: [anEvent keyCharacter = Character tab]"false]) ifFalse: [^ anEvent].
 	
 	self processShortcutList: globalShortcuts for: anEvent ifMatched: [^ anEvent ignore].
 	

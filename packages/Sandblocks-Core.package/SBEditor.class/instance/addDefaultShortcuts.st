@@ -33,7 +33,7 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $m command do: #implementorsOfIt;
 		addSingleSelectionShortcut: $b command do: #browseSelection;
 		addSingleSelectionShortcut: $q do: #closeSelectedMethod;
-		addSingleSelectionShortcut: $z do: #toggleMethodCollapsed;
+		addSingleSelectionShortcut: $z do: #toggleCollapsed;
 		addSingleSelectionShortcut: $( do: #leftRotate;
 		addSingleSelectionShortcut: $p command do: #evaluateSelection;
 		addSingleSelectionShortcut: $m do: #placeMark;
@@ -43,6 +43,8 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $+ do: #insertElementAfter;
 		" FIXME: dependent on keyboard layout "
 		addSingleSelectionShortcut: $* do: #insertElementBefore;
+		addSingleSelectionShortcut: Character tab shift do: [:editor | editor inputPreviousUnknown];
+		addSingleSelectionShortcut: Character tab do: [:editor | editor inputNextUnknown];
 		
 		addMultiSelectionShortcut: Character escape do: #endMultiSelection;
 		addMultiSelectionShortcut: $l do: #selectNext;
@@ -95,6 +97,8 @@ addDefaultShortcuts
 		addInputShortcut: $a command do: [:editor | editor textMorph moveCursorTo: 1];
 		addInputShortcut: $e command do: [:editor | editor textMorph moveCursorTo: 9e8];
 		addInputShortcut: $x command do: [:editor | editor textMorph clear];
+		addInputShortcut: Character tab shift do: [:editor | editor inputPreviousUnknown];
+		addInputShortcut: Character tab do: [:editor | editor inputNextUnknown];
 		addInputShortcut: $j command, Character arrowDown do: [:editor | editor currentInput suggestionMenuDo: #next];
 		addInputShortcut: $k command, Character arrowUp do: [:editor | editor currentInput suggestionMenuDo: #previous];
 		addInputShortcut: Character cr asSandblockShortcut do: [:editor | editor currentInput useSuggestion];

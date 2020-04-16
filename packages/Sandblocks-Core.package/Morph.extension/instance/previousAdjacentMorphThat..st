@@ -5,5 +5,5 @@ previousAdjacentMorphThat: aBlock
 	next := self.
 	[
 	next := next submorphBefore.
-	next  ifNil: [^ nil].
+	next ifNil: [^ nil].
 	(next lastMorphThat: aBlock) ifNotNil: [:m | ^ m]] repeat
