@@ -63,7 +63,7 @@ addDefaultShortcuts
 		addMultiSelectionShortcut: ${ do: #wrapInDynamicArray;
 		addMultiSelectionShortcut: $# do: #wrapInLiteralArray;
 		addMultiSelectionShortcut: $v do: #startOrAddToMultiSelection;
-		addMultiSelectionShortcut: $> do: #extractMethod;
+		addMultiSelectionShortcut: $t do: #extractMethod;
 		addMultiSelectionShortcut: $; do: #wrapInCascade;
 		addMultiSelectionShortcut: $" do: #wrapInToggledCode;
 		
@@ -76,12 +76,12 @@ addDefaultShortcuts
 		addCommandShortcut: $u do: #undo;
 		addCommandShortcut: $U do: #redo;
 		addCommandShortcut: $g do: #selectMethod;
-		addCommandShortcut: $Y command do: #promptChangeClassNewWindow;
-		addCommandShortcut: $y command do: #promptChangeClassSameWindow;
 		addCommandShortcut: $s command do: #save;
-		addCommandShortcut: $x command do: #promptSwitchMethodSameWindow;
-		addCommandShortcut: $t command do: #promptSwitchMethodNewWindow;
-		addCommandShortcut: $e do: #promptNewMethod;
+		addCommandShortcut: $< command do: #restartFrame;
+		addCommandShortcut: $> do: #stepOver;
+		addCommandShortcut: $< do: #stepInto;
+		addCommandShortcut: $e do: #focusErrors;
+		addCommandShortcut: $E do: #focusPreviousErrorFrame;
 		addCommandShortcut: Character escape command do: #close;
 		addCommandShortcut: $S command do: #saveWorkspace;
 		addCommandShortcut: $O command do: #promptOpenWorkspace;

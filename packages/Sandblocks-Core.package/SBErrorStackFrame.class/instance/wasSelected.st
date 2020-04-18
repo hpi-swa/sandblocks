@@ -1,0 +1,9 @@
+as yet unclassified
+wasSelected
+
+	| method |
+	super wasSelected.
+	method := self sandblockEditor openCompiledMethod: self context method.
+	self attachDecorator: SBErrorDecorator new.
+	self updateSelection.
+	self triggerEvent: #selected with: self

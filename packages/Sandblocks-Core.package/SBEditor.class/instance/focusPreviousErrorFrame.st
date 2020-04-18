@@ -1,0 +1,4 @@
+actions
+focusPreviousErrorFrame
+
+	errors focusPreviousFrame

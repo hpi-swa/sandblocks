@@ -22,6 +22,11 @@ initialize
 		hResizing: #shrinkWrap;
 		listDirection: #topToBottom;
 		
+		addMorphBack: (errors := SBErrorPanel new
+			disableLayout: true;
+			topLeft: self topLeft;
+			yourself);
+		
 		addMorphBack: (scroll := SBEditorCanvas new
 			hResizing: #spaceFill;
 			vResizing: #spaceFill;

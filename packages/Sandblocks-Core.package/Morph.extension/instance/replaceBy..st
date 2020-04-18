@@ -5,4 +5,5 @@ replaceBy: aMorph
 	currentOwner := self owner.
 	index := currentOwner submorphIndexOf: self.
 	self delete.
-	currentOwner addMorph: aMorph asElementNumber: index
+	currentOwner addMorph: aMorph asElementNumber: index.
+	^ aMorph

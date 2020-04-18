@@ -29,7 +29,8 @@
 		"bottomPanel",
 		"compileTimeButton",
 		"compileTime",
-		"workspace" ],
+		"workspace",
+		"errors" ],
 	"name" : "SBEditor",
 	"pools" : [
 		 ],

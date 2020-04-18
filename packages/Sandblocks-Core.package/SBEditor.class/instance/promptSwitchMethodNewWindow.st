@@ -1,4 +1,0 @@
-actions
-promptSwitchMethodNewWindow
-
-	self promptSwitchMethodNewWindow: true

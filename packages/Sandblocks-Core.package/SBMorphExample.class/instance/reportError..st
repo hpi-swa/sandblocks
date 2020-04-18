@@ -6,6 +6,12 @@ reportError: anError
 		clearErrors;
 		displayError: anError.
 	
+	true ifTrue: [^ self sandblockEditor reportError: anError process: ((Process
+		forContext: anError signalerContext copyStack
+		priority: Processor activeProcess priority)
+			shouldResumeFromDebugger: false;
+			yourself)"ToolSet debugException: anError"].
+	
 	editor := self sandblockEditor.
 	i := 1.
 	ctx := anError signalerContext.

@@ -1,0 +1,15 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"activeErrorDo:" : "tobe 4/18/2020 21:52",
+		"addError:process:" : "tobe 4/18/2020 20:14",
+		"childSandblocksDo:" : "tobe 4/18/2020 20:12",
+		"deleteCommandFor:" : "tobe 4/18/2020 21:17",
+		"drawnColor" : "tobe 4/18/2020 20:31",
+		"focus" : "tobe 4/18/2020 20:22",
+		"focusPreviousFrame" : "tobe 4/18/2020 21:53",
+		"initialize" : "tobe 4/18/2020 20:12",
+		"restart" : "tobe 4/18/2020 21:57",
+		"stepInto" : "tobe 4/18/2020 22:06",
+		"stepOver" : "tobe 4/18/2020 22:06" } }
