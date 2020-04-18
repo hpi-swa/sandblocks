@@ -11,7 +11,8 @@
 		"fromAlign",
 		"toAlign",
 		"lineType",
-		"curveModifier" ],
+		"curveModifier",
+		"connectorType" ],
 	"name" : "SBConnectorLine",
 	"pools" : [
 		 ],

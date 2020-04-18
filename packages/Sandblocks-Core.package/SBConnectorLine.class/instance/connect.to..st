@@ -7,4 +7,6 @@ connect: anObject to: anotherObject
 	to when: #positionChanged send: #update: to: self with: nil.
 	from addDependent: self.
 	to addDependent: self.
-	self update: nil
+	self update: nil.
+	from when: #outOfWorld send: #delete to: self.
+	to when: #outOfWorld send: #delete to: self

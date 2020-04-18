@@ -6,4 +6,4 @@ do
 	nextSelection := (target submorphAfter ifNil: [target submorphBefore]) ifNotNil: [:m | m containingSandblock].
 	oldIndex := oldOwner submorphIndexOf: target.
 	oldOwner removeMorph: target.
-	^ nextSelection ifNil: [oldOwner containingSandblock]
+	^ target focusAfterDeleteifNone: [nextSelection ifNil: [oldOwner containingSandblock]]

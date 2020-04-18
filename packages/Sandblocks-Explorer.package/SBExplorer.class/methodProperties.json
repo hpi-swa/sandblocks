@@ -4,7 +4,9 @@
 	"instance" : {
 		"childSandblocksDo:" : "tobe 4/16/2020 09:03",
 		"drawnColor" : "tobe 4/16/2020 09:18",
-		"initialize" : "tobe 4/16/2020 08:54",
+		"evaluateWith:" : "tobe 4/18/2020 08:24",
+		"initialize" : "tobe 4/16/2020 09:42",
 		"object" : "tobe 4/16/2020 08:54",
-		"on:" : "tobe 4/16/2020 09:12",
+		"on:" : "tobe 4/16/2020 09:41",
+		"printOn:" : "tobe 4/16/2020 09:45",
 		"toggleCollapsed" : "tobe 4/16/2020 09:13" } }

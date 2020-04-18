@@ -4,7 +4,8 @@ keyStroke: anEvent
 	| char |
 	char := anEvent keyCharacter.
 	
-	"(char = Character tab or: [char = Character space]) ifTrue: [^ self moveFocusToNextPart: (anEvent shiftPressed ifTrue: [-1] ifFalse: [1])]."
+	self flag: #fixme. " !!! this is most certainly an OS-dependent key mapping mess "
+	(char asLowercase = $i and: [anEvent commandKeyPressed]) ifTrue: [^ self moveFocusToNextPart: (anEvent shiftPressed ifTrue: [-1] ifFalse: [1])].
 	
 	char = $: ifTrue: [^ self addMessagePart].
 	(char isSpecial and: [currentInputMessagePart contents isEmpty])

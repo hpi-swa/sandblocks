@@ -3,4 +3,5 @@ outOfWorld: aWorld
 
 	super outOfWorld: aWorld.
 	
-	self removeSuggestionMenu
+	self removeSuggestionMenu.
+	self triggerEvent: #outOfWorld
