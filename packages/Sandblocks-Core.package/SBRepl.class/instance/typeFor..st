@@ -1,4 +1,4 @@
 artefact protocol
 typeFor: aBlock
 
-	^ nil
+	^ self typeCache at: aBlock ifAbsent: [nil]

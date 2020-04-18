@@ -5,6 +5,8 @@ evaluateSelection
 	result := self selection evaluateWith: self selection containingArtefact.
 	source := self selection.
 	
+	source containingArtefact cacheType: result class for: source.
+	
 	self openMorphInView: (explorer := result asSandblock
 		focusAfterDelete: source;
 		yourself).

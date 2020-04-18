@@ -3,6 +3,8 @@ initialize
 
 	super initialize.
 	
+	typeCache := Dictionary new.
+	
 	self
 		layoutInset: 8 withScalingFactor;
 		addMorphBack: (SBRow new
