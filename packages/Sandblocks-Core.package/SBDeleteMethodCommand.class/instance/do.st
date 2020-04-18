@@ -1,6 +1,6 @@
 as yet unclassified
 do
 
-	oldSource := (method methodClass >> method currentSelector) getSourceFromFile.
-	method methodClass removeSelector: method currentSelector.
-	^ nil
+	oldSource := (target currentClass >> target currentSelector) getSourceFromFile.
+	target currentClass removeSelector: target currentSelector.
+	^ super do

@@ -6,10 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"method",
 		"oldSource" ],
 	"name" : "SBDeleteMethodCommand",
 	"pools" : [
 		 ],
-	"super" : "SBCommand",
+	"super" : "SBDeleteCommand",
 	"type" : "normal" }

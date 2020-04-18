@@ -10,5 +10,9 @@ codeActions
 					(classOrInstanceSide := UIManager default chooseFrom: {'Instance Side'. 'Class Side'}) ~= 0 ifTrue: [
 						node sandblockEditor do: ((SBMoveMethodCommand newFor: self)
 							method: self;
-							toClass: (classOrInstanceSide = 2 ifTrue: [class class] ifFalse: [class]))]]])
+							toClass: (classOrInstanceSide = 2 ifTrue: [class class] ifFalse: [class]))]]]).
+		(SBCodeAction
+			labeled: 'Delete method'
+			for: self
+			do: [:node | node sandblockEditor do: ((SBDeleteMethodCommand newFor: self) target: self)])
 	}

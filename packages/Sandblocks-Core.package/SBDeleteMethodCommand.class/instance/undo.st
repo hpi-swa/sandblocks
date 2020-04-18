@@ -1,5 +1,5 @@
 as yet unclassified
 undo
 
-	method methodClass compile: oldSource.
-	^ method
+	target methodClass compile: oldSource.
+	^ super undo
