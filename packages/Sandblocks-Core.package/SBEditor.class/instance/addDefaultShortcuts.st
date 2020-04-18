@@ -4,7 +4,7 @@ addDefaultShortcuts
 	self
 		addSingleSelectionShortcut: $K do: #swapLeft;
 		addSingleSelectionShortcut: $J do: #swapRight;
-		addSingleSelectionShortcut: $d do: #deleteAroundSelection;
+		addSingleSelectionShortcut: $X do: #deleteAroundSelection;
 		addSingleSelectionShortcut: $i do: #startInputAtStart;
 		addSingleSelectionShortcut: $$ do: #selectRightMostBlock;
 		addSingleSelectionShortcut: $0 asSandblockShortcut, Character home do: #selectContainingArtefact;

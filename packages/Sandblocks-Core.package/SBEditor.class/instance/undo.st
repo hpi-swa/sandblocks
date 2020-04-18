@@ -2,9 +2,9 @@ actions
 undo
 
 	| command |
-	undoStack ifNotEmpty: [
+	undoStack ifNotEmpty: [ | ret |
 		command := undoStack removeLast.
 		redoStack addLast: command.
-		command undo.
-		self select: command previousSelection.
+		ret := command undo.
+		self select: (command previousSelection isInWorld ifTrue: [command previousSelection] ifFalse: [ret]).
 		self markChangesAfterCommand: command]
