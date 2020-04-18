@@ -8,8 +8,8 @@ saveTryFixing: aBoolean quick: aQuickBoolean
 	
 	text := aQuickBoolean ifTrue: [self sourceString] ifFalse: [self prettySourceString].
 	newSelector := self methodClass compile: text asText.
-	(self currentSelector ~= #'' and: [newSelector ~=self  currentSelector]) ifTrue: [
-		self methodClass removeSelector: self currentSelector].
+	(self currentClass ~= self methodClass or: [self currentSelector ~= #'' and: [newSelector ~=self  currentSelector]]) ifTrue: [
+		self currentClass removeSelector: self currentSelector].
 	self currentSelector: newSelector.
 	
 	aQuickBoolean ifFalse: [self updatePCs].

@@ -6,13 +6,8 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"body",
-		"methodClass",
-		"hasUnsavedChanges",
-		"typeCache",
-		"currentSelector",
-		"currentClass" ],
-	"name" : "SBBasicMethod",
+		 ],
+	"name" : "SBPastePlaceholder",
 	"pools" : [
 		 ],
 	"super" : "SBBlock",

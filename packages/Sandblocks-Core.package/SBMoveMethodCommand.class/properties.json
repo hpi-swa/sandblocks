@@ -6,14 +6,11 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"body",
-		"methodClass",
-		"hasUnsavedChanges",
-		"typeCache",
-		"currentSelector",
-		"currentClass" ],
-	"name" : "SBBasicMethod",
+		"fromClass",
+		"toClass",
+		"method" ],
+	"name" : "SBMoveMethodCommand",
 	"pools" : [
 		 ],
-	"super" : "SBBlock",
+	"super" : "SBCommand",
 	"type" : "normal" }

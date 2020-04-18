@@ -9,12 +9,12 @@ exampleMorphToMorph
 				caseBlock: [:m | 
 					m
 						connect: (Morph new
-							 color: Color red;
-							 openInWorld: m owner;
-							 position: 139 @ 164)
+							color: Color red;
+							openInWorld: m owner;
+							position: 139 @ 164)
 						to: (Morph new
-							 color: Color red;
-							 openInWorld: m owner;
-							 position: 317 @ 47)])
+							color: Color red;
+							openInWorld: m owner;
+							position: 317 @ 47)])
 		}
 		extent: 407 @ 264

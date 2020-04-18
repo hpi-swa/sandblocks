@@ -1,7 +1,9 @@
 actions
 replaceWithCopyBuffer
 
-	copyBuffer ifNotNil: [
-		self do: ((SBReplaceCommand newFor: self method)
+	copyBuffer ifNotNil: [ | new |
+		new := (copyBuffer isSelection ifTrue: [copyBuffer firstSubmorph] ifFalse: [copyBuffer]) veryDeepCopy.
+		self do: ((SBReplaceCommand newFor: self selectedArtefact)
 			target: self selection;
-			replacer: (copyBuffer isSelection ifTrue: [copyBuffer firstSubmorph] ifFalse: [copyBuffer]) veryDeepCopy)]
+			replacer: new).
+		new postDuplicate]
