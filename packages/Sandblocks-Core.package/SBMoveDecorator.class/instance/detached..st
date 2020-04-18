@@ -1,4 +1,4 @@
 callbacks
 detached: aMorph
 
-	aMorph eventHandler: nil
+	aMorph eventHandler removeActionsWithReceiver: self

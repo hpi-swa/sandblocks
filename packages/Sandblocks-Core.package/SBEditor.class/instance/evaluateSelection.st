@@ -5,7 +5,7 @@ evaluateSelection
 	result := self selection evaluateWith: self selection containingArtefact.
 	source := self selection.
 	
-	self openMorphInView: (explorer := (SBExplorer on: result)
+	self openMorphInView: (explorer := result asSandblock
 		focusAfterDelete: source;
 		yourself).
 	

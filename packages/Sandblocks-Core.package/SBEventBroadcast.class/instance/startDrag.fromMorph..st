@@ -1,4 +1,4 @@
 event handling
 startDrag: anEvent fromMorph: aMorph
 
-	lastDragPosition := anEvent position
+	self triggerEvent: #startDrag with: anEvent

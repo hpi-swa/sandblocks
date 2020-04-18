@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Explorer",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"object" ],
+	"name" : "SBDataProjection",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

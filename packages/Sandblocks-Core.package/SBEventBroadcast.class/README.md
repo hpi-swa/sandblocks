@@ -1,0 +1,1 @@
+A SBMoveDecorator will allow dragging a morph (without lifting it). If preventOcclusion is set to true, it will also step to ensure that no other sibling morphs overlap its morph.

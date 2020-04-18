@@ -1,0 +1,10 @@
+{
+	"class" : {
+		"matches:" : "tobe 4/18/2020 13:21" },
+	"instance" : {
+		"childSandblocksDo:" : "tobe 4/18/2020 13:20",
+		"copyChildSandblocksDo:" : "tobe 4/18/2020 13:16",
+		"copyObject:" : "tobe 4/18/2020 13:14",
+		"example" : "tobe 4/18/2020 14:52",
+		"initialize" : "tobe 4/18/2020 13:43",
+		"object:" : "tobe 4/18/2020 13:39" } }

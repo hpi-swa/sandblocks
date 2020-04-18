@@ -2,5 +2,5 @@ event handling
 mouseMove: anEvent
 
 	lastDragPosition ifNotNil: [
-		self position: self position + (anEvent position - lastDragPosition).
+		self morph position: self morph position + (anEvent position - lastDragPosition).
 		lastDragPosition := anEvent position]

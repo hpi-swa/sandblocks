@@ -1,7 +1,7 @@
 selection
 select: aBlock
 
-	self assert: aBlock isSandblock.
+	self assert: (aBlock isNil or: [aBlock isSandblock]).
 	
 	(currentInput ~= nil and: [currentInput ~= aBlock]) ifTrue: [self endInput].
 	
