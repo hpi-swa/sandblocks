@@ -45,6 +45,7 @@ initialize
 			color: Color transparent;
 			addMorphBack: (modeLabel := StringMorph new emphasis: TextEmphasis bold emphasisCode);
 			addMorphBack: (selectionLabel := StringMorph new contents: '');
+			addMorphBack: (searchInput := SBSearchPanel new);
 			addMorphBack: (Morph new extent: 0 @ 0; hResizing: #spaceFill; color: Color transparent);
 			addMorphBack: (compileTimeButton := StringMorph new
 				contents: 'Compile on save';

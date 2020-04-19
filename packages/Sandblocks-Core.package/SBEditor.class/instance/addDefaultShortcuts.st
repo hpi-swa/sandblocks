@@ -86,6 +86,8 @@ addDefaultShortcuts
 		addCommandShortcut: $S command do: #saveWorkspace;
 		addCommandShortcut: $O command do: #promptOpenWorkspace;
 		addCommandShortcut: $r command do: #openRepl;
+		addCommandShortcut: $/ do: #startSearch;
+		addCommandShortcut: $n command do: #nextSearchResult;
 		
 		addInputShortcut: Character escape do: #endInput;
 		addInputShortcut: Character arrowLeft do: [:editor | editor textMorph moveCursor: -1];

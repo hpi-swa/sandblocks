@@ -1,4 +1,4 @@
-events
+accessing
 mode: aSymbol
 
 	aSymbol = #input

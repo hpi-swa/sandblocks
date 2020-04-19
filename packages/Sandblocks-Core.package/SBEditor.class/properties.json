@@ -30,7 +30,8 @@
 		"compileTimeButton",
 		"compileTime",
 		"workspace",
-		"errors" ],
+		"errors",
+		"searchInput" ],
 	"name" : "SBEditor",
 	"pools" : [
 		 ],

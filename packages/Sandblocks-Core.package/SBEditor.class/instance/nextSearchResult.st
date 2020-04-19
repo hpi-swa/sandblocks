@@ -1,0 +1,4 @@
+actions
+nextSearchResult
+
+	searchInput nextResult

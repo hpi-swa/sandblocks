@@ -1,0 +1,4 @@
+actions
+startSearch
+
+	searchInput startSearch
