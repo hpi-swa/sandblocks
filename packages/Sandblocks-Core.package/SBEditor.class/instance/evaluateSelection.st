@@ -1,9 +1,10 @@
 actions
 evaluateSelection
 
-	| result explorer source |
-	result := self selection evaluateWith: self selection containingArtefact.
+	| result explorer source artefact |
 	source := self selection.
+	artefact := source containingArtefact.
+	result := source evaluateWith: artefact for: (errors focusedArtefact = artefact ifTrue: [errors focusedContext] ifFalse: [nil]).
 	
 	source containingArtefact cacheType: result class for: source.
 	

@@ -12,11 +12,7 @@ run
 	
 	processRunning := true.
 	currentProcess := [
-		[ | arguments |
-			currentSelf := self evaluateSelf.
-			arguments := self evaluateArguments.
-			currentSelf perform: self containingArtefact selector asSymbol withArguments: arguments
-		] on: Error do: [:e |
+		[self evaluate] on: Error do: [:e |
 			processRunning := false.
 			self scheduleLastError: e.
 			Processor activeProcess suspend].
