@@ -20,7 +20,7 @@ asSandblock
 						instructions nextInstruction]].
 				rangeToPC := Dictionary new.
 				rangeToPCList do: [:assoc | 
-					(#(#storeIntoReceiverVariable: #storeIntoTemporaryVariable: #popIntoReceiverVariable: #popIntoTemporaryVariable: #pushClosureCopyNumCopiedValues:numArgs:blockSize: #send:super:numArgs:) includes: (instructions
+					(#(#storeIntoReceiverVariable: #storeIntoTemporaryVariable: #popIntoReceiverVariable: #popIntoTemporaryVariable: #pushClosureCopyNumCopiedValues:numArgs:blockSize: #send:super:numArgs: #methodReturnConstant: #methodReturnReceiver #methodReturnTop) includes: (instructions
 						 pc: assoc value;
 						 nextInstruction) selector) ifTrue: [rangeToPC at: assoc key put: assoc value]].
 				nodeToPC := sourceRanges collect: [:range | rangeToPC at: range ifAbsent: [0]].

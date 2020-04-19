@@ -3,10 +3,5 @@ stepOver
 
 	| newContext |
 	newContext := process completeStep: self currentStackFrame context.
-	newContext == self currentStackFrame context
-		ifTrue: [
-			process stepToSendOrReturn.
-			self currentStackFrame updateSelection]
-		ifFalse: [
-			self removeMorph: self firstSubmorph.
-			self firstSubmorph select]
+	newContext == self currentStackFrame context ifTrue: [newContext := process stepToSendOrReturn].
+	self resetContext: newContext

@@ -1,9 +1,13 @@
 as yet unclassified
 restart
 
-	process popTo: self currentStackFrame context.
-	[self firstSubmorph ~= self currentStackFrame] whileTrue: [self removeMorph: self firstSubmorph].
-	process
-		restartTop;
-		stepToSendOrReturn.
-	self currentStackFrame updateSelection
+	| actualContext targetContext |
+	targetContext := self currentStackFrame context.
+	actualContext := process popTo: targetContext.
+	
+	actualContext = targetContext ifTrue: [
+		process
+			restartTop;
+			stepToSendOrReturn].
+	
+	self resetContext: actualContext
