@@ -2,6 +2,7 @@ as yet unclassified
 resetContext: aContext
 
 	aContext ~= self firstSubmorph context ifTrue: [ | stack dropToIndex addFromIndex |
+		" find the minimal update required to reconcile our UI with the stack by looking if we can just drop or add elements "
 		stack := aContext contextStack.
 		dropToIndex := self submorphs findFirst: [:frame | frame context = aContext].
 		

@@ -6,4 +6,6 @@ debug
 		forBlock: [self evaluate]
 		runUntil: [:context | context method == self containingArtefact compiledMethod].
 	
-	self sandblockEditor reportError: process suspendedContext process: process
+	self sandblockEditor
+		reportError: process suspendedContext process: process;
+		focusErrors

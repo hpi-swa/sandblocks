@@ -6,11 +6,10 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"context",
-		"pcIndicator",
-		"valueDecorators" ],
-	"name" : "SBErrorStackFrame",
+		"label",
+		"shown" ],
+	"name" : "SBReportedValueDecorator",
 	"pools" : [
 		 ],
-	"super" : "SBBlock",
+	"super" : "SBMorphDecorator",
 	"type" : "normal" }

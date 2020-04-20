@@ -1,4 +1,4 @@
-as yet unclassified
+event handling
 mouseEnterDragging: anEvent
 
 	self allOwnersDo: #resetHighlightForDrop.

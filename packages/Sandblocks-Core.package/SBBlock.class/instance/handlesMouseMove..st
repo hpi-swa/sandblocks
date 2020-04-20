@@ -1,4 +1,4 @@
-as yet unclassified
+event handling
 handlesMouseMove: anEvent
 
 	^ (super handlesMouseMove: anEvent) or: [anEvent isDraggingEvent]

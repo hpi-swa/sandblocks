@@ -1,4 +1,5 @@
 selection
 scrollToShow: aBlock
 
-	scroll scrollToShow: aBlock
+	(aBlock hasOwner: scroll) ifTrue: [
+		scroll scrollToShow: aBlock]
