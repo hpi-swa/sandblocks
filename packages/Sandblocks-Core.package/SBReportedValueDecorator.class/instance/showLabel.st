@@ -11,7 +11,7 @@ showLabel
 			yourself);
 		addMorphBack: (Morph new
 			addMorph: (StringMorph new
-				contents: self label;
+				contents: (self label printStringLimitedTo: 100);
 				yourself);
 			vResizing: #shrinkWrap;
 			hResizing: #shrinkWrap;

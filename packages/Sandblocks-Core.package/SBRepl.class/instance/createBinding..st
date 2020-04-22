@@ -2,9 +2,8 @@ artefact protocol
 createBinding: aString
 
 	| decl |
-	decl := SBDeclarationForLocalVariable new
+	decl := (SBName contents: aString)
 		binding: aString -> nil;
-		contents: aString;
 		yourself.
 	bindings addMorphBack: decl.
 	self changed.

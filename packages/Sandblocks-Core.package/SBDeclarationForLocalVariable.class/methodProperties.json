@@ -3,10 +3,13 @@
 		 },
 	"instance" : {
 		"asSuggestionItem" : "tobe 1/18/2020 10:20",
-		"browse" : "tobe 4/22/2020 18:53",
+		"attached:" : "tobe 4/22/2020 19:42",
+		"browse" : "tobe 4/22/2020 20:50",
 		"classForBinding" : "tobe 7/8/2019 08:03",
-		"guessedClass" : "tobe 1/1/2020 11:07",
-		"initialize" : "tobe 4/22/2020 10:39",
+		"detached:" : "tobe 4/22/2020 19:41",
+		"guessedClass" : "tobe 4/22/2020 19:42",
+		"handleDroppedBlock:event:" : "tobe 4/22/2020 20:42",
 		"inputCommandClass" : "tobe 4/22/2020 10:41",
+		"printBlockOn:" : "tobe 4/22/2020 19:43",
 		"scope" : "tobe 4/22/2020 14:19",
 		"valid" : "tobe 4/22/2020 14:07" } }

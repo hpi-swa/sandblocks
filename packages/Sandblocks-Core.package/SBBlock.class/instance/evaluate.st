@@ -1,4 +1,7 @@
 as yet unclassified
 evaluate
 
-	^ Compiler evaluate: self sourceString
+	| res |
+	res := Compiler evaluate: self sourceString.
+	self containingArtefact ifNotNil: [:artefact | artefact cacheType: res class for: self].
+	^ res

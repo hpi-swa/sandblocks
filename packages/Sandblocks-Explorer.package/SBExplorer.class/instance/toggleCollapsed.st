@@ -5,12 +5,12 @@ toggleCollapsed
 	caption := self firstSubmorph.
 	self submorphCount > 1
 		ifTrue: [
-			caption clearEmphasis.
+			caption lastSubmorph clearEmphasis.
 			self
 				removeAllMorphs;
 				addMorphBack: caption]
 		ifFalse: [
-			caption bold.
+			caption lastSubmorph bold.
 			inspector streamFieldsOn: (SBImmediateStream with: [:field |
 				(#(all self) includes: field type) ifFalse: [
 					self addMorphBack: (SBRow new

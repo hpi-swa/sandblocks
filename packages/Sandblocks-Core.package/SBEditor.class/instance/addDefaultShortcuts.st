@@ -10,8 +10,8 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $0 asSandblockShortcut, Character home do: #selectContainingArtefact;
 		addSingleSelectionShortcut: $a do: #startInputAtEnd;
 		addSingleSelectionShortcut: $s do: #startInputSubstituting;
-		addSingleSelectionShortcut: $n do: #insertLabelBelow;
-		addSingleSelectionShortcut: $N do: #insertLabelAbove;
+		addSingleSelectionShortcut: $d do: #insertLabelBelow;
+		addSingleSelectionShortcut: $D do: #insertLabelAbove;
 		addSingleSelectionShortcut: $o do: #insertStatementBelow;
 		addSingleSelectionShortcut: $O do: #insertStatementAbove;
 		addSingleSelectionShortcut: $, do: #promptCodeAction;
@@ -77,6 +77,7 @@ addDefaultShortcuts
 		addCommandShortcut: $u do: #undo;
 		addCommandShortcut: $U do: #redo;
 		addCommandShortcut: $g do: #selectMethod;
+		addCommandShortcut: $G do: #selectLast;
 		addCommandShortcut: $s command do: #save;
 		addCommandShortcut: $< command do: #restartFrame;
 		addCommandShortcut: $> do: #stepOver;
@@ -88,7 +89,7 @@ addDefaultShortcuts
 		addCommandShortcut: $O command do: #promptOpenWorkspace;
 		addCommandShortcut: $r command do: #openRepl;
 		addCommandShortcut: $/ do: #startSearch;
-		addCommandShortcut: $n command do: #nextSearchResult;
+		addCommandShortcut: $n do: #nextSearchResult;
 		
 		addInputShortcut: Character escape do: #endInput;
 		addInputShortcut: Character arrowLeft do: [:editor | editor textMorph moveCursor: -1];

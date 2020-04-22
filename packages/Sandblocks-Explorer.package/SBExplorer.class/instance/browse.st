@@ -1,4 +1,4 @@
 as yet unclassified
 browse
 
-	self binding value browse
+	self object class browse

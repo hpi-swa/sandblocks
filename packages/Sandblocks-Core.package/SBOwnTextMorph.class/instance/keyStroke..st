@@ -16,4 +16,4 @@ keyStroke: anEvent
 		char = $e ifTrue: [^ self moveCursorTo: self contents size + 1].
 		char = $s ifTrue: [^ self contents: '']].
 	
-	self insertCharacter: char
+	self insertString: char asString

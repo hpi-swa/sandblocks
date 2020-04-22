@@ -7,9 +7,6 @@ startDrag: anEvent
 	
 	self flag: #fixme. " this should be made better "
 	(self hasDecorator: SBMoveDecorator) ifFalse: [
-		anEvent hand attachMorph: (SBSelection new 
-			methodClass: self containingArtefact;
-			colorPolicy: self colorPolicy;
-			addMorphBack: self veryDeepCopy)].
+		self pickUp: anEvent].
 	
 	"self showOverlayFor: anEvent"

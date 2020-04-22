@@ -1,4 +1,4 @@
 actions
 selectMethod
 
-	self select: self method
+	self select: self selection containingArtefact

@@ -4,4 +4,4 @@ drawOn: aCanvas
 	aCanvas
 		paragraph: (self paragraph positionWhenComposed: self position)
 		bounds: (self position extent: self paragraph extent)
-		color: Color black
+		color: self color

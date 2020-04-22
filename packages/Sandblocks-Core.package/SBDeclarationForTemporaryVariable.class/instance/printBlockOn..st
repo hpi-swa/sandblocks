@@ -1,4 +1,4 @@
 as yet unclassified
 printBlockOn: aStream
 
-	aStream nextPutAll: 'temporary declaration '; nextPutAll: self contents
+	aStream nextPutAll: 'temporary '; nextPutAll: self contents
