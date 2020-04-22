@@ -1,4 +1,4 @@
 as yet unclassified
 isMethodArgument
 
-	^ false
+	^ self behavior isMethodArgument

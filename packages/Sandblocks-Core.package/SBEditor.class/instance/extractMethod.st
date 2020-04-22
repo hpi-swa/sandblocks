@@ -7,7 +7,7 @@ extractMethod
 		self flag: #todo. " consider write vs read access "
 		localBindings := extracting gather: #resolveLocalBindings.
 		localBindings := ((KeyedSet keyBlock: #name) addAll: localBindings; yourself) asArray.
-		arguments := localBindings collect: [:arg | SBDeclaration new name: arg contents].
+		arguments := localBindings collect: [:arg | SBName contents: arg contents].
 		
 		method := SBMethod new
 				selector: (#extracted numArgs: localBindings size)

@@ -1,9 +1,8 @@
 as yet unclassified
 toggle
 
-	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
-		target: self;
+	self block sandblockEditor do: ((SBMutatePropertyCommand newFor: self block containingArtefact)
+		target: self block;
 		selector: #contents;
 		value: self parsedContents not asString;
-		yourself).
-	self triggerEvent: #toggled
+		yourself)

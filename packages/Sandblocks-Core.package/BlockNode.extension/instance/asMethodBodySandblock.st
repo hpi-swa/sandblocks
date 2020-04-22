@@ -8,7 +8,7 @@ asMethodBodySandblock
 	
 	^ SBBlockBody new
 		statements: (s collect: #asSandblock);
-		temporaries: (self temporaries collect: #asDeclarationSandblock);
-		bindings: (self arguments collect: #asBlockBindingSandblock);
+		temporaries: (self temporaries collect: #asSandblock);
+		bindings: (self arguments collect: #asSandblock);
 		pc: self pc;
 		yourself

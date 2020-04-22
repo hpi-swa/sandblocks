@@ -6,9 +6,9 @@
 		 ],
 	"commentStamp" : "",
 	"instvars" : [
-		"binding" ],
+		 ],
 	"name" : "SBDeclarationForLocalVariable",
 	"pools" : [
 		 ],
-	"super" : "SBDeclaration",
+	"super" : "SBDeclarationBehavior",
 	"type" : "normal" }

@@ -3,7 +3,9 @@
 		 },
 	"instance" : {
 		"asSuggestionItem" : "tobe 1/12/2020 12:14",
-		"guessedClass" : "tobe 1/5/2020 16:39",
+		"guessedClass" : "tobe 4/22/2020 14:27",
+		"inputCommandClass" : "tobe 4/22/2020 13:57",
 		"isMethodArgument" : "tobe 7/7/2019 13:58",
 		"isMethodLocal" : "tobe 7/7/2019 14:02",
-		"scope" : "tobe 1/5/2020 16:39" } }
+		"scope" : "tobe 4/22/2020 14:19",
+		"valid" : "tobe 4/22/2020 14:07" } }

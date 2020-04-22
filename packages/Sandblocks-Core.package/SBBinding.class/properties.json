@@ -10,5 +10,5 @@
 	"name" : "SBBinding",
 	"pools" : [
 		 ],
-	"super" : "SBName",
+	"super" : "SBNameBehavior",
 	"type" : "normal" }

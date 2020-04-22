@@ -1,4 +1,4 @@
 *Sandblocks-Core
 containingSandblock
 
-	^ self owner containingSandblock
+	^ self owner ifNotNil: #containingSandblock

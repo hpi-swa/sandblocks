@@ -7,6 +7,6 @@ bindingFor: aString ifPresent: aBlock
 	
 	Symbol hasInterned: aString ifTrue: [:sym | | binding |
 		binding := self methodClass bindingOf: sym environment: self methodClass environment.
-		binding ifNotNil: [^ aBlock value: (SBDeclarationForPoolVariable new contents: aString; binding: binding)]].
+		binding ifNotNil: [^ aBlock value: ((SBName poolDeclaration: aString) binding: binding)]].
 	
 	^ nil

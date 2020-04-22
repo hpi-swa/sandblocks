@@ -3,13 +3,19 @@ noteNewOwner: aMorph
 
 	aMorph ifNil: [^ self].
 	
-	(self contents = 'true' or: [self contents = 'false']) ifTrue: [^ self assureClass: SBBoolean].
-	self isReserved ifTrue: [^ self assureClass: SBKeywordBinding].
-	aMorph isAssignment ifTrue: [^ self assureClass: SBBinding].
-	aMorph isBlockBody ifTrue: [^ self assureClass: SBBinding].
-	(aMorph parentSandblockOrNil ifNotNil: #isMethod ifNil: [false]) ifTrue: [^ self assureClass: SBDeclarationForMethodArgument].
-	aMorph isTemporaries ifTrue: [^ self assureClass: SBDeclarationForTemporaryVariable].
-	aMorph isBlockBindings ifTrue: [^ self assureClass: SBDeclarationForBlock].
+	(self contents = 'true' or: [self contents = 'false']) ifTrue: [^ self behavior: SBBoolean new].
+	self isReserved ifTrue: [^ self behavior: SBKeywordBinding new].
+	aMorph isAssignment ifTrue: [^ self behavior: (self isFirstChild ifTrue: [SBAssignmentLabel new] ifFalse: [SBBinding new])].
+	aMorph isBlockBody ifTrue: [^ self behavior: SBBinding new].
+	(aMorph parentSandblock ifNotNil: #isMethod ifNil: [false]) ifTrue: [^ self behavior: SBDeclarationForMethodArgument new].
+	aMorph isTemporaries ifTrue: [^ self behavior: SBDeclarationForTemporaryVariable new].
+	aMorph isBlockBindings ifTrue: [^ self behavior: SBDeclarationForBlock new].
+	(self containingArtefact ifNotNil: #isClassContainer ifNil: [false]) ifTrue: [
+		aMorph = self containingArtefact instanceVariables ifTrue: [^ self behavior: SBDeclarationForInstanceVariable new].
+		aMorph = self containingArtefact classVariables ifTrue: [^ self behavior: SBDeclarationForPoolVariable new]].
+	
+	((self containingArtefact ifNotNil: #isRepl ifNil: [false]) and: [aMorph = self containingArtefact localVariables])
+		ifTrue: [^ self behavior: SBDeclarationForLocalVariable new].
 	
 	self flag: #fixme. " this may be too strict "
-	self assureClass: SBBinding
+	self behavior: SBBinding new

@@ -2,9 +2,10 @@
 	"class" : {
 		 },
 	"instance" : {
-		"guessedClass" : "tobe 1/5/2020 16:40",
-		"initialize" : "tobe 7/3/2019 15:52",
+		"attached:" : "tobe 4/22/2020 13:00",
+		"guessedClass" : "tobe 4/22/2020 14:51",
 		"inputCommandClass" : "tobe 12/21/2019 17:35",
 		"isExpression" : "tobe 7/10/2019 12:17",
-		"printOn:" : "tobe 7/6/2019 12:15",
-		"validBinding" : "tobe 7/3/2019 15:16" } }
+		"isKeyword" : "tobe 4/22/2020 19:00",
+		"printBlockOn:" : "tobe 4/22/2020 12:56",
+		"valid" : "tobe 4/22/2020 14:08" } }

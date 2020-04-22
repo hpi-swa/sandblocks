@@ -10,5 +10,5 @@
 	"name" : "SBDeclarationForBlock",
 	"pools" : [
 		 ],
-	"super" : "SBDeclaration",
+	"super" : "SBDeclarationBehavior",
 	"type" : "normal" }

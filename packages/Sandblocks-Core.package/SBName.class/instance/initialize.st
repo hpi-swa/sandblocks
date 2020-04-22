@@ -3,4 +3,4 @@ initialize
 
 	super initialize.
 	
-	"text emphasis: TextEmphasis bold"
+	self behavior: SBBinding new

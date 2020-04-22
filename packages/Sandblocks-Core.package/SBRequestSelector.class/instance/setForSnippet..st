@@ -7,7 +7,7 @@ setForSnippet: aCollectionOfBlocks
 	
 	editor method: (SBMethod new
 		selector: (arguments collect: [:arg | ':']) join
-		arguments: (arguments collect: [:arg | SBDeclaration new name: arg contents])
+		arguments: (arguments collect: [:arg | SBName contents: arg contents])
 		class: aCollectionOfBlocks first containingArtefact methodClass).
 	
 	editor startInput: editor method at: 1 replacingContents: true

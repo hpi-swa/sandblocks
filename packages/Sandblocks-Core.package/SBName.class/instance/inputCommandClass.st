@@ -1,4 +1,4 @@
 as yet unclassified
 inputCommandClass
 
-	^ SBBindingRenameCommand
+	^ self behavior inputCommandClass

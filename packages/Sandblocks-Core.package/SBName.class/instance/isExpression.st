@@ -1,4 +1,4 @@
 as yet unclassified
 isExpression
 
-	^ false
+	^ self behavior isExpression

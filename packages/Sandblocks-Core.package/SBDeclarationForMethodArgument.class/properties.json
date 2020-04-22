@@ -10,5 +10,5 @@
 	"name" : "SBDeclarationForMethodArgument",
 	"pools" : [
 		 ],
-	"super" : "SBDeclaration",
+	"super" : "SBDeclarationBehavior",
 	"type" : "normal" }

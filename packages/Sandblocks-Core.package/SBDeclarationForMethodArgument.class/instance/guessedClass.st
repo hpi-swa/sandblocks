@@ -1,4 +1,4 @@
 as yet unclassified
 guessedClass
 
-	^ self containingArtefact typeFor: self
+	^ self block containingArtefact typeFor: self

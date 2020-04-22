@@ -10,5 +10,5 @@
 	"name" : "SBDeclarationForTemporaryVariable",
 	"pools" : [
 		 ],
-	"super" : "SBDeclaration",
+	"super" : "SBDeclarationBehavior",
 	"type" : "normal" }

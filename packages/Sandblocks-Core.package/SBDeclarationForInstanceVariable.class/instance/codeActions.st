@@ -4,7 +4,7 @@ codeActions
 	^ super codeActions, {
 		(SBCodeAction
 			labeled: 'Define getter/setter'
-			for: self
+			for: self block
 			do: [:node | 
 				node sandblockEditor openMorphInView: (SBMethod new
 					 selector: node contents asSymbol arguments: #() class: node containingArtefact shownClass;

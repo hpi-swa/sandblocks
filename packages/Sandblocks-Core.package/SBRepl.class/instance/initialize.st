@@ -10,7 +10,7 @@ initialize
 		addMorphBack: (SBRow new
 			cellGap: 8 withScalingFactor;
 			addMorphBack: (SBTextBubble new layoutInset: 4 withScalingFactor; contents: 'REPL');
-			addMorphBack: (bindings := SBRow new));
+			addMorphBack: (bindings := SBRow new cellGap: 4 withScalingFactor));
 		addMorphBack: SBBlockBody empty;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;

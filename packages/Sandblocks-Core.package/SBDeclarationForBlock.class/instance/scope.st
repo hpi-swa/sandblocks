@@ -1,4 +1,4 @@
 accessing
 scope
 
-	^ {self parentSandblock}
+	^ {self block parentSandblock}

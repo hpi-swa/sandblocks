@@ -1,4 +1,4 @@
 as yet unclassified
 guessedClass
 
-	^ self binding value class
+	^ self block binding value class

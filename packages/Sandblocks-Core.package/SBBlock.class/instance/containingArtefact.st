@@ -1,4 +1,4 @@
 as yet unclassified
 containingArtefact
 
-	^ self parentSandblock containingArtefact
+	^ self parentSandblock ifNotNil: #containingArtefact

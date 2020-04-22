@@ -1,4 +1,4 @@
 as yet unclassified
 isBlockBinding
 
-	^ false
+	^ self behavior isBlockBinding

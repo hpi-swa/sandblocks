@@ -2,6 +2,9 @@
 	"class" : {
 		 },
 	"instance" : {
+		"asSuggestionItem" : "tobe 4/22/2020 14:33",
+		"inputCommandClass" : "tobe 4/22/2020 13:57",
 		"isMethodLocal" : "tobe 1/5/2020 23:00",
-		"printOn:" : "tobe 1/5/2020 23:00",
-		"scope" : "tobe 1/5/2020 23:01" } }
+		"printBlockOn:" : "tobe 4/22/2020 12:55",
+		"scope" : "tobe 4/22/2020 14:18",
+		"valid" : "tobe 4/22/2020 14:08" } }

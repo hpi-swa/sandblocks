@@ -1,4 +1,4 @@
 as yet unclassified
 isDeclaration
 
-	^ false
+	^ self behavior isDeclaration

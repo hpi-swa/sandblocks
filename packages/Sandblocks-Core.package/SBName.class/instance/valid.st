@@ -1,4 +1,4 @@
 as yet unclassified
 valid
 
-	^ self validContents
+	^ self validContents and: [self behavior valid]

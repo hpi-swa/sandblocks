@@ -4,7 +4,7 @@
 	"instance" : {
 		"allMorphsDoBreadthFirst:" : "tobe 7/10/2019 23:18",
 		"centerRight:" : "tobe 9/8/2019 11:46",
-		"containingSandblock" : "tobe 6/29/2019 10:05",
+		"containingSandblock" : "tobe 4/22/2020 14:39",
 		"firstMorphThat:" : "tobe 6/29/2019 10:30",
 		"focusNextMorph:" : "tobe 6/29/2019 10:36",
 		"focusPreviousMorph:" : "tobe 6/29/2019 10:37",
@@ -25,8 +25,7 @@
 		"nextAdjacentMorphThat:" : "tobe 6/29/2019 10:30",
 		"nextMorphThat:" : "tobe 4/22/2020 09:59",
 		"onHoverHighlight:labeled:" : "tobe 2/2/2020 20:30",
-		"parentSandblock" : "tobe 6/29/2019 14:23",
-		"parentSandblockOrNil" : "tobe 12/15/2019 15:49",
+		"parentSandblock" : "tobe 4/22/2020 12:41",
 		"preventOcclusion" : "tobe 12/27/2019 12:07",
 		"previousAdjacentMorphThat:" : "tobe 4/15/2020 11:25",
 		"previousMorphThat:" : "tobe 4/15/2020 11:22",

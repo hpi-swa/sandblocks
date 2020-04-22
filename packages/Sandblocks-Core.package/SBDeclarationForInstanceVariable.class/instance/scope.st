@@ -1,4 +1,4 @@
 as yet unclassified
 scope
 
-	^ self sandblockEditor methods select: [:m | m methodClass = self containingArtefact shownClass]
+	^ self block sandblockEditor methods select: [:m | m methodClass = self block containingArtefact shownClass]

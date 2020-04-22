@@ -3,6 +3,7 @@
 		 },
 	"instance" : {
 		"clear" : "tobe 7/7/2019 11:18",
+		"clearEmphasis" : "tobe 4/22/2020 12:59",
 		"color" : "tobe 6/30/2019 12:03",
 		"contents" : "tobe 6/29/2019 12:16",
 		"contents:" : "tobe 7/13/2019 12:31",
@@ -15,7 +16,7 @@
 		"drawOn:" : "tobe 12/3/2019 14:26",
 		"drawString:on:at:font:color:" : "tobe 12/3/2019 14:42",
 		"emphasis" : "tobe 6/29/2019 12:55",
-		"emphasis:" : "tobe 6/29/2019 12:54",
+		"emphasis:" : "tobe 4/22/2020 12:59",
 		"font" : "tobe 11/24/2019 22:41",
 		"font:" : "tobe 11/24/2019 22:47",
 		"fontToUse" : "tobe 2/4/2020 08:24",

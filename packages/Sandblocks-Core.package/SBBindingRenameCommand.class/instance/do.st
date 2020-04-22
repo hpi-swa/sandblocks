@@ -10,14 +10,14 @@ do
 	newMorph isName ifFalse: [^ super do].
 	(#('self' 'super' 'thisContext' 'true' 'false' 'nil') includes: newText) ifTrue: [^ super do].
 	activeMorph bindingFor: newText ifPresent: [:b |
-		^ super do].
+		b ~= activeMorph ifTrue: [^ super do]].
 	
 	declaration := newMorph isDeclaration
 		ifTrue: [oldMorph contents: previousText]
 		ifFalse: [activeMorph bindingFor: previousText ifPresent: [:b | b]].
 	
 	didRename := true.
-	usages := declaration allUsages, {declaration}.
+	usages := declaration behavior allUsages, {declaration}.
 	ret := super do.
 	usages do: [:binding | binding contents: newText].
 	^ ret

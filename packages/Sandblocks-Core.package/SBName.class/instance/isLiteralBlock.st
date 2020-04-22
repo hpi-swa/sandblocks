@@ -1,4 +1,4 @@
 as yet unclassified
 isLiteralBlock
 
-	^ false
+	^ self behavior isLiteralBlock

@@ -7,4 +7,5 @@ click: anEvent
 		"self stopRunning."
 		error := lastError.
 		self lastError: nil.
-		currentProcess debug: error signalerContext title: error asString full: true.].
+		self sandblockEditor reportError: error process: currentProcess; focusErrors.
+		"currentProcess debug: error signalerContext title: error asString full: true."]
