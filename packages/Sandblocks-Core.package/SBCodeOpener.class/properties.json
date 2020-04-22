@@ -14,7 +14,8 @@
 		"messages",
 		"currentPanelIndex",
 		"result",
-		"showingClassSide" ],
+		"showingClassSide",
+		"preview" ],
 	"name" : "SBCodeOpener",
 	"pools" : [
 		 ],

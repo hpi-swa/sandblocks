@@ -5,10 +5,11 @@
 		"attached:" : "tobe 4/20/2020 09:00",
 		"detached:" : "tobe 4/20/2020 09:01",
 		"flash" : "tobe 4/20/2020 09:10",
-		"hideLabel" : "tobe 4/20/2020 08:52",
+		"hideLabel" : "tobe 4/22/2020 10:02",
+		"indicatorBorderWidth" : "tobe 4/22/2020 09:59",
 		"initialize" : "tobe 4/20/2020 08:56",
 		"label:" : "tobe 4/20/2020 08:40",
-		"mouseLeave:" : "tobe 4/20/2020 07:45",
-		"mouseMove:" : "tobe 4/20/2020 09:03",
-		"postDrawOn:" : "tobe 4/20/2020 09:04",
-		"showLabel" : "tobe 4/20/2020 09:04" } }
+		"mouseLeave:" : "tobe 4/22/2020 10:02",
+		"mouseMove:" : "tobe 4/22/2020 10:02",
+		"postDrawOn:" : "tobe 4/22/2020 09:54",
+		"showLabel" : "tobe 4/22/2020 10:06" } }

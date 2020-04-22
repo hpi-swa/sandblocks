@@ -1,5 +1,5 @@
 as yet unclassified
 hideLabel
 
-	shown := false.
-	self morph changed
+	indicator ifNotNil: #delete.
+	indicator := nil
