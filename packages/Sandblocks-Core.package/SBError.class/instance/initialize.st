@@ -5,4 +5,8 @@ initialize
 	self
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		changeTableLayout
+		changeTableLayout;
+		layoutInset: 8 withScalingFactor;
+		cellGap: 8 withScalingFactor.
+	
+	frames := SBColumn new

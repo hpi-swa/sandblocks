@@ -6,7 +6,7 @@ evaluateSelection
 	artefact := source containingArtefact.
 	result := source evaluateWith: artefact for: (errors focusedArtefact = artefact ifTrue: [errors focusedContext] ifFalse: [nil]).
 	
-	source containingArtefact cacheType: result class for: source.
+	source containingArtefact ifNotNil: [source containingArtefact cacheType: result class for: source].
 	
 	self openMorphInView: (explorer := result asSandblock
 		focusAfterDelete: source;

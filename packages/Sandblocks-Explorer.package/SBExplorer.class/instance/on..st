@@ -8,4 +8,4 @@ on: anObject
 		addMorphBack: (SBIcon iconBars
 			on: #startDrag send: #pickUp: to: self;
 			yourself);
-		addMorphBack: (SBStringMorph new contents: (anObject printStringLimitedTo: 40)))
+		addMorphBack: (SBStringMorph new contents: (anObject asString truncateWithElipsisTo: 40)))

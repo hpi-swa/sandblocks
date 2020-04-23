@@ -1,4 +1,4 @@
 as yet unclassified
 isActiveFrame
 
-	^ self isFirstChild
+	^ (self owner submorphIndexOf: self) = 1

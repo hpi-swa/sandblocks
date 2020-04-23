@@ -1,11 +1,10 @@
 as yet unclassified
 toggleCollapsed
 
-	| caption |
 	self expanded
 		ifTrue: [
-			caption := self firstSubmorph.
-			self submorphsDo: #closed.
-			self removeAllMorphs.
-			self addMorph: caption]
+			frames submorphsDo: #closed.
+			frames removeAllMorphs.
+			frames delete.
+			explorer ifNotNil: #delete]
 		ifFalse: [self focus]

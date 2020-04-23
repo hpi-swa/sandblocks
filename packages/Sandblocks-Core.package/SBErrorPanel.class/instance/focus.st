@@ -1,4 +1,4 @@
 as yet unclassified
 focus
 
-	self firstSubmorph focus
+	self hasSubmorphs ifTrue: [self firstSubmorph focus]

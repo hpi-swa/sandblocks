@@ -8,7 +8,9 @@
 	"instvars" : [
 		"error",
 		"process",
-		"currentStackFrame" ],
+		"currentStackFrame",
+		"frames",
+		"explorer" ],
 	"name" : "SBError",
 	"pools" : [
 		 ],
