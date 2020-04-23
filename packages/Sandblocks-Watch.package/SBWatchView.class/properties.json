@@ -9,7 +9,8 @@
 		"display",
 		"lastValue",
 		"dark",
-		"hadValue" ],
+		"hadValue",
+		"count" ],
 	"name" : "SBWatchView",
 	"pools" : [
 		 ],

@@ -7,12 +7,24 @@ initialize
 	hadValue := false.
 	
 	self
-		changeTableLayout;
+		layoutPolicy: SBHorizontalLayout new;
 		listDirection: #leftToRight;
 		color: Color transparent;
-		cellInset: 4;
+		cellGap: 8;
 		vResizing: #shrinkWrap;
 		hResizing: #spaceFill;
-		addMorphBack: (SBIcon iconSearch large; on: #click send: #exploreLastValue to: self);
-		addMorphBack: (SBIcon iconBar_chart large; on: #click send: #promptChangeDisplay to: self);
+		addMorphBack: (SBIcon iconSearch
+			large;
+			on: #click send: #exploreLastValue to: self;
+			balloonText: 'Explore last value';
+			yourself);
+		addMorphBack: (SBIcon iconBar_chart
+			large;
+			on: #click send: #promptChangeDisplay to: self;
+			balloonText: 'Change display type';
+			yourself);
+		addMorphBack: (count := SBBadge new
+			contents: '0';
+			balloonText: 'Number of reported values';
+			yourself);
 		useDisplay: SBDisplayPrint

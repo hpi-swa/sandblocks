@@ -10,7 +10,8 @@
 		"process",
 		"currentStackFrame",
 		"frames",
-		"explorer" ],
+		"explorer",
+		"temporaries" ],
 	"name" : "SBError",
 	"pools" : [
 		 ],
