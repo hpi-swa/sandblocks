@@ -1,53 +1,52 @@
 shortcuts
 addDefaultShortcuts
 
+	SBLabel text: ['Tree Modification'].
 	self
 		addSingleSelectionShortcut: $K do: #swapLeft;
 		addSingleSelectionShortcut: $J do: #swapRight;
+		addSingleSelectionShortcut: $( do: #leftRotate;
+		addSingleSelectionShortcut: $r do: #replaceWithCopyBuffer;
+		addSingleSelectionShortcut: $, do: #promptCodeAction;
 		addSingleSelectionShortcut: $X do: #deleteAroundSelection;
+		addMultiSelectionShortcut: $x do: #deleteSelection;
+		addMultiSelectionShortcut: $# do: #wrapInLiteralArray.
+	SBLabel text: ['Insert mode'].
+	self
 		addSingleSelectionShortcut: $i do: #startInputAtStart;
-		addSingleSelectionShortcut: $$ do: #selectRightMostBlock;
-		addSingleSelectionShortcut: $0 asSandblockShortcut, Character home do: #selectContainingArtefact;
 		addSingleSelectionShortcut: $a do: #startInputAtEnd;
 		addSingleSelectionShortcut: $s do: #startInputSubstituting;
+		addSingleSelectionShortcut: $c do: #changeSelection;
+		addSingleSelectionShortcut: $c command do: #copyString;
+		addSingleSelectionShortcut: $v command do: #pasteString;
+		addSingleSelectionShortcut: Character tab shift do: [:editor | editor inputPreviousUnknown];
+		addSingleSelectionShortcut: Character tab do: [:editor | editor inputNextUnknown].
+	SBLabel text: ['Create nodes'].
+	self
 		addSingleSelectionShortcut: $d do: #insertLabelBelow;
 		addSingleSelectionShortcut: $D do: #insertLabelAbove;
-		addSingleSelectionShortcut: $o do: #insertStatementBelow;
 		addSingleSelectionShortcut: $O do: #insertStatementAbove;
-		addSingleSelectionShortcut: $, do: #promptCodeAction;
-		addSingleSelectionShortcut: Character space shift do: #wrapAsArgument;
-		addSingleSelectionShortcut: Character space do: #wrapInMessageSend;
-		addSingleSelectionShortcut: $r do: #replaceWithCopyBuffer;
 		addSingleSelectionShortcut: $p do: #pasteStatementBelow;
 		addSingleSelectionShortcut: $P do: #pasteStatementAbove;
 		addSingleSelectionShortcut: $: do: #wrapInAssignment;
 		addSingleSelectionShortcut: $^ do: #wrapInReturn;
-		addSingleSelectionShortcut: $= do: #extractVariable;
-		addSingleSelectionShortcut: $c command do: #copyString;
-		addSingleSelectionShortcut: $v command do: #pasteString;
-		addSingleSelectionShortcut: $w do: #watchSelectionForExample;
-		addSingleSelectionShortcut: $W do: #watchSelection;
-		addSingleSelectionShortcut: $r do: #replaceWithCopyBuffer;
-		addSingleSelectionShortcut: $c do: #changeSelection;
-		addSingleSelectionShortcut: $n command do: #sendersOfIt;
-		addSingleSelectionShortcut: $m command do: #implementorsOfIt;
-		addSingleSelectionShortcut: $b command do: #browseSelection;
-		addSingleSelectionShortcut: $q do: #closeSelectedMethod;
-		addSingleSelectionShortcut: $z do: #toggleCollapsed;
-		addSingleSelectionShortcut: $( do: #leftRotate;
-		addSingleSelectionShortcut: $p command do: #evaluateSelection;
-		addSingleSelectionShortcut: $P command do: #debugSelection;
-		addSingleSelectionShortcut: $m do: #placeMark;
-		addSingleSelectionShortcut: $' do: #goToMark;
-		addSingleSelectionShortcut: $? do: #showUsageInfo;
+		addSingleSelectionShortcut: Character space do: #wrapInMessageSend;
+		addSingleSelectionShortcut: Character space shift do: #wrapAsArgument;
+		addSingleSelectionShortcut: $o do: #insertStatementBelow;
 		addSingleSelectionShortcut: $. do: #addElement;
 		addSingleSelectionShortcut: $+ do: #insertElementAfter;
-		" FIXME: dependent on keyboard layout "
 		addSingleSelectionShortcut: $* do: #insertElementBefore;
-		addSingleSelectionShortcut: Character tab shift do: [:editor | editor inputPreviousUnknown];
-		addSingleSelectionShortcut: Character tab do: [:editor | editor inputNextUnknown];
-		
-		addMultiSelectionShortcut: Character escape do: #endMultiSelection;
+		addMultiSelectionShortcut: $[ do: #wrapInBlock;
+		addMultiSelectionShortcut: ${ do: #wrapInDynamicArray;
+		addMultiSelectionShortcut: $; do: #wrapInCascade.
+	SBLabel text: ['Navigation'].
+	self
+		addSingleSelectionShortcut: $$ do: #selectRightMostBlock;
+		addSingleSelectionShortcut: $0 asSandblockShortcut, Character home do: #selectContainingArtefact;
+		addSingleSelectionShortcut: $z do: #toggleCollapsed;
+		addSingleSelectionShortcut: $q do: #closeSelectedMethod;
+		addSingleSelectionShortcut: $m do: #placeMark;
+		addSingleSelectionShortcut: $' do: #goToMark;
 		addMultiSelectionShortcut: $l do: #selectNext;
 		addMultiSelectionShortcut: $h do: #selectPrevious;
 		addMultiSelectionShortcut: $k do: #selectUp;
@@ -58,39 +57,51 @@ addDefaultShortcuts
 		addMultiSelectionShortcut: $l command do: [:editor | editor selectToplevelTowards: #right];
 		addMultiSelectionShortcut: $H do: #selectPreviousStatement;
 		addMultiSelectionShortcut: $L do: #selectNextStatement;
-		addMultiSelectionShortcut: $x do: #deleteSelection;
-		addMultiSelectionShortcut: $[ do: #wrapInBlock;
-		addMultiSelectionShortcut: $y do: #copySelection;
-		addMultiSelectionShortcut: ${ do: #wrapInDynamicArray;
-		addMultiSelectionShortcut: $# do: #wrapInLiteralArray;
-		addMultiSelectionShortcut: $v do: #startOrAddToMultiSelection;
-		addMultiSelectionShortcut: $t do: #extractMethod;
-		addMultiSelectionShortcut: $; do: #wrapInCascade;
-		addMultiSelectionShortcut: $" do: #wrapInToggledCode;
-		
-		addCommandShortcut: $x command do: #openOpenWindow;
 		addCommandShortcut: $1 do: #resetZoom;
-		addCommandShortcut: $f command do: #toggleFullscreen;
-		addCommandShortcut: $, command do: #promptMenu;
-		addCommandShortcut: $a command do: #addExample;
-		addCommandShortcut: $! do: #refocus;
-		addCommandShortcut: $u do: #undo;
-		addCommandShortcut: $U do: #redo;
 		addCommandShortcut: $g do: #selectMethod;
 		addCommandShortcut: $G do: #selectLast;
-		addCommandShortcut: $s command do: #save;
-		addCommandShortcut: $< command do: #restartFrame;
-		addCommandShortcut: $> do: #stepOver;
-		addCommandShortcut: $< do: #stepInto;
-		addCommandShortcut: $e do: #focusErrors;
-		addCommandShortcut: $E do: #focusPreviousErrorFrame;
-		addCommandShortcut: Character escape command do: #close;
-		addCommandShortcut: $S command do: #saveWorkspace;
-		addCommandShortcut: $O command do: #promptOpenWorkspace;
+		addCommandShortcut: $! do: #refocus.
+	SBLabel text: ['Refactoring'].
+	self
+		addSingleSelectionShortcut: $= do: #extractVariable;
+		addMultiSelectionShortcut: $t do: #extractMethod.
+	SBLabel text: ['Tools'].
+	self
+		addSingleSelectionShortcut: $W do: #watchSelection;
+		addSingleSelectionShortcut: $w do: #watchSelectionForExample;
+		addSingleSelectionShortcut: $m command do: #implementorsOfIt;
+		addSingleSelectionShortcut: $b command do: #browseSelection;
+		addSingleSelectionShortcut: $p command do: #evaluateSelection;
+		addSingleSelectionShortcut: $P command do: #debugSelection;
+		addSingleSelectionShortcut: $n command do: #sendersOfIt;
+		addSingleSelectionShortcut: $? do: #showUsageInfo;
 		addCommandShortcut: $r command do: #openRepl;
+		addCommandShortcut: $x command do: #openOpenWindow;
+		addMultiSelectionShortcut: $" do: #wrapInToggledCode;
+		addCommandShortcut: $a command do: #addExample;
+		addCommandShortcut: $, command do: #promptMenu;
 		addCommandShortcut: $/ do: #startSearch;
 		addCommandShortcut: $n do: #nextSearchResult;
-		
+		addCommandShortcut: $S command do: #saveWorkspace;
+		addCommandShortcut: $O command do: #promptOpenWorkspace;
+		addCommandShortcut: $f command do: #toggleFullscreen.
+	SBLabel text: ['Tools: Debugger'].
+	self
+		addCommandShortcut: $> do: #stepOver;
+		addCommandShortcut: $< do: #stepInto;
+		addCommandShortcut: $< command do: #restartFrame;
+		addCommandShortcut: $e do: #focusErrors;
+		addCommandShortcut: $E do: #focusPreviousErrorFrame.
+	SBLabel text: ['Persistence/History'].
+	self
+		addCommandShortcut: $s command do: #save;
+		addCommandShortcut: $u do: #undo;
+		addCommandShortcut: $U do: #redo.
+	self
+		addMultiSelectionShortcut: Character escape do: #endMultiSelection;
+		addMultiSelectionShortcut: $y do: #copySelection;
+		addMultiSelectionShortcut: $v do: #startOrAddToMultiSelection;
+		addCommandShortcut: Character escape command do: #close;
 		addInputShortcut: Character escape do: #endInput;
 		addInputShortcut: Character arrowLeft do: [:editor | editor textMorph moveCursor: -1];
 		addInputShortcut: Character arrowRight do: [:editor | editor textMorph moveCursor: 1];
@@ -99,12 +110,14 @@ addDefaultShortcuts
 		addInputShortcut: $h command do: [:editor | editor textMorph moveCursor: -1];
 		addInputShortcut: $l command do: [:editor | editor textMorph moveCursor: 1];
 		addInputShortcut: $a command do: [:editor | editor textMorph moveCursorTo: 1];
-		addInputShortcut: $e command do: [:editor | editor textMorph moveCursorTo: 9e8];
+		addInputShortcut: $e command do: [:editor | editor textMorph moveCursorTo: 900000000];
 		addInputShortcut: $x command do: [:editor | editor textMorph clear];
 		addInputShortcut: Character tab shift do: [:editor | editor inputPreviousUnknown];
 		addInputShortcut: Character tab do: [:editor | editor inputNextUnknown];
-		addInputShortcut: $j command, Character arrowDown do: [:editor | editor currentInput suggestionMenuDo: #next];
-		addInputShortcut: $k command, Character arrowUp do: [:editor | editor currentInput suggestionMenuDo: #previous];
+		addInputShortcut: $j command, Character arrowDown
+			do: [:editor | editor currentInput suggestionMenuDo: #next];
+		addInputShortcut: $k command, Character arrowUp
+			do: [:editor | editor currentInput suggestionMenuDo: #previous];
 		addInputShortcut: Character cr asSandblockShortcut do: [:editor | editor currentInput useSuggestion];
 		addInputShortcut: $1 command do: [:editor | editor endInputWith: self method arguments first contents];
 		addInputShortcut: $2 command do: [:editor | editor endInputWith: self method arguments second contents];

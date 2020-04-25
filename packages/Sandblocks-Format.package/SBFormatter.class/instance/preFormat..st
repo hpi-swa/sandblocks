@@ -2,7 +2,7 @@ as yet unclassified
 preFormat: aNode
 
 	| formatter |
-	^ ((SBExampleWatch report: preFormatCache for: 760893879)
+	^ (preFormatCache
 		at: aNode
 		ifAbsentPut: [
 			formatter := self class new.

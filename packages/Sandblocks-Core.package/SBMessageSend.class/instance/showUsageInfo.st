@@ -1,7 +1,7 @@
 accessing
 showUsageInfo
 
-	self receiver guessedClass
+	self actualReceiver guessedClass
 		ifNotNil: [:class |  | method |
 			method := class lookupSelector: self selector asSymbol.
 			method ifNil: [^ self].
