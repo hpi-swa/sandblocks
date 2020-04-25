@@ -11,10 +11,10 @@ initialize
 		cellGap: 4 withScalingFactor;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
-		layoutInset: 8 withScalingFactor;
+		layoutInset: 6 withScalingFactor;
 		addMorphBack: (className := SBTextBubble new
 			emphasis: TextEmphasis bold;
-			layoutInset: 8 withScalingFactor;
+			layoutInset: 6 withScalingFactor;
 			font: (TextStyle default fontOfPointSize: 12));
 		addRow: 'SuperClass' with: (superClassName := SBClassNameInput new contents: 'Object');
 		addRow: 'Instance Variables:' with: (instanceVariables := SBArray new addType: SBDeclarationForInstanceVariable);

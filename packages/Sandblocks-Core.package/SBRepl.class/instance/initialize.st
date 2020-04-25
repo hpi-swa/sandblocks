@@ -6,7 +6,7 @@ initialize
 	typeCache := Dictionary new.
 	
 	self
-		layoutInset: 8 withScalingFactor;
+		layoutInset: 6 withScalingFactor;
 		addMorphBack: (SBRow new
 			cellGap: 8 withScalingFactor;
 			addMorphBack: (SBTextBubble new layoutInset: 4 withScalingFactor; contents: 'REPL');

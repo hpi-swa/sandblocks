@@ -4,7 +4,7 @@ initialize
 	super initialize.
 	
 	self
-		layoutInset: 4 * self scalingFactor;
+		layoutInset: 2 withScalingFactor;
 		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;

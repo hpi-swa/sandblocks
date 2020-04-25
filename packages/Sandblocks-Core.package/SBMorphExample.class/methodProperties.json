@@ -3,7 +3,7 @@
 		"matches:" : "tobe 12/3/2019 10:00",
 		"newFrom:" : "tobe 12/3/2019 10:07",
 		"setUp:cases:extent:" : "tobe 12/3/2019 09:59",
-		"suggestion" : "tobe 1/22/2020 21:11" },
+		"suggestion" : "tobe 4/25/2020 13:10" },
 	"instance" : {
 		"addCase:name:" : "tobe 12/3/2019 10:47",
 		"artefactChanged:" : "tobe 12/11/2019 19:54",
@@ -14,7 +14,7 @@
 		"codeActions" : "tobe 12/15/2019 14:06",
 		"displayError:" : "tobe 3/1/2020 08:13",
 		"drawnColor" : "tobe 12/3/2019 10:48",
-		"initialize" : "tobe 2/23/2020 07:12",
+		"initialize" : "tobe 4/25/2020 13:05",
 		"insertCommandRequest:near:" : "tobe 2/8/2020 13:59",
 		"isExpression" : "tobe 12/21/2019 19:00",
 		"isMorphExample" : "tobe 12/24/2019 12:32",

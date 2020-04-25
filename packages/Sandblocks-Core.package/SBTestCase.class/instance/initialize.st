@@ -6,7 +6,7 @@ initialize
 	self
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		layoutInset: 8 withScalingFactor;
+		layoutInset: 6 withScalingFactor;
 		cellGap: 8 withScalingFactor;
 		changeTableLayout;
 		addMorphBack: (SBRow new

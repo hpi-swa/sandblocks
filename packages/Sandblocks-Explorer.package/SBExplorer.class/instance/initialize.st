@@ -7,5 +7,5 @@ initialize
 		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		layoutInset: 4 withScalingFactor;
+		layoutInset: 2 withScalingFactor;
 		attachDecorator: (SBMoveDecorator new preventOcclusion: true)

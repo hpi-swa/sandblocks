@@ -8,6 +8,6 @@ initialize
 	self
 		changeTableLayout;
 		cellGap: 4 withScalingFactor;
-		layoutInset: 4 withScalingFactor;
+		layoutInset: 2 withScalingFactor;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap

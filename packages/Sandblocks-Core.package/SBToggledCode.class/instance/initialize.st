@@ -5,7 +5,7 @@ initialize
 	
 	self
 		changeTableLayout;
-		layoutInset: 4 withScalingFactor;
+		layoutInset: 2 withScalingFactor;
 		cellGap: 4 withScalingFactor;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;

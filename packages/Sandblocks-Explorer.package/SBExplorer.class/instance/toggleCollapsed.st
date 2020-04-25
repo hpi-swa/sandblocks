@@ -15,6 +15,6 @@ toggleCollapsed
 				(#(all self) includes: field type) ifFalse: [
 					self addMorphBack: (SBRow new
 						cellGap: 4 withScalingFactor;
-						layoutInset: (Rectangle left: 12 withScalingFactor right: 0 top: 0 bottom: 0);
+						layoutInset: (SBEdgeInsets left: 12 withScalingFactor right: 0 top: 0 bottom: 0);
 						addMorphBack: (SBStringMorph new contents: field name asString);
 						addMorphBack: (SBExplorer on: (field getValueFor: self)))]])]

@@ -1,0 +1,16 @@
+{
+	"class" : {
+		"left:right:top:bottom:" : "tobe 4/25/2020 12:44" },
+	"instance" : {
+		"+" : "tobe 4/25/2020 12:45",
+		"adaptToEdgeInsetsAndAdd:" : "tobe 4/25/2020 12:45",
+		"adaptToPoint:andSend:" : "tobe 4/25/2020 13:00",
+		"bottom" : "tobe 4/25/2020 13:01",
+		"corner" : "tobe 4/25/2020 13:03",
+		"isRectangle" : "tobe 4/25/2020 12:49",
+		"isZero" : "tobe 4/25/2020 13:02",
+		"left" : "tobe 4/25/2020 13:01",
+		"left:right:top:bottom:" : "tobe 4/25/2020 12:45",
+		"origin" : "tobe 4/25/2020 13:03",
+		"right" : "tobe 4/25/2020 13:01",
+		"top" : "tobe 4/25/2020 13:01" } }

@@ -3,11 +3,11 @@ matches: aMessage
 
 	SBExample
 		self: [SBColor]
-		args: [{(SBMessageSend new receiver: (SBBinding new contents: 'Color') selector: #orange)}]
+		args: [{(SBMessageSend new receiver: (SBName contents: 'Color') selector: #orange)}]
 		label: 'matching'.
 	SBExample
 		self: [SBColor]
-		args: [{(SBMessageSend new receiver: (SBBinding new contents: 'Color') selector: #fromUser)}]
+		args: [{(SBMessageSend new receiver: (SBName contents: 'Color') selector: #fromUser)}]
 		label: 'non matching'.
 		
 	(aMessage receiver isBinding and: [#('Color' 'ECSColor') includes: aMessage receiver contents]) ifFalse: [^ false].

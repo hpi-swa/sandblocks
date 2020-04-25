@@ -9,7 +9,6 @@ initialize
 	
 	self
 		layoutPolicy: SBBlockBodyLayout new;
-		layoutInset: 2 withScalingFactor;
 		minimumHeight: TextStyle defaultFont height + self layoutInset vertical;
 		color: Color random;
 		cellPositioning: #topLeft;

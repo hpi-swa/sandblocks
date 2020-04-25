@@ -8,12 +8,12 @@ codeActions
 			do: [:node | 
 				node sandblockEditor openMorphInView: (SBMethod new
 					 selector: node contents asSymbol arguments: #() class: node containingArtefact shownClass;
-					 body: (SBBlockBody new statements: {(SBReturn new expression: (SBBinding new contents: node contents))})).
+					 body: (SBBlockBody new statements: {(SBReturn new expression: (SBName contents: node contents))})).
 				node sandblockEditor openMorphInView: (SBMethod new
 						selector: node contents asSymbol asSimpleSetter
-						arguments: {(SBBinding new contents: 'anObject')}
+						arguments: {(SBName contents: 'anObject')}
 						class: node containingArtefact shownClass;
 					 body: (SBBlockBody new statements: {
-						(SBAssignment new binding: (SBBinding new contents: node contents) value: (SBBinding new contents: 'anObject'))
+						(SBAssignment new binding: (SBName contents: node contents) value: (SBName contents: 'anObject'))
 					}))])
 	}

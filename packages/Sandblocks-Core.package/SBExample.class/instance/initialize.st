@@ -8,7 +8,7 @@ initialize
 	
 	self
 		layoutPolicy: SBHorizontalLayout new;
-		layoutInset: 10 * self scalingFactor;
+		layoutInset: 8 withScalingFactor;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		cellGap: 4 * self scalingFactor

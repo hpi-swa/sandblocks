@@ -2,7 +2,7 @@ actions
 wrapInAssignment
 
 	| binding |
-	binding := SBBinding new.
+	binding := SBName new.
 	self do: ((SBWrapCommand newFor: self method)
 		outer: SBAssignment new;
 		inner: self selection;

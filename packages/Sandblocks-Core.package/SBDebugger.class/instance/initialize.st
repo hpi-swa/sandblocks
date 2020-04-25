@@ -9,7 +9,7 @@ initialize
 		color: Color white;
 		addMorphBack: (editor := SBEditor new
 			addOverlayDraw: [:canvas | self drawBlockValuesOn: canvas];
-			minHeight: 400 * self scalingFactor;
+			minHeight: 400 withScalingFactor;
 			vResizing: #spaceFill;
 			hResizing: #spaceFill;
 			addCommandShortcut: $q command do: [:editor | self send];
@@ -20,8 +20,8 @@ initialize
 		changeTableLayout;
 		addMorphBack: (SBRow new
 			changeTableLayout;
-			layoutInset: 6 * self scalingFactor;
-			cellGap: 12 * self scalingFactor;
+			layoutInset: 4 withScalingFactor;
+			cellGap: 12 withScalingFactor;
 			addMorphBack: (self shortcut: 'ctrl+q' label: 'step into');
 			addMorphBack: (self shortcut: 'ctrl+w' label: 'step through');
 			addMorphBack: (self shortcut: 'ctrl+e' label: 'step over');
@@ -29,4 +29,4 @@ initialize
 			addMorphBack: (self shortcut: 'ctrl+a' label: 'where');
 			addMorphBack: (pcLabel := StringMorph new));
 		addMorphBack: (frames := ECSTextList new
-			minHeight: 200 * self scalingFactor)
+			minHeight: 200 withScalingFactor)

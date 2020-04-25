@@ -6,7 +6,7 @@ initialize
 	self
 		layoutPolicy: SBVerticalLayout new;
 		cellPositioning: #topLeft;
-		layoutInset: 8 * self scalingFactor;
+		layoutInset: 6 withScalingFactor;
 		vResizing: #shrinkWrap; hResizing: #shrinkWrap;
 		
 		addMorphBack: (SBRow new

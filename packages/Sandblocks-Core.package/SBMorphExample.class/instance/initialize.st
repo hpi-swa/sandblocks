@@ -7,7 +7,7 @@ initialize
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		changeTableLayout;
-		layoutInset: 8 * self scalingFactor;
+		layoutInset: 6 withScalingFactor;
 		addMorphBack: (TransformMorph new
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap;

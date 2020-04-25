@@ -1,0 +1,17 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "tobe 4/25/2020 12:50",
+	"instvars" : [
+		"left",
+		"right",
+		"top",
+		"bottom" ],
+	"name" : "SBEdgeInsets",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

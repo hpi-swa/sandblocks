@@ -7,7 +7,7 @@ initialize
 		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		layoutInset: (12 @ 6) withScalingFactor;
+		layoutInset: (10 @ 4) withScalingFactor;
 		addMorphBack: (activeIcon := SBIcon iconBug);
 		on: #doubleClick send: #toggleActive to: self;
 		active: true

@@ -8,6 +8,6 @@ initialize
 	self
 		color: Color transparent;
 		cellPositioning: #topLeft;
-		layoutInset: (2 @ 2) withScalingFactor;
+		layoutInset: 0;
 		cellGap: 1 withScalingFactor;
 		extent: 0 @ 0

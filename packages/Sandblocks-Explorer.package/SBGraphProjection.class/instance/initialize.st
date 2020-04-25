@@ -5,4 +5,4 @@ initialize
 	self
 		changeTableLayout;
 		extent: 200 asPoint;
-		layoutInset: 8 withScalingFactor
+		layoutInset: 4 withScalingFactor

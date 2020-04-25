@@ -4,7 +4,7 @@ initialize
 	super initialize.
 	self
 		 layoutPolicy: SBVerticalLayout new;
-		 layoutInset: 8 withScalingFactor;
+		 layoutInset: 6 withScalingFactor;
 		 cellGap: 8 withScalingFactor;
 		 hResizing: #shrinkWrap;
 		 vResizing: #shrinkWrap;
