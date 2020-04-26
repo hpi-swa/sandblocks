@@ -12,5 +12,5 @@ fixActions
 				do: [:node | node containingBlock declareTemporaryVariable: node contents].
 			SBCodeAction
 				labeled: 'Declare instance variable' for: self block
-				do: [:node | node sandblockEditor declareInstanceVariable: node contents for: self containingArtefact methodClass].
+				do: [:node | node sandblockEditor declareInstanceVariable: node contents for: node containingArtefact methodClass].
 		}]

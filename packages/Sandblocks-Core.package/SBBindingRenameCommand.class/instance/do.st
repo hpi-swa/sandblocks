@@ -16,6 +16,8 @@ do
 		ifTrue: [oldMorph contents: previousText]
 		ifFalse: [activeMorph bindingFor: previousText ifPresent: [:b | b]].
 	
+	declaration ifNil: [^ super do].
+	
 	didRename := true.
 	usages := declaration behavior allUsages, {declaration}.
 	ret := super do.

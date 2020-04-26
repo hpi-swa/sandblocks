@@ -9,7 +9,8 @@
 		"inspector",
 		"object",
 		"hasUnsavedChanges",
-		"label" ],
+		"label",
+		"field" ],
 	"name" : "SBExplorer",
 	"pools" : [
 		 ],

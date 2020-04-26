@@ -1,10 +1,18 @@
 accessing
 fixActions
 
-	^ (self isDefined not and: [self isSendToSelf])
-		ifTrue: [{SBCodeAction labeled: 'Create method' for: self do: [:node | self sandblockEditor openMorphInView: (SBMethod new
-			selector: self selector
-			arguments: (self arguments collectWithIndex: [:arg :index | arg isName ifTrue: [arg veryDeepCopy] ifFalse: [SBName contents: 'anObject', index asString]])
-			class: self containingArtefact methodClass;
-			body: SBBlockBody new)]}]
+	^ self isDefined not
+		ifTrue: [ | class |
+			class := self actualReceiver guessedClass.
+			{
+				(SBCodeAction
+					labeled: 'Create method on ', (class ifNotNil: #name ifNil: ['...'])
+					for: self
+					do: [:node | 
+						self sandblockEditor openMorphInView: (SBMethod new
+							selector: self selector
+								arguments: (self arguments collectWithIndex: [:arg :index | arg isName ifTrue: [arg veryDeepCopy] ifFalse: [SBName contents: 'anObject', index asString]])
+								class: (class ifNil: [UIManager default chooseClassOrTrait ifNil: [^ self]]);
+							body: SBBlockBody new)])
+			}]
 		ifFalse: [#()]

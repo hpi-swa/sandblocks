@@ -1,6 +1,7 @@
 {
 	"class" : {
-		"on:" : "tobe 4/16/2020 09:03" },
+		"on:" : "tobe 4/16/2020 09:03",
+		"on:field:" : "tobe 4/26/2020 14:25" },
 	"instance" : {
 		"browse" : "tobe 4/22/2020 20:48",
 		"cacheType:for:" : "tobe 4/26/2020 12:05",
@@ -11,6 +12,7 @@
 		"ensureExpanded" : "tobe 4/26/2020 12:02",
 		"evaluate" : "tobe 4/22/2020 20:09",
 		"evaluateWith:for:" : "tobe 4/19/2020 22:25",
+		"field:" : "tobe 4/26/2020 14:27",
 		"hasUnsavedChanges" : "tobe 4/26/2020 11:55",
 		"hasUnsavedChanges:" : "tobe 4/26/2020 11:55",
 		"initialize" : "tobe 4/25/2020 12:58",
@@ -21,9 +23,9 @@
 		"on:" : "tobe 4/26/2020 12:15",
 		"printOn:" : "tobe 4/16/2020 09:45",
 		"relatedClass" : "tobe 4/26/2020 12:01",
-		"saveTryFixing:quick:" : "tobe 4/26/2020 12:16",
+		"saveTryFixing:quick:" : "tobe 4/26/2020 14:41",
 		"startInputAt:replacingContents:" : "tobe 4/26/2020 12:13",
-		"toggleCollapsed" : "tobe 4/26/2020 12:10",
+		"toggleCollapsed" : "tobe 4/26/2020 14:42",
 		"typeFor:" : "tobe 4/26/2020 12:04",
 		"veryDeepCopyWith:" : "tobe 4/22/2020 20:47",
 		"wantsInteractiveErrorCorrection" : "tobe 4/26/2020 12:05" } }

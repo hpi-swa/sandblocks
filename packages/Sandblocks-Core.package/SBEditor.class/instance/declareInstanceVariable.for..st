@@ -6,4 +6,4 @@ declareInstanceVariable: aString for: aClass
 	self do: ((SBInsertCommand newFor: class)
 		container: class instanceVariables;
 		index: class instanceVariables submorphCount + 1;
-		morph: (SBDeclarationForInstanceVariable new contents: aString))
+		morph: (SBName contents: aString))

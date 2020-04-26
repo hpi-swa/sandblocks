@@ -17,8 +17,8 @@ initialize
 			layoutInset: 6 withScalingFactor;
 			font: (TextStyle default fontOfPointSize: 12));
 		addRow: 'SuperClass' with: (superClassName := SBClassNameInput new contents: 'Object');
-		addRow: 'Instance Variables:' with: (instanceVariables := SBArray new addType: SBDeclarationForInstanceVariable);
-		addRow: 'Class Variables:' with: (classVariables := SBArray new addType: SBDeclarationForPoolVariable);
+		addRow: 'Instance Variables:' with: (instanceVariables := SBArray new addType: SBName);
+		addRow: 'Class Variables:' with: (classVariables := SBArray new addType: SBName);
 		addRow: 'Pool Dictionaries:' with: (poolDictionaries := SBArray new);
 		addRow: 'Category:' with: (category := SBTextBubble new);
 		attachDecorator: (SBMoveDecorator new preventOcclusion: true)
