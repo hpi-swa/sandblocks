@@ -11,11 +11,11 @@ writeSourceOn: aStream
 		args: [{'' writeStream}]
 		label: 'simple'.
 	aStream
-		 nextPut: $(;
-		 nextPutAll: 'TOMStateMachine';
-		 nextPutAll: ' new';
-		 nextPutAll: ' initialState: ';
-		 nextPutAll: self initialState name asSymbol storeString.
+		nextPut: $(;
+		nextPutAll: 'TOMStateMachine';
+		nextPutAll: ' new';
+		nextPutAll: ' initialState: ';
+		nextPutAll: self initialState name asSymbol storeString.
 	self states do: [:state | 
 		state uponEnterBlocks do: [:block | 
 			aStream nextPut: $;.
@@ -48,6 +48,5 @@ writeSourceOn: aStream
 				comment: 'is a trigger symbol'
 				active: 1
 				do: {[condition isSymbolBlock ifTrue: [aStream nextPutAll: ' when: ']]}.
-			aStream nextPutAll: ' if: '.
 			condition writeSourceOn: aStream]].
 	aStream nextPut: $)

@@ -1,6 +1,8 @@
 as yet unclassified
 on: anObject
 
+	self removeAllMorphs.
+	
 	inspector := anObject inspectorClass on: anObject.
 	object := anObject.
 	self addMorphBack: (SBRow new
@@ -8,4 +10,4 @@ on: anObject
 		addMorphBack: (SBIcon iconBars
 			on: #startDrag send: #pickUp: to: self;
 			yourself);
-		addMorphBack: (SBStringMorph new contents: (anObject asString truncateWithElipsisTo: 40)))
+		addMorphBack: (label := SBStringMorph new contents: (anObject asString truncateWithElipsisTo: 40)))

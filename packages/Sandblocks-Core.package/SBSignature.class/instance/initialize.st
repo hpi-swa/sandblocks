@@ -8,5 +8,5 @@ initialize
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		listDirection: #leftToRight;
-		cellGap: 2 * self scalingFactor;
+		cellGap: 4 * self scalingFactor;
 		color: Color transparent

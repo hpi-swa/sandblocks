@@ -3,16 +3,16 @@ toggleCollapsed
 
 	| caption |
 	caption := self firstSubmorph.
-	self submorphCount > 1
+	self isCollapsed not
 		ifTrue: [
-			caption lastSubmorph clearEmphasis.
+			label clearEmphasis.
 			self
 				removeAllMorphs;
 				addMorphBack: caption]
 		ifFalse: [
-			caption lastSubmorph bold.
-			inspector streamFieldsOn: (SBImmediateStream with: [:field |
-				(#(all self) includes: field type) ifFalse: [
+			label bold.
+			inspector streamFieldsOn: (SBImmediateStream with: [:field | 
+				(#(#all #self) includes: field type) ifFalse: [
 					self addMorphBack: (SBRow new
 						cellGap: 4 withScalingFactor;
 						layoutInset: (SBEdgeInsets left: 12 withScalingFactor right: 0 top: 0 bottom: 0);

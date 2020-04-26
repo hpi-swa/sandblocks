@@ -7,7 +7,9 @@
 	"commentStamp" : "",
 	"instvars" : [
 		"inspector",
-		"object" ],
+		"object",
+		"hasUnsavedChanges",
+		"label" ],
 	"name" : "SBExplorer",
 	"pools" : [
 		 ],

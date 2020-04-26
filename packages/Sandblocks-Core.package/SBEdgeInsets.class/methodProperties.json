@@ -4,6 +4,7 @@
 	"instance" : {
 		"+" : "tobe 4/25/2020 12:45",
 		"adaptToEdgeInsetsAndAdd:" : "tobe 4/25/2020 12:45",
+		"adaptToInteger:andSend:" : "tobe 4/26/2020 09:03",
 		"adaptToPoint:andSend:" : "tobe 4/25/2020 13:00",
 		"bottom" : "tobe 4/25/2020 13:01",
 		"corner" : "tobe 4/25/2020 13:03",

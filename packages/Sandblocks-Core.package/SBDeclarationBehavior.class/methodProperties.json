@@ -2,13 +2,14 @@
 	"class" : {
 		 },
 	"instance" : {
-		"allUsages" : "tobe 4/22/2020 14:26",
+		"allUsages" : "tobe 4/26/2020 11:24",
 		"classForBinding" : "tobe 7/8/2019 08:03",
 		"guessedClass" : "tobe 12/21/2019 18:57",
 		"isDeclaration" : "tobe 7/3/2019 15:01",
 		"isExpression" : "tobe 7/3/2019 15:03",
 		"isMethodLocal" : "tobe 7/7/2019 14:02",
 		"keyStroke:" : "tobe 7/13/2019 08:08",
+		"resolveBinding" : "tobe 4/26/2020 11:20",
 		"scope" : "tobe 12/15/2019 15:33",
 		"valid" : "tobe 4/22/2020 14:07",
 		"wasDeselected" : "tobe 1/12/2020 12:36",

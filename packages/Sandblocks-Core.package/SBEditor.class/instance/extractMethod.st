@@ -19,7 +19,7 @@ extractMethod
 			{(SBReplaceConsecutiveCommand newFor: self method)
 				targets: extracting;
 				replacer: (SBMessageSend new
-					receiver: (SBKeywordBinding new name: 'self')
+					receiver: (SBName contents: 'self')
 					selector: method selector
 					arguments: arguments veryDeepCopy)},
 			(extracting withIndexCollect: [:stmt :index | (SBInsertCommand newFor: method)

@@ -9,7 +9,7 @@ initialize
 		layoutInset: 6 withScalingFactor;
 		addMorphBack: (SBRow new
 			cellGap: 8 withScalingFactor;
-			addMorphBack: (SBTextBubble new layoutInset: 4 withScalingFactor; contents: 'REPL');
+			addMorphBack: (SBTextBubble new layoutInset: 4 withScalingFactor; contents: 'Workspace');
 			addMorphBack: (bindings := SBRow new cellGap: 4 withScalingFactor));
 		addMorphBack: SBBlockBody empty;
 		vResizing: #shrinkWrap;

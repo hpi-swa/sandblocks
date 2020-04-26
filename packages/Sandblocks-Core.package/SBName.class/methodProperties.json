@@ -6,6 +6,7 @@
 		"poolDeclaration:" : "tobe 4/22/2020 14:10" },
 	"instance" : {
 		"acceptInputEvent:" : "tobe 2/23/2020 11:40",
+		"allUsages" : "tobe 4/26/2020 11:21",
 		"asSuggestionItem" : "tobe 4/22/2020 14:30",
 		"behavior" : "tobe 4/22/2020 12:31",
 		"behavior:" : "tobe 4/22/2020 12:57",
@@ -40,4 +41,6 @@
 		"uppercaseSuggestions" : "tobe 1/22/2020 20:59",
 		"valid" : "tobe 4/22/2020 14:06",
 		"validContents" : "tobe 7/3/2019 14:05",
+		"wasDeselected" : "tobe 4/26/2020 11:18",
+		"wasSelected" : "tobe 4/26/2020 11:19",
 		"writeSourceOn:" : "tobe 6/29/2019 18:57" } }

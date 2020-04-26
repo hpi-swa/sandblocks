@@ -2,7 +2,7 @@ input
 endInput
 
 	| command input |
-	currentInput ifNil: [^ self].
+	(currentInput isNil or: [currentInputCommand isNil]) ifTrue: [^ self].
 	command := currentInputCommand.
 	input := currentInput.
 	currentInput := nil.

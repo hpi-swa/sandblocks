@@ -30,8 +30,8 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $P do: #pasteStatementAbove;
 		addSingleSelectionShortcut: $: do: #wrapInAssignment;
 		addSingleSelectionShortcut: $^ do: #wrapInReturn;
-		addSingleSelectionShortcut: Character space do: #wrapInMessageSend;
 		addSingleSelectionShortcut: Character space shift do: #wrapAsArgument;
+		addSingleSelectionShortcut: Character space do: #wrapInMessageSend;
 		addSingleSelectionShortcut: $o do: #insertStatementBelow;
 		addSingleSelectionShortcut: $. do: #addElement;
 		addSingleSelectionShortcut: $+ do: #insertElementAfter;
