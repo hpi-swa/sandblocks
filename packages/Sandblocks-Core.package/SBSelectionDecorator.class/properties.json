@@ -10,5 +10,5 @@
 	"name" : "SBSelectionDecorator",
 	"pools" : [
 		 ],
-	"super" : "SBMorphDecorator",
+	"super" : "SBBlockDecorator",
 	"type" : "normal" }

@@ -4,11 +4,11 @@
 		 ],
 	"classvars" : [
 		 ],
-	"commentStamp" : "tobe 3/1/2020 08:20",
+	"commentStamp" : "",
 	"instvars" : [
-		"morph" ],
-	"name" : "SBMorphDecorator",
+		 ],
+	"name" : "SBLeafEmphasisColorPolicy",
 	"pools" : [
 		 ],
-	"super" : "Object",
+	"super" : "SBColorPolicy",
 	"type" : "normal" }

@@ -1,4 +1,4 @@
 as yet unclassified
 guessedClass
 
-	^ nil
+	^ self block binding ifNotNil: [:b | b value class]

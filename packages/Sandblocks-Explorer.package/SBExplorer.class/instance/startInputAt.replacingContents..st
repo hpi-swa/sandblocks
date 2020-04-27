@@ -7,4 +7,4 @@ startInputAt: aNumber replacingContents: aBoolean
 		target: self label;
 		replacer: new;
 		shouldMergeWithNext: true).
-	^ new startInputAt: aNumber replacingContents: aBoolean
+	^ new startInputAt: aNumber replacingContents: true

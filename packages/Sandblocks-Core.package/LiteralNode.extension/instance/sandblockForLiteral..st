@@ -7,5 +7,5 @@ sandblockForLiteral: anObject
 	anObject isArray ifTrue: [^ SBArray new type: #literal contents: (anObject collect: [:o | self sandblockForLiteral: o])].
 	anObject isCharacter ifTrue: [^ SBCharacter new contents: anObject asString].
 	anObject isCollection ifTrue: [^ SBArray new type: #literal contents: (anObject collect: [:num | SBNumber new contents: num asString] as: Array)].
-	(#(nil true false) includes: anObject) ifTrue: [^ SBKeywordBinding new contents: anObject asString].
+	(#(nil true false) includes: anObject) ifTrue: [^ SBName contents: anObject asString].
 	^ self shouldBeImplemented

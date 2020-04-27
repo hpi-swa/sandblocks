@@ -12,5 +12,5 @@
 	"name" : "SBEventBroadcast",
 	"pools" : [
 		 ],
-	"super" : "SBMorphDecorator",
+	"super" : "SBBlockDecorator",
 	"type" : "normal" }

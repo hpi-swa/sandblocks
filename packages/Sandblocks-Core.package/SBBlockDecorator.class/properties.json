@@ -4,11 +4,11 @@
 		 ],
 	"classvars" : [
 		 ],
-	"commentStamp" : "",
+	"commentStamp" : "tobe 3/1/2020 08:20",
 	"instvars" : [
-		"letter" ],
-	"name" : "SBMarkedDecorator",
+		"morph" ],
+	"name" : "SBBlockDecorator",
 	"pools" : [
 		 ],
-	"super" : "SBBlockDecorator",
+	"super" : "Object",
 	"type" : "normal" }

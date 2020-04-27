@@ -9,5 +9,5 @@ codeActions
 				body: (SBBlockBody new
 					statements: {
 						SBMessageSend new
-							receiver: (SBKeywordBinding new contents: 'super') selector: 'initialize' arguments: #()}))]
+							receiver: (SBName contents: 'super') selector: 'initialize' arguments: #()}))]
 	}

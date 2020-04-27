@@ -12,5 +12,5 @@
 	"name" : "SBReportedValueDecorator",
 	"pools" : [
 		 ],
-	"super" : "SBMorphDecorator",
+	"super" : "SBBlockDecorator",
 	"type" : "normal" }

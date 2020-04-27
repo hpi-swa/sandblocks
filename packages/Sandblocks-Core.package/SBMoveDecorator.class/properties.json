@@ -12,5 +12,5 @@
 	"name" : "SBMoveDecorator",
 	"pools" : [
 		 ],
-	"super" : "SBMorphDecorator",
+	"super" : "SBBlockDecorator",
 	"type" : "normal" }
