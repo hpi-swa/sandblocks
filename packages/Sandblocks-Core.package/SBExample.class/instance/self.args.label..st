@@ -9,4 +9,5 @@ self: aBlock args: aCollectionBlock label: aString
 		addMorphBack: aBlock;
 		addMorphBack: (SBStringMorph new contents: 'args:');
 		addMorphBack: aCollectionBlock;
+		addMorphBack: (returnValue := SBStringMorph new contents: '');
 		updateIcon

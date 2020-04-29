@@ -9,12 +9,12 @@ do
 	didRename := false.
 	newMorph isName ifFalse: [^ super do].
 	(#('self' 'super' 'thisContext' 'true' 'false' 'nil') includes: newText) ifTrue: [^ super do].
-	activeMorph bindingFor: newText ifPresent: [:b |
+	activeMorph bindingFor: newText class: activeMorph containingArtefact relatedClass ifPresent: [:b |
 		b ~= activeMorph ifTrue: [^ super do]].
 	
 	declaration := newMorph isDeclaration
 		ifTrue: [oldMorph contents: previousText]
-		ifFalse: [activeMorph bindingFor: previousText ifPresent: [:b | b]].
+		ifFalse: [activeMorph bindingFor: previousText class: activeMorph containingArtefact relatedClass ifPresent: [:b | b]].
 	
 	declaration ifNil: [^ super do].
 	

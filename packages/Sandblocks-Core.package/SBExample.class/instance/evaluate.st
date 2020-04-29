@@ -4,4 +4,4 @@ evaluate
 	| arguments |
 	currentSelf := self evaluateSelf.
 	arguments := self evaluateArguments.
-	currentSelf perform: self containingArtefact selector asSymbol withArguments: arguments
+	^ currentSelf perform: self containingArtefact selector asSymbol withArguments: arguments

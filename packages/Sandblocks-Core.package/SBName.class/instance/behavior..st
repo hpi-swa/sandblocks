@@ -1,5 +1,6 @@
 as yet unclassified
 behavior: anObject
 
-	behavior := anObject.
-	anObject attached: self
+	behavior class ~= anObject class ifTrue: [
+		behavior := anObject.
+		anObject attached: self]

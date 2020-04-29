@@ -2,6 +2,8 @@ as yet unclassified
 focusPanel: aNumber
 
 	currentPanelIndex := aNumber clampLow: 1 high: self submorphCount.
+	self methods ifEmpty: [currentPanelIndex := currentPanelIndex min: 2].
+	
 	(currentPanelIndex = 2 and: [self selectedClassIndex = 0]) ifTrue: [self selectedClassIndex: 1].
 	currentPanelIndex < 2 ifTrue: [self selectedClassIndex: 0].
 	

@@ -5,7 +5,7 @@
 	"instance" : {
 		"acceptChild:" : "tobe 7/14/2019 08:17",
 		"addBlockArgument" : "tobe 4/22/2020 19:10",
-		"bindingFor:ifPresent:" : "tobe 7/10/2019 11:07",
+		"bindingFor:class:ifPresent:" : "tobe 4/29/2020 09:33",
 		"bindings" : "tobe 7/8/2019 17:22",
 		"bindings:" : "tobe 6/28/2019 17:59",
 		"canDeleteChild:" : "tobe 7/13/2019 22:57",

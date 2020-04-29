@@ -3,6 +3,7 @@ stopRunning
 
 	self stopSteppingSelector: #run.
 	active := false.
+	returnValue contents: ''.
 	self updateIcon.
 	
 	self sandblockEditor allMorphsDo: [:morph |

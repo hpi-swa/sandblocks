@@ -1,0 +1,14 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"causesSideEffect:" : "tobe 4/29/2020 20:21",
+		"createsObject:" : "tobe 4/29/2020 20:20",
+		"initialize" : "tobe 4/29/2020 10:03",
+		"isAllowedExternalCall:" : "tobe 4/29/2020 20:39",
+		"isBlacklistedPrimitive:" : "tobe 4/29/2020 20:19",
+		"maxTime" : "tobe 4/29/2020 17:28",
+		"popIntoReceiverVariable:" : "tobe 4/29/2020 17:51",
+		"send:super:numArgs:" : "tobe 4/29/2020 20:39",
+		"simulate:" : "tobe 4/29/2020 20:37",
+		"storeIntoReceiverVariable:" : "tobe 4/29/2020 20:23" } }

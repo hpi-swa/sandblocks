@@ -5,7 +5,7 @@
 		"newFromSource:named:at:" : "tobe 1/12/2020 18:59" },
 	"instance" : {
 		"artefact" : "tobe 4/18/2020 08:45",
-		"bindingFor:ifPresent:" : "tobe 4/22/2020 19:48",
+		"bindingFor:class:ifPresent:" : "tobe 4/29/2020 09:34",
 		"bindingOf:" : "tobe 1/12/2020 16:06",
 		"body" : "tobe 1/12/2020 12:27",
 		"cacheType:for:" : "tobe 4/18/2020 19:56",

@@ -14,7 +14,8 @@
 		"currentSelf",
 		"nameInput",
 		"active",
-		"errorDecorator" ],
+		"errorDecorator",
+		"returnValue" ],
 	"name" : "SBExample",
 	"pools" : [
 		 ],

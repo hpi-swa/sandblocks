@@ -11,4 +11,4 @@ debugSelection
 		forMethod: (Compiler new compileCue: cue noPattern: true ifFail: nil) generateWithTempNames
 		receiver: (context ifNotNil: #receiver).
 	
-	self reportError: process suspendedContext process: process
+	self reportError: nil process: process

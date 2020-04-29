@@ -3,13 +3,14 @@
 		 },
 	"instance" : {
 		"browse" : "tobe 7/7/2019 22:47",
-		"codeActions" : "tobe 4/27/2020 07:58",
-		"fixActions" : "tobe 4/22/2020 09:43",
+		"codeActions" : "tobe 4/29/2020 16:32",
+		"contentsChanged" : "tobe 4/29/2020 09:59",
+		"fixActions" : "tobe 4/29/2020 10:02",
 		"guessedClass" : "tobe 12/21/2019 18:58",
 		"inputCommandClass" : "tobe 12/15/2019 18:39",
 		"isBinding" : "tobe 7/5/2019 16:15",
 		"isExpression" : "tobe 4/22/2020 13:12",
 		"printBlockOn:" : "tobe 4/22/2020 12:56",
-		"resolveBinding" : "tobe 4/22/2020 13:59",
+		"resolveBinding" : "tobe 4/29/2020 09:36",
 		"valid" : "tobe 4/22/2020 14:06",
 		"validBinding" : "tobe 7/3/2019 14:07" } }

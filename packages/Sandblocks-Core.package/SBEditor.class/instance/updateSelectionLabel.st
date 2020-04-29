@@ -5,8 +5,9 @@ updateSelectionLabel
 		ifTrue: [multiSelection size asString, (' element' asPluralBasedOn: multiSelection)]
 		ifFalse: [
 			(self selection notNil and: [self selection isInWorld])
-				ifTrue: [
-					(self selection containingArtefact isNil or: [self selection guessedClass isNil])
+				ifTrue: [ | class |
+					class := self selection guessClassExpensive.
+					(self selection containingArtefact isNil or: [class isNil])
 						ifTrue: [self selection printString]
-						ifFalse:  ['{1} ({2})' format: {self selection printString. (self selection guessedClass) asString}]]
+						ifFalse:  ['{1} ({2})' format: {self selection printString. class asString}]]
 				ifFalse: ['']])

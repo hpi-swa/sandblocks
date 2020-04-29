@@ -17,4 +17,4 @@ toggleCollapsed
 						cellGap: 4 withScalingFactor;
 						layoutInset: (SBEdgeInsets left: 12 withScalingFactor right: 0 top: 0 bottom: 0);
 						addMorphBack: (SBStringMorph new contents: field name asString);
-						addMorphBack: (SBExplorer on: (field getValueFor: self) field: (field inspector: inspector)))]])]
+						addMorphBack: (SBExplorer on: ([field getValueFor: inspector] on: Error do: [nil]) field: (field inspector: inspector)))]])]
