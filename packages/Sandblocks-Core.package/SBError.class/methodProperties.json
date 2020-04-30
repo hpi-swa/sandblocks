@@ -2,6 +2,7 @@
 	"class" : {
 		 },
 	"instance" : {
+		"canCopy" : "tobe 4/30/2020 08:11",
 		"childSandblocksDo:" : "tobe 4/23/2020 07:05",
 		"createFrameForContext:" : "tobe 4/18/2020 22:21",
 		"currentBlockForPC" : "tobe 4/20/2020 09:15",

@@ -5,9 +5,9 @@ storeOn: aStream
 		nextPut: $(;
 		nextPutAll: self className;
 		nextPutAll: ' newFor: ';
-		nextPutAll: self method methodClass name;
+		nextPutAll: self methodClass name;
 		nextPutAll: ' >> ';
-		nextPutAll: self method selector asSymbol storeString;
+		nextPutAll: self selector asSymbol storeString;
 		nextPutAll: ' at: ';
 		nextPutAll: self position storeString;
 		nextPut: $)

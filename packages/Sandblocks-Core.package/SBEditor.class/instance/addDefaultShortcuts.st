@@ -44,7 +44,6 @@ addDefaultShortcuts
 		addSingleSelectionShortcut: $$ do: #selectRightMostBlock;
 		addSingleSelectionShortcut: $0 asSandblockShortcut, Character home do: #selectContainingArtefact;
 		addSingleSelectionShortcut: $z do: #toggleCollapsed;
-		addSingleSelectionShortcut: $q do: #closeSelectedMethod;
 		addSingleSelectionShortcut: $m do: #placeMark;
 		addSingleSelectionShortcut: $' do: #goToMark;
 		addMultiSelectionShortcut: $l do: #selectNext;
@@ -84,12 +83,13 @@ addDefaultShortcuts
 		addCommandShortcut: $n do: #nextSearchResult;
 		addCommandShortcut: $S command do: #saveWorkspace;
 		addCommandShortcut: $O command do: #promptOpenWorkspace;
-		addCommandShortcut: $f command do: #toggleFullscreen.
+		addCommandShortcut: $f command do: #toggleFullscreen;
+		addCommandShortcut: $T do: #createEmptyMethod.
 	SBLabel text: ['Tools: Debugger'].
 	self
 		addCommandShortcut: $> do: #stepOver;
 		addCommandShortcut: $< do: #stepInto;
-		addCommandShortcut: $< command do: #restartFrame;
+		addCommandShortcut: $R command do: #restartFrame;
 		addCommandShortcut: $e do: #focusErrors;
 		addCommandShortcut: $E do: #focusPreviousErrorFrame.
 	SBLabel text: ['Persistence/History'].

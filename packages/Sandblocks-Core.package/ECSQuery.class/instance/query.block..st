@@ -6,4 +6,4 @@ query: anArray block: aBlock
 	self addMorphBack: aBlock.
 	
 	anArray childSandblocksDo: [:symbol |
-		bindings addMorphBack: (SBDeclarationForBlock new contents: symbol contents withFirstCharacterDownshifted)]
+		bindings addMorphBack: (SBName contents: symbol contents withFirstCharacterDownshifted)]

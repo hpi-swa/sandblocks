@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"store" ],
+	"name" : "SBReachabilitySimulator",
+	"pools" : [
+		 ],
+	"super" : "SBSimulator",
+	"type" : "normal" }

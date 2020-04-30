@@ -2,7 +2,9 @@ as yet unclassified
 setCopyBuffer: aMorphOrCollection
 
 	| form list |
-	list := aMorphOrCollection isCollection ifTrue: [aMorphOrCollection] ifFalse: [{aMorphOrCollection}].
+	list := (aMorphOrCollection isCollection ifTrue: [aMorphOrCollection] ifFalse: [{aMorphOrCollection}]) select: #canCopy.
+	list ifEmpty: [^ self].
+	
 	copyBuffer := SBSelection new
 		methodClass: (list first containingArtefact ifNotNil: #relatedClass);
 		colorPolicy: self colorPolicy.

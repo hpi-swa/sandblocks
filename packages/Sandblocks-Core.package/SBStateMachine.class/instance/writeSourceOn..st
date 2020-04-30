@@ -2,7 +2,7 @@ as yet unclassified
 writeSourceOn: aStream
 
 	SBExample
-		self: [SBStateMachine new buildFrom: 'TOMStateMachine new
+		self: [SBStateMachine new buildFrom: 'SBStateMachine new
 		initialState: #idle;
 		
 		uponEnter: #combat do: [ self combat ];
@@ -12,7 +12,7 @@ writeSourceOn: aStream
 		label: 'simple'.
 	aStream
 		nextPut: $(;
-		nextPutAll: 'TOMStateMachine';
+		nextPutAll: 'SBStateMachine';
 		nextPutAll: ' new';
 		nextPutAll: ' initialState: ';
 		nextPutAll: self initialState name asSymbol storeString.

@@ -4,5 +4,5 @@ emptyWithDeclarations: aCollectionOfStrings
 	^ SBBlockBody new
 		statements: {SBUnknown new};
 		temporaries: {};
-		bindings: (aCollectionOfStrings collect: [:s | SBDeclarationForBlock new name: s]);
+		bindings: (aCollectionOfStrings collect: [:s | SBName contents: s]);
 		yourself

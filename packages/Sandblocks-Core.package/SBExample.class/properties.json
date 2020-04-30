@@ -15,7 +15,8 @@
 		"nameInput",
 		"active",
 		"errorDecorator",
-		"returnValue" ],
+		"returnValue",
+		"reportedError" ],
 	"name" : "SBExample",
 	"pools" : [
 		 ],

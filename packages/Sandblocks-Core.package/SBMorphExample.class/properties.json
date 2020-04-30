@@ -10,7 +10,8 @@
 		"cases",
 		"errorDecorator",
 		"header",
-		"errorIcon" ],
+		"errorIcon",
+		"reportedError" ],
 	"name" : "SBMorphExample",
 	"pools" : [
 		 ],

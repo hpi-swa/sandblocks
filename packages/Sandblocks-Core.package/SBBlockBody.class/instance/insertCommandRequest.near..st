@@ -6,7 +6,7 @@ insertCommandRequest: anAfterBoolean near: aBlock
 			(SBInsertCommand newFor: self containingArtefact)
 				index: (bindings submorphIndexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
 				container: bindings;
-				morph: SBDeclarationForBlock new;
+				morph: SBName new;
 				shouldMergeWithNext: true;
 				yourself]
 		ifFalse: [
