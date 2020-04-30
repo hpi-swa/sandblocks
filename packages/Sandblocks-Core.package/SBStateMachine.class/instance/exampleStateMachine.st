@@ -1,13 +1,13 @@
 as yet unclassified
 exampleStateMachine
 
-	| a |
+	| a b |
 	super initialize.
 	a := 5.
-	SBStateMachine new
+	b := SBStateMachine new
 		initialState: #idle;
 		uponEnter: #evasion do: [self flattenOnStream: a];
-		uponEnter: #combat do: [self combat];
+		uponEnter: #combat do: [self yourself];
 		uponLeave: #combat do: [self stop];
 		from: #idle to: #combat if: [self checkNearbyEnemies];
 		from: #combat to: #evasion if: [self checkLowHealth];
