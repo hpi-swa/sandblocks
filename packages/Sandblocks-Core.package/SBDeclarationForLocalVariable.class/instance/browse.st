@@ -1,4 +1,0 @@
-as yet unclassified
-browse
-
-	self binding value browse

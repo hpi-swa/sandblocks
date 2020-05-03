@@ -1,4 +1,0 @@
-artefact protocol
-methodClass
-
-	^ UndefinedObject

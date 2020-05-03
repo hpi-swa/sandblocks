@@ -1,1 +1,0 @@
-A SBAEInvocationAggregate collects all necessary information for the UI to display an invocation of an active expression. It optionally supports aggregating similar invocations by incrementing its count.

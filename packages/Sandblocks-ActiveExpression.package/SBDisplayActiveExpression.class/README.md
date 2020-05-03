@@ -1,1 +1,0 @@
-A SBDisplayActiveExpression is used by SBWatch when an active expression is observed through reportValue:. It will keep a reference to that active expression and subscribe to listen to its changes to then kickoff the remaining tool UI.

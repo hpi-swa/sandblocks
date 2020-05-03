@@ -1,4 +1,0 @@
-testing
-canDeleteChild: aBlock
-
-	^ false

@@ -1,4 +1,0 @@
-actions
-focusErrors
-
-	errors focus

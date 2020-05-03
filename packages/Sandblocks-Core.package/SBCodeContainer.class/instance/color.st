@@ -1,4 +1,0 @@
-accessing
-color
-
-	^ Color white

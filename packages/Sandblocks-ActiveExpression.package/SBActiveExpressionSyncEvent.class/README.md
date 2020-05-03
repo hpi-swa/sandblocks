@@ -1,1 +1,0 @@
-A SBActiveExpressionSyncEvent wraps an expression and reports its execution to any SBAEMarble's currently onscreen with the color of the object in which it is executed. It helps the user to determine execution order between the synchronous statements and the asynchronous invocations of the active expressions.

@@ -1,4 +1,0 @@
-accessing
-expressionIndex
-
-	^ expressionIndex value

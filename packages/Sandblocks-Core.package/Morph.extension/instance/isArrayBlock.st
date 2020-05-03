@@ -1,4 +1,0 @@
-*Sandblocks-Core
-isArrayBlock
-
-	^ false

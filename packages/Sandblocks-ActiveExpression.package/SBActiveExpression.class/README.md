@@ -1,1 +1,0 @@
-A SBActiveExpression is a simple projection for active expressions. It displays an icons rather than the constructor call.

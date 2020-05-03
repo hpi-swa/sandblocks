@@ -1,4 +1,0 @@
-actions
-nextSearchResult
-
-	searchInput nextResult

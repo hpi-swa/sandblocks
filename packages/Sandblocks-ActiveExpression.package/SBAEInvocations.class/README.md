@@ -1,1 +1,0 @@
-A SBAEInvocations holds all active expressions and the list of their activations. It displays the invocations of one active expression that is currently focused, as well as your some tooling to further inspect the active expression's invocations.

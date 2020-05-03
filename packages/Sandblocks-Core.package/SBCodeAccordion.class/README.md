@@ -1,1 +1,0 @@
-A SBCodeAccordion is a code container that contains a number of code lenses. When clicked, it may focus a single code lens.

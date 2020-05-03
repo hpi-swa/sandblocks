@@ -1,12 +1,12 @@
 OrderedDictionary {
-	'packages\/BaselineOfSandblocks.package' : #SquotCypressCodeSerializer,
-	'packages\/Sandblocks-ActiveExpression.package' : #SquotCypressCodeSerializer,
-	'packages\/Sandblocks-Example.package' : #SquotCypressCodeSerializer,
-	'packages\/Sandblocks-Drawing.package' : #SquotCypressCodeSerializer,
-	'packages\/Sandblocks-Format.package' : #SquotCypressCodeSerializer,
-	'packages\/Sandblocks-Graph.package' : #SquotCypressCodeSerializer,
-	'packages\/Sandblocks-Watch.package' : #SquotCypressCodeSerializer,
-	'packages\/Sandblocks-Core.package' : #SquotCypressCodeSerializer,
-	'packages\/JumpingCubes.package' : #SquotCypressCodeSerializer,
-	'packages\/Sandblocks-Explorer.package' : #SquotCypressCodeSerializer
+	'packages\/Sandblocks-Format' : #SquotTonelSerializer,
+	'packages\/Sandblocks-Explorer' : #SquotTonelSerializer,
+	'packages\/Sandblocks-ActiveExpression' : #SquotTonelSerializer,
+	'packages\/Sandblocks-Example' : #SquotTonelSerializer,
+	'packages\/Sandblocks-Watch' : #SquotTonelSerializer,
+	'packages\/BaselineOfSandblocks' : #SquotTonelSerializer,
+	'packages\/JumpingCubes' : #SquotTonelSerializer,
+	'packages\/Sandblocks-Core' : #SquotTonelSerializer,
+	'packages\/Sandblocks-Drawing' : #SquotTonelSerializer,
+	'packages\/Sandblocks-Graph' : #SquotTonelSerializer
 }

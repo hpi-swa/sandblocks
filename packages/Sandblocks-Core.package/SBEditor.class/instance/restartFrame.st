@@ -1,4 +1,0 @@
-actions
-restartFrame
-
-	errors restart

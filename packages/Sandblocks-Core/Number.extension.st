@@ -1,0 +1,17 @@
+Extension { #name : #Number }
+
+{ #category : #'*Sandblocks-Core' }
+Number >> adaptToEdgeInsetsAndAdd: anEdgeInsets [
+
+	^ SBEdgeInsets
+		left: anEdgeInsets left + self
+		right: anEdgeInsets right + self
+		top: anEdgeInsets top + self
+		bottom: anEdgeInsets bottom + self
+]
+
+{ #category : #'*Sandblocks-Core' }
+Number >> withScalingFactor [
+
+	^ self
+]

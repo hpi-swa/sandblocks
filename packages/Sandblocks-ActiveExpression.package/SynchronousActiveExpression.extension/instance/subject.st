@@ -1,4 +1,0 @@
-*Sandblocks-ActiveExpression
-subject
-
-	^ subject

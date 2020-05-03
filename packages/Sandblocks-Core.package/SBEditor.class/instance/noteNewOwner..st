@@ -1,4 +1,0 @@
-selection
-noteNewOwner: aMorph
-
-	" ignore "

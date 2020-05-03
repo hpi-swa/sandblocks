@@ -1,1 +1,0 @@
-A SBCodeContainer is an abstraction to support bundling a number of methods or other code containers within a morph.

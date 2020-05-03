@@ -1,4 +1,0 @@
-actions
-wrapInMessageSend
-
-	self wrapInMessageSend: ''

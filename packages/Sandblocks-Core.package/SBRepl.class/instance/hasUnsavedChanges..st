@@ -1,2 +1,0 @@
-artefact protocol
-hasUnsavedChanges: aBoolean
