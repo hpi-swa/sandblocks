@@ -225,7 +225,7 @@ SBError >> updateExplorers [
 	temporaries ifNotNil: #delete.
 	self addMorphBack: (temporaries := (SBExplorer on: (Array streamContents: [:stream |
 		context tempNames doWithIndex: [:name :index |
-			stream nextPut: name -> (context tempAt: index)]])) toggleCollapsed).
+			stream nextPut: name -> (context debuggerMap namedTempAt: index in: context)]])) toggleCollapsed).
 	explorer ifNotNil: #delete.
 	self addMorphBack: (explorer := SBExplorer on: context receiver) toggleCollapsed
 ]

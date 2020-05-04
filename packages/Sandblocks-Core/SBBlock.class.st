@@ -421,7 +421,9 @@ SBBlock >> focusAfterDelete: aBlock [
 { #category : #accessing }
 SBBlock >> focusAfterDeleteifNone: aBlock [
 
-	^ self valueOfProperty: #focusAfterDelete ifAbsent: aBlock
+	| block |
+	block := self valueOfProperty: #focusAfterDelete ifAbsent: aBlock.
+	^ block isInWorld ifTrue: [block] ifFalse: [aBlock value]
 ]
 
 { #category : #'as yet unclassified' }
