@@ -54,7 +54,7 @@ SBWatchView >> exampleStarting: anExample [
 { #category : #'as yet unclassified' }
 SBWatchView >> exploreLastValue [
 
-	lastValue explore
+	self sandblockEditor openMorphInView: (SBExplorer on: lastValue)
 ]
 
 { #category : #'as yet unclassified' }

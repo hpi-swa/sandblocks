@@ -172,6 +172,7 @@ SBEditor >> addDefaultShortcuts [
 	self
 		addMultiSelectionShortcut: Character escape do: #endMultiSelection;
 		addMultiSelectionShortcut: $y do: #copySelection;
+		addSingleSelectionShortcut: $Y do: #copyAroundSelection;
 		addMultiSelectionShortcut: $v do: #startOrAddToMultiSelection;
 		addCommandShortcut: Character escape command do: #close;
 		addInputShortcut: Character escape do: #endInput;
@@ -410,6 +411,18 @@ SBEditor >> compiledMethod: aMethod [
 SBEditor >> containingArtefact [
 
 	^ nil
+]
+
+{ #category : #actions }
+SBEditor >> copyAroundSelection [
+
+	| replacer around |
+	" create a copy of our surroundings with ourselves replaced "
+	replacer := SBPastePlaceholder new.
+	around := self selection.
+	around replaceBy: replacer.
+	self setCopyBuffer: replacer parentSandblock.
+	replacer replaceBy: around
 ]
 
 { #category : #'as yet unclassified' }
