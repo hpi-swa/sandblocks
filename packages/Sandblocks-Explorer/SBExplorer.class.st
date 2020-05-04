@@ -184,12 +184,14 @@ SBExplorer >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 SBExplorer >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| new |
-	new := SBUnknown new.
+	new := [self object printString parseAsSandblockWithoutSubstitution] on: Error do: [:error | 
+		error signal.
+		SBUnknown new].
 	self sandblockEditor do: ((SBReplaceCommand newFor: self)
 		target: self label;
 		replacer: new;
 		shouldMergeWithNext: true).
-	^ new startInputAt: aNumber replacingContents: true
+	^ new startInputAt: aNumber replacingContents: false
 ]
 
 { #category : #'as yet unclassified' }

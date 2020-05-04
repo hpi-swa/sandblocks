@@ -79,6 +79,12 @@ SBInputCommand >> previousText: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBInputCommand >> target [
+
+	^ oldMorph
+]
+
+{ #category : #'as yet unclassified' }
 SBInputCommand >> undo [
 
 	oldMorph = newMorph ifFalse: [newMorph replaceBy: oldMorph].

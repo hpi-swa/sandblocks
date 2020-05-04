@@ -129,7 +129,7 @@ SBEditor >> addDefaultShortcuts [
 		addMultiSelectionShortcut: $H do: #selectPreviousStatement;
 		addMultiSelectionShortcut: $L do: #selectNextStatement;
 		addCommandShortcut: $1 do: #resetZoom;
-		addCommandShortcut: $g do: #selectMethod;
+		addCommandShortcut: $g do: #selectArtefact;
 		addCommandShortcut: $G do: #selectLast;
 		addCommandShortcut: $! do: #refocus.
 	SBLabel text: ['Refactoring'].
@@ -1409,6 +1409,12 @@ SBEditor >> select: aBlock [
 	self internalSelect: aBlock
 ]
 
+{ #category : #actions }
+SBEditor >> selectArtefact [
+
+	self select: self selection containingArtefact
+]
+
 { #category : #selection }
 SBEditor >> selectClick: aBlock [
 
@@ -1447,12 +1453,6 @@ SBEditor >> selectLast [
 SBEditor >> selectLeftMostBlock [
 
 	self select: self selection leftMostBlock
-]
-
-{ #category : #actions }
-SBEditor >> selectMethod [
-
-	self select: self selection containingArtefact
 ]
 
 { #category : #selection }
@@ -1582,6 +1582,7 @@ SBEditor >> startInput: aMorph at: aNumber replacingContents: aBoolean [
 	currentInput := aMorph.
 	(aMorph startInputAt: aNumber replacingContents: aBoolean)
 		ifNotNil: [:cmd |
+			currentInput := cmd target.
 			currentInputCommand := cmd.
 			self mode: #input]
 		ifNil: [currentInput := nil]

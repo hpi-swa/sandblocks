@@ -92,6 +92,12 @@ SBInputMessageCommand >> select: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBInputMessageCommand >> target [
+
+	^ messageSend
+]
+
+{ #category : #'as yet unclassified' }
 SBInputMessageCommand >> undo [
 
 	messageSend selector: previousSelector arguments: previousArguments.
