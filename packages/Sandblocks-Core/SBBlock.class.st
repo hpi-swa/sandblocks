@@ -688,6 +688,12 @@ SBBlock >> isNumberBlock [
 ]
 
 { #category : #testing }
+SBBlock >> isPragma [
+
+	^ false
+]
+
+{ #category : #testing }
 SBBlock >> isRepl [
 
 	^ false

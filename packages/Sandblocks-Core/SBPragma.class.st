@@ -45,7 +45,6 @@ SBPragma >> initialize [
 		listDirection: #leftToRight;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
-		cellGap: 8 * self scalingFactor;
 		addMorphBack: (signature := SBSignature new
 			layoutPolicy: SBKeywordMessageLayout new;
 			selector: 'pragma';
@@ -80,7 +79,7 @@ SBPragma >> moveCursorTo: aNumber [
 { #category : #'as yet unclassified' }
 SBPragma >> prefix [
 
-	^ '<>'
+	^ '<> '
 ]
 
 { #category : #'as yet unclassified' }

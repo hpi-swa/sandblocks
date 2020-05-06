@@ -290,7 +290,12 @@ SBBasicMethod >> postDuplicate [
 	self currentSelector: 'copy', currentSelector capitalized.
 	self selector: self currentSelector arguments: self arguments.
 	
-	super postDuplicate
+	super postDuplicate.
+	
+	self
+		hasUnsavedChanges: true;
+		detachDecorators: SBMoveDecorator;
+		attachDecorator: (SBMoveDecorator new preventOcclusion: true)
 ]
 
 { #category : #'as yet unclassified' }

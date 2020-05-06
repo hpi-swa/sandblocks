@@ -86,6 +86,14 @@ SBMessageSend >> currentTextMorph [
 	^ signature currentTextMorph
 ]
 
+{ #category : #'as yet unclassified' }
+SBMessageSend >> drawSubmorphsOn: aCanvas [
+
+	super drawSubmorphsOn: aCanvas.
+	self receiver guessedClass ifNotNil: [:class |
+		(class canUnderstand: self selector asSymbol) ifFalse: [self drawFrame: Color yellow on: aCanvas]]
+]
+
 { #category : #accessing }
 SBMessageSend >> fixActions [
 
