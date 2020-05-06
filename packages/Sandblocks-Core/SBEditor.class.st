@@ -876,7 +876,7 @@ SBEditor >> insertStatementAboveOrBelow: anAboveBoolean [
 	self selection = self method
 		ifTrue: [
 			self do: ((SBInsertCommand newFor: self method)
-				index: 3;
+				index: 2;
 				container: self method body;
 				morph: newStatement;
 				shouldMergeWithNext: true;
@@ -1582,7 +1582,6 @@ SBEditor >> startInput: aMorph at: aNumber replacingContents: aBoolean [
 	currentInput := aMorph.
 	(aMorph startInputAt: aNumber replacingContents: aBoolean)
 		ifNotNil: [:cmd |
-			currentInput := cmd target.
 			currentInputCommand := cmd.
 			self mode: #input]
 		ifNil: [currentInput := nil]

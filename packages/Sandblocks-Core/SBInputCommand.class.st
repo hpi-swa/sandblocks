@@ -81,7 +81,7 @@ SBInputCommand >> previousText: aString [
 { #category : #'as yet unclassified' }
 SBInputCommand >> target [
 
-	^ oldMorph
+	^ newMorph ifNil: [oldMorph]
 ]
 
 { #category : #'as yet unclassified' }

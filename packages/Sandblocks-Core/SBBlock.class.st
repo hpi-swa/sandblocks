@@ -62,6 +62,12 @@ SBBlock >> artefactSaved: aMethodBlock [
 	" callback fired after each save of a method/artefact "
 ]
 
+{ #category : #converting }
+SBBlock >> asObject [
+
+	^ SBConvertResult unsupported
+]
+
 { #category : #decorators }
 SBBlock >> attachDecorator: aDecorator [
 

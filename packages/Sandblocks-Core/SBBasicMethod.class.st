@@ -104,6 +104,13 @@ SBBasicMethod >> codeActions [
 
 	^ super codeActions, {
 		(SBCodeAction
+			labeled: ('Move to {1} side' format: {self relatedClass isMeta ifTrue: ['instance'] ifFalse: ['class']})
+			for: self
+			do: [:node | 
+				node sandblockEditor do: ((SBMoveMethodCommand newFor: self)
+					method: self;
+					toClass: (self relatedClass isMeta ifTrue: [self relatedClass theNonMetaClass] ifFalse: [self relatedClass class]))]).
+		(SBCodeAction
 			labeled: 'Move to class ...'
 			for: self
 			do: [:node | 

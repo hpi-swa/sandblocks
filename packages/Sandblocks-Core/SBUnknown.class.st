@@ -18,7 +18,8 @@ SBUnknown >> acceptCharacter: char [
 	char = ${ ifTrue: [^ self doWrap: [:outer :inner | outer type: #dynamic contents: {inner}] with: SBArray new].
 	char = $[ ifTrue: [^ self doWrap: [:outer :inner | outer statements: {inner}] with: SBBlockBody new].
 	char = $^ ifTrue: [^ self doWrap: [:outer :inner | outer expression: inner] with: SBReturn new].
-	(char = $: and: [self parentSandblock isBlockBody]) ifTrue: [self parentSandblock addBlockArgument]
+	(char = $: and: [self parentSandblock isBlockBody]) ifTrue: [self parentSandblock addBlockArgument].
+	char = $< ifTrue: [^ self replaceWithPragma]
 ]
 
 { #category : #'as yet unclassified' }
@@ -69,6 +70,19 @@ SBUnknown >> keyStroke: anEvent [
 SBUnknown >> printOn: aStream [
 
 	aStream nextPutAll: 'unknown'
+]
+
+{ #category : #'as yet unclassified' }
+SBUnknown >> replaceWithPragma [
+
+	| pragma |
+	pragma := SBPragma new.
+	self stopEditing.
+	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+		target: self;
+		replacer: pragma;
+		shouldMergeWithNext: true).
+	^ pragma sandblockEditor startInput: pragma at: 1 replacingContents: true
 ]
 
 { #category : #'as yet unclassified' }

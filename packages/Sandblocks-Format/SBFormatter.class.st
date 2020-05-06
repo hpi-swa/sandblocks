@@ -196,6 +196,16 @@ SBFormatter >> precedenceOf: aNode [
 ]
 
 { #category : #'as yet unclassified' }
+SBFormatter >> printPragmas: aNode [
+
+	aNode primitive > 0 ifTrue: [
+		(aNode primitive between: 255 and: 519) ifFalse: [
+			stream crtab: 1.
+			aNode printPrimitiveOn: stream]].
+	aNode printPragmasOn: stream
+]
+
+{ #category : #'as yet unclassified' }
 SBFormatter >> rawContents [
 
 	^ stream contents
@@ -249,9 +259,9 @@ SBFormatter >> visitAssignmentNode: aNode [
 { #category : #'as yet unclassified' }
 SBFormatter >> visitBlockNode: aNode [
 
-	| isMethodBlock startWithNewLine temporaries |
-	SBLabel text: ['TODO: pragmas'].
+	| isMethodBlock startWithNewLine |
 	isMethodBlock := (self parentFor: aNode) isKindOf: MethodNode.
+	startWithNewLine := isMethodBlock not and: [aNode statements size > 1 or: [self willBeMultiLine: aNode statements first]].
 	isMethodBlock ifFalse: [
 		stream nextPut: $[.
 		aNode arguments ifNotEmpty: [:args | 
@@ -259,9 +269,9 @@ SBFormatter >> visitBlockNode: aNode [
 				stream nextPut: $:.
 				stream nextPutAll: arg name.
 				stream space].
-			stream nextPutAll: '| ']].
+			stream nextPut: $|.
+			startWithNewLine ifFalse: [stream space]]].
 	self formatTemporariesOf: aNode isMethod: isMethodBlock.
-	startWithNewLine := isMethodBlock not and: [aNode statements size > 1 or: [self willBeMultiLine: aNode statements first]].
 	self
 		indent: (startWithNewLine ifTrue: [1] ifFalse: [0])
 		around: [ | first |
@@ -363,10 +373,12 @@ SBFormatter >> visitMessageNode: aNode [
 ]
 
 { #category : #'as yet unclassified' }
-SBFormatter >> visitMethodNode: aNode [ 
+SBFormatter >> visitMethodNode: aNode [
+
 	aNode selector isUnary
 		ifTrue: [stream nextPutAll: aNode selector]
-		ifFalse: [self
+		ifFalse: [
+			self
 				with: aNode selector keywords
 				and: aNode arguments
 				do: [:part :arg | 
@@ -374,11 +386,11 @@ SBFormatter >> visitMethodNode: aNode [
 					stream space.
 					self visitNode: arg]
 				separatedBy: [stream space]].
+	self printPragmas: aNode.
 	self newLine.
-	self
-		indent: 1
-		around: [self newLine.
-			self visitNode: aNode block]
+	self indent: 1 around: [
+		self newLine.
+		self visitNode: aNode block]
 ]
 
 { #category : #'as yet unclassified' }
@@ -418,9 +430,11 @@ SBFormatter >> visitVariableNode: aNode [
 ]
 
 { #category : #'as yet unclassified' }
-SBFormatter >> willBeMultiLine: aNode [ 
-	^ (self preFormat: aNode)
-		includes: Character cr
+SBFormatter >> willBeMultiLine: aNode [
+
+	| text |
+	text := self preFormat: aNode.
+	^ (text includes: Character cr) or: [text size > 50]
 ]
 
 { #category : #'as yet unclassified' }

@@ -191,6 +191,7 @@ SBExplorer >> startInputAt: aNumber replacingContents: aBoolean [
 		target: self label;
 		replacer: new;
 		shouldMergeWithNext: true).
+	self sandblockEditor replaceInput: new.
 	^ new startInputAt: aNumber replacingContents: false
 ]
 

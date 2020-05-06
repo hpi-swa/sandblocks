@@ -3,11 +3,11 @@ Extension { #name : #LiteralNode }
 { #category : #'*Sandblocks-Core' }
 LiteralNode >> asSandblock [
 
-	^ self sandblockForLiteral: self key
+	^ self class sandblockForLiteral: self key
 ]
 
 { #category : #'*Sandblocks-Core' }
-LiteralNode >> sandblockForLiteral: anObject [
+LiteralNode class >> sandblockForLiteral: anObject [
 
 	anObject isNumber ifTrue: [^ SBNumber new contents: anObject asString].
 	anObject isSymbol ifTrue: [^ SBSymbol new contents: anObject asString].

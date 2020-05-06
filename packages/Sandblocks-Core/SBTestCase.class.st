@@ -42,6 +42,12 @@ SBTestCase >> clearErrors [
 ]
 
 { #category : #'as yet unclassified' }
+SBTestCase >> codeActions [
+
+	^ {SBCodeAction labeled: 'Run test' for: self do: [:node | node runTest]}
+]
+
+{ #category : #'as yet unclassified' }
 SBTestCase >> currentSelector: aString [
 
 	selectorInput contents: aString.
@@ -78,8 +84,14 @@ SBTestCase >> initialize [
 { #category : #'as yet unclassified' }
 SBTestCase >> reportError: anError [
 
-	(anError signalerContext findContextSuchThat: [:context | context method selector = self selector and: [context method methodClass = self methodClass]])
-		ifNotNil: [:context | (self blockForPC: context previousPc) attachDecorator: (errorIndicator := SBErrorDecorator new message: anError asString)]
+	self sandblockEditor reportError: anError process: ((Process
+				forContext: anError signalerContext copyStack
+				priority: Processor activeProcess priority)
+					shouldResumeFromDebugger: false;
+					yourself)
+	
+	"(anError signalerContext findContextSuchThat: [:context | context method selector = self selector and: [context method methodClass = self methodClass]])
+		ifNotNil: [:context | (self blockForPC: context previousPc) attachDecorator: (errorIndicator := SBErrorDecorator new message: anError asString)]"
 ]
 
 { #category : #'as yet unclassified' }

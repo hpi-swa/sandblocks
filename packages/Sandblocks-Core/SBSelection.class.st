@@ -140,6 +140,12 @@ SBSelection >> selection [
 ]
 
 { #category : #'as yet unclassified' }
+SBSelection >> statements [
+
+	^ #()
+]
+
+{ #category : #'as yet unclassified' }
 SBSelection >> wrapsAround [
 
 	^ self placeholder notNil

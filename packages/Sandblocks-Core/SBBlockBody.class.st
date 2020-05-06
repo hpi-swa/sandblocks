@@ -190,6 +190,12 @@ SBBlockBody >> prefix [
 	^ self isMethodBody ifTrue: [nil] ifFalse: [' [] ']
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlockBody >> prependStatement: aBlock [
+
+	self addMorph: aBlock asElementNumber: 2
+]
+
 { #category : #converting }
 SBBlockBody >> printOn: aStream [
 
@@ -239,7 +245,10 @@ SBBlockBody >> writeSourceOn: aStream [
 	temporaries writeSourceOn: aStream.
 	temporaries hasSubmorphs ifTrue: [aStream cr].
 	
-	self submorphs allButFirst do: [:m | m writeSourceOn: aStream] separatedBy: [aStream nextPut: $.; cr].
+	self submorphs allButFirst do: [:m |
+		m writeSourceOn: aStream.
+		m isExpression ifTrue: [aStream nextPut: $.].
+		aStream cr].
 	
 	self isMethodBody ifFalse: [aStream nextPut: $]]
 ]
