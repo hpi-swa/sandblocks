@@ -1,10 +1,10 @@
 Class {
 	#name : #SBReturn,
-	#superclass : #SBBlock,
+	#superclass : #SBASTNode,
 	#instVars : [
 		'pc'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #formatting }

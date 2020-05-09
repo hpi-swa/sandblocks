@@ -1,6 +1,6 @@
 Class {
 	#name : #SBPragma,
-	#superclass : #SBBlock,
+	#superclass : #SBASTNode,
 	#instVars : [
 		'signature'
 	],

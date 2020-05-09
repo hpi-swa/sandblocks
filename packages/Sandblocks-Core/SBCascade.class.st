@@ -1,7 +1,7 @@
 Class {
 	#name : #SBCascade,
-	#superclass : #SBBlock,
-	#category : 'Sandblocks-Core'
+	#superclass : #SBASTNode,
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }

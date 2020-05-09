@@ -1,11 +1,11 @@
 Class {
 	#name : #SBArray,
-	#superclass : #SBBlock,
+	#superclass : #SBASTNode,
 	#instVars : [
 		'type',
 		'addType'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }

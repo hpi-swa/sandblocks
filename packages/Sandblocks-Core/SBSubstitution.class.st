@@ -1,10 +1,10 @@
 Class {
 	#name : #SBSubstitution,
-	#superclass : #SBBlock,
+	#superclass : #SBASTNode,
 	#instVars : [
 		'pc'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }

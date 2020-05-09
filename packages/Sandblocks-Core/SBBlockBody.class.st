@@ -1,12 +1,12 @@
 Class {
 	#name : #SBBlockBody,
-	#superclass : #SBBlock,
+	#superclass : #SBASTNode,
 	#instVars : [
 		'temporaries',
 		'bindings',
 		'pc'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }

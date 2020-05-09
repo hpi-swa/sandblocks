@@ -1,6 +1,6 @@
 Class {
 	#name : #SBBasicMethod,
-	#superclass : #SBBlock,
+	#superclass : #SBASTNode,
 	#instVars : [
 		'body',
 		'methodClass',

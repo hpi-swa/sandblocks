@@ -1,11 +1,11 @@
 Class {
 	#name : #SBLiteral,
-	#superclass : #SBBlock,
+	#superclass : #SBASTNode,
 	#instVars : [
 		'text',
 		'castToUnknownWhenEmpty'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
