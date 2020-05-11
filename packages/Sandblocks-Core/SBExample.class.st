@@ -259,7 +259,7 @@ SBExample >> run [
 	
 	errorDecorator ifNotNil: #detach.
 	errorDecorator := nil.
-	returnValue contents: ''.
+	returnValue clear.
 	self sendStartNotification.
 	self collectTypeInfo.
 	
@@ -274,7 +274,7 @@ SBExample >> run [
 		currentProcess := nil.
 		processRunning := false.
 		Project current addDeferredUIMessage: [
-			returnValue contents: '-> ', returned printString.
+			returnValue reportValue: returned."contents: '-> ', returned printString".
 			self sendFinishNotification]
 	] forkAt: Processor userBackgroundPriority
 ]
@@ -296,7 +296,7 @@ SBExample >> self: aBlock args: aCollectionBlock label: aString [
 		addMorphBack: aBlock;
 		addMorphBack: (SBStringMorph new contents: 'args:');
 		addMorphBack: aCollectionBlock;
-		addMorphBack: (returnValue := SBStringMorph new contents: '');
+		addMorphBack: (returnValue := SBWatchView new);
 		updateIcon
 ]
 
@@ -351,7 +351,7 @@ SBExample >> stopRunning [
 
 	self stopSteppingSelector: #run.
 	active := false.
-	returnValue contents: ''.
+	returnValue clear.
 	self updateIcon.
 	
 	self sandblockEditor allMorphsDo: [:morph |

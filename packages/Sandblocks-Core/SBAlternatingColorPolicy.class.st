@@ -29,7 +29,7 @@ SBAlternatingColorPolicy >> colorForBlock: aBlock [
 { #category : #'as yet unclassified' }
 SBAlternatingColorPolicy >> colors [
 
-	^ {Color white. Color r: 0.9 g: 0.9 b: 0.9. Color blue}
+	^ {Color white. Color r: 0.85 g: 0.85 b: 0.85. Color blue}
 ]
 
 { #category : #'as yet unclassified' }

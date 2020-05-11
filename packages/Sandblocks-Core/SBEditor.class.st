@@ -27,7 +27,8 @@ Class {
 		'compileTime',
 		'workspace',
 		'errors',
-		'searchInput'
+		'searchInput',
+		'helpOverlay'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -464,7 +465,7 @@ SBEditor >> currentInput [
 { #category : #accessing }
 SBEditor >> currentMethodMap [
 
-	^ self methods collect: [:method | method compiledMethod sandblocksFastHash -> method] as: Dictionary
+	^ (self methods select: #exists) collect: [:method | method compiledMethod sandblocksFastHash -> method] as: Dictionary
 ]
 
 { #category : #actions }
@@ -686,16 +687,19 @@ SBEditor >> extractVariable [
 { #category : #events }
 SBEditor >> filterEvent: anEvent for: aMorph [
 
+	anEvent keyValue = 251 ifTrue: [self toggleHelperTimer: anEvent type = #keyDown].
 	(anEvent type == #keystroke or: [false]) ifFalse: [^ anEvent].
 	self processShortcutList: globalShortcuts for: anEvent ifMatched: [^ anEvent ignore].
 	mode = #input ifTrue: [
 		self processShortcutList: inputShortcuts for: anEvent ifMatched: [^ anEvent ignore].
 		currentInput keyStroke: anEvent.
 		^ anEvent ignore].
-	mode = #command ifTrue: [self processShortcutList: commandShortcuts for: anEvent ifMatched: [^ anEvent ignore]].
+	mode = #command ifTrue: [
+		self processShortcutList: commandShortcuts for: anEvent ifMatched: [^ anEvent ignore]].
 	self selection ifNotNil: [
 		self processShortcutList: multiSelectionShortcuts for: anEvent ifMatched: [^ anEvent ignore].
-		mode ~= #selection ifTrue: [self processShortcutList: singleSelectionShortcuts for: anEvent ifMatched: [^ anEvent ignore]]].
+		mode ~= #selection ifTrue: [
+			self processShortcutList: singleSelectionShortcuts for: anEvent ifMatched: [^ anEvent ignore]]].
 	^ anEvent
 ]
 
@@ -876,7 +880,7 @@ SBEditor >> insertStatementAboveOrBelow: anAboveBoolean [
 	self selection = self method
 		ifTrue: [
 			self do: ((SBInsertCommand newFor: self method)
-				index: 2;
+				index: (anAboveBoolean ifTrue: [2] ifFalse: [self method body submorphCount + 1]);
 				container: self method body;
 				morph: newStatement;
 				shouldMergeWithNext: true;
@@ -1121,6 +1125,14 @@ SBEditor >> openRepl [
 	| repl |
 	repl := self openMorphInView: SBRepl new.
 	self startInput: repl body childSandblocks first at: 1 replacingContents: true
+]
+
+{ #category : #shortcuts }
+SBEditor >> outOfWorld: aWorld [
+
+	super outOfWorld: aWorld.
+	
+	helpOverlay ifNotNil: #delete
 ]
 
 { #category : #'as yet unclassified' }
@@ -1557,6 +1569,12 @@ SBEditor >> setCopyBuffer: aMorphOrCollection [
 	copyBufferPreview image: ((form scaledIntoFormOfSize: (self copyBufferPreviewSize min: form extent)) collectColors: [:c | c alpha: c alpha * 0.7])
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> showHelper [
+
+	helpOverlay isNil ifTrue: [helpOverlay := SBHelpOverlay new target: self selection]
+]
+
 { #category : #actions }
 SBEditor >> showUsageInfo [
 
@@ -1698,6 +1716,18 @@ SBEditor >> toggleFullscreen [
 				openInWorld;
 				extent: Display extent;
 				position: 0 @ 0]
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> toggleHelperTimer: aBoolean [
+
+	aBoolean
+		ifTrue: [
+			self addAlarm: #showHelper after: 1 second asMilliSeconds]
+		ifFalse: [
+			helpOverlay ifNotNil: #delete.
+			helpOverlay := nil.
+			self removeAlarm: #showHelper]
 ]
 
 { #category : #actions }

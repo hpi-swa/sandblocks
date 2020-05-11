@@ -51,6 +51,8 @@ SBCodeOpener >> delete [
 { #category : #'as yet unclassified' }
 SBCodeOpener >> focus: aMethodOrClass [
 
+	aMethodOrClass ifNil: [^ self].
+	
 	aMethodOrClass isBehavior
 		ifTrue: [
 			self showingClassSide: aMethodOrClass isClassSide.

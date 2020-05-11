@@ -36,5 +36,5 @@ SBDisplayMorph >> reportValue: aMorph [
 				 line: 0 @ 0 to: 30 asPoint width: 1 color: Color yellow;
 				 line: 30 @ 0 to: 0 @ 30 width: 1 color: Color yellow.
 			fallback].
-	self image: ((form width > 100 or: [form height > 100]) ifTrue: [form scaledIntoFormOfSize: 100 asPoint] ifFalse: [form])
+	self image: ((form width > 100 or: [form height > 100]) ifTrue: [form scaledIntoFormOfSize: (100 asPoint min: form extent)] ifFalse: [form])
 ]

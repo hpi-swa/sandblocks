@@ -204,6 +204,12 @@ SBBasicMethod >> ensureExpanded [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> exists [
+
+	^ self currentClass respondsTo: self currentSelector
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> hasUnsavedChanges [
 
 	^ hasUnsavedChanges
@@ -323,6 +329,7 @@ SBBasicMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
 	(self currentClass ~= self methodClass or: [self currentSelector ~= #'' and: [newSelector ~=self  currentSelector]]) ifTrue: [
 		self currentClass removeSelector: self currentSelector].
 	self currentSelector: newSelector.
+	self currentClass: self methodClass.
 	
 	aQuickBoolean ifFalse: [self updatePCs].
 	self hasUnsavedChanges: false.

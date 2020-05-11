@@ -90,7 +90,7 @@ SBMessageSend >> currentTextMorph [
 SBMessageSend >> drawSubmorphsOn: aCanvas [
 
 	super drawSubmorphsOn: aCanvas.
-	self receiver guessedClass ifNotNil: [:class |
+	self actualReceiver guessedClass ifNotNil: [:class |
 		(class canUnderstand: self selector asSymbol) ifFalse: [self drawFrame: Color yellow on: aCanvas]]
 ]
 
@@ -99,7 +99,7 @@ SBMessageSend >> fixActions [
 
 	^ self isDefined not
 		ifTrue: [ | class |
-			class := self actualReceiver guessedClass.
+			class := self actualReceiver guessClassExpensive.
 			{
 				(SBCodeAction
 					labeled: 'Create method on ', (class ifNotNil: #name ifNil: ['...'])

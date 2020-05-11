@@ -29,6 +29,12 @@ SBWatchView class >> watchTypes [
 	} select: #notNil
 ]
 
+{ #category : #'event handling' }
+SBWatchView >> clear [
+
+	count contents: '0'
+]
+
 { #category : #'as yet unclassified' }
 SBWatchView >> dark: aBoolean [
 
@@ -47,7 +53,7 @@ SBWatchView >> exampleFinished: anExample [
 { #category : #'event handling' }
 SBWatchView >> exampleStarting: anExample [
 
-	count contents: '0'.
+	self clear.
 	display exampleStarting: anExample
 ]
 
