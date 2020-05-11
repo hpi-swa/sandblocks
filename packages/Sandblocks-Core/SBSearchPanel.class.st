@@ -41,7 +41,7 @@ SBSearchPanel >> keyStroke: anEvent [
 { #category : #'as yet unclassified' }
 SBSearchPanel >> matchesQuery: aMorph [
 
-	^ aMorph textContents asLowercase includesSubstring: self contents
+	^ aMorph textContents asLowercase includesSubstring: self contents asLowercase
 ]
 
 { #category : #'as yet unclassified' }
@@ -52,6 +52,12 @@ SBSearchPanel >> nextResult [
 	self
 		searchFrom: start
 		ifNone: [start ~= self sandblockEditor ifTrue: [self searchFrom: self sandblockEditor ifNone: [nil]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBSearchPanel >> prefix [
+
+	^ 'Search: /'
 ]
 
 { #category : #'as yet unclassified' }

@@ -92,6 +92,9 @@ SBLiteral >> isLiteralBlock [
 SBLiteral >> keyStroke: anEvent [
 
 	(anEvent keyCharacter isSpecial or: [anEvent keyCharacter = Character space]) ifTrue: [
+		(self parentSandblock isMessageSend and: [self parentSandblock selector = SBMessageSend placeholderSelector])
+			ifTrue: [^ self sandblockEditor endInput; startInput: self parentSandblock at: 1 replacingContents: true].
+		
 		^ self sandblockEditor
 			endInput;
 			wrapInMessageSend: (anEvent keyCharacter isSpecial ifTrue: [anEvent keyCharacter asString] ifFalse: [''])].

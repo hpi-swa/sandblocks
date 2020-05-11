@@ -35,9 +35,21 @@ SBHelpShortcut >> drawnColor [
 ]
 
 { #category : #'as yet unclassified' }
+SBHelpShortcut >> left: aBlock [
+
+	self position: aBlock positionInWorld - (self fullBounds width @ 0)
+]
+
+{ #category : #'as yet unclassified' }
 SBHelpShortcut >> rejectsEvent: anEvent [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBHelpShortcut >> right: aBlock [
+
+	self position: aBlock positionInWorld + (aBlock width @ 0)
 ]
 
 { #category : #'as yet unclassified' }

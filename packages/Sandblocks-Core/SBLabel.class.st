@@ -101,14 +101,14 @@ SBLabel >> initialize [
 		vResizing: #shrinkWrap;
 		changeTableLayout;
 		layoutInset: 6 withScalingFactor;
-		addMorphBack: (text := SBOwnTextMorph new emphasis: TextEmphasis italic);
+		addMorphBack: (text := SBMultilineOwnTextMorph new emphasis: TextEmphasis italic);
 		headingLevel: 0
 ]
 
 { #category : #'as yet unclassified' }
 SBLabel >> isExpression [
 
-	^ false
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -132,7 +132,7 @@ SBLabel >> label: aString [
 { #category : #'as yet unclassified' }
 SBLabel >> printOn: aStream [
 
-	aStream nextPutAll: 'label ', self contents
+	aStream nextPutAll: 'label ', (self contents truncateWithElipsisTo: 20)
 ]
 
 { #category : #'as yet unclassified' }

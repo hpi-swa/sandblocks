@@ -195,6 +195,13 @@ SBRepl >> name: aString [
 ]
 
 { #category : #'artefact protocol' }
+SBRepl >> printOn: aStream [
+
+	aStream nextPutAll: 'workspace '.
+	aStream nextPutAll: (self name truncateWithElipsisTo: 20)
+]
+
+{ #category : #'artefact protocol' }
 SBRepl >> relatedClass [
 
 	^ self methodClass

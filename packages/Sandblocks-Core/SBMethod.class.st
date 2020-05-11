@@ -184,12 +184,6 @@ SBMethod >> useSuggestion: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBMethod >> valid [
-
-	^ self selector contents notEmpty
-]
-
-{ #category : #'as yet unclassified' }
 SBMethod >> writeSignatureSourceOn: aStream [
 
 	signature writeSourceOn: aStream

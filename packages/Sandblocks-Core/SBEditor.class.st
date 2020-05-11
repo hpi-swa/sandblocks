@@ -213,15 +213,6 @@ SBEditor >> addElement [
 ]
 
 { #category : #actions }
-SBEditor >> addEmptyClass [
-
-	| class |
-	class := SBClass new category: (self anyNearbyClass ifNotNil: #category ifNil: ['UserObjects']).
-	self openMorphInView: class.
-	self startInput: class childSandblocks first at: 1 replacingContents: false
-]
-
-{ #category : #actions }
 SBEditor >> addExample [
 
 	self selection ifNotNil: [:selected | selected isExample ifTrue: [^ selected toggleRunning]].
@@ -325,6 +316,52 @@ SBEditor >> blockForClass: aClass ifPresent: aBlock ifAbsent: anotherBlock [
 SBEditor >> browseSelection [
 
 	self selection browse
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> buildCommandBar [
+
+	^ SBRow new
+		changeTableLayout;
+		hResizing: #spaceFill;
+		cellGap: 4 withScalingFactor;
+		layoutInset: 4 withScalingFactor;
+		addMorphBack: (SBButton new icon: SBIcon iconUndo shortcut: $u asSandblockShortcut do: [self undo]);
+		addMorphBack: (SBButton new icon: SBIcon iconRepeat shortcut: $U asSandblockShortcut do: [self redo]);
+		addMorphBack: (SBButton new icon: SBIcon iconFolder_open shortcut: $x command do: [self openOpenWindow]);
+		addMorphBack: (SBButton new
+			icon: SBIcon iconPlus shortcut: nil do: [self promptAddArtifact];
+			balloonText: 'Add artifact');
+		addMorphBack: (Morph new
+			height: 0;
+			color: Color transparent;
+			hResizing: #spaceFill);
+		addMorphBack: (SBButton new
+			icon: SBIcon iconWindow_maximize shortcut: nil do: [self promptWorkspaceActions];
+			balloonText: 'Manage Workspaces');
+		addMorphBack: (SBButton new icon: SBIcon iconExpand shortcut: $f command do: [self toggleFullscreen])
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> buildDebugCommandBar [
+
+	^ SBRow new
+		changeTableLayout;
+		hResizing: #spaceFill;
+		cellGap: 4 withScalingFactor;
+		layoutInset: 4 withScalingFactor;
+		addMorphBack: (SBButton new
+			icon: SBIcon iconLong_arrow_right shortcut: $> asSandblockShortcut do: [self stepOver];
+			balloonText: 'Step over');
+		addMorphBack: (SBButton new
+			icon: SBIcon iconLevel_down shortcut: $< asSandblockShortcut do: [self stepInto];
+			balloonText: 'Step into');
+		addMorphBack: (SBButton new
+			icon: SBIcon iconForward shortcut: nil do: [self stepThrough];
+			balloonText: 'Step through');
+		addMorphBack: (SBButton new
+			icon: SBIcon iconFast_backward shortcut: $R command do: [self restartFrame];
+			balloonText: 'Restart frame')
 ]
 
 { #category : #actions }
@@ -442,6 +479,15 @@ SBEditor >> copySelection [
 SBEditor >> copyString [
 
 	Clipboard clipboardText: self selection prettySourceString
+]
+
+{ #category : #actions }
+SBEditor >> createEmptyClass [
+
+	| class |
+	class := SBClass new category: (self anyNearbyClass ifNotNil: #category ifNil: ['UserObjects']).
+	self openMorphInView: class.
+	self startInput: class childSandblocks first at: 1 replacingContents: false
 ]
 
 { #category : #actions }
@@ -687,7 +733,9 @@ SBEditor >> extractVariable [
 { #category : #events }
 SBEditor >> filterEvent: anEvent for: aMorph [
 
-	anEvent keyValue = 251 ifTrue: [self toggleHelperTimer: anEvent type = #keyDown].
+	anEvent keyValue = 251
+		ifTrue: [self toggleHelperTimer: anEvent type = #keyDown]
+		ifFalse: [self removeHelperTimer].
 	(anEvent type == #keystroke or: [false]) ifFalse: [^ anEvent].
 	self processShortcutList: globalShortcuts for: anEvent ifMatched: [^ anEvent ignore].
 	mode = #input ifTrue: [
@@ -706,7 +754,8 @@ SBEditor >> filterEvent: anEvent for: aMorph [
 { #category : #actions }
 SBEditor >> focusErrors [
 
-	errors focus
+	errors focus.
+	errors topLeft: scroll topLeft
 ]
 
 { #category : #actions }
@@ -749,7 +798,7 @@ SBEditor >> initialize [
 	globalShortcuts := OrderedCollection new.
 	inputShortcuts := OrderedCollection new.
 	multiSelection := OrderedCollection new.
-	colorPolicy := SBDefaultColorPolicy new.
+	colorPolicy := SBAlternatingColorPolicy new.
 	compileTime := #compileOnSave.
 	
 	self
@@ -766,6 +815,9 @@ SBEditor >> initialize [
 			disableLayout: true;
 			topLeft: self topLeft;
 			yourself);
+			
+		addMorphBack: self buildCommandBar;
+		"addMorphBack: self buildDebugCommandBar;"
 		
 		addMorphBack: (scroll := SBEditorCanvas new
 			hResizing: #spaceFill;
@@ -774,13 +826,12 @@ SBEditor >> initialize [
 		
 		addMorphBack: (bottomPanel := Morph new
 			changeTableLayout;
-			cellPositioning: #topLeft;
-			vResizing: #rigid;
-			cellGap: 8 * self scalingFactor;
-			extent: 0 @ self copyBufferPreviewSize y;
+			cellPositioning: #center;
+			vResizing: #shrinkWrap;
+			cellGap: 8 withScalingFactor;
 			hResizing: #spaceFill;
 			wrapCentering: #center;
-			layoutInset: 4 withScalingFactor @ 0;
+			layoutInset: 4 withScalingFactor;
 			listDirection: #leftToRight;
 			color: Color transparent;
 			addMorphBack: (modeLabel := StringMorph new emphasis: TextEmphasis bold emphasisCode);
@@ -790,6 +841,8 @@ SBEditor >> initialize [
 			addMorphBack: (compileTimeButton := StringMorph new
 				contents: 'Compile on save';
 				on: #click send: #promptChangeCompile to: self);
+			addMorphBack: (SBButton new balloonText: 'Copy'; icon: SBIcon iconCopy shortcut: $y asSandblockShortcut do: [self copy]);
+			addMorphBack: (SBButton new balloonText: 'Copy around'; icon: SBIcon iconClipboard shortcut: $Y asSandblockShortcut do: [self copyAroundSelection]);
 			addMorphBack: (copyBufferPreview := ImageMorph new image: (Form extent: 1 @ 1));
 			yourself);
 		
@@ -1216,6 +1269,15 @@ SBEditor >> processShortcutList: aCollection for: anEvent ifMatched: aBlock [
 			(def second value: self) = false ifFalse: [^ aBlock value]]]
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> promptAddArtifact [
+
+	| index |
+	index := UIManager default chooseFrom: {'Add method (T)'. 'Add class (Control+,)'}.
+	index = 1 ifTrue: [^ self createEmptyMethod].
+	index = 2 ifTrue: [^ self createEmptyClass]
+]
+
 { #category : #'initialize-release' }
 SBEditor >> promptChangeCompile [
 
@@ -1245,7 +1307,7 @@ SBEditor >> promptMenu [
 				changed.
 			self allMorphsDo: [:morph | morph removeProperty: #sandblockBlockColor]]}.
 		{'Change Compile Method'. [self promptChangeCompile]}.
-		{'New Class'. [self addEmptyClass]}
+		{'New Class'. [self createEmptyClass]}
 	}.
 	
 	(UIManager default chooseFrom: (options collect: #first) values: (options collect: #second)) ifNotNil: #value
@@ -1258,9 +1320,17 @@ SBEditor >> promptOpenWorkspace [
 	items := SBWorkspaceHistory default items.
 	index := UIManager default chooseFrom: items.
 	index = 0 ifTrue: [^ self].
-	
 	self close.
 	(items at: index) open
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> promptWorkspaceActions [
+
+	| index |
+	index := UIManager default chooseFrom: {'Open Workspace (Cmd+O)'. 'Save Workspace (Cmd+S)'}.
+	index = 1 ifTrue: [^ self promptOpenWorkspace].
+	index = 2 ifTrue: [^ self saveWorkspace]
 ]
 
 { #category : #actions }
@@ -1278,6 +1348,14 @@ SBEditor >> redo [
 SBEditor >> refocus [
 
 	self selection ifNotNil: #ensureVisible
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> removeHelperTimer [
+
+	helpOverlay ifNotNil: #delete.
+	helpOverlay := nil.
+	self removeAlarm: #showHelper
 ]
 
 { #category : #input }
@@ -1566,13 +1644,14 @@ SBEditor >> setCopyBuffer: aMorphOrCollection [
 	
 	list select: [:m | m isCodeContainer not] thenDo: [:m | copyBuffer addMorphBack: m veryDeepCopy].
 	form := copyBuffer imageForm.
-	copyBufferPreview image: ((form scaledIntoFormOfSize: (self copyBufferPreviewSize min: form extent)) collectColors: [:c | c alpha: c alpha * 0.7])
+	"copyBufferPreview image: ((form scaledIntoFormOfSize: (self copyBufferPreviewSize min: form extent)) collectColors: [:c | c alpha: c alpha * 0.7])."
+	copyBufferPreview image: ((form scaledToHeight: self copyBufferPreviewSize y) collectColors: [:c | c alpha: c alpha * 0.7])
 ]
 
 { #category : #'as yet unclassified' }
 SBEditor >> showHelper [
 
-	helpOverlay isNil ifTrue: [helpOverlay := SBHelpOverlay new target: self selection]
+	(helpOverlay isNil and: [self isInWorld]) ifTrue: [helpOverlay := SBHelpOverlay new target: self selection]
 ]
 
 { #category : #actions }
@@ -1724,10 +1803,7 @@ SBEditor >> toggleHelperTimer: aBoolean [
 	aBoolean
 		ifTrue: [
 			self addAlarm: #showHelper after: 1 second asMilliSeconds]
-		ifFalse: [
-			helpOverlay ifNotNil: #delete.
-			helpOverlay := nil.
-			self removeAlarm: #showHelper]
+		ifFalse: [self removeHelperTimer]
 ]
 
 { #category : #actions }

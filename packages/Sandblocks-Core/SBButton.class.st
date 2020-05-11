@@ -10,7 +10,8 @@ Class {
 { #category : #'as yet unclassified' }
 SBButton >> clicked [
 
-	action value
+	action value.
+	self mouseEntered
 ]
 
 { #category : #'as yet unclassified' }
@@ -45,7 +46,7 @@ SBButton >> initialize [
 		changeTableLayout;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
-		borderStyle: (BorderStyle width: 2 color: Color veryLightGray);
+		borderStyle: (BorderStyle width: 1 color: Color veryLightGray);
 		listDirection: #leftToRight;
 		cellGap: 8 withScalingFactor;
 		layoutInset: (8 @ 4) withScalingFactor;
@@ -62,7 +63,6 @@ SBButton >> initialize [
 SBButton >> label: aString shortcut: aShortcut do: aBlock [
 
 	SBExample self: [SBButton new] args: [{'hello'. $p command. [nil]}] label: 'label'.
-	action := aBlock.
 	self
 		widget: (StringMorph new
 			contents: aString;
@@ -92,8 +92,10 @@ SBButton >> mousePressed [
 { #category : #'as yet unclassified' }
 SBButton >> widget: aMorph shortcut: aShortcut do: aBlock [
 
+	action := aBlock.
 	self addMorphBack: aMorph.
-	self addMorphBack: (StringMorph new
-		contents: aShortcut displayString;
-		color: Color gray)
+	aShortcut ifNotNil: [
+		self addMorphBack: (StringMorph new
+			contents: aShortcut displayString;
+			color: Color gray)]
 ]

@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Tutorial",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBTutorialSnippets",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }
