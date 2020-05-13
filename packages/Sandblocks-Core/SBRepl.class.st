@@ -35,6 +35,12 @@ SBRepl class >> newFromSource: aString named: anotherString at: aPoint [
 ]
 
 { #category : #'artefact protocol' }
+SBRepl >> acceptedRepresentationAt: aNumber [
+
+	^ #isObject
+]
+
+{ #category : #'artefact protocol' }
 SBRepl >> artefact [
 
 	^ nil
@@ -129,9 +135,11 @@ SBRepl >> getOrCreateLocalBinding: aString [
 { #category : #'compilation cue protocol' }
 SBRepl >> handleDroppedBlock: aBlock event: anEvent [
 
-	| name |
-	name := aBlock name asLegalSelector.
-	(self createBinding: name) binding value: aBlock evaluate
+	aBlock object
+		representationThat: #isObject
+		do: [:repr |
+			(self createBinding: repr name asLegalSelector) binding value: repr]
+		ifNone: [nil]
 ]
 
 { #category : #'artefact protocol' }
@@ -222,10 +230,9 @@ SBRepl >> saveTryFixing: aBoolean quick: aQuickBoolean [
 { #category : #'artefact protocol' }
 SBRepl >> setFromSelection: aSelectionBlock [
 
+	self body removeAllMorphs.
 	aSelectionBlock childSandblocksDo: [:block |
-		self body
-			removeAllMorphs;
-			addMorphBack: block]
+		self body addMorphBack: block]
 ]
 
 { #category : #'artefact protocol' }
@@ -233,6 +240,14 @@ SBRepl >> setFromSource: aString [
 
 	self removeMorph: self lastSubmorph.
 	self addMorphBack: aString parseAsSandblock
+]
+
+{ #category : #'artefact protocol' }
+SBRepl >> statements: aCollection [
+
+	self body removeAllMorphs.
+	aCollection do: [:statement |
+		self body addMorphBack: statement]
 ]
 
 { #category : #'as yet unclassified' }

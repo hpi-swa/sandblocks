@@ -47,6 +47,12 @@ SBGraphProjection >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBGraphProjection >> object [
+
+	^ object
+]
+
+{ #category : #'as yet unclassified' }
 SBGraphProjection >> object: anObject [
 
 	super object: anObject.

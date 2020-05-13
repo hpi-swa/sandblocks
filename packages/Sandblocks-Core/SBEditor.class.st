@@ -59,10 +59,22 @@ SBEditor class >> openFor: aMethodOrClass [
 	^ (self newFor: aMethodOrClass) openInWindow; yourself
 ]
 
+{ #category : #'initialize-release' }
+SBEditor class >> openWorkspace: aString [
+
+	SBWorkspaceHistory default items detect: [:workspace | workspace name = aString] ifFound: [:workspace | workspace open] ifNone: [self error: 'no such workspace']
+]
+
 { #category : #actions }
 SBEditor >> acceptChild: aBlock [
 
 	^ aBlock isArtefact
+]
+
+{ #category : #shortcuts }
+SBEditor >> acceptedRepresentationAt: aNumber [
+
+	^ #isToplevelMorph
 ]
 
 { #category : #shortcuts }
@@ -568,17 +580,19 @@ SBEditor >> declareTemporaryVariable: aString [
 SBEditor >> deleteAroundSelection [
 
 	| replacer around |
-	" create a copy of our surroundings with ourselves replaced "
-	replacer := SBPastePlaceholder new.
-	around := self selection.
-	around replaceBy: replacer.
-	self setCopyBuffer: replacer parentSandblock.
-	replacer replaceBy: around.
-	
-	(self selection isExpression" and: [self selection parentSandblock isExpression]") ifTrue: [
+	(self selection hasRepresentationThat: (self selection parentSandblock parentSandblock contextAcceptedRepresentationAt: self selection parentSandblock childIndex)) ifTrue: [
+		" create a copy of our surroundings with ourselves replaced "
+		replacer := SBPastePlaceholder new.
+		around := self selection.
+		around replaceBy: replacer.
+		self setCopyBuffer: replacer parentSandblock.
+		replacer replaceBy: around.
+		
+		replacer := self selection veryDeepCopy.
 		self do: ((SBReplaceCommand newFor: self method)
 			target: self selection parentSandblock;
-			replacer: self selection)]
+			replacer: replacer).
+		replacer postDuplicate]
 ]
 
 { #category : #'submorphs-add\/remove' }
@@ -774,11 +788,12 @@ SBEditor >> goToMark [
 { #category : #'submorphs-add\/remove' }
 SBEditor >> handleDroppedBlock: aMorph event: anEvent [
 
-	aMorph isSelection ifTrue: [ | repl |
-		repl := SBRepl new setFromSelection: aMorph.
-		self sandblockEditor openMorphInView: repl.
-		repl center: (scroll firstSubmorph globalPointToLocal: anEvent position).
-		repl body firstSubmorph select]
+	aMorph object
+		representationThat: #isToplevelMorph
+		do: [:repr |
+			self openMorphInView: repr.
+			repr center: ((scroll transformFrom: nil) globalPointToLocal: anEvent position)]
+		ifNone: []
 ]
 
 { #category : #actions }
@@ -1293,7 +1308,7 @@ SBEditor >> promptChangeCompile [
 { #category : #actions }
 SBEditor >> promptCodeAction [
 
-	self selection codeActions ifNotEmpty: [:actions | self method proposeCodeActions: actions for: self selection]
+	self selection codeActions ifNotEmpty: [:actions | self selection proposeCodeActions: actions for: self selection]
 ]
 
 { #category : #actions }

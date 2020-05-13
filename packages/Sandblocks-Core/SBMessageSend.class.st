@@ -161,7 +161,7 @@ SBMessageSend >> isDefined [
 { #category : #'as yet unclassified' }
 SBMessageSend >> isExpression [
 
-	^ self isInCascade not
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

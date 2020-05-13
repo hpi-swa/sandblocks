@@ -21,6 +21,12 @@ SBBlock >> acceptDroppingMorph: aMorph event: anEvent [
 	self handleDroppedBlock: aMorph event: anEvent
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> acceptedRepresentationAt: aNumber [
+
+	^ nil
+]
+
 { #category : #testing }
 SBBlock >> activeMorph [
 	" provides the opportunity to advertise a different morph that self to be considered as the current holder of focus "
@@ -133,6 +139,12 @@ SBBlock >> canSwap [
 	^ self isExpression
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> childIndex [
+
+	^ self parentSandblock childSandblocks indexOf: self
+]
+
 { #category : #accessing }
 SBBlock >> childSandblocks [
 
@@ -173,17 +185,19 @@ SBBlock >> closestAdjacentFrom: mySide to: theirSide [
 { #category : #accessing }
 SBBlock >> codeActions [
 
-	^ #()
-	
-	
-	" from active-expressions experiment - not sure how to best place this now:
-	
-	self isExpression ifTrue: [
-		{SBCodeAction labeled: 'Wrap in Marker' for: self do: [:node |
-			node sandblockEditor do: ((SBWrapCommand newFor: node containingArtefact)
-				outer: SBActiveExpressionSyncEvent new;
-				inner: node;
-				wrap: [:outer :inner | outer expression: inner])]}] ifFalse: [#()]"
+	^ {
+		(SBCodeAction
+			labeled: 'Represent as ...'
+			for: self
+			do: [:node |
+				node object
+					representationThat: (self parentSandblock acceptedRepresentationAt: 1)
+					do: [:type |
+						self sandblockEditor do: (SBReplaceCommand newNonEdit
+							target: self;
+							replacer: type)]
+					ifNone: [nil]])
+	}
 ]
 
 { #category : #testing }
@@ -555,6 +569,12 @@ SBBlock >> intoWorld: aWorld [
 ]
 
 { #category : #testing }
+SBBlock >> isASTNode [
+
+	^ false
+]
+
+{ #category : #testing }
 SBBlock >> isArrayBlock [
 
 	^ false
@@ -910,7 +930,7 @@ SBBlock >> pc: aNumber [
 SBBlock >> pickUp: anEvent [
 
 	anEvent hand attachMorph: (SBSelection new 
-		methodClass: self containingArtefact;
+		methodClass: self containingArtefact relatedClass;
 		colorPolicy: self colorPolicy;
 		addMorphBack: self veryDeepCopy)
 ]
@@ -1160,7 +1180,7 @@ SBBlock >> valid [
 { #category : #'as yet unclassified' }
 SBBlock >> wantsDroppedMorph: aMorph event: evt [
 
-	^ aMorph isSandblock
+	^ (aMorph respondsTo: #object) and: [aMorph object hasRepresentationThat: (self acceptedRepresentationAt: 1)]
 ]
 
 { #category : #testing }

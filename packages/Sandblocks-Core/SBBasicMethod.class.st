@@ -2,12 +2,12 @@ Class {
 	#name : #SBBasicMethod,
 	#superclass : #SBASTNode,
 	#instVars : [
-		'body',
 		'methodClass',
 		'hasUnsavedChanges',
 		'typeCache',
 		'currentSelector',
-		'currentClass'
+		'currentClass',
+		'body'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -77,14 +77,13 @@ SBBasicMethod >> blocksForVariableNamed: aString do: aBlock [
 { #category : #'as yet unclassified' }
 SBBasicMethod >> body [
 
-	^ body
+	^ self submorphCount = 1 ifTrue: [nil] ifFalse: [self lastSubmorph]
 ]
 
 { #category : #'as yet unclassified' }
-SBBasicMethod >> body: aMorph [
+SBBasicMethod >> body: aBlock [
 
-	body ifNotNil: [self removeMorph: aMorph].
-	self addMorphBack: (body := aMorph)
+	self addMorphBack: aBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -148,6 +147,13 @@ SBBasicMethod >> compiledMethod [
 SBBasicMethod >> containingArtefact [
 
 	^ self
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> contextAcceptedRepresentationAt: aNumber [
+
+	aNumber = self childSandblocks size ifTrue: [^ #isSmalltalkBlock].
+	^ #isSmalltalkName
 ]
 
 { #category : #'as yet unclassified' }
@@ -373,11 +379,11 @@ SBBasicMethod >> textContents [
 { #category : #'as yet unclassified' }
 SBBasicMethod >> toggleCollapsed [
 
-	body
-		visible: body visible not;
-		disableLayout: body visible not.
+	self body
+		visible: self body visible not;
+		disableLayout: self body visible not.
 	
-	(body visible not and: [self isSelected not]) ifTrue: [self select]
+	(self body visible not and: [self isSelected not]) ifTrue: [self select]
 ]
 
 { #category : #'as yet unclassified' }

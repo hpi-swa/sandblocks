@@ -38,6 +38,13 @@ SBCascade >> codeActions [
 ]
 
 { #category : #'as yet unclassified' }
+SBCascade >> contextAcceptedRepresentationAt: aNumber [
+
+	aNumber = 1 ifTrue: [^ #isSmalltalkExpression].
+	^ #isSmalltalkMessage
+]
+
+{ #category : #'as yet unclassified' }
 SBCascade >> guessedClass [
 
 	^ self submorphs last guessedClass

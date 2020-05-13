@@ -47,9 +47,9 @@ SBMethod >> codeActions [
 { #category : #'as yet unclassified' }
 SBMethod >> collapsed: aBoolean [
 
-	body visible not = aBoolean ifTrue: [^ self].
+	self body visible not = aBoolean ifTrue: [^ self].
 	
-	body
+	self body
 		visible: aBoolean not;
 		disableLayout: aBoolean.
 	
@@ -161,11 +161,11 @@ SBMethod >> storeOn: aStream [
 { #category : #'as yet unclassified' }
 SBMethod >> toggleCollapsed [
 
-	body
-		visible: body visible not;
-		disableLayout: body visible not.
+	self body
+		visible: self body visible not;
+		disableLayout: self body visible not.
 	
-	(body visible not and: [self isSelected not]) ifTrue: [self select]
+	(self body visible not and: [self isSelected not]) ifTrue: [self select]
 ]
 
 { #category : #'as yet unclassified' }

@@ -109,6 +109,15 @@ SBSelection >> multiSelection [
 ]
 
 { #category : #'as yet unclassified' }
+SBSelection >> object [
+
+	^ self submorphCount > 1
+		ifTrue: [
+			SBBlockBody new statements: (self submorphs collect: [:morph | morph veryDeepCopy])]
+		ifFalse: [self firstSubmorph]
+]
+
+{ #category : #'as yet unclassified' }
 SBSelection >> parentSandblock [
 
 	^ nil
