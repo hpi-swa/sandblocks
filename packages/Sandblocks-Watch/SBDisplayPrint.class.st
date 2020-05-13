@@ -29,8 +29,9 @@ SBDisplayPrint >> exampleStarting: anExample [
 SBDisplayPrint >> initialize [
 
 	super initialize.
-	
-	self contents: '---'
+	self
+		contents: '---';
+		color: Color white
 ]
 
 { #category : #'as yet unclassified' }

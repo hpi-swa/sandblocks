@@ -306,3 +306,9 @@ SBOwnTextMorph >> wantsKeyboardFocus [
 
 	^ false
 ]
+
+{ #category : #'as yet unclassified' }
+SBOwnTextMorph >> wantsMetaMenu [
+
+	^ false
+]

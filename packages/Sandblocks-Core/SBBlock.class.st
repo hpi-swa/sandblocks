@@ -68,12 +68,6 @@ SBBlock >> artefactSaved: aMethodBlock [
 	" callback fired after each save of a method/artefact "
 ]
 
-{ #category : #converting }
-SBBlock >> asObject [
-
-	^ SBConvertResult unsupported
-]
-
 { #category : #decorators }
 SBBlock >> attachDecorator: aDecorator [
 
@@ -566,6 +560,14 @@ SBBlock >> intoWorld: aWorld [
 	super intoWorld: aWorld.
 	
 	self updateSteppingDecorators
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> invokeMetaMenu: anEvent [
+
+	SBLabel text: [
+		'We hijack this event because it''s the only way to cleanly access ctrl+click'].
+	self pickUp: anEvent
 ]
 
 { #category : #testing }

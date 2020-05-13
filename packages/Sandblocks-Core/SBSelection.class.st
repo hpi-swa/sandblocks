@@ -113,8 +113,8 @@ SBSelection >> object [
 
 	^ self submorphCount > 1
 		ifTrue: [
-			SBBlockBody new statements: (self submorphs collect: [:morph | morph veryDeepCopy])]
-		ifFalse: [self firstSubmorph]
+			SBBlockBody new statements: (self submorphs collect: [:morph | morph object])]
+		ifFalse: [self firstSubmorph object]
 ]
 
 { #category : #'as yet unclassified' }

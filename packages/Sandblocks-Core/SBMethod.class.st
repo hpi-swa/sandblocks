@@ -104,6 +104,12 @@ SBMethod >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBMethod >> object [
+
+	^ self compiledMethod
+]
+
+{ #category : #'as yet unclassified' }
 SBMethod >> selector [
 
 	^ signature selector

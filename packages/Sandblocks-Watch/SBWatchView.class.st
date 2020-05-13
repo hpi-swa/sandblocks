@@ -68,7 +68,7 @@ SBWatchView >> initialize [
 
 	super initialize.
 	
-	dark := false.
+	dark := true.
 	hadValue := false.
 	
 	self

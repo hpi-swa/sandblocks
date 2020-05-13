@@ -75,12 +75,6 @@ Morph >> isMethod [
 ]
 
 { #category : #'*Sandblocks-Core' }
-Morph >> isSandblock [
-
-	^ false
-]
-
-{ #category : #'*Sandblocks-Core' }
 Morph >> isStatement [
 
 	^ false

@@ -10,14 +10,48 @@ Object >> asSandblock [
 { #category : #'*Sandblocks-Core' }
 Object >> hasRepresentationThat: aSymbol [
 
-	self representationsThat: aSymbol do: [:repr | ^ true].
+	self representationsThat: aSymbol do: [:repr | ^ true] deep: false checked: Set new.
 	^ false
+]
+
+{ #category : #'*Sandblocks-Core' }
+Object >> isSandblock [
+
+	^ false
+]
+
+{ #category : #'*Sandblocks-Core' }
+Object >> representationCapabilities [
+
+	| set |
+	SBExample self: [Morph new] args: [{}] label: 'simple'.
+	set := Set new.
+	self representationsDo: [:repr |
+		set addAll: (repr class methodDictionary values collect: #selector)].
+	set
+		remove: #matches: ifAbsent: [nil];
+		remove: #newFor: ifAbsent: [nil].
+	^ set
 ]
 
 { #category : #'*Sandblocks-Core' }
 Object >> representationThat: aSymbol [
 
 	^ self representationThat: aSymbol do: #yourself ifNone: [self error: 'no suitable representation found']
+]
+
+{ #category : #'*Sandblocks-Core' }
+Object >> representationThat: aSymbol do: aBlock ifNone: anotherBlock [
+
+	| options index |
+	options := self representationsThat: aSymbol.
+	options size = 1 ifTrue: [^ aBlock value: (options first newFor: self)].
+	options ifEmpty: [^ anotherBlock value].
+	index := UIManager default
+		chooseFrom: (options collect: [:repr | repr prettyName])
+		title: ('How to represent {1} ({2})' format: {self asString. self className}).
+	index = 0 ifTrue: [^ anotherBlock value].
+	^ aBlock value: ((options at: index) newFor: self)
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -43,12 +77,30 @@ Object >> representationsThat: aSymbol [
 { #category : #'*Sandblocks-Core' }
 Object >> representationsThat: aSymbol do: aBlock [
 
+	self representationsThat: aSymbol do: aBlock deep: true checked: Set new
+]
+
+{ #category : #'*Sandblocks-Core' }
+Object >> representationsThat: aSymbol do: aBlock deep: aBoolean checked: aSet [
+
+	| s |
 	aSymbol ifNil: [^ self].
 	
 	aSymbol isSymbol ifFalse: [^ aSymbol do: [:sym | self representationsThat: sym do: aBlock]].
 	
+	s := Set new.
 	SBRepresentation allSubclassesDo: [:repr |
-		((repr respondsTo: aSymbol) and: [(repr perform: aSymbol) and: [repr matches: self]]) ifTrue: [aBlock value: repr]]
+		((aBoolean or: [(repr respondsTo: aSymbol) and: [repr perform: aSymbol]]) and: (s includes: repr) not and: [repr matches: self]) ifTrue: [ | nested |
+			((repr respondsTo: aSymbol) and: [repr perform: aSymbol]) ifTrue: [aBlock value: repr].
+			
+			(aBoolean and: [(nested := (repr newFor: self)) ~= self]) ifTrue: [
+				nested
+					representationsThat: aSymbol
+					do: [:nestedRepr | aBlock value: (SBDerivedRepresentation from: repr to: nestedRepr)]
+					deep: false
+					checked: s].
+			
+			s add: repr]]
 ]
 
 { #category : #'*Sandblocks-Core' }

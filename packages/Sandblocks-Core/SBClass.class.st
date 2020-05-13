@@ -183,8 +183,8 @@ SBClass >> initialize [
 			layoutInset: 6 withScalingFactor;
 			font: (TextStyle default fontOfPointSize: 12));
 		addRow: 'SuperClass' with: (superClassName := SBClassNameInput new contents: 'Object');
-		addRow: 'Instance Variables:' with: (instanceVariables := SBArray new addType: SBName);
-		addRow: 'Class Variables:' with: (classVariables := SBArray new addType: SBName);
+		addRow: 'Instance Variables:' with: (instanceVariables := SBNameList new);
+		addRow: 'Class Variables:' with: (classVariables := SBNameList new);
 		addRow: 'Pool Dictionaries:' with: (poolDictionaries := SBArray new);
 		addRow: 'Category:' with: (category := SBTextBubble new);
 		attachDecorator: (SBMoveDecorator new preventOcclusion: true)
@@ -206,6 +206,12 @@ SBClass >> isArtefact [
 SBClass >> isClassContainer [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBClass >> object [
+
+	^ self relatedClass
 ]
 
 { #category : #'as yet unclassified' }

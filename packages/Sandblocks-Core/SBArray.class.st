@@ -2,8 +2,7 @@ Class {
 	#name : #SBArray,
 	#superclass : #SBASTNode,
 	#instVars : [
-		'type',
-		'addType'
+		'type'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -23,16 +22,10 @@ SBArray >> acceptChild: aMorph [
 	^ aMorph isExpression
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #converting }
 SBArray >> addType [
 
-	^ addType
-]
-
-{ #category : #'as yet unclassified' }
-SBArray >> addType: aClass [
-
-	addType := aClass
+	^ SBUnknown
 ]
 
 { #category : #'as yet unclassified' }
@@ -89,7 +82,6 @@ SBArray >> initialize [
 	super initialize.
 	
 	type := #dynamic.
-	addType := SBUnknown.
 	
 	self
 		layoutPolicy: SBArrayLayout new;
@@ -106,7 +98,7 @@ SBArray >> insertCommandRequest: anAfterBoolean near: aBlock [
 	^ (SBInsertCommand newFor: self containingArtefact)
 		index: (self childSandblocks indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
 		container: self;
-		morph: addType new;
+		morph: self addType new;
 		shouldMergeWithNext: true;
 		yourself
 ]
@@ -140,7 +132,7 @@ SBArray >> minExtent [
 { #category : #'as yet unclassified' }
 SBArray >> prefix [
 
-	^ type caseOf: {[#dynamic] -> ['{']. [#literal] -> ['#(']. [#byte] -> ['#[']} otherwise: '?'
+	^ type caseOf: {[#dynamic] -> ['{}']. [#literal] -> ['#()']. [#byte] -> ['#[]']} otherwise: '?'
 ]
 
 { #category : #converting }
