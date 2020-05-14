@@ -72,7 +72,7 @@ SBEditor >> acceptChild: aBlock [
 ]
 
 { #category : #shortcuts }
-SBEditor >> acceptedRepresentationAt: aNumber [
+SBEditor >> acceptedRepresentation [
 
 	^ #isToplevelMorph
 ]
@@ -127,7 +127,6 @@ SBEditor >> addDefaultShortcuts [
 	SBLabel text: ['Navigation'].
 	self
 		addSingleSelectionShortcut: $$ do: #selectRightMostBlock;
-		addSingleSelectionShortcut: $0 asSandblockShortcut, Character home do: #selectContainingArtefact;
 		addSingleSelectionShortcut: $z do: #toggleCollapsed;
 		addSingleSelectionShortcut: $m do: #placeMark;
 		addSingleSelectionShortcut: $' do: #goToMark;
@@ -387,16 +386,17 @@ SBEditor >> canDeleteChild: aBlock [
 SBEditor >> changeSelection [
 
 	| new |
-	self setCopyBuffer: self selection.
 	new := SBUnknown new.
+	(new hasRepresentationThat: (self selection parentSandblock contextAcceptedRepresentationAt: self selection childIndex)) ifTrue: [
+		self setCopyBuffer: self selection.
+		
+		self do: ((SBReplaceCommand newFor: self method)
+			target: self selection;
+			replacer: new;
+			shouldMergeWithNext: true;
+			yourself).
 	
-	self do: ((SBReplaceCommand newFor: self method)
-		target: self selection;
-		replacer: new;
-		shouldMergeWithNext: true;
-		yourself).
-	
-	self startInput: new at: 0 replacingContents: false
+		self startInput: new at: 0 replacingContents: false]
 ]
 
 { #category : #actions }
@@ -632,14 +632,17 @@ SBEditor >> do: aCommand [
 { #category : #actions }
 SBEditor >> doMultiSelection: aBlock [
 
-	self do: (aBlock value: self sortedMultiSelection).
-	mode = #selection ifTrue: [self endMultiSelection]
+	| command |
+	command := aBlock value: self sortedMultiSelection.
+	command commands ifNotEmpty: [
+		self do: command.
+		mode = #selection ifTrue: [self endMultiSelection]]
 ]
 
 { #category : #actions }
 SBEditor >> doMultiSelectionEach: aBlock [
 
-	self doMultiSelection: [:sel | SBCombinedCommand newWith: (sel collect: aBlock)]
+	self doMultiSelection: [:sel | SBCombinedCommand newWith: (sel collect: aBlock thenSelect: #notNil)]
 ]
 
 { #category : #input }
@@ -1517,7 +1520,9 @@ SBEditor >> select: aBlock [
 { #category : #actions }
 SBEditor >> selectArtefact [
 
-	self select: self selection containingArtefact
+	self select: (self selection containingArtefact = self selection
+		ifTrue: [self selection parentSandblock containingArtefact]
+		ifFalse: [self selection containingArtefact])
 ]
 
 { #category : #selection }
@@ -1525,12 +1530,6 @@ SBEditor >> selectClick: aBlock [
 
 	selectionDownHistory removeAll.
 	self select: (aBlock == self selection ifTrue: [nil] ifFalse: [aBlock])
-]
-
-{ #category : #actions }
-SBEditor >> selectContainingArtefact [
-
-	self select: self selection containingArtefact
 ]
 
 { #category : #selection }
@@ -1574,10 +1573,11 @@ SBEditor >> selectNext [
 SBEditor >> selectNextStatement [
 
 	selectionDownHistory removeAll.
+	(self selection nextBlockThat: #isMessageSend) ifNotNil: [:b | ^ self select: b]
 	
-	(self selection topFirstMorphThat: [:m | m isStatement and: [m ~= self selection]]) ifNotNil: [:s | ^ self select: s].
+	"(self selection topFirstMorphThat: [:m | m isStatement and: [m ~= self selection]]) ifNotNil: [:s | ^ self select: s].
 	(self selection morphAfterThat: #isStatement) ifNotNil: [:s | ^ self select: s].
-	(self selection ownerSatisfying: #isStatement) ifNotNil: [:owner | (owner morphAfterThat: #isStatement) ifNotNil: [:s | self select: s]]
+	(self selection ownerSatisfying: #isStatement) ifNotNil: [:owner | (owner morphAfterThat: #isStatement) ifNotNil: [:s | self select: s]]"
 ]
 
 { #category : #selection }
@@ -1594,12 +1594,7 @@ SBEditor >> selectPrevious [
 SBEditor >> selectPreviousStatement [
 
 	selectionDownHistory removeAll.
-	"next := self selection adjacentBlock: -1.
-	next := next ifNil: [self selection parentSandblock].
-	next ifNotNil: [:b | self select: b]"
-	(self selection morphBeforeThat: #isStatement) ifNotNil: [:s | ^ self select: (s lastMorphThat: #isStatement)].
-	"(self selection topFirstMorphThat: [:m | m isStatement and: [m ~= self selection]]) ifNotNil: [:s | ^ self select: s]."
-	self select: ((self selection ownerSatisfying: #isStatement) ifNil: [self selection containingArtefact])
+	(self selection previousBlockThat: #isMessageSend) ifNotNil: [:b | ^ self select: b]
 ]
 
 { #category : #selection }

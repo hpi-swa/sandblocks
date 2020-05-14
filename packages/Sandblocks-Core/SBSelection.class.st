@@ -12,6 +12,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBSelection >> addedMorph: aMorph [
+
+	aMorph isSandblock ifTrue: [
+		aMorph allBlocksDo: [:block | block detachDecorators: SBSelectionDecorator]]
+]
+
+{ #category : #'as yet unclassified' }
 SBSelection >> bindingFor: aString class: aClass ifPresent: aBlock [
 
 	^ nil
@@ -152,6 +159,12 @@ SBSelection >> selection [
 SBSelection >> statements [
 
 	^ #()
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> wantsToBeDroppedInto: aMorph [
+
+	^ aMorph isSandblock
 ]
 
 { #category : #'as yet unclassified' }

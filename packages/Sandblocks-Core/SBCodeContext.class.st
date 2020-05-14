@@ -77,7 +77,7 @@ SBCodeContext >> imageForm [
 { #category : #'as yet unclassified' }
 SBCodeContext >> method [
 
-	^ self methodClass >> self selector
+	^ self methodClass methodDict at: self selector ifAbsent: [nil]
 ]
 
 { #category : #'as yet unclassified' }

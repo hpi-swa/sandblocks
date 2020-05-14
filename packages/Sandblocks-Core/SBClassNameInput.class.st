@@ -11,6 +11,12 @@ SBClassNameInput >> doubleClick: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBClassNameInput >> object [
+
+	^ self selectedClass
+]
+
+{ #category : #'as yet unclassified' }
 SBClassNameInput >> promptChangeClass [
 
 	(UIManager default chooseClassOrTrait) ifNotNil: [:class |

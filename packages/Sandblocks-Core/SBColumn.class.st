@@ -17,3 +17,9 @@ SBColumn >> initialize [
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
 ]
+
+{ #category : #'as yet unclassified' }
+SBColumn >> wantsMetaMenu [
+
+	^ false
+]

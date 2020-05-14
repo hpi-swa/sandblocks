@@ -43,3 +43,9 @@ SBStringMorph >> reportValue: anObject [
 
 	self contents: anObject printString
 ]
+
+{ #category : #accessing }
+SBStringMorph >> wantsMetaMenu [
+
+	^ false
+]

@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBASTNode >> acceptedRepresentationAt: aNumber [
+SBASTNode >> acceptedRepresentation [
 
 	^ (self parentSandblock notNil and: [self parentSandblock isASTNode]) ifTrue: [
 		self parentSandblock contextAcceptedRepresentationAt: self childIndex] ifFalse: [nil]

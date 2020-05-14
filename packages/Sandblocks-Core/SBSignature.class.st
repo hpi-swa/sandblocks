@@ -354,6 +354,12 @@ SBSignature >> textMorphFor: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBSignature >> wantsMetaMenu [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBSignature >> writeSourceOn: aStream [
 
 	| i |

@@ -22,7 +22,8 @@ SBBlock >> acceptDroppingMorph: aMorph event: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBBlock >> acceptedRepresentationAt: aNumber [
+SBBlock >> acceptedRepresentation [
+	" return what representations may replace you "
 
 	^ nil
 ]
@@ -185,7 +186,7 @@ SBBlock >> codeActions [
 			for: self
 			do: [:node |
 				node object
-					representationThat: (self parentSandblock acceptedRepresentationAt: 1)
+					representationThat: (self parentSandblock acceptedRepresentation)
 					do: [:type |
 						self sandblockEditor do: (SBReplaceCommand newNonEdit
 							target: self;
@@ -283,6 +284,13 @@ SBBlock >> containingStatement [
 	^ current
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> contextAcceptedRepresentationAt: aNumber [
+	" return any constraints on the representation of your child block at aNumber "
+
+	^ nil
+]
+
 { #category : #'artefact protocol' }
 SBBlock >> declarations [
 	" return any SBName declarations you may know "
@@ -301,7 +309,9 @@ SBBlock >> deleteCommandFor: aBlock [
 
 	^ (self canDeleteChild: aBlock)
 		ifTrue: [(SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock]
-		ifFalse: [(SBReplaceCommand newFor: aBlock containingArtefact) target: aBlock; replacer: SBUnknown new]
+		ifFalse: [
+			(self acceptedRepresentation includesRepresentation: #isSmalltalkExpression) ifTrue: [
+				(SBReplaceCommand newFor: aBlock containingArtefact) target: aBlock; replacer: SBUnknown new]]
 ]
 
 { #category : #decorators }
@@ -977,6 +987,16 @@ SBBlock >> previousBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBBlock >> previousBlockThat: aBlock [
+
+	| n |
+	n := self previousBlock.
+	n ifNil: [^ nil].
+	(aBlock value: n) ifTrue: [^ n].
+	^ n previousBlockThat: aBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBBlock >> proposeCodeActions: aCollection for: aBlock [
 
 	| index |
@@ -1182,7 +1202,7 @@ SBBlock >> valid [
 { #category : #'as yet unclassified' }
 SBBlock >> wantsDroppedMorph: aMorph event: evt [
 
-	^ (aMorph respondsTo: #object) and: [aMorph object hasRepresentationThat: (self acceptedRepresentationAt: 1)]
+	^ (aMorph respondsTo: #object) and: [aMorph object hasRepresentationThat: self acceptedRepresentation]
 ]
 
 { #category : #testing }

@@ -35,7 +35,7 @@ SBRepl class >> newFromSource: aString named: anotherString at: aPoint [
 ]
 
 { #category : #'artefact protocol' }
-SBRepl >> acceptedRepresentationAt: aNumber [
+SBRepl >> acceptedRepresentation [
 
 	^ #isObject
 ]

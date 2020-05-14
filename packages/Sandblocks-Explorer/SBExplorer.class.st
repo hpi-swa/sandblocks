@@ -24,6 +24,12 @@ SBExplorer class >> on: anObject field: aField [
 ]
 
 { #category : #'as yet unclassified' }
+SBExplorer >> acceptedRepresentation [
+
+	^ #isObject
+]
+
+{ #category : #'as yet unclassified' }
 SBExplorer >> browse [
 
 	self object class browse
@@ -88,6 +94,18 @@ SBExplorer >> evaluateWith: anObject for: aReceiverObject [
 SBExplorer >> field: aField [
 
 	field := aField
+]
+
+{ #category : #'as yet unclassified' }
+SBExplorer >> handleDroppedBlock: aBlock event: anEvent [
+
+	| newObject |
+	newObject := aBlock object representationThat: #isObject.
+	self on: newObject.
+	field ifNotNil: [field setValueFor: field inspector to: newObject].
+	self select.
+	self toggleCollapsed.
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

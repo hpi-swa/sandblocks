@@ -17,3 +17,9 @@ SBRow >> initialize [
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
 ]
+
+{ #category : #'as yet unclassified' }
+SBRow >> wantsMetaMenu [
+
+	^ false
+]

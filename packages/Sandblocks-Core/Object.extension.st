@@ -10,7 +10,7 @@ Object >> asSandblock [
 { #category : #'*Sandblocks-Core' }
 Object >> hasRepresentationThat: aSymbol [
 
-	self representationsThat: aSymbol do: [:repr | ^ true] deep: false checked: Set new.
+	self representationsThat: aSymbol do: [:repr | ^ true] deep: false.
 	^ false
 ]
 
@@ -77,30 +77,26 @@ Object >> representationsThat: aSymbol [
 { #category : #'*Sandblocks-Core' }
 Object >> representationsThat: aSymbol do: aBlock [
 
-	self representationsThat: aSymbol do: aBlock deep: true checked: Set new
+	self representationsThat: aSymbol do: aBlock deep: true
 ]
 
 { #category : #'*Sandblocks-Core' }
-Object >> representationsThat: aSymbol do: aBlock deep: aBoolean checked: aSet [
+Object >> representationsThat: aSymbol do: aBlock deep: aBoolean [
 
-	| s |
+	SBExample self: ['5+5' parseAsSandblock] args: [{#isToplevelMorph. [:repr | nil]. true}] label: 'simple'.
 	aSymbol ifNil: [^ self].
-	
-	aSymbol isSymbol ifFalse: [^ aSymbol do: [:sym | self representationsThat: sym do: aBlock]].
-	
-	s := Set new.
+	aSymbol isSymbol ifFalse: [
+		^ aSymbol do: [:sym | self representationsThat: sym do: aBlock]].
 	SBRepresentation allSubclassesDo: [:repr |
-		((aBoolean or: [(repr respondsTo: aSymbol) and: [repr perform: aSymbol]]) and: (s includes: repr) not and: [repr matches: self]) ifTrue: [ | nested |
-			((repr respondsTo: aSymbol) and: [repr perform: aSymbol]) ifTrue: [aBlock value: repr].
-			
-			(aBoolean and: [(nested := (repr newFor: self)) ~= self]) ifTrue: [
+		((repr supports: aSymbol) and: [repr matches: self]) ifTrue: [aBlock value: repr].
+		aBoolean ifTrue: [ | nested |
+			((repr matches: self) and: [(nested := repr newFor: self) ~= self]) ifTrue: [
 				nested
 					representationsThat: aSymbol
-					do: [:nestedRepr | aBlock value: (SBDerivedRepresentation from: repr to: nestedRepr)]
-					deep: false
-					checked: s].
-			
-			s add: repr]]
+					do: [:nestedRepr |
+						(nestedRepr catchesAll not or: [repr supports: #isObject]) ifTrue: [
+							aBlock value: (SBDerivedRepresentation from: repr to: nestedRepr)]]
+					deep: false]]]
 ]
 
 { #category : #'*Sandblocks-Core' }
