@@ -187,6 +187,8 @@ SBEditor >> addDefaultShortcuts [
 		addMultiSelectionShortcut: $y do: #copySelection;
 		addSingleSelectionShortcut: $Y do: #copyAroundSelection;
 		addMultiSelectionShortcut: $v do: #startOrAddToMultiSelection;
+		addMultiSelectionShortcut: $V do: #multiSelectChildren;
+		addSingleSelectionShortcut: $V do: #multiSelectChildren;
 		addCommandShortcut: Character escape command do: #close;
 		addInputShortcut: Character escape do: #endInput;
 		addInputShortcut: Character arrowLeft do: [:editor | editor textMorph moveCursor: -1];
@@ -205,11 +207,21 @@ SBEditor >> addDefaultShortcuts [
 		addInputShortcut: $k command, Character arrowUp
 			do: [:editor | editor currentInput suggestionMenuDo: #previous];
 		addInputShortcut: Character cr asSandblockShortcut do: [:editor | editor currentInput useSuggestion];
-		addInputShortcut: $1 command do: [:editor | editor endInputWith: self method arguments first contents];
-		addInputShortcut: $2 command do: [:editor | editor endInputWith: self method arguments second contents];
-		addInputShortcut: $3 command do: [:editor | editor endInputWith: self method arguments third contents];
-		addInputShortcut: $4 command do: [:editor | editor endInputWith: self method arguments fourth contents];
-		addInputShortcut: $5 command do: [:editor | editor endInputWith: self method arguments fifth contents]
+		addInputShortcut: $1 command
+			do: [:editor |
+				editor endInputWith: self method arguments first contents];
+		addInputShortcut: $2 command
+			do: [:editor |
+				editor endInputWith: self method arguments second contents];
+		addInputShortcut: $3 command
+			do: [:editor |
+				editor endInputWith: self method arguments third contents];
+		addInputShortcut: $4 command
+			do: [:editor |
+				editor endInputWith: self method arguments fourth contents];
+		addInputShortcut: $5 command
+			do: [:editor |
+				editor endInputWith: self method arguments fifth contents]
 ]
 
 { #category : #actions }
@@ -272,10 +284,18 @@ SBEditor >> addSingleSelectionShortcut: aShortcut do: anActionBlock [
 { #category : #actions }
 SBEditor >> addToMultiSelection [
 
-	multiSelection copy do: [:morph | (morph hasOwner: self selection) ifTrue: [multiSelection remove: morph]].
+	self addToMultiSelection: self selection
+]
+
+{ #category : #actions }
+SBEditor >> addToMultiSelection: aBlock [
+
+	multiSelection copy do: [:morph | (morph hasOwner: aBlock) ifTrue: [self removeMultiSelected: morph]].
 	
-	multiSelection add: self selection.
-	self selection attachDecorator: SBMultiSelectionDecorator new.
+	aBlock allOwnersDo: [:morph | (multiSelection includes: morph) ifTrue: [self removeMultiSelected: morph]].
+	
+	multiSelection add: aBlock.
+	aBlock attachDecorator: SBMultiSelectionDecorator new.
 	self updateSelectionLabel
 ]
 
@@ -1071,6 +1091,13 @@ SBEditor >> mode: aSymbol [
 	self updateSelectionLabel
 ]
 
+{ #category : #shortcuts }
+SBEditor >> multiSelectChildren [
+
+	mode = #select ifFalse: [self mode: #selection].
+	self selection childSandblocks do: [:b | self addToMultiSelection: b]
+]
+
 { #category : #selection }
 SBEditor >> multiSelection [
 
@@ -1375,6 +1402,14 @@ SBEditor >> removeHelperTimer [
 	helpOverlay ifNotNil: #delete.
 	helpOverlay := nil.
 	self removeAlarm: #showHelper
+]
+
+{ #category : #actions }
+SBEditor >> removeMultiSelected: aMorph [
+
+	aMorph detachDecorators: SBMultiSelectionDecorator.
+	multiSelection remove: aMorph.
+	multiSelection ifEmpty: [self mode: #command]
 ]
 
 { #category : #input }
@@ -1718,10 +1753,7 @@ SBEditor >> startOrAddToMultiSelection [
 
 	mode = #selection ifTrue: [
 		^ (multiSelection includes: self selection)
-			ifTrue: [
-				self selection detachDecorators: SBMultiSelectionDecorator.
-				multiSelection remove: self selection.
-				multiSelection ifEmpty: [self mode: #command]]
+			ifTrue: [self removeMultiSelected: self selection]
 			ifFalse: [self addToMultiSelection]].
 	
 	self addToMultiSelection.

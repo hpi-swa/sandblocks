@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'localBindings',
 		'bindings',
-		'typeCache'
+		'typeCache',
+		'receiver'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -121,7 +122,7 @@ SBRepl >> ensureExpanded [
 { #category : #'compilation cue protocol' }
 SBRepl >> evaluateWith: aRequestor for: aContext [
 
-	^ Compiler new evaluate: (self body sourceString, ' value') readStream in: aContext to: (aContext ifNotNil: #receiver) notifying: aRequestor ifFail: nil
+	^ Compiler new evaluate: (self body sourceString, ' value') readStream in: aContext to: (aContext ifNil: [self receiver] ifNotNil: #receiver) notifying: aRequestor ifFail: nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -207,6 +208,19 @@ SBRepl >> printOn: aStream [
 
 	aStream nextPutAll: 'workspace '.
 	aStream nextPutAll: (self name truncateWithElipsisTo: 20)
+]
+
+{ #category : #'compilation cue protocol' }
+SBRepl >> receiver [
+
+	^ receiver
+]
+
+{ #category : #'compilation cue protocol' }
+SBRepl >> receiver: anObject [
+
+	self name: (anObject asString truncateWithElipsisTo: 20).
+	receiver := anObject
 ]
 
 { #category : #'artefact protocol' }
