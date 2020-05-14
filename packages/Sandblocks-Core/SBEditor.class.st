@@ -147,7 +147,7 @@ SBEditor >> addDefaultShortcuts [
 	SBLabel text: ['Refactoring'].
 	self
 		addSingleSelectionShortcut: $= do: #extractVariable;
-		addMultiSelectionShortcut: $t do: #extractMethod.
+		addMultiSelectionShortcut: $T do: #extractMethod.
 	SBLabel text: ['Tools'].
 	self
 		addSingleSelectionShortcut: $W do: #watchSelection;
@@ -168,7 +168,7 @@ SBEditor >> addDefaultShortcuts [
 		addCommandShortcut: $S command do: #saveWorkspace;
 		addCommandShortcut: $O command do: #promptOpenWorkspace;
 		addCommandShortcut: $f command do: #toggleFullscreen;
-		addCommandShortcut: $T do: #createEmptyMethod.
+		addCommandShortcut: $t do: #createEmptyMethod.
 	SBLabel text: ['Tools: Debugger'].
 	self
 		addCommandShortcut: $> do: #stepOver;
@@ -737,7 +737,7 @@ SBEditor >> extractMethod [
 				body: SBBlockBody new.
 		
 		SBCombinedCommand newWith:
-			{(SBReplaceConsecutiveCommand newFor: self method)
+			{(SBReplaceConsecutiveCommand newFor: self selectedArtefact)
 				targets: extracting;
 				replacer: (SBMessageSend new
 					receiver: (SBName contents: 'self')
@@ -748,7 +748,12 @@ SBEditor >> extractMethod [
 				index: index + 1;
 				morph: stmt;
 				yourself]),
-			{self openMorphInViewCommand: method}
+			{
+				(SBWrapCommand newFor: self selectedArtefact)
+					inner: extracting last;
+					outer: SBReturn new;
+					wrap: [:outer :inner | outer expression: inner].
+				self openMorphInViewCommand: method}
 		]
 ]
 

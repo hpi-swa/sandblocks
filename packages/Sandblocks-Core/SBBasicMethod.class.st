@@ -13,6 +13,16 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> allUsages [
+
+	^ Array streamContents: [:stream |
+		self sandblockEditor allBlocksDo: [:block |
+			(block isMessageSend and: [
+				block selector = self selector and: [
+					block receiver guessClassExpensive = self methodClass]]) ifTrue: [stream nextPut: block]]]
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> arguments [
 
 	^ Array streamContents: [:stream | self argumentsDo: [:a | stream nextPut: a]]
