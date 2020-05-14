@@ -20,7 +20,10 @@ BlockNode >> asMethodBodySandblock [
 BlockNode >> asSandblock [
 	
 	^ SBBlockBody new
-		statements: (self statements collect: #asSandblock);
+		statements: (Array streamContents: [:stream |
+			self statements do: [:statement |
+				statement comment ifNotNil: [:comment | stream nextPut: (SBLabel new contents: comment)].
+				stream nextPut: statement asSandblock]]);
 		temporaries: (self temporaries select: [:node | node scope ~= -2] thenCollect: #asSandblock);
 		bindings: (self arguments collect: #asSandblock);
 		pc: closureCreationNode pc;

@@ -104,6 +104,12 @@ SBCommand >> undo [
 ]
 
 { #category : #'as yet unclassified' }
+SBCommand >> valid [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBCommand >> wasEdit [
 
 	^ wasEdit

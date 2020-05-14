@@ -258,6 +258,15 @@ SBBasicMethod >> instanceVariables [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> intoWorld: aWorld [
+
+	super intoWorld: aWorld.
+	SystemChangeNotifier uniqueInstance
+		noMoreNotificationsFor: self;
+		notify: self ofSystemChangesOfItem: #method using: #methodChanged:
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> isArtefact [
 
 	^ true
@@ -289,9 +298,26 @@ SBBasicMethod >> isMyArgument: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> methodChanged: anEvent [
+
+	(anEvent item selector = self selector and: [anEvent item methodClass = self methodClass]) ifTrue: [
+		anEvent isRemoved ifTrue: [^ self delete].
+		anEvent isModified ifTrue: [
+			SBLabel text: [
+				'FIXME: heuristic to check whether we just caused this change'].
+			^ (self sandblockEditor selection hasOwner: self) ifFalse: [self reload]]]
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> methodClass [
 
 	^ methodClass
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> outOfWorld: aWorld [
+
+	SystemChangeNotifier uniqueInstance noMoreNotificationsFor: self
 ]
 
 { #category : #'as yet unclassified' }
@@ -320,6 +346,12 @@ SBBasicMethod >> printOn: aStream [
 SBBasicMethod >> relatedClass [
 
 	^ self methodClass
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> reload [
+
+	self sandblockEditor select: (self replaceBy: (self compiledMethod asSandblock position: self position))
 ]
 
 { #category : #'as yet unclassified' }

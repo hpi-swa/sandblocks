@@ -37,10 +37,7 @@ SBMethod >> childSandblocksDo: aBlock [
 SBMethod >> codeActions [
 
 	^ super codeActions, {
-		SBCodeAction
-			labeled: 'Reload Method'
-			for: self
-			do: [:node | self sandblockEditor select: (self replaceBy: (self compiledMethod asSandblock position: self position))]
+		(SBCodeAction labeled: 'Reload Method' for: self do: [:node | node reload])
 	}
 ]
 

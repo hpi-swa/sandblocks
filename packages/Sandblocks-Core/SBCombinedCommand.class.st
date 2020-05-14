@@ -56,6 +56,12 @@ SBCombinedCommand >> undo [
 ]
 
 { #category : #'as yet unclassified' }
+SBCombinedCommand >> valid [
+
+	^ commands notEmpty
+]
+
+{ #category : #'as yet unclassified' }
 SBCombinedCommand >> wasEdit [
 
 	^ self commands anySatisfy: #wasEdit

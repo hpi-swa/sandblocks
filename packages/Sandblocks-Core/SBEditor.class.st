@@ -173,6 +173,7 @@ SBEditor >> addDefaultShortcuts [
 	self
 		addCommandShortcut: $> do: #stepOver;
 		addCommandShortcut: $< do: #stepInto;
+		addCommandShortcut: $y command do: #stepThrough;
 		addCommandShortcut: $R command do: #restartFrame;
 		addCommandShortcut: $e do: #focusErrors;
 		addCommandShortcut: $E do: #focusPreviousErrorFrame.
@@ -634,7 +635,7 @@ SBEditor >> doMultiSelection: aBlock [
 
 	| command |
 	command := aBlock value: self sortedMultiSelection.
-	command commands ifNotEmpty: [
+	command valid ifTrue: [
 		self do: command.
 		mode = #selection ifTrue: [self endMultiSelection]]
 ]
@@ -688,7 +689,7 @@ SBEditor >> evaluateSelection [
 	
 	source containingArtefact ifNotNil: [source containingArtefact cacheType: result class for: source].
 	
-	self openMorphInView: (explorer := result asSandblock
+	self openMorphInView: (explorer := (result representationThat: #isToplevelMorph)
 		focusAfterDelete: source;
 		yourself).
 	
@@ -1743,6 +1744,12 @@ SBEditor >> stepInto [
 SBEditor >> stepOver [
 
 	errors stepOver
+]
+
+{ #category : #actions }
+SBEditor >> stepThrough [
+
+	errors stepThrough
 ]
 
 { #category : #actions }

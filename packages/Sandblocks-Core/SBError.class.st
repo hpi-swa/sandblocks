@@ -200,6 +200,22 @@ SBError >> stepOver [
 ]
 
 { #category : #'as yet unclassified' }
+SBError >> stepThrough [
+
+	| newContext currentBlock |
+	currentBlock := self currentStackFrame currentBlock.
+	process stepToHome: self currentStackFrame context.
+	newContext := process stepToSendOrReturn.
+	
+	newContext = self currentStackFrame context
+		ifTrue: [
+			self currentStackFrame recordTopValueFor: currentBlock.
+			newContext := process stepToSendOrReturn].
+	
+	self resetContext: newContext
+]
+
+{ #category : #'as yet unclassified' }
 SBError >> textContents [
 
 	^ error asString

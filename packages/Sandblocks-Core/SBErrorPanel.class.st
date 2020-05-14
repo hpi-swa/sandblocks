@@ -97,3 +97,9 @@ SBErrorPanel >> stepOver [
 
 	self activeErrorDo: #stepOver
 ]
+
+{ #category : #'as yet unclassified' }
+SBErrorPanel >> stepThrough [
+
+	self activeErrorDo: #stepThrough
+]
