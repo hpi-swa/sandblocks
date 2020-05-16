@@ -616,7 +616,7 @@ SBEditor >> deleteAroundSelection [
 		replacer postDuplicate]
 ]
 
-{ #category : #'submorphs-add\/remove' }
+{ #category : #'submorphs-add/remove' }
 SBEditor >> deleteCommandFor: aBlock [
 
 	^ SBDeleteCommand newNonEdit target: aBlock
@@ -776,10 +776,11 @@ SBEditor >> extractVariable [
 { #category : #events }
 SBEditor >> filterEvent: anEvent for: aMorph [
 
-	anEvent keyValue = 251
-		ifTrue: [self toggleHelperTimer: anEvent type = #keyDown]
-		ifFalse: [self removeHelperTimer].
-	(anEvent type == #keystroke or: [false]) ifFalse: [^ anEvent].
+	anEvent isMouse ifTrue: [
+		anEvent isMouseDown ifTrue: [anEvent hand releaseKeyboardFocus].
+		^ anEvent].
+	anEvent keyValue = 251 ifTrue: [self toggleHelperTimer: anEvent type = #keyDown] ifFalse: [self removeHelperTimer].
+	anEvent isKeystroke ifFalse: [^ anEvent ignore].
 	self processShortcutList: globalShortcuts for: anEvent ifMatched: [^ anEvent ignore].
 	mode = #input ifTrue: [
 		self processShortcutList: inputShortcuts for: anEvent ifMatched: [^ anEvent ignore].
@@ -814,7 +815,7 @@ SBEditor >> goToMark [
 		self allBlocksDo: [:morph | (morph withDecorator: SBMarkedDecorator do: [:mark | mark letter = letter ifTrue: [^ self select: morph]])]]
 ]
 
-{ #category : #'submorphs-add\/remove' }
+{ #category : #'submorphs-add/remove' }
 SBEditor >> handleDroppedBlock: aMorph event: anEvent [
 
 	aMorph object
@@ -847,6 +848,7 @@ SBEditor >> initialize [
 	
 	self
 		addKeyboardCaptureFilter: self;
+		addMouseCaptureFilter: self;
 		addDefaultShortcuts;
 		
 		extent: 500 asPoint;
@@ -1097,6 +1099,14 @@ SBEditor >> mode: aSymbol [
 ]
 
 { #category : #shortcuts }
+SBEditor >> modelWakeUp [
+
+	" when our window takes focus again and we're detached, bring us back to the front "
+	Project current addDeferredUIMessage: [
+		self valueOfProperty: #previousWindow ifPresentDo: [:window | self owner addMorphFront: self]]
+]
+
+{ #category : #shortcuts }
 SBEditor >> multiSelectChildren [
 
 	mode = #select ifFalse: [self mode: #selection].
@@ -1188,20 +1198,20 @@ SBEditor >> openInWindow [
 	^ window
 ]
 
-{ #category : #'submorphs-add\/remove' }
+{ #category : #'submorphs-add/remove' }
 SBEditor >> openMorph: aMorph [
 
 	scroll addMorphBack: aMorph
 ]
 
-{ #category : #'submorphs-add\/remove' }
+{ #category : #'submorphs-add/remove' }
 SBEditor >> openMorphInView: aMorph [
 
 	self do: (self openMorphInViewCommand: aMorph).
 	^ aMorph
 ]
 
-{ #category : #'submorphs-add\/remove' }
+{ #category : #'submorphs-add/remove' }
 SBEditor >> openMorphInViewCommand: aMorph [
 
 	| position |
@@ -1842,7 +1852,9 @@ SBEditor >> toggleCollapsed [
 SBEditor >> toggleFullscreen [
 
 	self owner = self world
-		ifTrue: [(self valueOfProperty: #previousWindow) addMorph: self frame: (0@0 extent: 1@1)]
+		ifTrue: [
+			(self valueOfProperty: #previousWindow) addMorph: self frame: (0@0 extent: 1@1).
+			self removeProperty: #previousWindow]
 		ifFalse: [
 			self
 				setProperty: #previousWindow toValue: self owner;
