@@ -14,6 +14,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBEdgeInsets class >> left: leftNumber [
+
+	^ self basicNew left: leftNumber right: 0 top: 0 bottom: 0
+]
+
+{ #category : #'as yet unclassified' }
 SBEdgeInsets class >> left: leftNumber right: rightNumber top: topNumber bottom: bottomNumber [ 
 
 	^ self basicNew left: leftNumber right: rightNumber top: topNumber bottom: bottomNumber

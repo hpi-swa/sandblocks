@@ -380,6 +380,8 @@ SBBasicMethod >> reload [
 SBBasicMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
 
 	| text newSelector |
+	(self savedMethodHasComments and: [(UIManager default confirm: 'Currently saved version has comments that will be removed. Still save?') not]) ifTrue: [^ false].
+	
 	self allBlocksDo: [:block |
 		block valid ifFalse: [
 			aBoolean ifFalse: [^ false] ifTrue: [block tryFixIfFail: [^ false]]]].

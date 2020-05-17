@@ -107,6 +107,23 @@ SBMethod >> object [
 ]
 
 { #category : #'as yet unclassified' }
+SBMethod >> savedMethodHasComments [
+
+	SBExample self: [
+		SBMethod newFor: SBMethod >> #savedMethodHasComments at: 0 @ 0] args: [{}] label: 'no comment'.
+	SBExample self: [SBMethod newFor: SBEditor >> #do: at: 0 @ 0] args: [{}] label: 'has comment'.
+	^ self methodClass methodDictionary
+		at: self selector asSymbol
+		ifPresent: [:method | | scanner |
+			scanner := Scanner new scan: method getSourceFromFile readStream.
+			[
+				scanner advance.
+				scanner tokenType = #doIt] whileFalse: [scanner currentComment ifNotNil: [^ true]].
+			false]
+		ifAbsent: [false]
+]
+
+{ #category : #'as yet unclassified' }
 SBMethod >> selector [
 
 	^ signature selector
@@ -122,9 +139,14 @@ SBMethod >> selector: aSymbol arguments: aCollection [
 SBMethod >> selector: aSymbol arguments: aCollection class: aClass [
 
 	super selector: aSymbol arguments: aCollection class: aClass.
-	
 	signature selector: aSymbol arguments: aCollection.
-	classPrefix contents: aClass name, ' >> '
+	classPrefix contents: aClass name, ' >> '.
+	self savedMethodHasComments ifTrue: [
+		self firstSubmorph
+			addMorphBack: (Morph new
+				color: Color transparent;
+				extent: 12 @ 0);
+			addMorphBack: (SBIcon iconWarning balloonText: 'Method has comments that cannot be saved')]
 ]
 
 { #category : #'as yet unclassified' }
