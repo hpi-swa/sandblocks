@@ -20,7 +20,8 @@ SBUnknown >> acceptCharacter: char [
 	char = $^ ifTrue: [^ self doWrap: [:outer :inner | outer expression: inner] with: SBReturn new].
 	(char = $: and: [self parentSandblock isBlockBody]) ifTrue: [ | block |
 		block := self parentSandblock.
-		self sandblockEditor do: ((SBDeleteCommand newFor: self containingArtefact) target: self; shouldMergeWithNext: true).
+		self parentSandblock statements size > 1 ifTrue: [
+			self sandblockEditor do: ((SBDeleteCommand newFor: self containingArtefact) target: self; shouldMergeWithNext: true)].
 		^ block addBlockArgument].
 	char = $< ifTrue: [^ self replaceWithPragma]
 ]

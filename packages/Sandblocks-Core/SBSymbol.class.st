@@ -26,7 +26,9 @@ SBSymbol >> isSymbolBlock [
 { #category : #'as yet unclassified' }
 SBSymbol >> keyStroke: anEvent [
 
-	super keyStroke: anEvent.
+	anEvent keyCharacter isSpecial
+		ifTrue: [self acceptInputEvent: anEvent]
+		ifFalse: [super keyStroke: anEvent].
 	
 	self updateSuggestions
 ]

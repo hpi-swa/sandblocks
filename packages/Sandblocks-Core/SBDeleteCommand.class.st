@@ -17,7 +17,7 @@ SBDeleteCommand >> do [
 	nextSelection := (target submorphAfter ifNil: [target submorphBefore]) ifNotNil: [:m | m containingSandblock].
 	oldIndex := oldOwner submorphIndexOf: target.
 	oldOwner removeMorph: target.
-	^ target focusAfterDeleteifNone: [nextSelection ifNil: [oldOwner containingSandblock]]
+	^ target containingSandblock focusAfterDeleteifNone: [nextSelection ifNil: [oldOwner containingSandblock]]
 ]
 
 { #category : #'as yet unclassified' }

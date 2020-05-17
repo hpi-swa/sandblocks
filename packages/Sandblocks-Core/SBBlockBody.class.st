@@ -172,6 +172,14 @@ SBBlockBody >> isMethodBody [
 	^ self owner notNil and: [self parentSandblock isMethod]
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlockBody >> noteNewOwner: aMorph [
+
+	super noteNewOwner: aMorph.
+	
+	self removeProperty: #sandblockBlockColor
+]
+
 { #category : #converting }
 SBBlockBody >> pc [
 
