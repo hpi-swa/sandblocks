@@ -699,24 +699,33 @@ SBEditor >> endMultiSelection [
 	self mode: #command
 ]
 
+{ #category : #shortcuts }
+SBEditor >> errorContextFor: anArtefact ifNone: anExceptionBlock [
+
+	^ errors focusedArtefact = anArtefact ifTrue: [errors focusedContext] ifFalse: [anExceptionBlock value]
+]
+
 { #category : #actions }
 SBEditor >> evaluateSelection [
 
-	| result explorer source artefact |
+	| result source |
 	source := self selection.
-	artefact := source containingArtefact.
-	result := source evaluateWith: artefact for: (errors focusedArtefact = artefact ifTrue: [errors focusedContext] ifFalse: [nil]).
+	"artefact := source containingArtefact.
+	result := source evaluateWith: artefact for: (errors focusedArtefact = ifTrue: [errors focusedContext] ifFalse: [nil])."
+	result := source evaluate.
 	
 	source containingArtefact ifNotNil: [source containingArtefact cacheType: result class for: source].
 	
-	self openMorphInView: (explorer := (result representationThat: #isToplevelMorph)
-		focusAfterDelete: source;
-		yourself).
-	
-	scroll addMorph: ((SBConnectorLine new connectorType: #dots)
-		color: Color black;
-		connect: source to: explorer;
-		yourself)
+	result
+		representationThat: #isToplevelMorph
+		do: [:explorer |
+			explorer focusAfterDelete: source.
+			scroll addMorph: ((SBConnectorLine new connectorType: #dots)
+				color: Color black;
+				connect: source to: explorer;
+				yourself).
+			self openMorphInView: explorer]
+		ifNone: []
 ]
 
 { #category : #actions }

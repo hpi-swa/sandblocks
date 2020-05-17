@@ -120,9 +120,15 @@ SBRepl >> ensureExpanded [
 ]
 
 { #category : #'compilation cue protocol' }
-SBRepl >> evaluateWith: aRequestor for: aContext [
+SBRepl >> evaluationContext [
 
-	^ Compiler new evaluate: (self body sourceString, ' value') readStream in: aContext to: (aContext ifNil: [self receiver] ifNotNil: #receiver) notifying: aRequestor ifFail: nil
+	^ nil
+]
+
+{ #category : #'compilation cue protocol' }
+SBRepl >> evaluationReceiver [
+
+	^ self receiver
 ]
 
 { #category : #'as yet unclassified' }
@@ -259,9 +265,7 @@ SBRepl >> setFromSource: aString [
 { #category : #'artefact protocol' }
 SBRepl >> statements: aCollection [
 
-	self body removeAllMorphs.
-	aCollection do: [:statement |
-		self body addMorphBack: statement]
+	self body statements: aCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -301,4 +305,11 @@ SBRepl >> typeFor: aBlock [
 SBRepl >> wantsInteractiveErrorCorrection [
 
 	^ false
+]
+
+{ #category : #'compilation cue protocol' }
+SBRepl >> writeSourceOn: aStream [
+
+	self body writeSourceOn: aStream.
+	aStream nextPutAll: ' value'
 ]

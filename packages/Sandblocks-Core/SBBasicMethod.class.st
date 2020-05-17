@@ -220,6 +220,18 @@ SBBasicMethod >> ensureExpanded [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> evaluationContext [
+
+	^ self sandblockEditor errorContextFor: self ifNone: [nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> evaluationReceiver [
+
+	^ self relatedClass
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> exists [
 
 	^ self currentClass respondsTo: self currentSelector

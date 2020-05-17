@@ -179,7 +179,7 @@ SBBlock >> closestAdjacentFrom: mySide to: theirSide [
 	component := ({#leftCenter. #rightCenter} includes: mySide) ifTrue: [#x] ifFalse: [#y].
 	candidates := self parentSandblock childSandblocks select: [:block |
 		block ~= self and: [
-			(block center perform: component) perform: direction with: (myPoint perform: component)]].
+			((block perform: mySide) perform: component) perform: direction with: (myPoint perform: component)]].
 	^ candidates
 		ifEmpty: [self]
 		ifNotEmpty: [
@@ -196,11 +196,20 @@ SBBlock >> codeActions [
 			for: self
 			do: [:node |
 				node object
-					representationThat: (self parentSandblock acceptedRepresentation)
+					representationThat: self parentSandblock acceptedRepresentation
 					do: [:type |
 						self sandblockEditor do: (SBReplaceCommand newNonEdit
 							target: self;
 							replacer: type)]
+					ifNone: [nil]]).
+		(SBCodeAction
+			labeled: 'Explore as ...'
+			for: self
+			do: [:node |
+				node object
+					representationThat: #isToplevelMorph
+					do: [:type |
+						self sandblockEditor openMorphInView: type]
 					ifNone: [nil]])
 	}
 ]
@@ -423,7 +432,16 @@ SBBlock >> ensureVisible [
 { #category : #'as yet unclassified' }
 SBBlock >> evaluate [
 
-	^ Compiler evaluate: self sourceString
+	^ self containingArtefact
+		ifNotNil: [:artefact | | context |
+			context := artefact evaluationContext.
+			Compiler new
+				evaluate: self sourceString
+				in: context
+				to: (context ifNil: [artefact evaluationReceiver] ifNotNil: #receiver)
+				notifying: artefact
+				ifFail: nil]
+		ifNil: [Compiler evaluate: self sourceString]
 ]
 
 { #category : #'as yet unclassified' }
