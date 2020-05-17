@@ -106,13 +106,15 @@ SBSandboxSimulator >> simulate: aBlock [
 	SBExample self: [SBSandboxSimulator new] args: [{[ActiveWorld addMorph: Morph new]}] label: 'morph'.
 	SBExample self: [SBSandboxSimulator new] args: [{[UIManager default]}] label: 'ui manager'.
 	startTime := DateAndTime now.
-	aBlock hasMethodReturn ifTrue: [self error: 'simulation of blocks with ^ can run loose'].
+	aBlock hasMethodReturn ifTrue: [
+		self error: 'simulation of blocks with ^ can run loose'].
 	simulationContext := thisContext.
 	currentContext := aBlock asContext.
 	currentContext pushArgs: Array new from: simulationContext.
-	[currentContext notNil and: [currentContext ~~ simulationContext]] whileTrue: [
+	[
+		currentContext notNil and: [currentContext ~~ simulationContext]] whileTrue: [
 		currentContext := currentContext interpretNextInstructionFor: self.
-		(DateAndTime now - startTime) > self maxTime ifTrue: [^ SBExampleWatch report: nil for: 908043403]].
+		(DateAndTime now - startTime) > self maxTime ifTrue: [^ nil]].
 	^ currentContext ifNil: [nil] ifNotNil: [simulationContext pop]
 ]
 

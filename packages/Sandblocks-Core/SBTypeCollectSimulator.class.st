@@ -66,6 +66,12 @@ SBTypeCollectSimulator >> jump: offset if: condition [
 ]
 
 { #category : #'as yet unclassified' }
+SBTypeCollectSimulator >> maxTime [
+
+	^ 100 milliSeconds
+]
+
+{ #category : #'as yet unclassified' }
 SBTypeCollectSimulator >> methodMap [
 
 	^ methodMap
@@ -256,14 +262,16 @@ SBTypeCollectSimulator >> send: selector super: supered numArgs: numArgs [
 { #category : #'as yet unclassified' }
 SBTypeCollectSimulator >> simulate: aBlock [
 
-	| simulationContext |
-	aBlock hasMethodReturn
-		ifTrue: [self error: 'simulation of blocks with ^ can run loose']. "could probably be solved by guarding method returns"
+	| simulationContext startTime |
+	aBlock hasMethodReturn ifTrue: [
+		self error: 'simulation of blocks with ^ can run loose'].
+	startTime := DateAndTime now.
 	simulationContext := thisContext.
-	currentContext := topContext := aBlock asContext.
+	currentContext := (topContext := aBlock asContext).
 	currentContext pushArgs: Array new from: simulationContext.
 	[currentContext == simulationContext] whileFalse: [
-		currentContext := currentContext interpretNextInstructionFor: self].
+		currentContext := currentContext interpretNextInstructionFor: self.
+		(DateAndTime now - startTime) > self maxTime ifTrue: [^ nil]].
 	^ simulationContext pop
 ]
 
