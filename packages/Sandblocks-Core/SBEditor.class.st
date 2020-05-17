@@ -141,9 +141,9 @@ SBEditor >> addDefaultShortcuts [
 		addMultiSelectionShortcut: $H do: #selectPreviousStatement;
 		addMultiSelectionShortcut: $L do: #selectNextStatement;
 		addCommandShortcut: $1 do: #resetZoom;
-		addCommandShortcut: $g do: #selectArtefact;
-		addCommandShortcut: $G do: #selectLast;
-		addCommandShortcut: $! do: #refocus.
+		addMultiSelectionShortcut: $g do: #selectArtefact;
+		addMultiSelectionShortcut: $G do: #selectLast;
+		addMultiSelectionShortcut: $! do: #refocus.
 	SBLabel text: ['Refactoring'].
 	self
 		addSingleSelectionShortcut: $= do: #extractVariable;
