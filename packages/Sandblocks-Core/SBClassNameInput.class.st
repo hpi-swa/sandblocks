@@ -1,7 +1,7 @@
 Class {
 	#name : #SBClassNameInput,
-	#superclass : #SBTextBubble,
-	#category : 'Sandblocks-Core'
+	#superclass : #SBComboBox,
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
