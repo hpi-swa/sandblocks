@@ -313,6 +313,17 @@ SBName >> validContents [
 ]
 
 { #category : #'as yet unclassified' }
+SBName >> veryDeepCopyWith: aCopier [
+
+	| new previousBinding |
+	previousBinding := binding.
+	new := super veryDeepCopyWith: aCopier.
+	binding := previousBinding.
+	new binding: previousBinding.
+	^ new
+]
+
+{ #category : #'as yet unclassified' }
 SBName >> wasDeselected [
 
 	self flag: #todo. " will not clean up on changed usages "

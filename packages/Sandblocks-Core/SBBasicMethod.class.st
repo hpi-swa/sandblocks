@@ -445,8 +445,8 @@ SBBasicMethod >> toggleCollapsed [
 { #category : #'as yet unclassified' }
 SBBasicMethod >> tryFix: aNodeBlock ifFail: aBlock [
 
+	self sandblockEditor select: aNodeBlock.
 	aNodeBlock fixActions
-		ifEmpty: [self sandblockEditor select: aNodeBlock]
 		ifNotEmpty: [:actions | self proposeCodeActions: actions for: aNodeBlock].
 	^ aNodeBlock valid ifTrue: [true] ifFalse: aBlock
 ]

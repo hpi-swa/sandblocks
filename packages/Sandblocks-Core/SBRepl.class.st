@@ -65,6 +65,18 @@ SBRepl >> bindingOf: aString [
 	^ (self getOrCreateLocalBinding: aString) binding
 ]
 
+{ #category : #'artefact protocol' }
+SBRepl >> bindings [
+
+	^ bindings
+]
+
+{ #category : #'artefact protocol' }
+SBRepl >> bindings: aDictionary [
+
+	bindings := aDictionary
+]
+
 { #category : #'method protocol' }
 SBRepl >> body [
 
@@ -180,6 +192,12 @@ SBRepl >> initialize [
 ]
 
 { #category : #'artefact protocol' }
+SBRepl >> isArtefact [
+
+	^ true
+]
+
+{ #category : #'artefact protocol' }
 SBRepl >> isRepl [
 
 	^ true
@@ -225,7 +243,7 @@ SBRepl >> receiver [
 { #category : #'compilation cue protocol' }
 SBRepl >> receiver: anObject [
 
-	self name: (anObject asString truncateWithElipsisTo: 20).
+	anObject ifNotNil: [self name: (anObject asString truncateWithElipsisTo: 20)].
 	receiver := anObject
 ]
 
@@ -299,6 +317,17 @@ SBRepl >> typeCache [
 SBRepl >> typeFor: aBlock [
 
 	^ self typeCache at: aBlock ifAbsent: [nil]
+]
+
+{ #category : #'artefact protocol' }
+SBRepl >> veryDeepCopyWith: deepCopier [
+
+	| new previousReceiver |
+	previousReceiver := self receiver.
+	new := super veryDeepCopyWith: deepCopier.
+	new receiver: previousReceiver.
+	receiver := previousReceiver.
+	^ new
 ]
 
 { #category : #'compilation cue protocol' }
