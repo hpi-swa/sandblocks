@@ -123,6 +123,14 @@ SBError >> maxFrames [
 ]
 
 { #category : #'as yet unclassified' }
+SBError >> outOfWorld: aWorld [
+
+	super outOfWorld: aWorld.
+	
+	process ifNotNil: #terminate
+]
+
+{ #category : #'as yet unclassified' }
 SBError >> resetContext: aContext [
 
 	aContext ~= frames firstSubmorph context ifTrue: [ | stack dropToIndex addFromIndex |
