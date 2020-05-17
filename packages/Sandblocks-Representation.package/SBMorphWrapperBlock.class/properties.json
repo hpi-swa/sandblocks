@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Representation",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"addMorphLater" ],
+	"name" : "SBMorphWrapperBlock",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }
