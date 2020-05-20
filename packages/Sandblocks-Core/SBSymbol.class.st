@@ -52,6 +52,12 @@ SBSymbol >> selector [
 ]
 
 { #category : #'as yet unclassified' }
+SBSymbol >> symbols [
+
+	^ self colorPolicy symbolsForSymbol: self
+]
+
+{ #category : #'as yet unclassified' }
 SBSymbol >> updateSuggestions [
 
 	| suggestions |

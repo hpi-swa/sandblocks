@@ -10,8 +10,13 @@ Class {
 { #category : #'as yet unclassified' }
 SBLayoutPolicy class >> layoutMorphsOf: aMorph do: aBlock [
 
+	| count |
+	count := 0.
 	aMorph submorphs do: [:morph |
-		(morph disableLayout not and: [morph visible]) ifTrue: [aBlock value: morph]]
+		(morph disableLayout not and: [morph visible]) ifTrue: [
+			aBlock value: morph.
+			count := count + 1]].
+	^ count
 ]
 
 { #category : #'as yet unclassified' }
@@ -29,8 +34,13 @@ SBLayoutPolicy >> layout: aMorph in: aRectangle [
 { #category : #'as yet unclassified' }
 SBLayoutPolicy >> layoutMorphsOf: aMorph do: aBlock [
 
+	| count |
+	count := 0.
 	aMorph submorphs do: [:morph |
-		(morph disableLayout not and: [morph visible]) ifTrue: [aBlock value: morph]]
+		(morph disableLayout not and: [morph visible]) ifTrue: [
+			aBlock value: morph.
+			count := count + 1]].
+	^ count
 ]
 
 { #category : #'as yet unclassified' }

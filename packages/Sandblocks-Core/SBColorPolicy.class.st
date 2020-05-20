@@ -55,3 +55,143 @@ SBColorPolicy >> layoutInset [
 
 	^ 2
 ]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForArray: aBlock [
+
+	^ #('{}' nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForAssignment: aBlock [
+
+	| parent |
+	parent := aBlock parentSandblock.
+	^ (parent notNil and: [parent isMessageSend]) ifTrue: [#('(' ')')] ifFalse: [#(nil nil)]
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForAssignmentLabel: aBlock [
+
+	^ #(nil nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForBinding: aBlock [
+
+	^ #(nil nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForBlock: aBlock [
+
+	^ #(' [] ' nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForBlockDeclaration: aBlock [
+
+	^ #(':' nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForBoolean: aBlock [
+
+	^ #(nil nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForByteArray: aBlock [
+
+	^ #('#[]' nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForCharacter: aBlock [
+
+	^ #('$' nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForComment: aBlock [
+
+	^ #('" ' nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForInstanceVariableDeclaration: aBlock [
+
+	^ #(nil nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForKeywordBinding: aBlock [
+
+	^ #(nil nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForLiteralArray: aBlock [
+
+	^ #('#()' nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForLocalVariableDeclaration: aBlock [
+
+	^ #(nil nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForMessageSend: aBlock [
+
+	^ #(nil nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForMethodArgumentDeclaration: aBlock [
+
+	^ #(nil nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForPoolVariableDeclaration: aBlock [
+
+	^ #(nil nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForPragma: aBlock [
+
+	^ #('<> ' nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForRegex: aBlock [
+
+	^ #('r' nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForReturn: aBlock [
+
+	^ #('^ ' nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForString: aBlock [
+
+	^ #('''' nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForSymbol: aBlock [
+
+	^ #('# ' nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForTemporaryVariableDeclaration: aBlock [
+
+	^ #(nil nil)
+]

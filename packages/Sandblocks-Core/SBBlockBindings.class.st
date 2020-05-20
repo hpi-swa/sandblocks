@@ -9,3 +9,9 @@ SBBlockBindings >> isBlockBindings [
 
 	^ true
 ]
+
+{ #category : #'as yet unclassified' }
+SBBlockBindings >> visible [
+
+	^ self hasSubmorphs
+]

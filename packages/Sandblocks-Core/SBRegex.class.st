@@ -166,6 +166,12 @@ SBRegex >> stopEditing: aCommand [
 ]
 
 { #category : #'as yet unclassified' }
+SBRegex >> symbols [
+
+	^ self colorPolicy symbolsForRegex: self
+]
+
+{ #category : #'as yet unclassified' }
 SBRegex >> textContents [
 
 	^ self contents

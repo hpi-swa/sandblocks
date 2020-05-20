@@ -143,9 +143,15 @@ SBArray >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
-SBArray >> spaceForPrefix [
+SBArray >> symbols [
 
-	^ super spaceForPrefix + (8 * self scalingFactor)
+	^ type
+		caseOf: {
+			([#dynamic] -> [self colorPolicy symbolsForArray: self]).
+			([#literal] -> [self colorPolicy symbolsForLiteralArray: self]).
+			([#byte] -> [self colorPolicy symbolsForByteArray: self])
+		}
+		otherwise: '?'
 ]
 
 { #category : #'as yet unclassified' }

@@ -107,6 +107,12 @@ SBPragma >> stopEditing: aCommand [
 ]
 
 { #category : #'as yet unclassified' }
+SBPragma >> symbols [
+
+	^ self colorPolicy symbolsForPragma: self
+]
+
+{ #category : #'as yet unclassified' }
 SBPragma >> valid [
 
 	^ (self parentSandblock isBlockBody and: [self parentSandblock isMethodBody]) and: [

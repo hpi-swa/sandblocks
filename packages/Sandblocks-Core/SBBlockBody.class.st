@@ -122,13 +122,13 @@ SBBlockBody >> initialize [
 	
 	self
 		layoutPolicy: SBBlockBodyLayout new;
-		minimumHeight: TextStyle defaultFont height + self layoutInset vertical;
 		color: Color random;
 		cellPositioning: #topLeft;
 		cellPositioning: #topLeft;
 		listDirection: #topToBottom;
 		vResizing: #shrinkWrap; hResizing: #shrinkWrap;
 		addMorphBack: (SBRow new
+			hideWhenEmpty: true;
 			cellGap: 8 withScalingFactor;
 			addMorphBack: bindings;
 			addMorphBack: temporaries)
@@ -173,6 +173,12 @@ SBBlockBody >> isMethodBody [
 ]
 
 { #category : #'as yet unclassified' }
+SBBlockBody >> minimumHeight [
+
+	^ self fontToUse height + self layoutInset vertical
+]
+
+{ #category : #'as yet unclassified' }
 SBBlockBody >> noteNewOwner: aMorph [
 
 	super noteNewOwner: aMorph.
@@ -190,12 +196,6 @@ SBBlockBody >> pc [
 SBBlockBody >> pc: aNumber [
 
 	pc := aNumber
-]
-
-{ #category : #'as yet unclassified' }
-SBBlockBody >> prefix [
-
-	^ self isMethodBody ifTrue: [nil] ifFalse: [' [] ']
 ]
 
 { #category : #'as yet unclassified' }
@@ -227,6 +227,12 @@ SBBlockBody >> statements: aCollection [
 
 	self submorphs allButFirst do: [:m | self removeMorph: m].
 	aCollection do: [:m | self addMorphBack: m]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlockBody >> symbols [
+
+	^ self isMethodBody ifTrue: [#(nil nil)] ifFalse: [self colorPolicy symbolsForBlock: self]
 ]
 
 { #category : #converting }

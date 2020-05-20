@@ -58,6 +58,12 @@ SBDeclarationForInstanceVariable >> scope [
 ]
 
 { #category : #'as yet unclassified' }
+SBDeclarationForInstanceVariable >> symbolsFor: aColorPolicy [
+
+	^ aColorPolicy symbolsForInstanceVariableDeclaration: self block
+]
+
+{ #category : #'as yet unclassified' }
 SBDeclarationForInstanceVariable >> valid [
 
 	^ true

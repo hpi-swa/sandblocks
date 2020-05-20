@@ -70,6 +70,12 @@ SBReturn >> printOn: aStream [
 	self firstSubmorph printOn: aStream
 ]
 
+{ #category : #'as yet unclassified' }
+SBReturn >> symbols [
+
+	^ self colorPolicy symbolsForReturn: self
+]
+
 { #category : #formatting }
 SBReturn >> valid [
 

@@ -66,6 +66,12 @@ SBKeywordBinding >> printBlockOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBKeywordBinding >> symbolsFor: aColorPolicy [
+
+	^ aColorPolicy symbolsForKeywordBinding: self block
+]
+
+{ #category : #'as yet unclassified' }
 SBKeywordBinding >> valid [
 
 	^ true

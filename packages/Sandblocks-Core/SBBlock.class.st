@@ -385,21 +385,7 @@ SBBlock >> drawOn: aCanvas [
 		borderWidth: (self colorPolicy borderWidthForBlock: self) 
 		borderColor: (self colorPolicy borderColorForBlock: self).
 	
-	self prefix ifNotNil: [:p | self drawPrefix: p on: aCanvas]
-]
-
-{ #category : #'as yet unclassified' }
-SBBlock >> drawPrefix: aString on: aCanvas [
-
-	| font width fg |
-	font := self fontToUse.
-	width := font widthOfString: aString.
-	fg := self sandblockForegroundColor.
-	aCanvas
-		drawString: aString
-		at: self layoutBounds origin + (self spaceForPrefix negated + ((self spaceForPrefix / 2) - (width / 2)) rounded @ ((self layoutBounds height / 2) - (font height / 2)) rounded)
-		font: font
-		color: ("fg = Color white ifTrue: [Color veryLightGray] ifFalse: ["fg alpha: 0.5)
+	self drawSymbolsOn: aCanvas
 ]
 
 { #category : #'as yet unclassified' }
@@ -410,6 +396,31 @@ SBBlock >> drawSubmorphsOn: aCanvas [
 	self valid ifFalse: [aCanvas frameRectangle: self bounds width: 2 * self scalingFactor color: Color red].
 	
 	self decorators do: [:d | d postDrawOn: aCanvas]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> drawSymbolsOn: aCanvas [
+
+	| symbols fg font space |
+	symbols := self symbols.
+	space := self spaceForSymbols.
+	
+	font := self fontToUse.
+	fg := self sandblockForegroundColor.
+	
+	symbols first ifNotNil: [
+		aCanvas
+			drawString: symbols first
+			at: self layoutBounds origin + (space first negated rounded @ ((self layoutBounds height / 2) - (font height / 2)) rounded)
+			font: font
+			color: (fg alpha: 0.5)].
+	
+	symbols second ifNotNil: [
+		aCanvas
+			drawString: symbols second
+			at: self layoutBounds topRight + (0 @ ((self layoutBounds height / 2) - (font height / 2)) rounded)
+			font: font
+			color: (fg alpha: 0.5)].
 ]
 
 { #category : #colors }
@@ -834,12 +845,12 @@ SBBlock >> lastDeepChild [
 SBBlock >> layoutInset [
 
 	| space inset |
-	space := self spaceForPrefix.
+	space := self spaceForSymbols.
 	inset := self colorPolicy layoutInset + super layoutInset.
-	^ space > 0
+	^ (space first > 0 or: [space second > 0])
 		ifTrue: [inset isPoint
-				ifTrue: [Rectangle left: space + inset x right: inset x top: inset y bottom: inset y]
-				ifFalse: [Rectangle left: space + inset right: inset top: inset bottom: inset]]
+				ifTrue: [Rectangle left: space first + inset x right: inset x + space second top: inset y bottom: inset y]
+				ifFalse: [Rectangle left: space first + inset right: inset + space second top: inset bottom: inset]]
 		ifFalse: [inset]
 ]
 
@@ -995,7 +1006,7 @@ SBBlock >> postDuplicate [
 { #category : #'as yet unclassified' }
 SBBlock >> prefix [
 
-	^ nil
+	^ self symbols first
 ]
 
 { #category : #'as yet unclassified' }
@@ -1110,9 +1121,14 @@ SBBlock >> sourceString [
 ]
 
 { #category : #'as yet unclassified' }
-SBBlock >> spaceForPrefix [
+SBBlock >> spaceForSymbols [
 
-	^ self prefix ifNil: [0] ifNotNil: [:p | self fontToUse widthOfString: p]
+	| symbols |
+	symbols := self symbols.
+	^ {
+		(symbols first ifNil: [0] ifNotNil: [self fontToUse widthOfString: symbols first]).
+		(symbols second ifNil: [0] ifNotNil: [self fontToUse widthOfString: symbols second])
+	}
 ]
 
 { #category : #'as yet unclassified' }
@@ -1155,6 +1171,12 @@ SBBlock >> suggestionMenuDo: aBlock [
 SBBlock >> suggestionsMenu [
 
 	^ self valueOfProperty: #sandblockSuggestionMenu ifAbsentPut: [SBSuggestionMenu new]
+]
+
+{ #category : #testing }
+SBBlock >> symbols [
+
+	^ #(nil nil)
 ]
 
 { #category : #accessing }

@@ -26,12 +26,6 @@ SBString >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBString >> prefix [
-
-	^ ''''
-]
-
-{ #category : #'as yet unclassified' }
 SBString >> printOn: aStream [
 
 	aStream nextPutAll: 'string '.
@@ -39,9 +33,9 @@ SBString >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
-SBString >> spaceForPrefix [
+SBString >> symbols [
 
-	^ super spaceForPrefix + (4 * self scalingFactor)
+	^ self colorPolicy symbolsForString: self
 ]
 
 { #category : #'as yet unclassified' }

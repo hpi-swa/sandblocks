@@ -53,6 +53,12 @@ SBDeclarationForBlock >> scope [
 ]
 
 { #category : #accessing }
+SBDeclarationForBlock >> symbolsFor: aColorPolicy [
+
+	^ aColorPolicy symbolsForBlockDeclaration: self block
+]
+
+{ #category : #accessing }
 SBDeclarationForBlock >> valid [
 
 	" check that this name does not already exist in a parent scope "

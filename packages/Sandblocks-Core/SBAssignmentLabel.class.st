@@ -54,6 +54,12 @@ SBAssignmentLabel >> resolveBinding [
 ]
 
 { #category : #'as yet unclassified' }
+SBAssignmentLabel >> symbolsFor: aColorPolicy [
+
+	^ aColorPolicy symbolsForAssignmentLabel: self block
+]
+
+{ #category : #'as yet unclassified' }
 SBAssignmentLabel >> valid [
 
 	^ self resolveBinding notNil

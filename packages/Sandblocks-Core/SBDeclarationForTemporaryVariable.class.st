@@ -35,6 +35,12 @@ SBDeclarationForTemporaryVariable >> scope [
 ]
 
 { #category : #'as yet unclassified' }
+SBDeclarationForTemporaryVariable >> symbolsFor: aColorPolicy [
+
+	^ aColorPolicy symbolsForTemporaryVariableDeclaration: self block
+]
+
+{ #category : #'as yet unclassified' }
 SBDeclarationForTemporaryVariable >> valid [
 
 	^ true

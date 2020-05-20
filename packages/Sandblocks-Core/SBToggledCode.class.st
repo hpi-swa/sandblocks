@@ -183,6 +183,12 @@ SBToggledCode >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBToggledCode >> symbols [
+
+	^ self colorPolicy symbolsForComment: self
+]
+
+{ #category : #'as yet unclassified' }
 SBToggledCode >> updateSelected [
 
 	| index |

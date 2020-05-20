@@ -35,6 +35,12 @@ SBDeclarationForPoolVariable >> scope [
 ]
 
 { #category : #'as yet unclassified' }
+SBDeclarationForPoolVariable >> symbolsFor: aColorPolicy [
+
+	^ aColorPolicy symbolsForPoolVariableDeclaration: self block
+]
+
+{ #category : #'as yet unclassified' }
 SBDeclarationForPoolVariable >> valid [
 
 	^ true

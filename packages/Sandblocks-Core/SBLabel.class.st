@@ -161,6 +161,12 @@ SBLabel >> stopEditing: aCommand [
 ]
 
 { #category : #'as yet unclassified' }
+SBLabel >> symbols [
+
+	^ self colorPolicy symbolsForComment: self
+]
+
+{ #category : #'as yet unclassified' }
 SBLabel >> textBlock: aBlock [
 
 	self label: (Compiler evaluate: aBlock sourceString) value

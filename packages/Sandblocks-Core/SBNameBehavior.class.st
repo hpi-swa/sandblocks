@@ -127,6 +127,12 @@ SBNameBehavior >> resolveBinding [
 ]
 
 { #category : #'as yet unclassified' }
+SBNameBehavior >> symbolsFor: aColorPolicy [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
 SBNameBehavior >> valid [
 
 	^ self subclassResponsibility

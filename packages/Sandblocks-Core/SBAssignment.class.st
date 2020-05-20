@@ -69,6 +69,12 @@ SBAssignment >> printOn: aStream [
 	aStream nextPutAll: self firstSubmorph contents
 ]
 
+{ #category : #'as yet unclassified' }
+SBAssignment >> symbols [
+
+	^ self colorPolicy symbolsForAssignment: self
+]
+
 { #category : #converting }
 SBAssignment >> writeSourceOn: aStream [
 

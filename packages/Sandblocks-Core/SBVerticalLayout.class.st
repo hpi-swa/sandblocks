@@ -18,13 +18,13 @@ SBVerticalLayout class >> layout: aMorph in: aRectangle [
 { #category : #'as yet unclassified' }
 SBVerticalLayout class >> minExtentOf: aMorph in: aRectangle [
 
-	| minWidth totalHeight |
+	| minWidth totalHeight count |
 	minWidth := 0.
 	totalHeight := 0.
-	self layoutMorphsOf: aMorph do: [:m | | extent |
+	count := self layoutMorphsOf: aMorph do: [:m | | extent |
 		extent := m minExtent.
 		minWidth := extent x max: minWidth.
 		totalHeight := totalHeight + extent y].
 	
-	^ minWidth @ (totalHeight + (aMorph submorphCount - 1 * aMorph cellGap))
+	^ minWidth @ (totalHeight + (count - 1 * aMorph cellGap))
 ]

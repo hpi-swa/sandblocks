@@ -128,7 +128,7 @@ SBMessageSend >> initialize [
 	self listDirection: #leftToRight.
 	self hResizing: #shrinkWrap.
 	self vResizing: #shrinkWrap.
-	self cellGap: 2 * self scalingFactor.
+	self cellGap: 4 * self scalingFactor.
 	
 	signature := SBSignature new layoutPolicy: SBKeywordMessageLayout new.
 	pc := 0.
@@ -244,6 +244,15 @@ SBMessageSend >> postDuplicate [
 	super postDuplicate
 ]
 
+{ #category : #'as yet unclassified' }
+SBMessageSend >> precedence [
+
+	self selector ifEmpty: [^ 1].
+	self selector last = $: ifTrue: [^ 3].
+	self selector first canBeIdentifierInitial ifTrue: [^ 1].
+	^ 2
+]
+
 { #category : #converting }
 SBMessageSend >> printOn: aStream [
 
@@ -318,6 +327,12 @@ SBMessageSend >> stopEditing: aCommand [
 
 	signature stopEditing: aCommand.
 	self removeSuggestionMenu
+]
+
+{ #category : #'as yet unclassified' }
+SBMessageSend >> symbols [
+
+	^ self colorPolicy symbolsForMessageSend: self
 ]
 
 { #category : #'as yet unclassified' }

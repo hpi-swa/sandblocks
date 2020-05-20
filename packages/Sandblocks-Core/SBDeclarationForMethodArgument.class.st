@@ -47,6 +47,12 @@ SBDeclarationForMethodArgument >> scope [
 ]
 
 { #category : #'as yet unclassified' }
+SBDeclarationForMethodArgument >> symbolsFor: aColorPolicy [
+
+	^ aColorPolicy symbolsForMethodArgumentDeclaration: self block
+]
+
+{ #category : #'as yet unclassified' }
 SBDeclarationForMethodArgument >> valid [
 
 	^ true

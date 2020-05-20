@@ -62,6 +62,12 @@ SBDeclarationForLocalVariable >> scope [
 ]
 
 { #category : #'as yet unclassified' }
+SBDeclarationForLocalVariable >> symbolsFor: aColorPolicy [
+
+	^ aColorPolicy symbolsForLocalVariableDeclaration: self block
+]
+
+{ #category : #'as yet unclassified' }
 SBDeclarationForLocalVariable >> valid [
 
 	^ true

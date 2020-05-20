@@ -252,12 +252,6 @@ SBName >> noteNewOwner: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBName >> prefix [
-
-	^ self behavior prefix
-]
-
-{ #category : #'as yet unclassified' }
 SBName >> printOn: aStream [
 
 	self behavior printBlockOn: aStream
@@ -267,6 +261,12 @@ SBName >> printOn: aStream [
 SBName >> resolveBinding [
 
 	^ self behavior resolveBinding
+]
+
+{ #category : #'as yet unclassified' }
+SBName >> symbols [
+
+	^ self behavior symbolsFor: self colorPolicy
 ]
 
 { #category : #'as yet unclassified' }

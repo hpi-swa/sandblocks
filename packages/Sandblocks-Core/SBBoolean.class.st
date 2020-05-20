@@ -49,6 +49,12 @@ SBBoolean >> printBlockOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBBoolean >> symbolsFor: aColorPolicy [
+
+	^ aColorPolicy symbolsForBoolean: self block
+]
+
+{ #category : #'as yet unclassified' }
 SBBoolean >> toggle [
 
 	self block sandblockEditor do: ((SBMutatePropertyCommand newFor: self block containingArtefact)

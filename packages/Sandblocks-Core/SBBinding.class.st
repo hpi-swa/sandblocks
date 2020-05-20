@@ -89,6 +89,12 @@ SBBinding >> resolveBinding [
 ]
 
 { #category : #'as yet unclassified' }
+SBBinding >> symbolsFor: aColorPolicy [
+
+	^ aColorPolicy symbolsForBinding: self block
+]
+
+{ #category : #'as yet unclassified' }
 SBBinding >> valid [
 
 	^ self validBinding

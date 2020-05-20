@@ -41,6 +41,12 @@ SBTemporaries >> isTemporaries [
 ]
 
 { #category : #'as yet unclassified' }
+SBTemporaries >> visible [
+
+	^ self hasSubmorphs
+]
+
+{ #category : #'as yet unclassified' }
 SBTemporaries >> writeSourceOn: aStream [
 
 	self hasSubmorphs ifFalse: [^ self].
