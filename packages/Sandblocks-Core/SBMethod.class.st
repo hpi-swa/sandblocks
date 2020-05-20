@@ -34,14 +34,6 @@ SBMethod >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBMethod >> codeActions [
-
-	^ super codeActions, {
-		(SBCodeAction labeled: 'Reload Method' for: self do: [:node | node reload])
-	}
-]
-
-{ #category : #'as yet unclassified' }
 SBMethod >> collapsed: aBoolean [
 
 	self body visible not = aBoolean ifTrue: [^ self].
@@ -98,29 +90,6 @@ SBMethod >> keyStroke: anEvent [
 
 	signature keyStroke: anEvent.
 	self updateSuggestions
-]
-
-{ #category : #'as yet unclassified' }
-SBMethod >> object [
-
-	^ self compiledMethod
-]
-
-{ #category : #'as yet unclassified' }
-SBMethod >> savedMethodHasComments [
-
-	SBExample self: [
-		SBMethod newFor: SBMethod >> #savedMethodHasComments at: 0 @ 0] args: [{}] label: 'no comment'.
-	SBExample self: [SBMethod newFor: SBEditor >> #do: at: 0 @ 0] args: [{}] label: 'has comment'.
-	^ self methodClass methodDictionary
-		at: self selector asSymbol
-		ifPresent: [:method | | scanner |
-			scanner := Scanner new scan: method getSourceFromFile readStream.
-			[
-				scanner advance.
-				scanner tokenType = #doIt] whileFalse: [scanner currentComment ifNotNil: [^ true]].
-			false]
-		ifAbsent: [false]
 ]
 
 { #category : #'as yet unclassified' }

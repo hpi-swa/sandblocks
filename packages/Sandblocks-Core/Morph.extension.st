@@ -166,7 +166,7 @@ Morph >> nextAdjacentMorphThat: aBlock [
 { #category : #'*Sandblocks-Core' }
 Morph >> nextMorphThat: aBlock [
 
-	(self firstMorphThat: aBlock) ifNotNil: [:b | ^ b].
+	(self firstMorphThat: [:m | m ~= self and: [aBlock value: m]]) ifNotNil: [:b | ^ b].
 	(self nextAdjacentMorphThat: aBlock) ifNotNil: [:b | ^ b].
 	^ (self owner ifNil: [^ nil]) nextMorphThat: aBlock
 ]

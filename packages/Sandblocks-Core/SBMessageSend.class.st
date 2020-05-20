@@ -107,7 +107,8 @@ SBMessageSend >> fixActions [
 							selector: self selector
 								arguments: (self arguments collectWithIndex: [:arg :index | arg isName ifTrue: [arg veryDeepCopy] ifFalse: [SBName contents: 'anObject', index asString]])
 								class: (class ifNil: [UIManager default chooseClassOrTrait ifNil: [^ self]]);
-							body: SBBlockBody new)])
+							body: SBBlockBody new;
+							hasUnsavedChanges: true)])
 			}]
 		ifFalse: [#()]
 ]
@@ -185,11 +186,19 @@ SBMessageSend >> isSendToSelf [
 { #category : #'as yet unclassified' }
 SBMessageSend >> keyStroke: anEvent [
 
-	(anEvent keyCharacter = Character space or: [(self selector notEmpty and: [self isBinary not]) and: [anEvent keyCharacter isSpecial]]) ifTrue: [
+	(anEvent keyCharacter = Character space or: [
+		(self selector notEmpty and: [self isBinary not]) and: [anEvent keyCharacter isSpecial]]) ifTrue: [
 		^ self sandblockEditor
 			endInput;
 			wrapInMessageSend: (anEvent keyCharacter isSpecial ifTrue: [anEvent keyCharacter asString] ifFalse: [''])].
-	
+	(anEvent keyCharacter = Character backspace and: [self selector isEmpty]) ifTrue: [ | receiver |
+		receiver := self receiver.
+		^ self sandblockEditor
+			endInput;
+			do: ((SBReplaceCommand newFor: self containingArtefact)
+				target: self;
+				replacer: receiver);
+			startInput: receiver at: 900000000 replacingContents: false].
 	signature keyStroke: anEvent.
 	self updateSuggestions
 ]

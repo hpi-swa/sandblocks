@@ -13,6 +13,12 @@ SBReturn >> childSandblocksDo: aBlock [
 	self hasSubmorphs ifTrue: [aBlock value: self firstSubmorph]
 ]
 
+{ #category : #formatting }
+SBReturn >> expression [
+
+	^ self firstSubmorph
+]
+
 { #category : #'as yet unclassified' }
 SBReturn >> expression: aBlock [
 
@@ -31,6 +37,12 @@ SBReturn >> initialize [
 		layoutPolicy: SBHorizontalLayout new;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
+]
+
+{ #category : #formatting }
+SBReturn >> isReturn [
+
+	^ true
 ]
 
 { #category : #formatting }
@@ -68,5 +80,5 @@ SBReturn >> valid [
 SBReturn >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '^ '.
-	self firstSubmorph writeSourceOn: aStream
+	self expression writeSourceOn: aStream
 ]

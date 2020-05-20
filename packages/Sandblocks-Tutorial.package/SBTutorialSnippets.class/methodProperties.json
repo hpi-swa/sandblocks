@@ -1,7 +1,13 @@
 {
 	"class" : {
-		 },
+		"workspace" : "tobe 5/20/2020 10:36" },
 	"instance" : {
-		"t01movement" : "tobe 5/11/2020 15:49",
-		"t02deleting" : "tobe 5/11/2020 14:59",
-		"t03Swapping" : "tobe 5/11/2020 14:58" } }
+		"t01movement" : "tobe 5/20/2020 09:14",
+		"t02deleting" : "tobe 5/20/2020 09:14",
+		"t03Swapping" : "tobe 5/20/2020 09:14",
+		"t04Jumping" : "tobe 5/20/2020 09:19",
+		"t05BasicMessageSend" : "tobe 5/20/2020 09:31",
+		"t06EditingValues" : "tobe 5/20/2020 09:40",
+		"t07Smalltalk" : "tobe 5/20/2020 09:43",
+		"t08Lists" : "tobe 5/20/2020 10:08",
+		"t09Assignments" : "tobe 5/20/2020 10:13" } }

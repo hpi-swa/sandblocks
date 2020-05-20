@@ -94,8 +94,7 @@ SBEditor >> addDefaultShortcuts [
 		addSingleSelectionShortcut: $r do: #replaceWithCopyBuffer;
 		addSingleSelectionShortcut: $, do: #promptCodeAction;
 		addSingleSelectionShortcut: $X do: #deleteAroundSelection;
-		addMultiSelectionShortcut: $x do: #deleteSelection;
-		addMultiSelectionShortcut: $# do: #wrapInLiteralArray.
+		addMultiSelectionShortcut: $x do: #deleteSelection.
 	SBLabel text: ['Insert mode'].
 	self
 		addSingleSelectionShortcut: $i do: #startInputAtStart;
@@ -108,6 +107,7 @@ SBEditor >> addDefaultShortcuts [
 		addSingleSelectionShortcut: Character tab do: [:editor | editor inputNextUnknown].
 	SBLabel text: ['Create nodes'].
 	self
+		addMultiSelectionShortcut: $# do: #wrapInLiteralArray;
 		addSingleSelectionShortcut: $d do: #insertLabelBelow;
 		addSingleSelectionShortcut: $D do: #insertLabelAbove;
 		addSingleSelectionShortcut: $O do: #insertStatementAbove;
@@ -193,7 +193,7 @@ SBEditor >> addDefaultShortcuts [
 		addInputShortcut: Character escape do: #endInput;
 		addInputShortcut: Character arrowLeft do: [:editor | editor textMorph moveCursor: -1];
 		addInputShortcut: Character arrowRight do: [:editor | editor textMorph moveCursor: 1];
-		addInputShortcut: Character backspace do: [:editor | editor textMorph deleteBeforeCursor];
+		"addInputShortcut: Character backspace do: [:editor | editor textMorph deleteBeforeCursor];"
 		addInputShortcut: Character delete do: [:editor | editor textMorph deleteAfterCursor];
 		addInputShortcut: $h command do: [:editor | editor textMorph moveCursor: -1];
 		addInputShortcut: $l command do: [:editor | editor textMorph moveCursor: 1];
@@ -279,12 +279,6 @@ SBEditor >> addMultiSelectionShortcut: aShortcut do: anActionBlock [
 SBEditor >> addSingleSelectionShortcut: aShortcut do: anActionBlock [
 
 	singleSelectionShortcuts add: {aShortcut asSandblockShortcut. anActionBlock}
-]
-
-{ #category : #actions }
-SBEditor >> addToMultiSelection [
-
-	self addToMultiSelection: self selection
 ]
 
 { #category : #actions }
@@ -1285,8 +1279,9 @@ SBEditor >> pasteStatementAboveOrBelow: anAboveBoolean [
 	
 	index := adjacent owner submorphIndexOf: adjacent.
 	morph := target veryDeepCopy.
+	morph topCenter: self selection bottomCenter.
 	
-	self do: ((SBInsertCommand newFor: self selectedArtefact)
+	self do: ((adjacent parentSandblock containingArtefact ifNil: [SBInsertCommand newNonEdit] ifNotNil: [:artefact | SBInsertCommand newFor: artefact])
 		index: (anAboveBoolean
 			ifTrue: [index] ifFalse: [index + 1]);
 		container: adjacent owner;
@@ -1343,7 +1338,7 @@ SBEditor >> processShortcutList: aCollection for: anEvent ifMatched: aBlock [
 SBEditor >> promptAddArtifact [
 
 	| index |
-	index := UIManager default chooseFrom: {'Add method (T)'. 'Add class (Control+,)'}.
+	index := UIManager default chooseFrom: {'Add method (t)'. 'Add class (Control+,)'}.
 	index = 1 ifTrue: [^ self createEmptyMethod].
 	index = 2 ifTrue: [^ self createEmptyClass]
 ]
@@ -1491,7 +1486,7 @@ SBEditor >> resetState [
 { #category : #actions }
 SBEditor >> resetZoom [
 
-	scroll scale: 1 @ 1.
+	scroll scale: 1.
 	scroll viewportPosition: scroll currentPosition rounded
 ]
 
@@ -1775,12 +1770,18 @@ SBEditor >> startInputSubstituting [
 { #category : #actions }
 SBEditor >> startOrAddToMultiSelection [
 
+	self startOrAddToMultiSelection: self selection
+]
+
+{ #category : #actions }
+SBEditor >> startOrAddToMultiSelection: aBlock [
+
 	mode = #selection ifTrue: [
-		^ (multiSelection includes: self selection)
-			ifTrue: [self removeMultiSelected: self selection]
-			ifFalse: [self addToMultiSelection]].
+		^ (multiSelection includes: aBlock)
+			ifTrue: [self removeMultiSelected: aBlock]
+			ifFalse: [self addToMultiSelection: aBlock]].
 	
-	self addToMultiSelection.
+	self addToMultiSelection: aBlock.
 	self mode: #selection
 ]
 
@@ -2089,7 +2090,6 @@ SBEditor >> wrapInMessageSend: aString [
 
 	| msg |
 	self selection isExpression ifFalse: [^ self].
-	
 	msg := SBMessageSend new.
 	self do: ((SBWrapCommand newFor: self method)
 		outer: msg;
@@ -2099,10 +2099,10 @@ SBEditor >> wrapInMessageSend: aString [
 			outer
 				receiver: inner
 				selector: aString
-				arguments: (aString numArgs > 0 ifTrue: [(1 to: aString numArgs) collect: [:i | SBUnknown new]] ifFalse: [#()])];
+				arguments: (aString numArgs > 0 ifTrue: [
+					(1 to: aString numArgs) collect: [:i | SBUnknown new]] ifFalse: [#()])];
 		yourself).
-	
-	self startInput: msg at: 9e8 replacingContents: false
+	self startInput: msg at: 900000000 replacingContents: false
 ]
 
 { #category : #actions }

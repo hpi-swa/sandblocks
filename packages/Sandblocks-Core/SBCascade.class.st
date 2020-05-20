@@ -93,7 +93,7 @@ SBCascade >> messages [
 SBCascade >> printOn: aStream [
 
 	aStream nextPutAll: 'cascade to '.
-	self firstSubmorph printOn: aStream
+	self hasSubmorphs ifTrue: [self firstSubmorph printOn: aStream]
 ]
 
 { #category : #'as yet unclassified' }

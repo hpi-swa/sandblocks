@@ -113,17 +113,19 @@ SBBasicMethod >> codeActions [
 
 	^ super codeActions, {
 		(SBCodeAction
-			labeled: ('Move to {1} side' format: {self relatedClass isMeta ifTrue: ['instance'] ifFalse: ['class']})
+			labeled: ('Move to {1} side' format: {
+				(self relatedClass isMeta ifTrue: ['instance'] ifFalse: ['class'])
+			})
 			for: self
-			do: [:node | 
+			do: [:node |
 				node sandblockEditor do: ((SBMoveMethodCommand newFor: self)
 					method: self;
 					toClass: (self relatedClass isMeta ifTrue: [self relatedClass theNonMetaClass] ifFalse: [self relatedClass class]))]).
 		(SBCodeAction
 			labeled: 'Move to class ...'
 			for: self
-			do: [:node | 
-				UIManager default chooseClassOrTrait ifNotNil: [:class |  | classOrInstanceSide |
+			do: [:node |
+				UIManager default chooseClassOrTrait ifNotNil: [:class | | classOrInstanceSide |
 					(classOrInstanceSide := UIManager default chooseFrom: {'Instance Side'. 'Class Side'}) ~= 0 ifTrue: [
 						node sandblockEditor do: ((SBMoveMethodCommand newFor: self)
 							method: self;
@@ -131,7 +133,10 @@ SBBasicMethod >> codeActions [
 		(SBCodeAction
 			labeled: 'Delete method'
 			for: self
-			do: [:node | node sandblockEditor do: ((SBDeleteMethodCommand newFor: self) target: self)])
+			do: [:node |
+				node sandblockEditor do: ((SBDeleteMethodCommand newFor: self) target: self)]).
+		(SBCodeAction labeled: 'Create test' for: self do: [:node | self createTestMethod]).
+		(SBCodeAction labeled: 'Reload Method' for: self do: [:node | node reload])
 	}
 ]
 
@@ -164,6 +169,34 @@ SBBasicMethod >> contextAcceptedRepresentationAt: aNumber [
 
 	aNumber = self childSandblocks size ifTrue: [^ #isSmalltalkBlock].
 	^ #isSmalltalkName
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> createTestMethod [
+
+	| guessedClassName name testClass guessedMethodName method |
+	guessedClassName := (self relatedClass name, 'Test') asSymbol.
+	testClass := Smalltalk
+		at: guessedClassName
+		ifAbsent: [
+			name := UIManager default request: 'Test Class name?' initialAnswer: guessedClassName.
+			Smalltalk
+				at: name
+				ifAbsent: [ 
+					TestCase
+						subclass: name asSymbol
+						instanceVariableNames: #()
+						classVariableNames: #()
+						poolDictionaries: #()
+						category: self relatedClass category, '-Tests']].
+	guessedMethodName := ('test', self selector capitalized copyReplaceAll: ':' with: '') asSymbol.
+	[
+		testClass methodDictionary includesKey: guessedMethodName] whileTrue: [guessedMethodName := guessedMethodName, 'x'].
+	method := self sandblockEditor openMorphInView: (SBMethod new
+		selector: guessedMethodName arguments: #() class: testClass;
+		hasUnsavedChanges: true;
+		body: SBBlockBody empty).
+	self sandblockEditor startInput: method body statements first at: 1 replacingContents: true
 ]
 
 { #category : #'as yet unclassified' }
@@ -327,13 +360,19 @@ SBBasicMethod >> methodChanged: anEvent [
 		anEvent isModified ifTrue: [
 			SBLabel text: [
 				'FIXME: heuristic to check whether we just caused this change'].
-			^ (self sandblockEditor selection hasOwner: self) ifFalse: [self reload]]]
+			^ (self sandblockEditor selection ifNotNil: [:s | s hasOwner: self] ifNil: [false]) ifFalse: [self reload]]]
 ]
 
 { #category : #'as yet unclassified' }
 SBBasicMethod >> methodClass [
 
 	^ methodClass
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> object [
+
+	^ self compiledMethod
 ]
 
 { #category : #'as yet unclassified' }
@@ -345,10 +384,10 @@ SBBasicMethod >> outOfWorld: aWorld [
 { #category : #'as yet unclassified' }
 SBBasicMethod >> postDuplicate [
 
-	currentSelector isBinary ifTrue: [^ self shouldBeImplemented].
+	currentSelector asSymbol isBinary ifTrue: [^ self shouldBeImplemented].
 	
 	self currentSelector: 'copy', currentSelector capitalized.
-	self selector: self currentSelector arguments: self arguments.
+	self selector: self currentSelector arguments: self arguments class: self methodClass.
 	
 	super postDuplicate.
 	
@@ -399,6 +438,23 @@ SBBasicMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> savedMethodHasComments [
+
+	SBExample self: [
+		SBMethod newFor: SBMethod >> #savedMethodHasComments at: 0 @ 0] args: [{}] label: 'no comment'.
+	SBExample self: [SBMethod newFor: SBEditor >> #do: at: 0 @ 0] args: [{}] label: 'has comment'.
+	^ self methodClass methodDictionary
+		at: self selector asSymbol
+		ifPresent: [:method | | scanner |
+			scanner := Scanner new scan: method getSourceFromFile readStream.
+			[
+				scanner advance.
+				scanner tokenType = #doIt] whileFalse: [scanner currentComment ifNotNil: [^ true]].
+			false]
+		ifAbsent: [false]
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> selector [
 
 	^ self subclassResponsibility
@@ -440,15 +496,6 @@ SBBasicMethod >> toggleCollapsed [
 		disableLayout: self body visible not.
 	
 	(self body visible not and: [self isSelected not]) ifTrue: [self select]
-]
-
-{ #category : #'as yet unclassified' }
-SBBasicMethod >> tryFix: aNodeBlock ifFail: aBlock [
-
-	self sandblockEditor select: aNodeBlock.
-	aNodeBlock fixActions
-		ifNotEmpty: [:actions | self proposeCodeActions: actions for: aNodeBlock].
-	^ aNodeBlock valid ifTrue: [true] ifFalse: aBlock
 ]
 
 { #category : #'as yet unclassified' }

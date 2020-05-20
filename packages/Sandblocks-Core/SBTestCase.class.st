@@ -3,7 +3,9 @@ Class {
 	#superclass : #SBMethodSubstitution,
 	#instVars : [
 		'selectorInput',
-		'errorIndicator'
+		'errorIndicator',
+		'passIcon',
+		'reportedError'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -27,6 +29,13 @@ SBTestCase >> argumentsDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBTestCase >> artefactSaved: anArtefact [
+
+	super artefactSaved: anArtefact.
+	self runTest
+]
+
+{ #category : #'as yet unclassified' }
 SBTestCase >> childSandblocksDo: aBlock [
 
 	aBlock value: selectorInput.
@@ -44,7 +53,7 @@ SBTestCase >> clearErrors [
 { #category : #'as yet unclassified' }
 SBTestCase >> codeActions [
 
-	^ {SBCodeAction labeled: 'Run test' for: self do: [:node | node runTest]}
+	^ {SBCodeAction labeled: 'Run test' for: self do: [:node | node runTest]}, super codeActions
 ]
 
 { #category : #'as yet unclassified' }
@@ -64,7 +73,6 @@ SBTestCase >> drawnColor [
 SBTestCase >> initialize [
 
 	super initialize.
-	
 	self
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
@@ -78,13 +86,24 @@ SBTestCase >> initialize [
 				layoutInset: 5 withScalingFactor;
 				yourself);
 			addMorphBack: (SBIcon iconPlay on: #click send: #runTest to: self);
+			addMorphBack: (Morph new
+				width: 6;
+				height: 0;
+				color: Color transparent;
+				yourself);
+			addMorphBack: (passIcon := SBIcon iconCheck
+				color: Color lightGreen;
+				yourself);
 			yourself)
 ]
 
 { #category : #'as yet unclassified' }
 SBTestCase >> reportError: anError [
 
-	self sandblockEditor reportError: anError process: ((Process
+	passIcon changeIconName: #iconRemove; color: Color red.
+	
+	reportedError ifNotNil: #delete.
+	reportedError := self sandblockEditor reportError: anError process: ((Process
 				forContext: anError signalerContext copyStack
 				priority: Processor activeProcess priority)
 					shouldResumeFromDebugger: false;
@@ -97,17 +116,24 @@ SBTestCase >> reportError: anError [
 { #category : #'as yet unclassified' }
 SBTestCase >> runTest [
 
-	(self saveTryFixing: true quick: false) ifFalse: [^ self].
 	self clearErrors.
-	[(self methodClass selector: self currentSelector) runCase]
+	passIcon
+		changeIconName: #'iconClock_o';
+		color: Color yellow.
+	([(self methodClass selector: self currentSelector) runCase. true]
 		on: TestResult failure
-		do: [:err | 
+		do: [:err |
 			self reportError: err.
 			err return: false]
 		on: TestResult error
-		do: [:err | 
+		do: [:err |
 			self reportError: err.
-			err return: false]
+			err return: false]) ifTrue: [
+		passIcon
+			changeIconName: #iconCheck;
+			color: Color lightGreen.
+		reportedError ifNotNil: #delete.
+		reportedError := nil]
 ]
 
 { #category : #'as yet unclassified' }

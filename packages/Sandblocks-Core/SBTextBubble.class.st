@@ -82,6 +82,12 @@ SBTextBubble >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBTextBubble >> object [
+
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
 SBTextBubble >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |

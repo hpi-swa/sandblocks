@@ -336,7 +336,7 @@ SBBlock >> deleteCommandFor: aBlock [
 { #category : #decorators }
 SBBlock >> detachDecorator: aDecorator [
 
-	decorators remove: aDecorator.
+	decorators remove: aDecorator ifAbsent: [].
 	aDecorator detached: self.
 	self changed.
 	self updateSteppingDecorators
@@ -1173,8 +1173,8 @@ SBBlock >> toggleDecorator: aDecorator [
 { #category : #'as yet unclassified' }
 SBBlock >> tryFixIfFail: aBlock [
 
+	self sandblockEditor select: self.
 	self fixActions
-		ifEmpty: [self sandblockEditor select: self]
 		ifNotEmpty: [:actions | self proposeCodeActions: actions for: self].
 	^ self valid ifTrue: [true] ifFalse: aBlock
 ]
