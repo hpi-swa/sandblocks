@@ -13,6 +13,12 @@ SequenceableCollection >> viewFrom: aNumber to: anotherNumber [
 ]
 
 { #category : #'*Sandblocks-Core' }
+SequenceableCollection >> viewFrom: aNumber to: anotherNumber by: aThirdNumber [
+
+	^ SBCollectionView on: self from: aNumber to: anotherNumber by: aThirdNumber
+]
+
+{ #category : #'*Sandblocks-Core' }
 SequenceableCollection >> withInsert: anObject at: anIndex [
 
 	^ self copyReplaceFrom: anIndex to: anIndex - 1 with: {anObject}

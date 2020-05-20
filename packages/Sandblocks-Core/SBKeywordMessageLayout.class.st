@@ -13,38 +13,55 @@ SBKeywordMessageLayout class >> indent [
 { #category : #'as yet unclassified' }
 SBKeywordMessageLayout class >> layout: aMorph in: aRectangle [
 
-	| y rowHeight |
+	| y rowHeight keywordWidth alignKeywords |
 	(self wantsSingleColumn: aMorph) ifTrue: [^ SBVerticalLayout layout: aMorph in: aRectangle].
 	(self wantsSingleRow: aMorph) ifTrue: [^ SBHorizontalLayout layout: aMorph in: aRectangle].
 	
 	y := aRectangle top.
-	aMorph submorphs pairsDo: [:name :value | | nameExtent valueExtent |
+	alignKeywords := self wantsAlignedKeywords: aMorph.
+	keywordWidth := self maxKeywordWidth: aMorph.
+	aMorph submorphs pairsDo: [:name :value | | nameExtent valueExtent left |
 		nameExtent := name minExtent.
 		valueExtent := value minExtent.
 		rowHeight := nameExtent y max: valueExtent y.
+		left := aRectangle left + (alignKeywords ifTrue: [keywordWidth - (nameExtent x)] ifFalse: [0]).
 		
-		name layoutInBounds: (aRectangle left + aMorph cellGap @ (y + (rowHeight - nameExtent y / 2) rounded) extent: nameExtent).
-		value layoutInBounds: (aRectangle left + (aMorph cellGap * 2) + nameExtent x @ (y + (rowHeight - valueExtent y // 2)) extent: valueExtent).
+		name layoutInBounds: (left + aMorph cellGap @ (y + (rowHeight - nameExtent y / 2) rounded) extent: nameExtent).
+		value layoutInBounds: (left + (aMorph cellGap * 2) + nameExtent x @ (y + (rowHeight - valueExtent y // 2)) extent: valueExtent).
 		y := y + aMorph cellGap + (nameExtent y max: valueExtent y)]
+]
+
+{ #category : #'as yet unclassified' }
+SBKeywordMessageLayout class >> maxKeywordWidth: aMorph [
+
+	^ (aMorph submorphs viewFrom: 1 to: aMorph submorphCount by: 2) inject: 0 into: [:width :keyword | width max: keyword minExtent x]
 ]
 
 { #category : #'as yet unclassified' }
 SBKeywordMessageLayout class >> minExtentOf: aMorph in: aRectangle [
 
-	| x y |
+	| x y keywordWidth alignKeywords |
 	(self wantsSingleColumn: aMorph) ifTrue: [^ SBVerticalLayout minExtentOf: aMorph in: aRectangle].
 	(self wantsSingleRow: aMorph) ifTrue: [^ SBHorizontalLayout minExtentOf: aMorph in: aRectangle].
 	
 	x := aMorph lastSubmorph minExtent x.
 	y := 0.
+	keywordWidth := self maxKeywordWidth: aMorph.
+	alignKeywords := self wantsAlignedKeywords: aMorph.
 	aMorph submorphs pairsDo: [:name :value | | nameExtent valueExtent |
 		nameExtent := name minExtent.
 		valueExtent := value minExtent.
 		
-		x := x max: nameExtent x + valueExtent x + aMorph cellGap.
+		x := x max: (alignKeywords ifTrue: [keywordWidth] ifFalse: [nameExtent x]) + valueExtent x + aMorph cellGap.
 		y := y + aMorph cellGap + (nameExtent y max: valueExtent y)].
 	
 	^ x @ y
+]
+
+{ #category : #'as yet unclassified' }
+SBKeywordMessageLayout class >> wantsAlignedKeywords: aMorph [
+
+	^ (self maxKeywordWidth: aMorph) < 300
 ]
 
 { #category : #'as yet unclassified' }

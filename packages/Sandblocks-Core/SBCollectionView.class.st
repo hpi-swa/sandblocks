@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'collection',
 		'end',
-		'start'
+		'start',
+		'step'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -16,6 +17,17 @@ SBCollectionView class >> on: aCollection from: aNumber to: anotherNumber [
 		collection: aCollection;
 		start: aNumber;
 		end: anotherNumber;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
+SBCollectionView class >> on: aCollection from: aNumber to: anotherNumber by: aThirdNumber [
+
+	^ self new
+		collection: aCollection;
+		start: aNumber;
+		end: anotherNumber;
+		step: aThirdNumber;
 		yourself
 ]
 
@@ -40,7 +52,8 @@ SBCollectionView >> collection: anObject [
 { #category : #'as yet unclassified' }
 SBCollectionView >> do: aBlock [
 
-	collection from: start to: end do: aBlock
+	start to: end by: step do: [:index |
+		aBlock value: (collection at: index)]
 ]
 
 { #category : #'as yet unclassified' }
@@ -53,6 +66,14 @@ SBCollectionView >> end [
 SBCollectionView >> end: anObject [
 
 	end := anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBCollectionView >> initialize [
+
+	super initialize.
+	
+	step := 1
 ]
 
 { #category : #'as yet unclassified' }
@@ -77,4 +98,16 @@ SBCollectionView >> start [
 SBCollectionView >> start: anObject [
 
 	start := anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBCollectionView >> step [
+
+	^ step
+]
+
+{ #category : #'as yet unclassified' }
+SBCollectionView >> step: aNumber [
+
+	step := aNumber
 ]
