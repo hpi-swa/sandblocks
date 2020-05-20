@@ -208,9 +208,17 @@ SBBlock >> codeActions [
 			do: [:node |
 				node object
 					representationThat: #isToplevelMorph
-					do: [:type |
-						self sandblockEditor openMorphInView: type]
-					ifNone: [nil]])
+					do: [:type | self sandblockEditor openMorphInView: type]
+					ifNone: [nil]]).
+		(SBCodeAction
+			labeled: 'Change local color policy'
+			for: self
+			do: [:node |
+				(UIManager default chooseFrom: SBColorPolicy withAllSubclasses values: SBColorPolicy withAllSubclasses) ifNotNil: [:policy |
+					self
+						setProperty: #localColorPolicy toValue: policy new;
+						clearCache;
+						changed]])
 	}
 ]
 
@@ -229,7 +237,7 @@ SBBlock >> color [
 { #category : #'as yet unclassified' }
 SBBlock >> colorPolicy [
 
-	^ self sandblockEditor ifNotNil: #colorPolicy ifNil: [SBDefaultColorPolicy new]
+	^ self valueOfProperty: #localColorPolicy ifAbsent: [self parentSandblock ifNotNil: #colorPolicy ifNil: [SBDefaultColorPolicy new]]
 ]
 
 { #category : #'as yet unclassified' }

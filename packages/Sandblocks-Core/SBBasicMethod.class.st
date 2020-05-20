@@ -261,7 +261,7 @@ SBBasicMethod >> evaluationContext [
 { #category : #'as yet unclassified' }
 SBBasicMethod >> evaluationReceiver [
 
-	^ self relatedClass
+	^ self relatedClass basicNew
 ]
 
 { #category : #'as yet unclassified' }

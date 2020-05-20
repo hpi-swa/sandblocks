@@ -30,8 +30,23 @@ Class {
 		'searchInput',
 		'helpOverlay'
 	],
+	#classVars : [
+		'DefaultColorPolicy'
+	],
 	#category : #'Sandblocks-Core'
 }
+
+{ #category : #configuration }
+SBEditor class >> defaultColorPolicy [
+
+	^ DefaultColorPolicy ifNil: [DefaultColorPolicy := SBDefaultColorPolicy]
+]
+
+{ #category : #configuration }
+SBEditor class >> defaultColorPolicy: aColorPolicyClass [
+
+	DefaultColorPolicy := aColorPolicyClass
+]
 
 { #category : #'initialize-release' }
 SBEditor class >> newFor: aMethodOrClass [
@@ -846,7 +861,7 @@ SBEditor >> initialize [
 	globalShortcuts := OrderedCollection new.
 	inputShortcuts := OrderedCollection new.
 	multiSelection := OrderedCollection new.
-	colorPolicy := SBAlternatingColorPolicy new.
+	colorPolicy := self class defaultColorPolicy new.
 	compileTime := #compileOnSave.
 	
 	self
@@ -1312,7 +1327,8 @@ SBEditor >> pasteString [
 				(SBInsertCommand newFor: self selectedArtefact)
 					index: baseIndex + index - 1;
 					container: self selection containingStatement owner;
-					morph: statement asSandblock]))
+					morph: statement asSandblock])).
+	block postDuplicate
 ]
 
 { #category : #actions }
@@ -1343,6 +1359,17 @@ SBEditor >> promptAddArtifact [
 	index = 2 ifTrue: [^ self createEmptyClass]
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> promptChangeColorPolicy [
+
+	| policy |
+	policy := (UIManager default chooseFrom: SBColorPolicy withAllSubclasses values: SBColorPolicy withAllSubclasses) ifNil: [^ self].
+	self class defaultColorPolicy: policy.
+	self colorPolicy: policy new..
+	self clearCache.
+	self changed
+]
+
 { #category : #'initialize-release' }
 SBEditor >> promptChangeCompile [
 
@@ -1366,15 +1393,10 @@ SBEditor >> promptMenu [
 
 	| options |
 	options := {
-		{'Change Color Policy'. [
-			self colorPolicy: ((UIManager default chooseFrom: SBColorPolicy withAllSubclasses values: SBColorPolicy withAllSubclasses) ifNil: [^ self])
-				new;
-				changed.
-			self allMorphsDo: [:morph | morph removeProperty: #sandblockBlockColor]]}.
-		{'Change Compile Method'. [self promptChangeCompile]}.
-		{'New Class'. [self createEmptyClass]}
+		({'Change Color Policy'. [self promptChangeColorPolicy]}).
+		({'Change Compile Method'. [self promptChangeCompile]}).
+		({'New Class'. [self createEmptyClass]})
 	}.
-	
 	(UIManager default chooseFrom: (options collect: #first) values: (options collect: #second)) ifNotNil: #value
 ]
 
@@ -1716,7 +1738,7 @@ SBEditor >> setCopyBuffer: aMorphOrCollection [
 { #category : #'as yet unclassified' }
 SBEditor >> showHelper [
 
-	(helpOverlay isNil and: [self isInWorld]) ifTrue: [helpOverlay := SBHelpOverlay new target: self selection]
+	(helpOverlay isNil and: [self isInWorld and: [self selection notNil]]) ifTrue: [helpOverlay := SBHelpOverlay new target: self selection]
 ]
 
 { #category : #actions }
