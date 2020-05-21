@@ -11,7 +11,7 @@ Make sure you're running on a Squeak5.3 image. Then run:
 Metacello new
   baseline: 'Sandblocks';
   repository: 'github://tom95/Sandblocks:master/packages';
-  load.
+  load: #tutorial.
 
 SBTutorialSnippets workspace.
 ```
