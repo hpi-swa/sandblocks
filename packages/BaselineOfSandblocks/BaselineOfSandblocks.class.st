@@ -27,3 +27,10 @@ BaselineOfSandblocks >> baseline: spec [
 			group: 'tutorial' with: #('default' 'Sandblocks-Tutorial');
 			group: 'withActiveExpressions' with: #('Sandblocks-ActiveExpression' 'JumpingCubes')]
 ]
+
+{ #category : #baseline }
+BaselineOfSandblocks >> projectClass [
+	^ Smalltalk
+		at: #MetacelloCypressBaselineProject
+		ifAbsent: [super projectClass]
+]
