@@ -26,6 +26,7 @@ SBTextColorPolicy >> colorForBlock: aBlock [
 SBTextColorPolicy >> foregroundColorForBlock: aBlock [
 
 	aBlock isMessageSend ifTrue: [^ Color blue].
+	aBlock isPragma ifTrue: [^ Color green].
 	aBlock isLiteralBlock ifTrue: [^ Color red muchDarker].
 	^ Color black
 ]
@@ -95,6 +96,12 @@ SBTextColorPolicy >> symbolsForMessageSend: aBlock [
 			ifFalse: [#(nil ';')]].
 	
 	^ (parent isMessageSend and: [parent precedence < aBlock precedence]) ifTrue: [#('(' ')')] ifFalse: [#(nil nil)]
+]
+
+{ #category : #'as yet unclassified' }
+SBTextColorPolicy >> symbolsForPragma: aBlock [
+
+	^ #('<' '>')
 ]
 
 { #category : #'as yet unclassified' }

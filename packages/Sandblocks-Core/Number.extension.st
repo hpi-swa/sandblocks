@@ -11,6 +11,16 @@ Number >> adaptToEdgeInsetsAndAdd: anEdgeInsets [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Number >> asEdgeInsets [
+
+	^ SBEdgeInsets
+		left: self
+		right: self
+		top: self
+		bottom: self
+]
+
+{ #category : #'*Sandblocks-Core' }
 Number >> withScalingFactor [
 
 	^ self

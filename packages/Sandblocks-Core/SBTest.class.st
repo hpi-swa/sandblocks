@@ -1,7 +1,7 @@
 Class {
 	#name : #SBTest,
 	#superclass : #TestCase,
-	#category : #'Sandblocks-Core'
+	#category : #'Sandblocks-Core-Tests'
 }
 
 { #category : #'as yet unclassified' }

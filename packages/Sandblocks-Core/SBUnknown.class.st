@@ -19,7 +19,7 @@ SBUnknown >> acceptCharacter: char [
 	char = $( ifTrue: [^ self doWrap: [:outer :inner | outer type: #literal contents: {inner}] with: SBArray new].
 	char = $[ ifTrue: [^ self doWrap: [:outer :inner | outer statements: {inner}] with: SBBlockBody new].
 	char = $^ ifTrue: [^ self doWrap: [:outer :inner | outer expression: inner] with: SBReturn new].
-	(char = $: and: [self parentSandblock isBlockBody]) ifTrue: [ | block |
+	(char = $: and: [self parentSandblock isBlockBody and: [self parentSandblock isMethodBody not]]) ifTrue: [ | block |
 		block := self parentSandblock.
 		self parentSandblock statements size > 1 ifTrue: [
 			self sandblockEditor do: ((SBDeleteCommand newFor: self containingArtefact) target: self; shouldMergeWithNext: true)].

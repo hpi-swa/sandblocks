@@ -1,6 +1,16 @@
 Extension { #name : #Rectangle }
 
 { #category : #'*Sandblocks-Core' }
+Rectangle >> asEdgeInsets [
+
+	^ SBEdgeInsets
+		left: self left
+		right: self right
+		top: self top
+		bottom: self bottom
+]
+
+{ #category : #'*Sandblocks-Core' }
 Rectangle >> horizontal [
 
 	^ self left + self right

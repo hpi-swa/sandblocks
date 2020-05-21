@@ -5,6 +5,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBTemporaries >> addedMorph: aMorph [
+
+	super addedMorph: aMorph.
+	
+	self triggerEvent: #visibilityChanged
+]
+
+{ #category : #'as yet unclassified' }
 SBTemporaries >> childSandblocksDo: aBlock [
 
 	self submorphsDo: aBlock

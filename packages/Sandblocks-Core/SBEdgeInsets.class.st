@@ -58,6 +58,12 @@ SBEdgeInsets >> adaptToPoint: aPoint andSend: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBEdgeInsets >> asEdgeInsets [
+
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
 SBEdgeInsets >> bottom [
 
 	^ bottom

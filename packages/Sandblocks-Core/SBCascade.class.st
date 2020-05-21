@@ -17,6 +17,12 @@ SBCascade >> canDeleteChild: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBCascade >> cellGap [
+
+	^ self colorPolicy lineGap
+]
+
+{ #category : #'as yet unclassified' }
 SBCascade >> childSandblocksDo: aBlock [
 
 	self submorphsDo: aBlock

@@ -11,6 +11,16 @@ Point >> adaptToEdgeInsetsAndAdd: anEdgeInsets [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Point >> asEdgeInsets [
+
+	^ SBEdgeInsets
+		left: self x
+		right: self x
+		top: self y
+		bottom: self y
+]
+
+{ #category : #'*Sandblocks-Core' }
 Point class >> fromSide: aSymbol [
 
 	aSymbol = #left ifTrue: [^ -1 @ 0].
