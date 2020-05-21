@@ -38,6 +38,12 @@ SBCollectionView >> add: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBCollectionView >> at: aNumber [
+
+	^ collection at: start + aNumber * step - 1
+]
+
+{ #category : #'as yet unclassified' }
 SBCollectionView >> collection [
 
 	^ collection
@@ -85,7 +91,7 @@ SBCollectionView >> remove: anObject ifAbsent: aBlock [
 { #category : #'as yet unclassified' }
 SBCollectionView >> size [
 
-	^ end - start
+	^ end - start // step + 1
 ]
 
 { #category : #'as yet unclassified' }

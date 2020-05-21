@@ -75,6 +75,12 @@ SBBlockBody >> canDeleteChild: aBlock [
 	^ true
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlockBody >> cellGap [
+
+	^ self colorPolicy lineGap
+]
+
 { #category : #converting }
 SBBlockBody >> childSandblocksDo: aBlock [
 

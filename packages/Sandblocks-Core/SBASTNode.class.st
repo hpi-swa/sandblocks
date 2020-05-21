@@ -121,30 +121,18 @@ SBASTNode >> wrapInCascade [
 	cascade := SBCascade new.
 	self isMessageSend ifFalse: [^ self].
 	self assert: self isSelected.
+	self sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
 	self sandblockEditor doMultiSelection: [:selected |
-		SBCombinedCommand newWith: {
-			((SBMoveCommand newFor: self containingArtefact)
-				morph: selected first receiver;
-				container: cascade;
-				index: 1;
-				yourself).
-			((SBWrapCommand newFor: self containingArtefact)
-				outer: cascade;
-				inner: selected first;
-				wrap: [:outer :inner | outer addMorphBack: inner];
-				yourself)
-		}, (selected allButFirst collectWithIndex: [:message :index |
-			SBCombinedCommand newWith: {
-				((SBInsertCommand newFor: self containingArtefact)
-					container: cascade;
-					morph: message;
-					index: index + 2;
-					yourself).
-				((SBDeleteCommand newFor: self containingArtefact)
-					target: message receiver;
-					yourself)
-			}])].
-	self sandblockEditor select: cascade
+		(SBWrapConsecutiveCommand newFor: self containingArtefact)
+			targets: selected;
+			outer: SBCascade new;
+			wrap: [:outer :inner |
+				outer addMorphFront: inner first receiver.
+				outer addAllMorphs: inner];
+			wrapUndo: [:outer :inner |
+				inner do: [:message | message receiver: outer receiver veryDeepCopy].
+				outer removeAllMorphs]].
+	SBToggledCode comment: '' active: 0 do: {[self sandblockEditor select: cascade]}
 ]
 
 { #category : #shortcuts }

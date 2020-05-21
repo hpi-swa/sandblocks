@@ -10,12 +10,6 @@ Class {
 }
 
 { #category : #accessing }
-SBWrapCommand >> affectedMorphs [
-
-	^ {inner}
-]
-
-{ #category : #accessing }
 SBWrapCommand >> do [
 
 	inner replaceBy: outer.

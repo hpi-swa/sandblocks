@@ -2,7 +2,7 @@
 	"class" : {
 		"workspace" : "tobe 5/20/2020 10:36" },
 	"instance" : {
-		"t01movement" : "tobe 5/20/2020 13:47",
+		"t01movement" : "tobe 5/21/2020 08:53",
 		"t02deleting" : "tobe 5/20/2020 09:14",
 		"t03Swapping" : "tobe 5/20/2020 09:14",
 		"t04Jumping" : "tobe 5/20/2020 09:19",
@@ -10,4 +10,5 @@
 		"t06EditingValues" : "tobe 5/20/2020 09:40",
 		"t07Smalltalk" : "tobe 5/20/2020 09:43",
 		"t08Lists" : "tobe 5/20/2020 10:08",
-		"t09Assignments" : "tobe 5/20/2020 10:13" } }
+		"t09Assignments" : "tobe 5/20/2020 10:13",
+		"t10Cascades" : "tobe 5/21/2020 13:57" } }

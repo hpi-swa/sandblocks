@@ -33,6 +33,12 @@ SBColorPolicy >> borderWidthForBlock: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBColorPolicy >> centerAlignSymbols [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBColorPolicy >> colorForBlock: aBlock [
 
 	^ Color white
@@ -57,6 +63,24 @@ SBColorPolicy >> layoutInset [
 ]
 
 { #category : #'as yet unclassified' }
+SBColorPolicy >> layoutInsetFor: aBlock [
+
+	^ 2
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> lineGap [
+
+	^ 0
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> selectionBorderWidth [
+
+	^ 3
+]
+
+{ #category : #'as yet unclassified' }
 SBColorPolicy >> symbolsForArray: aBlock [
 
 	^ #('{}' nil)
@@ -65,9 +89,7 @@ SBColorPolicy >> symbolsForArray: aBlock [
 { #category : #'as yet unclassified' }
 SBColorPolicy >> symbolsForAssignment: aBlock [
 
-	| parent |
-	parent := aBlock parentSandblock.
-	^ (parent notNil and: [parent isMessageSend]) ifTrue: [#('(' ')')] ifFalse: [#(nil nil)]
+	^ #(nil nil)
 ]
 
 { #category : #'as yet unclassified' }

@@ -401,26 +401,26 @@ SBBlock >> drawSubmorphsOn: aCanvas [
 { #category : #'as yet unclassified' }
 SBBlock >> drawSymbolsOn: aCanvas [
 
-	| symbols fg font space |
+	| symbols fg font space y centerAlign |
+	centerAlign := self colorPolicy centerAlignSymbols.
 	symbols := self symbols.
 	space := self spaceForSymbols.
-	
 	font := self fontToUse.
 	fg := self sandblockForegroundColor.
-	
+	y := centerAlign ifTrue: [
+		((self layoutBounds height / 2) - (font height / 2)) rounded] ifFalse: [0].
 	symbols first ifNotNil: [
 		aCanvas
 			drawString: symbols first
-			at: self layoutBounds origin + (space first negated rounded @ ((self layoutBounds height / 2) - (font height / 2)) rounded)
+			at: self layoutBounds origin + (space first negated rounded @ y)
 			font: font
 			color: (fg alpha: 0.5)].
-	
 	symbols second ifNotNil: [
 		aCanvas
 			drawString: symbols second
-			at: self layoutBounds topRight + (0 @ ((self layoutBounds height / 2) - (font height / 2)) rounded)
+			at: self layoutBounds topRight + (0 @ (centerAlign ifTrue: [y] ifFalse: [self layoutBounds height - font height]))
 			font: font
-			color: (fg alpha: 0.5)].
+			color: (fg alpha: 0.5)]
 ]
 
 { #category : #colors }
@@ -512,7 +512,7 @@ SBBlock >> forwardAlarm: aSelector to: anObject [
 { #category : #'as yet unclassified' }
 SBBlock >> frameSize [
 
-	^ 3 withScalingFactor
+	^ self colorPolicy ifNotNil: [:c | c selectionBorderWidth] ifNil: [0]
 ]
 
 { #category : #'as yet unclassified' }
@@ -779,6 +779,12 @@ SBBlock >> isRepl [
 ]
 
 { #category : #testing }
+SBBlock >> isReturn [
+
+	^ false
+]
+
+{ #category : #testing }
 SBBlock >> isSandblock [
 
 	^ true
@@ -846,11 +852,11 @@ SBBlock >> layoutInset [
 
 	| space inset |
 	space := self spaceForSymbols.
-	inset := self colorPolicy layoutInset + super layoutInset.
+	inset := (self colorPolicy layoutInsetFor: self) + super layoutInset.
 	^ (space first > 0 or: [space second > 0])
 		ifTrue: [inset isPoint
-				ifTrue: [Rectangle left: space first + inset x right: inset x + space second top: inset y bottom: inset y]
-				ifFalse: [Rectangle left: space first + inset right: inset + space second top: inset bottom: inset]]
+				ifTrue: [SBEdgeInsets left: space first + inset x right: inset x + space second top: inset y bottom: inset y]
+				ifFalse: [SBEdgeInsets left: space first + inset right: inset + space second top: inset bottom: inset]]
 		ifFalse: [inset]
 ]
 

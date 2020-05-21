@@ -13,12 +13,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBReplaceConsecutiveCommand >> affectedMorphs [
-
-	^ targets, {replacerOldOwner ifNil: [replacer owner]} select: #notNil
-]
-
-{ #category : #'as yet unclassified' }
 SBReplaceConsecutiveCommand >> do [
 
 	targetOldOwner := targets first owner.

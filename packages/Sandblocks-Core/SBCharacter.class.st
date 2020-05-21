@@ -26,6 +26,12 @@ SBCharacter >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBCharacter >> symbols [
+
+	^ self colorPolicy symbolsForCharacter: self
+]
+
+{ #category : #'as yet unclassified' }
 SBCharacter >> textContents [
 
 	^ '$', self contents
