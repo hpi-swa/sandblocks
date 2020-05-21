@@ -71,6 +71,12 @@ SBEdgeInsets >> corner [
 ]
 
 { #category : #'as yet unclassified' }
+SBEdgeInsets >> horizontal [
+
+	^ left + right
+]
+
+{ #category : #'as yet unclassified' }
 SBEdgeInsets >> isRectangle [
 
 	^ true
@@ -114,4 +120,22 @@ SBEdgeInsets >> right [
 SBEdgeInsets >> top [
 
 	^ top
+]
+
+{ #category : #'as yet unclassified' }
+SBEdgeInsets >> vertical [
+
+	^ top + bottom
+]
+
+{ #category : #'as yet unclassified' }
+SBEdgeInsets >> x [
+
+	^ self horizontal
+]
+
+{ #category : #'as yet unclassified' }
+SBEdgeInsets >> y [
+
+	^ self vertical
 ]

@@ -90,6 +90,12 @@ SBToggledCode >> color [
 ]
 
 { #category : #'as yet unclassified' }
+SBToggledCode >> colorPolicy [
+
+	^ SBPlainColorPolicy new
+]
+
+{ #category : #'as yet unclassified' }
 SBToggledCode >> comment: aString active: aNumber do: aCollection [
 
 	comment contents: aString.

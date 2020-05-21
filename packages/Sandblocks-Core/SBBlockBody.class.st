@@ -179,6 +179,12 @@ SBBlockBody >> isMethodBody [
 ]
 
 { #category : #'as yet unclassified' }
+SBBlockBody >> minHeight [
+
+	^ self fontToUse height + self layoutInset y
+]
+
+{ #category : #'as yet unclassified' }
 SBBlockBody >> minimumHeight [
 
 	^ self fontToUse height + self layoutInset vertical
