@@ -2025,11 +2025,7 @@ SBEditor >> wrapAsArgument [
 { #category : #actions }
 SBEditor >> wrapInArrayType: aSymbol [
 
-	self do: ((SBWrapCommand newFor: self method)
-		outer: SBArray new;
-		inner: self selection;
-		wrap: [:outer :inner | outer type: aSymbol contents: {inner}];
-		yourself)
+	self selection wrapInArrayType: aSymbol
 ]
 
 { #category : #actions }
@@ -2050,13 +2046,7 @@ SBEditor >> wrapInAssignment [
 { #category : #actions }
 SBEditor >> wrapInBlock [
 
-	self doMultiSelection: [:statements |
-		self flag: #todo. " inner needs to support an array :/ "
-		(SBWrapCommand newFor: self method)
-			outer: SBBlockBody new;
-			inner: self selection;
-			wrap: [:outer :inner | outer statements: statements];
-			yourself]
+	self selection wrapInBlock
 ]
 
 { #category : #actions }

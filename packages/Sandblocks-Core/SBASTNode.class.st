@@ -94,23 +94,26 @@ SBASTNode >> wrapAsArgument [
 { #category : #shortcuts }
 SBASTNode >> wrapInArrayType: aSymbol [
 
-	self sandblockEditor do: ((SBWrapCommand newFor: self containingArtefact)
-		outer: SBArray new;
-		inner: self;
-		wrap: [:outer :inner | outer type: aSymbol contents: {inner}];
-		yourself)
+	self assert: self isSelected.
+	self sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
+	self sandblockEditor doMultiSelection: [:selected |
+		(SBWrapConsecutiveCommand newFor: self containingArtefact)
+			outer: SBArray new;
+			targets: selected;
+			wrap: [:outer :inner | outer type: aSymbol contents: inner];
+			yourself]
 ]
 
 { #category : #shortcuts }
 SBASTNode >> wrapInBlock [
 
 	self assert: self isSelected.
-	self sandblockEditor doMultiSelection: [:statements |
-		self flag: #todo.
-		(SBWrapCommand newFor: self containingArtefact)
+	self sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
+	self sandblockEditor doMultiSelection: [:selected |
+		(SBWrapConsecutiveCommand newFor: self containingArtefact)
 			outer: SBBlockBody new;
-			inner: self;
-			wrap: [:outer :inner | outer statements: statements];
+			targets: selected;
+			wrap: [:outer :inner | outer statements: inner];
 			yourself]
 ]
 
@@ -118,9 +121,9 @@ SBASTNode >> wrapInBlock [
 SBASTNode >> wrapInCascade [
 
 	| cascade |
-	cascade := SBCascade new.
 	self isMessageSend ifFalse: [^ self].
 	self assert: self isSelected.
+	cascade := SBCascade new.
 	self sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
 	self sandblockEditor doMultiSelection: [:selected |
 		(SBWrapConsecutiveCommand newFor: self containingArtefact)
@@ -131,8 +134,7 @@ SBASTNode >> wrapInCascade [
 				outer addAllMorphs: inner];
 			wrapUndo: [:outer :inner |
 				inner do: [:message | message receiver: outer receiver veryDeepCopy].
-				outer removeAllMorphs]].
-	SBToggledCode comment: '' active: 0 do: {[self sandblockEditor select: cascade]}
+				outer removeAllMorphs]]
 ]
 
 { #category : #shortcuts }
