@@ -37,15 +37,6 @@ SBMorphExampleCase >> childSandblocksDo: aBlock [
 	aBlock value: self caseBlock
 ]
 
-{ #category : #accessing }
-SBMorphExampleCase >> codeActions [
-
-	^ super codeActions, {
-		SBCodeAction labeled: 'Restart on save' for: self do: [:node | node status: #restartOnSave].
-		SBCodeAction labeled: 'Manual restart' for: self do: [:node | node status: #manualRestart].
-	}
-]
-
 { #category : #helper }
 SBMorphExampleCase >> evaluateFor: aMorph in: aWorld [
 
@@ -65,6 +56,12 @@ SBMorphExampleCase >> initialize [
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		cellGap: 4 withScalingFactor
+]
+
+{ #category : #'as yet unclassified' }
+SBMorphExampleCase >> manualRestart [
+
+	self status: #manualRestart
 ]
 
 { #category : #initialization }
@@ -91,6 +88,12 @@ SBMorphExampleCase >> promptChangeStatus [
 	self sandblockEditor
 		select: self;
 		promptCodeAction
+]
+
+{ #category : #'as yet unclassified' }
+SBMorphExampleCase >> restartOnSave [
+
+	self status: #restartOnSave
 ]
 
 { #category : #callbacks }

@@ -101,12 +101,6 @@ SBMorphExample >> clearErrors [
 		errorIcon := nil]
 ]
 
-{ #category : #accessing }
-SBMorphExample >> codeActions [
-
-	^ {SBCodeAction labeled: 'Toggle stepping' for: self do: #toggleStepping}, super codeActions
-]
-
 { #category : #errors }
 SBMorphExample >> displayError: anError [
 
@@ -257,11 +251,10 @@ SBMorphExample >> setUpMorph [
 
 { #category : #callbacks }
 SBMorphExample >> toggleStepping [
+	<action>
 
 	view submorphsDo: [:morph |
-		morph isStepping
-			ifFalse: [morph startStepping]
-			ifTrue: [morph stopStepping]]
+		morph isStepping ifFalse: [morph startStepping] ifTrue: [morph stopStepping]]
 ]
 
 { #category : #errors }

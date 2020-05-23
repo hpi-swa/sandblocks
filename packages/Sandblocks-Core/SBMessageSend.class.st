@@ -39,6 +39,23 @@ SBMessageSend >> browse [
 ]
 
 { #category : #'as yet unclassified' }
+SBMessageSend >> browseAllImplementors [
+	<action>
+
+	super browseImplementors
+]
+
+{ #category : #'as yet unclassified' }
+SBMessageSend >> browseImplementors [
+	<action>
+
+	self actualReceiver guessClassExpensive
+		ifNotNil: [:class |
+			self sandblockEditor openCompiledMethod: class >> self selector asSymbol]
+		ifNil: [super browseImplementors]
+]
+
+{ #category : #'as yet unclassified' }
 SBMessageSend >> canSwap [
 
 	^ true
@@ -54,16 +71,16 @@ SBMessageSend >> childSandblocksDo: aBlock [
 { #category : #accessing }
 SBMessageSend >> codeActions [
 
-	^ super codeActions,
-	
-	(self signature isUnary ifTrue: [{SBCodeAction labeled: 'Use as variable' for: self do: #useAsVariable}] ifFalse: [#()]),
-	
-	(SBSubstitution allSubclasses
+	^ super codeActions, (SBSubstitution allSubclasses
 		select: [:substition | substition matches: self]
-		thenCollect: [:substitution | SBCodeAction labeled: 'Convert to ', substitution name for: self do: [:node |
-			node sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-				target: node;
-				replacer: ((substitution newFrom: self) pc: self pc))]])
+		thenCollect: [:substitution |
+			SBCodeAction
+				labeled: 'Convert to ', substitution name
+				for: self
+				do: [:node |
+					node sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+						target: node;
+						replacer: ((substitution newFrom: self) pc: self pc))]])
 ]
 
 { #category : #'as yet unclassified' }
@@ -181,6 +198,12 @@ SBMessageSend >> isMessageSend [
 SBMessageSend >> isSendToSelf [
 
 	^ self receiver notNil and: [self receiver isName and: [self receiver isReserved] and: [self receiver contents = 'self']]
+]
+
+{ #category : #'as yet unclassified' }
+SBMessageSend >> isUnary [
+
+	^ self signature isUnary
 ]
 
 { #category : #'as yet unclassified' }
@@ -354,6 +377,8 @@ SBMessageSend >> updateSuggestions [
 
 { #category : #accessing }
 SBMessageSend >> useAsVariable [
+	<action>
+	<actionValidIf: #isUnary>
 
 	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
 		target: self;

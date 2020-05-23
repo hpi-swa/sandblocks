@@ -110,38 +110,6 @@ SBBasicMethod >> cacheType: aClass for: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBBasicMethod >> codeActions [
-
-	^ super codeActions, {
-		(SBCodeAction
-			labeled: ('Move to {1} side' format: {
-				(self relatedClass isMeta ifTrue: ['instance'] ifFalse: ['class'])
-			})
-			for: self
-			do: [:node |
-				node sandblockEditor do: ((SBMoveMethodCommand newFor: self)
-					method: self;
-					toClass: (self relatedClass isMeta ifTrue: [self relatedClass theNonMetaClass] ifFalse: [self relatedClass class]))]).
-		(SBCodeAction
-			labeled: 'Move to class ...'
-			for: self
-			do: [:node |
-				UIManager default chooseClassOrTrait ifNotNil: [:class | | classOrInstanceSide |
-					(classOrInstanceSide := UIManager default chooseFrom: {'Instance Side'. 'Class Side'}) ~= 0 ifTrue: [
-						node sandblockEditor do: ((SBMoveMethodCommand newFor: self)
-							method: self;
-							toClass: (classOrInstanceSide = 2 ifTrue: [class class] ifFalse: [class]))]]]).
-		(SBCodeAction
-			labeled: 'Delete method'
-			for: self
-			do: [:node |
-				node sandblockEditor do: ((SBDeleteMethodCommand newFor: self) target: self)]).
-		(SBCodeAction labeled: 'Create test' for: self do: [:node | self createTestMethod]).
-		(SBCodeAction labeled: 'Reload Method' for: self do: [:node | node reload])
-	}
-]
-
-{ #category : #'as yet unclassified' }
 SBBasicMethod >> collapsed: aBoolean [
 
 	self body visible not = aBoolean ifTrue: [^ self].
@@ -236,6 +204,13 @@ SBBasicMethod >> currentTextMorph [
 SBBasicMethod >> declarations [
 
 	^ self arguments, self instanceVariables
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> deleteMethod [
+	<action>
+
+	^ self sandblockEditor do: ((SBDeleteMethodCommand newFor: self) target: self)
 ]
 
 { #category : #'as yet unclassified' }
@@ -351,9 +326,21 @@ SBBasicMethod >> isClassSide [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> isClassSideMethod [
+
+	^ self relatedClass isMeta
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> isCollapsed [
 
 	^ self body visible not
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> isInstanceSideMethod [
+
+	^ self isClassSideMethod not
 ]
 
 { #category : #'as yet unclassified' }
@@ -384,6 +371,37 @@ SBBasicMethod >> methodChanged: anEvent [
 SBBasicMethod >> methodClass [
 
 	^ methodClass
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> moveToClass [
+	<action>
+
+	^ UIManager default chooseClassOrTrait ifNotNil: [:class | | classOrInstanceSide |
+		(classOrInstanceSide := UIManager default chooseFrom: {'Instance Side'. 'Class Side'}) ~= 0 ifTrue: [
+			self sandblockEditor do: ((SBMoveMethodCommand newFor: self)
+				method: self;
+				toClass: (classOrInstanceSide = 2 ifTrue: [class class] ifFalse: [class]))]]
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> moveToClassSide [
+	<action>
+	<actionValidIf: #isInstanceSideMethod>
+
+	self sandblockEditor do: ((SBMoveMethodCommand newFor: self)
+		method: self;
+		toClass: self relatedClass class)
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> moveToInstanceSide [
+	<action>
+	<actionValidIf: #isClassSideMethod>
+
+	self sandblockEditor do: ((SBMoveMethodCommand newFor: self)
+		method: self;
+		toClass: self relatedClass theNonMetaClass)
 ]
 
 { #category : #'as yet unclassified' }

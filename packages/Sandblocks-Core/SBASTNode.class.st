@@ -77,20 +77,6 @@ SBASTNode >> changeToUnknown [
 ]
 
 { #category : #'as yet unclassified' }
-SBASTNode >> codeActions [
-
-	^ super codeActions, (self containingStatement = self
-		ifTrue: [
-			{
-				(SBCodeAction
-					labeled: 'Unpack as statements'
-					for: self
-					do: [:node | self unpackAsStatements])
-			}]
-		ifFalse: [#()])
-]
-
-{ #category : #'as yet unclassified' }
 SBASTNode >> contextAcceptedRepresentationAt: aNumber [
 
 	^ #isSmalltalkExpression

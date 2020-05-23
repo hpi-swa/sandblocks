@@ -96,15 +96,6 @@ SBExample >> click: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBExample >> codeActions [
-
-	^ super codeActions, {
-		(SBCodeAction labeled: 'Debug Example' for: self do: [:node | node debug]).
-		(SBCodeAction labeled: 'Show reachability' for: self do: [:node | node showReachability])
-	}
-]
-
-{ #category : #'as yet unclassified' }
 SBExample >> collectTypeInfo [
 
 	| arguments receiver selector |
@@ -125,12 +116,13 @@ SBExample >> currentSelf [
 
 { #category : #'as yet unclassified' }
 SBExample >> debug [
+	<action>
 
 	| process |
 	process := Process
 		forBlock: [self evaluate]
-		runUntil: [:context | context method == self containingArtefact compiledMethod].
-	
+		runUntil: [:context |
+			context method == self containingArtefact compiledMethod].
 	self sandblockEditor
 		reportError: process suspendedContext process: process;
 		focusErrors
@@ -328,6 +320,7 @@ SBExample >> sendStartNotification [
 
 { #category : #'as yet unclassified' }
 SBExample >> showReachability [
+	<action>
 
 	| policy |
 	policy := SBReachabilityColorPolicy new.

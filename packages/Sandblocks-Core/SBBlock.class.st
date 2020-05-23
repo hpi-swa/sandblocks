@@ -138,6 +138,17 @@ SBBlock >> canSwap [
 ]
 
 { #category : #'as yet unclassified' }
+SBBlock >> changeLocalColorPolicy [
+	<action>
+
+	^ (UIManager default chooseFrom: SBColorPolicy withAllSubclasses values: SBColorPolicy withAllSubclasses) ifNotNil: [:policy |
+		self
+			setProperty: #localColorPolicy toValue: policy new;
+			clearCache;
+			changed]
+]
+
+{ #category : #'as yet unclassified' }
 SBBlock >> childIndex [
 
 	^ self parentSandblock childSandblocks indexOf: self
@@ -188,41 +199,6 @@ SBBlock >> closestAdjacentFrom: mySide to: theirSide [
 		ifNotEmpty: [
 			candidates fold: [:a :b |
 				((a perform: theirSide) squaredDistanceTo: myPoint) < ((b perform: theirSide) squaredDistanceTo: myPoint) ifTrue: [a] ifFalse: [b]]]
-]
-
-{ #category : #accessing }
-SBBlock >> codeActions [
-
-	^ {
-		(SBCodeAction
-			labeled: 'Represent as ...'
-			for: self
-			do: [:node |
-				node object
-					representationThat: self parentSandblock acceptedRepresentation
-					do: [:type |
-						self sandblockEditor do: (SBReplaceCommand newNonEdit
-							target: self;
-							replacer: type)]
-					ifNone: [nil]]).
-		(SBCodeAction
-			labeled: 'Explore as ...'
-			for: self
-			do: [:node |
-				node object
-					representationThat: #isToplevelMorph
-					do: [:type | self sandblockEditor openMorphInView: type]
-					ifNone: [nil]]).
-		(SBCodeAction
-			labeled: 'Change local color policy'
-			for: self
-			do: [:node |
-				(UIManager default chooseFrom: SBColorPolicy withAllSubclasses values: SBColorPolicy withAllSubclasses) ifNotNil: [:policy |
-					self
-						setProperty: #localColorPolicy toValue: policy new;
-						clearCache;
-						changed]])
-	}
 ]
 
 { #category : #testing }
@@ -545,6 +521,15 @@ SBBlock >> evaluateExpression [
 SBBlock >> evaluateWith: aRequestor for: aContext [
 
 	^ Compiler new evaluate: self sourceString readStream in: aContext to: (aContext ifNotNil: #receiver ifNil: [self containingArtefact relatedClass]) notifying: aRequestor ifFail: nil
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> exploreAs [
+
+	^ self object
+		representationThat: #isToplevelMorph
+		do: [:type | self sandblockEditor openMorphInView: type]
+		ifNone: [nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -1098,6 +1083,12 @@ SBBlock >> noteNewOwner: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBBlock >> object [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
 SBBlock >> outOfWorld: aWorld [
 
 	super outOfWorld: aWorld.
@@ -1289,6 +1280,19 @@ SBBlock >> replaceWithCopyBuffer [
 			target: self;
 			replacer: new).
 		new postDuplicate]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> representAs [
+	<action>
+
+	^ self object
+		representationThat: self parentSandblock acceptedRepresentation
+		do: [:type |
+			self sandblockEditor do: (SBReplaceCommand newNonEdit
+				target: self;
+				replacer: type)]
+		ifNone: [nil]
 ]
 
 { #category : #'as yet unclassified' }

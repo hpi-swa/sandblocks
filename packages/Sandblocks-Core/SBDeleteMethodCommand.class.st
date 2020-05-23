@@ -10,9 +10,11 @@ Class {
 { #category : #'as yet unclassified' }
 SBDeleteMethodCommand >> do [
 
+	| ret |
+	ret := super do.
 	oldSource := (target currentClass >> target currentSelector) getSourceFromFile.
 	target currentClass removeSelector: target currentSelector.
-	^ super do
+	^ ret
 ]
 
 { #category : #'as yet unclassified' }

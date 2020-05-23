@@ -51,12 +51,6 @@ SBTestCase >> clearErrors [
 ]
 
 { #category : #'as yet unclassified' }
-SBTestCase >> codeActions [
-
-	^ {SBCodeAction labeled: 'Run test' for: self do: [:node | node runTest]}, super codeActions
-]
-
-{ #category : #'as yet unclassified' }
 SBTestCase >> currentSelector: aString [
 
 	selectorInput contents: aString.
@@ -115,6 +109,7 @@ SBTestCase >> reportError: anError [
 
 { #category : #'as yet unclassified' }
 SBTestCase >> runTest [
+	<action>
 
 	self clearErrors.
 	passIcon

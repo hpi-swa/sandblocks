@@ -83,33 +83,32 @@ SBClass >> classVariables [
 ]
 
 { #category : #'as yet unclassified' }
-SBClass >> codeActions [
-
-	^ super codeActions, {
-		(SBCodeAction
-			labeled: 'Add initialize'
-			for: self
-			do: [:node | 
-				node sandblockEditor openMorphInView: (SBMethod new
-					selector: 'initialize' arguments: #() class: node shownClass;
-					hasUnsavedChanges: true;
-					body: (SBBlockBody new statements: {(SBMessageSend new receiver: (SBName contents: 'super') selector: 'initialize' arguments: #())}))]).
-		(SBCodeAction
-			labeled: 'Subclass'
-			for: self
-			do: [:node | 
-				node sandblockEditor openMorphInView: (SBClass new
-					hasUnsavedChanges: true;
-					category: self category;
-					superClassName: className contents;
-					yourself)])
-	}
-]
-
-{ #category : #'as yet unclassified' }
 SBClass >> containingArtefact [
 
 	^ self
+]
+
+{ #category : #'as yet unclassified' }
+SBClass >> createInitialize [
+	<action>
+
+	self sandblockEditor openMorphInView: (SBMethod new
+		selector: 'initialize' arguments: #() class: self shownClass;
+		hasUnsavedChanges: true;
+		body: (SBBlockBody new statements: {
+			(SBMessageSend new receiver: (SBName contents: 'super') selector: 'initialize' arguments: #())
+		}))
+]
+
+{ #category : #'as yet unclassified' }
+SBClass >> createSubclass [
+	<action>
+
+	self sandblockEditor openMorphInView: (SBClass new
+		hasUnsavedChanges: true;
+		category: self category;
+		superClassName: className contents;
+		yourself)
 ]
 
 { #category : #'as yet unclassified' }

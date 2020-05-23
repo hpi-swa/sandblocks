@@ -9,6 +9,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStateMachineState >> addEnterAction [
+
+	self addUponEnter: SBBlockBody empty
+]
+
+{ #category : #'as yet unclassified' }
+SBStateMachineState >> addLeaveAction [
+
+	self addUponLeave: SBBlockBody empty
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachineState >> addUponEnter: aBlock [
 
 	self addMorphBack: (SBRow new
@@ -35,21 +47,13 @@ SBStateMachineState >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBStateMachineState >> codeActions [
+SBStateMachineState >> connectTo [
 
 	| states index |
-	^ {
-		(SBCodeAction
-			labeled: 'Connect ...'
-			for: self
-			do: [:node | 
-				states := self owner states collect: #name.
-				index := UIManager default chooseFrom: states.
-				index >= 0 ifTrue: [self owner connect: self name to: (states values at: index) if: SBBlockBody empty]]).
-		(SBCodeAction labeled: 'Add Enter' for: self do: [:node | node addUponEnter: SBBlockBody empty]).
-		(SBCodeAction labeled: 'Add Leave' for: self do: [:node | node addUponLeave: SBBlockBody empty]).
-		(SBCodeAction labeled: 'Set Initial' for: self do: [:node | node owner initialState: self])
-	}
+	states := self owner states collect: #name.
+	index := UIManager default chooseFrom: states.
+	index > 0 ifTrue: [
+		self owner connect: self name to: (states values at: index) if: SBBlockBody empty]
 ]
 
 { #category : #'as yet unclassified' }
@@ -82,6 +86,12 @@ SBStateMachineState >> name: aString [
 SBStateMachineState >> prefix [
 
 	^ self owner initialState = self ifTrue: ['* '] ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBStateMachineState >> setAsInitialState [
+
+	self parentSandblock initialState: self
 ]
 
 { #category : #'as yet unclassified' }

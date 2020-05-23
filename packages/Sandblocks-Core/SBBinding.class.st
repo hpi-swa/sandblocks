@@ -12,18 +12,6 @@ SBBinding >> browse [
 ]
 
 { #category : #'as yet unclassified' }
-SBBinding >> codeActions [
-
-	^ super codeActions, {
-		SBCodeAction labeled: 'Use as message send' for: self block do: [:node |
-			node sandblockEditor do: ((SBReplaceCommand newFor: node containingArtefact)
-				target: node;
-				replacer: (SBMessageSend new receiver: (SBName contents: 'self') selector: node contents asSymbol);
-				yourself)]
-	}
-]
-
-{ #category : #'as yet unclassified' }
 SBBinding >> contentsChanged [
 
 	(self contents = 'true' or: [self contents = 'false'])
@@ -93,6 +81,16 @@ SBBinding >> resolveBinding [
 SBBinding >> symbolsFor: aColorPolicy [
 
 	^ aColorPolicy symbolsForBinding: self block
+]
+
+{ #category : #'as yet unclassified' }
+SBBinding >> useAsMessageSend [
+	<action>
+
+	^ self block sandblockEditor do: ((SBReplaceCommand newFor: self block containingArtefact)
+		target: self block;
+		replacer: (SBMessageSend new receiver: (SBName contents: 'self') selector: self block contents asSymbol);
+		yourself)
 ]
 
 { #category : #'as yet unclassified' }

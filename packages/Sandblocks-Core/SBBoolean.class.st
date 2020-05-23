@@ -5,12 +5,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBBoolean >> codeActions [
-
-	^ {(SBCodeAction labeled: 'Toggle' for: self block do: [:node | node behavior toggle])}
-]
-
-{ #category : #'as yet unclassified' }
 SBBoolean >> contentsChanged [
 
 	(self contents = 'true' or: [self contents = 'false'])
@@ -56,6 +50,7 @@ SBBoolean >> symbolsFor: aColorPolicy [
 
 { #category : #'as yet unclassified' }
 SBBoolean >> toggle [
+	<action>
 
 	self block sandblockEditor do: ((SBMutatePropertyCommand newFor: self block containingArtefact)
 		target: self block;

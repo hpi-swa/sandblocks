@@ -57,6 +57,7 @@ SBWatch >> childSandblocksDo: aBlock [
 
 { #category : #'as yet unclassified' }
 SBWatch >> chooseViewMode [
+	<action>
 
 	display promptChangeDisplay
 ]
@@ -65,16 +66,6 @@ SBWatch >> chooseViewMode [
 SBWatch >> click: anEvent [
 
 	super click: anEvent
-]
-
-{ #category : #'as yet unclassified' }
-SBWatch >> codeActions [
-
-	^ {
-		SBCodeAction labeled: 'Change View Mode' for: self do: #chooseViewMode.
-		SBCodeAction labeled: 'Explore Value' for: self do: #exploreLastValue.
-		SBCodeAction labeled: 'Store as Example' for: self do: #storeAsExample.
-	}, super codeActions
 ]
 
 { #category : #'as yet unclassified' }
@@ -106,6 +97,7 @@ SBWatch >> exampleStarting: anExample [
 
 { #category : #'as yet unclassified' }
 SBWatch >> exploreLastValue [
+	<action>
 
 	display exploreLastValue
 ]
@@ -203,6 +195,7 @@ SBWatch >> reportValue: anObject [
 
 { #category : #'as yet unclassified' }
 SBWatch >> storeAsExample [
+	<action>
 
 	display storeAsExample
 ]

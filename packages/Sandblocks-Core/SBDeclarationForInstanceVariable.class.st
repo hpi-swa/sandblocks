@@ -18,26 +18,24 @@ SBDeclarationForInstanceVariable >> browse [
 ]
 
 { #category : #'as yet unclassified' }
-SBDeclarationForInstanceVariable >> codeActions [
+SBDeclarationForInstanceVariable >> defineGetterSetter [
+	<action>
 
-	^ super codeActions, {
-		(SBCodeAction
-			labeled: 'Define getter/setter'
-			for: self block
-			do: [:node | 
-				node sandblockEditor openMorphInView: (SBMethod new
-					hasUnsavedChanges: true;
-					 selector: node contents asSymbol arguments: #() class: node containingArtefact shownClass;
-					 body: (SBBlockBody new statements: {(SBReturn new expression: (SBName contents: node contents))})).
-				node sandblockEditor openMorphInView: (SBMethod new
-						hasUnsavedChanges: true;
-						selector: node contents asSymbol asSimpleSetter
-						arguments: {(SBName contents: 'anObject')}
-						class: node containingArtefact shownClass;
-					 body: (SBBlockBody new statements: {
-						(SBAssignment new binding: (SBName contents: node contents) value: (SBName contents: 'anObject'))
-					}))])
-	}
+	self block sandblockEditor
+		openMorphInView: (SBMethod new
+			hasUnsavedChanges: true;
+			selector: self contents asSymbol arguments: #() class: self block containingArtefact shownClass;
+			body: (SBBlockBody new statements: {
+				(SBReturn new expression: (SBName contents: self contents))
+			}));
+		openMorphInView: (SBMethod new
+			hasUnsavedChanges: true;
+			selector: self contents asSymbol asSimpleSetter
+				arguments: {(SBName contents: 'anObject')}
+				class: self block containingArtefact shownClass;
+			body: (SBBlockBody new statements: {
+				(SBAssignment new binding: (SBName contents: self contents) value: (SBName contents: 'anObject'))
+			}))
 ]
 
 { #category : #'as yet unclassified' }

@@ -43,23 +43,31 @@ SBArray >> changeTypeTo: aSymbol [
 		value: aSymbol)
 ]
 
+{ #category : #'as yet unclassified' }
+SBArray >> changeTypeToByte [
+	<action>
+
+	self changeTypeTo: #byte
+]
+
+{ #category : #'as yet unclassified' }
+SBArray >> changeTypeToDynamic [
+	<action>
+	
+	self changeTypeTo: #dynamic
+]
+
+{ #category : #'as yet unclassified' }
+SBArray >> changeTypeToLiteral [
+	<action>
+	
+	self changeTypeTo: #literal
+]
+
 { #category : #converting }
 SBArray >> childSandblocksDo: aBlock [
 
 	self submorphsDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
-SBArray >> codeActions [
-
-	^ super codeActions, {
-		SBCodeAction
-			labeled: 'Change to dynamic array' for: self do: [:node | node changeTypeTo: #dynamic].
-		SBCodeAction
-			labeled: 'Change to byte array' for: self do: [:node | node changeTypeTo: #byte].
-		SBCodeAction
-			labeled: 'Change to literal array' for: self do: [:node | node changeTypeTo: #literal].
-	}
 ]
 
 { #category : #'as yet unclassified' }

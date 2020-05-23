@@ -21,12 +21,6 @@ SBNameBehavior >> block [
 ]
 
 { #category : #'as yet unclassified' }
-SBNameBehavior >> codeActions [
-
-	^ #()
-]
-
-{ #category : #'as yet unclassified' }
 SBNameBehavior >> contents [
 
 	^ self block contents
