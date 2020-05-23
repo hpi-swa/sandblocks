@@ -73,12 +73,6 @@ SBHalt >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBHalt >> textContents [
-
-	^ 'halt'
-]
-
-{ #category : #'as yet unclassified' }
 SBHalt >> toggleActive [
 
 	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)

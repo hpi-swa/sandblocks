@@ -19,6 +19,7 @@ SBDeclarationForLocalVariable >> attached: aBlock [
 
 { #category : #'as yet unclassified' }
 SBDeclarationForLocalVariable >> browse [
+	<action>
 
 	self binding value browse
 ]

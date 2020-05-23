@@ -35,6 +35,18 @@ SBShortcut >> character: aCharacter [
 ]
 
 { #category : #'as yet unclassified' }
+SBShortcut >> commandKeyPressed [
+
+	^ command
+]
+
+{ #category : #'as yet unclassified' }
+SBShortcut >> controlKeyPressed [
+
+	^ ctrl
+]
+
+{ #category : #'as yet unclassified' }
 SBShortcut >> displayString [
 
 	SBExample self: [$p asSandblockShortcut] args: [{}] label: 'p'.
@@ -54,11 +66,17 @@ SBShortcut >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBShortcut >> keyCharacter [
+
+	^ character
+]
+
+{ #category : #'as yet unclassified' }
 SBShortcut >> matchesEvent: anEvent [
 
 	^ anEvent keyCharacter = character
-		"and: [ctrl = anEvent controlKeyPressed]"
-		and: [command = (anEvent commandKeyPressed or: [anEvent controlKeyPressed])]
+		and: [
+			command = (anEvent commandKeyPressed or: [anEvent controlKeyPressed])]
 		and: [shift not or: [anEvent shiftPressed]]
 ]
 
@@ -81,6 +99,12 @@ SBShortcut >> printOn: aStream [
 	shift ifTrue: [aStream nextPutAll: 'shift+'].
 	aStream nextPutAll: character printString.
 	aStream nextPut: $)
+]
+
+{ #category : #'as yet unclassified' }
+SBShortcut >> shiftPressed [
+
+	^ shift
 ]
 
 { #category : #'as yet unclassified' }

@@ -31,6 +31,7 @@ SBExplorer >> acceptedRepresentation [
 
 { #category : #'as yet unclassified' }
 SBExplorer >> browse [
+	<action>
 
 	self object class browse
 ]
@@ -215,6 +216,7 @@ SBExplorer >> startInputAt: aNumber replacingContents: aBoolean [
 
 { #category : #'as yet unclassified' }
 SBExplorer >> toggleCollapsed [
+	<action>
 
 	| caption |
 	caption := self firstSubmorph.

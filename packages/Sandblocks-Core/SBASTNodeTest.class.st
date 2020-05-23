@@ -145,7 +145,9 @@ SBASTNodeTest >> testWrapInCascadeMultiSelection [
 	editor select: selection.
 	selection wrapInCascade.
 	self assert: block statements first isCascade.
-	self assert: block statements first messages first = selection
+	self assert: block statements first messages first = selection.
+	self assert: block statements first messages first receiver isNil.
+	self assert: block statements first messages second receiver isNil
 ]
 
 { #category : #'as yet unclassified' }

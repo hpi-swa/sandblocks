@@ -12,6 +12,7 @@ SBDeclarationForInstanceVariable >> asSuggestionItem [
 
 { #category : #'as yet unclassified' }
 SBDeclarationForInstanceVariable >> browse [
+	<action>
 
 	self systemNavigation browseAllAccessesTo: self contents from: self block containingArtefact shownClass
 ]

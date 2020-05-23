@@ -98,6 +98,7 @@ SBBasicMethod >> body: aBlock [
 
 { #category : #'as yet unclassified' }
 SBBasicMethod >> browse [
+	<action>
 
 	Browser newOnClass: self methodClass selector: self selector
 ]
@@ -143,9 +144,9 @@ SBBasicMethod >> codeActions [
 { #category : #'as yet unclassified' }
 SBBasicMethod >> collapsed: aBoolean [
 
-	body visible not = aBoolean ifTrue: [^ self].
+	self body visible not = aBoolean ifTrue: [^ self].
 	
-	body
+	self body
 		visible: aBoolean not;
 		disableLayout: aBoolean.
 	
@@ -173,6 +174,7 @@ SBBasicMethod >> contextAcceptedRepresentationAt: aNumber [
 
 { #category : #'as yet unclassified' }
 SBBasicMethod >> createTestMethod [
+	<action>
 
 	| guessedClassName name testClass guessedMethodName method |
 	guessedClassName := (self relatedClass name, 'Test') asSymbol.
@@ -301,6 +303,21 @@ SBBasicMethod >> insertCommandRequest: anAfterBoolean near: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> insertStatementAboveOrBelow: anAboveBoolean [
+
+	| statement |
+	statement := SBUnknown new.
+	self sandblockEditor
+		do: ((SBInsertCommand newFor: self)
+			index: (anAboveBoolean ifTrue: [2] ifFalse: [self body submorphCount + 1]);
+			container: self body;
+			morph: statement;
+			shouldMergeWithNext: true;
+			yourself);
+		startInput: statement at: 1 replacingContents: false
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> instanceVariables [
 
 	| editor |
@@ -360,7 +377,7 @@ SBBasicMethod >> methodChanged: anEvent [
 		anEvent isModified ifTrue: [
 			SBLabel text: [
 				'FIXME: heuristic to check whether we just caused this change'].
-			^ (self sandblockEditor selection ifNotNil: [:s | s hasOwner: self] ifNil: [false]) ifFalse: [self reload]]]
+			^ (self sandblockEditor selection ifNotNil: [:s | s hasOwner: self] ifNil: [false]) ifFalse: [self reloadMethod]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -373,6 +390,13 @@ SBBasicMethod >> methodClass [
 SBBasicMethod >> object [
 
 	^ self compiledMethod
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> openClassDefinition [
+	<action>
+	
+	self sandblockEditor open: self relatedClass
 ]
 
 { #category : #'as yet unclassified' }
@@ -410,7 +434,8 @@ SBBasicMethod >> relatedClass [
 ]
 
 { #category : #'as yet unclassified' }
-SBBasicMethod >> reload [
+SBBasicMethod >> reloadMethod [
+	<action>
 
 	self sandblockEditor select: (self replaceBy: (self compiledMethod asSandblock position: self position))
 ]

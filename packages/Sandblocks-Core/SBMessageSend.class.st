@@ -225,6 +225,14 @@ SBMessageSend >> moveCursorTo: aNumber [
 	signature moveCursorTo: aNumber
 ]
 
+{ #category : #'as yet unclassified' }
+SBMessageSend >> noteNewOwner: aMorph [
+
+	super noteNewOwner: aMorph.
+	
+	self isInCascade ifTrue: [self receiver: nil]
+]
+
 { #category : #accessing }
 SBMessageSend >> pc [
 
@@ -333,12 +341,6 @@ SBMessageSend >> stopEditing: aCommand [
 SBMessageSend >> symbols [
 
 	^ self colorPolicy symbolsForMessageSend: self
-]
-
-{ #category : #'as yet unclassified' }
-SBMessageSend >> textContents [
-
-	^ self selector
 ]
 
 { #category : #'as yet unclassified' }

@@ -25,7 +25,19 @@ SBBlock >> acceptDroppingMorph: aMorph event: anEvent [
 SBBlock >> acceptedRepresentation [
 	" return what representations may replace you "
 
-	^ nil
+	^ #()
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> actions [
+
+	^ Array streamContents: [:stream |
+		self class withAllSuperclassesDo: [:class |
+			Pragma
+				withPragmasIn: class
+				do: [:pragma |
+					(#(#action #multiSelectAction #inputAction) includes: pragma keyword) ifTrue: [stream nextPut: pragma]].
+			SBBlock = class ifTrue: [^ stream contents]]]
 ]
 
 { #category : #testing }
@@ -33,6 +45,19 @@ SBBlock >> activeMorph [
 	" provides the opportunity to advertise a different morph that self to be considered as the current holder of focus "
 
 	^ self
+]
+
+{ #category : #actions }
+SBBlock >> addElement [
+	<action>
+
+	| cmd |
+	cmd := (self insertCommandRequest: true near: (self childSandblocks ifNotEmpty: #last ifEmpty: [nil])) ifNil: [^ self].
+	
+	self sandblockEditor do: cmd.
+	
+	cmd shouldMergeWithNext ifTrue: [
+		self sandblockEditor startInput: self sandblockEditor selection at: 0 replacingContents: false]
 ]
 
 { #category : #accessing }
@@ -88,28 +113,6 @@ SBBlock >> bindingFor: aString class: aClass ifPresent: aBlock [
 SBBlock >> browse [
 	" you were asked to be browsed. you may ignore this "
 	
-]
-
-{ #category : #'as yet unclassified' }
-SBBlock >> browseImplementors [
-
-	| list |
-	self selector ifNotNil: [:sel |
-		list := self systemNavigation allImplementorsOf: sel asSymbol.
-		list size = 1
-			ifTrue: [self sandblockEditor open: list first compiledMethod]
-			ifFalse: [self sandblockEditor openMorphInView: (SBCodeAccordion newFor: (list collect: #compiledMethod))]]
-]
-
-{ #category : #'as yet unclassified' }
-SBBlock >> browseSenders [
-
-	self selector ifNotNil: [:sel | | calls container |
-		calls := self systemNavigation allCallsOn: sel asSymbol.
-		container := SBCodeAccordion new.
-		calls do: [:call |
-			container  addMorphBack: (SBCodeLens forMethod: call compiledMethod selector: sel)].
-		container openNear: self]
 ]
 
 { #category : #'artefact protocol' }
@@ -318,6 +321,32 @@ SBBlock >> contextAcceptedRepresentationAt: aNumber [
 	^ nil
 ]
 
+{ #category : #actions }
+SBBlock >> copyAround [
+	<action>
+
+	| replacer |
+	" create a copy of our surroundings with ourselves replaced "
+	replacer := SBPastePlaceholder new.
+	self replaceBy: replacer.
+	self sandblockEditor copyBuffer: replacer parentSandblock.
+	replacer replaceBy: self
+]
+
+{ #category : #actions }
+SBBlock >> copyString [
+	<action>
+
+	Clipboard clipboardText: self textContents
+]
+
+{ #category : #actions }
+SBBlock >> copyToBuffer [
+	<multiSelectAction>
+
+	self sandblockEditor copyBuffer: self sandblockEditor multiSelection
+]
+
 { #category : #'artefact protocol' }
 SBBlock >> declarations [
 	" return any SBName declarations you may know "
@@ -329,6 +358,36 @@ SBBlock >> declarations [
 SBBlock >> decorators [
 
 	^ decorators
+]
+
+{ #category : #actions }
+SBBlock >> deleteAround [
+	<action>
+
+	| replacer around editor |
+	editor := self sandblockEditor.
+	(self hasRepresentationThat: (self parentSandblock parentSandblock contextAcceptedRepresentationAt: self parentSandblock childIndex)) ifTrue: [
+		" create a copy of our surroundings with ourselves replaced "
+		replacer := SBPastePlaceholder new.
+		around := self.
+		around replaceBy: replacer.
+		editor copyBuffer: replacer parentSandblock.
+		replacer replaceBy: around.
+		
+		replacer := self veryDeepCopy.
+		editor do: ((SBReplaceCommand newFor: self containingArtefact)
+			target: self parentSandblock;
+			replacer: replacer).
+		replacer postDuplicate]
+]
+
+{ #category : #actions }
+SBBlock >> deleteBlock [
+	<multiSelectAction>
+
+	self sandblockEditor
+		copyBuffer: self sandblockEditor multiSelection;
+		doMultiSelectionEach: [:selected | selected parentSandblock deleteCommandFor: selected]
 ]
 
 { #category : #'as yet unclassified' }
@@ -438,8 +497,9 @@ SBBlock >> ensureDecorator: aClass do: aBlock [
 		aBlock value: d]
 ]
 
-{ #category : #testing }
+{ #category : #actions }
 SBBlock >> ensureVisible [
+	<action>
 
 	| method |
 	method := self containingArtefact.
@@ -461,6 +521,24 @@ SBBlock >> evaluate [
 				notifying: artefact
 				ifFail: nil]
 		ifNil: [Compiler evaluate: self sourceString]
+]
+
+{ #category : #actions }
+SBBlock >> evaluateExpression [
+	<action>
+
+	| result |
+	result := self evaluate.
+	
+	self containingArtefact ifNotNil: [self containingArtefact cacheType: result class for: self].
+	
+	result
+		representationThat: #isToplevelMorph
+		do: [:explorer |
+			explorer focusAfterDelete: self.
+			self sandblockEditor connectFrom: self to: explorer.
+			self openMorphInView: explorer]
+		ifNone: []
 ]
 
 { #category : #'as yet unclassified' }
@@ -604,11 +682,55 @@ SBBlock >> initialize [
 		extent: 0 @ 0
 ]
 
+{ #category : #actions }
+SBBlock >> inputNextUnknown [
+	<action>
+	<inputAction>
+
+	(self activeMorph nextMorphThat: [:m | m isSandblock and: [m isUnknown]])
+		ifNotNil: [:m | self sandblockEditor startInput: m at: 1 replacingContents: true]
+]
+
+{ #category : #actions }
+SBBlock >> inputPreviousUnknown [
+	<action>
+	<inputAction>
+
+	(self previousMorphThat: [:m | m isSandblock and: [m isUnknown]])
+		ifNotNil: [:m | self sandblockEditor startInput: m at: 1 replacingContents: true]
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> insertCommandRequest: anAfterBoolean near: aBlock [
 
 	" the user pressed + on us, do we want to do something now? "
 	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> insertElement: aBoolean [
+
+	| cmd |
+	cmd := (self parentSandblock insertCommandRequest: aBoolean near: self) ifNil: [^ self].
+	
+	self sandblockEditor do: cmd.
+	
+	cmd shouldMergeWithNext ifTrue: [
+		self sandblockEditor startInput: self sandblockEditor selection at: 0 replacingContents: false]
+]
+
+{ #category : #actions }
+SBBlock >> insertElementAfter [
+	<action>
+
+	self insertElement: true
+]
+
+{ #category : #actions }
+SBBlock >> insertElementBefore [
+	<action>
+
+	self insertElement: false
 ]
 
 { #category : #testing }
@@ -866,6 +988,16 @@ SBBlock >> leftMostBlock [
 	^ self childSandblocks ifEmpty: [self] ifNotEmpty: [:c | c first leftMostBlock]
 ]
 
+{ #category : #actions }
+SBBlock >> leftRotate [
+	<action>
+
+	(self isFirstChild or: [self isLastChild]) ifFalse: [^ self].
+	self sandblockEditor do: ((SBSubtreeRotateCommand newFor: self containingArtefact)
+		 target: self;
+		 yourself)
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> minExtent [
 	"Layout specific. Return the minimum size the receiver can be represented in.
@@ -928,6 +1060,14 @@ SBBlock >> mouseMove: anEvent [
 	(anEvent isDraggingEvent and: [self handlesMouseOverDragging: anEvent]) ifTrue: [self highlightForDrop]
 ]
 
+{ #category : #actions }
+SBBlock >> multiSelectChildren [
+	<multiSelectAction>
+
+	self sandblockEditor mode = #select ifFalse: [self mode: #selection].
+	self childSandblocks do: #startOrAddToMultiSelection
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> nextBlock [
 
@@ -979,6 +1119,56 @@ SBBlock >> parentAdjacentBlock: aNumber [
 		ifNil: [self parentSandblock ifNotNil: [:p | p parentAdjacentBlock: aNumber]]
 ]
 
+{ #category : #actions }
+SBBlock >> pasteAbove [
+	<action>
+
+	self pasteAboveOrBelow: true
+]
+
+{ #category : #actions }
+SBBlock >> pasteAboveOrBelow: anAboveBoolean [
+
+	
+	| index target adjacent morph copyBuffer |
+	copyBuffer := self sandblockEditor copyBuffer.
+	copyBuffer ifNil: [^ self].
+	
+	copyBuffer wrapsAround ifTrue: [^ self wrapSelectionWith: copyBuffer].
+	
+	target := copyBuffer isSelection ifTrue: [copyBuffer firstSubmorph] ifFalse: [copyBuffer].
+	
+	adjacent := self.
+	[adjacent parentSandblock acceptChild: target] whileFalse: [adjacent := adjacent parentSandblock].
+	
+	index := adjacent owner submorphIndexOf: adjacent.
+	morph := target veryDeepCopy.
+	morph topCenter: self bottomCenter.
+	
+	self sandblockEditor do: ((adjacent parentSandblock containingArtefact ifNil: [SBInsertCommand newNonEdit] ifNotNil: [:artefact | SBInsertCommand newFor: artefact])
+		index: (anAboveBoolean
+			ifTrue: [index] ifFalse: [index + 1]);
+		container: adjacent owner;
+		morph: morph;
+		yourself).
+	
+	morph postDuplicate
+]
+
+{ #category : #actions }
+SBBlock >> pasteBelow [
+	<action>
+
+	self pasteAboveOrBelow: false
+]
+
+{ #category : #actions }
+SBBlock >> pasteString [
+	<action>
+
+	^ self subclassResponsibility
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> pc [
 
@@ -998,6 +1188,17 @@ SBBlock >> pickUp: anEvent [
 		methodClass: self containingArtefact relatedClass;
 		colorPolicy: self colorPolicy;
 		addMorphBack: self veryDeepCopy)
+]
+
+{ #category : #actions }
+SBBlock >> placeMark [
+	<action>
+
+	(self hasDecorator: SBMarkedDecorator)
+		ifTrue: [self detachDecorators: SBMarkedDecorator]
+		ifFalse: [
+			self waitForLetterDo: [:letter |
+				self attachDecorator: (SBMarkedDecorator new letter: letter)]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -1049,6 +1250,17 @@ SBBlock >> previousBlockThat: aBlock [
 	^ n previousBlockThat: aBlock
 ]
 
+{ #category : #actions }
+SBBlock >> promptAction [
+	<multiSelectAction>
+
+	| options mode index |
+	options := self validActions.
+	index := UIManager default chooseFrom: (options collect: [:option |
+		option method selector, (' ', (SBEditor shortcutStringForAction: option selector))]).
+	index > 0 ifTrue: [self perform: (options at: index) method selector]
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> proposeCodeActions: aCollection for: aBlock [
 
@@ -1062,6 +1274,21 @@ SBBlock >> removeSuggestionMenu [
 
 	self valueOfProperty: #sandblockSuggestionMenu ifPresentDo: #delete.
 	self removeProperty: #sandblockSuggestionMenu
+]
+
+{ #category : #actions }
+SBBlock >> replaceWithCopyBuffer [
+	<action>
+
+	| copyBuffer |
+	copyBuffer := self sandblockEditor copyBuffer.
+	
+	copyBuffer ifNotNil: [ | new |
+		new := (copyBuffer isSelection ifTrue: [copyBuffer firstSubmorph] ifFalse: [copyBuffer]) veryDeepCopy.
+		self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+			target: self;
+			replacer: new).
+		new postDuplicate]
 ]
 
 { #category : #'as yet unclassified' }
@@ -1094,7 +1321,107 @@ SBBlock >> sandblockForegroundColor [
 { #category : #'as yet unclassified' }
 SBBlock >> select [
 
-	self sandblockEditor selectClick: self
+	self sandblockEditor select: self
+]
+
+{ #category : #actions }
+SBBlock >> selectArtefact [
+	<multiSelectAction>
+
+	(self containingArtefact = self
+		ifTrue: [self parentSandblock containingArtefact]
+		ifFalse: [self containingArtefact]) ifNotNil: #select
+]
+
+{ #category : #actions }
+SBBlock >> selectBottomToplevel [
+	<multiSelectAction>
+	
+	self selectToplevelTowards: #bottom
+]
+
+{ #category : #actions }
+SBBlock >> selectDown [
+	<multiSelectAction>
+
+	| next selectionDownHistory |
+	selectionDownHistory := self sandblockEditor selectionDownHistory.
+	
+	" try to follow our steps back down "
+	next := selectionDownHistory ifEmpty: [] ifNotEmpty: #removeLast.
+	(self childSandblocks includes: next) ifFalse: [
+		selectionDownHistory removeAll.
+		next := self childSandblocks first].
+	
+	next ifNotNil: #select
+]
+
+{ #category : #actions }
+SBBlock >> selectLast [
+	<multiSelectAction>
+
+	self containingArtefact lastDeepChild select
+]
+
+{ #category : #actions }
+SBBlock >> selectLeftToplevel [
+	<multiSelectAction>
+	
+	self selectToplevelTowards: #left
+]
+
+{ #category : #actions }
+SBBlock >> selectNext [
+	<multiSelectAction>
+
+	self sandblockEditor selectionDownHistory removeAll.
+	self nextBlock ifNotNil: #select
+]
+
+{ #category : #actions }
+SBBlock >> selectPrevious [
+	<multiSelectAction>
+
+	self sandblockEditor selectionDownHistory removeAll.
+	self previousBlock ifNotNil: #select
+]
+
+{ #category : #actions }
+SBBlock >> selectRightMostBlock [
+	<action>
+
+	self rightMostBlock select
+]
+
+{ #category : #actions }
+SBBlock >> selectRightToplevel [
+	<multiSelectAction>
+	
+	self selectToplevelTowards: #right
+]
+
+{ #category : #actions }
+SBBlock >> selectTopToplevel [
+	<multiSelectAction>
+	
+	self selectToplevelTowards: #top
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> selectToplevelTowards: aSideSymbol [
+
+	| opposite |
+	opposite := aSideSymbol caseOf: {([#left] -> [#right]). ([#right] -> [#left]). ([#top] -> [#bottom]). ([#bottom] -> [#top])}.
+	(self containingArtefact closestAdjacentFrom: (aSideSymbol, 'Center') asSymbol to: (opposite, 'Center') asSymbol) select
+]
+
+{ #category : #actions }
+SBBlock >> selectUp [
+	<multiSelectAction>
+
+	self parentSandblock ifNotNil: [:b |
+		self sandblockEditor selectionDownHistory addLast: self.
+		b select]
 ]
 
 { #category : #'as yet unclassified' }
@@ -1157,6 +1484,34 @@ SBBlock >> startInputAt: aNumber replacingContents: aBoolean [
 	^ nil
 ]
 
+{ #category : #actions }
+SBBlock >> startInputAtEnd [
+	<action>
+
+	self sandblockEditor startInput: self at: 9e8 replacingContents: false
+]
+
+{ #category : #actions }
+SBBlock >> startInputAtStart [
+	<action>
+
+	self sandblockEditor startInput: self at: 1 replacingContents: false
+]
+
+{ #category : #actions }
+SBBlock >> startInputSubstituting [
+	<action>
+
+	self sandblockEditor startInput: self at: 1 replacingContents: true
+]
+
+{ #category : #actions }
+SBBlock >> startOrAddToMultiSelection [
+	<multiSelectAction>
+
+	self sandblockEditor startOrAddToMultiSelection: self
+]
+
 { #category : #testing }
 SBBlock >> stepDecorator: aDecorator [
 
@@ -1179,6 +1534,32 @@ SBBlock >> suggestionsMenu [
 	^ self valueOfProperty: #sandblockSuggestionMenu ifAbsentPut: [SBSuggestionMenu new]
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> swap: aNumber [
+
+	| next children |
+	children := self parentSandblock childSandblocks.
+	next := children atWrap: (children indexOf: self) + aNumber.
+	(next notNil and: [self canSwap and: [next canSwap]]) ifTrue: [
+		self sandblockEditor do: ((SBSwapCommand newFor: self containingArtefact)
+			a: self;
+			b: next)]
+]
+
+{ #category : #actions }
+SBBlock >> swapLeft [
+	<action>
+
+	self swap: -1
+]
+
+{ #category : #actions }
+SBBlock >> swapRight [
+	<action>
+
+	self swap: 1
+]
+
 { #category : #testing }
 SBBlock >> symbols [
 
@@ -1191,8 +1572,9 @@ SBBlock >> textContents [
 	^ ''
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBBlock >> toggleCollapsed [
+	<action>
 
 	self containingArtefact ifNotNil: #toggleCollapsed
 ]
@@ -1247,8 +1629,9 @@ SBBlock >> updateSuggestions: aCollection showNear: aMorph [
 		resize
 ]
 
-{ #category : #suggestions }
+{ #category : #actions }
 SBBlock >> useSuggestion [
+	<inputAction>
 	" try to apply a suggestion, return whether anything was applied "
 
 	self suggestionMenuDo: [:menu |
@@ -1263,6 +1646,19 @@ SBBlock >> valid [
 	^ true
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> validActions [
+
+	| mode |
+	mode := self sandblockEditor mode.
+	^ self actions select: [:action |
+		((mode = #input and: [action keyword = #inputAction]) or: [
+			(mode = #command and: [
+				#(#action #multiSelectAction) includes: action keyword]) or: [
+				mode = #selection and: [action keyword = #multiSelectAction]]]) and: [
+			(action method pragmaAt: #actionValidIf:) ifNotNil: [:validPragma | self perform: validPragma arguments first] ifNil: [true]]]
+]
+
 { #category : #'event handling' }
 SBBlock >> veryDeepCopyWith: aCopier [
 
@@ -1272,6 +1668,18 @@ SBBlock >> veryDeepCopyWith: aCopier [
 	previousDecorators do: #detach.
 	previousDecorators do: [:decorator | new attachDecorator: decorator].
 	^ new
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> waitForLetterDo: aBlock [
+
+	| delay keyEvent |
+	delay := Delay forMilliseconds: 50.
+	[Sensor anyButtonPressed not and: [(keyEvent := Sensor peekKeyboardEvent) isNil]]
+		whileTrue: [delay wait].
+	keyEvent ifNotNil: [ | letter |
+		letter := (ActiveHand generateKeyboardEvent: keyEvent) keyCharacter.
+		letter isLetter ifTrue: [aBlock value: letter]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -1302,4 +1710,22 @@ SBBlock >> withDecorator: aClass do: aBlock [
 SBBlock >> withDecorator: aClass do: aBlock ifAbsent: anotherBlock [
 
 	^ decorators detect: [:d | d class = aClass] ifFound: aBlock ifNone: anotherBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> wrapSelectionWith: aSelection [
+
+	| new |
+	new := aSelection veryDeepCopy.
+	
+	self sandblockEditor do: (SBCombinedCommand newWith: {
+		(SBReplaceCommand newFor: self containingArtefact)
+			target: self;
+			replacer: new firstSubmorph.
+		(SBReplaceCommand newFor: self containingArtefact)
+			target: new placeholder;
+			replacer: self.
+	}).
+	
+	new postDuplicate
 ]

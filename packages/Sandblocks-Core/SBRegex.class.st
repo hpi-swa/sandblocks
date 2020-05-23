@@ -172,12 +172,6 @@ SBRegex >> symbols [
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> textContents [
-
-	^ self contents
-]
-
-{ #category : #'as yet unclassified' }
 SBRegex >> toggleExamples [
 
 	examples owner

@@ -57,6 +57,12 @@ SBExample >> active [
 ]
 
 { #category : #'as yet unclassified' }
+SBExample >> addExample [
+
+	self toggleRunning
+]
+
+{ #category : #'as yet unclassified' }
 SBExample >> argumentsBlock [
 
 	^ self submorphs sixth

@@ -163,12 +163,6 @@ SBLiteral >> stopEditing: aCommand [
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> textContents [
-
-	^ self contents
-]
-
-{ #category : #'as yet unclassified' }
 SBLiteral >> textMorphClass [
 
 	^ SBOwnTextMorph

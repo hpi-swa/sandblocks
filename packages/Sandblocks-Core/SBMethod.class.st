@@ -154,6 +154,7 @@ SBMethod >> storeOn: aStream [
 
 { #category : #'as yet unclassified' }
 SBMethod >> toggleCollapsed [
+	<action>
 
 	self body
 		visible: self body visible not;

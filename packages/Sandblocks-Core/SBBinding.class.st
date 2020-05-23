@@ -6,6 +6,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 SBBinding >> browse [
+	<action>
 
 	self resolveBinding ifNotNil: #browse
 ]

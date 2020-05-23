@@ -15,7 +15,6 @@ Class {
 		'multiSelection',
 		'mode',
 		'inputShortcuts',
-		'globalShortcuts',
 		'commandShortcuts',
 		'singleSelectionShortcuts',
 		'multiSelectionShortcuts',
@@ -31,7 +30,8 @@ Class {
 		'helpOverlay'
 	],
 	#classVars : [
-		'DefaultColorPolicy'
+		'DefaultColorPolicy',
+		'Shortcuts'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -78,6 +78,159 @@ SBEditor class >> openFor: aMethodOrClass [
 SBEditor class >> openWorkspace: aString [
 
 	SBWorkspaceHistory default items detect: [:workspace | workspace name = aString] ifFound: [:workspace | workspace open] ifNone: [self error: 'no such workspace']
+]
+
+{ #category : #'initialize-release' }
+SBEditor class >> registerDefaultShortcuts [
+	"self registerDefaultShortcuts"
+
+	"(UIManager default confirm: 'This will reset all custom shortcuts, continue?') ifFalse: [^ self]."
+	
+	Shortcuts := nil.
+	self
+		" navigation "
+		registerShortcut: $h do: #selectPrevious;
+		registerShortcut: $l do: #selectNext;
+		registerShortcut: $j do: #selectDown;
+		registerShortcut: $k do: #selectUp;
+		registerShortcut: $G do: #selectLast;
+		registerShortcut: $g do: #selectArtefact;
+		registerShortcut: $$ do: #selectRightMostBlock;
+		registerShortcut: Character tab shift do: #inputPreviousUnknown;
+		registerShortcut: Character tab do: #inputNextUnknown;
+		registerShortcut: $z do: #toggleCollapsed;
+		registerShortcut: $m do: #placeMark;
+		registerShortcut: $' do: #goToMark;
+		registerShortcut: $h command do: #selectLeftToplevel;
+		registerShortcut: $j command do: #selectBottomToplevel;
+		registerShortcut: $k command do: #selectTopToplevel;
+		registerShortcut: $l command do: #selectRightToplevel;
+		registerShortcut: $H do: #selectPreviousSend;
+		registerShortcut: $L do: #selectNextSend;
+		registerShortcut: $1 do: #resetZoom;
+		registerShortcut: $! do: #ensureVisible;
+		
+		" modify general "
+		registerShortcut: $, do: #promptAction;
+		registerShortcut: $i do: #startInputAtStart;
+		registerShortcut: $a do: #startInputAtEnd;
+		registerShortcut: $s do: #startInputSubstituting;
+		registerShortcut: $c do: #changeToUnknown;
+		registerShortcut: $Y do: #copyAround;
+		registerShortcut: $y do: #copyToBuffer;
+		registerShortcut: $X do: #deleteAround;
+		registerShortcut: $x do: #deleteBlock;
+		registerShortcut: $( do: #leftRotate;
+		registerShortcut: $. do: #addElement;
+		registerShortcut: $+ do: #insertElementAfter;
+		registerShortcut: $* do: #insertElementBefore;
+		registerShortcut: $K do: #swapLeft;
+		registerShortcut: $J do: #swapRight;
+		registerShortcut: $c command do: #copyString;
+		registerShortcut: $v command do: #pasteString;
+		registerShortcut: $p do: #pasteBelow;
+		registerShortcut: $P do: #pasteAbove;
+		registerShortcut: $v do: #startOrAddToMultiSelection;
+		registerShortcut: $V do: #multiSelectChildren;
+		registerShortcut: Character escape do: #endMultiSelection;
+		registerShortcut: $r do: #replaceWithCopyBuffer;
+
+		" modify smalltalk "
+		registerShortcut: $" do: #wrapInToggledCode;
+		registerShortcut: $d do: #insertLabelBelow;
+		registerShortcut: $D do: #insertLabelAbove;
+		registerShortcut: $O do: #insertStatementAbove;
+		registerShortcut: $o do: #insertStatementBelow;
+		registerShortcut: $[ do: #wrapInBlock;
+		registerShortcut: ${ do: #wrapInDynamicArray;
+		registerShortcut: $# do: #wrapInLiteralArray;
+		registerShortcut: $: do: #wrapInAssignment;
+		registerShortcut: $; do: #wrapInCascade;
+		registerShortcut: $^ do: #wrapInReturn;
+		registerShortcut: Character space shift do: #wrapAsArgument;
+		registerShortcut: Character space do: #wrapInMessageSend;
+		
+		" input "
+		registerShortcut: Character escape do: #endInput;
+		registerShortcut: Character cr do: #useSuggestion;
+		registerShortcut: Character arrowLeft do: #moveCursorLeft;
+		registerShortcut: $h command do: #moveCursorLeft;
+		registerShortcut: Character arrowRight do: #moveCursorRight;
+		registerShortcut: $l command do: #moveCursorRight;
+		registerShortcut: $a command do: #moveCursorToStart;
+		registerShortcut: $e command do: #moveCursorToEnd;
+		registerShortcut: $x command do: #clearInput;
+		registerShortcut: $j command do: #focusNextSuggestion;
+		registerShortcut: $k command do: #focusPreviousSuggestion;
+		registerShortcut: $1 command do: #useFirstArgument;
+		registerShortcut: $2 command do: #useSecondArgument;
+		registerShortcut: $3 command do: #useThirdArgument;
+		registerShortcut: $4 command do: #useFourthArgument;
+		registerShortcut: $5 command do: #useFifthArgument;
+		
+		" refactor "
+		registerShortcut: $T do: #extractMethod;
+		registerShortcut: $t do: #createEmptyMethod;
+		registerShortcut: $= do: #extractVariable;
+		
+		" debugging "
+		registerShortcut: $> do: #stepOver;
+		registerShortcut: $< do: #stepInto;
+		registerShortcut: $y command do: #stepThrough;
+		registerShortcut: $Y command do: #restartFrame;
+		registerShortcut: $e do: #focusErrors;
+		registerShortcut: $E do: #focusPreviousErrorFrame;
+		
+		" tools "
+		registerShortcut: $W do: #wrapWithWatch;
+		registerShortcut: $w do: #wrapWithExampleWatch;
+		registerShortcut: $p command do: #evaluateExpression;
+		registerShortcut: $P command do: #debugExpression;
+		registerShortcut: $a command do: #addExample;
+		registerShortcut: $m command do: #browseImplementors;
+		registerShortcut: $n command do: #browseSenders;
+		registerShortcut: $x command do: #openOpenWindow;
+		registerShortcut: $b command do: #browse;
+		
+		" editor "
+		registerShortcut: $u do: #undo;
+		registerShortcut: $U do: #redo;
+		registerShortcut: $s command do: #save;
+		registerShortcut: $r command do: #openRepl;
+		registerShortcut: $c command do: #openOpenWindow;
+		registerShortcut: $, command do: #promptMenu;
+		registerShortcut: $/ do: #startSearch;
+		registerShortcut: $n do: #nextSearchResult;
+		registerShortcut: $S command do: #saveWorkspace;
+		registerShortcut: $O command do: #promptOpenWorkspace;
+		registerShortcut: $f command do: #toggleFullscreen
+]
+
+{ #category : #'initialize-release' }
+SBEditor class >> registerShortcut: aShortcut do: aSymbol [
+
+	self shortcuts add: aShortcut asSandblockShortcut -> aSymbol
+]
+
+{ #category : #'initialize-release' }
+SBEditor class >> shortcutStringForAction: anAction [
+
+	^ String streamContents: [:stream |
+		stream nextPut: $(.
+		(self shortcutsForAction: anAction) do: [:shortcut | shortcut printDisplayOn: stream] separatedBy: [stream space].
+		stream nextPut: $)]
+]
+
+{ #category : #'initialize-release' }
+SBEditor class >> shortcuts [
+
+	^ Shortcuts ifNil: [Shortcuts := OrderedCollection new]
+]
+
+{ #category : #'initialize-release' }
+SBEditor class >> shortcutsForAction: anAction [
+
+	^ self shortcuts select: [:assoc | assoc value = anAction] thenCollect: [:assoc | assoc key]
 ]
 
 { #category : #actions }
@@ -203,12 +356,9 @@ SBEditor >> addDefaultShortcuts [
 		addSingleSelectionShortcut: $Y do: #copyAroundSelection;
 		addMultiSelectionShortcut: $v do: #startOrAddToMultiSelection;
 		addMultiSelectionShortcut: $V do: #multiSelectChildren;
-		addSingleSelectionShortcut: $V do: #multiSelectChildren;
-		addCommandShortcut: Character escape command do: #close;
 		addInputShortcut: Character escape do: #endInput;
 		addInputShortcut: Character arrowLeft do: [:editor | editor textMorph moveCursor: -1];
 		addInputShortcut: Character arrowRight do: [:editor | editor textMorph moveCursor: 1];
-		"addInputShortcut: Character backspace do: [:editor | editor textMorph deleteBeforeCursor];"
 		addInputShortcut: Character delete do: [:editor | editor textMorph deleteAfterCursor];
 		addInputShortcut: $h command do: [:editor | editor textMorph moveCursor: -1];
 		addInputShortcut: $l command do: [:editor | editor textMorph moveCursor: 1];
@@ -270,12 +420,6 @@ SBEditor >> addExample [
 				type: #dynamic
 				contents: (Array streamContents: [:str | self method arguments size timesRepeat: [str nextPut: SBUnknown new]]))
 			label: 'simple'))
-]
-
-{ #category : #shortcuts }
-SBEditor >> addGlobalShortcut: aShortcut do: anActionBlock [
-
-	globalShortcuts add: {aShortcut asSandblockShortcut. anActionBlock}
 ]
 
 { #category : #shortcuts }
@@ -441,6 +585,13 @@ SBEditor >> classes [
 	^ scroll submorphs select: [:morph | morph isSandblock and: [morph isClassContainer]]
 ]
 
+{ #category : #'actions input' }
+SBEditor >> clearInput [
+	<inputAction>
+	
+	self textMorph clear
+]
+
 { #category : #'initialize-release' }
 SBEditor >> clearUndoStack [
 
@@ -487,6 +638,15 @@ SBEditor >> compiledMethod: aMethod [
 	self openMorphInView: aMethod asSandblock
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> connectFrom: aMorph to: anotherMorph [
+
+	scroll addMorph: ((SBConnectorLine new connectorType: #dots)
+		color: Color black;
+		connect: aMorph to: anotherMorph;
+		yourself)
+]
+
 { #category : #selection }
 SBEditor >> containingArtefact [
 
@@ -503,6 +663,29 @@ SBEditor >> copyAroundSelection [
 	around replaceBy: replacer.
 	self setCopyBuffer: replacer parentSandblock.
 	replacer replaceBy: around
+]
+
+{ #category : #shortcuts }
+SBEditor >> copyBuffer [
+
+	^ copyBuffer
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> copyBuffer: aMorphOrCollection [
+
+	| form list |
+	list := (aMorphOrCollection isCollection ifTrue: [aMorphOrCollection] ifFalse: [{aMorphOrCollection}]) select: #canCopy.
+	list ifEmpty: [^ self].
+	
+	copyBuffer := SBSelection new
+		methodClass: (list first containingArtefact ifNotNil: #relatedClass);
+		colorPolicy: self colorPolicy.
+	
+	list do: [:m | copyBuffer addMorphBack: m veryDeepCopy].
+	form := copyBuffer imageForm.
+	"copyBufferPreview image: ((form scaledIntoFormOfSize: (self copyBufferPreviewSize min: form extent)) collectColors: [:c | c alpha: c alpha * 0.7])."
+	copyBufferPreview image: ((form scaledToHeight: self copyBufferPreviewSize y) collectColors: [:c | c alpha: c alpha * 0.7])
 ]
 
 { #category : #'as yet unclassified' }
@@ -525,6 +708,7 @@ SBEditor >> copyString [
 
 { #category : #actions }
 SBEditor >> createEmptyClass [
+	<action>
 
 	| class |
 	class := SBClass new category: (self anyNearbyClass ifNotNil: #category ifNil: ['UserObjects']).
@@ -534,6 +718,7 @@ SBEditor >> createEmptyClass [
 
 { #category : #actions }
 SBEditor >> createEmptyMethod [
+	<action>
 
 	| method |
 	self openMorphInView: (method := SBMethod new
@@ -675,8 +860,9 @@ SBEditor >> doMultiSelectionEach: aBlock [
 	self doMultiSelection: [:sel | SBCombinedCommand newWith: (sel collect: aBlock thenSelect: #notNil)]
 ]
 
-{ #category : #input }
+{ #category : #'actions input' }
 SBEditor >> endInput [
+	<inputAction>
 
 	| command input |
 	(currentInput isNil or: [currentInputCommand isNil]) ifTrue: [^ self].
@@ -702,6 +888,7 @@ SBEditor >> endInputWith: aString [
 
 { #category : #actions }
 SBEditor >> endMultiSelection [
+	<multiSelectAction>
 
 	multiSelection do: [:b | b detachDecorators: SBMultiSelectionDecorator].
 	multiSelection := OrderedCollection new.
@@ -712,6 +899,12 @@ SBEditor >> endMultiSelection [
 SBEditor >> errorContextFor: anArtefact ifNone: anExceptionBlock [
 
 	^ errors focusedArtefact = anArtefact ifTrue: [errors focusedContext] ifFalse: [anExceptionBlock value]
+]
+
+{ #category : #accessing }
+SBEditor >> errors [
+
+	^ errors
 ]
 
 { #category : #actions }
@@ -797,9 +990,13 @@ SBEditor >> filterEvent: anEvent for: aMorph [
 	anEvent isMouse ifTrue: [
 		anEvent isMouseDown ifTrue: [anEvent hand releaseKeyboardFocus].
 		^ anEvent].
-	anEvent keyValue = 251 ifTrue: [self toggleHelperTimer: anEvent type = #keyDown] ifFalse: [self removeHelperTimer].
 	anEvent isKeystroke ifFalse: [^ anEvent ignore].
-	self processShortcutList: globalShortcuts for: anEvent ifMatched: [^ anEvent ignore].
+	
+	self performShortcutFor: anEvent.
+	true ifTrue: [^ anEvent ignore].
+	
+	anEvent keyValue = 251 ifTrue: [self toggleHelperTimer: anEvent type = #keyDown] ifFalse: [self removeHelperTimer].
+	
 	mode = #input ifTrue: [
 		self processShortcutList: inputShortcuts for: anEvent ifMatched: [^ anEvent ignore].
 		currentInput keyStroke: anEvent.
@@ -815,19 +1012,36 @@ SBEditor >> filterEvent: anEvent for: aMorph [
 
 { #category : #actions }
 SBEditor >> focusErrors [
+	<action>
 
 	errors focus.
 	errors topLeft: scroll topLeft
 ]
 
+{ #category : #'actions input' }
+SBEditor >> focusNextSuggestion [
+	<inputAction>
+	
+	self currentInput suggestionMenuDo: #next
+]
+
 { #category : #actions }
 SBEditor >> focusPreviousErrorFrame [
+	<action>
 
 	errors focusPreviousFrame
 ]
 
+{ #category : #'actions input' }
+SBEditor >> focusPreviousSuggestion [
+	<inputAction>
+	
+	self currentInput suggestionMenuDo: #previous
+]
+
 { #category : #actions }
 SBEditor >> goToMark [
+	<action>
 
 	self waitForLetterDo: [:letter |
 		self allBlocksDo: [:morph | (morph withDecorator: SBMarkedDecorator do: [:mark | mark letter = letter ifTrue: [^ self select: morph]])]]
@@ -858,7 +1072,6 @@ SBEditor >> initialize [
 	singleSelectionShortcuts := OrderedCollection new.
 	multiSelectionShortcuts := OrderedCollection new.
 	commandShortcuts := OrderedCollection new.
-	globalShortcuts := OrderedCollection new.
 	inputShortcuts := OrderedCollection new.
 	multiSelection := OrderedCollection new.
 	colorPolicy := self class defaultColorPolicy new.
@@ -867,7 +1080,7 @@ SBEditor >> initialize [
 	self
 		addKeyboardCaptureFilter: self;
 		addMouseCaptureFilter: self;
-		addDefaultShortcuts;
+		"addDefaultShortcuts;"
 		
 		extent: 500 asPoint;
 		changeTableLayout;
@@ -984,43 +1197,13 @@ SBEditor >> insertLabelBelow [
 { #category : #actions }
 SBEditor >> insertStatementAbove [
 
-	self insertStatementAboveOrBelow: true
-]
-
-{ #category : #actions }
-SBEditor >> insertStatementAboveOrBelow: anAboveBoolean [
-
-	| currentStatement index newStatement |
-	newStatement :=  SBUnknown new.
-	self selection isCodeContainer ifTrue: [self select: self selection method].
-	
-	self selection = self method
-		ifTrue: [
-			self do: ((SBInsertCommand newFor: self method)
-				index: (anAboveBoolean ifTrue: [2] ifFalse: [self method body submorphCount + 1]);
-				container: self method body;
-				morph: newStatement;
-				shouldMergeWithNext: true;
-				yourself)]
-		ifFalse: [
-			currentStatement := self selection containingStatement.
-			index := currentStatement owner submorphIndexOf: currentStatement.
-	
-			self do: ((SBInsertCommand newFor: self selection containingArtefact)
-				index: (anAboveBoolean
-					ifTrue: [index] ifFalse: [index + 1]);
-				container: currentStatement owner;
-				morph: newStatement;
-				shouldMergeWithNext: true;
-				yourself)].
-	
-	self startInput: newStatement at: 1 replacingContents: false
+	self selection insertStatementAbove
 ]
 
 { #category : #actions }
 SBEditor >> insertStatementBelow [
 
-	self insertStatementAboveOrBelow: false
+	self selection insertStatementBelow
 ]
 
 { #category : #selection }
@@ -1093,6 +1276,12 @@ SBEditor >> methods [
 ]
 
 { #category : #accessing }
+SBEditor >> mode [
+
+	^ mode
+]
+
+{ #category : #accessing }
 SBEditor >> mode: aSymbol [
 
 	aSymbol = #input
@@ -1124,6 +1313,34 @@ SBEditor >> modelWakeUp [
 		self valueOfProperty: #previousWindow ifPresentDo: [:window | self owner addMorphFront: self]]
 ]
 
+{ #category : #'actions input' }
+SBEditor >> moveCursorLeft [
+	<inputAction>
+
+	self textMorph moveCursor: -1
+]
+
+{ #category : #'actions input' }
+SBEditor >> moveCursorRight [
+	<inputAction>
+
+	self textMorph moveCursor: 1
+]
+
+{ #category : #'actions input' }
+SBEditor >> moveCursorToEnd [
+	<inputAction>
+
+	self textMorph moveCursorTo: 9e8
+]
+
+{ #category : #'actions input' }
+SBEditor >> moveCursorToStart [
+	<inputAction>
+
+	self textMorph moveCursorTo: 1
+]
+
 { #category : #shortcuts }
 SBEditor >> multiSelectChildren [
 
@@ -1152,6 +1369,7 @@ SBEditor >> multiSelectionIsConsecutive [
 
 { #category : #actions }
 SBEditor >> nextSearchResult [
+	<action>
 
 	searchInput nextResult
 ]
@@ -1243,6 +1461,7 @@ SBEditor >> openMorphInViewCommand: aMorph [
 
 { #category : #actions }
 SBEditor >> openOpenWindow [
+	<action>
 
 	| selected |
 	selected := self selectedArtefact.
@@ -1253,6 +1472,7 @@ SBEditor >> openOpenWindow [
 
 { #category : #actions }
 SBEditor >> openRepl [
+	<action>
 
 	| repl |
 	repl := self openMorphInView: SBRepl new.
@@ -1331,6 +1551,31 @@ SBEditor >> pasteString [
 	block postDuplicate
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> perform: anAction for: aBlock [
+
+	(aBlock class lookupSelector: anAction) ifNotNil: [:method |
+		(((mode = #selection and: [(method pragmaAt: #multiSelectAction) notNil]) or: [
+			(mode = #command and: [
+				(method pragmaAt: #multiSelectAction) notNil or: [(method pragmaAt: #action) notNil]]) or: [
+				mode = #input and: [(method pragmaAt: #inputAction) notNil]]]) and: [
+			(method pragmaAt: #actionValidIf:) ifNotNil: [:pragma | aBlock perform: pragma arguments first] ifNil: [true]]) ifTrue: [
+			aBlock perform: anAction.
+			^ true]].
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> performShortcutFor: anEvent [
+
+	self shortcuts do: [:assoc |
+		(assoc key matchesEvent: anEvent) ifTrue: [
+			(self perform: assoc value for: self selection) ifTrue: [^ self] ifFalse: [
+				(self perform: assoc value for: self) ifTrue: [^ true]]]].
+	mode = #input ifTrue: [currentInput keyStroke: anEvent].
+	^ false
+]
+
 { #category : #actions }
 SBEditor >> placeMark [
 
@@ -1390,6 +1635,7 @@ SBEditor >> promptCodeAction [
 
 { #category : #actions }
 SBEditor >> promptMenu [
+	<action>
 
 	| options |
 	options := {
@@ -1402,6 +1648,7 @@ SBEditor >> promptMenu [
 
 { #category : #actions }
 SBEditor >> promptOpenWorkspace [
+	<action>
 
 	| items index |
 	items := SBWorkspaceHistory default items.
@@ -1422,6 +1669,7 @@ SBEditor >> promptWorkspaceActions [
 
 { #category : #actions }
 SBEditor >> redo [
+	<action>
 
 	| command |
 	redoStack ifNotEmpty: [
@@ -1433,6 +1681,7 @@ SBEditor >> redo [
 
 { #category : #actions }
 SBEditor >> refocus [
+	<multiSelectAction>
 
 	self selection ifNotNil: #ensureVisible
 ]
@@ -1507,6 +1756,7 @@ SBEditor >> resetState [
 
 { #category : #actions }
 SBEditor >> resetZoom [
+	<multiSelectAction>
 
 	scroll scale: 1.
 	scroll viewportPosition: scroll currentPosition rounded
@@ -1526,6 +1776,7 @@ SBEditor >> resizeToFit [
 
 { #category : #actions }
 SBEditor >> restartFrame [
+	<action>
 
 	errors restart
 ]
@@ -1538,8 +1789,9 @@ SBEditor >> sandblockEditor [
 
 { #category : #actions }
 SBEditor >> save [
+	<action>
 
-	self selection ifNotNil: [self saveTryFixing: true quick: false]
+	self selection ifNotNil: [self save: self selectedArtefact tryFixing: true quick: false]
 ]
 
 { #category : #actions }
@@ -1553,17 +1805,8 @@ SBEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean [
 ]
 
 { #category : #actions }
-SBEditor >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
-
-	^ (self selectedArtefact saveTryFixing: aFixBoolean quick: aQuickBoolean)
-		ifTrue: [
-			self allBlocksDo: [:block | block artefactSaved: self method].
-			true]
-		ifFalse: [false]
-]
-
-{ #category : #actions }
 SBEditor >> saveWorkspace [
+	<action>
 
 	workspace
 		ifNotNil: [workspace updateFrom: self]
@@ -1712,27 +1955,28 @@ SBEditor >> selection [
 	^ selection ifNotNil: [selection owner ifNil: [nil] ifNotNil: [selection]]
 ]
 
+{ #category : #accessing }
+SBEditor >> selectionDownHistory [
+
+	^ selectionDownHistory
+]
+
 { #category : #actions }
 SBEditor >> sendersOfIt [
 
 	self selection browseSenders
 ]
 
-{ #category : #'as yet unclassified' }
-SBEditor >> setCopyBuffer: aMorphOrCollection [
+{ #category : #shortcuts }
+SBEditor >> shortcuts [
 
-	| form list |
-	list := (aMorphOrCollection isCollection ifTrue: [aMorphOrCollection] ifFalse: [{aMorphOrCollection}]) select: #canCopy.
-	list ifEmpty: [^ self].
-	
-	copyBuffer := SBSelection new
-		methodClass: (list first containingArtefact ifNotNil: #relatedClass);
-		colorPolicy: self colorPolicy.
-	
-	list do: [:m | copyBuffer addMorphBack: m veryDeepCopy].
-	form := copyBuffer imageForm.
-	"copyBufferPreview image: ((form scaledIntoFormOfSize: (self copyBufferPreviewSize min: form extent)) collectColors: [:c | c alpha: c alpha * 0.7])."
-	copyBufferPreview image: ((form scaledToHeight: self copyBufferPreviewSize y) collectColors: [:c | c alpha: c alpha * 0.7])
+	^ self valueOfProperty: #shortcutsOverride ifAbsent: [self class shortcuts]
+]
+
+{ #category : #shortcuts }
+SBEditor >> shortcutsOverride: aCollection [
+
+	self setProperty: #shortcutsOverride toValue: aCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -1809,24 +2053,28 @@ SBEditor >> startOrAddToMultiSelection: aBlock [
 
 { #category : #actions }
 SBEditor >> startSearch [
+	<action>
 
 	searchInput startSearch
 ]
 
 { #category : #actions }
 SBEditor >> stepInto [
+	<action>
 
 	errors stepInto
 ]
 
 { #category : #actions }
 SBEditor >> stepOver [
+	<action>
 
 	errors stepOver
 ]
 
 { #category : #actions }
 SBEditor >> stepThrough [
+	<action>
 
 	errors stepThrough
 ]
@@ -1880,8 +2128,9 @@ SBEditor >> toggleCollapsed [
 	self selection ifNotNil: #toggleCollapsed
 ]
 
-{ #category : #shortcuts }
+{ #category : #actions }
 SBEditor >> toggleFullscreen [
+	<action>
 
 	self owner = self world
 		ifTrue: [
@@ -1906,6 +2155,7 @@ SBEditor >> toggleHelperTimer: aBoolean [
 
 { #category : #actions }
 SBEditor >> undo [
+	<action>
 
 	| command |
 	undoStack ifNotEmpty: [ | ret |

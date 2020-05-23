@@ -32,12 +32,6 @@ SBCharacter >> symbols [
 ]
 
 { #category : #'as yet unclassified' }
-SBCharacter >> textContents [
-
-	^ '$', self contents
-]
-
-{ #category : #'as yet unclassified' }
 SBCharacter >> valid [
 
 	^ self contents size = 1
