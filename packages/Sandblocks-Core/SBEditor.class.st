@@ -1227,6 +1227,12 @@ SBEditor >> internalSelect: aBlock [
 		self updateSelectionLabel]
 ]
 
+{ #category : #accessing }
+SBEditor >> isMethodOpen: aCompiledMethod [
+
+	^ self methods anySatisfy: [:method | method selector = aCompiledMethod selector and: [method methodClass = aCompiledMethod methodClass]]
+]
+
 { #category : #input }
 SBEditor >> labelString [
 

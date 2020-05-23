@@ -87,7 +87,8 @@ SBError >> focus [
 	self addMorphBack: frames.
 	stack := self rootContext stack.
 	stack from: 1 to: (self maxFrames min: stack size) do: [:context | frames addMorphBack: (self createFrameForContext: context)].
-	frames sandblockEditor select: frames firstSubmorph
+	
+	frames sandblockEditor select: (frames submorphs detect: [:frame | self sandblockEditor isMethodOpen: frame context method] ifNone: [frames firstSubmorph])
 ]
 
 { #category : #'as yet unclassified' }
