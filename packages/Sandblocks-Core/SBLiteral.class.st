@@ -95,9 +95,8 @@ SBLiteral >> keyStroke: anEvent [
 		(self parentSandblock isMessageSend and: [self parentSandblock selector = SBMessageSend placeholderSelector])
 			ifTrue: [^ self sandblockEditor endInput; startInput: self parentSandblock at: 1 replacingContents: true].
 		
-		^ self sandblockEditor
-			endInput;
-			wrapInMessageSend: (anEvent keyCharacter isSpecial ifTrue: [anEvent keyCharacter asString] ifFalse: [''])].
+		self sandblockEditor endInput.
+		^ self wrapInMessageSend: (anEvent keyCharacter isSpecial ifTrue: [anEvent keyCharacter asString] ifFalse: [''])].
 	
 	"anEvent keyCharacter = Character tab ifTrue: [
 		^ (anEvent shiftPressed

@@ -19,5 +19,5 @@ SBEvaluateRepresentation class >> matches: anObject [
 { #category : #'as yet unclassified' }
 SBEvaluateRepresentation class >> newFor: anObject [
 
-	^ [anObject evaluate] on: Error do: [nil]
+	^ [anObject evaluate] on: Error, Warning, Halt do: [nil]
 ]

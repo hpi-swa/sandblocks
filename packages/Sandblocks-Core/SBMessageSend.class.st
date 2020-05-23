@@ -51,7 +51,7 @@ SBMessageSend >> browseImplementors [
 
 	self actualReceiver guessClassExpensive
 		ifNotNil: [:class |
-			self sandblockEditor openCompiledMethod: class >> self selector asSymbol]
+			self sandblockEditor openCompiledMethod: (class lookupSelector: self selector asSymbol)]
 		ifNil: [super browseImplementors]
 ]
 
@@ -211,9 +211,10 @@ SBMessageSend >> keyStroke: anEvent [
 
 	(anEvent keyCharacter = Character space or: [
 		(self selector notEmpty and: [self isBinary not]) and: [anEvent keyCharacter isSpecial]]) ifTrue: [
-		^ self sandblockEditor
-			endInput;
-			wrapInMessageSend: (anEvent keyCharacter isSpecial ifTrue: [anEvent keyCharacter asString] ifFalse: [''])].
+		self sandblockEditor
+			endInput.
+			
+		^ self wrapInMessageSend: (anEvent keyCharacter isSpecial ifTrue: [anEvent keyCharacter asString] ifFalse: [''])].
 	(anEvent keyCharacter = Character backspace and: [self selector isEmpty]) ifTrue: [ | receiver |
 		receiver := self receiver.
 		^ self sandblockEditor

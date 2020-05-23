@@ -505,16 +505,17 @@ SBBlock >> evaluateExpression [
 
 	| result |
 	result := self evaluate.
-	
-	self containingArtefact ifNotNil: [self containingArtefact cacheType: result class for: self].
-	
+	self containingArtefact ifNotNil: [
+		self containingArtefact cacheType: result class for: self].
 	result
 		representationThat: #isToplevelMorph
 		do: [:explorer |
 			explorer focusAfterDelete: self.
-			self sandblockEditor connectFrom: self to: explorer.
-			self openMorphInView: explorer]
-		ifNone: []
+			self sandblockEditor
+				openMorphInView: explorer;
+				connectFrom: self to: explorer]
+		ifNone: [nil]
+		near: self
 ]
 
 { #category : #'as yet unclassified' }
@@ -1055,7 +1056,7 @@ SBBlock >> mouseMove: anEvent [
 SBBlock >> multiSelectChildren [
 	<multiSelectAction>
 
-	self sandblockEditor mode = #select ifFalse: [self mode: #selection].
+	self sandblockEditor mode = #select ifFalse: [self sandblockEditor mode: #selection].
 	self childSandblocks do: #startOrAddToMultiSelection
 ]
 
@@ -1200,7 +1201,7 @@ SBBlock >> placeMark [
 	(self hasDecorator: SBMarkedDecorator)
 		ifTrue: [self detachDecorators: SBMarkedDecorator]
 		ifFalse: [
-			self waitForLetterDo: [:letter |
+			self sandblockEditor waitForLetterDo: [:letter |
 				self attachDecorator: (SBMarkedDecorator new letter: letter)]]
 ]
 
@@ -1687,18 +1688,6 @@ SBBlock >> veryDeepCopyWith: aCopier [
 ]
 
 { #category : #'as yet unclassified' }
-SBBlock >> waitForLetterDo: aBlock [
-
-	| delay keyEvent |
-	delay := Delay forMilliseconds: 50.
-	[Sensor anyButtonPressed not and: [(keyEvent := Sensor peekKeyboardEvent) isNil]]
-		whileTrue: [delay wait].
-	keyEvent ifNotNil: [ | letter |
-		letter := (ActiveHand generateKeyboardEvent: keyEvent) keyCharacter.
-		letter isLetter ifTrue: [aBlock value: letter]]
-]
-
-{ #category : #'as yet unclassified' }
 SBBlock >> wantsDroppedMorph: aMorph event: evt [
 
 	^ (aMorph respondsTo: #object) and: [aMorph object hasRepresentationThat: self acceptedRepresentation]
@@ -1714,6 +1703,7 @@ SBBlock >> wasDeselected [
 SBBlock >> wasSelected [
 
 	" may be overriden "
+	self triggerEvent: #selected
 ]
 
 { #category : #decorators }

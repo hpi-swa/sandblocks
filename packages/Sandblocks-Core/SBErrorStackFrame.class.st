@@ -113,9 +113,8 @@ SBErrorStackFrame >> updateSelection [
 SBErrorStackFrame >> wasSelected [
 
 	| method |
-	super wasSelected.
 	method := self sandblockEditor openCompiledMethod: self context method homeMethod.
 	self detachDecorators: SBErrorDecorator; attachDecorator: SBErrorDecorator new.
 	self updateSelection.
-	self triggerEvent: #selected with: self
+	super wasSelected
 ]

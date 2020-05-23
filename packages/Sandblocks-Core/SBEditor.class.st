@@ -462,13 +462,17 @@ SBEditor >> allActiveMorphExamples [
 { #category : #actions }
 SBEditor >> anyNearbyClass [
 
-	| artefact |
-	scroll hasSubmorphs ifFalse: [^ nil].
+	| artefacts |
+	artefacts := self artefacts.
+	artefacts ifEmpty: [^ UndefinedObject].
 	
-	artefact := (self selection ifNil: [self methods first]) containingArtefact.
-	artefact isMethod ifTrue: [^ artefact methodClass].
-	artefact isClassContainer ifTrue: [^ artefact shownClass].
-	^ nil
+	^ (self selection ifNotNil: #containingArtefact ifNil: [artefacts first]) relatedClass
+]
+
+{ #category : #actions }
+SBEditor >> artefacts [
+
+	^ scroll submorphs select: #isArtefact
 ]
 
 { #category : #selection }
@@ -1576,8 +1580,8 @@ SBEditor >> performShortcutFor: anEvent [
 
 	self shortcuts do: [:assoc |
 		(assoc key matchesEvent: anEvent) ifTrue: [
-			(self perform: assoc value for: self selection) ifTrue: [^ self] ifFalse: [
-				(self perform: assoc value for: self) ifTrue: [^ true]]]].
+			(self selection notNil and: [self perform: assoc value for: self selection]) ifTrue: [^ self].
+			(self perform: assoc value for: self) ifTrue: [^ true]]].
 	mode = #input ifTrue: [currentInput keyStroke: anEvent].
 	^ false
 ]
@@ -1991,12 +1995,6 @@ SBEditor >> showHelper [
 	(helpOverlay isNil and: [self isInWorld and: [self selection notNil]]) ifTrue: [helpOverlay := SBHelpOverlay new target: self selection]
 ]
 
-{ #category : #actions }
-SBEditor >> showUsageInfo [
-
-	self selection showUsageInfo
-]
-
 { #category : #selection }
 SBEditor >> sortedMultiSelection [
 
@@ -2019,24 +2017,6 @@ SBEditor >> startInput: aMorph at: aNumber replacingContents: aBoolean [
 			currentInputCommand := cmd.
 			self mode: #input]
 		ifNil: [currentInput := nil]
-]
-
-{ #category : #actions }
-SBEditor >> startInputAtEnd [
-
-	self startInput: self selection at: 9e8 replacingContents: false
-]
-
-{ #category : #actions }
-SBEditor >> startInputAtStart [
-
-	self startInput: self selection at: 1 replacingContents: false
-]
-
-{ #category : #actions }
-SBEditor >> startInputSubstituting [
-
-	self startInput: self selection at: 1 replacingContents: true
 ]
 
 { #category : #actions }
@@ -2098,28 +2078,6 @@ SBEditor >> storeOn: aStream [
 		morph storeOn: aStream.
 		aStream nextPut: $;].
 	aStream nextPutAll: 'yourself)'
-]
-
-{ #category : #actions }
-SBEditor >> swapLeft [
-
-	| next children |
-	children := self selection parentSandblock childSandblocks.
-	next := children atWrap: (children indexOf: self selection) - 1.
-	
-	(next notNil and: [self selection canSwap and: [next canSwap]]) ifTrue: [
-		self do: ((SBSwapCommand newFor: self method) a: self selection; b: next)]
-]
-
-{ #category : #actions }
-SBEditor >> swapRight [
-
-	| next children |
-	children := self selection parentSandblock childSandblocks.
-	next := children atWrap: (children indexOf: self selection) + 1.
-	
-	(next notNil and: [self selection canSwap and: [next canSwap]]) ifTrue: [
-		self do: ((SBSwapCommand newFor: self method) a: self selection; b: next)]
 ]
 
 { #category : #accessing }
@@ -2212,161 +2170,11 @@ SBEditor >> waitForLetterDo: aBlock [
 		letter isLetter ifTrue: [aBlock value: letter]]
 ]
 
-{ #category : #actions }
-SBEditor >> watchExampleExpression: aBlock [
-
-	self watchExpression: aBlock with: SBExampleWatch
-]
-
-{ #category : #actions }
-SBEditor >> watchExpression: aBlock [
-
-	self watchExpression: aBlock with: SBWatch
-]
-
-{ #category : #actions }
-SBEditor >> watchExpression: aBlock with: aWatchClass [
-
-	self selection isExpression ifFalse: [^ self].
-	
-	self selection isWatch
-		ifTrue: [^ self do: ((SBReplaceCommand newFor: self method) target: self selection; replacer: self selection childSandblocks first)].
-	
-	self selection parentSandblock isWatch ifTrue: [^ self deleteAroundSelection].
-	
-	self do: ((SBWrapCommand newFor: self method)
-			outer: aWatchClass new newIdentifier;
-			inner: aBlock;
-			wrap: [:outer :inner | outer expression: inner])
-]
-
-{ #category : #actions }
-SBEditor >> watchSelection [
-
-	self watchExpression: self selection
-]
-
-{ #category : #actions }
-SBEditor >> watchSelectionForExample [
-
-	self watchExampleExpression: self selection
-]
-
 { #category : #accessing }
 SBEditor >> workspace: aWorkspaceRecord [
 
 	workspace := aWorkspaceRecord.
 	self changed: #relabel
-]
-
-{ #category : #actions }
-SBEditor >> wrapAsArgument [
-
-	| msg |
-	msg := SBMessageSend new.
-	self do: ((SBWrapCommand newFor: self method)
-		outer: msg;
-		inner: self selection;
-		shouldMergeWithNext: true;
-		wrap: [:outer :inner |
-			outer
-				receiver: SBUnknown new
-				selector: SBMessageSend placeholderSelector
-				arguments: {inner}];
-		yourself).
-	
-	self startInput: msg receiver at: 0 replacingContents: false
-]
-
-{ #category : #actions }
-SBEditor >> wrapInArrayType: aSymbol [
-
-	self selection wrapInArrayType: aSymbol
-]
-
-{ #category : #actions }
-SBEditor >> wrapInAssignment [
-
-	| binding |
-	binding := SBName new.
-	self do: ((SBWrapCommand newFor: self method)
-		outer: SBAssignment new;
-		inner: self selection;
-		wrap: [:outer :inner | outer binding: binding value: inner];
-		shouldMergeWithNext: true;
-		yourself).
-	
-	self startInput: binding at: 0 replacingContents: true
-]
-
-{ #category : #actions }
-SBEditor >> wrapInBlock [
-
-	self selection wrapInBlock
-]
-
-{ #category : #actions }
-SBEditor >> wrapInCascade [
-
-	self selection wrapInCascade
-]
-
-{ #category : #actions }
-SBEditor >> wrapInDynamicArray [
-
-	self wrapInArrayType: #dynamic
-]
-
-{ #category : #actions }
-SBEditor >> wrapInLiteralArray [
-
-	self wrapInArrayType: #literal
-]
-
-{ #category : #actions }
-SBEditor >> wrapInMessageSend [
-
-	self wrapInMessageSend: ''
-]
-
-{ #category : #actions }
-SBEditor >> wrapInMessageSend: aString [
-
-	| msg |
-	self selection isExpression ifFalse: [^ self].
-	msg := SBMessageSend new.
-	self do: ((SBWrapCommand newFor: self method)
-		outer: msg;
-		inner: self selection;
-		shouldMergeWithNext: true;
-		wrap: [:outer :inner |
-			outer
-				receiver: inner
-				selector: aString
-				arguments: (aString numArgs > 0 ifTrue: [
-					(1 to: aString numArgs) collect: [:i | SBUnknown new]] ifFalse: [#()])];
-		yourself).
-	self startInput: msg at: 900000000 replacingContents: false
-]
-
-{ #category : #actions }
-SBEditor >> wrapInReturn [
-
-	self do: ((SBWrapCommand newFor: self method)
-		outer: SBReturn new;
-		inner: self selection;
-		wrap: [:outer :inner | outer expression: inner];
-		yourself)
-]
-
-{ #category : #actions }
-SBEditor >> wrapInToggledCode [
-
-	self do: ((SBWrapCommand newFor: self method)
-		outer: SBToggledCode new;
-		inner: self selection;
-		wrap: [:outer :inner | outer comment: '' active: 0 do: {SBBlockBody new statements: {inner}}];
-		yourself)
 ]
 
 { #category : #actions }

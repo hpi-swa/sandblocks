@@ -19,7 +19,7 @@ SBStNameRepresentation class >> isSmalltalkName [
 { #category : #'as yet unclassified' }
 SBStNameRepresentation class >> matches: aBlock [
 
-	^ (aBlock respondsTo: #contents) and: [aBlock contents isString and: [aBlock contents first isLetter and: [aBlock contents viewAllButFirst allSatisfy: #isAlphaNumeric]]]
+	^ (aBlock respondsTo: #contents) and: [aBlock contents isString  and: [aBlock contents isEmpty or: [aBlock contents first isLetter and: [aBlock contents viewAllButFirst allSatisfy: #isAlphaNumeric]]]]
 ]
 
 { #category : #'as yet unclassified' }
