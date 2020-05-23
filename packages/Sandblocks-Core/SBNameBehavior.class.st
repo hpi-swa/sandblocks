@@ -8,6 +8,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBNameBehavior >> actions [
+
+	^ Array streamContents: [:stream |
+		self class withAllSuperclassesDo: [:class |
+			Pragma
+				withPragmasIn: class
+				do: [:pragma |
+					(#(#action #multiSelectAction #inputAction) includes: pragma keyword) ifTrue: [stream nextPut: pragma]].
+			SBNameBehavior = class ifTrue: [^ stream contents]]]
+]
+
+{ #category : #'as yet unclassified' }
 SBNameBehavior >> attached: aName [
 
 	name := aName.

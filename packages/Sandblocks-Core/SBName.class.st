@@ -45,6 +45,12 @@ SBName >> acceptInputEvent: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBName >> actions [
+
+	^ super actions, self behavior actions
+]
+
+{ #category : #'as yet unclassified' }
 SBName >> allUsages [
 
 	^ self behavior resolveBinding ifNotNil: [:binding | binding allUsages] ifNil: [#()]
@@ -92,12 +98,6 @@ SBName >> browse [
 SBName >> castToUnknownWhenEmpty [
 
 	^ self behavior isExpression
-]
-
-{ #category : #'as yet unclassified' }
-SBName >> codeActions [
-
-	^ super codeActions, self behavior codeActions
 ]
 
 { #category : #'as yet unclassified' }
@@ -213,6 +213,12 @@ SBName >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBName >> lookupAction: aSymbol [
+
+	^ (self behavior class lookupSelector: aSymbol) ifNil: [self class lookupSelector: aSymbol]
+]
+
+{ #category : #'as yet unclassified' }
 SBName >> lowercaseSuggestions [
 
 	^ Array streamContents: [:str |
@@ -249,6 +255,12 @@ SBName >> noteNewOwner: aMorph [
 	
 	aMorph isAssignment ifTrue: [^ self behavior: (self isFirstChild ifTrue: [SBAssignmentLabel new] ifFalse: [SBBinding new])].
 	self behavior: SBBinding new
+]
+
+{ #category : #'as yet unclassified' }
+SBName >> performAction: aSymbol [
+
+	(self behavior respondsTo: aSymbol) ifTrue: [self behavior perform: aSymbol] ifFalse: [super performAction: aSymbol]
 ]
 
 { #category : #'as yet unclassified' }

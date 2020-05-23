@@ -139,11 +139,13 @@ SBCodeOpener >> initialize [
 SBCodeOpener >> keyStroke: anEvent [
 
 	anEvent keyCharacter = Character escape ifTrue: [^ self delete].
-	anEvent keyCharacter = Character arrowRight ifTrue: [^ self focusPanel: currentPanelIndex + 1].
-	anEvent keyCharacter = Character arrowLeft ifTrue: [^ self focusPanel: currentPanelIndex - 1].
+	(anEvent keyCharacter = Character arrowRight or: [anEvent keyCharacter = $l and: [anEvent commandKeyPressed]]) ifTrue: [^ self focusPanel: currentPanelIndex + 1].
+	(anEvent keyCharacter = Character arrowLeft or: [anEvent keyCharacter = $h and: [anEvent commandKeyPressed]]) ifTrue: [^ self focusPanel: currentPanelIndex - 1].
 	anEvent keyCharacter = Character cr ifTrue: [result := self selectedClassOrMethod. ^ self delete].
 	anEvent keyCharacter = Character tab ifTrue: [self showingClassSide: self showingClassSide not].
-	(anEvent keyCharacter = $f and: [anEvent commandKeyPressed]) ifTrue: [^ self focus: UIManager default chooseClassOrTrait].
+	(anEvent keyCharacter = $j and: [anEvent commandKeyPressed]) ifTrue: [^ self select: 1].
+	(anEvent keyCharacter = $k and: [anEvent commandKeyPressed]) ifTrue: [^ self select: -1].
+	((anEvent keyCharacter = $f or: [anEvent keyCharacter = $x]) and: [anEvent commandKeyPressed]) ifTrue: [^ self focus: UIManager default chooseClassOrTrait].
 	self currentPanel keyStroke: anEvent
 ]
 
@@ -203,6 +205,16 @@ SBCodeOpener >> positionNear: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBCodeOpener >> select: aNumber [
+
+	currentPanelIndex caseOf: {
+		[1] -> [self selectedCategoryIndex: selectedCategoryIndex + aNumber].
+		[2] -> [self selectedClassIndex: selectedClassIndex + aNumber].
+		[3] -> [self selectedMethodIndex: selectedMethodIndex + aNumber]
+	}
+]
+
+{ #category : #'as yet unclassified' }
 SBCodeOpener >> selectedCategory [
 
 	^ self categories at: self selectedCategoryIndex
@@ -217,7 +229,13 @@ SBCodeOpener >> selectedCategoryIndex [
 { #category : #'as yet unclassified' }
 SBCodeOpener >> selectedCategoryIndex: aNumber [
 
-	selectedCategoryIndex := aNumber.
+	aNumber < 1
+		ifTrue: [selectedCategoryIndex := self categories size]
+		ifFalse: [
+			aNumber > self categories size
+				ifTrue: [selectedCategoryIndex := 1]
+				ifFalse: [selectedCategoryIndex := aNumber]].
+	
 	selectedMethodIndex := 0.
 	selectedClassIndex := 0.
 	self changed: #selectedCategoryIndex.
@@ -241,7 +259,13 @@ SBCodeOpener >> selectedClassIndex [
 { #category : #'as yet unclassified' }
 SBCodeOpener >> selectedClassIndex: aNumber [
 
-	selectedClassIndex := aNumber.
+	aNumber < 1
+		ifTrue: [selectedClassIndex := self classes size]
+		ifFalse: [
+			aNumber > self classes size
+				ifTrue: [selectedClassIndex := 1]
+				ifFalse: [selectedClassIndex := aNumber]].
+
 	self changed: #selectedClassIndex.
 	self changed: #methods.
 	self selectedMethodIndex: 0
@@ -272,8 +296,14 @@ SBCodeOpener >> selectedMethodIndex [
 
 { #category : #'as yet unclassified' }
 SBCodeOpener >> selectedMethodIndex: aNumber [
-
-	selectedMethodIndex := aNumber.
+	
+	aNumber < 1
+		ifTrue: [selectedMethodIndex := self methods size]
+		ifFalse: [
+			aNumber > self methods size
+				ifTrue: [selectedMethodIndex := 1]
+				ifFalse: [selectedMethodIndex := aNumber]].
+	
 	self changed: #selectedMethodIndex.
 	
 	preview ifNotNil: #delete.
@@ -281,7 +311,7 @@ SBCodeOpener >> selectedMethodIndex: aNumber [
 	(selectedMethodIndex > 0 and: [selectedClassIndex > 0]) ifTrue: [
 		preview := SBSelection new
 			methodClass: self selectedClass;
-			colorPolicy: SBDefaultColorPolicy new;
+			colorPolicy: SBEditor defaultColorPolicy new;
 			addMorphBack: self selectedMethod asSandblock.
 		preview openInWorld.
 		preview topCenter: self bottomCenter]

@@ -1560,13 +1560,13 @@ SBEditor >> pasteString [
 { #category : #'as yet unclassified' }
 SBEditor >> perform: anAction for: aBlock [
 
-	(aBlock class lookupSelector: anAction) ifNotNil: [:method |
+	(aBlock lookupAction: anAction) ifNotNil: [:method |
 		(((mode = #selection and: [(method pragmaAt: #multiSelectAction) notNil]) or: [
 			(mode = #command and: [
 				(method pragmaAt: #multiSelectAction) notNil or: [(method pragmaAt: #action) notNil]]) or: [
 				mode = #input and: [(method pragmaAt: #inputAction) notNil]]]) and: [
 			(method pragmaAt: #actionValidIf:) ifNotNil: [:pragma | aBlock perform: pragma arguments first] ifNil: [true]]) ifTrue: [
-			aBlock perform: anAction.
+			aBlock performAction: anAction.
 			^ true]].
 	^ false
 ]

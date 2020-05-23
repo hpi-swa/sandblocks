@@ -983,6 +983,12 @@ SBBlock >> leftRotate [
 		 yourself)
 ]
 
+{ #category : #accessing }
+SBBlock >> lookupAction: aSymbol [
+
+	^ self class lookupSelector: aSymbol
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> minExtent [
 	"Layout specific. Return the minimum size the receiver can be represented in.
@@ -1173,6 +1179,12 @@ SBBlock >> pc: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
+SBBlock >> performAction: aSymbol [
+
+	self perform: aSymbol
+]
+
+{ #category : #'as yet unclassified' }
 SBBlock >> pickUp: anEvent [
 
 	anEvent hand attachMorph: (SBSelection new 
@@ -1245,11 +1257,11 @@ SBBlock >> previousBlockThat: aBlock [
 SBBlock >> promptAction [
 	<multiSelectAction>
 
-	| options mode index |
+	| options index |
 	options := self validActions.
 	index := UIManager default chooseFrom: (options collect: [:option |
 		option method selector, (' ', (SBEditor shortcutStringForAction: option selector))]).
-	index > 0 ifTrue: [self perform: (options at: index) method selector]
+	index > 0 ifTrue: [self performAction: (options at: index) method selector]
 ]
 
 { #category : #'as yet unclassified' }
