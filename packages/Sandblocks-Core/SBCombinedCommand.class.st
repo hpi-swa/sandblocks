@@ -49,6 +49,12 @@ SBCombinedCommand >> previousSelection [
 ]
 
 { #category : #'as yet unclassified' }
+SBCombinedCommand >> shouldMergeWithNext [
+
+	^ self commands last shouldMergeWithNext
+]
+
+{ #category : #'as yet unclassified' }
 SBCombinedCommand >> undo [
 
 	self commands allButFirst reverseDo: #undo.

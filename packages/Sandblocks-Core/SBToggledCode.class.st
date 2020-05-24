@@ -90,12 +90,6 @@ SBToggledCode >> color [
 ]
 
 { #category : #'as yet unclassified' }
-SBToggledCode >> colorPolicy [
-
-	^ SBPlainColorPolicy new
-]
-
-{ #category : #'as yet unclassified' }
 SBToggledCode >> comment: aString active: aNumber do: aCollection [
 
 	comment contents: aString.
@@ -125,7 +119,7 @@ SBToggledCode >> deselectAllBut: aNumber [
 	self submorphs allButFirst withIndexDo: [:row :rowIndex |
 		rowIndex ~= aNumber ifTrue: [
 			row firstSubmorph value: false.
-			row lastSubmorph setProperty: #sandblockBlockColor toValue: Color white; changed]]
+			row lastSubmorph localColorPolicy: SBPlainColorPolicy]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -204,9 +198,7 @@ SBToggledCode >> updateSelected [
 	
 	index > 0 ifTrue: [ | block |
 		block := (self submorphs at: index + 1) lastSubmorph.
-		block
-			setProperty: #sandblockBlockColor toValue: (block valueOfProperty: #previousBlockColor ifAbsent: [Color random]);
-			changed]
+		block removeLocalColorPolicy]
 ]
 
 { #category : #'as yet unclassified' }

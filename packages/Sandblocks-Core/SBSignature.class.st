@@ -1,17 +1,8 @@
 Class {
 	#name : #SBSignature,
 	#superclass : #Morph,
-	#instVars : [
-		'currentInputMessagePart'
-	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
-
-{ #category : #'as yet unclassified' }
-SBSignature >> activeMorph [
-
-	^ currentInputMessagePart
-]
 
 { #category : #'as yet unclassified' }
 SBSignature >> addArgumentAndEditAfter: aMorph focusKeyword: aTextMorph [
@@ -72,19 +63,14 @@ SBSignature >> argumentsDo: aBlock [
 { #category : #'as yet unclassified' }
 SBSignature >> childSandblocksDo: aBlock [
 
-	self argumentsDo: aBlock
+	"self argumentsDo: aBlock"
+	self submorphsDo: aBlock
 ]
 
 { #category : #'as yet unclassified' }
 SBSignature >> color [
 
 	^ self owner color
-]
-
-{ #category : #'as yet unclassified' }
-SBSignature >> currentTextMorph [
-
-	^ currentInputMessagePart
 ]
 
 { #category : #'as yet unclassified' }
@@ -95,12 +81,6 @@ SBSignature >> extractKeywords: aString [
 	parts size = 1 ifTrue: [^ parts].
 	
 	^ parts allButLast collect: [:p | p, ':']
-]
-
-{ #category : #'as yet unclassified' }
-SBSignature >> focusPartAt: aNumber [
-
-	self moveFocusToPart: (self submorphs at: (aNumber - 1 * 2 + 1))
 ]
 
 { #category : #'as yet unclassified' }
@@ -120,20 +100,23 @@ SBSignature >> initialize [
 { #category : #'as yet unclassified' }
 SBSignature >> insertCommandRequest: anAfterBoolean near: aBlock [
 
-	| cmd index |
+	| part |
 	self isBinary ifTrue: [^ nil].
-	index := (self arguments indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]).
-	index < 1 ifTrue: [^ nil].
-	cmd := (SBInputMessageCommand newFor: self containingSandblock containingArtefact)
-		 previousSelector: self selector;
-		 previousArguments: self arguments;
-		 newArguments: (self arguments withInsert: SBUnknown new at: index);
-		 messageSend: self;
-		 select: self parentSandblock;
-		 editInputIndex: index;
-		 newSelector: (self selector keywords withInsert: ':' at: index) join;
-		 yourself.
-	^ cmd
+	
+	part := SBMessagePart new contents: ':'.
+	^ SBCombinedCommand newWith: {
+		((SBInsertCommand newFor: self containingSandblock containingArtefact)
+			container: self;
+			index: aBlock childIndex + 1;
+			morph: SBUnknown new;
+			yourself).
+		((SBInsertCommand newFor: self containingSandblock containingArtefact)
+			container: self;
+			index: aBlock childIndex;
+			morph: part;
+			shouldMergeWithNext: true;
+			yourself)
+	}
 ]
 
 { #category : #'as yet unclassified' }
@@ -220,45 +203,6 @@ SBSignature >> minExtent [
 ]
 
 { #category : #'as yet unclassified' }
-SBSignature >> moveCursorTo: aNumber [
-
-	| index |
-	index := 0.
-	self submorphs pairsDo: [:message :argument |
-		index := index + message contents size.
-		index >= aNumber
-			ifTrue: [
-				currentInputMessagePart := message.
-				currentInputMessagePart moveCursorTo: aNumber - index - message contents size.
-				^ self]].
-	
-	currentInputMessagePart := self submorphs at: (self submorphCount - 1 max: 1).
-	currentInputMessagePart moveCursorTo: aNumber
-]
-
-{ #category : #'as yet unclassified' }
-SBSignature >> moveFocusToNextPart: aNumber [
-
-	((self arguments notEmpty and: [self submorphCount <= 2]) or: [currentInputMessagePart submorphAfter ifNotNil: #isUnknown ifNil: [false]])
-		ifTrue: [ | arg |
-			arg := currentInputMessagePart submorphAfter.
-			self containingSandblock sandblockEditor
-				endInput;
-				startInput: arg at: 0 replacingContents: false]
-		ifFalse: [self moveFocusToPart: (self submorphs atWrap: (self submorphIndexOf: currentInputMessagePart) + (2 * aNumber))]
-]
-
-{ #category : #'as yet unclassified' }
-SBSignature >> moveFocusToPart: aMorph [
-
-	currentInputMessagePart stopEditing.
-	currentInputMessagePart := aMorph.
-	
-	" place cursor in front of colon (behind doesn't make sense) or append "
-	currentInputMessagePart moveCursorTo: (currentInputMessagePart contents = ':' ifTrue: [0] ifFalse: [9e8])
-]
-
-{ #category : #'as yet unclassified' }
 SBSignature >> numArgs [
 
 	^ self submorphCount // 2
@@ -305,51 +249,18 @@ SBSignature >> selectorAndEdit: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBSignature >> setBinaryMessage: aString [
-
-	currentInputMessagePart contents: aString.
-	self flag: #fixme. " gonna be very annoying typing <= "
-	
-	self submorphCount = 1
-		ifTrue: [self addArgumentAndEditAfter: currentInputMessagePart focusKeyword: currentInputMessagePart]
-		ifFalse: [self moveCursorTo: 9e8]
-]
-
-{ #category : #'as yet unclassified' }
 SBSignature >> startInputAt: aNumber replacingContents: aBoolean [
 
-	| cmd |
-	currentInputMessagePart := self firstSubmorph.
-	
-	cmd := (SBInputMessageCommand newFor: self containingSandblock containingArtefact)
-		messageSend: self containingSandblock;
-		previousSelector: self selector;
-		previousArguments: self arguments;
-		yourself.
-	
-	currentInputMessagePart moveCursorTo: aNumber.
-	(aBoolean or: [currentInputMessagePart contents = SBMessageSend placeholderSelector]) ifTrue: [currentInputMessagePart contents: ((currentInputMessagePart contents includes: $:) ifTrue: [':'] ifFalse: [''])].
-	
-	^ cmd
-]
-
-{ #category : #'as yet unclassified' }
-SBSignature >> stopEditing: aCommand [
-
-	aCommand
-		newSelector: self selector;
-		newArguments: self arguments.
-	
-	currentInputMessagePart ifNotNil: #stopEditing.
-	currentInputMessagePart := nil
+	self sandblockEditor replaceInput: self firstSubmorph.
+	^ self firstSubmorph startInputAt: aNumber replacingContents: aBoolean
 ]
 
 { #category : #'as yet unclassified' }
 SBSignature >> textMorphFor: aString [
 
 	| text |
-	text := SBOwnTextMorph new contents: aString.
-	SBColorPolicy boldMessageSends ifTrue: [text emphasis: TextEmphasis bold].
+	text := SBMessagePart new contents: aString.
+	"SBColorPolicy boldMessageSends ifTrue: [text emphasis: TextEmphasis bold]."
 	^ text
 ]
 

@@ -262,6 +262,14 @@ SBBasicMethod >> hasUnsavedChanges: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> ignoreChangeNotifierDuring: aBlock [
+
+	self setProperty: #ignoreChangeNotifier toValue: true.
+	
+	aBlock ensure: [self removeProperty: #ignoreChangeNotifier]
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> initialize [
 
 	super initialize.
@@ -359,12 +367,9 @@ SBBasicMethod >> isMyArgument: aBlock [
 { #category : #'as yet unclassified' }
 SBBasicMethod >> methodChanged: anEvent [
 
-	(anEvent item selector = self selector and: [anEvent item methodClass = self methodClass]) ifTrue: [
+	((self hasProperty: #ignoreChangeNotifier) not and: (anEvent item selector = self selector and: [anEvent item methodClass = self methodClass])) ifTrue: [
 		anEvent isRemoved ifTrue: [^ self delete].
-		anEvent isModified ifTrue: [
-			SBLabel text: [
-				'FIXME: heuristic to check whether we just caused this change'].
-			^ (self sandblockEditor selection ifNotNil: [:s | s hasOwner: self] ifNil: [false]) ifFalse: [self reloadMethod]]]
+		anEvent isModified ifTrue: [^ self reloadMethod]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -469,9 +474,10 @@ SBBasicMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
 			aBoolean ifFalse: [^ false] ifTrue: [block tryFixIfFail: [^ false]]]].
 	
 	text := aQuickBoolean ifTrue: [self sourceString] ifFalse: [self prettySourceString].
-	newSelector := self methodClass compile: text asText.
-	(self currentClass ~= self methodClass or: [self currentSelector ~= #'' and: [newSelector ~=self  currentSelector]]) ifTrue: [
-		self currentClass removeSelector: self currentSelector].
+	self ignoreChangeNotifierDuring: [
+		newSelector := self methodClass compile: text asText.
+		(self currentClass ~= self methodClass or: [self currentSelector ~= #'' and: [newSelector ~=self  currentSelector]]) ifTrue: [
+			self currentClass removeSelector: self currentSelector]].
 	self currentSelector: newSelector.
 	self currentClass: self methodClass.
 	

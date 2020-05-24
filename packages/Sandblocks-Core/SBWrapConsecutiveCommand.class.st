@@ -20,7 +20,7 @@ SBWrapConsecutiveCommand >> do [
 	
 	targets first replaceBy: outer.
 	wrap value: outer value: targets.
-	^ outer
+	^ targets first
 ]
 
 { #category : #'as yet unclassified' }

@@ -119,6 +119,8 @@ SBLiteral >> moveCursorTo: aNumber [
 SBLiteral >> replaceWithUnknown [
 
 	| new |
+	self isUnknown ifTrue: [^ self].
+	
 	new := SBUnknown new.
 	self replaceBy: new.
 	new moveCursorTo: 0.

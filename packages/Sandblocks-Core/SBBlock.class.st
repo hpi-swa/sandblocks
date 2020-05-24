@@ -4,8 +4,23 @@ Class {
 	#instVars : [
 		'decorators'
 	],
-	#category : 'Sandblocks-Core'
+	#classVars : [
+		'Navigation'
+	],
+	#category : #'Sandblocks-Core'
 }
+
+{ #category : #'as yet unclassified' }
+SBBlock class >> navigation [
+
+	^ Navigation ifNil: [Navigation := SBDepthFirstPreOrderNavigation new]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock class >> navigation: aNavigation [
+
+	Navigation := aNavigation
+]
 
 { #category : #testing }
 SBBlock >> acceptChild: aMorph [
@@ -60,7 +75,7 @@ SBBlock >> addElement [
 		self sandblockEditor startInput: self sandblockEditor selection at: 0 replacingContents: false]
 ]
 
-{ #category : #accessing }
+{ #category : #hierarchy }
 SBBlock >> adjacentBlock: aNumber [
 
 	| adjacent index |
@@ -131,6 +146,15 @@ SBBlock >> canDeleteChild: aBlock [
 	^ false
 ]
 
+{ #category : #actions }
+SBBlock >> canInput [
+
+	self flag: #fixme.
+	" see if we specialize startInput. FIXME: we can currently not just call startInput and
+	see what we get back because some classes cause side-effects, which they shouldn't "
+	^ (self class lookupSelector: #startInputAt:replacingContents:) methodClass ~= SBBlock
+]
+
 { #category : #testing }
 SBBlock >> canSwap [
 
@@ -142,25 +166,22 @@ SBBlock >> changeLocalColorPolicy [
 	<action>
 
 	^ (UIManager default chooseFrom: SBColorPolicy withAllSubclasses values: SBColorPolicy withAllSubclasses) ifNotNil: [:policy |
-		self
-			setProperty: #localColorPolicy toValue: policy new;
-			clearCache;
-			changed]
+		self localColorPolicy: policy]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> childIndex [
 
 	^ self parentSandblock childSandblocks indexOf: self
 ]
 
-{ #category : #accessing }
+{ #category : #hierarchy }
 SBBlock >> childSandblocks [
 
 	^ Array streamContents: [:stream | self childSandblocksDo: [:block | stream nextPut: block]]
 ]
 
-{ #category : #accessing }
+{ #category : #hierarchy }
 SBBlock >> childSandblocksDo: aBlock [
 
 	^ self subclassResponsibility
@@ -181,7 +202,7 @@ SBBlock >> click: anEvent [
 	self select
 ]
 
-{ #category : #testing }
+{ #category : #hierarchy }
 SBBlock >> closestAdjacentFrom: mySide to: theirSide [
 
 	| myPoint direction component candidates |
@@ -533,6 +554,15 @@ SBBlock >> exploreAs [
 		ifNone: [nil]
 ]
 
+{ #category : #hierarchy }
+SBBlock >> firstDeepChild [
+
+	| current |
+	current := self.
+	[current childSandblocks isEmpty] whileFalse: [current := current childSandblocks first].
+	^ current
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> firstInput [
 
@@ -634,7 +664,7 @@ SBBlock >> handlesMouseOverDragging: anEvent [
 	^ anEvent hand hasSubmorphs and: [self wantsDroppedMorph: anEvent hand firstSubmorph event: anEvent]
 ]
 
-{ #category : #accessing }
+{ #category : #hierarchy }
 SBBlock >> hasChildSandblocks [
 
 	self childSandblocksDo: [:b | ^ true].
@@ -814,7 +844,7 @@ SBBlock >> isExpression [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : #hierarchy }
 SBBlock >> isFirstChild [
 
 	^ self parentSandblock childSandblocks first = self
@@ -826,10 +856,16 @@ SBBlock >> isGlobalWatch [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : #hierarchy }
 SBBlock >> isLastChild [
 
 	^ self parentSandblock childSandblocks last = self
+]
+
+{ #category : #hierarchy }
+SBBlock >> isLastDeepChild [
+
+	^ self = self lastDeepChild
 ]
 
 { #category : #testing }
@@ -946,7 +982,7 @@ SBBlock >> isWatch [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : #hierarchy }
 SBBlock >> lastDeepChild [
 
 	| current |
@@ -982,6 +1018,14 @@ SBBlock >> leftRotate [
 	self sandblockEditor do: ((SBSubtreeRotateCommand newFor: self containingArtefact)
 		 target: self;
 		 yourself)
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> localColorPolicy: aPolicy [
+
+	self setProperty: #localColorPolicy toValue: aPolicy new;
+			clearCache;
+			changed
 ]
 
 { #category : #accessing }
@@ -1060,7 +1104,7 @@ SBBlock >> multiSelectChildren [
 	self childSandblocks do: #startOrAddToMultiSelection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> nextBlock [
 
 	self childSandblocksDo: [:first | ^ first].
@@ -1069,7 +1113,7 @@ SBBlock >> nextBlock [
 		self parentSandblock parentAdjacentBlock: 1]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> nextBlockThat: aBlock [
 
 	| n |
@@ -1110,7 +1154,7 @@ SBBlock >> outerBounds [
 	^ super outerBounds expandBy: self frameSize
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> parentAdjacentBlock: aNumber [
 
 	^ (self adjacentBlock: aNumber)
@@ -1273,6 +1317,15 @@ SBBlock >> proposeCodeActions: aCollection for: aBlock [
 	index > 0 ifTrue: [(aCollection at: index) do]
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> removeLocalColorPolicy [
+
+	self
+		removeProperty: #localColorPolicy;
+		clearCache;
+		changed
+]
+
 { #category : #suggestions }
 SBBlock >> removeSuggestionMenu [
 
@@ -1368,7 +1421,7 @@ SBBlock >> selectDown [
 	next := selectionDownHistory ifEmpty: [] ifNotEmpty: #removeLast.
 	(self childSandblocks includes: next) ifFalse: [
 		selectionDownHistory removeAll.
-		next := self childSandblocks first].
+		next := self hasChildSandblocks ifTrue: [self childSandblocks first] ifFalse: [nil]].
 	
 	next ifNotNil: #select
 ]
@@ -1392,7 +1445,7 @@ SBBlock >> selectNext [
 	<multiSelectAction>
 
 	self sandblockEditor selectionDownHistory removeAll.
-	self nextBlock ifNotNil: #select
+	self class navigation nextFrom: self do: #select
 ]
 
 { #category : #actions }
@@ -1400,7 +1453,7 @@ SBBlock >> selectPrevious [
 	<multiSelectAction>
 
 	self sandblockEditor selectionDownHistory removeAll.
-	self previousBlock ifNotNil: #select
+	self class navigation previousFrom: self do: #select
 ]
 
 { #category : #actions }
@@ -1504,6 +1557,7 @@ SBBlock >> startInputAt: aNumber replacingContents: aBoolean [
 { #category : #actions }
 SBBlock >> startInputAtEnd [
 	<action>
+	<actionValidIf: #canInput>
 
 	self sandblockEditor startInput: self at: 9e8 replacingContents: false
 ]
@@ -1511,6 +1565,7 @@ SBBlock >> startInputAtEnd [
 { #category : #actions }
 SBBlock >> startInputAtStart [
 	<action>
+	<actionValidIf: #canInput>
 
 	self sandblockEditor startInput: self at: 1 replacingContents: false
 ]
@@ -1518,6 +1573,7 @@ SBBlock >> startInputAtStart [
 { #category : #actions }
 SBBlock >> startInputSubstituting [
 	<action>
+	<actionValidIf: #canInput>
 
 	self sandblockEditor startInput: self at: 1 replacingContents: true
 ]

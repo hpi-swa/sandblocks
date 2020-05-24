@@ -739,6 +739,12 @@ SBEditor >> currentInput [
 	^ currentInput
 ]
 
+{ #category : #'submorphs-add/remove' }
+SBEditor >> currentInputCommand [
+
+	^ currentInputCommand
+]
+
 { #category : #accessing }
 SBEditor >> currentMethodMap [
 
@@ -1312,6 +1318,7 @@ SBEditor >> mode: aSymbol [
 		[#selection] -> [Color blue alpha: 0.2].
 		[#command] -> [Color white]
 	}).
+	self selection invalidRect: (self selection outerBounds expandBy: 4).
 	self updateSelectionLabel
 ]
 
