@@ -560,6 +560,18 @@ SBEditor >> canDeleteChild: aBlock [
 	^ true
 ]
 
+{ #category : #'actions input' }
+SBEditor >> cancelInput [
+
+	self assert: self currentInputCommand notNil.
+	
+	self currentInputCommand
+		newText: self currentInputCommand previousText;
+		newMorph: self currentInputCommand oldMorph.
+	
+	self endInput
+]
+
 { #category : #actions }
 SBEditor >> changeSelection [
 
@@ -1318,7 +1330,7 @@ SBEditor >> mode: aSymbol [
 		[#selection] -> [Color blue alpha: 0.2].
 		[#command] -> [Color white]
 	}).
-	self selection invalidRect: (self selection outerBounds expandBy: 4).
+	self selection ifNotNil: [:s | s invalidRect: (s outerBounds expandBy: 4)].
 	self updateSelectionLabel
 ]
 

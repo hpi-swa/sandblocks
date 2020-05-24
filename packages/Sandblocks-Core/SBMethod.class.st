@@ -52,6 +52,12 @@ SBMethod >> currentTextMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBMethod >> deleteCommandFor: aBlock [
+
+	^ signature deleteCommandFor: aBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBMethod >> ensureExpanded [
 
 	self isCollapsed ifTrue: [self toggleCollapsed]

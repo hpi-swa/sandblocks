@@ -165,6 +165,12 @@ SBColorPolicy >> symbolsForLocalVariableDeclaration: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForMessagePart: aBlock [
+
+	^ aBlock hasColon ifTrue: [#(nil ':')] ifFalse: [#(nil nil)]
+]
+
+{ #category : #'as yet unclassified' }
 SBColorPolicy >> symbolsForMessageSend: aBlock [
 
 	^ #(nil nil)

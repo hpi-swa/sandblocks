@@ -14,12 +14,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBInputMessageCommand >> affectedMorphs [
-
-	^ {messageSend}
-]
-
-{ #category : #'as yet unclassified' }
 SBInputMessageCommand >> do [
 
 	messageSend selector: newSelector arguments: newArguments.

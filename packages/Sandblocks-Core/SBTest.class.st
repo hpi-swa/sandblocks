@@ -15,3 +15,9 @@ SBTest >> editorFor: aBlock [
 	aBlock select.
 	^ editor
 ]
+
+{ #category : #'as yet unclassified' }
+SBTest >> keyboardEvent: aCharacter [
+
+	^ KeyboardEvent new setType: #keyStroke buttons: 0 position: 0 @ 0 keyValue: aCharacter hand: nil stamp: nil
+]

@@ -322,11 +322,12 @@ SBBlock >> contextAcceptedRepresentationAt: aNumber [
 SBBlock >> copyAround [
 	<action>
 
-	| replacer |
+	| replacer editor |
 	" create a copy of our surroundings with ourselves replaced "
+	editor := self sandblockEditor.
 	replacer := SBPastePlaceholder new.
 	self replaceBy: replacer.
-	self sandblockEditor copyBuffer: replacer parentSandblock.
+	editor copyBuffer: replacer parentSandblock.
 	replacer replaceBy: self
 ]
 
@@ -470,13 +471,13 @@ SBBlock >> drawSymbolsOn: aCanvas [
 			drawString: symbols first
 			at: self layoutBounds origin + (space first negated rounded @ y)
 			font: font
-			color: (fg alpha: 0.5)].
+			color: (fg alpha: 0.7)].
 	symbols second ifNotNil: [
 		aCanvas
 			drawString: symbols second
 			at: self layoutBounds topRight + (0 @ (centerAlign ifTrue: [y] ifFalse: [self layoutBounds height - font height]))
 			font: font
-			color: (fg alpha: 0.5)]
+			color: (fg alpha: 0.7)]
 ]
 
 { #category : #colors }
@@ -1611,9 +1612,9 @@ SBBlock >> suggestionsMenu [
 SBBlock >> swap: aNumber [
 
 	| next children |
-	children := self parentSandblock childSandblocks.
+	children := self parentSandblock childSandblocks select: #canSwap.
 	next := children atWrap: (children indexOf: self) + aNumber.
-	(next notNil and: [self canSwap and: [next canSwap]]) ifTrue: [
+	next ifNotNil: [
 		self sandblockEditor do: ((SBSwapCommand newFor: self containingArtefact)
 			a: self;
 			b: next)]

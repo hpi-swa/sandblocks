@@ -8,19 +8,32 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBMessagePart >> actualContents [
+
+	^ text contents
+]
+
+{ #category : #'as yet unclassified' }
 SBMessagePart >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
 SBMessagePart >> contents [
 
-	^ text contents
+	^ text contents, (self hasColon ifTrue: [':'] ifFalse: [''])
 ]
 
 { #category : #'as yet unclassified' }
 SBMessagePart >> contents: aString [
 
-	text contents: aString
+	text contents: ((aString notEmpty and: [aString last = $:]) ifTrue: [aString allButLast] ifFalse: [aString])
+]
+
+{ #category : #'as yet unclassified' }
+SBMessagePart >> continueInputInArgument: anEvent [
+
+	self sandblockEditor startInput: (self adjacentBlock: 1) at: 0 replacingContents: false.
+	^ self sandblockEditor selection keyStroke: anEvent
 ]
 
 { #category : #'as yet unclassified' }
@@ -33,6 +46,18 @@ SBMessagePart >> currentTextMorph [
 SBMessagePart >> drawnColor [
 
 	^ super drawnColor alpha: 0
+]
+
+{ #category : #'as yet unclassified' }
+SBMessagePart >> fontToUse [
+
+	^ super fontToUse emphasized: TextEmphasis bold emphasisCode
+]
+
+{ #category : #'as yet unclassified' }
+SBMessagePart >> hasColon [
+
+	^ self owner lastSubmorph ~= self and: [self isBinary not]
 ]
 
 { #category : #'as yet unclassified' }
@@ -51,22 +76,25 @@ SBMessagePart >> initialize [
 SBMessagePart >> insertUnknownAfterAndInput: aBoolean [
 
 	| new |
+	self owner arguments size > 0 ifTrue: [^ self].
+	
 	new := SBUnknown new.
 	self sandblockEditor currentInputCommand shouldMergeWithNext: true.
+	
 	self sandblockEditor
 		endInput;
 		do: ((SBInsertCommand newFor: self containingArtefact)
 			morph: new;
 			container: self owner;
-			shouldMergeWithNext: true;
-			index: self childIndex + 1);
-		startInput: new at: 1 replacingContents: false
+			shouldMergeWithNext: aBoolean;
+			index: self childIndex + 1).
+	self sandblockEditor startInput: (aBoolean ifTrue: [new] ifFalse: [self]) at: 9e8 replacingContents: false
 ]
 
 { #category : #'as yet unclassified' }
 SBMessagePart >> isBinary [
 
-	^ self contents notEmpty and: [self contents first isSpecial]
+	^ text contents notEmpty and: [text contents first isSpecial]
 ]
 
 { #category : #'as yet unclassified' }
@@ -76,19 +104,24 @@ SBMessagePart >> isFirstPart [
 ]
 
 { #category : #'as yet unclassified' }
+SBMessagePart >> isUnary [
+
+	^ self owner lastSubmorph = self
+]
+
+{ #category : #'as yet unclassified' }
 SBMessagePart >> keyStroke: anEvent [
 
-	(anEvent keyCharacter = Character backspace and: [self contents isEmpty and: [self isFirstPart]]) ifTrue: [ 
-		^ self messageSend tryDelete].
+	(anEvent keyCharacter = Character space or: [
+		self actualContents notEmpty and: [self isBinary not and: [anEvent keyCharacter isSpecial]]]) ifTrue: [^ self wrapInMessageSend: anEvent].
+	(anEvent keyCharacter = Character backspace and: [self actualContents isEmpty and: [self isFirstPart]]) ifTrue: [^ self messageSend tryDelete].
+	(anEvent keyCharacter isAlphaNumeric and: [self isBinary]) ifTrue: [^ self continueInputInArgument: anEvent].
+	anEvent keyCharacter = $: ifTrue: [^ self insertUnknownAfterAndInput: true].
 	
-	(self isBinary and: [anEvent keyCharacter isSpecial not]) ifTrue: [
-		self sandblockEditor startInput: (self adjacentBlock: 1) at: 0 replacingContents: false.
-		^ self sandblockEditor selection keyStroke: anEvent].
-	
-	text keyStroke: anEvent.
-	
-	(anEvent keyCharacter isSpecial and: [self contents size = 1 and: [self isFirstPart]]) ifTrue: [^ self insertUnknownAfterAndInput: false].
-	anEvent keyCharacter = $: ifTrue: [self insertUnknownAfterAndInput: true]
+	((anEvent keyCharacter isSpecial and: [self actualContents isEmpty or: [self isBinary]]) or: [anEvent keyCharacter isAlphaNumeric and: [self actualContents isEmpty or: [self isBinary not]]]) ifTrue: [
+		text keyStroke: anEvent.
+		(anEvent keyCharacter isSpecial and: [self actualContents size = 1 and: [self isFirstPart]]) ifTrue: [^ self insertUnknownAfterAndInput: false].
+		self updateSuggestions]
 ]
 
 { #category : #'as yet unclassified' }
@@ -127,11 +160,51 @@ SBMessagePart >> stopEditing: aCommand [
 		newText: self contents;
 		newMorph: self.
 	
-	text stopEditing
+	text stopEditing.
+	
+	self removeSuggestionMenu
+]
+
+{ #category : #'as yet unclassified' }
+SBMessagePart >> symbols [
+
+	^ self colorPolicy symbolsForMessagePart: self
 ]
 
 { #category : #'as yet unclassified' }
 SBMessagePart >> textContents [
 
 	^ self contents
+]
+
+{ #category : #'as yet unclassified' }
+SBMessagePart >> updateSuggestions [
+
+	| selector |
+	selector := self contents.
+	selector ifEmpty: [^ self].
+	
+	selector last = $: ifTrue: [selector := selector allButLast].
+	
+	self updateSuggestions: ((self messageSend actualReceiver completionSuggestionsFor: selector) collect: [:sel | SBSuggestionItem selector: sel label: 'send']) showNear: self
+]
+
+{ #category : #'as yet unclassified' }
+SBMessagePart >> useSuggestion: aString [
+
+	self messageSend useSuggestion: aString
+]
+
+{ #category : #'as yet unclassified' }
+SBMessagePart >> wrapInMessageSend [
+	<action>
+	
+	self messageSend wrapInMessageSend: ''
+]
+
+{ #category : #'as yet unclassified' }
+SBMessagePart >> wrapInMessageSend: anEvent [
+
+	self sandblockEditor endInput.
+	^ self messageSend wrapInMessageSend: (anEvent keyCharacter isSpecial ifTrue: [anEvent keyCharacter asString] ifFalse: [''])
 ]

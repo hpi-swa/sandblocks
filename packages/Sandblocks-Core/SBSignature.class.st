@@ -74,6 +74,17 @@ SBSignature >> color [
 ]
 
 { #category : #'as yet unclassified' }
+SBSignature >> deleteCommandFor: aBlock [
+
+	| index |
+	index := ((((self submorphs indexOf: aBlock) - 1) / 2) floor * 2) + 1.
+	^ SBCombinedCommand newWith: {
+		((SBDeleteCommand newFor: aBlock containingArtefact) target: (self submorphs at: index)).
+		((SBDeleteCommand newFor: aBlock containingArtefact) target: (self submorphs at: index + 1))
+	}
+]
+
+{ #category : #'as yet unclassified' }
 SBSignature >> extractKeywords: aString [
 
 	| parts |
@@ -170,6 +181,12 @@ SBSignature >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBSignature >> messageParts [
+
+	^ Array streamContents: [:s | 1 to: self submorphCount  by: 2 do: [:i | s nextPut: (self submorphs at: i)]]
+]
+
+{ #category : #'as yet unclassified' }
 SBSignature >> minExtent [
 	"Layout specific. Return the minimum size the receiver can be represented in.
 	Implementation note: When this message is sent from an owner trying to lay out its children it will traverse down the morph tree and recompute the minimal arrangement of the morphs based on which the minimal extent is returned. When a morph with some layout strategy is encountered, the morph will ask its strategy to compute the new arrangement. However, since the final size given to the receiver is unknown at the point of the query, the assumption is made that the current bounds of the receiver are the base on which the layout should be computed. This scheme prevents strange layout changes when for instance, a table is contained in another table. Unless the inner table has been resized manually (which means its bounds are already enlarged) the arrangement of the inner table will not change here. Thus the entire layout computation is basically an iterative process which may have different results depending on the incremental changes applied."
@@ -209,6 +226,14 @@ SBSignature >> numArgs [
 ]
 
 { #category : #'as yet unclassified' }
+SBSignature >> numArguments: aString [
+
+	aString last = $: ifTrue: [^ (self extractKeywords: aString) size].
+	aString first isSpecial ifTrue: [^ 1].
+	^ 0
+]
+
+{ #category : #'as yet unclassified' }
 SBSignature >> selector [
 
 	^ String streamContents: [:stream |
@@ -232,20 +257,49 @@ SBSignature >> selector: aString [
 { #category : #'as yet unclassified' }
 SBSignature >> selector: aString arguments: aCollection [
 
-	self removeAllMorphs.
+	| messageParts |
+	messageParts := self messageParts.
 	(self extractKeywords: aString) withIndexDo: [:keyword :index |
-		self addMorphBack: (self textMorphFor: keyword).
-		((keyword endsWith: ':') or: [keyword notEmpty and: [keyword allSatisfy: #isSpecial]]) ifTrue: [
-			self addMorphBack: (aCollection at: index)]]
+		messageParts
+			at: index
+			ifPresent: [:p |
+				p contents ~= keyword ifTrue: [p replaceBy: (self textMorphFor: keyword)]]
+			ifAbsent: [
+				self addMorph: (self textMorphFor: keyword) asElementNumber: (index * 2) - 1].
+		((keyword endsWith: ':') or: [
+			keyword notEmpty and: [keyword allSatisfy: #isSpecial]]) ifTrue: [
+			self arguments
+				at: index
+				ifPresent: [:a | a replaceBy: (aCollection at: index)]
+				ifAbsent: [
+					self addMorph: (aCollection at: index) asElementNumber: index * 2]]].
+	[
+		self submorphs size > (aCollection size * 2 max: 1)] whileTrue: [self lastSubmorph delete]
 ]
 
 { #category : #'as yet unclassified' }
 SBSignature >> selectorAndEdit: aString [
 
-	self selector: aString.
-	
+	" end the current input and pretend it never happened so that we can override with the suggestion "
+	| current |
+	current := self containingSandblock sandblockEditor currentInputCommand.
+	current oldMorph contents: current previousText.
 	self containingSandblock sandblockEditor endInput.
-	self arguments detect: #isUnknown ifFound: [:u | self sandblockEditor startInput: u at: 0 replacingContents: false] ifNone: []
+	
+	self sandblockEditor do: ((SBInputMessageCommand newFor: self containingSandblock containingArtefact)
+		messageSend: self containingSandblock;
+		previousArguments: self arguments;
+		previousSelector: self selector;
+		newSelector: aString;
+		newArguments: ((1 to: (self numArguments: aString)) collect: [:index | self arguments at: index ifAbsent: [SBUnknown new]]);
+		shouldMergeWithNext: true;
+		yourself).
+	
+	self arguments
+		detect: #isUnknown
+		ifFound: [:u | self sandblockEditor startInput: u at: 0 replacingContents: false]
+		ifNone: [
+			self sandblockEditor do: ((SBDoItCommand newFor: self containingSandblock containingArtefact) do: [self messageParts last select])]
 ]
 
 { #category : #'as yet unclassified' }

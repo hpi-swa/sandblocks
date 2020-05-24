@@ -9,7 +9,7 @@ SBSmalltalkNavigation >> nextFrom: aBlock [
 
 	| next |
 	next := SBDepthFirstPreOrderNavigation new nextFrom: aBlock.
-	next isMessageSend
+	^ self nextWithoutMessageSend: next
 ]
 
 { #category : #'as yet unclassified' }
@@ -22,11 +22,30 @@ SBSmalltalkNavigation >> nextOnMessage: next with: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBSmalltalkNavigation >> previousFrom: aBlock [
+SBSmalltalkNavigation >> nextWithoutMessageSend: aBlock [
 
 	^ aBlock isMessageSend
 		ifTrue: [
-			SBDepthFirstPostOrderNavigation new previousFrom: aBlock]
-		ifFalse: [
-			SBDepthFirstPreOrderNavigation new previousFrom: aBlock]
+			aBlock isInCascade
+				ifTrue: [aBlock messageParts first]
+			ifFalse: [self nextWithoutMessageSend: aBlock receiver]]
+		ifFalse: [aBlock]
+]
+
+{ #category : #'as yet unclassified' }
+SBSmalltalkNavigation >> previousFrom: aBlock [
+
+	| previous |
+	previous := SBDepthFirstPreOrderNavigation new previousFrom: aBlock.
+	^ self previousWithoutMessageSend: previous
+]
+
+{ #category : #'as yet unclassified' }
+SBSmalltalkNavigation >> previousWithoutMessageSend: aBlock [
+
+	^ aBlock isMessageSend
+		ifTrue: [ | adjacent |
+			adjacent := aBlock adjacentBlock: -1.
+			self previousWithoutMessageSend: (adjacent ifNotNil: [adjacent lastDeepChild] ifNil: [aBlock parentSandblock])]
+		ifFalse: [aBlock]
 ]

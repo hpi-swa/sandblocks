@@ -380,6 +380,7 @@ SBASTNode >> wrapInArrayType: aSymbol [
 { #category : #actions }
 SBASTNode >> wrapInAssignment [
 	<action>
+	<actionValidIf: #isExpression>
 
 	| binding |
 	binding := SBName new.
@@ -445,15 +446,15 @@ SBASTNode >> wrapInLiteralArray [
 { #category : #actions }
 SBASTNode >> wrapInMessageSend [
 	<action>
+	<actionValidIf: #isExpression>
 
-	self wrapInMessageSend: ''
+	^ self wrapInMessageSend: ''
 ]
 
 { #category : #actions }
 SBASTNode >> wrapInMessageSend: aString [
 
 	| msg |
-	self isExpression ifFalse: [^ self].
 	msg := SBMessageSend new
 		receiver: SBUnknown new
 		selector: aString
@@ -465,7 +466,8 @@ SBASTNode >> wrapInMessageSend: aString [
 		shouldMergeWithNext: true;
 		wrap: [:outer :inner | outer receiver: inner];
 		yourself).
-	self sandblockEditor startInput: msg at: 900000000 replacingContents: false
+	self sandblockEditor startInput: msg at: 900000000 replacingContents: false.
+	^ msg
 ]
 
 { #category : #actions }

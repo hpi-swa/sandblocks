@@ -27,9 +27,11 @@ SBError >> childSandblocksDo: aBlock [
 { #category : #'as yet unclassified' }
 SBError >> createFrameForContext: aContext [
 
-	^ SBErrorStackFrame new
-		context: aContext;
-		when: #selected send: #currentStackFrame: to: self
+	| frame |
+	frame := SBErrorStackFrame new context: aContext.
+	frame when: #selected send: #currentStackFrame: to: self with: frame.
+	
+	^ frame
 ]
 
 { #category : #'as yet unclassified' }

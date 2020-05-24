@@ -102,6 +102,14 @@ SBMessageSend >> currentTextMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBMessageSend >> deleteCommandFor: aBlock [
+
+	^ self receiver = aBlock
+		ifTrue: [super deleteCommandFor: aBlock]
+		ifFalse: [signature deleteCommandFor: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
 SBMessageSend >> drawSubmorphsOn: aCanvas [
 
 	super drawSubmorphsOn: aCanvas.
@@ -221,7 +229,7 @@ SBMessageSend >> keyStroke: anEvent [
 			do: ((SBReplaceCommand newFor: self containingArtefact)
 				target: self;
 				replacer: receiver);
-			startInput: receiver at: 900000000 replacingContents: false].
+			startInput: receiver at: 9e8 replacingContents: false].
 	
 	signature keyStroke: anEvent.
 	self updateSuggestions
@@ -241,6 +249,12 @@ SBMessageSend >> mergeArguments: arguments declarations: declarations [
 	declarations size = arguments size ifTrue: [^ arguments].
 	declarations size < arguments size ifTrue: [^ arguments first: declarations size].
 	declarations size > arguments size ifTrue: [^ arguments copyWithAll: ((1 to: declarations size - arguments size) collect: [:i | SBUnknown new])]
+]
+
+{ #category : #'as yet unclassified' }
+SBMessageSend >> messageParts [
+
+	^ signature messageParts
 ]
 
 { #category : #accessing }

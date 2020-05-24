@@ -13,6 +13,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> actualReceiver [
+
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> allUsages [
 
 	^ Array streamContents: [:stream |
