@@ -45,7 +45,7 @@ SBMessagePart >> currentTextMorph [
 { #category : #'as yet unclassified' }
 SBMessagePart >> drawnColor [
 
-	^ super drawnColor alpha: 0
+	^ self messageSend drawnColor alpha: 0
 ]
 
 { #category : #'as yet unclassified' }

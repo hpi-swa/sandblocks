@@ -1450,11 +1450,25 @@ SBBlock >> selectNext [
 ]
 
 { #category : #actions }
+SBBlock >> selectNextGroup [
+	<multiSelectAction>
+	
+	(self nextBlockThat: [:m | m isStatement]) ifNotNil: [:b | b firstDeepChild select]
+]
+
+{ #category : #actions }
 SBBlock >> selectPrevious [
 	<multiSelectAction>
 
 	self sandblockEditor selectionDownHistory removeAll.
 	self class navigation previousFrom: self do: #select
+]
+
+{ #category : #actions }
+SBBlock >> selectPreviousGroup [
+	<multiSelectAction>
+	
+	(self containingStatement previousBlockThat: [:m | m isStatement]) ifNotNil: [:b | b firstDeepChild select]
 ]
 
 { #category : #actions }

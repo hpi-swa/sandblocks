@@ -20,5 +20,5 @@ SBStExpressionRepresentation class >> matches: anObject [
 { #category : #'as yet unclassified' }
 SBStExpressionRepresentation class >> newFor: anObject [
 
-	^ anObject
+	^ anObject sourceString parseAsSandblockWithoutSubstitution
 ]

@@ -92,6 +92,8 @@ SBToggledCode >> color [
 { #category : #'as yet unclassified' }
 SBToggledCode >> comment: aString active: aNumber do: aCollection [
 
+	self submorphs copy allButFirstDo: #delete.
+	
 	comment contents: aString.
 	"previousBlockColor := aBlock valueOfProperty: #sandblockBlockColor."
 	aCollection withIndexDo: [:block :index |

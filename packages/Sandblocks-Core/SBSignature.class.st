@@ -77,6 +77,8 @@ SBSignature >> color [
 SBSignature >> deleteCommandFor: aBlock [
 
 	| index |
+	self isUnary ifTrue: [^ nil].
+	
 	index := ((((self submorphs indexOf: aBlock) - 1) / 2) floor * 2) + 1.
 	^ SBCombinedCommand newWith: {
 		((SBDeleteCommand newFor: aBlock containingArtefact) target: (self submorphs at: index)).
@@ -151,7 +153,7 @@ SBSignature >> isKeyword [
 { #category : #'as yet unclassified' }
 SBSignature >> isUnary [
 
-	^ self selector asSymbol isUnary
+	^ self selector isEmpty or: [self selector asSymbol isUnary]
 ]
 
 { #category : #'as yet unclassified' }

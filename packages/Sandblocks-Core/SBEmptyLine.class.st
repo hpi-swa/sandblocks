@@ -35,6 +35,12 @@ SBEmptyLine >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBEmptyLine >> printOn: aStream [
+
+	aStream nextPutAll: 'empty line'
+]
+
+{ #category : #'as yet unclassified' }
 SBEmptyLine >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '#sbEmptyLine'

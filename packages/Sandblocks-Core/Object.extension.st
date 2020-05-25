@@ -52,7 +52,6 @@ Object >> representationThat: aSymbol do: aBlock ifNone: anotherBlock [
 		title: ('How to represent {1} ({2})' format: {self asString. self className}).
 	index = 0 ifTrue: [^ self].
 	representation := (options at: index) newFor: self.
-	SBRepresentationPrompt new options: options target: self current: representation.
 	^ aBlock value: representation
 ]
 

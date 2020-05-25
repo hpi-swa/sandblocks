@@ -277,7 +277,7 @@ SBASTNode >> pasteString [
 SBASTNode >> selectNextGroup [
 	<multiSelectAction>
 	
-	(self nextBlockThat: [:m | m isStatement]) ifNotNil: #select
+	(self nextBlockThat: [:m | m isStatement]) ifNotNil: [:b | b firstDeepChild select]
 ]
 
 { #category : #actions }
@@ -292,7 +292,7 @@ SBASTNode >> selectNextSend [
 SBASTNode >> selectPreviousGroup [
 	<multiSelectAction>
 	
-	(self previousBlockThat: [:m | m isStatement]) ifNotNil: #select
+	(self containingStatement previousBlockThat: [:m | m isStatement]) ifNotNil: [:b | b firstDeepChild select]
 ]
 
 { #category : #actions }
@@ -431,6 +431,7 @@ SBASTNode >> wrapInBlock [
 { #category : #actions }
 SBASTNode >> wrapInCascade [
 	<multiSelectAction>
+	<actionValidIf: #isMessageSend>
 
 	| cascade |
 	self isMessageSend ifFalse: [^ self].
@@ -503,13 +504,18 @@ SBASTNode >> wrapInReturn [
 
 { #category : #actions }
 SBASTNode >> wrapInToggledCode [
-	<action>
+	<multiSelectAction>
 
-	self sandblockEditor do: ((SBWrapCommand newFor: self containingArtefact)
-		outer: SBToggledCode new;
-		inner: self;
-		wrap: [:outer :inner | outer comment: '' active: 0 do: {SBBlockBody new statements: {inner}}];
-		yourself)
+	| comment |
+	self assert: self isSelected.
+	comment := SBToggledCode new.
+	self sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
+	self sandblockEditor doMultiSelection: [:selected |
+		(SBWrapConsecutiveCommand newFor: self containingArtefact)
+			outer: comment;
+			targets: selected;
+			wrap: [:outer :inner | outer comment: '' active: 0 do: {SBBlockBody new statements: inner}];
+			yourself]
 ]
 
 { #category : #actions }

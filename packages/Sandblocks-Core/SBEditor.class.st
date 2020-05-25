@@ -91,8 +91,8 @@ SBEditor class >> registerDefaultShortcuts [
 		" navigation "
 		registerShortcut: $h do: #selectPrevious;
 		registerShortcut: $l do: #selectNext;
-		registerShortcut: $j do: #selectDown;
-		registerShortcut: $k do: #selectUp;
+		registerShortcut: $J do: #selectDown;
+		registerShortcut: $K do: #selectUp;
 		registerShortcut: $G do: #selectLast;
 		registerShortcut: $g do: #selectArtefact;
 		registerShortcut: $$ do: #selectRightMostBlock;
@@ -105,8 +105,8 @@ SBEditor class >> registerDefaultShortcuts [
 		registerShortcut: $j command do: #selectBottomToplevel;
 		registerShortcut: $k command do: #selectTopToplevel;
 		registerShortcut: $l command do: #selectRightToplevel;
-		registerShortcut: $K do: #selectPreviousGroup;
-		registerShortcut: $J do: #selectNextGroup;
+		registerShortcut: $k do: #selectPreviousGroup;
+		registerShortcut: $j do: #selectNextGroup;
 		registerShortcut: $1 do: #resetZoom;
 		registerShortcut: $! do: #ensureVisible;
 		
@@ -1466,7 +1466,7 @@ SBEditor >> openInWindow [
 { #category : #'submorphs-add/remove' }
 SBEditor >> openMorph: aMorph [
 
-	scroll addMorphBack: aMorph
+	scroll addMorphFront: aMorph
 ]
 
 { #category : #'submorphs-add/remove' }
