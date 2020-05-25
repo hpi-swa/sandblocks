@@ -37,6 +37,12 @@ Class {
 	#category : #'Sandblocks-Core'
 }
 
+{ #category : #'initialize-release' }
+SBEditor class >> anyShortcutForAction: aSymbol [
+
+	^ (self shortcutsForAction: aSymbol) ifNotEmpty: #first ifEmpty: [nil]
+]
+
 { #category : #configuration }
 SBEditor class >> defaultColorPolicy [
 
@@ -509,6 +515,41 @@ SBEditor >> browseSelection [
 	self selection browse
 ]
 
+{ #category : #'initialize-release' }
+SBEditor >> buildBottomPanel [
+
+	^ Morph new
+		changeTableLayout;
+		cellPositioning: #center;
+		vResizing: #shrinkWrap;
+		cellGap: 8 withScalingFactor;
+		hResizing: #spaceFill;
+		wrapCentering: #center;
+		layoutInset: 4 withScalingFactor;
+		listDirection: #leftToRight;
+		color: Color transparent;
+		addMorphBack: (modeLabel := StringMorph new emphasis: TextEmphasis bold emphasisCode);
+		addMorphBack: (selectionLabel := StringMorph new contents: '');
+		addMorphBack: (searchInput := SBSearchPanel new);
+		addMorphBack: (Morph new
+			extent: 0 @ 0;
+			hResizing: #spaceFill;
+			color: Color transparent);
+		addMorphBack: (compileTimeButton := StringMorph new
+			contents: 'Compile on save';
+			on: #click send: #promptChangeCompile to: self);
+		addMorphBack: (SBButton new
+			balloonText: 'Copy';
+			icon: SBIcon iconCopy shortcut: (self class anyShortcutForAction: #copyToBuffer) do: [self selection copyToBuffer]);
+		addMorphBack: (SBButton new
+			balloonText: 'Copy around';
+			icon: SBIcon iconClipboard
+				shortcut: (self class anyShortcutForAction: #copyAround)
+				do: [self selection copyAround]);
+		addMorphBack: (copyBufferPreview := ImageMorph new image: (Form extent: 1 @ 1));
+		yourself
+]
+
 { #category : #'as yet unclassified' }
 SBEditor >> buildCommandBar [
 
@@ -517,9 +558,9 @@ SBEditor >> buildCommandBar [
 		hResizing: #spaceFill;
 		cellGap: 4 withScalingFactor;
 		layoutInset: 4 withScalingFactor;
-		addMorphBack: (SBButton new icon: SBIcon iconUndo shortcut: $u asSandblockShortcut do: [self undo]);
-		addMorphBack: (SBButton new icon: SBIcon iconRepeat shortcut: $U asSandblockShortcut do: [self redo]);
-		addMorphBack: (SBButton new icon: SBIcon iconFolder_open shortcut: $x command do: [self openOpenWindow]);
+		addMorphBack: (SBButton new icon: SBIcon iconUndo shortcut: (self class anyShortcutForAction: #undo) do: [self undo]);
+		addMorphBack: (SBButton new icon: SBIcon iconRepeat shortcut: (self class anyShortcutForAction: #redo) do: [self redo]);
+		addMorphBack: (SBButton new icon: SBIcon iconFolder_open shortcut: (self class anyShortcutForAction: #openOpenWindow) do: [self openOpenWindow]);
 		addMorphBack: (SBButton new
 			icon: SBIcon iconPlus shortcut: nil do: [self promptAddArtifact];
 			balloonText: 'Add artifact');
@@ -530,7 +571,7 @@ SBEditor >> buildCommandBar [
 		addMorphBack: (SBButton new
 			icon: SBIcon iconWindow_maximize shortcut: nil do: [self promptWorkspaceActions];
 			balloonText: 'Manage Workspaces');
-		addMorphBack: (SBButton new icon: SBIcon iconExpand shortcut: $f command do: [self toggleFullscreen])
+		addMorphBack: (SBButton new icon: SBIcon iconExpand shortcut: (self class anyShortcutForAction: #toggleFullscreen) do: [self toggleFullscreen])
 ]
 
 { #category : #'as yet unclassified' }
@@ -1126,27 +1167,7 @@ SBEditor >> initialize [
 			vResizing: #spaceFill;
 			yourself);
 		
-		addMorphBack: (bottomPanel := Morph new
-			changeTableLayout;
-			cellPositioning: #center;
-			vResizing: #shrinkWrap;
-			cellGap: 8 withScalingFactor;
-			hResizing: #spaceFill;
-			wrapCentering: #center;
-			layoutInset: 4 withScalingFactor;
-			listDirection: #leftToRight;
-			color: Color transparent;
-			addMorphBack: (modeLabel := StringMorph new emphasis: TextEmphasis bold emphasisCode);
-			addMorphBack: (selectionLabel := StringMorph new contents: '');
-			addMorphBack: (searchInput := SBSearchPanel new);
-			addMorphBack: (Morph new extent: 0 @ 0; hResizing: #spaceFill; color: Color transparent);
-			addMorphBack: (compileTimeButton := StringMorph new
-				contents: 'Compile on save';
-				on: #click send: #promptChangeCompile to: self);
-			addMorphBack: (SBButton new balloonText: 'Copy'; icon: SBIcon iconCopy shortcut: $y asSandblockShortcut do: [self copy]);
-			addMorphBack: (SBButton new balloonText: 'Copy around'; icon: SBIcon iconClipboard shortcut: $Y asSandblockShortcut do: [self copyAroundSelection]);
-			addMorphBack: (copyBufferPreview := ImageMorph new image: (Form extent: 1 @ 1));
-			yourself);
+		addMorphBack: (bottomPanel := self buildBottomPanel);
 		
 		resetState
 ]
@@ -1640,7 +1661,11 @@ SBEditor >> processShortcutList: aCollection for: anEvent ifMatched: aBlock [
 SBEditor >> promptAddArtifact [
 
 	| index |
-	index := UIManager default chooseFrom: {'Add method (t)'. 'Add class (Control+,)'}.
+	index := UIManager default chooseFrom: {
+		('Add method ', (self class shortcutStringForAction: #createEmptyMethod)).
+		('Add class ', (self class shortcutStringForAction: #createEmptyClass))
+	}.
+	
 	index = 1 ifTrue: [^ self createEmptyMethod].
 	index = 2 ifTrue: [^ self createEmptyClass]
 ]
@@ -1703,7 +1728,10 @@ SBEditor >> promptOpenWorkspace [
 SBEditor >> promptWorkspaceActions [
 
 	| index |
-	index := UIManager default chooseFrom: {'Open Workspace (Cmd+O)'. 'Save Workspace (Cmd+S)'}.
+	index := UIManager default chooseFrom: {
+		('Open Workspace ', (self class shortcutStringForAction: #promptOpenWorkspace)).
+		('Save Workspace ', (self class shortcutStringForAction: #saveWorkspace))
+	}.
 	index = 1 ifTrue: [^ self promptOpenWorkspace].
 	index = 2 ifTrue: [^ self saveWorkspace]
 ]
