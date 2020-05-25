@@ -27,7 +27,8 @@ Class {
 		'workspace',
 		'errors',
 		'searchInput',
-		'helpOverlay'
+		'helpOverlay',
+		'verticalSelectionPosition'
 	],
 	#classVars : [
 		'DefaultColorPolicy',
@@ -109,6 +110,7 @@ SBEditor class >> registerDefaultShortcuts [
 		registerShortcut: $j do: #selectNextGroup;
 		registerShortcut: $1 do: #resetZoom;
 		registerShortcut: $! do: #ensureVisible;
+		registerShortcut: $0 do: #selectStartOfStatement;
 		
 		" modify general "
 		registerShortcut: $, do: #promptAction;
@@ -1098,6 +1100,7 @@ SBEditor >> initialize [
 	multiSelection := OrderedCollection new.
 	colorPolicy := self class defaultColorPolicy new.
 	compileTime := #compileOnSave.
+	verticalSelectionPosition := 0.
 	
 	self
 		addKeyboardCaptureFilter: self;
@@ -1235,6 +1238,7 @@ SBEditor >> internalSelect: aBlock [
 		previousSelection := selection.
 		selection := aBlock.
 		selection ifNotNil: [
+			verticalSelectionPosition := selection center x - (selection containingArtefact ifNotNil: [:a | a left] ifNil: [0]).
 			selection
 				 attachDecorator: SBSelectionDecorator new;
 				 wasSelected;
@@ -1253,6 +1257,14 @@ SBEditor >> internalSelect: aBlock [
 SBEditor >> isMethodOpen: aCompiledMethod [
 
 	^ self methods anySatisfy: [:method | method selector = aCompiledMethod selector and: [method methodClass = aCompiledMethod methodClass]]
+]
+
+{ #category : #accessing }
+SBEditor >> keepVerticalSelectionPositionDuring: aBlock [
+
+	| restore |
+	restore := verticalSelectionPosition.
+	aBlock ensure: [verticalSelectionPosition := restore]
 ]
 
 { #category : #input }
@@ -1419,8 +1431,8 @@ SBEditor >> okToChange [
 SBEditor >> open: aMethodOrClass [
 
 	aMethodOrClass isBehavior ifTrue: [
-		self openClass: aMethodOrClass.
-		^ aMethodOrClass methodsDo: [:compiledMethod | self openCompiledMethod: compiledMethod]].
+		^ self openClass: aMethodOrClass.
+		"^ aMethodOrClass methodsDo: [:compiledMethod | self openCompiledMethod: compiledMethod]"].
 	
 	aMethodOrClass isCompiledMethod ifTrue: [^ self openCompiledMethod: aMethodOrClass].
 	
@@ -2175,6 +2187,12 @@ SBEditor >> updateSelectionLabel [
 						ifTrue: [self selection printString]
 						ifFalse:  ['{1} ({2})' format: {self selection printString. class asString}]]
 				ifFalse: ['']])
+]
+
+{ #category : #accessing }
+SBEditor >> verticalSelectionPosition [
+
+	^ verticalSelectionPosition
 ]
 
 { #category : #actions }

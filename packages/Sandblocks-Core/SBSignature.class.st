@@ -21,31 +21,9 @@ SBSignature >> addArgumentAndEditAfter: aMorph focusKeyword: aTextMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBSignature >> addMessagePart [
+SBSignature >> addedMorph: aMorph [
 
-	self isUnary
-		ifTrue: [
-			currentInputMessagePart contents: currentInputMessagePart contents, $:.
-			self submorphCount = 2 ifFalse: [self addArgumentAndEditAfter: currentInputMessagePart focusKeyword: nil].
-			^ self].
-	(self isKeyword and: [(currentInputMessagePart contents occurrencesOf: $:) > 0])
-		ifTrue: [ | msg |
-			msg := currentInputMessagePart contentsBeforeCursor.
-			(msg isEmpty or: [msg last ~= $:]) ifTrue: [msg := msg, $:].
-			currentInputMessagePart contents: (currentInputMessagePart contentsAfterCursor withFirstCharacterDownshifted ifEmpty: [':']).
-			^ self
-				addMessagePart: msg
-				after: currentInputMessagePart submorphBefore
-				focusKeyword: (currentInputMessagePart contents = ':' ifTrue: [currentInputMessagePart])]
-]
-
-{ #category : #'as yet unclassified' }
-SBSignature >> addMessagePart: aString after: aMorph focusKeyword: aKeywordMorphOrNil [
-
-	| new |
-	new := self textMorphFor: aString.
-	self addMorph: new behind: aMorph.
-	^ self addArgumentAndEditAfter: new focusKeyword: (aKeywordMorphOrNil ifNil: [aString = ':' ifTrue: [new] ifFalse: [nil]])
+	self messageParts do: #layoutChanged
 ]
 
 { #category : #'as yet unclassified' }
@@ -113,19 +91,27 @@ SBSignature >> initialize [
 { #category : #'as yet unclassified' }
 SBSignature >> insertCommandRequest: anAfterBoolean near: aBlock [
 
-	| part |
+	| part index |
 	self isBinary ifTrue: [^ nil].
 	
+	self isUnary ifTrue: [^ (SBInsertCommand newFor: self containingSandblock containingArtefact)
+		container: self;
+		index: self submorphCount + 1;
+		morph: SBUnknown new;
+		shouldMergeWithNext: true;
+		yourself].
+	
 	part := SBMessagePart new contents: ':'.
+	index := (aBlock submorphIndex / 2) ceiling * 2.
 	^ SBCombinedCommand newWith: {
 		((SBInsertCommand newFor: self containingSandblock containingArtefact)
 			container: self;
-			index: aBlock childIndex + 1;
+			index: index + 2;
 			morph: SBUnknown new;
 			yourself).
 		((SBInsertCommand newFor: self containingSandblock containingArtefact)
 			container: self;
-			index: aBlock childIndex;
+			index: index + 1;
 			morph: part;
 			shouldMergeWithNext: true;
 			yourself)
@@ -154,32 +140,6 @@ SBSignature >> isKeyword [
 SBSignature >> isUnary [
 
 	^ self selector isEmpty or: [self selector asSymbol isUnary]
-]
-
-{ #category : #'as yet unclassified' }
-SBSignature >> keyStroke: anEvent [
-
-	| char |
-	char := anEvent keyCharacter.
-	
-	self flag: #fixme. " !!! this is most certainly an OS-dependent key mapping mess "
-	(char asLowercase = $i and: [anEvent commandKeyPressed]) ifTrue: [^ self moveFocusToNextPart: (anEvent shiftPressed ifTrue: [-1] ifFalse: [1])].
-	
-	char = $: ifTrue: [^ self addMessagePart].
-	(char isSpecial and: [currentInputMessagePart contents isEmpty])
-		ifTrue: [^ self setBinaryMessage: char asString].
-	
-	(char = $+ and: [anEvent controlKeyPressed] and: [self isKeyword]) ifTrue: [
-		^ self addMessagePart: ':' after: currentInputMessagePart submorphAfter focusKeyword: nil].
-	
-	self isBinary
-		ifTrue: [
-			char isSpecial
-				ifTrue: [currentInputMessagePart keyStroke: anEvent]
-				ifFalse: [
-					self moveFocusToNextPart: 1.
-					self sandblockEditor selection keyStroke: anEvent]]
-		ifFalse: [currentInputMessagePart keyStroke: anEvent]
 ]
 
 { #category : #'as yet unclassified' }
@@ -233,6 +193,12 @@ SBSignature >> numArguments: aString [
 	aString last = $: ifTrue: [^ (self extractKeywords: aString) size].
 	aString first isSpecial ifTrue: [^ 1].
 	^ 0
+]
+
+{ #category : #'as yet unclassified' }
+SBSignature >> removedMorph: aMorph [
+
+	self messageParts do: #layoutChanged
 ]
 
 { #category : #'as yet unclassified' }

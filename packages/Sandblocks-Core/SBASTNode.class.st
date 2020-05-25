@@ -53,9 +53,11 @@ SBASTNode >> browseSenders [
 
 	self selector ifNotNil: [:sel | | calls container |
 		calls := self systemNavigation allCallsOn: sel asSymbol.
+		calls ifEmpty: [^ self].
+		calls size = 1 ifTrue: [^ self sandblockEditor open: calls first compiledMethod].
+		
 		container := SBCodeAccordion new.
-		calls do: [:call |
-			container  addMorphBack: (SBCodeLens forMethod: call compiledMethod selector: sel)].
+		calls do: [:call | container  addMorphBack: (SBCodeLens forMethod: call compiledMethod selector: sel)].
 		container openNear: self]
 ]
 
@@ -274,13 +276,6 @@ SBASTNode >> pasteString [
 ]
 
 { #category : #actions }
-SBASTNode >> selectNextGroup [
-	<multiSelectAction>
-	
-	(self nextBlockThat: [:m | m isStatement]) ifNotNil: [:b | b firstDeepChild select]
-]
-
-{ #category : #actions }
 SBASTNode >> selectNextSend [
 	<multiSelectAction>
 
@@ -289,18 +284,18 @@ SBASTNode >> selectNextSend [
 ]
 
 { #category : #actions }
-SBASTNode >> selectPreviousGroup [
-	<multiSelectAction>
-	
-	(self containingStatement previousBlockThat: [:m | m isStatement]) ifNotNil: [:b | b firstDeepChild select]
-]
-
-{ #category : #actions }
 SBASTNode >> selectPreviousSend [
 	<multiSelectAction>
 
 	self sandblockEditor selectionDownHistory removeAll.
 	(self previousBlockThat: #isMessageSend) ifNotNil: #select
+]
+
+{ #category : #actions }
+SBASTNode >> selectStartOfStatement [
+	<multiSelectAction>
+	
+	self containingStatement firstDeepChild select
 ]
 
 { #category : #'as yet unclassified' }

@@ -1124,6 +1124,39 @@ SBBlock >> nextBlockThat: aBlock [
 	^ n nextBlockThat: aBlock
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> nextVerticalNear: aNumber [
+
+	| allCandidates candidates candidatesBestDistance tolerance |
+	^ self
+		nextVerticalNear: aNumber
+		calcDistance: [:candidate | candidate top - self bottom]
+		validBlock: [:candidate | candidate top > self bottom]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> nextVerticalNear: aNumber calcDistance: aDistBlock validBlock: aValidBlock [
+
+	| allCandidates candidates candidatesBestDistance tolerance artefact |
+	artefact := self containingArtefact.
+	tolerance := 10.
+	allCandidates := Array streamContents: [:stream |
+		self containingArtefact allBlocksDo: [:candidate |
+			(candidate hasChildSandblocks not and: [aValidBlock value: candidate]) ifTrue: [stream nextPut: candidate]]].
+	candidates := OrderedCollection new.
+	candidatesBestDistance := 900000000.
+	allCandidates do: [:candidate | | distance |
+		distance := aDistBlock value: candidate.
+		distance < candidatesBestDistance
+			ifTrue: [
+				(candidatesBestDistance between: distance and: distance + tolerance) ifTrue: [candidates add: candidate] ifFalse: [candidates := OrderedCollection with: candidate].
+				candidatesBestDistance := distance]
+			ifFalse: [
+				(distance between: candidatesBestDistance and: candidatesBestDistance + tolerance) ifTrue: [candidates add: candidate]]].
+	^ candidates detectMin: [:candidate |
+		((candidate center x - artefact left) - aNumber) abs]
+]
+
 { #category : #testing }
 SBBlock >> noteNewOwner: aMorph [
 
@@ -1299,6 +1332,15 @@ SBBlock >> previousBlockThat: aBlock [
 	^ n previousBlockThat: aBlock
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> previousVerticalNear: aNumber [
+
+	^ self
+		nextVerticalNear: aNumber
+		calcDistance: [:candidate | self top - candidate bottom]
+		validBlock: [:candidate | self top > candidate bottom]
+]
+
 { #category : #actions }
 SBBlock >> promptAction [
 	<multiSelectAction>
@@ -1452,8 +1494,9 @@ SBBlock >> selectNext [
 { #category : #actions }
 SBBlock >> selectNextGroup [
 	<multiSelectAction>
-	
-	(self nextBlockThat: [:m | m isStatement]) ifNotNil: [:b | b firstDeepChild select]
+
+	self sandblockEditor keepVerticalSelectionPositionDuring: [
+		(self nextVerticalNear: self sandblockEditor verticalSelectionPosition) ifNotNil: #select]
 ]
 
 { #category : #actions }
@@ -1467,8 +1510,9 @@ SBBlock >> selectPrevious [
 { #category : #actions }
 SBBlock >> selectPreviousGroup [
 	<multiSelectAction>
-	
-	(self containingStatement previousBlockThat: [:m | m isStatement]) ifNotNil: [:b | b firstDeepChild select]
+
+	self sandblockEditor keepVerticalSelectionPositionDuring: [
+		(self previousVerticalNear: self sandblockEditor verticalSelectionPosition) ifNotNil: #select]
 ]
 
 { #category : #actions }
@@ -1608,6 +1652,12 @@ SBBlock >> stepDecorator: aDecorator [
 
 { #category : #accessing }
 SBBlock >> stopEditing: aCommand [
+]
+
+{ #category : #hierarchy }
+SBBlock >> submorphIndex [
+
+	^ self owner submorphs indexOf: self
 ]
 
 { #category : #suggestions }
