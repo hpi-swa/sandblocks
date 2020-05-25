@@ -375,7 +375,7 @@ SBBasicMethod >> methodChanged: anEvent [
 
 	((self hasProperty: #ignoreChangeNotifier) not and: (anEvent item selector = self selector and: [anEvent item methodClass = self methodClass])) ifTrue: [
 		anEvent isRemoved ifTrue: [^ self delete].
-		anEvent isModified ifTrue: [^ self reloadMethod]]
+		anEvent isModified ifTrue: [^ self reloadMethodInPlace]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -466,7 +466,13 @@ SBBasicMethod >> relatedClass [
 SBBasicMethod >> reloadMethod [
 	<action>
 
-	self sandblockEditor select: (self replaceBy: (self compiledMethod asSandblock position: self position))
+	self sandblockEditor select: self reloadMethodInPlace
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> reloadMethodInPlace [
+
+	^ self replaceBy: (self compiledMethod asSandblock position: self position)
 ]
 
 { #category : #'as yet unclassified' }

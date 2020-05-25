@@ -1140,9 +1140,11 @@ SBBlock >> nextVerticalNear: aNumber calcDistance: aDistBlock validBlock: aValid
 	| allCandidates candidates candidatesBestDistance tolerance artefact |
 	artefact := self containingArtefact.
 	tolerance := 10.
+	
 	allCandidates := Array streamContents: [:stream |
 		self containingArtefact allBlocksDo: [:candidate |
 			(candidate hasChildSandblocks not and: [aValidBlock value: candidate]) ifTrue: [stream nextPut: candidate]]].
+	
 	candidates := OrderedCollection new.
 	candidatesBestDistance := 900000000.
 	allCandidates do: [:candidate | | distance |
@@ -1153,6 +1155,7 @@ SBBlock >> nextVerticalNear: aNumber calcDistance: aDistBlock validBlock: aValid
 				candidatesBestDistance := distance]
 			ifFalse: [
 				(distance between: candidatesBestDistance and: candidatesBestDistance + tolerance) ifTrue: [candidates add: candidate]]].
+	
 	^ candidates detectMin: [:candidate |
 		((candidate center x - artefact left) - aNumber) abs]
 ]
