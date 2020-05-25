@@ -58,6 +58,7 @@ SBExample >> active [
 
 { #category : #'as yet unclassified' }
 SBExample >> addExample [
+	<action>
 
 	self toggleRunning
 ]

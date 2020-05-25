@@ -12,7 +12,7 @@ CompiledMethod >> asSandblock [
 				class := self methodClass.
 				parser := class newParser encoderClass: self encoderClass.
 				source := self getSourceFor: (self selector ifNil: [self defaultSelector]) in: class.
-				methodNode := parser parse: source class: class.
+				methodNode := parser parse: source asString codeWithEmptyLineMarkers class: class.
 				sourceRanges := parser encoder rawSourceRanges.
 				debuggerMap := self debuggerMap.
 				instructions := InstructionStream on: self.

@@ -84,7 +84,7 @@ SBEditor class >> openWorkspace: aString [
 SBEditor class >> registerDefaultShortcuts [
 	"self registerDefaultShortcuts"
 
-	"(UIManager default confirm: 'This will reset all custom shortcuts, continue?') ifFalse: [^ self]."
+	(UIManager default confirm: 'This will reset all custom shortcuts, continue?') ifFalse: [^ self].
 	
 	Shortcuts := nil.
 	self
@@ -105,8 +105,8 @@ SBEditor class >> registerDefaultShortcuts [
 		registerShortcut: $j command do: #selectBottomToplevel;
 		registerShortcut: $k command do: #selectTopToplevel;
 		registerShortcut: $l command do: #selectRightToplevel;
-		registerShortcut: $H do: #selectPreviousSend;
-		registerShortcut: $L do: #selectNextSend;
+		registerShortcut: $K do: #selectPreviousGroup;
+		registerShortcut: $J do: #selectNextGroup;
 		registerShortcut: $1 do: #resetZoom;
 		registerShortcut: $! do: #ensureVisible;
 		
@@ -124,8 +124,8 @@ SBEditor class >> registerDefaultShortcuts [
 		registerShortcut: $. do: #addElement;
 		registerShortcut: $+ do: #insertElementAfter;
 		registerShortcut: $* do: #insertElementBefore;
-		registerShortcut: $K do: #swapLeft;
-		registerShortcut: $J do: #swapRight;
+		registerShortcut: $H do: #swapLeft;
+		registerShortcut: $L do: #swapRight;
 		registerShortcut: $c command do: #copyString;
 		registerShortcut: $v command do: #pasteString;
 		registerShortcut: $p do: #pasteBelow;
@@ -1151,7 +1151,7 @@ SBEditor >> initialize [
 { #category : #actions }
 SBEditor >> inputNextUnknown [
 
-	(self selection activeMorph nextMorphThat: [:m | m isSandblock and: [m isUnknown]]) ifNotNil: [:m | self startInput: m at: 1 replacingContents: true]
+	(self selection activeMorph nextBlockThat: [:m | m isUnknown]) ifNotNil: [:m | self startInput: m at: 1 replacingContents: true]
 ]
 
 { #category : #actions }

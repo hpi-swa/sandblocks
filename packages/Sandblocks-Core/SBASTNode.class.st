@@ -241,6 +241,12 @@ SBASTNode >> isReturn [
 	^ false
 ]
 
+{ #category : #testing }
+SBASTNode >> isStatement [
+
+	^ self owner isBlockBody
+]
+
 { #category : #'as yet unclassified' }
 SBASTNode >> object [
 
@@ -268,11 +274,25 @@ SBASTNode >> pasteString [
 ]
 
 { #category : #actions }
+SBASTNode >> selectNextGroup [
+	<multiSelectAction>
+	
+	(self nextBlockThat: [:m | m isStatement]) ifNotNil: #select
+]
+
+{ #category : #actions }
 SBASTNode >> selectNextSend [
 	<multiSelectAction>
 
 	self sandblockEditor selectionDownHistory removeAll.
 	(self nextBlockThat: #isMessageSend) ifNotNil: #select
+]
+
+{ #category : #actions }
+SBASTNode >> selectPreviousGroup [
+	<multiSelectAction>
+	
+	(self previousBlockThat: [:m | m isStatement]) ifNotNil: #select
 ]
 
 { #category : #actions }

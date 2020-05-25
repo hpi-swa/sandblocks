@@ -684,6 +684,12 @@ SBBlock >> hasInput [
 	^ self sandblockEditor currentInput = self
 ]
 
+{ #category : #suggestions }
+SBBlock >> hasSuggestions [
+
+	^ (self valueOfProperty: #sandblockSuggestionMenu ifAbsent: [^ false]) isInWorld
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> initialize [
 
@@ -704,7 +710,7 @@ SBBlock >> inputNextUnknown [
 	<action>
 	<inputAction>
 
-	(self activeMorph nextMorphThat: [:m | m isSandblock and: [m isUnknown]])
+	(self activeMorph nextBlockThat: [:m | m isUnknown])
 		ifNotNil: [:m | self sandblockEditor startInput: m at: 1 replacingContents: true]
 ]
 
@@ -945,12 +951,6 @@ SBBlock >> isSelected [
 SBBlock >> isSelection [
 
 	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isStatement [
-
-	^ self owner isBlockBody
 ]
 
 { #category : #testing }
@@ -1613,6 +1613,8 @@ SBBlock >> swap: aNumber [
 
 	| next children |
 	children := self parentSandblock childSandblocks select: #canSwap.
+	children ifEmpty: [^ self].
+	
 	next := children atWrap: (children indexOf: self) + aNumber.
 	next ifNotNil: [
 		self sandblockEditor do: ((SBSwapCommand newFor: self containingArtefact)
@@ -1706,6 +1708,7 @@ SBBlock >> updateSuggestions: aCollection showNear: aMorph [
 { #category : #actions }
 SBBlock >> useSuggestion [
 	<inputAction>
+	<actionValidIf: #hasSuggestions>
 	" try to apply a suggestion, return whether anything was applied "
 
 	self suggestionMenuDo: [:menu |

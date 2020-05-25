@@ -49,12 +49,12 @@ SBFormatter class >> formatString: aString class: aClass noPattern: aBoolean [
 	
 	methodNode accept: (ParseNodeEnumerator ofBlock: [:n | n comment: nil]).
 	
-	self assert: methodNode asString = (Parser new
+	"self assert: methodNode asString = (Parser new
 				parse: result
 				class: aClass
 				noPattern: aBoolean
 				notifying: nil
-				ifFail: nil) asString.
+				ifFail: nil) asString."
 	^ result
 ]
 
@@ -261,11 +261,12 @@ SBFormatter >> visitBlockNode: aNode [
 
 	| isMethodBlock startWithNewLine |
 	isMethodBlock := (self parentFor: aNode) isKindOf: MethodNode.
-	startWithNewLine := isMethodBlock not and: [aNode statements size > 1 or: [self willBeMultiLine: aNode statements first]].
+	startWithNewLine := isMethodBlock not and: [
+		aNode statements size > 1 or: [self willBeMultiLine: aNode statements first]].
 	isMethodBlock ifFalse: [
 		stream nextPut: $[.
-		aNode arguments ifNotEmpty: [:args | 
-			args do: [:arg | 
+		aNode arguments ifNotEmpty: [:args |
+			args do: [:arg |
 				stream nextPut: $:.
 				stream nextPutAll: arg name.
 				stream space].
@@ -274,12 +275,17 @@ SBFormatter >> visitBlockNode: aNode [
 	self formatTemporariesOf: aNode isMethod: isMethodBlock.
 	self
 		indent: (startWithNewLine ifTrue: [1] ifFalse: [0])
-		around: [ | first |
+		around: [ | statements |
+			statements := self blockStatementsOf: aNode.
 			startWithNewLine ifTrue: [self newLine].
-			first := true.
-			(self blockStatementsOf: aNode) do: [:statement | self visitNode: statement] separatedBy: [
-				stream nextPut: $..
-				self newLine]].
+			statements do: [:statement |
+				(statement isLiteralNode and: [statement key = #sbEmptyLine])
+					ifTrue: [self newLine]
+					ifFalse: [
+						self visitNode: statement.
+						statement ~= statements last ifTrue: [
+							stream nextPut: $..
+							self newLine]]]].
 	isMethodBlock ifFalse: [stream nextPut: $]]
 ]
 

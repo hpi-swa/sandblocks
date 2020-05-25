@@ -5,6 +5,30 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBASTNodeTest >> testInsertEmptyLineMarkers [
+
+	self
+		assert: 'a.
+	#sbEmptyLine.
+	b.
+      #sbEmptyLine.
+     ''abc
+     
+     def''.
+#sbEmptyLine.
+     ^ a'
+		equals: 'a.
+	#sbEmptyLine.
+	b.
+      
+     ''abc
+     
+     def''.
+
+     ^ a' codeWithEmptyLineMarkers
+]
+
+{ #category : #'as yet unclassified' }
 SBASTNodeTest >> testInsertStatementAboveOrBelow [
 
 	| block selection |

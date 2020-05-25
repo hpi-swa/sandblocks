@@ -88,7 +88,10 @@ SBMessagePart >> insertUnknownAfterAndInput: aBoolean [
 			container: self owner;
 			shouldMergeWithNext: aBoolean;
 			index: self childIndex + 1).
-	self sandblockEditor startInput: (aBoolean ifTrue: [new] ifFalse: [self]) at: 9e8 replacingContents: false
+	self sandblockEditor startInput: (aBoolean ifTrue: [new] ifFalse: [self]) at: 9e8 replacingContents: false.
+	
+	" inform our symbols that we now #hasColon "
+	self layoutChanged
 ]
 
 { #category : #'as yet unclassified' }
@@ -118,7 +121,7 @@ SBMessagePart >> keyStroke: anEvent [
 	(anEvent keyCharacter isAlphaNumeric and: [self isBinary]) ifTrue: [^ self continueInputInArgument: anEvent].
 	anEvent keyCharacter = $: ifTrue: [^ self insertUnknownAfterAndInput: true].
 	
-	((anEvent keyCharacter isSpecial and: [self actualContents isEmpty or: [self isBinary]]) or: [anEvent keyCharacter isAlphaNumeric and: [self actualContents isEmpty or: [self isBinary not]]]) ifTrue: [
+	(anEvent keyCharacter = Character backspace or: [(anEvent keyCharacter isSpecial and: [self actualContents isEmpty or: [self isBinary]]) or: [anEvent keyCharacter isAlphaNumeric and: [self actualContents isEmpty or: [self isBinary not]]]]) ifTrue: [
 		text keyStroke: anEvent.
 		(anEvent keyCharacter isSpecial and: [self actualContents size = 1 and: [self isFirstPart]]) ifTrue: [^ self insertUnknownAfterAndInput: false].
 		self updateSuggestions]

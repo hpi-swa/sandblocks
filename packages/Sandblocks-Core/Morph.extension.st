@@ -22,14 +22,8 @@ Morph >> containingSandblock [
 { #category : #'*Sandblocks-Core' }
 Morph >> firstMorphThat: aBlock [
 
-	self allMorphsDo: [:m | (aBlock value: m) ifTrue: [^ m]].
+	self allMorphsDoBreadthFirst: [:m | (aBlock value: m) ifTrue: [^ m]].
 	^ nil
-]
-
-{ #category : #'*Sandblocks-Core' }
-Morph >> focusNextMorph: anEvent [
-
-	anEvent hand newKeyboardFocus: (self nextMorphThat: [:m | m wantsKeyboardFocus])
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -161,14 +155,6 @@ Morph >> nextAdjacentMorphThat: aBlock [
 	next := next submorphAfter.
 	next  ifNil: [^ nil].
 	(next firstMorphThat: aBlock) ifNotNil: [:m | ^ m]] repeat
-]
-
-{ #category : #'*Sandblocks-Core' }
-Morph >> nextMorphThat: aBlock [
-
-	(self firstMorphThat: [:m | m ~= self and: [aBlock value: m]]) ifNotNil: [:b | ^ b].
-	(self nextAdjacentMorphThat: aBlock) ifNotNil: [:b | ^ b].
-	^ (self owner ifNil: [^ nil]) nextMorphThat: aBlock
 ]
 
 { #category : #'*Sandblocks-Core' }

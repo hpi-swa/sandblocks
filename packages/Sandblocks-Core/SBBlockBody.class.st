@@ -273,7 +273,7 @@ SBBlockBody >> writeSourceOn: aStream [
 	
 	self submorphs allButFirst do: [:m |
 		m writeSourceOn: aStream.
-		m isExpression ifTrue: [aStream nextPut: $.].
+		m isPragma ifFalse: [aStream nextPut: $.].
 		aStream cr].
 	
 	self isMethodBody ifFalse: [aStream nextPut: $]]
