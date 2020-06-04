@@ -155,6 +155,12 @@ SBBlock >> canInput [
 	^ (self class lookupSelector: #startInputAt:replacingContents:) methodClass ~= SBBlock
 ]
 
+{ #category : #actions }
+SBBlock >> canJumpTo: aBlock [
+
+	^ aBlock containingArtefact = self containingArtefact or: [self containingArtefact owner layoutPolicy notNil]
+]
+
 { #category : #testing }
 SBBlock >> canSwap [
 
@@ -1469,6 +1475,7 @@ SBBlock >> selectDown [
 	
 	" try to follow our steps back down "
 	next := selectionDownHistory ifEmpty: [] ifNotEmpty: #removeLast.
+	
 	(self childSandblocks includes: next) ifFalse: [
 		selectionDownHistory removeAll.
 		next := self hasChildSandblocks ifTrue: [self childSandblocks first] ifFalse: [nil]].
@@ -1495,7 +1502,7 @@ SBBlock >> selectNext [
 	<multiSelectAction>
 
 	self sandblockEditor selectionDownHistory removeAll.
-	self class navigation nextFrom: self do: #select
+	self class navigation nextFrom: self do: [:b | (self canJumpTo: b) ifTrue: [b select]]
 ]
 
 { #category : #actions }
@@ -1511,7 +1518,7 @@ SBBlock >> selectPrevious [
 	<multiSelectAction>
 
 	self sandblockEditor selectionDownHistory removeAll.
-	self class navigation previousFrom: self do: #select
+	self class navigation previousFrom: self do: [:b | (self canJumpTo: b) ifTrue: [b select]]
 ]
 
 { #category : #actions }

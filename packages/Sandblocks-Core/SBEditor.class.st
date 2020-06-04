@@ -1933,21 +1933,6 @@ SBEditor >> selectClick: aBlock [
 	self select: (aBlock == self selection ifTrue: [nil] ifFalse: [aBlock])
 ]
 
-{ #category : #selection }
-SBEditor >> selectDown [
-
-	| next from |
-	from := self selection.
-	
-	" try to follow our steps back down "
-	next := selectionDownHistory ifEmpty: [] ifNotEmpty: #removeLast.
-	(self selection childSandblocks includes: next) ifFalse: [
-		selectionDownHistory removeAll.
-		next := self selection firstMorphThat: #isSandblock].
-	
-	next ifNotNil: [self select: next]
-]
-
 { #category : #actions }
 SBEditor >> selectLast [
 
