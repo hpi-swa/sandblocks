@@ -3,24 +3,26 @@ Class {
 	#superclass : #SBCommand,
 	#instVars : [
 		'target',
-		'undoTarget'
+		'undoTarget',
+		'isLeft'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
 SBSubtreeRotateCommand >> do [
 
 	undoTarget := target parentSandblock.
-	^ self rotateAround: target
+	wasLeft := target isLastChild.
+	^ self rotateAround: target isLeftOrNil: wasLeft
 ]
 
 { #category : #'as yet unclassified' }
-SBSubtreeRotateCommand >> rotateAround: aTargetNode [
+SBSubtreeRotateCommand >> rotateAround: aTargetNode isLeftOrNil: aBoolean [
 
 	| child childInsertIndex parent childInsertOwner isLeft |
 	parent := aTargetNode parentSandblock.
-	isLeft := aTargetNode isLastChild.
+	isLeft := aBoolean ifNil: [aTargetNode isLastChild].
 	child := isLeft ifTrue: [aTargetNode childSandblocks first] ifFalse: [aTargetNode childSandblocks last].
 	childInsertOwner := aTargetNode owner.
 	childInsertIndex := childInsertOwner submorphIndexOf: aTargetNode.
@@ -40,5 +42,5 @@ SBSubtreeRotateCommand >> target: aBlock [
 { #category : #'as yet unclassified' }
 SBSubtreeRotateCommand >> undo [
 
-	^ self rotateAround: undoTarget
+	^ self rotateAround: undoTarget isLeftOrNil: wasLeft not
 ]

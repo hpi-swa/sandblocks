@@ -1315,15 +1315,6 @@ SBEditor >> labelString [
 	^ 'Sandblocks Editor', (workspace ifNotNil: [:w | ' - ', w name] ifNil: [''])
 ]
 
-{ #category : #selection }
-SBEditor >> leftRotate [
-
-	(self selection isFirstChild or: [self selection isLastChild]) ifFalse: [^ self].
-	self do: ((SBSubtreeRotateCommand newFor: self method)
-		 target: self selection;
-		 yourself)
-]
-
 { #category : #'initialize-release' }
 SBEditor >> markChangesAfterCommand: aCommand [
 
