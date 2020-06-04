@@ -28,7 +28,8 @@ Class {
 		'errors',
 		'searchInput',
 		'helpOverlay',
-		'verticalSelectionPosition'
+		'verticalSelectionPosition',
+		'countModifier'
 	],
 	#classVars : [
 		'DefaultColorPolicy',
@@ -247,16 +248,10 @@ SBEditor >> acceptChild: aBlock [
 	^ aBlock isArtefact
 ]
 
-{ #category : #shortcuts }
+{ #category : #accessing }
 SBEditor >> acceptedRepresentation [
 
 	^ #isToplevelMorph
-]
-
-{ #category : #shortcuts }
-SBEditor >> addCommandShortcut: aShortcut do: anActionBlock [
-
-	commandShortcuts add: {aShortcut asSandblockShortcut. anActionBlock}
 ]
 
 { #category : #shortcuts }
@@ -398,57 +393,6 @@ SBEditor >> addDefaultShortcuts [
 ]
 
 { #category : #actions }
-SBEditor >> addElement [
-
-	| cmd |
-	cmd := (self selection insertCommandRequest: true near: (self selection childSandblocks ifNotEmpty: #last ifEmpty: [nil])) ifNil: [^ self].
-	
-	self do: cmd.
-	
-	cmd shouldMergeWithNext ifTrue: [
-		self startInput: self selection at: 0 replacingContents: false]
-]
-
-{ #category : #actions }
-SBEditor >> addExample [
-
-	self selection ifNotNil: [:selected | selected isExample ifTrue: [^ selected toggleRunning]].
-	
-	self do: ((SBInsertCommand newFor: self method)
-		container: self method body;
-		index: 2;
-		morph: (SBExample new
-			self: (self method isClassSide
-				ifTrue: [SBName contents: self method methodClass theNonMetaClassName]
-				ifFalse: [
-					(SBMessageSend new
-						receiver: (SBName contents: self method methodClass name)
-						selector: (self method selector = #initialize ifTrue: [#basicNew] ifFalse: [#new]))])
-			args: (SBArray new
-				type: #dynamic
-				contents: (Array streamContents: [:str | self method arguments size timesRepeat: [str nextPut: SBUnknown new]]))
-			label: 'simple'))
-]
-
-{ #category : #shortcuts }
-SBEditor >> addInputShortcut: aShortcut do: anActionBlock [
-
-	inputShortcuts add: {aShortcut asSandblockShortcut. anActionBlock}
-]
-
-{ #category : #shortcuts }
-SBEditor >> addMultiSelectionShortcut: aShortcut do: anActionBlock [
-
-	multiSelectionShortcuts add: {aShortcut asSandblockShortcut. anActionBlock}
-]
-
-{ #category : #shortcuts }
-SBEditor >> addSingleSelectionShortcut: aShortcut do: anActionBlock [
-
-	singleSelectionShortcuts add: {aShortcut asSandblockShortcut. anActionBlock}
-]
-
-{ #category : #actions }
 SBEditor >> addToMultiSelection: aBlock [
 
 	multiSelection copy do: [:morph | (morph hasOwner: aBlock) ifTrue: [self removeMultiSelected: morph]].
@@ -483,7 +427,7 @@ SBEditor >> artefacts [
 	^ scroll submorphs select: #isArtefact
 ]
 
-{ #category : #selection }
+{ #category : #artefacts }
 SBEditor >> batchedChangeStep: aBlock [
 
 	" send this message when you are updating the tree rapidly for each update, but don't want to submit a command for each update, only at the end "
@@ -507,12 +451,6 @@ SBEditor >> bindingFor: aString class: aClass ifPresent: aBlock [
 SBEditor >> blockForClass: aClass ifPresent: aBlock ifAbsent: anotherBlock [
 
 	^ scroll submorphs detect: [:morph | morph isSandblock and: [morph isClassContainer and: [morph shownClass = aClass]]] ifFound: aBlock ifNone: anotherBlock
-]
-
-{ #category : #actions }
-SBEditor >> browseSelection [
-
-	self selection browse
 ]
 
 { #category : #'initialize-release' }
@@ -550,7 +488,7 @@ SBEditor >> buildBottomPanel [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #ui }
 SBEditor >> buildCommandBar [
 
 	^ SBRow new
@@ -574,7 +512,7 @@ SBEditor >> buildCommandBar [
 		addMorphBack: (SBButton new icon: SBIcon iconExpand shortcut: (self class anyShortcutForAction: #toggleFullscreen) do: [self toggleFullscreen])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #ui }
 SBEditor >> buildDebugCommandBar [
 
 	^ SBRow new
@@ -601,35 +539,6 @@ SBEditor >> canDeleteChild: aBlock [
 
 	" code containers might be inside of us, they can be freely deleted "
 	^ true
-]
-
-{ #category : #'actions input' }
-SBEditor >> cancelInput [
-
-	self assert: self currentInputCommand notNil.
-	
-	self currentInputCommand
-		newText: self currentInputCommand previousText;
-		newMorph: self currentInputCommand oldMorph.
-	
-	self endInput
-]
-
-{ #category : #actions }
-SBEditor >> changeSelection [
-
-	| new |
-	new := SBUnknown new.
-	(new hasRepresentationThat: (self selection parentSandblock contextAcceptedRepresentationAt: self selection childIndex)) ifTrue: [
-		self setCopyBuffer: self selection.
-		
-		self do: ((SBReplaceCommand newFor: self method)
-			target: self selection;
-			replacer: new;
-			shouldMergeWithNext: true;
-			yourself).
-	
-		self startInput: new at: 0 replacingContents: false]
 ]
 
 { #category : #actions }
@@ -691,12 +600,6 @@ SBEditor >> colorPolicy: aPolicy [
 	self allMorphsDo: #layoutChanged
 ]
 
-{ #category : #actions }
-SBEditor >> compiledMethod: aMethod [
-
-	self openMorphInView: aMethod asSandblock
-]
-
 { #category : #'as yet unclassified' }
 SBEditor >> connectFrom: aMorph to: anotherMorph [
 
@@ -712,25 +615,13 @@ SBEditor >> containingArtefact [
 	^ nil
 ]
 
-{ #category : #actions }
-SBEditor >> copyAroundSelection [
-
-	| replacer around |
-	" create a copy of our surroundings with ourselves replaced "
-	replacer := SBPastePlaceholder new.
-	around := self selection.
-	around replaceBy: replacer.
-	self setCopyBuffer: replacer parentSandblock.
-	replacer replaceBy: around
-]
-
-{ #category : #shortcuts }
+{ #category : #accessing }
 SBEditor >> copyBuffer [
 
 	^ copyBuffer
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBEditor >> copyBuffer: aMorphOrCollection [
 
 	| form list |
@@ -747,22 +638,16 @@ SBEditor >> copyBuffer: aMorphOrCollection [
 	copyBufferPreview image: ((form scaledToHeight: self copyBufferPreviewSize y) collectColors: [:c | c alpha: c alpha * 0.7])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBEditor >> copyBufferPreviewSize [
 
 	^ 120 @ (self fontToUse height * 1.5) rounded
 ]
 
-{ #category : #actions }
-SBEditor >> copySelection [
+{ #category : #accessing }
+SBEditor >> countModifier [
 
-	self setCopyBuffer: self multiSelection
-]
-
-{ #category : #actions }
-SBEditor >> copyString [
-
-	Clipboard clipboardText: self selection prettySourceString
+	^ countModifier ifEmpty: [0] ifNotEmpty: [countModifier asNumber]
 ]
 
 { #category : #actions }
@@ -794,7 +679,7 @@ SBEditor >> currentInput [
 	^ currentInput
 ]
 
-{ #category : #'submorphs-add/remove' }
+{ #category : #accessing }
 SBEditor >> currentInputCommand [
 
 	^ currentInputCommand
@@ -804,28 +689,6 @@ SBEditor >> currentInputCommand [
 SBEditor >> currentMethodMap [
 
 	^ (self methods select: #exists) collect: [:method | method compiledMethod sandblocksFastHash -> method] as: Dictionary
-]
-
-{ #category : #actions }
-SBEditor >> debugSelection [
-
-	| source artefact cue context process |
-	source := self selection.
-	artefact := source containingArtefact.
-	context := errors focusedArtefact = artefact ifTrue: [errors focusedContext] ifFalse: [nil].
-	cue := source compilationCueWith: artefact for: context.
-	
-	process := Process
-		forMethod: (Compiler new compileCue: cue noPattern: true ifFail: nil) generateWithTempNames
-		receiver: (context ifNotNil: #receiver).
-	
-	self reportError: nil process: process
-]
-
-{ #category : #actions }
-SBEditor >> declareBlockLocalVariable: aString [ 
-
-	self method declareBlockLocalVariable: aString
 ]
 
 { #category : #actions }
@@ -850,44 +713,10 @@ SBEditor >> declareInstanceVariable: aString for: aClass [
 		morph: (SBName contents: aString))
 ]
 
-{ #category : #actions }
-SBEditor >> declareTemporaryVariable: aString [ 
-
-	self method declareTemporaryVariable: aString
-]
-
-{ #category : #actions }
-SBEditor >> deleteAroundSelection [
-
-	| replacer around |
-	(self selection hasRepresentationThat: (self selection parentSandblock parentSandblock contextAcceptedRepresentationAt: self selection parentSandblock childIndex)) ifTrue: [
-		" create a copy of our surroundings with ourselves replaced "
-		replacer := SBPastePlaceholder new.
-		around := self selection.
-		around replaceBy: replacer.
-		self setCopyBuffer: replacer parentSandblock.
-		replacer replaceBy: around.
-		
-		replacer := self selection veryDeepCopy.
-		self do: ((SBReplaceCommand newFor: self method)
-			target: self selection parentSandblock;
-			replacer: replacer).
-		replacer postDuplicate]
-]
-
 { #category : #'submorphs-add/remove' }
 SBEditor >> deleteCommandFor: aBlock [
 
 	^ SBDeleteCommand newNonEdit target: aBlock
-]
-
-{ #category : #actions }
-SBEditor >> deleteSelection [
-
-	self setCopyBuffer: self multiSelection.
-	
-	self doMultiSelectionEach: [:selected |
-		selected parentSandblock deleteCommandFor: selected]
 ]
 
 { #category : #actions }
@@ -972,109 +801,29 @@ SBEditor >> errors [
 	^ errors
 ]
 
-{ #category : #actions }
-SBEditor >> evaluateSelection [
-
-	| result source |
-	source := self selection.
-	"artefact := source containingArtefact.
-	result := source evaluateWith: artefact for: (errors focusedArtefact = ifTrue: [errors focusedContext] ifFalse: [nil])."
-	result := source evaluate.
-	
-	source containingArtefact ifNotNil: [source containingArtefact cacheType: result class for: source].
-	
-	result
-		representationThat: #isToplevelMorph
-		do: [:explorer |
-			explorer focusAfterDelete: source.
-			scroll addMorph: ((SBConnectorLine new connectorType: #dots)
-				color: Color black;
-				connect: source to: explorer;
-				yourself).
-			self openMorphInView: explorer]
-		ifNone: []
-]
-
-{ #category : #actions }
-SBEditor >> extractMethod [
-
-	self multiSelectionIsConsecutive ifFalse: [^ self].
-	
-	self doMultiSelection: [:extracting | | arguments localBindings method |
-		self flag: #todo. " consider write vs read access "
-		localBindings := extracting gather: #resolveLocalBindings.
-		localBindings := ((KeyedSet keyBlock: #name) addAll: localBindings; yourself) asArray.
-		arguments := localBindings collect: [:arg | SBName contents: arg contents].
-		
-		method := SBMethod new
-				selector: (#extracted numArgs: localBindings size)
-				arguments: localBindings veryDeepCopy
-				class: self method methodClass;
-				body: SBBlockBody new.
-		
-		SBCombinedCommand newWith:
-			{(SBReplaceConsecutiveCommand newFor: self selectedArtefact)
-				targets: extracting;
-				replacer: (SBMessageSend new
-					receiver: (SBName contents: 'self')
-					selector: method selector
-					arguments: arguments veryDeepCopy)},
-			(extracting withIndexCollect: [:stmt :index | (SBInsertCommand newFor: method)
-				container: method body;
-				index: index + 1;
-				morph: stmt;
-				yourself]),
-			{
-				(SBWrapCommand newFor: self selectedArtefact)
-					inner: extracting last;
-					outer: SBReturn new;
-					wrap: [:outer :inner | outer expression: inner].
-				self openMorphInViewCommand: method}
-		]
-]
-
-{ #category : #actions }
-SBEditor >> extractVariable [
-
-	| name var block |
-	name := (UIManager default request: 'Name for variable?') ifEmpty: [^ self].
-	var := SBName contents: name.
-	block := self selection containingBlock.
-	
-	self do: (SBCombinedCommand newWith: {
-			block declareTemporaryVariableCommand: name.
-			(SBReplaceCommand newFor: self method) target: self selection; replacer: var.
-			(SBInsertCommand newFor: self method) container: block; index: 2; morph: self selection.
-			(SBWrapCommand newFor: self method) inner: self selection; outer: SBAssignment new; wrap: [:outer :inner | outer binding: var veryDeepCopy value: inner].
-		})
-]
-
 { #category : #events }
 SBEditor >> filterEvent: anEvent for: aMorph [
 
 	anEvent isMouse ifTrue: [
 		anEvent isMouseDown ifTrue: [anEvent hand newKeyboardFocus: self].
 		^ anEvent].
-	anEvent isKeystroke ifFalse: [^ anEvent ignore].
 	
-	self performShortcutFor: anEvent.
-	true ifTrue: [
-		anEvent wasHandled: false.
-		^ anEvent ignore].
+	anEvent isKeystroke ifFalse: [^ anEvent ignore].
 	
 	anEvent keyValue = 251 ifTrue: [self toggleHelperTimer: anEvent type = #keyDown] ifFalse: [self removeHelperTimer].
 	
-	mode = #input ifTrue: [
-		self processShortcutList: inputShortcuts for: anEvent ifMatched: [^ anEvent ignore].
-		currentInput keyStroke: anEvent.
-		^ anEvent ignore].
-	mode = #command ifTrue: [
-		self processShortcutList: commandShortcuts for: anEvent ifMatched: [^ anEvent ignore]].
-	self selection ifNotNil: [
-		self processShortcutList: multiSelectionShortcuts for: anEvent ifMatched: [^ anEvent ignore].
-		mode ~= #selection ifTrue: [
-			self processShortcutList: singleSelectionShortcuts for: anEvent ifMatched: [^ anEvent ignore]]].
-	^ anEvent
+	SBWatch report: countModifier for: 617319822.
+	(self performShortcutFor: anEvent)
+		ifTrue: [
+			SBWatch report: (countModifier := '') for: 247028657.
+			^ anEvent ignore]
+		ifFalse: [
+			anEvent keyCharacter isDigit ifTrue: [
+				countModifier := countModifier, anEvent keyCharacter.
+				^ anEvent ignore]].
+	
+	anEvent wasHandled: false.
+	^ anEvent ignore
 ]
 
 { #category : #actions }
@@ -1132,18 +881,6 @@ SBEditor >> handleDroppedBlock: aMorph event: anEvent [
 	placeholder delete
 ]
 
-{ #category : #actions }
-SBEditor >> hasWindowFocus [
-
-	^ self hasKeyboardFocus
-]
-
-{ #category : #actions }
-SBEditor >> implementorsOfIt [
-
-	self selection browseImplementors
-]
-
 { #category : #'initialize-release' }
 SBEditor >> initialize [
 
@@ -1161,7 +898,6 @@ SBEditor >> initialize [
 	self
 		addKeyboardCaptureFilter: self;
 		addMouseCaptureFilter: self;
-		"addDefaultShortcuts;"
 		
 		extent: 500 asPoint;
 		changeTableLayout;
@@ -1185,86 +921,6 @@ SBEditor >> initialize [
 		addMorphBack: (bottomPanel := self buildBottomPanel);
 		
 		resetState
-]
-
-{ #category : #actions }
-SBEditor >> inputNextUnknown [
-
-	(self selection activeMorph nextBlockThat: [:m | m isUnknown]) ifNotNil: [:m | self startInput: m at: 1 replacingContents: true]
-]
-
-{ #category : #actions }
-SBEditor >> inputPreviousUnknown [
-
-	(self selection previousMorphThat: [:m | m isSandblock and: [m isUnknown]]) ifNotNil: [:m | self startInput: m at: 1 replacingContents: true]
-]
-
-{ #category : #actions }
-SBEditor >> insertElement: aBoolean [
-
-	| cmd |
-	cmd := (self selection parentSandblock insertCommandRequest: aBoolean near: self selection) ifNil: [^ self].
-	
-	self do: cmd.
-	
-	cmd shouldMergeWithNext ifTrue: [
-		self startInput: self selection at: 0 replacingContents: false]
-]
-
-{ #category : #actions }
-SBEditor >> insertElementAfter [
-
-	self insertElement: true
-]
-
-{ #category : #actions }
-SBEditor >> insertElementBefore [
-
-	self insertElement: false
-]
-
-{ #category : #actions }
-SBEditor >> insertLabelAbove [
-
-	self insertLabelAboveOrBelow: true
-]
-
-{ #category : #actions }
-SBEditor >> insertLabelAboveOrBelow: anAboveBoolean [
-
-	| currentStatement index newStatement |
-	newStatement :=  SBLabel new.
-	
-	currentStatement := self selection containingStatement.
-	index := currentStatement owner submorphIndexOf: currentStatement.
-	
-	self do: ((SBInsertCommand newFor: self method)
-		index: (anAboveBoolean
-			ifTrue: [index] ifFalse: [index + 1]);
-		container: currentStatement owner;
-		morph: newStatement;
-		shouldMergeWithNext: true;
-		yourself).
-	
-	self startInput: newStatement at: 1 replacingContents: false
-]
-
-{ #category : #actions }
-SBEditor >> insertLabelBelow [
-
-	self insertLabelAboveOrBelow: false
-]
-
-{ #category : #actions }
-SBEditor >> insertStatementAbove [
-
-	self selection insertStatementAbove
-]
-
-{ #category : #actions }
-SBEditor >> insertStatementBelow [
-
-	self selection insertStatementBelow
 ]
 
 { #category : #selection }
@@ -1303,13 +959,13 @@ SBEditor >> keepVerticalSelectionPositionDuring: aBlock [
 	aBlock ensure: [verticalSelectionPosition := restore]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #events }
 SBEditor >> keyboardFocusChange: aBoolean [
 
 	self triggerEvent: #keyboardFocusChanged with: aBoolean
 ]
 
-{ #category : #input }
+{ #category : #accessing }
 SBEditor >> labelString [
 
 	^ 'Sandblocks Editor', (workspace ifNotNil: [:w | ' - ', w name] ifNil: [''])
@@ -1325,12 +981,6 @@ SBEditor >> markChangesAfterCommand: aCommand [
 			
 			artefact hasUnsavedChanges: saved not.
 			self allBlocksDo: [:block | block artefactChanged: artefact]]]
-]
-
-{ #category : #'as yet unclassified' }
-SBEditor >> method [
-
-	^ (self selection ifNotNil: #containingArtefact) ifNil: [self methods first]
 ]
 
 { #category : #actions }
@@ -1379,7 +1029,7 @@ SBEditor >> mode: aSymbol [
 	self updateSelectionLabel
 ]
 
-{ #category : #shortcuts }
+{ #category : #'initialize-release' }
 SBEditor >> modelWakeUp [
 
 	" when our window takes focus again and we're detached, bring us back to the front "
@@ -1413,13 +1063,6 @@ SBEditor >> moveCursorToStart [
 	<inputAction>
 
 	self textMorph moveCursorTo: 1
-]
-
-{ #category : #shortcuts }
-SBEditor >> multiSelectChildren [
-
-	mode = #select ifFalse: [self mode: #selection].
-	self selection childSandblocks do: [:b | self addToMultiSelection: b]
 ]
 
 { #category : #selection }
@@ -1553,7 +1196,7 @@ SBEditor >> openRepl [
 	self startInput: repl body childSandblocks first at: 1 replacingContents: true
 ]
 
-{ #category : #shortcuts }
+{ #category : #'initialize-release' }
 SBEditor >> outOfWorld: aWorld [
 
 	super outOfWorld: aWorld.
@@ -1561,71 +1204,13 @@ SBEditor >> outOfWorld: aWorld [
 	helpOverlay ifNotNil: #delete
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBEditor >> parentSandblock [
 
 	^ nil
 ]
 
-{ #category : #actions }
-SBEditor >> pasteStatementAbove [
-
-	self pasteStatementAboveOrBelow: true
-]
-
-{ #category : #actions }
-SBEditor >> pasteStatementAboveOrBelow: anAboveBoolean [
-
-	| index target adjacent morph |
-	copyBuffer ifNil: [^ self].
-	
-	copyBuffer wrapsAround ifTrue: [^ self wrapSelectionWith: copyBuffer].
-	
-	target := copyBuffer isSelection ifTrue: [copyBuffer firstSubmorph] ifFalse: [copyBuffer].
-	
-	adjacent := self selection.
-	[adjacent parentSandblock acceptChild: target] whileFalse: [adjacent := adjacent parentSandblock].
-	
-	index := adjacent owner submorphIndexOf: adjacent.
-	morph := target veryDeepCopy.
-	morph topCenter: self selection bottomCenter.
-	
-	self do: ((adjacent parentSandblock containingArtefact ifNil: [SBInsertCommand newNonEdit] ifNotNil: [:artefact | SBInsertCommand newFor: artefact])
-		index: (anAboveBoolean
-			ifTrue: [index] ifFalse: [index + 1]);
-		container: adjacent owner;
-		morph: morph;
-		yourself).
-	
-	morph postDuplicate
-]
-
-{ #category : #actions }
-SBEditor >> pasteStatementBelow [
-
-	self pasteStatementAboveOrBelow: false
-]
-
-{ #category : #actions }
-SBEditor >> pasteString [
-
-	| doIt block baseIndex |
-	doIt := Parser new parse: Clipboard clipboardText class: nil class noPattern: true notifying: nil ifFail: [^ nil].
-	block := doIt block statements last expr asSandblock.
-	baseIndex := self selection containingStatement owner submorphIndexOf: self selection containingStatement.
-	
-	self do: ((SBCombinedCommand newFor: self selectedArtefact)
-		commands:
-			{(SBReplaceCommand newFor: self method) target: self selection; replacer: block},
-			(doIt block statements allButLast withIndexCollect: [:statement :index |
-				(SBInsertCommand newFor: self selectedArtefact)
-					index: baseIndex + index - 1;
-					container: self selection containingStatement owner;
-					morph: statement asSandblock])).
-	block postDuplicate
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #shortcuts }
 SBEditor >> perform: anAction for: aBlock [
 
 	(aBlock lookupAction: anAction) ifNotNil: [:method |
@@ -1639,34 +1224,18 @@ SBEditor >> perform: anAction for: aBlock [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #shortcuts }
 SBEditor >> performShortcutFor: anEvent [
 
 	self shortcuts do: [:assoc |
 		(assoc key matchesEvent: anEvent) ifTrue: [
-			(self selection notNil and: [self perform: assoc value for: self selection]) ifTrue: [^ self].
+			(self selection notNil and: [self perform: assoc value for: self selection]) ifTrue: [^ true].
 			(self perform: assoc value for: self) ifTrue: [^ true]]].
-	mode = #input ifTrue: [currentInput keyStroke: anEvent].
+	mode = #input ifTrue: [
+		currentInput keyStroke: anEvent.
+		^ true].
+	
 	^ false
-]
-
-{ #category : #actions }
-SBEditor >> placeMark [
-
-	(self selection hasDecorator: SBMarkedDecorator)
-		ifTrue: [self selection detachDecorators: SBMarkedDecorator]
-		ifFalse: [
-			self waitForLetterDo: [:letter |
-				self selection attachDecorator: (SBMarkedDecorator new letter: letter)]]
-]
-
-{ #category : #shortcuts }
-SBEditor >> processShortcutList: aCollection for: anEvent ifMatched: aBlock [
-
-	aCollection do: [:def |
-		(def first asOrderedCollection anySatisfy: [:shortcut | shortcut matchesEvent: anEvent]) ifTrue: [
-			" allow handlers to explicitly opt out by returning false "
-			(def second value: self) = false ifFalse: [^ aBlock value]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -1706,12 +1275,6 @@ SBEditor >> promptChangeCompile [
 ]
 
 { #category : #actions }
-SBEditor >> promptCodeAction [
-
-	self selection codeActions ifNotEmpty: [:actions | self selection proposeCodeActions: actions for: self selection]
-]
-
-{ #category : #actions }
 SBEditor >> promptMenu [
 	<action>
 
@@ -1724,7 +1287,7 @@ SBEditor >> promptMenu [
 	(UIManager default chooseFrom: (options collect: #first) values: (options collect: #second)) ifNotNil: #value
 ]
 
-{ #category : #actions }
+{ #category : #workspaces }
 SBEditor >> promptOpenWorkspace [
 	<action>
 
@@ -1736,7 +1299,7 @@ SBEditor >> promptOpenWorkspace [
 	(items at: index) open
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #workspaces }
 SBEditor >> promptWorkspaceActions [
 
 	| index |
@@ -1767,7 +1330,7 @@ SBEditor >> refocus [
 	self selection ifNotNil: #ensureVisible
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 SBEditor >> removeHelperTimer [
 
 	helpOverlay ifNotNil: #delete.
@@ -1790,17 +1353,6 @@ SBEditor >> replaceInput: aMorph [
 	self assert: currentInput notNil.
 	currentInput := aMorph.
 	self select: aMorph containingSandblock
-]
-
-{ #category : #actions }
-SBEditor >> replaceWithCopyBuffer [
-
-	copyBuffer ifNotNil: [ | new |
-		new := (copyBuffer isSelection ifTrue: [copyBuffer firstSubmorph] ifFalse: [copyBuffer]) veryDeepCopy.
-		self do: ((SBReplaceCommand newFor: self selectedArtefact)
-			target: self selection;
-			replacer: new).
-		new postDuplicate]
 ]
 
 { #category : #actions }
@@ -1843,18 +1395,6 @@ SBEditor >> resetZoom [
 	scroll viewportPosition: scroll currentPosition rounded
 ]
 
-{ #category : #'as yet unclassified' }
-SBEditor >> resizeToFit [
-
-	| extent outer |
-	self deprecated.
-	
-	self fullBounds.
-	outer := (self ownerThatIsA: SystemWindow) ifNil: [self].
-	extent := scroll extentToFit + outer extent - scroll extent + (20 @ 20 * self scalingFactor).
-	outer extent: extent x @ (extent y min: Display height - (100 * self scalingFactor))
-]
-
 { #category : #actions }
 SBEditor >> restartFrame [
 	<action>
@@ -1862,7 +1402,7 @@ SBEditor >> restartFrame [
 	errors restart
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBEditor >> sandblockEditor [
 
 	^ self
@@ -1875,17 +1415,17 @@ SBEditor >> save [
 	self selection ifNotNil: [self save: self selectedArtefact tryFixing: true quick: false]
 ]
 
-{ #category : #actions }
+{ #category : #artefacts }
 SBEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean [
 
 	^ (anArtefact saveTryFixing: aFixBoolean quick: aQuickBoolean)
 		ifTrue: [
-			self allBlocksDo: [:block | block artefactSaved: self method].
+			self allBlocksDo: [:block | block artefactSaved: self selectedArtefact].
 			true]
 		ifFalse: [false]
 ]
 
-{ #category : #actions }
+{ #category : #workspaces }
 SBEditor >> saveWorkspace [
 	<action>
 
@@ -1933,83 +1473,7 @@ SBEditor >> selectClick: aBlock [
 	self select: (aBlock == self selection ifTrue: [nil] ifFalse: [aBlock])
 ]
 
-{ #category : #actions }
-SBEditor >> selectLast [
-
-	self select: self selection containingArtefact lastDeepChild
-]
-
-{ #category : #selection }
-SBEditor >> selectLeftMostBlock [
-
-	self select: self selection leftMostBlock
-]
-
-{ #category : #selection }
-SBEditor >> selectNext [
-
-	| from |
-	from := self selection.
-	
-	selectionDownHistory removeAll.
-	from nextBlock ifNotNil: [:b | self select: b]
-]
-
-{ #category : #selection }
-SBEditor >> selectNextStatement [
-
-	selectionDownHistory removeAll.
-	(self selection nextBlockThat: #isMessageSend) ifNotNil: [:b | ^ self select: b]
-	
-	"(self selection topFirstMorphThat: [:m | m isStatement and: [m ~= self selection]]) ifNotNil: [:s | ^ self select: s].
-	(self selection morphAfterThat: #isStatement) ifNotNil: [:s | ^ self select: s].
-	(self selection ownerSatisfying: #isStatement) ifNotNil: [:owner | (owner morphAfterThat: #isStatement) ifNotNil: [:s | self select: s]]"
-]
-
-{ #category : #selection }
-SBEditor >> selectPrevious [
-
-	| from |
-	from := self selection.
-	
-	selectionDownHistory removeAll.
-	from previousBlock ifNotNil: [:b | self select: b]
-]
-
-{ #category : #selection }
-SBEditor >> selectPreviousStatement [
-
-	selectionDownHistory removeAll.
-	(self selection previousBlockThat: #isMessageSend) ifNotNil: [:b | ^ self select: b]
-]
-
-{ #category : #selection }
-SBEditor >> selectRightMostBlock [
-
-	self select: self selection rightMostBlock
-]
-
-{ #category : #actions }
-SBEditor >> selectToplevelTowards: aSideSymbol [
-
-	| opposite |
-	opposite := aSideSymbol caseOf: {[#left] -> [#right]. [#right] -> [#left]. [#top] -> [#bottom]. [#bottom] -> [#top]}.
-	
-	self select: (self selection containingArtefact closestAdjacentFrom: (aSideSymbol, 'Center') asSymbol to: (opposite, 'Center') asSymbol)
-]
-
-{ #category : #selection }
-SBEditor >> selectUp [
-
-	| from |
-	from := self selection.
-	
-	from parentSandblock ifNotNil: [:b |
-		selectionDownHistory addLast: self selection.
-		self select: b]
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #artefacts }
 SBEditor >> selectedArtefact [
 
 	^ (self selection ifNotNil: #containingArtefact) ifNil: [self methods ifNotEmpty: #first ifEmpty: [nil]]
@@ -2027,12 +1491,6 @@ SBEditor >> selectionDownHistory [
 	^ selectionDownHistory
 ]
 
-{ #category : #actions }
-SBEditor >> sendersOfIt [
-
-	self selection browseSenders
-]
-
 { #category : #shortcuts }
 SBEditor >> shortcuts [
 
@@ -2045,7 +1503,7 @@ SBEditor >> shortcutsOverride: aCollection [
 	self setProperty: #shortcutsOverride toValue: aCollection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 SBEditor >> showHelper [
 
 	(helpOverlay isNil and: [self isInWorld and: [self selection notNil]]) ifTrue: [helpOverlay := SBHelpOverlay new target: self selection]
@@ -2073,12 +1531,6 @@ SBEditor >> startInput: aMorph at: aNumber replacingContents: aBoolean [
 			currentInputCommand := cmd.
 			self mode: #input]
 		ifNil: [currentInput := nil]
-]
-
-{ #category : #actions }
-SBEditor >> startOrAddToMultiSelection [
-
-	self startOrAddToMultiSelection: self selection
 ]
 
 { #category : #actions }
@@ -2142,12 +1594,6 @@ SBEditor >> textMorph [
 	^ currentInput currentTextMorph
 ]
 
-{ #category : #shortcuts }
-SBEditor >> toggleCollapsed [
-
-	self selection ifNotNil: #toggleCollapsed
-]
-
 { #category : #actions }
 SBEditor >> toggleFullscreen [
 	<action>
@@ -2164,7 +1610,7 @@ SBEditor >> toggleFullscreen [
 				position: 0 @ 0]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 SBEditor >> toggleHelperTimer: aBoolean [
 
 	aBoolean
@@ -2238,28 +1684,9 @@ SBEditor >> wantsKeyboardFocus [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : #workspaces }
 SBEditor >> workspace: aWorkspaceRecord [
 
 	workspace := aWorkspaceRecord.
 	self changed: #relabel
-]
-
-{ #category : #actions }
-SBEditor >> wrapSelectionWith: aSelection [
-
-	| around new |
-	around := self selection.
-	new := aSelection veryDeepCopy.
-	
-	self do: (SBCombinedCommand newWith: {
-		(SBReplaceCommand newFor: self selectedArtefact)
-			target: around;
-			replacer: new firstSubmorph.
-		(SBReplaceCommand newFor: self selectedArtefact)
-			target: new placeholder;
-			replacer: around.
-	}).
-	
-	new postDuplicate
 ]

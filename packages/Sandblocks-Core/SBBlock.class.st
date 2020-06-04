@@ -370,17 +370,19 @@ SBBlock >> deleteAround [
 
 	| replacer around editor |
 	editor := self sandblockEditor.
-	(self hasRepresentationThat: (self parentSandblock parentSandblock contextAcceptedRepresentationAt: self parentSandblock childIndex)) ifTrue: [
-		" create a copy of our surroundings with ourselves replaced "
+	(self hasRepresentationThat: (self parentSandblock parentSandblock contextAcceptedRepresentationAt: self parentSandblock childIndex)) ifTrue: [ | target |
+		target := self parentSandblock.
+		editor countModifier - 1 timesRepeat: [target := target parentSandblock].
+		
 		replacer := SBPastePlaceholder new.
 		around := self.
 		around replaceBy: replacer.
-		editor copyBuffer: replacer parentSandblock.
+		editor copyBuffer: target.
 		replacer replaceBy: around.
 		
 		replacer := self veryDeepCopy.
 		editor do: ((SBReplaceCommand newFor: self containingArtefact)
-			target: self parentSandblock;
+			target: target;
 			replacer: replacer).
 		replacer postDuplicate]
 ]

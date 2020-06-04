@@ -291,7 +291,10 @@ SBExample >> self: aBlock args: aCollectionBlock label: aString [
 
 	self
 		removeAllMorphs;
-		addMorphBack: (icon := SBIcon iconPause small; color: Color white);
+		addMorphBack: (icon := SBIcon iconPause
+			small;
+			color: Color white;
+			on: #click send: #toggleRunning to: self);
 		addMorphBack: (nameInput := SBTextBubble new contents: aString);
 		addMorphBack: (SBStringMorph new contents: 'self:');
 		addMorphBack: aBlock;
@@ -362,6 +365,7 @@ SBExample >> stopRunning [
 
 { #category : #'as yet unclassified' }
 SBExample >> toggleRunning [
+	<action>
 
 	self active
 		ifFalse: [self startRunning]
