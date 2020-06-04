@@ -8,9 +8,27 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBSubstitution class >> matches: aMessageSend [
+SBSubstitution class >> catchesAll [
 
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBSubstitution class >> isLeaf [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBSubstitution class >> isSmalltalkExpression [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBSubstitution class >> matches: aMessageSend [
+
+	^ aMessageSend isSandblock and: [aMessageSend isMessageSend]
 ]
 
 { #category : #'as yet unclassified' }
@@ -20,15 +38,27 @@ SBSubstitution class >> matchesCascades [
 ]
 
 { #category : #'as yet unclassified' }
-SBSubstitution class >> newFrom: aMessage [
+SBSubstitution class >> newFor: aMessage [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBSubstitution class >> prettyName [
+
+	^ self name allButFirst: 2
 ]
 
 { #category : #'as yet unclassified' }
 SBSubstitution class >> suggestion [
 
 	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBSubstitution class >> supports: aSymbol [
+
+	^ (self respondsTo: aSymbol) and: [self perform: aSymbol]
 ]
 
 { #category : #'as yet unclassified' }

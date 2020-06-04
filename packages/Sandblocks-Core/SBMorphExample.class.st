@@ -18,15 +18,17 @@ Class {
 { #category : #'as yet unclassified' }
 SBMorphExample class >> matches: aBlock [
 
+	(super matches: aBlock) ifFalse: [^ false].
+
 	^ aBlock receiver isBinding and: [aBlock receiver contents = self name] and: [aBlock selector = 'setUp:cases:extent:']
 ]
 
 { #category : #'as yet unclassified' }
-SBMorphExample class >> newFrom: aBlock [
+SBMorphExample class >> newFor: aBlock [
 
 	^ self new
 		setUp: aBlock arguments first
-		cases: (aBlock arguments second submorphs)
+		cases: aBlock arguments second submorphs
 		extent: aBlock arguments third contents
 ]
 

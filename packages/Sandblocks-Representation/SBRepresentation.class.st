@@ -49,6 +49,13 @@ SBRepresentation class >> priority [
 ]
 
 { #category : #'as yet unclassified' }
+SBRepresentation class >> representationsDo: aBlock [
+
+	self allSubclassesDo: aBlock.
+	SBSubstitution allSubclassesDo: aBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBRepresentation class >> supports: aSymbol [
 
 	^ (self respondsTo: aSymbol) and: [self perform: aSymbol]

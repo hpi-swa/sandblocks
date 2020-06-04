@@ -13,6 +13,8 @@ Class {
 { #category : #'as yet unclassified' }
 SBStateMachine class >> matches: aNode [
 
+	(super matches: aNode) ifFalse: [^ false].
+
 	^ aNode isCascade and: [aNode receiver isMessageSend and: [aNode receiver receiver isName and: [aNode receiver receiver contents = 'SBStateMachine' and: [aNode receiver selector = 'new']]]]
 ]
 
@@ -22,8 +24,8 @@ SBStateMachine class >> matchesCascades [
 	^ true
 ]
 
-{ #category : #'instance creation' }
-SBStateMachine class >> newFrom: aNode [ 
+{ #category : #'as yet unclassified' }
+SBStateMachine class >> newFor: aNode [
 
 	^ self new buildFrom: aNode
 ]

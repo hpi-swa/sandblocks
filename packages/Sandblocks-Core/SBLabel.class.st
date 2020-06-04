@@ -11,11 +11,13 @@ Class {
 { #category : #'as yet unclassified' }
 SBLabel class >> matches: aBlock [
 
+	(super matches: aBlock) ifFalse: [^ false].
+
 	^ aBlock receiver isBinding and: [aBlock receiver contents = self name] and: [aBlock selector = 'text:']
 ]
 
 { #category : #'as yet unclassified' }
-SBLabel class >> newFrom: aBlock [
+SBLabel class >> newFor: aBlock [
 
 	^ self new textBlock: aBlock arguments first
 ]

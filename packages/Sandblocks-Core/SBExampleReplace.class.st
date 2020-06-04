@@ -7,14 +7,15 @@ Class {
 { #category : #'as yet unclassified' }
 SBExampleReplace class >> matches: aBlock [
 
+	(super matches: aBlock) ifFalse: [^ false].
+
 	^ aBlock isConstructor: 'replace:with:' for: self
 ]
 
 { #category : #'as yet unclassified' }
-SBExampleReplace class >> newFrom: aBlock [
+SBExampleReplace class >> newFor: aBlock [
 
-	^ self new
-		replace: aBlock arguments first with: aBlock arguments second
+	^ self new replace: aBlock arguments first with: aBlock arguments second
 ]
 
 { #category : #'as yet unclassified' }

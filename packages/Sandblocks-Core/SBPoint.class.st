@@ -14,16 +14,17 @@ Class {
 { #category : #'as yet unclassified' }
 SBPoint class >> matches: aBlock [
 
+	(super matches: aBlock) ifFalse: [^ false].
+
 	^ (aBlock selector = '@' or: [aBlock selector = ',']) and: [aBlock receiver isNumberBlock] and: [aBlock arguments first isNumberBlock]
 ]
 
 { #category : #'as yet unclassified' }
-SBPoint class >> newFrom: aBlock [
+SBPoint class >> newFor: aBlock [
 
 	^ self new
-		x: aBlock receiver
-		y: aBlock arguments first;
-		type: (aBlock selector = ',' ifTrue: [ECSVector2] ifFalse: [Point])
+		x: aBlock receiver y: aBlock arguments first;
+		type: Point
 ]
 
 { #category : #'as yet unclassified' }

@@ -26,11 +26,13 @@ SBExample class >> getAllInMethod: aBlock [
 { #category : #'as yet unclassified' }
 SBExample class >> matches: aMessage [
 
+	(super matches: aMessage) ifFalse: [^ false].
+	
 	^ aMessage receiver isBinding and: [aMessage receiver contents = self name] and: [aMessage selector = 'self:args:label:']
 ]
 
 { #category : #'as yet unclassified' }
-SBExample class >> newFrom: aMessage [
+SBExample class >> newFor: aMessage [
 
 	^ self new
 		self: aMessage arguments first statements first

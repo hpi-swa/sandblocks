@@ -12,6 +12,8 @@ Class {
 { #category : #'as yet unclassified' }
 SBForm class >> matches: aBlock [
 
+	(super matches: aBlock) ifFalse: [^ false].
+
 	^ aBlock receiver isBinding
 		and: [aBlock receiver contents = 'Form']
 		and: [aBlock selector = 'fromFileNamed:']
@@ -19,7 +21,7 @@ SBForm class >> matches: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBForm class >> newFrom: aBlock [
+SBForm class >> newFor: aBlock [
 
 	^ self new filename: aBlock arguments first contents
 ]

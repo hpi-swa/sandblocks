@@ -1403,7 +1403,7 @@ SBBlock >> representAs [
 	<action>
 
 	^ self object
-		representationThat: self parentSandblock acceptedRepresentation
+		representationThat: self acceptedRepresentation
 		do: [:type |
 			self sandblockEditor do: (SBReplaceCommand newNonEdit
 				target: self;

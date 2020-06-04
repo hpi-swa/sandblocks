@@ -12,16 +12,22 @@ Class {
 { #category : #'as yet unclassified' }
 SBRegex class >> matches: aBlock [
 
+	(super matches: aBlock) ifFalse: [^ false].
+
 	^ (aBlock selector = 'asRegex' and: [aBlock receiver isStringBubble]) or:
 	[aBlock receiver isName and: [aBlock receiver contents = self name] and: [aBlock selector = 'regex:examples:']]
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex class >> newFrom: aBubble [
+SBRegex class >> newFor: aBubble [
 
 	^ aBubble selector = 'asRegex'
-		ifTrue: [self new regexString: aBubble receiver contents examples: #()]
-		ifFalse: [self new regexString: aBubble arguments first contents examples: (aBubble arguments second childSandblocks collect: #contents)]
+		ifTrue: [
+			self new regexString: aBubble receiver contents examples: #()]
+		ifFalse: [
+			self new
+				regexString: aBubble arguments first contents
+				examples: (aBubble arguments second childSandblocks collect: #contents)]
 ]
 
 { #category : #'as yet unclassified' }

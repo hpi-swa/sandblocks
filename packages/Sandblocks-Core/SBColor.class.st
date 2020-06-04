@@ -18,7 +18,9 @@ SBColor class >> matches: aMessage [
 		self: [SBColor]
 		args: [{(SBMessageSend new receiver: (SBName contents: 'Color') selector: #fromUser)}]
 		label: 'non matching'.
-		
+	
+	(super matches: aMessage) ifFalse: [^ false].
+	
 	(aMessage receiver isBinding and: [#('Color' 'ECSColor') includes: aMessage receiver contents]) ifFalse: [^ false].
 	^ aMessage selector asSymbol isUnary
 		ifTrue: [
@@ -28,9 +30,11 @@ SBColor class >> matches: aMessage [
 ]
 
 { #category : #'as yet unclassified' }
-SBColor class >> newFrom: aMessage [
+SBColor class >> newFor: aMessage [
 
-	^ self new colorContents: (Color perform: aMessage selector asSymbol withArguments: (aMessage arguments collect: [:arg | arg contents asNumber] as: Array))
+	^ self new colorContents: (Color
+		perform: aMessage selector asSymbol
+		withArguments: (aMessage arguments collect: [:arg | arg contents asNumber] as: Array))
 ]
 
 { #category : #'as yet unclassified' }

@@ -16,11 +16,13 @@ SBToggledCode class >> comment: aString active: aNumber do: aCollection [
 { #category : #'as yet unclassified' }
 SBToggledCode class >> matches: aBlock [
 
+	(super matches: aBlock) ifFalse: [^ false].
+
 	^ aBlock receiver isBinding and: [aBlock receiver contents = 'SBToggledCode'] and: [aBlock selector = 'comment:active:do:']
 ]
 
 { #category : #'as yet unclassified' }
-SBToggledCode class >> newFrom: aBlock [
+SBToggledCode class >> newFor: aBlock [
 
 	^ self new
 		comment: aBlock arguments first contents

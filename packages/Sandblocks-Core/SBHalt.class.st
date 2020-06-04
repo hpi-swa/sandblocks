@@ -17,13 +17,15 @@ SBHalt class >> deactivated [
 { #category : #'as yet unclassified' }
 SBHalt class >> matches: aBlock [
 
+	(super matches: aBlock) ifFalse: [^ false].
+
 	^ aBlock selector = 'halt' or: [aBlock receiver isName and: [aBlock receiver contents = 'SBHalt' and: [aBlock selector = #deactivated]]]
 ]
 
 { #category : #'as yet unclassified' }
-SBHalt class >> newFrom: aBlock [
+SBHalt class >> newFor: aBlock [
 
-	^ self new active: (aBlock selector ~= #deactivated)
+	^ self new active: aBlock selector ~= #deactivated
 ]
 
 { #category : #'as yet unclassified' }

@@ -15,11 +15,13 @@ Class {
 { #category : #'as yet unclassified' }
 SBWatch class >> matches: aBlock [
 
+	(super matches: aBlock) ifFalse: [^ false].
+
 	^ aBlock receiver isBinding and: [aBlock receiver contents = 'SBWatch'] and: [aBlock selector = 'report:for:']
 ]
 
 { #category : #'as yet unclassified' }
-SBWatch class >> newFrom: aBlock [
+SBWatch class >> newFor: aBlock [
 
 	^ self new
 		identifier: aBlock arguments second contents asNumber;

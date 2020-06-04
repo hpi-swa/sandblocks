@@ -72,7 +72,7 @@ Object >> representations [
 { #category : #'*Sandblocks-Core' }
 Object >> representationsDo: aBlock [
 
-	^ SBRepresentation allSubclassesDo: [:class | (class matches: self) ifTrue: [aBlock value: class]]
+	^ SBRepresentation representationsDo: [:class | (class matches: self) ifTrue: [aBlock value: class]]
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -95,7 +95,7 @@ Object >> representationsThat: aSymbol do: aBlock deep: aBoolean [
 	aSymbol ifNil: [^ self].
 	aSymbol isSymbol ifFalse: [
 		^ aSymbol do: [:sym | self representationsThat: sym do: aBlock]].
-	SBRepresentation allSubclassesDo: [:repr |
+	SBRepresentation representationsDo: [:repr |
 		((repr supports: aSymbol) and: [repr matches: self]) ifTrue: [aBlock value: repr].
 		(aBoolean and: [repr isLeaf not]) ifTrue: [ | nested |
 			((repr matches: self) and: [(nested := repr eagerNewFor: self) ~= self]) ifTrue: [
