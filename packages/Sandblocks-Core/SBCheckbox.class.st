@@ -2,7 +2,8 @@ Class {
 	#name : #SBCheckbox,
 	#superclass : #SBBlock,
 	#instVars : [
-		'value'
+		'value',
+		'nonEdit'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -14,9 +15,17 @@ SBCheckbox >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBCheckbox >> drawnColor [
+
+	^ Color transparent
+]
+
+{ #category : #'as yet unclassified' }
 SBCheckbox >> initialize [
 
 	super initialize.
+	
+	nonEdit := false.
 	
 	self
 		addMorphBack: SBIcon iconCheck_square_o;
@@ -27,9 +36,24 @@ SBCheckbox >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBCheckbox >> nonEdit [
+
+	^ nonEdit
+]
+
+{ #category : #'as yet unclassified' }
+SBCheckbox >> nonEdit: aBoolean [
+
+	nonEdit := aBoolean
+]
+
+{ #category : #'as yet unclassified' }
 SBCheckbox >> startInputAt: aNumber replacingContents: aBoolean [
 
-	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
+	self sandblockEditor do: ((self nonEdit
+		ifTrue: [SBMutatePropertyCommand newNonEdit]
+		ifFalse: [
+			SBMutatePropertyCommand newFor: self containingArtefact])
 		target: self;
 		selector: #value;
 		value: self value not).

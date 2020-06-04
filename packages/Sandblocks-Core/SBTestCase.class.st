@@ -5,7 +5,8 @@ Class {
 		'selectorInput',
 		'errorIndicator',
 		'passIcon',
-		'reportedError'
+		'reportedError',
+		'autoRun'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -32,13 +33,27 @@ SBTestCase >> argumentsDo: aBlock [
 SBTestCase >> artefactSaved: anArtefact [
 
 	super artefactSaved: anArtefact.
-	self runTest
+	
+	self autoRun ifTrue: [self runTest]
+]
+
+{ #category : #'as yet unclassified' }
+SBTestCase >> autoRun [
+
+	^ autoRun value
+]
+
+{ #category : #'as yet unclassified' }
+SBTestCase >> autoRun: aBoolean [
+
+	autoRun value: aBoolean
 ]
 
 { #category : #'as yet unclassified' }
 SBTestCase >> childSandblocksDo: aBlock [
 
 	aBlock value: selectorInput.
+	aBlock value: autoRun.
 	aBlock value: self body
 ]
 
@@ -88,6 +103,13 @@ SBTestCase >> initialize [
 			addMorphBack: (passIcon := SBIcon iconCheck
 				color: Color lightGreen;
 				yourself);
+			addMorphBack: (Morph new
+				width: 6;
+				height: 0;
+				color: Color transparent;
+				yourself);
+			addMorphBack: (autoRun := SBCheckbox new value: true; nonEdit: true);
+			addMorphBack: (SBStringMorph new contents: 'Auto-run');
 			yourself)
 ]
 
