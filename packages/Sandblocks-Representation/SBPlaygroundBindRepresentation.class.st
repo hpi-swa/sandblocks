@@ -11,6 +11,12 @@ SBPlaygroundBindRepresentation class >> catchesAll [
 ]
 
 { #category : #'as yet unclassified' }
+SBPlaygroundBindRepresentation class >> isLeaf [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBPlaygroundBindRepresentation class >> isToplevelMorph [
 
 	^ true
@@ -26,4 +32,10 @@ SBPlaygroundBindRepresentation class >> matches: anObject [
 SBPlaygroundBindRepresentation class >> newFor: anObject [
 
 	^ SBRepl new receiver: anObject; statements: {SBName contents: 'self'}
+]
+
+{ #category : #'as yet unclassified' }
+SBPlaygroundBindRepresentation class >> priority [
+
+	^ 1
 ]

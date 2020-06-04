@@ -8,6 +8,13 @@ Object >> asSandblock [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Object >> hasDerivableRepresentationThat: aSymbol [
+
+	self representationsThat: aSymbol do: [:repr | repr isLeaf ifFalse: [^ true]] deep: false.
+	^ false
+]
+
+{ #category : #'*Sandblocks-Core' }
 Object >> hasRepresentationThat: aSymbol [
 
 	self representationsThat: aSymbol do: [:repr | ^ true] deep: false.
@@ -90,8 +97,8 @@ Object >> representationsThat: aSymbol do: aBlock deep: aBoolean [
 		^ aSymbol do: [:sym | self representationsThat: sym do: aBlock]].
 	SBRepresentation allSubclassesDo: [:repr |
 		((repr supports: aSymbol) and: [repr matches: self]) ifTrue: [aBlock value: repr].
-		aBoolean ifTrue: [ | nested |
-			((repr matches: self) and: [(nested := repr newFor: self) ~= self]) ifTrue: [
+		(aBoolean and: [repr isLeaf not]) ifTrue: [ | nested |
+			((repr matches: self) and: [(nested := repr eagerNewFor: self) ~= self]) ifTrue: [
 				nested
 					representationsThat: aSymbol
 					do: [:nestedRepr |

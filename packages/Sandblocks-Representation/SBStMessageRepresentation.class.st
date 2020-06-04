@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStMessageRepresentation class >> isLeaf [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBStMessageRepresentation class >> isSmalltalkMessage [
 
 	^ true

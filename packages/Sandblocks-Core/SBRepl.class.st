@@ -227,6 +227,12 @@ SBRepl >> name: aString [
 	self firstSubmorph firstSubmorph contents: aString
 ]
 
+{ #category : #'method protocol' }
+SBRepl >> object [
+
+	^ nil
+]
+
 { #category : #'artefact protocol' }
 SBRepl >> printOn: aStream [
 

@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBPlaygroundRepresentation class >> isLeaf [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBPlaygroundRepresentation class >> isToplevelMorph [
 
 	^ true

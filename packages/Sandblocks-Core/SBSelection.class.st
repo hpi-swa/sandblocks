@@ -6,9 +6,10 @@ Class {
 	#superclass : #SBBlock,
 	#instVars : [
 		'colorPolicy',
-		'methodClass'
+		'methodClass',
+		'homeArtefact'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
@@ -66,6 +67,30 @@ SBSelection >> evaluate [
 	^ self submorphCount = 1
 		ifTrue: [self firstSubmorph evaluate]
 		ifFalse: [self submorphs collect: #evaluate]
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> evaluationContext [
+
+	^ self homeArtefact ifNotNil: #evaluationContext ifNil: [nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> evaluationReceiver [
+
+	^ self homeArtefact ifNotNil: #evaluationReceiver ifNil: [nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> homeArtefact [
+
+	^ homeArtefact
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> homeArtefact: anObject [
+
+	homeArtefact := anObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -159,6 +184,12 @@ SBSelection >> selection [
 SBSelection >> statements [
 
 	^ #()
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> wantsInteractiveErrorCorrection [
+
+	^ false
 ]
 
 { #category : #'as yet unclassified' }

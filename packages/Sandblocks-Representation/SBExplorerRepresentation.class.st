@@ -11,6 +11,12 @@ SBExplorerRepresentation class >> catchesAll [
 ]
 
 { #category : #'as yet unclassified' }
+SBExplorerRepresentation class >> isLeaf [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBExplorerRepresentation class >> isToplevelMorph [
 
 	^ true
@@ -26,4 +32,10 @@ SBExplorerRepresentation class >> matches: anObject [
 SBExplorerRepresentation class >> newFor: anObject [
 
 	^ SBExplorer on: anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBExplorerRepresentation class >> priority [
+
+	^ 2
 ]

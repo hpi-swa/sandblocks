@@ -1117,19 +1117,25 @@ SBEditor >> goToMark [
 { #category : #'submorphs-add/remove' }
 SBEditor >> handleDroppedBlock: aMorph event: anEvent [
 
+	| placeholder |
+	self openMorph: (placeholder := Morph new
+		center: ((scroll transformFrom: nil) globalPointToLocal: anEvent position);
+		extent: 150 @ 10;
+		yourself).
 	aMorph object
 		representationThat: #isToplevelMorph
 		do: [:repr |
 			self openMorphInView: repr.
 			repr center: ((scroll transformFrom: nil) globalPointToLocal: anEvent position)]
-		ifNone: []
+		ifNone: [nil]
+		near: placeholder.
+	placeholder delete
 ]
 
 { #category : #actions }
 SBEditor >> hasWindowFocus [
 
-	SBWatch report: self hasKeyboardFocus for: 644400187.
-	^ self containingWindow isLookingFocused
+	^ self hasKeyboardFocus
 ]
 
 { #category : #actions }

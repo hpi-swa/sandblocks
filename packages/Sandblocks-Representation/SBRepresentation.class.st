@@ -11,6 +11,20 @@ SBRepresentation class >> catchesAll [
 ]
 
 { #category : #'as yet unclassified' }
+SBRepresentation class >> eagerNewFor: anObject [
+	" called when eagerly evaluating representations for finding nested combinations.
+	Override if eagerly evaluating will be costly or cause side effects "
+
+	^ self newFor: anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBRepresentation class >> isLeaf [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBRepresentation class >> matches: anObject [
 
 	^ self subclassResponsibility
@@ -26,6 +40,12 @@ SBRepresentation class >> newFor: anObject [
 SBRepresentation class >> prettyName [
 
 	^ self name copyFrom: 3 to: self name size - 'Representation' size
+]
+
+{ #category : #'as yet unclassified' }
+SBRepresentation class >> priority [
+
+	^ 5
 ]
 
 { #category : #'as yet unclassified' }

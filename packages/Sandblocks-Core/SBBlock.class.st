@@ -529,6 +529,7 @@ SBBlock >> evaluateExpression [
 	result := self evaluate.
 	self containingArtefact ifNotNil: [
 		self containingArtefact cacheType: result class for: self].
+	
 	result
 		representationThat: #isToplevelMorph
 		do: [:explorer |
@@ -1269,7 +1270,8 @@ SBBlock >> performAction: aSymbol [
 { #category : #'as yet unclassified' }
 SBBlock >> pickUp: anEvent [
 
-	anEvent hand attachMorph: (SBSelection new 
+	anEvent hand attachMorph: (SBSelection new
+		homeArtefact: self containingArtefact;
 		methodClass: self containingArtefact relatedClass;
 		colorPolicy: self colorPolicy;
 		addMorphBack: self veryDeepCopy)
@@ -1601,13 +1603,12 @@ SBBlock >> startDrag: anEvent [
 
 	super startDrag: anEvent.
 	
-	self sandblockEditor select: self.
-	
-	self flag: #fixme. " this should be made better "
 	(self hasDecorator: SBMoveDecorator) ifFalse: [
-		self pickUp: anEvent].
+		(self nearestOwnerThat: [:o | o isSandblock and: [o isSelected]])
+			ifNotNil: [:o | ^ o pickUp: anEvent].
+		^ self select; pickUp: anEvent].
 	
-	"self showOverlayFor: anEvent"
+	self sandblockEditor select: self
 ]
 
 { #category : #'as yet unclassified' }

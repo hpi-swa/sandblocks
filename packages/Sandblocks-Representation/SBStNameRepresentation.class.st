@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStNameRepresentation class >> isLeaf [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBStNameRepresentation class >> isSmalltalkExpression [
 
 	^ true
@@ -26,4 +32,10 @@ SBStNameRepresentation class >> matches: aBlock [
 SBStNameRepresentation class >> newFor: anObject [
 
 	^ SBName contents: anObject contents
+]
+
+{ #category : #'as yet unclassified' }
+SBStNameRepresentation class >> priority [
+
+	^ 0
 ]

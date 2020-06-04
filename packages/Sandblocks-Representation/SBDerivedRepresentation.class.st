@@ -66,6 +66,12 @@ SBDerivedRepresentation >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBDerivedRepresentation >> priority [
+
+	^ from priority + to priority
+]
+
+{ #category : #'as yet unclassified' }
 SBDerivedRepresentation >> to [
 
 	^ to

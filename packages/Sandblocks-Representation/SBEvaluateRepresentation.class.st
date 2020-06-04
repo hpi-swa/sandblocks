@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBEvaluateRepresentation class >> eagerNewFor: anObject [
+
+	^ Object new
+]
+
+{ #category : #'as yet unclassified' }
 SBEvaluateRepresentation class >> isObject [
 
 	^ true
@@ -13,11 +19,11 @@ SBEvaluateRepresentation class >> isObject [
 { #category : #'as yet unclassified' }
 SBEvaluateRepresentation class >> matches: anObject [
 
-	^ anObject hasRepresentationThat: #isSmalltalkExpression
+	^ anObject hasDerivableRepresentationThat: #isSmalltalkExpression
 ]
 
 { #category : #'as yet unclassified' }
 SBEvaluateRepresentation class >> newFor: anObject [
 
-	^ [anObject evaluate] on: Error, Warning, Halt do: [nil]
+	^ anObject evaluate
 ]
