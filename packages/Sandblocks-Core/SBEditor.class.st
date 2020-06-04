@@ -1053,12 +1053,14 @@ SBEditor >> extractVariable [
 SBEditor >> filterEvent: anEvent for: aMorph [
 
 	anEvent isMouse ifTrue: [
-		anEvent isMouseDown ifTrue: [anEvent hand releaseKeyboardFocus].
+		anEvent isMouseDown ifTrue: [anEvent hand newKeyboardFocus: self].
 		^ anEvent].
 	anEvent isKeystroke ifFalse: [^ anEvent ignore].
 	
 	self performShortcutFor: anEvent.
-	true ifTrue: [^ anEvent ignore].
+	true ifTrue: [
+		anEvent wasHandled: false.
+		^ anEvent ignore].
 	
 	anEvent keyValue = 251 ifTrue: [self toggleHelperTimer: anEvent type = #keyDown] ifFalse: [self removeHelperTimer].
 	
@@ -1121,6 +1123,13 @@ SBEditor >> handleDroppedBlock: aMorph event: anEvent [
 			self openMorphInView: repr.
 			repr center: ((scroll transformFrom: nil) globalPointToLocal: anEvent position)]
 		ifNone: []
+]
+
+{ #category : #actions }
+SBEditor >> hasWindowFocus [
+
+	SBWatch report: self hasKeyboardFocus for: 644400187.
+	^ self containingWindow isLookingFocused
 ]
 
 { #category : #actions }
@@ -1286,6 +1295,12 @@ SBEditor >> keepVerticalSelectionPositionDuring: aBlock [
 	| restore |
 	restore := verticalSelectionPosition.
 	aBlock ensure: [verticalSelectionPosition := restore]
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> keyboardFocusChange: aBoolean [
+
+	self triggerEvent: #keyboardFocusChanged with: aBoolean
 ]
 
 { #category : #input }
@@ -2233,6 +2248,12 @@ SBEditor >> waitForLetterDo: aBlock [
 	keyEvent ifNotNil: [ | letter |
 		letter := (ActiveHand generateKeyboardEvent: keyEvent) keyCharacter.
 		letter isLetter ifTrue: [aBlock value: letter]]
+]
+
+{ #category : #actions }
+SBEditor >> wantsKeyboardFocus [
+
+	^ true
 ]
 
 { #category : #accessing }

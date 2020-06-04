@@ -1,13 +1,59 @@
 Class {
 	#name : #SBSelectionDecorator,
 	#superclass : #SBBlockDecorator,
+	#instVars : [
+		'cursorShown',
+		'blinkCount'
+	],
 	#category : #'Sandblocks-Core'
 }
+
+{ #category : #'as yet unclassified' }
+SBSelectionDecorator >> attached: aMorph [
+
+	super attached: aMorph.
+	aMorph sandblockEditor when: #keyboardFocusChanged send: #focusChanged: to: self
+]
+
+{ #category : #'as yet unclassified' }
+SBSelectionDecorator >> cursorVisible [
+
+	^ cursorShown or: [self morph sandblockEditor hasWindowFocus not]
+]
+
+{ #category : #'as yet unclassified' }
+SBSelectionDecorator >> detached: aMorph [
+
+	super detached: aMorph.
+	aMorph sandblockEditor removeActionsWithReceiver: self
+]
+
+{ #category : #'as yet unclassified' }
+SBSelectionDecorator >> focusChanged: aBoolean [
+
+	blinkCount := aBoolean ifTrue: [0] ifFalse: [self maxBlickCount].
+	self morph ifNotNil: #updateSteppingDecorators
+]
+
+{ #category : #'as yet unclassified' }
+SBSelectionDecorator >> initialize [
+
+	super initialize.
+	cursorShown := false.
+	blinkCount := 0
+]
+
+{ #category : #'as yet unclassified' }
+SBSelectionDecorator >> maxBlickCount [
+
+	^ 20
+]
 
 { #category : #'as yet unclassified' }
 SBSelectionDecorator >> postDrawOn: aCanvas [
 
 	| b color |
+	self cursorVisible ifFalse: [^ self].
 	b := self morph bounds expandBy: 2.
 	color := (self morph parentSandblock ifNil: [self morph]) foregroundColor.
 	
@@ -16,4 +62,19 @@ SBSelectionDecorator >> postDrawOn: aCanvas [
 			aCanvas line: b bottomLeft to: b bottomRight width: self morph frameSize color: color]
 		ifFalse: [
 			aCanvas frameRectangle: b width: self morph frameSize color: color]
+]
+
+{ #category : #'as yet unclassified' }
+SBSelectionDecorator >> step [
+
+	cursorShown := cursorShown not.
+	self morph invalidRect: (self morph outerBounds expandBy: 4).
+	blinkCount := blinkCount + 1.
+	blinkCount > self maxBlickCount ifTrue: [self morph updateSteppingDecorators]
+]
+
+{ #category : #'as yet unclassified' }
+SBSelectionDecorator >> stepTime [
+
+	^ blinkCount < self maxBlickCount ifTrue: [500] ifFalse: [-1]
 ]
