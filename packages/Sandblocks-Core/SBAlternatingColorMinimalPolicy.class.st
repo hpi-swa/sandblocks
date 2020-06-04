@@ -20,7 +20,7 @@ SBAlternatingColorMinimalPolicy >> borderWidthForBlock: aBlock [
 SBAlternatingColorMinimalPolicy >> colorForBlock: aBlock [
 
 	| currentColor colors |
-	aBlock isBlockBody ifTrue: [^ Color green alphaMixed: 0.3 with: Color black].
+	aBlock isBlockBody ifTrue: [^ Color red alphaMixed: 0.7 with: Color black].
 	currentColor := (aBlock parentSandblock ifNil: [^ self colors first]) drawnColor.
 	colors := self colors.
 	^ colors atWrap: (colors indexOf: currentColor) + 1
@@ -31,7 +31,7 @@ SBAlternatingColorMinimalPolicy >> colors [
 
 	^ SBToggledCode
 		comment: ''
-		active: 4
+		active: 3
 		do: {
 			[{Color red. Color green. Color blue}].
 			[{Color black. Color gray. Color white}].

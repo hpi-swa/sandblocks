@@ -1452,8 +1452,8 @@ SBEditor >> okToChange [
 SBEditor >> open: aMethodOrClass [
 
 	aMethodOrClass isBehavior ifTrue: [
-		^ self openClass: aMethodOrClass.
-		"^ aMethodOrClass methodsDo: [:compiledMethod | self openCompiledMethod: compiledMethod]"].
+		self openClass: aMethodOrClass.
+		^ aMethodOrClass methodsDo: [:compiledMethod | self openCompiledMethod: compiledMethod]].
 	
 	aMethodOrClass isCompiledMethod ifTrue: [^ self openCompiledMethod: aMethodOrClass].
 	

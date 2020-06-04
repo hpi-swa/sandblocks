@@ -51,8 +51,10 @@ SBMessageSend >> browseImplementors [
 
 	self actualReceiver guessClassExpensive
 		ifNotNil: [:class |
-			self sandblockEditor openCompiledMethod: (class lookupSelector: self selector asSymbol)]
-		ifNil: [super browseImplementors]
+			(class lookupSelector: self selector asSymbol) ifNotNil: [:m |
+				^ self sandblockEditor openCompiledMethod: m]].
+	
+	super browseImplementors
 ]
 
 { #category : #'as yet unclassified' }

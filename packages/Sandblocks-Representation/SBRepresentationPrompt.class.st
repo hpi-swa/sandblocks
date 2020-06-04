@@ -46,7 +46,7 @@ SBRepresentationPrompt >> mouseEnter: anEvent [
 { #category : #'as yet unclassified' }
 SBRepresentationPrompt >> mouseLeave: anEvent [
 
-	self addAlarm: #delete after: 2 seconds asMilliSeconds
+	self addAlarm: #delete after: 1 seconds asMilliSeconds
 ]
 
 { #category : #'as yet unclassified' }

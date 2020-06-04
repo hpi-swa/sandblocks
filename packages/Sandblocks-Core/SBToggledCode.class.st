@@ -133,7 +133,7 @@ SBToggledCode >> drawnColor [
 { #category : #'as yet unclassified' }
 SBToggledCode >> guessedClass [
 
-	^ self activeBlock ifNotNil: [:block | block lastSubmorph guessedClass]
+	^ self activeBlock ifNotNil: [:block | block isBlockBody ifTrue: [block lastSubmorph guessedClass] ifFalse: [block guessedClass]]
 ]
 
 { #category : #'as yet unclassified' }

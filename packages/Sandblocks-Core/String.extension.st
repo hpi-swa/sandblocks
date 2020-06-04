@@ -4,6 +4,9 @@ Extension { #name : #String }
 String >> codeWithEmptyLineMarkers [
 
 	| ranges crPositions write |
+	SBExample self: ['resultClass
+
+	^ TestResult.'] args: [{}] label: 'short'.
 	SBExample self: ['a.
 
 b.
@@ -12,9 +15,14 @@ c.
 
 asdas''.
 
-^ d'] args: [{}] label: 'example'.
-	ranges := Array streamContents: [:stream |
-		Scanner new scanTokenPositionsIn: self into: [:start :end | stream nextPut: (start to: end)]].
+^ d'] args: [{}] label: 'long'.
+	SBExampleWatch
+		report: (ranges := Array streamContents: [:stream |
+			Scanner new
+				scanTokenPositionsIn: self
+				into: [:start :end |
+					start <= end ifTrue: [stream nextPut: (start to: end)]]])
+		for: 920609171.
 	
 	crPositions := Array streamContents: [:stream |
 		stream nextPut: 1.
