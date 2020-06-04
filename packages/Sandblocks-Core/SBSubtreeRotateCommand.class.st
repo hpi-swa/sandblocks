@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'target',
 		'undoTarget',
-		'isLeft'
+		'wasLeft'
 	],
 	#category : #'Sandblocks-Core'
 }
