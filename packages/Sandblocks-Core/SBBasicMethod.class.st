@@ -254,6 +254,18 @@ SBBasicMethod >> exists [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> externalModification: aBoolean [
+
+	^ self setProperty: #externalModificationFlag toValue: aBoolean
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> hasExternalModification [
+
+	^ self valueOfProperty: #externalModificationFlag ifAbsent: [false]
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> hasUnsavedChanges [
 
 	^ hasUnsavedChanges
@@ -375,7 +387,7 @@ SBBasicMethod >> methodChanged: anEvent [
 
 	((self hasProperty: #ignoreChangeNotifier) not and: (anEvent item selector = self selector and: [anEvent item methodClass = self methodClass])) ifTrue: [
 		anEvent isRemoved ifTrue: [^ self delete].
-		anEvent isModified ifTrue: [^ self reloadMethodInPlace]]
+		(anEvent isModified) ifTrue: [^ self hasUnsavedChanges ifTrue: [self externalModification: true] ifFalse: [self reloadMethodInPlace]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -472,6 +484,7 @@ SBBasicMethod >> reloadMethod [
 { #category : #'as yet unclassified' }
 SBBasicMethod >> reloadMethodInPlace [
 
+	self externalModification: false.
 	^ self replaceBy: (self compiledMethod asSandblock position: self position)
 ]
 
@@ -485,7 +498,12 @@ SBBasicMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
 		block valid ifFalse: [
 			aBoolean ifFalse: [^ false] ifTrue: [block tryFixIfFail: [^ false]]]].
 	
+	(self hasExternalModification not or: [(UIManager default confirm: 'Method may have changed elsewhere, continue?')])
+		ifTrue: [self externalModification: false]
+		ifFalse: [^ false].
+	
 	text := aQuickBoolean ifTrue: [self sourceString] ifFalse: [self prettySourceString].
+	
 	self ignoreChangeNotifierDuring: [
 		newSelector := self methodClass compile: text asText.
 		(self currentClass ~= self methodClass or: [self currentSelector ~= #'' and: [newSelector ~=self  currentSelector]]) ifTrue: [

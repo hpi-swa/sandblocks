@@ -18,7 +18,7 @@ SBSelectionDecorator >> attached: aMorph [
 { #category : #'as yet unclassified' }
 SBSelectionDecorator >> cursorVisible [
 
-	^ cursorShown or: [self morph sandblockEditor hasWindowFocus not]
+	^ cursorShown or: [self morph sandblockEditor hasWindowFocus not or: [blinkCount >= self maxBlickCount]]
 ]
 
 { #category : #'as yet unclassified' }
