@@ -7,8 +7,8 @@ Class {
 { #category : #'as yet unclassified' }
 SBASTNode >> acceptedRepresentation [
 
-	^ (self parentSandblock notNil and: [self parentSandblock isASTNode]) ifTrue: [
-		self parentSandblock contextAcceptedRepresentationAt: self childIndex] ifFalse: [#()]
+	^ self parentSandblock ifNotNil: [
+		self parentSandblock contextAcceptedRepresentationAt: self childIndex] ifNil: [nil]
 ]
 
 { #category : #actions }
@@ -67,7 +67,7 @@ SBASTNode >> changeToUnknown [
 
 	| new |
 	new := SBUnknown new.
-	(new hasRepresentationThat: (self parentSandblock contextAcceptedRepresentationAt: self childIndex)) ifTrue: [
+	(new hasRepresentationThat: self acceptedRepresentation) ifTrue: [
 		self sandblockEditor
 			copyBuffer: self;
 			do: ((SBReplaceCommand newFor: self containingArtefact)

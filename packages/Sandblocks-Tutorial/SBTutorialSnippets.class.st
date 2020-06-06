@@ -33,10 +33,11 @@ SBTutorialSnippets >> t01movement [
 
 	| y |
 	SBLabel text: [
-		'move your selection by clicking or using hjkl.
- If anything breaks, use u to undo. Try selecting the `12 squared`.
+		'Move your selection by clicking or using hjkl.
+To select larger parts, use shift+k and shift+j to make your selection smaller again.
+ If anything breaks, use u to undo.
 
-To move faster, you can use H and L to jump between message sends.'].
+Try selecting the `12 squared` using only the keyboard.'].
 	(true and: [false]) ifTrue: [5 squared].
 	y := self size + super size.
 	#($a #abc 'a' 1 1.0) do: [:each |
@@ -61,7 +62,7 @@ Bring the list into the right order using x and P.'].
 SBTutorialSnippets >> t03Swapping [
 
 	SBLabel text: [
-		'You can also move adjacent elements using J and K'].
+		'You can also move adjacent elements using H and L'].
 	{1. 2. 6. 3. 4. 5}.
 	SBLabel text: ['Try swapping the 2 and the 10'].
 	10 raisedTo: 2
@@ -74,7 +75,7 @@ SBTutorialSnippets >> t04Jumping [
 	SBLabel text: [
 		'In a large method, you can navigate faster by using g and G to jump to the start or end.
 
-Try selecting the `12 squared` and pressing ma. This will place a marker on it.
+Try selecting the `6 < y` at the end and pressing ma. This will place a marker on it.
 With the marker in place, select the previous tutorial, then press ''a to jump back to the marker.
 Pressing m on the marker again will delete it.'].
 	(true and: [false]) ifTrue: [5 squared].
@@ -112,7 +113,7 @@ SBTutorialSnippets >> t07Smalltalk [
 	SBLabel text: [
 		'For smalltalk-specific constructs, use its letter to wrap an expression.
 
-For example, press [ on the ifTrue: expression.
+For example, press [ on the ifTrue: expression after selecting with ctrl+k.
 Press ^ on the final expression of the method (use G to jump there).'].
 	7 squared > 40 ifTrue: (Transcript showln: 'hello').
 	42
@@ -130,25 +131,32 @@ and * to insert an element before the selected.'].
 	{32. 43. 12}.
 	SBLabel text: [
 		'Create your own arrays by pressing { on an element. Then press + to add more elements'].
-	42.
+	42
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialSnippets >> t09MessageSends [
+
 	SBLabel text: [
 		'Change the call to a with:do: with a second array.
 
-Select the first array and press +. Type ''with'' and press tab. Type { to create a new array.
+To do so, select the `do:` and press *. Type ''with'' and press tab. Type { to create a new array.
 Finally, select the block argument :num and press + to add another binding and adapt the showln:'].
 	{42. 12} do: [:num | Transcript showln: num].
+	
 	SBLabel text: ['This could be your final result:'].
 	{42. 12} with: {54. 32} do: [:num :num2 | Transcript showln: {num. num2}].
+	
 	SBLabel text: [
 		'One final note for statements: for convenience, o and O will insert statements in the current block.
 This allows you to quickly create a new statement, even when you do not have a statement selected.
 
-Try pressing * when you have `42 squared` selected. Select the 42 and press O.'].
-	42 squared
+For example, select the 42 and press O.'].
+	^ 42 squared
 ]
 
 { #category : #'as yet unclassified' }
-SBTutorialSnippets >> t09Assignments [
+SBTutorialSnippets >> t10Assignments [
 
 	SBLabel text: [
 		'There are three way to create assignments.
@@ -159,12 +167,13 @@ When you save the method, it will ask you to declare it.'].
 	42 squared.
 	SBLabel text: [
 		'3) Select the boolean expression 7>8 and press =
+
 Note that when you change the resulting variable name using s or i, both will update.'].
 	7 > 8 ifTrue: [Transcript showln: 'Hi']
 ]
 
 { #category : #'as yet unclassified' }
-SBTutorialSnippets >> t10Cascades [
+SBTutorialSnippets >> t11Cascades [
 
 	SBLabel text: [
 		'To create cascades, multiselection comes in handy.
@@ -176,5 +185,16 @@ also press v. Then press ;'].
 	SBLabel text: [
 		'To start a cascade, simply press ; on an existing message send. Then
 use the usuall list operators to add more sends (+ * .)'].
-	self color: Color red
+	self color: 'red'
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialSnippets >> t12Projections [
+
+	SBLabel text: [
+		'The editor will automatically replace expressions with matching projections.
+Double click the color block to edit its value.
+
+Try pressing , on the color block and choose representAs, then stExpression'].
+	Color r: 0.548 g: 0.886 b: 0.07
 ]

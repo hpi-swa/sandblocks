@@ -2,9 +2,10 @@ Class {
 	#name : #SBColor,
 	#superclass : #SBSubstitution,
 	#instVars : [
-		'indicator'
+		'indicator',
+		'previousColor'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
@@ -48,6 +49,12 @@ SBColor >> click: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBColor >> colorContents [
+
+	^ indicator color
+]
+
+{ #category : #'as yet unclassified' }
 SBColor >> colorContents: aColor [
 
 	indicator color: aColor
@@ -63,8 +70,11 @@ SBColor >> colorContentsUpdate: aColor [
 { #category : #'as yet unclassified' }
 SBColor >> doubleClick: anEvent [
 
-	self flag: #todo. " we dont know when we're closed so we can't create a proper command for undo "
-	(NewColorPickerMorph on: self originalColor: indicator color setColorSelector: #colorContentsUpdate:) openNear: self
+	previousColor := self colorContents.
+	
+	(NewColorPickerMorph on: self originalColor: indicator color setColorSelector: #colorContentsUpdate:)
+		openNear: self;
+		when: #closed send: #saveColor to: self
 ]
 
 { #category : #'as yet unclassified' }
@@ -98,6 +108,16 @@ SBColor >> mouseDown: anEvent [
 SBColor >> printOn: aStream [
 
 	indicator color printOn: aStream
+]
+
+{ #category : #'as yet unclassified' }
+SBColor >> saveColor [
+
+	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
+		target: self;
+		selector: #colorContents;
+		value: self colorContents;
+		oldValue: previousColor)
 ]
 
 { #category : #'as yet unclassified' }

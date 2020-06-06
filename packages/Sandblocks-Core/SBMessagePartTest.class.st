@@ -41,6 +41,39 @@ SBMessagePartTest >> testHasColon [
 ]
 
 { #category : #'as yet unclassified' }
+SBMessagePartTest >> testInsertMessagePartAtEnd [
+
+	| message |
+	message := 'a do: b' parseAsSandblock.
+	self editorFor: message.
+	message arguments last insertElementAfter.
+	self assert: message selector = 'do::'.
+	self assert: message arguments last isUnknown
+]
+
+{ #category : #'as yet unclassified' }
+SBMessagePartTest >> testInsertMessagePartAtStart [
+
+	| message |
+	{[message receiver insertElementAfter]. [message messageParts first insertElementBefore]} do: [:cmd |
+		message := 'a do: b' parseAsSandblock.
+		self editorFor: message.
+		cmd value.
+		self assert: message selector = ':do:']
+]
+
+{ #category : #'as yet unclassified' }
+SBMessagePartTest >> testInsertMessagePartBeforeEnd [
+
+	| message |
+	message := 'a do: b' parseAsSandblock.
+	self editorFor: message.
+	message messageParts last insertElementAfter.
+	self assert: message selector = 'do::'.
+	self assert: message arguments first isUnknown
+]
+
+{ #category : #'as yet unclassified' }
 SBMessagePartTest >> testPressColonInExistingMessage [
 
 	| message argument part |

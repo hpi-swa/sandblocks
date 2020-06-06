@@ -160,6 +160,19 @@ SBTestCase >> selector [
 ]
 
 { #category : #'as yet unclassified' }
+SBTestCase >> veryDeepCopy [
+
+	| previousError copy |
+	previousError := reportedError.
+	reportedError := nil.
+	
+	copy := super veryDeepCopy.
+	reportedError := previousError.
+	
+	^ copy
+]
+
+{ #category : #'as yet unclassified' }
 SBTestCase >> writeSignatureSourceOn: aStream [
 
 	aStream nextPutAll: selectorInput contents

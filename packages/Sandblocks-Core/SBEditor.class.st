@@ -616,6 +616,12 @@ SBEditor >> containingArtefact [
 ]
 
 { #category : #accessing }
+SBEditor >> contextAcceptedRepresentationAt: aNumber [
+
+	^ #isToplevelMorph
+]
+
+{ #category : #accessing }
 SBEditor >> copyBuffer [
 
 	^ copyBuffer

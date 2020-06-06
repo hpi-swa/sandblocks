@@ -7,7 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBColorMinimalPolicy >> borderWidthForBlock: aBlock [
 
-	^ aBlock isMethod ifTrue: [1] ifFalse: [0]
+	^ aBlock isArtefact ifTrue: [1] ifFalse: [0]
 ]
 
 { #category : #'as yet unclassified' }

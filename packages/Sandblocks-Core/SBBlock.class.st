@@ -402,7 +402,7 @@ SBBlock >> deleteCommandFor: aBlock [
 	^ (self canDeleteChild: aBlock)
 		ifTrue: [(SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock]
 		ifFalse: [
-			(self acceptedRepresentation includesRepresentation: #isSmalltalkExpression) ifTrue: [
+			((self contextAcceptedRepresentationAt: aBlock childIndex) includesRepresentation: #isSmalltalkExpression) ifTrue: [
 				(SBReplaceCommand newFor: aBlock containingArtefact) target: aBlock; replacer: SBUnknown new]]
 ]
 

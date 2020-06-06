@@ -91,31 +91,34 @@ SBSignature >> initialize [
 { #category : #'as yet unclassified' }
 SBSignature >> insertCommandRequest: anAfterBoolean near: aBlock [
 
-	| part index |
+	| part index insertArg insertPart |
 	self isBinary ifTrue: [^ nil].
-	
-	self isUnary ifTrue: [^ (SBInsertCommand newFor: self containingSandblock containingArtefact)
-		container: self;
-		index: self submorphCount + 1;
-		morph: SBUnknown new;
-		shouldMergeWithNext: true;
-		yourself].
-	
-	part := SBMessagePart new contents: ':'.
-	index := (aBlock submorphIndex / 2) ceiling * 2.
-	^ SBCombinedCommand newWith: {
-		((SBInsertCommand newFor: self containingSandblock containingArtefact)
+	self isUnary ifTrue: [
+		^ (SBInsertCommand newFor: self containingSandblock containingArtefact)
 			container: self;
-			index: index + 2;
+			index: self submorphCount + 1;
 			morph: SBUnknown new;
-			yourself).
-		((SBInsertCommand newFor: self containingSandblock containingArtefact)
-			container: self;
-			index: index + 1;
-			morph: part;
 			shouldMergeWithNext: true;
-			yourself)
-	}
+			yourself].
+	
+	index := aBlock owner = self
+		ifTrue: [
+			anAfterBoolean ifTrue: [aBlock submorphIndex + 1] ifFalse: [aBlock submorphIndex]]
+		ifFalse: [1].
+	part := SBMessagePart new contents: ':'.
+	
+	insertPart := (SBInsertCommand newFor: self containingSandblock containingArtefact)
+		container: self;
+		index: index;
+		morph: part;
+		shouldMergeWithNext: true;
+		yourself.
+	insertArg := (SBInsertCommand newFor: self containingSandblock containingArtefact)
+		container: self;
+		index: index;
+		morph: SBUnknown new;
+		yourself.
+	^ SBCombinedCommand newWith: (index odd ifTrue: [{insertArg. insertPart}] ifFalse: [{insertPart. insertArg}])
 ]
 
 { #category : #'as yet unclassified' }

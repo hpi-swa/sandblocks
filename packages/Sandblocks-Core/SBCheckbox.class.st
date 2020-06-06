@@ -15,6 +15,13 @@ SBCheckbox >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBCheckbox >> click: anEvent [
+
+	super click: anEvent.
+	self value: self value not
+]
+
+{ #category : #'as yet unclassified' }
 SBCheckbox >> drawnColor [
 
 	^ Color transparent

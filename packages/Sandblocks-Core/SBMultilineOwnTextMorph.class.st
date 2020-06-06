@@ -15,6 +15,13 @@ SBMultilineOwnTextMorph >> contents: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBMultilineOwnTextMorph >> cursor: aNumber [
+
+	super cursor: aNumber.
+	paragraph := nil
+]
+
+{ #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> drawOn: aCanvas [
 
 	aCanvas
@@ -24,15 +31,36 @@ SBMultilineOwnTextMorph >> drawOn: aCanvas [
 ]
 
 { #category : #'as yet unclassified' }
+SBMultilineOwnTextMorph >> handlesMouseDown: anEvent [
+
+	^ self hasCursor
+]
+
+{ #category : #'as yet unclassified' }
+SBMultilineOwnTextMorph >> keyboardFocusColor [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> minExtent [
 
 	^ self paragraph extent
 ]
 
 { #category : #'as yet unclassified' }
+SBMultilineOwnTextMorph >> mouseDown: anEvent [
+
+	| block |
+	block := self paragraph characterBlockAtPoint: anEvent position.
+	self paragraph selectionStart: block selectionStop: block.
+	self cursor: block stringIndex
+]
+
+{ #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> paragraph [
 
-	^ "paragraph ifNil: "true ifTrue: [
+	^paragraph ifNil: [
 		paragraph := NewParagraph new
 			compose: self contents asText
 			style: TextStyle default
@@ -46,4 +74,12 @@ SBMultilineOwnTextMorph >> paragraph [
 		paragraph
 			selectionStart: (paragraph characterBlockForIndex: self cursor)
 			selectionStop: (paragraph characterBlockForIndex: self cursor)]
+]
+
+{ #category : #'as yet unclassified' }
+SBMultilineOwnTextMorph >> privateMoveBy: delta [ 
+
+	super privateMoveBy: delta.
+	
+	paragraph ifNotNil: [:p | p moveBy: delta]
 ]
