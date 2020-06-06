@@ -198,3 +198,21 @@ Double click the color block to edit its value.
 Try pressing , on the color block and choose representAs, then stExpression'].
 	Color r: 0.548 g: 0.886 b: 0.07
 ]
+
+{ #category : #'as yet unclassified' }
+SBTutorialSnippets >> t13Evaluating [
+
+	SBLabel text: [
+		'You can evaluate expressions by pressing ctrl+p. Try with the below.'].
+	Morph new.
+	SBLabel text: [
+		'Once evaluated, delete the result with x.
+When you evaluate an expression, you will get different representations offered.
+
+Evaluate the expression again and choose explorer.'].
+	Morph new.
+	SBLabel text: [
+		'Once the explorer is opened, use z to show more details on an object.
+
+You can always use , and representAs to choose a different representation.']
+]

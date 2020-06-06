@@ -39,3 +39,9 @@ SBMorphWrapperBlock >> intoWorld: aWorld [
 		self addMorphBack: addMorphLater.
 		addMorphLater := nil]
 ]
+
+{ #category : #'as yet unclassified' }
+SBMorphWrapperBlock >> object [
+
+	^ self firstSubmorph
+]

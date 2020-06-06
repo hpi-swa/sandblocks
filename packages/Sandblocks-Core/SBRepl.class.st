@@ -36,12 +36,6 @@ SBRepl class >> newFromSource: aString named: anotherString at: aPoint [
 ]
 
 { #category : #'artefact protocol' }
-SBRepl >> acceptedRepresentation [
-
-	^ #isObject
-]
-
-{ #category : #'artefact protocol' }
 SBRepl >> artefact [
 
 	^ nil
@@ -107,6 +101,12 @@ SBRepl >> childSandblocksDo: aBlock [
 SBRepl >> containingArtefact [
 
 	^ self
+]
+
+{ #category : #'artefact protocol' }
+SBRepl >> contextAcceptedRepresentationAt: aNumber [
+
+	^ #isObject
 ]
 
 { #category : #'artefact protocol' }
@@ -230,7 +230,7 @@ SBRepl >> name: aString [
 { #category : #'method protocol' }
 SBRepl >> object [
 
-	^ nil
+	^ receiver
 ]
 
 { #category : #'artefact protocol' }

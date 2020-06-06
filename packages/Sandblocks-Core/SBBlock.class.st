@@ -40,7 +40,8 @@ SBBlock >> acceptDroppingMorph: aMorph event: anEvent [
 SBBlock >> acceptedRepresentation [
 	" return what representations may replace you "
 
-	^ #()
+	^ self parentSandblock ifNotNil: [
+		self parentSandblock contextAcceptedRepresentationAt: self childIndex] ifNil: [nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -158,7 +159,7 @@ SBBlock >> canInput [
 { #category : #actions }
 SBBlock >> canJumpTo: aBlock [
 
-	^ aBlock containingArtefact = self containingArtefact or: [self containingArtefact owner layoutPolicy notNil]
+	^ aBlock containingArtefact = self containingArtefact or: [self containingArtefact parentSandblock floating not]
 ]
 
 { #category : #testing }
@@ -368,12 +369,13 @@ SBBlock >> decorators [
 SBBlock >> deleteAround [
 	<action>
 
-	| replacer around editor |
+	| replacer around editor target |
 	editor := self sandblockEditor.
-	(self hasRepresentationThat: (self parentSandblock parentSandblock contextAcceptedRepresentationAt: self parentSandblock childIndex)) ifTrue: [ | target |
-		target := self parentSandblock.
-		editor countModifier - 1 timesRepeat: [target := target parentSandblock].
+	target := self parentSandblock.
+	editor countModifier - 1 timesRepeat: [target := target parentSandblock].
 		
+		
+	(self hasRepresentationThat: (target parentSandblock contextAcceptedRepresentationAt: target childIndex)) ifTrue: [
 		replacer := SBPastePlaceholder new.
 		around := self.
 		around replaceBy: replacer.
@@ -584,6 +586,12 @@ SBBlock >> firstInput [
 SBBlock >> fixActions [
 
 	^ #()
+]
+
+{ #category : #actions }
+SBBlock >> floating [
+
+	^ self layoutPolicy isNil
 ]
 
 { #category : #accessing }

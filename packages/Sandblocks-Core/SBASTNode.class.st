@@ -4,13 +4,6 @@ Class {
 	#category : #'Sandblocks-Core'
 }
 
-{ #category : #'as yet unclassified' }
-SBASTNode >> acceptedRepresentation [
-
-	^ self parentSandblock ifNotNil: [
-		self parentSandblock contextAcceptedRepresentationAt: self childIndex] ifNil: [nil]
-]
-
 { #category : #actions }
 SBASTNode >> addExample [
 	<action>

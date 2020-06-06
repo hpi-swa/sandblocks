@@ -24,12 +24,6 @@ SBExplorer class >> on: anObject field: aField [
 ]
 
 { #category : #'as yet unclassified' }
-SBExplorer >> acceptedRepresentation [
-
-	^ #isObject
-]
-
-{ #category : #'as yet unclassified' }
 SBExplorer >> browse [
 	<action>
 
@@ -62,6 +56,12 @@ SBExplorer >> containingArtefact [
 ]
 
 { #category : #'as yet unclassified' }
+SBExplorer >> contextAcceptedRepresentationAt: aNumber [
+
+	^ #isToplevelMorph
+]
+
+{ #category : #'as yet unclassified' }
 SBExplorer >> declarations [
 
 	^ #()
@@ -89,6 +89,18 @@ SBExplorer >> evaluate [
 SBExplorer >> evaluateWith: anObject for: aReceiverObject [
 
 	^ object
+]
+
+{ #category : #'as yet unclassified' }
+SBExplorer >> evaluationContext [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBExplorer >> evaluationReceiver [
+
+	^ self object
 ]
 
 { #category : #'as yet unclassified' }
@@ -203,8 +215,7 @@ SBExplorer >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 SBExplorer >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| new |
-	new := [self object printString parseAsSandblockWithoutSubstitution] on: Error do: [:error | 
-		error signal.
+	new := [self object printString parseAsSandblockWithoutSubstitution] on: SyntaxErrorNotification do: [:error | 
 		SBUnknown new].
 	self sandblockEditor do: ((SBReplaceCommand newFor: self)
 		target: self label;
