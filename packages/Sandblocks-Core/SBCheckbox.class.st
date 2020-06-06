@@ -33,13 +33,13 @@ SBCheckbox >> initialize [
 	super initialize.
 	
 	nonEdit := false.
+	value := false.
 	
 	self
 		addMorphBack: SBIcon iconCheck_square_o;
 		changeTableLayout;
 		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap;
-		value: false
+		vResizing: #shrinkWrap
 ]
 
 { #category : #'as yet unclassified' }
@@ -65,7 +65,6 @@ SBCheckbox >> startInputAt: aNumber replacingContents: aBoolean [
 		selector: #value;
 		value: self value not).
 	
-	self triggerEvent: #toggled.
 	^ nil
 ]
 
@@ -79,5 +78,6 @@ SBCheckbox >> value [
 SBCheckbox >> value: aBoolean [
 
 	self firstSubmorph changeIconName: (aBoolean ifTrue: [#iconCheck_square_o] ifFalse: [#iconSquare_o]).
-	value := aBoolean
+	value := aBoolean.
+	self triggerEvent: #toggled
 ]

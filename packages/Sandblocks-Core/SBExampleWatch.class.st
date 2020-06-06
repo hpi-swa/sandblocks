@@ -45,9 +45,7 @@ SBExampleWatch class >> registry [
 SBExampleWatch class >> report: aValue for: aSymbol [
 
 	| reg watchers example |
-	example  := SBExample allInstances
-		detect: #isCurrent
-		ifNone: [^ aValue].
+	example := SBExecutionEnvironment value ifNil: [^ aValue].
 	
 	reg := self registry.
 	watchers := reg at: aSymbol ifAbsent: [^ aValue].

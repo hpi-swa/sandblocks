@@ -108,9 +108,26 @@ SBTestCase >> initialize [
 				height: 0;
 				color: Color transparent;
 				yourself);
-			addMorphBack: (autoRun := SBCheckbox new value: true; nonEdit: true);
+			addMorphBack: (autoRun := SBCheckbox new
+				value: true;
+				nonEdit: true;
+				when: #toggled send: #sendStopNotification to: self);
 			addMorphBack: (SBStringMorph new contents: 'Auto-run');
 			yourself)
+]
+
+{ #category : #'as yet unclassified' }
+SBTestCase >> label [
+
+	^ self selector
+]
+
+{ #category : #'as yet unclassified' }
+SBTestCase >> outOfWorld: aWorld [
+
+	super outOfWorld: aWorld.
+	
+	self sendStopNotification
 ]
 
 { #category : #'as yet unclassified' }
@@ -133,6 +150,10 @@ SBTestCase >> reportError: anError [
 SBTestCase >> runTest [
 	<action>
 
+	SBExecutionEnvironment value: self.
+	
+	self sendStartNotification.
+	
 	self clearErrors.
 	passIcon
 		changeIconName: #'iconClock_o';
@@ -150,13 +171,36 @@ SBTestCase >> runTest [
 			changeIconName: #iconCheck;
 			color: Color lightGreen.
 		reportedError ifNotNil: #delete.
-		reportedError := nil]
+		reportedError := nil].
+	
+	self sendFinishNotification
 ]
 
 { #category : #'as yet unclassified' }
 SBTestCase >> selector [
 
 	^ self currentSelector
+]
+
+{ #category : #'as yet unclassified' }
+SBTestCase >> sendFinishNotification [
+
+	self sandblockEditor allMorphsDo: [:morph |
+		(morph isSandblock and: [morph isExampleWatch]) ifTrue: [morph exampleFinished: self]]
+]
+
+{ #category : #'as yet unclassified' }
+SBTestCase >> sendStartNotification [
+
+	self sandblockEditor allBlocksDo: [:morph |
+		morph isExampleWatch ifTrue: [morph exampleStarting: self]]
+]
+
+{ #category : #'as yet unclassified' }
+SBTestCase >> sendStopNotification [
+
+	self sandblockEditor allMorphsDo: [:morph |
+		(morph isSandblock and: [morph isExampleWatch]) ifTrue: [morph exampleStopped: self]]
 ]
 
 { #category : #'as yet unclassified' }

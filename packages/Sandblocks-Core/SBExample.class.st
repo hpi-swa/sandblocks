@@ -267,6 +267,8 @@ SBExample >> run [
 	processRunning := true.
 	currentProcess := [
 		| returned |
+		SBExecutionEnvironment value: self.
+		
 		[returned := self evaluate] on: Error do: [:e |
 			processRunning := false.
 			self scheduleLastError: e.
