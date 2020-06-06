@@ -50,6 +50,12 @@ SBSubstitution class >> prettyName [
 ]
 
 { #category : #'as yet unclassified' }
+SBSubstitution class >> selector: aString receiverMatches: aMessage [
+
+	^ aMessage receiver isBinding and: [self name = aMessage receiver contents and: [aMessage selector = aString]]
+]
+
+{ #category : #'as yet unclassified' }
 SBSubstitution class >> suggestion [
 
 	^ nil

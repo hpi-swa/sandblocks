@@ -14,6 +14,12 @@ SBPragma >> activeMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBPragma >> actualReceiver [
+
+	^ self containingArtefact
+]
+
+{ #category : #'as yet unclassified' }
 SBPragma >> arguments [
 
 	^ signature arguments
