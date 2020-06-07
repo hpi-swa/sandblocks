@@ -57,6 +57,12 @@ SBEditor class >> defaultColorPolicy: aColorPolicyClass [
 ]
 
 { #category : #'initialize-release' }
+SBEditor class >> initialize [
+
+	self registerDefaultShortcuts
+]
+
+{ #category : #'initialize-release' }
 SBEditor class >> newFor: aMethodOrClass [
 
 	| editor |
