@@ -447,14 +447,14 @@ SBBasicMethod >> outOfWorld: aWorld [
 ]
 
 { #category : #'as yet unclassified' }
-SBBasicMethod >> postDuplicate [
+SBBasicMethod >> postDuplicateSelf [
 
 	currentSelector asSymbol isBinary ifTrue: [^ self shouldBeImplemented].
 	
 	self currentSelector: 'copy', currentSelector capitalized.
 	self selector: self currentSelector arguments: self arguments class: self methodClass.
 	
-	super postDuplicate.
+	super postDuplicateSelf.
 	
 	self
 		hasUnsavedChanges: true;

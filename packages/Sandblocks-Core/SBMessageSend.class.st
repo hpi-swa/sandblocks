@@ -299,6 +299,12 @@ SBMessageSend >> messageParts [
 	^ signature messageParts
 ]
 
+{ #category : #actions }
+SBMessageSend >> messageSend [
+
+	^ self
+]
+
 { #category : #accessing }
 SBMessageSend >> moveCursorTo: aNumber [
 
@@ -332,10 +338,10 @@ SBMessageSend >> pc: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
-SBMessageSend >> postDuplicate [
+SBMessageSend >> postDuplicateSelf [
 
 	self isInCascade ifTrue: [self receiver: nil].
-	super postDuplicate
+	super postDuplicateSelf
 ]
 
 { #category : #'as yet unclassified' }
@@ -489,6 +495,29 @@ SBMessageSend >> veryDeepCopyWith: deepCopier [
 		self assert: self isInCascade.
 		new receiver: self owner receiver veryDeepCopy].
 	^ new
+]
+
+{ #category : #actions }
+SBMessageSend >> wrapInCascade [
+	<multiSelectAction>
+
+	| cascade |
+	self assert: self isSelected.
+	cascade := SBCascade new.
+	self sandblockEditor doMultiSelection: [:selected | | targets |
+		targets := selected collect: #messageSend.
+		(self sandblockEditor submorphsAreConsecutive: targets)
+			ifFalse: [nil]
+			ifTrue: [
+				(SBWrapConsecutiveCommand newFor: self containingArtefact)
+					targets: (selected collect: #messageSend);
+					outer: SBCascade new;
+					wrap: [:outer :inner |
+						outer addMorphFront: inner first receiver.
+						outer addAllMorphs: inner];
+					wrapUndo: [:outer :inner |
+						inner do: [:message | message receiver: outer receiver veryDeepCopy].
+						outer removeAllMorphs]]]
 ]
 
 { #category : #converting }

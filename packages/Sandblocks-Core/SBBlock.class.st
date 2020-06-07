@@ -13,7 +13,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBBlock class >> navigation [
 
-	^ Navigation ifNil: [Navigation := SBDepthFirstPreOrderNavigation new]
+	^ Navigation ifNil: [Navigation := SBSmalltalkNavigation new]
 ]
 
 { #category : #'as yet unclassified' }
@@ -205,8 +205,7 @@ SBBlock >> clearCache [
 
 	" this block may have just been duplicated or moved somewhere else, ensure to clear all caches and present yourself neatly "
 	self allMorphsDo: [:morph | morph layoutChanged].
-	self allBlocksDo: [:morph | morph ~= self ifTrue: [morph clearCache]].
-	self removeProperty: #sandblockBlockColor
+	self allBlocksDo: [:morph | morph ~= self ifTrue: [self removeProperty: #sandblockBlockColor]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -1311,10 +1310,15 @@ SBBlock >> placeMark [
 { #category : #'as yet unclassified' }
 SBBlock >> postDuplicate [
 
-	" this block has been duplicated, adjuts any identifiers if need be "
-	self clearCache.
+	self allBlocksDo: [:morph | morph postDuplicateSelf].
+	self clearCache
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> postDuplicateSelf [
+
+	" this block has been duplicated, adjust any identifiers if need be "
 	
-	self allBlocksDo: [:morph | morph ~= self ifTrue: [morph postDuplicate]].
 ]
 
 { #category : #'as yet unclassified' }

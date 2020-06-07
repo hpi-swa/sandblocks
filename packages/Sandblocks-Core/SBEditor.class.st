@@ -47,7 +47,7 @@ SBEditor class >> anyShortcutForAction: aSymbol [
 { #category : #configuration }
 SBEditor class >> defaultColorPolicy [
 
-	^ DefaultColorPolicy ifNil: [DefaultColorPolicy := SBDefaultColorPolicy]
+	^ DefaultColorPolicy ifNil: [DefaultColorPolicy := SBColorMinimalPolicy]
 ]
 
 { #category : #configuration }
@@ -749,7 +749,7 @@ SBEditor >> doMultiSelection: aBlock [
 
 	| command |
 	command := aBlock value: self sortedMultiSelection.
-	command valid ifTrue: [
+	(command notNil and: [command valid]) ifTrue: [
 		self do: command.
 		mode = #selection ifTrue: [self endMultiSelection]]
 ]
@@ -1581,6 +1581,19 @@ SBEditor >> storeOn: aStream [
 		morph storeOn: aStream.
 		aStream nextPut: $;].
 	aStream nextPutAll: 'yourself)'
+]
+
+{ #category : #selection }
+SBEditor >> submorphsAreConsecutive: aCollection [
+
+	| sorted order |
+	order := self allMorphs.
+	sorted := aCollection sort: [:a :b | (order indexOf: a) < (order indexOf: b)].
+	
+	sorted overlappingPairsDo: [:a :b |
+		a submorphAfter = b ifFalse: [^ false]].
+	
+	^ true
 ]
 
 { #category : #accessing }

@@ -423,28 +423,6 @@ SBASTNode >> wrapInBlock [
 ]
 
 { #category : #actions }
-SBASTNode >> wrapInCascade [
-	<multiSelectAction>
-	<actionValidIf: #isMessageSend>
-
-	| cascade |
-	self isMessageSend ifFalse: [^ self].
-	self assert: self isSelected.
-	cascade := SBCascade new.
-	self sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
-	self sandblockEditor doMultiSelection: [:selected |
-		(SBWrapConsecutiveCommand newFor: self containingArtefact)
-			targets: selected;
-			outer: SBCascade new;
-			wrap: [:outer :inner |
-				outer addMorphFront: inner first receiver.
-				outer addAllMorphs: inner];
-			wrapUndo: [:outer :inner |
-				inner do: [:message | message receiver: outer receiver veryDeepCopy].
-				outer removeAllMorphs]]
-]
-
-{ #category : #actions }
 SBASTNode >> wrapInDynamicArray [
 	<multiSelectAction>
 
