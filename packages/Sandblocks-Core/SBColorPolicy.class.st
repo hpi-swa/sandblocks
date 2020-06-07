@@ -137,7 +137,7 @@ SBColorPolicy >> symbolsForCharacter: aBlock [
 { #category : #'as yet unclassified' }
 SBColorPolicy >> symbolsForComment: aBlock [
 
-	^ #('" ' nil)
+	^ #('" ' ' "')
 ]
 
 { #category : #'as yet unclassified' }

@@ -115,7 +115,7 @@ SBLabel >> initialize [
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		changeTableLayout;
-		layoutInset: 6 withScalingFactor;
+		layoutInset: 0 withScalingFactor;
 		addMorphBack: (text := SBMultilineOwnTextMorph new emphasis: TextEmphasis italic);
 		headingLevel: 0
 ]

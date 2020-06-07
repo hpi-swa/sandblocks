@@ -1526,7 +1526,12 @@ SBBlock >> selectNextGroup [
 	<multiSelectAction>
 
 	self sandblockEditor keepVerticalSelectionPositionDuring: [
-		(self nextVerticalNear: self sandblockEditor verticalSelectionPosition) ifNotNil: #select]
+		(self nextVerticalNear: self sandblockEditor verticalSelectionPosition)
+			ifNotNil: #select
+			ifNil: [
+				SBLabel text: [
+					'Artefacts typically contain all their nodes, so none are below them'].
+				self isArtefact ifTrue: [self selectNext]]]
 ]
 
 { #category : #actions }
