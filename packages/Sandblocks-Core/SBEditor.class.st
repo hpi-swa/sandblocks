@@ -872,19 +872,7 @@ SBEditor >> goToMark [
 { #category : #'submorphs-add/remove' }
 SBEditor >> handleDroppedBlock: aMorph event: anEvent [
 
-	| placeholder |
-	self openMorph: (placeholder := Morph new
-		center: ((scroll transformFrom: nil) globalPointToLocal: anEvent position);
-		extent: 150 @ 10;
-		yourself).
-	aMorph object
-		representationThat: #isToplevelMorph
-		do: [:repr |
-			self openMorphInView: repr.
-			repr center: ((scroll transformFrom: nil) globalPointToLocal: anEvent position)]
-		ifNone: [nil]
-		near: placeholder.
-	placeholder delete
+	aMorph object representIn: self as: #isToplevelMorph near: ((scroll transformFrom: nil) globalPointToLocal: anEvent position)
 ]
 
 { #category : #'initialize-release' }

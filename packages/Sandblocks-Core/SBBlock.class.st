@@ -543,20 +543,14 @@ SBBlock >> evaluate [
 SBBlock >> evaluateExpression [
 	<action>
 
-	| result |
+	| result explorer |
 	result := self evaluate.
 	self containingArtefact ifNotNil: [
 		self containingArtefact cacheType: result class for: self].
 	
-	result
-		representationThat: #isToplevelMorph
-		do: [:explorer |
-			explorer focusAfterDelete: self.
-			self sandblockEditor
-				openMorphInView: explorer;
-				connectFrom: self to: explorer]
-		ifNone: [nil]
-		near: self
+	explorer := result representIn: self sandblockEditor as: #isToplevelMorph near: self.
+	explorer focusAfterDelete: self.
+	self sandblockEditor connectFrom: self to: explorer
 ]
 
 { #category : #'as yet unclassified' }

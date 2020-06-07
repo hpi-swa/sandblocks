@@ -9,6 +9,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBCheckbox >> changeValue: aBoolean [
+
+	self value: aBoolean.
+	self triggerEvent: #toggled
+]
+
+{ #category : #'as yet unclassified' }
 SBCheckbox >> childSandblocksDo: aBlock [
 
 	
@@ -18,7 +25,7 @@ SBCheckbox >> childSandblocksDo: aBlock [
 SBCheckbox >> click: anEvent [
 
 	super click: anEvent.
-	self value: self value not
+	self changeValue: self value not
 ]
 
 { #category : #'as yet unclassified' }
@@ -63,6 +70,7 @@ SBCheckbox >> startInputAt: aNumber replacingContents: aBoolean [
 			SBMutatePropertyCommand newFor: self containingArtefact])
 		target: self;
 		selector: #value;
+		mutateSelector: #changeValue:;
 		value: self value not).
 	
 	^ nil
@@ -78,6 +86,5 @@ SBCheckbox >> value [
 SBCheckbox >> value: aBoolean [
 
 	self firstSubmorph changeIconName: (aBoolean ifTrue: [#iconCheck_square_o] ifFalse: [#iconSquare_o]).
-	value := aBoolean.
-	self triggerEvent: #toggled
+	value := aBoolean
 ]

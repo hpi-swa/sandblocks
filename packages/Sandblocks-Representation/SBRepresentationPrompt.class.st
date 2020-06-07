@@ -66,8 +66,18 @@ SBRepresentationPrompt >> options: aCollection target: anObject current: aRepres
 			contents: option prettyName;
 			when: #selected send: #useRepresentation: to: self with: option)].
 	
+	currentRepresentation
+		when: #positionChanged send: #updatePosition to: self;
+		when: #extentChanged send: #updatePosition to: self.
+	
 	Project current addDeferredUIMessage: [
 		self addAlarm: #delete after: 2 seconds asMilliSeconds]
+]
+
+{ #category : #'as yet unclassified' }
+SBRepresentationPrompt >> updatePosition [
+
+	self position: currentRepresentation topRight
 ]
 
 { #category : #'as yet unclassified' }
@@ -77,8 +87,14 @@ SBRepresentationPrompt >> useRepresentation: aRepresentation [
 	newRepresentation := aRepresentation newFor: target.
 	newRepresentation position: newRepresentation position.
 	
+	newRepresentation
+		when: #positionChanged send: #updatePosition to: self;
+		when: #extentChanged send: #updatePosition to: self.
+	
 	currentRepresentation sandblockEditor do: ((SBReplaceCommand newNonEdit) target: currentRepresentation; replacer: newRepresentation).
 	
 	self flag: #todo. " use mutate command "
-	currentRepresentation := newRepresentation
+	currentRepresentation := newRepresentation.
+	
+	self updatePosition
 ]

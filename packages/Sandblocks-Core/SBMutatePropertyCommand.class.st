@@ -5,9 +5,10 @@ Class {
 		'target',
 		'selector',
 		'value',
-		'oldValue'
+		'oldValue',
+		'mutateSelector'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
@@ -20,8 +21,14 @@ SBMutatePropertyCommand >> affectedMorphs [
 SBMutatePropertyCommand >> do [
 
 	oldValue ifNil: [oldValue := target perform: selector].
-	target perform: selector asSimpleSetter with: value.
+	target perform: (mutateSelector ifNil: [selector asSimpleSetter]) with: value.
 	^ target
+]
+
+{ #category : #'as yet unclassified' }
+SBMutatePropertyCommand >> mutateSelector: aSymbol [
+
+	mutateSelector := aSymbol
 ]
 
 { #category : #'as yet unclassified' }

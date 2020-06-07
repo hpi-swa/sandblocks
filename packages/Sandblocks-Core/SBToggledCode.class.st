@@ -65,12 +65,12 @@ SBToggledCode >> buildRowFor: aBlock active: aBoolean [
 	row
 		cellGap: 4 withScalingFactor;
 		addMorphBack: (SBCheckbox new
+			value: aBoolean;
 			when: #toggled
 				evaluate: [
 					self
 						deselectAllBut: (self submorphIndexOf: row) - 1;
 						updateSelected];
-			value: aBoolean;
 			yourself);
 		addMorphBack: (aBlock
 			setProperty: #previousBlockColor
