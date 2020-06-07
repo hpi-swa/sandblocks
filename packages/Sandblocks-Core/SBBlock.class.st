@@ -1228,30 +1228,27 @@ SBBlock >> pasteAbove [
 { #category : #actions }
 SBBlock >> pasteAboveOrBelow: anAboveBoolean [
 
-	
-	| index target adjacent morph copyBuffer |
+	| index adjacent morph copyBuffer |
 	copyBuffer := self sandblockEditor copyBuffer.
 	copyBuffer ifNil: [^ self].
 	
 	copyBuffer wrapsAround ifTrue: [^ self wrapSelectionWith: copyBuffer].
 	
-	target := copyBuffer isSelection ifTrue: [copyBuffer firstSubmorph] ifFalse: [copyBuffer].
-	
-	adjacent := self.
-	[(adjacent parentSandblock ifNil: [^ self]) acceptChild: target] whileFalse: [adjacent := adjacent parentSandblock].
-	
-	index := adjacent owner submorphIndexOf: adjacent.
-	morph := target veryDeepCopy.
-	morph topCenter: self bottomCenter.
-	
-	self sandblockEditor do: ((adjacent parentSandblock containingArtefact ifNil: [SBInsertCommand newNonEdit] ifNotNil: [:artefact | SBInsertCommand newFor: artefact])
-		index: (anAboveBoolean
-			ifTrue: [index] ifFalse: [index + 1]);
-		container: adjacent owner;
-		morph: morph;
-		yourself).
-	
-	morph postDuplicate
+	self sandblockEditor do: (SBCombinedCommand newWith: (copyBuffer submorphs reversed collect: [:target |
+		adjacent := self.
+		[
+			(adjacent parentSandblock ifNil: [^ self]) acceptChild: target] whileFalse: [adjacent := adjacent parentSandblock].
+		
+		index := adjacent owner submorphIndexOf: adjacent.
+		morph := target veryDeepCopy
+			topCenter: self bottomCenter;
+			postDuplicate;
+			yourself.
+		(adjacent parentSandblock containingArtefact ifNil: [SBInsertCommand newNonEdit] ifNotNil: [:artefact | SBInsertCommand newFor: artefact])
+			index: (anAboveBoolean ifTrue: [index] ifFalse: [index + 1]);
+			container: adjacent owner;
+			morph: morph;
+			yourself]))
 ]
 
 { #category : #actions }

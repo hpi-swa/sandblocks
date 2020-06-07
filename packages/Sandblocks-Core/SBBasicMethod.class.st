@@ -155,7 +155,7 @@ SBBasicMethod >> createTestMethod [
 	testClass := Smalltalk
 		at: guessedClassName
 		ifAbsent: [
-			name := UIManager default request: 'Test Class name?' initialAnswer: guessedClassName.
+			name := (UIManager default request: 'Test Class name?' initialAnswer: guessedClassName) ifEmpty: [^ self].
 			Smalltalk
 				at: name
 				ifAbsent: [ 
