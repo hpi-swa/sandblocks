@@ -58,7 +58,7 @@ SBExampleWatch class >> report: aValue for: aSymbol [
 SBExampleWatch class >> unregisterWatch: aWatch [
 
 	self registry at: aWatch identifier ifPresent: [:list |
-		list remove: aWatch.
+		list remove: aWatch ifAbsent: [].
 		list ifEmpty: [self registry removeKey: aWatch identifier]]
 ]
 

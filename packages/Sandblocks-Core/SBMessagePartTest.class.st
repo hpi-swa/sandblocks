@@ -28,6 +28,28 @@ SBMessagePartTest >> testBinaryMessageEdit [
 ]
 
 { #category : #'as yet unclassified' }
+SBMessagePartTest >> testChangeDoesNothing [
+
+	| message |
+	message := '5 yourself' parseAsSandblock.
+	self editorFor: message.
+	message messageParts first select.
+	message messageParts first changeToUnknown.
+	self assert: message selector equals: 'yourself'
+]
+
+{ #category : #'as yet unclassified' }
+SBMessagePartTest >> testDeleteAround [
+
+	| block |
+	block := '[5 yourself: 2 send: 8]' parseAsSandblock.
+	self editorFor: block.
+	
+	block statements first messageParts second deleteAround.
+	self assert: block statements first contents = 'send'
+]
+
+{ #category : #'as yet unclassified' }
 SBMessagePartTest >> testHasColon [
 
 	| message |

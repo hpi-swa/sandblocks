@@ -13,6 +13,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBError >> balloonText [
+
+	^ error asString
+]
+
+{ #category : #'as yet unclassified' }
 SBError >> canCopy [
 
 	^ false

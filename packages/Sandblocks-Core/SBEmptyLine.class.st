@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBEmptyLine >> canAppearInBlockBody [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBEmptyLine >> canSwap [
 
 	^ true

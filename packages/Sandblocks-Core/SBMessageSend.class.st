@@ -97,6 +97,15 @@ SBMessageSend >> contents: aString [
 	signature selector: aString
 ]
 
+{ #category : #'as yet unclassified' }
+SBMessageSend >> contextAcceptedRepresentationAt: aNumber [
+
+	| base |
+	base := self isInCascade ifTrue: [0] ifFalse: 1.
+	aNumber = base ifTrue: [^ #isSmalltalkExpression].
+	^ (aNumber + base) odd ifTrue: [nil] ifFalse: [#isSmalltalkExpression]
+]
+
 { #category : #accessing }
 SBMessageSend >> currentTextMorph [
 
@@ -106,9 +115,7 @@ SBMessageSend >> currentTextMorph [
 { #category : #'as yet unclassified' }
 SBMessageSend >> deleteCommandFor: aBlock [
 
-	^ self receiver = aBlock
-		ifTrue: [super deleteCommandFor: aBlock]
-		ifFalse: [signature deleteCommandFor: aBlock]
+	^ aBlock = self receiver ifTrue: [super deleteCommandFor: aBlock] ifFalse: [signature deleteCommandFor: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
@@ -199,6 +206,12 @@ SBMessageSend >> isInCascade [
 ]
 
 { #category : #'as yet unclassified' }
+SBMessageSend >> isKeyword [
+
+	^ self signature isKeyword
+]
+
+{ #category : #'as yet unclassified' }
 SBMessageSend >> isMessageSend [
 
 	^ true
@@ -253,6 +266,33 @@ SBMessageSend >> mergeArguments: arguments declarations: declarations [
 	declarations size > arguments size ifTrue: [^ arguments copyWithAll: ((1 to: declarations size - arguments size) collect: [:i | SBUnknown new])]
 ]
 
+{ #category : #actions }
+SBMessageSend >> mergeWithParentSend [
+	<action>
+	<actionValidIf: #parentIsKeywordSend>
+
+	| signature |
+	
+	signature := self parentSandblock signature.
+	self sandblockEditor do: (SBCombinedCommand newWith: (self messageParts
+		with: self arguments
+		collect: [:part :arg |
+			{
+				((SBMoveCommand newFor: self containingArtefact)
+					container: signature;
+					index: signature submorphCount + 900000000;
+					morph: part).
+				((SBMoveCommand newFor: self containingArtefact)
+					container: signature;
+					index: signature submorphCount + 900000000;
+					morph: arg)
+			}]) flatten, {
+		((SBReplaceCommand newFor: self containingArtefact)
+			target: self;
+			replacer: self receiver)
+	})
+]
+
 { #category : #'as yet unclassified' }
 SBMessageSend >> messageParts [
 
@@ -271,6 +311,12 @@ SBMessageSend >> noteNewOwner: aMorph [
 	super noteNewOwner: aMorph.
 	
 	self isInCascade ifTrue: [self receiver: nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBMessageSend >> parentIsKeywordSend [
+
+	^ self parentSandblock ifNotNil: [:p | p isMessageSend and: [p isKeyword]] ifNil: [false]
 ]
 
 { #category : #accessing }

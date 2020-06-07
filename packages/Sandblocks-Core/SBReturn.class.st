@@ -7,6 +7,12 @@ Class {
 	#category : #'Sandblocks-Core'
 }
 
+{ #category : #'as yet unclassified' }
+SBReturn >> canAppearInBlockBody [
+
+	^ true
+]
+
 { #category : #formatting }
 SBReturn >> childSandblocksDo: aBlock [
 

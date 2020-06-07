@@ -136,6 +136,12 @@ SBBlock >> cacheType: aClass for: aBlock [
 ]
 
 { #category : #testing }
+SBBlock >> canAppearInBlockBody [
+
+	^ false
+]
+
+{ #category : #testing }
 SBBlock >> canCopy [
 
 	^ true
@@ -393,9 +399,11 @@ SBBlock >> deleteAround [
 SBBlock >> deleteBlock [
 	<multiSelectAction>
 
+	self assert: self isSelected.
 	self sandblockEditor
 		copyBuffer: self sandblockEditor multiSelection;
-		doMultiSelectionEach: [:selected | selected parentSandblock deleteCommandFor: selected]
+		doMultiSelectionEach: [:selected |
+			selected parentSandblock deleteCommandFor: selected]
 ]
 
 { #category : #'as yet unclassified' }
@@ -1237,7 +1245,7 @@ SBBlock >> pasteAboveOrBelow: anAboveBoolean [
 	target := copyBuffer isSelection ifTrue: [copyBuffer firstSubmorph] ifFalse: [copyBuffer].
 	
 	adjacent := self.
-	[adjacent parentSandblock acceptChild: target] whileFalse: [adjacent := adjacent parentSandblock].
+	[(adjacent parentSandblock ifNil: [^ self]) acceptChild: target] whileFalse: [adjacent := adjacent parentSandblock].
 	
 	index := adjacent owner submorphIndexOf: adjacent.
 	morph := target veryDeepCopy.

@@ -209,7 +209,7 @@ SBColorPolicy >> symbolsForReturn: aBlock [
 { #category : #'as yet unclassified' }
 SBColorPolicy >> symbolsForString: aBlock [
 
-	^ #('''' nil)
+	^ #('''' '''')
 ]
 
 { #category : #'as yet unclassified' }

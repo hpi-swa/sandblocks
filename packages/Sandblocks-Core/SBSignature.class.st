@@ -55,7 +55,11 @@ SBSignature >> color [
 SBSignature >> deleteCommandFor: aBlock [
 
 	| index |
-	self isUnary ifTrue: [^ nil].
+	(self isUnary or: [self isBinary]) ifTrue: [^ nil].
+	
+	(self isKeyword and: self submorphCount = 2) ifTrue: [
+		^ aBlock submorphIndex = 1 ifTrue: [nil] ifFalse: [
+			(SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock]].
 	
 	index := ((((self submorphs indexOf: aBlock) - 1) / 2) floor * 2) + 1.
 	^ SBCombinedCommand newWith: {

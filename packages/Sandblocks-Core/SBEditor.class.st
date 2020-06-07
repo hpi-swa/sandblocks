@@ -900,6 +900,7 @@ SBEditor >> initialize [
 	colorPolicy := self class defaultColorPolicy new.
 	compileTime := #compileOnSave.
 	verticalSelectionPosition := 0.
+	countModifier := ''.
 	
 	self
 		addKeyboardCaptureFilter: self;

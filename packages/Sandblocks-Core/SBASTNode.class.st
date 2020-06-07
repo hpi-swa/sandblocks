@@ -54,13 +54,19 @@ SBASTNode >> browseSenders [
 		container openNear: self]
 ]
 
+{ #category : #testing }
+SBASTNode >> canAppearInBlockBody [
+
+	^ self isExpression
+]
+
 { #category : #actions }
 SBASTNode >> changeToUnknown [
 	<action>
 
 	| new |
 	new := SBUnknown new.
-	(new hasRepresentationThat: self acceptedRepresentation) ifTrue: [
+	(new hasRepresentationThat: (SBExampleWatch report: self acceptedRepresentation for: 876936607)) ifTrue: [
 		self sandblockEditor
 			copyBuffer: self;
 			do: ((SBReplaceCommand newFor: self containingArtefact)

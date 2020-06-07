@@ -173,7 +173,8 @@ SBTestCase >> runTest [
 		reportedError ifNotNil: #delete.
 		reportedError := nil].
 	
-	self sendFinishNotification
+	self sendFinishNotification.
+	SBExecutionEnvironment value: nil
 ]
 
 { #category : #'as yet unclassified' }

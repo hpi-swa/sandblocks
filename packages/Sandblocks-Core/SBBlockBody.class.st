@@ -32,7 +32,7 @@ SBBlockBody class >> emptyWithDeclarations: aCollectionOfStrings [
 { #category : #'as yet unclassified' }
 SBBlockBody >> acceptChild: aMorph [
 
-	^ true
+	^ aMorph canAppearInBlockBody
 ]
 
 { #category : #converting }
