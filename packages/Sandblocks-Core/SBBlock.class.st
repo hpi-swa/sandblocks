@@ -165,7 +165,7 @@ SBBlock >> canInput [
 { #category : #actions }
 SBBlock >> canJumpTo: aBlock [
 
-	^ aBlock containingArtefact = self containingArtefact or: [self containingArtefact parentSandblock floating not]
+	^ aBlock containingArtefact = self containingArtefact or: [self containingArtefact floating not]
 ]
 
 { #category : #testing }
@@ -592,7 +592,7 @@ SBBlock >> fixActions [
 { #category : #actions }
 SBBlock >> floating [
 
-	^ self layoutPolicy isNil
+	^ self owner layoutPolicy isNil
 ]
 
 { #category : #accessing }

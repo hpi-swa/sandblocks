@@ -144,7 +144,7 @@ and * to insert an element before the selected.'].
 SBTutorialSnippets >> t09MessageSends [
 
 	SBLabel text: [
-		'Change the call to a with:do: with a second array.
+		'Change the call to a with:do: with a second array (see the statement after for a finished example).
 
 To do so, select the `do:` and press *. Type ''with'' and press tab. Type { to create a new array.
 Finally, select the block argument :num and press + to add another binding and adapt the showln:'].
