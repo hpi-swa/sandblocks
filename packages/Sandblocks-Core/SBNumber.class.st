@@ -33,9 +33,11 @@ SBNumber >> isNumberBlock [
 { #category : #'as yet unclassified' }
 SBNumber >> keyStroke: anEvent [
 
-	(anEvent keyCharacter = $- and: [text isCursorAtStart]) ifTrue: [
-		^ self acceptInputEvent: anEvent].
-	super keyStroke: anEvent
+	(anEvent keyCharacter = $- and: [text isCursorAtStart]) ifTrue: [^ self acceptInputEvent: anEvent].
+	
+	super keyStroke: anEvent.
+	
+	self contents: (self contents select: [:char | char isAlphaNumeric or: [char = $-]])
 ]
 
 { #category : #'as yet unclassified' }
