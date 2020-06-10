@@ -900,6 +900,12 @@ SBBlock >> isLiteralBlock [
 ]
 
 { #category : #testing }
+SBBlock >> isMessagePart [
+
+	^ false
+]
+
+{ #category : #testing }
 SBBlock >> isMessageSend [
 
 	^ false

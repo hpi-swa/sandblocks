@@ -73,7 +73,8 @@ SBSandboxSimulator >> method: aSymbol for: anObject super: supered numArgs: numA
 { #category : #'as yet unclassified' }
 SBSandboxSimulator >> popIntoReceiverVariable: offset [
 
-	(tempObjects includes: currentContext receiver) ifFalse: [self currentContextIsWhiteListed ifFalse: [^ SBExampleWatch report: nil for: 605804066]].
+	(tempObjects includes: (SBExampleWatch report: currentContext for: 1050030447) receiver) ifFalse: [
+		self currentContextIsWhiteListed ifFalse: [^ SBExampleWatch report: nil for: 605804066]].
 	^ currentContext popIntoReceiverVariable: offset
 ]
 
@@ -82,8 +83,9 @@ SBSandboxSimulator >> send: selector super: supered numArgs: numArgs [
 
 	| res receiver lookupClass |
 	receiver := currentContext at: currentContext stackPtr - numArgs.
-	(self method: selector for: receiver super: supered numArgs: numArgs) ifNotNil: [:method | 
-		method primitive = 117 ifTrue: [ | module call |(self isAllowedExternalCall: method) ifFalse: [^ SBExampleWatch report: nil for: 786950473]].
+	(self method: selector for: receiver super: supered numArgs: numArgs) ifNotNil: [:method |
+		method primitive = 117 ifTrue: [ | module call |
+			(self isAllowedExternalCall: method) ifFalse: [^ SBExampleWatch report: nil for: 786950473]].
 		(self isBlacklistedPrimitive: method) ifTrue: [^ SBExampleWatch report: nil for: 952327429].
 		(self createsObject: method) ifTrue: [
 			res := super send: selector super: supered numArgs: numArgs.
@@ -116,7 +118,7 @@ SBSandboxSimulator >> simulate: aBlock [
 	[
 		currentContext notNil and: [currentContext ~~ simulationContext]] whileTrue: [
 		currentContext := currentContext interpretNextInstructionFor: self.
-		(DateAndTime now - startTime) > self maxTime ifTrue: [^ nil]].
+		(DateAndTime now - startTime) > self maxTime ifTrue: [^ SBExampleWatch report: nil for: 570645926]].
 	^ currentContext ifNil: [nil] ifNotNil: [simulationContext pop]
 ]
 

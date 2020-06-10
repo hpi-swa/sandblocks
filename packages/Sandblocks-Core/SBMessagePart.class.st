@@ -116,6 +116,12 @@ SBMessagePart >> isFirstPart [
 ]
 
 { #category : #'as yet unclassified' }
+SBMessagePart >> isMessagePart [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBMessagePart >> isUnary [
 
 	^ self owner lastSubmorph = self

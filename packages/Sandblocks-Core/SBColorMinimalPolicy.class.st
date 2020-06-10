@@ -7,7 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBColorMinimalPolicy >> borderWidthForBlock: aBlock [
 
-	^ aBlock isArtefact ifTrue: [1] ifFalse: [0]
+	^ (aBlock isArtefact or: [(self colorForBlock: aBlock) luminance > 0.9 and: [aBlock isMessagePart not]]) ifTrue: [1] ifFalse: [0]
 ]
 
 { #category : #'as yet unclassified' }

@@ -219,7 +219,7 @@ SBExampleWatch >> veryDeepCopyWith: deepCopier [
 	" assure that copies of us have a unique id "
 	| new oldExamplesValues |
 	oldExamplesValues := exampleValues.
-	exampleValues := nil.
+	exampleValues := Dictionary new.
 	
 	new := super veryDeepCopyWith: deepCopier.
 	exampleValues := oldExamplesValues.

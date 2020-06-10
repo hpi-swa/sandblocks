@@ -89,5 +89,5 @@ SBKeywordMessageLayout class >> wantsSingleRow: aMorph [
 { #category : #'as yet unclassified' }
 SBKeywordMessageLayout class >> widthThreshold [
 
-	^ 400 withScalingFactor
+	^ 500 withScalingFactor
 ]
