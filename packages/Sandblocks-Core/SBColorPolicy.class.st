@@ -83,7 +83,7 @@ SBColorPolicy >> selectionBorderWidth [
 { #category : #'as yet unclassified' }
 SBColorPolicy >> symbolsForArray: aBlock [
 
-	^ #('{}' nil)
+	^ #('{} ' nil)
 ]
 
 { #category : #'as yet unclassified' }
@@ -125,7 +125,7 @@ SBColorPolicy >> symbolsForBoolean: aBlock [
 { #category : #'as yet unclassified' }
 SBColorPolicy >> symbolsForByteArray: aBlock [
 
-	^ #('#[]' nil)
+	^ #('#[] ' nil)
 ]
 
 { #category : #'as yet unclassified' }
@@ -155,7 +155,7 @@ SBColorPolicy >> symbolsForKeywordBinding: aBlock [
 { #category : #'as yet unclassified' }
 SBColorPolicy >> symbolsForLiteralArray: aBlock [
 
-	^ #('#()' nil)
+	^ #('#() ' nil)
 ]
 
 { #category : #'as yet unclassified' }

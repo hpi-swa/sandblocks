@@ -1894,5 +1894,5 @@ SBBlock >> wrapSelectionWith: aSelection [
 			replacer: self.
 	}).
 	
-	new postDuplicate
+	self parentSandblock postDuplicate
 ]

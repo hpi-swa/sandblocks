@@ -51,10 +51,12 @@ SBIcon class >> fromCache: aNameSymbol ifAbsentPut: aBlock [
 	
 	^ self new
 		iconName: aNameSymbol;
-		svg: (cache at: aNameSymbol ifAbsentPut: [
+		svg: (cache at: aNameSymbol ifAbsentPut: [ | doc |
+			doc := XMLDOMParser parseDocumentFrom: aBlock value readStream.
 			SBTransparentSvgMorph new
-				createFromSVGDocument: (XMLDOMParser parseDocumentFrom: aBlock value readStream);
+				createFromSVGDocument: doc;
 				color: Color transparent;
+				setProperty: #svgSource toValue: doc;
 				yourself])
 ]
 
@@ -4857,6 +4859,20 @@ SBIcon >> extent: aPoint [
 SBIcon >> formForSize: aNumber color: aColor [
 
 	^ self class cachedFormSvg: self svg color: aColor size: aNumber
+]
+
+{ #category : #colors }
+SBIcon >> fullDrawSvgOn: aCanvas [
+
+	| source |
+	source := svg valueOfProperty: #svgSource ifAbsent: [^ super fullDrawSvgOn: aCanvas].
+	aCanvas
+		drawSvg: (source root veryDeepCopy
+			attributeAt: 'width' put: self width asString;
+			attributeAt: 'height' put: self height asString;
+			withAllElementsDo: [:e | e attributeAt: 'fill' put: self color toSVGString];
+			yourself)
+		at: self position
 ]
 
 { #category : #colors }

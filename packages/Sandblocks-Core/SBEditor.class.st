@@ -121,7 +121,6 @@ SBEditor class >> registerDefaultShortcuts [
 		registerShortcut: $l command do: #selectRightToplevel;
 		registerShortcut: $k do: #selectPreviousGroup;
 		registerShortcut: $j do: #selectNextGroup;
-		registerShortcut: $1 do: #resetZoom;
 		registerShortcut: $! do: #ensureVisible;
 		registerShortcut: $0 do: #selectStartOfStatement;
 		
