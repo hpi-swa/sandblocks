@@ -29,7 +29,7 @@ SBString >> keyStroke: anEvent [
 SBString >> printOn: aStream [
 
 	aStream nextPutAll: 'string '.
-	aStream nextPutAll: self contents
+	aStream nextPutAll: (self contents truncateWithElipsisTo: 20)
 ]
 
 { #category : #'as yet unclassified' }
