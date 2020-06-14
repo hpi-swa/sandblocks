@@ -404,7 +404,8 @@ SBBasicMethod >> moveToClass [
 		(classOrInstanceSide := UIManager default chooseFrom: {'Instance Side'. 'Class Side'}) ~= 0 ifTrue: [
 			self sandblockEditor do: ((SBMoveMethodCommand newFor: self)
 				method: self;
-				toClass: (classOrInstanceSide = 2 ifTrue: [class class] ifFalse: [class]))]]
+				toClass: (classOrInstanceSide = 2 ifTrue: [class class] ifFalse: [class])).
+			self clearCache]]
 ]
 
 { #category : #'as yet unclassified' }

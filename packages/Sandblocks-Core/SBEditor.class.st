@@ -586,6 +586,13 @@ SBEditor >> close [
 	self valueOfProperty: #previousWindow ifPresentDo: #delete
 ]
 
+{ #category : #actions }
+SBEditor >> closeAll [
+	<action>
+	
+	self do: (SBCombinedCommand newWith: (scroll submorphs collect: [:m | SBDeleteCommand newNonEdit target: m]))
+]
+
 { #category : #drawing }
 SBEditor >> color [
 

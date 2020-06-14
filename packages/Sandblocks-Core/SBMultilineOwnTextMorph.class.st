@@ -2,7 +2,8 @@ Class {
 	#name : #SBMultilineOwnTextMorph,
 	#superclass : #SBOwnTextMorph,
 	#instVars : [
-		'paragraph'
+		'paragraph',
+		'maxWidth'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -43,6 +44,12 @@ SBMultilineOwnTextMorph >> keyboardFocusColor [
 ]
 
 { #category : #'as yet unclassified' }
+SBMultilineOwnTextMorph >> maxWidth: aNumber [
+
+	maxWidth := aNumber
+]
+
+{ #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> minExtent [
 
 	^ self paragraph extent
@@ -65,7 +72,7 @@ SBMultilineOwnTextMorph >> paragraph [
 			compose: self contents asText
 			style: TextStyle default
 			from: 1
-			in: (self position extent: 9999 @ 9999);
+			in: (self position extent: (maxWidth ifNil: [9999]) @ 9999);
 			adjustRightX;
 			focused: true;
 			showCaret: self cursor > 0;

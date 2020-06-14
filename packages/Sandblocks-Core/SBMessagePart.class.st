@@ -136,7 +136,7 @@ SBMessagePart >> keyStroke: anEvent [
 	(anEvent keyCharacter isAlphaNumeric and: [self isBinary]) ifTrue: [^ self continueInputInArgument: anEvent].
 	anEvent keyCharacter = $: ifTrue: [^ self insertUnknownAfterAndInput: true].
 	
-	(anEvent keyCharacter = Character backspace or: [(anEvent keyCharacter isSpecial and: [self actualContents isEmpty or: [self isBinary]]) or: [anEvent keyCharacter isAlphaNumeric and: [self actualContents isEmpty or: [self isBinary not]]]]) ifTrue: [
+	(({Character backspace. Character delete. $_} includes: anEvent keyCharacter) or: [(anEvent keyCharacter isSpecial and: [self actualContents isEmpty or: [self isBinary]]) or: [anEvent keyCharacter isAlphaNumeric and: [self actualContents isEmpty or: [self isBinary not]]]]) ifTrue: [
 		text keyStroke: anEvent.
 		(anEvent keyCharacter isSpecial and: [self actualContents size = 1 and: [self isFirstPart]]) ifTrue: [^ self insertUnknownAfterAndInput: false].
 		self updateSuggestions]

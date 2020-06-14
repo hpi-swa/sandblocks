@@ -32,6 +32,18 @@ SBStringMorph >> drawOn: aCanvas [
 	aCanvas drawString: contents in: self layoutBounds font: self fontToUse color: self color
 ]
 
+{ #category : #'as yet unclassified' }
+SBStringMorph >> fontToUse [
+
+	^ super fontToUse
+]
+
+{ #category : #'as yet unclassified' }
+SBStringMorph >> large [
+
+	self font: (TextStyle default fontOfSize: 22)
+]
+
 { #category : #layout }
 SBStringMorph >> minExtent [
 

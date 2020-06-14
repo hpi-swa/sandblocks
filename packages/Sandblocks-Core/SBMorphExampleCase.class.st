@@ -60,6 +60,7 @@ SBMorphExampleCase >> initialize [
 
 { #category : #'as yet unclassified' }
 SBMorphExampleCase >> manualRestart [
+	<action>
 
 	self status: #manualRestart
 ]
@@ -72,7 +73,7 @@ SBMorphExampleCase >> name: aString caseBlock: aBlock [
 		addMorphBack: (SBIcon iconRefresh color: Color white; on: #click send: #run to: self);
 		addMorphBack: (nameInput := SBTextBubble new contents: aString);
 		addMorphBack: aBlock;
-		addMorphBack: (statusLabel := (SBStringMorph new on: #click send: #promptChangeStatus to: self));
+		addMorphBack: (statusLabel := (SBStringMorph new on: #click send: #toggleRestart to: self));
 		updateLabel
 ]
 
@@ -82,16 +83,9 @@ SBMorphExampleCase >> nameInput [
 	^ nameInput
 ]
 
-{ #category : #callbacks }
-SBMorphExampleCase >> promptChangeStatus [
-
-	self sandblockEditor
-		select: self;
-		promptCodeAction
-]
-
 { #category : #'as yet unclassified' }
 SBMorphExampleCase >> restartOnSave [
+	<action>
 
 	self status: #restartOnSave
 ]
@@ -114,6 +108,12 @@ SBMorphExampleCase >> status: aSymbol [
 	status := aSymbol.
 	self updateLabel.
 	aSymbol ~= #manualRestart ifTrue: [self run]
+]
+
+{ #category : #'as yet unclassified' }
+SBMorphExampleCase >> toggleRestart [
+
+	self status: (self status = #restartOnSave ifTrue: [#manualRestart] ifFalse: [#restartOnSave])
 ]
 
 { #category : #helper }

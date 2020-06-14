@@ -493,6 +493,7 @@ SBASTNode >> wrapInToggledCode [
 { #category : #actions }
 SBASTNode >> wrapWithExampleWatch [
 	<action>
+	<actionValidIf: #isExpression>
 
 	self watchWith: SBExampleWatch
 ]
@@ -500,6 +501,7 @@ SBASTNode >> wrapWithExampleWatch [
 { #category : #actions }
 SBASTNode >> wrapWithWatch [
 	<action>
+	<actionValidIf: #isExpression>
 
 	self watchWith: SBWatch
 ]
