@@ -194,6 +194,15 @@ SBLabel >> textContents [
 ]
 
 { #category : #'as yet unclassified' }
+SBLabel >> useAsString [
+	<action>
+	
+	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+		target: self;
+		replacer: (SBString new contents: self contents))
+]
+
+{ #category : #'as yet unclassified' }
 SBLabel >> writeSourceOn: aStream [
 
 	aStream

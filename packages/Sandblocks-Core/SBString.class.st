@@ -11,6 +11,14 @@ SBString >> guessedClass [
 ]
 
 { #category : #'as yet unclassified' }
+SBString >> initialize [
+
+	super initialize.
+	
+	text maxWidth: 500
+]
+
+{ #category : #'as yet unclassified' }
 SBString >> isStringBubble [
 
 	^ true

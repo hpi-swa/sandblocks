@@ -5,10 +5,38 @@ Class {
 		'shortcutsList',
 		'steps',
 		'title',
-		'setup'
+		'setup',
+		'selector'
+	],
+	#classVars : [
+		'Progress'
 	],
 	#category : #'Sandblocks-Tutorial'
 }
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> checkIsComplete: aMethodSymbol index: aNumber [
+
+	^ self progress at: aMethodSymbol ifPresent: [:list | list includes: aNumber] ifAbsent: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> markStepCompleted: selector index: index [
+
+	(self progress at: selector ifAbsentPut: [Set new]) add: index
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> progress [
+
+	^ Progress ifNil: [Progress := Dictionary new]
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> resetProgressFor: aSymbol [
+
+	self progress removeKey: aSymbol
+]
 
 { #category : #'as yet unclassified' }
 SBTutorialStep class >> step01Method [
@@ -17,10 +45,38 @@ SBTutorialStep class >> step01Method [
 ]
 
 { #category : #'as yet unclassified' }
+SBTutorialStep class >> stepDeleting: anEditor [
+
+	SBTutorialStep new
+		title: 'Deleting';
+		addAction: #deleteBlock;
+		addAction: #pasteAbove;
+		addAction: #pasteBelow;
+		setup: anEditor
+			do: [:step | | method |
+				method := step createStepMethod: [{1. 2. 6. 3. 4. 5}] in: anEditor.
+				step
+					addStep: 'Delete the 6 in the list by pressing x'
+					checkCondition: [:editor |
+						method body statements first submorphs noneSatisfy: [:el | el contents = '6']].
+				step
+					addStep: 'A deleted element is automatically copied. Paste it at the end of the list using p.'
+					checkCondition: [:editor |
+						method body statements first lastSubmorph contents = '6'].
+				step
+					addStep: 'Paste the 6 again at the start of the list using P'
+					checkCondition: [:editor |
+						method body statements first firstSubmorph contents = '6']]
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> stepDeletingMethod [ {1. 2. 6. 3. 4. 5}
+]
+
+{ #category : #'as yet unclassified' }
 SBTutorialStep class >> stepMovement: anEditor [
 
-	| method |
-	anEditor openMorphInView: (SBTutorialStep new
+	SBTutorialStep new
 		title: '01 Movement';
 		addIntroText: 'Here we get to know the basics to move around the system. The text is gonna be rather long so make sure we can wrap properly.';
 		addAction: #selectNext;
@@ -28,16 +84,21 @@ SBTutorialStep class >> stepMovement: anEditor [
 		addAction: #selectUp;
 		addAction: #selectDown;
 		setup: anEditor
-			do: [:step |
+			do: [:step | | method |
 				method := step createStepMethod: [Transcript showln: 'Hello world!!'] in: anEditor.
 				step
 					addStep: 'Select the last block of this method'
-					checkCondition: [:editor | editor selection = method lastDeepChild]];
-		yourself)
+					checkCondition: [:editor | editor selection = method lastDeepChild]]
 ]
 
 { #category : #'as yet unclassified' }
 SBTutorialStep class >> stepMovementMethod [ Transcript showln: 'Hello world!!'
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> tutorialSteps [
+
+	^ {#stepMovement:. #stepDeleting:}
 ]
 
 { #category : #'as yet unclassified' }
@@ -63,7 +124,10 @@ SBTutorialStep >> addIntroText: aString [
 SBTutorialStep >> addStep: aString checkCondition: aBlock [
 
 	steps addMorphBack: (SBRow new
-		addMorphBack: (SBCheckbox new setProperty: #checkBlock toValue: aBlock);
+		addMorphBack: (SBCheckbox new
+			setProperty: #checkBlock toValue: aBlock;
+			value: (self class checkIsComplete: selector index: steps submorphCount + 1);
+			yourself);
 		addMorphBack: (SBMultilineOwnTextMorph new
 			contents: aString;
 			maxWidth: self maxTextWidth))
@@ -78,8 +142,15 @@ SBTutorialStep >> canCopy [
 { #category : #'as yet unclassified' }
 SBTutorialStep >> checkConditions [
 
-	steps submorphsDo: [:step |
-		step firstSubmorph value: ((step firstSubmorph valueOfProperty: #checkBlock) value: self sandblockEditor)]
+	steps submorphs withIndexDo: [:step :index | | checkbox |
+		checkbox := step firstSubmorph.
+		checkbox value ifFalse: [
+			([
+				(checkbox valueOfProperty: #checkBlock) value: self sandblockEditor] on: Error do: [:error |
+				error signal.
+				false]) ifTrue: [
+				checkbox value: true.
+				self class markStepCompleted: selector index: index]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -152,10 +223,10 @@ SBTutorialStep >> initialize [
 				height: 0);
 			addMorphBack: (SBButton new
 				balloonText: 'Previous Task';
-				icon: SBIcon iconArrow_left shortcut: nil do: [self next]);
+				icon: SBIcon iconArrow_left shortcut: nil do: [self previous]);
 			addMorphBack: (SBButton new
 				balloonText: 'Next Task';
-				icon: SBIcon iconArrow_right shortcut: nil do: [self previous]))
+				icon: SBIcon iconArrow_right shortcut: nil do: [self next]))
 ]
 
 { #category : #'as yet unclassified' }
@@ -167,7 +238,9 @@ SBTutorialStep >> maxTextWidth [
 { #category : #'as yet unclassified' }
 SBTutorialStep >> next [
 
-	
+	| nextSelector |
+	nextSelector := self class tutorialSteps at: (self class tutorialSteps indexOf: selector) + 1.
+	SBTutorialStep perform: nextSelector with: self sandblockEditor
 ]
 
 { #category : #'as yet unclassified' }
@@ -186,17 +259,27 @@ SBTutorialStep >> outOfWorld: aWorld [
 { #category : #'as yet unclassified' }
 SBTutorialStep >> previous [
 
-	
+	| previousSelector |
+	previousSelector := self class tutorialSteps at: (self class tutorialSteps indexOf: selector) - 1.
+	SBTutorialStep perform: previousSelector with: self sandblockEditor
 ]
 
 { #category : #'as yet unclassified' }
 SBTutorialStep >> reset [
 
-	| editor |
-	editor := self sandblockEditor.
-	editor closeAll.
-	editor openMorphInView: self.
-	setup value: self
+	self reset: self sandblockEditor.
+	self class resetProgressFor: selector
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep >> reset: anEditor [
+
+	steps removeAllMorphs.
+	anEditor closeAll.
+	anEditor openMorphInView: self.
+	setup value: self.
+	self extent: 0 @ 0.
+	anEditor when: #selectionChanged send: #checkConditions to: self
 ]
 
 { #category : #'as yet unclassified' }
@@ -208,10 +291,9 @@ SBTutorialStep >> selectionDo: aSymbol [
 { #category : #'as yet unclassified' }
 SBTutorialStep >> setup: anEditor do: aBlock [
 
+	selector := thisContext sender method homeMethod selector.
 	setup := aBlock.
-	steps removeAllMorphs.
-	aBlock value: self.
-	anEditor when: #selectionChanged send: #checkConditions to: self
+	self reset: anEditor
 ]
 
 { #category : #'as yet unclassified' }

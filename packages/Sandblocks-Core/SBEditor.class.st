@@ -590,7 +590,8 @@ SBEditor >> close [
 SBEditor >> closeAll [
 	<action>
 	
-	self do: (SBCombinedCommand newWith: (scroll submorphs collect: [:m | SBDeleteCommand newNonEdit target: m]))
+	scroll hasSubmorphs ifTrue: [
+		self do: (SBCombinedCommand newWith: (scroll submorphs collect: [:m | SBDeleteCommand newNonEdit target: m]))]
 ]
 
 { #category : #drawing }

@@ -84,6 +84,13 @@ SBASTNode >> contextAcceptedRepresentationAt: aNumber [
 ]
 
 { #category : #actions }
+SBASTNode >> copyString [
+	<action>
+
+	Clipboard clipboardText: self prettySourceString
+]
+
+{ #category : #actions }
 SBASTNode >> debugExpression [
 	<action>
 	
@@ -295,12 +302,6 @@ SBASTNode >> selectStartOfStatement [
 	<multiSelectAction>
 	
 	self containingStatement firstDeepChild select
-]
-
-{ #category : #'as yet unclassified' }
-SBASTNode >> textContents [
-
-	^ self prettySourceString
 ]
 
 { #category : #actions }

@@ -28,6 +28,18 @@ Object >> isSandblock [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Object >> representIn: aMorph as: aSymbol near: aPointOrMorph [
+
+	| options representation |
+	options := self representationsThat: aSymbol.
+	options ifEmpty: [^ self].
+	representation := options first newFor: self.
+	options size > 1 ifTrue: [ | prompt |
+		prompt := SBRepresentationPrompt new options: options target: self current: representation.
+		aMorph openMorphInView: representation]
+]
+
+{ #category : #'*Sandblocks-Core' }
 Object >> representationCapabilities [
 
 	| set |
