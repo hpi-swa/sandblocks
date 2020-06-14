@@ -98,7 +98,7 @@ SBEditor class >> openWorkspace: aString [
 SBEditor class >> registerDefaultShortcuts [
 	"self registerDefaultShortcuts"
 
-	(UIManager default confirm: 'This will reset all custom shortcuts, continue?') ifFalse: [^ self].
+	(Shortcuts notNil and: [Shortcuts notEmpty and: [(UIManager default confirm: 'This will reset all custom shortcuts, continue?') not]]) ifTrue: [^ self].
 	
 	Shortcuts := nil.
 	self

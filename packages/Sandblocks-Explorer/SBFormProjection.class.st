@@ -1,7 +1,7 @@
 Class {
 	#name : #SBFormProjection,
 	#superclass : #SBDataProjection,
-	#category : #'Sandblocks-Core'
+	#category : #'Sandblocks-Explorer'
 }
 
 { #category : #'as yet unclassified' }
