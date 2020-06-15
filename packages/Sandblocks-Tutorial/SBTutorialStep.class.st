@@ -6,7 +6,8 @@ Class {
 		'steps',
 		'title',
 		'setup',
-		'selector'
+		'selector',
+		'buttons'
 	],
 	#classVars : [
 		'Progress'
@@ -36,12 +37,6 @@ SBTutorialStep class >> progress [
 SBTutorialStep class >> resetProgressFor: aSymbol [
 
 	self progress removeKey: aSymbol
-]
-
-{ #category : #'as yet unclassified' }
-SBTutorialStep class >> step01Method [
-
-	Transcript showln: 'Hello world!!'
 ]
 
 { #category : #'as yet unclassified' }
@@ -77,7 +72,7 @@ SBTutorialStep class >> stepDeletingMethod [ {1. 2. 6. 3. 4. 5}
 SBTutorialStep class >> stepMovement: anEditor [
 
 	SBTutorialStep new
-		title: '01 Movement';
+		title: 'Movement';
 		addIntroText: 'Here we get to know the basics to move around the system. The text is gonna be rather long so make sure we can wrap properly.';
 		addAction: #selectNext;
 		addAction: #selectPrevious;
@@ -199,6 +194,7 @@ SBTutorialStep >> example [
 SBTutorialStep >> initialize [
 
 	super initialize.
+	
 	self
 		attachDecorator: (SBMoveDecorator new
 			preventOcclusion: true;
@@ -211,7 +207,7 @@ SBTutorialStep >> initialize [
 		addMorphBack: (SBRow new addMorphBack: (title := SBStringMorph new large));
 		addMorphBack: (shortcutsList := SBRow new cellGap: 8);
 		addMorphBack: (steps := SBColum new);
-		addMorphBack: (SBRow new
+		addMorphBack: (buttons := SBRow new
 			hResizing: #spaceFill;
 			cellGap: 8;
 			changeTableLayout;
@@ -220,13 +216,7 @@ SBTutorialStep >> initialize [
 				icon: SBIcon iconRefresh shortcut: nil do: [self reset]);
 			addMorphBack: (Morph new
 				hResizing: #spaceFill;
-				height: 0);
-			addMorphBack: (SBButton new
-				balloonText: 'Previous Task';
-				icon: SBIcon iconArrow_left shortcut: nil do: [self previous]);
-			addMorphBack: (SBButton new
-				balloonText: 'Next Task';
-				icon: SBIcon iconArrow_right shortcut: nil do: [self next]))
+				height: 0))
 ]
 
 { #category : #'as yet unclassified' }
@@ -239,7 +229,7 @@ SBTutorialStep >> maxTextWidth [
 SBTutorialStep >> next [
 
 	| nextSelector |
-	nextSelector := self class tutorialSteps at: (self class tutorialSteps indexOf: selector) + 1.
+	nextSelector := self class tutorialSteps at: self stepIndex + 1.
 	SBTutorialStep perform: nextSelector with: self sandblockEditor
 ]
 
@@ -260,7 +250,7 @@ SBTutorialStep >> outOfWorld: aWorld [
 SBTutorialStep >> previous [
 
 	| previousSelector |
-	previousSelector := self class tutorialSteps at: (self class tutorialSteps indexOf: selector) - 1.
+	previousSelector := self class tutorialSteps at: self stepIndex - 1.
 	SBTutorialStep perform: previousSelector with: self sandblockEditor
 ]
 
@@ -293,7 +283,21 @@ SBTutorialStep >> setup: anEditor do: aBlock [
 
 	selector := thisContext sender method homeMethod selector.
 	setup := aBlock.
-	self reset: anEditor
+	self reset: anEditor.
+	self stepIndex > 1 ifTrue: [
+		buttons addMorphBack: (SBButton new
+			balloonText: 'Previous Task';
+			icon: SBIcon iconArrow_left shortcut: nil do: [self previous])].
+	self stepIndex < self class tutorialSteps size ifTrue: [
+		buttons addMorphBack: (SBButton new
+			balloonText: 'Next Task';
+			icon: SBIcon iconArrow_right shortcut: nil do: [self next])]
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep >> stepIndex [
+
+	^ self class tutorialSteps indexOf: selector
 ]
 
 { #category : #'as yet unclassified' }

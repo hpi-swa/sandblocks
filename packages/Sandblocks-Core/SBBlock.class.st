@@ -1314,6 +1314,7 @@ SBBlock >> placeMark [
 SBBlock >> postDuplicate [
 
 	self allBlocksDo: [:morph | morph postDuplicateSelf].
+	self detachDecorators: SBMultiSelectionDecorator.
 	self clearCache
 ]
 
