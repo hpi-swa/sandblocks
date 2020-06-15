@@ -143,7 +143,7 @@ SBExplorer >> initialize [
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		layoutInset: 2 withScalingFactor;
-		attachDecorator: (SBMoveDecorator new preventOcclusion: true)
+		attachDecorator: SBMoveDecorator new
 ]
 
 { #category : #'as yet unclassified' }

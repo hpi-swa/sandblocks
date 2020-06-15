@@ -6,8 +6,7 @@ Class {
 	#superclass : #SBBlockDecorator,
 	#instVars : [
 		'lastDragPosition',
-		'velocity',
-		'preventOcclusion'
+		'velocity'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -54,8 +53,7 @@ SBMoveDecorator >> initialize [
 
 	super initialize.
 	
-	velocity := 0 @ 0.
-	preventOcclusion := true
+	velocity := 0 @ 0
 ]
 
 { #category : #testing }
@@ -80,18 +78,6 @@ SBMoveDecorator >> mouseUp: anEvent [
 		lastDragPosition := nil]
 ]
 
-{ #category : #accessing }
-SBMoveDecorator >> preventOcclusion [
-
-	^ preventOcclusion
-]
-
-{ #category : #accessing }
-SBMoveDecorator >> preventOcclusion: aBoolean [
-
-	preventOcclusion := aBoolean
-]
-
 { #category : #'event handling' }
 SBMoveDecorator >> startDrag: anEvent [
 
@@ -102,8 +88,8 @@ SBMoveDecorator >> startDrag: anEvent [
 SBMoveDecorator >> step [
 
 	self isDragging ifTrue: [^ self].
-	self morph owner submorphsDo: [:morph | 
-		(morph preventOcclusion and: [morph ~= self morph and: [(self morph bounds intersects: morph bounds) and: [(self morph bounds containsRect: morph bounds) not]]])
+	self morph owner submorphsDo: [:morph |
+		(morph ~= self morph and: [(self morph bounds intersects: morph bounds) and: [(self morph bounds containsRect: morph bounds) not]])
 			ifTrue: [ | speed intersection direction maxSpeed |
 				intersection := self morph bounds intersect: morph bounds.
 				speed := intersection area.
@@ -121,5 +107,5 @@ SBMoveDecorator >> step [
 { #category : #stepping }
 SBMoveDecorator >> stepTime [
 
-	^ self preventOcclusion ifTrue: [1] ifFalse: [-1]
+	^ self morph preventOcclusion ifTrue: [1] ifFalse: [-1]
 ]

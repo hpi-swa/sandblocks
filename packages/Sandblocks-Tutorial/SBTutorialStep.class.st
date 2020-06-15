@@ -196,9 +196,7 @@ SBTutorialStep >> initialize [
 	super initialize.
 	
 	self
-		attachDecorator: (SBMoveDecorator new
-			preventOcclusion: true;
-			yourself);
+		attachDecorator: SBMoveDecorator new;
 		changeTableLayout;
 		layoutInset: 8;
 		cellGap: 8;

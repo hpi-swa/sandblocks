@@ -294,7 +294,7 @@ SBBasicMethod >> initialize [
 	
 	self
 		hasUnsavedChanges: false;
-		attachDecorator: (SBMoveDecorator new preventOcclusion: true)
+		attachDecorator: SBMoveDecorator new
 ]
 
 { #category : #'as yet unclassified' }
@@ -460,7 +460,7 @@ SBBasicMethod >> postDuplicateSelf [
 	self
 		hasUnsavedChanges: true;
 		detachDecorators: SBMoveDecorator;
-		attachDecorator: (SBMoveDecorator new preventOcclusion: true)
+		attachDecorator: SBMoveDecorator new
 ]
 
 { #category : #'as yet unclassified' }

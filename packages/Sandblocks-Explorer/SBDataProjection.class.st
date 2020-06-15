@@ -24,7 +24,7 @@ SBDataProjection >> initialize [
 
 	super initialize.
 	self
-		attachDecorator: (SBMoveDecorator new preventOcclusion: true);
+		attachDecorator: SBMoveDecorator new;
 		attachDecorator: SBResizableDecorator new
 ]
 

@@ -63,6 +63,12 @@ SBBlockDecorator >> preDrawOn: aCanvas [
 ]
 
 { #category : #stepping }
+SBBlockDecorator >> shouldGetStepsFrom: aWorld [
+
+	^ morph notNil and: [morph world == aWorld]
+]
+
+{ #category : #stepping }
 SBBlockDecorator >> step [
 ]
 

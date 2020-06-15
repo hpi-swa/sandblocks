@@ -419,9 +419,9 @@ SBBlock >> deleteCommandFor: aBlock [
 SBBlock >> detachDecorator: aDecorator [
 
 	decorators remove: aDecorator ifAbsent: [].
+	self world ifNotNil: [:w | w stopStepping: aDecorator selector: #step].
 	aDecorator detached: self.
-	self changed.
-	self updateSteppingDecorators
+	self changed
 ]
 
 { #category : #decorators }
@@ -1344,7 +1344,7 @@ SBBlock >> prettySourceString [
 { #category : #testing }
 SBBlock >> preventOcclusion [
 
-	^ self withDecorator: SBMoveDecorator do: [:d | d preventOcclusion] ifAbsent: [false]
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -1789,9 +1789,7 @@ SBBlock >> updateSteppingDecorators [
 	self decorators do: [:d |
 		d stepTime >= 0 ifTrue: [
 			anyStepping := true.
-			self startStepping: #stepDecorator: at: Time millisecondClockValue arguments: {d} stepTime: d stepTime]].
-	
-	anyStepping ifFalse: [self stopSteppingSelector: #stepDecorator:]
+			self world ifNotNil: [:w | w startStepping: d at: Time millisecondClockValue selector: #step arguments: {} stepTime: d stepTime]]]
 ]
 
 { #category : #suggestions }
