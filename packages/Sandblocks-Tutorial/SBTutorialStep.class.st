@@ -36,7 +36,33 @@ SBTutorialStep class >> progress [
 { #category : #'as yet unclassified' }
 SBTutorialStep class >> resetProgressFor: aSymbol [
 
-	self progress removeKey: aSymbol
+	self progress removeKey: aSymbol ifAbsent: []
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> stepBasicMessageSend: anEditor [
+
+	SBTutorialStep new
+		title: 'Basic Message Send';
+		addIntroText: 'The editor has a separate input mode that allows typing on the keyboard as normal. Let''s see how to use it for message sends.';
+		addAction: #wrapInMessageSend;
+		addAction: #endInput;
+		setup: anEditor
+			do: [:step | | method |
+				method := step createStepMethod: [self assert: 1024 = 2] in: anEditor.
+				step addStep: 'Select the 2' checkCondition: [:editor | editor selection contents = '2'].
+				step
+					addStep: 'Press space to send a message to your selection, then type raisedTo:. Press enter to accept an autocompletion.'
+					checkCondition: [:editor |
+						method statements first arguments first arguments first selector = 'raisedTo:'].
+				step
+					addStep: 'Finally, type 10 in the now opened field and press escape to exit the input mode.'
+					checkCondition: [:editor |
+						method statements first arguments first arguments first arguments first contents = '10']]
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> stepBasicMessageSendMethod [ self assert: 1024 = 2
 ]
 
 { #category : #'as yet unclassified' }
@@ -69,31 +95,188 @@ SBTutorialStep class >> stepDeletingMethod [ {1. 2. 6. 3. 4. 5}
 ]
 
 { #category : #'as yet unclassified' }
+SBTutorialStep class >> stepInputMode: anEditor [
+
+	SBTutorialStep new
+		title: 'Input mode';
+		addIntroText: 'The input mode is used to edit any leaf node''s data.';
+		addAction: #startInputAtStart;
+		addAction: #startInputAtEnd;
+		addAction: #startInputSubstituting;
+		addAction: #endInput;
+		addAction: #changeToUnknown;
+		setup: anEditor
+			do: [:step | | method |
+				method := step
+					createStepMethod: [
+						self assert: 1234 = 234.
+						self assert: 'This is a rather long string where it would be annoying to have the cursor at the '.
+						self assert: (9 + 9) = 7.
+						self assert: (9 + 9) = Morph new]
+					in: anEditor.
+				step
+					addStep: 'To enter input mode at the start of a node, press i. Change the 234 to a 1234 by pressing i, then 1, then escape.'
+					checkCondition: [:editor |
+						method statements first arguments first arguments first contents = '1234'].
+				step
+					addStep: 'You can enter input mode at the end of a long text, too. Press a on the long string and add the missing word "start".'
+					checkCondition: [:editor |
+						method statements second arguments first contents includesSubstring: 'start'].
+				step
+					addStep: 'You can also replace the contents of an element and start editing right away.
+Press s on the 7 and change it to an 18.'
+					checkCondition: [:editor |
+						method statements third arguments first arguments first contents = '18'].
+				step
+					addStep: 'Finally, you can change a selection of elements in one go with c.
+Select the `Morph new` message send using shift+k and press c.
+Then change it to 18.'
+					checkCondition: [:editor |
+						method statements fourth arguments first arguments first contents = '18']]
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> stepInputModeMethod [
+
+	self assert: 1234 = 234.
+	self assert: 'This is a rather long string where it would be annoying to have the cursor at the start'.
+	self assert: (9 + 9) = 18.
+	self assert: (9 + 9) = 18
+]
+
+{ #category : #'as yet unclassified' }
 SBTutorialStep class >> stepMovement: anEditor [
 
 	SBTutorialStep new
 		title: 'Movement';
-		addIntroText: 'Here we get to know the basics to move around the system. The text is gonna be rather long so make sure we can wrap properly.';
+		addIntroText: 'Hey! First we''ll look at moving your cursor. You can click on things, but try to only use your keyboard to get used to it. Like in vim, hjlk moves your cursor around.
+
+Note that you always undo accidental changes with u (and redo with U).';
 		addAction: #selectNext;
-		addAction: #selectPrevious;
+		addAction: #selectPreviousGroup;
 		addAction: #selectUp;
-		addAction: #selectDown;
+		addAction: #selectNextGroup;
 		setup: anEditor
 			do: [:step | | method |
-				method := step createStepMethod: [Transcript showln: 'Hello world!!'] in: anEditor.
+				method := step
+					createStepMethod: [ | y x |
+						(true & false not) & nil isNil ifFalse: [52 squared].
+						y := self size + super size.
+						#($a #a 1 1.0) do: [:each |
+							Transcript
+								show: each class name;
+								show: ' '].
+						^ x < y]
+					in: anEditor.
 				step
-					addStep: 'Select the last block of this method'
-					checkCondition: [:editor | editor selection = method lastDeepChild]]
+					addStep: 'Select the empty string in the Transcript show cascade'
+					checkCondition: [:editor |
+						editor selection = method body statements third arguments first statements first messages second arguments first].
+				step
+					addStep: 'Select the 52 in the ifFalse: block'
+					checkCondition: [:editor |
+						editor selection = method body statements first arguments first statements first receiver].
+				step
+					addStep: 'Select the character $a'
+					checkCondition: [:editor |
+						editor selection = method body statements third receiver submorphs first]]
 ]
 
 { #category : #'as yet unclassified' }
-SBTutorialStep class >> stepMovementMethod [ Transcript showln: 'Hello world!!'
+SBTutorialStep class >> stepMovementMethod [ | y x |
+true & false not & nil isNil
+		ifFalse: [52 squared].
+	y := self size + super size.
+	#($a #a 1 1.0)
+		do: [:each | Transcript show: each class name;
+				 show: ' '].
+	^ x < y
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> stepSelection: anEditor [
+
+	SBTutorialStep new
+		title: 'Selection';
+		addIntroText: 'So far, we''ve only selected leaf nodes (i.e. nodes without children). Let''s try selecting larger groups.';
+		addAction: #selectUp;
+		addAction: #selectDown;
+		addAction: #deleteBlock;
+		setup: anEditor
+			do: [:step | | method |
+				method := step
+					createStepMethod: [ | y x |
+						(true & false not) & nil isNil ifFalse: [52 squared].
+						y := self size + super size.
+						#($a #a 1 1.0) do: [:each |
+							Transcript
+								show: each class name;
+								show: ' '].
+						^ x < y]
+					in: anEditor.
+				step
+					addStep: 'First, select the block argument :each in the 2nd to last line.'
+					checkCondition: [:editor |
+						editor selection = method body statements third arguments first bindings first].
+				step
+					addStep: 'Then use Shift+K to enlargen your selection to select the fuil do: message send. You can use Shift+J to go down again.'
+					checkCondition: [:editor | editor selection = method body statements third].
+				step
+					addStep: 'Finally, as an example use x to delete the full block.'
+					checkCondition: [:editor |
+						method body statements noneSatisfy: [:s | s selector = 'do:']]]
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> stepSelectionMethod [ | y x |
+true & false not & nil isNil
+		ifFalse: [52 squared].
+	y := self size + super size.
+	#($a #a 1 1.0)
+		do: [:each | Transcript show: each class name;
+				 show: ' '].
+	^ x < y
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> stepSwapping: anEditor [
+
+	SBTutorialStep new
+		title: 'Swapping';
+		addIntroText: 'In a text editor, you usually move code by copy-pasting. Here, you can also use swap commands directly.';
+		addAction: #swapLeft;
+		addAction: #swapRight;
+		setup: anEditor
+			do: [:step | | method |
+				method := step createStepMethod: [
+					{1. 2. 3. 6. 4. 5}.
+					self assert: (10 raisedTo: 2) = 1024] in: anEditor.
+				step addStep: 'Select the 6 in the array' checkCondition: [:editor | editor selection contents = '6'].
+				step
+					addStep: 'Using L, move it to the end of the array.'
+					checkCondition: [:editor |
+						method body statements first lastSubmorph contents = '6'].
+				step
+					addStep: 'Select the 2 in the message send below the array.'
+					checkCondition: [:editor |
+						editor selection contents = '2' and: [
+							editor selection containingStatement = method body statements second]].
+				step
+					addStep: 'Using H, swap it with the number 10.'
+					checkCondition: [:editor |
+						method body statements second arguments first receiver receiver contents = '2']]
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> stepSwappingMethod [ {1. 2. 3. 6. 4. 5}.
+	self assert: (10 raisedTo: 2)
+			= 1024
 ]
 
 { #category : #'as yet unclassified' }
 SBTutorialStep class >> tutorialSteps [
 
-	^ {#stepMovement:. #stepDeleting:}
+	^ {#stepMovement:. #stepDeleting:. #stepSelection:. #stepSwapping:. #stepBasicMessageSend:. #stepInputMode:}
 ]
 
 { #category : #'as yet unclassified' }
@@ -119,6 +302,7 @@ SBTutorialStep >> addIntroText: aString [
 SBTutorialStep >> addStep: aString checkCondition: aBlock [
 
 	steps addMorphBack: (SBRow new
+		cellGap: 8;
 		addMorphBack: (SBCheckbox new
 			setProperty: #checkBlock toValue: aBlock;
 			value: (self class checkIsComplete: selector index: steps submorphCount + 1);
@@ -126,6 +310,12 @@ SBTutorialStep >> addStep: aString checkCondition: aBlock [
 		addMorphBack: (SBMultilineOwnTextMorph new
 			contents: aString;
 			maxWidth: self maxTextWidth))
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep >> artefactChanged: anArtefact [
+
+	self checkConditions
 ]
 
 { #category : #'as yet unclassified' }
@@ -199,12 +389,14 @@ SBTutorialStep >> initialize [
 		attachDecorator: SBMoveDecorator new;
 		changeTableLayout;
 		layoutInset: 8;
-		cellGap: 8;
+		cellGap: 16;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		addMorphBack: (SBRow new addMorphBack: (title := SBStringMorph new large));
 		addMorphBack: (shortcutsList := SBRow new cellGap: 8);
-		addMorphBack: (steps := SBColum new);
+		addMorphBack: (steps := SBColum new
+			cellGap: 8;
+			yourself);
 		addMorphBack: (buttons := SBRow new
 			hResizing: #spaceFill;
 			cellGap: 8;
@@ -255,8 +447,8 @@ SBTutorialStep >> previous [
 { #category : #'as yet unclassified' }
 SBTutorialStep >> reset [
 
-	self reset: self sandblockEditor.
-	self class resetProgressFor: selector
+	self class resetProgressFor: selector.
+	self reset: self sandblockEditor
 ]
 
 { #category : #'as yet unclassified' }

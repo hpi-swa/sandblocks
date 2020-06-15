@@ -66,7 +66,7 @@ SBASTNode >> changeToUnknown [
 
 	| new |
 	new := SBUnknown new.
-	(new hasRepresentationThat: (SBExampleWatch report: self acceptedRepresentation for: 876936607)) ifTrue: [
+	(new hasRepresentationThat: self acceptedRepresentation) ifTrue: [
 		self sandblockEditor
 			copyBuffer: self;
 			do: ((SBReplaceCommand newFor: self containingArtefact)

@@ -61,6 +61,6 @@ SBMessageReceiverLayout >> wantsMultiRow: aMorph [
 	
 	^ (signatureExtent y > 100 withScalingFactor or: [
 		signatureExtent x > 400 withScalingFactor and: [receiverExtent x > 100 withScalingFactor]]) or: [
-		(signatureExtent x > 100 and: [receiverExtent x > 200 withScalingFactor]) or: [
+		(signatureExtent x > 200 and: [receiverExtent x > 200 withScalingFactor]) or: [
 			receiverExtent x > 80 and: [signatureExtent y > 80 withScalingFactor]]]
 ]

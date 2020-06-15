@@ -556,6 +556,12 @@ SBBasicMethod >> selector: aSymbol arguments: aCollection class: aClass [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> statements [
+
+	^ self body statements
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> stopEditing: aCommand [
 
 	signature stopEditing: aCommand.
