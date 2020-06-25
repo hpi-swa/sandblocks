@@ -7,7 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBDefaultColorPolicy >> borderWidthForBlock: aBlock [
 
-	^ 1
+	^ aBlock isMessagePart ifTrue: [0] ifFalse: [1]
 ]
 
 { #category : #'as yet unclassified' }

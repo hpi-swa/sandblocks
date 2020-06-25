@@ -29,6 +29,18 @@ SBASTNodeTest >> testInsertEmptyLineMarkers [
 ]
 
 { #category : #'as yet unclassified' }
+SBASTNodeTest >> testInsertEmptyLineMarkersAfterReturn [
+
+	self assert: 'a
+    ^ test.
+
+    " hello "' equals: 'a
+    ^ test.
+
+    " hello "' codeWithEmptyLineMarkers
+]
+
+{ #category : #'as yet unclassified' }
 SBASTNodeTest >> testInsertStatementAboveOrBelow [
 
 	| block selection |

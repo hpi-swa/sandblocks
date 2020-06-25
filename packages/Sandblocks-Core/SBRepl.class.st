@@ -286,6 +286,12 @@ SBRepl >> setFromSource: aString [
 	self addMorphBack: aString parseAsSandblock
 ]
 
+{ #category : #'compilation cue protocol' }
+SBRepl >> sourceString [
+
+	^ String streamContents: [:s | self writeSourceOn: s]
+]
+
 { #category : #'artefact protocol' }
 SBRepl >> statements: aCollection [
 

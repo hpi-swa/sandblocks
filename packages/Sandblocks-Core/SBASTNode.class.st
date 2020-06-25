@@ -163,6 +163,19 @@ SBASTNode >> extractVariable [
 ]
 
 { #category : #'as yet unclassified' }
+SBASTNode >> guessClassExpensive [
+
+	^ self guessedClass ifNil: [[(SBSandboxSimulator new simulate: [self evaluate]) ifNotNil: #class] on: Error do: [nil]]
+]
+
+{ #category : #'as yet unclassified' }
+SBASTNode >> guessedClass [
+
+	" return a non-nil value to help services like autocompletion do their job "
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBASTNode >> handleDroppedBlock: aBlock event: anEvent [
 
 	| replacer |
@@ -281,6 +294,28 @@ SBASTNode >> pasteString [
 	block postDuplicate
 ]
 
+{ #category : #'as yet unclassified' }
+SBASTNode >> pc [
+
+	^ 0
+]
+
+{ #category : #'as yet unclassified' }
+SBASTNode >> pc: aNumber [
+
+	" save a pc if you are an accessible point during execution "
+]
+
+{ #category : #'as yet unclassified' }
+SBASTNode >> prettySourceString [
+
+	^ SBFormatter formatString: self sourceString class: self containingArtefact methodClass noPattern: self ~= self containingArtefact
+	
+	"false
+		ifTrue: [[Smalltalk at: #PPPPrinter ifPresent: [:p | text := p format: text]] on: Error do: []]
+		ifFalse: [text := self class prettyPrinterClass format: text in: self containingArtefact methodClass notifying: nil]."
+]
+
 { #category : #actions }
 SBASTNode >> selectNextSend [
 	<multiSelectAction>
@@ -302,6 +337,21 @@ SBASTNode >> selectStartOfStatement [
 	<multiSelectAction>
 	
 	self containingStatement firstDeepChild select
+]
+
+{ #category : #printing }
+SBASTNode >> selectionLabel [
+
+	| class |
+	class := self guessClassExpensive.
+	^ (self containingArtefact isNil or: [class isNil]) ifTrue: [self printString] ifFalse: [
+		'{1} ({2})' format: {self printString. class asString}]
+]
+
+{ #category : #'as yet unclassified' }
+SBASTNode >> sourceString [
+
+	^ String streamContents: [:s | self writeSourceOn: s]
 ]
 
 { #category : #actions }
@@ -346,7 +396,7 @@ SBASTNode >> useThirdArgument [
 	self sandblockEditor endInputWith: self containingArtefact arguments third contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBASTNode >> watchWith: aWatchClass [
 
 	self isExpression ifFalse: [^ self].
@@ -505,4 +555,10 @@ SBASTNode >> wrapWithWatch [
 	<actionValidIf: #isExpression>
 
 	self watchWith: SBWatch
+]
+
+{ #category : #printing }
+SBASTNode >> writeSourceOn: aStream [
+
+	^ self subclassResponsibility
 ]

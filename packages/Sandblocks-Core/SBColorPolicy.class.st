@@ -47,7 +47,10 @@ SBColorPolicy >> colorForBlock: aBlock [
 { #category : #'as yet unclassified' }
 SBColorPolicy >> foregroundColorForBlock: aBlock [
 
-	^ self foregroundColorForColor: aBlock drawnColor
+	| color |
+	color := aBlock drawnColor.
+	(color alpha = 0 and: [aBlock parentSandblock notNil]) ifTrue: [color := aBlock parentSandblock drawnColor].
+	^ self foregroundColorForColor: color
 ]
 
 { #category : #'as yet unclassified' }

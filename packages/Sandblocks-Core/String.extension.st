@@ -16,21 +16,25 @@ c.
 asdas''.
 
 ^ d'] args: [{}] label: 'long'.
+	SBLabel text: [
+		'FIXME: the allButLast is a hack to fix the case where there''s comments after a return statement'].
 	SBExampleWatch
-		report: (ranges := Array streamContents: [:stream |
+		report: (ranges := (Array streamContents: [:stream |
 			Scanner new
 				scanTokenPositionsIn: self
 				into: [:start :end |
-					start <= end ifTrue: [stream nextPut: (start to: end)]]])
+					start <= end ifTrue: [stream nextPut: (start to: end)]]]) allButLast)
 		for: 920609171.
 	
-	crPositions := Array streamContents: [:stream |
-		stream nextPut: 1.
-		ranges overlappingPairsDo: [:first :second |
-			(first size = 1 and: [
-				(self at: first start) = $. and: [
-					((self viewFrom: first stop + 1 to: second start) occurrencesOf: Character cr) > 1]]) ifTrue: [
-				stream nextPut: ((self viewFrom: first stop + 1 to: second start) lastIndexOf: Character cr) + first stop]]].
+	SBExampleWatch
+		report: (crPositions := Array streamContents: [:stream |
+			stream nextPut: 1.
+			ranges overlappingPairsDo: [:first :second |
+				(first size = 1 and: [
+					(self at: first start) = $. and: [
+						((self viewFrom: first stop + 1 to: second start) occurrencesOf: Character cr) > 1]]) ifTrue: [
+					stream nextPut: ((self viewFrom: first stop + 1 to: second start) lastIndexOf: Character cr) + first stop]]])
+		for: 532193984.
 	
 	write := '' writeStream.
 	crPositions overlappingPairsDo: [:start :end |

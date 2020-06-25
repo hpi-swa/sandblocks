@@ -61,6 +61,13 @@ SBExplorer >> contextAcceptedRepresentationAt: aNumber [
 	^ #isToplevelMorph
 ]
 
+{ #category : #actions }
+SBExplorer >> copyString [
+	<action>
+	
+	Clipboard clipboardText: self object printString
+]
+
 { #category : #'as yet unclassified' }
 SBExplorer >> declarations [
 

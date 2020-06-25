@@ -406,6 +406,7 @@ SBEditor >> addToMultiSelection: aBlock [
 	
 	multiSelection add: aBlock.
 	aBlock attachDecorator: SBMultiSelectionDecorator new.
+	self triggerEvent: #selectionChanged with: selection.
 	self updateSelectionLabel
 ]
 
@@ -1265,7 +1266,7 @@ SBEditor >> promptChangeColorPolicy [
 	| policy |
 	policy := (UIManager default chooseFrom: SBColorPolicy withAllSubclasses values: SBColorPolicy withAllSubclasses) ifNil: [^ self].
 	self class defaultColorPolicy: policy.
-	self colorPolicy: policy new..
+	self colorPolicy: policy new.
 	self clearCache.
 	self changed
 ]
@@ -1549,8 +1550,8 @@ SBEditor >> startOrAddToMultiSelection: aBlock [
 			ifTrue: [self removeMultiSelected: aBlock]
 			ifFalse: [self addToMultiSelection: aBlock]].
 	
-	self addToMultiSelection: aBlock.
-	self mode: #selection
+	self mode: #selection.
+	self addToMultiSelection: aBlock
 ]
 
 { #category : #actions }
@@ -1673,11 +1674,7 @@ SBEditor >> updateSelectionLabel [
 		ifTrue: [multiSelection size asString, (' element' asPluralBasedOn: multiSelection)]
 		ifFalse: [
 			(self selection notNil and: [self selection isInWorld])
-				ifTrue: [ | class |
-					class := self selection guessClassExpensive.
-					(self selection containingArtefact isNil or: [class isNil])
-						ifTrue: [self selection printString]
-						ifFalse:  ['{1} ({2})' format: {self selection printString. class asString}]]
+				ifTrue: [self selection selectionLabel]
 				ifFalse: ['']])
 ]
 

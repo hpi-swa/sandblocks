@@ -171,7 +171,7 @@ SBToggledCode >> insertCommandRequest: anAfterBoolean near: aBlock [
 { #category : #'as yet unclassified' }
 SBToggledCode >> isWatch [
 
-	^ true
+	^ false
 ]
 
 { #category : #'as yet unclassified' }

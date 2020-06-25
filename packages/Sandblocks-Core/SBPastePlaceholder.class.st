@@ -15,6 +15,18 @@ SBPastePlaceholder >> drawnColor [
 ]
 
 { #category : #'as yet unclassified' }
+SBPastePlaceholder >> guessClassExpensive [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBPastePlaceholder >> guessedClass [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBPastePlaceholder >> initialize [
 
 	super initialize.

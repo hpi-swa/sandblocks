@@ -237,6 +237,13 @@ SBConnectorLine >> from [
 ]
 
 { #category : #'as yet unclassified' }
+SBConnectorLine >> handlesMouseDown: anEvent [
+
+	^ self endPointsDo: [:start :end |
+		anEvent position onLineFrom: start to: end within: 10]
+]
+
+{ #category : #'as yet unclassified' }
 SBConnectorLine >> initialize [
 
 	super initialize.
@@ -266,6 +273,12 @@ SBConnectorLine >> lineType: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBConnectorLine >> mouseDown: anEvent [
+
+	self delete
+]
+
+{ #category : #'as yet unclassified' }
 SBConnectorLine >> outerBounds [
 
 	^ self bounds expandBy: self arrowSize * 2
@@ -274,7 +287,8 @@ SBConnectorLine >> outerBounds [
 { #category : #'as yet unclassified' }
 SBConnectorLine >> rejectsEvent: anEvent [
 
-	^ true
+	^ anEvent isMouse not or: [
+		anEvent isMouseDown not or: [(self handlesMouseDown: anEvent) not]]
 ]
 
 { #category : #'as yet unclassified' }

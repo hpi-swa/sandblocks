@@ -558,15 +558,6 @@ SBBlock >> evaluateWith: aRequestor for: aContext [
 	^ Compiler new evaluate: self sourceString readStream in: aContext to: (aContext ifNotNil: #receiver ifNil: [self containingArtefact relatedClass]) notifying: aRequestor ifFail: nil
 ]
 
-{ #category : #'as yet unclassified' }
-SBBlock >> exploreAs [
-
-	^ self object
-		representationThat: #isToplevelMorph
-		do: [:type | self sandblockEditor openMorphInView: type]
-		ifNone: [nil]
-]
-
 { #category : #hierarchy }
 SBBlock >> firstDeepChild [
 
@@ -626,19 +617,6 @@ SBBlock >> forwardAlarm: aSelector to: anObject [
 SBBlock >> frameSize [
 
 	^ self colorPolicy ifNotNil: [:c | c selectionBorderWidth] ifNil: [0]
-]
-
-{ #category : #'as yet unclassified' }
-SBBlock >> guessClassExpensive [
-
-	^ self guessedClass ifNil: [[(SBSandboxSimulator new simulate: [self evaluate]) ifNotNil: #class] on: Error do: [nil]]
-]
-
-{ #category : #suggestions }
-SBBlock >> guessedClass [
-
-	" return a non-nil value to help services like autocompletion do their job "
-	^ nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -1271,16 +1249,14 @@ SBBlock >> pasteString [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBlock >> pc [
 
 	^ 0
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBlock >> pc: aNumber [
-
-	" save a pc if you are an accessible point during execution "
 ]
 
 { #category : #'as yet unclassified' }
@@ -1329,16 +1305,6 @@ SBBlock >> postDuplicateSelf [
 SBBlock >> prefix [
 
 	^ self symbols first
-]
-
-{ #category : #'as yet unclassified' }
-SBBlock >> prettySourceString [
-
-	^ SBFormatter formatString: self sourceString class: self containingArtefact methodClass noPattern: self ~= self containingArtefact
-	
-	"false
-		ifTrue: [[Smalltalk at: #PPPPrinter ifPresent: [:p | text := p format: text]] on: Error do: []]
-		ifFalse: [text := self class prettyPrinterClass format: text in: self containingArtefact methodClass notifying: nil]."
 ]
 
 { #category : #testing }
@@ -1592,6 +1558,12 @@ SBBlock >> selectUp [
 		b select]
 ]
 
+{ #category : #printing }
+SBBlock >> selectionLabel [
+
+	^ self printString
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> selector [
 	" if this node represents any selector, return it here "
@@ -1613,12 +1585,6 @@ SBBlock >> showOverlayFor: anEvent [
 
 { #category : #testing }
 SBBlock >> showUsageInfo [
-]
-
-{ #category : #'as yet unclassified' }
-SBBlock >> sourceString [
-
-	^ String streamContents: [:s | self writeSourceOn: s]
 ]
 
 { #category : #'as yet unclassified' }

@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBAssignment >> binding [
+
+	^ self firstSubmorph
+]
+
+{ #category : #'as yet unclassified' }
 SBAssignment >> binding: aBlock value: anotherBlock [
 
 	self removeAllMorphs.
@@ -22,6 +28,12 @@ SBAssignment >> childSandblocksDo: aBlock [
 	self hasSubmorphs ifTrue: [
 		aBlock value: self firstSubmorph.
 		aBlock value: self lastSubmorph]
+]
+
+{ #category : #'as yet unclassified' }
+SBAssignment >> expression [
+
+	^ self lastSubmorph
 ]
 
 { #category : #'as yet unclassified' }
@@ -79,8 +91,8 @@ SBAssignment >> symbols [
 SBAssignment >> writeSourceOn: aStream [
 
 	aStream nextPut: $(.
-	self submorphs first writeSourceOn: aStream.
+	self binding writeSourceOn: aStream.
 	aStream nextPutAll: ' := '.
-	self submorphs third writeSourceOn: aStream.
+	self expression writeSourceOn: aStream.
 	aStream nextPut: $)
 ]

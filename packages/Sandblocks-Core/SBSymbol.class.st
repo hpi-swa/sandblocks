@@ -68,6 +68,16 @@ SBSymbol >> updateSuggestions [
 ]
 
 { #category : #'as yet unclassified' }
+SBSymbol >> useAsMessageSend [
+	<action>
+
+	^ self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+		target: self;
+		replacer: (SBMessageSend new receiver: (SBName contents: 'self') selector: self contents asSymbol);
+		yourself)
+]
+
+{ #category : #'as yet unclassified' }
 SBSymbol >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '#'.

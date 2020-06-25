@@ -10,7 +10,7 @@ CompiledMethod >> asSandblock [
 		do: {
 			[
 				class := self methodClass.
-				parser := class newParser encoderClass: self encoderClass.
+				parser := "class newParser"SBParserOverride new encoderClass: self encoderClass.
 				source := self getSourceFor: (self selector ifNil: [self defaultSelector]) in: class.
 				methodNode := parser parse: source asString codeWithEmptyLineMarkers class: class.
 				sourceRanges := parser encoder rawSourceRanges.

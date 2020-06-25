@@ -40,6 +40,100 @@ SBTutorialStep class >> resetProgressFor: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBTutorialStep class >> stepAdvancedMessageSends: anEditor [
+
+	SBTutorialStep new
+		title: 'Advanced Message Sends';
+		addIntroText: 'Let''s consider a complex example. Try to change the first expression to look like the second. Here, we will guide you through the steps once more. Maybe try resetting the tutorial after and try it again without following the steps exactly!';
+		addAction: #addElement;
+		addAction: #addElement;
+		addAction: #promptAction;
+		setup: anEditor
+			do: [:step | | method |
+				method := step
+					createStepMethod: [
+						SBLabel text: ['Try to change this:'].
+						{42. 12} do: [:num | Transcript showln: num].
+						SBLabel text: ['Into this:'].
+						{42. 12} with: {54. 32} do: [:num :num2 | Transcript showln: {num. num2}]]
+					in: anEditor.
+				step
+					addStep: 'Select the message part do: and hit * to insert another part before it. Then type with: and hit tab to focus the next hole.'
+					checkCondition: [:editor | method statements second selector = 'with:do:'].
+				step
+					addStep: 'Type { to create an array in the hole and add the numbers 54 and 32'
+					checkCondition: [:editor |
+						method statements second arguments first in: [:array |
+							array isArrayBlock and: [
+								(array submorphs collect: #contents) = {'54'. '32'}]]].
+				step
+					addStep: 'Move on to the block. Select the first statement and press O to create a new statement above. Then type :num2 to turn it into a block binding.'
+					checkCondition: [:editor |
+						method statements second arguments in: [:args | args size > 1 and: [args second bindings size = 2]]].
+				step
+					addStep: 'Finally, turn the number in the showln: to an array using { and add another element after it using +.'
+					checkCondition: [:editor |
+						method statements second arguments in: [:args |
+							args size > 1 and: [
+								args second statements first in: [:msg |
+									msg isMessageSend and: [
+										msg arguments first in: [:array |
+											array isArrayBlock and: [
+												(array submorphs collect: #contents) = {'num'. 'num2'}]]]]]]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> stepAdvancedMessageSendsMethod [ SBLabel
+		text: ['Try to change this:'].
+	{42. 12}
+		do: [:num | Transcript showln: num].
+	SBLabel
+		text: ['Into this:'].
+	{42. 12}
+		with: {54. 32}
+		do: [:num :num2 | Transcript showln: {num. num2}]
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> stepAssignments: anEditor [
+
+	SBTutorialStep new
+		title: 'Assignments';
+		addAction: #wrapInAssignment;
+		addAction: #extractVariable;
+		addAction: #insertStatementBelow;
+		setup: anEditor
+			do: [:step | | method |
+				method := step createStepMethod: [
+					42 squared.
+					7 > 8 ifTrue: [Transcript showln: 'hi']] in: anEditor.
+				step
+					addStep: 'To wrap an expression in an assignment, select the expression and press :'
+					checkCondition: [:editor | method statements first isAssignment].
+				step
+					addStep: 'Hit save (Ctrl+s) and declare the method as temporary.'
+					checkCondition: [:editor | method body temporaries notEmpty].
+				step
+					addStep: 'Next, create a new statement by pressing o. Type the name var and press : again while still in input mode. Assign 5 to this variable.'
+					checkCondition: [:editor |
+						method statements second isAssignment and: [method statements second binding contents = 'var']].
+				step
+					addStep: 'The last way to create an assignment is to extract an expression. Select the 7>8 and press =. Name the new variable comp.'
+					checkCondition: [:editor |
+						method statements last receiver in: [:r | r isName and: [r contents = 'comp']]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> stepAssignmentsMethod [
+
+	| test var comp |
+	comp := 7 > 8.
+	test := 42 squared.
+	var := 5.
+	comp ifTrue: [Transcript showln: 'hi']
+]
+
+{ #category : #'as yet unclassified' }
 SBTutorialStep class >> stepBasicMessageSend: anEditor [
 
 	SBTutorialStep new
@@ -63,6 +157,53 @@ SBTutorialStep class >> stepBasicMessageSend: anEditor [
 
 { #category : #'as yet unclassified' }
 SBTutorialStep class >> stepBasicMessageSendMethod [ self assert: 1024 = 2
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> stepCascade: anEditor [
+
+	SBTutorialStep new
+		title: 'Cascades';
+		addIntroText: 'Let''s format this morph construction code in a cascade. Remember you can press u to undo when anything goes wrong (and U to redo).';
+		addAction: #wrapInCascade;
+		addAction: #deleteAround;
+		addAction: #pasteElementBelow;
+		setup: anEditor
+			do: [:step | | method |
+				method := step
+					createStepMethod: [ | m |
+						m := Morph new.
+						m changeTableLayout.
+						m hResizing: #shrinkWrap.
+						m vResizing: #shrinkWrap]
+					in: anEditor.
+				step
+					addStep: 'First, multiselect the changeTableLayout, hResizing:, and vResizing: message sends by pressing v on each.'
+					checkCondition: [:editor |
+						editor mode = #selection and: [
+							editor multiSelection size = 3 and: [
+								editor multiSelection allSatisfy: [:m | m isMessageSend or: [m isMessagePart]]]]].
+				step
+					addStep: 'Create a cascade from your multiselection by pressing ;'
+					checkCondition: [:editor | method statements second isCascade].
+				step
+					addStep: 'Let''s also move the cascade around our `Morph new` expression. The fastest way to do so is to select the receiver of the cascade `m` and press X, which deletes and copies the element around your selection.'
+					checkCondition: [:editor |
+						method statements second in: [:m | m isBinding and: [m contents = 'm']]].
+				step
+					addStep: 'Next, select the `Morph new` and press p to paste the just copied surronding element around our selection.'
+					checkCondition: [:editor | method statements first expression isCascade]]
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> stepCascadeMethod [
+
+	| m |
+	m := Morph new
+		changeTableLayout;
+		hResizing: #shrinkWrap;
+		vResizing: #shrinkWrap.
+	m
 ]
 
 { #category : #'as yet unclassified' }
@@ -145,6 +286,50 @@ SBTutorialStep class >> stepInputModeMethod [
 ]
 
 { #category : #'as yet unclassified' }
+SBTutorialStep class >> stepLists: anEditor [
+
+	SBTutorialStep new
+		title: 'Lists';
+		addIntroText: 'Many elements act as lists, for example arrays, statements in blocks, or even message sends.';
+		addAction: #addElement;
+		addAction: #insertElementAfter;
+		addAction: #insertElementBefore;
+		setup: anEditor
+			do: [:step | | method |
+				method := step createStepMethod: [{3. 4. 5}] in: anEditor.
+				step
+					addStep: 'Select the array element using shift+K'
+					checkCondition: [:editor | editor selection isArrayBlock].
+				step
+					addStep: 'You can append an element to a list by pressing .
+Append 6 to the array by pressing dot then typing 6.'
+					checkCondition: [:editor |
+						method statements first lastSubmorph contents = '6'].
+				step
+					addStep: 'Add a 1 at the start of the array by selecting the 3 and pressing *'
+					checkCondition: [:editor |
+						method statements first firstSubmorph contents = '1'].
+				step
+					addStep: 'Finally, to insert an element after the current, use + and type 2.'
+					checkCondition: [:editor |
+						method statements first submorphs second contents = '2'].
+				step
+					addStep: 'There is one special type of insert. Create an empty statement above the array using O.'
+					checkCondition: [:editor |
+						method statements size > 1 and: [method statements second isArrayBlock]].
+				step
+					addStep: 'Create an empty statement below the array by first moving the cursor to any number in the array and pressing o.'
+					checkCondition: [:editor |
+						method statements size > 2 and: [method statements second isArrayBlock]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> stepListsMethod [
+
+	{1. 2. 3. 4. 5. 6}
+]
+
+{ #category : #'as yet unclassified' }
 SBTutorialStep class >> stepMovement: anEditor [
 
 	SBTutorialStep new
@@ -194,6 +379,55 @@ true & false not & nil isNil
 ]
 
 { #category : #'as yet unclassified' }
+SBTutorialStep class >> stepMultiSelection: anEditor [
+
+	SBTutorialStep new
+		title: 'Multi Selection';
+		addIntroText: 'You can multiselect elements with a dedicated selection mode. Many commands will then act on all elements at once.';
+		addAction: #addElement;
+		addAction: #wrapInDynamicArray;
+		addAction: #unpackAsStatements;
+		addAction: #addElement;
+		addAction: #promptAction;
+		setup: anEditor
+			do: [:step | | method |
+				method := step createStepMethod: [
+					3 yourself.
+					4 squared.
+					5] in: anEditor.
+				step
+					addStep: 'Select the `3 yourself` and press v.'
+					checkCondition: [:editor |
+						editor mode = #selection and: [editor multiSelection first selector = 'yourself']].
+				step
+					addStep: 'Navigate to the `4 squared` and press v again to add it to your multi selection.'
+					checkCondition: [:editor | editor multiSelection last selector = 'squared'].
+				step
+					addStep: 'Navigate to the 5 and press v.'
+					checkCondition: [:editor | editor multiSelection last contents = '5'].
+				step
+					addStep: 'Press { to wrap your multi selection in an array.'
+					checkCondition: [:editor | method statements first isArrayBlock].
+				step
+					addStep: 'Add a 6 to the array using .'
+					checkCondition: [:editor |
+						method statements first submorphCount = 4 and: [
+							method statements first lastSubmorph contents = '6']].
+				step
+					addStep: 'Finally, you can unpack the array again using the unpackAsStatements command. It is not bound to a shortcut by default, so to access it select the array and press , (comma) to see all available commands and filter for unpack.'
+					checkCondition: [:editor | method statements size = 4]]
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> stepMultiSelectionMethod [
+
+	3 yourself.
+	4 squared.
+	5.
+	6
+]
+
+{ #category : #'as yet unclassified' }
 SBTutorialStep class >> stepSelection: anEditor [
 
 	SBTutorialStep new
@@ -239,6 +473,43 @@ true & false not & nil isNil
 ]
 
 { #category : #'as yet unclassified' }
+SBTutorialStep class >> stepSmalltalkThings: anEditor [
+
+	SBTutorialStep new
+		title: 'Smalltalk Things';
+		addAction: #wrapInDynamicArray;
+		addAction: #wrapInBlock;
+		addAction: #wrapInReturn;
+		setup: anEditor
+			do: [:step | | method |
+				method := step
+					createStepMethod: [
+						5 = 2 ifTrue: (Transcript showln: 'true') ifFalse: [123].
+						65 do: [:each | each].
+						Morph new]
+					in: anEditor.
+				step
+					addStep: 'Wrap the ifTrue: branch in a block by selecting the whole message send via shift+K, then press [.'
+					checkCondition: [:editor |
+						method statements first arguments first isBlockBody].
+				step
+					addStep: 'Next, wrap the 65 in an array by pressing {. Note that the yellow outline indicates that #do: is not understood by 65.'
+					checkCondition: [:editor | method statements second receiver isArrayBlock].
+				step
+					addStep: 'Finally, wrap the last statement in a return by pressing ^.'
+					checkCondition: [:editor | method statements last isReturn]]
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep class >> stepSmalltalkThingsMethod [ 5 = 2
+		ifTrue: (Transcript showln: 'true')
+		ifFalse: [123].
+	65
+		do: [:each | each].
+	Morph new
+]
+
+{ #category : #'as yet unclassified' }
 SBTutorialStep class >> stepSwapping: anEditor [
 
 	SBTutorialStep new
@@ -276,7 +547,19 @@ SBTutorialStep class >> stepSwappingMethod [ {1. 2. 3. 6. 4. 5}.
 { #category : #'as yet unclassified' }
 SBTutorialStep class >> tutorialSteps [
 
-	^ {#stepMovement:. #stepDeleting:. #stepSelection:. #stepSwapping:. #stepBasicMessageSend:. #stepInputMode:}
+	^ {
+		#stepMovement:.
+		#stepDeleting:.
+		#stepSelection:.
+		#stepSwapping:.
+		#stepBasicMessageSend:.
+		#stepInputMode:.
+		#stepSmalltalkThings:.
+		#stepAssignments:.
+		#stepLists:.
+		#stepMultiSelection:.
+		#stepCascade:
+	}
 ]
 
 { #category : #'as yet unclassified' }

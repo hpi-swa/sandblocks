@@ -33,9 +33,7 @@ SBColor class >> matches: aMessage [
 { #category : #'as yet unclassified' }
 SBColor class >> newFor: aMessage [
 
-	^ self new colorContents: (Color
-		perform: aMessage selector asSymbol
-		withArguments: (aMessage arguments collect: [:arg | arg contents asNumber] as: Array))
+	^ self new colorContents: aMessage evaluate
 ]
 
 { #category : #'as yet unclassified' }
@@ -96,12 +94,6 @@ SBColor >> initialize [
 		addMorphBack: (indicator := Morph new
 			extent: 16 asPoint * self scalingFactor;
 			color: Color red)
-]
-
-{ #category : #'as yet unclassified' }
-SBColor >> mouseDown: anEvent [
-
-	anEvent hand waitForClicksOrDrag: self event: anEvent
 ]
 
 { #category : #'as yet unclassified' }

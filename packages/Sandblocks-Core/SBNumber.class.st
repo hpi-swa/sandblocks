@@ -37,7 +37,7 @@ SBNumber >> keyStroke: anEvent [
 	
 	super keyStroke: anEvent.
 	
-	self contents: (self contents select: [:char | char isAlphaNumeric or: [char = $-]])
+	self contents: (self contents select: [:char | char isAlphaNumeric or: [char = $- or: [char = $.]]])
 ]
 
 { #category : #'as yet unclassified' }
