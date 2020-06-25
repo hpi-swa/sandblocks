@@ -345,7 +345,7 @@ SBASTNode >> selectionLabel [
 	| class |
 	class := self guessClassExpensive.
 	^ (self containingArtefact isNil or: [class isNil]) ifTrue: [self printString] ifFalse: [
-		'{1} ({2})' format: {self printString. class asString}]
+		'{1} ({2}) ({3})' format: {self printString. class asString. self pc}]
 ]
 
 { #category : #'as yet unclassified' }

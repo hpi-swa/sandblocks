@@ -611,7 +611,8 @@ SBEditor >> colorPolicy [
 SBEditor >> colorPolicy: aPolicy [
 
 	colorPolicy := aPolicy.
-	self allMorphsDo: #layoutChanged
+	self allMorphsDo: #layoutChanged.
+	self changed
 ]
 
 { #category : #'as yet unclassified' }

@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBReachabilitySimulator >> jump: offset if: condition [ 
+	store report: currentContext method homeMethod pc: currentContext previousPc.
+	^ super jump: offset if: condition
+]
+
+{ #category : #'as yet unclassified' }
 SBReachabilitySimulator >> methodReturnConstant: value [ 
 
 	store report: currentContext method homeMethod pc: currentContext previousPc.
@@ -26,6 +32,27 @@ SBReachabilitySimulator >> methodReturnTop [
 
 	store report: currentContext method homeMethod pc: currentContext previousPc.
 	^ super methodReturnTop
+]
+
+{ #category : #'as yet unclassified' }
+SBReachabilitySimulator >> popIntoLiteralVariable: offset [ 
+
+	store report: currentContext method homeMethod pc: currentContext previousPc.
+	^ super popIntoLiteralVariable: offset
+]
+
+{ #category : #'as yet unclassified' }
+SBReachabilitySimulator >> popIntoReceiverVariable: offset [ 
+
+	store report: currentContext method homeMethod pc: currentContext previousPc.
+	^ super popIntoReceiverVariable: offset
+]
+
+{ #category : #'as yet unclassified' }
+SBReachabilitySimulator >> popIntoTemporaryVariable: offset [ 
+
+	store report: currentContext method homeMethod pc: currentContext previousPc.
+	^ super popIntoTemporaryVariable: offset
 ]
 
 { #category : #'as yet unclassified' }

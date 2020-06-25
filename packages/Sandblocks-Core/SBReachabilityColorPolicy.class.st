@@ -10,7 +10,11 @@ Class {
 { #category : #'as yet unclassified' }
 SBReachabilityColorPolicy >> colorForBlock: aBlock [
 
-	(aBlock containingArtefact ifNotNil: #isMethod ifNil: [false]) ifTrue: [^ (self wasReached: aBlock) ifTrue: [Color red adjustBrightness: 0.2] ifFalse: [Color white]].
+	(aBlock containingArtefact ifNotNil: #isMethod ifNil: [false]) ifTrue: [
+		^ ((self wasReached: aBlock) or: [
+			(aBlock isLiteralBlock or: [aBlock isName]) and: [self wasReached: aBlock parentSandblock]])
+				ifTrue: [Color red adjustBrightness: 0.2]
+				ifFalse: [Color white]].
 	^ super colorForBlock: aBlock
 ]
 
