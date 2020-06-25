@@ -10,21 +10,22 @@ CompiledMethod >> asSandblock [
 		do: {
 			[
 				class := self methodClass.
-				parser := "class newParser"SBParserOverride new encoderClass: self encoderClass.
+				parser := (SBToggledCode comment: '' active: 1 do: {[SBParserOverride new]. [class newParser]}) encoderClass: self encoderClass.
 				source := self getSourceFor: (self selector ifNil: [self defaultSelector]) in: class.
 				methodNode := parser parse: source asString codeWithEmptyLineMarkers class: class.
 				sourceRanges := parser encoder rawSourceRanges.
 				debuggerMap := self debuggerMap.
 				instructions := InstructionStream on: self.
-				rangeToPCList := Array streamContents: [:stream | 
+				rangeToPCList := Array streamContents: [:stream |
 					[instructions atEnd] whileFalse: [
+						self haltOnce.
 						stream nextPut: (debuggerMap rangeForPC: instructions pc in: self contextIsActiveContext: true) -> instructions pc.
 						instructions nextInstruction]].
 				rangeToPC := Dictionary new.
-				rangeToPCList do: [:assoc | 
-					(#(#storeIntoReceiverVariable: #storeIntoTemporaryVariable: #popIntoReceiverVariable: #popIntoTemporaryVariable: #pushClosureCopyNumCopiedValues:numArgs:blockSize: #send:super:numArgs: #methodReturnConstant: #methodReturnReceiver #methodReturnTop #jump:if:) includes: (instructions
-						 pc: assoc value;
-						 nextInstruction) selector) ifTrue: [rangeToPC at: assoc key put: assoc value]].
+				rangeToPCList do: [:assoc |
+					(#(#storeIntoReceiverVariable: #storeIntoTemporaryVariable: #popIntoReceiverVariable: #popIntoTemporaryVariable: #pushClosureCopyNumCopiedValues:numArgs:blockSize: #pushFullClosure:numCopied: #send:super:numArgs: #methodReturnConstant: #methodReturnReceiver #methodReturnTop #jump:if:) includes: (instructions
+						pc: assoc value;
+						nextInstruction) selector) ifTrue: [rangeToPC at: assoc key put: assoc value]].
 				nodeToPC := sourceRanges collect: [:range | rangeToPC at: range ifAbsent: [0]].
 				nodeToPC keysAndValuesDo: [:node :pc | node pc: pc]].
 			[

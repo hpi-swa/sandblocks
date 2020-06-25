@@ -342,10 +342,11 @@ SBASTNode >> selectStartOfStatement [
 { #category : #printing }
 SBASTNode >> selectionLabel [
 
-	| class |
-	class := self guessClassExpensive.
-	^ (self containingArtefact isNil or: [class isNil]) ifTrue: [self printString] ifFalse: [
-		'{1} ({2}) ({3})' format: {self printString. class asString. self pc}]
+	^ String streamContents: [:stream |
+		self printOn: stream.
+		
+		self guessClassExpensive ifNotNil: [:c | stream space; nextPut: $(. c printOn: stream. stream nextPut: $)].
+		self pc > 0 ifTrue: [stream space; nextPut: $(. self pc printOn: stream. stream nextPut: $)]]
 ]
 
 { #category : #'as yet unclassified' }

@@ -56,6 +56,20 @@ SBReachabilitySimulator >> popIntoTemporaryVariable: offset [
 ]
 
 { #category : #'as yet unclassified' }
+SBReachabilitySimulator >> pushClosureCopyNumCopiedValues: numCopied numArgs: numArgs blockSize: blockSize [
+
+	store report: currentContext method homeMethod pc: currentContext previousPc.
+	^ super pushClosureCopyNumCopiedValues: numCopied numArgs: numArgs blockSize: blockSize
+]
+
+{ #category : #'as yet unclassified' }
+SBReachabilitySimulator >> pushFullClosure: aCompiledBlock numCopied: numCopied [
+
+	store report: currentContext method homeMethod pc: currentContext previousPc.
+	^ super pushFullClosure: aCompiledBlock numCopied: numCopied
+]
+
+{ #category : #'as yet unclassified' }
 SBReachabilitySimulator >> send: selector super: supered numArgs: numArgs [
 
 	store report: currentContext method homeMethod pc: currentContext previousPc.

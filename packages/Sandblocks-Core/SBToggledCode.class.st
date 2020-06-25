@@ -81,7 +81,7 @@ SBToggledCode >> buildRowFor: aBlock active: aBoolean [
 { #category : #'as yet unclassified' }
 SBToggledCode >> childSandblocksDo: aBlock [
 
-	aBlock value: self firstSubmorph.
+	comment isInWorld ifTrue: [aBlock value: comment].
 	self submorphs allButFirstDo: [:b | b submorphsDo: aBlock]
 ]
 
@@ -97,6 +97,8 @@ SBToggledCode >> comment: aString active: aNumber do: aCollection [
 	self submorphs copy allButFirstDo: #delete.
 	
 	comment contents: aString.
+	aString ifNotEmpty: [self addMorphFront: comment] ifEmpty: [comment delete].
+	
 	"previousBlockColor := aBlock valueOfProperty: #sandblockBlockColor."
 	aCollection withIndexDo: [:block :index |
 		self addMorphBack: (self buildRowFor: block active: index = aNumber)].
@@ -143,13 +145,14 @@ SBToggledCode >> initialize [
 
 	super initialize.
 	
+	comment := SBTextBubble new layoutInset: (6 @ 2) withScalingFactor; colored: false.
+	
 	self
 		changeTableLayout;
 		layoutInset: 2 withScalingFactor;
 		cellGap: 4 withScalingFactor;
 		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap;
-		addMorphBack: (comment := SBTextBubble new layoutInset: (6 @ 2) withScalingFactor; colored: false)
+		hResizing: #shrinkWrap
 ]
 
 { #category : #'as yet unclassified' }
@@ -184,6 +187,15 @@ SBToggledCode >> prefix [
 SBToggledCode >> printOn: aStream [
 
 	aStream nextPutAll: 'toggled code'.
+]
+
+{ #category : #'as yet unclassified' }
+SBToggledCode >> startInputAt: aNumber replacingContents: aBoolean [
+
+	comment isInWorld ifFalse: [self addMorphFront: comment].
+	
+	self sandblockEditor replaceInput: comment.
+	^ comment startInputAt: aNumber replacingContents: aBoolean
 ]
 
 { #category : #'as yet unclassified' }
