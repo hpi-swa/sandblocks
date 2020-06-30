@@ -2,8 +2,7 @@ Class {
 	#name : #SBLiteral,
 	#superclass : #SBASTNode,
 	#instVars : [
-		'text',
-		'castToUnknownWhenEmpty'
+		'text'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -17,13 +16,7 @@ SBLiteral >> acceptInputEvent: anEvent [
 { #category : #'as yet unclassified' }
 SBLiteral >> castToUnknownWhenEmpty [
 
-	^ castToUnknownWhenEmpty
-]
-
-{ #category : #'as yet unclassified' }
-SBLiteral >> castToUnknownWhenEmpty: aBoolean [
-
-	castToUnknownWhenEmpty := aBoolean
+	^ false
 ]
 
 { #category : #'as yet unclassified' }
@@ -46,7 +39,6 @@ SBLiteral >> contents: aString [
 SBLiteral >> contentsChanged [
 
 	(self castToUnknownWhenEmpty and: [text contents isEmpty]) ifTrue: [
-		self stopEditing.
 		self replaceWithUnknown]
 ]
 
@@ -60,8 +52,6 @@ SBLiteral >> currentTextMorph [
 SBLiteral >> initialize [
 
 	super initialize.
-	
-	castToUnknownWhenEmpty := true.
 	
 	self
 		addMorphBack: (text := self textMorphClass new when: #contentsChanged send: #contentsChanged to: self);
@@ -92,19 +82,16 @@ SBLiteral >> isLiteralBlock [
 SBLiteral >> keyStroke: anEvent [
 
 	(anEvent keyCharacter isSpecial or: [anEvent keyCharacter = Character space]) ifTrue: [
-		(self parentSandblock isMessageSend and: [self parentSandblock selector = SBMessageSend placeholderSelector])
-			ifTrue: [^ self sandblockEditor endInput; startInput: self parentSandblock at: 1 replacingContents: true].
+		(self parentSandblock isMessageSend and: [
+			self parentSandblock selector = SBMessageSend placeholderSelector]) ifTrue: [
+			^ self sandblockEditor
+				endInput;
+				startInput: self parentSandblock at: 1 replacingContents: true].
 		
 		self sandblockEditor endInput.
 		^ self wrapInMessageSend: (anEvent keyCharacter isSpecial ifTrue: [anEvent keyCharacter asString] ifFalse: [''])].
 	
-	"anEvent keyCharacter = Character tab ifTrue: [
-		^ (anEvent shiftPressed
-			ifTrue: [self previousAdjacentMorphThat: [:m | m isSandblock and: [m isLiteralBlock]]]
-			ifFalse: [self nextAdjacentMorphThat: [:m | m isSandblock and: [m isLiteralBlock]]]) ifNotNil: [:m |
-				self sandblockEditor
-					select: m;
-					startInput: m at: 0 replacingContents: false]]."
+	(anEvent keyCharacter = Character backspace and: [self contents isEmpty]) ifTrue: [^ self replaceWithUnknown].
 	
 	self acceptInputEvent: anEvent
 ]
@@ -120,6 +107,8 @@ SBLiteral >> replaceWithUnknown [
 
 	| new |
 	self isUnknown ifTrue: [^ self].
+	
+	self stopEditing.
 	
 	new := SBUnknown new.
 	self replaceBy: new.

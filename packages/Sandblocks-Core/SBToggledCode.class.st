@@ -41,7 +41,7 @@ SBToggledCode >> activeBlock [
 { #category : #'as yet unclassified' }
 SBToggledCode >> activeIndex [
 
-	self submorphs allButFirst withIndexDo: [:row :index | row firstSubmorph value ifTrue: [^ index]].
+	self optionRows withIndexDo: [:row :index | row firstSubmorph value ifTrue: [^ index]].
 	^ 0
 ]
 
@@ -69,7 +69,7 @@ SBToggledCode >> buildRowFor: aBlock active: aBoolean [
 			when: #toggled
 				evaluate: [
 					self
-						deselectAllBut: (self submorphIndexOf: row) - 1;
+						deselectAllBut: (self optionRows indexOf: row);
 						updateSelected];
 			yourself);
 		addMorphBack: (aBlock
@@ -81,8 +81,10 @@ SBToggledCode >> buildRowFor: aBlock active: aBoolean [
 { #category : #'as yet unclassified' }
 SBToggledCode >> childSandblocksDo: aBlock [
 
-	comment isInWorld ifTrue: [aBlock value: comment].
-	self submorphs allButFirstDo: [:b | b submorphsDo: aBlock]
+	comment isInWorld
+		ifTrue: [aBlock value: comment].
+	
+	self optionRows do: [:b | b submorphsDo: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
@@ -93,8 +95,8 @@ SBToggledCode >> color [
 
 { #category : #'as yet unclassified' }
 SBToggledCode >> comment: aString active: aNumber do: aCollection [
-
-	self submorphs copy allButFirstDo: #delete.
+	
+	self optionRows copy do: #delete.
 	
 	comment contents: aString.
 	aString ifNotEmpty: [self addMorphFront: comment] ifEmpty: [comment delete].
@@ -108,7 +110,7 @@ SBToggledCode >> comment: aString active: aNumber do: aCollection [
 { #category : #'as yet unclassified' }
 SBToggledCode >> deleteCommandFor: aBlock [
 
-	^ aBlock = self firstSubmorph
+	^ (aBlock = self firstSubmorph and: [comment isInWorld])
 		ifTrue: [
 			(SBMutatePropertyCommand newFor: self containingArtefact)
 				target: self firstSubmorph;
@@ -122,7 +124,7 @@ SBToggledCode >> deleteCommandFor: aBlock [
 { #category : #'as yet unclassified' }
 SBToggledCode >> deselectAllBut: aNumber [
 
-	self submorphs allButFirst withIndexDo: [:row :rowIndex |
+	self optionRows withIndexDo: [:row :rowIndex |
 		rowIndex ~= aNumber ifTrue: [
 			row firstSubmorph value: false.
 			row lastSubmorph localColorPolicy: SBPlainColorPolicy]]
@@ -177,6 +179,12 @@ SBToggledCode >> isWatch [
 	^ false
 ]
 
+{ #category : #accessing }
+SBToggledCode >> optionRows [
+
+	^ comment isInWorld ifTrue: [self submorphs allButFirst] ifFalse: [self submorphs]
+]
+
 { #category : #'as yet unclassified' }
 SBToggledCode >> prefix [
 
@@ -213,7 +221,7 @@ SBToggledCode >> updateSelected [
 	self deselectAllBut: index.
 	
 	index > 0 ifTrue: [ | block |
-		block := (self submorphs at: index + 1) lastSubmorph.
+		block := (self optionRows at: index) lastSubmorph.
 		block removeLocalColorPolicy]
 ]
 
@@ -225,6 +233,6 @@ SBToggledCode >> writeSourceOn: aStream [
 	aStream nextPutAll: ' active: '.
 	self activeIndex storeOn: aStream.
 	aStream nextPutAll: ' do: {'.
-	self submorphs allButFirst do: [:row | row lastSubmorph writeSourceOn: aStream] separatedBy: [aStream nextPut: $.].
+	self optionRows do: [:row | row lastSubmorph writeSourceOn: aStream] separatedBy: [aStream nextPut: $.].
 	aStream nextPutAll: '})'
 ]

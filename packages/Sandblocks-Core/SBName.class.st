@@ -97,7 +97,7 @@ SBName >> browse [
 { #category : #'as yet unclassified' }
 SBName >> castToUnknownWhenEmpty [
 
-	^ self behavior isExpression
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -270,6 +270,13 @@ SBName >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBName >> replaceWithUnknown [
+
+	self behavior isExpression
+		ifTrue: [super replaceWithUnknown]
+]
+
+{ #category : #'as yet unclassified' }
 SBName >> resolveBinding [
 
 	^ self behavior resolveBinding
@@ -279,6 +286,12 @@ SBName >> resolveBinding [
 SBName >> symbols [
 
 	^ self behavior symbolsFor: self colorPolicy
+]
+
+{ #category : #'as yet unclassified' }
+SBName >> textContents [
+
+	^ self contents
 ]
 
 { #category : #'as yet unclassified' }

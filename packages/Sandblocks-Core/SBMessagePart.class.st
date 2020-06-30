@@ -157,6 +157,13 @@ SBMessagePart >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBMessagePart >> selectorContentsBeforeMe [
+
+	^ self messageSend messageParts in: [:parts |
+		((parts copyFrom: 1 to: (parts indexOf: self) - 1) collect: #contents) joinSeparatedBy: '']
+]
+
+{ #category : #'as yet unclassified' }
 SBMessagePart >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
@@ -199,7 +206,7 @@ SBMessagePart >> textContents [
 SBMessagePart >> updateSuggestions [
 
 	| selector |
-	selector := self contents.
+	selector := self selectorContentsBeforeMe, self contents.
 	selector ifEmpty: [^ self].
 	
 	selector last = $: ifTrue: [selector := selector allButLast].

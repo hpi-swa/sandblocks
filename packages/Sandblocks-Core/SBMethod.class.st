@@ -98,6 +98,12 @@ SBMethod >> keyStroke: anEvent [
 	self updateSuggestions
 ]
 
+{ #category : #accessing }
+SBMethod >> messageParts [
+
+	^ signature messageParts
+]
+
 { #category : #'as yet unclassified' }
 SBMethod >> selector [
 

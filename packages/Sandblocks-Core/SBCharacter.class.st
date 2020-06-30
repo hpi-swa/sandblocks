@@ -7,7 +7,10 @@ Class {
 { #category : #'as yet unclassified' }
 SBCharacter >> keyStroke: anEvent [
 
-	"anEvent keyCharacter isAlphaNumeric"true
+	anEvent keyCharacter = Character backspace ifTrue: [
+		^ self replaceWithUnknown].
+
+	anEvent keyCharacter shouldBePrintedAsLiteral
 		ifTrue: [self contents: anEvent keyCharacter asString]
 		ifFalse: [super keyStroke: anEvent]
 ]

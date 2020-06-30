@@ -11,6 +11,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBNumber >> castToUnknownWhenEmpty [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBNumber >> guessedClass [
 
 	^ Number
