@@ -29,7 +29,8 @@ Class {
 		'searchInput',
 		'helpOverlay',
 		'verticalSelectionPosition',
-		'countModifier'
+		'countModifier',
+		'globalShortcutListeners'
 	],
 	#classVars : [
 		'DefaultColorPolicy',
@@ -847,26 +848,11 @@ SBEditor >> filterEvent: anEvent for: aMorph [
 	^ anEvent ignore
 ]
 
-{ #category : #actions }
-SBEditor >> focusErrors [
-	<action>
-
-	errors focus.
-	errors topLeft: scroll topLeft
-]
-
 { #category : #'actions input' }
 SBEditor >> focusNextSuggestion [
 	<inputAction>
 	
 	self currentInput suggestionMenuDo: #next
-]
-
-{ #category : #actions }
-SBEditor >> focusPreviousErrorFrame [
-	<action>
-
-	errors focusPreviousFrame
 ]
 
 { #category : #'actions input' }
@@ -904,6 +890,7 @@ SBEditor >> initialize [
 	compileTime := #compileOnSave.
 	verticalSelectionPosition := 0.
 	countModifier := ''.
+	globalShortcutListeners := OrderedCollection new.
 	
 	self
 		addKeyboardCaptureFilter: self;
@@ -929,6 +916,9 @@ SBEditor >> initialize [
 			yourself);
 		
 		addMorphBack: (bottomPanel := self buildBottomPanel);
+		
+		registerGlobalShortcutListener: self;
+		registerGlobalShortcutListener: errors;
 		
 		resetState
 ]
@@ -1240,7 +1230,9 @@ SBEditor >> performShortcutFor: anEvent [
 	self shortcuts do: [:assoc |
 		(assoc key matchesEvent: anEvent) ifTrue: [
 			(self selection notNil and: [self perform: assoc value for: self selection]) ifTrue: [^ true].
-			(self perform: assoc value for: self) ifTrue: [^ true]]].
+			globalShortcutListeners do: [:listener |
+				(self perform: assoc value for: listener) ifTrue: [^ true]]]].
+	
 	mode = #input ifTrue: [
 		currentInput keyStroke: anEvent.
 		^ true].
@@ -1340,6 +1332,12 @@ SBEditor >> refocus [
 	self selection ifNotNil: #ensureVisible
 ]
 
+{ #category : #'initialize-release' }
+SBEditor >> registerGlobalShortcutListener: aMorph [
+
+	globalShortcutListeners add: aMorph
+]
+
 { #category : #helper }
 SBEditor >> removeHelperTimer [
 
@@ -1403,13 +1401,6 @@ SBEditor >> resetZoom [
 
 	scroll scale: 1.
 	scroll viewportPosition: scroll currentPosition rounded
-]
-
-{ #category : #actions }
-SBEditor >> restartFrame [
-	<action>
-
-	errors restart
 ]
 
 { #category : #accessing }
@@ -1560,27 +1551,6 @@ SBEditor >> startSearch [
 	<action>
 
 	searchInput startSearch
-]
-
-{ #category : #actions }
-SBEditor >> stepInto [
-	<action>
-
-	errors stepInto
-]
-
-{ #category : #actions }
-SBEditor >> stepOver [
-	<action>
-
-	errors stepOver
-]
-
-{ #category : #actions }
-SBEditor >> stepThrough [
-	<action>
-
-	errors stepThrough
 ]
 
 { #category : #actions }

@@ -18,7 +18,7 @@ SBCharacter >> keyStroke: anEvent [
 { #category : #'as yet unclassified' }
 SBCharacter >> prefix [
 
-	^ '$'
+	^ self colorPolicy symbolsForCharacter: self
 ]
 
 { #category : #'as yet unclassified' }

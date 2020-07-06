@@ -38,13 +38,16 @@ SBErrorPanel >> drawnColor [
 ]
 
 { #category : #'as yet unclassified' }
-SBErrorPanel >> focus [
+SBErrorPanel >> focusErrors [
+	<action>
 
-	self hasSubmorphs ifTrue: [self firstSubmorph focus]
+	self hasSubmorphs ifTrue: [self firstSubmorph focus].
+	"errors topLeft: scroll topLeft"
 ]
 
 { #category : #'as yet unclassified' }
-SBErrorPanel >> focusPreviousFrame [
+SBErrorPanel >> focusPreviousErrorFrame [
+	<action>
 
 	self activeErrorDo: [:m | m focusPreviousFrame]
 ]
@@ -81,25 +84,29 @@ SBErrorPanel >> removedMorph: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBErrorPanel >> restart [
+SBErrorPanel >> restartFrame [
+	<action>
 
 	self activeErrorDo: #restart
 ]
 
 { #category : #'as yet unclassified' }
 SBErrorPanel >> stepInto [
+	<action>
 
 	self activeErrorDo: #stepInto
 ]
 
 { #category : #'as yet unclassified' }
 SBErrorPanel >> stepOver [
+	<action>
 
 	self activeErrorDo: #stepOver
 ]
 
 { #category : #'as yet unclassified' }
 SBErrorPanel >> stepThrough [
+	<action>
 
 	self activeErrorDo: #stepThrough
 ]
