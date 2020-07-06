@@ -366,35 +366,40 @@ SBASTNode >> unpackAsStatements [
 SBASTNode >> useFifthArgument [
 	<inputAction>
 	
-	self sandblockEditor endInputWith: self containingArtefact arguments fifth contents
+	self containingArtefact arguments size >= 5 ifTrue: [
+		self sandblockEditor endInputWith: self containingArtefact arguments fifth contents]
 ]
 
 { #category : #'actions input' }
 SBASTNode >> useFirstArgument [
 	<inputAction>
 	
-	self sandblockEditor endInputWith: self containingArtefact arguments first contents
+	self containingArtefact arguments ifNotEmpty: [
+		self sandblockEditor endInputWith: self containingArtefact arguments first contents]
 ]
 
 { #category : #'actions input' }
 SBASTNode >> useFourthArgument [
 	<inputAction>
 	
-	self sandblockEditor endInputWith: self containingArtefact arguments fourth contents
+	self containingArtefact arguments size >= 4 ifTrue: [
+		self sandblockEditor endInputWith: self containingArtefact arguments fourth contents]
 ]
 
 { #category : #'actions input' }
 SBASTNode >> useSecondArgument [
 	<inputAction>
 	
-	self sandblockEditor endInputWith: self containingArtefact arguments second contents
+	self containingArtefact arguments size >= 2 ifTrue: [
+		self sandblockEditor endInputWith: self containingArtefact arguments second contents]
 ]
 
 { #category : #'actions input' }
 SBASTNode >> useThirdArgument [
 	<inputAction>
 	
-	self sandblockEditor endInputWith: self containingArtefact arguments third contents
+	self containingArtefact arguments size >= 3 ifTrue: [
+		self sandblockEditor endInputWith: self containingArtefact arguments third contents]
 ]
 
 { #category : #actions }

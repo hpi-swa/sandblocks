@@ -130,7 +130,7 @@ SBBasicMethod >> collapsed: aBoolean [
 { #category : #'as yet unclassified' }
 SBBasicMethod >> compiledMethod [
 
-	^ self methodClass >> self selector asSymbol
+	^ self methodClass compiledMethodAt: self selector asSymbol ifAbsent: []
 ]
 
 { #category : #'as yet unclassified' }

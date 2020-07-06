@@ -646,7 +646,7 @@ SBBlock >> handleDroppedBlock: aBlock event: anEvent [
 { #category : #'event handling' }
 SBBlock >> handlesMouseDown: anEvent [
 
-	^ true
+	^ anEvent redButtonPressed
 ]
 
 { #category : #'event handling' }

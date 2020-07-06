@@ -61,7 +61,9 @@ SBGraphProjection >> object: anObject [
 		visualize: (SWDataUnlabeled create
 			addMany: (anObject isDictionary
 				ifTrue: [anObject associations collect: [:a | {a key. a value}]]
-				ifFalse: [anObject withIndexCollect: [:num :index | {index. num}]]);
+				ifFalse: [ | index |
+					index := 0.
+					anObject collect: [:num | index := index + 1. {index. num}] as: Array]);
 			yourself)
 		with: SWBarGraph create)
 		vResizing: #spaceFill;

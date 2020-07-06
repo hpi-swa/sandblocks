@@ -97,7 +97,7 @@ SBName >> browse [
 { #category : #'as yet unclassified' }
 SBName >> castToUnknownWhenEmpty [
 
-	^ true
+	^ self isExpression
 ]
 
 { #category : #'as yet unclassified' }

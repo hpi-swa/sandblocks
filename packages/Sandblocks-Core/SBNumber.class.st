@@ -19,7 +19,7 @@ SBNumber >> castToUnknownWhenEmpty [
 { #category : #'as yet unclassified' }
 SBNumber >> guessedClass [
 
-	^ Number
+	^ [self parsedContents class] on: NumberParserError do: [Number]
 ]
 
 { #category : #'as yet unclassified' }

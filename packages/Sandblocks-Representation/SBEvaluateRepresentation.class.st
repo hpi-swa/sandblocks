@@ -19,7 +19,8 @@ SBEvaluateRepresentation class >> isObject [
 { #category : #'as yet unclassified' }
 SBEvaluateRepresentation class >> matches: anObject [
 
-	^ anObject hasDerivableRepresentationThat: #isSmalltalkExpression
+	^ "anObject hasDerivableRepresentationThat: #isSmalltalkExpression"
+	anObject isSandblock and: [anObject isExpression]
 ]
 
 { #category : #'as yet unclassified' }
