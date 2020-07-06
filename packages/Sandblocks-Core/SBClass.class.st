@@ -65,7 +65,7 @@ SBClass >> class: aClass [
 	superClassName contents: (aClass superclass ifNil: ['ProtoObject'] ifNotNil: #name).
 	instanceVariables contents: (aClass instVarNames collect: [:name | SBName contents: name]).
 	classVariables contents: (aClass classVarNames collect: [:name | SBName contents: name]).
-	poolDictionaries contents: (aClass sharedPools collect: [:name | SBTextBubble new contents: name]).
+	poolDictionaries contents: (aClass sharedPools collect: [:pool | SBTextBubble new contents: (aClass environment keyAtIdentityValue: pool ifAbsent: ['private'])]).
 	category contents: (aClass environment organization categoryOfElement: aClass name).
 	class := aClass
 ]

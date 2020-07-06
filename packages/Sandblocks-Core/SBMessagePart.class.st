@@ -58,6 +58,12 @@ SBMessagePart >> drawnColor [
 ]
 
 { #category : #'as yet unclassified' }
+SBMessagePart >> evaluate [
+
+	^ self messageSend evaluate
+]
+
+{ #category : #'as yet unclassified' }
 SBMessagePart >> fontToUse [
 
 	^ super fontToUse emphasized: TextEmphasis bold emphasisCode
