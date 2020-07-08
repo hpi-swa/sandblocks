@@ -735,6 +735,13 @@ SBEditor >> declareInstanceVariable: aString for: aClass [
 		morph: (SBName contents: aString))
 ]
 
+{ #category : #actions }
+SBEditor >> deleteBlock [
+	<action>
+	
+	self close
+]
+
 { #category : #'submorphs-add/remove' }
 SBEditor >> deleteCommandFor: aBlock [
 
