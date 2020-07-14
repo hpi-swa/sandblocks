@@ -35,7 +35,7 @@ SBToggledCode >> activeBlock [
 
 	| index |
 	index := self activeIndex.
-	^ index > 0 ifTrue: [(self submorphs at: index + 1) lastSubmorph] ifFalse: [nil]
+	^ index > 0 ifTrue: [(self optionRows at: index) lastSubmorph] ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -81,8 +81,8 @@ SBToggledCode >> buildRowFor: aBlock active: aBoolean [
 { #category : #'as yet unclassified' }
 SBToggledCode >> childSandblocksDo: aBlock [
 
-	comment isInWorld
-		ifTrue: [aBlock value: comment].
+	comment owner
+		ifNotNil: [aBlock value: comment].
 	
 	self optionRows do: [:b | b submorphsDo: aBlock]
 ]
@@ -110,7 +110,7 @@ SBToggledCode >> comment: aString active: aNumber do: aCollection [
 { #category : #'as yet unclassified' }
 SBToggledCode >> deleteCommandFor: aBlock [
 
-	^ (aBlock = self firstSubmorph and: [comment isInWorld])
+	^ (aBlock = self firstSubmorph and: [comment owner notNil])
 		ifTrue: [
 			(SBMutatePropertyCommand newFor: self containingArtefact)
 				target: self firstSubmorph;
@@ -182,7 +182,7 @@ SBToggledCode >> isWatch [
 { #category : #accessing }
 SBToggledCode >> optionRows [
 
-	^ comment isInWorld ifTrue: [self submorphs allButFirst] ifFalse: [self submorphs]
+	^ comment owner ifNotNil: [self submorphs allButFirst] ifNil: [self submorphs]
 ]
 
 { #category : #'as yet unclassified' }
@@ -200,7 +200,7 @@ SBToggledCode >> printOn: aStream [
 { #category : #'as yet unclassified' }
 SBToggledCode >> startInputAt: aNumber replacingContents: aBoolean [
 
-	comment isInWorld ifFalse: [self addMorphFront: comment].
+	comment owner ifNil: [self addMorphFront: comment].
 	
 	self sandblockEditor replaceInput: comment.
 	^ comment startInputAt: aNumber replacingContents: aBoolean

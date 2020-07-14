@@ -36,6 +36,7 @@ SBBlock >> acceptChild: aMorph [
 { #category : #'as yet unclassified' }
 SBBlock >> acceptDroppingMorph: aMorph event: anEvent [
 
+	self sandblockEditor containingWindow ifNotNil: #beKeyWindow.
 	self allOwnersDo: #resetHighlightForDrop.
 	self resetHighlightForDrop.
 	self handleDroppedBlock: aMorph event: anEvent

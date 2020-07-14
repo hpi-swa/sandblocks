@@ -11,6 +11,12 @@ SBObjectRepresentation class >> catchesAll [
 ]
 
 { #category : #'as yet unclassified' }
+SBObjectRepresentation class >> identity [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBObjectRepresentation class >> isObject [
 
 	^ true

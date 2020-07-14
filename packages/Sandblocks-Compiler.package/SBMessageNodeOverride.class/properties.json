@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Compiler",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBMessageNodeOverride",
+	"pools" : [
+		 ],
+	"super" : "MessageNode",
+	"type" : "normal" }

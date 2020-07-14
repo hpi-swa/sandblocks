@@ -115,6 +115,12 @@ SBNameBehavior >> isMethodLocal [
 ]
 
 { #category : #'as yet unclassified' }
+SBNameBehavior >> isTemporaryVariable [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBNameBehavior >> prefix [
 
 	^ nil

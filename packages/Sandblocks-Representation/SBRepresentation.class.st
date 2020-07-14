@@ -19,6 +19,12 @@ SBRepresentation class >> eagerNewFor: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBRepresentation class >> identity [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBRepresentation class >> isLeaf [
 
 	^ false

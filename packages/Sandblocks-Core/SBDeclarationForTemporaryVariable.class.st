@@ -23,6 +23,12 @@ SBDeclarationForTemporaryVariable >> isMethodLocal [
 ]
 
 { #category : #'as yet unclassified' }
+SBDeclarationForTemporaryVariable >> isTemporaryVariable [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBDeclarationForTemporaryVariable >> printBlockOn: aStream [
 
 	aStream nextPutAll: 'temporary '; nextPutAll: self contents

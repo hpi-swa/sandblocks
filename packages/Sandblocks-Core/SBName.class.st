@@ -195,6 +195,12 @@ SBName >> isReserved [
 ]
 
 { #category : #'as yet unclassified' }
+SBName >> isTemporaryVariable [
+
+	^ self behavior isTemporaryVariable
+]
+
+{ #category : #'as yet unclassified' }
 SBName >> keyStroke: anEvent [
 
 	(self isExpression and: [anEvent keyCharacter = $:]) ifTrue: [ | new |

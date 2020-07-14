@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStExpressionRepresentation class >> identity [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBStExpressionRepresentation class >> isSmalltalkExpression [
 
 	^ true

@@ -9,5 +9,6 @@ OrderedDictionary {
 	'packages/Sandblocks-Drawing' : #SquotTonelSerializer,
 	'packages/Sandblocks-Graph' : #SquotTonelSerializer,
 	'packages/Sandblocks-Representation' : #SquotTonelSerializer,
-	'packages/Sandblocks-Tutorial' : #SquotTonelSerializer
+	'packages/Sandblocks-Tutorial' : #SquotTonelSerializer,
+	'packages/Sandblocks-Compiler.package' : #SquotCypressCodeSerializer
 }

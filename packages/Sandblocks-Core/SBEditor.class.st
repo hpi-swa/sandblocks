@@ -739,7 +739,8 @@ SBEditor >> declareInstanceVariable: aString for: aClass [
 SBEditor >> deleteBlock [
 	<action>
 	
-	self close
+	(UIManager default confirm: 'Are sure you want to close the editor?')
+		ifTrue: [self close]
 ]
 
 { #category : #'submorphs-add/remove' }

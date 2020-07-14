@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Compiler",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBParserOverride",
+	"pools" : [
+		 ],
+	"super" : "Parser",
+	"type" : "normal" }

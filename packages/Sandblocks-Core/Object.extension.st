@@ -100,7 +100,7 @@ Object >> representationsThat: aSymbol [
 { #category : #'*Sandblocks-Core' }
 Object >> representationsThat: aSymbol do: aBlock [
 
-	self representationsThat: aSymbol do: aBlock deep: true
+	self representationsThat: aSymbol do: aBlock deep: 0
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -112,14 +112,15 @@ Object >> representationsThat: aSymbol do: aBlock deep: aBoolean [
 		^ aSymbol do: [:sym | self representationsThat: sym do: aBlock]].
 	SBRepresentation representationsDo: [:repr |
 		((repr supports: aSymbol) and: [repr matches: self]) ifTrue: [aBlock value: repr].
-		(aBoolean and: [repr isLeaf not]) ifTrue: [ | nested |
-			((repr matches: self) and: [(nested := repr eagerNewFor: self) ~= self]) ifTrue: [
+		
+		((aBoolean isBoolean not and: [aBoolean < 2]) and: [
+			repr identity not and: [repr isLeaf not and: [repr matches: self]]]) ifTrue: [ | nested |
+			(nested := repr eagerNewFor: self) ~= self ifTrue: [
 				nested
 					representationsThat: aSymbol
 					do: [:nestedRepr |
-						(nestedRepr catchesAll not or: [repr supports: #isObject]) ifTrue: [
-							aBlock value: (SBDerivedRepresentation from: repr to: nestedRepr)]]
-					deep: false]]]
+						aBlock value: (SBDerivedRepresentation from: repr to: nestedRepr)]
+					deep: aBoolean + 1]]]
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -127,5 +128,5 @@ Object >> sandblockColor [
 	" get a color that may represent this object somewhat uniquely and consistently "
 	
 	" the identity hashes for classes appear to be rather close together, so we raise them to get larger differences "
-	^ (Color colorFromPixelValue: (16rFF000000 bitOr: (self identityHash ** 6 \\ 16rffffff max: 1)) depth: 32) adjustBrightness: -0.2
+	^ (Color colorFromPixelValue: (16rFF000000 bitOr: (self identityHash ** 6 \\ 16rffffff max: 1)) depth: 32) "adjustBrightness: -0.2"
 ]
