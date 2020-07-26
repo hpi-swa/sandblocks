@@ -129,7 +129,7 @@ SBWatchView >> storeAsExample [
 	class := self containingSandblock containingArtefact methodClass.
 	value := lastValue veryDeepCopy.
 	class compile: name, String cr, '^', value storeString.
-	self sandblockEditor openCompiledMethod: class >> name asSymbol
+	self sandblockEditor open: class >> name asSymbol
 ]
 
 { #category : #'as yet unclassified' }

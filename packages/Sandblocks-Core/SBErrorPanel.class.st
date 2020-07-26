@@ -55,7 +55,7 @@ SBErrorPanel >> focusPreviousErrorFrame [
 { #category : #'as yet unclassified' }
 SBErrorPanel >> focusedArtefact [
 
-	self activeErrorDo: [:error | ^ self sandblockEditor openCompiledMethod: error currentStackFrame context method].
+	self activeErrorDo: [:error | ^ self sandblockEditor open: error currentStackFrame context method].
 	^ nil
 ]
 

@@ -74,7 +74,7 @@ SBDerivedRepresentation >> printOn: aStream [
 { #category : #'as yet unclassified' }
 SBDerivedRepresentation >> priority [
 
-	^ from priority + to priority
+	^ (from priority max: to priority) - 0.5
 ]
 
 { #category : #'as yet unclassified' }

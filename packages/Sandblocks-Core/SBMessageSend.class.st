@@ -52,7 +52,7 @@ SBMessageSend >> browseImplementors [
 	self actualReceiver guessClassExpensive
 		ifNotNil: [:class |
 			(class lookupSelector: self selector asSymbol) ifNotNil: [:m |
-				^ self sandblockEditor openCompiledMethod: m]].
+				^ self sandblockEditor open: m]].
 	
 	super browseImplementors
 ]

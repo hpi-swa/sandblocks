@@ -64,7 +64,7 @@ SBErrorStackFrame >> isActiveFrame [
 { #category : #'as yet unclassified' }
 SBErrorStackFrame >> method [
 
-	^ self sandblockEditor openCompiledMethod: context method
+	^ self sandblockEditor open: context method
 ]
 
 { #category : #'as yet unclassified' }
@@ -105,7 +105,7 @@ SBErrorStackFrame >> setActive [
 SBErrorStackFrame >> updateSelection [
 
 	pcIndicator ifNotNil: #detach.
-	((self sandblockEditor openCompiledMethod: self context method) blockForPC: (self isActiveFrame ifTrue: [self context pc] ifFalse: [self context previousPc])) ifNotNil: [:block | 
+	((self sandblockEditor open: self context method) blockForPC: (self isActiveFrame ifTrue: [self context pc] ifFalse: [self context previousPc])) ifNotNil: [:block | 
 		block
 			select;
 			attachDecorator: (pcIndicator := SBErrorDecorator new)]
@@ -115,7 +115,7 @@ SBErrorStackFrame >> updateSelection [
 SBErrorStackFrame >> wasSelected [
 
 	| method |
-	method := self sandblockEditor openCompiledMethod: self context method homeMethod.
+	method := self sandblockEditor open: self context method homeMethod.
 	self detachDecorators: SBErrorDecorator; attachDecorator: SBErrorDecorator new.
 	self updateSelection.
 	super wasSelected

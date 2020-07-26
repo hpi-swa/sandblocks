@@ -100,8 +100,8 @@ Object >> representationsDo: aBlock [
 { #category : #'*Sandblocks-Core' }
 Object >> representationsThat: aSymbol [
 
-	^ Array streamContents: [:stream |
-		self representationsThat: aSymbol do: [:repr | stream nextPut: repr]]
+	^ (Array streamContents: [:stream |
+		self representationsThat: aSymbol do: [:repr | stream nextPut: repr]]) sort: #priority asSortFunction reversed.
 ]
 
 { #category : #'*Sandblocks-Core' }

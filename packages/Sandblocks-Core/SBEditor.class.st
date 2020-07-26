@@ -1113,17 +1113,22 @@ SBEditor >> okToChange [
 ]
 
 { #category : #actions }
-SBEditor >> open: aMethodOrClass [
+SBEditor >> open: anObject [
 
-	aMethodOrClass isBehavior ifTrue: [
-		self openClass: aMethodOrClass.
-		^ aMethodOrClass methodsDo: [:compiledMethod | self openCompiledMethod: compiledMethod]].
-	
-	aMethodOrClass isCompiledMethod ifTrue: [^ self openCompiledMethod: aMethodOrClass].
-	
-	aMethodOrClass isCollection ifTrue: [^ aMethodOrClass do: [:methodOrClass | self open: methodOrClass]].
-	
-	self error: 'not supported for opening'
+	^ scroll submorphs
+		detect: [:morph | morph isSandblock and: [morph object = anObject]]
+		ifFound: #select
+		ifNone: [
+		 	anObject
+				representIn: self
+				as: #isToplevelMorph
+				near: scroll offset + (self extent // 2)]
+]
+
+{ #category : #actions }
+SBEditor >> openAll: aCollection [
+
+	aCollection do: [:object | self open: object]
 ]
 
 { #category : #actions }

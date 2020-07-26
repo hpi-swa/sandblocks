@@ -71,7 +71,7 @@ SBCodeContext >> hash [
 { #category : #'as yet unclassified' }
 SBCodeContext >> imageForm [
 
-	^ ((SBEditor new openCompiledMethod: self method; yourself) method blockForPC: self pc) imageForm
+	^ ((SBEditor new open: self method; yourself) method blockForPC: self pc) imageForm
 ]
 
 { #category : #'as yet unclassified' }

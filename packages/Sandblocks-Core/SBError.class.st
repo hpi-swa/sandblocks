@@ -44,7 +44,7 @@ SBError >> createFrameForContext: aContext [
 SBError >> currentBlockForPC [
 
 	| method |
-	method := self sandblockEditor openCompiledMethod: (self currentStackFrame context method).
+	method := self sandblockEditor open: (self currentStackFrame context method).
 	^ method blockForPC: self currentStackFrame context pc
 ]
 
