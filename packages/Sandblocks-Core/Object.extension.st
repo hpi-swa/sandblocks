@@ -28,12 +28,19 @@ Object >> isSandblock [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Object >> newFirstSafeOptionFrom: aCollection [
+	" try to find the first representation that causes no side effects. If none were found assume, that the side effect was the user's intention "
+
+	^ (aCollection detect: [:repr | repr causesSideEffects not] ifNone: [aCollection first]) newFor: self
+]
+
+{ #category : #'*Sandblocks-Core' }
 Object >> representIn: aMorph as: aSymbol near: aPointOrMorph [
 
 	| options representation |
-	options := self representationsThat: aSymbol.
+	options := (self representationsThat: aSymbol) sort: #priority asSortFunction reversed.
 	options ifEmpty: [^ self].
-	representation := options first newFor: self.
+	representation := self newFirstSafeOptionFrom: options.
 	options size > 1 ifTrue: [ | prompt |
 		prompt := SBRepresentationPrompt new options: options target: self current: representation.
 		aMorph openMorphInView: prompt.
@@ -121,12 +128,4 @@ Object >> representationsThat: aSymbol do: aBlock deep: aBoolean [
 					do: [:nestedRepr |
 						aBlock value: (SBDerivedRepresentation from: repr to: nestedRepr)]
 					deep: aBoolean + 1]]]
-]
-
-{ #category : #'*Sandblocks-Core' }
-Object >> sandblockColor [
-	" get a color that may represent this object somewhat uniquely and consistently "
-	
-	" the identity hashes for classes appear to be rather close together, so we raise them to get larger differences "
-	^ (Color colorFromPixelValue: (16rFF000000 bitOr: (self identityHash ** 6 \\ 16rffffff max: 1)) depth: 32) "adjustBrightness: -0.2"
 ]

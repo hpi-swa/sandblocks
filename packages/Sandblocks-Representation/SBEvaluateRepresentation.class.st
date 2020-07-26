@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBEvaluateRepresentation class >> causesSideEffects [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBEvaluateRepresentation class >> eagerNewFor: anObject [
 
 	^ Object new

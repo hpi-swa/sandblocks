@@ -14,6 +14,12 @@ SBSubstitution class >> catchesAll [
 ]
 
 { #category : #'as yet unclassified' }
+SBSubstitution class >> causesSideEffects [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBSubstitution class >> identity [
 
 	^ false

@@ -24,6 +24,12 @@ SBDerivedRepresentation >> = aRepr [
 ]
 
 { #category : #'as yet unclassified' }
+SBDerivedRepresentation >> causesSideEffects [
+
+	^ from causesSideEffects or: [to causesSideEffects]
+]
+
+{ #category : #'as yet unclassified' }
 SBDerivedRepresentation >> from [
 
 	^ from
