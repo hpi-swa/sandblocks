@@ -135,6 +135,7 @@ SBEditor class >> registerDefaultShortcuts [
 		registerShortcut: $y do: #copyToBuffer;
 		registerShortcut: $X do: #deleteAround;
 		registerShortcut: $x do: #deleteBlock;
+		registerShortcut: $d do: #deleteAdjacent;
 		registerShortcut: $( do: #leftRotate;
 		registerShortcut: $. do: #addElement;
 		registerShortcut: $+ do: #insertElementAfter;
@@ -152,7 +153,6 @@ SBEditor class >> registerDefaultShortcuts [
 
 		" modify smalltalk "
 		registerShortcut: $" do: #wrapInToggledCode;
-		registerShortcut: $d do: #insertLabelBelow;
 		registerShortcut: $D do: #insertLabelAbove;
 		registerShortcut: $O do: #insertStatementAbove;
 		registerShortcut: $o do: #insertStatementBelow;
@@ -200,6 +200,7 @@ SBEditor class >> registerDefaultShortcuts [
 		registerShortcut: $W do: #wrapWithWatch;
 		registerShortcut: $w do: #wrapWithExampleWatch;
 		registerShortcut: $p command do: #evaluateExpression;
+		registerShortcut: $d command do: #doExpression;
 		registerShortcut: $P command do: #debugExpression;
 		registerShortcut: $a command do: #addExample;
 		registerShortcut: $m command do: #browseImplementors;
@@ -431,7 +432,7 @@ SBEditor >> anyNearbyClass [
 { #category : #actions }
 SBEditor >> artefacts [
 
-	^ scroll submorphs select: #isArtefact
+	^ scroll submorphs select: [:s | s isSandblock and: [s isArtefact]]
 ]
 
 { #category : #artefacts }
@@ -1193,6 +1194,13 @@ SBEditor >> openOpenWindow [
 	((selected notNil and: [selected artefact isCompiledCode or: [selected artefact isBehavior]])
 		ifTrue: [SBCodeOpener new positionNear: self; openFor: selected artefact]
 		ifFalse: [SBCodeOpener new positionNear: self; open]) ifNotNil: [:methodOrClass | self open: methodOrClass]
+]
+
+{ #category : #actions }
+SBEditor >> openProfiler [
+	<action>
+
+	self openMorphInView: SBProfiler new
 ]
 
 { #category : #actions }

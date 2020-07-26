@@ -89,6 +89,12 @@ SBPragma >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBPragma >> messageParts [
+
+	^ signature messageParts
+]
+
+{ #category : #'as yet unclassified' }
 SBPragma >> moveCursorTo: aNumber [
 
 	signature moveCursorTo: aNumber

@@ -25,7 +25,7 @@ SBCheckbox >> childSandblocksDo: aBlock [
 SBCheckbox >> click: anEvent [
 
 	super click: anEvent.
-	self changeValue: self value not
+	self toggle
 ]
 
 { #category : #'as yet unclassified' }
@@ -64,6 +64,14 @@ SBCheckbox >> nonEdit: aBoolean [
 { #category : #'as yet unclassified' }
 SBCheckbox >> startInputAt: aNumber replacingContents: aBoolean [
 
+	self toggle.
+	
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBCheckbox >> toggle [
+
 	self sandblockEditor do: ((self nonEdit
 		ifTrue: [SBMutatePropertyCommand newNonEdit]
 		ifFalse: [
@@ -72,8 +80,6 @@ SBCheckbox >> startInputAt: aNumber replacingContents: aBoolean [
 		selector: #value;
 		mutateSelector: #changeValue:;
 		value: self value not).
-	
-	^ nil
 ]
 
 { #category : #'as yet unclassified' }

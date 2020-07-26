@@ -65,6 +65,7 @@ SBToggledCode >> buildRowFor: aBlock active: aBoolean [
 	row
 		cellGap: 4 withScalingFactor;
 		addMorphBack: (SBCheckbox new
+			nonEdit: false;
 			value: aBoolean;
 			when: #toggled
 				evaluate: [

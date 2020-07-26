@@ -12,7 +12,7 @@ SBUnknown >> acceptCharacter: char [
 	char = $$ ifTrue: [^ self doReplaceBy: (SBCharacter new contents: '')].
 	char = $' ifTrue: [^ self doReplaceBy: (SBString new contents: '')].
 	char = $# ifTrue: [^ self doReplaceBy: (SBSymbol new contents: '')].
-	(char = Character space and: [self isStatement]) ifTrue: [^ self emptyLine].
+	((char = Character space or: [char = Character cr]) and: [self isStatement]) ifTrue: [^ self emptyLine].
 	
 	char = ${ ifTrue: [^ self doWrap: [:outer :inner | outer type: #dynamic contents: {inner}] with: SBArray new].
 	char = $( ifTrue: [^ self doWrap: [:outer :inner | outer type: #literal contents: {inner}] with: SBArray new].

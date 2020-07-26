@@ -171,7 +171,7 @@ SBBlock >> canInput [
 { #category : #actions }
 SBBlock >> canJumpTo: aBlock [
 
-	^ aBlock containingArtefact = self containingArtefact or: [self containingArtefact floating not]
+	^ aBlock containingArtefact = self containingArtefact or: [self containingArtefact notNil and: [self containingArtefact floating not]]
 ]
 
 { #category : #testing }
@@ -329,6 +329,13 @@ SBBlock >> containingStatement [
 	^ current
 ]
 
+{ #category : #actions }
+SBBlock >> containingToplevel [
+	" first parent that is floating "
+	
+	^ self floating ifTrue: [self] ifFalse: [self parentSandblock containingToplevel]
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> contextAcceptedRepresentationAt: aNumber [
 	" return any constraints on the representation of your child block at aNumber "
@@ -377,6 +384,23 @@ SBBlock >> decorators [
 ]
 
 { #category : #actions }
+SBBlock >> deleteAdjacent [
+	<action>
+
+	| count startIndex endIndex |
+	count := self sandblockEditor countModifier.
+	
+	startIndex := self childIndex.
+	endIndex := count = 0
+		ifTrue: [self parentSandblock childSandblocks size]
+		ifFalse: [
+			startIndex + (count - 1) min: self parentSandblock childSandblocks size].
+	
+	self sandblockEditor do: (SBCombinedCommand newWith: ((startIndex to: endIndex) collect: [:index |
+		(SBDeleteCommand newFor: self containingArtefact) target: (self parentSandblock childSandblocks at: index)]))
+]
+
+{ #category : #actions }
 SBBlock >> deleteAround [
 	<action>
 
@@ -384,7 +408,6 @@ SBBlock >> deleteAround [
 	editor := self sandblockEditor.
 	target := self parentSandblock.
 	editor countModifier - 1 timesRepeat: [target := target parentSandblock].
-		
 		
 	(self hasRepresentationThat: (target parentSandblock contextAcceptedRepresentationAt: target childIndex)) ifTrue: [
 		replacer := SBPastePlaceholder new.
@@ -437,6 +460,16 @@ SBBlock >> detachDecorators: aDecoratorClass [
 	decorators := decorators reject: [:d | d class = aDecoratorClass].
 	self changed.
 	self updateSteppingDecorators
+]
+
+{ #category : #actions }
+SBBlock >> doExpression [
+	<action>
+
+	| result |
+	result := self evaluate.
+	self containingArtefact ifNotNil: [
+		self containingArtefact cacheType: result class for: self]
 ]
 
 { #category : #'as yet unclassified' }
@@ -1276,7 +1309,7 @@ SBBlock >> pickUp: anEvent [
 
 	anEvent hand attachMorph: (SBSelection new
 		homeArtefact: self containingArtefact;
-		methodClass: self containingArtefact relatedClass;
+		methodClass: (self containingArtefact ifNotNil: #relatedClass);
 		colorPolicy: self colorPolicy;
 		addMorphBack: self veryDeepCopy)
 ]
@@ -1552,7 +1585,7 @@ SBBlock >> selectToplevelTowards: aSideSymbol [
 
 	| opposite |
 	opposite := aSideSymbol caseOf: {([#left] -> [#right]). ([#right] -> [#left]). ([#top] -> [#bottom]). ([#bottom] -> [#top])}.
-	(self containingArtefact closestAdjacentFrom: (aSideSymbol, 'Center') asSymbol to: (opposite, 'Center') asSymbol) select
+	(self containingToplevel closestAdjacentFrom: (aSideSymbol, 'Center') asSymbol to: (opposite, 'Center') asSymbol) select
 ]
 
 { #category : #actions }
