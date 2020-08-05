@@ -8,7 +8,7 @@ CascadeNode >> asSandblock [
 	
 	SBSubstitution allSubclassesDo: [:substitution |
 		(substitution matchesCascades and: [substitution matches: send]) ifTrue: [
-			^ (substitution newFrom: send) pc: self pc]].
+			^ (substitution newFor: send) pc: self pc]].
 	
 	^ send
 ]

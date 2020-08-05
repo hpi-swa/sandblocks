@@ -18,6 +18,14 @@ SBTestCase class >> matches: aMethodBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBTestCase class >> newFor: aMethodBlock [
+
+	^ self new
+		selector: aMethodBlock selector arguments: aMethodBlock arguments class: aMethodBlock methodClass;
+		body: aMethodBlock body
+]
+
+{ #category : #'as yet unclassified' }
 SBTestCase class >> newFrom: aMethodBlock [
 
 	^ self new

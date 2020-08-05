@@ -31,6 +31,12 @@ SBError >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBError >> contextAcceptedRepresentationAt: aNumber [
+
+	^ #isToplevelMorph
+]
+
+{ #category : #'as yet unclassified' }
 SBError >> createFrameForContext: aContext [
 
 	| frame |

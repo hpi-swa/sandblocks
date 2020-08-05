@@ -19,7 +19,7 @@ SBString >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBString >> isStringBubble [
+SBString >> isStringBlock [
 
 	^ true
 ]

@@ -69,6 +69,19 @@ SBBlockBody >> bindings: aCollection [
 	aCollection do: [:m | bindings addMorphBack: m]
 ]
 
+{ #category : #hierarchy }
+SBBlockBody >> blockBodyNestingDepth [
+
+	| d node |
+	d := 1.
+	node := self.
+	
+	[(node := node containingBlock) notNil] whileTrue: [
+		d := d + 1].
+	
+	^ d
+]
+
 { #category : #'as yet unclassified' }
 SBBlockBody >> canDeleteChild: aBlock [
 
@@ -184,6 +197,12 @@ SBBlockBody >> isExpression [
 SBBlockBody >> isMethodBody [
 
 	^ self owner notNil and: [self parentSandblock isMethod]
+]
+
+{ #category : #hierarchy }
+SBBlockBody >> localNestingDepth [
+
+	^ 1
 ]
 
 { #category : #'as yet unclassified' }

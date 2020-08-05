@@ -212,7 +212,7 @@ SBRepl >> localVariables [
 { #category : #'artefact protocol' }
 SBRepl >> methodClass [
 
-	^ UndefinedObject
+	^ receiver ifNotNil: #class ifNil: [UndefinedObject]
 ]
 
 { #category : #'artefact protocol' }

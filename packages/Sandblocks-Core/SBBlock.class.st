@@ -189,6 +189,15 @@ SBBlock >> changeLocalColorPolicy [
 ]
 
 { #category : #hierarchy }
+SBBlock >> childHierarchyComplexity [
+
+	^ self childSandblocks size < 2 ifTrue: [0] ifFalse: [ | c |
+		c := 0.
+		self allBlocksDo: [:b | c := c + 1].
+		c]
+]
+
+{ #category : #hierarchy }
 SBBlock >> childIndex [
 
 	^ self parentSandblock childSandblocks indexOf: self
@@ -995,7 +1004,7 @@ SBBlock >> isSelection [
 ]
 
 { #category : #testing }
-SBBlock >> isStringBubble [
+SBBlock >> isStringBlock [
 
 	^ false
 ]
@@ -1072,6 +1081,12 @@ SBBlock >> localColorPolicy: aPolicy [
 			changed
 ]
 
+{ #category : #hierarchy }
+SBBlock >> localNestingDepth [
+
+	^ 1 + (self parentSandblock ifNotNil: [:p | p localNestingDepth] ifNil: [0])
+]
+
 { #category : #accessing }
 SBBlock >> lookupAction: aSymbol [
 
@@ -1146,6 +1161,20 @@ SBBlock >> multiSelectChildren [
 
 	self sandblockEditor mode = #select ifFalse: [self sandblockEditor mode: #selection].
 	self childSandblocks do: #startOrAddToMultiSelection
+]
+
+{ #category : #hierarchy }
+SBBlock >> nestingDepth [
+
+	| d node |
+	d := 1.
+	node := self.
+	
+	[node isArtefact not and: [node parentSandblock notNil]] whileTrue: [
+		node := node parentSandblock.
+		d := d + 1].
+	
+	^ d
 ]
 
 { #category : #hierarchy }

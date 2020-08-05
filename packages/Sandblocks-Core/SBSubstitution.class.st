@@ -40,7 +40,7 @@ SBSubstitution class >> isSmalltalkExpression [
 { #category : #'as yet unclassified' }
 SBSubstitution class >> matches: aMessageSend [
 
-	^ aMessageSend isSandblock and: [aMessageSend isMessageSend]
+	^ aMessageSend isSandblock and: [aMessageSend isMessageSend or: [self matchesCascades and: [aMessageSend isCascade]]]
 ]
 
 { #category : #'as yet unclassified' }

@@ -77,7 +77,8 @@ SBShortcut >> matchesEvent: anEvent [
 	^ anEvent keyCharacter = character
 		and: [
 			command = (anEvent commandKeyPressed or: [anEvent controlKeyPressed])]
-		and: [shift not or: [anEvent shiftPressed]]
+		and: [
+			(shift or: [character isUppercase]) = anEvent shiftPressed]
 ]
 
 { #category : #'as yet unclassified' }

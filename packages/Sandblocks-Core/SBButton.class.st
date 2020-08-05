@@ -42,6 +42,7 @@ SBButton >> icon: anIconMorph shortcut: aShortcut do: aBlock [
 SBButton >> initialize [
 
 	super initialize.
+	
 	self
 		changeTableLayout;
 		hResizing: #shrinkWrap;

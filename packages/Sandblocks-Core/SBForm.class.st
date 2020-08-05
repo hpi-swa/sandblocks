@@ -17,7 +17,7 @@ SBForm class >> matches: aBlock [
 	^ aBlock receiver isBinding
 		and: [aBlock receiver contents = 'Form']
 		and: [aBlock selector = 'fromFileNamed:']
-		and: [aBlock arguments first isStringBubble]
+		and: [aBlock arguments first isStringBlock]
 ]
 
 { #category : #'as yet unclassified' }

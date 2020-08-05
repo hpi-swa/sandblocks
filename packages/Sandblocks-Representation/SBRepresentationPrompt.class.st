@@ -50,6 +50,12 @@ SBRepresentationPrompt >> mouseLeave: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBRepresentationPrompt >> object [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBRepresentationPrompt >> options: aCollection target: anObject current: aRepresentation [
 
 	SBExample

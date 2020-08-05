@@ -68,6 +68,12 @@ SBErrorStackFrame >> method [
 ]
 
 { #category : #'as yet unclassified' }
+SBErrorStackFrame >> object [
+
+	^ context
+]
+
+{ #category : #'as yet unclassified' }
 SBErrorStackFrame >> outOfWorld: aWorld [
 
 	self closed.

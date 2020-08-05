@@ -46,6 +46,17 @@ asdas''.
 ]
 
 { #category : #'*Sandblocks-Core' }
+String >> parseAsMethod [
+
+	| parser class methodNode |
+	SBExample self: ['test 5 + 12 squared'] args: [{}] label: 'simple'.
+	class := UndefinedObject.
+	parser := class newParser.
+	methodNode := parser parse: self class: class noPattern: false notifying: nil ifFail: nil.
+	^ methodNode
+]
+
+{ #category : #'*Sandblocks-Core' }
 String >> parseAsNode [
 
 	| parser class methodNode |

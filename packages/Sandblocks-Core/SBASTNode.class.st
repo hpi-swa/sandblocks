@@ -179,7 +179,7 @@ SBASTNode >> guessedClass [
 SBASTNode >> handleDroppedBlock: aBlock event: anEvent [
 
 	| replacer |
-	replacer := aBlock object representationThat: (self parentSandblock contextAcceptedRepresentationAt: self childIndex).
+	replacer := aBlock object representationThat: (self parentSandblock contextAcceptedRepresentationAt: self childIndex) do: #yourself ifNone: [^ self].
 	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
 		target: self;
 		replacer: replacer).

@@ -126,9 +126,8 @@ SBExample >> debug [
 		forBlock: [self evaluate]
 		runUntil: [:context |
 			context method == self containingArtefact compiledMethod].
-	self sandblockEditor
-		reportError: process suspendedContext process: process;
-		focusErrors
+	self sandblockEditor reportError: nil process: process.
+	self sandblockEditor errors focusErrors
 ]
 
 { #category : #'as yet unclassified' }

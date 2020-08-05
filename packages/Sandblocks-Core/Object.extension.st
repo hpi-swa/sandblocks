@@ -79,7 +79,7 @@ Object >> representationThat: aSymbol do: aBlock ifNone: anotherBlock [
 	index := UIManager default
 		chooseFrom: (options collect: [:repr | repr prettyName])
 		title: ('How to represent {1} ({2})' format: {self asString. self className}).
-	index = 0 ifTrue: [^ self].
+	index = 0 ifTrue: [^ anotherBlock value].
 	representation := (options at: index) newFor: self.
 	^ aBlock value: representation
 ]
