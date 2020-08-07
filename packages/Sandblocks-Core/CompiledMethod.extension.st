@@ -3,34 +3,46 @@ Extension { #name : #CompiledMethod }
 { #category : #'*Sandblocks-Core' }
 CompiledMethod >> asSandblock [
 
-	| methodNode class parser source sourceRanges debuggerMap rangeToPC nodeToPC rangeToPCList instructions |
+	| methodNode class parser source nodeToRange debuggerMap rangeToPC nodeToPC rangeToPCList instructions |
 	SBToggledCode
 		comment: 'either extract info from source (1st) or use generated result (may include errors, but might be more accurate)'
 		active: 1
 		do: {
 			[
 				class := self methodClass.
-				parser := (SBToggledCode comment: '' active: 1 do: {[SBParserOverride new]. [class newParser]}) encoderClass: self encoderClass.
+				parser := (SBToggledCode comment: '' active: 2 do: {[SBParserOverride new]. [class newParser]}) encoderClass: self encoderClass.
 				source := self getSourceFor: (self selector ifNil: [self defaultSelector]) in: class.
 				methodNode := parser parse: source asString codeWithEmptyLineMarkers class: class.
-				sourceRanges := parser encoder rawSourceRanges.
+				nodeToRange := parser encoder rawSourceRanges.
 				debuggerMap := self debuggerMap.
 				instructions := InstructionStream on: self.
-				rangeToPCList := Array streamContents: [:stream |
-					[instructions atEnd] whileFalse: [
-						self haltOnce.
-						stream nextPut: (debuggerMap rangeForPC: instructions pc in: self contextIsActiveContext: true) -> instructions pc.
-						instructions nextInstruction]].
+				SBWatch
+					report: (rangeToPCList := Array streamContents: [:stream |
+						self enumerateInstructions: debuggerMap of: self on: stream])
+					for: 581681541.
+				
 				rangeToPC := Dictionary new.
 				rangeToPCList do: [:assoc |
-					(#(#storeIntoReceiverVariable: #storeIntoTemporaryVariable: #popIntoReceiverVariable: #popIntoTemporaryVariable: #pushClosureCopyNumCopiedValues:numArgs:blockSize: #pushFullClosure:numCopied: #send:super:numArgs: #methodReturnConstant: #methodReturnReceiver #methodReturnTop #jump:if:) includes: (instructions
-						pc: assoc value;
-						nextInstruction) selector) ifTrue: [rangeToPC at: assoc key put: assoc value]].
-				nodeToPC := sourceRanges collect: [:range | rangeToPC at: range ifAbsent: [0]].
-				nodeToPC keysAndValuesDo: [:node :pc | node pc: pc]].
+					(#(#storeIntoReceiverVariable: #storeIntoTemporaryVariable: #popIntoReceiverVariable: #popIntoTemporaryVariable: #pushClosureCopyNumCopiedValues:numArgs:blockSize: #pushFullClosure:numCopied: #send:super:numArgs: #methodReturnConstant: #methodReturnReceiver #methodReturnTop #jump:if:) includes: assoc value second) ifTrue: [rangeToPC at: assoc key put: assoc value first]].
+				nodeToPC := (SBWatch report: nodeToRange for: 539115364) collect: [:range |
+					(SBWatch report: rangeToPC for: 1056201063) at: range ifAbsent: [0]].
+				(SBWatch report: nodeToPC for: 522912432) keysAndValuesDo: [:node :pc | node pc: pc]].
 			[
 				methodNode := self methodNode.
 				methodNode generate]
 		}.
 	^ methodNode asSandblock
+]
+
+{ #category : #'*Sandblocks-Core' }
+CompiledMethod >> enumerateInstructions: aDebuggerMap of: aCompiledCode on: aStream [
+
+	| instructions |
+	instructions := InstructionStream on: aCompiledCode.
+	^ [instructions atEnd] whileFalse: [ | instruction pc |
+		pc := instructions pc.
+		instruction := instructions nextInstruction.
+		aStream nextPut: (aDebuggerMap rangeForPC: pc in: aCompiledCode contextIsActiveContext: true) -> {pc. instruction selector}.
+		instruction selector = #pushFullClosure:numCopied: ifTrue: [
+			self enumerateInstructions: aDebuggerMap of: instruction arguments first on: aStream]]
 ]

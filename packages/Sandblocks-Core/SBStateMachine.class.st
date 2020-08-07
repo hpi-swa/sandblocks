@@ -89,6 +89,18 @@ SBStateMachine >> buildFrom: aNode [
 ]
 
 { #category : #'as yet unclassified' }
+SBStateMachine >> checkLowHealth [
+
+	^ 5 < 2
+]
+
+{ #category : #'as yet unclassified' }
+SBStateMachine >> checkNearbyEnemies [
+
+	Transcript showln: 'Enemies!'
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachine >> childSandblocksDo: aBlock [
 
 	states do: [:state | aBlock value: state].
@@ -106,6 +118,13 @@ SBStateMachine >> connect: aStateName to: anotherStateName if: aBlock [
 	line addCondition: aBlock.
 	self addMorphBack: line.
 	^ connectors add: line
+]
+
+{ #category : #'as yet unclassified' }
+SBStateMachine >> copyExampleStateMachine [
+
+	5 squared.
+	[2 squared] value
 ]
 
 { #category : #'as yet unclassified' }

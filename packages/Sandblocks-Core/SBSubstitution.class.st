@@ -62,6 +62,12 @@ SBSubstitution class >> prettyName [
 ]
 
 { #category : #'as yet unclassified' }
+SBSubstitution class >> priority [
+
+	^ 10
+]
+
+{ #category : #'as yet unclassified' }
 SBSubstitution class >> selector: aString receiverMatches: aMessage [
 
 	^ aMessage receiver isBinding and: [self name = aMessage receiver contents and: [aMessage selector = aString]]

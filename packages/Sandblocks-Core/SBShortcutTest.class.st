@@ -11,6 +11,18 @@ SBShortcutTest >> testMatchesArrowKey [
 ]
 
 { #category : #'as yet unclassified' }
+SBShortcutTest >> testMatchesColon [
+
+	self assert: ($: asSandblockShortcut matchesEvent: (KeyboardEvent new setType: #keyDown buttons: 8 position: 0 @ 0 keyValue: $: asInteger hand: nil stamp: 0))
+]
+
+{ #category : #'as yet unclassified' }
+SBShortcutTest >> testMatchesEscape [
+
+	self assert: (Character escape asSandblockShortcut matchesEvent: (KeyboardEvent new setType: #keyDown buttons: 0 position: 0 @ 0 keyValue: Character escape asInteger hand: nil stamp: 0))
+]
+
+{ #category : #'as yet unclassified' }
 SBShortcutTest >> testMatchesUpperCase [
 
 	self assert: ($O asSandblockShortcut matchesEvent: (KeyboardEvent new setType: #keyDown buttons: 8 position: 0 @ 0 keyValue: $O asInteger hand: nil stamp: 0))

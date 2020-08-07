@@ -667,6 +667,13 @@ SBBlock >> frameSize [
 	^ self colorPolicy ifNotNil: [:c | c selectionBorderWidth] ifNil: [0]
 ]
 
+{ #category : #'event handling' }
+SBBlock >> handleDropMorph: anEvent [
+
+	self highlightForDrop: false.
+	^ super handleDropMorph: anEvent
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> handleDroppedBlock: aBlock event: anEvent [
 
@@ -1138,6 +1145,8 @@ SBBlock >> mouseDown: anEvent [
 { #category : #'event handling' }
 SBBlock >> mouseEnterDragging: anEvent [
 
+	(anEvent hand firstSubmorph respondsTo: #noteDragEnter:) ifTrue: [anEvent hand firstSubmorph noteDragEnter: self].
+	
 	self allOwnersDo: #resetHighlightForDrop.
 	self highlightForDrop: true
 ]
@@ -1145,6 +1154,8 @@ SBBlock >> mouseEnterDragging: anEvent [
 { #category : #'event handling' }
 SBBlock >> mouseLeaveDragging: anEvent [
 
+	(anEvent hand firstSubmorph respondsTo: #noteDragLeave:) ifTrue: [anEvent hand firstSubmorph noteDragLeave: self].
+	
 	self highlightForDrop: false
 ]
 
