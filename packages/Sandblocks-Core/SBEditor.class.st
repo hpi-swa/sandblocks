@@ -843,10 +843,9 @@ SBEditor >> filterEvent: anEvent for: aMorph [
 	
 	anEvent keyValue = 251 ifTrue: [self toggleHelperTimer: anEvent type = #keyDown] ifFalse: [self removeHelperTimer].
 	
-	SBWatch report: countModifier for: 617319822.
 	(self performShortcutFor: anEvent)
 		ifTrue: [
-			SBWatch report: (countModifier := '') for: 247028657.
+			countModifier := ''.
 			^ anEvent ignore]
 		ifFalse: [
 			anEvent keyCharacter isDigit ifTrue: [

@@ -22,7 +22,7 @@ SBStringMorph >> clearEmphasis [
 { #category : #accessing }
 SBStringMorph >> color [
 
-	^ self containingSandblock foregroundColor
+	^ self containingSandblock ifNotNil: [:b | b foregroundColor] ifNil: [super color]
 ]
 
 { #category : #drawing }

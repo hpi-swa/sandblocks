@@ -8,12 +8,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBPragma >> activeMorph [
-
-	^ signature activeMorph ifNil: [self]
-]
-
-{ #category : #'as yet unclassified' }
 SBPragma >> actualReceiver [
 
 	^ self containingArtefact

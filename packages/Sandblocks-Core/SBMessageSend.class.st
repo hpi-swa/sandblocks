@@ -14,12 +14,6 @@ SBMessageSend class >> placeholderSelector [
 	^ '----'
 ]
 
-{ #category : #accessing }
-SBMessageSend >> activeMorph [
-
-	^ signature activeMorph ifNil: [self]
-]
-
 { #category : #'as yet unclassified' }
 SBMessageSend >> actualReceiver [
 

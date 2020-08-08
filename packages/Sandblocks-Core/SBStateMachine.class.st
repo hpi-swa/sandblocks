@@ -51,7 +51,7 @@ SBStateMachine >> buildFrom: aNode [
 		from: #combat to: #idle when: #finished' parseAsSandblockWithoutSubstitution
 			}]
 		label: 'simple'.
-	states := Dictionary newFrom: (((aNode messages gather: [:message | 
+	states := OrderedDictionary newFrom: (((aNode messages gather: [:message | 
 		message selector caseOf: {
 			([#from:to:if:] -> [message arguments copyFrom: 1 to: 2]).
 			([#from:to:when:] -> [message arguments copyFrom: 1 to: 2]).
@@ -66,17 +66,17 @@ SBStateMachine >> buildFrom: aNode [
 	aNode messages do: [:message | 
 		message selector caseOf: {
 			([#initialState:] -> [initialState := states at: message arguments first contents]).
-			([#from:to:if:] -> [ | line |
+			([#from:to:if:] -> [ 
 				self
 					connect: message arguments first contents
 					to: message arguments second contents
 					if: message arguments third]).
-			([#from:to:when:] -> [ | line |
+			([#from:to:when:] -> [ 
 				self
 					connect: message arguments first contents
 					to: message arguments second contents
 					if: message arguments third]).
-			([#from:to:after:] -> [ | line |
+			([#from:to:after:] -> [ 
 				self
 					connect: message arguments first contents
 					to: message arguments second contents
@@ -86,6 +86,12 @@ SBStateMachine >> buildFrom: aNode [
 			([#yourself] -> [nil])
 		}].
 	self updatePositions
+]
+
+{ #category : #'as yet unclassified' }
+SBStateMachine >> canDeleteChild: aBlock [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -104,7 +110,7 @@ SBStateMachine >> checkNearbyEnemies [
 SBStateMachine >> childSandblocksDo: aBlock [
 
 	states do: [:state | aBlock value: state].
-	connectors do: [:transition | transition conditions do: [:condition | aBlock value: condition]]
+	connectors do: [:transition | aBlock value: transition conditions]
 ]
 
 { #category : #'as yet unclassified' }
@@ -150,9 +156,10 @@ SBStateMachine >> exampleStateMachine [
 	a := 5.
 	b := SBStateMachine new
 		initialState: #idle;
-		uponEnter: #evasion do: [self flattenOnStream: a];
-		uponEnter: #combat do: [self yourself];
-		uponLeave: #combat do: [self stop];
+		uponEnter: #evasion do: [self];
+		uponLeave: #evasion do: [4];
+		uponEnter: #combat do: [self];
+		uponLeave: #combat do: [self];
 		from: #idle to: #combat if: [self checkNearbyEnemies];
 		from: #combat to: #evasion if: [self checkLowHealth];
 		from: #evasion to: #idle if: [true]

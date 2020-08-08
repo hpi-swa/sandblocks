@@ -39,9 +39,3 @@ Point >> scalarTowards: aSymbol [
 	aSymbol = #bottom ifTrue: [^ self y].
 	self error: 'invalid side'
 ]
-
-{ #category : #'*Sandblocks-Core' }
-Point >> withScalingFactor [
-
-	^ self
-]

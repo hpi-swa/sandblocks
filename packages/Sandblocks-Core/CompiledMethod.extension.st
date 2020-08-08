@@ -16,17 +16,14 @@ CompiledMethod >> asSandblock [
 				nodeToRange := parser encoder rawSourceRanges.
 				debuggerMap := self debuggerMap.
 				instructions := InstructionStream on: self.
-				SBWatch
-					report: (rangeToPCList := Array streamContents: [:stream |
-						self enumerateInstructions: debuggerMap of: self on: stream])
-					for: 581681541.
+				rangeToPCList := Array streamContents: [:stream |
+					self enumerateInstructions: debuggerMap of: self on: stream].
 				
 				rangeToPC := Dictionary new.
 				rangeToPCList do: [:assoc |
 					(#(#storeIntoReceiverVariable: #storeIntoTemporaryVariable: #popIntoReceiverVariable: #popIntoTemporaryVariable: #pushClosureCopyNumCopiedValues:numArgs:blockSize: #pushFullClosure:numCopied: #send:super:numArgs: #methodReturnConstant: #methodReturnReceiver #methodReturnTop #jump:if:) includes: assoc value second) ifTrue: [rangeToPC at: assoc key put: assoc value first]].
-				nodeToPC := (SBWatch report: nodeToRange for: 539115364) collect: [:range |
-					(SBWatch report: rangeToPC for: 1056201063) at: range ifAbsent: [0]].
-				(SBWatch report: nodeToPC for: 522912432) keysAndValuesDo: [:node :pc | node pc: pc]].
+				nodeToPC := nodeToRange collect: [:range | rangeToPC at: range ifAbsent: [0]].
+				nodeToPC keysAndValuesDo: [:node :pc | node pc: pc]].
 			[
 				methodNode := self methodNode.
 				methodNode generate]

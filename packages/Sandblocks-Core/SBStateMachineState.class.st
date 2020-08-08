@@ -10,12 +10,14 @@ Class {
 
 { #category : #'as yet unclassified' }
 SBStateMachineState >> addEnterAction [
+	<action>
 
 	self addUponEnter: SBBlockBody empty
 ]
 
 { #category : #'as yet unclassified' }
 SBStateMachineState >> addLeaveAction [
+	<action>
 
 	self addUponLeave: SBBlockBody empty
 ]
@@ -48,6 +50,7 @@ SBStateMachineState >> childSandblocksDo: aBlock [
 
 { #category : #'as yet unclassified' }
 SBStateMachineState >> connectTo [
+	<action>
 
 	| states index |
 	states := self owner states collect: #name.
@@ -89,7 +92,14 @@ SBStateMachineState >> prefix [
 ]
 
 { #category : #'as yet unclassified' }
+SBStateMachineState >> printOn: aStream [
+
+	aStream nextPutAll: self className; nextPut: $(; nextPutAll: self name; nextPut: $)
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachineState >> setAsInitialState [
+	<action>
 
 	self parentSandblock initialState: self
 ]

@@ -560,7 +560,7 @@ SBASTNode >> wrapWithWatch [
 	<action>
 	<actionValidIf: #isExpression>
 
-	self watchWith: SBWatch
+	self watchWith: SBNewWatch
 ]
 
 { #category : #printing }

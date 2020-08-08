@@ -15,12 +15,6 @@ SBMethod class >> newFor: aMethod at: aPoint [
 ]
 
 { #category : #'as yet unclassified' }
-SBMethod >> activeMorph [
-
-	^ signature activeMorph ifNil: [self]
-]
-
-{ #category : #'as yet unclassified' }
 SBMethod >> argumentsDo: aBlock [
 
 	^ signature argumentsDo: aBlock

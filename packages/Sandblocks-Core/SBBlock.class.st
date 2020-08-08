@@ -62,13 +62,6 @@ SBBlock >> actions [
 			SBBlock = class ifTrue: [^ stream contents]]]
 ]
 
-{ #category : #testing }
-SBBlock >> activeMorph [
-	" provides the opportunity to advertise a different morph that self to be considered as the current holder of focus "
-
-	^ self
-]
-
 { #category : #actions }
 SBBlock >> addElement [
 	<action>
@@ -761,7 +754,7 @@ SBBlock >> inputNextUnknown [
 	<action>
 	<inputAction>
 
-	(self activeMorph nextBlockThat: [:m | m isUnknown])
+	(self nextBlockThat: [:m | m isUnknown])
 		ifNotNil: [:m | self sandblockEditor startInput: m at: 1 replacingContents: true]
 ]
 
