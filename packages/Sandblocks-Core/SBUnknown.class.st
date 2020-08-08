@@ -13,6 +13,7 @@ SBUnknown >> acceptCharacter: char [
 	char = $' ifTrue: [^ self doReplaceBy: (SBString new contents: '')].
 	char = $# ifTrue: [^ self doReplaceBy: (SBSymbol new contents: '')].
 	((char = Character space or: [char = Character cr]) and: [self isStatement]) ifTrue: [^ self emptyLine].
+	char = Character backspace ifTrue: [^ self tryDelete].
 	
 	char = ${ ifTrue: [^ self doWrap: [:outer :inner | outer type: #dynamic contents: {inner}] with: SBArray new].
 	char = $( ifTrue: [^ self doWrap: [:outer :inner | outer type: #literal contents: {inner}] with: SBArray new].
@@ -97,6 +98,17 @@ SBUnknown >> replaceWithPragma [
 		replacer: pragma;
 		shouldMergeWithNext: true).
 	^ pragma sandblockEditor startInput: pragma at: 1 replacingContents: true
+]
+
+{ #category : #'as yet unclassified' }
+SBUnknown >> tryDelete [
+
+	| editor p |
+	p := self previousBlock.
+	editor := self sandblockEditor.
+	
+	self deleteBlock.
+	editor startInput: p at: 9e8 replacingContents: false
 ]
 
 { #category : #'as yet unclassified' }
