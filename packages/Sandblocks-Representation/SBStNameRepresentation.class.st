@@ -23,15 +23,22 @@ SBStNameRepresentation class >> isSmalltalkName [
 ]
 
 { #category : #'as yet unclassified' }
-SBStNameRepresentation class >> matches: aBlock [
+SBStNameRepresentation class >> matches: anObject [
 
-	^ (aBlock respondsTo: #contents) and: [aBlock contents isString  and: [aBlock contents isEmpty or: [aBlock contents first isLetter and: [aBlock contents viewAllButFirst allSatisfy: #isAlphaNumeric]]]]
+	| string |
+	string := (anObject isString or: [anObject isText])
+		ifTrue: [anObject string]
+		ifFalse: [
+			((anObject respondsTo: #contents) and: [anObject contents isString]) ifTrue: [anObject contents] ifFalse: [^ false]].
+	
+	^ string isEmpty or: [
+		string first isLetter and: [string viewAllButFirst allSatisfy: #isAlphaNumeric]]
 ]
 
 { #category : #'as yet unclassified' }
 SBStNameRepresentation class >> newFor: anObject [
 
-	^ SBName contents: anObject contents
+	^ SBName contents: ((anObject isString or: [anObject isText]) ifTrue: [anObject] ifFalse: [anObject contents])
 ]
 
 { #category : #'as yet unclassified' }

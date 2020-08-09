@@ -226,7 +226,7 @@ SBMultilineOwnTextMorph >> selection [
 	| cursors |
 	self hasSelection ifFalse: [^ ''].
 	cursors := self selectionBounds.
-	^ self contents copyFrom: cursors first to: cursors second
+	^ self contents copyFrom: cursors first to: cursors second - 1
 ]
 
 { #category : #'as yet unclassified' }

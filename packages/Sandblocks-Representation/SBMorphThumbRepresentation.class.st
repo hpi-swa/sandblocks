@@ -5,6 +5,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBMorphThumbRepresentation class >> eagerNewFor: aMorph [
+
+	" be conservative with our resources "
+	^ Form basicNew
+]
+
+{ #category : #'as yet unclassified' }
 SBMorphThumbRepresentation class >> isForm [
 
 	^ true

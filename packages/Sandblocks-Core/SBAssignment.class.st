@@ -30,6 +30,13 @@ SBAssignment >> childSandblocksDo: aBlock [
 		aBlock value: self lastSubmorph]
 ]
 
+{ #category : #converting }
+SBAssignment >> contextAcceptedRepresentationAt: aNumber [
+
+	aNumber = 1 ifTrue: [^ #isSmalltalkName].
+	^ #isSmalltalkExpression
+]
+
 { #category : #'as yet unclassified' }
 SBAssignment >> expression [
 

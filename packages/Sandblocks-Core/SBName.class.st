@@ -109,6 +109,12 @@ SBName >> contentsChanged [
 ]
 
 { #category : #'as yet unclassified' }
+SBName >> doubleClick: anEvent [
+
+	self behavior doubleClick: anEvent
+]
+
+{ #category : #'as yet unclassified' }
 SBName >> fixActions [
 
 	^ self behavior fixActions

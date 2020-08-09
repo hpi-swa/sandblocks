@@ -49,6 +49,10 @@ SBNameBehavior >> detached: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBNameBehavior >> doubleClick: anEvent [
+]
+
+{ #category : #'as yet unclassified' }
 SBNameBehavior >> fixActions [
 
 	^ #()

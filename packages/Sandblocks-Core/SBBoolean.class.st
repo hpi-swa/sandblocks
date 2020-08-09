@@ -12,6 +12,12 @@ SBBoolean >> contentsChanged [
 ]
 
 { #category : #'as yet unclassified' }
+SBBoolean >> doubleClick: anEvent [
+
+	self toggle
+]
+
+{ #category : #'as yet unclassified' }
 SBBoolean >> guessedClass [
 
 	^ Boolean
