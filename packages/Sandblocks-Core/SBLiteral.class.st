@@ -81,7 +81,7 @@ SBLiteral >> isLiteralBlock [
 { #category : #'as yet unclassified' }
 SBLiteral >> keyStroke: anEvent [
 
-	(anEvent keyCharacter isSpecial or: [anEvent keyCharacter = Character space]) ifTrue: [
+	(self isExpression and: [anEvent keyCharacter isSpecial or: [anEvent keyCharacter = Character space]]) ifTrue: [
 		(self parentSandblock isMessageSend and: [
 			self parentSandblock selector = SBMessageSend placeholderSelector]) ifTrue: [
 			^ self sandblockEditor

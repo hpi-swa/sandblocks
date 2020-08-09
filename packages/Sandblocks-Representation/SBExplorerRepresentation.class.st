@@ -17,6 +17,12 @@ SBExplorerRepresentation class >> isLeaf [
 ]
 
 { #category : #'as yet unclassified' }
+SBExplorerRepresentation class >> isSandblock [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBExplorerRepresentation class >> isToplevelMorph [
 
 	^ true

@@ -30,17 +30,14 @@ SBDemoFormatter class >> formatString: aString class: aClass noPattern: aBoolean
 
 	| result formatter node methodNode |
 	SBExample
-		self: [SBFormatter]
+		self: [SBDemoFormatter]
 		args: [
 			{'testMethod
 
-    self halt; yourself'. UndefinedObject. true}]
+    self halt; yourself'. UndefinedObject. false}]
 		label: 'string test'.
 	methodNode := Parser new parse: aString class: aClass noPattern: aBoolean notifying: nil ifFail: nil.
-	node := aBoolean
-		ifTrue: [
-			(SBExampleWatch report: methodNode for: 715231687) body statements first expr]
-		ifFalse: [SBExampleWatch report: methodNode for: 893204939].
+	node := aBoolean ifTrue: [methodNode body statements first expr] ifFalse: [methodNode].
 	formatter := self new initForNode: node.
 	node accept: formatter.
 	result := formatter contents.
@@ -276,17 +273,14 @@ SBDemoFormatter >> visitBlockNode: aNode [
 	isMethodBlock := (self parentFor: aNode) isKindOf: MethodNode.
 	startWithNewLine := isMethodBlock not and: [
 		aNode statements size > 1 or: [self willBeMultiLine: aNode statements first]].
-	
 	isMethodBlock ifFalse: [
 		self formatBlockStartOf: aNode startWithNewLine: startWithNewLine].
 	self formatTemporariesOf: aNode isMethod: isMethodBlock.
-	
 	self
 		indent: (startWithNewLine ifTrue: [1] ifFalse: [0])
 		around: [ | statements |
 			statements := self blockStatementsOf: aNode.
 			startWithNewLine ifTrue: [self newLine].
-			
 			statements do: [:statement |
 				(statement isLiteralNode and: [statement key = #sbEmptyLine])
 					ifTrue: [self newLine]

@@ -164,7 +164,7 @@ SBBlock >> canInput [
 { #category : #actions }
 SBBlock >> canJumpTo: aBlock [
 
-	^ aBlock containingArtefact = self containingArtefact or: [self containingArtefact notNil and: [self containingArtefact floating not]]
+	^ aBlock parentSandblock containingArtefact = self containingArtefact or: [self containingArtefact notNil and: [self containingArtefact floating not]]
 ]
 
 { #category : #testing }
@@ -294,7 +294,9 @@ SBBlock >> completionSuggestionsFor: aString [
 { #category : #'as yet unclassified' }
 SBBlock >> containingArtefact [
 
-	^ self parentSandblock ifNotNil: #containingArtefact
+	^ self isArtefact
+		ifTrue: [self]
+		ifFalse: [self parentSandblock ifNotNil: [:b | b containingArtefact]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -551,6 +553,10 @@ SBBlock >> ensureDecorator: aClass do: aBlock [
 		d := aClass new.
 		self attachDecorator: d.
 		aBlock value: d]
+]
+
+{ #category : #'artefact protocol' }
+SBBlock >> ensureExpanded [
 ]
 
 { #category : #actions }
@@ -1214,11 +1220,11 @@ SBBlock >> nextVerticalNear: aNumber [
 SBBlock >> nextVerticalNear: aNumber calcDistance: aDistBlock validBlock: aValidBlock [
 
 	| allCandidates candidates candidatesBestDistance tolerance artefact |
-	artefact := self containingArtefact.
+	artefact := self parentSandblock containingArtefact ifNil: [self containingArtefact].
 	tolerance := 10.
 	
 	allCandidates := Array streamContents: [:stream |
-		self containingArtefact allBlocksDo: [:candidate |
+		artefact allBlocksDo: [:candidate |
 			(candidate hasChildSandblocks not and: [aValidBlock value: candidate]) ifTrue: [stream nextPut: candidate]]].
 	
 	candidates := OrderedCollection new.
@@ -1429,6 +1435,12 @@ SBBlock >> proposeCodeActions: aCollection for: aBlock [
 	| index |
 	index := UIManager default chooseFrom: (aCollection collect: #label).
 	index > 0 ifTrue: [(aCollection at: index) do]
+]
+
+{ #category : #'artefact protocol' }
+SBBlock >> relatedClass [
+
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }

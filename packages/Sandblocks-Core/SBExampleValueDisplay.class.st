@@ -13,7 +13,8 @@ Class {
 { #category : #'event handling' }
 SBExampleValueDisplay >> exampleFinished: anExample [ 
 
-	display exampleFinished: anExample.
+	"display exampleFinished: anExample."
+	
 	statusLabel contents: (hadValue
 		ifTrue: ['']
 		ifFalse:  ['- Not reached -'])
@@ -22,7 +23,10 @@ SBExampleValueDisplay >> exampleFinished: anExample [
 { #category : #'event handling' }
 SBExampleValueDisplay >> exampleStarting: anExample [
 
-	display exampleStarting: anExample.
+	"display exampleStarting: anExample."
+	display noValue.
+	self extent: 0 @ 0.
+	
 	statusLabel contents: '...'.
 	hadValue := false
 ]
@@ -41,7 +45,7 @@ SBExampleValueDisplay >> initialize [
 		changeListDirection: #leftToRight;
 		addMorphBack: (label := SBStringMorph new);
 		addMorphBack: (statusLabel := SBStringMorph new contents: '');
-		addMorphBack: (display := SBWatchView new dark: true)
+		addMorphBack: (display := SBNewWatchView new)
 ]
 
 { #category : #'as yet unclassified' }

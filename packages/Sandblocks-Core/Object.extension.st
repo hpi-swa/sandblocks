@@ -1,6 +1,12 @@
 Extension { #name : #Object }
 
 { #category : #'*Sandblocks-Core' }
+Object >> anyRepresentationThat: aSymbol [
+
+	^ (self representationsThat: aSymbol) first newFor: self
+]
+
+{ #category : #'*Sandblocks-Core' }
 Object >> asSandblock [
 
 	SBDataProjection allSubclassesDo: [:class | (class matches: self) ifTrue: [^ class new object: self]].

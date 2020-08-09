@@ -20,7 +20,7 @@ SBMorphThumbRepresentation class >> isForm [
 { #category : #'as yet unclassified' }
 SBMorphThumbRepresentation class >> matches: anObject [
 
-	^ anObject isMorph
+	^ anObject isMorph and: [anObject isSandblock not]
 ]
 
 { #category : #'as yet unclassified' }

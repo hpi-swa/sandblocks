@@ -11,7 +11,7 @@ BlockNode >> asMethodBodySandblock [
 	^ SBBlockBody new
 		statements: (s collect: #asSandblock);
 		temporaries: (self temporaries collect: #asSandblock);
-		bindings: (self arguments collect: #asSandblock);
+		bindings: #();
 		pc: self pc;
 		yourself
 ]

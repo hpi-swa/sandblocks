@@ -188,6 +188,7 @@ SBExplorer >> on: anObject [
 		cellGap: 4 withScalingFactor;
 		addMorphBack: (SBIcon iconBars
 			on: #startDrag send: #pickUp: to: self;
+			small;
 			yourself);
 		addMorphBack: (label := SBStringMorph new contents: (anObject asString truncateWithElipsisTo: 40)))
 ]

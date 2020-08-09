@@ -268,7 +268,7 @@ Morph >> sandblockEditor [
 { #category : #'*Sandblocks-Core' }
 Morph >> sandblockForegroundColor [
 
-	^ self containingSandblock foregroundColor
+	^ self containingSandblock ifNotNil: [:b | b foregroundColor] ifNil: [color]
 ]
 
 { #category : #'*Sandblocks-Core' }

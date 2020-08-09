@@ -4,7 +4,7 @@ Extension { #name : #MessageNode }
 MessageNode >> asCascadePartSandblock [
 	
 	| msg |
-	msg := self asSandblock.
+	msg := self asSandblockWithoutSubstitution.
 	msg receiver: nil.
 	^ msg
 ]

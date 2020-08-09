@@ -84,7 +84,7 @@ SBNumber >> mouseUp: anEvent [
 	isDown := false.
 	oldCursor ifNotNil: #show.
 	
-	scrubbingCommand oldValue ~= self contents ifTrue: [
+	(scrubbingCommand notNil and: [scrubbingCommand oldValue ~= self contents]) ifTrue: [
 		self sandblockEditor do: (scrubbingCommand value: self contents)].
 	scrubbingCommand := nil
 ]

@@ -11,6 +11,12 @@ SBMorphRepresentation class >> isMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBMorphRepresentation class >> isSandblock [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBMorphRepresentation class >> isToplevelMorph [
 
 	^ true

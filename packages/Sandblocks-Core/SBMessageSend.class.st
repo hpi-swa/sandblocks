@@ -149,7 +149,7 @@ SBMessageSend >> fixActions [
 { #category : #'as yet unclassified' }
 SBMessageSend >> guessedClass [
 
-	^ self containingArtefact typeFor: self
+	^ self containingArtefact ifNotNil: [:a | a typeFor: self]
 ]
 
 { #category : #'as yet unclassified' }

@@ -49,6 +49,18 @@ SBBlockBody >> addBlockArgument [
 		startInput: self sandblockEditor selection at: 0 replacingContents: false
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlockBody >> addElement [
+	<action>
+	
+	self sandblockEditor do: ((SBInsertCommand newFor: self containingArtefact)
+		index: self submorphCount + 1;
+		container: self;
+		morph: SBUnknown new;
+		shouldMergeWithNext: true;
+		yourself)
+]
+
 { #category : #converting }
 SBBlockBody >> bindingFor: aString class: aClass ifPresent: aBlock [
 

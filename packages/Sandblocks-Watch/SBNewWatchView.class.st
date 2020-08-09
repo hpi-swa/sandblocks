@@ -94,16 +94,16 @@ SBNewWatchView >> initialize [
 			yourself)
 ]
 
+{ #category : #'event handling' }
+SBNewWatchView >> noValue [
+
+	display ifNotNil: #delete
+]
+
 { #category : #'as yet unclassified' }
 SBNewWatchView >> promptChangeDisplay [
 
-	| choices index |
-	choices := self validDisplaysFor: lastValue.
-	
-	index := UIManager default chooseFrom: choices.
-	index < 1 ifTrue: [^ self].
-	
-	self useDisplay: (choices at: index)
+	self useDisplay: (lastValue representationThat: #isMorph)
 ]
 
 { #category : #'as yet unclassified' }
@@ -111,7 +111,7 @@ SBNewWatchView >> reportValue: anObject [
 
 	hadValue ifFalse: [hadValue := true].
 	
-	self useDisplay: ((anObject representationsThat: #isMorph) first newFor: anObject).
+	self useDisplay: (anObject anyRepresentationThat: #isMorph).
 	
 	count contents: (count contents asInteger + 1) asString.
 	lastValue := anObject

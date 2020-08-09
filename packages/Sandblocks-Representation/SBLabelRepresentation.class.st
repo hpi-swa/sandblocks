@@ -31,7 +31,7 @@ SBLabelRepresentation class >> matches: anObject [
 { #category : #'as yet unclassified' }
 SBLabelRepresentation class >> newFor: anObject [
 
-	^ SBStringMorph new contents: (anObject printStringLimitedTo: 120)
+	^ SBMultilineOwnTextMorph new contents: (anObject printStringLimitedTo: 120)
 ]
 
 { #category : #'as yet unclassified' }
