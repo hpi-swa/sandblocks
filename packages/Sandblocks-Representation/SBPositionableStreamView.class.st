@@ -22,6 +22,18 @@ SBPositionableStreamView >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBPositionableStreamView >> contextAcceptedRepresentationAt: aNumber [
+
+	^ aNumber < (self childSandblocks size - 2) ifTrue: [#isSandblock] ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBPositionableStreamView >> hasUnsavedChanges [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBPositionableStreamView >> hasUnsavedChanges: aBoolean [
 
 	
@@ -49,9 +61,25 @@ SBPositionableStreamView >> isArtefact [
 ]
 
 { #category : #'as yet unclassified' }
+SBPositionableStreamView >> next [
+	<action>
+	
+	stream next.
+	self stream: stream
+]
+
+{ #category : #'as yet unclassified' }
 SBPositionableStreamView >> object [
 
 	^ stream
+]
+
+{ #category : #'as yet unclassified' }
+SBPositionableStreamView >> reset [
+	<action>
+	
+	stream reset.
+	self stream: stream
 ]
 
 { #category : #'as yet unclassified' }

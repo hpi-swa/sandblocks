@@ -48,6 +48,8 @@ SBMethod >> currentTextMorph [
 { #category : #'as yet unclassified' }
 SBMethod >> deleteCommandFor: aBlock [
 
+	aBlock = self body ifTrue: [^ nil].
+	
 	^ signature deleteCommandFor: aBlock
 ]
 

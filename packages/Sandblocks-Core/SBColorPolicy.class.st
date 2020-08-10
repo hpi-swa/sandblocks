@@ -78,6 +78,12 @@ SBColorPolicy >> lineGap [
 ]
 
 { #category : #'as yet unclassified' }
+SBColorPolicy >> messageCellGap [
+
+	^ 4
+]
+
+{ #category : #'as yet unclassified' }
 SBColorPolicy >> selectionBorderWidth [
 
 	^ 3
@@ -186,6 +192,12 @@ SBColorPolicy >> symbolsForMethodArgumentDeclaration: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForNumber: aBlock [
+
+	^ #(nil nil)
+]
+
+{ #category : #'as yet unclassified' }
 SBColorPolicy >> symbolsForPoolVariableDeclaration: aBlock [
 
 	^ #(nil nil)
@@ -223,6 +235,12 @@ SBColorPolicy >> symbolsForSymbol: aBlock [
 
 { #category : #'as yet unclassified' }
 SBColorPolicy >> symbolsForTemporaryVariableDeclaration: aBlock [
+
+	^ #(nil nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsForUnknown: aBlock [
 
 	^ #(nil nil)
 ]

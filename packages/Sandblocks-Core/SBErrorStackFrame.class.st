@@ -39,7 +39,13 @@ SBErrorStackFrame >> context: aContext [
 { #category : #'as yet unclassified' }
 SBErrorStackFrame >> currentBlock [
 
-	^ self method blockForPC: context pc
+	^ self currentBlockIsActive: self isActiveFrame
+]
+
+{ #category : #'as yet unclassified' }
+SBErrorStackFrame >> currentBlockIsActive: aBoolean [
+
+	^ self method blockForPC: (aBoolean ifTrue: [context pc] ifFalse: [context previousPc])
 ]
 
 { #category : #'as yet unclassified' }
@@ -58,13 +64,13 @@ SBErrorStackFrame >> initialize [
 { #category : #'as yet unclassified' }
 SBErrorStackFrame >> isActiveFrame [
 
-	^ (self owner submorphIndexOf: self) = 1
+	^ context = self parentSandblock process suspendedContext
 ]
 
 { #category : #'as yet unclassified' }
 SBErrorStackFrame >> method [
 
-	^ self sandblockEditor open: context method
+	^ self sandblockEditor open: context method homeMethod
 ]
 
 { #category : #'as yet unclassified' }
@@ -111,7 +117,7 @@ SBErrorStackFrame >> setActive [
 SBErrorStackFrame >> updateSelection [
 
 	pcIndicator ifNotNil: #detach.
-	((self sandblockEditor open: self context method) blockForPC: (self isActiveFrame ifTrue: [self context pc] ifFalse: [self context previousPc])) ifNotNil: [:block | 
+	self currentBlock ifNotNil: [:block | 
 		block
 			select;
 			attachDecorator: (pcIndicator := SBErrorDecorator new)]

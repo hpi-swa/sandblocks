@@ -117,9 +117,10 @@ SBMoveDecorator >> step [
 	self isDragging ifTrue: [^ self].
 	self morph owner submorphsDo: [:otherMorph |
 		(otherMorph isSandblock and: [
-			otherMorph ~= self morph and: [
-				(self morph bounds intersects: otherMorph bounds) and: [
-					(self morph bounds containsRect: otherMorph bounds) not]]]) ifTrue: [
+			otherMorph preventOcclusion and: [
+				otherMorph ~= self morph and: [
+					(self morph bounds intersects: otherMorph bounds) and: [
+						(self morph bounds containsRect: otherMorph bounds) not]]]]) ifTrue: [
 			velocity := self resolveCollisionCenteredWith: otherMorph.
 			hadIntersect := true]].
 	(velocity closeTo: 0 @ 0)

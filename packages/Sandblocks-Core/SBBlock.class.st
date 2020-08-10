@@ -1478,13 +1478,13 @@ SBBlock >> replaceWithCopyBuffer [
 SBBlock >> representAs [
 	<action>
 
-	^ self object
-		representationThat: self acceptedRepresentation
-		do: [:type |
-			self sandblockEditor do: (SBReplaceCommand newNonEdit
-				target: self;
-				replacer: type)]
-		ifNone: [nil]
+	| options prompt |
+	options := self object representationsThat: self acceptedRepresentation.
+	options ifEmpty: [^ self].
+	
+	prompt := SBRepresentationPrompt new options: options target: self object current: self.
+	self sandblockEditor openMorphInView: prompt.
+	prompt position: self topRight
 ]
 
 { #category : #'as yet unclassified' }

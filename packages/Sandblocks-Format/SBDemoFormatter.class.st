@@ -32,26 +32,21 @@ SBDemoFormatter class >> formatString: aString class: aClass noPattern: aBoolean
 	SBExample
 		self: [SBDemoFormatter]
 		args: [
+			{'testMethod self future by: 2 do: 3'. UndefinedObject. false}]
+		label: 'future node'.
+	SBExample
+		self: [SBDemoFormatter]
+		args: [
 			{'testMethod
 
     self halt; yourself'. UndefinedObject. false}]
-		label: 'string test'.
+		label: 'cacade'.
 	methodNode := Parser new parse: aString class: aClass noPattern: aBoolean notifying: nil ifFail: nil.
 	node := aBoolean ifTrue: [methodNode body statements first expr] ifFalse: [methodNode].
 	formatter := self new initForNode: node.
 	node accept: formatter.
 	result := formatter contents.
-	
 	methodNode accept: (ParseNodeEnumerator ofBlock: [:n | n comment: nil]).
-	
-	SBToggledCode
-		comment: 'Sanity check to not produce invalid code'
-		active: 0
-		do: {
-			[
-				methodNode accept: (ParseNodeEnumerator ofBlock: [:n | n comment: nil]).
-				self assert: methodNode asString = (Parser new parse: result class: aClass noPattern: aBoolean notifying: nil ifFail: nil) asString]
-		}.
 	^ result
 ]
 
@@ -147,20 +142,15 @@ SBDemoFormatter >> maxLineLength [
 { #category : #'as yet unclassified' }
 SBDemoFormatter >> needsParenthesisFor: aNode [
 
-	SBExample
-		self: [SBFormatter new]
-		args: [
-			{
-				(Parser new parse: '(self assert: 2) ifNotNil: 3' class: nil class noPattern: true notifying: nil ifFail: nil) body statements first expr receiver
-			}]
-		label: 'simple'.
+	SBExample self: [SBDemoFormatter new] args: [{'(self assert: 2) ifNotNil: 3' parseAsNode}] label: 'simple'.
 	aNode isLeaf ifTrue: [^ false].
 	(aNode isKindOf: ReturnNode) ifTrue: [^ false].
 	aNode isBlockNode ifTrue: [^ false].
 	(self parentFor: aNode) isBlockNode ifTrue: [^ false].
 	(aNode isMessage and: [aNode originalSelector isUnary]) ifTrue: [^ false].
-	(((self parentFor: aNode) isKindOf: CascadeNode)
-		and: [aNode isMessage and: [aNode originalSelector isUnary not and: [(self parentFor: aNode) originalReceiver = aNode]]]) ifTrue: [^ true].
+	(((self parentFor: aNode) isKindOf: CascadeNode) and: [
+		aNode isMessage and: [
+			aNode originalSelector isUnary not and: [(self parentFor: aNode) originalReceiver = aNode]]]) ifTrue: [^ true].
 	(self precedenceOf: aNode) < (self precedenceOf: (self parentFor: aNode)) ifTrue: [^ false].
 	^ true
 ]
@@ -327,10 +317,14 @@ SBDemoFormatter >> visitCascadeNode: aNode [
 { #category : #'as yet unclassified' }
 SBDemoFormatter >> visitFutureNode: aNode [
 
-	self flag: #fixme. " should probably investigate if this is an appropriate measure, consider the context and its arguments "
+	self flag: #fixme.
 	self visitNode: aNode receiver.
 	self assert: aNode futureArgs isEmpty.
-	stream space; nextPutAll: aNode originalSelector; space; nextPutAll: aNode futureSelector
+	stream
+		space;
+		nextPutAll: aNode originalSelector;
+		space;
+		nextPutAll: aNode futureSelector
 ]
 
 { #category : #'as yet unclassified' }

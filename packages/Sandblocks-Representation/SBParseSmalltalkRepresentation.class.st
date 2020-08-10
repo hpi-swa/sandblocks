@@ -24,3 +24,9 @@ SBParseSmalltalkRepresentation class >> newFor: anObject [
 
 	^ anObject string parseAsSandblock
 ]
+
+{ #category : #'as yet unclassified' }
+SBParseSmalltalkRepresentation class >> priority [
+
+	^ 2
+]

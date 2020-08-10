@@ -26,7 +26,7 @@ SBMorphRepresentation class >> isToplevelMorph [
 SBMorphRepresentation class >> matches: anObject [
 
 	self flag: #fixme. " sandblocks cannot live outside their natural habitat, but encoding this here is not nice "
-	^ anObject isMorph and: [anObject isSandblock not]
+	^ anObject isMorph and: [anObject isSandblock not and: [anObject owner isNil or: [anObject owner class = SBMorphWrapperBlock]]]
 ]
 
 { #category : #'as yet unclassified' }

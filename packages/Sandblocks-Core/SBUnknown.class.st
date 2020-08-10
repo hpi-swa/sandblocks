@@ -101,6 +101,12 @@ SBUnknown >> replaceWithPragma [
 ]
 
 { #category : #'as yet unclassified' }
+SBUnknown >> symbols [
+
+	^ self colorPolicy symbolsForUnknown: self
+]
+
+{ #category : #'as yet unclassified' }
 SBUnknown >> tryDelete [
 
 	| editor p |

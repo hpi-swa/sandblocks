@@ -47,11 +47,9 @@ SBError >> createFrameForContext: aContext [
 ]
 
 { #category : #'as yet unclassified' }
-SBError >> currentBlockForPC [
+SBError >> currentBlock [
 
-	| method |
-	method := self sandblockEditor open: (self currentStackFrame context method).
-	^ method blockForPC: self currentStackFrame context pc
+	^ self currentStackFrame currentBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -146,6 +144,12 @@ SBError >> outOfWorld: aWorld [
 ]
 
 { #category : #'as yet unclassified' }
+SBError >> process [
+
+	^ process
+]
+
+{ #category : #'as yet unclassified' }
 SBError >> resetContext: aContext [
 
 	aContext ~= frames firstSubmorph context ifTrue: [ | stack dropToIndex addFromIndex |
@@ -185,7 +189,7 @@ SBError >> rootContext [
 
 	^ SBToggledCode
 		comment: ''
-		active: 2
+		active: 1
 		do: {[process suspendedContext]. [(error ifNotNil: #signalerContext) ifNil: [process suspendedContext]]}
 ]
 
@@ -211,7 +215,7 @@ SBError >> stepInto [
 SBError >> stepOver [
 
 	| newContext currentBlock |
-	currentBlock := self currentStackFrame currentBlock.
+	currentBlock := self currentBlock.
 	newContext := process completeStep: self currentStackFrame context.
 	
 	newContext = self currentStackFrame context
@@ -226,7 +230,7 @@ SBError >> stepOver [
 SBError >> stepThrough [
 
 	| newContext currentBlock |
-	currentBlock := self currentStackFrame currentBlock.
+	currentBlock := self currentBlock.
 	process stepToHome: self currentStackFrame context.
 	newContext := process stepToSendOrReturn.
 	
@@ -265,6 +269,10 @@ SBError >> updateExplorers [
 	self addMorphBack: (temporaries := (SBExplorer on: (Array streamContents: [:stream |
 		context tempNames doWithIndex: [:name :index |
 			stream nextPut: name -> (context debuggerMap namedTempAt: index in: context)]])) toggleCollapsed).
-	explorer ifNotNil: #delete.
-	self addMorphBack: (explorer := SBExplorer on: context receiver) toggleCollapsed
+	
+	(explorer ifNotNil: #object) == context receiver
+		ifTrue: [self flag: #todo. " update "]
+		ifFalse: [
+			explorer ifNotNil: #delete.
+			self addMorphBack: (explorer := SBExplorer on: context receiver) toggleCollapsed]
 ]

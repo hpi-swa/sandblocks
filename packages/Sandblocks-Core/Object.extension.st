@@ -3,7 +3,7 @@ Extension { #name : #Object }
 { #category : #'*Sandblocks-Core' }
 Object >> anyRepresentationThat: aSymbol [
 
-	^ (self representationsThat: aSymbol) first newFor: self
+	^ self newFirstSafeOptionFrom: (self representationsThat: aSymbol)
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -44,7 +44,7 @@ Object >> newFirstSafeOptionFrom: aCollection [
 Object >> representIn: aMorph as: aSymbol near: aPointOrMorph [
 
 	| options representation |
-	options := (self representationsThat: aSymbol) sort: #priority asSortFunction reversed.
+	options := self representationsThat: aSymbol.
 	options ifEmpty: [^ self].
 	representation := self newFirstSafeOptionFrom: options.
 	options size > 1 ifTrue: [ | prompt |

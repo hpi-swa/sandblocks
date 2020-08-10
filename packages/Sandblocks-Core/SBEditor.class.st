@@ -1105,6 +1105,12 @@ SBEditor >> noteNewOwner: aMorph [
 	" ignore "
 ]
 
+{ #category : #accessing }
+SBEditor >> object [
+
+	^ nil
+]
+
 { #category : #actions }
 SBEditor >> okToChange [
 

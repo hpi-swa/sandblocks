@@ -109,6 +109,12 @@ SBNumber >> startDrag: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBNumber >> symbols [
+
+	^ self colorPolicy symbolsForNumber: self
+]
+
+{ #category : #'as yet unclassified' }
 SBNumber >> valid [
 
 	| stream |

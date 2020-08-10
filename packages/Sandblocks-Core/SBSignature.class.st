@@ -39,6 +39,12 @@ SBSignature >> argumentsDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBSignature >> cellGap [
+
+	^ self containingSandblock colorPolicy messageCellGap
+]
+
+{ #category : #'as yet unclassified' }
 SBSignature >> childSandblocksDo: aBlock [
 
 	"self argumentsDo: aBlock"
@@ -88,7 +94,6 @@ SBSignature >> initialize [
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		listDirection: #leftToRight;
-		cellGap: 4 * self scalingFactor;
 		color: Color transparent
 ]
 

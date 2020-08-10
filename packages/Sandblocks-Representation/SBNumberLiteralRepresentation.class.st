@@ -21,3 +21,9 @@ SBNumberLiteralRepresentation class >> newFor: anObject [
 
 	^ SBNumber new contents: anObject asString
 ]
+
+{ #category : #'as yet unclassified' }
+SBNumberLiteralRepresentation class >> priority [
+
+	^ -20
+]

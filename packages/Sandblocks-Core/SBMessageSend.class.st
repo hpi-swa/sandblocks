@@ -58,6 +58,12 @@ SBMessageSend >> canSwap [
 ]
 
 { #category : #'as yet unclassified' }
+SBMessageSend >> cellGap [
+
+	^ self colorPolicy messageCellGap
+]
+
+{ #category : #'as yet unclassified' }
 SBMessageSend >> childSandblocksDo: aBlock [
 
 	self receiver ifNotNil: aBlock.
@@ -161,7 +167,6 @@ SBMessageSend >> initialize [
 	self listDirection: #leftToRight.
 	self hResizing: #shrinkWrap.
 	self vResizing: #shrinkWrap.
-	self cellGap: 4 * self scalingFactor.
 	
 	signature := SBSignature new layoutPolicy: SBKeywordMessageLayout new.
 	pc := 0.

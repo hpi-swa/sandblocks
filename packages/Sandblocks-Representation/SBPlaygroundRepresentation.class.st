@@ -27,3 +27,9 @@ SBPlaygroundRepresentation class >> newFor: anObject [
 
 	^ SBRepl new statements: {anObject veryDeepCopy}
 ]
+
+{ #category : #'as yet unclassified' }
+SBPlaygroundRepresentation class >> priority [
+
+	^ 2
+]

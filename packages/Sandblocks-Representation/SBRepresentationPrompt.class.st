@@ -81,6 +81,12 @@ SBRepresentationPrompt >> options: aCollection target: anObject current: aRepres
 ]
 
 { #category : #'as yet unclassified' }
+SBRepresentationPrompt >> preventOcclusion [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBRepresentationPrompt >> updatePosition [
 
 	self position: currentRepresentation topRight
