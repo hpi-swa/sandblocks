@@ -265,5 +265,7 @@ SBMultilineOwnTextMorph >> updateCursor [
 	p
 		selectionStart: (p characterBlockForIndex: bounds first)
 		selectionStop: (p characterBlockForIndex: bounds second).
-	p showCaret: bounds first > 0
+	p showCaret: bounds first > 0.
+	
+	self triggerEvent: #selectionChanged
 ]

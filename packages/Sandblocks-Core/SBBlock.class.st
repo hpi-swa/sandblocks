@@ -1468,10 +1468,12 @@ SBBlock >> replaceWithCopyBuffer [
 	
 	copyBuffer ifNotNil: [ | new |
 		new := (copyBuffer isSelection ifTrue: [copyBuffer firstSubmorph] ifFalse: [copyBuffer]) veryDeepCopy.
-		self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+		
+		new representationThat: self acceptedRepresentation do: [:repr |
+			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
 			target: self;
 			replacer: new).
-		new postDuplicate]
+		repr postDuplicate] ifNone: []]
 ]
 
 { #category : #'as yet unclassified' }

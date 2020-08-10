@@ -614,6 +614,7 @@ SBEditor >> colorPolicy: aPolicy [
 
 	colorPolicy := aPolicy.
 	self allMorphsDo: #layoutChanged.
+	self clearCache.
 	self changed
 ]
 
@@ -1285,9 +1286,7 @@ SBEditor >> promptChangeColorPolicy [
 	| policy |
 	policy := (UIManager default chooseFrom: SBColorPolicy withAllSubclasses values: SBColorPolicy withAllSubclasses) ifNil: [^ self].
 	self class defaultColorPolicy: policy.
-	self colorPolicy: policy new.
-	self clearCache.
-	self changed
+	self colorPolicy: policy new
 ]
 
 { #category : #'initialize-release' }
@@ -1308,7 +1307,8 @@ SBEditor >> promptMenu [
 
 	| options |
 	options := {
-		({'Change Color Policy'. [self promptChangeColorPolicy]}).
+		({'Change UI Theme'. [self promptChangeColorPolicy]}).
+		({'Reset UI Theme'. [self resetColorPolicy]}).
 		({'Change Compile Method'. [self promptChangeCompile]}).
 		({'New Class'. [self createEmptyClass]})
 	}.
@@ -1409,6 +1409,12 @@ SBEditor >> reportTypeInfo: anObject at: aContext findNode: aBlock [
 	self methods
 		detect: [:method | method methodClass = aContext methodClass and: [method selector = aContext selector]]
 		ifFound: [:method | method cacheType: anObject class for: (aBlock value: method)]
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> resetColorPolicy [
+
+	self colorPolicy: self class defaultColorPolicy new
 ]
 
 { #category : #'initialize-release' }

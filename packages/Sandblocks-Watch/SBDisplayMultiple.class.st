@@ -22,7 +22,7 @@ SBDisplayMultiple >> count: aNumber [
 	countInput value: aNumber.
 	
 	self submorphs allButFirstDo: [:morph | self removeMorph: morph].
-	count timesRepeat: [self addMorphBack: (SBDisplayPrint new dark: dark)]
+	count timesRepeat: [self addMorphBack: SBDisplayPrint new]
 ]
 
 { #category : #'as yet unclassified' }
@@ -56,7 +56,7 @@ SBDisplayMultiple >> initialize [
 		listDirection: #topToBottom;
 		addMorphBack: (SBRow new
 			cellInset: (TextStyle defaultFont height / 2) floor;
-			addMorphBack: (countInput := SBNumberInput new min: 1; onChange: [:num | self count: num]);
+			addMorphBack: (countInput := SBNumberInput new color: Color white; min: 1; onChange: [:num | self count: num]);
 			addMorphBack: (SBIcon iconBar_chart large; on: #click send: #promptChangeDisplay to: self));
 		count: 5
 ]
@@ -71,7 +71,7 @@ SBDisplayMultiple >> promptChangeDisplay [
 	index < 1 ifTrue: [^ self].
 	
 	self submorphs allButFirstDo: [:m| m delete].
-	count timesRepeat: [self addMorphBack: ((choices at: index) new dark: dark)]
+	count timesRepeat: [self addMorphBack: ((choices at: index) new)]
 ]
 
 { #category : #'as yet unclassified' }

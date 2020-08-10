@@ -147,7 +147,7 @@ SBWatch >> initialize [
 		layoutInset: 2 withScalingFactor;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		addMorphBack: (display := SBWatchView new dark: true)
+		addMorphBack: (display := SBWatchView new)
 ]
 
 { #category : #'as yet unclassified' }
