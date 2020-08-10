@@ -567,7 +567,8 @@ SBBlock >> ensureVisible [
 	method := self containingArtefact.
 	(method ~= self and: [method notNil]) ifTrue: [method ensureExpanded].
 	
-	Project current addDeferredUIMessage: [self sandblockEditor ifNotNil: [:e | e scrollToShow: self]]
+	Project current addDeferredUIMessage: [
+		self isInWorld ifTrue: [self sandblockEditor ifNotNil: [:e | e scrollToShow: self]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -1469,7 +1470,7 @@ SBBlock >> replaceWithCopyBuffer [
 	copyBuffer ifNotNil: [ | new |
 		new := (copyBuffer isSelection ifTrue: [copyBuffer firstSubmorph] ifFalse: [copyBuffer]) veryDeepCopy.
 		
-		new representationThat: self acceptedRepresentation do: [:repr |
+		new safeRepresentationThat: self acceptedRepresentation do: [:repr |
 			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
 			target: self;
 			replacer: new).

@@ -64,6 +64,12 @@ SBStringView >> string: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBStringView >> textContents [
+
+	^ self firstSubmorph hasSelection ifTrue: [self firstSubmorph selection] ifFalse: [self firstSubmorph contents]
+]
+
+{ #category : #'as yet unclassified' }
 SBStringView >> updateSelectionLabels [
 
 	| row range |

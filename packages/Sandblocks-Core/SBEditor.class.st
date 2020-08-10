@@ -941,15 +941,13 @@ SBEditor >> internalSelect: aBlock [
 		selection ifNotNil: [
 			verticalSelectionPosition := selection center x - (selection containingArtefact ifNotNil: [:a | a left] ifNil: [0]).
 			selection
-				 attachDecorator: SBSelectionDecorator new;
-				 wasSelected;
-				 ensureVisible].
-		
+				attachDecorator: SBSelectionDecorator new;
+				wasSelected;
+				ensureVisible].
 		previousSelection ifNotNil: [
 			previousSelection
-				 detachDecorators: SBSelectionDecorator;
-				 wasDeselected].
-		
+				detachDecorators: SBSelectionDecorator;
+				wasDeselected].
 		self triggerEvent: #selectionChanged with: selection.
 		self updateSelectionLabel]
 ]

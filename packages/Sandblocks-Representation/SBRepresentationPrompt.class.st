@@ -89,6 +89,13 @@ SBRepresentationPrompt >> preventOcclusion [
 { #category : #'as yet unclassified' }
 SBRepresentationPrompt >> updatePosition [
 
+	SBToggledCode
+		comment: 'No idea why this is necessary, but otherwise we''re at 0@0'
+		active: 1
+		do: {
+			[
+				currentRepresentation owner ifNotNil: [:m | m layoutChanged fullBounds]]
+		}.
 	self position: currentRepresentation topRight
 ]
 
@@ -98,15 +105,17 @@ SBRepresentationPrompt >> useRepresentation: aRepresentation [
 	| newRepresentation |
 	newRepresentation := aRepresentation newFor: target.
 	newRepresentation position: newRepresentation position.
-	
-	newRepresentation
-		when: #positionChanged send: #updatePosition to: self;
-		when: #extentChanged send: #updatePosition to: self.
+	currentRepresentation removeActionsWithReceiver: self.
 	
 	currentRepresentation sandblockEditor do: ((SBReplaceCommand newNonEdit) target: currentRepresentation; replacer: newRepresentation).
 	
 	self flag: #todo. " use mutate command "
 	currentRepresentation := newRepresentation.
 	
-	self updatePosition
+	self updatePosition.
+	self haltOnce.
+	
+	newRepresentation
+		when: #positionChanged send: #updatePosition to: self;
+		when: #extentChanged send: #updatePosition to: self
 ]
