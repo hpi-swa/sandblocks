@@ -6,7 +6,8 @@ Class {
 		'lastValue',
 		'dark',
 		'hadValue',
-		'count'
+		'count',
+		'currentRepresentation'
 	],
 	#category : #'Sandblocks-Watch'
 }
@@ -103,7 +104,14 @@ SBNewWatchView >> noValue [
 { #category : #'as yet unclassified' }
 SBNewWatchView >> promptChangeDisplay [
 
-	self useDisplay: (lastValue representationThat: #isMorph)
+	| index options |
+	options := lastValue representationsThat: self representationTypes.
+	index := UIManager default chooseFrom: options.
+	index = 0 ifTrue: [^ self].
+	
+	currentRepresentation := options at: index.
+	
+	self useDisplay: (currentRepresentation newFor: lastValue)
 ]
 
 { #category : #'as yet unclassified' }
@@ -111,10 +119,18 @@ SBNewWatchView >> reportValue: anObject [
 
 	hadValue ifFalse: [hadValue := true].
 	
-	self useDisplay: (anObject anyRepresentationThat: #isMorph).
+	self useDisplay: ((currentRepresentation notNil and: [currentRepresentation matches: anObject])
+		ifTrue: [currentRepresentation newFor: anObject]
+		ifFalse: [anObject anyRepresentationThat: self representationTypes]).
 	
 	count contents: (count contents asInteger + 1) asString.
 	lastValue := anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBNewWatchView >> representationTypes [
+
+	^ #(isMorph isSandblock)
 ]
 
 { #category : #'as yet unclassified' }

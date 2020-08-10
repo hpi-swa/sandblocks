@@ -123,3 +123,9 @@ SBPositionableStreamView >> stream: aStream [
 	aStream position > 0 ifTrue: [
 		((self firstSubmorph submorphs select: #isSandblock) at: (aStream position - start) + 1) attachDecorator: SBErrorDecorator new]
 ]
+
+{ #category : #'as yet unclassified' }
+SBPositionableStreamView >> update [
+
+	self stream: stream
+]

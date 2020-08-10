@@ -1831,6 +1831,10 @@ SBBlock >> typeFor: aBlock [
 	^ nil
 ]
 
+{ #category : #'event handling' }
+SBBlock >> update [
+]
+
 { #category : #testing }
 SBBlock >> updateSteppingDecorators [
 

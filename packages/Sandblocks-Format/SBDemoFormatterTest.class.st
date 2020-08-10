@@ -58,3 +58,11 @@ SBDemoFormatterTest >> testPragmas [
 	self test'.
 	self assert: string equals: (SBFormatter formatString: string class: UndefinedObject noPattern: false)
 ]
+
+{ #category : #'as yet unclassified' }
+SBDemoFormatterTest >> testVisitFutureNode [
+
+	| string |
+	string := 'self future do: 4 with: 2'.
+	self assert: string equals: (SBDemoFormatter formatString: string class: UndefinedObject noPattern: true)
+]

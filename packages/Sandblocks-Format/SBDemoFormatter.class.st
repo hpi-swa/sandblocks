@@ -318,6 +318,7 @@ SBDemoFormatter >> visitCascadeNode: aNode [
 SBDemoFormatter >> visitFutureNode: aNode [
 
 	self flag: #fixme.
+	SBExampleWatch report: stream for: 464408383.
 	self visitNode: aNode receiver.
 	self assert: aNode futureArgs isEmpty.
 	stream
