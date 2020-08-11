@@ -386,7 +386,7 @@ SBTutorialStep class >> stepMultiSelection: anEditor [
 		addIntroText: 'You can multiselect elements with a dedicated selection mode. Many commands will then act on all elements at once.';
 		addAction: #addElement;
 		addAction: #wrapInDynamicArray;
-		addAction: #unpackAsStatements;
+		addAction: #unpackList;
 		addAction: #addElement;
 		addAction: #promptAction;
 		setup: anEditor

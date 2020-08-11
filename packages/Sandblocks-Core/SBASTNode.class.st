@@ -162,6 +162,13 @@ SBASTNode >> extractVariable [
 		})
 ]
 
+{ #category : #actions }
+SBASTNode >> fixedNumberOfChildren [
+	" return whether you may only take a fixed number of children "
+
+	^ true
+]
+
 { #category : #'as yet unclassified' }
 SBASTNode >> guessClassExpensive [
 
@@ -275,6 +282,12 @@ SBASTNode >> object [
 ]
 
 { #category : #actions }
+SBASTNode >> parentHasDynamicNumberOfChildren [
+
+	^ self parentSandblock fixedNumberOfChildren not
+]
+
+{ #category : #actions }
 SBASTNode >> pasteString [
 	<action>
 
@@ -356,8 +369,9 @@ SBASTNode >> sourceString [
 ]
 
 { #category : #actions }
-SBASTNode >> unpackAsStatements [
+SBASTNode >> unpackList [
 	<action>
+	<actionValidIf: #parentHasDynamicNumberOfChildren>
 
 	self sandblockEditor do: ((SBUnwrapConsecutiveCommand newFor: self containingArtefact) target: self)
 ]
@@ -421,6 +435,7 @@ SBASTNode >> watchWith: aWatchClass [
 { #category : #actions }
 SBASTNode >> wrapAsArgument [
 	<action>
+	<actionValidIf: #isExpression>
 
 	| msg |
 	msg := SBMessageSend new.
@@ -523,6 +538,7 @@ SBASTNode >> wrapInMessageSend: aString [
 { #category : #actions }
 SBASTNode >> wrapInReturn [
 	<action>
+	<actionValidIf: #isExpression>
 
 	self sandblockEditor do: ((SBWrapCommand newFor: self containingArtefact)
 		outer: SBReturn new;

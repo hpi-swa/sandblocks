@@ -274,7 +274,7 @@ Morph >> sandblockForegroundColor [
 { #category : #'*Sandblocks-Core' }
 Morph >> scalingFactor [
 
-	^ (self fontToUse height / 16) ceiling
+	^ (self fontToUse height / 18) ceiling
 ]
 
 { #category : #'*Sandblocks-Core-Simulate' }

@@ -481,9 +481,9 @@ SBEditor >> buildBottomPanel [
 			extent: 0 @ 0;
 			hResizing: #spaceFill;
 			color: Color transparent);
-		addMorphBack: (compileTimeButton := StringMorph new
+		"addMorphBack: (compileTimeButton := StringMorph new
 			contents: 'Compile on save';
-			on: #click send: #promptChangeCompile to: self);
+			on: #click send: #promptChangeCompile to: self);"
 		addMorphBack: (SBButton new
 			balloonText: 'Copy';
 			icon: SBIcon iconCopy shortcut: (self class anyShortcutForAction: #copyToBuffer) do: [self selection copyToBuffer]);
@@ -767,7 +767,8 @@ SBEditor >> do: aCommand [
 	self select: aCommand do.
 	aCommand postDo.
 	
-	self markChangesAfterCommand: aCommand
+	self markChangesAfterCommand: aCommand.
+	self updateVerticalSelectionPosition 
 ]
 
 { #category : #actions }
@@ -939,7 +940,7 @@ SBEditor >> internalSelect: aBlock [
 		previousSelection := selection.
 		selection := aBlock.
 		selection ifNotNil: [
-			verticalSelectionPosition := selection center x - (selection containingArtefact ifNotNil: [:a | a left] ifNil: [0]).
+			self updateVerticalSelectionPosition.
 			selection
 				attachDecorator: SBSelectionDecorator new;
 				wasSelected;
@@ -1677,6 +1678,12 @@ SBEditor >> updateSelectionLabel [
 			(self selection notNil and: [self selection isInWorld])
 				ifTrue: [self selection selectionLabel]
 				ifFalse: ['']])
+]
+
+{ #category : #selection }
+SBEditor >> updateVerticalSelectionPosition [
+
+	verticalSelectionPosition := selection center x - (selection containingArtefact ifNotNil: [:a | a left] ifNil: [0]).
 ]
 
 { #category : #accessing }

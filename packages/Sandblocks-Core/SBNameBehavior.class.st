@@ -113,6 +113,12 @@ SBNameBehavior >> isLiteralBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBNameBehavior >> isMethodArgument [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBNameBehavior >> isMethodLocal [
 
 	^ false

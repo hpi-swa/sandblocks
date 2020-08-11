@@ -629,6 +629,13 @@ SBBlock >> fixActions [
 ]
 
 { #category : #actions }
+SBBlock >> fixedNumberOfChildren [
+	" return whether you may only take a fixed number of children "
+
+	^ true
+]
+
+{ #category : #actions }
 SBBlock >> floating [
 
 	^ self owner layoutPolicy isNil
@@ -1472,9 +1479,9 @@ SBBlock >> replaceWithCopyBuffer [
 		
 		new safeRepresentationThat: self acceptedRepresentation do: [:repr |
 			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-			target: self;
-			replacer: new).
-		repr postDuplicate] ifNone: []]
+				target: self;
+				replacer: repr).
+			repr postDuplicate] ifNone: []]
 ]
 
 { #category : #'as yet unclassified' }

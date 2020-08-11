@@ -26,13 +26,14 @@ SBCTextColorPolicy >> statementSeparator [
 { #category : #'as yet unclassified' }
 SBCTextColorPolicy >> symbolsCheckStatement: aBlock for: aCollection [
 
-	(aBlock parentSandblock isMessageSend and: [aBlock isFirstChild not]) ifTrue: [
+	((aBlock parentSandblock isMessageSend and: [aBlock isFirstChild not]) or:
+		[aBlock isName and: [aBlock isMethodArgument]]) ifTrue: [
 		^ {
 			aCollection first ifNil: ['('] ifNotNil: ['(', aCollection first].
 			aCollection second ifNil: [')'] ifNotNil: [aCollection second, ')']
 		}].
 	
-	^ (aBlock parentSandblock isBlockBody)
+	^ aBlock isStatement
 		ifTrue: [
 			aCollection last
 				ifNil: [{aCollection first. self statementSeparator}]

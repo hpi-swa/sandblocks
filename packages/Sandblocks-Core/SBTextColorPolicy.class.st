@@ -59,7 +59,7 @@ SBTextColorPolicy >> statementSeparator [
 { #category : #'as yet unclassified' }
 SBTextColorPolicy >> symbolsCheckStatement: aBlock for: aCollection [
 
-	^ (aBlock parentSandblock isBlockBody and: [aBlock isLastChild not])
+	^ (aBlock isStatement and: [aBlock isLastChild not])
 		ifTrue: [
 			aCollection last
 				ifNil: [{aCollection first. self statementSeparator}]
@@ -131,6 +131,12 @@ SBTextColorPolicy >> symbolsForMessageSend: aBlock [
 		symbolsCheckStatement: aBlock
 		for: ((parent isMessageSend and: [
 			aBlock precedence > parent precedence or: [parent precedence = 3 and: [aBlock precedence = 3]]]) ifTrue: [#('(' ')')] ifFalse: [#(nil nil)])
+]
+
+{ #category : #'as yet unclassified' }
+SBTextColorPolicy >> symbolsForMethodArgumentDeclaration: aBlock [
+
+	^ self symbolsCheckStatement: aBlock for: #(nil nil)
 ]
 
 { #category : #'as yet unclassified' }

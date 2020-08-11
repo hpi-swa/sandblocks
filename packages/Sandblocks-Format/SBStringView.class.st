@@ -8,7 +8,8 @@ Class {
 SBStringView >> childSandblocksDo: aBlock [
 
 	aBlock value: self submorphs second submorphs first.
-	aBlock value: self submorphs second submorphs second
+	aBlock value: self submorphs second submorphs second.
+	aBlock value: self submorphs second submorphs third
 ]
 
 { #category : #'as yet unclassified' }
@@ -41,7 +42,8 @@ SBStringView >> initialize [
 		addMorphBack: (SBRow new
 			cellGap: 4;
 			addMorphBack: (SBNumberWithPrefix new prefix: 'Start: ');
-			addMorphBack: (SBNumberWithPrefix new prefix: 'Stop: '));
+			addMorphBack: (SBNumberWithPrefix new prefix: 'Stop: ');
+			addMorphBack: (SBNumberWithPrefix new prefix: 'Length: '));
 		updateSelectionLabels
 ]
 
@@ -76,5 +78,6 @@ SBStringView >> updateSelectionLabels [
 	row := self submorphs second.
 	range := self firstSubmorph selectionBounds.
 	row submorphs first contents: range first asString.
-	row submorphs second contents: range second asString
+	row submorphs second contents: range second asString.
+	row submorphs third contents: (range second - range first) asString
 ]

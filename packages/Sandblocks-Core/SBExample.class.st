@@ -74,7 +74,7 @@ SBExample >> argumentsBlock [
 { #category : #'as yet unclassified' }
 SBExample >> artefactSaved: aMethod [
 
-	self active ifTrue: [self run]
+	(aMethod isMethod and: [self active]) ifTrue: [self run]
 ]
 
 { #category : #'as yet unclassified' }

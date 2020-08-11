@@ -136,6 +136,12 @@ SBBlockBody >> evaluateWithArguments: aCollection [
 	^ (Compiler evaluate: self sourceString) valueWithEnoughArguments: aCollection
 ]
 
+{ #category : #converting }
+SBBlockBody >> fixedNumberOfChildren [
+
+	^ false
+]
+
 { #category : #'as yet unclassified' }
 SBBlockBody >> guessedClass [
 
@@ -202,7 +208,7 @@ SBBlockBody >> isBlockBody [
 { #category : #converting }
 SBBlockBody >> isExpression [
 
-	^ self parentSandblock isMethod not
+	^ self parentSandblock ifNil: [true] ifNotNil: [:p | p isMethod not]
 ]
 
 { #category : #testing }

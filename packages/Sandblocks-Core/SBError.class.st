@@ -7,7 +7,8 @@ Class {
 		'currentStackFrame',
 		'frames',
 		'explorer',
-		'temporaries'
+		'temporaries',
+		'scroll'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -96,7 +97,7 @@ SBError >> focus [
 	| stack |
 	self expanded ifTrue: [^ self focusNextFrame].
 	
-	self addMorphBack: frames.
+	self addMorphBack: scroll.
 	stack := self rootContext stack.
 	stack from: 1 to: (self maxFrames min: stack size) do: [:context | frames addMorphBack: (self createFrameForContext: context)].
 	
@@ -126,7 +127,8 @@ SBError >> initialize [
 		layoutInset: 6 withScalingFactor;
 		cellGap: 8 withScalingFactor.
 	
-	frames := SBColumn new
+	frames := SBColumn new.
+	scroll := ScrollPane new
 ]
 
 { #category : #'as yet unclassified' }
@@ -255,7 +257,7 @@ SBError >> toggleCollapsed [
 		ifTrue: [
 			frames submorphsDo: #closed.
 			frames removeAllMorphs.
-			frames delete.
+			scroll delete.
 			explorer ifNotNil: #delete]
 		ifFalse: [self focus]
 ]

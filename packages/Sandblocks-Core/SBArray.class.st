@@ -85,6 +85,12 @@ SBArray >> do: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBArray >> fixedNumberOfChildren [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBArray >> initialize [
 
 	super initialize.

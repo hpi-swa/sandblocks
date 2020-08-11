@@ -105,9 +105,8 @@ SBOwnTextMorph >> drawOn: aCanvas [
 		self drawString: self suffix on: aCanvas at: self position x + (font widthOfString: self contents) @ self position y font: font color: colorToUse].
 	
 	cursor > 0 ifTrue: [
-		aCanvas clipBy: self bounds during: [:c |
-			cursorX := (font widthOfString: self contents from: 1 to: cursor - 1) + self left.
-			c line: cursorX @ self top to: cursorX @ self bottom width: 2 color: Color red]]
+		cursorX := (font widthOfString: self contents from: 1 to: cursor - 1) + self left.
+		aCanvas line: cursorX @ self top to: cursorX @ self bottom width: 2 color: Color red]
 ]
 
 { #category : #'as yet unclassified' }
@@ -219,6 +218,12 @@ SBOwnTextMorph >> insertString: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> invalidRect: aRectangle [
+
+	^ super invalidRect: (aRectangle expandBy: 2)
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> isCursorAtEnd [
 
 	^ self cursor = (self contents size + 1)
@@ -262,7 +267,7 @@ SBOwnTextMorph >> minExtent [
 
 	| font |
 	font := self fontToUse.
-	^ (font widthOfString: self contents) @ font height max: 4 @ font height
+	^ (font widthOfString: self contents) @ font height max: 4 withScalingFactor @ font height
 ]
 
 { #category : #'as yet unclassified' }

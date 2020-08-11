@@ -26,5 +26,5 @@ SBStExpressionRepresentation class >> matches: anObject [
 { #category : #'as yet unclassified' }
 SBStExpressionRepresentation class >> newFor: anObject [
 
-	^ anObject sourceString parseAsSandblockWithoutSubstitution
+	^ anObject veryDeepCopy
 ]

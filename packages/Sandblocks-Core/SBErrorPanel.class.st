@@ -1,6 +1,9 @@
 Class {
 	#name : #SBErrorPanel,
 	#superclass : #SBBlock,
+	#instVars : [
+		'commandBar'
+	],
 	#category : #'Sandblocks-Core'
 }
 
@@ -17,6 +20,28 @@ SBErrorPanel >> addError: anError process: aProcess [
 	error := SBError new error: anError process: aProcess.
 	self addMorphFront: error.
 	^ error
+]
+
+{ #category : #'as yet unclassified' }
+SBErrorPanel >> buildDebugCommandBar [
+
+	^ SBRow new
+		changeTableLayout;
+		hResizing: #spaceFill;
+		cellGap: 4 withScalingFactor;
+		layoutInset: 4 withScalingFactor;
+		addMorphBack: (SBButton new
+			icon: SBIcon iconLong_arrow_right shortcut: $> asSandblockShortcut do: [self stepOver];
+			balloonText: 'Step over');
+		addMorphBack: (SBButton new
+			icon: SBIcon iconLevel_down shortcut: $< asSandblockShortcut do: [self stepInto];
+			balloonText: 'Step into');
+		addMorphBack: (SBButton new
+			icon: SBIcon iconForward shortcut: nil do: [self stepThrough];
+			balloonText: 'Step through');
+		addMorphBack: (SBButton new
+			icon: SBIcon iconFast_backward shortcut: $R command do: [self restartFrame];
+			balloonText: 'Restart frame')
 ]
 
 { #category : #'as yet unclassified' }
@@ -42,6 +67,7 @@ SBErrorPanel >> focusErrors [
 	<action>
 
 	self hasSubmorphs ifTrue: [self firstSubmorph focus].
+	commandBar ifNil: [self sandblockEditor addMorph: (commandBar := self buildDebugCommandBar) asElementNumber: 2]
 	"errors topLeft: scroll topLeft"
 ]
 
@@ -80,7 +106,11 @@ SBErrorPanel >> initialize [
 SBErrorPanel >> removedMorph: aMorph [
 
 	super removedMorph: aMorph.
-	self hasSubmorphs ifFalse: [self extent: 0 @ 0]
+	self hasSubmorphs ifFalse: [
+		self extent: 0 @ 0.
+		commandBar ifNotNil: [
+			commandBar delete.
+			commandBar := nil]]
 ]
 
 { #category : #'as yet unclassified' }

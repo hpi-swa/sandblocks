@@ -20,7 +20,7 @@ SBDerivedRepresentation class >> from: aRepr to: anotherRepr [
 { #category : #'as yet unclassified' }
 SBDerivedRepresentation >> = aRepr [
 
-	^ self from = aRepr from and: [self to = aRepr to]
+	^ aRepr class = self class and: [self from = aRepr from and: [self to = aRepr to]]
 ]
 
 { #category : #'as yet unclassified' }

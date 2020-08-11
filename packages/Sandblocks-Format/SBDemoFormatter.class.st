@@ -28,26 +28,19 @@ SBDemoFormatter class >> format: aMethodNode [
 { #category : #'as yet unclassified' }
 SBDemoFormatter class >> formatString: aString class: aClass noPattern: aBoolean [
 
-	| result formatter node methodNode |
-	SBExample
-		self: [SBDemoFormatter]
-		args: [
-			{'testMethod self future by: 2 do: 3'. UndefinedObject. false}]
-		label: 'future node'.
+	| formatter node methodNode |
 	SBExample
 		self: [SBDemoFormatter]
 		args: [
 			{'testMethod
 
-    self halt; yourself'. UndefinedObject. false}]
-		label: 'cacade'.
+{$a.$b.$c.$d.$e.$f.$g.$h.$i.$j}'. UndefinedObject. false}]
+		label: 'brace node long'.
 	methodNode := Parser new parse: aString class: aClass noPattern: aBoolean notifying: nil ifFail: nil.
 	node := aBoolean ifTrue: [methodNode body statements first expr] ifFalse: [methodNode].
 	formatter := self new initForNode: node.
 	node accept: formatter.
-	result := formatter contents.
-	methodNode accept: (ParseNodeEnumerator ofBlock: [:n | n comment: nil]).
-	^ result
+	^ formatter contents
 ]
 
 { #category : #'as yet unclassified' }
@@ -136,7 +129,8 @@ SBDemoFormatter >> literalLines [
 
 { #category : #'as yet unclassified' }
 SBDemoFormatter >> maxLineLength [
-	^ 100
+
+	^ 20
 ]
 
 { #category : #'as yet unclassified' }
@@ -193,6 +187,38 @@ SBDemoFormatter >> preFormatCache: aDictionary [
 { #category : #'as yet unclassified' }
 SBDemoFormatter >> precedenceOf: aNode [ 
 	^ aNode accept: SBPrecedenceVisitor new
+]
+
+{ #category : #'as yet unclassified' }
+SBDemoFormatter >> printArrayNode: aBraceNode on: aWriteStream [
+
+	| width multiLine |
+	width := aBraceNode elements inject: 0 into: [:sum :element | sum + (self preFormat: element) size].
+	multiLine := width > self maxLineLength.
+	
+	aWriteStream nextPut: ${.
+	self
+		indent: (multiLine ifTrue: [1] ifFalse: [0])
+		around: [
+			aBraceNode elements
+				do: [:element | self visitNode: element]
+				separatedBy: [
+					aWriteStream nextPut: $..
+					multiLine ifTrue: [aWriteStream cr]]].
+	aWriteStream nextPut: $}
+]
+
+{ #category : #'as yet unclassified' }
+SBDemoFormatter >> printBraceNode2: aBraceNode on: aWriteStream [
+
+	| multiLine width |
+	width := aBraceNode elements inject: 0 into: [:sum :element | sum + (self preFormat: element) size].
+	multiLine := width > self maxLineLength.
+	
+	aWriteStream nextPut: ${.
+	self indent: (multiLine ifTrue: [1] ifFalse: [0]) around: [
+	aBraceNode elements do: [:element | self visitNode: element] separatedBy: [aWriteStream nextPut: $.. multiLine ifTrue: [aWriteStream cr]]].
+	aWriteStream nextPut: $}
 ]
 
 { #category : #'as yet unclassified' }
@@ -286,20 +312,20 @@ SBDemoFormatter >> visitBlockNode: aNode [
 { #category : #'as yet unclassified' }
 SBDemoFormatter >> visitBraceNode: aNode [
 
-	| length multiLine |
-	length := aNode elements inject: 0 into: [:sum :node | sum + (self preFormat: node) size].
-	multiLine := length > self maxLineLength or: [aNode elements anySatisfy: [:node | self willBeMultiLine: node]].
-	stream nextPut: ${.
+	| width multiLine |
+	width := aNode elements inject: 0 into: [:sum :element | sum + (self preFormat: element)].
+	multiLine := (SBExampleWatch report: width for: 560480735) > self maxLineLength.
+	(SBExampleWatch report: stream for: 222118060) nextPut: ${.
 	self
 		indent: (multiLine ifTrue: [1] ifFalse: [0])
 		around: [
-			multiLine ifTrue: [self newLine].
 			aNode elements
 				do: [:element | self visitNode: element]
 				separatedBy: [
-					stream nextPut: $..
-					multiLine ifTrue: [self newLine] ifFalse: [stream space]]].
-	multiLine ifTrue: [self newLine].
+					stream
+						nextPut: $.;
+						space.
+					multiLine ifTrue: [stream cr]]].
 	stream nextPut: $}
 ]
 
