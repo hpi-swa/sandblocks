@@ -27,7 +27,7 @@ BlockNode >> asSandblock [
 				stream nextPut: statement asSandblock]]]);
 		temporaries: (self temporaries select: [:node | node scope ~= -2] thenCollect: #asSandblock);
 		bindings: (self arguments collect: #asSandblock);
-		pc: closureCreationNode pc;
+		pc: (closureCreationNode ifNotNil: [:n | n pc] ifNil: [0]);
 		yourself
 ]
 

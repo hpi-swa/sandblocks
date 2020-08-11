@@ -33,14 +33,21 @@ SBDemoFormatter class >> formatString: aString class: aClass noPattern: aBoolean
 		self: [SBDemoFormatter]
 		args: [
 			{'testMethod
-
-{$a.$b.$c.$d.$e.$f.$g.$h.$i.$j}'. UndefinedObject. false}]
+  {$a.$b.$c.$d.$e.$f.$g.$h.$i.$j}'. UndefinedObject. false}]
 		label: 'brace node long'.
-	methodNode := Parser new parse: aString class: aClass noPattern: aBoolean notifying: nil ifFail: nil.
-	node := aBoolean ifTrue: [methodNode body statements first expr] ifFalse: [methodNode].
+	
+	node := self nodeFrom: aString class: aClass noPattern: aBoolean.
 	formatter := self new initForNode: node.
 	node accept: formatter.
 	^ formatter contents
+]
+
+{ #category : #'as yet unclassified' }
+SBDemoFormatter class >> nodeFrom: aString class: aClass noPattern: aBoolean [
+
+	| methodNode |
+	methodNode := Parser new parse: aString class: aClass noPattern: aBoolean notifying: nil ifFail: nil.
+	^ aBoolean ifTrue: [methodNode body statements first expr] ifFalse: [methodNode]
 ]
 
 { #category : #'as yet unclassified' }
@@ -313,7 +320,7 @@ SBDemoFormatter >> visitBlockNode: aNode [
 SBDemoFormatter >> visitBraceNode: aNode [
 
 	| width multiLine |
-	width := aNode elements inject: 0 into: [:sum :element | sum + (self preFormat: element)].
+	width := aNode elements inject: 0 into: [:sum :element | sum + (self preFormat: element) size].
 	multiLine := (SBExampleWatch report: width for: 560480735) > self maxLineLength.
 	(SBExampleWatch report: stream for: 222118060) nextPut: ${.
 	self

@@ -14,12 +14,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBError >> balloonText [
-
-	^ error asString
-]
-
-{ #category : #'as yet unclassified' }
 SBError >> canCopy [
 
 	^ false
@@ -65,6 +59,8 @@ SBError >> currentStackFrame: aFrameBlock [
 	(currentStackFrame notNil and: [currentStackFrame ~= aFrameBlock]) ifTrue: [currentStackFrame closed].
 	currentStackFrame := aFrameBlock.
 	
+	Project current addDeferredUIMessage: [scroll scrollToShow: (aFrameBlock bounds expandBy: 0 @ 60 withScalingFactor)].
+	
 	self updateExplorers
 ]
 
@@ -81,7 +77,11 @@ SBError >> error: anError process: aProcess [
 	process := aProcess.
 	self addMorphFront: (SBRow new
 		addMorphBack: (SBIcon iconFlash color: Color red);
-		addMorphBack: (SBStringMorph new bold; contents: (anError asString truncateMiddleTo: 30));
+		addMorphBack: (SBStringMorph new
+			bold;
+			contents: (anError asString truncateMiddleTo: 30);
+			balloonText: error asString;
+			yourself);
 		yourself)
 ]
 
@@ -101,7 +101,7 @@ SBError >> focus [
 	stack := self rootContext stack.
 	stack from: 1 to: (self maxFrames min: stack size) do: [:context | frames addMorphBack: (self createFrameForContext: context)].
 	
-	frames sandblockEditor select: (frames submorphs detect: [:frame | self sandblockEditor isMethodOpen: frame context method] ifNone: [frames firstSubmorph])
+	frames sandblockEditor select: (frames submorphs detect: [:frame | self sandblockEditor isMethodOpen: frame context method homeMethod] ifNone: [frames firstSubmorph])
 ]
 
 { #category : #'as yet unclassified' }
@@ -129,12 +129,16 @@ SBError >> initialize [
 	
 	frames := SBColumn new.
 	scroll := ScrollPane new
+		hResizing: #spaceFill;
+		vResizing: #rigid;
+		height: 150.
+	scroll scroller addMorphBack: frames
 ]
 
 { #category : #'as yet unclassified' }
 SBError >> maxFrames [
 
-	^ 10
+	^ 40
 ]
 
 { #category : #'as yet unclassified' }

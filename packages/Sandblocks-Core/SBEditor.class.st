@@ -1003,7 +1003,7 @@ SBEditor >> methodForContext: aContext ifOpen: aBlock ifClosed: anotherBlock [
 { #category : #accessing }
 SBEditor >> methods [
 
-	^ scroll submorphs select: [:morph | morph isSandblock and: [morph isMethod]]
+	^ scroll submorphs select: [:morph | morph isSandblock and: [morph object isCompiledMethod]]
 ]
 
 { #category : #accessing }
@@ -1503,6 +1503,12 @@ SBEditor >> selectClick: aBlock [
 
 	selectionDownHistory removeAll.
 	self select: (aBlock == self selection ifTrue: [nil] ifFalse: [aBlock])
+]
+
+{ #category : #artefacts }
+SBEditor >> selectToplevelTowards: aSideSymbol [
+
+	self submorphs detect: [:m | m isSandblock] ifFound: #select ifNone: []
 ]
 
 { #category : #artefacts }

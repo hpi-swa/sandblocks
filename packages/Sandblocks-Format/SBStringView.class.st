@@ -56,7 +56,7 @@ SBStringView >> isArtefact [
 { #category : #'as yet unclassified' }
 SBStringView >> object [
 
-	^ self firstSubmorph contents
+	^ self textContents
 ]
 
 { #category : #'as yet unclassified' }
@@ -79,5 +79,5 @@ SBStringView >> updateSelectionLabels [
 	range := self firstSubmorph selectionBounds.
 	row submorphs first contents: range first asString.
 	row submorphs second contents: range second asString.
-	row submorphs third contents: (range second - range first) asString
+	row submorphs third contents: (self firstSubmorph hasSelection ifTrue: [range second - range first] ifFalse: [self firstSubmorph contents size]) asString
 ]
