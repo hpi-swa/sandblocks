@@ -1448,7 +1448,7 @@ SBBlock >> proposeCodeActions: aCollection for: aBlock [
 { #category : #'artefact protocol' }
 SBBlock >> relatedClass [
 
-	^ nil
+	^ nil class
 ]
 
 { #category : #'as yet unclassified' }
