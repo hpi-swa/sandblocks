@@ -1,7 +1,7 @@
 Class {
 	#name : #SBStringView,
 	#superclass : #SBBlock,
-	#category : #'Sandblocks-Format'
+	#category : #'Sandblocks-Representation'
 }
 
 { #category : #'as yet unclassified' }

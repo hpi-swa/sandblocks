@@ -113,7 +113,6 @@ SBRepresentationPrompt >> useRepresentation: aRepresentation [
 	currentRepresentation := newRepresentation.
 	
 	self updatePosition.
-	self haltOnce.
 	
 	newRepresentation
 		when: #positionChanged send: #updatePosition to: self;

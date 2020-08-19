@@ -23,7 +23,7 @@ SBExampleValueDisplay >> exampleFinished: anExample [
 { #category : #'event handling' }
 SBExampleValueDisplay >> exampleStarting: anExample [
 
-	"display exampleStarting: anExample."
+	display exampleStarting: anExample.
 	display noValue.
 	self extent: 0 @ 0.
 	

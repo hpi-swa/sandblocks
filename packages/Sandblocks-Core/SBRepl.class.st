@@ -56,6 +56,8 @@ SBRepl >> bindingFor: aString class: aClass ifPresent: aBlock [
 { #category : #'compilation cue protocol' }
 SBRepl >> bindingOf: aString [
 
+	aString = 'sbEditor' ifTrue: [^ #sbEditor -> self sandblockEditor].
+
 	^ (self getOrCreateLocalBinding: aString) binding
 ]
 

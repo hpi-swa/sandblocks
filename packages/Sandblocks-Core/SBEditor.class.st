@@ -1139,10 +1139,8 @@ SBEditor >> openAll: aCollection [
 { #category : #actions }
 SBEditor >> openClass: aClass [
 
-	^ self classes
-		detect: [:m | m shownClass = aClass]
-		ifFound: [:m | m select; yourself]
-		ifNone: [self openMorphInView: (SBClass new class: aClass)]
+	self open: aClass.
+	aClass methodsDo: [:m | self open: m]
 ]
 
 { #category : #actions }

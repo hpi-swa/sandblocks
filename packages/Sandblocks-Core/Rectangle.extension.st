@@ -31,3 +31,9 @@ Rectangle >> vertical [
 
 	^ self top + self bottom
 ]
+
+{ #category : #'*Sandblocks-Core' }
+Rectangle >> withScalingFactor [
+
+	^ self
+]

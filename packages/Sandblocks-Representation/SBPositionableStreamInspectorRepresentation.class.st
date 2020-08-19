@@ -1,29 +1,29 @@
 Class {
-	#name : #SBPositionableStreamRepresentation,
+	#name : #SBPositionableStreamInspectorRepresentation,
 	#superclass : #SBRepresentation,
 	#category : #'Sandblocks-Representation'
 }
 
 { #category : #'as yet unclassified' }
-SBPositionableStreamRepresentation class >> isSandblock [
+SBPositionableStreamInspectorRepresentation class >> isSandblock [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBPositionableStreamRepresentation class >> isToplevelMorph [
+SBPositionableStreamInspectorRepresentation class >> isToplevelMorph [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBPositionableStreamRepresentation class >> matches: anObject [
+SBPositionableStreamInspectorRepresentation class >> matches: anObject [
 
 	^ anObject isKindOf: PositionableStream
 ]
 
 { #category : #'as yet unclassified' }
-SBPositionableStreamRepresentation class >> newFor: aStream [
+SBPositionableStreamInspectorRepresentation class >> newFor: aStream [
 
 	^ SBPositionableStreamView new stream: aStream
 ]

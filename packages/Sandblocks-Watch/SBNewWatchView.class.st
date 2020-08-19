@@ -55,7 +55,7 @@ SBNewWatchView >> exampleFinished: anExample [
 SBNewWatchView >> exampleStarting: anExample [
 
 	self clear.
-	display exampleStarting: anExample
+	"display exampleStarting: anExample"
 ]
 
 { #category : #'as yet unclassified' }

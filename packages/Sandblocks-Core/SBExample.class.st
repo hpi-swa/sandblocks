@@ -172,7 +172,7 @@ SBExample >> initialize [
 	processRunning := false.
 	
 	self
-		layoutPolicy: SBHorizontalLayout new;
+		layoutPolicy: (SBThresholdLayout new thresholdWidth: 300 withScalingFactor);
 		layoutInset: 8 withScalingFactor;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;

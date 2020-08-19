@@ -154,6 +154,7 @@ SBStateMachine >> exampleStateMachine [
 	| a b |
 	super initialize.
 	a := 5.
+	
 	b := SBStateMachine new
 		initialState: #idle;
 		uponEnter: #evasion do: [self];
@@ -162,7 +163,8 @@ SBStateMachine >> exampleStateMachine [
 		uponLeave: #combat do: [self];
 		from: #idle to: #combat if: [self checkNearbyEnemies];
 		from: #combat to: #evasion if: [self checkLowHealth];
-		from: #evasion to: #idle if: [true]
+		from: #evasion to: #idle if: [true];
+		from: #combat to: #combat if: [self isMorph]
 ]
 
 { #category : #'as yet unclassified' }

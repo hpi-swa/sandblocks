@@ -19,3 +19,9 @@ Number >> asEdgeInsets [
 		top: self
 		bottom: self
 ]
+
+{ #category : #'*Sandblocks-Core' }
+Number >> withScalingFactor [
+
+	^ self
+]

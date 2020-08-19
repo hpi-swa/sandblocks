@@ -60,7 +60,7 @@ String >> parseAsNode [
 	class := UndefinedObject.
 	parser := class newParser.
 	methodNode := parser parse: self class: class noPattern: true notifying: nil ifFail: nil.
-	^ methodNode block statements size > 1 ifTrue: [methodNode block] ifFalse: [methodNode block first expr]
+	^ methodNode block statements size > 1 ifTrue: [methodNode block] ifFalse: [methodNode block statements first expr]
 ]
 
 { #category : #'*Sandblocks-Core' }
