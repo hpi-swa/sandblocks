@@ -1,5 +1,11 @@
-as yet unclassified
-messagePart: level repeat: repeat
+Class {
+	#name : #SBParserOverride,
+	#superclass : #Parser,
+	#category : 'Sandblocks-Compiler'
+}
+
+{ #category : #'as yet unclassified' }
+SBParserOverride >> messagePart: level repeat: repeat [
 
 	| start receiver selector args precedence words keywordStart |
 	[receiver := parseNode.
@@ -56,3 +62,4 @@ messagePart: level repeat: repeat
 	repeat]
 		whileTrue: [].
 	^true
+]

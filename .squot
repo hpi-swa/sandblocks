@@ -10,5 +10,5 @@ OrderedDictionary {
 	'packages/Sandblocks-Graph' : #SquotTonelSerializer,
 	'packages/Sandblocks-Representation' : #SquotTonelSerializer,
 	'packages/Sandblocks-Tutorial' : #SquotTonelSerializer,
-	'packages/Sandblocks-Compiler.package' : #SquotCypressCodeSerializer
+	'packages/Sandblocks-Compiler' : #SquotTonelSerializer
 }
