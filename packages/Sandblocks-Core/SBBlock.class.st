@@ -1692,6 +1692,15 @@ SBBlock >> spaceForSymbols [
 	}
 ]
 
+{ #category : #actions }
+SBBlock >> startContinuousMultiSelection [
+	<action>
+
+	self sandblockEditor
+		mode: #continuousSelection;
+		addToMultiSelection: self
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> startDrag: anEvent [
 

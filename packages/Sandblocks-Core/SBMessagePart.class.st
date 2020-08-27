@@ -72,7 +72,7 @@ SBMessagePart >> fontToUse [
 { #category : #'as yet unclassified' }
 SBMessagePart >> hasColon [
 
-	^ self owner lastSubmorph ~= self and: [self isBinary not]
+	^ self owner ifNil: [false] ifNotNil: [self owner lastSubmorph ~= self and: [self isBinary not]]
 ]
 
 { #category : #'as yet unclassified' }

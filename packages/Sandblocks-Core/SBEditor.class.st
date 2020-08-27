@@ -147,6 +147,7 @@ SBEditor class >> registerDefaultShortcuts [
 		registerShortcut: $p do: #pasteBelow;
 		registerShortcut: $P do: #pasteAbove;
 		registerShortcut: $v do: #startOrAddToMultiSelection;
+		registerShortcut: $V command do: #startContinuousMultiSelection;
 		registerShortcut: $V do: #multiSelectChildren;
 		registerShortcut: Character escape do: #endMultiSelection;
 		registerShortcut: $r do: #replaceWithCopyBuffer;
@@ -402,11 +403,11 @@ SBEditor >> addDefaultShortcuts [
 { #category : #actions }
 SBEditor >> addToMultiSelection: aBlock [
 
+	multiSelection add: aBlock.
 	multiSelection copy do: [:morph | (morph hasOwner: aBlock) ifTrue: [self removeMultiSelected: morph]].
 	
 	aBlock allOwnersDo: [:morph | (multiSelection includes: morph) ifTrue: [self removeMultiSelected: morph]].
 	
-	multiSelection add: aBlock.
 	aBlock attachDecorator: SBMultiSelectionDecorator new.
 	self triggerEvent: #selectionChanged with: selection.
 	self updateSelectionLabel
@@ -945,10 +946,14 @@ SBEditor >> internalSelect: aBlock [
 				attachDecorator: SBSelectionDecorator new;
 				wasSelected;
 				ensureVisible].
+		
 		previousSelection ifNotNil: [
 			previousSelection
 				detachDecorators: SBSelectionDecorator;
 				wasDeselected].
+		
+		self mode = #continuousSelection ifTrue: [self addToMultiSelection: selection].
+		
 		self triggerEvent: #selectionChanged with: selection.
 		self updateSelectionLabel]
 ]
@@ -1015,23 +1020,21 @@ SBEditor >> mode [
 { #category : #accessing }
 SBEditor >> mode: aSymbol [
 
-	aSymbol = #input
-		ifTrue: [self assert: currentInput notNil]
-		ifFalse: [self assert: currentInput isNil].
-	
-	aSymbol = #selection
-		ifFalse: [self assert: multiSelection isEmpty].
+	aSymbol = #input ifTrue: [self assert: currentInput notNil] ifFalse: [self assert: currentInput isNil].
+	(aSymbol = #selection or: [aSymbol = #continuousSelection]) ifFalse: [self assert: multiSelection isEmpty].
 	
 	mode := aSymbol.
 	modeLabel contents: (mode caseOf: {
-		[#input] -> ['INPUT'].
-		[#selection] -> ['SELECTION'].
-		[#command] -> ['COMMAND']
+		([#input] -> ['INPUT']).
+		([#selection] -> ['SELECTION']).
+		([#continuousSelection] -> ['CONT. SELECTION']).
+		([#command] -> ['COMMAND'])
 	}).
 	bottomPanel color: (mode caseOf: {
-		[#input] -> [Color red alpha: 0.2].
-		[#selection] -> [Color blue alpha: 0.2].
-		[#command] -> [Color white]
+		([#input] -> [Color red alpha: 0.2]).
+		([#selection] -> [Color blue alpha: 0.2]).
+		([#continuousSelection] -> [Color blue alpha: 0.2]).
+		([#command] -> [Color white])
 	}).
 	self selection ifNotNil: [:s | s invalidRect: (s outerBounds expandBy: 4)].
 	self updateSelectionLabel
@@ -1238,7 +1241,7 @@ SBEditor >> parentSandblock [
 SBEditor >> perform: anAction for: aBlock [
 
 	(aBlock lookupAction: anAction) ifNotNil: [:method |
-		(((mode = #selection and: [(method pragmaAt: #multiSelectAction) notNil]) or: [
+		((((mode = #selection or: [mode = #continuousSelection]) and: [(method pragmaAt: #multiSelectAction) notNil]) or: [
 			(mode = #command and: [
 				(method pragmaAt: #multiSelectAction) notNil or: [(method pragmaAt: #action) notNil]]) or: [
 				mode = #input and: [(method pragmaAt: #inputAction) notNil]]]) and: [
