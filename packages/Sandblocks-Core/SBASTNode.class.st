@@ -345,6 +345,13 @@ SBASTNode >> selectPreviousSend [
 	(self previousBlockThat: #isMessageSend) ifNotNil: #select
 ]
 
+{ #category : #printing }
+SBASTNode >> selectRightMostBlock [
+	<action>
+
+	self containingStatement rightMostBlock select
+]
+
 { #category : #actions }
 SBASTNode >> selectStartOfStatement [
 	<multiSelectAction>

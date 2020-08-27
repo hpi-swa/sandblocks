@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBNumberBaseRepresentation class >> causesSideEffects [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBNumberBaseRepresentation class >> eagerNewFor: anObject [
 
 	^ anObject

@@ -779,7 +779,7 @@ SBEditor >> doMultiSelection: aBlock [
 	command := aBlock value: self sortedMultiSelection.
 	(command notNil and: [command valid]) ifTrue: [
 		self do: command.
-		mode = #selection ifTrue: [self endMultiSelection]]
+		(mode = #selection or: [mode = #continuousSelection]) ifTrue: [self endMultiSelection]]
 ]
 
 { #category : #actions }
@@ -1079,7 +1079,7 @@ SBEditor >> moveCursorToStart [
 { #category : #selection }
 SBEditor >> multiSelection [
 
-	^ mode = #selection
+	^ (mode = #selection or: [mode = #continuousSelection])
 		ifTrue: [multiSelection select: [:bubble | bubble owner notNil]]
 		ifFalse: [self selection ifNotNil: [{self selection}] ifNil: [#()]]
 	"^ multiSelection ifEmpty: [self selection ifNotNil: [{self selection}] ifNil: [#()]]"

@@ -329,7 +329,7 @@ SBBlock >> containingStatement [
 
 	| current |
 	current := self.
-	[current owner ifNil: [^ nil] ifNotNil: #isBlockBody] whileFalse: [current := current owner].
+	[current parentSandblock ifNil: [^ nil] ifNotNil: #isBlockBody] whileFalse: [current := current parentSandblock].
 	^ current
 ]
 
@@ -391,7 +391,7 @@ SBBlock >> decorators [
 SBBlock >> deleteAdjacent [
 	<action>
 
-	| count startIndex endIndex |
+	| count startIndex endIndex targets |
 	count := self sandblockEditor countModifier.
 	
 	startIndex := self childIndex.
@@ -400,8 +400,14 @@ SBBlock >> deleteAdjacent [
 		ifFalse: [
 			startIndex + (count - 1) min: self parentSandblock childSandblocks size].
 	
-	self sandblockEditor do: (SBCombinedCommand newWith: ((startIndex to: endIndex) collect: [:index |
-		(SBDeleteCommand newFor: self containingArtefact) target: (self parentSandblock childSandblocks at: index)]))
+	targets := (startIndex to: endIndex) collect: [:index | self parentSandblock childSandblocks at: index].
+	
+	self sandblockEditor
+		copyBuffer: targets;
+		do: (SBCombinedCommand newWith: (targets
+			collect: [:target |
+				(SBDeleteCommand newFor: self containingArtefact)
+					target: target]))
 ]
 
 { #category : #actions }
@@ -1288,6 +1294,16 @@ SBBlock >> parentAdjacentBlock: aNumber [
 		ifNil: [self parentSandblock ifNotNil: [:p | p parentAdjacentBlock: aNumber]]
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> parentThatAccepts: target ifNone: aBlock [
+
+	| adjacent |
+	adjacent := self.
+	[
+		(adjacent parentSandblock ifNil: [^ aBlock value]) acceptChild: target] whileFalse: [adjacent := adjacent parentSandblock].
+	^ adjacent
+]
+
 { #category : #actions }
 SBBlock >> pasteAbove [
 	<action>
@@ -1298,27 +1314,39 @@ SBBlock >> pasteAbove [
 { #category : #actions }
 SBBlock >> pasteAboveOrBelow: anAboveBoolean [
 
-	| index adjacent morph copyBuffer |
-	copyBuffer := self sandblockEditor copyBuffer.
-	copyBuffer ifNil: [^ self].
-	
+	| copyBuffer |
+	copyBuffer := self sandblockEditor copyBuffer ifNil: [^ self].
 	copyBuffer wrapsAround ifTrue: [^ self wrapSelectionWith: copyBuffer].
-	
-	self sandblockEditor do: (SBCombinedCommand newWith: (copyBuffer submorphs reversed collect: [:target |
-		adjacent := self.
-		[
-			(adjacent parentSandblock ifNil: [^ self]) acceptChild: target] whileFalse: [adjacent := adjacent parentSandblock].
-		
-		index := adjacent owner submorphIndexOf: adjacent.
-		morph := target veryDeepCopy
-			topCenter: self bottomCenter;
-			postDuplicate;
-			yourself.
-		(adjacent parentSandblock containingArtefact ifNil: [SBInsertCommand newNonEdit] ifNotNil: [:artefact | SBInsertCommand newFor: artefact])
-			index: (anAboveBoolean ifTrue: [index] ifFalse: [index + 1]);
-			container: adjacent owner;
-			morph: morph;
-			yourself]))
+	SBToggledCode
+		comment: ''
+		active: 2
+		do: {
+			[
+				self sandblockEditor do: (SBCombinedCommand newWith: (copyBuffer submorphs reversed collect: [:target | | index adjacent morph |
+					target := self parentThatAccepts: target ifNone: [^ self].
+					index := adjacent getIndexInOwner.
+					morph := target veryDeepCopy
+						topCenter: self bottomCenter;
+						postDuplicate;
+						yourself.
+					(adjacent parentSandblock containingArtefact ifNil: [SBInsertCommand newNonEdit] ifNotNil: [:artefact | SBInsertCommand newFor: artefact])
+						index: (anAboveBoolean ifTrue: [index] ifFalse: [index + 1]);
+						container: adjacent owner;
+						morph: morph;
+						yourself]))].
+			[
+				copyBuffer submorphs withIndexDo: [:target :index |
+					target
+						safeRepresentationThat: (self parentSandblock contextAcceptedRepresentationAt: (anAboveBoolean ifTrue: [self childIndex] ifFalse: [self childIndex + index]))
+						do: [:repr |
+							self sandblockEditor do: ((SBInsertCommand newFor: self containingArtefact)
+								morph: repr;
+								container: self owner;
+								index: (anAboveBoolean ifTrue: [self submorphIndex] ifFalse: [self submorphIndex + index]);
+								shouldMergeWithNext: index < copyBuffer submorphCount)]
+						ifNone: [SBLabel text: ['undo last command?']].
+					anAboveBoolean ifTrue: [self submorphBefore select] ifFalse: [self submorphAfter select]]]
+		}
 ]
 
 { #category : #actions }
@@ -1905,7 +1933,7 @@ SBBlock >> validActions [
 		((mode = #input and: [action keyword = #inputAction]) or: [
 			(mode = #command and: [
 				#(#action #multiSelectAction) includes: action keyword]) or: [
-				mode = #selection and: [action keyword = #multiSelectAction]]]) and: [
+				(mode = #selection or: [mode = #continuousSelection]) and: [action keyword = #multiSelectAction]]]) and: [
 			(action method pragmaAt: #actionValidIf:) ifNotNil: [:validPragma | self perform: validPragma arguments first] ifNil: [true]]]
 ]
 
