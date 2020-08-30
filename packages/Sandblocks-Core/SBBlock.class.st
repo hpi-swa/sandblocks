@@ -119,9 +119,9 @@ SBBlock >> attachDecorator: aDecorator [
 ]
 
 { #category : #testing }
-SBBlock >> bindingFor: aString class: aClass ifPresent: aBlock [
+SBBlock >> binding: aString for: block class: aClass ifPresent: aBlock [
 
-	^ self parentSandblock bindingFor: aString class: aClass ifPresent: aBlock
+	^ self parentSandblock binding: aString for: block class: aClass ifPresent: aBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -205,7 +205,8 @@ SBBlock >> childSandblocks [
 { #category : #hierarchy }
 SBBlock >> childSandblocksDo: aBlock [
 
-	^ self subclassResponsibility
+	" FIXME: at this point I believe we should assume leaf blocks by default, but I'm not sure "
+	"^ self subclassResponsibility"
 ]
 
 { #category : #'as yet unclassified' }

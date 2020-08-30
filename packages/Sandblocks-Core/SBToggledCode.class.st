@@ -52,6 +52,18 @@ SBToggledCode >> addedMorph: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBToggledCode >> binding: aString for: block class: aClass ifPresent: aBlock [
+
+	^ (self isInActiveBlockBody: block)
+		ifTrue: [super binding: aString for: block class: aClass ifPresent: aBlock]
+		ifFalse: [
+			aBlock value: (SBName new
+				contents: aString;
+				behavior: SBDeclarationForLocalVariable new;
+				yourself)]
+]
+
+{ #category : #'as yet unclassified' }
 SBToggledCode >> block [
 
 	^ self lastSubmorph
@@ -172,6 +184,12 @@ SBToggledCode >> insertCommandRequest: anAfterBoolean near: aBlock [
 		select: block statements first;
 		shouldMergeWithNext: true;
 		yourself
+]
+
+{ #category : #'as yet unclassified' }
+SBToggledCode >> isInActiveBlockBody: aBlock [
+
+	^ aBlock containingBlock = self activeBlock
 ]
 
 { #category : #'as yet unclassified' }

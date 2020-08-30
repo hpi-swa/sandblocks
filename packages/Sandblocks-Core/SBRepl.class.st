@@ -42,7 +42,7 @@ SBRepl >> artefact [
 ]
 
 { #category : #'artefact protocol' }
-SBRepl >> bindingFor: aString class: aClass ifPresent: aBlock [
+SBRepl >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	bindings submorphs detect: [:b | b contents = aString] ifFound: [:v | ^ aBlock value: v].
 	

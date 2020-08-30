@@ -427,7 +427,7 @@ SBEditor >> anyNearbyClass [
 	artefacts := self artefacts.
 	artefacts ifEmpty: [^ UndefinedObject].
 	
-	^ (self selection ifNotNil: #containingArtefact ifNil: [artefacts first]) relatedClass
+	^ ((self selection ifNotNil: #containingArtefact) ifNil: [artefacts first]) relatedClass
 ]
 
 { #category : #actions }
@@ -447,7 +447,7 @@ SBEditor >> batchedChangeStep: aBlock [
 ]
 
 { #category : #accessing }
-SBEditor >> bindingFor: aString class: aClass ifPresent: aBlock [
+SBEditor >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	Symbol hasInterned: aString ifTrue: [:sym | | binding |
 		binding := aClass bindingOf: sym environment: aClass environment.
@@ -1142,8 +1142,10 @@ SBEditor >> openAll: aCollection [
 { #category : #actions }
 SBEditor >> openClass: aClass [
 
-	self open: aClass.
-	aClass methodsDo: [:m | self open: m]
+	| cl |
+	cl := self open: aClass.
+	aClass methodsDo: [:m | self open: m].
+	^ cl
 ]
 
 { #category : #actions }

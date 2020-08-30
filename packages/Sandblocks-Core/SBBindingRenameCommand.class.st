@@ -18,12 +18,12 @@ SBBindingRenameCommand >> do [
 	didRename := false.
 	newMorph isName ifFalse: [^ super do].
 	(#('self' 'super' 'thisContext' 'true' 'false' 'nil') includes: newText) ifTrue: [^ super do].
-	activeMorph bindingFor: newText class: activeMorph containingArtefact relatedClass ifPresent: [:b |
+	activeMorph binding: newText for: activeMorph class: activeMorph containingArtefact relatedClass ifPresent: [:b |
 		b ~= activeMorph ifTrue: [^ super do]].
 	
 	declaration := newMorph isDeclaration
 		ifTrue: [oldMorph contents: previousText]
-		ifFalse: [activeMorph bindingFor: previousText class: activeMorph containingArtefact relatedClass ifPresent: [:b | b]].
+		ifFalse: [activeMorph binding: previousText for: activeMorph class: activeMorph containingArtefact relatedClass ifPresent: [:b | b]].
 	
 	declaration ifNil: [^ super do].
 	
@@ -40,7 +40,7 @@ SBBindingRenameCommand >> undo [
 	| ret usages declaration |
 	didRename ifFalse: [^ super undo].
 	
-	declaration := newMorph bindingFor: newText class: newMorph containingArtefact relatedClass ifPresent: [:b | b].
+	declaration := newMorph binding: newText for: newMorph class: newMorph containingArtefact relatedClass ifPresent: [:b | b].
 	usages := declaration behavior allUsages, {declaration}.
 	ret := super undo.
 	usages do: [:binding | binding contents: previousText].

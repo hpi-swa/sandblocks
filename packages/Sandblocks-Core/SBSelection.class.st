@@ -20,7 +20,7 @@ SBSelection >> addedMorph: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBSelection >> bindingFor: aString class: aClass ifPresent: aBlock [
+SBSelection >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	^ nil
 ]

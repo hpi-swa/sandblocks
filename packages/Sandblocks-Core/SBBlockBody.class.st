@@ -62,11 +62,11 @@ SBBlockBody >> addElement [
 ]
 
 { #category : #converting }
-SBBlockBody >> bindingFor: aString class: aClass ifPresent: aBlock [
+SBBlockBody >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	temporaries submorphs detect: [:s | s contents = aString] ifFound: [:s | ^ aBlock value: s] ifNone: [].
 	bindings submorphs detect: [:s | s contents = aString] ifFound: [:s | ^ aBlock value: s] ifNone: [].
-	^ super bindingFor: aString class: aClass ifPresent: aBlock
+	^ super binding: aString for: block class: aClass ifPresent: aBlock
 ]
 
 { #category : #'as yet unclassified' }
