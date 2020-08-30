@@ -22,7 +22,6 @@ Class {
 		'methodContainer',
 		'colorPolicy',
 		'bottomPanel',
-		'compileTimeButton',
 		'compileTime',
 		'workspace',
 		'errors',
@@ -1299,7 +1298,6 @@ SBEditor >> promptChangeCompile [
 	index := UIManager default chooseFrom: labels.
 	index < 1 ifTrue: [^ self].
 	
-	compileTimeButton contents: (labels at: index).
 	compileTime := index = 1 ifTrue: [#compileOnSave] ifFalse: [#compileOnChange]
 ]
 
