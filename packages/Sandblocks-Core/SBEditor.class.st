@@ -182,6 +182,7 @@ SBEditor class >> registerDefaultShortcuts [
 		registerShortcut: $3 command do: #useThirdArgument;
 		registerShortcut: $4 command do: #useFourthArgument;
 		registerShortcut: $5 command do: #useFifthArgument;
+		registerShortcut: $' command do: #splitStringAtCursor;
 		
 		" refactor "
 		registerShortcut: $T do: #extractMethod;

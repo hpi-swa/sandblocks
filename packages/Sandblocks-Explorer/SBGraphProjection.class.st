@@ -65,7 +65,7 @@ SBGraphProjection >> object: anObject [
 					index := 0.
 					anObject collect: [:num | index := index + 1. {index. num}] as: Array]);
 			yourself)
-		with: SWBarGraph create)
+		with: SWBarChart create)
 		vResizing: #spaceFill;
 		hResizing: #spaceFill;
 		yourself).

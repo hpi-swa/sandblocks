@@ -90,6 +90,12 @@ SBColorPolicy >> selectionBorderWidth [
 ]
 
 { #category : #'as yet unclassified' }
+SBColorPolicy >> selectionColorForBlock: aBlock [
+
+	^ aBlock foregroundColor
+]
+
+{ #category : #'as yet unclassified' }
 SBColorPolicy >> symbolsForArray: aBlock [
 
 	^ #('{} ' nil)

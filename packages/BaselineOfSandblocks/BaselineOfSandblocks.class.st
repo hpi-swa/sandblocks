@@ -17,13 +17,14 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Explorer' with: [spec requires: 'StatisticsWorkbench'];
 			package: 'Sandblocks-Watch';
 			package: 'Sandblocks-Drawing';
+			package: 'Sandblocks-Compiler';
 			package: 'Sandblocks-Format';
 			package: 'Sandblocks-Tutorial';
 			package: 'Sandblocks-Representation';
 			package: 'Sandblocks-ActiveExpression' with: [spec requires: #('default' 'ActiveExpressions')];
 			package: 'JumpingCubes' with: [spec requires: #('Sandblocks-ActiveExpression')].
 		spec
-			group: 'default' with: #('Sandblocks-Core' 'Sandblocks-Explorer' 'Sandblocks-Watch' 'Sandblocks-Format' 'Sandblocks-Drawing');
+			group: 'default' with: #('Sandblocks-Core' 'Sandblocks-Explorer' 'Sandblocks-Watch' 'Sandblocks-Format' 'Sandblocks-Drawing' 'Sandblocks-Representation' 'Sandblocks-Compiler');
 			group: 'tutorial' with: #('default' 'Sandblocks-Tutorial');
 			group: 'withActiveExpressions' with: #('Sandblocks-ActiveExpression' 'JumpingCubes')]
 ]

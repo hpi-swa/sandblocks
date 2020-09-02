@@ -247,6 +247,12 @@ SBName >> name: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBName >> noValidBinding [
+
+	^ self behavior noValidBinding
+]
+
+{ #category : #'as yet unclassified' }
 SBName >> noteNewOwner: aMorph [
 
 	aMorph ifNil: [^ self].

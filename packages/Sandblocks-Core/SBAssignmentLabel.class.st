@@ -64,3 +64,9 @@ SBAssignmentLabel >> valid [
 
 	^ self resolveBinding notNil
 ]
+
+{ #category : #'as yet unclassified' }
+SBAssignmentLabel >> validBinding [
+
+	^ self resolveBinding notNil
+]

@@ -126,5 +126,5 @@ SBUnknown >> valid [
 { #category : #'as yet unclassified' }
 SBUnknown >> writeSourceOn: aStream [
 
-	self error: 'source is not valid because it contains non-filled values'
+	"self error: 'source is not valid because it contains non-filled values'"
 ]

@@ -55,7 +55,7 @@ SBSelectionDecorator >> postDrawOn: aCanvas [
 	| b color |
 	self cursorVisible ifFalse: [^ self].
 	b := self morph bounds expandBy: 2.
-	color := (self morph parentSandblock ifNil: [self morph]) foregroundColor.
+	color := self morph colorPolicy selectionColorForBlock: (self morph parentSandblock ifNil: [self morph]).
 	
 	self morph sandblockEditor mode = #input
 		ifTrue: [

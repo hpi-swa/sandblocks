@@ -43,6 +43,22 @@ SBNameBehavior >> contentsChanged [
 ]
 
 { #category : #'as yet unclassified' }
+SBNameBehavior >> declareBlockVariable [
+	<action>
+	<actionValidIf: #noValidBinding>
+	
+	self block containingBlock declareTemporaryVariable: self contents
+]
+
+{ #category : #'as yet unclassified' }
+SBNameBehavior >> declareMethodVariable [
+	<action>
+	<actionValidIf: #noValidBinding>
+	
+	self block containingArtefact declareTemporaryVariable: self contents
+]
+
+{ #category : #'as yet unclassified' }
 SBNameBehavior >> detached: aBlock [
 
 	name := nil
@@ -131,6 +147,12 @@ SBNameBehavior >> isTemporaryVariable [
 ]
 
 { #category : #'as yet unclassified' }
+SBNameBehavior >> noValidBinding [
+
+	^ self validBinding not
+]
+
+{ #category : #'as yet unclassified' }
 SBNameBehavior >> prefix [
 
 	^ nil
@@ -158,4 +180,10 @@ SBNameBehavior >> symbolsFor: aColorPolicy [
 SBNameBehavior >> valid [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBNameBehavior >> validBinding [
+
+	^ true
 ]
