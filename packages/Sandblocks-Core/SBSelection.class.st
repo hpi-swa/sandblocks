@@ -13,6 +13,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBSelection >> aboutToBeGrabbedBy: aHand [
+
+	super aboutToBeGrabbedBy: aHand.
+	self align: self fullBounds topLeft with: aHand position + (aHand extent // 3).
+	aHand newKeyboardFocus: self
+]
+
+{ #category : #'as yet unclassified' }
 SBSelection >> addedMorph: aMorph [
 
 	aMorph isSandblock ifTrue: [
@@ -85,6 +93,12 @@ SBSelection >> evaluationReceiver [
 ]
 
 { #category : #'as yet unclassified' }
+SBSelection >> handlesKeyboard: anEvent [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBSelection >> homeArtefact [
 
 	^ homeArtefact
@@ -104,7 +118,9 @@ SBSelection >> initialize [
 	self
 		layoutPolicy: SBVerticalLayout new;
 		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap
+		hResizing: #shrinkWrap.
+	
+	self on: #keyStroke send: #keyStroke: to: self
 ]
 
 { #category : #'as yet unclassified' }
@@ -123,6 +139,13 @@ SBSelection >> isMethodBody [
 SBSelection >> isSelection [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> keyStroke: evt [
+	"Abort the drag on an escape"
+
+	evt keyCharacter = Character escape ifTrue: [self delete].
 ]
 
 { #category : #'as yet unclassified' }

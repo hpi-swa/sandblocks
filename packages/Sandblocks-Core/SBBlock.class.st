@@ -1383,7 +1383,7 @@ SBBlock >> performAction: aSymbol [
 { #category : #'as yet unclassified' }
 SBBlock >> pickUp: anEvent [
 
-	anEvent hand attachMorph: (SBSelection new
+	anEvent hand grabMorph: (SBSelection new
 		homeArtefact: self containingArtefact;
 		methodClass: (self containingArtefact ifNotNil: #relatedClass);
 		colorPolicy: self colorPolicy;
