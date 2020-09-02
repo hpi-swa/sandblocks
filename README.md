@@ -6,7 +6,7 @@ This is a research prototype. Hiccups during usage are very much expected. Save 
 ![The sandblocks editor](https://raw.githubusercontent.com/tom95/sandblocks/master/screenshots/sandblocks.png)
 
 ### Installing
-Make sure you're running on a Squeak5.3 image. Then run:
+Make sure you're running on a Squeak-trunk image. Then run:
 ```smalltalk
 Metacello new
   baseline: 'Sandblocks';
