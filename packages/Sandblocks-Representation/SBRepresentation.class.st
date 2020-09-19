@@ -39,7 +39,7 @@ SBRepresentation class >> isLeaf [
 { #category : #'as yet unclassified' }
 SBRepresentation class >> matches: anObject [
 
-	^ self subclassResponsibility
+	^ false
 ]
 
 { #category : #'as yet unclassified' }

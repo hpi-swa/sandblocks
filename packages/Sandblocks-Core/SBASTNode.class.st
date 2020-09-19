@@ -322,7 +322,7 @@ SBASTNode >> pc: aNumber [
 { #category : #'as yet unclassified' }
 SBASTNode >> prettySourceString [
 
-	^ SBFormatter formatString: self sourceString class: self containingArtefact methodClass noPattern: self ~= self containingArtefact
+	^ SBFormatter formatString: self sourceString class: self containingArtefact relatedClass noPattern: self ~= self containingArtefact
 	
 	"false
 		ifTrue: [[Smalltalk at: #PPPPrinter ifPresent: [:p | text := p format: text]] on: Error do: []]

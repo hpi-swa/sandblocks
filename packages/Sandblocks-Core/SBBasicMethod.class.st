@@ -13,6 +13,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBBasicMethod class >> selector: aSymbol arguments: aCollection class: aClass body: aBlock [
+
+	^ self new
+		selector: aSymbol arguments: aCollection class: aClass;
+		body: aBlock asSandblock
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> actualReceiver [
 
 	^ self
@@ -325,9 +333,12 @@ SBBasicMethod >> instanceVariables [
 	editor := self sandblockEditor.
 	^ Array streamContents: [:stream |
 		self methodClass withAllSuperclassesDo: [:class |
-			editor blockForClass: class ifPresent: [:c | stream nextPutAll: c instanceVariables] ifAbsent: [
-				class instVarNames do: [:name |
-					stream nextPut: (SBName instanceVariable: name)]]]]
+			editor
+				ifNil: [class allInstVarNames collect: [:name | SBName instanceVariable: name]]
+				ifNotNil: [
+					editor blockForClass: class ifPresent: [:c | stream nextPutAll: c instanceVariables] ifAbsent: [
+						class instVarNames do: [:name |
+							stream nextPut: (SBName instanceVariable: name)]]]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -513,7 +524,6 @@ SBBasicMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
 	self currentClass: self methodClass.
 	
 	aQuickBoolean ifFalse: [self updatePCs].
-	self hasUnsavedChanges: false.
 	^ true
 ]
 

@@ -66,7 +66,7 @@ SBClass >> class: aClass [
 	instanceVariables contents: (aClass instVarNames collect: [:name | SBName contents: name]).
 	classVariables contents: (aClass classVarNames collect: [:name | SBName contents: name]).
 	poolDictionaries contents: (aClass sharedPools collect: [:pool | SBTextBubble new contents: (aClass environment keyAtIdentityValue: pool ifAbsent: ['private'])]).
-	category contents: (aClass environment organization categoryOfElement: aClass name).
+	category contents: (aClass environment organization categoryOfElement: aClass theNonMetaClass name).
 	class := aClass
 ]
 
@@ -262,7 +262,6 @@ Is this really what you want to do?') asText makeBoldFrom: 1 to: newClassName si
 		notifying: nil
 		logged: false].
 	
-	self hasUnsavedChanges: false.
 	^ true
 ]
 

@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBLiteral,
 	#instVars : [
 		'behavior',
-		'binding'
+		'binding',
+		'autoCast'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -60,6 +61,18 @@ SBName >> allUsages [
 SBName >> asSuggestionItem [
 
 	^ self behavior asSuggestionItem
+]
+
+{ #category : #accessing }
+SBName >> autoCast [
+
+	^ autoCast
+]
+
+{ #category : #accessing }
+SBName >> autoCast: aBoolean [
+
+	autoCast := aBoolean
 ]
 
 { #category : #'as yet unclassified' }
@@ -137,7 +150,9 @@ SBName >> initialize [
 
 	super initialize.
 	
-	self behavior: SBBinding new
+	self behavior: SBBinding new.
+	
+	autoCast := true
 ]
 
 { #category : #'as yet unclassified' }
@@ -255,7 +270,7 @@ SBName >> noValidBinding [
 { #category : #'as yet unclassified' }
 SBName >> noteNewOwner: aMorph [
 
-	aMorph ifNil: [^ self].
+	(aMorph isNil or: [self autoCast isNil or: [self autoCast not]]) ifTrue: [^ self].
 	
 	((aMorph parentSandblock ifNotNil: #isMethod ifNil: [false]) and: [aMorph parentSandblock isMyArgument: self]) ifTrue: [^ self behavior: SBDeclarationForMethodArgument new].
 	aMorph isTemporaries ifTrue: [^ self behavior: SBDeclarationForTemporaryVariable new].

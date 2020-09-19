@@ -1,6 +1,9 @@
 OrderedDictionary {
+	'packages/Sandblocks-Representation' : #SquotTonelSerializer,
 	'packages/Sandblocks-Format' : #SquotTonelSerializer,
 	'packages/Sandblocks-Explorer' : #SquotTonelSerializer,
+	'packages/Sandblocks-Compiler' : #SquotTonelSerializer,
+	'packages/Sandblocks-Tutorial' : #SquotTonelSerializer,
 	'packages/Sandblocks-Example' : #SquotTonelSerializer,
 	'packages/Sandblocks-Watch' : #SquotTonelSerializer,
 	'packages/BaselineOfSandblocks' : #SquotTonelSerializer,
@@ -8,7 +11,5 @@ OrderedDictionary {
 	'packages/Sandblocks-Core' : #SquotTonelSerializer,
 	'packages/Sandblocks-Drawing' : #SquotTonelSerializer,
 	'packages/Sandblocks-Graph' : #SquotTonelSerializer,
-	'packages/Sandblocks-Representation' : #SquotTonelSerializer,
-	'packages/Sandblocks-Tutorial' : #SquotTonelSerializer,
-	'packages/Sandblocks-Compiler' : #SquotTonelSerializer
+	'packages/ObservableExperiment' : #SquotTonelSerializer
 }

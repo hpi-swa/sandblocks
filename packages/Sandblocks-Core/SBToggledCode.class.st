@@ -57,10 +57,13 @@ SBToggledCode >> binding: aString for: block class: aClass ifPresent: aBlock [
 	^ (self isInActiveBlockBody: block)
 		ifTrue: [super binding: aString for: block class: aClass ifPresent: aBlock]
 		ifFalse: [
-			aBlock value: (SBName new
-				contents: aString;
-				behavior: SBDeclarationForLocalVariable new;
-				yourself)]
+			block isDeclaration
+				ifTrue: [nil]
+				ifFalse: [
+					aBlock value: (SBName new
+						contents: aString;
+						behavior: SBDeclarationForLocalVariable new;
+						yourself)]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -189,7 +192,13 @@ SBToggledCode >> insertCommandRequest: anAfterBoolean near: aBlock [
 { #category : #'as yet unclassified' }
 SBToggledCode >> isInActiveBlockBody: aBlock [
 
-	^ aBlock containingBlock = self activeBlock
+	| block |
+	block := aBlock containingBlock.
+	[block] whileNotNil: [
+		block = self activeBlock ifTrue: [^ true].
+		block := block containingBlock].
+	
+	^ false
 ]
 
 { #category : #'as yet unclassified' }

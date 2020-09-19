@@ -109,6 +109,12 @@ SBBlock >> artefactSaved: aMethodBlock [
 	" callback fired after each save of a method/artefact "
 ]
 
+{ #category : #converting }
+SBBlock >> asSandblock [
+
+	^ self
+]
+
 { #category : #decorators }
 SBBlock >> attachDecorator: aDecorator [
 
@@ -128,6 +134,7 @@ SBBlock >> binding: aString for: block class: aClass ifPresent: aBlock [
 SBBlock >> browse [
 	" you were asked to be browsed. you may ignore this "
 	
+	self relatedClass browse
 ]
 
 { #category : #'artefact protocol' }
@@ -352,12 +359,15 @@ SBBlock >> contextAcceptedRepresentationAt: aNumber [
 SBBlock >> copyAround [
 	<action>
 
-	| replacer editor |
+	| replacer editor target |
 	" create a copy of our surroundings with ourselves replaced "
 	editor := self sandblockEditor.
+	target := self parentSandblock.
+	editor countModifier - 1 timesRepeat: [target := target parentSandblock].
+	
 	replacer := SBPastePlaceholder new.
 	self replaceBy: replacer.
-	editor copyBuffer: replacer parentSandblock.
+	editor copyBuffer: target.
 	replacer replaceBy: self
 ]
 
@@ -1337,11 +1347,11 @@ SBBlock >> pasteAboveOrBelow: anAboveBoolean [
 						yourself]))].
 			[
 				copyBuffer submorphs withIndexDo: [:target :index |
-					target
+					target object
 						safeRepresentationThat: (self parentSandblock contextAcceptedRepresentationAt: (anAboveBoolean ifTrue: [self childIndex] ifFalse: [self childIndex + index]))
 						do: [:repr |
-							self sandblockEditor do: ((SBInsertCommand newFor: self containingArtefact)
-								morph: repr;
+							self sandblockEditor do: ((self containingArtefact = self ifFalse: [SBInsertCommand newFor: self containingArtefact] ifTrue: [SBInsertCommand newNonEdit])
+								morph: (repr center: self center);
 								container: self owner;
 								index: (anAboveBoolean ifTrue: [self submorphIndex] ifFalse: [self submorphIndex + index]);
 								shouldMergeWithNext: index < copyBuffer submorphCount)]
@@ -1477,7 +1487,7 @@ SBBlock >> proposeCodeActions: aCollection for: aBlock [
 { #category : #'artefact protocol' }
 SBBlock >> relatedClass [
 
-	^ nil class
+	^ self object class
 ]
 
 { #category : #'as yet unclassified' }

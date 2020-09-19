@@ -990,8 +990,8 @@ SBEditor >> markChangesAfterCommand: aCommand [
 	aCommand wasEdit ifTrue: [
 		aCommand affectedArtefacts do: [:artefact | | saved |
 			saved := false.
-			compileTime = #compileOnChange ifTrue: [saved := self save: artefact tryFixing: false quick: false].
-			
+			compileTime = #compileOnChange ifTrue: [
+				saved := self save: artefact tryFixing: false quick: false].
 			artefact hasUnsavedChanges: saved not.
 			self allBlocksDo: [:block | block artefactChanged: artefact]]]
 ]
@@ -1454,6 +1454,7 @@ SBEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean [
 
 	^ (anArtefact saveTryFixing: aFixBoolean quick: aQuickBoolean)
 		ifTrue: [
+			anArtefact hasUnsavedChanges: false.
 			self allBlocksDo: [:block | block artefactSaved: self selectedArtefact].
 			true]
 		ifFalse: [false]
