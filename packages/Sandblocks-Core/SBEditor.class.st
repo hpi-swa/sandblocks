@@ -1204,8 +1204,8 @@ SBEditor >> openOpenWindow [
 
 	| selected |
 	selected := self selectedArtefact.
-	((selected notNil and: [selected artefact isCompiledCode or: [selected artefact isBehavior]])
-		ifTrue: [SBCodeOpener new positionNear: self; openFor: selected artefact]
+	((selected notNil and: [selected object isCompiledCode or: [selected object isBehavior]])
+		ifTrue: [SBCodeOpener new positionNear: self; openFor: selected object]
 		ifFalse: [SBCodeOpener new positionNear: self; open]) ifNotNil: [:methodOrClass | self open: methodOrClass]
 ]
 

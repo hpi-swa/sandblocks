@@ -40,6 +40,19 @@ SBMethod >> collapsed: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBMethod >> contextAcceptedRepresentationAt: aNumber [
+
+	SBToggledCode
+		comment: 'need insert vs replace semantics for this :('
+		active: 0
+		do: {
+			[
+				aNumber = self childSandblocks size ifTrue: [^ #isSmalltalkBlock]]
+		}.
+	^ aNumber odd ifTrue: [#isSmalltalkMessagePart] ifFalse: [#isSmalltalkExpression]
+]
+
+{ #category : #'as yet unclassified' }
 SBMethod >> currentTextMorph [
 
 	^ signature currentTextMorph
