@@ -241,6 +241,9 @@ SBOwnTextMorph >> keyStroke: anEvent [
 	| char |
 	char := anEvent keyCharacter.
 	
+	({Character arrowUp. Character arrowDown} includes: char) ifTrue: [^ self].
+	(self multiLine not and: [char = Character cr]) ifTrue: [^ self].
+	
 	char = Character arrowLeft ifTrue: [^ self moveCursorTo: self cursor - 1].
 	char = Character arrowRight ifTrue: [^ self moveCursorTo: self cursor + 1].
 	char = Character backspace ifTrue: [^ self deleteBeforeCursor].
@@ -286,6 +289,12 @@ SBOwnTextMorph >> moveCursor: aNumber [
 SBOwnTextMorph >> moveCursorTo: aNumber [
 
 	self cursor: (aNumber clampLow: 1 high: self contents size + 1)
+]
+
+{ #category : #'as yet unclassified' }
+SBOwnTextMorph >> multiLine [
+
+	^ false
 ]
 
 { #category : #'as yet unclassified' }

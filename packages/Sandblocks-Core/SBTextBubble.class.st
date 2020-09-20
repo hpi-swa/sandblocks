@@ -3,9 +3,10 @@ Class {
 	#superclass : #SBBlock,
 	#instVars : [
 		'text',
-		'colored'
+		'colored',
+		'prefix'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
@@ -78,13 +79,26 @@ SBTextBubble >> initialize [
 { #category : #'as yet unclassified' }
 SBTextBubble >> keyStroke: anEvent [
 
-	text keyStroke: anEvent
+	text keyStroke: anEvent.
+	self triggerEvent: #keyStroke with: anEvent
 ]
 
 { #category : #'as yet unclassified' }
 SBTextBubble >> object [
 
 	^ self
+]
+
+{ #category : #'as yet unclassified' }
+SBTextBubble >> prefix [
+
+	^ prefix
+]
+
+{ #category : #'as yet unclassified' }
+SBTextBubble >> prefix: aString [
+
+	prefix := aString
 ]
 
 { #category : #'as yet unclassified' }
@@ -109,7 +123,15 @@ SBTextBubble >> stopEditing: aCommand [
 		newText: self contents;
 		newMorph: self.
 	
-	text stopEditing
+	text stopEditing.
+	
+	self triggerEvent: #stopEditing
+]
+
+{ #category : #'as yet unclassified' }
+SBTextBubble >> symbols [
+
+	^ {prefix. nil}
 ]
 
 { #category : #'as yet unclassified' }

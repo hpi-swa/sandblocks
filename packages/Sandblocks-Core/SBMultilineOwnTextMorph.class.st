@@ -185,6 +185,12 @@ SBMultilineOwnTextMorph >> moveCursorVertically: aNumber selecting: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBMultilineOwnTextMorph >> multiLine [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> paragraph [
 
 	^ paragraph ifNil: [ | cursors |
