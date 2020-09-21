@@ -8,12 +8,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBNameList >> addType [
-
-	^ SBName
-]
-
-{ #category : #'as yet unclassified' }
 SBNameList >> contextAcceptedRepresentationAt: aNumber [
 
 	^ #isSmalltalkName
@@ -23,4 +17,10 @@ SBNameList >> contextAcceptedRepresentationAt: aNumber [
 SBNameList >> isExpression [
 
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBNameList >> newChild [
+
+	^ SBName new
 ]

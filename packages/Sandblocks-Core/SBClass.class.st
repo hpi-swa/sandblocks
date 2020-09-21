@@ -73,7 +73,7 @@ SBClass >> class: aClass [
 { #category : #'as yet unclassified' }
 SBClass >> className: aString [
 
-	className content: aString
+	className contents: aString
 ]
 
 { #category : #'as yet unclassified' }
@@ -256,11 +256,12 @@ Is this really what you want to do?') asText makeBoldFrom: 1 to: newClassName si
 				ifFalse: [^ false]].
 	
 	oldClass ifNotNil: [oldClass := oldClass superclass].
-	class := environment beCurrentDuring: [oldClass subclassDefinerClass
-		evaluate: self definitionString
-		in: environment
-		notifying: nil
-		logged: false].
+	class := environment beCurrentDuring: [
+		oldClass subclassDefinerClass
+			evaluate: self definitionString
+			in: environment
+			notifying: nil
+			logged: false].
 	
 	^ true
 ]

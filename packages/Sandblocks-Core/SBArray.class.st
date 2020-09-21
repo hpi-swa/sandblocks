@@ -22,12 +22,6 @@ SBArray >> acceptChild: aMorph [
 	^ aMorph isExpression
 ]
 
-{ #category : #converting }
-SBArray >> addType [
-
-	^ SBUnknown
-]
-
 { #category : #'as yet unclassified' }
 SBArray >> canDeleteChild: aBlock [
 
@@ -112,7 +106,7 @@ SBArray >> insertCommandRequest: anAfterBoolean near: aBlock [
 	^ (SBInsertCommand newFor: self containingArtefact)
 		index: (self childSandblocks indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
 		container: self;
-		morph: self addType new;
+		morph: self newChild;
 		shouldMergeWithNext: true;
 		yourself
 ]
@@ -141,6 +135,12 @@ SBArray >> minExtent [
 	| inset |
 	inset := self layoutInset.
 	^ super minExtent max: inset left + inset right @ (self fontToUse height + inset top + inset bottom)
+]
+
+{ #category : #converting }
+SBArray >> newChild [
+
+	^ SBUnknown new
 ]
 
 { #category : #'as yet unclassified' }
