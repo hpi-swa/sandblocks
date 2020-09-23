@@ -132,6 +132,7 @@ SBBlock >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 { #category : #'as yet unclassified' }
 SBBlock >> browse [
+	<action>
 	" you were asked to be browsed. you may ignore this "
 	
 	self relatedClass browse
@@ -582,7 +583,7 @@ SBBlock >> ensureVisible [
 
 	| method |
 	method := self containingArtefact.
-	(method ~= self and: [method notNil]) ifTrue: [method ensureExpanded].
+	(method ~= self and: [method notNil and: [self visibleInWorld not]]) ifTrue: [method ensureExpanded].
 	
 	Project current addDeferredUIMessage: [
 		self isInWorld ifTrue: [self sandblockEditor ifNotNil: [:e | e scrollToShow: self]]]
@@ -621,6 +622,18 @@ SBBlock >> evaluateExpression [
 SBBlock >> evaluateWith: aRequestor for: aContext [
 
 	^ Compiler new evaluate: self sourceString readStream in: aContext to: (aContext ifNotNil: #receiver ifNil: [self containingArtefact relatedClass]) notifying: aRequestor ifFail: nil
+]
+
+{ #category : #'artefact protocol' }
+SBBlock >> evaluationContext [
+
+	^ nil
+]
+
+{ #category : #'artefact protocol' }
+SBBlock >> evaluationReceiver [
+
+	^ nil
 ]
 
 { #category : #hierarchy }
@@ -1025,7 +1038,7 @@ SBBlock >> isSandblock [
 { #category : #testing }
 SBBlock >> isSelected [
 
-	^ self sandblockEditor selection = self
+	^ self sandblockEditor ifNil: [false] ifNotNil: [:editor | editor selection = self]
 ]
 
 { #category : #testing }
@@ -1280,7 +1293,8 @@ SBBlock >> noteNewOwner: aMorph [
 { #category : #'as yet unclassified' }
 SBBlock >> object [
 
-	^ self subclassResponsibility
+	"Should be self subclassResponsibility but often causes non-recoverable errors with drag and drop"
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -1398,7 +1412,9 @@ SBBlock >> pickUp: anEvent [
 		homeArtefact: self containingArtefact;
 		methodClass: (self containingArtefact ifNotNil: #relatedClass);
 		colorPolicy: self colorPolicy;
-		addMorphBack: self veryDeepCopy)
+		addMorphBack: self veryDeepCopy;
+		sourceBlock: self;
+		yourself)
 ]
 
 { #category : #actions }
@@ -1425,6 +1441,12 @@ SBBlock >> postDuplicateSelf [
 
 	" this block has been duplicated, adjust any identifiers if need be "
 	
+]
+
+{ #category : #colors }
+SBBlock >> prefersNoBorder [
+
+	^ false
 ]
 
 { #category : #'as yet unclassified' }
@@ -1964,6 +1986,12 @@ SBBlock >> veryDeepCopyWith: aCopier [
 SBBlock >> wantsDroppedMorph: aMorph event: evt [
 
 	^ (aMorph respondsTo: #object) and: [aMorph object hasRepresentationThat: self acceptedRepresentation]
+]
+
+{ #category : #'artefact protocol' }
+SBBlock >> wantsInteractiveErrorCorrection [
+
+	^ false
 ]
 
 { #category : #testing }

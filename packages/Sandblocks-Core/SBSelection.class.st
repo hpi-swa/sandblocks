@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'colorPolicy',
 		'methodClass',
-		'homeArtefact'
+		'homeArtefact',
+		'sourceBlock'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -204,6 +205,18 @@ SBSelection >> sandblockEditor [
 SBSelection >> selection [
 
 	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> sourceBlock [
+
+	^ sourceBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> sourceBlock: aBlock [
+
+	sourceBlock := aBlock
 ]
 
 { #category : #'as yet unclassified' }

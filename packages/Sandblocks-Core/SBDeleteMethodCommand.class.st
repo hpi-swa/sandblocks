@@ -2,7 +2,8 @@ Class {
 	#name : #SBDeleteMethodCommand,
 	#superclass : #SBDeleteCommand,
 	#instVars : [
-		'oldSource'
+		'oldSource',
+		'category'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -13,6 +14,7 @@ SBDeleteMethodCommand >> do [
 	| ret |
 	ret := super do.
 	oldSource := (target currentClass >> target currentSelector) getSourceFromFile.
+	category := (target currentClass >> target currentSelector) currentClass category.
 	target currentClass removeSelector: target currentSelector.
 	^ ret
 ]
@@ -20,6 +22,6 @@ SBDeleteMethodCommand >> do [
 { #category : #'as yet unclassified' }
 SBDeleteMethodCommand >> undo [
 
-	target methodClass compile: oldSource.
+	target methodClass compile: oldSource classified: category.
 	^ super undo
 ]

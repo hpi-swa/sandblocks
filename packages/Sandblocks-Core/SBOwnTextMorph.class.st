@@ -6,9 +6,10 @@ Class {
 		'contents',
 		'emphasis',
 		'suffix',
-		'font'
+		'font',
+		'colorAlpha'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
@@ -26,7 +27,20 @@ SBOwnTextMorph >> clearEmphasis [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> color [
 
-	^ self sandblockForegroundColor
+	^ self sandblockForegroundColor alpha: colorAlpha
+]
+
+{ #category : #'as yet unclassified' }
+SBOwnTextMorph >> colorAlpha [
+
+	^ colorAlpha
+]
+
+{ #category : #'as yet unclassified' }
+SBOwnTextMorph >> colorAlpha: aNumber [
+
+	colorAlpha := aNumber.
+	self changed
 ]
 
 { #category : #'as yet unclassified' }
@@ -196,6 +210,7 @@ SBOwnTextMorph >> initialize [
 	cursor := 0.
 	suffix := ''.
 	contents := ''.
+	colorAlpha := 1.
 	emphasis := TextEmphasis normal
 ]
 

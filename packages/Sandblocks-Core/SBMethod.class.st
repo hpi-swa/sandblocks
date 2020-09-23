@@ -24,7 +24,7 @@ SBMethod >> argumentsDo: aBlock [
 SBMethod >> childSandblocksDo: aBlock [
 
 	signature childSandblocksDo: aBlock.
-	aBlock value: self body
+	self body visible ifTrue: [aBlock value: self body]
 ]
 
 { #category : #'as yet unclassified' }
@@ -181,7 +181,7 @@ SBMethod >> toggleCollapsed [
 		visible: self body visible not;
 		disableLayout: self body visible not.
 	
-	(self body visible not and: [self isSelected not]) ifTrue: [self select]
+	(self body visible not and: [self isSelected not and: [self sandblockEditor notNil]]) ifTrue: [self select]
 ]
 
 { #category : #'as yet unclassified' }

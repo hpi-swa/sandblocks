@@ -25,8 +25,8 @@ SBKeywordBinding >> contentsChanged [
 { #category : #'as yet unclassified' }
 SBKeywordBinding >> guessedClass [
 
-	self contents = 'self' ifTrue: [^ self block containingArtefact methodClass].
-	self contents = 'super' ifTrue: [^ self block containingArtefact methodClass superclass].
+	self contents = 'self' ifTrue: [^ self block containingArtefact relatedClass].
+	self contents = 'super' ifTrue: [^ self block containingArtefact relatedClass superclass].
 	self contents = 'thisContext' ifTrue: [^ Context].
 	self contents = 'nil' ifTrue: [^ UndefinedObject].
 	self contents  = 'false' ifTrue: [^ False].

@@ -1311,7 +1311,8 @@ SBEditor >> promptMenu [
 		({'Change UI Theme'. [self promptChangeColorPolicy]}).
 		({'Reset UI Theme'. [self resetColorPolicy]}).
 		({'Change Compile Method'. [self promptChangeCompile]}).
-		({'New Class'. [self createEmptyClass]})
+		({'New Class'. [self createEmptyClass]}).
+		({'New Representation'. [self openMorphInView: (SBRepresentationEditor new class: nil)]}).
 	}.
 	(UIManager default chooseFrom: (options collect: #first) values: (options collect: #second)) ifNotNil: #value
 ]

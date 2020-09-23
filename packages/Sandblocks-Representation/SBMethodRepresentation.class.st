@@ -5,6 +5,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBMethodRepresentation class >> isMethod [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBMethodRepresentation class >> isMethodBlock [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBMethodRepresentation class >> isToplevelMorph [
 
 	^ true

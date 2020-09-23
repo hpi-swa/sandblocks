@@ -5,12 +5,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBExplorerRepresentation class >> catchesAll [
-
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
 SBExplorerRepresentation class >> isLeaf [
 
 	^ true

@@ -4,13 +4,32 @@ Class {
 	#instVars : [
 		'text',
 		'colored',
-		'prefix'
+		'prefix',
+		'bordered'
 	],
 	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
+SBTextBubble >> bordered [
+
+	^ bordered
+]
+
+{ #category : #'as yet unclassified' }
+SBTextBubble >> bordered: aBoolean [
+
+	bordered := aBoolean
+]
+
+{ #category : #'as yet unclassified' }
 SBTextBubble >> childSandblocksDo: aBlock [
+]
+
+{ #category : #'as yet unclassified' }
+SBTextBubble >> colorAlpha: aNumber [
+
+	text colorAlpha: aNumber
 ]
 
 { #category : #'as yet unclassified' }
@@ -67,6 +86,7 @@ SBTextBubble >> initialize [
 	super initialize.
 	
 	colored := true.
+	bordered := true.
 	
 	self
 		addMorphBack: (text := SBOwnTextMorph new
@@ -87,6 +107,12 @@ SBTextBubble >> keyStroke: anEvent [
 SBTextBubble >> object [
 
 	^ self
+]
+
+{ #category : #'as yet unclassified' }
+SBTextBubble >> prefersNoBorder [
+
+	^ bordered not
 ]
 
 { #category : #'as yet unclassified' }

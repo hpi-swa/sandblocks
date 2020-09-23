@@ -121,6 +121,7 @@ SBRepresentationPrompt >> options: aCollection target: anObject current: aRepres
 	
 	options do: [:option |
 		self addMorphBack: (SBTextBubble new
+			prefix: (option causesSideEffects ifTrue: ['/!\ '] ifFalse: [nil]);
 			contents: option prettyName;
 			setProperty: #representation toValue: option;
 			when: #selected send: #useRepresentation: to: self with: option)].
@@ -135,7 +136,7 @@ SBRepresentationPrompt >> options: aCollection target: anObject current: aRepres
 				Project current addDeferredUIMessage: [
 					self addAlarm: #delete after: 2 seconds asMilliSeconds]]
 		}.
-	self select: 1
+	self select: (options findFirst: [:option | option causesSideEffects not])
 ]
 
 { #category : #'as yet unclassified' }

@@ -351,3 +351,10 @@ Morph >> topFirstMorphThat: aBlock [
 	self allMorphsDoBreadthFirst: [:m | (aBlock value: m) ifTrue: [^ m]].
 	^ nil
 ]
+
+{ #category : #'*Sandblocks-Core' }
+Morph >> visibleInWorld [
+
+	^ (self firstOwnerSuchThat: [:o | o visible not])
+		ifNotNil: [false] ifNil: [true]
+]

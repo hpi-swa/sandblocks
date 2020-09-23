@@ -164,6 +164,12 @@ SBMessagePart >> messageSend [
 ]
 
 { #category : #'as yet unclassified' }
+SBMessagePart >> prefersNoBorder [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBMessagePart >> printOn: aStream [
 
 	aStream
