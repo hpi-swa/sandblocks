@@ -2,7 +2,14 @@ SmalltalkCISpec {
   #loading : [
     SCIMetacelloLoadSpec {
       #baseline : 'Sandblocks',
-      #platforms : [ #squeak ]
+      #platforms : [ #squeak ],
+			#directory: 'packages',
+			#testing : {
+				#coverage : {
+					#categories : [ 'Sandblocks' ]
+					#format : #coveralls
+				}
+			}
     }
   ]
 }
