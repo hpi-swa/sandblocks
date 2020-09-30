@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBSubstitution class >> applyAutomatically [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBSubstitution class >> catchesAll [
 
 	^ false

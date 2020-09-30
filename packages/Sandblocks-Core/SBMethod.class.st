@@ -23,6 +23,7 @@ SBMethod >> argumentsDo: aBlock [
 { #category : #'as yet unclassified' }
 SBMethod >> childSandblocksDo: aBlock [
 
+	aBlock value: classPrefix.
 	signature childSandblocksDo: aBlock.
 	self body visible ifTrue: [aBlock value: self body]
 ]
@@ -84,7 +85,7 @@ SBMethod >> initialize [
 		vResizing: #shrinkWrap; hResizing: #shrinkWrap;
 		
 		addMorphBack: (SBRow new
-			addMorphBack: (classPrefix := SBStringMorph new);
+			addMorphBack: (classPrefix := SBClassNameInput new suffix: ' >> '; bordered: false);
 			addMorphBack: (signature := SBSignature new))
 ]
 
@@ -114,6 +115,12 @@ SBMethod >> messageParts [
 ]
 
 { #category : #'as yet unclassified' }
+SBMethod >> methodClass [
+
+	^ classPrefix object
+]
+
+{ #category : #'as yet unclassified' }
 SBMethod >> selector [
 
 	^ signature selector
@@ -130,7 +137,7 @@ SBMethod >> selector: aSymbol arguments: aCollection class: aClass [
 
 	super selector: aSymbol arguments: aCollection class: aClass.
 	signature selector: aSymbol arguments: aCollection.
-	classPrefix contents: aClass name, ' >> '.
+	classPrefix object: aClass.
 	self savedMethodHasComments ifTrue: [
 		self firstSubmorph
 			addMorphBack: (Morph new

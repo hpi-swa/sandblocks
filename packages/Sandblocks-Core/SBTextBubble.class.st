@@ -5,7 +5,8 @@ Class {
 		'text',
 		'colored',
 		'prefix',
-		'bordered'
+		'bordered',
+		'suffix'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -65,7 +66,7 @@ SBTextBubble >> currentTextMorph [
 { #category : #'as yet unclassified' }
 SBTextBubble >> drawnColor [
 
-	^ self colored ifTrue: [super drawnColor] ifFalse: [self parentSandblock drawnColor]
+	^ self colored ifTrue: [super drawnColor] ifFalse: [Color transparent]
 ]
 
 { #category : #'as yet unclassified' }
@@ -155,9 +156,21 @@ SBTextBubble >> stopEditing: aCommand [
 ]
 
 { #category : #'as yet unclassified' }
+SBTextBubble >> suffix [
+
+	^ suffix
+]
+
+{ #category : #'as yet unclassified' }
+SBTextBubble >> suffix: aString [
+
+	suffix := aString
+]
+
+{ #category : #'as yet unclassified' }
 SBTextBubble >> symbols [
 
-	^ {prefix. nil}
+	^ {prefix. suffix}
 ]
 
 { #category : #'as yet unclassified' }

@@ -17,6 +17,13 @@ SBClassNameInput >> object [
 ]
 
 { #category : #'as yet unclassified' }
+SBClassNameInput >> printOn: aStream [
+
+	aStream nextPutAll: 'class input '.
+	aStream print: self object
+]
+
+{ #category : #'as yet unclassified' }
 SBClassNameInput >> promptChangeClass [
 
 	(UIManager default chooseClassOrTrait) ifNotNil: [:class |

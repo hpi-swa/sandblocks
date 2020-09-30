@@ -124,7 +124,7 @@ SBMessagePartTest >> testTypeBinary [
 	message messageParts first keyStroke: (self keyboardEvent: $-).
 	self assert: message selector = '+-'.
 	message messageParts first keyStroke: (self keyboardEvent: $').
-	self assert: editor currentInput = message messageParts first.
+	self assert: editor currentInput = message arguments first.
 	self assert: message selector = '+-'
 ]
 
