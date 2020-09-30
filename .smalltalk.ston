@@ -3,13 +3,14 @@ SmalltalkCISpec {
     SCIMetacelloLoadSpec {
       #baseline : 'Sandblocks',
       #platforms : [ #squeak ],
-			#directory: 'packages',
-			#testing : {
-				#coverage : {
-					#packages : [ 'Sandblocks' ],
-					#format : #coveralls
-				}
-			}
+      #directory: 'packages',
+	  #useLatestMetacello : true
     }
-  ]
+  ],
+  #testing : {
+    #coverage : {
+      #packages : [ 'Sandblocks' ],
+      #format : #coveralls
+    }
+  }
 }
