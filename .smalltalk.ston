@@ -6,7 +6,7 @@ SmalltalkCISpec {
 			#directory: 'packages',
 			#testing : {
 				#coverage : {
-					#categories : [ 'Sandblocks' ]
+					#packages : [ 'Sandblocks' ],
 					#format : #coveralls
 				}
 			}
