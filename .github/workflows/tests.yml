@@ -1,0 +1,9 @@
+steps:
+  - uses: actions/checkout@v2
+  - uses: hpi-swa/setup-smalltalkCI@v1
+    id: smalltalkci
+    with:
+      smalltalk-version: 'Squeak64-trunk'
+  - run: smalltalkci -s ${{ steps.smalltalkci.outputs.smalltalk-version }}
+    shell: bash
+    timeout-minutes: 15
