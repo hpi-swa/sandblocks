@@ -27,7 +27,7 @@ SBClassMethodEditor >> class: aClass [
 						yourself)]].
 			[
 				aClass organization categories do: [:category |
-					self addMorphBack: (SBMethodCategory new class: aClass category: category)]]
+					self addMorphBack: (SBMethodCategory new class: aClass category: category collapsed: aClass methodDict size > 20)]]
 		}
 ]
 
@@ -63,6 +63,7 @@ SBClassMethodEditor >> initialize [
 		changeTableLayout;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
+		cellGap: 4;
 		attachDecorator: SBMoveDecorator new
 ]
 
@@ -72,7 +73,7 @@ SBClassMethodEditor >> insertCommandRequest: anAfterBoolean near: aBlock [
 	^ (SBInsertCommand newFor: self containingArtefact)
 		index: (self childSandblocks indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
 		container: self;
-		morph: (SBMethodCategory new class: self firstSubmorph object category: 'untitled');
+		morph: (SBMethodCategory new class: self firstSubmorph object category: 'untitled' collapsed: false);
 		shouldMergeWithNext: true;
 		yourself
 ]

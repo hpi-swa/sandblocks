@@ -16,6 +16,15 @@ SBMethodCategory >> acceptedRepresentation [
 ]
 
 { #category : #'as yet unclassified' }
+SBMethodCategory >> addMethods [
+
+	(class organization listAtCategoryNamed: savedCategoryName) do: [:method |
+			self addMorphBack: ((class lookupSelector: method) asSandblock
+				toggleCollapsed;
+				hResizing: #spaceFill)]
+]
+
+{ #category : #'as yet unclassified' }
 SBMethodCategory >> category [
 
 	^ savedCategoryName
@@ -28,15 +37,13 @@ SBMethodCategory >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBMethodCategory >> class: aClass category: aString [
+SBMethodCategory >> class: aClass category: aString collapsed: aBoolean [
 
 	self firstSubmorph contents: aString.
 	class := aClass.
 	savedCategoryName := aString.
-	(aClass organization listAtCategoryNamed: aString) do: [:method |
-		self addMorphBack: ((aClass lookupSelector: method) asSandblock
-			toggleCollapsed;
-			hResizing: #spaceFill)]
+	
+	aBoolean ifFalse: [self addMethods]
 ]
 
 { #category : #'as yet unclassified' }
@@ -51,10 +58,10 @@ SBMethodCategory >> drawSubmorphsOn: aCanvas [
 { #category : #'as yet unclassified' }
 SBMethodCategory >> handleDroppedBlock: aBlock event: anEvent [
 
-	| command insertCommand changeCategoryCommand |
+	| insertCommand changeCategoryCommand |
 	SBExample
 		self: [
-			SBMethodCategory new class: FrameRateMorph category: 'stepping and presenter']
+			SBMethodCategory new class: FrameRateMorph category: 'stepping and presenter' collapsed: false]
 		args: [{(FrameRateMorph >> #step) asSandblock. nil}]
 		label: 'example'.
 	insertCommand := (SBInsertCommand newFor: self)
@@ -113,6 +120,12 @@ SBMethodCategory >> isArtefact [
 ]
 
 { #category : #'as yet unclassified' }
+SBMethodCategory >> object [
+
+	^ self firstSubmorph contents
+]
+
+{ #category : #'as yet unclassified' }
 SBMethodCategory >> prefersNoBorder [
 
 	^ false
@@ -135,4 +148,13 @@ SBMethodCategory >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 		class organization renameCategory: savedCategoryName toBe: currentName.
 		savedCategoryName := currentName].
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBMethodCategory >> toggleCollapsed [
+	<action>
+	
+	self submorphCount > 1
+		ifTrue: [(self submorphs copyFrom: 2 to: self submorphCount) do: #delete]
+		ifFalse: [self addMethods]
 ]
