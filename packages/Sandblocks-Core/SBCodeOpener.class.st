@@ -57,13 +57,13 @@ SBCodeOpener >> focus: aMethodOrClass [
 		ifTrue: [
 			self showingClassSide: aMethodOrClass isClassSide.
 			self selectedCategoryIndex: (self categories indexOf: aMethodOrClass category).
-			self selectedClassIndex: (self classes indexOf: aMethodOrClass theNonMetaClass name).
-			self focusPanel: 3]
+			self selectedClassIndex: (self classes indexOf: aMethodOrClass theNonMetaClass name) moved: false.
+			self focusPanel: 2]
 		ifFalse: [
 			self showingClassSide: aMethodOrClass methodClass isClassSide.
 			self selectedCategoryIndex: (self categories indexOf: aMethodOrClass methodClass category).
 			self selectedClassIndex: (self classes indexOf: aMethodOrClass methodClass theNonMetaClass name).
-			self selectedMethodIndex: (self methods indexOf: aMethodOrClass selector).
+			self selectedMethodIndex: (self methods indexOf: aMethodOrClass selector) moved: false.
 			self focusPanel: 3]
 ]
 
@@ -73,11 +73,11 @@ SBCodeOpener >> focusPanel: aNumber [
 	currentPanelIndex := aNumber clampLow: 1 high: self submorphCount.
 	self methods ifEmpty: [currentPanelIndex := currentPanelIndex min: 2].
 	
-	(currentPanelIndex = 2 and: [self selectedClassIndex = 0]) ifTrue: [self selectedClassIndex: 1].
-	currentPanelIndex < 2 ifTrue: [self selectedClassIndex: 0].
+	(currentPanelIndex = 2 and: [self selectedClassIndex = 0]) ifTrue: [self selectedClassIndex: 1 moved: false].
+	currentPanelIndex < 2 ifTrue: [self selectedClassIndex: 0 moved: false].
 	
-	(currentPanelIndex = 3 and: [self selectedMethodIndex = 0]) ifTrue: [self selectedMethodIndex: 1].
-	currentPanelIndex < 3 ifTrue: [self selectedMethodIndex: 0]
+	(currentPanelIndex = 3 and: [self selectedMethodIndex = 0]) ifTrue: [self selectedMethodIndex: 1 moved: false].
+	currentPanelIndex < 3 ifTrue: [self selectedMethodIndex: 0 moved: false]
 ]
 
 { #category : #'as yet unclassified' }
@@ -209,8 +209,8 @@ SBCodeOpener >> select: aNumber [
 
 	currentPanelIndex caseOf: {
 		[1] -> [self selectedCategoryIndex: selectedCategoryIndex + aNumber].
-		[2] -> [self selectedClassIndex: selectedClassIndex + aNumber].
-		[3] -> [self selectedMethodIndex: selectedMethodIndex + aNumber]
+		[2] -> [self selectedClassIndex: selectedClassIndex + aNumber moved: true].
+		[3] -> [self selectedMethodIndex: selectedMethodIndex + aNumber moved: true]
 	}
 ]
 
@@ -241,7 +241,7 @@ SBCodeOpener >> selectedCategoryIndex: aNumber [
 	self changed: #selectedCategoryIndex.
 	self changed: #classes.
 	self changed: #methods.
-	self selectedClassIndex: 0
+	self selectedClassIndex: 0 moved: false
 ]
 
 { #category : #'as yet unclassified' }
@@ -259,7 +259,13 @@ SBCodeOpener >> selectedClassIndex [
 { #category : #'as yet unclassified' }
 SBCodeOpener >> selectedClassIndex: aNumber [
 
-	aNumber < 1
+	self selectedClassIndex: aNumber moved: true
+]
+
+{ #category : #'as yet unclassified' }
+SBCodeOpener >> selectedClassIndex: aNumber moved: aBoolean [
+
+	(aNumber < 1 and: [aBoolean])
 		ifTrue: [selectedClassIndex := self classes size]
 		ifFalse: [
 			aNumber > self classes size
@@ -268,7 +274,7 @@ SBCodeOpener >> selectedClassIndex: aNumber [
 
 	self changed: #selectedClassIndex.
 	self changed: #methods.
-	self selectedMethodIndex: 0
+	self selectedMethodIndex: 0 moved: false
 ]
 
 { #category : #'as yet unclassified' }
@@ -297,7 +303,13 @@ SBCodeOpener >> selectedMethodIndex [
 { #category : #'as yet unclassified' }
 SBCodeOpener >> selectedMethodIndex: aNumber [
 	
-	aNumber < 1
+	self selectedMethodIndex: aNumber moved: true
+]
+
+{ #category : #'as yet unclassified' }
+SBCodeOpener >> selectedMethodIndex: aNumber moved: aBoolean [
+	
+	(aNumber < 1 and: [aBoolean])
 		ifTrue: [selectedMethodIndex := self methods size]
 		ifFalse: [
 			aNumber > self methods size
@@ -328,7 +340,7 @@ SBCodeOpener >> showingClassSide: aBoolean [
 
 	showingClassSide := aBoolean.
 	self changed: #methods.
-	self selectedMethodIndex: (self methods notEmpty ifTrue: [1] ifFalse: [0])
+	self selectedMethodIndex: (self methods notEmpty ifTrue: [1] ifFalse: [0]) moved: false
 ]
 
 { #category : #'as yet unclassified' }

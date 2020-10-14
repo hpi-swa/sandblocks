@@ -21,7 +21,7 @@ SBRepresentation class >> eagerNewFor: anObject [
 	" called when eagerly evaluating representations for finding nested combinations.
 	Override if eagerly evaluating will be costly or cause side effects "
 
-	^ self newFor: anObject
+	^ self causesSideEffects ifTrue: [nil] ifFalse: [self newFor: anObject]
 ]
 
 { #category : #'as yet unclassified' }
@@ -65,6 +65,20 @@ SBRepresentation class >> representationsDo: aBlock [
 
 	self allSubclassesDo: aBlock.
 	SBSubstitution allSubclassesDo: aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBRepresentation class >> representationsDo: aBlock for: anObject [
+
+	| n |
+	self allSubclassesDo: aBlock.
+	SBSubstitution allSubclassesDo: aBlock.
+	
+	n := anObject class allInstVarNames.
+	n size > 0 ifTrue: [
+		n do: [:name |
+			(anObject respondsTo: name asSymbol) ifTrue: [
+				aBlock value: (SBExtractFieldRepresentation new name: name asSymbol)]]]
 ]
 
 { #category : #'as yet unclassified' }

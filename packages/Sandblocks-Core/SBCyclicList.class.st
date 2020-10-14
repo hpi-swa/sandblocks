@@ -17,6 +17,13 @@ SBCyclicList >> add: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
+SBCyclicList >> clear [
+
+	cursor := 0.
+	array := Array new: array size withAll: 0
+]
+
+{ #category : #'as yet unclassified' }
 SBCyclicList >> contents [
 
 	^ Array streamContents: [:stream |

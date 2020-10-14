@@ -5,7 +5,10 @@ Class {
 		'options',
 		'target',
 		'currentRepresentation',
-		'selectedIndex'
+		'selectedIndex',
+		'sourceMorph',
+		'position',
+		'scroll'
 	],
 	#category : #'Sandblocks-Representation'
 }
@@ -13,13 +16,13 @@ Class {
 { #category : #'as yet unclassified' }
 SBRepresentationPrompt >> candidates [
 
-	^ (self submorphs copyFrom: 3 to: self submorphCount) select: [:m | m visible]
+	^ options submorphs select: [:m | m visible]
 ]
 
 { #category : #'as yet unclassified' }
 SBRepresentationPrompt >> childSandblocksDo: aBlock [
 
-	self submorphs allButFirstDo: aBlock
+	options submorphsDo: aBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -68,7 +71,13 @@ SBRepresentationPrompt >> initialize [
 			prefix: 'Filter: ';
 			when: #contentsChanged send: #updateFilter to: self;
 			when: #stopEditing send: #close to: self;
-			when: #keyStroke send: #filterKeyStroke: to: self)
+			when: #keyStroke send: #filterKeyStroke: to: self);
+		addMorphBack: (scroll := ScrollPane new
+			hResizing: #shrinkWrap;
+			vResizing: #rigid;
+			height: 150).
+	
+	scroll scroller addMorphBack: (options := SBColumn new)
 ]
 
 { #category : #'as yet unclassified' }
@@ -108,19 +117,19 @@ SBRepresentationPrompt >> object [
 ]
 
 { #category : #'as yet unclassified' }
-SBRepresentationPrompt >> options: aCollection target: anObject current: aRepresentation [
+SBRepresentationPrompt >> options: aCollection target: anObject at: aPoint from: aSourceMorph [
 
 	SBExample
 		self: [SBRepresentationPrompt new]
 		args: [
 			{(5 representationsThat: #isToplevelMorph). 5. nil}]
 		label: 'example'.
-	options := aCollection.
-	currentRepresentation := aRepresentation.
 	target := anObject.
+	position := aPoint.
+	sourceMorph := aSourceMorph.
 	
-	options do: [:option |
-		self addMorphBack: (SBTextBubble new
+	aCollection do: [:option |
+		options addMorphBack: (SBTextBubble new
 			prefix: (option causesSideEffects ifTrue: ['/!\ '] ifFalse: [nil]);
 			contents: option prettyName;
 			setProperty: #representation toValue: option;
@@ -136,7 +145,39 @@ SBRepresentationPrompt >> options: aCollection target: anObject current: aRepres
 				Project current addDeferredUIMessage: [
 					self addAlarm: #delete after: 2 seconds asMilliSeconds]]
 		}.
-	self select: (options findFirst: [:option | option causesSideEffects not])
+	self select: (aCollection findFirst: [:option | option causesSideEffects not]).
+	self allMorphsDo: #layoutChanged
+]
+
+{ #category : #'as yet unclassified' }
+SBRepresentationPrompt >> options: aCollection target: anObject current: aRepresentation [
+
+	SBExample
+		self: [SBRepresentationPrompt new]
+		args: [
+			{(5 representationsThat: #isToplevelMorph). 5. nil}]
+		label: 'example'.
+	currentRepresentation := aRepresentation.
+	target := anObject.
+	
+	aCollection do: [:option |
+		options addMorphBack: (SBTextBubble new
+			prefix: (option causesSideEffects ifTrue: ['/!\ '] ifFalse: [nil]);
+			contents: option prettyName;
+			setProperty: #representation toValue: option;
+			when: #selected send: #useRepresentation: to: self with: option)].
+	currentRepresentation
+		when: #positionChanged send: #updatePosition to: self;
+		when: #extentChanged send: #updatePosition to: self.
+	SBToggledCode
+		comment: ''
+		active: 0
+		do: {
+			[
+				Project current addDeferredUIMessage: [
+					self addAlarm: #delete after: 2 seconds asMilliSeconds]]
+		}.
+	self select: (aCollection findFirst: [:option | option causesSideEffects not])
 ]
 
 { #category : #'as yet unclassified' }
@@ -150,11 +191,12 @@ SBRepresentationPrompt >> select: aNumber [
 
 	| candidates |
 	candidates := self candidates.
-	self submorphs from: 3 to: self submorphCount do: [:m | m detachDecorators: SBMultiSelectionDecorator].
+	options submorphsDo: [:m | m detachDecorators: SBMultiSelectionDecorator].
 	selectedIndex := aNumber clampLow: 1 high: candidates size.
 	candidates ifNotEmpty: [ | selected |
 		selected := candidates at: selectedIndex.
 		selected attachDecorator: SBMultiSelectionDecorator new.
+		scroll scrollToShow: (selected bounds expandBy: 0 @ 50).
 		self sandblockEditor ifNotNil: [
 			self useRepresentation: (selected valueOfProperty: #representation)]]
 ]
@@ -162,8 +204,11 @@ SBRepresentationPrompt >> select: aNumber [
 { #category : #'as yet unclassified' }
 SBRepresentationPrompt >> updateFilter [
 
-	(self submorphs allButFirst: 2) do: [:morph | | visible |
-		visible := (morph contents findString: self submorphs second contents startingAt: 1 caseSensitive: false) > 0.
+	| filter |
+	filter := self submorphs second contents.
+	options submorphsDo: [:morph | | visible |
+		visible := filter isEmpty or: [
+			(morph contents findString: filter startingAt: 1 caseSensitive: false) > 0].
 		morph
 			visible: visible;
 			disableLayout: visible not].
@@ -180,7 +225,7 @@ SBRepresentationPrompt >> updatePosition [
 			[
 				currentRepresentation owner ifNotNil: [:m | m layoutChanged fullBounds]]
 		}.
-	self position: currentRepresentation topRight
+	self position: currentRepresentation right @ self top
 ]
 
 { #category : #'as yet unclassified' }
@@ -188,24 +233,25 @@ SBRepresentationPrompt >> useRepresentation: aRepresentation [
 
 	| newRepresentation |
 	newRepresentation := aRepresentation newFor: target.
-	newRepresentation position: newRepresentation position.
-	currentRepresentation removeActionsWithReceiver: self.
-	SBToggledCode
-		comment: ''
-		active: 2
-		do: {
-			[
-				currentRepresentation sandblockEditor do: (SBReplaceCommand newNonEdit
-					target: currentRepresentation;
-					replacer: newRepresentation)].
-			[
-				currentRepresentation replaceBy: newRepresentation.
-				newRepresentation center: currentRepresentation center]
-		}.
+	
+	currentRepresentation
+		ifNotNil: [:c |
+			c removeActionsWithReceiver: self.
+			newRepresentation position: currentRepresentation position.
+			
+			currentRepresentation replaceBy: newRepresentation.
+			newRepresentation center: currentRepresentation center]
+		ifNil: [
+			self sandblockEditor openMorphInView: newRepresentation.
+			newRepresentation position: position].
+	
 	self flag: #todo.
 	currentRepresentation := newRepresentation.
 	self updatePosition.
 	newRepresentation
 		when: #positionChanged send: #updatePosition to: self;
-		when: #extentChanged send: #updatePosition to: self
+		when: #extentChanged send: #updatePosition to: self.
+	
+	sourceMorph ifNotNil: [
+		newRepresentation owner addMorphBack: (SBRepresentationConnector connect: sourceMorph to: newRepresentation representation: aRepresentation)]
 ]

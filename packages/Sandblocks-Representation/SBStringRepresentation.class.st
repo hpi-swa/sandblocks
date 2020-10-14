@@ -7,17 +7,18 @@ Class {
 { #category : #'as yet unclassified' }
 SBStringRepresentation class >> matches: anObject [
 
-	| string |
+	"| string |
 	string := (anObject isString or: [anObject isText])
 		ifTrue: [anObject string]
 		ifFalse: [
 			((anObject respondsTo: #contents) and: [anObject contents isString]) ifTrue: [anObject contents] ifFalse: [^ false]].
+	"
 	
-	^ true
+	^ anObject isText
 ]
 
 { #category : #'as yet unclassified' }
 SBStringRepresentation class >> newFor: anObject [
 
-	^ (anObject isString or: [anObject isText]) ifTrue: [anObject] ifFalse: [anObject contents]
+	^ "(anObject isString or: [anObject isText]) ifTrue: [anObject] ifFalse: [anObject contents]"anObject string
 ]

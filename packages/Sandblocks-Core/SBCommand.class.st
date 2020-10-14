@@ -35,6 +35,15 @@ SBCommand class >> newNonEdit [
 ]
 
 { #category : #'as yet unclassified' }
+SBCommand class >> newOrEditFor: anArtefactOrNil [
+
+	^ self basicNew initialize
+		artefact: anArtefactOrNil;
+		wasEdit: anArtefactOrNil notNil;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
 SBCommand >> affectedArtefacts [
 
 	^ {self artefact}

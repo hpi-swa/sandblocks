@@ -443,6 +443,7 @@ SBEditor >> batchedChangeStep: aBlock [
 	compileTime = #compileOnChange ifTrue: [ | artefact |
 		self save: aBlock containingArtefact tryFixing: false quick: true.
 		artefact := self selectedArtefact.
+		artefact triggerEvent: #changed.
 		self allBlocksDo: [:block | block artefactChanged: artefact]]
 ]
 
@@ -698,6 +699,16 @@ SBEditor >> createEmptyMethod [
 	self startInput: method at: 1 replacingContents: true
 ]
 
+{ #category : #actions }
+SBEditor >> createEmptyRepresentation [
+	<action>
+
+	| representation |
+	representation := SBRepresentationEditor new class: nil.
+	self openMorphInView: representation.
+	self startInput: representation childSandblocks first at: 1 replacingContents: false
+]
+
 { #category : #accessing }
 SBEditor >> currentInput [
 
@@ -884,7 +895,7 @@ SBEditor >> goToMark [
 { #category : #'submorphs-add/remove' }
 SBEditor >> handleDroppedBlock: aMorph event: anEvent [
 
-	aMorph object representIn: self as: #isToplevelMorph near: ((scroll transformFrom: nil) globalPointToLocal: anEvent position)
+	aMorph object representIn: self as: #isToplevelMorph near: ((scroll transformFrom: nil) globalPointToLocal: anEvent position) from: ([aMorph sourceBlock] on: MessageNotUnderstood do: [nil])
 ]
 
 { #category : #'initialize-release' }
@@ -993,6 +1004,7 @@ SBEditor >> markChangesAfterCommand: aCommand [
 			compileTime = #compileOnChange ifTrue: [
 				saved := self save: artefact tryFixing: false quick: false].
 			artefact hasUnsavedChanges: saved not.
+			artefact triggerEvent: #changed.
 			self allBlocksDo: [:block | block artefactChanged: artefact]]]
 ]
 
@@ -1312,7 +1324,7 @@ SBEditor >> promptMenu [
 		({'Reset UI Theme'. [self resetColorPolicy]}).
 		({'Change Compile Method'. [self promptChangeCompile]}).
 		({'New Class'. [self createEmptyClass]}).
-		({'New Representation'. [self openMorphInView: (SBRepresentationEditor new class: nil)]}).
+		({'New Representation'. [self createEmptyRepresentation]}).
 	}.
 	(UIManager default chooseFrom: (options collect: #first) values: (options collect: #second)) ifNotNil: #value
 ]

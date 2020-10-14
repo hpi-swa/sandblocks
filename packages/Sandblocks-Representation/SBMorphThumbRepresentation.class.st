@@ -8,7 +8,7 @@ Class {
 SBMorphThumbRepresentation class >> eagerNewFor: aMorph [
 
 	" be conservative with our resources "
-	^ Form basicNew
+	^ Form extent: 1 @ 1 depth: 32
 ]
 
 { #category : #'as yet unclassified' }

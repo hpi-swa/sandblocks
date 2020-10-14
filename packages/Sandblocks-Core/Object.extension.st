@@ -30,7 +30,7 @@ Object >> hasDerivableRepresentationThat: aSymbol [
 { #category : #'*Sandblocks-Core' }
 Object >> hasRepresentationThat: aSymbol [
 
-	self representationsThat: aSymbol do: [:repr | ^ true] deep: false.
+	self representationsThat: aSymbol do: [:repr | ^ true] deep: 0.
 	^ false
 ]
 
@@ -59,6 +59,24 @@ Object >> representIn: aMorph as: aSymbol near: aPointOrMorph [
 		prompt position: (aPointOrMorph isPoint ifTrue: [aPointOrMorph] ifFalse: [aPointOrMorph position]).
 		aMorph openMorphInView: representation].
 	^ representation
+]
+
+{ #category : #'*Sandblocks-Core' }
+Object >> representIn: aSBEditor as: aSymbol near: aPointOrMorph from: aSourceMorph [
+
+	| options position |
+	options := self representationsThat: aSymbol.
+	options ifEmpty: [^ self].
+	position := aPointOrMorph isPoint ifTrue: [aPointOrMorph] ifFalse: [aPointOrMorph position].
+	options size > 1
+		ifTrue: [ | prompt |
+			prompt := (SBNewWatch report: SBRepresentationPrompt for: 999585281) new.
+			aSBEditor openMorphInView: prompt.
+			prompt options: options target: self at: position from: aSourceMorph]
+		ifFalse: [
+			aSBEditor openMorphInView: ((self newFirstSafeOptionFrom: options)
+				position: position;
+				yourself)]
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -132,14 +150,14 @@ Object >> representationsThat: aSymbol do: aBlock deep: aBoolean [
 	SBRepresentation representationsDo: [:repr |
 		((repr supports: aSymbol) and: [repr matches: self]) ifTrue: [aBlock value: repr].
 		
-		((aBoolean isBoolean not and: [aBoolean < 2]) and: [
+		((aBoolean isBoolean not and: [aBoolean < 3]) and: [
 			repr identity not and: [repr isLeaf not and: [repr matches: self]]]) ifTrue: [ | nested |
 			(nested := repr eagerNewFor: self) ~= self ifTrue: [
 				nested
 					representationsThat: aSymbol
 					do: [:nestedRepr |
 						aBlock value: (SBDerivedRepresentation from: repr to: nestedRepr)]
-					deep: aBoolean + 1]]]
+					deep: aBoolean + 1]]] for: self
 ]
 
 { #category : #'*Sandblocks-Core' }

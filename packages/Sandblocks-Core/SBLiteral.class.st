@@ -120,7 +120,7 @@ SBLiteral >> replaceWithUnknown [
 SBLiteral >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (self inputCommandClass newFor: self containingArtefact)
+	cmd := (self inputCommandClass newOrEditFor: self containingArtefact)
 		oldMorph: self;
 		previousText: self contents;
 		yourself.

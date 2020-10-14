@@ -56,7 +56,7 @@ SBNumber >> mouseDown: anEvent [
 	anEvent hand newMouseFocus: self.
 	isDown := true.
 	lastMousePosition := anEvent position.
-	scrubbingCommand := (SBMutatePropertyCommand newFor: self containingArtefact)
+	scrubbingCommand := (SBMutatePropertyCommand newOrEditFor: self containingArtefact)
 		oldValue: self contents;
 		selector: #contents;
 		target: self.
@@ -92,7 +92,7 @@ SBNumber >> mouseUp: anEvent [
 { #category : #'as yet unclassified' }
 SBNumber >> parsedContents [
 
-	^ self contents asNumber
+	^ self contents ifEmpty: [0] ifNotEmpty: [:num | num asNumber]
 ]
 
 { #category : #'as yet unclassified' }
@@ -125,6 +125,18 @@ SBNumber >> valid [
 		(ExtendedNumberParser on: stream) nextNumber.
 		stream position = self contents size ifFalse: [^ false]] on: NumberParserError do: [^ false].
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBNumber >> value [
+
+	^ self parsedContents
+]
+
+{ #category : #'as yet unclassified' }
+SBNumber >> value: aNumber [
+
+	self contents: aNumber asString
 ]
 
 { #category : #'as yet unclassified' }

@@ -101,8 +101,10 @@ SBConnectorLine >> curvePointsForSelfConnection [
 { #category : #'as yet unclassified' }
 SBConnectorLine >> drawArrowOn: aCanvas origin: aPoint delta: anotherPoint [
 
-	aCanvas line: aPoint to: aPoint + anotherPoint width: 3 color: self color.
-	aCanvas line: aPoint to: aPoint + anotherPoint leftRotated width: 3 color: self color
+	aCanvas asBalloonCanvas
+		aaLevel: 4;
+		line: aPoint to: aPoint + anotherPoint width: 3 color: self color;
+		line: aPoint to: aPoint + anotherPoint leftRotated width: 3 color: self color
 ]
 
 { #category : #'as yet unclassified' }
@@ -110,8 +112,8 @@ SBConnectorLine >> drawConnectorsOn: aCanvas alignBetween: aPoint and: anotherPo
 
 	| rotated |
 	self connectorType = #arrow ifTrue: [
-		rotated := Point r: self arrowSize degrees: (aPoint - anotherPoint) theta radiansToDegrees - 135.
-		self drawArrowOn: aCanvas origin: aPoint delta: rotated].
+		rotated := Point r: self arrowSize degrees: (aPoint - anotherPoint) theta radiansToDegrees + 45.
+		self drawArrowOn: aCanvas origin: anotherPoint delta: rotated].
 	self connectorType = #dots ifTrue: [{aPoint. anotherPoint} do: [:point | aCanvas fillOval: (14 asPoint center: point) color: self color]]
 ]
 
@@ -137,10 +139,20 @@ SBConnectorLine >> endPointsDo: aBlock [
 
 	^ aBlock
 		value: (fromAlign = #none
-			ifTrue: [from bounds line: (from bounds sideNearestTo: to center) do: [:a :b | to center nearestPointOnLineFrom: a to: b]]
+			ifTrue: [ | side |
+				side := from bounds sideNearestTo: to center.
+				from bounds
+					line: side
+					do: [:a :b |
+						(from bounds line: side do: [:a2 :b2 | ((b2 - a2) // 2) + a2]) nearestPointOnLineFrom: a to: b]]
 			ifFalse: [from perform: (fromAlign, 'Center') asSymbol])
 		value: (toAlign = #none
-			ifTrue: [to bounds line: (to bounds sideNearestTo: from center) do: [:a :b | from center nearestPointOnLineFrom: a to: b]]
+			ifTrue: [ | side |
+				side := to bounds sideNearestTo: from center.
+				to bounds
+					line: side
+					do: [:a :b |
+						(to bounds line: side do: [:a2 :b2 | ((b2 - a2) // 2) + a2]) nearestPointOnLineFrom: a to: b]]
 			ifFalse: [to perform: (toAlign, 'Center') asSymbol])
 ]
 
@@ -289,6 +301,22 @@ SBConnectorLine >> rejectsEvent: anEvent [
 
 	^ anEvent isMouse not or: [
 		anEvent isMouseDown not or: [(self handlesMouseDown: anEvent) not]]
+]
+
+{ #category : #'as yet unclassified' }
+SBConnectorLine >> replaceToWith: anObject [
+
+	to removeActionsWithReceiver: self.
+	to removeDependent: self.
+	self update: nil.
+	
+	to replaceBy: anObject.
+	
+	to := anObject.
+	to when: #positionChanged send: #update: to: self with: nil.
+	to addDependent: self.
+	self update: nil.
+	to when: #outOfWorld send: #delete to: self
 ]
 
 { #category : #'as yet unclassified' }

@@ -1,12 +1,12 @@
 Class {
 	#name : #SBGraphPlot,
-	#superclass : #Morph,
+	#superclass : #SBBlock,
 	#instVars : [
 		'data',
 		'label',
 		'labelColor'
 	],
-	#category : 'Sandblocks-Watch'
+	#category : #'Sandblocks-Watch'
 }
 
 { #category : #drawing }
@@ -28,10 +28,10 @@ SBGraphPlot >> drawOn: aCanvas [
 { #category : #'as yet unclassified' }
 SBGraphPlot >> extent: aPoint [
 
-	super extent: aPoint.
-	
-	data size ~= aPoint x ifTrue: [
-		data size: aPoint x // self gap]
+	| point |
+	point := aPoint max: 10 @ 30.
+	super extent: point.
+	data size ~= point x ifTrue: [data size: point x // self gap]
 ]
 
 { #category : #'as yet unclassified' }
@@ -44,12 +44,10 @@ SBGraphPlot >> gap [
 { #category : #initialization }
 SBGraphPlot >> initialize [
 
-	super initialize.
-	
 	data := SBCyclicList new.
+	super initialize.
 	label := ''.
 	labelColor := Color black.
-	
 	self
 		hResizing: #spaceFill;
 		vResizing: #rigid;
@@ -72,6 +70,16 @@ SBGraphPlot >> label: aString [
 SBGraphPlot >> labelColor: aColor [
 
 	labelColor := aColor
+]
+
+{ #category : #'as yet unclassified' }
+SBGraphPlot >> replace: anObject [
+
+	anObject isNumber ifTrue: [self reportValue: anObject].
+	anObject isCollection ifTrue: [
+		data clear.
+		anObject do: [:val | data add: val].
+		self changed]
 ]
 
 { #category : #'as yet unclassified' }

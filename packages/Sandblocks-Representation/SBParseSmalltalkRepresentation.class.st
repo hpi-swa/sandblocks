@@ -15,7 +15,7 @@ SBParseSmalltalkRepresentation class >> matches: anObject [
 
 	(anObject isString or: [anObject isText]) ifFalse: [^ false].
 	
-	[anObject string parseAsNode] on: SyntaxErrorNotification do: [^ false].
+	[anObject string parseAsNode] on: SyntaxErrorNotification, UndeclaredVariableWarning do: [^ false].
 	^ true
 ]
 

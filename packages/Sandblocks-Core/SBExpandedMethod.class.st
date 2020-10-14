@@ -23,6 +23,12 @@ SBExpandedMethod class >> newFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBExpandedMethod class >> priority [
+
+	^ 3
+]
+
+{ #category : #'as yet unclassified' }
 SBExpandedMethod >> childSandblocksDo: aBlock [
 
 	self submorphsDo: aBlock

@@ -13,9 +13,9 @@ SBParseSmalltalkMethodRepresentation class >> isToplevelMorph [
 { #category : #'as yet unclassified' }
 SBParseSmalltalkMethodRepresentation class >> matches: anObject [
 
-	(anObject isString or: [anObject isText]) ifFalse: [^ false].
+	anObject isString ifFalse: [^ false].
 	
-	[anObject string parseAsMethod] on: SyntaxErrorNotification do: [^ false].
+	[anObject parseAsMethod] on: SyntaxErrorNotification do: [^ false].
 	^ true
 ]
 

@@ -207,6 +207,12 @@ SBExplorer >> relatedClass [
 ]
 
 { #category : #'as yet unclassified' }
+SBExplorer >> replace: anObject [
+
+	self on: anObject
+]
+
+{ #category : #'as yet unclassified' }
 SBExplorer >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 
 	| newObject |

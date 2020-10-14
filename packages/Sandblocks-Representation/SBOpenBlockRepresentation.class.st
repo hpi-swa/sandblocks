@@ -11,6 +11,12 @@ SBOpenBlockRepresentation class >> causesSideEffects [
 ]
 
 { #category : #'as yet unclassified' }
+SBOpenBlockRepresentation class >> isLeaf [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBOpenBlockRepresentation class >> isToplevelMorph [
 
 	^ true

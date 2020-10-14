@@ -64,7 +64,7 @@ SBMultilineOwnTextMorph >> handlesMouseDown: anEvent [
 { #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> hasSelection [
 
-	^ self cursor ~= 0 and: [self selectionBound ~= self cursor]
+	^ self cursor ~= 0 and: [self selectionBound ~= self cursor and: [self selectionBound > 0]]
 ]
 
 { #category : #'as yet unclassified' }

@@ -228,7 +228,9 @@ SBBlock >> clearCache [
 { #category : #'as yet unclassified' }
 SBBlock >> click: anEvent [
 
-	self select
+	self isSelected
+		ifTrue: [self parentSandblock select]
+		ifFalse: [self select]
 ]
 
 { #category : #hierarchy }
@@ -2017,6 +2019,16 @@ SBBlock >> withDecorator: aClass do: aBlock [
 SBBlock >> withDecorator: aClass do: aBlock ifAbsent: anotherBlock [
 
 	^ decorators detect: [:d | d class = aClass] ifFound: aBlock ifNone: anotherBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> withParentChainDo: aBlock [
+
+	| p |
+	p := aBlock.
+	[aBlock] whileNotNil: [
+		aBlock value: p.
+		p := aBlock parentSandblock]
 ]
 
 { #category : #'as yet unclassified' }

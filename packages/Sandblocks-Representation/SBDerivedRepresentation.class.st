@@ -48,6 +48,12 @@ SBDerivedRepresentation >> hash [
 ]
 
 { #category : #'as yet unclassified' }
+SBDerivedRepresentation >> matches: anObject [
+
+	^ from matches: anObject
+]
+
+{ #category : #'as yet unclassified' }
 SBDerivedRepresentation >> newFor: anObject [
 
 	^ to newFor: (from newFor: anObject)
@@ -74,7 +80,7 @@ SBDerivedRepresentation >> printOn: aStream [
 { #category : #'as yet unclassified' }
 SBDerivedRepresentation >> priority [
 
-	^ (from priority max: to priority) - 0.5
+	^ (from priority min: to priority) - 0.5
 ]
 
 { #category : #'as yet unclassified' }

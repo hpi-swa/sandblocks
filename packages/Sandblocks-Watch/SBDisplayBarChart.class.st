@@ -32,3 +32,9 @@ SBDisplayBarChart >> minExtent [
 	fontHeight := TextStyle defaultFont height.
 	^ (fontHeight * 5) @ (fontHeight * 2)
 ]
+
+{ #category : #'as yet unclassified' }
+SBDisplayBarChart >> object [
+
+	^ data last
+]

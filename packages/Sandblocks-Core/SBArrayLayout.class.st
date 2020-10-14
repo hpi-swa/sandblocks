@@ -8,8 +8,8 @@ Class {
 SBArrayLayout >> layout: aMorph in: aRectangle [
 
 	(self wantsMultiRow: aMorph)
-		ifTrue: [SBVerticalLayout new layout: aMorph in: aRectangle]
-		ifFalse: [SBHorizontalLayout new layout: aMorph in: aRectangle]
+		ifTrue: [SBVerticalLayout layout: aMorph in: aRectangle]
+		ifFalse: [SBHorizontalLayout layout: aMorph in: aRectangle]
 ]
 
 { #category : #'as yet unclassified' }
@@ -18,8 +18,8 @@ SBArrayLayout >> minExtentOf: aMorph in: aRectangle [
 	minExtentCache ifNotNil: [^ minExtentCache].
 	
 	^ minExtentCache := (self wantsMultiRow: aMorph)
-		ifTrue: [SBVerticalLayout new minExtentOf: aMorph in: aRectangle]
-		ifFalse: [SBHorizontalLayout new minExtentOf: aMorph in: aRectangle]
+		ifTrue: [SBVerticalLayout minExtentOf: aMorph in: aRectangle]
+		ifFalse: [SBHorizontalLayout minExtentOf: aMorph in: aRectangle]
 ]
 
 { #category : #'as yet unclassified' }

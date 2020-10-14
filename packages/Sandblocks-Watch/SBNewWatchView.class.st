@@ -119,10 +119,10 @@ SBNewWatchView >> reportValue: anObject [
 
 	hadValue ifFalse: [hadValue := true].
 	
-	self useDisplay: ((currentRepresentation notNil and: [currentRepresentation matches: anObject])
-		ifTrue: [currentRepresentation newFor: anObject]
-		ifFalse: [anObject anyRepresentationThat: self representationTypes]).
-	
+	(currentRepresentation notNil and: [currentRepresentation matches: anObject])
+		ifTrue: [display replace: anObject]
+		ifFalse: [self useDisplay: (anObject anyRepresentationThat: self representationTypes)].
+
 	count contents: (count contents asInteger + 1) asString.
 	lastValue := anObject
 ]
@@ -130,7 +130,7 @@ SBNewWatchView >> reportValue: anObject [
 { #category : #'as yet unclassified' }
 SBNewWatchView >> representationTypes [
 
-	^ #(isMorph isSandblock)
+	^ #(isToplevelMorph)
 ]
 
 { #category : #'as yet unclassified' }
