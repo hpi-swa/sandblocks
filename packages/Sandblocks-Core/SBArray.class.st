@@ -92,7 +92,7 @@ SBArray >> initialize [
 	type := #dynamic.
 	
 	self
-		layoutPolicy: SBArrayLayout new;
+		layoutPolicy: (SBAdaptiveLayout new wrap: true);
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		cellGap: 4 withScalingFactor;

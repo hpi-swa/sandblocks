@@ -99,15 +99,16 @@ SBAdaptiveLayout >> morph: aMorph fitsInRow: aNumber [
 	self
 		layoutMorphsOf: aMorph
 		do: [:morph |
-			width := morph minExtent x + (width + aMorph cellGap).
-			width > aNumber ifTrue: [^ false]].
+			width := width + morph minExtent x.
+			width > aNumber ifTrue: [^ false].
+			width := width + aMorph cellGap].
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
 SBAdaptiveLayout >> preferredSizeFor: aMorph width: aNumber [
 
-	^ PHSizeRequest fixed: ((self morph: aMorph fitsInRow: aNumber)
+	^ SBSizeRequest fixed: ((self morph: aMorph fitsInRow: aNumber)
 		ifTrue: [SBHorizontalLayout minExtentOf: aMorph in: nil]
 		ifFalse: [
 			self wrap

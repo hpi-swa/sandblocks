@@ -18,7 +18,7 @@ Morph >> calculateSizeForWidth: aNumber [
 			ifNotNilDo: [:layout | layout preferredSizeFor: self width: aNumber - padding x]
 			ifNil: [
 				self flag: #fixme. " vs minimumuExtent vs minExtent? "
-				PHSizeRequest fixed: self extent]) adjustFor: self)
+				SBSizeRequest fixed: self extent]) adjustFor: self)
 		+ padding
 ]
 
@@ -237,13 +237,13 @@ Morph >> position: aPoint [
 Morph >> preferredSizeForWidth: aNumber [
 
 	| padding |
-	padding := self layoutInset asPoint * 2.
+	padding := self layoutInset asEdgeInsets.
 	
 	^ ((self layoutPolicy
 			ifNotNilDo: [:layout | layout preferredSizeFor: self width: aNumber - padding x]
 			ifNil: [
 				self flag: #fixme. " vs minimumuExtent vs minExtent? "
-				PHSizeRequest fixed: self extent]) adjustFor: self)
+				SBSizeRequest fixed: self extent]) adjustFor: self)
 		+ padding
 ]
 

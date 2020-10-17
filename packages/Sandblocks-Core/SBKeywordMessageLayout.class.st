@@ -59,6 +59,12 @@ SBKeywordMessageLayout class >> minExtentOf: aMorph in: aRectangle [
 ]
 
 { #category : #'as yet unclassified' }
+SBKeywordMessageLayout class >> preferredSizeFor: aMorph width: aNumber [
+
+	^ SBSizeRequest fixed: 100 @ 100
+]
+
+{ #category : #'as yet unclassified' }
 SBKeywordMessageLayout class >> wantsAlignedKeywords: aMorph [
 
 	^ (self maxKeywordWidth: aMorph) < 300

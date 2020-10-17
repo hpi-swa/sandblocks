@@ -14,6 +14,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBEdgeInsets class >> all: aNumber [
+
+	^ self left: aNumber right: aNumber top: aNumber bottom: aNumber
+]
+
+{ #category : #'as yet unclassified' }
 SBEdgeInsets class >> left: leftNumber [
 
 	^ self basicNew left: leftNumber right: 0 top: 0 bottom: 0
@@ -58,9 +64,23 @@ SBEdgeInsets >> adaptToPoint: aPoint andSend: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBEdgeInsets >> adaptToSizeRequest: aSizeRequest andSend: aSymbol [
+
+	self flag: #todo.
+	self assert: aSymbol = #+.
+	^ aSizeRequest + self asPoint
+]
+
+{ #category : #'as yet unclassified' }
 SBEdgeInsets >> asEdgeInsets [
 
 	^ self
+]
+
+{ #category : #'as yet unclassified' }
+SBEdgeInsets >> asPoint [
+
+	^ self horizontal @ self vertical
 ]
 
 { #category : #'as yet unclassified' }

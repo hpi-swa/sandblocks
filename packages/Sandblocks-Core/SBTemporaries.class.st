@@ -39,7 +39,9 @@ SBTemporaries >> initialize [
 
 	super initialize.
 	
-	self layoutInset: (4 @ 2) withScalingFactor
+	self
+		layoutInset: (4 @ 2) withScalingFactor;
+		cellPositioning: #topLeft
 ]
 
 { #category : #'as yet unclassified' }

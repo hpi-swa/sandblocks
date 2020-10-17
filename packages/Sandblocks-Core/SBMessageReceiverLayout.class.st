@@ -13,20 +13,28 @@ SBMessageReceiverLayout >> indent [
 { #category : #'as yet unclassified' }
 SBMessageReceiverLayout >> layout: aMorph in: aRectangle [
 
-	| signatureSize signaturePosition receiverSize multiRow |
+	| signaturePosition |
 	aMorph receiver ifNil: [^ aMorph signature layoutInBounds: (aRectangle origin extent: aMorph signature minExtent)].
 	
-	multiRow := self wantsMultiRow: aMorph.
+	self measureLayoutFor: aMorph width: aRectangle width do: [:receiverSize :signatureSize :multiRow |
+		aMorph receiver layoutInBounds: (aRectangle origin + (multiRow ifTrue: [0 @ 0] ifFalse: [0 @ ((aRectangle height / 2) - (receiverSize y / 2))]) extent: receiverSize).
+		
+		signaturePosition := multiRow
+			ifTrue: [self indent * aMorph scalingFactor @ (aMorph cellGap * self spaceFactorMultiRow + aMorph receiver height)]
+			ifFalse: [aMorph receiver width + aMorph cellGap @ ((aRectangle height / 2) - (signatureSize y / 2)) rounded].
 	
-	receiverSize := aMorph receiver minExtent.
-	aMorph receiver layoutInBounds: (aRectangle origin + (multiRow ifTrue: [0 @ 0] ifFalse: [0 @ ((aRectangle height / 2) - (receiverSize y / 2))]) extent: receiverSize).
+		aMorph signature layoutInBounds: (aRectangle origin + signaturePosition extent: signatureSize)].
+]
+
+{ #category : #'as yet unclassified' }
+SBMessageReceiverLayout >> measureLayoutFor: aMorph width: aNumber do: aBlock [
+
+	| multiRow receiverSize signatureSize |
+	receiverSize := (aMorph receiver preferredSizeForWidth: aNumber) minSize.
+	signatureSize := (aMorph signature preferredSizeForWidth: aNumber - receiverSize x) naturalSize.
+	multiRow := receiverSize x + signatureSize x + aMorph cellGap < aNumber.
 	
-	signatureSize := aMorph signature minExtent.
-	signaturePosition := multiRow
-		ifTrue: [self indent * aMorph scalingFactor @ (aMorph cellGap * self spaceFactorMultiRow + aMorph receiver height)]
-		ifFalse: [aMorph receiver width + aMorph cellGap @ ((aRectangle height / 2) - (signatureSize y / 2)) rounded].
-	
-	aMorph signature layoutInBounds: (aRectangle origin + signaturePosition extent: signatureSize)
+	^ aBlock value: receiverSize value: signatureSize value: multiRow
 ]
 
 { #category : #'as yet unclassified' }
@@ -43,6 +51,15 @@ SBMessageReceiverLayout >> minExtentOf: aMorph in: aRectangle [
 	^ minExtentCache := (self wantsMultiRow: aMorph)
 		ifTrue: [(r x max: s x + (self indent * aMorph scalingFactor)) @ (r y + s y + (aMorph cellGap * self spaceFactorMultiRow))]
 		ifFalse: [(r x + s x + aMorph cellGap) @ (r y max: s y)]
+]
+
+{ #category : #'as yet unclassified' }
+SBMessageReceiverLayout >> preferredSizeFor: aMorph width: aNumber [
+
+	^ self measureLayoutFor: aMorph width: aNumber do: [:receiverSize :signatureSize :multiRow |
+		multiRow
+			ifTrue: [SBSizeRequest fixed: (receiverSize x + signatureSize x + aMorph cellGap) @ (receiverSize y max: signatureSize y)]
+			ifFalse: [SBSizeRequest fixed: (receiverSize x max: signatureSize x + (self indent * aMorph scalingFactor)) @ (receiverSize y + signatureSize y + (aMorph cellGap * self spaceFactorMultiRow))]]
 ]
 
 { #category : #'as yet unclassified' }

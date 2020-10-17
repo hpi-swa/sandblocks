@@ -179,12 +179,14 @@ SBBlockBody >> initialize [
 	pc := 0.
 	
 	self
-		layoutPolicy: SBBlockBodyLayout new;
+		"layoutPolicy: SBBlockBodyLayout new;"
+		layoutPolicy: SBBoxLayout new;
+		listDirection: #topToBottom;
 		color: Color random;
 		cellPositioning: #topLeft;
-		cellPositioning: #topLeft;
 		listDirection: #topToBottom;
-		vResizing: #shrinkWrap; hResizing: #shrinkWrap;
+		hResizing: #shrinkWrap;
+		vResizing: #spaceFill;
 		addMorphBack: (SBRow new
 			hideWhenEmpty: true;
 			cellGap: 8 withScalingFactor;

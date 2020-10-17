@@ -79,12 +79,14 @@ SBMethod >> initialize [
 	super initialize.
 	
 	self
-		layoutPolicy: SBVerticalLayout new;
+		layoutPolicy: SBBoxLayout new;
+		listDirection: #topToBottom;
 		cellPositioning: #topLeft;
 		layoutInset: 6 withScalingFactor;
-		vResizing: #shrinkWrap; hResizing: #shrinkWrap;
+		"vResizing: #shrinkWrap; hResizing: #shrinkWrap;"
 		
 		addMorphBack: (SBRow new
+			cellPositioning: #topLeft;
 			addMorphBack: (classPrefix := SBClassNameInput new suffix: ' >> '; bordered: false);
 			addMorphBack: (signature := SBSignature new))
 ]

@@ -155,7 +155,7 @@ SBBoxLayout >> preferredSizeFor: aWidget width: aNumber [
 			absoluteMin := absoluteMin + item minSize x].
 		item].
 	
-	childItems size < 0 ifTrue: [^ PHSizeRequest fixed: 0 asPoint].
+	childItems size < 0 ifTrue: [^ SBSizeRequest fixed: 0 asPoint].
 	
 	" give each child a tentative amount of space.
 	  vertical case is easy: just give our container width and see what height we get
@@ -186,7 +186,7 @@ SBBoxLayout >> preferredSizeFor: aWidget width: aNumber [
 		nonLayoutDirectionMinSize := nonLayoutDirectionMinSize max: sizes minSize.
 		nonLayoutDirectionNatSize := nonLayoutDirectionNatSize max: sizes naturalSize].
 	
-	^ PHSizeRequest
+	^ SBSizeRequest
 		min: (self flipPoint: totalMin @ nonLayoutDirectionMinSize)
 		natural: (self flipPoint: totalNat @ nonLayoutDirectionNatSize)
 ]
