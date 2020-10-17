@@ -28,7 +28,21 @@ BlockNode >> asSandblock [
 		temporaries: (self temporaries select: [:node | node scope ~= -2] thenCollect: #asSandblock);
 		bindings: (self arguments collect: #asSandblock);
 		pc: (closureCreationNode ifNotNil: [:n | n pc] ifNil: [0]);
+		startPC: (closureCreationNode ifNotNil: [:n | n key isCompiledCode ifTrue: [n key -> n key initialPC] ifFalse: [0]] ifNil: [0]);
+		endPC: (pc ifNil: [0]);
 		yourself
+]
+
+{ #category : #'*Sandblocks-Core' }
+BlockNode >> closureCreationNode [
+
+	^ closureCreationNode
+]
+
+{ #category : #'*Sandblocks-Core' }
+BlockNode >> closureCreationNode: aNode [
+
+	closureCreationNode := aNode
 ]
 
 { #category : #'*Sandblocks-Core' }

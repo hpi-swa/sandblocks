@@ -19,6 +19,7 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Drawing';
 			package: 'Sandblocks-Compiler';
 			package: 'Sandblocks-Format';
+			package: 'Sandblocks-Babylonian';
 			package: 'Sandblocks-Tutorial';
 			package: 'Sandblocks-Representation';
 			package: 'Sandblocks-ActiveExpression' with: [spec requires: #('default' 'ActiveExpressions')];

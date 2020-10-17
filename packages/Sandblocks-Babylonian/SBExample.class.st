@@ -14,7 +14,7 @@ Class {
 		'returnValue',
 		'reportedError'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Babylonian'
 }
 
 { #category : #'as yet unclassified' }
@@ -315,14 +315,14 @@ SBExample >> selfBlock [
 SBExample >> sendFinishNotification [
 
 	self sandblockEditor allMorphsDo: [:morph |
-		(morph isSandblock and: [morph isExampleWatch]) ifTrue: [morph exampleFinished: self]]
+		(morph isSandblock and: [morph listensToExamples]) ifTrue: [morph exampleFinished: self]]
 ]
 
 { #category : #'as yet unclassified' }
 SBExample >> sendStartNotification [
 
 	self sandblockEditor allBlocksDo: [:morph |
-		morph isExampleWatch ifTrue: [morph exampleStarting: self]]
+		morph listensToExamples ifTrue: [morph exampleStarting: self]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -361,7 +361,7 @@ SBExample >> stopRunning [
 	self updateIcon.
 	
 	self sandblockEditor allMorphsDo: [:morph |
-		(morph isSandblock and: [morph isExampleWatch]) ifTrue: [morph exampleStopped: self]]
+		(morph isSandblock and: [morph listensToExamples]) ifTrue: [morph exampleStopped: self]]
 ]
 
 { #category : #'as yet unclassified' }

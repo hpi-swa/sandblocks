@@ -10,7 +10,7 @@ Class {
 	#classVars : [
 		'Registry'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Babylonian'
 }
 
 { #category : #'as yet unclassified' }
@@ -125,6 +125,12 @@ SBExampleWatch >> expression: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBExampleWatch >> filterForContextId: aNumber example: anExample [
+
+	exampleValues at: anExample ifPresent: [:display | display filterForContextId: aNumber]
+]
+
+{ #category : #'as yet unclassified' }
 SBExampleWatch >> guessedClass [
 
 	^ self expression guessedClass
@@ -185,6 +191,12 @@ SBExampleWatch >> isWatch [
 ]
 
 { #category : #'as yet unclassified' }
+SBExampleWatch >> listensToExamples [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBExampleWatch >> newIdentifier [
 
 	self identifier: Random new nextValue
@@ -211,6 +223,12 @@ SBExampleWatch >> reportValue: anObject for: anExample [
 	exampleValues
 		at: anExample
 		ifPresent: [:display | display reportValue: anObject name: (anExample ifNotNil: #label ifNil: [''])]
+]
+
+{ #category : #'as yet unclassified' }
+SBExampleWatch >> valuesForExample: anExample [
+
+	^ exampleValues at: anExample ifAbsent: [nil]
 ]
 
 { #category : #'as yet unclassified' }

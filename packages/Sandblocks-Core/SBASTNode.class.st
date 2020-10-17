@@ -365,8 +365,7 @@ SBASTNode >> selectionLabel [
 	^ String streamContents: [:stream |
 		self printOn: stream.
 		
-		self guessClassExpensive ifNotNil: [:c | stream space; nextPut: $(. c printOn: stream. stream nextPut: $)].
-		self pc > 0 ifTrue: [stream space; nextPut: $(. self pc printOn: stream. stream nextPut: $)]]
+		self guessClassExpensive ifNotNil: [:c | stream space; nextPut: $(. c printOn: stream. stream nextPut: $)]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -381,6 +380,12 @@ SBASTNode >> unpackList [
 	<actionValidIf: #parentHasDynamicNumberOfChildren>
 
 	self sandblockEditor do: ((SBUnwrapConsecutiveCommand newFor: self containingArtefact) target: self)
+]
+
+{ #category : #'as yet unclassified' }
+SBASTNode >> updatePCFrom: aBlock [
+
+	self pc: aBlock pc
 ]
 
 { #category : #'actions input' }

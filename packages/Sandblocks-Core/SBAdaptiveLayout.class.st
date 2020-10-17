@@ -18,7 +18,6 @@ SBAdaptiveLayout >> initialize [
 { #category : #'as yet unclassified' }
 SBAdaptiveLayout >> layout: aMorph in: aRectangle [
 
-	self haltOnce.
 	(self morph: aMorph fitsInRow: (SBNewWatch report: aRectangle width for: 814100019))
 		ifTrue: [SBHorizontalLayout layout: aMorph in: aRectangle]
 		ifFalse: [

@@ -26,3 +26,9 @@ SBChartRepresentation class >> newFor: aCollection [
 			aCollection do: [:val | chart reportValue: val].
 			chart]
 ]
+
+{ #category : #'as yet unclassified' }
+SBChartRepresentation class >> priority [
+
+	^ 1
+]

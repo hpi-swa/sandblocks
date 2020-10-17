@@ -11,5 +11,6 @@ OrderedDictionary {
 	'packages/Sandblocks-Core' : #SquotTonelSerializer,
 	'packages/Sandblocks-Drawing' : #SquotTonelSerializer,
 	'packages/Sandblocks-Graph' : #SquotTonelSerializer,
-	'packages/ObservableExperiment' : #SquotTonelSerializer
+	'packages/ObservableExperiment' : #SquotTonelSerializer,
+	'packages/Sandblocks-Babylonian' : #SquotTonelSerializer
 }

@@ -5,9 +5,10 @@ Class {
 		'display',
 		'label',
 		'statusLabel',
-		'hadValue'
+		'hadValue',
+		'values'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Babylonian'
 }
 
 { #category : #'event handling' }
@@ -27,8 +28,21 @@ SBExampleValueDisplay >> exampleStarting: anExample [
 	display noValue.
 	self extent: 0 @ 0.
 	
+	values := OrderedCollection new.
+	
 	statusLabel contents: '...'.
 	hadValue := false
+]
+
+{ #category : #'as yet unclassified' }
+SBExampleValueDisplay >> filterForContextId: aNumber [
+
+	| frames |
+	frames := values select: [:probedValue |
+		probedValue frames anySatisfy: [:frame | frame contextIdentityHash = aNumber]].
+	
+	self flag: #todo.
+	frames ifNotEmpty: [display reportValue: frames first value]
 ]
 
 { #category : #'as yet unclassified' }
@@ -67,10 +81,9 @@ SBExampleValueDisplay >> name:  aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBExampleValueDisplay >> reportValue: anObject [
+SBExampleValueDisplay >> probedValues [
 
-	display reportValue: anObject.
-	hadValue := true
+	^ values
 ]
 
 { #category : #'as yet unclassified' }
@@ -78,5 +91,7 @@ SBExampleValueDisplay >> reportValue: anObject name: aString [
 
 	display reportValue: anObject.
 	label contents: aString.
-	hadValue := true
+	hadValue := true.
+	
+	values add: (SBProbedValue new value: anObject context: thisContext sender sender sender sender sender sender sender)
 ]

@@ -330,6 +330,15 @@ SBBlock >> containingBlocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBBlock >> containingFullBlock [
+
+	| next |
+	next := self.
+	[next := next parentSandblock ifNil: [^ nil]] doWhileFalse: [next isBlockBody and: [next startPC notNil]].
+	^ next
+]
+
+{ #category : #'as yet unclassified' }
 SBBlock >> containingSandblock [
 
 	^ self
@@ -1117,6 +1126,12 @@ SBBlock >> leftRotate [
 	self sandblockEditor do: ((SBSubtreeRotateCommand newFor: self containingArtefact)
 		target: self;
 		yourself)
+]
+
+{ #category : #testing }
+SBBlock >> listensToExamples [
+
+	^ false
 ]
 
 { #category : #'as yet unclassified' }

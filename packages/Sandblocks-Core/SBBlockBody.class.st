@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'temporaries',
 		'bindings',
-		'pc'
+		'pc',
+		'startPC',
+		'endPC'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -59,6 +61,13 @@ SBBlockBody >> addElement [
 		morph: SBUnknown new;
 		shouldMergeWithNext: true;
 		yourself)
+]
+
+{ #category : #converting }
+SBBlockBody >> addExampleSlider [
+	<action>
+	
+	SBExampleBlockDecoration new wrapAround: self
 ]
 
 { #category : #converting }
@@ -128,6 +137,18 @@ SBBlockBody >> declareTemporaryVariableCommand: aString [
 		index: temporaries submorphCount + 1;
 		morph: (SBName contents: aString);
 		yourself
+]
+
+{ #category : #'as yet unclassified' }
+SBBlockBody >> endPC [
+
+	^ endPC
+]
+
+{ #category : #'as yet unclassified' }
+SBBlockBody >> endPC: aNumber [
+
+	endPC := aNumber
 ]
 
 { #category : #'as yet unclassified' }
@@ -267,6 +288,18 @@ SBBlockBody >> printOn: aStream [
 	aStream nextPutAll: 'block'
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlockBody >> startPC [
+
+	^ startPC
+]
+
+{ #category : #'as yet unclassified' }
+SBBlockBody >> startPC: aNumber [
+
+	startPC := aNumber
+]
+
 { #category : #converting }
 SBBlockBody >> statementCount [
 
@@ -302,6 +335,14 @@ SBBlockBody >> temporaries [
 SBBlockBody >> temporaries: aCollection [
 
 	temporaries bindings: aCollection
+]
+
+{ #category : #'as yet unclassified' }
+SBBlockBody >> updatePCFrom: aBlock [
+
+	super updatePCFrom: aBlock.
+	self endPC: aBlock endPC.
+	self startPC: aBlock startPC
 ]
 
 { #category : #converting }

@@ -6,7 +6,7 @@ CompiledMethod >> asSandblock [
 	| methodNode class parser source nodeToRange debuggerMap rangeToPC nodeToPC rangeToPCList instructions |
 	SBToggledCode
 		comment: 'either extract info from source (1st) or use generated result (may include errors, but might be more accurate)'
-		active: 1
+		active: 4
 		do: {
 			[
 				class := self methodClass.
@@ -27,7 +27,14 @@ CompiledMethod >> asSandblock [
 				nodeToPC keysAndValuesDo: [:node :pc | node pc: pc]].
 			[
 				methodNode := self methodNode.
-				methodNode generate]
+				methodNode generate].
+			[methodNode := SBPCMapper new applyMappingFor: self methodNode].
+			[
+				class := self methodClass.
+				parser := Parser new encoderClass: self encoderClass.
+				source := self getSourceFor: (self selector ifNil: [self defaultSelector]) in: class.
+				methodNode := SBPCMapper new
+					applyMappingFor: (parser parse: source asString codeWithEmptyLineMarkers class: class)]
 		}.
 	^ methodNode asSandblock
 ]
