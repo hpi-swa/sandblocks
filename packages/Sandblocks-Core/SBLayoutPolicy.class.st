@@ -32,6 +32,13 @@ SBLayoutPolicy >> layout: aMorph in: aRectangle [
 ]
 
 { #category : #'as yet unclassified' }
+SBLayoutPolicy >> layoutMorphsOf: aMorph [
+
+	^ Array streamContents: [:stream |
+		self layoutMorphsOf: aMorph do: [:m | stream nextPut: m]]
+]
+
+{ #category : #'as yet unclassified' }
 SBLayoutPolicy >> layoutMorphsOf: aMorph do: aBlock [
 
 	| count |

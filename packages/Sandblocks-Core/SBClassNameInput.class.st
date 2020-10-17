@@ -36,7 +36,9 @@ SBClassNameInput >> promptChangeClass [
 { #category : #'as yet unclassified' }
 SBClassNameInput >> selectedClass [
 
-	^ Smalltalk at: self contents asSymbol
+	^ (self contents endsWith: ' class')
+		ifTrue: [(Smalltalk at: (self contents allButLast: ' class' size) asSymbol) class]
+		ifFalse: [Smalltalk at: self contents asSymbol]
 ]
 
 { #category : #'as yet unclassified' }
