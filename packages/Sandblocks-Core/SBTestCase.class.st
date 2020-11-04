@@ -81,6 +81,26 @@ SBTestCase >> currentSelector: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBTestCase >> debug [
+	<action>
+
+	| testCase |
+	testCase := self methodClass selector: self currentSelector.
+	
+	SBToggledCode comment: 'doesn''t work yet :(' active: 1 do: {[self flag: #fixme]}.
+	
+	[testCase debugAsFailure]
+		on: Halt
+		do: [:halt |
+			self sandblockEditor
+				reportError: halt
+				process: ((Process forContext: halt signalerContext copyStack priority: Processor activeProcess priority)
+					shouldResumeFromDebugger: false;
+					yourself).
+			self sandblockEditor errors focusErrors]
+]
+
+{ #category : #'as yet unclassified' }
 SBTestCase >> drawnColor [
 
 	^ Color veryDarkGray
@@ -91,11 +111,9 @@ SBTestCase >> initialize [
 
 	super initialize.
 	self
-		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap;
+		useAlgebraLayout;
 		layoutInset: 6 withScalingFactor;
 		cellGap: 8 withScalingFactor;
-		changeTableLayout;
 		addMorphBack: (SBRow new
 			cellGap: 8 withScalingFactor;
 			addMorphBack: (selectorInput := SBTextBubble new
@@ -128,6 +146,18 @@ SBTestCase >> initialize [
 SBTestCase >> label [
 
 	^ self selector
+]
+
+{ #category : #'as yet unclassified' }
+SBTestCase >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: {
+			SBAlgebraCommand morph data: self firstSubmorph.
+			SBAlgebraCommand hardLine.
+			self body layoutCommands
+		}
 ]
 
 { #category : #'as yet unclassified' }

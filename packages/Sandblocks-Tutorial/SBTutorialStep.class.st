@@ -677,7 +677,7 @@ SBTutorialStep >> initialize [
 		vResizing: #shrinkWrap;
 		addMorphBack: (SBRow new addMorphBack: (title := SBStringMorph new large));
 		addMorphBack: (shortcutsList := SBRow new cellGap: 8);
-		addMorphBack: (steps := SBColum new
+		addMorphBack: (steps := SBColumn new
 			cellGap: 8;
 			yourself);
 		addMorphBack: (buttons := SBRow new

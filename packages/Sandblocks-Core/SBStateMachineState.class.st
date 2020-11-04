@@ -65,11 +65,11 @@ SBStateMachineState >> initialize [
 	super initialize.
 	self addMorphBack: (label := SBTextBubble new).
 	self
-		 changeTableLayout;
-		 vResizing: #shrinkWrap;
-		 hResizing: #shrinkWrap;
-		 layoutInset: 6 withScalingFactor;
-		 attachDecorator: SBMoveDecorator new
+		changeTableLayout;
+		vResizing: #shrinkWrap;
+		hResizing: #shrinkWrap;
+		layoutInset: 6 withScalingFactor;
+		attachDecorator: SBMoveDecorator new
 ]
 
 { #category : #'as yet unclassified' }

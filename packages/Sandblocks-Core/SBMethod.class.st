@@ -79,12 +79,13 @@ SBMethod >> initialize [
 	super initialize.
 	
 	self
-		layoutPolicy: SBVerticalLayout new;
+		useAlgebraLayout;
 		cellPositioning: #topLeft;
 		layoutInset: 6 withScalingFactor;
-		vResizing: #shrinkWrap; hResizing: #shrinkWrap;
+		extent: 300 @ 50;
 		
 		addMorphBack: (SBRow new
+			layoutPolicy: nil;
 			addMorphBack: (classPrefix := SBClassNameInput new suffix: ' >> '; bordered: false);
 			addMorphBack: (signature := SBSignature new))
 ]
@@ -106,6 +107,23 @@ SBMethod >> keyStroke: anEvent [
 
 	signature keyStroke: anEvent.
 	self updateSuggestions
+]
+
+{ #category : #accessing }
+SBMethod >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: {
+			SBAlgebraCommand container
+				morph: self firstSubmorph;
+				data: {
+					self firstSubmorph submorphs first layoutCommands.
+					SBAlgebraCommand indent data: {SBAlgebraCommand softLine. self firstSubmorph submorphs second layoutCommands}
+				}
+		}, (self body visible
+			ifTrue: [{SBAlgebraCommand hardLine. self body layoutCommands}]
+			ifFalse: [{}])
 ]
 
 { #category : #accessing }

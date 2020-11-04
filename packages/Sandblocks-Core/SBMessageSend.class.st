@@ -165,14 +165,8 @@ SBMessageSend >> initialize [
 
 	super initialize.
 	
-	self layoutPolicy: SBMessageReceiverLayout new.
-	self listDirection: #leftToRight.
-	self hResizing: #shrinkWrap.
-	self vResizing: #shrinkWrap.
-	
-	signature := SBSignature new layoutPolicy: SBKeywordMessageLayout new.
 	pc := 0.
-	self addMorphBack: signature
+	self addMorphBack: (signature := SBSignature new)
 ]
 
 { #category : #'as yet unclassified' }
@@ -257,10 +251,24 @@ SBMessageSend >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBMessageSend >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (self receiver
+			ifNil: [{self signature layoutCommands}]
+			ifNotNil: [{
+				self receiver layoutCommands.
+				SBAlgebraCommand indent data: {
+					SBAlgebraCommand softLineOrGap.
+					self signature layoutCommands}}])
+]
+
+{ #category : #'as yet unclassified' }
 SBMessageSend >> layoutInset [
 
 	^ self isInCascade
-		ifTrue: [super layoutInset + (SBEdgeInsets left: 20 withScalingFactor right: 0 top: 0 bottom: 0)]
+		ifTrue: [(SBEdgeInsets left: 20 withScalingFactor right: 0 top: 0 bottom: 0) + super layoutInset]
 		ifFalse: [super layoutInset]
 ]
 

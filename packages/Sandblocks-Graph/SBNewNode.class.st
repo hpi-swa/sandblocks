@@ -68,8 +68,8 @@ SBNewNode >> initialize [
 		addMorphBack: (inOutMorphs := SBRow new
 			changeTableLayout;
 			cellGap: 12;
-			addMorphBack: (inputMorphs := SBColum new changeTableLayout);
-			addMorphBack: (outputMorphs := SBColum new changeTableLayout));
+			addMorphBack: (inputMorphs := SBColumn new changeTableLayout);
+			addMorphBack: (outputMorphs := SBColumn new changeTableLayout));
 		update
 ]
 

@@ -157,7 +157,6 @@ SBExampleWatch >> initialize [
 	exampleValues := Dictionary new.
 	
 	self
-		changeTableLayout;
 		cellGap: 4 withScalingFactor;
 		layoutInset: 2 withScalingFactor;
 		vResizing: #shrinkWrap;
@@ -188,6 +187,14 @@ SBExampleWatch >> isGlobalWatch [
 SBExampleWatch >> isWatch [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBExampleWatch >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine withGap: true])
 ]
 
 { #category : #'as yet unclassified' }

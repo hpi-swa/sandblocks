@@ -31,7 +31,7 @@ SBStateMachineTransition >> initialize [
 
 	super initialize.
 	
-	conditions := SBArray new.
+	conditions := SBArray new useAlgebraLayout.
 	
 	self addMorphBack: conditions
 ]

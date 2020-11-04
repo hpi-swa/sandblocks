@@ -122,7 +122,7 @@ SBMemoize >> initialize [
 		layoutInset: 4;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		addMorphBack: (SBColum new
+		addMorphBack: (SBColumn new
 			cellGap: 12;
 			addMorphBack: (SBRow new
 				addMorphBack: SBIcon iconSave;

@@ -37,18 +37,21 @@ SBReturn >> initialize [
 
 	super initialize.
 	
-	pc := 0.
-	
-	self
-		layoutPolicy: SBHorizontalLayout new;
-		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap
+	pc := 0
 ]
 
 { #category : #formatting }
 SBReturn >> isReturn [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBReturn >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: {self expression layoutCommands}
 ]
 
 { #category : #formatting }

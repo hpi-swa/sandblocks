@@ -25,14 +25,18 @@ SBBlockRow >> initialize [
 	
 	self
 		color: Color transparent;
-		layoutPolicy: SBHorizontalLayout new;
-		listDirection: #leftToRight;
-		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap;
 		layoutInset: 2 * self scalingFactor;
 		cellGap: 2 * self scalingFactor;
 		extent: 0 @ 0;
 		yourself
+]
+
+{ #category : #'as yet unclassified' }
+SBBlockRow >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand softLineOrGap])
 ]
 
 { #category : #'as yet unclassified' }

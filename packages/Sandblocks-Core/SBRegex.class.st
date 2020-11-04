@@ -114,7 +114,7 @@ SBRegex >> initialize [
 		cellPositioning: #center;
 		addMorphBack: (text := SBTextBubble new when: #contentsChanged send: #checkExamples to: self);
 		addMorphBack: ((exampleLabel  := SBStringMorph new) on: #click send: #toggleExamples to: self);
-		addMorphBack: ((examples := SBColum new) when: #morphAdded send: #checkExamples to: self);
+		addMorphBack: ((examples := SBColumn new) when: #morphAdded send: #checkExamples to: self);
 		updateLabel
 ]
 

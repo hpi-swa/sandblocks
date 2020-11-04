@@ -47,7 +47,6 @@ SBSignature >> cellGap [
 { #category : #'as yet unclassified' }
 SBSignature >> childSandblocksDo: aBlock [
 
-	"self argumentsDo: aBlock"
 	self submorphsDo: aBlock
 ]
 
@@ -89,12 +88,7 @@ SBSignature >> initialize [
 
 	super initialize.
 	
-	self
-		layoutPolicy: SBKeywordMessageLayout new;
-		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap;
-		listDirection: #leftToRight;
-		color: Color transparent
+	self color: Color transparent; layoutPolicy: SBAlgebraLayout new
 ]
 
 { #category : #'as yet unclassified' }
@@ -152,6 +146,20 @@ SBSignature >> isKeyword [
 SBSignature >> isUnary [
 
 	^ self selector isEmpty or: [self selector asSymbol isUnary]
+]
+
+{ #category : #'as yet unclassified' }
+SBSignature >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (self isUnary
+			ifTrue: [{self firstSubmorph layoutCommands}]
+			ifFalse: [
+				(Array new: self submorphCount streamContents: [:stream |
+					self submorphs pairsDo: [:messagePart :argument |
+						stream nextPut: (SBAlgebraCommand indent data: {messagePart layoutCommands. SBAlgebraCommand softLineOrGap. argument layoutCommands}).
+						argument ~= self lastSubmorph ifTrue: [stream nextPut: SBAlgebraCommand softLineOrGap]]])])
 ]
 
 { #category : #'as yet unclassified' }

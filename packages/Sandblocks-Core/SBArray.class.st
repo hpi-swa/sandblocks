@@ -92,11 +92,7 @@ SBArray >> initialize [
 	type := #dynamic.
 	
 	self
-		layoutPolicy: SBArrayLayout new;
-		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap;
 		cellGap: 4 withScalingFactor;
-		listDirection: #leftToRight;
 		extent: self minExtent
 ]
 
@@ -129,12 +125,28 @@ SBArray >> isLiteralBlock [
 	^ type = #literal
 ]
 
+{ #category : #converting }
+SBArray >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand softLineOrGap withGap: true])
+]
+
 { #category : #'as yet unclassified' }
 SBArray >> minExtent [
 
 	| inset |
 	inset := self layoutInset.
 	^ super minExtent max: inset left + inset right @ (self fontToUse height + inset top + inset bottom)
+]
+
+{ #category : #'as yet unclassified' }
+SBArray >> minimumHeight [
+
+	| inset |
+	inset := self layoutInset.
+	^ (self fontToUse height + inset top + inset bottom)
 ]
 
 { #category : #converting }

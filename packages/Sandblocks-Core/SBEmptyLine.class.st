@@ -47,6 +47,12 @@ SBEmptyLine >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBEmptyLine >> prefersNoBorder [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBEmptyLine >> printOn: aStream [
 
 	aStream nextPutAll: 'empty line'

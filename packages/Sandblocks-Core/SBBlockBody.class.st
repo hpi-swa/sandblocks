@@ -179,13 +179,11 @@ SBBlockBody >> initialize [
 	pc := 0.
 	
 	self
-		layoutPolicy: SBBlockBodyLayout new;
 		color: Color random;
-		cellPositioning: #topLeft;
-		cellPositioning: #topLeft;
-		listDirection: #topToBottom;
-		vResizing: #shrinkWrap; hResizing: #shrinkWrap;
+		hResizing: #shrinkWrap;
+		vResizing: #shrinkWrap;
 		addMorphBack: (SBRow new
+			layoutPolicy: nil;
 			hideWhenEmpty: true;
 			cellGap: 8 withScalingFactor;
 			addMorphBack: bindings;
@@ -238,6 +236,29 @@ SBBlockBody >> isMethodBody [
 	^ self owner notNil and: [self parentSandblock isMethod]
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlockBody >> layoutCommands [
+
+	| preamble |
+	preamble := self firstSubmorph layoutCommands.
+	
+	self statementCount = 0 ifTrue: [^ SBAlgebraCommand container
+			morph: self;
+			data: {preamble}].
+	
+	^ self statementCount > 1
+		ifTrue: [
+			SBAlgebraCommand container
+				morph: self;
+				data: (((bindings hasSubmorphs or: [temporaries hasSubmorphs]) ifTrue: [{preamble. SBAlgebraCommand hardLine withGap: true}] ifFalse: {}),
+					(self statements collect: [:stmt | stmt layoutCommands] separatedBy: [SBAlgebraCommand hardLine withGap: true]))]
+		ifFalse: [
+			SBAlgebraCommand container
+				morph: self;
+				data: ((bindings hasSubmorphs or: [temporaries hasSubmorphs]) ifTrue: [{preamble. SBAlgebraCommand softLine}] ifFalse: {}),
+					{self statements first layoutCommands}]
+]
+
 { #category : #hierarchy }
 SBBlockBody >> localNestingDepth [
 
@@ -253,7 +274,7 @@ SBBlockBody >> minHeight [
 { #category : #'as yet unclassified' }
 SBBlockBody >> minimumHeight [
 
-	^ self fontToUse height + self layoutInset vertical
+	^ self fontToUse height + self layoutInset asEdgeInsets vertical
 ]
 
 { #category : #'as yet unclassified' }
@@ -317,6 +338,12 @@ SBBlockBody >> statements: aCollection [
 
 	self submorphs allButFirst do: [:m | self removeMorph: m].
 	aCollection do: [:m | self addMorphBack: m]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlockBody >> statementsDo: aBlock [
+
+	^ self submorphs allButFirstDo: aBlock
 ]
 
 { #category : #'as yet unclassified' }

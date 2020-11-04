@@ -103,7 +103,7 @@ SBNode >> initialize [
 		addMorphBack: (SBRow new
 			changeTableLayout;
 			addMorphBack: (inputs := SBColumn new);
-			addMorphBack: (outputs := SBColum new))
+			addMorphBack: (outputs := SBColumn new))
 ]
 
 { #category : #'as yet unclassified' }

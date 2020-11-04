@@ -143,8 +143,11 @@ SBStateMachine >> drawnColor [
 SBStateMachine >> example [
 
 	SBMorphExample
-		setUp: [SBEditor newFor: SBStateMachine >> #exampleStateMachine]
-		cases: {(SBMorphExampleCase name: 'example 1' caseBlock: [:e | e])}
+		setUp: [
+			SBEditor newFor: SBStateMachine >> #exampleStateMachine]
+		cases: {
+			SBMorphExampleCase name: 'example 1' caseBlock: [:e | e]
+		}
 		extent: 535 @ 537
 ]
 
@@ -157,11 +160,14 @@ SBStateMachine >> exampleStateMachine [
 	
 	b := SBStateMachine new
 		initialState: #idle;
-		uponEnter: #evasion do: [self];
-		uponLeave: #evasion do: [4];
-		uponEnter: #combat do: [self];
-		uponLeave: #combat do: [self];
+		uponEnter: #evasion do: [self accelerate];
+		uponLeave: #evasion do: [self stop];
+		uponEnter: #combat do: [self startShooting];
+		uponLeave: #combat do: [self stopShooting];
 		from: #idle to: #combat if: [self checkNearbyEnemies];
+		from: #idle to: #combat if: [self changed];
+		from: #idle to: #combat if: [self checkNearbyEnemies];
+		from: #idle to: #combat if: [self changed];
 		from: #combat to: #evasion if: [self checkLowHealth];
 		from: #evasion to: #idle if: [true];
 		from: #combat to: #combat if: [self isMorph]

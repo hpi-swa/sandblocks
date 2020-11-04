@@ -5,6 +5,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBColumn >> addedMorph: aMorph [
+
+	super addedMorph: aMorph.
+	self triggerEvent: #morphAdded with: aMorph
+]
+
+{ #category : #'as yet unclassified' }
 SBColumn >> initialize [
 
 	super initialize.

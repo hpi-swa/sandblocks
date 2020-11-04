@@ -48,13 +48,7 @@ SBAssignment >> initialize [
 
 	super initialize.
 	
-	pc := 0.
-	
-	self
-		layoutPolicy: SBHorizontalLayout new;
-		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap;
-		listDirection: #leftToRight
+	pc := 0
 ]
 
 { #category : #'as yet unclassified' }
@@ -67,6 +61,20 @@ SBAssignment >> isAssignment [
 SBAssignment >> isExpression [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBAssignment >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: {
+			self binding layoutCommands.
+			SBAlgebraCommand gap.
+			SBAlgebraCommand morph data: self submorphs second.
+			SBAlgebraCommand indent data: {
+				SBAlgebraCommand softLineOrGap.
+				self expression layoutCommands}}
 ]
 
 { #category : #converting }

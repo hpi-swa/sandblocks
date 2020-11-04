@@ -13,6 +13,15 @@ SequenceableCollection >> atPingPong: aNumber [
 ]
 
 { #category : #'*Sandblocks-Core' }
+SequenceableCollection >> collect: elementBlock separatedBy: separatorBlock [
+
+	^ self species streamContents: [:stream |
+		1 to: self size do: [:index |
+			index = 1 ifFalse: [stream nextPut: separatorBlock value].
+			stream nextPut: (elementBlock value: (self at: index))]]
+]
+
+{ #category : #'*Sandblocks-Core' }
 SequenceableCollection >> viewAllButFirst [
 
 	^ SBCollectionView on: self from: 2 to: self size

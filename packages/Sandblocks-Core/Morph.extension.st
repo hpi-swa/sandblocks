@@ -7,6 +7,21 @@ Morph >> allMorphsDoBreadthFirst: aBlock [
 	self submorphsDo: [:m | m allMorphsDoBreadthFirst: aBlock]
 ]
 
+{ #category : #'*Sandblocks-Core-layout' }
+Morph >> calculateSizeForWidth: aNumber [
+
+	| padding |
+	self halt.
+	padding := self paddingAsPoint * PHStyleContext scalingFactor.
+	
+	^ ((self layoutPolicy
+			ifNotNilDo: [:layout | layout preferredSizeFor: self width: aNumber - padding x]
+			ifNil: [
+				self flag: #fixme. " vs minimumuExtent vs minExtent? "
+				PHSizeRequest fixed: self extent]) adjustFor: self)
+		+ padding
+]
+
 { #category : #'*Sandblocks-Core' }
 Morph >> centerRight: aPoint [
 
@@ -98,6 +113,12 @@ Morph >> lastMorphThat: aBlock [
 
 	self reverseAllMorphsDo: [:m | (aBlock value: m) ifTrue: [^ m]].
 	^ nil
+]
+
+{ #category : #'*Sandblocks-Core' }
+Morph >> layoutCommands [
+
+	^ SBAlgebraCommand morph data: self
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -216,6 +237,20 @@ Morph >> position: aPoint [
 	self owner ifNotNil: [:o | 
 		self flag: #todo. "mt: Maybe we can save a lot of effort and troubles by only calling #layoutChanged if the owner has a layout policy installed? Take the thumbs of scroll-bars as an example..."
 		o layoutChanged].
+]
+
+{ #category : #'*Sandblocks-Core-layout' }
+Morph >> preferredSizeForWidth: aNumber [
+
+	| padding |
+	padding := self layoutInset asPoint * 2.
+	
+	^ ((self layoutPolicy
+			ifNotNilDo: [:layout | layout preferredSizeFor: self width: aNumber - padding x]
+			ifNil: [
+				self flag: #fixme. " vs minimumuExtent vs minExtent? "
+				PHSizeRequest fixed: self extent]) adjustFor: self)
+		+ padding
 ]
 
 { #category : #'*Sandblocks-Core' }

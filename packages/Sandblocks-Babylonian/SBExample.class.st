@@ -172,7 +172,6 @@ SBExample >> initialize [
 	processRunning := false.
 	
 	self
-		layoutPolicy: (SBThresholdLayout new thresholdWidth: 600 withScalingFactor);
 		layoutInset: 8 withScalingFactor;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
@@ -235,6 +234,18 @@ SBExample >> lastError: anError [
 		ifNil: [
 			errorIndicator ifNotNil: #delete.
 			errorIndicator := nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBExample >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		"data: (Array streamContents: [:str |
+			self submorphs withIndexDo: [:morph :index |
+				str nextPut: morph layoutCommands.
+				(index \\ 2 = 1 and: [index > 1]) ifTrue: [str nextPut: SBAlgebraCommand softLineOrGap]]]);"
+		data: (self submorphs pairsCollect: [:a :b | SBAlgebraCommand group data: {a layoutCommands. SBAlgebraCommand gap. b layoutCommands. SBAlgebraCommand softLineOrGap}]), {self lastSubmorph layoutCommands}
 ]
 
 { #category : #'as yet unclassified' }

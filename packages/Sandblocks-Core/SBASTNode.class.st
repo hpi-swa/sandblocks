@@ -193,6 +193,17 @@ SBASTNode >> handleDroppedBlock: aBlock event: anEvent [
 	replacer postDuplicate
 ]
 
+{ #category : #'actions input' }
+SBASTNode >> initialize [
+
+	super initialize.
+	
+	self
+		layoutPolicy: SBAlgebraLayout new;
+		hResizing: #shrinkWrap;
+		vResizing: #shrinkWrap
+]
+
 { #category : #actions }
 SBASTNode >> insertLabelAbove [
 	<action>
@@ -495,6 +506,7 @@ SBASTNode >> wrapInAssignment [
 { #category : #actions }
 SBASTNode >> wrapInBlock [
 	<multiSelectAction>
+	<actionValidIf: #isExpression>
 
 	self assert: self isSelected.
 	self sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].

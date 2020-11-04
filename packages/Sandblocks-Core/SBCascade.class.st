@@ -57,17 +57,6 @@ SBCascade >> guessedClass [
 ]
 
 { #category : #'as yet unclassified' }
-SBCascade >> initialize [
-
-	super initialize.
-	
-	self
-		layoutPolicy: SBVerticalLayout new;
-		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap
-]
-
-{ #category : #'as yet unclassified' }
 SBCascade >> insertCommandRequest: anAfterBoolean near: aBlock [
 
 	^ (SBInsertCommand newFor: self containingArtefact)
@@ -87,6 +76,16 @@ SBCascade >> isCascade [
 SBCascade >> isExpression [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBCascade >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: {
+			self receiver layoutCommands.
+			SBAlgebraCommand group data: (self messages gather: [:message | {SBAlgebraCommand hardLine withGap: true. message layoutCommands}])}
 ]
 
 { #category : #'as yet unclassified' }

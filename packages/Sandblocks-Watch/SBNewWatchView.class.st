@@ -78,7 +78,7 @@ SBNewWatchView >> initialize [
 		color: Color transparent;
 		cellGap: 8;
 		vResizing: #shrinkWrap;
-		hResizing: #spaceFill;
+		hResizing: #shrinkWrap;
 		addMorphBack: (SBIcon iconSearch
 			large;
 			on: #click send: #exploreLastValue to: self;

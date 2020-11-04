@@ -142,11 +142,8 @@ SBNewWatch >> initialize [
 	super initialize.
 	
 	self
-		changeTableLayout;
 		cellGap: 4 withScalingFactor;
 		layoutInset: 2 withScalingFactor;
-		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap;
 		addMorphBack: (display := SBNewWatchView new)
 ]
 
@@ -168,6 +165,17 @@ SBNewWatch >> isGlobalWatch [
 SBNewWatch >> isWatch [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBNewWatch >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: {
+			self submorphs first layoutCommands.
+			SBAlgebraCommand hardLine.
+			SBAlgebraCommand morph data: self submorphs second}
 ]
 
 { #category : #'as yet unclassified' }

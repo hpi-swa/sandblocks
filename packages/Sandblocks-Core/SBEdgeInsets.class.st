@@ -14,6 +14,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBEdgeInsets class >> all: aNumber [
+
+	^ self left: aNumber right: aNumber top: aNumber bottom: aNumber
+]
+
+{ #category : #'as yet unclassified' }
 SBEdgeInsets class >> left: leftNumber [
 
 	^ self basicNew left: leftNumber right: 0 top: 0 bottom: 0
@@ -54,7 +60,7 @@ SBEdgeInsets >> adaptToPoint: aPoint andSend: aSymbol [
 
 	self flag: #todo.
 	self assert: aSymbol = #+.
-	^ aPoint adaptToEdgeInsetsAndAdd: self
+	^ aPoint + (self horizontal @ self vertical)
 ]
 
 { #category : #'as yet unclassified' }
@@ -67,6 +73,12 @@ SBEdgeInsets >> asEdgeInsets [
 SBEdgeInsets >> bottom [
 
 	^ bottom
+]
+
+{ #category : #'as yet unclassified' }
+SBEdgeInsets >> bottomRight [
+
+	^ right @ bottom
 ]
 
 { #category : #'as yet unclassified' }
@@ -117,6 +129,12 @@ SBEdgeInsets >> origin [
 ]
 
 { #category : #'as yet unclassified' }
+SBEdgeInsets >> printOn: aStream [
+
+	aStream nextPutAll: self className; nextPut: $(; nextPutAll: 'left: '; print: self left; nextPutAll: ' right: '; print: self right; nextPutAll: ' top: '; print: self top; nextPutAll: ' bottom: '; print: self bottom; nextPut: $)
+]
+
+{ #category : #'as yet unclassified' }
 SBEdgeInsets >> right [
 
 	^ right
@@ -126,6 +144,12 @@ SBEdgeInsets >> right [
 SBEdgeInsets >> top [
 
 	^ top
+]
+
+{ #category : #'as yet unclassified' }
+SBEdgeInsets >> topLeft [
+
+	^ left @ top
 ]
 
 { #category : #'as yet unclassified' }

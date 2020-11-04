@@ -690,7 +690,7 @@ SBBlock >> focusAfterDelete: aBlock [
 ]
 
 { #category : #accessing }
-SBBlock >> focusAfterDeleteifNone: aBlock [
+SBBlock >> focusAfterDeleteIfNone: aBlock [
 
 	| block |
 	block := self valueOfProperty: #focusAfterDelete ifAbsent: aBlock.
@@ -1095,6 +1095,12 @@ SBBlock >> lastDeepChild [
 	current := self.
 	[current childSandblocks isEmpty] whileFalse: [current := current childSandblocks last].
 	^ current
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> layoutCommands [
+
+	^ SBAlgebraCommand morph data: self
 ]
 
 { #category : #'as yet unclassified' }
@@ -1955,6 +1961,15 @@ SBBlock >> updateSuggestions: aCollection showNear: aMorph [
 		topLeft: aMorph positionInWorld + (0 @ aMorph height);
 		openInWorld;
 		resize
+]
+
+{ #category : #layout }
+SBBlock >> useAlgebraLayout [
+
+	self
+		vResizing: #shrinkWrap;
+		hResizing: #rigid;
+		layoutPolicy: SBAlgebraLayout new
 ]
 
 { #category : #actions }

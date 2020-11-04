@@ -85,6 +85,14 @@ SBClassMethodEditor >> isArtefact [
 ]
 
 { #category : #'as yet unclassified' }
+SBClassMethodEditor >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine withGap: true])
+]
+
+{ #category : #'as yet unclassified' }
 SBClassMethodEditor >> object [
 
 	^ self firstSubmorph relatedClass

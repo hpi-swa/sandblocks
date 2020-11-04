@@ -34,7 +34,7 @@ SBRow >> initialize [
 	super initialize.
 	
 	hideWhenEmpty := false.
-
+	
 	self
 		extent: 0 @ 0;
 		color: Color transparent;
@@ -50,6 +50,14 @@ SBRow >> layoutChanged [
 	super layoutChanged.
 	self flag: #fixme. " did not get it to correctly re-layout without forcing eager relayout. no clue why "
 	self hideWhenEmpty ifTrue: [self fullBounds]
+]
+
+{ #category : #'as yet unclassified' }
+SBRow >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: ((self submorphs select: #visible) collect: #layoutCommands separatedBy: [SBAlgebraCommand softLineOrGap])
 ]
 
 { #category : #'as yet unclassified' }

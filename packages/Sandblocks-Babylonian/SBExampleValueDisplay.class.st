@@ -52,7 +52,6 @@ SBExampleValueDisplay >> initialize [
 	
 	self
 		color: Color transparent;
-		changeTableLayout;
 		cellGap: 4;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
@@ -72,6 +71,14 @@ SBExampleValueDisplay >> label [
 SBExampleValueDisplay >> label: aString [
 
 	label contents: aString
+]
+
+{ #category : #'as yet unclassified' }
+SBExampleValueDisplay >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand softLineOrGap])
 ]
 
 { #category : #'as yet unclassified' }
