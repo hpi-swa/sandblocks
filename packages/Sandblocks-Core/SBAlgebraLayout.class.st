@@ -2,7 +2,8 @@ Class {
 	#name : #SBAlgebraLayout,
 	#superclass : #LayoutPolicy,
 	#instVars : [
-		'measure'
+		'measure',
+		'minExtentCache'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -64,6 +65,12 @@ SBAlgebraLayout >> fitsDocument: command at: aState limit: maxRight [
 				lineHeight: (aState lineHeight max: extent y)].
 		[#noop] -> [aState].
 	}
+]
+
+{ #category : #'as yet unclassified' }
+SBAlgebraLayout >> flushLayoutCache [
+
+	minExtentCache := nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -172,6 +179,8 @@ SBAlgebraLayout >> layoutDocument: command limit: aNumber [
 SBAlgebraLayout >> minExtentOf: aMorph in: aRectangle [
 
 	| state initial commands minExtent |
+	minExtentCache ifNotNil: [^ minExtentCache].
+	
 	commands := self commandsForRoot: aMorph.
 	(commands type = #morph and: [commands data = aMorph]) ifTrue: [^ aRectangle extent].
 	
@@ -185,7 +194,7 @@ SBAlgebraLayout >> minExtentOf: aMorph in: aRectangle [
 	  small threshold that we can assume our layout will be able to be condensed into and
 	  only start reporting proper min widths if the provided space is less than that "
 	minExtent := state extentFrom: initial.
-	^ "aRectangle width <= minExtent x"true
+	^ minExtentCache := "aRectangle width <= minExtent x"true
 		ifTrue: [state extentFrom: initial]
 		ifFalse: [50 @ (state extentFrom: initial) y]
 ]

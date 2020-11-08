@@ -382,7 +382,7 @@ SBASTNode >> selectionLabel [
 	^ String streamContents: [:stream |
 		self printOn: stream.
 		
-		self guessClassExpensive ifNotNil: [:c | stream space; nextPut: $(. c printOn: stream. stream nextPut: $)]]
+		self guessedClass ifNotNil: [:c | stream space; nextPut: $(. c printOn: stream. stream nextPut: $)]]
 ]
 
 { #category : #'as yet unclassified' }

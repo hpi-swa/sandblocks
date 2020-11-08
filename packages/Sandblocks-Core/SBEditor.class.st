@@ -1373,8 +1373,7 @@ SBEditor >> performShortcutFor: anEvent [
 
 	self shortcuts do: [:assoc |
 		(assoc key matchesEvent: anEvent) ifTrue: [
-			(self selection notNil and: [
-				self perform: (SBNewWatch report: assoc for: 392172289) value for: self selection]) ifTrue: [^ true].
+			(self selection notNil and: [self perform: assoc value for: self selection]) ifTrue: [^ true].
 			globalShortcutListeners do: [:listener |
 				(self perform: assoc value for: listener) ifTrue: [^ true]]]].
 	

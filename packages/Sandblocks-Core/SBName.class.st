@@ -57,9 +57,9 @@ SBName >> actions [
 ]
 
 { #category : #'as yet unclassified' }
-SBName >> allUsages [
+SBName >> allUsagesDo: aBlock [
 
-	^ self behavior resolveBinding ifNotNil: [:binding | binding allUsages] ifNil: [#()]
+	^ self behavior resolveBinding ifNotNil: [:binding | binding allUsagesDo: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
@@ -391,13 +391,13 @@ SBName >> wasDeselected [
 
 	self flag: #todo. " will not clean up on changed usages "
 	self isInWorld ifTrue: [
-		self allUsages do: [:b | b detachDecorators: SBHighlightDecorator]]
+		self allUsagesDo: [:b | b detachDecorators: SBHighlightDecorator]]
 ]
 
 { #category : #'as yet unclassified' }
 SBName >> wasSelected [
 
-	self allUsages do: [:b | b attachDecorator: SBHighlightDecorator new]
+	self allUsagesDo: [:b | b attachDecorator: SBHighlightDecorator new]
 ]
 
 { #category : #'as yet unclassified' }

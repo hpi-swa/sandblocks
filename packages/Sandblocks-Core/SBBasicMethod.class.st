@@ -27,13 +27,12 @@ SBBasicMethod >> actualReceiver [
 ]
 
 { #category : #'as yet unclassified' }
-SBBasicMethod >> allUsages [
+SBBasicMethod >> allUsagesDo: aBlock [
 
-	^ Array streamContents: [:stream |
-		self sandblockEditor allBlocksDo: [:block |
-			(block isMessageSend and: [
-				block selector = self selector and: [
-					block receiver guessClassExpensive = self methodClass]]) ifTrue: [stream nextPut: block]]]
+	^ self sandblockEditor allBlocksDo: [:block |
+		(block isMessageSend and: [
+			block selector = self selector and: [
+				block receiver guessClassExpensive = self methodClass]]) ifTrue: [aBlock value: block]]
 ]
 
 { #category : #'as yet unclassified' }

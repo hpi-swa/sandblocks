@@ -8,9 +8,16 @@ Class {
 SBDeclarationBehavior >> allUsages [
 
 	^ Array streamContents: [:stream |
-		self scope select: #notNil thenDo: [:scope |
+		self allUsagesDo: [:u | stream nextPut: u]]
+]
+
+{ #category : #'as yet unclassified' }
+SBDeclarationBehavior >> allUsagesDo: aBlock [
+
+	^ self scope do: [:scope |
+		scope ifNotNil: [
 			scope allBlocksDo: [:block |
-				(block isBinding and: [block behavior resolveBinding = self block]) ifTrue: [stream nextPut: block]]]]
+				(block isBinding and: [block behavior resolveBinding = self block]) ifTrue: [aBlock value: block]]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -60,11 +67,11 @@ SBDeclarationBehavior >> wasDeselected [
 
 	self flag: #todo. " will not clean up on changed usages "
 	self isInWorld ifTrue: [
-		self allUsages do: [:b | b detachDecorators: SBHighlightDecorator]]
+		self allUsagesDo: [:b | b detachDecorators: SBHighlightDecorator]]
 ]
 
 { #category : #'as yet unclassified' }
 SBDeclarationBehavior >> wasSelected [
 
-	self allUsages do: [:b | b attachDecorator: SBHighlightDecorator new]
+	self allUsagesDo: [:b | b attachDecorator: SBHighlightDecorator new]
 ]

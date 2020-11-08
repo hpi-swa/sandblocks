@@ -23,8 +23,9 @@ SBEditorCanvas >> animateToPosition: aPoint [
 { #category : #viewport }
 SBEditorCanvas >> basicViewportPosition: aPoint [
 
-	self transform: (self transform withOffset: aPoint - self position).
-	self changed
+	aPoint - self position ~= self transform offset ifTrue: [ 
+		self transform: (self transform withOffset: aPoint - self position).
+		self changed]
 ]
 
 { #category : #'event handling' }
