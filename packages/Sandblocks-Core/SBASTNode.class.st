@@ -358,16 +358,22 @@ SBASTNode >> selectPreviousSend [
 
 { #category : #printing }
 SBASTNode >> selectRightMostBlock [
-	<action>
+	<multiSelectAction>
+	<inputAction>
 
-	self containingStatement rightMostBlock select
+	self containingStatement rightMostBlock select.
+	
+	self sandblockEditor maybeStartInputFromEnd
 ]
 
 { #category : #actions }
 SBASTNode >> selectStartOfStatement [
 	<multiSelectAction>
+	<inputAction>
 	
-	self containingStatement firstDeepChild select
+	self containingStatement firstDeepChild select.
+	
+	self sandblockEditor maybeStartInputFromStart
 ]
 
 { #category : #printing }

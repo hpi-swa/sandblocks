@@ -63,6 +63,10 @@ SBExampleSlider >> exampleStarting: anExample [
 ]
 
 { #category : #'as yet unclassified' }
+SBExampleSlider >> filterForContextId: aNumber [
+]
+
+{ #category : #'as yet unclassified' }
 SBExampleSlider >> initialize [
 
 	super initialize.

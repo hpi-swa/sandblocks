@@ -228,9 +228,7 @@ SBBlock >> clearCache [
 { #category : #'as yet unclassified' }
 SBBlock >> click: anEvent [
 
-	self isSelected
-		ifTrue: [self parentSandblock select]
-		ifFalse: [self select]
+	self sandblockEditor selectClick: self at: anEvent position
 ]
 
 { #category : #hierarchy }
@@ -290,15 +288,16 @@ SBBlock >> compilationCueWith: aRequestor for: aContext [
 SBBlock >> completionSuggestionsFor: aString [
 
 	^ aString size > 2
-		ifTrue: [
-			self guessClassExpensive
-				ifNotNil: [:baseClass | 
-					Array streamContents: [:stream | 
-						baseClass withAllSuperclassesDo: [:class | 
-							class methodsDo: [:m |  | sel |
+		ifTrue: [ | baseClass |
+			baseClass := self guessClassExpensive.
+			baseClass isNil
+				ifFalse: [
+					Array streamContents: [:stream |
+						baseClass withAllSuperclassesDo: [:class |
+							class methodsDo: [:m | | sel |
 								sel := m selector asString.
 								(sel sandblockMatch: aString) ifTrue: [stream nextPut: sel]]]]]
-				ifNil: [Symbol allSymbols select: [:sym | sym asString sandblockMatch: aString]]]
+				ifTrue: [Symbol allSymbols select: [:sym | sym asString sandblockMatch: aString]]]
 		ifFalse: [#()]
 ]
 
@@ -397,6 +396,12 @@ SBBlock >> copyToBuffer [
 	self sandblockEditor copyBuffer: self sandblockEditor multiSelection
 ]
 
+{ #category : #accessing }
+SBBlock >> currentTextMorph [
+
+	^ nil
+]
+
 { #category : #'artefact protocol' }
 SBBlock >> declarations [
 	" return any SBName declarations you may know "
@@ -464,7 +469,8 @@ SBBlock >> deleteBlock [
 	self sandblockEditor
 		copyBuffer: self sandblockEditor multiSelection;
 		doMultiSelectionEach: [:selected |
-			selected parentSandblock deleteCommandFor: selected]
+			selected parentSandblock deleteCommandFor: selected];
+		maybeStartInputFromEnd
 ]
 
 { #category : #'as yet unclassified' }
@@ -844,6 +850,7 @@ SBBlock >> insertElement: aBoolean [
 { #category : #actions }
 SBBlock >> insertElementAfter [
 	<action>
+	<inputAction>
 
 	self insertElement: true
 ]
@@ -851,6 +858,7 @@ SBBlock >> insertElementAfter [
 { #category : #actions }
 SBBlock >> insertElementBefore [
 	<action>
+	<inputAction>
 
 	self insertElement: false
 ]
@@ -1618,10 +1626,13 @@ SBBlock >> select [
 { #category : #actions }
 SBBlock >> selectArtefact [
 	<multiSelectAction>
+	<inputAction>
 
 	(self containingArtefact = self
 		ifTrue: [self parentSandblock containingArtefact]
-		ifFalse: [self containingArtefact]) ifNotNil: #select
+		ifFalse: [self containingArtefact]) ifNotNil: #select.
+		
+	self sandblockEditor maybeStartInputFromStart
 ]
 
 { #category : #actions }
@@ -1645,14 +1656,20 @@ SBBlock >> selectDown [
 		selectionDownHistory removeAll.
 		next := self hasChildSandblocks ifTrue: [self childSandblocks first] ifFalse: [nil]].
 	
-	next ifNotNil: #select
+	next
+		ifNotNil: #select
+		ifNil: [
+			self sandblockEditor startInput: self at: 0 replacingContents: false]
 ]
 
 { #category : #actions }
 SBBlock >> selectLast [
 	<multiSelectAction>
+	<inputAction>
 
-	self containingArtefact lastDeepChild select
+	self containingArtefact lastDeepChild select.
+	
+	self sandblockEditor maybeStartInputFromEnd
 ]
 
 { #category : #actions }
@@ -1665,38 +1682,52 @@ SBBlock >> selectLeftToplevel [
 { #category : #actions }
 SBBlock >> selectNext [
 	<multiSelectAction>
+	<inputAction>
 
 	self sandblockEditor selectionDownHistory removeAll.
-	self class navigation nextFrom: self do: [:b | (self canJumpTo: b) ifTrue: [b select]]
+	self class navigation nextFrom: self do: [:b | (self canJumpTo: b) ifTrue: [b select]].
+	
+	self sandblockEditor maybeStartInputFromStart
 ]
 
 { #category : #actions }
 SBBlock >> selectNextGroup [
 	<multiSelectAction>
 
+	| oldCursorPos |
+	oldCursorPos := self currentTextMorph ifNotNil: [:m | m cursorPosition] ifNil: [self center].
+	
 	self sandblockEditor keepVerticalSelectionPositionDuring: [
 		(self nextVerticalNear: self sandblockEditor verticalSelectionPosition)
 			ifNotNil: #select
 			ifNil: [
 				SBLabel text: [
 					'Artefacts typically contain all their nodes, so none are below them'].
-				self isArtefact ifTrue: [self selectNext]]]
+				self isArtefact ifTrue: [self selectNext]]].
+	self sandblockEditor maybeStartInputNear: oldCursorPos
 ]
 
 { #category : #actions }
 SBBlock >> selectPrevious [
 	<multiSelectAction>
+	<inputAction>
 
 	self sandblockEditor selectionDownHistory removeAll.
-	self class navigation previousFrom: self do: [:b | (self canJumpTo: b) ifTrue: [b select]]
+	self class navigation previousFrom: self do: [:b | (self canJumpTo: b) ifTrue: [b select]].
+	
+	self sandblockEditor maybeStartInputFromEnd
 ]
 
 { #category : #actions }
 SBBlock >> selectPreviousGroup [
 	<multiSelectAction>
 
+	| oldCursorPos |
+	oldCursorPos := self currentTextMorph ifNotNil: [:m | m cursorPosition] ifNil: [self center].
+	
 	self sandblockEditor keepVerticalSelectionPositionDuring: [
-		(self previousVerticalNear: self sandblockEditor verticalSelectionPosition) ifNotNil: #select]
+		(self previousVerticalNear: self sandblockEditor verticalSelectionPosition) ifNotNil: #select].
+	oldCursorPos ifNil: [self sandblockEditor maybeStartInputFromStart] ifNotNil: [self sandblockEditor maybeStartInputNear: oldCursorPos]
 ]
 
 { #category : #actions }
@@ -1731,7 +1762,10 @@ SBBlock >> selectToplevelTowards: aSideSymbol [
 { #category : #actions }
 SBBlock >> selectUp [
 	<multiSelectAction>
+	<inputAction>
 
+	self sandblockEditor mode = #input ifTrue: [^ self sandblockEditor endInput].
+	
 	self parentSandblock ifNotNil: [:b |
 		self sandblockEditor selectionDownHistory addLast: self.
 		b select]
@@ -1881,6 +1915,7 @@ SBBlock >> swap: aNumber [
 { #category : #actions }
 SBBlock >> swapLeft [
 	<action>
+	<inputAction>
 
 	self swap: -1
 ]
@@ -1888,6 +1923,7 @@ SBBlock >> swapLeft [
 { #category : #actions }
 SBBlock >> swapRight [
 	<action>
+	<inputAction>
 
 	self swap: 1
 ]

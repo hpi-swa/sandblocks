@@ -287,8 +287,9 @@ SBConnectorLine >> lineType: aSymbol [
 { #category : #'as yet unclassified' }
 SBConnectorLine >> mouseDown: anEvent [
 
-	self sandblockEditor do: ((SBDeleteCommand newFor: self owner containingArtefact)
-		target: self)
+	self sandblockEditor do: (((self owner isSandblock not or: [self owner containingArtefact isNil])
+		ifTrue: [SBDeleteCommand newNonEdit]
+		ifFalse: [	SBDeleteCommand newFor: self owner containingArtefact]) target: self)
 ]
 
 { #category : #'as yet unclassified' }

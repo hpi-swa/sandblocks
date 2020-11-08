@@ -60,7 +60,10 @@ SBSignature >> color [
 SBSignature >> deleteCommandFor: aBlock [
 
 	| index |
-	(self isUnary or: [self isBinary]) ifTrue: [^ nil].
+	(self isUnary or: [self isBinary]) ifTrue: [
+		^ (SBReplaceCommand newFor: aBlock containingArtefact)
+			target: aBlock;
+			replacer: SBUnknown new].
 	
 	(self isKeyword and: self submorphCount = 2) ifTrue: [
 		^ aBlock submorphIndex = 1 ifTrue: [nil] ifFalse: [
@@ -88,7 +91,11 @@ SBSignature >> initialize [
 
 	super initialize.
 	
-	self color: Color transparent; layoutPolicy: SBAlgebraLayout new
+	self
+		color: Color transparent;
+		layoutPolicy: SBAlgebraLayout new;
+		hResizing: #shrinkWrap;
+		vResizing: #shrinkWrap
 ]
 
 { #category : #'as yet unclassified' }

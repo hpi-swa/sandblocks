@@ -11,6 +11,16 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBNumber >> acceptInputEvent: anEvent [
+
+	| char |
+	char := anEvent keyCharacter.
+	(char isAlphaNumeric or: [char = $- or: [char = $.]])
+		ifTrue: [super acceptInputEvent: anEvent]
+		ifFalse: [SBSmalltalkGrammarHandler new perform: char for: self empty: false]
+]
+
+{ #category : #'as yet unclassified' }
 SBNumber >> castToUnknownWhenEmpty [
 
 	^ true

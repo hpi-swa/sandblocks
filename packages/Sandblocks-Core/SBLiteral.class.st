@@ -81,7 +81,7 @@ SBLiteral >> isLiteralBlock [
 { #category : #'as yet unclassified' }
 SBLiteral >> keyStroke: anEvent [
 
-	(self isExpression and: [anEvent keyCharacter isSpecial or: [anEvent keyCharacter = Character space]]) ifTrue: [
+	"(self isExpression and: [anEvent keyCharacter isSpecial or: [anEvent keyCharacter = Character space]]) ifTrue: [
 		(self parentSandblock isMessageSend and: [
 			self parentSandblock selector = SBMessageSend placeholderSelector]) ifTrue: [
 			^ self sandblockEditor
@@ -90,7 +90,7 @@ SBLiteral >> keyStroke: anEvent [
 		
 		self sandblockEditor endInput.
 		^ self wrapInMessageSend: (anEvent keyCharacter isSpecial ifTrue: [anEvent keyCharacter asString] ifFalse: [''])].
-	
+	"
 	(anEvent keyCharacter = Character backspace and: [self contents isEmpty]) ifTrue: [^ self replaceWithUnknown].
 	
 	self acceptInputEvent: anEvent

@@ -88,6 +88,32 @@ SBOwnTextMorph >> cursor: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> cursorIndexForPosition: aPoint [
+
+	| font offset index |
+	font := self fontToUse.
+	offset := aPoint x - self position x.
+	index := 0.
+	[offset > 0 and: [index < self contents size]] whileTrue: [
+		index := index + 1.
+		offset := offset - (font widthOf: (self contents at: index))].
+	^ offset > 0 ifTrue: [index + 1] ifFalse: [index]
+]
+
+{ #category : #'as yet unclassified' }
+SBOwnTextMorph >> cursorPosition [
+
+	| font offset index |
+	font := self fontToUse.
+	offset := self position x.
+	index := self cursor - 1.
+	[index > 0] whileTrue: [
+		index := index - 1.
+		offset := offset + (font widthOf: (self contents at: index))].
+	^ index @ self y
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> deleteAfterCursor [
 
 	self cursor <= self contents size ifTrue: [
@@ -301,9 +327,35 @@ SBOwnTextMorph >> moveCursor: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> moveCursor: aNumber ifAtBound: aBlock wordWise: aBoolean [
+
+	(aBoolean and: [(aNumber < 0 and: [self cursor = 1]) or: [aNumber > 0 and: [self cursor = (self contents size + 1)]]])
+		ifTrue: [^ aBlock value].
+	
+	self
+		moveCursorTo: (aBoolean
+			ifTrue: [aNumber > 0 ifTrue: [self contents size + 1] ifFalse: [1]]
+			ifFalse: [self cursor + aNumber])
+		ifAtBound: aBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> moveCursorTo: aNumber [
 
 	self cursor: (aNumber clampLow: 1 high: self contents size + 1)
+]
+
+{ #category : #'as yet unclassified' }
+SBOwnTextMorph >> moveCursorTo: aNumber ifAtBound: aBlock [
+
+	(aNumber < 1 or: [aNumber > (self contents size + 1)]) ifTrue: [^ aBlock value].
+	self moveCursorTo: aNumber
+]
+
+{ #category : #'as yet unclassified' }
+SBOwnTextMorph >> moveCursorVertically: aNumber ifAtBound: aBlock [
+
+	aBlock value
 ]
 
 { #category : #'as yet unclassified' }

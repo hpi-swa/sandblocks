@@ -285,7 +285,7 @@ SBExplorer >> update [
 			row submorphs second object == newObject
 				ifTrue: [row submorphs second update]
 				ifFalse: [
-					row submorphs second replaceBy: (SBExplorer on: newObject field: (field inspector: inspector))]]
+					row submorphs second replaceBy: (SBExplorer on: newObject field: (subField inspector: inspector))]]
 ]
 
 { #category : #'as yet unclassified' }

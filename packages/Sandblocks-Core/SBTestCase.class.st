@@ -81,6 +81,12 @@ SBTestCase >> currentSelector: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBTestCase >> currentTextMorph [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBTestCase >> debug [
 	<action>
 
@@ -139,7 +145,8 @@ SBTestCase >> initialize [
 				nonEdit: true;
 				when: #toggled send: #sendStopNotification to: self);
 			addMorphBack: (SBStringMorph new contents: 'Auto-run');
-			yourself)
+			yourself);
+		attachDecorator: SBResizableDecorator new
 ]
 
 { #category : #'as yet unclassified' }

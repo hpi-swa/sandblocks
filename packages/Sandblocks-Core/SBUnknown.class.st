@@ -37,6 +37,13 @@ SBUnknown >> contents: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBUnknown >> deleteBeforeCursor [
+	<inputAction>
+	
+	self tryDelete
+]
+
+{ #category : #'as yet unclassified' }
 SBUnknown >> doReplaceBy: aMorph [
 
 	self stopEditing.
@@ -78,7 +85,8 @@ SBUnknown >> isUnknown [
 { #category : #'as yet unclassified' }
 SBUnknown >> keyStroke: anEvent [
 
-	self acceptCharacter: anEvent keyCharacter
+	"self acceptCharacter: anEvent keyCharacter"
+	SBSmalltalkGrammarHandler new perform: anEvent keyCharacter for: self empty: true
 ]
 
 { #category : #'as yet unclassified' }

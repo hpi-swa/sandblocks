@@ -135,7 +135,7 @@ SBAlgebraLayout >> layoutDocument: command at: aState limit: maxRight wrap: aWra
 				wrap: aWrapBoolean.
 			state := (state offset: (state offset + (inset right @ 0)) lineHeight: state lineHeight + inset bottom) containerWidth: state containerWidth + inset right.
 			
-			measure ifFalse: [command morph bounds: (aState offset extent: ((state extentFrom: aState) max: 0 @ command morph minimumHeight))].
+			measure ifFalse: [command morph layoutInBounds: (aState offset extent: ((state extentFrom: aState) max: 0 @ command morph minimumHeight))].
 			((state
 				offset: (state offset x max: state containerWidth) @ state offset y
 				lineHeight: ((state lineHeight max: aState lineHeight) max: command morph minimumHeight))

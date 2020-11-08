@@ -42,8 +42,20 @@ SBMultilineOwnTextMorph >> cursor: aNumber [
 { #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> cursorFromEvent: anEvent [
 
+	^ self cursorIndexForPosition: anEvent position
+]
+
+{ #category : #'as yet unclassified' }
+SBMultilineOwnTextMorph >> cursorIndexForPosition: aPoint [
+
 	self contents ifEmpty: [^ 0].
-	^ (self paragraph characterBlockAtPoint: anEvent position) stringIndex
+	^ (self paragraph characterBlockAtPoint: aPoint) stringIndex
+]
+
+{ #category : #'as yet unclassified' }
+SBMultilineOwnTextMorph >> cursorPosition [
+
+	^ (self paragraph characterBlockForIndex: self cursor) origin
 ]
 
 { #category : #'as yet unclassified' }
@@ -147,6 +159,13 @@ SBMultilineOwnTextMorph >> mouseMove: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBMultilineOwnTextMorph >> moveCursor: aNumber ifAtBound: aBlock [
+
+	((self cursor + aNumber) < 1 or: [(self cursor + aNumber) > (self contents size + 1)]) ifTrue: [^ aBlock value].
+	self moveCursor: aNumber selecting: ActiveEvent shiftPressed
+]
+
+{ #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> moveCursor: aNumber selecting: aBoolean [
 
 	(self hasSelection and: [aBoolean not]) ifTrue: [
@@ -164,21 +183,31 @@ SBMultilineOwnTextMorph >> moveCursorTo: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
-SBMultilineOwnTextMorph >> moveCursorVertically: aNumber selecting: aBoolean [
-	" negative numbers move up, positive down "
-	
+SBMultilineOwnTextMorph >> moveCursorVertically: aNumber ifAtBound: aBlock [
+
+	self moveCursorVertically: aNumber selecting: ActiveEvent shiftPressed ifAtBound: aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBMultilineOwnTextMorph >> moveCursorVertically: aNumber selecting: aBoolean ifAtBound: aBlock [
+
 	| data line |
 	data := self lineNumberOfIndex: self cursor.
 	
-	(aNumber < 0 and: [data first + aNumber < 1])
-		ifTrue: [self cursor: 1]
+	(aNumber < 0 and: [(data first + aNumber) < 1])
+		ifTrue: [
+			self cursor: 1.
+			aBlock value]
 		ifFalse: [
-			(aNumber > 0 and: [data first + aNumber > self paragraph numberOfLines])
-				ifTrue: [self cursor: self contents size + 1]
+			(aNumber > 0 and: [
+				(data first + aNumber) > self paragraph numberOfLines])
+				ifTrue: [
+					self cursor: self contents size + 1.
+					aBlock value]
 				ifFalse: [
 					line := data first + aNumber.
 					data := self indexAtLine: line x: data second.
-
+					
 					self cursor: data first + data second]].
 	
 	aBoolean ifFalse: [self selectionBound: self cursor]

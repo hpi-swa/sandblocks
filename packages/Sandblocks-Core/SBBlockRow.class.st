@@ -28,6 +28,9 @@ SBBlockRow >> initialize [
 		layoutInset: 2 * self scalingFactor;
 		cellGap: 2 * self scalingFactor;
 		extent: 0 @ 0;
+		layoutPolicy: SBAlgebraLayout new;
+		hResizing: #shrinkWrap;
+		vResizing: #shrinkWrap;
 		yourself
 ]
 

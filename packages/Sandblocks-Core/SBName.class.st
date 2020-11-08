@@ -42,7 +42,12 @@ SBName class >> poolDeclaration: aString [
 { #category : #'as yet unclassified' }
 SBName >> acceptInputEvent: anEvent [
 
-	anEvent keyCharacter isSeparator ifFalse: [super acceptInputEvent: anEvent]
+	| char |
+	char := anEvent keyCharacter.
+	(char isAlphaNumeric or: [char = $_])
+		ifTrue: [super acceptInputEvent: anEvent]
+		ifFalse: [
+			self isExpression ifTrue: [SBSmalltalkGrammarHandler new perform: char for: self empty: false]]
 ]
 
 { #category : #'as yet unclassified' }

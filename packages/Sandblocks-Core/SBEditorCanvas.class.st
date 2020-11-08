@@ -30,7 +30,7 @@ SBEditorCanvas >> basicViewportPosition: aPoint [
 { #category : #'event handling' }
 SBEditorCanvas >> click: anEvent [
 
-	self sandblockEditor selectClick: nil
+	self sandblockEditor select: nil
 ]
 
 { #category : #'geometry testing' }

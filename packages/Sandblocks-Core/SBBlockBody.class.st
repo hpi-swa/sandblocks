@@ -183,7 +183,7 @@ SBBlockBody >> initialize [
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		addMorphBack: (SBRow new
-			layoutPolicy: nil;
+			layoutPolicy: SBAlgebraLayout new;
 			hideWhenEmpty: true;
 			cellGap: 8 withScalingFactor;
 			addMorphBack: bindings;

@@ -29,10 +29,12 @@ Class {
 		'helpOverlay',
 		'verticalSelectionPosition',
 		'countModifier',
-		'globalShortcutListeners'
+		'globalShortcutListeners',
+		'inputMapping'
 	],
 	#classVars : [
 		'DefaultColorPolicy',
+		'InputMappingClass',
 		'Shortcuts'
 	],
 	#category : #'Sandblocks-Core'
@@ -42,6 +44,12 @@ Class {
 SBEditor class >> anyShortcutForAction: aSymbol [
 
 	^ (self shortcutsForAction: aSymbol) ifNotEmpty: #first ifEmpty: [nil]
+]
+
+{ #category : #'initialize-release' }
+SBEditor class >> clearShortcuts [
+
+	Shortcuts := nil
 ]
 
 { #category : #configuration }
@@ -74,6 +82,12 @@ SBEditor class >> newFor: aMethodOrClass [
 ]
 
 { #category : #'initialize-release' }
+SBEditor class >> newInputMapping [
+
+	^ (InputMappingClass ifNil: [SBInputMapping]) new
+]
+
+{ #category : #'initialize-release' }
 SBEditor class >> open [
 
 	| editor |
@@ -100,7 +114,7 @@ SBEditor class >> registerDefaultShortcuts [
 
 	(Shortcuts notNil and: [Shortcuts notEmpty and: [(UIManager default confirm: 'This will reset all custom shortcuts, continue?') not]]) ifTrue: [^ self].
 	
-	Shortcuts := nil.
+	self clearShortcuts.
 	self
 		" navigation "
 		registerShortcut: $h do: #selectPrevious;
@@ -234,7 +248,7 @@ SBEditor class >> shortcutStringForAction: anAction [
 
 	^ String streamContents: [:stream |
 		stream nextPut: $(.
-		(self shortcutsForAction: anAction) do: [:shortcut | shortcut printDisplayOn: stream] separatedBy: [stream space].
+		(self shortcutsForAction: anAction) do: [:shortcut | (shortcut isCollection ifTrue: [shortcut first] ifFalse: [shortcut]) printDisplayOn: stream] separatedBy: [stream space].
 		stream nextPut: $)]
 ]
 
@@ -248,6 +262,13 @@ SBEditor class >> shortcuts [
 SBEditor class >> shortcutsForAction: anAction [
 
 	^ self shortcuts select: [:assoc | assoc value = anAction] thenCollect: [:assoc | assoc key]
+]
+
+{ #category : #'initialize-release' }
+SBEditor class >> useInputMapping: anInputMappingClass [
+	" self useInputMapping: SBTextInputMapping "
+
+	InputMappingClass := anInputMappingClass
 ]
 
 { #category : #actions }
@@ -580,7 +601,7 @@ SBEditor >> clearUndoStack [
 { #category : #selection }
 SBEditor >> click: anEvent [
 
-	self selectClick: nil
+	self select: nil
 ]
 
 { #category : #actions }
@@ -673,7 +694,7 @@ SBEditor >> copyBufferPreviewSize [
 { #category : #accessing }
 SBEditor >> countModifier [
 
-	^ countModifier ifEmpty: [0] ifNotEmpty: [countModifier asNumber]
+	^ inputMapping countModifier
 ]
 
 { #category : #actions }
@@ -747,6 +768,20 @@ SBEditor >> declareInstanceVariable: aString for: aClass [
 		container: class instanceVariables;
 		index: class instanceVariables submorphCount + 1;
 		morph: (SBName contents: aString))
+]
+
+{ #category : #'actions input' }
+SBEditor >> deleteAfterCursor [
+	<inputAction>
+
+	self textMorph deleteAfterCursor
+]
+
+{ #category : #'actions input' }
+SBEditor >> deleteBeforeCursor [
+	<inputAction>
+
+	self textMorph deleteBeforeCursor
 ]
 
 { #category : #actions }
@@ -859,12 +894,9 @@ SBEditor >> filterEvent: anEvent for: aMorph [
 	
 	(self performShortcutFor: anEvent)
 		ifTrue: [
-			countModifier := ''.
+			inputMapping handledEvent: anEvent in: self.
 			^ anEvent ignore]
-		ifFalse: [
-			anEvent keyCharacter isDigit ifTrue: [
-				countModifier := countModifier, anEvent keyCharacter.
-				^ anEvent ignore]].
+		ifFalse: [inputMapping unhandledEvent: anEvent in: self didHandle: [^ anEvent ignore]].
 	
 	anEvent wasHandled: false.
 	^ anEvent ignore
@@ -913,6 +945,7 @@ SBEditor >> initialize [
 	verticalSelectionPosition := 0.
 	countModifier := ''.
 	globalShortcutListeners := OrderedCollection new.
+	inputMapping := self class newInputMapping.
 	
 	self
 		addKeyboardCaptureFilter: self;
@@ -969,6 +1002,16 @@ SBEditor >> internalSelect: aBlock [
 		self updateSelectionLabel]
 ]
 
+{ #category : #input }
+SBEditor >> interruptInputDuring: aBlock [
+
+	| cursor |
+	cursor := self selection currentTextMorph ifNotNil: #cursor.
+	self endInput.
+	aBlock value.
+	self maybeStartInputAt: cursor
+]
+
 { #category : #accessing }
 SBEditor >> isMethodOpen: aCompiledMethod [
 
@@ -1006,6 +1049,36 @@ SBEditor >> markChangesAfterCommand: aCommand [
 			artefact hasUnsavedChanges: saved not.
 			artefact triggerEvent: #changed.
 			self allBlocksDo: [:block | block artefactChanged: artefact]]]
+]
+
+{ #category : #input }
+SBEditor >> maybeStartInputAt: aNumber [
+
+	inputMapping defaultState = #input ifTrue: [
+		self selection currentTextMorph ifNotNil: [:textMorph |
+			self startInput: self selection at: aNumber replacingContents: false]]
+]
+
+{ #category : #input }
+SBEditor >> maybeStartInputFromEnd [
+
+	inputMapping defaultState = #input ifTrue: [
+		self startInput: self selection at: 9e8 replacingContents: false]
+]
+
+{ #category : #input }
+SBEditor >> maybeStartInputFromStart [
+
+	inputMapping defaultState = #input ifTrue: [
+		self startInput: self selection at: 0 replacingContents: false]
+]
+
+{ #category : #input }
+SBEditor >> maybeStartInputNear: aPoint [
+
+	inputMapping defaultState = #input ifTrue: [
+		self selection currentTextMorph ifNotNil: [:textMorph |
+			self startInput: self selection at: (textMorph cursorIndexForPosition: aPoint) replacingContents: false]]
 ]
 
 { #category : #actions }
@@ -1061,17 +1134,38 @@ SBEditor >> modelWakeUp [
 ]
 
 { #category : #'actions input' }
+SBEditor >> moveCursorDown [
+	<inputAction>
+
+	self textMorph moveCursorVertically: 1 ifAtBound: [ | next |
+		next := self selection nextVerticalNear: self sandblockEditor verticalSelectionPosition.
+		next ifNotNil: [self startInput: next at: 9e8 replacingContents: false]]
+]
+
+{ #category : #'actions input' }
 SBEditor >> moveCursorLeft [
 	<inputAction>
 
-	self textMorph moveCursor: -1
+	self textMorph
+		moveCursor: -1
+		ifAtBound: [ | next |
+			next := self class navigation previousFrom: self selection do: [:b |
+				(self selection canJumpTo: b) ifTrue: [b] ifFalse: [nil]].
+			self select: next; startInput: next at: 900000000 replacingContents: false]
+		wordWise: (ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed])
 ]
 
 { #category : #'actions input' }
 SBEditor >> moveCursorRight [
 	<inputAction>
 
-	self textMorph moveCursor: 1
+	self textMorph
+		moveCursor: 1
+		ifAtBound: [ | next |
+			next := self class navigation nextFrom: self selection do: [:b |
+				(self selection canJumpTo: b) ifTrue: [b] ifFalse: [nil]].
+			self select: next; startInput: next at: 0 replacingContents: false]
+		wordWise: (ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed])
 ]
 
 { #category : #'actions input' }
@@ -1086,6 +1180,15 @@ SBEditor >> moveCursorToStart [
 	<inputAction>
 
 	self textMorph moveCursorTo: 1
+]
+
+{ #category : #'actions input' }
+SBEditor >> moveCursorUp [
+	<inputAction>
+
+	self textMorph moveCursorVertically: -1 ifAtBound: [ | next |
+		next := self selection previousVerticalNear: self sandblockEditor verticalSelectionPosition.
+		next ifNotNil: [self startInput: next at: 9e8 replacingContents: false]]
 ]
 
 { #category : #selection }
@@ -1169,7 +1272,7 @@ SBEditor >> openCompiledMethod: aMethod [
 		ifNone: [self openMorphInView: aMethod asSandblock]
 ]
 
-{ #category : #input }
+{ #category : #'initialize-release' }
 SBEditor >> openInWindow [
 
 	| window |
@@ -1270,7 +1373,8 @@ SBEditor >> performShortcutFor: anEvent [
 
 	self shortcuts do: [:assoc |
 		(assoc key matchesEvent: anEvent) ifTrue: [
-			(self selection notNil and: [self perform: assoc value for: self selection]) ifTrue: [^ true].
+			(self selection notNil and: [
+				self perform: (SBNewWatch report: assoc for: 392172289) value for: self selection]) ifTrue: [^ true].
 			globalShortcutListeners do: [:listener |
 				(self perform: assoc value for: listener) ifTrue: [^ true]]]].
 	
@@ -1356,6 +1460,7 @@ SBEditor >> promptWorkspaceActions [
 { #category : #actions }
 SBEditor >> redo [
 	<action>
+	<inputAction>
 
 	| command |
 	redoStack ifNotEmpty: [
@@ -1435,10 +1540,13 @@ SBEditor >> resetColorPolicy [
 SBEditor >> resetState [
 
 	self clearUndoStack.
+	
+	"self inputMapping resetState."
 	selectionDownHistory := OrderedCollection new.
-	selection := self methods ifNotEmpty: #first ifEmpty: [nil].
-	colorPolicy := colorPolicy class new.
-	self mode: #command
+	selection := nil.
+	self mode: #command.
+	
+	colorPolicy := colorPolicy class new
 ]
 
 { #category : #actions }
@@ -1458,8 +1566,10 @@ SBEditor >> sandblockEditor [
 { #category : #actions }
 SBEditor >> save [
 	<action>
+	<inputAction>
 
-	self selection ifNotNil: [self save: self selectedArtefact tryFixing: true quick: false]
+	self interruptInputDuring: [
+		self selection ifNotNil: [self save: self selectedArtefact tryFixing: true quick: false]]
 ]
 
 { #category : #artefacts }
@@ -1515,10 +1625,11 @@ SBEditor >> selectArtefact [
 ]
 
 { #category : #selection }
-SBEditor >> selectClick: aBlock [
+SBEditor >> selectClick: aBlock at: aPoint [
 
-	selectionDownHistory removeAll.
-	self select: (aBlock == self selection ifTrue: [nil] ifFalse: [aBlock])
+	aBlock select.
+	inputMapping defaultState = #input
+		ifTrue: [self startInput: aBlock at: (aBlock currentTextMorph ifNotNil: [:m | m cursorIndexForPosition: aPoint] ifNil: [0]) replacingContents: false]
 ]
 
 { #category : #artefacts }
@@ -1579,6 +1690,7 @@ SBEditor >> startInput: aMorph at: aNumber replacingContents: aBoolean [
 
 	" needs to be set first, as startInputAt: may choose to immediately replace this "
 	self select: aMorph.
+	
 	currentInput := aMorph.
 	(aMorph startInputAt: aNumber replacingContents: aBoolean)
 		ifNotNil: [:cmd |
@@ -1668,8 +1780,11 @@ SBEditor >> toggleHelperTimer: aBoolean [
 { #category : #actions }
 SBEditor >> undo [
 	<action>
+	<inputAction>
 
 	| command |
+	self endInput.
+	
 	undoStack ifNotEmpty: [ | ret |
 		command := undoStack removeLast.
 		redoStack addLast: command.

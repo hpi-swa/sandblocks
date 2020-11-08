@@ -17,6 +17,12 @@ SBShortcut >> , aShortCut [
 ]
 
 { #category : #'as yet unclassified' }
+SBShortcut >> asCollection [
+
+	^ {self}
+]
+
+{ #category : #'as yet unclassified' }
 SBShortcut >> asSandblockShortcut [
 
 	^ self

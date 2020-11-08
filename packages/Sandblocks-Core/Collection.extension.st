@@ -11,3 +11,9 @@ Collection >> includesRepresentation: aSymbol [
 
 	^ self includes: aSymbol
 ]
+
+{ #category : #'*Sandblocks-Core' }
+Collection >> matchesEvent: anEvent [
+
+	^ self anySatisfy: [:shortcut | shortcut matchesEvent: anEvent]
+]

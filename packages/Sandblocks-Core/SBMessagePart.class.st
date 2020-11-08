@@ -52,6 +52,14 @@ SBMessagePart >> deleteAround [
 ]
 
 { #category : #'as yet unclassified' }
+SBMessagePart >> deleteBeforeCursor [
+	<inputAction>
+	
+	(self actualContents isEmpty and: [self isFirstPart]) ifTrue: [^ self messageSend tryDelete].
+	self sandblockEditor deleteBeforeCursor
+]
+
+{ #category : #'as yet unclassified' }
 SBMessagePart >> drawnColor [
 
 	^ self messageSend drawnColor alpha: 0
@@ -82,7 +90,7 @@ SBMessagePart >> initialize [
 	
 	self
 		addMorphBack: (text := SBOwnTextMorph new emphasis: TextEmphasis bold);
-		layoutPolicy: SBVerticalLayout new;
+		layoutPolicy: SBAlgebraLayout new;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
 ]
@@ -136,12 +144,9 @@ SBMessagePart >> isUnary [
 { #category : #'as yet unclassified' }
 SBMessagePart >> keyStroke: anEvent [
 
-	(anEvent keyCharacter = Character space or: [
+	"(anEvent keyCharacter = Character space or: [
 		self actualContents notEmpty and: [
-			self isBinary not and: [anEvent keyCharacter isSpecial]]]) ifTrue: [^ self wrapInMessageSend: anEvent].
-	
-	(anEvent keyCharacter = Character backspace and: [
-		self actualContents isEmpty and: [self isFirstPart]]) ifTrue: [^ self messageSend tryDelete].
+			self isBinary not and: [anEvent keyCharacter isSpecial]]]) ifTrue: [^ self wrapInMessageSend: anEvent]."
 	
 	((anEvent keyCharacter isAlphaNumeric or: [#($' $#) includes: anEvent keyCharacter]) and: [self isBinary]) ifTrue: [^ self continueInputInArgument: anEvent].
 	
@@ -154,7 +159,17 @@ SBMessagePart >> keyStroke: anEvent [
 		text keyStroke: anEvent.
 		(anEvent keyCharacter isSpecial and: [
 			self actualContents size = 1 and: [self isFirstPart]]) ifTrue: [^ self insertUnknownAfterAndInput: false].
-		self updateSuggestions]
+		^ self updateSuggestions].
+	
+	SBSmalltalkGrammarHandler new perform: anEvent keyCharacter for: self parentSandblock empty: false
+]
+
+{ #category : #'as yet unclassified' }
+SBMessagePart >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: {self firstSubmorph layoutCommands}
 ]
 
 { #category : #'as yet unclassified' }

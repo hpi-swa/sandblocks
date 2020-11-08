@@ -108,12 +108,6 @@ SBMessageSend >> contextAcceptedRepresentationAt: aNumber [
 		ifFalse: [#isSmalltalkExpression]
 ]
 
-{ #category : #accessing }
-SBMessageSend >> currentTextMorph [
-
-	^ signature currentTextMorph
-]
-
 { #category : #'as yet unclassified' }
 SBMessageSend >> deleteCommandFor: aBlock [
 
