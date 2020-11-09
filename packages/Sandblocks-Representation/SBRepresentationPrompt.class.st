@@ -69,6 +69,7 @@ SBRepresentationPrompt >> initialize [
 			bold);
 		addMorphBack: (SBTextBubble new
 			prefix: 'Filter: ';
+			when: #dismiss send: #close to: self;
 			when: #contentsChanged send: #updateFilter to: self;
 			when: #stopEditing send: #close to: self;
 			when: #keyStroke send: #filterKeyStroke: to: self);

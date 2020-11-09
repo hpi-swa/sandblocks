@@ -166,7 +166,6 @@ SBToggledCode >> initialize [
 	comment := SBTextBubble new layoutInset: (6 @ 2) withScalingFactor; colored: false.
 	
 	self
-		changeTableLayout;
 		layoutInset: 2 withScalingFactor;
 		cellGap: 4 withScalingFactor;
 		vResizing: #shrinkWrap;
@@ -205,6 +204,14 @@ SBToggledCode >> isInActiveBlockBody: aBlock [
 SBToggledCode >> isWatch [
 
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBToggledCode >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine])
 ]
 
 { #category : #accessing }

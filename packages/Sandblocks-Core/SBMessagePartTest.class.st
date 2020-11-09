@@ -35,7 +35,7 @@ SBMessagePartTest >> testChangeDoesNothing [
 	self editorFor: message.
 	message messageParts first select.
 	message messageParts first changeToUnknown.
-	self assert: message selector equals: 'yourself'
+	self assert: message messageParts first isMessagePart
 ]
 
 { #category : #'as yet unclassified' }

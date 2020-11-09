@@ -18,28 +18,6 @@ SBTextInputMapping >> handledEvent: anEvent in: anEditor [
 SBTextInputMapping >> registerDefaultShortcuts [
 
 	self
-		" modify general "
-		registerShortcut: $, do: #promptAction;
-		"registerShortcut: $c do: #changeToUnknown;"
-		registerShortcut: $C command do: #copyAround;
-		registerShortcut: $c command do: #copyToBuffer;
-		registerShortcut: $v command do: #pasteBelow;
-		"registerShortcut: $d do: #deleteAdjacent;"
-		"registerShortcut: $( do: #leftRotate;"
-		"registerShortcut: $. do: #addElement;"
-		registerShortcut: Character arrowLeft command withShift do: #swapLeft;
-		registerShortcut: Character arrowRight command withShift do: #swapRight;
-		"registerShortcut: $c command do: #copyString;
-		registerShortcut: $v command do: #pasteString;"
-		registerShortcut: $p do: #pasteBelow;
-		registerShortcut: $P do: #pasteAbove;
-		registerShortcut: $v do: #startOrAddToMultiSelection;
-		registerShortcut: $V command do: #startContinuousMultiSelection;
-		registerShortcut: $V do: #multiSelectChildren;
-		registerShortcut: $r do: #replaceWithCopyBuffer;
-		registerShortcut: Character backspace do: #deleteBlock;
-		registerShortcut: Character delete do: #deleteAround;
-
 		" modify smalltalk "
 		registerShortcut: $" do: #wrapInToggledCode;
 		registerShortcut: $D do: #insertLabelAbove;
@@ -78,28 +56,28 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $* command do: #insertElementBefore;
 		
 		" refactor "
-		registerShortcut: $T do: #extractMethod;
-		registerShortcut: $t do: #createEmptyMethod;
-		registerShortcut: $= do: #extractVariable;
+		registerShortcut: $T command do: #extractMethod;
+		registerShortcut: $t command do: #createEmptyMethod;
+		"registerShortcut: $= do: #extractVariable;"
 		
 		" debugging "
-		registerShortcut: $> do: #stepOver;
-		registerShortcut: $< do: #stepInto;
+		registerShortcut: $> command do: #stepOver;
+		registerShortcut: $< command do: #stepInto;
 		registerShortcut: $y command do: #stepThrough;
 		registerShortcut: $Y command do: #restartFrame;
-		registerShortcut: $e do: #focusErrors;
-		registerShortcut: $E do: #focusPreviousErrorFrame;
+		registerShortcut: $e command do: #focusErrors;
+		registerShortcut: $E command do: #focusPreviousErrorFrame;
 		
 		" tools "
-		registerShortcut: $W do: #wrapWithWatch;
-		registerShortcut: $w do: #wrapWithExampleWatch;
+		registerShortcut: $W command do: #wrapWithWatch;
+		registerShortcut: $w command do: #wrapWithExampleWatch;
 		registerShortcut: $p command do: #evaluateExpression;
 		registerShortcut: $d command do: #doExpression;
 		registerShortcut: $P command do: #debugExpression;
 		registerShortcut: $a command do: #addExample;
 		registerShortcut: $m command do: #browseImplementors;
 		registerShortcut: $n command do: #browseSenders;
-		registerShortcut: $x command do: #openOpenWindow;
+		registerShortcut: $o command do: #openOpenWindow;
 		registerShortcut: $b command do: #browse;
 		
 		" editor "
@@ -109,8 +87,8 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $r command do: #openRepl;
 		registerShortcut: $c command do: #openOpenWindow;
 		registerShortcut: $, command do: #promptMenu;
-		registerShortcut: $/ do: #startSearch;
-		registerShortcut: $n do: #nextSearchResult;
+		registerShortcut: $f command do: #startSearch;
+		registerShortcut: $g command do: #nextSearchResult;
 		registerShortcut: $S command do: #saveWorkspace;
 		registerShortcut: $O command do: #promptOpenWorkspace;
 		registerShortcut: $f command do: #toggleFullscreen;
@@ -127,13 +105,37 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character tab shift do: #inputPreviousUnknown;
 		registerShortcut: Character tab do: #inputNextUnknown;
 		registerShortcut: Character arrowUp do: #selectPreviousGroup;
-		registerShortcut: Character arrowDown do: #selectNextGroup
+		registerShortcut: Character arrowDown do: #selectNextGroup;
+		
+		registerShortcut: Character escape do: #dismiss;
+		
+		" modify general "
+		registerShortcut: $, do: #promptAction;
+		"registerShortcut: $c do: #changeToUnknown;"
+		registerShortcut: $C command do: #copyAround;
+		registerShortcut: $c command do: #copyToBuffer;
+		registerShortcut: $v command do: #pasteBelow;
+		"registerShortcut: $d do: #deleteAdjacent;"
+		"registerShortcut: $( do: #leftRotate;"
+		"registerShortcut: $. do: #addElement;"
+		registerShortcut: Character arrowLeft command withShift do: #swapLeft;
+		registerShortcut: Character arrowRight command withShift do: #swapRight;
+		"registerShortcut: $c command do: #copyString;
+		registerShortcut: $v command do: #pasteString;"
+		registerShortcut: $p do: #pasteBelow;
+		registerShortcut: $P do: #pasteAbove;
+		registerShortcut: $v do: #startOrAddToMultiSelection;
+		registerShortcut: $V command do: #startContinuousMultiSelection;
+		registerShortcut: $V do: #multiSelectChildren;
+		registerShortcut: $r do: #replaceWithCopyBuffer;
+		registerShortcut: Character backspace do: #deleteBlock;
+		registerShortcut: Character delete do: #deleteAround
 ]
 
 { #category : #'as yet unclassified' }
 SBTextInputMapping >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 
-	anEvent keyCharacter isAlphaNumeric ifTrue: [
+	(anEvent keyCharacter isAlphaNumeric and: [anEditor selection notNil]) ifTrue: [
 		anEditor startInput: anEditor selection at: 0 replacingContents: true.
 		anEditor selection keyStroke: anEvent.
 		^ aBlock value]

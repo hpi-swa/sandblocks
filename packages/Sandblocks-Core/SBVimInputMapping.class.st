@@ -86,7 +86,6 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $v do: #startOrAddToMultiSelection;
 		registerShortcut: $V command do: #startContinuousMultiSelection;
 		registerShortcut: $V do: #multiSelectChildren;
-		registerShortcut: Character escape do: #endMultiSelection;
 		registerShortcut: $r do: #replaceWithCopyBuffer;
 
 		" modify smalltalk "
@@ -160,7 +159,10 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $n do: #nextSearchResult;
 		registerShortcut: $S command do: #saveWorkspace;
 		registerShortcut: $O command do: #promptOpenWorkspace;
-		registerShortcut: $f command do: #toggleFullscreen
+		registerShortcut: $f command do: #toggleFullscreen;
+
+		registerShortcut: Character escape do: #endMultiSelection;
+		registerShortcut: Character escape do: #dismiss
 ]
 
 { #category : #'as yet unclassified' }

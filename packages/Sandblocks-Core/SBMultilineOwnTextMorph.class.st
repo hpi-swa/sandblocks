@@ -159,13 +159,6 @@ SBMultilineOwnTextMorph >> mouseMove: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBMultilineOwnTextMorph >> moveCursor: aNumber ifAtBound: aBlock [
-
-	((self cursor + aNumber) < 1 or: [(self cursor + aNumber) > (self contents size + 1)]) ifTrue: [^ aBlock value].
-	self moveCursor: aNumber selecting: ActiveEvent shiftPressed
-]
-
-{ #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> moveCursor: aNumber selecting: aBoolean [
 
 	(self hasSelection and: [aBoolean not]) ifTrue: [

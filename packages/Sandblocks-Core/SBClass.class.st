@@ -195,9 +195,9 @@ SBClass >> initialize [
 			layoutInset: 6 withScalingFactor;
 			font: (TextStyle default fontOfPointSize: 12));
 		addRow: 'SuperClass' with: (superClassName := SBClassNameInput new contents: 'Object');
-		addRow: 'Instance Variables:' with: (instanceVariables := SBNameList new useAlgebraLayout);
-		addRow: 'Class Variables:' with: (classVariables := SBNameList new useAlgebraLayout);
-		addRow: 'Pool Dictionaries:' with: (poolDictionaries := SBArray new useAlgebraLayout);
+		addRow: 'Instance Variables:' with: (instanceVariables := SBNameList new);
+		addRow: 'Class Variables:' with: (classVariables := SBNameList new);
+		addRow: 'Pool Dictionaries:' with: (poolDictionaries := SBArray new);
 		addRow: 'Category:' with: (category := SBTextBubble new);
 		attachDecorator: SBMoveDecorator new
 ]

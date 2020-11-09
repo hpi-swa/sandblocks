@@ -38,7 +38,7 @@ SBAlgebraLayoutTest >> testContainerBounds [
 
 	| doc a b container |
 	doc := SBAlgebraCommand container
-		morph: (container := Morph new);
+		morph: (container := Morph new hResizing: #shrinkWrap; vResizing: #shrinkWrap);
 		data: {
 			SBAlgebraCommand morph data: (a := Morph new extent: 80 @ 40).
 			SBAlgebraCommand hardLine.
@@ -56,7 +56,7 @@ SBAlgebraLayoutTest >> testContainerInset [
 	| doc a b container |
 	doc := SBAlgebraCommand group data: {
 		SBAlgebraCommand container
-			morph: (container := Morph new layoutInset: 10);
+			morph: (container := Morph new layoutInset: 10; hResizing: #shrinkWrap; vResizing: #shrinkWrap);
 			data: {SBAlgebraCommand morph data: (a := Morph new)}.
 		SBAlgebraCommand hardLine.
 		SBAlgebraCommand morph data: (b := Morph new)}.
@@ -73,7 +73,7 @@ SBAlgebraLayoutTest >> testContainerInsetMultipleChildren [
 	| doc a b container |
 	doc := SBAlgebraCommand group data: {
 		SBAlgebraCommand container
-			morph: (container := Morph new layoutInset: 30);
+			morph: (container := Morph new layoutInset: 30; hResizing: #shrinkWrap; vResizing: #shrinkWrap);
 			data: {
 				SBAlgebraCommand morph data: (a := Morph new).
 				SBAlgebraCommand hardLine.
@@ -91,7 +91,7 @@ SBAlgebraLayoutTest >> testContainerLeftInset [
 	| doc a b container |
 	doc := SBAlgebraCommand group data: {
 		SBAlgebraCommand container
-			morph: (container := Morph new layoutInset: (SBEdgeInsets left: 10));
+			morph: (container := Morph new layoutInset: (SBEdgeInsets left: 10); hResizing: #shrinkWrap; vResizing: #shrinkWrap);
 			data: {SBAlgebraCommand morph data: (a := Morph new)}.
 		SBAlgebraCommand hardLine.
 		SBAlgebraCommand morph data: (b := Morph new)}.
@@ -107,7 +107,7 @@ SBAlgebraLayoutTest >> testContainerWithLongerFirstChildAndInset [
 
 	| doc container |
 	doc := SBAlgebraCommand container
-		morph: (container := Morph new layoutInset: 10);
+		morph: (container := Morph new layoutInset: 10; hResizing: #shrinkWrap; vResizing: #shrinkWrap);
 		data: {
 			SBAlgebraCommand morph data: (Morph new width: 80).
 			SBAlgebraCommand hardLine.
@@ -197,7 +197,7 @@ SBAlgebraLayoutTest >> testNestedContainerBounds [
 
 	| doc a b container innerContainer |
 	doc := SBAlgebraCommand container
-		morph: (container := Morph new);
+		morph: (container := Morph new hResizing: #shrinkWrap; vResizing: #shrinkWrap);
 		data: {
 			SBAlgebraCommand morph data: (a := Morph new extent: 80 @ 40).
 			SBAlgebraCommand hardLine.
@@ -289,8 +289,8 @@ SBAlgebraLayoutTest >> testSequentialContainerLineHeight [
 
 	| doc a b |
 	doc := SBAlgebraCommand group data: {
-		SBAlgebraCommand container morph: (a := Morph new); data: {SBAlgebraCommand morph data: (Morph new extent: 10 @ 80)}.
-		SBAlgebraCommand container morph: (b := Morph new); data: {SBAlgebraCommand morph data: (Morph new extent: 10 @ 30)}}.
+		SBAlgebraCommand container morph: (a := Morph new hResizing: #shrinkWrap; vResizing: #shrinkWrap); data: {SBAlgebraCommand morph data: (Morph new extent: 10 @ 80)}.
+		SBAlgebraCommand container morph: (b := Morph new hResizing: #shrinkWrap; vResizing: #shrinkWrap); data: {SBAlgebraCommand morph data: (Morph new extent: 10 @ 30)}}.
 	
 	SBAlgebraLayout new layoutDocument: doc limit: 300.
 	self assert: 10 @ 80 equals: a extent.
@@ -302,11 +302,11 @@ SBAlgebraLayoutTest >> testWrapAsSecondChild [
 
 	| doc a b c |
 	doc := SBAlgebraCommand container
-		morph: Morph new;
+		morph: (Morph new hResizing: #shrinkWrap; vResizing: #shrinkWrap);
 		data: {
-			SBAlgebraCommand container morph: (a := Morph new); data: {SBAlgebraCommand morph data: (Morph new extent: 50 @ 20)}.
+			SBAlgebraCommand container morph: (a := Morph new hResizing: #shrinkWrap; vResizing: #shrinkWrap); data: {SBAlgebraCommand morph data: (Morph new extent: 50 @ 20)}.
 			SBAlgebraCommand container
-				morph: (Morph new);
+				morph: (Morph new hResizing: #shrinkWrap; vResizing: #shrinkWrap);
 				data: {
 					SBAlgebraCommand container
 						morph: Morph new;

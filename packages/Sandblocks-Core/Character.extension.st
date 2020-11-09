@@ -19,6 +19,12 @@ Character >> ctrl [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Character >> isLikelyUnmodifiedOnKeyboard [
+
+	^ self asInteger >= 32 and: [self asInteger < 255 and: [self asInteger ~= 127]]
+]
+
+{ #category : #'*Sandblocks-Core' }
 Character >> shift [
 
 	^ self asSandblockShortcut withShift

@@ -502,6 +502,11 @@ SBBlock >> detachDecorators: aDecoratorClass [
 ]
 
 { #category : #actions }
+SBBlock >> dismiss [
+	<action>
+]
+
+{ #category : #actions }
 SBBlock >> doExpression [
 	<action>
 

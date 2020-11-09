@@ -64,6 +64,13 @@ SBTextBubble >> currentTextMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBTextBubble >> dismiss [
+	<action>
+	
+	self triggerEvent: #dismiss
+]
+
+{ #category : #'as yet unclassified' }
 SBTextBubble >> drawnColor [
 
 	^ self colored ifTrue: [super drawnColor] ifFalse: [Color transparent]

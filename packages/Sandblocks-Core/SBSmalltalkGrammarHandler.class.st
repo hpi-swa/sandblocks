@@ -14,10 +14,10 @@ SBSmalltalkGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 		char = $' ifTrue: [^ self replace: aBlock with: (SBString new contents: '')].
 		char = $# ifTrue: [^ self replace: aBlock with: (SBSymbol new contents: '')].
 		((char = Character space or: [char = Character cr]) and: [aBlock isStatement]) ifTrue: [^ self emptyLine].
-		(char = $: and: [self parentSandblock isBlockBody and: [self parentSandblock isMethodBody not]]) ifTrue: [ | block |
-			block := self parentSandblock.
-			self parentSandblock statements size > 1 ifTrue: [
-				self sandblockEditor do: ((SBDeleteCommand newFor: self containingArtefact) target: self; shouldMergeWithNext: true)].
+		(char = $: and: [aBlock parentSandblock isBlockBody and: [aBlock parentSandblock isMethodBody not]]) ifTrue: [ | block |
+			block := aBlock parentSandblock.
+			aBlock parentSandblock statements size > 1 ifTrue: [
+				aBlock sandblockEditor do: ((SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock; shouldMergeWithNext: true)].
 			^ block addBlockArgument].
 	char = $< ifTrue: [^ self replaceWithPragma].
 	char = Character backspace ifTrue: [^ self tryDelete: aBlock]].

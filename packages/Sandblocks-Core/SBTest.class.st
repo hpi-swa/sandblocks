@@ -8,7 +8,7 @@ Class {
 SBTest >> editorFor: aBlock [
 
 	| editor |
-	editor := SBEditor new.
+	editor := SBEditor new useVimInput.
 	editor openMorphInView: (SBMethod new
 		selector: #test arguments: #() class: nil class;
 		body: (SBBlockBody new statements: {aBlock})).
@@ -19,5 +19,5 @@ SBTest >> editorFor: aBlock [
 { #category : #'as yet unclassified' }
 SBTest >> keyboardEvent: aCharacter [
 
-	^ KeyboardEvent new setType: #keyStroke buttons: 0 position: 0 @ 0 keyValue: aCharacter hand: nil stamp: nil
+	^ KeyboardEvent new setType: #keystroke buttons: 0 position: 0 @ 0 keyValue: aCharacter hand: nil stamp: nil
 ]

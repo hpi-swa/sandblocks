@@ -591,6 +591,12 @@ SBEditor >> clearInput [
 	self textMorph clear
 ]
 
+{ #category : #shortcuts }
+SBEditor >> clearShortcuts [
+
+	self shortcutsOverride: OrderedCollection new
+]
+
 { #category : #'initialize-release' }
 SBEditor >> clearUndoStack [
 
@@ -1355,14 +1361,21 @@ SBEditor >> parentSandblock [
 ]
 
 { #category : #shortcuts }
-SBEditor >> perform: anAction for: aBlock [
+SBEditor >> perform: anAction for: aBlock event: anEvent [
+	"
+	we used to have a distinction in action that are valid only in input or select mode
+	
+	((mode = #selection or: [mode = #continuousSelection]) and: [(method pragmaAt: #multiSelectAction) notNil]) or: [
+		(mode = #command and: [
+		(method pragmaAt: #multiSelectAction) notNil or: [(method pragmaAt: #action) notNil]]) or: [
+		mode = #input and: [(method pragmaAt: #inputAction) notNil]]]]."
 
-	(aBlock lookupAction: anAction) ifNotNil: [:method |
-		((((mode = #selection or: [mode = #continuousSelection]) and: [(method pragmaAt: #multiSelectAction) notNil]) or: [
-			(mode = #command and: [
-				(method pragmaAt: #multiSelectAction) notNil or: [(method pragmaAt: #action) notNil]]) or: [
-				mode = #input and: [(method pragmaAt: #inputAction) notNil]]]) and: [
-			(method pragmaAt: #actionValidIf:) ifNotNil: [:pragma | aBlock perform: pragma arguments first] ifNil: [true]]) ifTrue: [
+	(aBlock lookupAction: anAction) ifNotNil: [:method | | validShortcut validMode validInvocation |
+		validShortcut := mode ~= #input or: [anEvent anyModifierKeyPressed or: [anEvent keyCharacter isLikelyUnmodifiedOnKeyboard not]].
+		validMode := method pragmas anySatisfy: [:p | (mode = #input ifTrue: [#(#action #inputAction #multiSelectAction)] ifFalse: [#(#action #multiSelectAction)]) includes: p keyword].
+		validInvocation := (method pragmaAt: #actionValidIf:) ifNotNil: [:pragma | aBlock perform: pragma arguments first] ifNil: [true].
+		
+		(validShortcut and: [validMode and: [validInvocation]]) ifTrue: [
 			aBlock performAction: anAction.
 			^ true]].
 	^ false
@@ -1373,9 +1386,9 @@ SBEditor >> performShortcutFor: anEvent [
 
 	self shortcuts do: [:assoc |
 		(assoc key matchesEvent: anEvent) ifTrue: [
-			(self selection notNil and: [self perform: assoc value for: self selection]) ifTrue: [^ true].
+			(self selection notNil and: [self perform: assoc value for: self selection event: anEvent]) ifTrue: [^ true].
 			globalShortcutListeners do: [:listener |
-				(self perform: assoc value for: listener) ifTrue: [^ true]]]].
+				(self perform: assoc value for: listener event: anEvent) ifTrue: [^ true]]]].
 	
 	mode = #input ifTrue: [
 		currentInput keyStroke: anEvent.
@@ -1480,6 +1493,12 @@ SBEditor >> refocus [
 SBEditor >> registerGlobalShortcutListener: aMorph [
 
 	globalShortcutListeners add: aMorph
+]
+
+{ #category : #shortcuts }
+SBEditor >> registerShortcut: aShortcut do: aSymbol [
+
+	self shortcuts add: aShortcut asSandblockShortcut -> aSymbol
 ]
 
 { #category : #helper }
@@ -1627,8 +1646,7 @@ SBEditor >> selectArtefact [
 SBEditor >> selectClick: aBlock at: aPoint [
 
 	aBlock select.
-	inputMapping defaultState = #input
-		ifTrue: [self startInput: aBlock at: (aBlock currentTextMorph ifNotNil: [:m | m cursorIndexForPosition: aPoint] ifNil: [0]) replacingContents: false]
+	self maybeStartInputNear: aPoint
 ]
 
 { #category : #artefacts }
@@ -1820,6 +1838,20 @@ SBEditor >> updateSelectionLabel [
 SBEditor >> updateVerticalSelectionPosition [
 
 	verticalSelectionPosition := selection center x - (selection containingArtefact ifNotNil: [:a | a left] ifNil: [0]).
+]
+
+{ #category : #input }
+SBEditor >> useTextInput [
+
+	inputMapping := SBTextInputMapping new.
+	inputMapping applyFor: self
+]
+
+{ #category : #input }
+SBEditor >> useVimInput [
+
+	inputMapping := SBVimInputMapping new.
+	inputMapping applyFor: self
 ]
 
 { #category : #accessing }

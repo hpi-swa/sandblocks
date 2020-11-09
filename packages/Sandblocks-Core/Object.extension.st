@@ -3,7 +3,10 @@ Extension { #name : #Object }
 { #category : #'*Sandblocks-Core' }
 Object >> anyRepresentationThat: aSymbol [
 
-	^ self newFirstSafeOptionFrom: (self representationsThat: aSymbol)
+	| options |
+	options := self representationsThat: aSymbol.
+	options ifEmpty: [^ nil].
+	^ self newFirstSafeOptionFrom: options
 ]
 
 { #category : #'*Sandblocks-Core' }
