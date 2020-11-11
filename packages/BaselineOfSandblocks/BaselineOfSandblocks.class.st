@@ -13,7 +13,7 @@ BaselineOfSandblocks >> baseline: spec [
 			baseline: 'StatisticsWorkbench' with: [spec repository: 'github://hpi-swa-teaching/StatisticsWorkbench:dev/packages'];
 			package: 'SVG-Morphic' with: [spec repository: 'http://www.squeaksource.com/SVGMorph'];
 			
-			package: 'Sandblocks-Core' with: [spec requires: #('SVG-Morphic')];
+			package: 'Sandblocks-Core' with: [spec requires: #('SVG-Morphic' 'Sandblocks-Morphs')];
 			package: 'Sandblocks-Explorer' with: [spec requires: 'StatisticsWorkbench'];
 			package: 'Sandblocks-Watch';
 			package: 'Sandblocks-Debugger';
