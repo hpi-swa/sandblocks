@@ -25,7 +25,6 @@ SBBlockRow >> initialize [
 	
 	self
 		color: Color transparent;
-		layoutInset: 2 * self scalingFactor;
 		cellGap: 2 * self scalingFactor;
 		extent: 0 @ 0;
 		layoutPolicy: SBAlgebraLayout new;

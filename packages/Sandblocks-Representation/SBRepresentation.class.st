@@ -61,24 +61,16 @@ SBRepresentation class >> priority [
 ]
 
 { #category : #'as yet unclassified' }
-SBRepresentation class >> representationsDo: aBlock [
-
-	self allSubclassesDo: aBlock.
-	SBSubstitution allSubclassesDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBRepresentation class >> representationsDo: aBlock for: anObject [
 
-	| n |
 	self allSubclassesDo: aBlock.
 	SBSubstitution allSubclassesDo: aBlock.
 	
-	n := anObject class allInstVarNames.
+	"n := anObject class allInstVarNames.
 	n size > 0 ifTrue: [
 		n do: [:name |
 			(anObject respondsTo: name asSymbol) ifTrue: [
-				aBlock value: (SBExtractFieldRepresentation new name: name asSymbol)]]]
+				aBlock value: (SBExtractFieldRepresentation new name: name asSymbol)]]]"
 ]
 
 { #category : #'as yet unclassified' }

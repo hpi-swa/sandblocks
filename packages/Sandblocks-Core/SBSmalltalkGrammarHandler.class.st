@@ -19,7 +19,7 @@ SBSmalltalkGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 			aBlock parentSandblock statements size > 1 ifTrue: [
 				aBlock sandblockEditor do: ((SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock; shouldMergeWithNext: true)].
 			^ block addBlockArgument].
-	char = $< ifTrue: [^ self replaceWithPragma].
+	char = $< ifTrue: [^ self replaceWithPragma: aBlock].
 	char = Character backspace ifTrue: [^ self tryDelete: aBlock]].
 	
 	char = Character space ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer receiver: inner selector: '' arguments: #()] with: SBMessageSend new].
@@ -41,6 +41,19 @@ SBSmalltalkGrammarHandler >> replace: aBlock with: aMorph [
 	
 	aMorph moveCursorTo: 9e8.
 	aMorph sandblockEditor replaceInput: aMorph
+]
+
+{ #category : #'as yet unclassified' }
+SBSmalltalkGrammarHandler >> replaceWithPragma: aBlock [
+
+	| pragma |
+	pragma := SBPragma new.
+	aBlock stopEditing.
+	aBlock sandblockEditor do: ((SBReplaceCommand newFor: aBlock containingArtefact)
+		target: aBlock;
+		replacer: pragma;
+		shouldMergeWithNext: true).
+	^ pragma sandblockEditor startInput: pragma at: 1 replacingContents: true
 ]
 
 { #category : #'as yet unclassified' }

@@ -25,7 +25,7 @@ SBTemporaries >> initialize [
 
 	super initialize.
 	
-	self layoutInset: (4 @ 2) withScalingFactor
+
 ]
 
 { #category : #'as yet unclassified' }
@@ -35,9 +35,9 @@ SBTemporaries >> isTemporaries [
 ]
 
 { #category : #'as yet unclassified' }
-SBTemporaries >> visible [
+SBTemporaries >> layoutInset [
 
-	^ self hasSubmorphs
+	^ self hasSubmorphs ifTrue: [(4 @ 2) withScalingFactor] ifFalse: [0]
 ]
 
 { #category : #'as yet unclassified' }

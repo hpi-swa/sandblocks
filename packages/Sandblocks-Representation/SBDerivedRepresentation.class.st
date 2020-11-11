@@ -68,13 +68,7 @@ SBDerivedRepresentation >> prettyName [
 { #category : #'as yet unclassified' }
 SBDerivedRepresentation >> printOn: aStream [
 
-	aStream nextPut: $(.
-	aStream nextPutAll: self className.
-	aStream space.
-	self from printOn: aStream.
-	aStream nextPutAll: ' -> '.
-	self to printOn: aStream.
-	aStream nextPut: $).
+	aStream nextPutAll: self prettyName
 ]
 
 { #category : #'as yet unclassified' }

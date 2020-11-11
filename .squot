@@ -12,5 +12,9 @@ OrderedDictionary {
 	'packages/Sandblocks-Drawing' : #SquotTonelSerializer,
 	'packages/Sandblocks-Graph' : #SquotTonelSerializer,
 	'packages/ObservableExperiment' : #SquotTonelSerializer,
-	'packages/Sandblocks-Babylonian' : #SquotTonelSerializer
+	'packages/Sandblocks-Babylonian' : #SquotTonelSerializer,
+	'packages/Sandblocks-Debugger' : #SquotTonelSerializer,
+	'packages/Sandblocks-Layout' : #SquotTonelSerializer,
+	'packages/Sandblocks-Morphs' : #SquotTonelSerializer,
+	'packages/Sandblocks-Utils' : #SquotTonelSerializer
 }

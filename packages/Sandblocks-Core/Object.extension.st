@@ -127,7 +127,7 @@ Object >> representations [
 { #category : #'*Sandblocks-Core' }
 Object >> representationsDo: aBlock [
 
-	^ SBRepresentation representationsDo: [:class | (class matches: self) ifTrue: [aBlock value: class]]
+	^ SBRepresentation representationsDo: [:class | (class matches: self) ifTrue: [aBlock value: class]] for: self
 ]
 
 { #category : #'*Sandblocks-Core' }

@@ -54,14 +54,9 @@ SBPragma >> initialize [
 
 	super initialize.
 	self
-		listDirection: #leftToRight;
-		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap;
 		addMorphBack: (signature := SBSignature new
-			layoutPolicy: SBKeywordMessageLayout new;
 			selector: 'pragma';
-			yourself);
-		layoutPolicy: SBHorizontalLayout new
+			yourself)
 ]
 
 { #category : #'as yet unclassified' }
@@ -80,6 +75,14 @@ SBPragma >> isPragma [
 SBPragma >> keyStroke: anEvent [
 
 	signature keyStroke: anEvent
+]
+
+{ #category : #'as yet unclassified' }
+SBPragma >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: {self firstSubmorph layoutCommands}
 ]
 
 { #category : #'as yet unclassified' }
