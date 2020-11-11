@@ -19,6 +19,7 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Debugger';
 			package: 'Sandblocks-Utils';
 			package: 'Sandblocks-Layout';
+			package: 'Sandblocks-Morphs';
 			package: 'Sandblocks-Drawing';
 			package: 'Sandblocks-Compiler';
 			package: 'Sandblocks-Format';
@@ -28,7 +29,7 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-ActiveExpression' with: [spec requires: #('default' 'ActiveExpressions')];
 			package: 'JumpingCubes' with: [spec requires: #('Sandblocks-ActiveExpression')].
 		spec
-			group: 'default' with: #('Sandblocks-Core' 'Sandblocks-Layout' 'Sandblocks-Utils' 'Sandblocks-Debugger' 'Sandblocks-Explorer' 'Sandblocks-Watch' 'Sandblocks-Format' 'Sandblocks-Drawing' 'Sandblocks-Representation' 'Sandblocks-Compiler' 'Sandblocks-Babylonian');
+			group: 'default' with: #('Sandblocks-Core' 'Sandblocks-Layout' 'Sandblocks-Utils' 'Sandblocks-Debugger' 'Sandblocks-Morphs' 'Sandblocks-Explorer' 'Sandblocks-Watch' 'Sandblocks-Format' 'Sandblocks-Drawing' 'Sandblocks-Representation' 'Sandblocks-Compiler' 'Sandblocks-Babylonian');
 			group: 'tutorial' with: #('default' 'Sandblocks-Tutorial');
 			group: 'withActiveExpressions' with: #('Sandblocks-ActiveExpression' 'JumpingCubes')]
 ]
