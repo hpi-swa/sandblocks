@@ -67,7 +67,7 @@ SBEditor class >> defaultColorPolicy: aColorPolicyClass [
 { #category : #'initialize-release' }
 SBEditor class >> initialize [
 
-	self registerDefaultShortcuts
+	self newInputMapping applyFor: self
 ]
 
 { #category : #'initialize-release' }
@@ -84,7 +84,7 @@ SBEditor class >> newFor: aMethodOrClass [
 { #category : #'initialize-release' }
 SBEditor class >> newInputMapping [
 
-	^ (InputMappingClass ifNil: [SBInputMapping]) new
+	^ (InputMappingClass ifNil: [SBVimInputMapping]) new
 ]
 
 { #category : #'initialize-release' }
@@ -268,7 +268,8 @@ SBEditor class >> shortcutsForAction: anAction [
 SBEditor class >> useInputMapping: anInputMappingClass [
 	" self useInputMapping: SBTextInputMapping "
 
-	InputMappingClass := anInputMappingClass
+	InputMappingClass := anInputMappingClass.
+	anInputMappingClass new applyFor: self
 ]
 
 { #category : #actions }
