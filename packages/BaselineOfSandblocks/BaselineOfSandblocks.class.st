@@ -14,8 +14,8 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'SVG-Morphic' with: [spec repository: 'http://www.squeaksource.com/SVGMorph'];
 			
 			package: 'Sandblocks-Core' with: [spec requires: #('SVG-Morphic' 'Sandblocks-Morphs' 'Sandblocks-Layout')];
-			package: 'Sandblocks-Explorer' with: [spec requires: 'StatisticsWorkbench'];
-			package: 'Sandblocks-Watch' with: [spec requires: 'Sandblocks-Morphs'];
+			package: 'Sandblocks-Explorer' with: [spec requires: #('Sandblocks-Core' 'StatisticsWorkbench')];
+			package: 'Sandblocks-Watch' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-Debugger' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-Utils';
 			package: 'Sandblocks-Layout';
