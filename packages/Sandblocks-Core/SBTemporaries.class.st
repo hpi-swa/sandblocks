@@ -5,20 +5,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBTemporaries >> addedMorph: aMorph [
-
-	super addedMorph: aMorph.
-	
-	self triggerEvent: #visibilityChanged
-]
-
-{ #category : #'as yet unclassified' }
-SBTemporaries >> childSandblocksDo: aBlock [
-
-	self submorphsDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBTemporaries >> drawOn: aCanvas [
 
 	self submorphCount > 0 ifTrue: [ | inset fixWidth font color |

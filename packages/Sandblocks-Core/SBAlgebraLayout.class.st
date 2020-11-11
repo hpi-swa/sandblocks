@@ -133,7 +133,6 @@ SBAlgebraLayout >> layoutDocument: command at: aState limit: maxRight wrap: aWra
 			state := self layoutDocument: (SBAlgebraCommand group data: command data) at: state limit: maxRight wrap: aWrapBoolean.
 			state startX: state startX - self indent].
 		[#container] -> [ | inset |
-			measure ifFalse: [command morph position: aState offset].
 			inset := command morph layoutInset asEdgeInsets.
 			state := self
 				layoutDocument: (SBAlgebraCommand group data: command data)
