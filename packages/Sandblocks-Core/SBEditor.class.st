@@ -1864,13 +1864,12 @@ SBEditor >> verticalSelectionPosition [
 { #category : #actions }
 SBEditor >> waitForLetterDo: aBlock [
 
-	| delay keyEvent |
+	| delay character |
 	delay := Delay forMilliseconds: 50.
-	[Sensor anyButtonPressed not and: [(keyEvent := Sensor peekKeyboardEvent) isNil]]
-		whileTrue: [delay wait].
-	keyEvent ifNotNil: [ | letter |
-		letter := (ActiveHand generateKeyboardEvent: keyEvent) keyCharacter.
-		letter isLetter ifTrue: [aBlock value: letter]]
+	[
+		Sensor anyButtonPressed not and: [(character := Sensor peekKeyboard) isNil]] whileTrue: [delay wait].
+	character ifNotNil: [
+		character isLetter ifTrue: [aBlock value: character]]
 ]
 
 { #category : #actions }
