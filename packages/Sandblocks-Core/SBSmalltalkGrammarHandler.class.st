@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBSmalltalkGrammarHandler >> emptyLine: aBlock [
+	<action>
+	<actionValidIf: #isStatement>
+	
+	aBlock sandblockEditor do: ((SBReplaceCommand newFor: aBlock containingArtefact)
+		target: aBlock;
+		replacer: SBEmptyLine new)
+]
+
+{ #category : #'as yet unclassified' }
 SBSmalltalkGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 
 	aBoolean ifTrue: [
@@ -13,7 +23,7 @@ SBSmalltalkGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 		char = $$ ifTrue: [^ self replace: aBlock with: (SBCharacter new contents: '')].
 		char = $' ifTrue: [^ self replace: aBlock with: (SBString new contents: '')].
 		char = $# ifTrue: [^ self replace: aBlock with: (SBSymbol new contents: '')].
-		((char = Character space or: [char = Character cr]) and: [aBlock isStatement]) ifTrue: [^ self emptyLine].
+		((char = Character space or: [char = Character cr]) and: [aBlock isStatement]) ifTrue: [^ self emptyLine: aBlock].
 		(char = $: and: [aBlock parentSandblock isBlockBody and: [aBlock parentSandblock isMethodBody not]]) ifTrue: [ | block |
 			block := aBlock parentSandblock.
 			aBlock parentSandblock statements size > 1 ifTrue: [

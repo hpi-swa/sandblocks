@@ -32,14 +32,20 @@ SBReachabilityColorPolicy >> colorForBlock: aBlock [
 { #category : #'as yet unclassified' }
 SBReachabilityColorPolicy >> hash: aMethod [
 
-	^ aMethod selector hash bitXor: aMethod methodClass hash
+	^ aMethod "aMethod selector hash bitXor: aMethod methodClass hash"
 ]
 
 { #category : #'as yet unclassified' }
 SBReachabilityColorPolicy >> initialize [
 
 	super initialize.
-	methods := IdentityDictionary new
+	methods := Dictionary new
+]
+
+{ #category : #private }
+SBReachabilityColorPolicy >> methods [
+
+	^ methods
 ]
 
 { #category : #'as yet unclassified' }
@@ -53,6 +59,22 @@ SBReachabilityColorPolicy >> parentWasReached: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBReachabilityColorPolicy >> reached: aNumber in: aCompiledMethod [
+
+	| method pc |
+	aNumber isNumber
+		ifTrue: [
+			pc := aNumber.
+			method := aCompiledMethod]
+		ifFalse: [
+			pc := aNumber value.
+			method := aNumber key].
+	
+	methods at: (self hash: method) ifPresent: [:pcs | (pcs includes: pc) ifTrue: [^ true]].
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBReachabilityColorPolicy >> report: aMethod pc: aNumber [
 
 	(methods at: (self hash: aMethod) ifAbsentPut: [IdentitySet new]) add: aNumber
@@ -61,6 +83,5 @@ SBReachabilityColorPolicy >> report: aMethod pc: aNumber [
 { #category : #'as yet unclassified' }
 SBReachabilityColorPolicy >> wasReached: aBlock [
 
-	methods at: (self hash: aBlock containingArtefact compiledMethod) ifPresent: [:pcs | (pcs includes: aBlock pc) ifTrue: [^ true]].
-	^ false
+	^ self reached: aBlock pc in: aBlock containingArtefact compiledMethod
 ]
