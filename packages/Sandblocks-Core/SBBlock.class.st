@@ -708,6 +708,22 @@ SBBlock >> focusAfterDeleteIfNone: aBlock [
 	^ block isInWorld ifTrue: [block] ifFalse: [aBlock value]
 ]
 
+{ #category : #actions }
+SBBlock >> focusNextSuggestion [
+	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
+	
+	self suggestionMenuDo: #next
+]
+
+{ #category : #actions }
+SBBlock >> focusPreviousSuggestion [
+	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
+	
+	self suggestionMenuDo: #previous
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> foregroundColor [
 
@@ -780,6 +796,12 @@ SBBlock >> hasChildSandblocks [
 
 	self childSandblocksDo: [:b | ^ true].
 	^ false
+]
+
+{ #category : #testing }
+SBBlock >> hasCurrentTextMorph [
+
+	^ self currentTextMorph notNil
 ]
 
 { #category : #decorators }

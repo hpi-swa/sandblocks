@@ -40,6 +40,10 @@ SBVimInputMapping >> initialize [
 SBVimInputMapping >> registerDefaultShortcuts [
 
 	self
+		" auto completion "
+		registerShortcut: $j command do: #focusNextSuggestion;
+		registerShortcut: $k command do: #focusPreviousSuggestion;
+		
 		" navigation "
 		registerShortcut: $h do: #selectPrevious;
 		registerShortcut: $l do: #selectNext;
@@ -112,8 +116,6 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $a command do: #moveCursorToStart;
 		registerShortcut: $e command do: #moveCursorToEnd;
 		registerShortcut: $x command do: #clearInput;
-		registerShortcut: $j command do: #focusNextSuggestion;
-		registerShortcut: $k command do: #focusPreviousSuggestion;
 		registerShortcut: $1 command do: #useFirstArgument;
 		registerShortcut: $2 command do: #useSecondArgument;
 		registerShortcut: $3 command do: #useThirdArgument;
