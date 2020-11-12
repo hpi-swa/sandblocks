@@ -4,7 +4,6 @@ OrderedDictionary {
 	'packages/Sandblocks-Explorer' : #SquotTonelSerializer,
 	'packages/Sandblocks-Compiler' : #SquotTonelSerializer,
 	'packages/Sandblocks-Tutorial' : #SquotTonelSerializer,
-	'packages/Sandblocks-Example' : #SquotTonelSerializer,
 	'packages/Sandblocks-Watch' : #SquotTonelSerializer,
 	'packages/BaselineOfSandblocks' : #SquotTonelSerializer,
 	'packages/JumpingCubes' : #SquotTonelSerializer,
