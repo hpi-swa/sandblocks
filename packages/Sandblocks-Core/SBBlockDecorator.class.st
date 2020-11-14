@@ -84,3 +84,9 @@ SBBlockDecorator >> uninstallEventBroadcaster [
 
 	self morph eventHandler removeActionsWithReceiver: self
 ]
+
+{ #category : #drawing }
+SBBlockDecorator >> world [
+
+	^ self morph ifNotNil: [:m | m world]
+]
