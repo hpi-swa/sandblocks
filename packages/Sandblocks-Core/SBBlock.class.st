@@ -629,6 +629,7 @@ SBBlock >> evaluate [
 { #category : #actions }
 SBBlock >> evaluateExpression [
 	<action>
+	<actionValidIf: #isExpression>
 
 	| result explorer |
 	result := self evaluate.

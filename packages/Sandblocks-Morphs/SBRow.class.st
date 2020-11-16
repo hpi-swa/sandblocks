@@ -9,8 +9,6 @@ SBRow >> initialize [
 
 	super initialize.
 	
-	hideWhenEmpty := false.
-	
 	self
 		extent: 0 @ 0;
 		color: Color transparent;

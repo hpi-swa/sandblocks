@@ -11,6 +11,7 @@ BaselineOfSandblocks >> baseline: spec [
 		spec
 			baseline: 'ActiveExpressions' with: [spec repository: 'github://active-expressions/active-expressions-squeak:master/src'];
 			baseline: 'StatisticsWorkbench' with: [spec repository: 'github://hpi-swa-teaching/StatisticsWorkbench:dev/packages'];
+			baseline: 'RatPack' with: [spec repository: 'github://hpi-swa-teaching/RatPack:develop/packages'];
 			package: 'SVG-Morphic' with: [spec repository: 'http://www.squeaksource.com/SVGMorph'];
 			
 			package: 'Sandblocks-Core' with: [spec requires: #('SVG-Morphic' 'Sandblocks-Morphs' 'Sandblocks-Layout')];
@@ -26,12 +27,15 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Babylonian' with: [spec requires: #('Sandblocks-Core')];
 			package: 'Sandblocks-Tutorial' with: [spec requires: 'default'];
 			package: 'Sandblocks-Representation';
+			
+			package: 'Sandblocks-RatPack' with: [spec requires: #('default' 'RatPack')];
 			package: 'Sandblocks-ActiveExpression' with: [spec requires: #('default' 'ActiveExpressions')];
 			package: 'JumpingCubes' with: [spec requires: #('Sandblocks-ActiveExpression')].
 		spec
 			group: 'default' with: #('Sandblocks-Core' 'Sandblocks-Layout' 'Sandblocks-Utils' 'Sandblocks-Debugger' 'Sandblocks-Morphs' 'Sandblocks-Explorer' 'Sandblocks-Watch' 'Sandblocks-Format' 'Sandblocks-Drawing' 'Sandblocks-Representation' 'Sandblocks-Compiler' 'Sandblocks-Babylonian');
 			group: 'tutorial' with: #('Sandblocks-Tutorial');
-			group: 'withActiveExpressions' with: #('Sandblocks-ActiveExpression' 'JumpingCubes')]
+			group: 'withActiveExpressions' with: #('Sandblocks-ActiveExpression' 'JumpingCubes');
+			group: 'withRatPack' with: #('Sandblocks-RatPack')]
 ]
 
 { #category : #baseline }

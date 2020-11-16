@@ -208,12 +208,6 @@ SBBasicMethod >> currentSelector: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBBasicMethod >> currentTextMorph [
-
-	^ self subclassResponsibility
-]
-
-{ #category : #'as yet unclassified' }
 SBBasicMethod >> declarations [
 
 	^ self arguments, self instanceVariables
@@ -471,6 +465,12 @@ SBBasicMethod >> postDuplicateSelf [
 		hasUnsavedChanges: true;
 		detachDecorators: SBMoveDecorator;
 		attachDecorator: SBMoveDecorator new
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> pragmas [
+
+	^ self statements select: [:s | s isPragma]
 ]
 
 { #category : #'as yet unclassified' }

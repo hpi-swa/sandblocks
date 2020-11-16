@@ -14,15 +14,18 @@ Class {
 { #category : #'as yet unclassified' }
 SBTestCase class >> matches: aMethodBlock [
 
-	^ aMethodBlock methodClass isTestClass and: [aMethodBlock selector asSymbol isTestSelector and: [aMethodBlock arguments isEmpty]]
+	^ (super matches: aMethodBlock) and: [aMethodBlock methodClass isTestClass and: [aMethodBlock selector asSymbol isTestSelector and: [aMethodBlock arguments isEmpty]]]
 ]
 
 { #category : #'as yet unclassified' }
-SBTestCase class >> newFor: aMethodBlock [
+SBTestCase class >> newFor: anObject [
 
+	| block |
+	block := anObject asSandblock.
 	^ self new
-		selector: aMethodBlock selector arguments: aMethodBlock arguments class: aMethodBlock methodClass;
-		body: aMethodBlock body
+		selector: block selector arguments: block arguments class: block methodClass;
+		body: block body;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }

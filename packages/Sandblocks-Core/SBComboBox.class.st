@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBComboBox >> display: anObject [
+
+	^ anObject printString
+]
+
+{ #category : #'as yet unclassified' }
 SBComboBox >> object [
 
 	^ object
@@ -17,7 +23,7 @@ SBComboBox >> object [
 SBComboBox >> object: anObject [
 
 	object := anObject.
-	self contents: object printString
+	self contents: (self display: object)
 ]
 
 { #category : #'as yet unclassified' }

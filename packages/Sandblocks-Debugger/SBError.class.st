@@ -280,7 +280,7 @@ SBError >> updateExplorers [
 			stream nextPut: name -> (context debuggerMap namedTempAt: index in: context)]])) toggleCollapsed).
 	
 	(explorer ifNotNil: #object) == context receiver
-		ifTrue: [explorer update]
+		ifTrue: ["TODO: explorer update"]
 		ifFalse: [
 			explorer ifNotNil: #delete.
 			self addMorphBack: (explorer := SBExplorer on: context receiver) toggleCollapsed]
