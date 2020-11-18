@@ -1406,10 +1406,10 @@ SBBlock >> pasteAboveOrBelow: anAboveBoolean [
 		active: 2
 		do: {
 			[
-				self sandblockEditor do: (SBCombinedCommand newWith: (copyBuffer submorphs reversed collect: [:target | | index adjacent morph |
-					target := self parentThatAccepts: target ifNone: [^ self].
+				self sandblockEditor do: (SBCombinedCommand newWith: (copyBuffer submorphs reversed collect: [:target | | index adjacent morph actualTarget |
+					actualTarget := self parentThatAccepts: target ifNone: [^ self].
 					index := adjacent getIndexInOwner.
-					morph := target veryDeepCopy
+					morph := actualTarget veryDeepCopy
 						topCenter: self bottomCenter;
 						postDuplicate;
 						yourself.
