@@ -58,7 +58,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		" refactor "
 		registerShortcut: $T command do: #extractMethod;
 		registerShortcut: $t command do: #createEmptyMethod;
-		"registerShortcut: $= do: #extractVariable;"
+		registerShortcut: $= do: #extractVariable;
 		
 		" debugging "
 		registerShortcut: $> command do: #stepOver;
@@ -136,7 +136,8 @@ SBTextInputMapping >> registerDefaultShortcuts [
 SBTextInputMapping >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 
 	(anEvent keyCharacter isAlphaNumeric and: [anEditor selection notNil]) ifTrue: [
-		anEditor startInput: anEditor selection at: 0 replacingContents: true.
+		"anEditor startInput: anEditor selection at: 0 replacingContents: true."
+		anEditor selection changeToUnknown.
 		anEditor selection keyStroke: anEvent.
 		^ aBlock value]
 ]

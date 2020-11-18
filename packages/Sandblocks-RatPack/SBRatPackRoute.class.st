@@ -99,6 +99,13 @@ SBRatPackRoute >> methodInput [
 ]
 
 { #category : #'as yet unclassified' }
+SBRatPackRoute >> openRequestTracker [
+	<action>
+	
+	self sandblockEditor openMorphInView: (SBRatPackRequestTracker new serverClass: self methodClass)
+]
+
+{ #category : #'as yet unclassified' }
 SBRatPackRoute >> pathArray [
 
 	^ self firstSubmorph submorphs second
