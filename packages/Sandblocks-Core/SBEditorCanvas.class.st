@@ -153,7 +153,7 @@ SBEditorCanvas >> mouseWheel: anEvent [
 
 	(anEvent commandKeyPressed and: [dragStartPosition notNil])
 		ifTrue: [self zoomViewport: anEvent wheelDelta y from: dragStartPosition]
-		ifFalse: [self viewportPosition: targetPosition + anEvent wheelDelta negated]
+		ifFalse: [self viewportPosition: targetPosition + (anEvent wheelDelta * (1@(-1)))]
 ]
 
 { #category : #viewport }
