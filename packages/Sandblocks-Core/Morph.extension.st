@@ -284,6 +284,7 @@ Morph >> replaceBy: aMorph [
 	index := currentOwner submorphIndexOf: self.
 	self delete.
 	currentOwner addMorph: aMorph asElementNumber: index.
+	aMorph position: self position.
 	^ aMorph
 ]
 

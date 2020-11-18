@@ -112,6 +112,13 @@ SBRatPackRoute >> pathArray [
 ]
 
 { #category : #'as yet unclassified' }
+SBRatPackRoute >> reload [
+	<action>
+	
+	self replaceBy: (SBRatPackRoute newFor: (self compiledMethod asSandblock))
+]
+
+{ #category : #'as yet unclassified' }
 SBRatPackRoute >> selector [
 
 	^ self currentSelector
