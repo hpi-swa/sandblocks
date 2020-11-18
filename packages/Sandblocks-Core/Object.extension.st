@@ -73,7 +73,7 @@ Object >> representIn: aSBEditor as: aSymbol near: aPointOrMorph from: aSourceMo
 	position := aPointOrMorph isPoint ifTrue: [aPointOrMorph] ifFalse: [aPointOrMorph position].
 	options size > 1
 		ifTrue: [ | prompt |
-			prompt := (SBNewWatch report: SBRepresentationPrompt for: 999585281) new.
+			prompt := SBRepresentationPrompt new.
 			aSBEditor openMorphInView: prompt.
 			prompt options: options target: self at: position from: aSourceMorph]
 		ifFalse: [

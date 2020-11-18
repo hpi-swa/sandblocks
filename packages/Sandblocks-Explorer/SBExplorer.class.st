@@ -75,6 +75,12 @@ SBExplorer >> declarations [
 ]
 
 { #category : #'as yet unclassified' }
+SBExplorer >> doubleClick: anEvent [
+
+	self toggleCollapsed
+]
+
+{ #category : #'as yet unclassified' }
 SBExplorer >> drawnColor [
 
 	^ self object sandblockColor

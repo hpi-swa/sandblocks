@@ -71,7 +71,7 @@ SBRepresentationPrompt >> initialize [
 			prefix: 'Filter: ';
 			when: #dismiss send: #close to: self;
 			when: #contentsChanged send: #updateFilter to: self;
-			when: #stopEditing send: #close to: self;
+			"when: #stopEditing send: #close to: self;"
 			when: #keyStroke send: #filterKeyStroke: to: self);
 		addMorphBack: (scroll := ScrollPane new
 			hResizing: #shrinkWrap;
@@ -86,8 +86,8 @@ SBRepresentationPrompt >> intoWorld: aWorld [
 
 	super intoWorld: aWorld.
 	
-	Project current addDeferredUIMessage: [
-		self sandblockEditor startInput: self submorphs second at: 1 replacingContents: true]
+	"Project current addDeferredUIMessage: [
+		self sandblockEditor startInput: self submorphs second at: 1 replacingContents: true]"
 ]
 
 { #category : #'as yet unclassified' }
@@ -105,7 +105,7 @@ SBRepresentationPrompt >> mouseEnter: anEvent [
 { #category : #'as yet unclassified' }
 SBRepresentationPrompt >> mouseLeave: anEvent [
 
-	SBToggledCode comment: '' active: 0 do: {
+	SBToggledCode comment: '' active: 1 do: {
 		[
 			self addAlarm: #delete after: 1 seconds asMilliSeconds]
 	}
@@ -122,32 +122,13 @@ SBRepresentationPrompt >> options: aCollection target: anObject at: aPoint from:
 
 	SBExample
 		self: [SBRepresentationPrompt new]
-		args: [
-			{(5 representationsThat: #isToplevelMorph). 5. nil}]
+		args: [{5 representationsThat: #isToplevelMorph. 5. nil}]
 		label: 'example'.
 	target := anObject.
 	position := aPoint.
 	sourceMorph := aSourceMorph.
 	
-	aCollection do: [:option |
-		options addMorphBack: (SBTextBubble new
-			prefix: (option causesSideEffects ifTrue: ['/!\ '] ifFalse: [nil]);
-			contents: option prettyName;
-			setProperty: #representation toValue: option;
-			when: #selected send: #useRepresentation: to: self with: option)].
-	currentRepresentation
-		when: #positionChanged send: #updatePosition to: self;
-		when: #extentChanged send: #updatePosition to: self.
-	SBToggledCode
-		comment: ''
-		active: 0
-		do: {
-			[
-				Project current addDeferredUIMessage: [
-					self addAlarm: #delete after: 2 seconds asMilliSeconds]]
-		}.
-	self select: (aCollection findFirst: [:option | option causesSideEffects not]).
-	self allMorphsDo: #layoutChanged
+	self options: aCollection target: anObject current: nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -155,8 +136,7 @@ SBRepresentationPrompt >> options: aCollection target: anObject current: aRepres
 
 	SBExample
 		self: [SBRepresentationPrompt new]
-		args: [
-			{(5 representationsThat: #isToplevelMorph). 5. nil}]
+		args: [{5 representationsThat: #isToplevelMorph. 5. nil}]
 		label: 'example'.
 	currentRepresentation := aRepresentation.
 	target := anObject.
@@ -167,18 +147,21 @@ SBRepresentationPrompt >> options: aCollection target: anObject current: aRepres
 			contents: option prettyName;
 			setProperty: #representation toValue: option;
 			when: #selected send: #useRepresentation: to: self with: option)].
-	currentRepresentation
-		when: #positionChanged send: #updatePosition to: self;
-		when: #extentChanged send: #updatePosition to: self.
+	currentRepresentation ifNotNil: [
+		currentRepresentation
+			when: #positionChanged send: #updatePosition to: self;
+			when: #extentChanged send: #updatePosition to: self].
 	SBToggledCode
 		comment: ''
-		active: 0
+		active: 1
 		do: {
 			[
 				Project current addDeferredUIMessage: [
-					self addAlarm: #delete after: 2 seconds asMilliSeconds]]
+					self addAlarm: #delete after: 2 seconds asMilliSeconds.
+					currentRepresentation ifNotNil: #select]]
 		}.
-	self select: (aCollection findFirst: [:option | option causesSideEffects not])
+	self select: (aCollection findFirst: [:option | option causesSideEffects not]).
+	self allMorphsDo: #layoutChanged
 ]
 
 { #category : #'as yet unclassified' }

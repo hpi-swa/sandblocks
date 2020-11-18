@@ -448,7 +448,8 @@ SBBasicMethod >> openClassDefinition [
 { #category : #'as yet unclassified' }
 SBBasicMethod >> outOfWorld: aWorld [
 
-	SystemChangeNotifier uniqueInstance noMoreNotificationsFor: self
+	SystemChangeNotifier uniqueInstance noMoreNotificationsFor: self.
+	super outOfWorld: aWorld
 ]
 
 { #category : #'as yet unclassified' }
