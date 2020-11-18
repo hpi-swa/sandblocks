@@ -28,7 +28,7 @@ SBPenTextRecognizer >> preprocessForm: aForm [
 	target := Form extent: self requiredFormExtent depth: 8.
 	target getCanvas
 		fillColor: Color white;
-		image: decal at: ((target width / 2) - (decal width / 2)) floor @ 0"(target height - decal height)".
+		drawImage: decal at: ((target width / 2) - (decal width / 2)) floor @ 0"(target height - decal height)".
 	
 	^ target
 ]

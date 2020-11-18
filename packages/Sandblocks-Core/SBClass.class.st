@@ -149,7 +149,7 @@ SBClass >> drawSubmorphsOn: aCanvas [
 	
 	self hasUnsavedChanges ifTrue: [ | adornment |
 		adornment  := PluggableTextMorph adornmentWithColor: Color orange.
-		aCanvas image: adornment at: self position + (self width - adornment width @ 0)]
+		aCanvas drawImage: adornment at: self position + (self width - adornment width @ 0)]
 ]
 
 { #category : #'as yet unclassified' }
