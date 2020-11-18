@@ -10,12 +10,12 @@ BaselineOfSandblocks >> baseline: spec [
 	spec for: #common do: [
 		spec
 			baseline: 'ActiveExpressions' with: [spec repository: 'github://active-expressions/active-expressions-squeak:master/src'];
-			baseline: 'StatisticsWorkbench' with: [spec repository: 'github://hpi-swa-teaching/StatisticsWorkbench:dev/packages'];
+			"baseline: 'StatisticsWorkbench' with: [spec repository: 'github://hpi-swa-teaching/StatisticsWorkbench:dev/packages'];"
 			baseline: 'RatPack' with: [spec repository: 'github://hpi-swa-teaching/RatPack:develop/packages'];
 			package: 'SVG-Morphic' with: [spec repository: 'http://www.squeaksource.com/SVGMorph'];
 			
 			package: 'Sandblocks-Core' with: [spec requires: #('SVG-Morphic' 'Sandblocks-Morphs' 'Sandblocks-Layout')];
-			package: 'Sandblocks-Explorer' with: [spec requires: #('Sandblocks-Core' 'StatisticsWorkbench')];
+			package: 'Sandblocks-Explorer' with: [spec requires: #('Sandblocks-Core') "'StatisticsWorkbench'"];
 			package: 'Sandblocks-Watch' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-Debugger' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-Utils';
