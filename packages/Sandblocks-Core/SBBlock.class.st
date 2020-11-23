@@ -520,7 +520,18 @@ SBBlock >> doExpression [
 SBBlock >> drawDropHighlightOn: aCanvas [
 
 	self highlightedForDrop ifTrue: [
-		aCanvas frameRectangle: self bounds width: 3 color: Color red]
+		self fixedNumberOfChildren
+			ifTrue: [
+				aCanvas frameRectangle: self bounds width: 3 color: Color red]
+			ifFalse: [ | dropLocation |
+				dropLocation := self dropLocationDo: [:position :morph :horizontal |
+					aCanvas
+						frameRectangle: self bounds width: 3 color: (Color red alpha: 0.3);
+						
+						line: position
+						to: position + (horizontal ifTrue: [morph width @ 0] ifFalse: [0 @ morph height])
+						width: 6
+						color: Color red]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -584,6 +595,23 @@ SBBlock >> drawSymbolsOn: aCanvas [
 SBBlock >> drawnColor [
 
 	^ self color
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> dropLocationDo: aBlock [
+
+	| mousePosition closestDist closestMorph |
+	mousePosition := self valueOfProperty: #dropLocation.
+	closestDist := 900000000.
+	closestMorph := nil.
+	self childSandblocksDo: [:block | | dist |
+		dist := block topLeft squaredDistanceTo: mousePosition.
+		dist < closestDist ifTrue: [
+			closestDist := dist.
+			closestMorph := block]].
+	^ closestMorph ifNotNil: [ | delta |
+		delta := (((closestMorph adjacentBlock: 1) ifNil: [closestMorph adjacentBlock: -1]) ifNotNil: [:next | next topLeft - closestMorph topLeft] ifNil: [1 @ 0]) abs.
+		aBlock value: closestMorph topLeft - (0 @ 4) value: closestMorph value: delta x < delta y]
 ]
 
 { #category : #decorators }
@@ -1259,7 +1287,9 @@ SBBlock >> mouseLeaveDragging: anEvent [
 SBBlock >> mouseMove: anEvent [
 
 	super mouseMove: anEvent.
-	(anEvent isDraggingEvent and: [self handlesMouseOverDragging: anEvent]) ifTrue: [self highlightForDrop]
+	(anEvent isDraggingEvent and: [self handlesMouseOverDragging: anEvent]) ifTrue: [
+		self setProperty: #dropLocation toValue: anEvent position.
+		self highlightForDrop]
 ]
 
 { #category : #actions }
@@ -1467,12 +1497,18 @@ SBBlock >> performAction: aSymbol [
 { #category : #'as yet unclassified' }
 SBBlock >> pickUp: anEvent [
 
+	| editor |
+	editor := self sandblockEditor.
+	anEvent shiftPressed ifFalse: [
+		editor do: ((self parentSandblock deleteCommandFor: self) shouldMergeWithNext: true)].
+	
 	anEvent hand grabMorph: (SBSelection new
 		homeArtefact: self containingArtefact;
 		methodClass: (self containingArtefact ifNotNil: #relatedClass);
 		colorPolicy: self colorPolicy;
 		addMorphBack: self veryDeepCopy;
 		sourceBlock: self;
+		onAbortUndoIn: editor;
 		yourself)
 ]
 
@@ -2042,8 +2078,10 @@ SBBlock >> useSuggestion [
 	<actionValidIf: #hasSuggestions>
 	" try to apply a suggestion, return whether anything was applied "
 
-	self suggestionMenuDo: [:menu |
+	self suggestionMenuDo: [:menu | | editor |
+		editor := self sandblockEditor.
 		menu activeSuggestion ifNotNil: [:s | s useSuggestionOn: self].
+		editor maybeStartInputFromEnd.
 		^ true].
 	^ false
 ]
@@ -2081,7 +2119,7 @@ SBBlock >> veryDeepCopyWith: aCopier [
 { #category : #'as yet unclassified' }
 SBBlock >> wantsDroppedMorph: aMorph event: evt [
 
-	^ (aMorph respondsTo: #object) and: [aMorph object hasRepresentationThat: self acceptedRepresentation]
+	^ (aMorph respondsTo: #object)" rather performance heavy, not sure yet: and: [aMorph object hasRepresentationThat: self acceptedRepresentation]"
 ]
 
 { #category : #'artefact protocol' }

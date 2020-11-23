@@ -21,8 +21,6 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		" modify smalltalk "
 		registerShortcut: $" do: #wrapInToggledCode;
 		registerShortcut: $D do: #insertLabelAbove;
-		registerShortcut: $O do: #insertStatementAbove;
-		registerShortcut: $o do: #insertStatementBelow;
 		registerShortcut: $[ do: #wrapInBlock;
 		registerShortcut: ${ do: #wrapInDynamicArray;
 		registerShortcut: $# do: #wrapInLiteralArray;
@@ -85,7 +83,6 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $Z command do: #redo;
 		registerShortcut: $s command do: #save;
 		registerShortcut: $r command do: #openRepl;
-		registerShortcut: $c command do: #openOpenWindow;
 		registerShortcut: $, command do: #promptMenu;
 		registerShortcut: $f command do: #startSearch;
 		registerShortcut: $g command do: #nextSearchResult;
@@ -129,7 +126,10 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $V do: #multiSelectChildren;
 		registerShortcut: $r do: #replaceWithCopyBuffer;
 		registerShortcut: Character backspace do: #deleteBlock;
-		registerShortcut: Character delete do: #deleteAround
+		registerShortcut: Character delete do: #deleteAround;
+		
+		registerShortcut: Character cr shift do: #insertStatementAbove;
+		registerShortcut: Character cr do: #insertStatementBelow
 ]
 
 { #category : #'as yet unclassified' }

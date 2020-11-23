@@ -30,6 +30,13 @@ SBRepresentationConnector >> connect: anObject to: anotherObject representation:
 	currentRepresentation := aRepresentationClass
 ]
 
+{ #category : #'as yet unclassified' }
+SBRepresentationConnector >> delete [
+
+	from removeActionsWithReceiver: self.
+	super delete
+]
+
 { #category : #stepping }
 SBRepresentationConnector >> step [
 

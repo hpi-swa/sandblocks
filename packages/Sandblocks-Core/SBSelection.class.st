@@ -8,10 +8,20 @@ Class {
 		'colorPolicy',
 		'methodClass',
 		'homeArtefact',
-		'sourceBlock'
+		'sourceBlock',
+		'onAbortUndoIn'
 	],
 	#category : #'Sandblocks-Core'
 }
+
+{ #category : #'as yet unclassified' }
+SBSelection >> abortDrag: anEvent [
+
+	self onAbortUndoIn ifNotNil: [:editor |
+		editor undo.
+		(editor morphsAt: anEvent position) do: [:m | m highlightForDrop: false]].
+	self delete
+]
 
 { #category : #'as yet unclassified' }
 SBSelection >> aboutToBeGrabbedBy: aHand [
@@ -143,16 +153,16 @@ SBSelection >> isSelection [
 ]
 
 { #category : #'as yet unclassified' }
-SBSelection >> keyStroke: evt [
+SBSelection >> keyStroke: anEvent [
 	"Abort the drag on an escape"
 
-	evt keyCharacter = Character escape ifTrue: [self delete].
+	anEvent keyCharacter = Character escape ifTrue: [self abortDrag: anEvent].
 ]
 
 { #category : #'as yet unclassified' }
 SBSelection >> methodClass [
 	
-	^ methodClass
+	^ methodClass ifNil: [nil class]
 ]
 
 { #category : #'as yet unclassified' }
@@ -174,6 +184,18 @@ SBSelection >> object [
 		ifTrue: [
 			SBBlockBody new statements: (self submorphs collect: [:morph | morph object])]
 		ifFalse: [self firstSubmorph object]
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> onAbortUndoIn [
+
+	^ onAbortUndoIn
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> onAbortUndoIn: aMorph [
+
+	onAbortUndoIn := aMorph
 ]
 
 { #category : #'as yet unclassified' }

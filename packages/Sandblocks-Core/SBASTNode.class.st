@@ -186,11 +186,19 @@ SBASTNode >> guessedClass [
 SBASTNode >> handleDroppedBlock: aBlock event: anEvent [
 
 	| replacer |
-	replacer := aBlock object representationThat: (self parentSandblock contextAcceptedRepresentationAt: self childIndex) do: #yourself ifNone: [^ self].
-	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-		target: self;
-		replacer: replacer).
-	replacer postDuplicate
+	replacer := aBlock object anyRepresentationThat: (self parentSandblock contextAcceptedRepresentationAt: self childIndex).
+	self fixedNumberOfChildren
+		ifTrue: [
+			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+				target: self;
+				replacer: replacer).
+			replacer postDuplicate]
+		ifFalse: [
+			self dropLocationDo: [:position :morph :horizontal |
+				self sandblockEditor do: ((self insertCommandRequest: false near: morph) shouldMergeWithNext: true).
+				self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+					target: self sandblockEditor selection;
+					replacer: replacer)]]
 ]
 
 { #category : #'actions input' }
