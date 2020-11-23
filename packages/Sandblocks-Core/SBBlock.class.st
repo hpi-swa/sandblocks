@@ -1271,7 +1271,7 @@ SBBlock >> mouseEnterDragging: anEvent [
 
 	(anEvent hand firstSubmorph respondsTo: #noteDragEnter:) ifTrue: [anEvent hand firstSubmorph noteDragEnter: self].
 	
-	self allOwnersDo: #resetHighlightForDrop.
+	self resetParentHighlights.
 	self highlightForDrop: true
 ]
 
@@ -1652,6 +1652,13 @@ SBBlock >> representAs [
 	prompt := SBRepresentationPrompt new options: options target: self object current: self.
 	self sandblockEditor openMorphInView: prompt.
 	prompt position: self topRight
+]
+
+{ #category : #'event handling' }
+SBBlock >> resetParentHighlights [
+
+	self allOwnersDo: [:m |
+		(m valueOfProperty: #highlightedForDrop ifAbsent: [false]) ifTrue: [m resetHighlightForDrop]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -2119,7 +2126,7 @@ SBBlock >> veryDeepCopyWith: aCopier [
 { #category : #'as yet unclassified' }
 SBBlock >> wantsDroppedMorph: aMorph event: evt [
 
-	^ (aMorph respondsTo: #object)" rather performance heavy, not sure yet: and: [aMorph object hasRepresentationThat: self acceptedRepresentation]"
+	^ (aMorph respondsTo: #object) and: [aMorph object hasRepresentationThat: self acceptedRepresentation]
 ]
 
 { #category : #'artefact protocol' }
