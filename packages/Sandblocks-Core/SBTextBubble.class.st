@@ -24,6 +24,13 @@ SBTextBubble >> bordered: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBTextBubble >> changeToUnknown [
+	<action>
+
+	self sandblockEditor startInput: self at: 0 replacingContents: true
+]
+
+{ #category : #'as yet unclassified' }
 SBTextBubble >> childSandblocksDo: aBlock [
 ]
 

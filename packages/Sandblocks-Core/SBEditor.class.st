@@ -228,7 +228,6 @@ SBEditor class >> registerDefaultShortcuts [
 		registerShortcut: $U do: #redo;
 		registerShortcut: $s command do: #save;
 		registerShortcut: $r command do: #openRepl;
-		registerShortcut: $c command do: #openOpenWindow;
 		registerShortcut: $, command do: #promptMenu;
 		registerShortcut: $/ do: #startSearch;
 		registerShortcut: $n do: #nextSearchResult;
@@ -953,6 +952,7 @@ SBEditor >> initialize [
 	countModifier := ''.
 	globalShortcutListeners := OrderedCollection new.
 	inputMapping := self class newInputMapping.
+	inputMapping applyFor: self.
 	
 	self
 		addKeyboardCaptureFilter: self;
@@ -1102,7 +1102,7 @@ SBEditor >> methodForContext: aContext ifOpen: aBlock ifClosed: anotherBlock [
 { #category : #accessing }
 SBEditor >> methods [
 
-	^ scroll submorphs select: [:morph | morph isSandblock and: [morph object isCompiledMethod]]
+	^ self allBlocksSelect: [:block | block object isCompiledMethod]
 ]
 
 { #category : #accessing }
@@ -1247,8 +1247,7 @@ SBEditor >> okToChange [
 { #category : #actions }
 SBEditor >> open: anObject [
 
-	^ scroll submorphs
-		detect: [:morph | morph isSandblock and: [morph object = anObject]]
+	^ self allBlocksDetect: [:morph | morph isSandblock and: [morph object = anObject]]
 		ifFound: #select
 		ifNone: [
 		 	anObject
@@ -1406,11 +1405,14 @@ SBEditor >> promptAddArtifact [
 	| index |
 	index := UIManager default chooseFrom: {
 		('Add method ', (self class shortcutStringForAction: #createEmptyMethod)).
-		('Add class ', (self class shortcutStringForAction: #createEmptyClass))
+		('Add class ', (self class shortcutStringForAction: #createEmptyClass)).
+		('Open Workspace ', (self class shortcutStringForAction: #openRepl))
 	}.
 	
 	index = 1 ifTrue: [^ self createEmptyMethod].
-	index = 2 ifTrue: [^ self createEmptyClass]
+	index = 2 ifTrue: [^ self createEmptyClass].
+	index = 3 ifTrue: [^ self openRepl]
+	
 ]
 
 { #category : #'as yet unclassified' }

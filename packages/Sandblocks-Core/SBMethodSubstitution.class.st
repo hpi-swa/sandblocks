@@ -37,7 +37,7 @@ SBMethodSubstitution class >> isToplevelMorph [
 { #category : #'as yet unclassified' }
 SBMethodSubstitution class >> matches: anObject [
 
-	^ anObject isCompiledMethod
+	^ anObject isCompiledMethod or: [anObject isSandblock and: [anObject isMethod]]
 ]
 
 { #category : #'as yet unclassified' }

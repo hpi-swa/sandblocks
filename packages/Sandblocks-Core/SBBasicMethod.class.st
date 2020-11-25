@@ -433,6 +433,12 @@ SBBasicMethod >> moveToInstanceSide [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> numArgs [
+
+	^ self arguments size
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> object [
 
 	^ self compiledMethod
@@ -586,12 +592,13 @@ SBBasicMethod >> textContents [
 
 { #category : #'as yet unclassified' }
 SBBasicMethod >> toggleCollapsed [
+	<action>
 
 	self body
 		visible: self body visible not;
 		disableLayout: self body visible not.
 	
-	(self body visible not and: [self isSelected not]) ifTrue: [self select]
+	(self body visible not and: [self isSelected not and: [self sandblockEditor notNil]]) ifTrue: [self select]
 ]
 
 { #category : #'as yet unclassified' }

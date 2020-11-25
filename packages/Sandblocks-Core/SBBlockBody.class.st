@@ -209,7 +209,7 @@ SBBlockBody >> insertCommandRequest: anAfterBoolean near: aBlock [
 			yourself].
 	
 	^ (SBInsertCommand newFor: self containingArtefact)
-		index: ((self childSandblocks indexOf: aBlock)) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
+		index: (self statements indexOf: aBlock) + (anAfterBoolean ifTrue: [2] ifFalse: [1]);
 		container: self;
 		morph: SBUnknown new;
 		shouldMergeWithNext: true;

@@ -51,6 +51,12 @@ SBCascade >> contextAcceptedRepresentationAt: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
+SBCascade >> fixedNumberOfChildren [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBCascade >> guessedClass [
 
 	^ self submorphs last guessedClass

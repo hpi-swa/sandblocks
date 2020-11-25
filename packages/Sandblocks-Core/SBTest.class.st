@@ -5,6 +5,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBTest class >> keyboardEvent: aCharacter [
+
+	^ self keyboardEvent: aCharacter shift: false command: false
+]
+
+{ #category : #'as yet unclassified' }
+SBTest class >> keyboardEvent: aCharacter shift: aBoolean command: anotherBoolean [
+
+	^ KeyboardEvent new setType: #keystroke buttons: ((aBoolean ifTrue: [8] ifFalse: [0]) bitOr: (anotherBoolean ifTrue: [64] ifFalse: [0])) position: 0 @ 0 keyValue: aCharacter hand: nil stamp: nil
+]
+
+{ #category : #'as yet unclassified' }
 SBTest >> editorFor: aBlock [
 
 	| editor |
@@ -19,5 +31,5 @@ SBTest >> editorFor: aBlock [
 { #category : #'as yet unclassified' }
 SBTest >> keyboardEvent: aCharacter [
 
-	^ KeyboardEvent new setType: #keystroke buttons: 0 position: 0 @ 0 keyValue: aCharacter hand: nil stamp: nil
+	^ self class keyboardEvent: aCharacter
 ]

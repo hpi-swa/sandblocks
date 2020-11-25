@@ -31,14 +31,13 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character space do: #wrapInMessageSend;
 		
 		" input "
-		registerShortcut: Character cr do: #useSuggestion;
 		registerShortcut: Character arrowLeft asSandblockShortcut, Character arrowLeft shift, Character arrowLeft command do: #moveCursorLeft;
 		registerShortcut: Character arrowRight asSandblockShortcut, Character arrowRight shift, Character arrowRight command do: #moveCursorRight;
 		registerShortcut: Character arrowUp asSandblockShortcut do: #moveCursorUp;
 		registerShortcut: Character arrowDown do: #moveCursorDown;
 		registerShortcut: Character arrowUp do: #moveCursorUp;
-		registerShortcut: Character home do: #moveCursorToStart;
-		registerShortcut: Character end do: #moveCursorToEnd;
+		"registerShortcut: Character home do: #moveCursorToStart;"
+		"registerShortcut: Character end do: #moveCursorToEnd;"
 		registerShortcut: Character backspace do: #deleteBeforeCursor;
 		registerShortcut: Character delete do: #deleteAfterCursor;
 		registerShortcut: $a command do: #clearInput;
@@ -82,8 +81,8 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $z command do: #undo;
 		registerShortcut: $Z command do: #redo;
 		registerShortcut: $s command do: #save;
-		registerShortcut: $r command do: #openRepl;
-		registerShortcut: $, command do: #promptMenu;
+		"registerShortcut: $r command do: #openRepl;"
+		registerShortcut: $; command do: #promptMenu;
 		registerShortcut: $f command do: #startSearch;
 		registerShortcut: $g command do: #nextSearchResult;
 		registerShortcut: $S command do: #saveWorkspace;
@@ -107,11 +106,13 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character escape do: #dismiss;
 		
 		" modify general "
-		registerShortcut: $, do: #promptAction;
+		registerShortcut: $, command do: #promptAction;
 		"registerShortcut: $c do: #changeToUnknown;"
 		registerShortcut: $C command do: #copyAround;
 		registerShortcut: $c command do: #copyToBuffer;
 		registerShortcut: $v command do: #pasteBelow;
+		registerShortcut: $V command do: #pasteAbove;
+		registerShortcut: $r command do: #replaceWithCopyBuffer;
 		"registerShortcut: $d do: #deleteAdjacent;"
 		"registerShortcut: $( do: #leftRotate;"
 		"registerShortcut: $. do: #addElement;"
@@ -119,17 +120,16 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character arrowRight command withShift do: #swapRight;
 		"registerShortcut: $c command do: #copyString;
 		registerShortcut: $v command do: #pasteString;"
-		registerShortcut: $p do: #pasteBelow;
-		registerShortcut: $P do: #pasteAbove;
 		registerShortcut: $v do: #startOrAddToMultiSelection;
-		registerShortcut: $V command do: #startContinuousMultiSelection;
+		"registerShortcut: $V command do: #startContinuousMultiSelection;"
 		registerShortcut: $V do: #multiSelectChildren;
-		registerShortcut: $r do: #replaceWithCopyBuffer;
 		registerShortcut: Character backspace do: #deleteBlock;
-		registerShortcut: Character delete do: #deleteAround;
+		registerShortcut: Character backspace shift do: #deleteAround;
+		"registerShortcut: Character delete do: #deleteAround;"
 		
 		registerShortcut: Character cr shift do: #insertStatementAbove;
-		registerShortcut: Character cr do: #insertStatementBelow
+		registerShortcut: Character cr do: #insertStatementBelow;
+		registerShortcut: Character cr do: #useSuggestion
 ]
 
 { #category : #'as yet unclassified' }

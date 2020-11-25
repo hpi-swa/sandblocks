@@ -185,16 +185,16 @@ SBASTNode >> guessedClass [
 { #category : #'as yet unclassified' }
 SBASTNode >> handleDroppedBlock: aBlock event: anEvent [
 
-	| replacer |
-	replacer := aBlock object anyRepresentationThat: (self parentSandblock contextAcceptedRepresentationAt: self childIndex).
 	self fixedNumberOfChildren
-		ifTrue: [
+		ifTrue: [ | replacer |
+			replacer := aBlock object anyRepresentationThat: self acceptedRepresentation.
 			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
 				target: self;
 				replacer: replacer).
 			replacer postDuplicate]
-		ifFalse: [
+		ifFalse: [ | replacer |
 			self dropLocationDo: [:position :morph :horizontal |
+				replacer := aBlock object anyRepresentationThat: (self parentSandblock contextAcceptedRepresentationAt: morph childIndex).
 				self sandblockEditor do: ((self insertCommandRequest: false near: morph) shouldMergeWithNext: true).
 				self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
 					target: self sandblockEditor selection;
@@ -272,6 +272,7 @@ SBASTNode >> insertStatementAboveOrBelow: anAboveBoolean [
 { #category : #actions }
 SBASTNode >> insertStatementBelow [
 	<action>
+	<actionValidIf: #hasNoSuggestions>
 
 	self insertStatementAboveOrBelow: false
 ]
@@ -369,7 +370,7 @@ SBASTNode >> selectRightMostBlock [
 	<multiSelectAction>
 	<inputAction>
 
-	self containingStatement rightMostBlock select.
+	self containingStatement ifNil: [self rightMostBlock select] ifNotNil: [:statement | statement rightMostBlock select].
 	
 	self sandblockEditor maybeStartInputFromEnd
 ]

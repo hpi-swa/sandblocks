@@ -14,7 +14,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBTestCase class >> matches: aMethodBlock [
 
-	^ (super matches: aMethodBlock) and: [aMethodBlock methodClass isTestClass and: [aMethodBlock selector asSymbol isTestSelector and: [aMethodBlock arguments isEmpty]]]
+	^ (super matches: aMethodBlock) and: [aMethodBlock methodClass isTestClass and: [aMethodBlock selector asSymbol isTestSelector and: [aMethodBlock numArgs = 0]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -135,8 +135,8 @@ SBTestCase >> initialize [
 				height: 0;
 				color: Color transparent;
 				yourself);
-			addMorphBack: (passIcon := SBIcon iconCheck
-				color: Color lightGreen;
+			addMorphBack: (passIcon := SBIcon iconQuestion
+				color: Color white;
 				yourself);
 			addMorphBack: (Morph new
 				width: 6;
@@ -163,11 +163,9 @@ SBTestCase >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
-		data: {
-			SBAlgebraCommand morph data: self firstSubmorph.
-			SBAlgebraCommand hardLine.
-			self body layoutCommands
-		}
+		data: {SBAlgebraCommand morph data: self firstSubmorph}, (self body visible
+			ifTrue: [{SBAlgebraCommand hardLine. self body layoutCommands}]
+			ifFalse: [{}])
 ]
 
 { #category : #'as yet unclassified' }

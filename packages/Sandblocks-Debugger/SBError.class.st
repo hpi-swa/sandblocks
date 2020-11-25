@@ -285,3 +285,10 @@ SBError >> updateExplorers [
 			explorer ifNotNil: #delete.
 			self addMorphBack: (explorer := SBExplorer on: context receiver) toggleCollapsed]
 ]
+
+{ #category : #'as yet unclassified' }
+SBError >> wasSelected [
+
+	self expanded ifFalse: [
+		self parentSandblock focusError: self]
+]

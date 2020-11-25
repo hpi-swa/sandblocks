@@ -7,7 +7,10 @@ Class {
 { #category : #'as yet unclassified' }
 SBContentsRepresentation class >> matches: anObject [
 
-	^ (anObject respondsTo: #contents) and: [anObject isText not and: [anObject contents isString or: [anObject contents isText]]]
+	| contents |
+	(anObject respondsTo: #contents) ifFalse: [^ false].
+	contents := [anObject contents] on: Error do: [^ false].
+	^ anObject isText not and: [contents isString or: [anObject contents isText]]
 ]
 
 { #category : #'as yet unclassified' }

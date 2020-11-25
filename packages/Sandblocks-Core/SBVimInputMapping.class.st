@@ -155,7 +155,6 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $U do: #redo;
 		registerShortcut: $s command do: #save;
 		registerShortcut: $r command do: #openRepl;
-		registerShortcut: $c command do: #openOpenWindow;
 		registerShortcut: $, command do: #promptMenu;
 		registerShortcut: $/ do: #startSearch;
 		registerShortcut: $n do: #nextSearchResult;

@@ -84,17 +84,31 @@ SBBlock >> adjacentBlock: aNumber [
 	^ adjacent at: index + aNumber ifAbsent: [nil]
 ]
 
-{ #category : #accessing }
+{ #category : #hierarchy }
 SBBlock >> allBlocks [
 
 	^ Array streamContents: [:stream | self allBlocksDo: [:block | stream nextPut: block]]
 ]
 
-{ #category : #accessing }
+{ #category : #hierarchy }
+SBBlock >> allBlocksDetect: aBlock ifFound: aSuccessBlock ifNone: aFailureBlock [
+
+	self allBlocksDo: [:b | (aBlock value: b) ifTrue: [^ aSuccessBlock value: b]].
+	^ aFailureBlock value
+]
+
+{ #category : #hierarchy }
 SBBlock >> allBlocksDo: aBlock [
 
 	self childSandblocksDo: [:m | m allBlocksDo: aBlock].
 	aBlock value: self
+]
+
+{ #category : #hierarchy }
+SBBlock >> allBlocksSelect: aBlock [
+
+	^ Array streamContents: [:stream |
+		self allBlocksDo: [:b | (aBlock value: b) ifTrue: [stream nextPut: b]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -187,6 +201,13 @@ SBBlock >> changeLocalColorPolicy [
 
 	^ (UIManager default chooseFrom: SBColorPolicy withAllSubclasses values: SBColorPolicy withAllSubclasses) ifNotNil: [:policy |
 		self localColorPolicy: policy]
+]
+
+{ #category : #actions }
+SBBlock >> changeToUnknown [
+	<action>
+	
+	" if support, change to prepare for arbitrary input to replace you "
 ]
 
 { #category : #hierarchy }
@@ -527,11 +548,10 @@ SBBlock >> drawDropHighlightOn: aCanvas [
 				dropLocation := self dropLocationDo: [:position :morph :horizontal |
 					aCanvas
 						frameRectangle: self bounds width: 3 color: (Color red alpha: 0.3);
-						
 						line: position
-						to: position + (horizontal ifTrue: [morph width @ 0] ifFalse: [0 @ morph height])
-						width: 6
-						color: Color red]]]
+							to: position + (horizontal ifTrue: [morph width @ 0] ifFalse: [0 @ morph height])
+							width: 6
+							color: Color red]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -601,7 +621,10 @@ SBBlock >> drawnColor [
 SBBlock >> dropLocationDo: aBlock [
 
 	| mousePosition closestDist closestMorph |
-	mousePosition := self valueOfProperty: #dropLocation.
+	mousePosition := self
+		valueOfProperty: #dropLocation
+		ifAbsent: [
+			^ aBlock value: self center value: self childSandblocks first value: false].
 	closestDist := 900000000.
 	closestMorph := nil.
 	self childSandblocksDo: [:block | | dist |
@@ -843,6 +866,12 @@ SBBlock >> hasDecorator: aClass [
 SBBlock >> hasInput [
 
 	^ self sandblockEditor currentInput = self
+]
+
+{ #category : #suggestions }
+SBBlock >> hasNoSuggestions [
+
+	^ self hasSuggestions not
 ]
 
 { #category : #suggestions }
@@ -1289,7 +1318,7 @@ SBBlock >> mouseMove: anEvent [
 	super mouseMove: anEvent.
 	(anEvent isDraggingEvent and: [self handlesMouseOverDragging: anEvent]) ifTrue: [
 		self setProperty: #dropLocation toValue: anEvent position.
-		self highlightForDrop]
+		self highlightForDrop: true]
 ]
 
 { #category : #actions }
@@ -1499,8 +1528,6 @@ SBBlock >> pickUp: anEvent [
 
 	| editor |
 	editor := self sandblockEditor.
-	anEvent shiftPressed ifFalse: [
-		editor do: ((self parentSandblock deleteCommandFor: self) shouldMergeWithNext: true)].
 	
 	anEvent hand grabMorph: (SBSelection new
 		homeArtefact: self containingArtefact;
@@ -1509,7 +1536,10 @@ SBBlock >> pickUp: anEvent [
 		addMorphBack: self veryDeepCopy;
 		sourceBlock: self;
 		onAbortUndoIn: editor;
-		yourself)
+		yourself).
+	
+	anEvent shiftPressed ifFalse: [
+		editor do: ((self parentSandblock deleteCommandFor: self) shouldMergeWithNext: true)]
 ]
 
 { #category : #actions }
@@ -1586,6 +1616,7 @@ SBBlock >> previousVerticalNear: aNumber [
 { #category : #actions }
 SBBlock >> promptAction [
 	<multiSelectAction>
+	<inputAction>
 
 	| options index |
 	options := self validActions.
@@ -1978,9 +2009,10 @@ SBBlock >> swap: aNumber [
 	
 	next := children atWrap: (children indexOf: self) + aNumber.
 	next ifNotNil: [
-		self sandblockEditor do: ((SBSwapCommand newFor: self containingArtefact)
-			a: self;
-			b: next)]
+		self sandblockEditor
+			do: ((SBSwapCommand newFor: self containingArtefact)
+				a: self;
+				b: next)]
 ]
 
 { #category : #actions }
@@ -2126,7 +2158,19 @@ SBBlock >> veryDeepCopyWith: aCopier [
 { #category : #'as yet unclassified' }
 SBBlock >> wantsDroppedMorph: aMorph event: evt [
 
-	^ (aMorph respondsTo: #object) and: [aMorph object hasRepresentationThat: self acceptedRepresentation]
+	^ (aMorph respondsTo: #object) and: [
+		SBToggledCode
+			comment: 'strong hit on performance'
+			active: 2
+			do: {
+				[
+					aMorph object hasRepresentationThat: (self fixedNumberOfChildren
+						ifTrue: [self acceptedRepresentation]
+						ifFalse: [
+							self dropLocationDo: [:position :morph :horizontal |
+								self parentSandblock contextAcceptedRepresentationAt: morph childIndex]])].
+				[true]
+			}]
 ]
 
 { #category : #'artefact protocol' }

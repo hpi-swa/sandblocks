@@ -58,7 +58,8 @@ SBCodeOpener >> focus: aMethodOrClass [
 			self showingClassSide: aMethodOrClass isClassSide.
 			self selectedCategoryIndex: (self categories indexOf: aMethodOrClass category).
 			self selectedClassIndex: (self classes indexOf: aMethodOrClass theNonMetaClass name) moved: false.
-			self focusPanel: 2]
+			self selectedMethodIndex: 1.
+			self focusPanel: 3]
 		ifFalse: [
 			self showingClassSide: aMethodOrClass methodClass isClassSide.
 			self selectedCategoryIndex: (self categories indexOf: aMethodOrClass methodClass category).

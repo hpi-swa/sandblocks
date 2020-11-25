@@ -66,12 +66,17 @@ SBErrorPanel >> drawnColor [
 ]
 
 { #category : #'as yet unclassified' }
+SBErrorPanel >> focusError: anError [
+
+	anError focus.
+	commandBar ifNil: [self sandblockEditor addMorph: (commandBar := self buildDebugCommandBar) asElementNumber: 4]
+]
+
+{ #category : #'as yet unclassified' }
 SBErrorPanel >> focusErrors [
 	<action>
 
-	self hasSubmorphs ifTrue: [self firstSubmorph focus].
-	commandBar ifNil: [self sandblockEditor addMorph: (commandBar := self buildDebugCommandBar) asElementNumber: 4]
-	"errors topLeft: scroll topLeft"
+	self hasSubmorphs ifTrue: [self focusError: self firstSubmorph]
 ]
 
 { #category : #'as yet unclassified' }
