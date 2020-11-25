@@ -5,9 +5,10 @@ Class {
 		'character',
 		'ctrl',
 		'command',
-		'shift'
+		'shift',
+		'option'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
@@ -68,7 +69,8 @@ SBShortcut >> initialize [
 	
 	ctrl := false.
 	command := false.
-	shift := false
+	shift := false.
+	option := false
 ]
 
 { #category : #'as yet unclassified' }
@@ -90,8 +92,15 @@ SBShortcut >> matchesEvent: anEvent [
 		}.
 	^ anEvent keyCharacter = character and: [
 		command = (anEvent commandKeyPressed or: [anEvent controlKeyPressed]) and: [
-			(shift or: [character isUppercase]) = anEvent shiftPressed or: [
-				(anEvent keyCharacter <= 32 and: [shift = anEvent shiftPressed]) or: [shiftedKeys includes: anEvent keyCharacter]]]]
+			anEvent optionKeyPressed = self option and: [
+				(shift or: [character isUppercase]) = anEvent shiftPressed or: [
+					(anEvent keyCharacter <= 32 and: [shift = anEvent shiftPressed]) or: [shiftedKeys includes: anEvent keyCharacter]]]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBShortcut >> option [
+
+	^ option ifNil: [false]
 ]
 
 { #category : #'as yet unclassified' }
@@ -131,6 +140,12 @@ SBShortcut >> withCommand [
 SBShortcut >> withCtrl [
 
 	ctrl := true
+]
+
+{ #category : #'as yet unclassified' }
+SBShortcut >> withOption [
+
+	option := true
 ]
 
 { #category : #'as yet unclassified' }

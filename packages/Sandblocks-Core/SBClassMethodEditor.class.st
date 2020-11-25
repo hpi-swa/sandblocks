@@ -97,3 +97,9 @@ SBClassMethodEditor >> object [
 
 	^ self firstSubmorph relatedClass
 ]
+
+{ #category : #'as yet unclassified' }
+SBClassMethodEditor >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
+
+	^ false
+]

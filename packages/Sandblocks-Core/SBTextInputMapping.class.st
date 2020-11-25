@@ -118,11 +118,8 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		"registerShortcut: $. do: #addElement;"
 		registerShortcut: Character arrowLeft command withShift do: #swapLeft;
 		registerShortcut: Character arrowRight command withShift do: #swapRight;
-		"registerShortcut: $c command do: #copyString;
-		registerShortcut: $v command do: #pasteString;"
-		registerShortcut: $v do: #startOrAddToMultiSelection;
-		"registerShortcut: $V command do: #startContinuousMultiSelection;"
-		registerShortcut: $V do: #multiSelectChildren;
+		registerShortcut: $c asSandblockShortcut withOption do: #copyString;
+		registerShortcut: $v asSandblockShortcut withOption do: #pasteString;
 		registerShortcut: Character backspace do: #deleteBlock;
 		registerShortcut: Character backspace shift do: #deleteAround;
 		"registerShortcut: Character delete do: #deleteAround;"

@@ -28,6 +28,14 @@ SBShortcutTest >> testMatchesCommandComma [
 ]
 
 { #category : #'as yet unclassified' }
+SBShortcutTest >> testMatchesCtrlAlt [
+
+	| shortcut |
+	shortcut := $v command withCtrl.
+	self assert: (shortcut matchesEvent: (SBTest keyboardEvent: $v shift: false command: true control: true))
+]
+
+{ #category : #'as yet unclassified' }
 SBShortcutTest >> testMatchesEscape [
 
 	self assert: (Character escape asSandblockShortcut matchesEvent: (KeyboardEvent new setType: #keyDown buttons: 0 position: 0 @ 0 keyValue: Character escape asInteger hand: nil stamp: 0))
