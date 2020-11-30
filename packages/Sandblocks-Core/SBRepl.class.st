@@ -181,6 +181,7 @@ SBRepl >> initialize [
 	typeCache := Dictionary new.
 	
 	self
+		layoutPolicy: SBAlgebraLayout new;
 		layoutInset: 6 withScalingFactor;
 		addMorphBack: (SBRow new
 			cellGap: 8 withScalingFactor;
@@ -188,9 +189,9 @@ SBRepl >> initialize [
 			addMorphBack: (bindings := SBRow new cellGap: 4 withScalingFactor));
 		addMorphBack: SBBlockBody empty;
 		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap;
-		changeTableLayout;
-		attachDecorator: SBMoveDecorator new
+		hResizing: #rigid;
+		attachDecorator: SBMoveDecorator new;
+		attachDecorator: SBResizableDecorator new
 ]
 
 { #category : #'artefact protocol' }
@@ -203,6 +204,17 @@ SBRepl >> isArtefact [
 SBRepl >> isRepl [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBRepl >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: {
+			SBAlgebraCommand morph data: self firstSubmorph.
+			SBAlgebraCommand hardLine withGap: true.
+			self lastSubmorph layoutCommands}
 ]
 
 { #category : #'as yet unclassified' }

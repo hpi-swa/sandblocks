@@ -196,6 +196,12 @@ SBBlock >> canSwap [
 ]
 
 { #category : #'as yet unclassified' }
+SBBlock >> centerAlignSymbols [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBBlock >> changeLocalColorPolicy [
 	<action>
 
@@ -590,7 +596,7 @@ SBBlock >> drawSubmorphsOn: aCanvas [
 SBBlock >> drawSymbolsOn: aCanvas [
 
 	| symbols fg font space y centerAlign |
-	centerAlign := self colorPolicy centerAlignSymbols.
+	centerAlign := self colorPolicy centerAlignSymbols and: [self centerAlignSymbols].
 	symbols := self symbols.
 	space := self spaceForSymbols.
 	font := self fontToUse.
