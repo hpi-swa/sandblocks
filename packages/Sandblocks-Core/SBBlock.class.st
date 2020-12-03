@@ -474,7 +474,9 @@ SBBlock >> deleteAround [
 	editor := self sandblockEditor.
 	target := self parentSandblock.
 	editor countModifier - 1 timesRepeat: [target := target parentSandblock].
-		
+	
+	target parentSandblock ifNil: [^ self].
+	
 	(self hasRepresentationThat: (target parentSandblock contextAcceptedRepresentationAt: target childIndex)) ifTrue: [
 		replacer := SBPastePlaceholder new.
 		around := self.
