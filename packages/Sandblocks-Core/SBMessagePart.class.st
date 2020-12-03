@@ -294,3 +294,11 @@ SBMessagePart >> wrapInMessageSend: anEvent [
 	self sandblockEditor endInput.
 	^ self messageSend wrapInMessageSend: (anEvent keyCharacter isSpecial ifTrue: [anEvent keyCharacter asString] ifFalse: [''])
 ]
+
+{ #category : #'as yet unclassified' }
+SBMessagePart >> wrapWithWatch [
+	<action>
+	<inputAction>
+
+	self messageSend wrapWithWatch
+]

@@ -134,6 +134,12 @@ SBPragma >> symbols [
 ]
 
 { #category : #'as yet unclassified' }
+SBPragma >> useSuggestion: aString [
+
+	signature selectorAndEdit: aString
+]
+
+{ #category : #'as yet unclassified' }
 SBPragma >> valid [
 
 	^ (self parentSandblock isBlockBody and: [self parentSandblock isMethodBody]) and: [

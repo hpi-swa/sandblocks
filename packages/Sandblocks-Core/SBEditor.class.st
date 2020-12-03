@@ -572,6 +572,12 @@ SBEditor >> canDeleteChild: aBlock [
 	^ true
 ]
 
+{ #category : #accessing }
+SBEditor >> canvas [
+
+	^ scroll
+]
+
 { #category : #actions }
 SBEditor >> childSandblocksDo: aBlock [
 
@@ -1160,7 +1166,7 @@ SBEditor >> moveCursorLeft [
 		ifAtBound: [ | next |
 			next := self class navigation previousFrom: self selection do: [:b |
 				(self selection canJumpTo: b) ifTrue: [b] ifFalse: [nil]].
-			self select: next; startInput: next at: 900000000 replacingContents: false]
+			next ifNotNil: [self select: next; startInput: next at: 900000000 replacingContents: false]]
 		wordWise: (ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed])
 ]
 
@@ -1173,7 +1179,7 @@ SBEditor >> moveCursorRight [
 		ifAtBound: [ | next |
 			next := self class navigation nextFrom: self selection do: [:b |
 				(self selection canJumpTo: b) ifTrue: [b] ifFalse: [nil]].
-			self select: next; startInput: next at: 0 replacingContents: false]
+			next ifNotNil: [self select: next; startInput: next at: 0 replacingContents: false]]
 		wordWise: (ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed])
 ]
 

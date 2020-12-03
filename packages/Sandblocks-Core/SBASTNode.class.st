@@ -613,6 +613,7 @@ SBASTNode >> wrapWithExampleWatch [
 { #category : #actions }
 SBASTNode >> wrapWithWatch [
 	<action>
+	<inputAction>
 	<actionValidIf: #isExpression>
 
 	self watchWith: SBNewWatch

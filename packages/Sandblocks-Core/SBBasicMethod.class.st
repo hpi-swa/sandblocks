@@ -635,12 +635,6 @@ SBBasicMethod >> updateSuggestions [
 ]
 
 { #category : #'as yet unclassified' }
-SBBasicMethod >> useSuggestion: aString [
-
-	signature selectorAndEdit: aString
-]
-
-{ #category : #'as yet unclassified' }
 SBBasicMethod >> valid [
 
 	^ self selector notEmpty and: [

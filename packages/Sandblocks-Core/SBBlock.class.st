@@ -255,7 +255,8 @@ SBBlock >> clearCache [
 { #category : #'as yet unclassified' }
 SBBlock >> click: anEvent [
 
-	self sandblockEditor selectClick: self at: anEvent position
+	self sandblockEditor selectClick: self at: anEvent position.
+	(anEvent yellowButtonPressed and: [SBPreferences rightClickContextMenu]) ifTrue: [self promptAction]
 ]
 
 { #category : #hierarchy }
@@ -834,7 +835,8 @@ SBBlock >> handleDroppedBlock: aBlock event: anEvent [
 { #category : #'event handling' }
 SBBlock >> handlesMouseDown: anEvent [
 
-	^ anEvent redButtonPressed
+	^ anEvent redButtonPressed or: [
+		SBPreferences rightClickContextMenu and: [anEvent yellowButtonPressed]]
 ]
 
 { #category : #'event handling' }
@@ -1931,12 +1933,24 @@ SBBlock >> startContinuousMultiSelection [
 { #category : #'as yet unclassified' }
 SBBlock >> startDrag: anEvent [
 
+	(SBToggledCode
+		comment: 'if the preference is on, we absorb the startDrag events'
+		active: 1
+		do: {
+			[
+				anEvent yellowButtonPressed and: [SBPreferences rightClickContextMenu]]
+		}) ifTrue: [ | canvas |
+		canvas := self sandblockEditor canvas.
+		anEvent hand newMouseFocus: canvas.
+		^ canvas startDrag: (anEvent transformBy: canvas transform asMatrix2x3 invert)].
+	
 	super startDrag: anEvent.
 	
 	(self hasDecorator: SBMoveDecorator) ifFalse: [
-		(self nearestOwnerThat: [:o | o isSandblock and: [o isSelected]])
-			ifNotNil: [:o | ^ o pickUp: anEvent].
-		^ self select; pickUp: anEvent].
+		(self nearestOwnerThat: [:o | o isSandblock and: [o isSelected]]) ifNotNil: [:o | ^ o pickUp: anEvent].
+		^ self
+			select;
+			pickUp: anEvent].
 	
 	self sandblockEditor select: self
 ]

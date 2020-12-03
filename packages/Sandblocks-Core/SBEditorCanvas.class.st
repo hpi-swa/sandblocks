@@ -197,7 +197,7 @@ SBEditorCanvas >> scrollToShow: aMorph [
 SBEditorCanvas >> startDrag: anEvent [
 
 	| canvas |
-	anEvent redButtonPressed
+	(anEvent redButtonPressed and: [SBPreferences drawOnCanvas])
 		ifTrue: [
 			canvas := SBDrawCanvas new center: (self transform globalPointToLocal: anEvent position).
 			self addMorphBack: canvas.
