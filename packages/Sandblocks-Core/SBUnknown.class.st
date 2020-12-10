@@ -5,29 +5,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBUnknown >> acceptCharacter: char [
-
-	(char isDigit or: [char = $-]) ifTrue: [^ self doReplaceBy: (SBNumber new contents: char asString)].
-	(char isAlphaNumeric or: [char = $_]) ifTrue: [^ self doReplaceBy: (SBName contents: char asString)].
-	char = $$ ifTrue: [^ self doReplaceBy: (SBCharacter new contents: '')].
-	char = $' ifTrue: [^ self doReplaceBy: (SBString new contents: '')].
-	char = $# ifTrue: [^ self doReplaceBy: (SBSymbol new contents: '')].
-	((char = Character space or: [char = Character cr]) and: [self isStatement]) ifTrue: [^ self emptyLine].
-	char = Character backspace ifTrue: [^ self tryDelete].
-	
-	char = ${ ifTrue: [^ self doWrap: [:outer :inner | outer type: #dynamic contents: {inner}] with: SBArray new].
-	char = $( ifTrue: [^ self doWrap: [:outer :inner | outer type: #literal contents: {inner}] with: SBArray new].
-	char = $[ ifTrue: [^ self doWrap: [:outer :inner | outer statements: {inner}] with: SBBlockBody new].
-	char = $^ ifTrue: [^ self doWrap: [:outer :inner | outer expression: inner] with: SBReturn new].
-	(char = $: and: [self parentSandblock isBlockBody and: [self parentSandblock isMethodBody not]]) ifTrue: [ | block |
-		block := self parentSandblock.
-		self parentSandblock statements size > 1 ifTrue: [
-			self sandblockEditor do: ((SBDeleteCommand newFor: self containingArtefact) target: self; shouldMergeWithNext: true)].
-		^ block addBlockArgument].
-	char = $< ifTrue: [^ self replaceWithPragma]
-]
-
-{ #category : #'as yet unclassified' }
 SBUnknown >> contents: aString [
 
 	aString ifNotEmpty: [ | editor |
@@ -85,7 +62,6 @@ SBUnknown >> isUnknown [
 { #category : #'as yet unclassified' }
 SBUnknown >> keyStroke: anEvent [
 
-	"self acceptCharacter: anEvent keyCharacter"
 	SBSmalltalkGrammarHandler new perform: anEvent keyCharacter for: self empty: true
 ]
 

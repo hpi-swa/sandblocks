@@ -4,7 +4,7 @@ Class {
 	#category : #'Sandblocks-Core-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBGrammarHandlerTest >> testContinueBinaryMessage [
 
 	| block editor send |
@@ -17,7 +17,7 @@ SBGrammarHandlerTest >> testContinueBinaryMessage [
 	self assert: (block statements first isMessageSend and: [block statements first = send])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBGrammarHandlerTest >> testDeleteInEmptyString [
 
 	| block editor string |
@@ -30,7 +30,7 @@ SBGrammarHandlerTest >> testDeleteInEmptyString [
 	self assert: block statements isEmpty
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBGrammarHandlerTest >> testInsertNewStatement [
 
 	| block editor |
@@ -47,7 +47,7 @@ SBGrammarHandlerTest >> testInsertNewStatement [
 		self assert: block statements size = 2]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBGrammarHandlerTest >> testWrapWithArray [
 
 	| block editor |
@@ -65,7 +65,7 @@ SBGrammarHandlerTest >> testWrapWithArray [
 		self assert: block statements first isArrayBlock]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBGrammarHandlerTest >> testWrapWithBinaryMessageSend [
 
 	| block editor |
@@ -82,7 +82,7 @@ SBGrammarHandlerTest >> testWrapWithBinaryMessageSend [
 		self assert: (block statements first isMessageSend and: [block statements first ~= leaf])]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBGrammarHandlerTest >> testWrapWithMessageSend [
 
 	| block editor |

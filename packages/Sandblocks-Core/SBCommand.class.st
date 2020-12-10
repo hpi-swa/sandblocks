@@ -61,7 +61,7 @@ SBCommand >> artefact: anObject [
 	artefact := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #apply }
 SBCommand >> do [
 
 	^ self subclassResponsibility
@@ -106,7 +106,7 @@ SBCommand >> shouldMergeWithNext: aBoolean [
 	shouldMergeWithNext := aBoolean
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #apply }
 SBCommand >> undo [
 
 	^ self subclassResponsibility

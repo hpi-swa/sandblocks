@@ -28,7 +28,6 @@ Class {
 		'searchInput',
 		'helpOverlay',
 		'verticalSelectionPosition',
-		'countModifier',
 		'globalShortcutListeners',
 		'inputMapping'
 	],
@@ -693,8 +692,7 @@ SBEditor >> copyBuffer: aMorphOrCollection [
 	
 	list do: [:m | copyBuffer addMorphBack: m veryDeepCopy].
 	form := copyBuffer imageForm.
-	"copyBufferPreview image: ((form scaledIntoFormOfSize: (self copyBufferPreviewSize min: form extent)) collectColors: [:c | c alpha: c alpha * 0.7])."
-	copyBufferPreview image: ((form scaledToHeight: self copyBufferPreviewSize y) collectColors: [:c | c alpha: c alpha * 0.7])
+	copyBufferPreview image: ((form scaledToHeight: self copyBufferPreviewSize y)" collectColors: [:c | c alpha: c alpha * 0.7]")
 ]
 
 { #category : #accessing }
@@ -955,7 +953,6 @@ SBEditor >> initialize [
 	colorPolicy := self class defaultColorPolicy new.
 	compileTime := #compileOnSave.
 	verticalSelectionPosition := 0.
-	countModifier := ''.
 	globalShortcutListeners := OrderedCollection new.
 	inputMapping := self class newInputMapping.
 	inputMapping applyFor: self.

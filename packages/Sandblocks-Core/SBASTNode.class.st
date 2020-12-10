@@ -295,6 +295,12 @@ SBASTNode >> isStatement [
 	^ self owner isBlockBody
 ]
 
+{ #category : #constants }
+SBASTNode >> nullBlockClass [
+
+	^ SBUnknown
+]
+
 { #category : #'as yet unclassified' }
 SBASTNode >> object [
 

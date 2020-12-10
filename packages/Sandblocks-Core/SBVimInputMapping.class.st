@@ -33,7 +33,7 @@ SBVimInputMapping >> initialize [
 
 	super initialize.
 	
-	
+	countModifier := ''
 ]
 
 { #category : #'as yet unclassified' }

@@ -52,6 +52,16 @@ SequenceableCollection >> viewFrom: aNumber to: anotherNumber by: aThirdNumber [
 ]
 
 { #category : #'*Sandblocks-Core' }
+SequenceableCollection >> with: otherCollection and: thirdCollection do: threeArgBlock [
+
+	self isOfSameSizeCheck: otherCollection.
+	self isOfSameSizeCheck: thirdCollection.
+	
+	1 to: self size do: [:index |
+		threeArgBlock value: (self at: index) value: (otherCollection at: index) value: (thirdCollection at: index)]
+]
+
+{ #category : #'*Sandblocks-Core' }
 SequenceableCollection >> withInsert: anObject at: anIndex [
 
 	^ self copyReplaceFrom: anIndex to: anIndex - 1 with: {anObject}
