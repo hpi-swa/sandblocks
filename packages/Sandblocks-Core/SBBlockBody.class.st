@@ -280,6 +280,14 @@ SBBlockBody >> minimumHeight [
 	^ self fontToUse height + self layoutInset asEdgeInsets vertical
 ]
 
+{ #category : #converting }
+SBBlockBody >> multiSelectChildren [
+	<multiSelectAction>
+
+	self sandblockEditor mode = #select ifFalse: [self sandblockEditor mode: #selection].
+	self statements do: #startOrAddToMultiSelection
+]
+
 { #category : #'as yet unclassified' }
 SBBlockBody >> noteNewOwner: aMorph [
 

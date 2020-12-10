@@ -19,6 +19,12 @@ SBRecordedCommand >> add: aMorph in: anOwnerMorph at: aNumber [
 ]
 
 { #category : #action }
+SBRecordedCommand >> addAll: aCollection after: aMorph [
+
+	self addAll: aCollection in: aMorph owner at: aMorph submorphIndex + 1
+]
+
+{ #category : #action }
 SBRecordedCommand >> addAll: aCollection in: anOwnerMorph at: aNumber [
 
 	undo add: [aCollection do: [:m | m delete]].
@@ -42,6 +48,12 @@ SBRecordedCommand >> do [
 	firstRemoved := nil.
 	doBlock value: self.
 	^ firstAdded
+]
+
+{ #category : #action }
+SBRecordedCommand >> moveAll: aCollection after: aMorph [
+
+	self moveAll: aCollection in: aMorph owner at: aMorph submorphIndex + 1
 ]
 
 { #category : #action }
@@ -79,6 +91,14 @@ SBRecordedCommand >> remove: aMorph [
 SBRecordedCommand >> removed: aMorph [
 
 	firstRemoved ifNil: [firstRemoved := aMorph]
+]
+
+{ #category : #action }
+SBRecordedCommand >> replace: aMorph with: anotherMorph [
+
+	undo add: [anotherMorph replaceBy: aMorph].
+	aMorph replaceBy: anotherMorph.
+	self added: anotherMorph
 ]
 
 { #category : #apply }

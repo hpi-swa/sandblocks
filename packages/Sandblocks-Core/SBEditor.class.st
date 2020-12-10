@@ -596,6 +596,13 @@ SBEditor >> clearInput [
 	self textMorph clear
 ]
 
+{ #category : #selection }
+SBEditor >> clearMultiSelection [
+
+	multiSelection do: [:b | b detachDecorators: SBMultiSelectionDecorator].
+	multiSelection := OrderedCollection new
+]
+
 { #category : #shortcuts }
 SBEditor >> clearShortcuts [
 
@@ -874,8 +881,7 @@ SBEditor >> endInputWith: aString [
 SBEditor >> endMultiSelection [
 	<multiSelectAction>
 
-	multiSelection do: [:b | b detachDecorators: SBMultiSelectionDecorator].
-	multiSelection := OrderedCollection new.
+	self clearMultiSelection.
 	self mode: #command
 ]
 
@@ -1117,6 +1123,8 @@ SBEditor >> mode [
 { #category : #accessing }
 SBEditor >> mode: aSymbol [
 
+	self clearMultiSelection.
+		
 	aSymbol = #input ifTrue: [self assert: currentInput notNil] ifFalse: [self assert: currentInput isNil].
 	(aSymbol = #selection or: [aSymbol = #continuousSelection]) ifFalse: [self assert: multiSelection isEmpty].
 	
