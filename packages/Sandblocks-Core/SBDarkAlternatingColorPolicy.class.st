@@ -11,6 +11,12 @@ SBDarkAlternatingColorPolicy >> borderWidthForBlock: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBDarkAlternatingColorPolicy >> colorForEditor [
+
+	^ Color r: 0.3 g: 0.3 b: 0.3
+]
+
+{ #category : #'as yet unclassified' }
 SBDarkAlternatingColorPolicy >> colors [
 
 	^ {Color black. Color r: 0.2 g: 0.2 b: 0.2. Color white}

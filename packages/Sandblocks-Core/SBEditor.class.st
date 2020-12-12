@@ -641,7 +641,7 @@ SBEditor >> closeAll [
 { #category : #drawing }
 SBEditor >> color [
 
-	^ Color white
+	^ self colorPolicy ifNotNil: #colorForEditor ifNil: [Color white]
 ]
 
 { #category : #'initialize-release' }

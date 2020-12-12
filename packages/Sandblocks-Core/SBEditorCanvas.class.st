@@ -46,6 +46,12 @@ SBEditorCanvas >> currentPosition [
 	^ self position + self transform offset
 ]
 
+{ #category : #'geometry testing' }
+SBEditorCanvas >> defaultColor [
+
+	^ (self owner ifNotNil: [:editor | editor colorPolicy ifNotNil: #colorForEditor]) ifNil: [Color white]
+]
+
 { #category : #'event handling' }
 SBEditorCanvas >> doubleClick: anEvent [
 
@@ -114,9 +120,8 @@ SBEditorCanvas >> initialize [
 	dragging := false.
 	targetPosition := 0 @ 0.
 	dragLeftOverVelocity := 0 @ 0.
-	self smoothing: 2.
-	
-	self color: Color white
+	color := nil.
+	self smoothing: 2
 ]
 
 { #category : #'event handling' }

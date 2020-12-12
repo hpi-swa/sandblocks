@@ -45,6 +45,12 @@ SBColorPolicy >> colorForBlock: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBColorPolicy >> colorForEditor [
+
+	^ Color white
+]
+
+{ #category : #'as yet unclassified' }
 SBColorPolicy >> foregroundColorForBlock: aBlock [
 
 	| color |
