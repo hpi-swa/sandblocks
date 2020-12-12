@@ -75,6 +75,12 @@ SBExplorer >> declarations [
 ]
 
 { #category : #'as yet unclassified' }
+SBExplorer >> deleteCommandFor: aBlock [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBExplorer >> doubleClick: anEvent [
 
 	self toggleCollapsed

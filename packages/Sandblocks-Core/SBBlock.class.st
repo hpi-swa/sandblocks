@@ -1554,7 +1554,8 @@ SBBlock >> pickUp: anEvent [
 		yourself).
 	
 	anEvent shiftPressed ifFalse: [
-		editor do: ((self parentSandblock deleteCommandFor: self) shouldMergeWithNext: true)]
+		(self parentSandblock deleteCommandFor: self) ifNotNil: [:cmd |
+			editor do: (cmd shouldMergeWithNext: true)]]
 ]
 
 { #category : #actions }
