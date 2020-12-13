@@ -31,6 +31,12 @@ Point class >> fromSide: aSymbol [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Point >> rotatedBy: anAngleNumber [
+
+	^ self rotateBy: anAngleNumber about: 0 @ 0
+]
+
+{ #category : #'*Sandblocks-Core' }
 Point >> scalarTowards: aSymbol [
 
 	aSymbol = #left ifTrue: [^ self x].

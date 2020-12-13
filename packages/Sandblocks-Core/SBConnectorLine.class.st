@@ -8,7 +8,8 @@ Class {
 		'toAlign',
 		'lineType',
 		'curveModifier',
-		'connectorType'
+		'connectorType',
+		'evade'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -74,15 +75,31 @@ SBConnectorLine >> controlSize [
 { #category : #'as yet unclassified' }
 SBConnectorLine >> curvePoints [
 
-	| delta controlSize controlPoint fromControl toControl |
 	self isSelfConnection ifTrue: [^ self curvePointsForSelfConnection].
-	^ self endPointsDo: [:a :b | 
+	self evade ~= #none ifTrue: [^ self curvePointsForEvade].
+	^ self endPointsDo: [:a :b | | delta controlSize controlPoint fromControl toControl |
 		delta := a - b.
 		controlSize := (delta x max: delta y) / 2.
 		controlPoint := delta x abs > delta y abs ifTrue: [controlSize @ 0] ifFalse: [0 @ controlSize].
 		fromControl := fromAlign = #none ifTrue: [controlPoint * delta sign negated] ifFalse: [(Point fromSide: fromAlign) * self controlSize].
 		toControl := toAlign = #none ifTrue: [controlPoint * delta sign] ifFalse: [(Point fromSide: toAlign) * self controlSize].
 		{a. (a + fromControl). (b + toControl). b}]
+]
+
+{ #category : #'as yet unclassified' }
+SBConnectorLine >> curvePointsForEvade [
+
+	| delta controlDistance angle |
+	^ self endPointsDo: [:a :b |
+		delta := a - b.
+		controlDistance := (self width max: self height) / 4.
+		angle := (evade = #left ifTrue: [45] ifFalse: [-45]) degreesToRadians.
+		{
+			a.
+			a + (delta normalized negated * controlDistance rotatedBy: angle negated).
+			b + (delta normalized * controlDistance rotatedBy: angle).
+			b
+		}]
 ]
 
 { #category : #'as yet unclassified' }
@@ -126,12 +143,12 @@ SBConnectorLine >> drawOn: aCanvas [
 				aaLevel: 4;
 				line: a to: b width: 3 color: self color.
 			self drawConnectorsOn: aCanvas alignBetween: a and: b]].
-	self lineType = #curve ifTrue: [ | delta controlSize controlPoint fromControl toControl points |
+	self lineType = #curve ifTrue: [ | points |
 		points := self curvePoints.
 		aCanvas asBalloonCanvas
 			aaLevel: 4;
 			drawBezier3Shape: points color: Color transparent borderWidth: 2 withScalingFactor borderColor: self color.
-		self drawConnectorsOn: aCanvas alignBetween: points last and: points third]
+		self drawConnectorsOn: aCanvas alignBetween: points third and: points last]
 ]
 
 { #category : #'as yet unclassified' }
@@ -154,6 +171,21 @@ SBConnectorLine >> endPointsDo: aBlock [
 					do: [:a :b |
 						(to bounds line: side do: [:a2 :b2 | ((b2 - a2) // 2) + a2]) nearestPointOnLineFrom: a to: b]]
 			ifFalse: [to perform: (toAlign, 'Center') asSymbol])
+]
+
+{ #category : #'as yet unclassified' }
+SBConnectorLine >> evade [
+
+	^ evade
+]
+
+{ #category : #'as yet unclassified' }
+SBConnectorLine >> evade: aDirection [
+	" set this line to curve to the #left or the #right or #none "
+
+	evade := aDirection.
+	self changed.
+	self layoutChanged
 ]
 
 { #category : #'as yet unclassified' }
@@ -263,7 +295,8 @@ SBConnectorLine >> initialize [
 	fromAlign := #none.
 	toAlign := #none.
 	curveModifier := 0.
-	connectorType := #arrow
+	connectorType := #arrow.
+	evade := #none
 ]
 
 { #category : #'as yet unclassified' }
@@ -275,7 +308,7 @@ SBConnectorLine >> isSelfConnection [
 { #category : #'as yet unclassified' }
 SBConnectorLine >> lineType [
 
-	^ self isSelfConnection ifTrue: [#curve] ifFalse: [lineType]
+	^ (self isSelfConnection or: [self evade ~= #none]) ifTrue: [#curve] ifFalse: [lineType]
 ]
 
 { #category : #'as yet unclassified' }

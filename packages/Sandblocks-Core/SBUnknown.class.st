@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBUnknown >> acceptCharacter: aCharacter [
+
+	SBSmalltalkGrammarHandler new perform: aCharacter for: self empty: true
+]
+
+{ #category : #'as yet unclassified' }
 SBUnknown >> contents: aString [
 
 	aString ifNotEmpty: [ | editor |
@@ -62,7 +68,7 @@ SBUnknown >> isUnknown [
 { #category : #'as yet unclassified' }
 SBUnknown >> keyStroke: anEvent [
 
-	SBSmalltalkGrammarHandler new perform: anEvent keyCharacter for: self empty: true
+	self acceptCharacter: anEvent keyCharacter
 ]
 
 { #category : #'as yet unclassified' }

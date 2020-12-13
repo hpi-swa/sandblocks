@@ -102,6 +102,15 @@ SBAssignment >> symbols [
 	^ self colorPolicy symbolsForAssignment: self
 ]
 
+{ #category : #'as yet unclassified' }
+SBAssignment >> useAsMessageSend [
+	<action>
+	
+	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+		target: self;
+		replacer: (SBMessageSend new receiver: (SBName contents: 'self') selector: self binding contents asSymbol asSimpleSetter arguments: {self expression}))
+]
+
 { #category : #converting }
 SBAssignment >> writeSourceOn: aStream [
 

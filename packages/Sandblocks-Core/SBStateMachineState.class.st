@@ -2,7 +2,6 @@ Class {
 	#name : #SBStateMachineState,
 	#superclass : #SBBlock,
 	#instVars : [
-		'name',
 		'label'
 	],
 	#category : #'Sandblocks-Core'
@@ -69,19 +68,25 @@ SBStateMachineState >> initialize [
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		layoutInset: 6 withScalingFactor;
-		attachDecorator: SBMoveDecorator new
+		attachDecorator: SBMoveDecorator new;
+		attachDecorator: SBResizableDecorator new
+]
+
+{ #category : #'as yet unclassified' }
+SBStateMachineState >> isASTNode [
+
+	^ false
 ]
 
 { #category : #'as yet unclassified' }
 SBStateMachineState >> name [
 
-	^ name
+	^ label contents
 ]
 
 { #category : #'as yet unclassified' }
 SBStateMachineState >> name: aString [
 
-	name := aString.
 	label contents: aString
 ]
 

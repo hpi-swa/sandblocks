@@ -48,7 +48,9 @@ SBErrorStackFrame >> currentBlock [
 { #category : #'as yet unclassified' }
 SBErrorStackFrame >> currentBlockIsActive: aBoolean [
 
-	^ self method blockForPC: (aBoolean ifTrue: [context pc] ifFalse: [context previousPc])
+	| pc |
+	pc := aBoolean ifTrue: [context pc] ifFalse: [context previousPc].
+	^ self method blockForPC: (context closure ifNotNil: [:c | c method -> pc] ifNil: [pc])
 ]
 
 { #category : #'as yet unclassified' }

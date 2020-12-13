@@ -478,7 +478,7 @@ SBBlock >> deleteAround [
 	target parentSandblock ifNil: [^ self].
 	
 	" if we have multiple siblings and our destination can take multiple children, move all "
-	(self parentSandblock childSandblocks size > 1 and: [target parentHasDynamicNumberOfChildren]) ifTrue: [ 
+	(self parentSandblock childSandblocks size > 1 and: [target parentHasDynamicNumberOfChildren and: [self isStatement]]) ifTrue: [ 
 		SBPastePlaceholder forAll: self parentSandblock childSandblocks root: target copyIn: editor.
 		
 		editor do: ((SBRecordedCommand newFor: self containingArtefact) record: [:recorder |

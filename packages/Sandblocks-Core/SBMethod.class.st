@@ -136,7 +136,7 @@ SBMethod >> messageParts [
 { #category : #'as yet unclassified' }
 SBMethod >> methodClass [
 
-	^ classPrefix object
+	^ classPrefix selectedClass
 ]
 
 { #category : #'as yet unclassified' }
