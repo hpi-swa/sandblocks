@@ -1721,6 +1721,8 @@ SBEditor >> sortedMultiSelection [
 { #category : #input }
 SBEditor >> startInput: aMorph at: aNumber replacingContents: aBoolean [
 
+	aMorph ifNil: [^ nil].
+	
 	" needs to be set first, as startInputAt: may choose to immediately replace this "
 	self select: aMorph.
 	
