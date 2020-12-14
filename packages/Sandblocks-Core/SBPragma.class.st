@@ -78,6 +78,12 @@ SBPragma >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBPragma >> keyword [
+
+	^ self selector
+]
+
+{ #category : #'as yet unclassified' }
 SBPragma >> layoutCommands [
 
 	^ SBAlgebraCommand container
