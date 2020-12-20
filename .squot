@@ -14,5 +14,12 @@ OrderedDictionary {
 	'packages/Sandblocks-Core' : #SquotTonelSerializer,
 	'packages/Sandblocks-Drawing' : #SquotTonelSerializer,
 	'packages/Sandblocks-Debugger' : #SquotTonelSerializer,
-	'packages/Sandblocks-Graph' : #SquotTonelSerializer
+	'packages/Sandblocks-Graph' : #SquotTonelSerializer,
+	'packages/RatPack-Core' : #SquotTonelSerializer,
+	'packages/RatPack-Examples' : #SquotTonelSerializer,
+	'packages/RatPack-Help' : #SquotTonelSerializer,
+	'packages/RatPack-Templating' : #SquotTonelSerializer,
+	'packages/RatPack-Testing' : #SquotTonelSerializer,
+	'packages/RatPack-UI' : #SquotTonelSerializer,
+	'packages/BaselineOfRatPack' : #SquotTonelSerializer
 }
