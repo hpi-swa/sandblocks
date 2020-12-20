@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBRPRequestTracker >> currentTimestamp [
+
+	^ Time highResClock
+]
+
+{ #category : #'as yet unclassified' }
 SBRPRequestTracker >> finalizeRequest: dynEnv [
 
 	"self halt."
@@ -22,7 +28,7 @@ SBRPRequestTracker >> initRequest: dynEnv [
 
 	self
 		at: #timings put: (Dictionary new
-			at: #preParsing put: Time utcMicrosecondClock;
+			at: #preParsing put: self currentTimestamp;
 			yourself);
 		at: #request put: dynEnv request;
 		at: #response put: dynEnv response.
@@ -43,7 +49,7 @@ SBRPRequestTracker >> lastRequest: aDictionary [
 SBRPRequestTracker >> postRouting: dynEnv [
 
 	(self at: #timings)
-		at: #postRouting put: Time utcMicrosecondClock.
+		at: #postRouting put: self currentTimestamp.
 	self at: #handler put: dynEnv handler.
 
 ]
@@ -52,7 +58,7 @@ SBRPRequestTracker >> postRouting: dynEnv [
 SBRPRequestTracker >> preRouting: dynEnv [
 
 	(self at: #timings)
-		at: #preRouting put: Time utcMicrosecondClock.
+		at: #preRouting put: self currentTimestamp.
 
 ]
 
@@ -66,27 +72,6 @@ SBRPRequestTracker >> request [
 SBRPRequestTracker >> response [
 
 	^ self at: #response
-]
-
-{ #category : #'as yet unclassified' }
-SBRPRequestTracker >> startRequest: dynEnv [
-
-	self lastRequest: (Dictionary new
-		at: #timings put: (Dictionary new
-			at: #preParsing put: Time utcMicrosecondClock;
-			yourself);
-		at: #request put: dynEnv request;
-		at: #response put: dynEnv response;
-		yourself).
-
-]
-
-{ #category : #'as yet unclassified' }
-SBRPRequestTracker >> startRouting: dynEnv [
-
-	(self lastRequest at: #timings)
-		at: #preRouting put: Time utcMicrosecondClock.
-
 ]
 
 { #category : #accessing }

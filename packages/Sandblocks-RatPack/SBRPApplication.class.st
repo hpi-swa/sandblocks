@@ -5,10 +5,10 @@ Class {
 }
 
 { #category : #routing }
-SBRPApplication >> processRequest: aHttpRequest [
+SBRPApplication >> doProcessRequest: aHttpRequest [
 	| requestTracker |
 
-	self 
+	self
 		request: aHttpRequest;
 		response: (HttpResponse fromString: '').
 
@@ -25,6 +25,26 @@ SBRPApplication >> processRequest: aHttpRequest [
 	self logWindow logRequest: aHttpRequest andResponse: self response.
 	requestTracker finalizeRequest: self dynamicEnvironment.
 	self changed: #requestHandled with: requestTracker.
+	^ self response
+
+]
+
+{ #category : #routing }
+SBRPApplication >> processRequest: aHttpRequest [
+
+	aHttpRequest url = '/favicon.ico'
+		ifTrue: [
+			self doProcessRequest: aHttpRequest]
+		ifFalse: [ | recorder |
+			recorder := MessageSendRecorder new
+				watchPackageNamed: #'Sandblocks-RatPack';
+				watchPackageNamed: #'Ratpack-Core';
+				watchPackageNamed: #'Ratpack-Examples';
+				setMessageSend: (MessageSend receiver: self selector: #doProcessRequest: argument: aHttpRequest);
+				yourself.
+			recorder record.
+			recorder topRecord browse].
+	
 	^ self response
 
 ]

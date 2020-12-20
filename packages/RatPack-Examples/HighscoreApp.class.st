@@ -121,6 +121,18 @@ HighscoreApp >> getPlayerList [
 	self sendHtml: (self est: self playerListTemplate)
 ]
 
+{ #category : #handler }
+HighscoreApp >> getPlayerListJSON [
+	<get: '/test/'>
+
+	"| players |
+	players := SBNewWatch report: (self database loadModelObjectsOf: SwaPlayerModel) for: 21983831.
+	self playerListTemplate"
+	
+	self sendJson: Dictionary new asJsonString.
+	self status: 501.
+]
+
 { #category : #templating }
 HighscoreApp >> highscoreListCssTemplate [
 

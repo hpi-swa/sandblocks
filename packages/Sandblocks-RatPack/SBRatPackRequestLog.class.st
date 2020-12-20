@@ -2,6 +2,7 @@ Class {
 	#name : #SBRatPackRequestLog,
 	#superclass : #SBBlock,
 	#instVars : [
+		'service',
 		'handlerSelector',
 		'route',
 		'requestLog'
@@ -21,14 +22,7 @@ SBRatPackRequestLog class >> set: sbrprl [
 	tmp := sbrprl.
 ]
 
-{ #category : #'as yet unclassified' }
-SBRatPackRequestLog >> appendRequest: aSBRPRequestTracker [
-
-	self requestLog addLast: aSBRPRequestTracker.
-	self halt.
-]
-
-{ #category : #nil }
+{ #category : #'submorphs-add/remove' }
 SBRatPackRequestLog >> delete [
 
 	super delete.
@@ -40,7 +34,11 @@ SBRatPackRequestLog >> exploreLatestRequest [
 
 	self requestLog ifNotEmpty: [
 		Project current addDeferredUIMessage: [
-			self lastRequest explore]].
+			"self lastRequest explore"
+			self sandblockEditor
+				openMorphInView: (SBMorphWrapperBlock new
+					addMorphBack: (ToolBuilder build: (ObjectExplorer explore: self lastRequest))
+						submorphs third)]].
 ]
 
 { #category : #'as yet unclassified' }
@@ -154,11 +152,4 @@ SBRatPackRequestLog >> update: aSymbol with: anObject [
 
 	(aSymbol = #requestHandled) ifTrue: [
 		self handleRequestTracking: anObject].
-]
-
-{ #category : #accessing }
-SBRatPackRequestLog >> withApplication: aRPApplication [
-
-	self halt.
-	aRPApplication addDependent: self.
 ]

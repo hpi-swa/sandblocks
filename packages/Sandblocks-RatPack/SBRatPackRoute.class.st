@@ -116,6 +116,18 @@ SBRatPackRoute >> reload [
 	self replaceBy: (SBRatPackRoute newFor: (self compiledMethod asSandblock))
 ]
 
+{ #category : #'as yet unclassified' }
+SBRatPackRoute >> reloadMethodInPlace [
+
+	| newBody |
+	newBody := self compiledMethod asSandblock body.
+	newBody statements
+		detect: [:s | s isPragma and: [self class validMethods includes: s selector]]
+		ifFound: [:pragma |	pragma delete]. "todo update route string"
+
+	self body replaceBy: newBody.
+]
+
 { #category : #accessing }
 SBRatPackRoute >> rpApplication [
 
