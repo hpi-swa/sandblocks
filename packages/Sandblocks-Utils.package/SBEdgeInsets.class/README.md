@@ -1,1 +1,0 @@
-A SBEdgeInsets models a Morph's layoutInset without requiring the caller to pretend its a Rectangle to specify four different values. As such, it also supports adding to numbers and points.

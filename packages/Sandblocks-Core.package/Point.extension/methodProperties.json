@@ -1,9 +1,0 @@
-{
-	"class" : {
-		"fromSide:" : "" },
-	"instance" : {
-		"adaptToEdgeInsetsAndAdd:" : "",
-		"asEdgeInsets" : "",
-		"rotatedBy:" : "",
-		"scalarTowards:" : "",
-		"withScalingFactor" : "" } }

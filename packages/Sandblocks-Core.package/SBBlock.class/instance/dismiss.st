@@ -1,3 +1,0 @@
-actions
-dismiss
-	<action>

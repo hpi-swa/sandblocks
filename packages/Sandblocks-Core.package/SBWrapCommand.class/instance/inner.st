@@ -1,4 +1,0 @@
-accessing
-inner
-
-	^ inner

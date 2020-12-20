@@ -1,4 +1,0 @@
-constants
-fadeSize
-
-	^ 80

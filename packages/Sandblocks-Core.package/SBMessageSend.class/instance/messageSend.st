@@ -1,4 +1,0 @@
-actions
-messageSend
-
-	^ self

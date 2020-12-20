@@ -1,4 +1,0 @@
-artefact protocol
-isArtefact
-
-	^ true

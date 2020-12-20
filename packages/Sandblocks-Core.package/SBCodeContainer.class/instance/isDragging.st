@@ -1,4 +1,0 @@
-testing
-isDragging
-
-	^ lastDragPosition notNil

@@ -1,4 +1,0 @@
-printing
-selectionLabel
-
-	^ self printString

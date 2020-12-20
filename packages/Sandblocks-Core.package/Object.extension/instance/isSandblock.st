@@ -1,4 +1,0 @@
-*Sandblocks-Core
-isSandblock
-
-	^ false

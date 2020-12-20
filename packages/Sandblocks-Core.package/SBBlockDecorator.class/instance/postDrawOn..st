@@ -1,4 +1,0 @@
-drawing
-postDrawOn: aCanvas
-
-	

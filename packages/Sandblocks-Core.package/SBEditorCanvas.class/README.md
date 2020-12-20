@@ -1,1 +1,0 @@
-A SBEditorCanvas is an infite scrolling morph that clips its submorphs. Via 2d scroll viewport can be moved around. It supports smoothly animating to positions or rectangles in its coordinate system.

@@ -1,8 +1,0 @@
-{
-	"class" : {
-		 },
-	"instance" : {
-		"defaultState" : "",
-		"handledEvent:in:" : "",
-		"registerDefaultShortcuts" : "",
-		"unhandledEvent:in:didHandle:" : "" } }

@@ -1,4 +1,0 @@
-accessing
-rpApplication
-
-	^ self methodClass

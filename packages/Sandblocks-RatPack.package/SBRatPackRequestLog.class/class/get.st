@@ -1,4 +1,0 @@
-nil
-get
-
-	^ tmp

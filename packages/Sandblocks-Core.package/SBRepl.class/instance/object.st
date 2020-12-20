@@ -1,4 +1,0 @@
-method protocol
-object
-
-	^ receiver

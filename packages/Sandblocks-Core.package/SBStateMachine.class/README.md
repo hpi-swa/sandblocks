@@ -1,1 +1,0 @@
-A TOMStateMachine is a versatile implementation of a state machine, providing event based, condition based and time based triggers.

@@ -1,4 +1,0 @@
-apply
-undo
-
-	^ self subclassResponsibility

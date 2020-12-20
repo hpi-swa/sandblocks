@@ -1,1 +1,0 @@
-A SBError is the representation of a suspended process and an error as a block. It implements stepping this process.

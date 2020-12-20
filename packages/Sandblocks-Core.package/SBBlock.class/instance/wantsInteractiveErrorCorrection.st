@@ -1,4 +1,0 @@
-artefact protocol
-wantsInteractiveErrorCorrection
-
-	^ false

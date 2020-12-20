@@ -1,4 +1,0 @@
-color
-color
-
-	^ Color veryLightGray

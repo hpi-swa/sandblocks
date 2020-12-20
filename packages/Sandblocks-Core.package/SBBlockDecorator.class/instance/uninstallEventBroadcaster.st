@@ -1,4 +1,0 @@
-stepping
-uninstallEventBroadcaster
-
-	self morph eventHandler removeActionsWithReceiver: self

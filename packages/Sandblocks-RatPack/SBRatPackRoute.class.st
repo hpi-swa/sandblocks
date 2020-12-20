@@ -1,0 +1,159 @@
+Class {
+	#name : #SBRatPackRoute,
+	#superclass : #SBMethodSubstitution,
+	#category : #'Sandblocks-RatPack'
+}
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute class >> matches: aMethod [
+
+	^ (super matches: aMethod) and: [(aMethod methodClass inheritsFrom: RPApplication) and: [aMethod pragmas anySatisfy: [:p | self validMethods includes: p keyword]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute class >> newFor: anObject [
+
+	| block |
+	block := anObject asSandblock.
+	^ self new
+		selector: block selector arguments: block arguments class: block methodClass;
+		body: block body;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute class >> validMethods [
+
+	^ #(get: put: post: delete: patch: head: options: trace: connect:)
+]
+
+{ #category : #nil }
+SBRatPackRoute >> SBRPModelAccessTrqacker [
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute >> argumentsDo: aBlock [
+
+	self signature argumentsDo: aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute >> body [
+
+	^ self submorphs second
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute >> body: aBlock [
+
+	super body: aBlock.
+	
+	self statements
+		detect: [:s | s isPragma and: [self class validMethods includes: s selector]]
+		ifFound: [:pragma |
+			pragma delete.
+			self methodInput object: pragma selector allButLast asSymbol.
+			self pathArray addMorphBack: pragma arguments first].
+	
+	self addMorphBack: (SBRatPackRequestLog new
+		serverClass: self rpApplication;
+		handlerSelector: self selector;
+		yourself).
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute >> childSandblocksDo: aBlock [
+
+	aBlock value: self pathArray.
+	aBlock value: self body
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute >> drawnColor [
+
+	^ Color veryDarkGray
+]
+
+{ #category : #'actions input' }
+SBRatPackRoute >> initialize [
+
+	super initialize.
+	
+	self
+		addMorphBack: (SBRow new
+			layoutPolicy: SBAlgebraLayout new;
+			addMorphBack: (SBMethodSelect new object: #get);
+			addMorphBack: SBArray new;
+			addMorphBack: (SBSignature new hResizing: #spaceFill));
+		layoutInset: 4;
+		attachDecorator: SBResizableDecorator new
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute >> methodInput [
+
+	^ self firstSubmorph firstSubmorph
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute >> openRequestTracker [
+	<action>
+	
+	self sandblockEditor openMorphInView: (SBRatPackRequestTracker new
+		serverClass: self rpApplication).
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute >> pathArray [
+
+	^ self firstSubmorph submorphs second
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute >> reload [
+	<action>
+	
+	self replaceBy: (SBRatPackRoute newFor: (self compiledMethod asSandblock))
+]
+
+{ #category : #accessing }
+SBRatPackRoute >> rpApplication [
+
+	^ self methodClass
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute >> selector [
+
+	^ self currentSelector
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute >> selector: aSymbol arguments: aCollection class: aClass [
+
+	super selector: aSymbol arguments: aCollection class: aClass.
+	
+	self signature selector: aSymbol arguments: aCollection
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute >> signature [
+
+	^ self firstSubmorph submorphs third
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute >> writeSignatureSourceOn: aStream [
+
+	self signature writeSourceOn: aStream
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRoute >> writeSourceOn: aStream [
+
+	self writeSignatureSourceOn: aStream.
+	aStream space.
+	(SBPragma new selector: self methodInput object asSimpleSetter arguments: {self pathArray submorphs first veryDeepCopy}) writeSourceOn: aStream.
+	aStream space.
+	self body writeSourceOn: aStream
+]

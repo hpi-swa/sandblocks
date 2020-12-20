@@ -1,8 +1,0 @@
-{
-	"class" : {
-		"keyboardEvent:" : "",
-		"keyboardEvent:shift:command:" : "",
-		"keyboardEvent:shift:command:control:" : "" },
-	"instance" : {
-		"editorFor:" : "",
-		"keyboardEvent:" : "" } }

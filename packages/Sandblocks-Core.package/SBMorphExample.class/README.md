@@ -1,1 +1,0 @@
-A SBMorphExample partially sandboxes a morph in its own pasteupmorph. Together with the SBMorphExampleCase it will reopen the morph when requested.

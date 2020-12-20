@@ -1,4 +1,0 @@
-colors
-prefersNoBorder
-
-	^ false

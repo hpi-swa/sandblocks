@@ -1,4 +1,0 @@
-testing
-canAppearInBlockBody
-
-	^ false

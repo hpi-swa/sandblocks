@@ -1,4 +1,0 @@
-hierarchy
-localNestingDepth
-
-	^ 1

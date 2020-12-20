@@ -1,1 +1,0 @@
-A SBAlgebraState is an immutable object storing the current state of the layouting process in an SBAlgebraLayout.

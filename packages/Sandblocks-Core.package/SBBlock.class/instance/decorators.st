@@ -1,4 +1,0 @@
-decorators
-decorators
-
-	^ decorators

@@ -1,4 +1,0 @@
-initialize-release
-colorPolicy
-
-	^ colorPolicy

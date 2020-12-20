@@ -1,9 +1,0 @@
-{
-	"class" : {
-		 },
-	"instance" : {
-		"nextFrom:" : "",
-		"nextOnMessage:with:" : "",
-		"nextWithoutMessageSend:" : "",
-		"previousFrom:" : "",
-		"previousWithoutMessageSend:" : "" } }

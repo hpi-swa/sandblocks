@@ -1,4 +1,0 @@
-converting
-newChild
-
-	^ SBUnknown new

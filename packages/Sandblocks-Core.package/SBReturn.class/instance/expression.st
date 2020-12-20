@@ -1,4 +1,0 @@
-formatting
-expression
-
-	^ self firstSubmorph

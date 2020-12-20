@@ -1,1 +1,0 @@
-A SBMorphDecorator will add some functionality to the morph it is attached to. This may include drawing before or after the morph, stepping with the morph, or listening for events.

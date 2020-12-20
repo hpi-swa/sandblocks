@@ -1,1 +1,0 @@
-A SBErrorStackFrame is the representation of a stack frame in a suspended process as a block.
