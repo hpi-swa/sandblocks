@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Babylonian",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"value",
+		"frames" ],
+	"name" : "SBProbedValue",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

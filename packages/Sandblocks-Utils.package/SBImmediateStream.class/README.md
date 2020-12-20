@@ -1,0 +1,1 @@
+A SBImmediateStream is a stream that immediately executes a given block on each item it receives.

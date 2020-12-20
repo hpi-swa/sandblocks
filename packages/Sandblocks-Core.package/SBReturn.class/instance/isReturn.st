@@ -1,0 +1,4 @@
+formatting
+isReturn
+
+	^ true

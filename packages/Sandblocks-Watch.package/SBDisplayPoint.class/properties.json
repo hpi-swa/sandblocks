@@ -1,0 +1,17 @@
+{
+	"category" : "Sandblocks-Watch",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"lastPoint",
+		"label",
+		"pointers",
+		"direction" ],
+	"name" : "SBDisplayPoint",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }

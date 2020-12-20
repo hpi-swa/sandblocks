@@ -1,0 +1,27 @@
+{
+	"class" : {
+		"all:" : "",
+		"left:" : "",
+		"left:right:top:bottom:" : "" },
+	"instance" : {
+		"+" : "",
+		"adaptToEdgeInsetsAndAdd:" : "",
+		"adaptToInteger:andSend:" : "",
+		"adaptToPoint:andSend:" : "",
+		"asEdgeInsets" : "",
+		"bottom" : "",
+		"bottomRight" : "",
+		"corner" : "",
+		"horizontal" : "",
+		"isRectangle" : "",
+		"isZero" : "",
+		"left" : "",
+		"left:right:top:bottom:" : "",
+		"origin" : "",
+		"printOn:" : "",
+		"right" : "",
+		"top" : "",
+		"topLeft" : "",
+		"vertical" : "",
+		"x" : "",
+		"y" : "" } }

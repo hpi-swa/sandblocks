@@ -1,0 +1,4 @@
+artefact protocol
+evaluationReceiver
+
+	^ nil

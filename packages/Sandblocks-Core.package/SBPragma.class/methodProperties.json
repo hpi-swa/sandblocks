@@ -1,0 +1,28 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"actualReceiver" : "",
+		"arguments" : "",
+		"canAppearInBlockBody" : "",
+		"canSwap" : "",
+		"childSandblocksDo:" : "",
+		"contents:" : "",
+		"currentTextMorph" : "",
+		"initialize" : "",
+		"insertCommandRequest:near:" : "",
+		"isPragma" : "",
+		"keyStroke:" : "",
+		"keyword" : "",
+		"layoutCommands" : "",
+		"messageParts" : "",
+		"moveCursorTo:" : "",
+		"prefix" : "",
+		"selector" : "",
+		"selector:arguments:" : "",
+		"startInputAt:replacingContents:" : "",
+		"stopEditing:" : "",
+		"symbols" : "",
+		"useSuggestion:" : "",
+		"valid" : "",
+		"writeSourceOn:" : "" } }

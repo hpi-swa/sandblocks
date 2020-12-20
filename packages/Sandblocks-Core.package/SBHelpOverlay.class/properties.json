@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"target" ],
+	"name" : "SBHelpOverlay",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }

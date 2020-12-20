@@ -1,0 +1,11 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"applyFor:" : "",
+		"countModifier" : "",
+		"defaultState" : "",
+		"handledEvent:in:" : "",
+		"registerDefaultShortcuts" : "",
+		"registerShortcut:do:" : "",
+		"unhandledEvent:in:didHandle:" : "" } }

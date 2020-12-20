@@ -1,0 +1,12 @@
+{
+	"class" : {
+		"matches:" : "" },
+	"instance" : {
+		"dark:" : "",
+		"exampleFinished:" : "",
+		"exampleStarting:" : "",
+		"hidePoint" : "",
+		"initialize" : "",
+		"reportValue:" : "",
+		"showPoint" : "",
+		"updateDirection" : "" } }

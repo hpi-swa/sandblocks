@@ -1,0 +1,15 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"activeSelector" : "",
+		"activeSuggestion" : "",
+		"editor:" : "",
+		"handleMouseEnter:" : "",
+		"initialize" : "",
+		"minExtent" : "",
+		"moveActive:" : "",
+		"next" : "",
+		"previous" : "",
+		"resize" : "",
+		"suggestions:" : "" } }

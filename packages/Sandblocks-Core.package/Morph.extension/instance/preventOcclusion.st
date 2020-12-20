@@ -1,0 +1,4 @@
+*Sandblocks-Core
+preventOcclusion
+
+	^ false

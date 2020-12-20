@@ -1,0 +1,4 @@
+accessing
+pc
+
+	^ 0

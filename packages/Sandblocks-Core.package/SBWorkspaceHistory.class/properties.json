@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"Instance" ],
+	"commentStamp" : "",
+	"instvars" : [
+		"items" ],
+	"name" : "SBWorkspaceHistory",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

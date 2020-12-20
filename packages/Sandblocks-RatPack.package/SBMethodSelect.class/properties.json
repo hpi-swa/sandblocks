@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-RatPack",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBMethodSelect",
+	"pools" : [
+		 ],
+	"super" : "SBComboBox",
+	"type" : "normal" }

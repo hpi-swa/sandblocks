@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-RatPack",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBRPRequestTracker",
+	"pools" : [
+		 ],
+	"super" : "Dictionary",
+	"type" : "normal" }

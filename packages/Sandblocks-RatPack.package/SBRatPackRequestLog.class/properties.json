@@ -1,0 +1,16 @@
+{
+	"category" : "Sandblocks-RatPack",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"handlerSelector",
+		"route",
+		"requestLog" ],
+	"name" : "SBRatPackRequestLog",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

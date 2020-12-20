@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Layout",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"measure",
+		"minExtentCache" ],
+	"name" : "SBAlgebraLayout",
+	"pools" : [
+		 ],
+	"super" : "LayoutPolicy",
+	"type" : "normal" }

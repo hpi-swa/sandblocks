@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"text" ],
+	"name" : "SBMessagePart",
+	"pools" : [
+		 ],
+	"super" : "SBASTNode",
+	"type" : "normal" }

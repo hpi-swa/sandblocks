@@ -1,0 +1,4 @@
+testing
+isExampleWatch
+
+	^ false

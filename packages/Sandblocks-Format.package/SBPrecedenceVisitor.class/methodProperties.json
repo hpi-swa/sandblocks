@@ -1,0 +1,25 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"visitAssignmentNode:" : "",
+		"visitBlockNode:" : "",
+		"visitBraceNode:" : "",
+		"visitCascadeNode:" : "",
+		"visitCommentNode:" : "",
+		"visitFieldNode:" : "",
+		"visitFutureNode:" : "",
+		"visitInstanceVariableNode:" : "",
+		"visitLiteralNode:" : "",
+		"visitLiteralVariableNode:" : "",
+		"visitMessageNode:" : "",
+		"visitMessageNodeInCascade:" : "",
+		"visitMethodNode:" : "",
+		"visitNewArrayNode:" : "",
+		"visitRemoteTempVectorNode:" : "",
+		"visitReturnNode:" : "",
+		"visitSelectorNode:" : "",
+		"visitTempVariableNode:" : "",
+		"visitTrackedAssignmentNode:" : "",
+		"visitUndeclaredVariableNode:" : "",
+		"visitVariableNode:" : "" } }

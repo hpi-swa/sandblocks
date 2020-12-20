@@ -1,0 +1,19 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"addEnterAction" : "",
+		"addLeaveAction" : "",
+		"addUponEnter:" : "",
+		"addUponLeave:" : "",
+		"childSandblocksDo:" : "",
+		"connectTo" : "",
+		"initialize" : "",
+		"isASTNode" : "",
+		"name" : "",
+		"name:" : "",
+		"prefix" : "",
+		"printOn:" : "",
+		"setAsInitialState" : "",
+		"uponEnterBlocks" : "",
+		"uponLeaveBlocks" : "" } }

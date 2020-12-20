@@ -1,0 +1,19 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"conditionalTransitions",
+		"signalTransitions",
+		"enterActions",
+		"leaveActions",
+		"state",
+		"timeTransitions" ],
+	"name" : "SBStateMachine",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

@@ -1,0 +1,8 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"perform:for:empty:" : "",
+		"replace:with:" : "",
+		"tryDelete:" : "",
+		"wrap:do:with:" : "" } }

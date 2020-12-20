@@ -1,0 +1,19 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"outer",
+		"wrap",
+		"targets",
+		"targetOldOwner",
+		"targetOldIndex",
+		"wrapUndo" ],
+	"name" : "SBWrapConsecutiveCommand",
+	"pools" : [
+		 ],
+	"super" : "SBCommand",
+	"type" : "normal" }

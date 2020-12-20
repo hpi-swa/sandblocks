@@ -1,0 +1,19 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"view",
+		"cases",
+		"errorDecorator",
+		"header",
+		"errorIcon",
+		"reportedError" ],
+	"name" : "SBMorphExample",
+	"pools" : [
+		 ],
+	"super" : "SBSubstitution",
+	"type" : "normal" }

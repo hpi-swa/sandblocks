@@ -1,0 +1,4 @@
+accessing
+preventOcclusion
+
+	^ true

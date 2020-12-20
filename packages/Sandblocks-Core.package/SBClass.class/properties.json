@@ -1,0 +1,21 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"className",
+		"superClassName",
+		"instanceVariables",
+		"class",
+		"hasUnsavedChanges",
+		"classVariables",
+		"poolDictionaries",
+		"category" ],
+	"name" : "SBClass",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

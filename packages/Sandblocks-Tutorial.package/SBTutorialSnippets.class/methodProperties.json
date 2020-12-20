@@ -1,0 +1,17 @@
+{
+	"class" : {
+		"workspace" : "" },
+	"instance" : {
+		"t01movement" : "",
+		"t02deleting" : "",
+		"t03Swapping" : "",
+		"t04Jumping" : "",
+		"t05BasicMessageSend" : "",
+		"t06EditingValues" : "",
+		"t07Smalltalk" : "",
+		"t08Lists" : "",
+		"t09MessageSends" : "",
+		"t10Assignments" : "",
+		"t11Cascades" : "",
+		"t12Projections" : "",
+		"t13Evaluating" : "" } }

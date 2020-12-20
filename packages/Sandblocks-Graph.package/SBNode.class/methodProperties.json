@@ -1,0 +1,21 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"addInput:" : "",
+		"addOutput:" : "",
+		"bubbleSize" : "",
+		"drawOn:" : "",
+		"flowIn" : "",
+		"flowOut" : "",
+		"hasFlowIn:" : "",
+		"hasFlowOut:" : "",
+		"initialize" : "",
+		"inputs" : "",
+		"isFlowSource:" : "",
+		"isLink" : "",
+		"isNode" : "",
+		"maybeRemoveFlowIn" : "",
+		"newTextMorph" : "",
+		"output" : "",
+		"outputs" : "" } }

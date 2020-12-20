@@ -1,0 +1,10 @@
+{
+	"class" : {
+		"for:root:copyIn:" : "",
+		"forAll:root:copyIn:" : "" },
+	"instance" : {
+		"childSandblocksDo:" : "",
+		"drawnColor" : "",
+		"guessClassExpensive" : "",
+		"guessedClass" : "",
+		"initialize" : "" } }

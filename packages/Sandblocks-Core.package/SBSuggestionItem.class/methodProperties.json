@@ -1,0 +1,18 @@
+{
+	"class" : {
+		"selector:label:" : "" },
+	"instance" : {
+		"active" : "",
+		"active:" : "",
+		"activeColor" : "",
+		"completionAction" : "",
+		"completionAction:" : "",
+		"drawOn:" : "",
+		"initialize" : "",
+		"label" : "",
+		"label:" : "",
+		"minExtent" : "",
+		"selector" : "",
+		"selector:" : "",
+		"selectorPercentage" : "",
+		"useSuggestionOn:" : "" } }

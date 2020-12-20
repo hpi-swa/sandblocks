@@ -1,0 +1,13 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"guessedClass" : "",
+		"initialize" : "",
+		"isStringBlock" : "",
+		"keyStroke:" : "",
+		"printOn:" : "",
+		"splitStringAtCursor" : "",
+		"symbols" : "",
+		"textMorphClass" : "",
+		"writeSourceOn:" : "" } }

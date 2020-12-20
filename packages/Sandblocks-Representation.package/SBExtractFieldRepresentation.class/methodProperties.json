@@ -1,0 +1,14 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"causesSideEffects" : "",
+		"eagerNewFor:" : "",
+		"identity" : "",
+		"isLeaf" : "",
+		"matches:" : "",
+		"name:" : "",
+		"newFor:" : "",
+		"prettyName" : "",
+		"priority" : "",
+		"supports:" : "" } }

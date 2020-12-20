@@ -1,0 +1,23 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"anyRepresentationThat:" : "",
+		"asSandblock" : "",
+		"firstSafeOptionFrom:" : "",
+		"hasDerivableRepresentationThat:" : "",
+		"hasRepresentationThat:" : "",
+		"isSandblock" : "",
+		"newFirstSafeOptionFrom:" : "",
+		"representIn:as:near:" : "",
+		"representIn:as:near:from:" : "",
+		"representationCapabilities" : "",
+		"representationThat:" : "",
+		"representationThat:do:ifNone:" : "",
+		"representations" : "",
+		"representationsDo:" : "",
+		"representationsThat:" : "",
+		"representationsThat:do:" : "",
+		"representationsThat:do:deep:" : "",
+		"safeRepresentationThat:do:ifNone:" : "",
+		"sandblockColor" : "" } }

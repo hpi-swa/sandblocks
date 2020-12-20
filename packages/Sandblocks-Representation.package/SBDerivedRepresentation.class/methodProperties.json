@@ -1,0 +1,16 @@
+{
+	"class" : {
+		"from:to:" : "" },
+	"instance" : {
+		"=" : "",
+		"causesSideEffects" : "",
+		"from" : "",
+		"from:" : "",
+		"hash" : "",
+		"matches:" : "",
+		"newFor:" : "",
+		"prettyName" : "",
+		"printOn:" : "",
+		"priority" : "",
+		"to" : "",
+		"to:" : "" } }

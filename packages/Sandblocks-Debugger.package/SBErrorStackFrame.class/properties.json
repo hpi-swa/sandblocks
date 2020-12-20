@@ -1,0 +1,16 @@
+{
+	"category" : "Sandblocks-Debugger",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"context",
+		"pcIndicator",
+		"valueDecorators" ],
+	"name" : "SBErrorStackFrame",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

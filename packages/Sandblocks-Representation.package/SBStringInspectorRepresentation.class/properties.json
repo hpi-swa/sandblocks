@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Representation",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBStringInspectorRepresentation",
+	"pools" : [
+		 ],
+	"super" : "SBRepresentation",
+	"type" : "normal" }

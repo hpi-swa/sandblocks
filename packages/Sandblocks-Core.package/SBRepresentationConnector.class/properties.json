@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"lastSource",
+		"currentRepresentation" ],
+	"name" : "SBRepresentationConnector",
+	"pools" : [
+		 ],
+	"super" : "SBConnectorLine",
+	"type" : "normal" }

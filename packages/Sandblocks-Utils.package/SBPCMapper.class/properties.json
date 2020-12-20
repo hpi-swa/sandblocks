@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Utils",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBPCMapper",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

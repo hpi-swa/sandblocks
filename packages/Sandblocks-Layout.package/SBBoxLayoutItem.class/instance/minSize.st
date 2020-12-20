@@ -1,0 +1,4 @@
+accessing
+minSize
+
+	^ minSize

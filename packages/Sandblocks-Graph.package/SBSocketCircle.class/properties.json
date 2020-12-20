@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Graph",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"type" ],
+	"name" : "SBSocketCircle",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }

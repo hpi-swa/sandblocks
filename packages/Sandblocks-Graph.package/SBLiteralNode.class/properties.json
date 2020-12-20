@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Graph",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"name" ],
+	"name" : "SBLiteralNode",
+	"pools" : [
+		 ],
+	"super" : "SBNewNode",
+	"type" : "normal" }

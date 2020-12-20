@@ -1,0 +1,12 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"testMatchesArrowKey" : "",
+		"testMatchesColon" : "",
+		"testMatchesCommandComma" : "",
+		"testMatchesCtrlAlt" : "",
+		"testMatchesEscape" : "",
+		"testMatchesShiftCommandComma" : "",
+		"testMatchesUpperCase" : "",
+		"testNotMatchesArrowKeyShift" : "" } }

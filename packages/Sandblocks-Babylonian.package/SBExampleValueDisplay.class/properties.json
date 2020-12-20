@@ -1,0 +1,18 @@
+{
+	"category" : "Sandblocks-Babylonian",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"display",
+		"label",
+		"statusLabel",
+		"hadValue",
+		"values" ],
+	"name" : "SBExampleValueDisplay",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }

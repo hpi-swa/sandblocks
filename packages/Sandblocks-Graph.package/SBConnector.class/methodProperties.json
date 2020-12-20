@@ -1,0 +1,22 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"connectFrom:to:" : "",
+		"delete" : "",
+		"drawOn:" : "",
+		"end:" : "",
+		"handlesMouseMove:" : "",
+		"isLink" : "",
+		"isNode" : "",
+		"mouseMove:" : "",
+		"mouseUp:" : "",
+		"outerBounds" : "",
+		"rejectsEvent:" : "",
+		"source" : "",
+		"sourceNode" : "",
+		"start:" : "",
+		"startNow:" : "",
+		"target" : "",
+		"targetNode" : "",
+		"updateConnection" : "" } }

@@ -1,0 +1,12 @@
+{
+	"class" : {
+		"label:shortcut:" : "" },
+	"instance" : {
+		"above:" : "",
+		"below:" : "",
+		"childSandblocksDo:" : "",
+		"drawnColor" : "",
+		"left:" : "",
+		"rejectsEvent:" : "",
+		"right:" : "",
+		"shortcuts:" : "" } }

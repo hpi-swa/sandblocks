@@ -1,0 +1,20 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"childSandblocksDo:" : "",
+		"closed" : "",
+		"context" : "",
+		"context:" : "",
+		"currentBlock" : "",
+		"currentBlockIsActive:" : "",
+		"initialize" : "",
+		"isActiveFrame" : "",
+		"method" : "",
+		"object" : "",
+		"outOfWorld:" : "",
+		"printOn:" : "",
+		"recordTopValueFor:" : "",
+		"setActive" : "",
+		"updateSelection" : "",
+		"wasSelected" : "" } }

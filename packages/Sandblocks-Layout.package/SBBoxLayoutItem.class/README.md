@@ -1,0 +1,1 @@
+A PHBoxLayoutItem is a helper class internally used by the box layout to save intermediate calculation results. It is essentialy a tuple of data with some logic for allocating widgets in its space.

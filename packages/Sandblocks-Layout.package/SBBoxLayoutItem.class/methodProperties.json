@@ -1,0 +1,24 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"applyAlignmentWithOffset:in:" : "",
+		"expanding" : "",
+		"expanding:" : "",
+		"finalSize" : "",
+		"finalSize:" : "",
+		"inVerticalLayout:" : "",
+		"initialize" : "",
+		"maxSize" : "",
+		"maxSize:" : "",
+		"minSize" : "",
+		"minSize:" : "",
+		"morph:wantsExpandIn:" : "",
+		"naturalSize" : "",
+		"naturalSize:" : "",
+		"nonLayoutDirectionSizesForWidth:" : "",
+		"offset" : "",
+		"offset:" : "",
+		"takeWidth:" : "",
+		"widget" : "",
+		"widget:" : "" } }

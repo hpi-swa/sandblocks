@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core-Tests",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBShortcutTest",
+	"pools" : [
+		 ],
+	"super" : "TestCase",
+	"type" : "normal" }

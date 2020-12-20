@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Layout",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBVerticalLayout",
+	"pools" : [
+		 ],
+	"super" : "SBLayoutPolicy",
+	"type" : "normal" }

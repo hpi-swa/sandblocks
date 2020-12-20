@@ -1,0 +1,20 @@
+{
+	"category" : "Sandblocks-Debugger",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"error",
+		"process",
+		"currentStackFrame",
+		"frames",
+		"explorer",
+		"temporaries",
+		"scroll" ],
+	"name" : "SBError",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

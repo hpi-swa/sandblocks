@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBDeclarationForMethodArgument",
+	"pools" : [
+		 ],
+	"super" : "SBDeclarationBehavior",
+	"type" : "normal" }

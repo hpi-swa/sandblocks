@@ -1,0 +1,22 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"testBasic" : "",
+		"testBasicWrap" : "",
+		"testContainerBounds" : "",
+		"testContainerInset" : "",
+		"testContainerInsetMultipleChildren" : "",
+		"testContainerLeftInset" : "",
+		"testContainerWithLongerFirstChildAndInset" : "",
+		"testDoNotContinueOverllappingContainer" : "",
+		"testIndent" : "",
+		"testIndentDifferentOrigin" : "",
+		"testLineOrGap" : "",
+		"testMorphInContainer" : "",
+		"testNestedContainerBounds" : "",
+		"testNestedOptionalWrap" : "",
+		"testNestedOptionalWrap2" : "",
+		"testOptionalWrap" : "",
+		"testSequentialContainerLineHeight" : "",
+		"testWrapAsSecondChild" : "" } }

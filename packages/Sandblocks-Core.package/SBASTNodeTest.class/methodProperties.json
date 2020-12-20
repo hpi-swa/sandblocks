@@ -1,0 +1,18 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"testInsertEmptyLineMarkers" : "",
+		"testInsertEmptyLineMarkersAfterReturn" : "",
+		"testInsertStatementAboveOrBelow" : "",
+		"testUndoWrapInArray" : "",
+		"testUndoWrapInBlock" : "",
+		"testUndoWrapInCascade" : "",
+		"testWrapAsArgument" : "",
+		"testWrapInArrayType" : "",
+		"testWrapInBlock" : "",
+		"testWrapInCascade" : "",
+		"testWrapInCascadeMessageParts" : "",
+		"testWrapInCascadeMultiSelection" : "",
+		"testWrapInMessageSend" : "",
+		"testWrapInReturn" : "" } }

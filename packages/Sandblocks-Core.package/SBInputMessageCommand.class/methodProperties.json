@@ -1,0 +1,16 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"do" : "",
+		"editInputIndex:" : "",
+		"hasChange" : "",
+		"messageSend:" : "",
+		"newArguments:" : "",
+		"newSelector:" : "",
+		"postDo" : "",
+		"previousArguments:" : "",
+		"previousSelector:" : "",
+		"select:" : "",
+		"target" : "",
+		"undo" : "" } }

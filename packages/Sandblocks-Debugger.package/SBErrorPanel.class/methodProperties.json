@@ -1,0 +1,21 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"activeErrorDo:" : "",
+		"addError:process:" : "",
+		"buildDebugCommandBar" : "",
+		"childSandblocksDo:" : "",
+		"deleteCommandFor:" : "",
+		"drawnColor" : "",
+		"focusError:" : "",
+		"focusErrors" : "",
+		"focusPreviousErrorFrame" : "",
+		"focusedArtefact" : "",
+		"focusedContext" : "",
+		"initialize" : "",
+		"removedMorph:" : "",
+		"restartFrame" : "",
+		"stepInto" : "",
+		"stepOver" : "",
+		"stepThrough" : "" } }

@@ -1,0 +1,14 @@
+{
+	"class" : {
+		"catchesAll" : "",
+		"causesSideEffects" : "",
+		"identity" : "",
+		"isLeaf" : "",
+		"isToplevelMorph" : "",
+		"matches:" : "",
+		"newFor:" : "",
+		"prettyName" : "",
+		"priority" : "",
+		"supports:" : "" },
+	"instance" : {
+		 } }

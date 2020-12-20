@@ -1,0 +1,13 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"drawOn:" : "",
+		"extent:" : "",
+		"gap" : "",
+		"initialize" : "",
+		"label" : "",
+		"label:" : "",
+		"labelColor:" : "",
+		"replace:" : "",
+		"reportValue:" : "" } }

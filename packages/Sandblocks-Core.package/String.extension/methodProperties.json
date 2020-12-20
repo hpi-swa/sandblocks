@@ -1,0 +1,12 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"codeWithEmptyLineMarkers" : "",
+		"parseAsMethod" : "",
+		"parseAsMethodFor:" : "",
+		"parseAsNode" : "",
+		"parseAsSandblock" : "",
+		"parseAsSandblockWithoutSubstitution" : "",
+		"sandblockMatch:" : "",
+		"truncateMiddleTo:" : "" } }

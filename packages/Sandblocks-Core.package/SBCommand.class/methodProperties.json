@@ -1,0 +1,21 @@
+{
+	"class" : {
+		"new" : "",
+		"newFor:" : "",
+		"newNonEdit" : "",
+		"newOrEditFor:" : "" },
+	"instance" : {
+		"affectedArtefacts" : "",
+		"artefact" : "",
+		"artefact:" : "",
+		"do" : "",
+		"initialize" : "",
+		"postDo" : "",
+		"previousSelection" : "",
+		"previousSelection:" : "",
+		"shouldMergeWithNext" : "",
+		"shouldMergeWithNext:" : "",
+		"undo" : "",
+		"valid" : "",
+		"wasEdit" : "",
+		"wasEdit:" : "" } }

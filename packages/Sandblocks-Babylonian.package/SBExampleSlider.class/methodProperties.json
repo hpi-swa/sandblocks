@@ -1,0 +1,13 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"allSlidersDo:" : "",
+		"allWatchesDo:" : "",
+		"example:watch:" : "",
+		"exampleFinished:" : "",
+		"exampleStarting:" : "",
+		"filterForContextId:" : "",
+		"initialize" : "",
+		"listensToExamples" : "",
+		"selectIteration:" : "" } }

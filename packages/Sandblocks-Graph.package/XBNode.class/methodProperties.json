@@ -1,0 +1,10 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"addInput:" : "",
+		"addOutput:" : "",
+		"hasFlowSink" : "",
+		"hasFlowSource" : "",
+		"initialize" : "",
+		"updateContents" : "" } }

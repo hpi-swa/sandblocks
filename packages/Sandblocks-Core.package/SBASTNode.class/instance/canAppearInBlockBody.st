@@ -1,0 +1,4 @@
+testing
+canAppearInBlockBody
+
+	^ self isExpression

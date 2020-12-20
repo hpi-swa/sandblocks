@@ -1,0 +1,12 @@
+{
+	"class" : {
+		"matches:" : "",
+		"newFor:" : "",
+		"replace:with:" : "",
+		"suggestion" : "" },
+	"instance" : {
+		"childSandblocksDo:" : "",
+		"drawnColor" : "",
+		"initialize" : "",
+		"replace:with:" : "",
+		"writeSourceOn:" : "" } }

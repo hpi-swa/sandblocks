@@ -1,0 +1,28 @@
+{
+	"class" : {
+		"matches:" : "",
+		"newFor:" : "",
+		"setUp:cases:extent:" : "",
+		"suggestion" : "" },
+	"instance" : {
+		"addCase:name:" : "",
+		"artefactChanged:" : "",
+		"canDeleteChild:" : "",
+		"cases" : "",
+		"childSandblocksDo:" : "",
+		"clearErrors" : "",
+		"displayError:" : "",
+		"drawnColor" : "",
+		"initialize" : "",
+		"insertCommandRequest:near:" : "",
+		"isExpression" : "",
+		"isMorphExample" : "",
+		"reportError:" : "",
+		"runCase:" : "",
+		"sendStartNotification" : "",
+		"setUp:cases:extent:" : "",
+		"setUpMorph" : "",
+		"toggleStepping" : "",
+		"veryDeepCopyWith:" : "",
+		"view" : "",
+		"writeSourceOn:" : "" } }

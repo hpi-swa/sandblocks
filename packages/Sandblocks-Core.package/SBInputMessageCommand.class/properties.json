@@ -1,0 +1,20 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"previousSelector",
+		"previousArguments",
+		"messageSend",
+		"newSelector",
+		"newArguments",
+		"select",
+		"editInputIndex" ],
+	"name" : "SBInputMessageCommand",
+	"pools" : [
+		 ],
+	"super" : "SBCommand",
+	"type" : "normal" }

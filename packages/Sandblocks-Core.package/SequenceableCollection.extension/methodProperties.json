@@ -1,0 +1,13 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"atPingPong:" : "",
+		"collect:separatedBy:" : "",
+		"viewAllButFirst" : "",
+		"viewAllButFirstAndLast" : "",
+		"viewAllButLast" : "",
+		"viewFrom:to:" : "",
+		"viewFrom:to:by:" : "",
+		"with:and:do:" : "",
+		"withInsert:at:" : "" } }

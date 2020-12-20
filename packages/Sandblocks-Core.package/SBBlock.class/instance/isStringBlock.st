@@ -1,0 +1,4 @@
+testing
+isStringBlock
+
+	^ false

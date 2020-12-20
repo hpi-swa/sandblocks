@@ -1,0 +1,15 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"browse" : "",
+		"guessedClass" : "",
+		"isSymbolBlock" : "",
+		"keyStroke:" : "",
+		"prefix" : "",
+		"printOn:" : "",
+		"selector" : "",
+		"symbols" : "",
+		"updateSuggestions" : "",
+		"useAsMessageSend" : "",
+		"writeSourceOn:" : "" } }

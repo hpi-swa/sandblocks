@@ -1,0 +1,27 @@
+{
+	"class" : {
+		"matches:" : "",
+		"newFor:" : "",
+		"regex:examples:" : "" },
+	"instance" : {
+		"addExample:" : "",
+		"canDeleteChild:" : "",
+		"checkExamples" : "",
+		"childSandblocksDo:" : "",
+		"contents" : "",
+		"contents:" : "",
+		"createExample:" : "",
+		"currentTextMorph" : "",
+		"guessedClass" : "",
+		"initialize" : "",
+		"insertCommandRequest:near:" : "",
+		"prefix" : "",
+		"printOn:" : "",
+		"regexMatches:" : "",
+		"regexString:examples:" : "",
+		"stopEditing:" : "",
+		"symbols" : "",
+		"toggleExamples" : "",
+		"updateLabel" : "",
+		"valid" : "",
+		"writeSourceOn:" : "" } }

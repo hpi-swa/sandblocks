@@ -1,0 +1,16 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"lastDragPosition",
+		"velocity",
+		"preventOcclusion" ],
+	"name" : "SBEventBroadcast",
+	"pools" : [
+		 ],
+	"super" : "SBBlockDecorator",
+	"type" : "normal" }

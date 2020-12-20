@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Layout-Tests",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBAlgebraLayoutTest",
+	"pools" : [
+		 ],
+	"super" : "TestCase",
+	"type" : "normal" }

@@ -1,0 +1,4 @@
+accessing
+messageParts
+
+	^ signature messageParts

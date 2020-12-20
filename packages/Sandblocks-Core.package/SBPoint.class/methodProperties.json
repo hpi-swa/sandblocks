@@ -1,0 +1,20 @@
+{
+	"class" : {
+		"matches:" : "",
+		"newFor:" : "" },
+	"instance" : {
+		"childSandblocksDo:" : "",
+		"contents" : "",
+		"contents:" : "",
+		"guessedClass" : "",
+		"initialize" : "",
+		"messageSelector" : "",
+		"mouseDown:" : "",
+		"mouseMove:" : "",
+		"mouseUp:" : "",
+		"parsedContents" : "",
+		"printOn:" : "",
+		"startDrag:" : "",
+		"type:" : "",
+		"writeSourceOn:" : "",
+		"x:y:" : "" } }

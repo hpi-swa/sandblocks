@@ -1,0 +1,18 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"canAppearInBlockBody" : "",
+		"childSandblocksDo:" : "",
+		"expression" : "",
+		"expression:" : "",
+		"initialize" : "",
+		"isReturn" : "",
+		"layoutCommands" : "",
+		"pc" : "",
+		"pc:" : "",
+		"prefix" : "",
+		"printOn:" : "",
+		"symbols" : "",
+		"valid" : "",
+		"writeSourceOn:" : "" } }

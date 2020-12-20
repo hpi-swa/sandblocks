@@ -1,0 +1,15 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"changeValue:" : "",
+		"childSandblocksDo:" : "",
+		"click:" : "",
+		"drawnColor" : "",
+		"initialize" : "",
+		"nonEdit" : "",
+		"nonEdit:" : "",
+		"startInputAt:replacingContents:" : "",
+		"toggle" : "",
+		"value" : "",
+		"value:" : "" } }

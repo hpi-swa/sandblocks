@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"conditions" ],
+	"name" : "SBStateMachineTransition",
+	"pools" : [
+		 ],
+	"super" : "SBConnectorLine",
+	"type" : "normal" }

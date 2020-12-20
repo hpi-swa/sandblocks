@@ -1,0 +1,1 @@
+A SBErrorPanel collects and displays errors that occured in the environment.

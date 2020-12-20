@@ -1,0 +1,18 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"attached:" : "",
+		"detached:" : "",
+		"handlesClickOrDrag:" : "",
+		"handlesGestureStart:" : "",
+		"handlesKeyboard:" : "",
+		"initialize" : "",
+		"isDragging" : "",
+		"mouseMove:" : "",
+		"mouseUp:" : "",
+		"resolveCollisionCenteredWith:" : "",
+		"resolveCollisionWith:" : "",
+		"startDrag:" : "",
+		"step" : "",
+		"stepTime" : "" } }

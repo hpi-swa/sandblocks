@@ -1,0 +1,11 @@
+{
+	"class" : {
+		"matches:" : "" },
+	"instance" : {
+		"count:" : "",
+		"dark:" : "",
+		"exampleFinished:" : "",
+		"exampleStarting:" : "",
+		"initialize" : "",
+		"promptChangeDisplay" : "",
+		"reportValue:" : "" } }

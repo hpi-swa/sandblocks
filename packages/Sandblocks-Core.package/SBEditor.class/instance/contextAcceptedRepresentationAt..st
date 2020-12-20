@@ -1,0 +1,4 @@
+accessing
+contextAcceptedRepresentationAt: aNumber
+
+	^ #isToplevelMorph

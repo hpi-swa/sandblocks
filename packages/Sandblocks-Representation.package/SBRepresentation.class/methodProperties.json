@@ -1,0 +1,15 @@
+{
+	"class" : {
+		"catchesAll" : "",
+		"causesSideEffects" : "",
+		"eagerNewFor:" : "",
+		"identity" : "",
+		"isLeaf" : "",
+		"matches:" : "",
+		"newFor:" : "",
+		"prettyName" : "",
+		"priority" : "",
+		"representationsDo:for:" : "",
+		"supports:" : "" },
+	"instance" : {
+		 } }

@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"Navigation" ],
+	"commentStamp" : "",
+	"instvars" : [
+		"decorators" ],
+	"name" : "SBBlock",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }

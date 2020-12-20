@@ -1,0 +1,16 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"causesSideEffect:" : "",
+		"createsObject:" : "",
+		"currentContextIsWhiteListed" : "",
+		"initialize" : "",
+		"isAllowedExternalCall:" : "",
+		"isBlacklistedPrimitive:" : "",
+		"maxTime" : "",
+		"method:for:super:numArgs:" : "",
+		"popIntoReceiverVariable:" : "",
+		"send:super:numArgs:" : "",
+		"simulate:" : "",
+		"storeIntoReceiverVariable:" : "" } }

@@ -1,0 +1,13 @@
+as yet unclassified
+instanceVariables
+
+	| editor |
+	editor := self sandblockEditor.
+	^ Array streamContents: [:stream |
+		self methodClass withAllSuperclassesDo: [:class |
+			editor
+				ifNil: [class allInstVarNames collect: [:name | SBName instanceVariable: name]]
+				ifNotNil: [
+					editor blockForClass: class ifPresent: [:c | stream nextPutAll: c instanceVariables] ifAbsent: [
+						class instVarNames do: [:name |
+							stream nextPut: (SBName instanceVariable: name)]]]]]

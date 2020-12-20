@@ -1,0 +1,13 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"affectedMorphs" : "",
+		"do" : "",
+		"mutateSelector:" : "",
+		"oldValue" : "",
+		"oldValue:" : "",
+		"selector:" : "",
+		"target:" : "",
+		"undo" : "",
+		"value:" : "" } }

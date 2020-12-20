@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Morphs",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBBadge",
+	"pools" : [
+		 ],
+	"super" : "SBStringMorph",
+	"type" : "normal" }

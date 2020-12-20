@@ -1,0 +1,17 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"affectedMorphs" : "",
+		"do" : "",
+		"hasChange" : "",
+		"newMorph" : "",
+		"newMorph:" : "",
+		"newText" : "",
+		"newText:" : "",
+		"oldMorph" : "",
+		"oldMorph:" : "",
+		"previousText" : "",
+		"previousText:" : "",
+		"target" : "",
+		"undo" : "" } }

@@ -1,0 +1,18 @@
+{
+	"category" : "Sandblocks-Graph",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"inputs",
+		"outputs",
+		"flowIn",
+		"flowOut",
+		"isFlowSource" ],
+	"name" : "SBNode",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }

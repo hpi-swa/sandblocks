@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"tempObjects",
+		"sideEffects" ],
+	"name" : "SBTracingSimulator",
+	"pools" : [
+		 ],
+	"super" : "SBSimulator",
+	"type" : "normal" }

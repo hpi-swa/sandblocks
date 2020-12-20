@@ -1,0 +1,16 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"label",
+		"shown",
+		"indicator" ],
+	"name" : "SBReportedValueDecorator",
+	"pools" : [
+		 ],
+	"super" : "SBBlockDecorator",
+	"type" : "normal" }

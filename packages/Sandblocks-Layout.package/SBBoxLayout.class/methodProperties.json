@@ -1,0 +1,12 @@
+{
+	"class" : {
+		"exampleCenteredBox" : "",
+		"exampleHeightForWidth" : "",
+		"exampleSimpleChat" : "" },
+	"instance" : {
+		"distributeLeftOver:among:" : "",
+		"flipPoint:" : "",
+		"layout:in:" : "",
+		"minExtentOf:in:" : "",
+		"morph:wantsExpandIn:" : "",
+		"preferredSizeFor:width:" : "" } }

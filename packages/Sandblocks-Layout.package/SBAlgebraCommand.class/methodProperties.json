@@ -1,0 +1,24 @@
+{
+	"class" : {
+		"container" : "",
+		"gap" : "",
+		"group" : "",
+		"hardLine" : "",
+		"indent" : "",
+		"morph" : "",
+		"noop" : "",
+		"root" : "",
+		"softLine" : "",
+		"softLineOrGap" : "" },
+	"instance" : {
+		"data" : "",
+		"data:" : "",
+		"debugStoreString" : "",
+		"morph" : "",
+		"morph:" : "",
+		"printOn:" : "",
+		"storeOn:" : "",
+		"type" : "",
+		"type:" : "",
+		"withGap" : "",
+		"withGap:" : "" } }

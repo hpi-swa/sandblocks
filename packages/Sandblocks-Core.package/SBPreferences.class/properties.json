@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"DrawOnCanvas",
+		"RightClickContextMenu" ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBPreferences",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

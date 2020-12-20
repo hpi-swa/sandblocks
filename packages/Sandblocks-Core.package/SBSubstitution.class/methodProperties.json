@@ -1,0 +1,24 @@
+{
+	"class" : {
+		"applyAutomatically" : "",
+		"catchesAll" : "",
+		"causesSideEffects" : "",
+		"identity" : "",
+		"isLeaf" : "",
+		"isSmalltalkExpression" : "",
+		"matches:" : "",
+		"matchesCascades" : "",
+		"newFor:" : "",
+		"prettyName" : "",
+		"priority" : "",
+		"selector:receiverMatches:" : "",
+		"suggestion" : "",
+		"supports:" : "" },
+	"instance" : {
+		"codeActions" : "",
+		"constructorString:arguments:on:" : "",
+		"initialize" : "",
+		"isExpression" : "",
+		"pc" : "",
+		"pc:" : "",
+		"replaceWithMessageSend" : "" } }

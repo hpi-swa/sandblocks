@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"type" ],
+	"name" : "SBArray",
+	"pools" : [
+		 ],
+	"super" : "SBASTNode",
+	"type" : "normal" }

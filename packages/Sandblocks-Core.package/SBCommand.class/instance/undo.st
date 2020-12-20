@@ -1,0 +1,4 @@
+apply
+undo
+
+	^ self subclassResponsibility

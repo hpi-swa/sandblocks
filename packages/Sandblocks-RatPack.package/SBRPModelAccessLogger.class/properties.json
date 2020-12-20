@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-RatPack",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBRPModelAccessLogger",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

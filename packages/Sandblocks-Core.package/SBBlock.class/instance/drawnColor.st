@@ -1,0 +1,4 @@
+colors
+drawnColor
+
+	^ self color

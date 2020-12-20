@@ -1,0 +1,16 @@
+{
+	"class" : {
+		"svg:color:size:" : "" },
+	"instance" : {
+		"=" : "",
+		"averageColorInQuadOfSize:at:from:" : "",
+		"color" : "",
+		"color:" : "",
+		"correctColorFromPixelValue:" : "",
+		"downSample:from:" : "",
+		"hash" : "",
+		"renderForm" : "",
+		"size" : "",
+		"size:" : "",
+		"svg" : "",
+		"svg:" : "" } }

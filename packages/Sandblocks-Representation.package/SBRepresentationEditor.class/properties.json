@@ -1,0 +1,16 @@
+{
+	"category" : "Sandblocks-Representation",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"object",
+		"hasUnsavedChanges",
+		"argumentBlock" ],
+	"name" : "SBRepresentationEditor",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

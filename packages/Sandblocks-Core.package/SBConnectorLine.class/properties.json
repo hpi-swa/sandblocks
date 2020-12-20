@@ -1,0 +1,21 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"from",
+		"to",
+		"fromAlign",
+		"toAlign",
+		"lineType",
+		"curveModifier",
+		"connectorType",
+		"evade" ],
+	"name" : "SBConnectorLine",
+	"pools" : [
+		 ],
+	"super" : "Morph",
+	"type" : "normal" }

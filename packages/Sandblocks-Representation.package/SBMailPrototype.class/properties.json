@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Representation",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBMailPrototype",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Watch",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBDisplayText",
+	"pools" : [
+		 ],
+	"super" : "TextMorph",
+	"type" : "normal" }

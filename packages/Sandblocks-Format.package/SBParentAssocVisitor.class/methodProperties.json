@@ -1,0 +1,16 @@
+{
+	"class" : {
+		"getParentsFrom:" : "" },
+	"instance" : {
+		"initialize" : "",
+		"parents" : "",
+		"visitAssignmentNode:" : "",
+		"visitBlockNode:" : "",
+		"visitBraceNode:" : "",
+		"visitCascadeNode:" : "",
+		"visitFutureNode:" : "",
+		"visitMessageNode:" : "",
+		"visitMessageNodeInCascade:" : "",
+		"visitMethodNode:" : "",
+		"visitReturnNode:" : "",
+		"visitTrackedAssignmentNode:" : "" } }

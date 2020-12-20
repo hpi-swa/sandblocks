@@ -1,0 +1,10 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"initialize" : "",
+		"relevantFramesFrom:" : "",
+		"reportSideEffectTo:named:value:" : "",
+		"send:super:numArgs:" : "",
+		"sideEffects" : "",
+		"trackInstanceVarChange:" : "" } }

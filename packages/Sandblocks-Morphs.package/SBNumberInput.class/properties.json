@@ -1,0 +1,21 @@
+{
+	"category" : "Sandblocks-Morphs",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"max",
+		"step",
+		"min",
+		"isDown",
+		"lastMousePosition",
+		"value",
+		"onChange",
+		"oldCursor" ],
+	"name" : "SBNumberInput",
+	"pools" : [
+		 ],
+	"super" : "SBStringMorph",
+	"type" : "normal" }

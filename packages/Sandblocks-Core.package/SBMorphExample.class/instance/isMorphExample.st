@@ -1,0 +1,4 @@
+testing
+isMorphExample
+
+	^ true

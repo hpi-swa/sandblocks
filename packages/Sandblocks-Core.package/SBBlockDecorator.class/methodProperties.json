@@ -1,0 +1,17 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"attached:" : "",
+		"changed" : "",
+		"detach" : "",
+		"detached:" : "",
+		"installEventBroadcasterFor:" : "",
+		"morph" : "",
+		"postDrawOn:" : "",
+		"preDrawOn:" : "",
+		"shouldGetStepsFrom:" : "",
+		"step" : "",
+		"stepTime" : "",
+		"uninstallEventBroadcaster" : "",
+		"world" : "" } }

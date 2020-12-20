@@ -1,0 +1,23 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"," : "",
+		"asCollection" : "",
+		"asSandblockShortcut" : "",
+		"character" : "",
+		"character:" : "",
+		"commandKeyPressed" : "",
+		"controlKeyPressed" : "",
+		"displayString" : "",
+		"initialize" : "",
+		"keyCharacter" : "",
+		"matchesEvent:" : "",
+		"option" : "",
+		"printDisplayOn:" : "",
+		"printOn:" : "",
+		"shiftPressed" : "",
+		"withCommand" : "",
+		"withCtrl" : "",
+		"withOption" : "",
+		"withShift" : "" } }

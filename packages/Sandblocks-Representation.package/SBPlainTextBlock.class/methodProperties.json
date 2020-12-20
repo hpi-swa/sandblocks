@@ -1,0 +1,15 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"childSandblocksDo:" : "",
+		"contents" : "",
+		"contents:" : "",
+		"currentTextMorph" : "",
+		"drawnColor" : "",
+		"example" : "",
+		"initialize" : "",
+		"keyStroke:" : "",
+		"object" : "",
+		"startInputAt:replacingContents:" : "",
+		"stopEditing:" : "" } }

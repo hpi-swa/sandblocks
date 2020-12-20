@@ -1,0 +1,14 @@
+{
+	"class" : {
+		"deactivated" : "",
+		"matches:" : "",
+		"newFor:" : "",
+		"suggestion" : "" },
+	"instance" : {
+		"active" : "",
+		"active:" : "",
+		"childSandblocksDo:" : "",
+		"drawnColor" : "",
+		"initialize" : "",
+		"toggleActive" : "",
+		"writeSourceOn:" : "" } }

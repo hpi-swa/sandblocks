@@ -1,2 +1,18 @@
-OrderedDictionary { }'packages/Sandblocks-Babylonian' : #SquotTonelSerializer
+OrderedDictionary {
+	'packages/Sandblocks-Babylonian.package' : #SquotCypressCodeSerializer,
+	'packages/Sandblocks-Compiler.package' : #SquotCypressCodeSerializer,
+	'packages/Sandblocks-Core.package' : #SquotCypressCodeSerializer,
+	'packages/Sandblocks-Debugger.package' : #SquotCypressCodeSerializer,
+	'packages/Sandblocks-Drawing.package' : #SquotCypressCodeSerializer,
+	'packages/Sandblocks-Explorer.package' : #SquotCypressCodeSerializer,
+	'packages/Sandblocks-Format.package' : #SquotCypressCodeSerializer,
+	'packages/Sandblocks-Graph.package' : #SquotCypressCodeSerializer,
+	'packages/Sandblocks-Layout.package' : #SquotCypressCodeSerializer,
+	'packages/Sandblocks-Morphs.package' : #SquotCypressCodeSerializer,
+	'packages/Sandblocks-RatPack.package' : #SquotCypressCodeSerializer,
+	'packages/Sandblocks-Representation.package' : #SquotCypressCodeSerializer,
+	'packages/Sandblocks-Tutorial.package' : #SquotCypressCodeSerializer,
+	'packages/Sandblocks-Utils.package' : #SquotCypressCodeSerializer,
+	'packages/BaselineOfSandblocks.package' : #SquotCypressCodeSerializer,
+	'packages/Sandblocks-Watch.package' : #SquotCypressCodeSerializer
 }

@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Format",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"parents" ],
+	"name" : "SBParentAssocVisitor",
+	"pools" : [
+		 ],
+	"super" : "ParseNodeVisitor",
+	"type" : "normal" }

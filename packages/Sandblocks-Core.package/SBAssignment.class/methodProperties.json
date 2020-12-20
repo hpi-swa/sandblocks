@@ -1,0 +1,19 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"binding" : "",
+		"binding:value:" : "",
+		"childSandblocksDo:" : "",
+		"contextAcceptedRepresentationAt:" : "",
+		"expression" : "",
+		"initialize" : "",
+		"isAssignment" : "",
+		"isExpression" : "",
+		"layoutCommands" : "",
+		"pc" : "",
+		"pc:" : "",
+		"printOn:" : "",
+		"symbols" : "",
+		"useAsMessageSend" : "",
+		"writeSourceOn:" : "" } }

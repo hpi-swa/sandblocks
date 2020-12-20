@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBTextColorPolicy",
+	"pools" : [
+		 ],
+	"super" : "SBColorPolicy",
+	"type" : "normal" }

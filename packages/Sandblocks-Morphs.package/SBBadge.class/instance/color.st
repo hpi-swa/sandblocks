@@ -1,0 +1,4 @@
+accessing
+color
+
+	^ Color white

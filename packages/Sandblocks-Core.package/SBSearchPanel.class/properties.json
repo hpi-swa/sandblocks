@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"currentFocus",
+		"currentFocusIndicator" ],
+	"name" : "SBSearchPanel",
+	"pools" : [
+		 ],
+	"super" : "SBTextBubble",
+	"type" : "normal" }

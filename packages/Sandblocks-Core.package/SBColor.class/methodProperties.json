@@ -1,0 +1,16 @@
+{
+	"class" : {
+		"matches:" : "",
+		"newFor:" : "" },
+	"instance" : {
+		"childSandblocksDo:" : "",
+		"click:" : "",
+		"colorContents" : "",
+		"colorContents:" : "",
+		"colorContentsUpdate:" : "",
+		"doubleClick:" : "",
+		"guessedClass" : "",
+		"initialize" : "",
+		"printOn:" : "",
+		"saveColor" : "",
+		"writeSourceOn:" : "" } }

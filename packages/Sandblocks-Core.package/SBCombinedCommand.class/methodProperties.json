@@ -1,0 +1,13 @@
+{
+	"class" : {
+		"newWith:" : "" },
+	"instance" : {
+		"affectedArtefacts" : "",
+		"commands" : "",
+		"commands:" : "",
+		"do" : "",
+		"previousSelection" : "",
+		"shouldMergeWithNext" : "",
+		"undo" : "",
+		"valid" : "",
+		"wasEdit" : "" } }

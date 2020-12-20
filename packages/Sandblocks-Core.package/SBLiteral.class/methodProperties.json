@@ -1,0 +1,23 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"acceptInputEvent:" : "",
+		"castToUnknownWhenEmpty" : "",
+		"childSandblocksDo:" : "",
+		"contents" : "",
+		"contents:" : "",
+		"contentsChanged" : "",
+		"currentTextMorph" : "",
+		"initialize" : "",
+		"inputCommandClass" : "",
+		"isExpression" : "",
+		"isLiteralBlock" : "",
+		"keyStroke:" : "",
+		"moveCursorTo:" : "",
+		"replaceWithUnknown" : "",
+		"startInputAt:replacingContents:" : "",
+		"stopEditing" : "",
+		"stopEditing:" : "",
+		"textMorphClass" : "",
+		"useSuggestion:" : "" } }

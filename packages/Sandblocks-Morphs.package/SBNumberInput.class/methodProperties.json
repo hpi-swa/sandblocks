@@ -1,0 +1,21 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"externalValueUpdate:" : "",
+		"initialize" : "",
+		"keyStroke:" : "",
+		"max" : "",
+		"max:" : "",
+		"min" : "",
+		"min:" : "",
+		"mouseDown:" : "",
+		"mouseMove:" : "",
+		"mouseUp:" : "",
+		"onChange:" : "",
+		"sendChange" : "",
+		"step" : "",
+		"step:" : "",
+		"value" : "",
+		"value:" : "",
+		"valueWithConstraints:" : "" } }

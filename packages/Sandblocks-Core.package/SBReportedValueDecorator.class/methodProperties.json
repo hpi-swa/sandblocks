@@ -1,0 +1,16 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"attached:" : "",
+		"detached:" : "",
+		"flash" : "",
+		"hideLabel" : "",
+		"indicatorBorderWidth" : "",
+		"initialize" : "",
+		"label" : "",
+		"label:" : "",
+		"mouseLeave:" : "",
+		"mouseMove:" : "",
+		"showLabel" : "",
+		"startDrag:" : "" } }

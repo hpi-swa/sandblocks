@@ -1,0 +1,14 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"asSuggestionItem" : "",
+		"guessedClass" : "",
+		"inputCommandClass" : "",
+		"isBlockBinding" : "",
+		"isMethodLocal" : "",
+		"prefix" : "",
+		"printBlockOn:" : "",
+		"scope" : "",
+		"symbolsFor:" : "",
+		"valid" : "" } }

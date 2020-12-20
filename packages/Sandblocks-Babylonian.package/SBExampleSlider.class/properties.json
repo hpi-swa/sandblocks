@@ -1,0 +1,16 @@
+{
+	"category" : "Sandblocks-Babylonian",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"example",
+		"contextIdentityHashes",
+		"selectedIndex" ],
+	"name" : "SBExampleSlider",
+	"pools" : [
+		 ],
+	"super" : "SBASTNode",
+	"type" : "normal" }

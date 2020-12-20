@@ -1,0 +1,26 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"borderWidthForBlock:" : "",
+		"centerAlignSymbols" : "",
+		"colorForBlock:" : "",
+		"foregroundColorForBlock:" : "",
+		"layoutInsetFor:" : "",
+		"lineGap" : "",
+		"selectionBorderWidth" : "",
+		"statementSeparator" : "",
+		"symbolsCheckStatement:for:" : "",
+		"symbolsForArray:" : "",
+		"symbolsForAssignment:" : "",
+		"symbolsForBinding:" : "",
+		"symbolsForBlock:" : "",
+		"symbolsForBlockDeclaration:" : "",
+		"symbolsForBoolean:" : "",
+		"symbolsForLiteralArray:" : "",
+		"symbolsForMessageSend:" : "",
+		"symbolsForMethodArgumentDeclaration:" : "",
+		"symbolsForNumber:" : "",
+		"symbolsForPragma:" : "",
+		"symbolsForString:" : "",
+		"symbolsForUnknown:" : "" } }

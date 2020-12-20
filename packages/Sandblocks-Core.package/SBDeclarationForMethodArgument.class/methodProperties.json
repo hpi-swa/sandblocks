@@ -1,0 +1,13 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"asSuggestionItem" : "",
+		"guessedClass" : "",
+		"inputCommandClass" : "",
+		"isMethodArgument" : "",
+		"isMethodLocal" : "",
+		"printBlockOn:" : "",
+		"scope" : "",
+		"symbolsFor:" : "",
+		"valid" : "" } }

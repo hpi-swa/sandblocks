@@ -1,0 +1,20 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"connect:to:" : "",
+		"graph" : "",
+		"initialize" : "",
+		"newConnection" : "",
+		"newNode:" : "",
+		"visitAssignmentNode:" : "",
+		"visitBlockNode:" : "",
+		"visitBraceNode:" : "",
+		"visitCascadeNode:" : "",
+		"visitLiteralNode:" : "",
+		"visitLiteralVariableNode:" : "",
+		"visitMessageNode:" : "",
+		"visitReturnNode:" : "",
+		"visitTempVariableNode:" : "",
+		"visitTrackedAssignmentNode:" : "",
+		"visitVariableNode:" : "" } }

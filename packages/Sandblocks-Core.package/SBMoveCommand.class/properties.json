@@ -1,0 +1,18 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"container",
+		"morph",
+		"index",
+		"oldOwner",
+		"oldIndex" ],
+	"name" : "SBMoveCommand",
+	"pools" : [
+		 ],
+	"super" : "SBCommand",
+	"type" : "normal" }

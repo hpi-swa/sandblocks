@@ -1,0 +1,21 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"acceptInputEvent:" : "",
+		"castToUnknownWhenEmpty" : "",
+		"guessedClass" : "",
+		"initialize" : "",
+		"isNumberBlock" : "",
+		"keyStroke:" : "",
+		"mouseDown:" : "",
+		"mouseMove:" : "",
+		"mouseUp:" : "",
+		"parsedContents" : "",
+		"printOn:" : "",
+		"startDrag:" : "",
+		"symbols" : "",
+		"valid" : "",
+		"value" : "",
+		"value:" : "",
+		"writeSourceOn:" : "" } }

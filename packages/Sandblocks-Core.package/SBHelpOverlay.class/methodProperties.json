@@ -1,0 +1,10 @@
+{
+	"class" : {
+		"on:" : "" },
+	"instance" : {
+		"canAdd:" : "",
+		"canInsertAfter:" : "",
+		"canInsertBefore:" : "",
+		"initialize" : "",
+		"rejectsEvent:" : "",
+		"target:" : "" } }

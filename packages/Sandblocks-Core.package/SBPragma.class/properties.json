@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"signature" ],
+	"name" : "SBPragma",
+	"pools" : [
+		 ],
+	"super" : "SBASTNode",
+	"type" : "normal" }

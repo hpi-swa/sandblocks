@@ -1,0 +1,15 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"asSuggestionItem" : "",
+		"attached:" : "",
+		"browse" : "",
+		"detached:" : "",
+		"guessedClass" : "",
+		"handleDroppedBlock:event:" : "",
+		"inputCommandClass" : "",
+		"printBlockOn:" : "",
+		"scope" : "",
+		"symbolsFor:" : "",
+		"valid" : "" } }

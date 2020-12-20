@@ -1,0 +1,10 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"testContinueBinaryMessage" : "",
+		"testDeleteInEmptyString" : "",
+		"testInsertNewStatement" : "",
+		"testWrapWithArray" : "",
+		"testWrapWithBinaryMessageSend" : "",
+		"testWrapWithMessageSend" : "" } }

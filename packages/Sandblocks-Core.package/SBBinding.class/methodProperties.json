@@ -1,0 +1,17 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"browse" : "",
+		"contentsChanged" : "",
+		"fixActions" : "",
+		"guessedClass" : "",
+		"inputCommandClass" : "",
+		"isBinding" : "",
+		"isExpression" : "",
+		"printBlockOn:" : "",
+		"resolveBinding" : "",
+		"symbolsFor:" : "",
+		"useAsMessageSend" : "",
+		"valid" : "",
+		"validBinding" : "" } }

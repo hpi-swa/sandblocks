@@ -1,0 +1,19 @@
+{
+	"class" : {
+		"on:from:to:" : "",
+		"on:from:to:by:" : "" },
+	"instance" : {
+		"add:" : "",
+		"at:" : "",
+		"collection" : "",
+		"collection:" : "",
+		"do:" : "",
+		"end" : "",
+		"end:" : "",
+		"initialize" : "",
+		"remove:ifAbsent:" : "",
+		"size" : "",
+		"start" : "",
+		"start:" : "",
+		"step" : "",
+		"step:" : "" } }

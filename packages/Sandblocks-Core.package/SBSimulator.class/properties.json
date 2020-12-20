@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"methodMap",
+		"currentContext" ],
+	"name" : "SBSimulator",
+	"pools" : [
+		 ],
+	"super" : "InstructionClient",
+	"type" : "normal" }

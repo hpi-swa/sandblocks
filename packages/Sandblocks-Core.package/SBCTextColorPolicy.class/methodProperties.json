@@ -1,0 +1,14 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"foregroundColorForBlock:" : "",
+		"messageCellGap" : "",
+		"statementSeparator" : "",
+		"symbolsCheckStatement:for:" : "",
+		"symbolsForArray:" : "",
+		"symbolsForBlock:" : "",
+		"symbolsForCharacter:" : "",
+		"symbolsForMessagePart:" : "",
+		"symbolsForReturn:" : "",
+		"symbolsForString:" : "" } }

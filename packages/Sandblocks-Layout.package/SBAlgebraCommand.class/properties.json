@@ -1,0 +1,16 @@
+{
+	"category" : "Sandblocks-Layout",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"type",
+		"morph",
+		"data" ],
+	"name" : "SBAlgebraCommand",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

@@ -1,0 +1,12 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"borderColorForBlock:" : "",
+		"borderWidthForBlock:" : "",
+		"colorForBlock:" : "",
+		"foregroundColorForBlock:" : "",
+		"layoutInsetFor:" : "",
+		"randomColor" : "",
+		"selectionBorderWidth" : "",
+		"selectionColorForBlock:" : "" } }

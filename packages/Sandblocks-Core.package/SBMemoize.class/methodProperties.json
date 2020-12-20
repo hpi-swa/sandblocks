@@ -1,0 +1,20 @@
+{
+	"class" : {
+		"cache" : "",
+		"do:identifier:" : "",
+		"example" : "",
+		"matches:" : "",
+		"newFor:" : "" },
+	"instance" : {
+		"cacheChanged:" : "",
+		"childSandblocksDo:" : "",
+		"drawnColor" : "",
+		"exploreCached" : "",
+		"expression" : "",
+		"expression:" : "",
+		"identifier" : "",
+		"identifier:" : "",
+		"initialize" : "",
+		"newIdentifier" : "",
+		"removeCached" : "",
+		"writeSourceOn:" : "" } }

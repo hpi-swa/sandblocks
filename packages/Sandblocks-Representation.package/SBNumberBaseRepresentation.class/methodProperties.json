@@ -1,0 +1,10 @@
+{
+	"class" : {
+		"causesSideEffects" : "",
+		"eagerNewFor:" : "",
+		"isSmalltalkExpression" : "",
+		"matches:" : "",
+		"newFor:" : "",
+		"priority" : "" },
+	"instance" : {
+		 } }

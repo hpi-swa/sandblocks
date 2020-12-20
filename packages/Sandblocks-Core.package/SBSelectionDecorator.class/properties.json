@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"cursorShown",
+		"blinkCount" ],
+	"name" : "SBSelectionDecorator",
+	"pools" : [
+		 ],
+	"super" : "SBBlockDecorator",
+	"type" : "normal" }

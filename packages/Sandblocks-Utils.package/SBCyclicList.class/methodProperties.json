@@ -1,0 +1,16 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"add:" : "",
+		"clear" : "",
+		"contents" : "",
+		"do:" : "",
+		"initialize" : "",
+		"last" : "",
+		"max" : "",
+		"reverseDo:" : "",
+		"reverseWithIndexDo:" : "",
+		"size" : "",
+		"size:" : "",
+		"withIndexDo:" : "" } }

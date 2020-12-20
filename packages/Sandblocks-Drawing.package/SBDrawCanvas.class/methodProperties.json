@@ -1,0 +1,22 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"beginDraw" : "",
+		"createStampOfSize:" : "",
+		"drawOn:" : "",
+		"endDraw" : "",
+		"ensurePointReachable:" : "",
+		"example" : "",
+		"extent:" : "",
+		"fillFrom:to:" : "",
+		"growBy:" : "",
+		"handleTouchBegin:" : "",
+		"handleTouchEnd:" : "",
+		"handleTouchUpdate:" : "",
+		"handlesMouseDown:" : "",
+		"handlesMouseMove:" : "",
+		"initialize" : "",
+		"mouseDown:" : "",
+		"mouseMove:" : "",
+		"mouseUp:" : "" } }

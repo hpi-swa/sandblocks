@@ -1,0 +1,21 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"acceptChild:" : "",
+		"canDeleteChild:" : "",
+		"cellGap" : "",
+		"childSandblocksDo:" : "",
+		"codeActions" : "",
+		"contextAcceptedRepresentationAt:" : "",
+		"fixedNumberOfChildren" : "",
+		"guessedClass" : "",
+		"insertCommandRequest:near:" : "",
+		"isCascade" : "",
+		"isExpression" : "",
+		"layoutCommands" : "",
+		"messages" : "",
+		"printOn:" : "",
+		"receiver" : "",
+		"receiver:messages:" : "",
+		"writeSourceOn:" : "" } }

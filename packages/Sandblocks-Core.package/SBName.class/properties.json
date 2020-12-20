@@ -1,0 +1,16 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"behavior",
+		"binding",
+		"autoCast" ],
+	"name" : "SBName",
+	"pools" : [
+		 ],
+	"super" : "SBLiteral",
+	"type" : "normal" }

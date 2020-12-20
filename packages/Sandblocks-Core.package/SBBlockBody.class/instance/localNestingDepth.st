@@ -1,0 +1,4 @@
+hierarchy
+localNestingDepth
+
+	^ 1

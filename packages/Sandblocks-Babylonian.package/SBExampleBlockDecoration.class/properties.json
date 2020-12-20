@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Babylonian",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"contexts",
+		"examples" ],
+	"name" : "SBExampleBlockDecoration",
+	"pools" : [
+		 ],
+	"super" : "SBASTNode",
+	"type" : "normal" }

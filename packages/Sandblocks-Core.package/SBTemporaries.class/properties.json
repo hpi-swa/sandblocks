@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBTemporaries",
+	"pools" : [
+		 ],
+	"super" : "SBBlockRow",
+	"type" : "normal" }

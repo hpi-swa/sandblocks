@@ -1,0 +1,1 @@
+A SBBadge displays an incrementing counter in a visual style that should help users quickly understand that it is a counter.

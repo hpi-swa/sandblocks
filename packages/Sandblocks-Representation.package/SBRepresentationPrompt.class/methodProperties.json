@@ -1,0 +1,23 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"candidates" : "",
+		"childSandblocksDo:" : "",
+		"close" : "",
+		"filterKeyStroke:" : "",
+		"handlesMouseOver:" : "",
+		"hasUnsavedChanges:" : "",
+		"initialize" : "",
+		"intoWorld:" : "",
+		"isArtefact" : "",
+		"mouseEnter:" : "",
+		"mouseLeave:" : "",
+		"object" : "",
+		"options:target:at:from:" : "",
+		"options:target:current:" : "",
+		"preventOcclusion" : "",
+		"select:" : "",
+		"updateFilter" : "",
+		"updatePosition" : "",
+		"useRepresentation:" : "" } }

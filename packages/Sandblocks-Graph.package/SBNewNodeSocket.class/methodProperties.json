@@ -1,0 +1,14 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"connectedLink" : "",
+		"connectedLinks" : "",
+		"delete" : "",
+		"initialize" : "",
+		"label:" : "",
+		"node" : "",
+		"notifyConnectTo:" : "",
+		"notifyDisconnectFrom:" : "",
+		"socket" : "",
+		"type:" : "" } }

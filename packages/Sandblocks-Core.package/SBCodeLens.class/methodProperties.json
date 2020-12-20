@@ -1,0 +1,20 @@
+{
+	"class" : {
+		"forContext:" : "",
+		"forMethod:pc:" : "",
+		"forMethod:selector:" : "" },
+	"instance" : {
+		"applyMode:" : "",
+		"childSandblocksDo:" : "",
+		"collapse" : "",
+		"collapseCompletely" : "",
+		"drawSubmorphsOn:" : "",
+		"expand" : "",
+		"fadeSize" : "",
+		"findMarkedBlock" : "",
+		"focus:" : "",
+		"initialize" : "",
+		"isExpanded" : "",
+		"method" : "",
+		"method:" : "",
+		"wasSelected" : "" } }

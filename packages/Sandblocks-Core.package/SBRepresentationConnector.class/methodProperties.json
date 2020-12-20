@@ -1,0 +1,10 @@
+{
+	"class" : {
+		"connect:to:representation:" : "" },
+	"instance" : {
+		"color" : "",
+		"connect:to:representation:" : "",
+		"delete" : "",
+		"step" : "",
+		"stepTime" : "",
+		"update" : "" } }

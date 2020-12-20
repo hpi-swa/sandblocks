@@ -1,0 +1,19 @@
+{
+	"class" : {
+		"name:caseBlock:" : "" },
+	"instance" : {
+		"artefactSaved:" : "",
+		"caseBlock" : "",
+		"childSandblocksDo:" : "",
+		"evaluateFor:in:" : "",
+		"initialize" : "",
+		"manualRestart" : "",
+		"name:caseBlock:" : "",
+		"nameInput" : "",
+		"restartOnSave" : "",
+		"run" : "",
+		"status" : "",
+		"status:" : "",
+		"toggleRestart" : "",
+		"updateLabel" : "",
+		"writeSourceOn:" : "" } }

@@ -1,0 +1,19 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"basicContainerWidth:" : "",
+		"basicLineHeight:" : "",
+		"basicOffset:" : "",
+		"basicStartX:" : "",
+		"containerWidth" : "",
+		"containerWidth:" : "",
+		"extentFrom:" : "",
+		"initialize" : "",
+		"lineHeight" : "",
+		"lineHeight:" : "",
+		"offset" : "",
+		"offset:" : "",
+		"offset:lineHeight:" : "",
+		"startX" : "",
+		"startX:" : "" } }

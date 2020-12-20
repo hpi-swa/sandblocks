@@ -1,0 +1,14 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"canAppearInBlockBody" : "",
+		"canSwap" : "",
+		"childSandblocksDo:" : "",
+		"drawnColor" : "",
+		"extent" : "",
+		"extent:" : "",
+		"initialize" : "",
+		"prefersNoBorder" : "",
+		"printOn:" : "",
+		"writeSourceOn:" : "" } }

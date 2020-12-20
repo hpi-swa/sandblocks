@@ -1,0 +1,1 @@
+A SBCollectionView allows creating views on SequencableCollections without copying any data.

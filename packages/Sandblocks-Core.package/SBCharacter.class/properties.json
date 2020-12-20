@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "SBCharacter",
+	"pools" : [
+		 ],
+	"super" : "SBLiteral",
+	"type" : "normal" }

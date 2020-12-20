@@ -1,0 +1,18 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"colorPolicy",
+		"methodClass",
+		"homeArtefact",
+		"sourceBlock",
+		"onAbortUndoIn" ],
+	"name" : "SBSelection",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

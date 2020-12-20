@@ -1,0 +1,21 @@
+{
+	"category" : "Sandblocks-Layout",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"minSize",
+		"naturalSize",
+		"maxSize",
+		"finalSize",
+		"expanding",
+		"widget",
+		"offset",
+		"vertical" ],
+	"name" : "SBBoxLayoutItem",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

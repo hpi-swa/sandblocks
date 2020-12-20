@@ -1,0 +1,11 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"deadzoneDistance" : "",
+		"initialize" : "",
+		"mouseMove:" : "",
+		"mouseUp:" : "",
+		"optionDistance" : "",
+		"sandblockEditor" : "",
+		"sandblockEditor:" : "" } }

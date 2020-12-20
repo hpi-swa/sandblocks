@@ -1,0 +1,14 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"borderColorForBlock:" : "",
+		"borderWidthForBlock:" : "",
+		"colorForBlock:" : "",
+		"hash:" : "",
+		"initialize" : "",
+		"methods" : "",
+		"parentWasReached:" : "",
+		"reached:in:" : "",
+		"report:pc:" : "",
+		"wasReached:" : "" } }

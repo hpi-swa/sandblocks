@@ -1,0 +1,12 @@
+{
+	"class" : {
+		"matches:" : "",
+		"newFor:" : "" },
+	"instance" : {
+		"childSandblocksDo:" : "",
+		"doubleClick:" : "",
+		"filename:" : "",
+		"guessedClass" : "",
+		"initialize" : "",
+		"printOn:" : "",
+		"writeSourceOn:" : "" } }

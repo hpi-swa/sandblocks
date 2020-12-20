@@ -1,0 +1,15 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"testAddColon" : "",
+		"testBinaryMessageEdit" : "",
+		"testChangeDoesNothing" : "",
+		"testDeleteAround" : "",
+		"testHasColon" : "",
+		"testInsertMessagePartAtEnd" : "",
+		"testInsertMessagePartAtStart" : "",
+		"testInsertMessagePartBeforeEnd" : "",
+		"testPressColonInExistingMessage" : "",
+		"testTypeBinary" : "",
+		"testUseSuggestion" : "" } }

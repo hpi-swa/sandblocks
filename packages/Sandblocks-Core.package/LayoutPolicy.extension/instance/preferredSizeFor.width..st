@@ -1,0 +1,5 @@
+*Sandblocks-Core-layout
+preferredSizeFor: aMorph width: aNumber
+
+	self flag: #fixme. "magic number"
+	^ PHSizeRequest fixed: (self minExtentOf: aMorph in: (0 @ 0 extent: aNumber @ 10000))

@@ -1,0 +1,23 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"acceptDroppingMorph:event:" : "",
+		"bubbleSize" : "",
+		"connectTo:" : "",
+		"drawOn:" : "",
+		"handlesMouseDown:" : "",
+		"handlesMouseOver:" : "",
+		"handlesMouseOverDragging:" : "",
+		"initialize" : "",
+		"mouseDown:" : "",
+		"mouseEnter:" : "",
+		"mouseEnterDragging:" : "",
+		"mouseLeaveDragging:" : "",
+		"node" : "",
+		"notifyConnectTo:" : "",
+		"notifyDisconnectFrom:" : "",
+		"startDrag:" : "",
+		"type" : "",
+		"type:" : "",
+		"wantsDroppedMorph:event:" : "" } }

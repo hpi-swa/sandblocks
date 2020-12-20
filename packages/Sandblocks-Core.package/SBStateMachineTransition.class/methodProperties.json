@@ -1,0 +1,10 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"addCondition:" : "",
+		"color" : "",
+		"conditions" : "",
+		"doLayoutIn:" : "",
+		"endPointsDo:" : "",
+		"initialize" : "" } }

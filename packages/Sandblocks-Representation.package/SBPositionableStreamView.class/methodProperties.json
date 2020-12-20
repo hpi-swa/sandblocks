@@ -1,0 +1,17 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"canDeleteChild:" : "",
+		"childSandblocksDo:" : "",
+		"contextAcceptedRepresentationAt:" : "",
+		"hasUnsavedChanges" : "",
+		"hasUnsavedChanges:" : "",
+		"initialize" : "",
+		"isArtefact" : "",
+		"next" : "",
+		"object" : "",
+		"reset" : "",
+		"saveTryFixing:quick:" : "",
+		"stream:" : "",
+		"update" : "" } }

@@ -1,0 +1,1 @@
+A SBMorphExampleCase contains a piece of code that is run after the morph of an SBMorphExample has been setup. It may specify a testcase via assert: or just perform some additional actions after the morph is in its world.

@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"currentlyProfiling" ],
+	"name" : "SBProfiler",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

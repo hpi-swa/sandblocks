@@ -1,0 +1,17 @@
+{
+	"category" : "Sandblocks-Utils",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"left",
+		"right",
+		"top",
+		"bottom" ],
+	"name" : "SBEdgeInsets",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

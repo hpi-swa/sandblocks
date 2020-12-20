@@ -1,0 +1,21 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"argumentBlock" : "",
+		"arguments" : "",
+		"binding:for:class:ifPresent:" : "",
+		"capabilitiesFrom:" : "",
+		"capabilitiesList" : "",
+		"childSandblocksDo:" : "",
+		"class:" : "",
+		"classLabel" : "",
+		"constructorBlock" : "",
+		"drawSubmorphsOn:" : "",
+		"hasUnsavedChanges" : "",
+		"hasUnsavedChanges:" : "",
+		"initialize" : "",
+		"isArtefact" : "",
+		"matcherBlock" : "",
+		"object" : "",
+		"saveTryFixing:quick:" : "" } }

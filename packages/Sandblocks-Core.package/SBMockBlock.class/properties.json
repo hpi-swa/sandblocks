@@ -1,0 +1,15 @@
+{
+	"category" : "Sandblocks-Core-Tests",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		"mockActionTaken",
+		"actionValid" ],
+	"name" : "SBMockBlock",
+	"pools" : [
+		 ],
+	"super" : "SBBlock",
+	"type" : "normal" }

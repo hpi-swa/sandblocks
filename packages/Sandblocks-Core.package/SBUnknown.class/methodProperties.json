@@ -1,0 +1,18 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"acceptCharacter:" : "",
+		"contents:" : "",
+		"deleteBeforeCursor" : "",
+		"doReplaceBy:" : "",
+		"doWrap:with:" : "",
+		"emptyLine" : "",
+		"isUnknown" : "",
+		"keyStroke:" : "",
+		"printOn:" : "",
+		"replaceWithPragma" : "",
+		"symbols" : "",
+		"tryDelete" : "",
+		"valid" : "",
+		"writeSourceOn:" : "" } }

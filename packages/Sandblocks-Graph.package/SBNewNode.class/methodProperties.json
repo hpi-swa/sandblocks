@@ -1,0 +1,19 @@
+{
+	"class" : {
+		 },
+	"instance" : {
+		"autoPlace" : "",
+		"autoPlaceInputs" : "",
+		"flowInSocket" : "",
+		"flowOutSocket" : "",
+		"hasFlowIn" : "",
+		"hasFlowOut" : "",
+		"initialize" : "",
+		"inputSockets" : "",
+		"inputs" : "",
+		"isLink" : "",
+		"isNode" : "",
+		"merge:withLabels:type:" : "",
+		"outputSockets" : "",
+		"outputs" : "",
+		"update" : "" } }
