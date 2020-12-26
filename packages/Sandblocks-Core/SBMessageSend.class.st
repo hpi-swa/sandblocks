@@ -505,6 +505,12 @@ SBMessageSend >> veryDeepCopyWith: deepCopier [
 	^ new
 ]
 
+{ #category : #testing }
+SBMessageSend >> wantsExtraSpace [
+
+	^ false
+]
+
 { #category : #actions }
 SBMessageSend >> wrapInCascade [
 	<multiSelectAction>

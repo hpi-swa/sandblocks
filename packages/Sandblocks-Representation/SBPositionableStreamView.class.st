@@ -75,6 +75,12 @@ SBPositionableStreamView >> object [
 ]
 
 { #category : #'as yet unclassified' }
+SBPositionableStreamView >> replace: anObject [
+
+	self stream: anObject
+]
+
+{ #category : #'as yet unclassified' }
 SBPositionableStreamView >> reset [
 	<action>
 	

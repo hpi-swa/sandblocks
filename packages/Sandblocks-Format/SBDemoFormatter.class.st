@@ -33,7 +33,7 @@ SBDemoFormatter class >> formatString: aString class: aClass noPattern: aBoolean
 		self: [SBDemoFormatter]
 		args: [
 			{'testMethod
-  {$a.$b.$c.$d.$e.$f.$g.$h.$i.$j}'. UndefinedObject. false}]
+  {$a.$b.$c.$d.$e.$f.$g.$h.$i}'. UndefinedObject. false}]
 		label: 'brace node long'.
 	node := self nodeFrom: aString class: aClass noPattern: aBoolean.
 	formatter := self new initForNode: node.
@@ -319,7 +319,6 @@ SBDemoFormatter >> visitBlockNode: aNode [
 SBDemoFormatter >> visitBraceNode: aNode [
 
 	| width multiLine |
-	1 / 0.
 	width := aNode elements inject: 0 into: [:sum :element | sum + ((self preFormat: element) size + 2)].
 	multiLine := width > self maxLineLength.
 	stream nextPut: ${.

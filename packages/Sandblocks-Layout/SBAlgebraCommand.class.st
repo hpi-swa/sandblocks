@@ -39,6 +39,12 @@ SBAlgebraCommand class >> hardLine [
 ]
 
 { #category : #'as yet unclassified' }
+SBAlgebraCommand class >> hardOrSoftline: aBoolean [
+
+	^ aBoolean ifTrue: [self hardLine] ifFalse: [self softLineOrGap]
+]
+
+{ #category : #'as yet unclassified' }
 SBAlgebraCommand class >> indent [
 
 	^ self new type: #indent

@@ -374,10 +374,12 @@ SBBlock >> containingSandblock [
 { #category : #'as yet unclassified' }
 SBBlock >> containingStatement [
 
-	| current |
-	current := self.
-	[current parentSandblock ifNil: [^ nil] ifNotNil: #isBlockBody] whileFalse: [current := current parentSandblock].
-	^ current
+	| parent |
+	parent := self parentSandblock.
+	parent ifNil: [^ nil].
+	
+	(parent isBlockBody and: [parent statements includes: self]) ifTrue: [^ self].
+	^ parent containingStatement
 ]
 
 { #category : #actions }
@@ -489,7 +491,7 @@ SBBlock >> deleteAround [
 	(self hasRepresentationThat: (target parentSandblock contextAcceptedRepresentationAt: target childIndex)) ifTrue: [ | replacer |
 		SBPastePlaceholder for: self root: target copyIn: editor.
 		
-		replacer := self veryDeepCopy.
+		replacer := self "veryDeepCopy".
 		editor do: ((SBReplaceCommand newFor: self containingArtefact)
 			target: target;
 			replacer: replacer).
@@ -497,10 +499,41 @@ SBBlock >> deleteAround [
 ]
 
 { #category : #actions }
+SBBlock >> deleteBeforeCursor [
+	<inputAction>
+	
+	| editor p parent adjacent |
+	self currentTextMorph contents ifNotEmpty: [^ self currentTextMorph deleteBeforeCursor].
+	
+	p := self previousBlock.
+	parent := self parentSandblock.
+	editor := self sandblockEditor.
+	adjacent := self adjacentBlock: -1.
+	
+	self childSandblocks ifNotEmpty: [ | new |
+		new := self childSandblocks last.
+		new deleteAround.
+		^ editor startInput: new at: 9e8 replacingContents: false].
+	
+	self deleteBlock.
+	editor startInput: parent at: 9e8 replacingContents: false.
+	editor mode = #input ifFalse: [
+		adjacent ifNil: [^ parent deleteBlock].
+		
+		parent childSandblocks size = 1
+			ifTrue: [
+				adjacent deleteAround.
+				editor startInput: editor selection at: 9e8 replacingContents: false]
+			ifFalse: [editor startInput: p at: 9e8 replacingContents: false]]
+]
+
+{ #category : #actions }
 SBBlock >> deleteBlock [
 	<multiSelectAction>
 
-	self assert: self isSelected.
+	self isSelected ifFalse: [
+		^ self sandblockEditor do: (self parentSandblock deleteCommandFor: self)].
+	
 	self sandblockEditor
 		copyBuffer: self sandblockEditor multiSelection;
 		doMultiSelectionEach: [:selected |
@@ -514,8 +547,8 @@ SBBlock >> deleteCommandFor: aBlock [
 	^ (self canDeleteChild: aBlock)
 		ifTrue: [(SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock]
 		ifFalse: [
-			aBlock nullBlockClass ifNotNil: [:nullBlockClass |
-				(SBReplaceCommand newFor: aBlock containingArtefact) target: aBlock; replacer: nullBlockClass new]]
+			aBlock newNullBlock ifNotNil: [:nullBlock |
+				(SBReplaceCommand newFor: aBlock containingArtefact) target: aBlock; replacer: nullBlock]]
 ]
 
 { #category : #decorators }
@@ -1041,6 +1074,12 @@ SBBlock >> isCodeContainer [
 ]
 
 { #category : #testing }
+SBBlock >> isDeclaration [
+
+	^ false
+]
+
+{ #category : #testing }
 SBBlock >> isExample [
 
 	^ false
@@ -1358,6 +1397,12 @@ SBBlock >> nestingDepth [
 	^ d
 ]
 
+{ #category : #testing }
+SBBlock >> newNullBlock [
+
+	^ nil
+]
+
 { #category : #hierarchy }
 SBBlock >> nextBlock [
 
@@ -1380,11 +1425,10 @@ SBBlock >> nextBlockThat: aBlock [
 { #category : #'as yet unclassified' }
 SBBlock >> nextVerticalNear: aNumber [
 
-	| allCandidates candidates candidatesBestDistance tolerance |
 	^ self
 		nextVerticalNear: aNumber
 		calcDistance: [:candidate | candidate top - self bottom]
-		validBlock: [:candidate | candidate top > self bottom]
+		validBlock: [:candidate | candidate top >= self bottom]
 ]
 
 { #category : #'as yet unclassified' }
@@ -1450,6 +1494,12 @@ SBBlock >> parentAdjacentBlock: aNumber [
 
 	^ (self adjacentBlock: aNumber)
 		ifNil: [self parentSandblock ifNotNil: [:p | p parentAdjacentBlock: aNumber]]
+]
+
+{ #category : #hierarchy }
+SBBlock >> parentHasDynamicNumberOfChildren [
+
+	^ self parentSandblock fixedNumberOfChildren not
 ]
 
 { #category : #'as yet unclassified' }
@@ -1626,7 +1676,7 @@ SBBlock >> previousVerticalNear: aNumber [
 	^ self
 		nextVerticalNear: aNumber
 		calcDistance: [:candidate | self top - candidate bottom]
-		validBlock: [:candidate | self top > candidate bottom]
+		validBlock: [:candidate | self top >= candidate bottom]
 ]
 
 { #category : #actions }
@@ -1697,8 +1747,8 @@ SBBlock >> representAs [
 	options ifEmpty: [^ self].
 	
 	prompt := SBRepresentationPrompt new options: options target: self object current: self.
-	self sandblockEditor openMorphInView: prompt.
-	prompt position: self topRight
+	self sandblockEditor openPopup: prompt.
+	prompt position: self positionInWorld + (self width @ 0)
 ]
 
 { #category : #'event handling' }
@@ -1818,10 +1868,7 @@ SBBlock >> selectNextGroup [
 	self sandblockEditor keepVerticalSelectionPositionDuring: [
 		(self nextVerticalNear: self sandblockEditor verticalSelectionPosition)
 			ifNotNil: #select
-			ifNil: [
-				SBLabel text: [
-					'Artefacts typically contain all their nodes, so none are below them'].
-				self isArtefact ifTrue: [self selectNext]]].
+			ifNil: [self hasChildSandblocks ifTrue: [self selectNext]]].
 	self sandblockEditor maybeStartInputNear: oldCursorPos
 ]
 
@@ -1844,8 +1891,13 @@ SBBlock >> selectPreviousGroup [
 	oldCursorPos := self currentTextMorph ifNotNil: [:m | m cursorPosition] ifNil: [self center].
 	
 	self sandblockEditor keepVerticalSelectionPositionDuring: [
-		(self previousVerticalNear: self sandblockEditor verticalSelectionPosition) ifNotNil: #select].
-	oldCursorPos ifNil: [self sandblockEditor maybeStartInputFromStart] ifNotNil: [self sandblockEditor maybeStartInputNear: oldCursorPos]
+		((self previousVerticalNear: self sandblockEditor verticalSelectionPosition)
+			ifNil: [self parentSandblock ~= self sandblockEditor ifTrue: [self parentSandblock] ifFalse: [nil]])
+				ifNotNil: #select].
+	oldCursorPos
+		ifNil: [self sandblockEditor maybeStartInputFromStart]
+		ifNotNil: [
+			self sandblockEditor maybeStartInputNear: oldCursorPos]
 ]
 
 { #category : #actions }
@@ -2199,6 +2251,12 @@ SBBlock >> wantsDroppedMorph: aMorph event: evt [
 								self parentSandblock contextAcceptedRepresentationAt: morph childIndex]])].
 				[true]
 			}]
+]
+
+{ #category : #testing }
+SBBlock >> wantsExtraSpace [
+
+	^ true
 ]
 
 { #category : #'artefact protocol' }

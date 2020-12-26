@@ -30,10 +30,10 @@ SBSmalltalkGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 				aBlock sandblockEditor do: ((SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock; shouldMergeWithNext: true)].
 			^ block addBlockArgument].
 	char = $< ifTrue: [^ self replaceWithPragma: aBlock].
-	char = Character backspace ifTrue: [self halt.^ self tryDelete: aBlock]].
+	char = Character backspace ifTrue: [^ self tryDelete: aBlock]].
 	
-	char = Character space ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer receiver: inner selector: '' arguments: #()] with: SBMessageSend new].
-	char isSpecial ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer receiver: inner selector: char asString arguments: {SBUnknown new}] with: SBMessageSend new].
+	char = Character space ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer receiver: inner selector: '' arguments: #()] with: SBMessageSend new focusOuter: true].
+	char isSpecial ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer receiver: inner selector: char asString arguments: {SBUnknown new}] with: SBMessageSend new focusOuter: true].
 	char = ${ ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer type: #dynamic contents: {inner}] with: SBArray new].
 	char = $( ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer type: #literal contents: {inner}] with: SBArray new].
 	char = $[ ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer statements: {inner}] with: SBBlockBody new].

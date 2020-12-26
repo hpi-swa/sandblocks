@@ -18,16 +18,21 @@ SBGrammarHandlerTest >> testContinueBinaryMessage [
 ]
 
 { #category : #tests }
-SBGrammarHandlerTest >> testDeleteInEmptyString [
+SBGrammarHandlerTest >> testDoNotJumpAfterCompletingUnknown [
 
-	| block editor string |
-	string := SBString new contents: ''.
+	| block editor |
 	block := '[]' parseAsSandblock.
 	editor := self editorFor: block.
-	block addMorphBack: string.
-	editor startInput: string at: 0 replacingContents: false.
-	editor selection keyStroke: (self keyboardEvent: Character backspace).
-	self assert: block statements isEmpty
+	
+	block addMorphBack: block newNullBlock.
+	block addMorphBack: block newNullBlock.
+	
+	editor startInput: block statements first at: 0 replacingContents: false.
+	
+	editor filterEvent: (self keyboardEvent: $a) for: nil.
+	editor filterEvent: (self keyboardEvent: $b) for: nil.
+	
+	self assert: 'ab' equals: block statements first contents
 ]
 
 { #category : #tests }
@@ -97,5 +102,5 @@ SBGrammarHandlerTest >> testWrapWithMessageSend [
 		editor startInput: leaf at: 0 replacingContents: false.
 		editor selection keyStroke: (self keyboardEvent: $ ).
 		self assert: (block statements first isMessageSend and: [block statements first ~= leaf]).
-		self assert: block statements first messageParts first isSelected]
+		self assert: block statements first messageParts first equals: editor currentInput]
 ]

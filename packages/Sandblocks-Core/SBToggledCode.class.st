@@ -78,6 +78,8 @@ SBToggledCode >> buildRowFor: aBlock active: aBoolean [
 	| row |
 	row := SBRow new.
 	row
+		layoutPolicy: SBAlgebraLayout new;
+		softWrap: false;
 		cellGap: 4 withScalingFactor;
 		addMorphBack: (SBCheckbox new
 			nonEdit: false;
@@ -211,7 +213,7 @@ SBToggledCode >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
-		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine])
+		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine withGap: true])
 ]
 
 { #category : #accessing }

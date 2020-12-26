@@ -571,6 +571,22 @@ SBEditor >> canDeleteChild: aBlock [
 	^ true
 ]
 
+{ #category : #'actions input' }
+SBEditor >> cancelInput [
+	" disregard the current input command and directly return to command mode (preserves shouldMergeWithNext of previous command) "
+	<inputAction>
+
+	| command input |
+	(currentInput isNil or: [currentInputCommand isNil]) ifTrue: [^ self].
+	command := currentInputCommand.
+	input := currentInput.
+	currentInput := nil.
+	currentInputCommand := nil.
+	
+	input stopEditing: command.
+	self mode: #command
+]
+
 { #category : #accessing }
 SBEditor >> canvas [
 
@@ -796,7 +812,7 @@ SBEditor >> deleteAfterCursor [
 
 { #category : #'actions input' }
 SBEditor >> deleteBeforeCursor [
-	<inputAction>
+	"<inputAction>"
 
 	self textMorph deleteBeforeCursor
 ]
@@ -855,15 +871,10 @@ SBEditor >> doMultiSelectionEach: aBlock [
 SBEditor >> endInput [
 	<inputAction>
 
-	| command input |
+	| command |
 	(currentInput isNil or: [currentInputCommand isNil]) ifTrue: [^ self].
 	command := currentInputCommand.
-	input := currentInput.
-	currentInput := nil.
-	currentInputCommand := nil.
-	
-	input stopEditing: command.
-	self mode: #command.
+	self cancelInput.
 	
 	command hasChange
 		ifTrue: [self do: command]
@@ -1343,6 +1354,13 @@ SBEditor >> openOpenWindow [
 		ifFalse: [SBCodeOpener new positionNear: self; open]) ifNotNil: [:methodOrClass | self open: methodOrClass]
 ]
 
+{ #category : #'submorphs-add/remove' }
+SBEditor >> openPopup: aMorph [
+
+	aMorph disableLayout: true.
+	self addMorphFront: aMorph
+]
+
 { #category : #actions }
 SBEditor >> openProfiler [
 	<action>
@@ -1392,6 +1410,18 @@ SBEditor >> perform: anAction for: aBlock event: anEvent [
 			aBlock performAction: anAction.
 			^ true]].
 	^ false
+]
+
+{ #category : #shortcuts }
+SBEditor >> performForSelection: anActionSymbol [
+
+	self perform: anActionSymbol for: self selection event: (KeyboardEvent new
+		setType: #keystroke
+		buttons: 64
+		position: 0 @ 0
+		keyValue: $a
+		hand: nil
+		stamp: nil)
 ]
 
 { #category : #shortcuts }
@@ -1612,6 +1642,7 @@ SBEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean [
 	^ (anArtefact saveTryFixing: aFixBoolean quick: aQuickBoolean)
 		ifTrue: [
 			anArtefact hasUnsavedChanges: false.
+			self triggerEvent: #artefactSaved with: anArtefact.
 			self allBlocksDo: [:block | block artefactSaved: self selectedArtefact].
 			true]
 		ifFalse: [false]

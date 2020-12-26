@@ -91,12 +91,6 @@ SBStateMachineState >> name: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBStateMachineState >> prefix [
-
-	^ self owner initialState = self ifTrue: ['* '] ifFalse: [nil]
-]
-
-{ #category : #'as yet unclassified' }
 SBStateMachineState >> printOn: aStream [
 
 	aStream nextPutAll: self className; nextPut: $(; nextPutAll: self name; nextPut: $)
@@ -107,6 +101,12 @@ SBStateMachineState >> setAsInitialState [
 	<action>
 
 	self parentSandblock initialState: self
+]
+
+{ #category : #'as yet unclassified' }
+SBStateMachineState >> symbols [
+
+	^ {self owner initialState = self ifTrue: ['* '] ifFalse: [nil]. nil}
 ]
 
 { #category : #'as yet unclassified' }

@@ -5,6 +5,24 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBASTNodeTest >> testCanUndoAppendLine [
+
+	| block selection editor |
+	block := '[5]' parseAsSandblock.
+	editor := self editorFor: block.
+	selection := block statements first.
+	selection insertStatementBelow.
+	
+	block statements last keyStroke: (self keyboardEvent: $s).
+	editor endInput.
+	self assert: 2 equals: (editor instVarNamed: #undoStack) size.
+	
+	editor undo.
+	
+	self assert: 1 equals: block statements size
+]
+
+{ #category : #'as yet unclassified' }
 SBASTNodeTest >> testInsertEmptyLineMarkers [
 
 	self

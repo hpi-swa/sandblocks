@@ -14,6 +14,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBCollectionView class >> new: aNumber [
+
+	^ Array new: aNumber
+]
+
+{ #category : #'as yet unclassified' }
 SBCollectionView class >> on: aCollection from: aNumber to: anotherNumber [
 
 	^ self new

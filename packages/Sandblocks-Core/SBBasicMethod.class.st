@@ -308,7 +308,7 @@ SBBasicMethod >> insertCommandRequest: anAfterBoolean near: aBlock [
 SBBasicMethod >> insertStatementAboveOrBelow: anAboveBoolean [
 
 	| statement |
-	statement := SBUnknown new.
+	statement := self newNullBlock.
 	self sandblockEditor
 		do: ((SBInsertCommand newFor: self)
 			index: (anAboveBoolean ifTrue: [2] ifFalse: [self body submorphCount + 1]);

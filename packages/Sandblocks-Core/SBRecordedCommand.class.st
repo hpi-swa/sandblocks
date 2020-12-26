@@ -101,6 +101,29 @@ SBRecordedCommand >> replace: aMorph with: anotherMorph [
 	self added: anotherMorph
 ]
 
+{ #category : #action }
+SBRecordedCommand >> restore: aMorph [
+	" remember this Morph's position in the tree and restore it when undone "
+	
+	| oldIndex oldOwner |
+	oldOwner := aMorph owner.
+	oldIndex := oldOwner submorphIndexOf: aMorph.
+	undo add: [oldOwner addMorph: aMorph asElementNumber: oldIndex]
+]
+
+{ #category : #action }
+SBRecordedCommand >> restore: aCollection after: aBlock [
+	" remember these Morphs' positions in the tree and restore them when undone "
+	
+	| oldIndices oldOwners |
+	oldOwners := aCollection collect: #owner.
+	oldIndices := aCollection with: oldOwners collect: [:morph :owner | owner submorphIndexOf: morph].
+	aBlock value.
+	undo add: [
+		oldOwners with: aCollection and: oldIndices do: [:owner :morph :index |
+			owner addMorph: morph asElementNumber: index]]
+]
+
 { #category : #apply }
 SBRecordedCommand >> undo [
 

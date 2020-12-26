@@ -60,6 +60,12 @@ SBStringView >> object [
 ]
 
 { #category : #'as yet unclassified' }
+SBStringView >> replace: anObject [
+
+	self string: anObject
+]
+
+{ #category : #'as yet unclassified' }
 SBStringView >> string: aString [
 
 	self firstSubmorph contents: aString

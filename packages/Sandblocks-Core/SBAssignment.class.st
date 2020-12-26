@@ -111,6 +111,12 @@ SBAssignment >> useAsMessageSend [
 		replacer: (SBMessageSend new receiver: (SBName contents: 'self') selector: self binding contents asSymbol asSimpleSetter arguments: {self expression}))
 ]
 
+{ #category : #testing }
+SBAssignment >> wantsExtraSpace [
+
+	^ false
+]
+
 { #category : #converting }
 SBAssignment >> writeSourceOn: aStream [
 

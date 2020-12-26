@@ -104,6 +104,12 @@ SBShortcut >> option [
 ]
 
 { #category : #'as yet unclassified' }
+SBShortcut >> optionKeyPressed [
+
+	^ option
+]
+
+{ #category : #'as yet unclassified' }
 SBShortcut >> printDisplayOn: aStream [
 
 	aStream.

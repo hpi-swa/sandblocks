@@ -17,6 +17,23 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBError >> artefactSaved: anArtefact [
+
+	"(self currentStackFrame notNil and: [anArtefact object = self currentStackFrame method object]) ifTrue: [ | newContext |
+		self currentStackFrame object isExecutingBlock ifTrue: [ | home |
+			home := self currentStackFrame object activeHome.
+			home ifNil: [^ self inform: 'Method for block not found on stack, can''t edit and continue'].
+			(self confirm: 'I will have to revert to the method from\which this block originated. Is that OK?' withCRs translated) ifFalse: [^ self].
+			self resetContext: home.
+			^ self].
+		
+		newContext := process popTo: self currentStackFrame object.
+		process restartTopWith: self currentStackFrame method object.
+		process stepToSendOrReturn.
+		newContext == self currentStackFrame context ifTrue: [self resetContext: newContext]]"
+]
+
+{ #category : #'as yet unclassified' }
 SBError >> canCopy [
 
 	^ false
@@ -139,6 +156,14 @@ SBError >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBError >> intoWorld: aWorld [
+
+	super intoWorld: aWorld.
+	
+	self sandblockEditor when: #artefactSaved send: #artefactSaved: to: self
+]
+
+{ #category : #'as yet unclassified' }
 SBError >> maxFrames [
 
 	^ 40
@@ -147,6 +172,8 @@ SBError >> maxFrames [
 { #category : #'as yet unclassified' }
 SBError >> outOfWorld: aWorld [
 
+	self sandblockEditor removeActionsWithReceiver: self forEvent: #artefactSaved.
+	
 	super outOfWorld: aWorld.
 	
 	process ifNotNil: #terminate

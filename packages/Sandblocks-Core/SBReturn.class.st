@@ -91,6 +91,12 @@ SBReturn >> valid [
 	^ self containingStatement = self and: [self containingBlock submorphs last = self]
 ]
 
+{ #category : #testing }
+SBReturn >> wantsExtraSpace [
+
+	^ false
+]
+
 { #category : #formatting }
 SBReturn >> writeSourceOn: aStream [
 

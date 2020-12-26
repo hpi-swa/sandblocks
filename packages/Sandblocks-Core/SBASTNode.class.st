@@ -295,22 +295,16 @@ SBASTNode >> isStatement [
 	^ self owner isBlockBody
 ]
 
-{ #category : #constants }
-SBASTNode >> nullBlockClass [
+{ #category : #actions }
+SBASTNode >> newNullBlock [
 
-	^ SBUnknown
+	^ SBUnknown new
 ]
 
 { #category : #'as yet unclassified' }
 SBASTNode >> object [
 
 	^ self
-]
-
-{ #category : #actions }
-SBASTNode >> parentHasDynamicNumberOfChildren [
-
-	^ self parentSandblock fixedNumberOfChildren not
 ]
 
 { #category : #actions }

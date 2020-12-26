@@ -1,6 +1,9 @@
 Class {
 	#name : #SBRow,
 	#superclass : #Morph,
+	#instVars : [
+		'softWrap'
+	],
 	#category : #'Sandblocks-Morphs'
 }
 
@@ -8,6 +11,8 @@ Class {
 SBRow >> initialize [ 
 
 	super initialize.
+	
+	softWrap := true.
 	
 	self
 		extent: 0 @ 0;
@@ -21,9 +26,12 @@ SBRow >> initialize [
 { #category : #'as yet unclassified' }
 SBRow >> layoutCommands [
 
-	^ SBAlgebraCommand container
-		morph: self;
-		data: ((self submorphs select: #visible) collect: #layoutCommands separatedBy: [SBAlgebraCommand softLineOrGap])
+	^ self layoutPolicy class = SBAlgebraLayout
+		ifTrue: [
+			SBAlgebraCommand container
+				morph: self;
+				data: ((self submorphs select: #visible) collect: #layoutCommands separatedBy: [self softWrap ifTrue: [SBAlgebraCommand softLineOrGap] ifFalse: [SBAlgebraCommand gap]])]
+		ifFalse: [super layoutCommands]
 ]
 
 { #category : #'as yet unclassified' }
@@ -32,6 +40,19 @@ SBRow >> removedMorph: aMorph [
 	super removedMorph: aMorph.
 	
 	aMorph removeActionsWithReceiver: self
+]
+
+{ #category : #'as yet unclassified' }
+SBRow >> softWrap [
+
+	^ softWrap ifNil: [true]
+]
+
+{ #category : #'as yet unclassified' }
+SBRow >> softWrap: aBoolean [
+	" if using layout commands softwrap indicates whether items are allowed to wrap "
+
+	softWrap := aBoolean
 ]
 
 { #category : #'as yet unclassified' }
