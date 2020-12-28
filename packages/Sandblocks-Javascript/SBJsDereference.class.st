@@ -29,6 +29,12 @@ SBJsDereference >> currentTextMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsDereference >> isExpression [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBJsDereference >> isValidCharacter: aCharacter [
 
 	^ aCharacter isAlphaNumeric or: [aCharacter = $_]

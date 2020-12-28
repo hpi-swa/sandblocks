@@ -56,6 +56,12 @@ SBRow >> softWrap: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBRow >> useAlgebraLayout [
+
+	self layoutPolicy: SBAlgebraLayout new
+]
+
+{ #category : #'as yet unclassified' }
 SBRow >> wantsMetaMenu [
 
 	^ false

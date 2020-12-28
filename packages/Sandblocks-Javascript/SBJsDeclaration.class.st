@@ -37,6 +37,12 @@ SBJsDeclaration >> isDeclaration [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsDeclaration >> isExpression [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBJsDeclaration >> layoutCommands [
 
 	^ SBAlgebraCommand container

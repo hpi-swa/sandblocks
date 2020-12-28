@@ -72,6 +72,12 @@ SBJsBinaryOperator >> isBinaryOperator [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsBinaryOperator >> isExpression [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBJsBinaryOperator >> keyStroke: anEvent [
 
 	self currentTextMorph keyStroke: anEvent.

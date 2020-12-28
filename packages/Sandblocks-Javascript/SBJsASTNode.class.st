@@ -71,6 +71,12 @@ SBJsASTNode >> isClosure [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsASTNode >> isExpression [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBJsASTNode >> isJsExpression [
 
 	^ true
@@ -92,6 +98,22 @@ SBJsASTNode >> newNullBlock [
 SBJsASTNode >> object [
 
 	^ self
+]
+
+{ #category : #'as yet unclassified' }
+SBJsASTNode >> wrapInDynamicArray [
+	<action>
+	<actionValidIf: #isExpression>
+	
+	| key |
+	self flag: #todo. " figure out a way to make the terminology language dependent: the shortcut comes from Smalltalk where { is an array but in JS it's an object "
+	key := self newNullBlock.
+	self sandblockEditor
+		do: ((SBWrapCommand newFor: self containingArtefact)
+			inner: self;
+			outer: (SBJsObjectLiteral new);
+			wrap: [:outer :inner | outer pairs: {key -> inner}]);
+		startInput: key at: 0 replacingContents: false
 ]
 
 { #category : #'as yet unclassified' }

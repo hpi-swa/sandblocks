@@ -25,7 +25,8 @@ SBJsGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 		char = $" ifTrue: [^ self replace: aBlock with: SBJsString new].
 		char = $( ifTrue: [ ^ SBJsClosure new in: [:closure | self replace: aBlock with: (closure statements: {closure newNullBlock})]].
 		" borrowed from Smalltalk "
-		char = $^ ifTrue: [^ SBJsReturn new in: [:return | self replace: aBlock with: (return expression: return newNullBlock)]]].
+		char = $^ ifTrue: [^ SBJsReturn new in: [:return | self replace: aBlock with: (return expression: return newNullBlock)]].
+		char = ${ ifTrue: [^ self replace: aBlock with: SBJsObjectLiteral new]].
 	
 	char = $. ifTrue: [
 		^ self wrap: aBlock do: [:outer :inner | outer lhs: inner rhs: ''] with: SBJsDereference new].

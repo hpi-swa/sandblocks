@@ -35,6 +35,12 @@ SBJsMethodCall >> insertCommandRequest: anAfterBoolean near: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsMethodCall >> isExpression [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBJsMethodCall >> layoutCommands [
 
 	^ SBAlgebraCommand container
@@ -61,6 +67,12 @@ SBJsMethodCall >> method: aBlock arguments: aCollection [
 	self addMorphBack: (SBStringMorph new contents: '(').
 	self addAllMorphsBack: aCollection.
 	self addMorphBack: (SBStringMorph new contents: ')').
+]
+
+{ #category : #'as yet unclassified' }
+SBJsMethodCall >> printOn: aStream [
+
+	aStream nextPutAll: 'method call'
 ]
 
 { #category : #'as yet unclassified' }

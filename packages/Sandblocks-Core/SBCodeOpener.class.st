@@ -121,6 +121,7 @@ SBCodeOpener >> initialize [
 			changeSelected: #selectedClassIndex:
 			menu: #menu:evaluate:)
 				getIconSelector: #classIconAt:;
+				doubleClickSelector: #openSelectedMethod;
 				vResizing: #spaceFill;
 				width: 200;
 				yourself);
@@ -131,6 +132,7 @@ SBCodeOpener >> initialize [
 			changeSelected: #selectedMethodIndex:
 			menu: #menu:evaluate:)
 				getIconSelector: #messageIconAt:;
+				doubleClickSelector: #openSelectedMethod;
 				vResizing: #spaceFill;
 				width: 200;
 				yourself).
@@ -148,6 +150,14 @@ SBCodeOpener >> keyStroke: anEvent [
 	(anEvent keyCharacter = $k and: [anEvent commandKeyPressed]) ifTrue: [^ self select: -1].
 	((anEvent keyCharacter = $f or: [anEvent keyCharacter = $x]) and: [anEvent commandKeyPressed]) ifTrue: [^ self focus: UIManager default chooseClassOrTrait].
 	self currentPanel keyStroke: anEvent
+]
+
+{ #category : #'as yet unclassified' }
+SBCodeOpener >> menu: aMenu evaluate: anObject [
+	" escape has been pressed - we ignore this and close instead "
+	
+	self delete.
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -197,6 +207,13 @@ SBCodeOpener >> openFor: aMethodOrClass [
 
 	self focus: aMethodOrClass.
 	^ self open
+]
+
+{ #category : #'as yet unclassified' }
+SBCodeOpener >> openSelectedMethod [
+
+	result := self selectedClassOrMethod.
+	self delete
 ]
 
 { #category : #'as yet unclassified' }

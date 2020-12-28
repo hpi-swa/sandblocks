@@ -12,13 +12,27 @@ Class {
 { #category : #'as yet unclassified' }
 SBDeleteCommand >> do [
 
-	| nextSelection nextBlock |
-	nextBlock := target containingSandblock.
+	| nextSelection |
+	nextSelection := target containingSandblock focusAfterDeleteIfNone: [self nextBlockFrom: target].
 	oldOwner := target owner.
-	nextSelection := (target submorphAfter ifNil: [target submorphBefore]) ifNotNil: [:m | m containingSandblock].
 	oldIndex := oldOwner submorphIndexOf: target.
 	oldOwner removeMorph: target.
-	^ nextBlock focusAfterDeleteIfNone: [nextSelection ifNil: [oldOwner containingSandblock]]
+	
+	^ nextSelection
+]
+
+{ #category : #'as yet unclassified' }
+SBDeleteCommand >> nextBlockFrom: aMorph [
+
+	^ (aMorph isSandblock
+		ifTrue: [
+			(aMorph adjacentBlock: 1) ifNil: [aMorph adjacentBlock: -1]]
+		ifFalse: [
+			aMorph childSandblocks
+				ifNotEmpty: [:blocks |
+					(blocks first adjacentBlock: -1) ifNil: [blocks last adjacentBlock: 1]]
+				ifEmpty: [
+					(aMorph containingSandblock adjacentBlock: -1) ifNil: [aMorph containingSandblock adjacentBlock: 1]]]) ifNil: [aMorph containingSandblock parentSandblock]
 ]
 
 { #category : #'as yet unclassified' }

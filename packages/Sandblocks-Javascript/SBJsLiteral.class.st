@@ -57,6 +57,12 @@ SBJsLiteral >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsLiteral >> isExpression [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBJsLiteral >> keyStroke: anEvent [
 
 	self acceptInputEvent: anEvent

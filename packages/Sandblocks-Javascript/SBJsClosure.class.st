@@ -49,6 +49,12 @@ SBJsClosure >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsClosure >> isExpression [
+
+	^ self isMethodBody not
+]
+
+{ #category : #'as yet unclassified' }
 SBJsClosure >> layoutCommands [
 
 	^ SBAlgebraCommand container

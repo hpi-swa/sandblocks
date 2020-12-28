@@ -232,12 +232,6 @@ SBBlock >> childIndex [
 ]
 
 { #category : #hierarchy }
-SBBlock >> childSandblocks [
-
-	^ Array streamContents: [:stream | self childSandblocksDo: [:block | stream nextPut: block]]
-]
-
-{ #category : #hierarchy }
 SBBlock >> childSandblocksDo: aBlock [
 
 	" FIXME: at this point I believe we should assume leaf blocks by default, but I'm not sure "
@@ -803,7 +797,7 @@ SBBlock >> focusAfterDelete: aBlock [
 SBBlock >> focusAfterDeleteIfNone: aBlock [
 
 	| block |
-	block := self valueOfProperty: #focusAfterDelete ifAbsent: aBlock.
+	block := self valueOfProperty: #focusAfterDelete ifAbsent: [^ aBlock value].
 	^ block isInWorld ifTrue: [block] ifFalse: [aBlock value]
 ]
 

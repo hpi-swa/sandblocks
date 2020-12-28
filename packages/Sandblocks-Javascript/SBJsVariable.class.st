@@ -23,7 +23,13 @@ SBJsVariable >> fixActions [
 { #category : #'as yet unclassified' }
 SBJsVariable >> isDeclaration [
 
-	^ self owner isDeclaration and: [self owner lhs = self]
+	^ self parentSandblock isDeclaration and: [self parentSandblock lhs = self]
+]
+
+{ #category : #'as yet unclassified' }
+SBJsVariable >> isObjectKey [
+
+	^ (self parentSandblock isKindOf: SBJsObjectLiteral) and: [self owner firstSubmorph = self]
 ]
 
 { #category : #'as yet unclassified' }
@@ -42,7 +48,7 @@ SBJsVariable >> resolveBinding [
 { #category : #'as yet unclassified' }
 SBJsVariable >> valid [
 
-	^ self isDeclaration or: [self resolveBinding notNil]
+	^ self isDeclaration or: [self isObjectKey or: [self resolveBinding notNil]]
 ]
 
 { #category : #'as yet unclassified' }

@@ -29,6 +29,21 @@ Morph >> centerRight: aPoint [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Morph >> childSandblocks [
+
+	^ Array streamContents: [:stream | self childSandblocksDo: [:block | stream nextPut: block]]
+]
+
+{ #category : #'*Sandblocks-Core' }
+Morph >> childSandblocksDo: aBlock [
+
+	self submorphsDo: [:morph |
+		morph isSandblock
+			ifTrue: [aBlock value: morph]
+			ifFalse: [morph childSandblocksDo: aBlock]]
+]
+
+{ #category : #'*Sandblocks-Core' }
 Morph >> containingSandblock [
 
 	^ self owner ifNotNil: #containingSandblock
