@@ -100,7 +100,7 @@ SBLiteral >> replaceWithUnknown [
 	
 	self stopEditing.
 	
-	new := SBUnknown new.
+	new := self newNullBlock.
 	self replaceBy: new.
 	new moveCursorTo: 0.
 	new sandblockEditor replaceInput: new

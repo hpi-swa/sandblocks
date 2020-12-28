@@ -50,6 +50,8 @@ SBRepl >> binding: aString for: block class: aClass ifPresent: aBlock [
 		binding := aClass bindingOf: sym environment: self methodClass environment.
 		binding ifNotNil: [^ aBlock value: ((SBName poolDeclaration: aString) binding: binding)]].
 	
+	aString = 'sbEditor' ifTrue: [^ aBlock value: ((SBName poolDeclaration: aString) binding: #sbEditor -> self sandblockEditor)].
+	
 	^ nil
 ]
 

@@ -152,7 +152,7 @@ SBArray >> minimumHeight [
 { #category : #converting }
 SBArray >> newChild [
 
-	^ SBUnknown new
+	^ self newNullBlock
 ]
 
 { #category : #'as yet unclassified' }

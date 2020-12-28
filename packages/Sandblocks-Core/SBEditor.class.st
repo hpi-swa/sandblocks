@@ -514,7 +514,10 @@ SBEditor >> buildBottomPanel [
 			icon: SBIcon iconClipboard
 				shortcut: (self class anyShortcutForAction: #copyAround)
 				do: [self selection copyAround]);
-		addMorphBack: (copyBufferPreview := ImageMorph new image: (Form extent: 1 @ 1));
+		addMorphBack: (copyBufferPreview := ImageMorph new
+			image: (Form extent: 1 @ 1);
+			balloonText: 'Pickup clipboard contents';
+			on: #startDrag send: #dragCopyBuffer: to: self);
 		yourself
 ]
 
@@ -749,7 +752,7 @@ SBEditor >> createEmptyMethod [
 		selector: ''
 		arguments: #()
 		class: ((self selectedArtefact ifNotNil: [:container | container relatedClass]) ifNil: [UIManager default chooseClassOrTrait]);
-		body: (SBBlockBody new statements: {SBUnknown new})).
+		body: (SBBlockBody new statements: {self newNullBlock})).
 	self startInput: method at: 1 replacingContents: true
 ]
 
@@ -865,6 +868,12 @@ SBEditor >> doMultiSelection: aBlock [
 SBEditor >> doMultiSelectionEach: aBlock [
 
 	self doMultiSelection: [:sel | SBCombinedCommand newWith: (sel collect: aBlock thenSelect: #notNil)]
+]
+
+{ #category : #accessing }
+SBEditor >> dragCopyBuffer: anEvent [
+
+	anEvent hand grabMorph: self copyBuffer
 ]
 
 { #category : #'actions input' }
@@ -1747,6 +1756,12 @@ SBEditor >> sortedMultiSelection [
 	
 	order := self allMorphs.
 	^ unsorted sort: [:a :b | (order indexOf: a) < (order indexOf: b)]
+]
+
+{ #category : #accessing }
+SBEditor >> startDrag: anEvent [
+
+	" ignored "
 ]
 
 { #category : #input }

@@ -76,6 +76,12 @@ SBUnknown >> keyStroke: anEvent [
 	self acceptCharacter: anEvent keyCharacter
 ]
 
+{ #category : #accessing }
+SBUnknown >> newNullBlock [
+
+	^ self
+]
+
 { #category : #'as yet unclassified' }
 SBUnknown >> printOn: aStream [
 

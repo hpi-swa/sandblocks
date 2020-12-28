@@ -24,7 +24,7 @@ SBASTNode >> addExample [
 						selector: (method selector = #initialize ifTrue: [#basicNew] ifFalse: [#new]))])
 			args: (SBArray new
 				type: #dynamic
-				contents: (Array streamContents: [:str | method arguments size timesRepeat: [str nextPut: SBUnknown new]]))
+				contents: (Array streamContents: [:str | method arguments size timesRepeat: [str nextPut: self newNullBlock]]))
 			label: 'example'))
 ]
 
@@ -65,7 +65,7 @@ SBASTNode >> changeToUnknown [
 	<action>
 
 	| new |
-	new := SBUnknown new anyRepresentationThat: self acceptedRepresentation.
+	new := self newNullBlock anyRepresentationThat: self acceptedRepresentation.
 	new ifNotNil: [
 		self sandblockEditor
 			copyBuffer: self;
@@ -194,7 +194,7 @@ SBASTNode >> handleDroppedBlock: aBlock event: anEvent [
 			replacer postDuplicate]
 		ifFalse: [ | replacer |
 			self dropLocationDo: [:position :morph :horizontal |
-				replacer := aBlock object anyRepresentationThat: (self parentSandblock contextAcceptedRepresentationAt: morph childIndex).
+				replacer := aBlock object anyRepresentationThat: (self contextAcceptedRepresentationAt: morph childIndex).
 				self sandblockEditor do: ((self insertCommandRequest: false near: morph) shouldMergeWithNext: true).
 				self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
 					target: self sandblockEditor selection;
@@ -257,7 +257,7 @@ SBASTNode >> insertStatementAbove [
 SBASTNode >> insertStatementAboveOrBelow: anAboveBoolean [
 
 	| currentStatement index newStatement |
-	newStatement := SBUnknown new.
+	newStatement := self newNullBlock.
 	currentStatement := self containingStatement.
 	index := currentStatement owner submorphIndexOf: currentStatement.
 	self sandblockEditor do: ((SBInsertCommand newFor: self containingArtefact)
@@ -483,7 +483,7 @@ SBASTNode >> wrapAsArgument [
 			inner: self;
 			shouldMergeWithNext: true;
 			wrap: [:outer :inner |
-				outer receiver: SBUnknown new selector: SBMessageSend placeholderSelector arguments: {inner}];
+				outer receiver: self newNullBlock selector: SBMessageSend placeholderSelector arguments: {inner}];
 			yourself);
 		startInput: msg receiver at: 0 replacingContents: false
 ]
@@ -560,7 +560,7 @@ SBASTNode >> wrapInMessageSend: aString [
 
 	| msg |
 	msg := SBMessageSend new
-		receiver: SBUnknown new
+		receiver: self newNullBlock
 		selector: aString
 		arguments: (aString numArgs > 0 ifTrue: [
 			(1 to: aString numArgs) collect: [:i | SBUnknown new]] ifFalse: [#()]).

@@ -28,8 +28,8 @@ SBJsClosure >> binding: aString for: block class: aClass ifPresent: aBlock [
 { #category : #'as yet unclassified' }
 SBJsClosure >> childSandblocksDo: aBlock [
 
-	self arguments childSandblocksDo: aBlock.
-	"aBlock value: self arguments."
+	"self arguments childSandblocksDo: aBlock."
+	aBlock value: self arguments.
 	super childSandblocksDo: aBlock
 ]
 

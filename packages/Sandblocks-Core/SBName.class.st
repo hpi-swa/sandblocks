@@ -230,7 +230,7 @@ SBName >> isTemporaryVariable [
 SBName >> keyStroke: anEvent [
 
 	(self isExpression and: [anEvent keyCharacter = $:]) ifTrue: [ | new |
-		new := SBUnknown new.
+		new := self newNullBlock.
 		^ self sandblockEditor
 			endInput;
 			do: ((SBWrapCommand newFor: self containingArtefact)

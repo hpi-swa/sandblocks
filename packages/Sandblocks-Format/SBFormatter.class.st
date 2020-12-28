@@ -448,7 +448,8 @@ SBFormatter >> willBeMultiLine: aNode [
 
 	| text |
 	text := self preFormat: aNode.
-	^ (text includes: Character cr) or: [text size > 50]
+	self flag: #todo. " does not correctly factor actual indent "
+	^ (text includes: Character cr) or: [text size > (self maxLineLength - (indent * 4))]
 ]
 
 { #category : #'as yet unclassified' }

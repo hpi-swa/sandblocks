@@ -65,7 +65,7 @@ SBEditorCanvas >> doubleClick: anEvent [
 			selector: ''
 			arguments: #()
 			class: (closest ifNotNil: [:container | container relatedClass] ifNil: [UIManager default chooseClassOrTrait]);
-			body: (SBBlockBody new statements: {SBUnknown new})).
+			body: (SBBlockBody new in: [:body | body statements: {body newNullBlock}])).
 	
 	method center: point.
 	method hasUnsavedChanges: true.

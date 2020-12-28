@@ -21,3 +21,9 @@ SBStMessageRepresentation class >> matches: anObject [
 
 	^ (super matches: anObject) and: [anObject isMessageSend]
 ]
+
+{ #category : #'as yet unclassified' }
+SBStMessageRepresentation class >> priority [
+
+	^ 4
+]

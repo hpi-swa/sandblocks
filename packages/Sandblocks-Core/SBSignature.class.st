@@ -8,7 +8,7 @@ Class {
 SBSignature >> addArgumentAndEditAfter: aMorph focusKeyword: aTextMorph [
 
 	| new |
-	new := SBUnknown new.
+	new := self containingSandblock newNullBlock.
 	self addMorph: new after: aMorph.
 	
 	aTextMorph
@@ -63,7 +63,7 @@ SBSignature >> deleteCommandFor: aBlock [
 	(self isUnary or: [self isBinary]) ifTrue: [
 		^ (SBReplaceCommand newFor: aBlock containingArtefact)
 			target: aBlock;
-			replacer: SBUnknown new].
+			replacer: self containingSandblock newNullBlock].
 	
 	(self isKeyword and: self submorphCount = 2) ifTrue: [
 		^ aBlock submorphIndex = 1 ifTrue: [nil] ifFalse: [
@@ -107,7 +107,7 @@ SBSignature >> insertCommandRequest: anAfterBoolean near: aBlock [
 		^ (SBInsertCommand newFor: self containingSandblock containingArtefact)
 			container: self;
 			index: self submorphCount + 1;
-			morph: SBUnknown new;
+			morph: self containingSandblock newNullBlock;
 			shouldMergeWithNext: true;
 			yourself].
 	
@@ -126,7 +126,7 @@ SBSignature >> insertCommandRequest: anAfterBoolean near: aBlock [
 	insertArg := (SBInsertCommand newFor: self containingSandblock containingArtefact)
 		container: self;
 		index: index;
-		morph: SBUnknown new;
+		morph: self containingSandblock newNullBlock;
 		yourself.
 	^ SBCombinedCommand newWith: (index odd ifTrue: [{insertArg. insertPart}] ifFalse: [{insertPart. insertArg}])
 ]
@@ -244,7 +244,7 @@ SBSignature >> selector: aString [
 	newNum := aString numArgs.
 	
 	arguments := (self arguments copyFrom: 1 to: (newNum min: currentNum)), (Array streamContents: [:s |
-		currentNum + 1 to: newNum do: [:i | s nextPut: SBUnknown new]]).
+		currentNum + 1 to: newNum do: [:i | s nextPut: self containingSandblock newNullBlock]]).
 	
 	self selector: aString arguments: arguments
 ]
@@ -286,7 +286,7 @@ SBSignature >> selectorAndEdit: aString [
 		previousArguments: self arguments;
 		previousSelector: self selector;
 		newSelector: aString;
-		newArguments: ((1 to: (self numArguments: aString)) collect: [:index | self arguments at: index ifAbsent: [SBUnknown new]]);
+		newArguments: ((1 to: (self numArguments: aString)) collect: [:index | self arguments at: index ifAbsent: [self containingSandblock newNullBlock]]);
 		shouldMergeWithNext: true;
 		yourself).
 	

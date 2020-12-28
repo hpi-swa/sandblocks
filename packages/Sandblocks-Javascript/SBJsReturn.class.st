@@ -7,19 +7,28 @@ Class {
 { #category : #'as yet unclassified' }
 SBJsReturn >> childSandblocksDo: aBlock [
 
-	aBlock value: self expression
+	self expression ifNotNil: aBlock
 ]
 
 { #category : #'as yet unclassified' }
 SBJsReturn >> expression [
 
-	^ self firstSubmorph
+	^ self submorphCount > 1 ifTrue: [self submorphs second] ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
 SBJsReturn >> expression: aBlock [
 
+	self expression ifNotNil: #delete.
 	self addMorphBack: aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBJsReturn >> initialize [
+
+	super initialize.
+	
+	self addMorphBack: (SBStringMorph new contents: 'return')
 ]
 
 { #category : #'as yet unclassified' }
@@ -27,13 +36,7 @@ SBJsReturn >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
-		data: {self expression layoutCommands}
-]
-
-{ #category : #'as yet unclassified' }
-SBJsReturn >> symbols [
-
-	^ #('return ' nil)
+		data: {SBAlgebraCommand morph data: self firstSubmorph. SBAlgebraCommand softLineOrGap}, (self expression ifNotNil: [:expr | {expr layoutCommands}] ifNil: [{}])
 ]
 
 { #category : #'as yet unclassified' }

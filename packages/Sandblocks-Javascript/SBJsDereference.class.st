@@ -7,7 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBJsDereference >> childSandblocksDo: aBlock [
 
-	aBlock value: self lhs
+	self submorphCount = 3 ifTrue: [aBlock value: self lhs]
 ]
 
 { #category : #'as yet unclassified' }

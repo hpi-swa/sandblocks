@@ -18,6 +18,12 @@ SBJsMethodCall >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsMethodCall >> deleteCommandFor: aBlock [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBJsMethodCall >> fixedNumberOfChildren [
 
 	^ false
@@ -48,10 +54,13 @@ SBJsMethodCall >> layoutCommands [
 		data: {
 			self method layoutCommands.
 			SBAlgebraCommand morph data: self submorphs second.
-			SBAlgebraCommand indent data:
-				{SBAlgebraCommand softLine},
-				((self arguments collect: [:a | a layoutCommands] separatedBy: [SBAlgebraCommand softLineOrGap]),
-				{SBAlgebraCommand morph data: self submorphs last})}
+			self arguments size < 2
+				ifTrue: [SBAlgebraCommand group data: (self arguments collect: [:a | a layoutCommands]), {SBAlgebraCommand morph data: self submorphs last}]
+				ifFalse: [
+					SBAlgebraCommand indent data:
+						{SBAlgebraCommand softLine},
+						((self arguments collect: [:a | a layoutCommands] separatedBy: [SBAlgebraCommand softLineOrGap]),
+						{SBAlgebraCommand morph data: self submorphs last})]}
 ]
 
 { #category : #'as yet unclassified' }

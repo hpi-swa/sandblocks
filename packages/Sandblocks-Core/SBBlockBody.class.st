@@ -14,21 +14,22 @@ Class {
 { #category : #'as yet unclassified' }
 SBBlockBody class >> empty [
 
-	^ SBBlockBody new
-		statements: {SBUnknown new};
-		temporaries: {};
-		bindings: {};
-		yourself
+	^ SBBlockBody new in: [:body |
+		body
+			statements: {body newNullBlock};
+			temporaries: {};
+			bindings: {}]
 ]
 
 { #category : #'as yet unclassified' }
 SBBlockBody class >> emptyWithDeclarations: aCollectionOfStrings [
 
-	^ SBBlockBody new
-		statements: {SBUnknown new};
-		temporaries: {};
-		bindings: (aCollectionOfStrings collect: [:s | SBName contents: s]);
-		yourself
+	^ SBBlockBody new in: [:body |
+		body
+			statements: {body newNull};
+			temporaries: {};
+			bindings: (aCollectionOfStrings collect: [:s | SBName contents: s]);
+			yourself]
 ]
 
 { #category : #'as yet unclassified' }
@@ -58,7 +59,7 @@ SBBlockBody >> addElement [
 	self sandblockEditor do: ((SBInsertCommand newFor: self containingArtefact)
 		index: self submorphCount + 1;
 		container: self;
-		morph: SBUnknown new;
+		morph: self newNullBlock;
 		shouldMergeWithNext: true;
 		yourself)
 ]
@@ -211,7 +212,7 @@ SBBlockBody >> insertCommandRequest: anAfterBoolean near: aBlock [
 	^ (SBInsertCommand newFor: self containingArtefact)
 		index: (self statements indexOf: aBlock) + (anAfterBoolean ifTrue: [2] ifFalse: [1]);
 		container: self;
-		morph: SBUnknown new;
+		morph: self newNullBlock;
 		shouldMergeWithNext: true;
 		yourself
 ]

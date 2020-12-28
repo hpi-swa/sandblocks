@@ -13,7 +13,10 @@ SBJsGrammarHandler >> checkKeyword: aString for: aBlock [
 		block inputNextUnknown].
 	
 	aString = 'let' ifTrue: [
-		self replace: aBlock with: (SBJsDeclaration new lhs: aBlock newNullBlock rhs: aBlock newNullBlock)]
+		self replace: aBlock with: (SBJsDeclaration new lhs: aBlock newNullBlock rhs: aBlock newNullBlock)].
+	
+	aString = 'return' ifTrue: [
+		self replace: aBlock with: (SBJsReturn new expression: (aBlock newNullBlock deleteIfDismissed: true))]
 ]
 
 { #category : #'as yet unclassified' }
@@ -28,8 +31,8 @@ SBJsGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 		char = $^ ifTrue: [^ SBJsReturn new in: [:return | self replace: aBlock with: (return expression: return newNullBlock)]].
 		char = ${ ifTrue: [^ self replace: aBlock with: SBJsObjectLiteral new]].
 	
-	char = $. ifTrue: [
-		^ self wrap: aBlock do: [:outer :inner | outer lhs: inner rhs: ''] with: SBJsDereference new].
+	"char = $. ifTrue: [
+		^ self wrap: aBlock do: [:outer :inner | outer lhs: inner rhs: ''] with: SBJsDereference new]."
 	char = $( ifTrue: [
 		^ SBJsMethodCall new in: [:call | self wrap: aBlock do: [:outer :inner | outer method: inner arguments: {call newNullBlock deleteIfDismissed: true}] with: call]].
 	((SBJsBinaryOperator validBinaryOperators collect: #first) includes: char) ifTrue: [

@@ -20,7 +20,7 @@ SBJsMethod class >> example [
 SBJsMethod >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	| globals |
-	globals := #('console' 'window' 'true' 'false' 'undefined' 'null' 'this').
+	globals := #('console' 'window' 'true' 'false' 'undefined' 'null' 'this' 'require').
 	globals detect: [:global | global = aString] ifFound: [:inst | ^ aBlock value: inst] ifNone: [].
 	
 	^ super binding: aString for: block class: aClass ifPresent: aBlock
@@ -35,6 +35,7 @@ SBJsMethod >> body [
 { #category : #'as yet unclassified' }
 SBJsMethod >> body: aMorph [
 
+	self removeAllMorphs.
 	self addMorphBack: (SBJsClosure new addMorphBack: aMorph)
 ]
 
@@ -62,7 +63,8 @@ SBJsMethod >> initialize [
 	self
 		layoutInset: 8;
 		attachDecorator: SBMoveDecorator new;
-		attachDecorator: SBResizableDecorator new
+		attachDecorator: SBResizableDecorator new;
+		addMorphBack: SBJsClosure new
 ]
 
 { #category : #'as yet unclassified' }

@@ -34,3 +34,9 @@ SBStExpressionRepresentation class >> newFor: anObject [
 		ifTrue: [anObject sourceString parseAsSandblockWithoutSubstitution]
 		ifFalse: [anObject veryDeepCopy]
 ]
+
+{ #category : #'as yet unclassified' }
+SBStExpressionRepresentation class >> priority [
+
+	^ 20
+]

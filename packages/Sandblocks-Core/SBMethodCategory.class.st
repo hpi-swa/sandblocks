@@ -123,7 +123,7 @@ SBMethodCategory >> insertCommandRequest: anAfterBoolean near: aBlock [
 			selector: ''
 			arguments: #()
 			class: class;
-			body: (SBBlockBody new statements: {SBUnknown new}));
+			body: (SBBlockBody new statements: {self newNullBlock}));
 		shouldMergeWithNext: true;
 		yourself
 ]
