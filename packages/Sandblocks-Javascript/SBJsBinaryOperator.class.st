@@ -14,7 +14,7 @@ SBJsBinaryOperator class >> validBinaryOperators [
 		'&' '|' '^'
 		'&&' '||' '??'
 		'?.'
-		'.'
+		'.' '['
 		'*=' '**=' '/=' '%=' '+=' '-=' '<<=' '>>=' '>>>=' '&=' '^=' '|=' '&&=' '||=' '??='
 		',')
 ]
@@ -26,16 +26,23 @@ SBJsBinaryOperator >> canMakeDeclaration [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsBinaryOperator >> centerAlignSymbols [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBJsBinaryOperator >> childSandblocksDo: aBlock [
 
-	aBlock value: self firstSubmorph.
-	aBlock value: self lastSubmorph
+	self submorphCount = 3 ifTrue: [
+		aBlock value: self firstSubmorph.
+		aBlock value: self lastSubmorph]
 ]
 
 { #category : #'as yet unclassified' }
 SBJsBinaryOperator >> contents [
 
-	^ self currentTextMorph contents
+	^ self submorphCount = 3 ifTrue: [self currentTextMorph contents] ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -63,6 +70,29 @@ SBJsBinaryOperator >> deleteBeforeCursor [
 	
 	self contents ifEmpty: [^ self tryDelete].
 	self sandblockEditor deleteBeforeCursor
+]
+
+{ #category : #'as yet unclassified' }
+SBJsBinaryOperator >> drawSymbolsOn: aCanvas [
+
+	| symbols fg font space centerAlign |
+	centerAlign := self colorPolicy centerAlignSymbols and: [self centerAlignSymbols].
+	symbols := self symbols.
+	space := self spaceForSymbols.
+	font := self fontToUse.
+	fg := self sandblockForegroundColor.
+	symbols first ifNotNil: [
+		aCanvas
+			drawString: symbols first
+			at: self layoutBounds origin + (space first negated rounded @ 0)
+			font: font
+			color: fg].
+	symbols second ifNotNil: [
+		aCanvas
+			drawString: symbols second
+			at: self layoutBounds topRight
+			font: font
+			color: fg]
 ]
 
 { #category : #'as yet unclassified' }
@@ -99,9 +129,10 @@ SBJsBinaryOperator >> layoutCommands [
 			self lhs layoutCommands.
 			SBAlgebraCommand gap.
 			SBAlgebraCommand morph data: self submorphs second.
-			SBAlgebraCommand indent data: {
-				SBAlgebraCommand softLineOrGap.
-				self rhs layoutCommands}}
+			self contents = '['
+				ifTrue: [self rhs layoutCommands]
+				ifFalse: [SBAlgebraCommand indent data: {SBAlgebraCommand softLineOrGap. self rhs layoutCommands}]
+		}
 ]
 
 { #category : #'as yet unclassified' }
@@ -132,6 +163,33 @@ SBJsBinaryOperator >> makeDeclaration [
 SBJsBinaryOperator >> operator [
 
 	^ self submorphs second
+]
+
+{ #category : #'as yet unclassified' }
+SBJsBinaryOperator >> precedence [
+
+	^ {
+		#('.' '?.' '[') -> 20. " missing: new, function call, computed member access "
+		" missing: new without arg list -> 19 "
+		" missing: postfix incr/decr -> 18 "
+		" missing: prefix operators -> 17 "
+		#('**') -> 16.
+		#('*' '/' '%') -> 15.
+		#('+' '-') -> 14.
+		#('<<' '>>' '>>>') -> 13.
+		#('<' '<=' '>' '>=' 'in' 'instanceof') -> 12.
+		#('==' '!=' '===' '!==') -> 11.
+		#('&') -> 10.
+		#('^') -> 9.
+		#('|') -> 8.
+		#('&&') -> 7.
+		#('||') -> 6.
+		#('??') -> 5.
+		" missing: ternary op -> 4"
+		#('=' '+=' '-=' '**=' '/=' '%=' '<<=' '>>=' '>>>=' '&=' '^=' '|=' '&&=' '||=' '??=') -> 3.
+		" missing: yield, yield* -> 2"
+		#(',') -> 1.
+	} detect: [:assoc | assoc key includes: self contents] ifFound: #value ifNone: [super precedence]
 ]
 
 { #category : #'as yet unclassified' }
@@ -167,6 +225,12 @@ SBJsBinaryOperator >> stopEditing: aCommand [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsBinaryOperator >> symbols [
+
+	^ self contents = '[' ifTrue: [#(nil ']')] ifFalse: [#(nil nil)]
+]
+
+{ #category : #'as yet unclassified' }
 SBJsBinaryOperator >> tryDelete [
 
 	| lhs |
@@ -177,4 +241,10 @@ SBJsBinaryOperator >> tryDelete [
 			target: self;
 			replacer: lhs);
 		startInput: lhs at: 9e8 replacingContents: false
+]
+
+{ #category : #'as yet unclassified' }
+SBJsBinaryOperator >> wantsExtraSpace [
+
+	^ self contents ~= '[' and: [self contents ~= '.']
 ]

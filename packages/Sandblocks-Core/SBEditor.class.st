@@ -752,7 +752,7 @@ SBEditor >> createEmptyMethod [
 		selector: ''
 		arguments: #()
 		class: ((self selectedArtefact ifNotNil: [:container | container relatedClass]) ifNil: [UIManager default chooseClassOrTrait]);
-		body: (SBBlockBody new statements: {self newNullBlock})).
+		body: (SBBlockBody new in: [:b | b statements: {b newNullBlock}])).
 	self startInput: method at: 1 replacingContents: true
 ]
 

@@ -563,7 +563,7 @@ SBASTNode >> wrapInMessageSend: aString [
 		receiver: self newNullBlock
 		selector: aString
 		arguments: (aString numArgs > 0 ifTrue: [
-			(1 to: aString numArgs) collect: [:i | SBUnknown new]] ifFalse: [#()]).
+			(1 to: aString numArgs) collect: [:i | self newNullBlock]] ifFalse: [#()]).
 	self sandblockEditor do: ((SBWrapCommand newFor: self containingArtefact)
 		outer: msg;
 		inner: self;

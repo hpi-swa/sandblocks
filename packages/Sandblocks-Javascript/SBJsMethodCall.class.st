@@ -11,16 +11,17 @@ SBJsMethodCall >> arguments [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethodCall >> childSandblocksDo: aBlock [
+SBJsMethodCall >> canDeleteChild: aBlock [
 
-	aBlock value: self method.
-	self arguments do: aBlock
+	^ self arguments includes: aBlock
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethodCall >> deleteCommandFor: aBlock [
+SBJsMethodCall >> childSandblocksDo: aBlock [
 
-	^ nil
+	(self submorphCount >= 3 and: [self method isSandblock]) ifTrue: [
+		aBlock value: self method.
+		self arguments do: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
@@ -76,6 +77,12 @@ SBJsMethodCall >> method: aBlock arguments: aCollection [
 	self addMorphBack: (SBStringMorph new contents: '(').
 	self addAllMorphsBack: aCollection.
 	self addMorphBack: (SBStringMorph new contents: ')').
+]
+
+{ #category : #'as yet unclassified' }
+SBJsMethodCall >> precedence [
+
+	^ 20
 ]
 
 { #category : #'as yet unclassified' }

@@ -40,3 +40,12 @@ SBJsGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 	char = Character space ifTrue: [
 		self checkKeyword: aBlock contents for: aBlock]
 ]
+
+{ #category : #'as yet unclassified' }
+SBJsGrammarHandler >> wrap: aBlock do: aWrapBlock with: anOuterBlock [
+
+	super wrap: aBlock do: aWrapBlock with: anOuterBlock.
+	(anOuterBlock parentSandblock precedence > 0 and: [anOuterBlock parentSandblock precedence >= anOuterBlock precedence]) ifTrue: [
+		anOuterBlock leftRotate.
+		anOuterBlock inputNextUnknown]
+]

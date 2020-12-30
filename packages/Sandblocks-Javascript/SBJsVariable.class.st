@@ -27,6 +27,12 @@ SBJsVariable >> isDeclaration [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsVariable >> isMemberAccess [
+
+	^ (self parentSandblock isKindOf: SBJsBinaryOperator) and: [self owner rhs = self and: [self owner contents = '.']]
+]
+
+{ #category : #'as yet unclassified' }
 SBJsVariable >> isObjectKey [
 
 	^ (self parentSandblock isKindOf: SBJsObjectLiteral) and: [self owner firstSubmorph = self]
@@ -48,7 +54,7 @@ SBJsVariable >> resolveBinding [
 { #category : #'as yet unclassified' }
 SBJsVariable >> valid [
 
-	^ self isDeclaration or: [self isObjectKey or: [self resolveBinding notNil]]
+	^ self isDeclaration or: [self isObjectKey or: [self isMemberAccess or: [self resolveBinding notNil]]]
 ]
 
 { #category : #'as yet unclassified' }

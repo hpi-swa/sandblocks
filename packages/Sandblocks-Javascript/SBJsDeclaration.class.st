@@ -19,6 +19,12 @@ SBJsDeclaration >> binding: aVariable value: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsDeclaration >> contents [
+
+	^ '='
+]
+
+{ #category : #'as yet unclassified' }
 SBJsDeclaration >> currentTextMorph [
 
 	^ nil

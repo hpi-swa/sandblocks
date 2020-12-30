@@ -169,6 +169,12 @@ SBBlock >> canCopy [
 ]
 
 { #category : #testing }
+SBBlock >> canDeleteAroundTo: aParentBlock [
+
+	^ self hasRepresentationThat: (aParentBlock parentSandblock contextAcceptedRepresentationAt: aParentBlock childIndex)
+]
+
+{ #category : #testing }
 SBBlock >> canDeleteChild: aBlock [
 
 	^ self fixedNumberOfChildren not
@@ -482,7 +488,7 @@ SBBlock >> deleteAround [
 			recorder remove: target]).
 		^ self].
 	
-	(self hasRepresentationThat: (target parentSandblock contextAcceptedRepresentationAt: target childIndex)) ifTrue: [ | replacer |
+	(self canDeleteAroundTo: target) ifTrue: [ | replacer |
 		SBPastePlaceholder for: self root: target copyIn: editor.
 		
 		replacer := self "veryDeepCopy".
@@ -495,7 +501,7 @@ SBBlock >> deleteAround [
 { #category : #actions }
 SBBlock >> deleteBeforeCursor [
 	<inputAction>
-	
+
 	| editor p parent adjacent |
 	self currentTextMorph contents ifNotEmpty: [^ self currentTextMorph deleteBeforeCursor].
 	
@@ -507,18 +513,18 @@ SBBlock >> deleteBeforeCursor [
 	self childSandblocks ifNotEmpty: [ | new |
 		new := self childSandblocks last.
 		new deleteAround.
-		^ editor startInput: new at: 9e8 replacingContents: false].
+		^ editor startInput: new at: 900000000 replacingContents: false].
 	
 	self deleteBlock.
-	editor startInput: parent at: 9e8 replacingContents: false.
+	editor startInput: parent at: 900000000 replacingContents: false.
 	editor mode = #input ifFalse: [
-		adjacent ifNil: [^ parent deleteBlock].
+		adjacent ifNil: [^ parent nextDeletableBlock deleteBlock].
 		
-		parent childSandblocks size = 1
+		parent childSandblocks size <= 2
 			ifTrue: [
 				adjacent deleteAround.
-				editor startInput: editor selection at: 9e8 replacingContents: false]
-			ifFalse: [editor startInput: p at: 9e8 replacingContents: false]]
+				editor startInput: editor selection lastDeepChild at: 900000000 replacingContents: false]
+			ifFalse: [editor startInput: p at: 900000000 replacingContents: false]]
 ]
 
 { #category : #actions }
@@ -1416,6 +1422,14 @@ SBBlock >> nextBlockThat: aBlock [
 	^ n nextBlockThat: aBlock
 ]
 
+{ #category : #hierarchy }
+SBBlock >> nextDeletableBlock [
+
+	^ ((self parentSandblock ifNil: [^ nil]) deleteCommandFor: self)
+		ifNotNil: [self]
+		ifNil: [self parentSandblock nextDeletableBlock]
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> nextVerticalNear: aNumber [
 
@@ -1626,6 +1640,13 @@ SBBlock >> postDuplicateSelf [
 
 	" this block has been duplicated, adjust any identifiers if need be "
 	
+]
+
+{ #category : #accessing }
+SBBlock >> precedence [
+	" some edit systems may support automatic reshuffling based on operator precedence. override this selector to return the specific precedence "
+
+	^ 0
 ]
 
 { #category : #colors }

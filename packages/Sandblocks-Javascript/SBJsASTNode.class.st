@@ -111,9 +111,25 @@ SBJsASTNode >> wrapInDynamicArray [
 	self sandblockEditor
 		do: ((SBWrapCommand newFor: self containingArtefact)
 			inner: self;
-			outer: (SBJsObjectLiteral new);
+			outer: SBJsObjectLiteral new;
 			wrap: [:outer :inner | outer pairs: {key -> inner}]);
 		startInput: key at: 0 replacingContents: false
+]
+
+{ #category : #'as yet unclassified' }
+SBJsASTNode >> wrapInMessageSend [
+	<action>
+	<actionValidIf: #isExpression>
+	
+	| operator |
+	self flag: #todo. " figure out a way to make the terminology language dependent: the shortcut comes from Smalltalk "
+	operator := SBJsBinaryOperator new.
+	self sandblockEditor
+		do: ((SBWrapCommand newFor: self containingArtefact)
+			inner: self;
+			outer: operator;
+			wrap: [:outer :inner | outer lhs: inner operator: '' rhs: operator newNullBlock]);
+		startInput: operator at: 0 replacingContents: false
 ]
 
 { #category : #'as yet unclassified' }

@@ -17,6 +17,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBCodeOpener >> arrowKey: aChar from: view [
+
+	" ignored "
+]
+
+{ #category : #'as yet unclassified' }
 SBCodeOpener >> categories [
 
 	^ self systemOrganizer categories

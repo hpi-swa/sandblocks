@@ -26,7 +26,7 @@ SBBlockBody class >> emptyWithDeclarations: aCollectionOfStrings [
 
 	^ SBBlockBody new in: [:body |
 		body
-			statements: {body newNull};
+			statements: {body newNullBlock};
 			temporaries: {};
 			bindings: (aCollectionOfStrings collect: [:s | SBName contents: s]);
 			yourself]
@@ -133,11 +133,15 @@ SBBlockBody >> declareTemporaryVariable: aString [
 { #category : #'as yet unclassified' }
 SBBlockBody >> declareTemporaryVariableCommand: aString [
 
-	^ (SBInsertCommand newFor: self containingArtefact)
-		container: temporaries;
-		index: temporaries submorphCount + 1;
-		morph: (SBName contents: aString);
-		yourself
+	^ temporaries submorphs
+		detect: [:t | t contents = aString]
+		ifFound: [:temp | SBDoItCommand newNonEdit do: []]
+		ifNone: [
+			(SBInsertCommand newFor: self containingArtefact)
+				container: temporaries;
+				index: temporaries submorphCount + 1;
+				morph: (SBName contents: aString);
+				yourself]
 ]
 
 { #category : #'as yet unclassified' }

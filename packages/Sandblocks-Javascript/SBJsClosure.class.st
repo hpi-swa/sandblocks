@@ -26,6 +26,12 @@ SBJsClosure >> binding: aString for: block class: aClass ifPresent: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsClosure >> canDeleteChild: aBlock [
+
+	^ aBlock ~= self arguments
+]
+
+{ #category : #'as yet unclassified' }
 SBJsClosure >> childSandblocksDo: aBlock [
 
 	"self arguments childSandblocksDo: aBlock."
@@ -67,6 +73,16 @@ SBJsClosure >> layoutCommands [
 					ifFalse: [SBAlgebraCommand softLineOrGap withGap: true]
 			}, self layoutCommandsForStatements
 		}
+]
+
+{ #category : #'as yet unclassified' }
+SBJsClosure >> startInputAt: aNumber replacingContents: aBoolean [
+
+	| new |
+	new := self newNullBlock deleteIfDismissed: true.
+	self arguments addMorphBack: new.
+	self sandblockEditor replaceInput: new.
+	^ new startInputAt: aNumber replacingContents: aBoolean
 ]
 
 { #category : #'as yet unclassified' }

@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBValueList >> canDeleteAroundTo: aParentBlock [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBValueList >> centerAlignSymbols [
 
 	^ true
@@ -50,6 +56,12 @@ SBValueList >> insertCommandRequest: anAfterBoolean near: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBValueList >> isJsExpression [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBValueList >> layoutCommands [
 
 	^ SBAlgebraCommand container
@@ -70,16 +82,6 @@ SBValueList >> newNullBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBValueList >> startInputAt: aNumber replacingContents: aBoolean [
-
-	| new |
-	new := self newNullBlock.
-	self addMorphBack: new.
-	self sandblockEditor replaceInput: new.
-	^ new startInputAt: aNumber replacingContents: aBoolean
-]
-
-{ #category : #'as yet unclassified' }
 SBValueList >> symbols [
 
 	^ symbols
@@ -89,6 +91,12 @@ SBValueList >> symbols [
 SBValueList >> symbols: aCollection [
 
 	symbols := aCollection
+]
+
+{ #category : #'as yet unclassified' }
+SBValueList >> valid [
+
+	^ self submorphs allSatisfy: [:m | (m isKindOf: SBJsVariable) or: [m isUnknown]]
 ]
 
 { #category : #'as yet unclassified' }

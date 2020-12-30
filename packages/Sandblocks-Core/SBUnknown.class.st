@@ -79,7 +79,7 @@ SBUnknown >> keyStroke: anEvent [
 { #category : #accessing }
 SBUnknown >> newNullBlock [
 
-	^ self
+	^ self veryDeepCopy
 ]
 
 { #category : #'as yet unclassified' }
@@ -109,6 +109,21 @@ SBUnknown >> tryDelete [
 SBUnknown >> valid [
 
 	^ false
+]
+
+{ #category : #accessing }
+SBUnknown >> wasDeselected [
+
+	| editor |
+	editor := self sandblockEditor.
+	(self deleteIfDismissed and: [editor notNil]) ifTrue: [ | wasInput previousSelection |
+		previousSelection := editor selection.
+		wasInput := editor mode = #input.
+		self sandblockEditor do: ((SBDeleteCommand newFor: self containingArtefact) target: self).
+		
+		previousSelection ifNotNil: [
+			previousSelection select.
+			wasInput ifTrue: [editor startInput: previousSelection at: 900000000 replacingContents: false]]]
 ]
 
 { #category : #'as yet unclassified' }
