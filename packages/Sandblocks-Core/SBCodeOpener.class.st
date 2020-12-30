@@ -118,6 +118,7 @@ SBCodeOpener >> initialize [
 			changeSelected: #selectedCategoryIndex:
 			menu: #menu:evaluate:)
 				vResizing: #spaceFill;
+				keystrokePreviewSelector: #keyStroke:;
 				width: 200;
 				yourself);
 		addMorphBack: (classes := (PluggableListMorphPlus
@@ -128,6 +129,7 @@ SBCodeOpener >> initialize [
 			menu: #menu:evaluate:)
 				getIconSelector: #classIconAt:;
 				doubleClickSelector: #openSelectedMethod;
+				keystrokePreviewSelector: #keyStroke:;
 				vResizing: #spaceFill;
 				width: 200;
 				yourself);
@@ -140,6 +142,7 @@ SBCodeOpener >> initialize [
 				getIconSelector: #messageIconAt:;
 				doubleClickSelector: #openSelectedMethod;
 				vResizing: #spaceFill;
+				keystrokePreviewSelector: #keyStroke:;
 				width: 200;
 				yourself).
 ]
@@ -147,15 +150,16 @@ SBCodeOpener >> initialize [
 { #category : #'as yet unclassified' }
 SBCodeOpener >> keyStroke: anEvent [
 
-	anEvent keyCharacter = Character escape ifTrue: [^ self delete].
-	(anEvent keyCharacter = Character arrowRight or: [anEvent keyCharacter = $l and: [anEvent commandKeyPressed]]) ifTrue: [^ self focusPanel: currentPanelIndex + 1].
-	(anEvent keyCharacter = Character arrowLeft or: [anEvent keyCharacter = $h and: [anEvent commandKeyPressed]]) ifTrue: [^ self focusPanel: currentPanelIndex - 1].
-	anEvent keyCharacter = Character cr ifTrue: [result := self selectedClassOrMethod. ^ self delete].
-	anEvent keyCharacter = Character tab ifTrue: [self showingClassSide: self showingClassSide not].
-	(anEvent keyCharacter = $j and: [anEvent commandKeyPressed]) ifTrue: [^ self select: 1].
-	(anEvent keyCharacter = $k and: [anEvent commandKeyPressed]) ifTrue: [^ self select: -1].
-	((anEvent keyCharacter = $f or: [anEvent keyCharacter = $x]) and: [anEvent commandKeyPressed]) ifTrue: [^ self focus: UIManager default chooseClassOrTrait].
-	self currentPanel keyStroke: anEvent
+	anEvent keyCharacter = Character escape ifTrue: [self delete. ^ true].
+	(anEvent keyCharacter = Character arrowRight or: [anEvent keyCharacter = $l and: [anEvent commandKeyPressed]]) ifTrue: [self focusPanel: currentPanelIndex + 1. ^ true].
+	(anEvent keyCharacter = Character arrowLeft or: [anEvent keyCharacter = $h and: [anEvent commandKeyPressed]]) ifTrue: [self focusPanel: currentPanelIndex - 1. ^ true].
+	anEvent keyCharacter = Character cr ifTrue: [result := self selectedClassOrMethod. self delete. ^ true].
+	anEvent keyCharacter = Character tab ifTrue: [self showingClassSide: self showingClassSide not. ^ true].
+	(anEvent keyCharacter = $j and: [anEvent commandKeyPressed]) ifTrue: [self select: 1. ^ true].
+	(anEvent keyCharacter = $k and: [anEvent commandKeyPressed]) ifTrue: [self select: -1. ^ true].
+	((anEvent keyCharacter = $f or: [anEvent keyCharacter = $x]) and: [anEvent commandKeyPressed]) ifTrue: [self focus: UIManager default chooseClassOrTrait. ^ true].
+	self performKeystroke: anEvent withForwardDisabled: self currentPanel.
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -178,9 +182,10 @@ SBCodeOpener >> messageIconAt: aNumber [
 SBCodeOpener >> methods [
 
 	^ self selectedClassIndex > 0 ifTrue: [
-		showingClassSide
+		(showingClassSide
 			ifTrue: [(Smalltalk at: (self classes at: self selectedClassIndex)) class methodDict keys]
-			ifFalse: [(Smalltalk at: (self classes at: self selectedClassIndex)) methodDict keys]] ifFalse: [#()]
+			ifFalse: [(Smalltalk at: (self classes at: self selectedClassIndex)) methodDict keys])
+				sorted: [:a :b | a selector < b selector]] ifFalse: [#()]
 ]
 
 { #category : #'as yet unclassified' }
@@ -196,14 +201,14 @@ SBCodeOpener >> open [
 	
 	hand keyboardFocus in: [:priorKeyboardFocus |
 		hand mouseFocus in: [:priorMouseFocus |
-			hand newMouseFocus: self.
-			hand newKeyboardFocus: self.
+			"hand newMouseFocus: self currentPanel."
+			hand newKeyboardFocus: self currentPanel.
 			
 			[[self isInWorld] whileTrue: [world doOneSubCycle]]
 				ifCurtailed: [self delete].
 			
 			hand newKeyboardFocus: priorKeyboardFocus.
-			hand newMouseFocus: priorMouseFocus]].
+			"hand newMouseFocus: priorMouseFocus"]].
 	
 	^ result
 ]
@@ -220,6 +225,13 @@ SBCodeOpener >> openSelectedMethod [
 
 	result := self selectedClassOrMethod.
 	self delete
+]
+
+{ #category : #'as yet unclassified' }
+SBCodeOpener >> performKeystroke: anEvent withForwardDisabled: aPanel [
+	aPanel keystrokePreviewSelector: nil.
+	aPanel keyStroke: anEvent.
+	aPanel keystrokePreviewSelector: #keyStroke:.
 ]
 
 { #category : #'as yet unclassified' }
