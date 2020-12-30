@@ -1,11 +1,11 @@
 Class {
-	#name : #SBJsBinaryOperator,
+	#name : #SBJsInfixOperator,
 	#superclass : #SBJsASTNode,
 	#category : #'Sandblocks-Javascript'
 }
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator class >> validBinaryOperators [
+SBJsInfixOperator class >> validInfixOperators [
 
 	^ #('+' '-' '/' '*' '%' '**'
 		'in' 'instanceof' '<' '>' '<=' '>='
@@ -20,19 +20,19 @@ SBJsBinaryOperator class >> validBinaryOperators [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> canMakeDeclaration [
+SBJsInfixOperator >> canMakeDeclaration [
 
 	^ self isStatement and: [self operator contents = '=']
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> centerAlignSymbols [
+SBJsInfixOperator >> centerAlignSymbols [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> childSandblocksDo: aBlock [
+SBJsInfixOperator >> childSandblocksDo: aBlock [
 
 	self submorphCount = 3 ifTrue: [
 		aBlock value: self firstSubmorph.
@@ -40,32 +40,32 @@ SBJsBinaryOperator >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> contents [
+SBJsInfixOperator >> contents [
 
 	^ self submorphCount = 3 ifTrue: [self currentTextMorph contents] ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> contents: aString [
+SBJsInfixOperator >> contents: aString [
 
 	self currentTextMorph contents: aString
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> continueInputInRhs: anEvent [
+SBJsInfixOperator >> continueInputInRhs: anEvent [
 
 	self sandblockEditor startInput: self rhs at: 0 replacingContents: false.
 	^ self sandblockEditor selection keyStroke: anEvent
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> currentTextMorph [
+SBJsInfixOperator >> currentTextMorph [
 
 	^ self operator
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> deleteBeforeCursor [
+SBJsInfixOperator >> deleteBeforeCursor [
 	<inputAction>
 	
 	self contents ifEmpty: [^ self tryDelete].
@@ -73,7 +73,7 @@ SBJsBinaryOperator >> deleteBeforeCursor [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> drawSymbolsOn: aCanvas [
+SBJsInfixOperator >> drawSymbolsOn: aCanvas [
 
 	| symbols fg font space centerAlign |
 	centerAlign := self colorPolicy centerAlignSymbols and: [self centerAlignSymbols].
@@ -96,24 +96,24 @@ SBJsBinaryOperator >> drawSymbolsOn: aCanvas [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> isBinaryOperator [
+SBJsInfixOperator >> isBinaryOperator [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> isExpression [
+SBJsInfixOperator >> isExpression [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> keyStroke: anEvent [
+SBJsInfixOperator >> keyStroke: anEvent [
 
 	self currentTextMorph keyStroke: anEvent.
 	
 	self flag: #fixme. " auto-complete unambiguous matches? "
-	self class validBinaryOperators
+	self class validInfixOperators
 		detect: [:operator | operator beginsWith: self currentTextMorph contents]
 		ifNone: [
 			self currentTextMorph deleteBeforeCursor.
@@ -121,7 +121,7 @@ SBJsBinaryOperator >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> layoutCommands [
+SBJsInfixOperator >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
@@ -136,13 +136,13 @@ SBJsBinaryOperator >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> lhs [
+SBJsInfixOperator >> lhs [
 
 	^ self firstSubmorph
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> lhs: aLeftBlock operator: anOperatorString rhs: aRhsBlock [
+SBJsInfixOperator >> lhs: aLeftBlock operator: anOperatorString rhs: aRhsBlock [
 
 	self addMorphBack: aLeftBlock.
 	self addMorphBack: (SBOwnTextMorph new contents: anOperatorString).
@@ -150,7 +150,7 @@ SBJsBinaryOperator >> lhs: aLeftBlock operator: anOperatorString rhs: aRhsBlock 
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> makeDeclaration [
+SBJsInfixOperator >> makeDeclaration [
 	<action>
 	<actionValidIf: #canMakeDeclaration>
 	
@@ -160,19 +160,17 @@ SBJsBinaryOperator >> makeDeclaration [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> operator [
+SBJsInfixOperator >> operator [
 
 	^ self submorphs second
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> precedence [
+SBJsInfixOperator >> precedence [
 
 	^ {
-		#('.' '?.' '[') -> 20. " missing: new, function call, computed member access "
-		" missing: new without arg list -> 19 "
+		#('.' '?.' '[') -> 20. " missing: function call "
 		" missing: postfix incr/decr -> 18 "
-		" missing: prefix operators -> 17 "
 		#('**') -> 16.
 		#('*' '/' '%') -> 15.
 		#('+' '-') -> 14.
@@ -187,19 +185,18 @@ SBJsBinaryOperator >> precedence [
 		#('??') -> 5.
 		" missing: ternary op -> 4"
 		#('=' '+=' '-=' '**=' '/=' '%=' '<<=' '>>=' '>>>=' '&=' '^=' '|=' '&&=' '||=' '??=') -> 3.
-		" missing: yield, yield* -> 2"
 		#(',') -> 1.
 	} detect: [:assoc | assoc key includes: self contents] ifFound: #value ifNone: [super precedence]
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> rhs [
+SBJsInfixOperator >> rhs [
 
 	^ self lastSubmorph
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> startInputAt: aNumber replacingContents: aBoolean [
+SBJsInfixOperator >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
 	cmd := (SBInputCommand newOrEditFor: self containingArtefact)
@@ -215,7 +212,7 @@ SBJsBinaryOperator >> startInputAt: aNumber replacingContents: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> stopEditing: aCommand [
+SBJsInfixOperator >> stopEditing: aCommand [
 
 	aCommand
 		newText: self currentTextMorph contents;
@@ -225,13 +222,13 @@ SBJsBinaryOperator >> stopEditing: aCommand [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> symbols [
+SBJsInfixOperator >> symbols [
 
 	^ self contents = '[' ifTrue: [#(nil ']')] ifFalse: [#(nil nil)]
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> tryDelete [
+SBJsInfixOperator >> tryDelete [
 
 	| lhs |
 	lhs := self lhs.
@@ -244,7 +241,7 @@ SBJsBinaryOperator >> tryDelete [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBinaryOperator >> wantsExtraSpace [
+SBJsInfixOperator >> wantsExtraSpace [
 
 	^ self contents ~= '[' and: [self contents ~= '.']
 ]

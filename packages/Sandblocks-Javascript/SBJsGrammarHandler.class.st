@@ -10,13 +10,18 @@ SBJsGrammarHandler >> checkKeyword: aString for: aBlock [
 	(SBJsKeywordBlock validBlockKeywords includes: aString) ifTrue: [ | block |
 		block := SBJsKeywordBlock new keyword: aString condition: aBlock newNullBlock branchStatements: {aBlock newNullBlock}.
 		self replace: aBlock with: block.
-		block inputNextUnknown].
+		^ block inputNextUnknown].
+	
+	(SBJsPrefixOperator validPrefixOperators includes: aString) ifTrue: [ | block |
+		block := SBJsPrefixOperator new operator: aString rhs: aBlock newNullBlock.
+		self replace: aBlock with: block.
+		^ block inputNextUnknown].
 	
 	aString = 'let' ifTrue: [
-		self replace: aBlock with: (SBJsDeclaration new lhs: aBlock newNullBlock rhs: aBlock newNullBlock)].
+		^ self replace: aBlock with: (SBJsDeclaration new lhs: aBlock newNullBlock rhs: aBlock newNullBlock)].
 	
 	aString = 'return' ifTrue: [
-		self replace: aBlock with: (SBJsReturn new expression: (aBlock newNullBlock deleteIfDismissed: true))]
+		^ self replace: aBlock with: (SBJsReturn new expression: (aBlock newNullBlock deleteIfDismissed: true))]
 ]
 
 { #category : #'as yet unclassified' }
@@ -35,8 +40,8 @@ SBJsGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 		^ self wrap: aBlock do: [:outer :inner | outer lhs: inner rhs: ''] with: SBJsDereference new]."
 	char = $( ifTrue: [
 		^ SBJsMethodCall new in: [:call | self wrap: aBlock do: [:outer :inner | outer method: inner arguments: {call newNullBlock deleteIfDismissed: true}] with: call]].
-	((SBJsBinaryOperator validBinaryOperators collect: #first) includes: char) ifTrue: [
-		^ self wrap: aBlock do: [:outer :inner | outer lhs: inner operator: char asString rhs: outer newNullBlock] with: SBJsBinaryOperator new].
+	((SBJsInfixOperator validInfixOperators collect: #first) includes: char) ifTrue: [
+		^ self wrap: aBlock do: [:outer :inner | outer lhs: inner operator: char asString rhs: outer newNullBlock] with: SBJsInfixOperator new].
 	char = Character space ifTrue: [
 		self checkKeyword: aBlock contents for: aBlock]
 ]

@@ -29,7 +29,7 @@ SBJsVariable >> isDeclaration [
 { #category : #'as yet unclassified' }
 SBJsVariable >> isMemberAccess [
 
-	^ (self parentSandblock isKindOf: SBJsBinaryOperator) and: [self owner rhs = self and: [self owner contents = '.']]
+	^ (self parentSandblock isKindOf: SBJsInfixOperator) and: [self owner rhs = self and: [self owner contents = '.']]
 ]
 
 { #category : #'as yet unclassified' }

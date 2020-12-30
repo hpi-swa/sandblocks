@@ -37,28 +37,12 @@ SBJsInputTest >> testBinaryExprPrecedence [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsInputTest >> testCastToUnknown [
-
-	| deref editor closure unknown innerClosure |
-	unknown := SBUnknown new grammarHandler: SBJsGrammarHandler new.
-	editor := self editorFor: unknown.
-	closure := innerClosure parentSandblock.
-	
-	editor startInput: unknown at: 0 replacingContents: true.
-	
-	self assert: 1 equals: closure statements size.
-	unknown select.
-	editor performForSelection: #deleteBeforeCursor.
-	self assert: 0 equals: closure statements size
-]
-
-{ #category : #'as yet unclassified' }
 SBJsInputTest >> testDeleteDereferenceWithParenthesis [
 
 	| deref unknown editor closure methodCall |
 	unknown := SBJsMethodCall new newNullBlock.
 	methodCall := SBJsMethodCall new
-		method: (SBJsBinaryOperator new lhs: (SBJsVariable new contents: 'a') operator: '.' rhs: (SBJsVariable new contents: 'b'))
+		method: (SBJsInfixOperator new lhs: (SBJsVariable new contents: 'a') operator: '.' rhs: (SBJsVariable new contents: 'b'))
 		arguments: {unknown}.
 	deref := methodCall method.
 	editor := self editorFor: methodCall.

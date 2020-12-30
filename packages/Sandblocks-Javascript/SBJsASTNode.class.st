@@ -123,7 +123,7 @@ SBJsASTNode >> wrapInMessageSend [
 	
 	| operator |
 	self flag: #todo. " figure out a way to make the terminology language dependent: the shortcut comes from Smalltalk "
-	operator := SBJsBinaryOperator new.
+	operator := SBJsInfixOperator new.
 	self sandblockEditor
 		do: ((SBWrapCommand newFor: self containingArtefact)
 			inner: self;

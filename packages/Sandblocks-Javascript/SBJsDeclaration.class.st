@@ -1,6 +1,6 @@
 Class {
 	#name : #SBJsDeclaration,
-	#superclass : #SBJsBinaryOperator,
+	#superclass : #SBJsInfixOperator,
 	#category : #'Sandblocks-Javascript'
 }
 

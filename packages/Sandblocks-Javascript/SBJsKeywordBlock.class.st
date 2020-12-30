@@ -7,7 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBJsKeywordBlock class >> validBlockKeywords [
 
-	^ #('if' 'while' 'else' 'else if' 'elseif')
+	^ #('if' 'while' 'else' 'else if' 'elseif' 'function')
 ]
 
 { #category : #'as yet unclassified' }
