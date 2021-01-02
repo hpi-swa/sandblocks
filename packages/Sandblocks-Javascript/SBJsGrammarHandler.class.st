@@ -48,7 +48,7 @@ SBJsGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 		^ SBJsMethodCall new in: [:call | self wrap: aBlock do: [:outer :inner | outer method: inner arguments: {call newNullBlock deleteIfDismissed: true}] with: call]]."
 	
 	((SBJsInfixOperator validInfixOperators collect: #first) includes: char) ifTrue: [
-		^ self wrap: aBlock do: [:outer :inner | outer lhs: inner operator: char asString rhs: outer newNullBlock] with: SBJsInfixOperator new].
+		^ self wrap: aBlock do: [:outer :inner | outer lhs: inner operator: char asString rhs: (outer newNullBlock deleteIfDismissed: char = $()] with: SBJsInfixOperator new].
 	char = Character space ifTrue: [
 		(self checkKeyword: aBlock contents for: aBlock) ifFalse: [
 			self wrap: aBlock do: [:outer :inner | outer lhs: inner operator: '' rhs: outer newNullBlock] with: SBJsInfixOperator new]]

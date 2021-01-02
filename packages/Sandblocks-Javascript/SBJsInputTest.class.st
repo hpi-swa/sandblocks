@@ -48,7 +48,8 @@ SBJsInputTest >> testAddMemberAccessViaSpace [
 	self assert: closure statements first ~= access.
 	
 	editor undo.
-	self assert: closure statements first = access
+	self assert: closure statements first = access.
+	self assert: (closure parentSandblock isKindOf: SBJsMethod)
 ]
 
 { #category : #'as yet unclassified' }

@@ -6,7 +6,8 @@ Class {
 		'previousOperator',
 		'previousRhs',
 		'morph',
-		'doRotate'
+		'doRotate',
+		'undoRotate'
 	],
 	#category : #'Sandblocks-Javascript'
 }
@@ -23,7 +24,9 @@ SBJsInfixOpInputCommand >> do [
 	rhs size < morph arity ifTrue: [
 		rhs size + 1 to: morph arity do: [:i | morph addMorphBack: morph newNullBlock]].
 	
-	doRotate ifTrue: [(SBSubtreeRotateCommand newNonEdit target: morph) do].
+	doRotate ifTrue: [
+		undoRotate := morph parentSandblock.
+		(SBSubtreeRotateCommand newNonEdit target: morph) do].
 	
 	^ morph rhs ifNil: [morph]
 ]
@@ -73,7 +76,7 @@ SBJsInfixOpInputCommand >> previousRhs: aCollection [
 { #category : #'as yet unclassified' }
 SBJsInfixOpInputCommand >> undo [
 
-	doRotate ifTrue: [(SBSubtreeRotateCommand newNonEdit target: morph) do].
+	doRotate ifTrue: [(SBSubtreeRotateCommand newNonEdit target: undoRotate) do].
 	
 	morph contents: previousOperator.
 	

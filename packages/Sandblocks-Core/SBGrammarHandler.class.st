@@ -89,7 +89,7 @@ SBGrammarHandler >> wrap: aBlock do: aWrapBlock with: aNode focusOuter: aBoolean
 		do: ((SBWrapCommand newFor: aBlock containingArtefact)
 			inner: aBlock;
 			outer: aNode;
-			shouldMergeWithNext: true;
+			shouldMergeWithNext: false;
 			wrap: aWrapBlock).
 	
 	aBoolean
