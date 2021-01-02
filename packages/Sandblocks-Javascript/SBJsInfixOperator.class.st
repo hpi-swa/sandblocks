@@ -56,7 +56,7 @@ SBJsInfixOperator >> centerAlignSymbols [
 { #category : #'as yet unclassified' }
 SBJsInfixOperator >> childSandblocksDo: aBlock [
 
-	self submorphCount >= 2 ifTrue: [
+	(self submorphCount >= 2 and: [self firstSubmorph isSandblock]) ifTrue: [
 		aBlock value: self firstSubmorph.
 		self allRhs do: aBlock]
 ]
@@ -265,6 +265,7 @@ SBJsInfixOperator >> startInputAt: aNumber replacingContents: aBoolean [
 SBJsInfixOperator >> stopEditing: aCommand [
 
 	aCommand operator: self currentTextMorph contents.
+	aCommand doRotate: (aCommand previousOperator = '' and: [self parentSandblock precedence > 0 and: [self parentSandblock precedence >= self precedence and: [self parentSandblock rhs = self]]]).
 	
 	self currentTextMorph stopEditing
 ]

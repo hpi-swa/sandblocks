@@ -45,6 +45,13 @@ SBJsVariable >> isValidCharacter: aCharacter [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsVariable >> printOn: aStream [
+
+	aStream nextPutAll: 'identifier '.
+	aStream nextPutAll: self contents
+]
+
+{ #category : #'as yet unclassified' }
 SBJsVariable >> resolveBinding [
 
 	self binding: self contents for: self class: self containingArtefact relatedClass ifPresent: [:b | ^ b].

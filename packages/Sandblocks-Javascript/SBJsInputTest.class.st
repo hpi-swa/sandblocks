@@ -16,6 +16,41 @@ SBJsInputTest >> editorFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsInputTest >> testAddMemberAccess [
+
+	| editor closure access |
+	access := SBJsInfixOperator new lhs: (SBJsVariable new contents: 'abc') operator: '.' rhs: (SBJsVariable new contents: 'def').
+	editor := self editorFor: access.
+	closure := access parentSandblock.
+	
+	editor startInput: access lhs at: 9e8 replacingContents: false.
+	
+	editor filterEvent: (self keyboardEvent: $.) for: nil.
+	
+	self assert: closure statements first contents = '.'
+]
+
+{ #category : #'as yet unclassified' }
+SBJsInputTest >> testAddMemberAccessViaSpace [
+
+	| editor closure access |
+	access := SBJsInfixOperator new lhs: (SBJsVariable new contents: 'abc') operator: '.' rhs: (SBJsVariable new contents: 'def').
+	editor := self editorFor: access.
+	closure := access parentSandblock.
+	
+	editor startInput: access rhs at: 9e8 replacingContents: false.
+	
+	editor filterEvent: (self keyboardEvent: $ ) for: nil.
+	editor filterEvent: (self keyboardEvent: $.) for: nil.
+	
+	self assert: closure statements first contents = '.'.
+	self assert: closure statements first ~= access.
+	
+	editor undo.
+	self assert: closure statements first = access
+]
+
+{ #category : #'as yet unclassified' }
 SBJsInputTest >> testBinaryExprPrecedence [
 
 	| editor number closure |

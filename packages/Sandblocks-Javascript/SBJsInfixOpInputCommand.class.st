@@ -5,7 +5,8 @@ Class {
 		'operator',
 		'previousOperator',
 		'previousRhs',
-		'morph'
+		'morph',
+		'doRotate'
 	],
 	#category : #'Sandblocks-Javascript'
 }
@@ -21,7 +22,16 @@ SBJsInfixOpInputCommand >> do [
 		rhs from: morph arity + 1 to: rhs size do: [:arg | arg delete]].
 	rhs size < morph arity ifTrue: [
 		rhs size + 1 to: morph arity do: [:i | morph addMorphBack: morph newNullBlock]].
+	
+	doRotate ifTrue: [(SBSubtreeRotateCommand newNonEdit target: morph) do].
+	
 	^ morph rhs ifNil: [morph]
+]
+
+{ #category : #'as yet unclassified' }
+SBJsInfixOpInputCommand >> doRotate: aBoolean [
+
+	doRotate := aBoolean
 ]
 
 { #category : #'as yet unclassified' }
@@ -43,6 +53,12 @@ SBJsInfixOpInputCommand >> operator: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsInfixOpInputCommand >> previousOperator [
+
+	^ previousOperator
+]
+
+{ #category : #'as yet unclassified' }
 SBJsInfixOpInputCommand >> previousOperator: aString [
 
 	previousOperator := aString
@@ -57,6 +73,8 @@ SBJsInfixOpInputCommand >> previousRhs: aCollection [
 { #category : #'as yet unclassified' }
 SBJsInfixOpInputCommand >> undo [
 
+	doRotate ifTrue: [(SBSubtreeRotateCommand newNonEdit target: morph) do].
+	
 	morph contents: previousOperator.
 	
 	morph allRhs do: #delete.
