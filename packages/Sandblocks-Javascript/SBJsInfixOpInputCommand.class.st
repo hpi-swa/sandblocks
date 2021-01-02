@@ -78,5 +78,7 @@ SBJsInfixOpInputCommand >> undo [
 	morph contents: previousOperator.
 	
 	morph allRhs do: #delete.
-	morph addAllMorphsBack: previousRhs
+	morph addAllMorphsBack: previousRhs.
+	
+	^ morph
 ]

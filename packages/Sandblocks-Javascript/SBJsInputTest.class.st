@@ -38,10 +38,11 @@ SBJsInputTest >> testAddMemberAccessViaSpace [
 	editor := self editorFor: access.
 	closure := access parentSandblock.
 	
-	editor startInput: access rhs at: 9e8 replacingContents: false.
+	access rhs select.
 	
 	editor filterEvent: (self keyboardEvent: $ ) for: nil.
 	editor filterEvent: (self keyboardEvent: $.) for: nil.
+	editor filterEvent: (self keyboardEvent: Character escape) for: nil.
 	
 	self assert: closure statements first contents = '.'.
 	self assert: closure statements first ~= access.
