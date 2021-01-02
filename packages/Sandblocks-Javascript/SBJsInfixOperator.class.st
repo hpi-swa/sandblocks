@@ -16,7 +16,29 @@ SBJsInfixOperator class >> validInfixOperators [
 		'?.'
 		'.' '['
 		'*=' '**=' '/=' '%=' '+=' '-=' '<<=' '>>=' '>>>=' '&=' '^=' '|=' '&&=' '||=' '??='
-		',')
+		','
+		" special operators where we cheat and pretend it's infix by using an arity ~= 1"
+		'++' '--' '(')
+]
+
+{ #category : #'as yet unclassified' }
+SBJsInfixOperator >> allRhs [
+
+	^ self submorphs viewFrom: 3 to: self submorphCount
+]
+
+{ #category : #'as yet unclassified' }
+SBJsInfixOperator >> arity [
+
+	self contents = '(' ifTrue: [^ self allRhs size].
+	(#('++' '--') includes: self contents) ifTrue: [^ 0].
+	^ 1
+]
+
+{ #category : #'as yet unclassified' }
+SBJsInfixOperator >> canDeleteChild: aMorph [
+
+	^ self fixedNumberOfChildren ifTrue: [false] ifFalse: [aMorph ~= self lhs]
 ]
 
 { #category : #'as yet unclassified' }
@@ -34,15 +56,15 @@ SBJsInfixOperator >> centerAlignSymbols [
 { #category : #'as yet unclassified' }
 SBJsInfixOperator >> childSandblocksDo: aBlock [
 
-	self submorphCount = 3 ifTrue: [
+	self submorphCount >= 2 ifTrue: [
 		aBlock value: self firstSubmorph.
-		aBlock value: self lastSubmorph]
+		self allRhs do: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
 SBJsInfixOperator >> contents [
 
-	^ self submorphCount = 3 ifTrue: [self currentTextMorph contents] ifFalse: [nil]
+	^ self submorphCount >= 2 ifTrue: [self currentTextMorph contents] ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -96,6 +118,23 @@ SBJsInfixOperator >> drawSymbolsOn: aCanvas [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsInfixOperator >> fixedNumberOfChildren [
+
+	^ self contents ~= '('
+]
+
+{ #category : #'as yet unclassified' }
+SBJsInfixOperator >> insertCommandRequest: anAfterBoolean near: aBlock [
+
+	^ (SBInsertCommand newFor: self containingArtefact)
+		index: ((self submorphs indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]) max: 3);
+		container: self;
+		morph: self newNullBlock;
+		shouldMergeWithNext: true;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
 SBJsInfixOperator >> isBinaryOperator [
 
 	^ true
@@ -123,15 +162,17 @@ SBJsInfixOperator >> keyStroke: anEvent [
 { #category : #'as yet unclassified' }
 SBJsInfixOperator >> layoutCommands [
 
+	| rhs |
+	rhs := self allRhs collect: #layoutCommands separatedBy: [SBAlgebraCommand softLineOrGap].
 	^ SBAlgebraCommand container
 		morph: self;
 		data: {
 			self lhs layoutCommands.
 			SBAlgebraCommand gap.
 			SBAlgebraCommand morph data: self submorphs second.
-			self contents = '['
-				ifTrue: [self rhs layoutCommands]
-				ifFalse: [SBAlgebraCommand indent data: {SBAlgebraCommand softLineOrGap. self rhs layoutCommands}]
+			(#('[' '(') includes: self contents)
+				ifTrue: [SBAlgebraCommand group data: rhs]
+				ifFalse: [SBAlgebraCommand indent data: {SBAlgebraCommand softLineOrGap}, rhs]
 		}
 ]
 
@@ -190,18 +231,27 @@ SBJsInfixOperator >> precedence [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsInfixOperator >> printOn: aStream [
+
+	self contents = '(' ifTrue: [^ aStream nextPutAll: 'method call'].
+	self contents = '[' ifTrue: [^ aStream nextPutAll: 'member access'].
+	aStream nextPutAll: 'operator '; nextPutAll: self contents
+]
+
+{ #category : #'as yet unclassified' }
 SBJsInfixOperator >> rhs [
 
-	^ self lastSubmorph
+	^ self submorphCount >= 3 ifTrue: [self lastSubmorph] ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
 SBJsInfixOperator >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (SBInputCommand newOrEditFor: self containingArtefact)
-		oldMorph: self;
-		previousText: self currentTextMorph contents;
+	cmd := (SBJsInfixOpInputCommand newFor: self containingArtefact)
+		previousOperator: self currentTextMorph contents;
+		previousRhs: self allRhs;
+		morph: self;
 		yourself.
 	
 	aBoolean
@@ -214,9 +264,7 @@ SBJsInfixOperator >> startInputAt: aNumber replacingContents: aBoolean [
 { #category : #'as yet unclassified' }
 SBJsInfixOperator >> stopEditing: aCommand [
 
-	aCommand
-		newText: self currentTextMorph contents;
-		newMorph: self.
+	aCommand operator: self currentTextMorph contents.
 	
 	self currentTextMorph stopEditing
 ]
@@ -224,7 +272,10 @@ SBJsInfixOperator >> stopEditing: aCommand [
 { #category : #'as yet unclassified' }
 SBJsInfixOperator >> symbols [
 
-	^ self contents = '[' ifTrue: [#(nil ']')] ifFalse: [#(nil nil)]
+	^ self contents caseOf: {
+		['['] -> [#(nil ']')].
+		['('] -> [#(nil ')')].
+	} otherwise: [#(nil nil)]
 ]
 
 { #category : #'as yet unclassified' }

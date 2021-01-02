@@ -38,8 +38,8 @@ SBJsGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 	
 	"char = $. ifTrue: [
 		^ self wrap: aBlock do: [:outer :inner | outer lhs: inner rhs: ''] with: SBJsDereference new]."
-	char = $( ifTrue: [
-		^ SBJsMethodCall new in: [:call | self wrap: aBlock do: [:outer :inner | outer method: inner arguments: {call newNullBlock deleteIfDismissed: true}] with: call]].
+	"char = $( ifTrue: [
+		^ SBJsMethodCall new in: [:call | self wrap: aBlock do: [:outer :inner | outer method: inner arguments: {call newNullBlock deleteIfDismissed: true}] with: call]]."
 	((SBJsInfixOperator validInfixOperators collect: #first) includes: char) ifTrue: [
 		^ self wrap: aBlock do: [:outer :inner | outer lhs: inner operator: char asString rhs: outer newNullBlock] with: SBJsInfixOperator new].
 	char = Character space ifTrue: [
