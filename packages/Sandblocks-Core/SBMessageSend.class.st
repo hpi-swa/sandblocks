@@ -424,6 +424,12 @@ SBMessageSend >> signature [
 	^ signature
 ]
 
+{ #category : #testing }
+SBMessageSend >> skipLeftRightNavigation [
+
+	^ true
+]
+
 { #category : #'as yet unclassified' }
 SBMessageSend >> startInputAt: aNumber replacingContents: aBoolean [
 

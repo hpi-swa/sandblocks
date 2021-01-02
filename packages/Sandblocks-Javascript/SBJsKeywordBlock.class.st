@@ -7,19 +7,43 @@ Class {
 { #category : #'as yet unclassified' }
 SBJsKeywordBlock class >> validBlockKeywords [
 
-	^ #('if' 'while' 'else' 'else if' 'elseif' 'function')
+	^ #('if' 'while' 'else' 'else if' 'elseif' 'function' 'for' 'function*')
 ]
 
 { #category : #'as yet unclassified' }
-SBJsKeywordBlock >> branch [
+SBJsKeywordBlock >> addHeaderBlock [
+	<action>
+	<actionValidIf: #dynamicArity>
+	
+	self sandblockEditor
+		do: (self insertCommandRequest: true near: nil);
+		startInput: self sandblockEditor selection at: 9e8 replacingContents: false
+]
 
-	^ self lastSubmorph
+{ #category : #'as yet unclassified' }
+SBJsKeywordBlock >> arity [
+
+	self contents = 'for' ifTrue: [^ 3].
+	self contents = 'function' ifTrue: [^ self header size].
+	^ 1
+]
+
+{ #category : #'as yet unclassified' }
+SBJsKeywordBlock >> binding: aString for: block class: aClass ifPresent: aBlock [
+
+	self contents = 'function' ifTrue: [
+		self header detect: [:arg | arg contents = aString] ifFound: [:arg | ^ aBlock value: arg] ifNone: []].
+	
+	(self contents = 'for' and: [self header first isDeclaration and: [self header first lhs contents = aString]]) ifTrue: [
+		^ aBlock value: self header first lhs].
+	
+	^ super binding: aString for: block class: aClass ifPresent: aBlock
 ]
 
 { #category : #'as yet unclassified' }
 SBJsKeywordBlock >> childSandblocksDo: aBlock [
 
-	aBlock value: self condition.
+	self header do: aBlock.
 	super childSandblocksDo: aBlock
 ]
 
@@ -27,16 +51,6 @@ SBJsKeywordBlock >> childSandblocksDo: aBlock [
 SBJsKeywordBlock >> condition [
 
 	^ self submorphs third
-]
-
-{ #category : #'as yet unclassified' }
-SBJsKeywordBlock >> condition: aBlock branchStatements: aCollection [
-
-	self addMorphBack: (SBOwnTextMorph new contents: 'if').
-	self addMorphBack: (SBStringMorph new contents: ' (').
-	self addMorphBack: aBlock.
-	self addMorphBack: (SBStringMorph new contents: ') {').
-	self statements: aCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -60,14 +74,42 @@ SBJsKeywordBlock >> currentTextMorph [
 { #category : #'as yet unclassified' }
 SBJsKeywordBlock >> deleteCommandFor: aBlock [
 
-	^ aBlock = self condition
+	^ (aBlock = self condition and: [self fixedArity])
 		ifTrue: [nil] ifFalse: [super deleteCommandFor: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
+SBJsKeywordBlock >> dynamicArity [
+
+	^ self fixedArity not
+]
+
+{ #category : #'as yet unclassified' }
+SBJsKeywordBlock >> fixedArity [
+
+	^ self contents ~= 'function'
+]
+
+{ #category : #'as yet unclassified' }
+SBJsKeywordBlock >> header [
+
+	^ self submorphs viewFrom: 3 to: 1 + ((self submorphs viewFrom: 3) findFirst: [:m | m isSandblock not])
 ]
 
 { #category : #'as yet unclassified' }
 SBJsKeywordBlock >> keyStroke: anEvent [
 
 	self currentTextMorph keyStroke: anEvent
+]
+
+{ #category : #'as yet unclassified' }
+SBJsKeywordBlock >> keyword: aString [
+
+	self addMorphBack: (SBOwnTextMorph new contents: aString).
+	self addMorphBack: (SBStringMorph new contents: ' (').
+	1 to: self arity do: [:i | self addMorphBack: self newNullBlock].
+	self addMorphBack: (SBStringMorph new contents: ') {').
+	self statements: {self newNullBlock}
 ]
 
 { #category : #'as yet unclassified' }
@@ -88,10 +130,16 @@ SBJsKeywordBlock >> layoutCommands [
 		data: {
 			SBAlgebraCommand morph data: self submorphs first.
 			SBAlgebraCommand morph data: self submorphs second.
-			self condition layoutCommands.
-			SBAlgebraCommand morph data: self submorphs fourth.
+			SBAlgebraCommand group data: (self header collect: #layoutCommands separatedBy: [SBAlgebraCommand gap]).
+			SBAlgebraCommand morph data: (self submorphs at: self arity + 3).
 			SBAlgebraCommand indent data: 
 				{SBAlgebraCommand hardOrSoftline: self statements size > 0}, self layoutCommandsForStatements}
+]
+
+{ #category : #'as yet unclassified' }
+SBJsKeywordBlock >> printOn: aStream [
+
+	aStream nextPutAll: self contents
 ]
 
 { #category : #'as yet unclassified' }
@@ -113,13 +161,13 @@ SBJsKeywordBlock >> startInputAt: aNumber replacingContents: aBoolean [
 { #category : #'as yet unclassified' }
 SBJsKeywordBlock >> statements [
 
-	^ self submorphs viewAllButFirst: 4
+	^ self submorphs viewAllButFirst: 3 + self arity
 ]
 
 { #category : #'as yet unclassified' }
 SBJsKeywordBlock >> statementsIndex [
 
-	^ 5
+	^ 4 + self arity
 ]
 
 { #category : #'as yet unclassified' }

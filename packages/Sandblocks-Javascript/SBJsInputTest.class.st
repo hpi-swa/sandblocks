@@ -151,6 +151,18 @@ SBJsInputTest >> testLetKeyword [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsInputTest >> testPrecedenceAdaptAfterFunctionCall [
+
+	| call editor |
+	call := SBJsInfixOperator new lhs: (SBJsVariable new contents: 'abc') operator: '(' rhs: (SBJsNumber new contents: '1').
+	editor := self editorFor: call.
+	
+	editor startInput: call rhs at: 900000000 replacingContents: false.
+	editor filterEvent: (self keyboardEvent: $.) for: nil.
+	self assert: (call rhs isKindOf: SBJsInfixOperator)
+]
+
+{ #category : #'as yet unclassified' }
 SBJsInputTest >> testTypeBinaryExpression [
 
 	| editor number closure |

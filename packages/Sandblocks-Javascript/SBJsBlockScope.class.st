@@ -19,6 +19,12 @@ SBJsBlockScope >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsBlockScope >> fixedArity [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBJsBlockScope >> fixedNumberOfChildren [
 
 	^ false
@@ -27,6 +33,14 @@ SBJsBlockScope >> fixedNumberOfChildren [
 { #category : #'as yet unclassified' }
 SBJsBlockScope >> insertCommandRequest: anAfterBoolean near: aBlock [
 
+	(((self header includes: aBlock) or: [aBlock isNil]) and: [self fixedArity not]) ifTrue: [
+		^ (SBInsertCommand newFor: self containingArtefact)
+			index: (aBlock ifNil: [3] ifNotNil: [((self submorphs indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]))]);
+			container: self;
+			morph: self newNullBlock;
+			shouldMergeWithNext: true;
+			yourself].
+	
 	^ (SBInsertCommand newFor: self containingArtefact)
 		index: ((self submorphs indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]) max: self statementsIndex);
 		container: self;

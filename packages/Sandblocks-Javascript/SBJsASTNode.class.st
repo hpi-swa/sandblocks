@@ -11,6 +11,23 @@ SBJsASTNode >> centerAlignSymbols [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsASTNode >> changeToUnknown [
+	<action>
+
+	| new |
+	new := self newNullBlock anyRepresentationThat: self acceptedRepresentation.
+	new ifNotNil: [
+		self sandblockEditor
+			copyBuffer: self;
+			do: ((SBReplaceCommand newFor: self containingArtefact)
+				target: self;
+				replacer: new;
+				shouldMergeWithNext: true;
+				yourself);
+			startInput: new at: 0 replacingContents: false]
+]
+
+{ #category : #'as yet unclassified' }
 SBJsASTNode >> contextAcceptedRepresentationAt: aNumber [
 
 	^ #isJsExpression
@@ -40,14 +57,26 @@ SBJsASTNode >> insertStatementAboveOrBelow: anAboveBoolean [
 	| currentStatement index newStatement |
 	newStatement := self newNullBlock.
 	currentStatement := self containingStatement ifNil: [^ self containingArtefact insertStatementAboveOrBelow: anAboveBoolean].
-	index := currentStatement owner submorphs indexOf: currentStatement.
-	self sandblockEditor do: ((SBInsertCommand newFor: self containingArtefact)
-		index: (anAboveBoolean ifTrue: [index] ifFalse: [index + 1]);
-		container: currentStatement owner;
-		morph: newStatement;
-		shouldMergeWithNext: true;
-		yourself).
-	self sandblockEditor startInput: newStatement at: 1 replacingContents: false
+	
+	(anAboveBoolean not and: [self containingBlock = currentStatement or: [self containingBlock hasOwner: currentStatement]]) ifTrue: [
+		^ self sandblockEditor
+			do: ((SBInsertCommand newFor: self containingArtefact)
+				index: self containingBlock statementsIndex;
+				container: self containingBlock;
+				morph: newStatement;
+				shouldMergeWithNext: true;
+				yourself);
+			startInput: newStatement at: 1 replacingContents: false].
+	
+	index := currentStatement owner submorphIndexOf: currentStatement.
+	self sandblockEditor
+		do: ((SBInsertCommand newFor: self containingArtefact)
+			index: (anAboveBoolean ifTrue: [index] ifFalse: [index + 1]);
+			container: currentStatement owner;
+			morph: newStatement;
+			shouldMergeWithNext: true;
+			yourself);
+		startInput: newStatement at: 1 replacingContents: false
 ]
 
 { #category : #'as yet unclassified' }
@@ -98,6 +127,22 @@ SBJsASTNode >> newNullBlock [
 SBJsASTNode >> object [
 
 	^ self
+]
+
+{ #category : #'as yet unclassified' }
+SBJsASTNode >> wrapAsArgument [
+	<action>
+	<actionValidIf: #isJsExpression>
+
+	| operator |
+	self flag: #todo. " figure out a way to make the terminology language dependent: the shortcut comes from Smalltalk "
+	operator := SBJsPrefixOperator new.
+	self sandblockEditor
+		do: ((SBWrapCommand newFor: self containingArtefact)
+			inner: self;
+			outer: operator;
+			wrap: [:outer :inner | outer operator: '' rhs: inner]);
+		startInput: operator at: 0 replacingContents: false
 ]
 
 { #category : #'as yet unclassified' }

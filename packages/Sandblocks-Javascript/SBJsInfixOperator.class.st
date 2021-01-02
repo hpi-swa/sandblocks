@@ -109,10 +109,13 @@ SBJsInfixOperator >> drawSymbolsOn: aCanvas [
 			at: self layoutBounds origin + (space first negated rounded @ 0)
 			font: font
 			color: fg].
-	symbols second ifNotNil: [
+	symbols second ifNotNil: [ | drawAtBottom |
+		drawAtBottom := self height > (self fontToUse height * 2).
 		aCanvas
 			drawString: symbols second
-			at: self layoutBounds topRight
+			at: (drawAtBottom
+				ifTrue: [self layoutBounds bottomRight - (0 @ (self fontToUse height + 2))]
+				ifFalse: [self layoutBounds topRight])
 			font: font
 			color: fg]
 ]
@@ -170,9 +173,7 @@ SBJsInfixOperator >> layoutCommands [
 			self lhs layoutCommands.
 			SBAlgebraCommand gap.
 			SBAlgebraCommand morph data: self submorphs second.
-			(#('[' '(') includes: self contents)
-				ifTrue: [SBAlgebraCommand group data: rhs]
-				ifFalse: [SBAlgebraCommand indent data: {SBAlgebraCommand softLineOrGap}, rhs]
+			SBAlgebraCommand indent data: {SBAlgebraCommand softLineOrGap}, rhs
 		}
 ]
 
@@ -210,7 +211,7 @@ SBJsInfixOperator >> operator [
 SBJsInfixOperator >> precedence [
 
 	^ {
-		#('.' '?.' '[') -> 20. " missing: function call "
+		#('.' '?.' '[' '(') -> 20.
 		" missing: postfix incr/decr -> 18 "
 		#('**') -> 16.
 		#('*' '/' '%') -> 15.
@@ -245,6 +246,19 @@ SBJsInfixOperator >> rhs [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsInfixOperator >> shouldRotateWhenJustAdded [
+
+	^ self parentSandblock precedence > 0 and: [
+	self parentSandblock precedence >= self precedence and: [self parentSandblock rhs = self and: self parentSandblock contents ~= '(']]
+]
+
+{ #category : #'as yet unclassified' }
+SBJsInfixOperator >> skipLeftRightNavigation [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBJsInfixOperator >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
@@ -265,7 +279,7 @@ SBJsInfixOperator >> startInputAt: aNumber replacingContents: aBoolean [
 SBJsInfixOperator >> stopEditing: aCommand [
 
 	aCommand operator: self currentTextMorph contents.
-	aCommand doRotate: (aCommand previousOperator = '' and: [self parentSandblock precedence > 0 and: [self parentSandblock precedence >= self precedence and: [self parentSandblock rhs = self]]]).
+	aCommand doRotate: (aCommand previousOperator = '' and: [self shouldRotateWhenJustAdded]).
 	
 	self currentTextMorph stopEditing
 ]

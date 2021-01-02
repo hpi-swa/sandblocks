@@ -1985,6 +1985,12 @@ SBBlock >> showOverlayFor: anEvent [
 SBBlock >> showUsageInfo [
 ]
 
+{ #category : #testing }
+SBBlock >> skipLeftRightNavigation [
+
+	^ false
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> spaceForSymbols [
 

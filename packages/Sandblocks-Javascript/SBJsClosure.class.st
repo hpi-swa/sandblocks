@@ -92,6 +92,12 @@ SBJsClosure >> statements [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsClosure >> statementsIndex [
+
+	^ 2
+]
+
+{ #category : #'as yet unclassified' }
 SBJsClosure >> symbols [
 
 	^ #(nil nil)

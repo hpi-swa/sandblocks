@@ -64,6 +64,18 @@ SBUnknown >> initialize [
 	deleteIfDismissed := false
 ]
 
+{ #category : #'as yet unclassified' }
+SBUnknown >> isExpression [
+
+	^ self grammarHandler isKindOf: SBSmalltalkGrammarHandler
+]
+
+{ #category : #'as yet unclassified' }
+SBUnknown >> isJsExpression [
+
+	^ self grammarHandler isKindOf: SBJsGrammarHandler
+]
+
 { #category : #testing }
 SBUnknown >> isUnknown [
 

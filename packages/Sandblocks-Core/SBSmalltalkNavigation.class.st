@@ -24,11 +24,10 @@ SBSmalltalkNavigation >> nextOnMessage: next with: aBlock [
 { #category : #'as yet unclassified' }
 SBSmalltalkNavigation >> nextWithoutMessageSend: aBlock [
 
-	^ aBlock isMessageSend
+	^ aBlock skipLeftRightNavigation
 		ifTrue: [
-			aBlock isInCascade
-				ifTrue: [aBlock messageParts first]
-			ifFalse: [self nextWithoutMessageSend: aBlock receiver]]
+			(aBlock isMessageSend and: [aBlock isInCascade]) ifTrue: [aBlock messageParts first]
+			ifFalse: [self nextWithoutMessageSend: aBlock childSandblocks first]]
 		ifFalse: [aBlock]
 ]
 
@@ -43,7 +42,7 @@ SBSmalltalkNavigation >> previousFrom: aBlock [
 { #category : #'as yet unclassified' }
 SBSmalltalkNavigation >> previousWithoutMessageSend: aBlock [
 
-	^ aBlock isMessageSend
+	^ aBlock skipLeftRightNavigation
 		ifTrue: [ | adjacent |
 			adjacent := aBlock adjacentBlock: -1.
 			self previousWithoutMessageSend: (adjacent ifNotNil: [adjacent lastDeepChild] ifNil: [aBlock parentSandblock])]

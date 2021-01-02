@@ -8,7 +8,7 @@ Class {
 SBJsGrammarHandler >> checkKeyword: aString for: aBlock [
 
 	(SBJsKeywordBlock validBlockKeywords includes: aString) ifTrue: [ | block |
-		block := SBJsKeywordBlock new keyword: aString condition: aBlock newNullBlock branchStatements: {aBlock newNullBlock}.
+		block := SBJsKeywordBlock new keyword: aString.
 		self replace: aBlock with: block.
 		block inputNextUnknown.
 		^ true].
@@ -58,7 +58,7 @@ SBJsGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 SBJsGrammarHandler >> wrap: aBlock do: aWrapBlock with: anOuterBlock [
 
 	super wrap: aBlock do: aWrapBlock with: anOuterBlock.
-	(anOuterBlock parentSandblock precedence > 0 and: [anOuterBlock parentSandblock precedence >= anOuterBlock precedence and: [anOuterBlock parentSandblock rhs = anOuterBlock]]) ifTrue: [
+	anOuterBlock shouldRotateWhenJustAdded ifTrue: [
 		anOuterBlock leftRotate.
 		anOuterBlock inputNextUnknown]
 ]
