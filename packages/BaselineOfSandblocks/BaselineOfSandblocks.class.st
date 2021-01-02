@@ -22,7 +22,7 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Layout';
 			package: 'Sandblocks-Morphs';
 			package: 'Sandblocks-Drawing';
-			package: 'Sandblocks-Javascript';
+			package: 'Sandblocks-Javascript' with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Representation')];
 			package: 'Sandblocks-Compiler';
 			package: 'Sandblocks-Format';
 			package: 'Sandblocks-Babylonian' with: [spec requires: #('Sandblocks-Core')];
