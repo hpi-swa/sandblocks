@@ -102,3 +102,13 @@ SBJsClosure >> symbols [
 
 	^ #(nil nil)
 ]
+
+{ #category : #'as yet unclassified' }
+SBJsClosure >> writeSourceOn: aStream [
+
+	aStream nextPutAll: '('.
+	self arguments submorphs do: [:a | a writeSourceOn: aStream] separatedBy: [aStream nextPutAll: ', '].
+	aStream nextPutAll: ') => {'.
+	self statements do: [:s | s writeSourceOn: aStream] separatedBy: [aStream nextPut: $;; cr].
+	aStream nextPut: $}
+]

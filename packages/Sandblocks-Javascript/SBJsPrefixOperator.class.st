@@ -128,3 +128,11 @@ SBJsPrefixOperator >> stopEditing: aCommand [
 	
 	self currentTextMorph stopEditing
 ]
+
+{ #category : #'as yet unclassified' }
+SBJsPrefixOperator >> writeSourceOn: aStream [
+
+	aStream nextPutAll: self contents.
+	aStream space.
+	aStream nextPutAll: self rhs
+]

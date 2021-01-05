@@ -1883,7 +1883,7 @@ SBBlock >> selectNextGroup [
 	self sandblockEditor keepVerticalSelectionPositionDuring: [
 		(self nextVerticalNear: self sandblockEditor verticalSelectionPosition)
 			ifNotNil: #select
-			ifNil: [self hasChildSandblocks ifTrue: [self selectNext]]].
+			ifNil: [(self hasChildSandblocks or: [self containingArtefact notNil and: [self containingArtefact floating not]]) ifTrue: [self selectNext]]].
 	self sandblockEditor maybeStartInputNear: oldCursorPos
 ]
 

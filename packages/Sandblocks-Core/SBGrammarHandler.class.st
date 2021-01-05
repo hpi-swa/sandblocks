@@ -53,7 +53,7 @@ SBGrammarHandler >> replace: aBlock with: aMorph [
 	wasInput := aBlock sandblockEditor mode = #input.
 	aBlock sandblockEditor cancelInput.
 	aBlock sandblockEditor do: ((SBReplaceCommand newFor: aBlock containingArtefact)
-		shouldMergeWithNext: true;
+		"shouldMergeWithNext: true;"
 		target: aBlock;
 		replacer: aMorph).
 	"aBlock replaceBy: aMorph."

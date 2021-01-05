@@ -121,3 +121,9 @@ SBJsMethod >> tryFixingMethod: aFixBoolean [
 				^ self tryFixingMethod: aFixBoolean]]].
 	^ true
 ]
+
+{ #category : #'as yet unclassified' }
+SBJsMethod >> writeSourceOn: aStream [
+
+	self body writeSourceOn: aStream
+]

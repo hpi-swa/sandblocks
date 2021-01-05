@@ -74,8 +74,14 @@ SBJsKeywordBlock >> currentTextMorph [
 { #category : #'as yet unclassified' }
 SBJsKeywordBlock >> deleteCommandFor: aBlock [
 
-	^ (aBlock = self condition and: [self fixedArity])
+	^ ((self header includes: aBlock) and: [self fixedArity])
 		ifTrue: [nil] ifFalse: [super deleteCommandFor: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
+SBJsKeywordBlock >> directAddHeaderBlock [
+	
+	self addMorph: self newNullBlock asElementNumber: self header size + 3
 ]
 
 { #category : #'as yet unclassified' }
@@ -94,6 +100,13 @@ SBJsKeywordBlock >> fixedArity [
 SBJsKeywordBlock >> header [
 
 	^ self submorphs viewFrom: 3 to: 1 + ((self submorphs viewFrom: 3) findFirst: [:m | m isSandblock not])
+]
+
+{ #category : #'as yet unclassified' }
+SBJsKeywordBlock >> header: aCollection [
+
+	self header do: #delete.
+	self addAllMorphs: aCollection after: self submorphs second
 ]
 
 { #category : #'as yet unclassified' }
@@ -131,7 +144,7 @@ SBJsKeywordBlock >> layoutCommands [
 			SBAlgebraCommand morph data: self submorphs first.
 			SBAlgebraCommand morph data: self submorphs second.
 			SBAlgebraCommand group data: (self header collect: #layoutCommands separatedBy: [SBAlgebraCommand gap]).
-			SBAlgebraCommand morph data: (self submorphs at: self arity + 3).
+			SBAlgebraCommand morph data: (self submorphs at: self header size + 3).
 			SBAlgebraCommand indent data: 
 				{SBAlgebraCommand hardOrSoftline: self statements size > 0}, self layoutCommandsForStatements}
 ]
@@ -146,13 +159,17 @@ SBJsKeywordBlock >> printOn: aStream [
 SBJsKeywordBlock >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (SBInputCommand newOrEditFor: self containingArtefact)
-		oldMorph: self;
-		previousText: self currentTextMorph contents;
+	cmd := (SBJsKeywordBlockInputCommand newOrEditFor: self containingArtefact)
+		morph: self;
+		previousContents: self currentTextMorph contents;
+		previousOperands: self header;
 		yourself.
 	
 	aBoolean
-		ifTrue: [self currentTextMorph contents: ''; moveCursorTo: 0]
+		ifTrue: [
+			self currentTextMorph
+				contents: '';
+				moveCursorTo: 0]
 		ifFalse: [self currentTextMorph moveCursorTo: aNumber].
 	
 	^ cmd
@@ -161,19 +178,19 @@ SBJsKeywordBlock >> startInputAt: aNumber replacingContents: aBoolean [
 { #category : #'as yet unclassified' }
 SBJsKeywordBlock >> statements [
 
-	^ self submorphs viewAllButFirst: 3 + self arity
+	^ self submorphs viewAllButFirst: 3 + self header size
 ]
 
 { #category : #'as yet unclassified' }
 SBJsKeywordBlock >> statementsIndex [
 
-	^ 4 + self arity
+	^ 4 + self header size
 ]
 
 { #category : #'as yet unclassified' }
 SBJsKeywordBlock >> stopEditing: aCommand [
 
-	aCommand newText: self currentTextMorph contents.
+	aCommand contents: self currentTextMorph contents.
 	
 	(self class validBlockKeywords includes: self contents)
 		ifFalse: [ | variable |
@@ -189,4 +206,14 @@ SBJsKeywordBlock >> stopEditing: aCommand [
 SBJsKeywordBlock >> symbols [
 
 	^ #(nil '}')
+]
+
+{ #category : #'as yet unclassified' }
+SBJsKeywordBlock >> writeSourceOn: aStream [
+
+	aStream nextPutAll: self contents; space; nextPut: $(.
+	self header do: [:a | a writeSourceOn: aStream] separatedBy: [aStream nextPutAll: ', '].
+	aStream nextPutAll: ') {'.
+	self statements do: [:s | s writeSourceOn: aStream] separatedBy: [aStream nextPut: $;; cr].
+	aStream nextPut: $}
 ]

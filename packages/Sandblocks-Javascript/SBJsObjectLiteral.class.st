@@ -18,9 +18,9 @@ SBJsObjectLiteral >> buildEmptyRow [
 { #category : #'as yet unclassified' }
 SBJsObjectLiteral >> childSandblocksDo: aBlock [
 
-	(self submorphs viewFrom: 2 to: self submorphCount -1) do: [:row |
-		aBlock value: row firstSubmorph.
-		aBlock value: row lastSubmorph]
+	self pairsDo: [:key :value |
+		aBlock value: key.
+		aBlock value: value]
 ]
 
 { #category : #'as yet unclassified' }
@@ -99,10 +99,28 @@ SBJsObjectLiteral >> pairs: aCollectionOrAssociations [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsObjectLiteral >> pairsDo: aBlock [
+
+	(self submorphs viewFrom: 2 to: self submorphCount -1) do: [:row |
+		aBlock value: row firstSubmorph value: row lastSubmorph]
+]
+
+{ #category : #'as yet unclassified' }
 SBJsObjectLiteral >> printOn: aStream [
 
 	aStream nextPutAll: 'object literal with '.
 	self keys
 		do: [:key | aStream nextPutAll: key contents]
 		separatedBy: [aStream nextPutAll: ', ']
+]
+
+{ #category : #'as yet unclassified' }
+SBJsObjectLiteral >> writeSourceOn: aStream [
+
+	aStream nextPut: ${.
+	self pairsDo: [:key :value |
+		key writeSourceOn: aStream.
+		aStream nextPut: $:; space.
+		value writeSourceOn: aStream].
+	aStream nextPut: $}.
 ]

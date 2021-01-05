@@ -130,6 +130,12 @@ SBJsASTNode >> object [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsASTNode >> sourceString [
+
+	^ String streamContents: [:s | self writeSourceOn: s]
+]
+
+{ #category : #'as yet unclassified' }
 SBJsASTNode >> wrapAsArgument [
 	<action>
 	<actionValidIf: #isJsExpression>
@@ -186,4 +192,10 @@ SBJsASTNode >> wrapInReturn [
 		outer: SBJsReturn new;
 		inner: self;
 		wrap: [:outer :inner | outer expression: inner])
+]
+
+{ #category : #'as yet unclassified' }
+SBJsASTNode >> writeSourceOn: aStream [
+
+	self subclassResponsibility
 ]

@@ -123,7 +123,8 @@ SBMethodCategory >> insertCommandRequest: anAfterBoolean near: aBlock [
 			selector: ''
 			arguments: #()
 			class: class;
-			body: (SBBlockBody new statements: {self newNullBlock}));
+			hResizing: #spaceFill;
+			body: (SBBlockBody new in: [:b | b statements: {b newNullBlock}]));
 		shouldMergeWithNext: true;
 		yourself
 ]

@@ -21,3 +21,11 @@ SBJsString >> textMorphClass [
 
 	^ SBMultilineOwnTextMorph
 ]
+
+{ #category : #'as yet unclassified' }
+SBJsString >> writeSourceOn: aStream [
+
+	aStream nextPut: $".
+	aStream nextPutAll: self contents.
+	aStream nextPut: $"
+]

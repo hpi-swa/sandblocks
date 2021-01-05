@@ -36,11 +36,23 @@ SBJsReturn >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
-		data: {SBAlgebraCommand morph data: self firstSubmorph. SBAlgebraCommand softLineOrGap}, (self expression ifNotNil: [:expr | {expr layoutCommands}] ifNil: [{}])
+		data: {
+			SBAlgebraCommand morph data: self firstSubmorph.
+			self expression
+				ifNotNil: [:expr | SBAlgebraCommand indent data: {SBAlgebraCommand softLineOrGap. expr layoutCommands}]
+				ifNil: [SBAlgebraCommand noop]
+		}
 ]
 
 { #category : #'as yet unclassified' }
 SBJsReturn >> valid [
 
 	^ self isStatement
+]
+
+{ #category : #'as yet unclassified' }
+SBJsReturn >> writeSourceOn: aStream [
+
+	aStream nextPutAll: 'return '.
+	self expression writeSourceOn: aStream
 ]

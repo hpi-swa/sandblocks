@@ -79,3 +79,12 @@ SBJsDeclaration >> symbols [
 
 	^ #('let ' nil)
 ]
+
+{ #category : #'as yet unclassified' }
+SBJsDeclaration >> writeSourceOn: aStream [
+
+	aStream nextPutAll: 'let '.
+	self binding writeSourceOn: aStream.
+	aStream nextPutAll: ' = '.
+	self rhs writeSourceOn: aStream
+]

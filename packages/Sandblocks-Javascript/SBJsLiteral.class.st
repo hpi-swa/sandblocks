@@ -135,3 +135,9 @@ SBJsLiteral >> validContents [
 
 	^ self valid
 ]
+
+{ #category : #'as yet unclassified' }
+SBJsLiteral >> writeSourceOn: aStream [
+
+	aStream nextPutAll: self contents
+]

@@ -311,3 +311,16 @@ SBJsInfixOperator >> wantsExtraSpace [
 
 	^ self contents ~= '[' and: [self contents ~= '.']
 ]
+
+{ #category : #'as yet unclassified' }
+SBJsInfixOperator >> writeSourceOn: aStream [
+
+	aStream nextPutAll: '('.
+	self lhs writeSourceOn: aStream.
+	aStream nextPutAll: self operator contents.
+	self allRhs do: [:s | s writeSourceOn: aStream] separatedBy: [aStream nextPut: $,; cr].
+	
+	self contents = '(' ifTrue: [aStream nextPut: $)].
+	self contents = '[' ifTrue: [aStream nextPut: $]].
+	aStream nextPutAll: ')'
+]
