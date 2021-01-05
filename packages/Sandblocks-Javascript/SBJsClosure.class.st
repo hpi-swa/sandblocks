@@ -47,6 +47,12 @@ SBJsClosure >> deleteCommandFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsClosure >> header [
+
+	^ #()
+]
+
+{ #category : #'as yet unclassified' }
 SBJsClosure >> initialize [
 
 	super initialize.

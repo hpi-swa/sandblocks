@@ -1,7 +1,7 @@
 Class {
 	#name : #SBSymbol,
-	#superclass : #SBLiteral,
-	#category : 'Sandblocks-Core'
+	#superclass : #SBStLiteral,
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }

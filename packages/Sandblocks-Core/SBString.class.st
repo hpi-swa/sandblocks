@@ -1,7 +1,7 @@
 Class {
 	#name : #SBString,
-	#superclass : #SBLiteral,
-	#category : 'Sandblocks-Core'
+	#superclass : #SBStLiteral,
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }

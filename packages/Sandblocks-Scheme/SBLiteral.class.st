@@ -1,51 +1,49 @@
 Class {
 	#name : #SBLiteral,
-	#superclass : #SBASTNode,
-	#instVars : [
-		'text'
-	],
-	#category : #'Sandblocks-Core'
+	#superclass : #SBScmASTNode,
+	#category : #'Sandblocks-Scheme'
 }
 
 { #category : #'as yet unclassified' }
 SBLiteral >> acceptInputEvent: anEvent [
 
-	text keyStroke: anEvent
+	self currentTextMorph keyStroke: anEvent.
+	
+	self flag: #fixme. " auto-complete unambiguous matches? "
+	self validContents ifFalse: [
+		self currentTextMorph deleteBeforeCursor.
+		SBScmGrammarHandler new perform: anEvent keyCharacter for: self empty: false]
 ]
 
 { #category : #'as yet unclassified' }
 SBLiteral >> castToUnknownWhenEmpty [
 
-	^ false
-]
-
-{ #category : #'as yet unclassified' }
-SBLiteral >> childSandblocksDo: aBlock [
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
 SBLiteral >> contents [
 
-	^ text contents
+	^ self currentTextMorph contents
 ]
 
 { #category : #'as yet unclassified' }
 SBLiteral >> contents: aString [
 
-	text contents: aString
+	self currentTextMorph contents: aString
 ]
 
 { #category : #'as yet unclassified' }
 SBLiteral >> contentsChanged [
 
-	(self castToUnknownWhenEmpty and: [text contents isEmpty]) ifTrue: [
+	(self castToUnknownWhenEmpty and: [self currentTextMorph contents isEmpty]) ifTrue: [
 		self replaceWithUnknown]
 ]
 
 { #category : #'as yet unclassified' }
 SBLiteral >> currentTextMorph [
 
-	^ text
+	^ self firstSubmorph
 ]
 
 { #category : #'as yet unclassified' }
@@ -54,42 +52,20 @@ SBLiteral >> initialize [
 	super initialize.
 	
 	self
-		addMorphBack: (text := self textMorphClass new when: #contentsChanged send: #contentsChanged to: self);
-		layoutPolicy: SBVerticalLayout new;
-		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap
-]
-
-{ #category : #'as yet unclassified' }
-SBLiteral >> inputCommandClass [
-
-	^ SBInputCommand
-]
-
-{ #category : #'as yet unclassified' }
-SBLiteral >> isExpression [
-
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
-SBLiteral >> isLiteralBlock [
-
-	^ true
+		addMorphBack: (self textMorphClass new when: #contentsChanged send: #contentsChanged to: self);
+		layoutPolicy: SBVerticalLayout new
 ]
 
 { #category : #'as yet unclassified' }
 SBLiteral >> keyStroke: anEvent [
 
-	(anEvent keyCharacter = Character backspace and: [self contents isEmpty]) ifTrue: [^ self replaceWithUnknown].
-	
 	self acceptInputEvent: anEvent
 ]
 
 { #category : #'as yet unclassified' }
 SBLiteral >> moveCursorTo: aNumber [
 
-	text moveCursorTo: aNumber
+	self currentTextMorph moveCursorTo: aNumber
 ]
 
 { #category : #'as yet unclassified' }
@@ -110,9 +86,9 @@ SBLiteral >> replaceWithUnknown [
 SBLiteral >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (self inputCommandClass newOrEditFor: self containingArtefact)
+	cmd := (SBInputCommand newOrEditFor: self containingArtefact)
 		oldMorph: self;
-		previousText: self contents;
+		previousText: self currentTextMorph contents;
 		yourself.
 	
 	aBoolean
@@ -128,7 +104,7 @@ SBLiteral >> startInputAt: aNumber replacingContents: aBoolean [
 { #category : #'as yet unclassified' }
 SBLiteral >> stopEditing [
 
-	text stopEditing.
+	self currentTextMorph stopEditing.
 	self removeSuggestionMenu
 ]
 
@@ -136,7 +112,7 @@ SBLiteral >> stopEditing [
 SBLiteral >> stopEditing: aCommand [
 
 	aCommand
-		newText: self contents;
+		newText: self currentTextMorph contents;
 		newMorph: self.
 	
 	self stopEditing
@@ -149,8 +125,13 @@ SBLiteral >> textMorphClass [
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> useSuggestion: aString [
+SBLiteral >> validContents [
 
-	self contents: aString.
-	self containingSandblock sandblockEditor endInput
+	^ self valid
+]
+
+{ #category : #'as yet unclassified' }
+SBLiteral >> writeSourceOn: aStream [
+
+	aStream nextPutAll: self contents
 ]

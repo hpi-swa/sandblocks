@@ -7,7 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBJsKeywordBlock class >> validBlockKeywords [
 
-	^ #('if' 'while' 'else' 'else if' 'elseif' 'function' 'for' 'function*')
+	^ #('if' 'while' 'else' 'else if' 'elseif' 'function' 'for' 'function*' 'jsx')
 ]
 
 { #category : #'as yet unclassified' }
@@ -25,6 +25,7 @@ SBJsKeywordBlock >> arity [
 
 	self contents = 'for' ifTrue: [^ 3].
 	self contents = 'function' ifTrue: [^ self header size].
+	self contents = 'jsx' ifTrue: [^ 2].
 	^ 1
 ]
 
@@ -107,6 +108,12 @@ SBJsKeywordBlock >> header: aCollection [
 
 	self header do: #delete.
 	self addAllMorphs: aCollection after: self submorphs second
+]
+
+{ #category : #'as yet unclassified' }
+SBJsKeywordBlock >> isExpression [
+
+	^ self contents = 'jsx'
 ]
 
 { #category : #'as yet unclassified' }

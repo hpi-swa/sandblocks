@@ -78,7 +78,7 @@ SBValueList >> minimumHeight [
 { #category : #'as yet unclassified' }
 SBValueList >> newNullBlock [
 
-	^ self owner isBlockBody ifTrue: [SBJsVariable new] ifFalse: [super newNullBlock]
+	^ SBJsVariable new
 ]
 
 { #category : #'as yet unclassified' }

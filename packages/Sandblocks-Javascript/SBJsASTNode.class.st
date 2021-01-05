@@ -34,6 +34,13 @@ SBJsASTNode >> contextAcceptedRepresentationAt: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsASTNode >> copyString [
+	<action>
+
+	Clipboard clipboardText: self sourceString
+]
+
+{ #category : #'as yet unclassified' }
 SBJsASTNode >> initialize [
 
 	super initialize.

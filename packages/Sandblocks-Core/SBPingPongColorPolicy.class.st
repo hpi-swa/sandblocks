@@ -26,7 +26,7 @@ SBPingPongColorPolicy >> colorForBlock: aBlock [
 { #category : #'as yet unclassified' }
 SBPingPongColorPolicy >> layoutInsetFor: aBlock [
 
-	((aBlock isKindOf: SBLiteral) or: [aBlock isBlockBody]) ifTrue: [^ 2 @ 2].
+	((aBlock isKindOf: SBStLiteral) or: [aBlock isBlockBody]) ifTrue: [^ 2 @ 2].
 	
 	aBlock isMessageSend ifTrue: [
 		aBlock childHierarchyComplexity > 9 ifTrue: [^ 3 @ 3]].

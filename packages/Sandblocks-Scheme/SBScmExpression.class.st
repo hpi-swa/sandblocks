@@ -1,0 +1,192 @@
+Class {
+	#name : #SBScmExpression,
+	#superclass : #SBScmASTNode,
+	#category : #'Sandblocks-Scheme'
+}
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> addedMorph: aMorph [
+
+	super addedMorph: aMorph.
+	
+	self clearCache
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> binding: aString for: block class: aClass ifPresent: aBlock [
+
+	self
+		ifWellFormedSpecialFormDo: [:f |
+			(#('let' 'let*' 'letrec') includes: f) ifTrue: [
+				self expressions second elements
+					detect: [:pair | pair elements first contents = aString]
+					ifFound: [:pair | ^ aBlock value: pair elements first]].
+			f = 'define' ifTrue: [
+				self elements second isSExpr
+					ifTrue: [
+						self elements second elements detect: [:arg | arg contents = aString] ifFound: [:arg | ^ aBlock value: arg]]
+					ifFalse: [self elements second contents = aString ifTrue: [^ aBlock value: self elements second]]].
+			(f = 'cond' and: [aString = 'else' and: [self elements last elements first = block]]) ifTrue: [^ aBlock value: block].
+			f = 'lambda' ifTrue: [
+				self elements second elements detect: [:arg | arg contents = aString] ifFound: [:arg | ^ aBlock value: arg]]]
+		ifNone: [nil].
+	^ super binding: aString for: block class: aClass ifPresent: aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> canDeleteChild: aBlock [
+
+	^ self elements size > 1
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> centerAlignSymbols [
+
+	^ self height < (self fontToUse height * 2.2)
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> childSandblocksDo: aBlock [
+
+	self elements do: aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> elements [
+
+	^ self submorphs
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> expressions [
+
+	^ self submorphs
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> ifSpecialForm: aString do: aBlock ifNone: anotherBlock [
+
+	^ self elements notEmpty and: [self elements first contents = aString and: [self ifWellFormedSpecialFormDo: [:f | true] ifNone: [false]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> ifSpecialFormDo: aBlock ifNone: anotherBlock [
+
+	^ (self elements notEmpty and: [self elements first isIdentifier and: [(self specialForms includes: self elements first contents)]])
+		ifTrue: [aBlock value: self elements first contents]
+		ifFalse: anotherBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> ifWellFormedSpecialFormDo: aBlock ifNone: anotherBlock [
+
+	| form let |
+	form := nil.
+	let := [self elements size >= 3 and: [self elements second isSExpr and: [self elements second elements allSatisfy: [:expr | expr isSExpr and: [expr elements size = 2]]]]].
+	^ (self ifSpecialFormDo: [:f |
+		(form := f) caseOf: {
+			['if'] -> [self elements size = 4].
+			['define'] -> [self elements size >= 3].
+			['lambda'] -> [self elements size >= 3].
+			['let'] -> [let value].
+			['let*'] -> [let value].
+			['letrec'] -> [let value].
+			['cond'] -> [self elements size >= 1].
+		}] ifNone: [false]) ifTrue: [aBlock value: form] ifFalse: anotherBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> insertCommandRequest: anAfterBoolean near: aBlock [
+
+	^ (SBInsertCommand newFor: self containingArtefact)
+		index: (self childSandblocks indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
+		container: self;
+		morph: self newNullBlock;
+		shouldMergeWithNext: true;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> isBlockBody [
+
+	^ self ifSpecialFormDo: [:f | f = 'lambda' or:
+		[f = 'define' and: [self elements size >= 2 and: [self elements second isSExpr]]]] ifNone: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> isMethodBody [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> isSExpr [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> layoutCommands [
+
+	| list |
+	list := [self elements collect: #layoutCommands separatedBy: [SBAlgebraCommand softLineOrGap]].
+	
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (self ifWellFormedSpecialFormDo: [:f | | e |
+			e := self elements collect: #layoutCommands.
+			f caseOf: {
+				['if'] -> [{e first. e second. SBAlgebraCommand indent data: {SBAlgebraCommand softLineOrGap. e third. SBAlgebraCommand softLineOrGap. e fourth}}].
+				['define'] -> [{e first. SBAlgebraCommand gap. e second. SBAlgebraCommand indent data: (list value viewAllButFirst: 3)}].
+				['lambda'] -> [{e first. SBAlgebraCommand gap. e second. SBAlgebraCommand indent data: (list value viewAllButFirst: 3)}].
+			} otherwise: list] ifNone: [{list value first. SBAlgebraCommand indent data: (list value viewAllButFirst: 1)}])
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> printOn: aStream [
+
+	self
+		ifWellFormedSpecialFormDo: [:f | aStream nextPutAll: 'special form '; nextPutAll: f]
+		ifNone: [
+			(self elements size > 0 and: [self elements first isIdentifier])
+				ifTrue: [aStream nextPutAll: 'apply '; nextPutAll: self elements first contents]
+				ifFalse: [aStream nextPutAll: 'sexpr']]
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> specialForms [
+
+	^ #('lambda' 'if' 'define' 'set!' 'let' 'let*' 'letrec' 'cond')
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> statements [
+
+	^ self expressions
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> symbols [
+
+	^ #('(' ')')
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> valid [
+
+	^ self ifSpecialFormDo: [:f | self ifWellFormedSpecialFormDo: [:fi | true] ifNone: [false]] ifNone: [true]
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> wantsExtraSpace [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> writeSourceOn: aStream [
+
+	aStream nextPut: $(.
+	self elements do: [:e | e writeSourceOn: aStream] separatedBy: [aStream space].
+	aStream nextPut: $)
+]

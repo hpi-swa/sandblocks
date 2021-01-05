@@ -977,7 +977,9 @@ SBBlock >> insertElement: aBoolean [
 	self sandblockEditor do: cmd.
 	
 	cmd shouldMergeWithNext ifTrue: [
-		self sandblockEditor startInput: self sandblockEditor selection at: 0 replacingContents: false]
+		self sandblockEditor startInput: self sandblockEditor selection at: 0 replacingContents: false].
+	
+	^ self sandblockEditor selection
 ]
 
 { #category : #actions }
@@ -985,7 +987,7 @@ SBBlock >> insertElementAfter [
 	<action>
 	<inputAction>
 
-	self insertElement: true
+	^ self insertElement: true
 ]
 
 { #category : #actions }
@@ -993,7 +995,7 @@ SBBlock >> insertElementBefore [
 	<action>
 	<inputAction>
 
-	self insertElement: false
+	^ self insertElement: false
 ]
 
 { #category : #testing }
@@ -1109,6 +1111,12 @@ SBBlock >> isGlobalWatch [
 	^ false
 ]
 
+{ #category : #testing }
+SBBlock >> isIdentifier [
+
+	^ false
+]
+
 { #category : #hierarchy }
 SBBlock >> isLastChild [
 
@@ -1188,9 +1196,21 @@ SBBlock >> isReturn [
 ]
 
 { #category : #testing }
+SBBlock >> isSExpr [
+
+	^ false
+]
+
+{ #category : #testing }
 SBBlock >> isSandblock [
 
 	^ true
+]
+
+{ #category : #testing }
+SBBlock >> isScmExpression [
+
+	^ false
 ]
 
 { #category : #testing }

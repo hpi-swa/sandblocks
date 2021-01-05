@@ -1,6 +1,6 @@
 Class {
 	#name : #SBUnknown,
-	#superclass : #SBLiteral,
+	#superclass : #SBStLiteral,
 	#instVars : [
 		'grammarHandler',
 		'deleteIfDismissed'

@@ -17,5 +17,6 @@ OrderedDictionary {
 	'packages/Sandblocks-Morphs' : #SquotTonelSerializer,
 	'packages/Sandblocks-Utils' : #SquotTonelSerializer,
 	'packages/Sandblocks-RatPack' : #SquotTonelSerializer,
-	'packages/Sandblocks-Javascript' : #SquotTonelSerializer
+	'packages/Sandblocks-Javascript' : #SquotTonelSerializer,
+	'packages/Sandblocks-Scheme' : #SquotTonelSerializer
 }

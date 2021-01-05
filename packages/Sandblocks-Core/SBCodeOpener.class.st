@@ -356,7 +356,7 @@ SBCodeOpener >> selectedMethodIndex: aNumber moved: aBoolean [
 	
 	preview ifNotNil: #delete.
 	
-	(selectedMethodIndex > 0 and: [selectedClassIndex > 0]) ifTrue: [
+	(selectedMethodIndex > 0 and: [selectedClassIndex > 0 and: [self methods notEmpty]]) ifTrue: [
 		preview := SBSelection new
 			methodClass: self selectedClass;
 			colorPolicy: SBEditor defaultColorPolicy new;

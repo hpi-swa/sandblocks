@@ -1,13 +1,13 @@
 Class {
 	#name : #SBNumber,
-	#superclass : #SBLiteral,
+	#superclass : #SBStLiteral,
 	#instVars : [
 		'isDown',
 		'lastMousePosition',
 		'oldCursor',
 		'scrubbingCommand'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }

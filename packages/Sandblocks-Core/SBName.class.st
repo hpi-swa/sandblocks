@@ -1,6 +1,6 @@
 Class {
 	#name : #SBName,
-	#superclass : #SBLiteral,
+	#superclass : #SBStLiteral,
 	#instVars : [
 		'behavior',
 		'binding',

@@ -52,6 +52,12 @@ SequenceableCollection >> viewCopyFrom: aNumber to: anotherNumber [
 ]
 
 { #category : #'*Sandblocks-Core' }
+SequenceableCollection >> viewFirst: aNumber [
+
+	^ SBCollectionView on: self from: 1 to: aNumber
+]
+
+{ #category : #'*Sandblocks-Core' }
 SequenceableCollection >> viewFrom: aNumber [
 
 	^ SBCollectionView on: self from: aNumber to: self size
