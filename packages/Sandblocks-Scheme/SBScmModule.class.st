@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBScmModule class >> fromString: aString [
+
+	^ SBScmParser new parse: aString readStream
+]
+
+{ #category : #'as yet unclassified' }
 SBScmModule >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	(#('+' '-' '*' '/' '>' '<' '>='
@@ -12,7 +18,8 @@ SBScmModule >> binding: aString for: block class: aClass ifPresent: aBlock [
 		'nil'
 		'eq?' 'eqv?' 'null?'
 		'apply'
-		'cons' 'car' 'cdr') includes: aString) ifTrue: [^ aBlock value: (SBScmIdentifier new contents: aString)].
+		'display' 'newline'
+		'cons' 'car' 'cdr' 'list') includes: aString) ifTrue: [^ aBlock value: (SBScmIdentifier new contents: aString)].
 	^ super binding: aString for: block class: aClass ifPresent: aBlock
 ]
 

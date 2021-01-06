@@ -37,6 +37,13 @@ SBString >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBString >> pasteString [
+	<action>
+	
+	self currentTextMorph insertString: Clipboard clipboardText
+]
+
+{ #category : #'as yet unclassified' }
 SBString >> printOn: aStream [
 
 	aStream nextPutAll: 'string '.

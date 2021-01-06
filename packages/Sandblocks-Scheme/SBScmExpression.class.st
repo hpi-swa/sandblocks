@@ -1,6 +1,9 @@
 Class {
 	#name : #SBScmExpression,
 	#superclass : #SBScmASTNode,
+	#instVars : [
+		'quoted'
+	],
 	#category : #'Sandblocks-Scheme'
 }
 
@@ -15,6 +18,8 @@ SBScmExpression >> addedMorph: aMorph [
 { #category : #'as yet unclassified' }
 SBScmExpression >> binding: aString for: block class: aClass ifPresent: aBlock [
 
+	self quoted ifTrue: [^ aBlock value: (SBScmSymbol new contents: aString)].
+	
 	self
 		ifWellFormedSpecialFormDo: [:f |
 			(#('let' 'let*' 'letrec') includes: f) ifTrue: [
@@ -36,7 +41,7 @@ SBScmExpression >> binding: aString for: block class: aClass ifPresent: aBlock [
 { #category : #'as yet unclassified' }
 SBScmExpression >> canDeleteChild: aBlock [
 
-	^ self elements size > 1
+	^ self elements size > 1 or: [self quoted]
 ]
 
 { #category : #'as yet unclassified' }
@@ -61,6 +66,12 @@ SBScmExpression >> elements [
 SBScmExpression >> expressions [
 
 	^ self submorphs
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> fixedNumberOfChildren [
+
+	^ false
 ]
 
 { #category : #'as yet unclassified' }
@@ -93,6 +104,14 @@ SBScmExpression >> ifWellFormedSpecialFormDo: aBlock ifNone: anotherBlock [
 			['letrec'] -> [let value].
 			['cond'] -> [self elements size >= 1].
 		}] ifNone: [false]) ifTrue: [aBlock value: form] ifFalse: anotherBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> initialize [
+
+	super initialize.
+	
+	quoted := false
 ]
 
 { #category : #'as yet unclassified' }
@@ -131,6 +150,8 @@ SBScmExpression >> layoutCommands [
 	| list |
 	list := [self elements collect: #layoutCommands separatedBy: [SBAlgebraCommand softLineOrGap]].
 	
+	self elements ifEmpty: [^ SBAlgebraCommand container morph: self; data: {}].
+	
 	^ SBAlgebraCommand container
 		morph: self;
 		data: (self ifWellFormedSpecialFormDo: [:f | | e |
@@ -143,6 +164,12 @@ SBScmExpression >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmExpression >> minimumHeight [
+
+	^ TextStyle defaultFont height + 4
+]
+
+{ #category : #'as yet unclassified' }
 SBScmExpression >> printOn: aStream [
 
 	self
@@ -151,6 +178,18 @@ SBScmExpression >> printOn: aStream [
 			(self elements size > 0 and: [self elements first isIdentifier])
 				ifTrue: [aStream nextPutAll: 'apply '; nextPutAll: self elements first contents]
 				ifFalse: [aStream nextPutAll: 'sexpr']]
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> quoted [
+
+	^ quoted
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> quoted: aBoolean [
+
+	quoted := aBoolean
 ]
 
 { #category : #'as yet unclassified' }
@@ -168,6 +207,7 @@ SBScmExpression >> statements [
 { #category : #'as yet unclassified' }
 SBScmExpression >> symbols [
 
+	self quoted ifTrue: [^ #('''(' ')')].
 	^ #('(' ')')
 ]
 
@@ -186,6 +226,8 @@ SBScmExpression >> wantsExtraSpace [
 { #category : #'as yet unclassified' }
 SBScmExpression >> writeSourceOn: aStream [
 
+	self quoted ifTrue: [aStream nextPut: $'].
+	
 	aStream nextPut: $(.
 	self elements do: [:e | e writeSourceOn: aStream] separatedBy: [aStream space].
 	aStream nextPut: $)

@@ -5,6 +5,17 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBScmSymbol >> acceptInputEvent: anEvent [
+
+	(anEvent keyCharacter = $( and: [self contents isEmpty])
+		ifTrue: [
+			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+				target: self;
+				replacer: (SBScmExpression new quoted: true))]
+		ifFalse: [super acceptInputEvent: anEvent]
+]
+
+{ #category : #'as yet unclassified' }
 SBScmSymbol >> symbols [
 
 	^ #('''' nil)

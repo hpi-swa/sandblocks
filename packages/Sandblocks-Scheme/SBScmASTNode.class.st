@@ -105,3 +105,11 @@ SBScmASTNode >> wrapAsArgument [
 			inner: self;
 			wrap: [:outer :inner | outer addMorphBack: inner])
 ]
+
+{ #category : #'as yet unclassified' }
+SBScmASTNode >> wrapInMessageSend [
+	<action>	
+	<actionValidIf: #isScmExpression>
+	
+	self insertElementAfter
+]
