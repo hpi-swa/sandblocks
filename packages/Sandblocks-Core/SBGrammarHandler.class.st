@@ -49,14 +49,19 @@ SBGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 { #category : #'as yet unclassified' }
 SBGrammarHandler >> replace: aBlock with: aMorph [
 
+	self replace: aBlock with: aMorph mergeInput: true
+]
+
+{ #category : #'as yet unclassified' }
+SBGrammarHandler >> replace: aBlock with: aMorph mergeInput: aBoolean [
+
 	| wasInput |
 	wasInput := aBlock sandblockEditor mode = #input.
 	aBlock sandblockEditor cancelInput.
 	aBlock sandblockEditor do: ((SBReplaceCommand newFor: aBlock containingArtefact)
-		"shouldMergeWithNext: true;"
+		shouldMergeWithNext: aBoolean;
 		target: aBlock;
 		replacer: aMorph).
-	"aBlock replaceBy: aMorph."
 	
 	self focusNextFrom: aMorph at: 9e8 wasInput: wasInput
 ]

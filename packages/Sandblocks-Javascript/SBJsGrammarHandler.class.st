@@ -9,22 +9,22 @@ SBJsGrammarHandler >> checkKeyword: aString for: aBlock [
 
 	(SBJsKeywordBlock validBlockKeywords includes: aString) ifTrue: [ | block |
 		block := SBJsKeywordBlock new keyword: aString.
-		self replace: aBlock with: block.
+		self replace: aBlock with: block mergeInput: false.
 		block inputNextUnknown.
 		^ true].
 	
 	(SBJsPrefixOperator validPrefixOperators includes: aString) ifTrue: [ | block |
 		block := SBJsPrefixOperator new operator: aString rhs: aBlock newNullBlock.
-		self replace: aBlock with: block.
+		self replace: aBlock with: block mergeInput: false.
 		block inputNextUnknown.
 		^ true].
 	
 	aString = 'let' ifTrue: [
-		self replace: aBlock with: (SBJsDeclaration new lhs: aBlock newNullBlock rhs: aBlock newNullBlock).
+		self replace: aBlock with: (SBJsDeclaration new lhs: aBlock newNullBlock rhs: aBlock newNullBlock) mergeInput: false.
 		^ true].
 	
 	aString = 'return' ifTrue: [
-		self replace: aBlock with: (SBJsReturn new expression: (aBlock newNullBlock deleteIfDismissed: true)).
+		self replace: aBlock with: (SBJsReturn new expression: (aBlock newNullBlock deleteIfDismissed: true)) mergeInput: false.
 		^ true].
 	
 	^ false
