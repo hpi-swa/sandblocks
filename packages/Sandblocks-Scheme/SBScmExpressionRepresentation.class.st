@@ -19,5 +19,5 @@ SBScmExpressionRepresentation class >> matches: aBlock [
 { #category : #'as yet unclassified' }
 SBScmExpressionRepresentation class >> newFor: aBlock [
 
-	^ aBlock
+	^ aBlock veryDeepCopy
 ]

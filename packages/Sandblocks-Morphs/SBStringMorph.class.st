@@ -38,6 +38,12 @@ SBStringMorph >> fontToUse [
 	^ super fontToUse
 ]
 
+{ #category : #accessing }
+SBStringMorph >> italic [
+
+	self emphasis: TextEmphasis italic emphasisCode
+]
+
 { #category : #'as yet unclassified' }
 SBStringMorph >> large [
 

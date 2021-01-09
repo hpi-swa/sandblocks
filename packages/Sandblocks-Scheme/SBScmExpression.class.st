@@ -15,7 +15,7 @@ SBScmExpression >> addedMorph: aMorph [
 	self clearCache
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'special form checking' }
 SBScmExpression >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	self quoted ifTrue: [^ aBlock value: (SBScmSymbol new contents: aString)].
@@ -79,7 +79,7 @@ SBScmExpression >> fixedNumberOfChildren [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'special form checking' }
 SBScmExpression >> ifDefinition: aBlock otherwise: anotherBlock [
 
 	^ self
@@ -99,12 +99,14 @@ SBScmExpression >> ifSpecialFormDo: aBlock ifNone: anotherBlock [
 		ifFalse: anotherBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'special form checking' }
 SBScmExpression >> ifWellFormedSpecialFormDo: aBlock ifNone: anotherBlock [
 
-	| form let |
+	| form let set |
 	form := nil.
 	let := [self elements size >= 3 and: [self elements second isSExpr and: [self elements second elements allSatisfy: [:expr | expr isSExpr and: [expr elements size = 2]]]]].
+	set := [self elements size = 3].
+	
 	^ (self ifSpecialFormDo: [:f |
 		(form := f) caseOf: {
 			['if'] -> [self elements size = 4].
@@ -113,6 +115,9 @@ SBScmExpression >> ifWellFormedSpecialFormDo: aBlock ifNone: anotherBlock [
 			['let'] -> [let value].
 			['let*'] -> [let value].
 			['letrec'] -> [let value].
+			['set!'] -> [set value and: [self elements second isIdentifier or: [self elements second isUnknown]]].
+			['set-car!'] -> [set value].
+			['set-cdr!'] -> [set value].
 			['cond'] -> [self elements size >= 1].
 			['begin'] -> [self elements size >= 2].
 		}] ifNone: [false]) ifTrue: [aBlock value: form] ifFalse: anotherBlock
@@ -156,7 +161,7 @@ SBScmExpression >> isSExpr [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'special form checking' }
 SBScmExpression >> layoutCommands [
 
 	| list |
@@ -169,10 +174,11 @@ SBScmExpression >> layoutCommands [
 		data: (self ifWellFormedSpecialFormDo: [:f | | e |
 			e := self elements collect: #layoutCommands.
 			f caseOf: {
-				['if'] -> [{e first. e second. SBAlgebraCommand indent data: {SBAlgebraCommand softLineOrGap. e third. SBAlgebraCommand softLineOrGap. e fourth}}].
+				['if'] -> [{e first. SBAlgebraCommand gap. e second. SBAlgebraCommand indent data: {SBAlgebraCommand softLineOrGap. e third. SBAlgebraCommand softLineOrGap. e fourth}}].
 				['define'] -> [{e first. SBAlgebraCommand gap. e second. SBAlgebraCommand indent data: (list value viewAllButFirst: 3)}].
 				['lambda'] -> [{e first. SBAlgebraCommand gap. e second. SBAlgebraCommand indent data: (list value viewAllButFirst: 3)}].
-				['begin'] -> [{e first. SBAlgebraCommand indent data: {SBAlgebraCommand hardLine}, (self elements viewAllButFirst collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine])}]
+				['begin'] -> [{e first. SBAlgebraCommand indent data: {SBAlgebraCommand hardLine}, (self elements viewAllButFirst collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine])}].
+				['cond'] -> [{e first. SBAlgebraCommand indent data: {SBAlgebraCommand hardLine}, (self elements viewAllButFirst collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine])}]
 			} otherwise: list] ifNone: [{list value first. SBAlgebraCommand indent data: (list value viewAllButFirst: 1)}])
 ]
 
@@ -236,7 +242,7 @@ SBScmExpression >> wantsExtraSpace [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'special form checking' }
 SBScmExpression >> withStatementsDo: aBlock ifNotApplicable: anotherBlock [
 	" check if we are a form that supports containing multiple statements (e.g. let or begin) "
 	

@@ -35,6 +35,15 @@ SBUnknown >> deleteIfDismissed: aBoolean [
 	deleteIfDismissed := aBoolean
 ]
 
+{ #category : #'as yet unclassified' }
+SBUnknown >> drawInvalidBorderOn: aCanvas [
+
+	" if we have a label do not draw a strong red border "
+	self contents
+		ifNotEmpty: [aCanvas frameRectangle: self bounds width: 1 * self scalingFactor color: (Color red alpha: 0.7)]
+		ifEmpty: [super drawInvalidBorderOn: aCanvas]
+]
+
 { #category : #accessing }
 SBUnknown >> endInput [
 	<inputAction>
@@ -61,7 +70,9 @@ SBUnknown >> initialize [
 
 	super initialize.
 	
-	deleteIfDismissed := false
+	deleteIfDismissed := false.
+	
+	text italic; colorAlpha: 0.7
 ]
 
 { #category : #'as yet unclassified' }
@@ -92,6 +103,12 @@ SBUnknown >> isUnknown [
 SBUnknown >> keyStroke: anEvent [
 
 	self acceptCharacter: anEvent keyCharacter
+]
+
+{ #category : #actions }
+SBUnknown >> label: aString [
+
+	text contents: aString
 ]
 
 { #category : #accessing }

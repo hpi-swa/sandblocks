@@ -18,8 +18,9 @@ Class {
 SBSelection >> abortDrag: anEvent [
 
 	self onAbortUndoIn ifNotNil: [:editor |
-		editor undo.
-		(editor morphsAt: anEvent position) do: [:m | m highlightForDrop: false]].
+		editor undo].
+	
+	(self world morphsAt: anEvent position) do: [:m | m highlightForDrop: false].
 	self delete
 ]
 
@@ -62,7 +63,7 @@ SBSelection >> childSandblocksDo: aBlock [
 { #category : #'as yet unclassified' }
 SBSelection >> colorPolicy [
 
-	^ colorPolicy
+	^ colorPolicy ifNil: [super colorPolicy]
 ]
 
 { #category : #'as yet unclassified' }
@@ -157,6 +158,14 @@ SBSelection >> keyStroke: anEvent [
 	"Abort the drag on an escape"
 
 	anEvent keyCharacter = Character escape ifTrue: [self abortDrag: anEvent].
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine])
 ]
 
 { #category : #'as yet unclassified' }

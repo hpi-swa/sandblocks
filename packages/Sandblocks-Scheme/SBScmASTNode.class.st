@@ -66,20 +66,22 @@ SBScmASTNode >> evaluate [
 { #category : #'as yet unclassified' }
 SBScmASTNode >> handleDroppedBlock: aBlock event: anEvent [
 
+	| replacer |
 	self fixedNumberOfChildren
-		ifTrue: [ | replacer |
+		ifTrue: [
 			replacer := aBlock object anyRepresentationThat: self acceptedRepresentation.
 			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
 				target: self;
 				replacer: replacer).
 			replacer postDuplicate]
-		ifFalse: [ | replacer |
+		ifFalse: [
 			self dropLocationDo: [:position :morph :horizontal |
 				replacer := aBlock object anyRepresentationThat: (self contextAcceptedRepresentationAt: morph childIndex).
 				self sandblockEditor do: ((self insertCommandRequest: false near: morph) shouldMergeWithNext: true).
 				self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
 					target: self sandblockEditor selection;
-					replacer: replacer)]]
+					replacer: replacer)]].
+	replacer containsUnknown ifTrue: [replacer inputNextUnknown]
 ]
 
 { #category : #'as yet unclassified' }

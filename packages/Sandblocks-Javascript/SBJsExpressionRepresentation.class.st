@@ -19,5 +19,5 @@ SBJsExpressionRepresentation class >> matches: aBlock [
 { #category : #'as yet unclassified' }
 SBJsExpressionRepresentation class >> newFor: aBlock [
 
-	^ aBlock
+	^ aBlock veryDeepCopy
 ]

@@ -395,6 +395,13 @@ SBBlock >> containingToplevel [
 	^ self floating ifTrue: [self] ifFalse: [self parentSandblock containingToplevel]
 ]
 
+{ #category : #testing }
+SBBlock >> containsUnknown [
+
+	self allBlocksDo: [:b | b isUnknown ifTrue: [^ true]].
+	^ false
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> contextAcceptedRepresentationAt: aNumber [
 	" return any constraints on the representation of your child block at aNumber "
@@ -616,6 +623,12 @@ SBBlock >> drawFrame: aColor on: aCanvas [
 ]
 
 { #category : #'as yet unclassified' }
+SBBlock >> drawInvalidBorderOn: aCanvas [
+
+	aCanvas frameRectangle: self bounds width: 2 * self scalingFactor color: Color red
+]
+
+{ #category : #'as yet unclassified' }
 SBBlock >> drawOn: aCanvas [
 
 	self decorators do: [:d | d preDrawOn: aCanvas].
@@ -634,7 +647,7 @@ SBBlock >> drawSubmorphsOn: aCanvas [
 
 	super drawSubmorphsOn: aCanvas.
 	
-	self valid ifFalse: [aCanvas frameRectangle: self bounds width: 2 * self scalingFactor color: Color red].
+	self valid ifFalse: [self drawInvalidBorderOn: aCanvas].
 	
 	self decorators do: [:d | d postDrawOn: aCanvas]
 ]
@@ -677,7 +690,9 @@ SBBlock >> dropLocationDo: aBlock [
 	mousePosition := self
 		valueOfProperty: #dropLocation
 		ifAbsent: [
-			^ aBlock value: self center value: self childSandblocks first value: false].
+			^ self childSandblocks
+				ifEmpty: [aBlock value: self center value: self value: false]
+				ifNotEmpty: [aBlock value: self center value: self childSandblocks first value: false]].
 	closestDist := 900000000.
 	closestMorph := nil.
 	self childSandblocksDo: [:block | | dist |
@@ -932,6 +947,15 @@ SBBlock >> hasNoSuggestions [
 SBBlock >> hasSuggestions [
 
 	^ (self valueOfProperty: #sandblockSuggestionMenu ifAbsent: [^ false]) isInWorld
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> highlightForDrop: aBoolean [
+
+	" override because we send this quite often and the base impl always calls changed "
+	(self valueOfProperty: #highlightedForDrop) ~= aBoolean ifTrue: [
+		self setProperty: #highlightedForDrop toValue: aBoolean.
+		self changed]
 ]
 
 { #category : #'as yet unclassified' }

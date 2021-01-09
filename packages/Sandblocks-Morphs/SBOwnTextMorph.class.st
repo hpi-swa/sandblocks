@@ -13,6 +13,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> bold [
+
+	self emphasis: TextEmphasis bold
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> clear [
 
 	self contents: ''
@@ -274,6 +280,12 @@ SBOwnTextMorph >> isCursorAtEnd [
 SBOwnTextMorph >> isCursorAtStart [
 
 	^ self cursor = 1
+]
+
+{ #category : #'as yet unclassified' }
+SBOwnTextMorph >> italic [
+
+	self emphasis: TextEmphasis italic
 ]
 
 { #category : #'as yet unclassified' }
