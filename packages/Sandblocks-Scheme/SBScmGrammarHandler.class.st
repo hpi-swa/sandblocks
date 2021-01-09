@@ -14,6 +14,8 @@ SBScmGrammarHandler >> perform: aCharacter for: aBlock empty: aBoolean [
 		
 		aCharacter = $( ifTrue: [^ self replace: aBlock with: (SBScmExpression new in: [:e | e addMorphBack: e newNullBlock])].
 		
+		aCharacter = $# ifTrue: [^ self replace: aBlock with: SBScmBoolean new].
+		
 		(aCharacter isDigit or: [aCharacter = $-]) ifTrue: [^ self replace: aBlock with: (SBScmNumber new contents: aCharacter asString)].
 	
 		(aCharacter isAlphabetic or: [aCharacter isSpecial or: [aCharacter = $#]]) ifTrue: [^ self replace: aBlock with: (SBScmIdentifier new contents: aCharacter asString)]].
@@ -22,5 +24,5 @@ SBScmGrammarHandler >> perform: aCharacter for: aBlock empty: aBoolean [
 		^ aBlock insertElementAfter].
 	
 	aCharacter = $) ifTrue: [
-		^ (aBlock parentSandblock insertElementAfter) deleteIfDismissed: true].
+		^ (aBlock parentSandblock insertElementAfter) deleteIfDismissed: true]
 ]

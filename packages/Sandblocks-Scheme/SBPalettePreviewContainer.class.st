@@ -33,6 +33,12 @@ SBPalettePreviewContainer >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBPalettePreviewContainer >> isBlockBody [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBPalettePreviewContainer >> pickUp: anEvent [
 
 	| editor |

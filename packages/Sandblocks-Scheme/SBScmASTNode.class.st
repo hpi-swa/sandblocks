@@ -147,8 +147,13 @@ SBScmASTNode >> isScmExpression [
 { #category : #'as yet unclassified' }
 SBScmASTNode >> leftRotate [
 	<action>
+	<inputAction>
 	
-	self wrapAsArgument
+	self sandblockEditor
+		do: ((SBWrapCommand newFor: self containingArtefact)
+			outer: SBScmExpression new;
+			inner: self;
+			wrap: [:outer :inner | outer addMorphBack: inner])
 ]
 
 { #category : #'as yet unclassified' }
@@ -173,11 +178,7 @@ SBScmASTNode >> sourceString [
 SBScmASTNode >> wrapAsArgument [
 	<action>
 	
-	self sandblockEditor
-		do: ((SBWrapCommand newFor: self containingArtefact)
-			outer: SBScmExpression new;
-			inner: self;
-			wrap: [:outer :inner | outer addMorphBack: inner])
+	self insertElementBefore
 ]
 
 { #category : #'as yet unclassified' }

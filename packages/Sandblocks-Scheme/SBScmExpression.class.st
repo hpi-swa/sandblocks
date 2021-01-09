@@ -110,7 +110,7 @@ SBScmExpression >> ifWellFormedSpecialFormDo: aBlock ifNone: anotherBlock [
 	^ (self ifSpecialFormDo: [:f |
 		(form := f) caseOf: {
 			['if'] -> [self elements size = 4].
-			['define'] -> [self elements size >= 3].
+			['define'] -> [self elements size >= 3 and: [(self elements second isSExpr and: [self elements second elements allSatisfy: [:e | e isIdentifier or: [e isUnknown]]]) or: [self elements second in: [:e | e isIdentifier or: [e isUnknown]]]]].
 			['lambda'] -> [self elements size >= 3].
 			['let'] -> [let value].
 			['let*'] -> [let value].

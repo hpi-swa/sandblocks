@@ -114,7 +114,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $V command do: #pasteAbove;
 		registerShortcut: $r command do: #replaceWithCopyBuffer;
 		"registerShortcut: $d do: #deleteAdjacent;"
-		"registerShortcut: $( do: #leftRotate;"
+		registerShortcut: $( do: #leftRotate;
 		"registerShortcut: $. do: #addElement;"
 		registerShortcut: Character arrowLeft command withShift do: #swapLeft;
 		registerShortcut: Character arrowRight command withShift do: #swapRight;

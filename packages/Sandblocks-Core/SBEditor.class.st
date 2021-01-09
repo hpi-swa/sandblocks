@@ -14,10 +14,6 @@ Class {
 		'selectionDownHistory',
 		'multiSelection',
 		'mode',
-		'inputShortcuts',
-		'commandShortcuts',
-		'singleSelectionShortcuts',
-		'multiSelectionShortcuts',
 		'scroll',
 		'methodContainer',
 		'colorPolicy',
@@ -971,10 +967,6 @@ SBEditor >> initialize [
 
 	super initialize.
 	
-	singleSelectionShortcuts := OrderedCollection new.
-	multiSelectionShortcuts := OrderedCollection new.
-	commandShortcuts := OrderedCollection new.
-	inputShortcuts := OrderedCollection new.
 	multiSelection := OrderedCollection new.
 	colorPolicy := self class defaultColorPolicy new.
 	compileTime := #compileOnSave.
