@@ -1820,6 +1820,20 @@ SBBlock >> rightMostBlock [
 	^ self childSandblocks ifEmpty: [self] ifNotEmpty: [:c | c last rightMostBlock]
 ]
 
+{ #category : #accessing }
+SBBlock >> sandblockBlockColorIfAbsent: aBlock [
+
+	^ self valueOfProperty: #sandblockBlockColor ifAbsent: aBlock
+]
+
+{ #category : #accessing }
+SBBlock >> sandblockBlockColorIfAbsentPut: aBlock [
+
+	^ self sandblockBlockColorIfAbsent: [ | newColor |
+		newColor := aBlock value.
+		self setProperty: #sandblockBlockColor toValue: newColor. newColor]
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> sandblockForegroundColor [
 

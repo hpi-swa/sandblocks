@@ -41,6 +41,25 @@ SBJsASTNode >> copyString [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsASTNode >> handleDroppedBlock: aBlock event: anEvent [
+
+	self fixedNumberOfChildren
+		ifTrue: [ | replacer |
+			replacer := aBlock object anyRepresentationThat: self acceptedRepresentation.
+			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+				target: self;
+				replacer: replacer).
+			replacer postDuplicate]
+		ifFalse: [ | replacer |
+			self dropLocationDo: [:position :morph :horizontal |
+				replacer := aBlock object anyRepresentationThat: (self contextAcceptedRepresentationAt: morph childIndex).
+				self sandblockEditor do: ((self insertCommandRequest: false near: morph) shouldMergeWithNext: true).
+				self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+					target: self sandblockEditor selection;
+					replacer: replacer)]]
+]
+
+{ #category : #'as yet unclassified' }
 SBJsASTNode >> initialize [
 
 	super initialize.

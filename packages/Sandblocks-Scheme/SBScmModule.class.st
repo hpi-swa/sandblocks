@@ -46,6 +46,12 @@ SBScmModule >> expressions [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmModule >> fixedNumberOfChildren [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBScmModule >> hasUnsavedChanges [
 
 	^ false
@@ -66,8 +72,7 @@ SBScmModule >> initialize [
 		layoutInset: 8;
 		attachDecorator: SBMoveDecorator new;
 		attachDecorator: SBResizableDecorator new;
-		addMorphBack: self newNullBlock;
-		setProperty: #sandblockBlockColor toValue: (Color r: 0.271 g: 0.682 b: 0.851)
+		addMorphBack: self newNullBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -105,6 +110,12 @@ SBScmModule >> layoutCommands [
 	^ SBAlgebraCommand container
 		morph: self;
 		data: (self expressions collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine withGap: true])
+]
+
+{ #category : #'as yet unclassified' }
+SBScmModule >> sandblockBlockColorIfAbsent: aBlock [
+
+	^ Color r: 0.271 g: 0.682 b: 0.851
 ]
 
 { #category : #'artefact protocol' }
