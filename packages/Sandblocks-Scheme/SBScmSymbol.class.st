@@ -20,3 +20,16 @@ SBScmSymbol >> symbols [
 
 	^ #('''' nil)
 ]
+
+{ #category : #'as yet unclassified' }
+SBScmSymbol >> valid [
+
+	^ self validContents
+]
+
+{ #category : #'as yet unclassified' }
+SBScmSymbol >> writeSourceOn: aStream [
+
+	aStream nextPut: $'.
+	aStream nextPutAll: self contents
+]

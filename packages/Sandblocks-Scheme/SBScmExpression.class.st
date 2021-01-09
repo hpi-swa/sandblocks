@@ -21,6 +21,11 @@ SBScmExpression >> binding: aString for: block class: aClass ifPresent: aBlock [
 	self quoted ifTrue: [^ aBlock value: (SBScmSymbol new contents: aString)].
 	
 	self
+		withStatementsDo: [:l |
+			l detect: [:s | s isSExpr and: [s ifDefinition: [:d | d = aString] otherwise: [false]]] ifFound: [:s | aBlock value: s]]
+		ifNotApplicable: [].
+	
+	self
 		ifWellFormedSpecialFormDo: [:f |
 			(#('let' 'let*' 'letrec') includes: f) ifTrue: [
 				self expressions second elements
@@ -75,9 +80,15 @@ SBScmExpression >> fixedNumberOfChildren [
 ]
 
 { #category : #'as yet unclassified' }
-SBScmExpression >> ifSpecialForm: aString do: aBlock ifNone: anotherBlock [
+SBScmExpression >> ifDefinition: aBlock otherwise: anotherBlock [
 
-	^ self elements notEmpty and: [self elements first contents = aString and: [self ifWellFormedSpecialFormDo: [:f | true] ifNone: [false]]]
+	^ self
+		ifSpecialFormDo: [:f |
+			f = 'define'
+				ifTrue: [
+					aBlock value: (self submorphs second isSExpr ifTrue: [self submorphs second submorphs first contents] ifFalse: [self submorphs second contents])]
+				ifFalse: anotherBlock]
+		ifNone: anotherBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -103,6 +114,7 @@ SBScmExpression >> ifWellFormedSpecialFormDo: aBlock ifNone: anotherBlock [
 			['let*'] -> [let value].
 			['letrec'] -> [let value].
 			['cond'] -> [self elements size >= 1].
+			['begin'] -> [self elements size >= 2].
 		}] ifNone: [false]) ifTrue: [aBlock value: form] ifFalse: anotherBlock
 ]
 
@@ -160,6 +172,7 @@ SBScmExpression >> layoutCommands [
 				['if'] -> [{e first. e second. SBAlgebraCommand indent data: {SBAlgebraCommand softLineOrGap. e third. SBAlgebraCommand softLineOrGap. e fourth}}].
 				['define'] -> [{e first. SBAlgebraCommand gap. e second. SBAlgebraCommand indent data: (list value viewAllButFirst: 3)}].
 				['lambda'] -> [{e first. SBAlgebraCommand gap. e second. SBAlgebraCommand indent data: (list value viewAllButFirst: 3)}].
+				['begin'] -> [{e first. SBAlgebraCommand indent data: {SBAlgebraCommand hardLine}, (self elements viewAllButFirst collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine])}]
 			} otherwise: list] ifNone: [{list value first. SBAlgebraCommand indent data: (list value viewAllButFirst: 1)}])
 ]
 
@@ -195,7 +208,7 @@ SBScmExpression >> quoted: aBoolean [
 { #category : #'as yet unclassified' }
 SBScmExpression >> specialForms [
 
-	^ #('lambda' 'if' 'define' 'set!' 'let' 'let*' 'letrec' 'cond')
+	^ #('lambda' 'if' 'define' 'set!' 'let' 'let*' 'letrec' 'cond' 'begin')
 ]
 
 { #category : #'as yet unclassified' }
@@ -221,6 +234,25 @@ SBScmExpression >> valid [
 SBScmExpression >> wantsExtraSpace [
 
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBScmExpression >> withStatementsDo: aBlock ifNotApplicable: anotherBlock [
+	" check if we are a form that supports containing multiple statements (e.g. let or begin) "
+	
+	(self parentSandblock notNil and: [self parentSandblock isSExpr]) ifTrue: [
+		self parentSandblock ifWellFormedSpecialFormDo: [:f |
+			f = 'cond' ifTrue: [self submorphs viewAllButFirst]] ifNone: []].
+	
+	^ self
+		ifWellFormedSpecialFormDo: [:f |
+			aBlock value: (f caseOf: {
+				['lambda'] -> [self submorphs viewAllButFirst: 2].
+				['define'] -> [self submorphs second isSExpr ifTrue: [self submorphs viewAllButFirst: 2] ifFalse: [^ anotherBlock value]].
+				['begin'] -> [self submorphs viewAllButFirst].
+				['let'] -> [self submorphs viewAllButFirst: 3].
+			} otherwise: [^ anotherBlock value])]
+		ifNone: anotherBlock
 ]
 
 { #category : #'as yet unclassified' }

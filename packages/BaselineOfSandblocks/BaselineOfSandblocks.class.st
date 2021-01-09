@@ -12,6 +12,7 @@ BaselineOfSandblocks >> baseline: spec [
 			baseline: 'ActiveExpressions' with: [spec repository: 'github://active-expressions/active-expressions-squeak:master/src'];
 			"baseline: 'StatisticsWorkbench' with: [spec repository: 'github://hpi-swa-teaching/StatisticsWorkbench:dev/packages'];"
 			baseline: 'RatPack' with: [spec repository: 'github://hpi-swa-teaching/RatPack:develop/packages'];
+			baseline: 'QoppaS-Core' with: [spec repository: 'github://hpi-swa-lab/QoppaS/packages'];
 			package: 'SVG-Morphic' with: [spec repository: 'http://www.squeaksource.com/SVGMorph'];
 			
 			package: 'Sandblocks-Core' with: [spec requires: #('SVG-Morphic' 'Sandblocks-Morphs' 'Sandblocks-Layout')];
@@ -23,7 +24,7 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Morphs';
 			package: 'Sandblocks-Drawing';
 			package: 'Sandblocks-Javascript' with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Representation')];
-			package: 'Sandblocks-Scheme' with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Representation')];
+			package: 'Sandblocks-Scheme' with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Representation' 'QoppaS-Core')];
 			package: 'Sandblocks-Compiler';
 			package: 'Sandblocks-Format';
 			package: 'Sandblocks-Babylonian' with: [spec requires: #('Sandblocks-Core')];

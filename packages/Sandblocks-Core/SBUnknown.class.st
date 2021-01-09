@@ -76,6 +76,12 @@ SBUnknown >> isJsExpression [
 	^ self grammarHandler isKindOf: SBJsGrammarHandler
 ]
 
+{ #category : #'as yet unclassified' }
+SBUnknown >> isScmExpression [
+
+	^ self grammarHandler isKindOf: SBScmGrammarHandler
+]
+
 { #category : #testing }
 SBUnknown >> isUnknown [
 

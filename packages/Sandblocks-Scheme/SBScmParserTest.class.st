@@ -43,6 +43,12 @@ SBScmParserTest >> testParseMultipleTopLevelExprs [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmParserTest >> testParseNegativeNumber [
+
+	self assert: ((SBScmParser new parse: '-3' readStream) expressions first isKindOf: SBScmNumber)
+]
+
+{ #category : #'as yet unclassified' }
 SBScmParserTest >> testParseNestedExpr [
 
 	self assertParses: '(+ 3 4 (+ 5 6) 2)'

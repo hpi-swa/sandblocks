@@ -9,3 +9,11 @@ SBScmString >> symbols [
 
 	^ #('"' '"')
 ]
+
+{ #category : #'as yet unclassified' }
+SBScmString >> writeSourceOn: aStream [
+
+	aStream nextPut: $".
+	aStream nextPutAll: (self contents copyReplaceAll: '"' with: '\"').
+	aStream nextPut: $"
+]

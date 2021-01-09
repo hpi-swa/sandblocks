@@ -7,5 +7,5 @@ Class {
 { #category : #'as yet unclassified' }
 SBScmNumber >> validContents [
 
-	^ self contents allSatisfy: [:c | c isDigit or: [c = $.]]
+	^ (self contents first = $- or: [self contents first isDigit]) and: [self contents viewAllButFirst allSatisfy: [:c | c isDigit or: [c = $.]]]
 ]

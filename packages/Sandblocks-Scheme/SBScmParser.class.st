@@ -32,17 +32,18 @@ SBScmParser >> parseExpression [
 SBScmParser >> parseLiteral [
 
 	| contents |
-	(stream next: 2) = '''(' ifTrue: [
-		stream peek = $) ifTrue: [
-			SBToggledCode comment: '()' active: 1 do: {[stream next: 2]}.
-			^ SBScmExpression new quoted: true].
-		stream back.
-		^ self parseSExpression quoted: true].
-	stream
-		back;
-		back.
-	contents := String streamContents: [:str | [stream peek isSeparator not and: [stream peek ~= $)]] whileTrue: [str nextPut: stream next]].
-	contents first isDigit ifTrue: [^ SBScmNumber new contents: contents].
+	stream size - stream position >= 2 ifTrue: [
+		(stream next: 2) = '''(' ifTrue: [
+			stream peek = $) ifTrue: [
+				SBToggledCode comment: '()' active: 1 do: {[stream next: 2]}.
+				^ SBScmExpression new quoted: true].
+			stream back.
+			^ self parseSExpression quoted: true].
+		stream
+			back;
+			back].
+	contents := String streamContents: [:str | [stream peek notNil and: [stream peek isSeparator not and: [stream peek ~= $)]]] whileTrue: [str nextPut: stream next]].
+	(contents first isDigit or: [contents first = $-]) ifTrue: [^ SBScmNumber new contents: contents].
 	contents first = $' ifTrue: [^ SBScmSymbol new contents: contents].
 	contents first = $" ifTrue: [^ SBScmString new contents: contents].
 	^ SBScmIdentifier new contents: contents

@@ -1,6 +1,9 @@
 Class {
 	#name : #SBScmModule,
 	#superclass : #SBScmASTNode,
+	#instVars : [
+		'interpreter'
+	],
 	#category : #'Sandblocks-Scheme'
 }
 
@@ -13,13 +16,14 @@ SBScmModule class >> fromString: aString [
 { #category : #'as yet unclassified' }
 SBScmModule >> binding: aString for: block class: aClass ifPresent: aBlock [
 
-	(#('+' '-' '*' '/' '>' '<' '>='
-		'if' 'define' 'lambda' 'let' 'let*' 'letrec' 'cond' 'not' 'and' 'or'
-		'nil'
-		'eq?' 'eqv?' 'null?'
-		'apply'
-		'display' 'newline'
-		'cons' 'car' 'cdr' 'list') includes: aString) ifTrue: [^ aBlock value: (SBScmIdentifier new contents: aString)].
+	| sym |
+	self
+		withStatementsDo: [:l |
+			l detect: [:s | s isSExpr and: [s ifDefinition: [:d | d = aString] otherwise: [false]]] ifFound: [:s | aBlock value: s]]
+		ifNotApplicable: [].
+	
+	sym := aString asSymbol.
+	interpreter globalEnv car do: [:cons | cons car = sym ifTrue: [^ aBlock value: (SBScmIdentifier new contents: aString)]].
 	^ super binding: aString for: block class: aClass ifPresent: aBlock
 ]
 
@@ -55,6 +59,8 @@ SBScmModule >> hasUnsavedChanges: aBoolean [
 SBScmModule >> initialize [
 
 	super initialize.
+	
+	interpreter := QoppaInterpreter new.
 	
 	self
 		layoutInset: 8;
@@ -111,6 +117,12 @@ SBScmModule >> saveTryFixing: aBoolean quick: anotherBoolean [
 SBScmModule >> statements [
 
 	^ self expressions
+]
+
+{ #category : #'as yet unclassified' }
+SBScmModule >> withStatementsDo: aBlock ifNotApplicable: anotherBlock [
+
+	aBlock value: self expressions
 ]
 
 { #category : #'as yet unclassified' }

@@ -5,9 +5,62 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBScmASTNode >> canEvaluate [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBScmASTNode >> canSwap [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBScmASTNode >> changeToUnknown [
+	<action>
+
+	| new |
+	new := self newNullBlock anyRepresentationThat: self acceptedRepresentation.
+	new ifNotNil: [
+		self sandblockEditor
+			copyBuffer: self;
+			do: ((SBReplaceCommand newFor: self containingArtefact)
+				target: self;
+				replacer: new;
+				shouldMergeWithNext: true;
+				yourself);
+			startInput: new at: 0 replacingContents: false]
+]
+
+{ #category : #'as yet unclassified' }
+SBScmASTNode >> containingStatement [
+
+	| parent |
+	parent := self parentSandblock.
+	parent ifNil: [^ nil].
+	
+	parent withStatementsDo: [:s | (s includes: self) ifTrue: [^ self]] ifNotApplicable: [].
+	^ parent containingStatement
+]
+
+{ #category : #'as yet unclassified' }
 SBScmASTNode >> contextAcceptedRepresentationAt: aNumber [
 
 	^ #isScmExpression
+]
+
+{ #category : #'as yet unclassified' }
+SBScmASTNode >> copyString [
+	<action>
+	
+	Clipboard clipboardText: self sourceString
+]
+
+{ #category : #'as yet unclassified' }
+SBScmASTNode >> evaluate [
+
+	^ QoppaInterpreter new readAndEvaluate: self sourceString
 ]
 
 { #category : #'as yet unclassified' }

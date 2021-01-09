@@ -20,14 +20,16 @@ SBScmIdentifier >> resolveBinding [
 { #category : #'as yet unclassified' }
 SBScmIdentifier >> valid [
 
-	^ self resolveBinding notNil
+	^ self resolveBinding notNil and: [self validContents]
 ]
 
 { #category : #'as yet unclassified' }
 SBScmIdentifier >> validContents [
 
 	| initial subsequent |
-	initial := [:c | c isAlphabetic or: [#($! $$ $% $& $* $/ $: $< $= $> $? $^ $_ $~ $+ $- $.) includes: c]].
+	self contents ifEmpty: [^ false].
+	
+	initial := [:c | c isAlphabetic or: [#($! $$ $% $& $* $/ $: $< $= $> $? $^ $_ $~ $+ $- $. $#) includes: c]].
 	subsequent := [:c | (initial value: c) or: [c isDigit or: [#($+ $- $. $@) includes: c]]].
 	^ (initial value: self contents first) and: [self contents viewAllButFirst allSatisfy: subsequent]
 ]

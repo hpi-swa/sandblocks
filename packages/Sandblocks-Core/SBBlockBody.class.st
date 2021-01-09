@@ -293,14 +293,6 @@ SBBlockBody >> multiSelectChildren [
 	self statements do: #startOrAddToMultiSelection
 ]
 
-{ #category : #'as yet unclassified' }
-SBBlockBody >> noteNewOwner: aMorph [
-
-	super noteNewOwner: aMorph.
-	
-	self removeProperty: #sandblockBlockColor
-]
-
 { #category : #converting }
 SBBlockBody >> pc [
 

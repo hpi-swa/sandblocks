@@ -180,6 +180,12 @@ SBBlock >> canDeleteChild: aBlock [
 	^ self fixedNumberOfChildren not
 ]
 
+{ #category : #testing }
+SBBlock >> canEvaluate [
+
+	^ self isExpression
+]
+
 { #category : #actions }
 SBBlock >> canInput [
 
@@ -727,7 +733,7 @@ SBBlock >> evaluate [
 { #category : #actions }
 SBBlock >> evaluateExpression [
 	<action>
-	<actionValidIf: #isExpression>
+	<actionValidIf: #canEvaluate>
 
 	| result explorer |
 	result := self evaluate.
@@ -1490,7 +1496,7 @@ SBBlock >> noteNewOwner: aMorph [
 
 	super noteNewOwner: aMorph.
 	
-	self allBlocksDo: [:block | block layoutChanged].
+	self clearCache.
 	" recheck name blocks "
 	self allBlocksDo: [:block | block isName ifTrue: [block noteNewOwner: block owner]]
 ]
