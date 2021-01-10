@@ -138,7 +138,7 @@ SBRepresentationPrompt >> options: aCollection target: anObject current: aRepres
 		self: [SBRepresentationPrompt new]
 		args: [{5 representationsThat: #isToplevelMorph. 5. nil}]
 		label: 'example'.
-	currentRepresentation := aRepresentation.
+	currentRepresentation := SBNewWatch report: aRepresentation for: 779709522.
 	target := anObject.
 	
 	aCollection do: [:option |
@@ -202,13 +202,6 @@ SBRepresentationPrompt >> updateFilter [
 { #category : #'as yet unclassified' }
 SBRepresentationPrompt >> updatePosition [
 
-	SBToggledCode
-		comment: 'No idea why this is necessary, but otherwise we''re at 0@0'
-		active: 1
-		do: {
-			[
-				currentRepresentation owner ifNotNil: [:m | m layoutChanged fullBounds]]
-		}.
 	self position: currentRepresentation right @ self top
 ]
 
@@ -231,7 +224,7 @@ SBRepresentationPrompt >> useRepresentation: aRepresentation [
 	
 	self flag: #todo.
 	currentRepresentation := newRepresentation.
-	self updatePosition.
+	self position: currentRepresentation topRight.
 	newRepresentation
 		when: #positionChanged send: #updatePosition to: self;
 		when: #extentChanged send: #updatePosition to: self.

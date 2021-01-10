@@ -972,9 +972,7 @@ SBEditor >> handleDroppedBlock: aMorph event: anEvent [
 	aMorph object
 		representIn: self
 		as: #isToplevelMorph
-		near: (SBNewWatch
-			report: ((scroll transformFrom: nil) globalPointToLocal: (SBNewWatch report: anEvent position for: 199822769))
-			for: 584838961)
+		near: ((scroll transformFrom: nil) globalPointToLocal: anEvent position)
 		from: ([aMorph sourceBlock] on: MessageNotUnderstood do: [nil])
 ]
 

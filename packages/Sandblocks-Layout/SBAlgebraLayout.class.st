@@ -124,6 +124,8 @@ SBAlgebraLayout >> layout: aMorph in: aRectangle [
 		limit: aRectangle right
 		wrap: false.
 	
+	cache := nil.
+	
 	" if we do not have an owner, enforce our minSize ourselves"
 	(aMorph owner isNil or: [aMorph owner layoutPolicy isNil]) ifTrue: [
 		aMorph extent: ((final extentFrom: initial) max: aRectangle extent) + aMorph layoutInset asEdgeInsets]
@@ -204,6 +206,8 @@ SBAlgebraLayout >> minExtentOf: aMorph in: aRectangle [
 	measure := true.
 	state := self layoutDocument: commands at: initial limit: aRectangle right wrap: false.
 	measure := false.
+	
+	cache := nil.
 	
 	" bit of a hack here: since our height depends on our width, we cannot generally just report
 	  the final result, as this would for example give us too much height. instead we choose a
