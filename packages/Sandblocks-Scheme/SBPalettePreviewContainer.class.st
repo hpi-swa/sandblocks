@@ -14,7 +14,7 @@ SBPalettePreviewContainer >> binding: aString for: block class: aClass ifPresent
 { #category : #'as yet unclassified' }
 SBPalettePreviewContainer >> filterEvent: anEvent for: aMorph [
 
-	(anEvent isMouse and: [anEvent isMouseWheel not]) ifTrue: [
+	(anEvent isMouse and: [anEvent isMouseWheel not and: [self bounds containsPoint: anEvent position]]) ifTrue: [
 		anEvent sentTo: self.
 		^ anEvent wasHandled: true].
 	

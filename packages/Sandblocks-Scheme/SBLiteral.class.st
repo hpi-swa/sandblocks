@@ -36,7 +36,7 @@ SBLiteral >> contents: aString [
 { #category : #'as yet unclassified' }
 SBLiteral >> contentsChanged [
 
-	(self castToUnknownWhenEmpty and: [self currentTextMorph contents isEmpty]) ifTrue: [
+	(self castToUnknownWhenEmpty and: [self currentTextMorph contents isEmpty and: [self sandblockEditor ifNotNil: [:e | e mode = #input] ifNil: [false]]]) ifTrue: [
 		self replaceWithUnknown]
 ]
 

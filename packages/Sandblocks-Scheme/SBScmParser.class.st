@@ -31,8 +31,8 @@ SBScmParser >> parseExpression [
 { #category : #'as yet unclassified' }
 SBScmParser >> parseLiteral [
 
-	| contents |
-	stream size - stream position >= 2 ifTrue: [
+	| contents endCheck |
+	(stream size - stream position) >= 2 ifTrue: [
 		(stream next: 2) = '''(' ifTrue: [
 			stream peek = $) ifTrue: [
 				SBToggledCode comment: '()' active: 1 do: {[stream next: 2]}.
@@ -42,10 +42,14 @@ SBScmParser >> parseLiteral [
 		stream
 			back;
 			back].
-	contents := String streamContents: [:str | [stream peek notNil and: [stream peek isSeparator not and: [stream peek ~= $)]]] whileTrue: [str nextPut: stream next]].
+	endCheck := stream peek caseOf: {[$"] -> [[:c | c = $"]]} otherwise: [[:c | c isSeparator]].
+	contents := String streamContents: [:str |
+		[str nextPut: stream next] doWhileTrue: [stream peek notNil and: [(endCheck value: stream peek) not and: [stream peek ~= $)]]]].
 	(contents first isDigit or: [contents first = $-]) ifTrue: [^ SBScmNumber new contents: contents].
-	contents first = $' ifTrue: [^ SBScmSymbol new contents: contents].
-	contents first = $" ifTrue: [^ SBScmString new contents: contents].
+	contents first = $' ifTrue: [^ SBScmSymbol new contents: contents allButFirst].
+	contents first = $" ifTrue: [
+		SBToggledCode comment: '"' active: 1 do: {[stream next]}.
+		^ SBScmString new contents: contents allButFirst].
 	^ SBScmIdentifier new contents: contents
 ]
 

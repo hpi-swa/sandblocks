@@ -13,7 +13,7 @@ SBScmParserTest >> assertParses: aString [
 { #category : #'as yet unclassified' }
 SBScmParserTest >> assertParses: aString as: anotherString [
 
-	self assert: (SBScmParser new parse: aString readStream) sourceString equals: anotherString
+	self assert: anotherString equals: (SBScmParser new parse: aString readStream) sourceString
 ]
 
 { #category : #'as yet unclassified' }
