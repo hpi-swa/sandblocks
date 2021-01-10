@@ -55,6 +55,18 @@ SBScmParserTest >> testParseNestedExpr [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmParserTest >> testParseString [
+
+	self assertParses: '"hello world, how are you?"'
+]
+
+{ #category : #'as yet unclassified' }
+SBScmParserTest >> testParseSymbol [
+
+	self assertParses: '''test'
+]
+
+{ #category : #'as yet unclassified' }
 SBScmParserTest >> testParserErrorsWithMalformed [
 
 	self should: [SBScmParser new parse: '(+ 3 4   ' readStream] raise: Error

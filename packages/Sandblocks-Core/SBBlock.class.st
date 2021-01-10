@@ -2087,7 +2087,7 @@ SBBlock >> startDrag: anEvent [
 		}) ifTrue: [ | canvas |
 		canvas := self sandblockEditor canvas.
 		anEvent hand newMouseFocus: canvas.
-		^ canvas startDrag: (anEvent transformBy: canvas transform asMatrixTransform2x3 inverseTransformation)].
+		^ canvas startDrag: (anEvent transformBy: self transformFromWorld asMatrixTransform2x3 inverseTransformation)].
 	
 	super startDrag: anEvent.
 	

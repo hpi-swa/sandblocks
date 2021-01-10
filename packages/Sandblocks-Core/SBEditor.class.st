@@ -25,7 +25,8 @@ Class {
 		'helpOverlay',
 		'verticalSelectionPosition',
 		'globalShortcutListeners',
-		'inputMapping'
+		'inputMapping',
+		'ignoreNext'
 	],
 	#classVars : [
 		'DefaultColorPolicy',
@@ -917,6 +918,15 @@ SBEditor >> errors [
 SBEditor >> filterEvent: anEvent for: aMorph [
 
 	anEvent isMouse ifTrue: [
+		anEvent isMouseOver not ifTrue: [
+			anEvent isMouseWheel ifTrue: [
+				^ (ignoreNext ifNil: [false])
+					ifTrue: [
+						ignoreNext := false.
+						anEvent hand sendMouseEvent: anEvent]
+					ifFalse: [
+						ignoreNext := true.
+						anEvent]]].
 		anEvent isMouseDown ifTrue: [anEvent hand newKeyboardFocus: self].
 		^ anEvent].
 	
@@ -959,7 +969,13 @@ SBEditor >> goToMark [
 { #category : #'submorphs-add/remove' }
 SBEditor >> handleDroppedBlock: aMorph event: anEvent [
 
-	aMorph object representIn: self as: #isToplevelMorph near: ((scroll transformFrom: nil) globalPointToLocal: anEvent position) from: ([aMorph sourceBlock] on: MessageNotUnderstood do: [nil])
+	aMorph object
+		representIn: self
+		as: #isToplevelMorph
+		near: (SBNewWatch
+			report: ((scroll transformFrom: nil) globalPointToLocal: (SBNewWatch report: anEvent position for: 199822769))
+			for: 584838961)
+		from: ([aMorph sourceBlock] on: MessageNotUnderstood do: [nil])
 ]
 
 { #category : #'initialize-release' }
@@ -1893,7 +1909,8 @@ SBEditor >> updateSelectionLabel [
 { #category : #selection }
 SBEditor >> updateVerticalSelectionPosition [
 
-	verticalSelectionPosition := selection center x - (selection containingArtefact ifNotNil: [:a | a left] ifNil: [0]).
+	selection ifNotNil: [
+		verticalSelectionPosition := selection center x - (selection containingArtefact ifNotNil: [:a | a left] ifNil: [0])]
 ]
 
 { #category : #input }

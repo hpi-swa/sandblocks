@@ -83,7 +83,7 @@ SBScmExpression >> fixedNumberOfChildren [
 SBScmExpression >> ifDefinition: aBlock otherwise: anotherBlock [
 
 	^ self
-		ifSpecialFormDo: [:f |
+		ifWellFormedSpecialFormDo: [:f |
 			f = 'define'
 				ifTrue: [
 					aBlock value: (self submorphs second isSExpr ifTrue: [self submorphs second submorphs first contents] ifFalse: [self submorphs second contents])]

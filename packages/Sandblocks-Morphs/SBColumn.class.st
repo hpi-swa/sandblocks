@@ -26,6 +26,20 @@ SBColumn >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBColumn >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine])
+]
+
+{ #category : #'as yet unclassified' }
+SBColumn >> useAlgebraLayout [
+
+	self layoutPolicy: SBAlgebraLayout new
+]
+
+{ #category : #'as yet unclassified' }
 SBColumn >> wantsMetaMenu [
 
 	^ false

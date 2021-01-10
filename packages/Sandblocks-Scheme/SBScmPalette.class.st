@@ -2,7 +2,8 @@ Class {
 	#name : #SBScmPalette,
 	#superclass : #SBBlock,
 	#instVars : [
-		'stream'
+		'stream',
+		'content'
 	],
 	#category : #'Sandblocks-Scheme'
 }
@@ -10,7 +11,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBScmPalette >> addBlock: aString as: aBlock [
 
-	self
+	content
 		"addMorphBack: (SBStringMorph new contents: aString);"
 		addMorphBack: (self container: aBlock)
 ]
@@ -18,9 +19,9 @@ SBScmPalette >> addBlock: aString as: aBlock [
 { #category : #'as yet unclassified' }
 SBScmPalette >> addSectionHeader: aString [
 
-	self submorphCount > 0 ifTrue: [self addMorphBack: (Morph new color: Color transparent; height: 16)].
-	self addMorphBack: (SBStringMorph new contents: aString; bold).
-	self addMorphBack: (Morph new color: Color transparent; height: 4)
+	content submorphCount > 0 ifTrue: [content addMorphBack: (Morph new color: Color transparent; height: 16)].
+	content addMorphBack: (SBStringMorph new contents: aString; bold).
+	content addMorphBack: (Morph new color: Color transparent; height: 4)
 ]
 
 { #category : #'as yet unclassified' }
@@ -37,10 +38,24 @@ SBScmPalette >> initialize [
 	super initialize.
 	
 	self
-		useAlgebraLayout;
+		addMorphBack: (ScrollPane new
+			hResizing: #shrinkWrap;
+			vResizing: #spaceFill);
+		hResizing: #shrinkWrap;
+		vResizing: #rigid;
+		changeTableLayout;
+		height: 200;
 		layoutInset: 8;
 		attachDecorator: SBMoveDecorator new;
-		
+		attachDecorator: SBResizableDecorator new.
+	
+	self firstSubmorph scroller
+		addMorphBack: (content := SBColumn new
+			useAlgebraLayout;
+			minimumWidth: 300;
+			layoutInset: 8).
+	
+	self	
 		addSectionHeader: 'Operators / Procedures';
 		addBlock: 'Generic' as: (SBScmExpression new addAllMorphs: {self newNullBlock: 'operator'. self newNullBlock: 'operand1'. self newNullBlock: 'operand2'});
 		addBlock: 'Addition' as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: '+'. self newNullBlock: 'operand1'. self newNullBlock: 'operand2'});
@@ -127,6 +142,8 @@ SBScmPalette >> newNullBlock: aString [
 { #category : #'as yet unclassified' }
 SBScmPalette >> pickUp: anEvent [
 
-	" ignore "
-	(self morphsAt: anEvent position) ifNotEmpty: [:l | (l at: l size - 1) pickUp: anEvent]
+	" forward directly to our palette contents "
+	| morphs |
+	morphs := content morphsAt: anEvent position.
+	morphs size > 1 ifTrue: [(morphs at: morphs size - 1) pickUp: anEvent]
 ]

@@ -121,7 +121,9 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $c asSandblockShortcut withOption do: #copyString;
 		registerShortcut: $v asSandblockShortcut withOption do: #pasteString;
 		registerShortcut: Character backspace do: #deleteBlock;
+		registerShortcut: $x command do: #deleteBlock;
 		registerShortcut: Character backspace shift do: #deleteAround;
+		registerShortcut: $X command do: #deleteBlock;
 		"registerShortcut: Character delete do: #deleteAround;"
 		
 		registerShortcut: Character cr shift do: #insertStatementAbove;

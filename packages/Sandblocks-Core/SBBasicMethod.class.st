@@ -123,6 +123,13 @@ SBBasicMethod >> cacheType: aClass for: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> changeToUnknown [
+	<action>
+	
+	" ignore "
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> collapsed: aBoolean [
 
 	self body visible not = aBoolean ifTrue: [^ self].
