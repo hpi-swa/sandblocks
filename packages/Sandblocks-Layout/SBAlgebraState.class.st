@@ -14,6 +14,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBAlgebraState >> = aState [
+
+	^ aState lineHeight = lineHeight and: [aState offset = offset and: [aState startX = startX and: [aState containerWidth = containerWidth]]]
+]
+
+{ #category : #'as yet unclassified' }
 SBAlgebraState >> basicContainerWidth: aNumber [
 
 	containerWidth := aNumber
@@ -56,6 +62,12 @@ SBAlgebraState >> extentFrom: anOldState [
 ]
 
 { #category : #'as yet unclassified' }
+SBAlgebraState >> hash [
+
+	^ (startX hash bitXor: offset hash) bitXor: (lineHeight hash bitXor: containerWidth hash)
+]
+
+{ #category : #'as yet unclassified' }
 SBAlgebraState >> initialize [
 
 	startX := 0.
@@ -92,6 +104,23 @@ SBAlgebraState >> offset: aNumber [
 SBAlgebraState >> offset: aPoint lineHeight: aNumber [
 
 	^ self copy basicOffset: aPoint; basicLineHeight: aNumber; yourself
+]
+
+{ #category : #'as yet unclassified' }
+SBAlgebraState >> offset: aPoint lineHeight: aNumber containerWidth: anotherNumber [
+
+	^ self copy basicOffset: aPoint; basicLineHeight: aNumber; basicContainerWidth: anotherNumber; yourself
+]
+
+{ #category : #'as yet unclassified' }
+SBAlgebraState >> offset: aPoint lineHeight: aNumber startX: anotherNumber containerWidth: aThirdNumber [
+
+	^ self copy
+		basicOffset: aPoint;
+		basicLineHeight: aNumber;
+		basicStartX: anotherNumber;
+		basicContainerWidth: aThirdNumber;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }

@@ -7,7 +7,8 @@ Class {
 	#name : #SBBlock,
 	#superclass : #Morph,
 	#instVars : [
-		'decorators'
+		'decorators',
+		'colorPolicyCache'
 	],
 	#classVars : [
 		'Navigation'
@@ -255,7 +256,9 @@ SBBlock >> clearCache [
 
 	" this block may have just been duplicated or moved somewhere else, ensure to clear all caches and present yourself neatly "
 	self allMorphsDo: [:morph | morph layoutChanged].
-	self allBlocksDo: [:morph | morph removeProperty: #sandblockBlockColor]
+	self allBlocksDo: [:morph | morph removeProperty: #sandblockBlockColor].
+	
+	colorPolicyCache := nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -300,7 +303,7 @@ SBBlock >> color [
 { #category : #'as yet unclassified' }
 SBBlock >> colorPolicy [
 
-	^ self valueOfProperty: #localColorPolicy ifAbsent: [self parentSandblock ifNotNil: #colorPolicy ifNil: [SBDefaultColorPolicy new]]
+	^ colorPolicyCache ifNil: [colorPolicyCache := self valueOfProperty: #localColorPolicy ifAbsent: [self parentSandblock ifNotNil: [:p | p colorPolicy] ifNil: [SBDefaultColorPolicy new]]]
 ]
 
 { #category : #'as yet unclassified' }
