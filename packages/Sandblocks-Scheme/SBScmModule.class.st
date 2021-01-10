@@ -23,7 +23,7 @@ SBScmModule >> binding: aString for: block class: aClass ifPresent: aBlock [
 		ifNotApplicable: [].
 	
 	sym := aString asSymbol.
-	interpreter globalEnv car do: [:cons | cons car = sym ifTrue: [^ aBlock value: (SBScmIdentifier new contents: aString)]].
+	self interpreter globalEnv car do: [:cons | cons car = sym ifTrue: [^ aBlock value: (SBScmIdentifier new contents: aString)]].
 	^ super binding: aString for: block class: aClass ifPresent: aBlock
 ]
 
@@ -66,8 +66,6 @@ SBScmModule >> initialize [
 
 	super initialize.
 	
-	interpreter := QoppaInterpreter new.
-	
 	self
 		layoutInset: 8;
 		attachDecorator: SBMoveDecorator new;
@@ -84,6 +82,12 @@ SBScmModule >> insertCommandRequest: anAfterBoolean near: aBlock [
 		morph: self newNullBlock;
 		shouldMergeWithNext: true;
 		yourself
+]
+
+{ #category : #'as yet unclassified' }
+SBScmModule >> interpreter [
+
+	^ interpreter ifNil: [interpreter := QoppaInterpreter new.]
 ]
 
 { #category : #'as yet unclassified' }
