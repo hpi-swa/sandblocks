@@ -142,6 +142,12 @@ SBBasicMethod >> collapsed: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> commandPaletteClass [
+
+	^ SBStPalette
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> compiledMethod [
 
 	^ self methodClass compiledMethodAt: self selector asSymbol ifAbsent: []

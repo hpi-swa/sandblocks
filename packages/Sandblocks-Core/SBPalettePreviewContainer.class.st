@@ -1,7 +1,7 @@
 Class {
 	#name : #SBPalettePreviewContainer,
 	#superclass : #SBSelection,
-	#category : #'Sandblocks-Scheme'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }

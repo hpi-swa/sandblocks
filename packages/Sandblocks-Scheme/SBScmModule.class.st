@@ -40,6 +40,12 @@ SBScmModule >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmModule >> commandPaletteClass [
+
+	^ SBScmPalette
+]
+
+{ #category : #'as yet unclassified' }
 SBScmModule >> expressions [
 
 	^ self submorphs

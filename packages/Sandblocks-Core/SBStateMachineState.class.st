@@ -55,7 +55,7 @@ SBStateMachineState >> connectTo [
 	states := self owner states collect: #name.
 	index := UIManager default chooseFrom: states.
 	index > 0 ifTrue: [
-		self owner connect: self name to: (states values at: index) if: SBBlockBody empty]
+		self owner connect: self name to: (states at: index) if: SBBlockBody empty]
 ]
 
 { #category : #'as yet unclassified' }
@@ -106,7 +106,7 @@ SBStateMachineState >> setAsInitialState [
 { #category : #'as yet unclassified' }
 SBStateMachineState >> symbols [
 
-	^ {self owner initialState = self ifTrue: ['* '] ifFalse: [nil]. nil}
+	^ {((self owner isKindOf: SBStateMachine) and: [self owner initialState = self]) ifTrue: ['* '] ifFalse: [nil]. nil}
 ]
 
 { #category : #'as yet unclassified' }

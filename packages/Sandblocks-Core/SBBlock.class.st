@@ -306,6 +306,12 @@ SBBlock >> colorPolicy [
 	^ colorPolicyCache ifNil: [colorPolicyCache := self valueOfProperty: #localColorPolicy ifAbsent: [self parentSandblock ifNotNil: [:p | p colorPolicy] ifNil: [SBDefaultColorPolicy new]]]
 ]
 
+{ #category : #hierarchy }
+SBBlock >> commandPaletteClass [
+
+	^ self parentSandblock ifNotNil: #commandPaletteClass
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> compilationCueWith: aRequestor for: aContext [
 
@@ -922,6 +928,12 @@ SBBlock >> hasChildSandblocks [
 	^ false
 ]
 
+{ #category : #accessing }
+SBBlock >> hasCommandPalette [
+
+	^ self commandPaletteClass notNil
+]
+
 { #category : #testing }
 SBBlock >> hasCurrentTextMorph [
 
@@ -1533,6 +1545,14 @@ SBBlock >> object [
 
 	"Should be self subclassResponsibility but often causes non-recoverable errors with drag and drop"
 	^ nil
+]
+
+{ #category : #actions }
+SBBlock >> openPalette [
+	<action>
+	<actionValidIf: #hasCommandPalette>
+	
+	self commandPaletteClass ifNotNil: [:class | self sandblockEditor openMorphInView: class new]
 ]
 
 { #category : #'as yet unclassified' }

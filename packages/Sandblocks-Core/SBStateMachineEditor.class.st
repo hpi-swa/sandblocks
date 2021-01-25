@@ -114,17 +114,22 @@ SBStateMachineEditor >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBStateMachineEditor >> commandPaletteClass [
+
+	^ SBStateMachinePalette
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachineEditor >> connect: aStateName to: anotherStateName if: aBlock [
 
-	| line states connectors |
+	| line connectors |
 	connectors := self connectors.
-	states := self states.
 	line := connectors
 		detect: [:transition |
 			transition from name = aStateName and: [transition to name = anotherStateName]]
 		ifFound: #yourself
 		ifNone: [
-			SBStateMachineTransition connect: (states at: aStateName) to: (states at: anotherStateName)].
+			SBStateMachineTransition connect: (self stateNamed: aStateName) to: (self stateNamed: anotherStateName)].
 	connectors
 		detect: [:transition |
 			transition to name = aStateName and: [transition from name = anotherStateName]]
@@ -189,6 +194,12 @@ SBStateMachineEditor >> exampleStateMachine [
 		from: #combat to: #combat if: [self isMorph]
 ]
 
+{ #category : #initialization }
+SBStateMachineEditor >> fixedNumberOfChildren [
+
+	^ false
+]
+
 { #category : #'as yet unclassified' }
 SBStateMachineEditor >> initialState [
 
@@ -243,9 +254,15 @@ SBStateMachineEditor >> minExtent [
 ]
 
 { #category : #'as yet unclassified' }
+SBStateMachineEditor >> stateNamed: aName [
+
+	^ self states detect: [:s | s name = aName]
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachineEditor >> states [
 
-	^ OrderedDictionary newFrom: (self submorphs select: [:morph | morph isKindOf: SBStateMachineState] thenCollect: [:state | state name asSymbol -> state])
+	^ self submorphs select: [:morph | morph isKindOf: SBStateMachineState]
 ]
 
 { #category : #'as yet unclassified' }

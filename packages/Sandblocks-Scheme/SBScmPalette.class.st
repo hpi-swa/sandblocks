@@ -1,59 +1,19 @@
 Class {
 	#name : #SBScmPalette,
-	#superclass : #SBBlock,
-	#instVars : [
-		'stream',
-		'content'
-	],
+	#superclass : #SBPalette,
 	#category : #'Sandblocks-Scheme'
 }
 
 { #category : #'as yet unclassified' }
-SBScmPalette >> addBlock: aString as: aBlock [
+SBScmPalette >> grammarHandler [
 
-	content
-		"addMorphBack: (SBStringMorph new contents: aString);"
-		addMorphBack: (self container: aBlock)
-]
-
-{ #category : #'as yet unclassified' }
-SBScmPalette >> addSectionHeader: aString [
-
-	content submorphCount > 0 ifTrue: [content addMorphBack: (Morph new color: Color transparent; height: 16)].
-	content addMorphBack: (SBStringMorph new contents: aString; bold).
-	content addMorphBack: (Morph new color: Color transparent; height: 4)
-]
-
-{ #category : #'as yet unclassified' }
-SBScmPalette >> container: aBlock [
-
-	^ SBPalettePreviewContainer new
-		methodClass: nil;
-		addMorphBack: aBlock
+	^ SBScmGrammarHandler new
 ]
 
 { #category : #'as yet unclassified' }
 SBScmPalette >> initialize [
 
 	super initialize.
-	
-	self
-		addMorphBack: (ScrollPane new
-			hResizing: #shrinkWrap;
-			vResizing: #spaceFill);
-		hResizing: #shrinkWrap;
-		vResizing: #rigid;
-		changeTableLayout;
-		height: 200;
-		layoutInset: 8;
-		attachDecorator: SBMoveDecorator new;
-		attachDecorator: SBResizableDecorator new.
-	
-	self firstSubmorph scroller
-		addMorphBack: (content := SBColumn new
-			useAlgebraLayout;
-			minimumWidth: 300;
-			layoutInset: 8).
 	
 	self	
 		addSectionHeader: 'Operators / Procedures';
@@ -117,33 +77,4 @@ SBScmPalette >> initialize [
 		addBlock: 'Newline on console' as: (SBScmExpression new addMorphBack: (SBScmIdentifier new contents: 'newline'));
 		
 		yourself
-]
-
-{ #category : #'as yet unclassified' }
-SBScmPalette >> layoutCommands [
-
-	^ SBAlgebraCommand container
-		morph: self;
-		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine])
-]
-
-{ #category : #'as yet unclassified' }
-SBScmPalette >> newNullBlock [
-
-	^ SBUnknown new grammarHandler: SBScmGrammarHandler new
-]
-
-{ #category : #'as yet unclassified' }
-SBScmPalette >> newNullBlock: aString [
-
-	^ self newNullBlock label: aString
-]
-
-{ #category : #'as yet unclassified' }
-SBScmPalette >> pickUp: anEvent [
-
-	" forward directly to our palette contents "
-	| morphs |
-	morphs := content morphsAt: anEvent position.
-	morphs size > 1 ifTrue: [(morphs at: morphs size - 1) pickUp: anEvent]
 ]
