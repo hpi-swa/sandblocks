@@ -100,7 +100,8 @@ SBAlgebraLayout >> initialize [
 
 	super initialize.
 	
-	measure := false
+	measure := false.
+	cache := Dictionary new
 ]
 
 { #category : #'as yet unclassified' }
