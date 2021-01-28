@@ -66,9 +66,9 @@ SBStateMachine >> fromAll: startStates to: endState when: aSignal [
 
 { #category : #initialization }
 SBStateMachine >> initialState: aState [
-	state := aState.
-	
-	self ensureTriggerListsFor: state
+
+	self ensureTriggerListsFor: aState.
+	self state: aState
 ]
 
 { #category : #transitions }
@@ -83,10 +83,24 @@ SBStateMachine >> initialize [
 	leaveActions := Dictionary new
 ]
 
+{ #category : #accessing }
+SBStateMachine >> performEnterActionsFor: aState leaving: anotherState [
+
+	(enterActions at: aState) do: [ :action | action valueWithEnoughArguments: {anotherState} ]
+]
+
 { #category : #private }
 SBStateMachine >> resetTimeTransitionsFor: aState [
 	(timeTransitions at: aState) keysAndValuesDo: [ :endState :time |
 		time at: 1 put: time second ]
+]
+
+{ #category : #transitions }
+SBStateMachine >> start [
+
+	state ifNil: [self error: 'no initial state configured'].
+	
+	self performEnterActionsFor: state leaving: nil
 ]
 
 { #category : #accessing }
@@ -96,30 +110,29 @@ SBStateMachine >> state [
 
 { #category : #accessing }
 SBStateMachine >> state: newState [
+
 	| oldState |
-	
 	oldState := self state.
-	(leaveActions at: oldState) do: [ :action | action valueWithEnoughArguments: newState ].
+	oldState ifNotNil: [(leaveActions at: oldState) do: [:action | action valueWithEnoughArguments: newState]].
 	
 	state := newState.
 	self ensureTriggerListsFor: newState.
 	self resetTimeTransitionsFor: newState.
 	
-	(enterActions at: self state) do: [ :action | action valueWithEnoughArguments: oldState ]
+	self performEnterActionsFor: state leaving: oldState
 ]
 
 { #category : #transitions }
 SBStateMachine >> tick: dt [
-	" iterate over all active conditional and time transitions and check if they were triggered "
+
 	| passedDuration |
 	passedDuration := dt seconds.
 	
-	(conditionalTransitions at: self state) keysAndValuesDo: [ :conditionalBlock :endState |
-		conditionalBlock value ifTrue: [ ^self state: endState ]].
+	(conditionalTransitions at: self state) keysAndValuesDo: [:conditionalBlock :endState | conditionalBlock value ifTrue: [^ self state: endState]].
 	
-	(timeTransitions at: self state) keysAndValuesDo: [ :endState :time |
+	(timeTransitions at: self state) keysAndValuesDo: [:endState :time |
 		time at: 1 put: time first - passedDuration.
-		time first negative ifTrue: [ ^self state: endState ]]
+		time first negative ifTrue: [^ self state: endState]]
 ]
 
 { #category : #transitions }

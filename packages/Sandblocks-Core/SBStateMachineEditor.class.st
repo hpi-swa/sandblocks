@@ -30,6 +30,16 @@ SBStateMachineEditor class >> newFor: aNode [
 ]
 
 { #category : #'as yet unclassified' }
+SBStateMachineEditor class >> suggestion [
+
+	^ [:block |
+		block sandblockEditor do: ((SBReplaceCommand newFor: block containingArtefact)
+			target: block;
+			replacer: (SBStateMachineEditor new);
+			yourself)]
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachineEditor >> addUponEnter: aBlock [
 
 	self addMorphBack: aBlock
@@ -60,6 +70,7 @@ SBStateMachineEditor >> buildFrom: aNode [
 			([#initialState:] -> [{message arguments first}]).
 			([#uponEnter:do:] -> [{message arguments first}]).
 			([#uponLeave:do:] -> [{message arguments first}]).
+			([#start] -> [{}]).
 			([#yourself] -> [{}])
 		}]) collect: #contents) withoutDuplicates collect: [:name | name -> (SBStateMachineState new name: name)]).
 	states do: [:state | self addMorphBack: state].
@@ -83,7 +94,8 @@ SBStateMachineEditor >> buildFrom: aNode [
 					if: message arguments third]).
 			([#uponEnter:do:] -> [(states at: message arguments first contents) addUponEnter: message arguments second]).
 			([#uponLeave:do:] -> [(states at: message arguments first contents) addUponLeave: message arguments second]).
-			([#yourself] -> [nil])
+			([#yourself] -> [nil]).
+			([#start] -> [nil]).
 		}].
 	self initializePositions
 ]
@@ -212,7 +224,7 @@ SBStateMachineEditor >> initialState: aState [
 	previous := initialState.
 	initialState := aState.
 	aState layoutChanged.
-	previous layoutChanged
+	previous ifNotNil: #layoutChanged
 ]
 
 { #category : #'as yet unclassified' }
@@ -241,7 +253,8 @@ SBStateMachineEditor >> insertCommandRequest: anAfterBoolean near: aBlock [
 	^ (SBInsertCommand newFor: self containingArtefact)
 		index: self submorphCount + 1;
 		container: self;
-		morph: (SBStateMachineState new name: 'unnamed'; position: self position + (30 @ 30));
+		morph: (SBStateMachineState new name: ''; position: self position + (30 @ 30));
+		shouldMergeWithNext: true;
 		yourself
 ]
 
@@ -249,6 +262,7 @@ SBStateMachineEditor >> insertCommandRequest: anAfterBoolean near: aBlock [
 SBStateMachineEditor >> minExtent [
 
 	| area |
+	self hasSubmorphs ifFalse: [^ 100 asPoint].
 	area := Rectangle merging: self submorphs.
 	^ area extent + (area origin - self position)
 ]
@@ -316,5 +330,5 @@ SBStateMachineEditor >> writeSourceOn: aStream [
 				active: 1
 				do: {[condition isSymbolBlock ifTrue: [aStream nextPutAll: ' when: ']]}.
 			condition writeSourceOn: aStream]].
-	aStream nextPut: $)
+	aStream nextPutAll: '; start)'
 ]

@@ -14,6 +14,12 @@ SBStateMachineTransition >> addCondition: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBStateMachineTransition >> checkAutoDelete [
+
+	" ingored "
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachineTransition >> color [
 
 	^ Color veryDarkGray

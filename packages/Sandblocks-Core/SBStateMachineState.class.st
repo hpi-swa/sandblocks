@@ -104,6 +104,13 @@ SBStateMachineState >> setAsInitialState [
 ]
 
 { #category : #'as yet unclassified' }
+SBStateMachineState >> startInputAt: aNumber replacingContents: aBoolean [
+
+	self sandblockEditor replaceInput: self firstSubmorph.
+	^ self firstSubmorph startInputAt: aNumber replacingContents: aBoolean
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachineState >> symbols [
 
 	^ {((self owner isKindOf: SBStateMachine) and: [self owner initialState = self]) ifTrue: ['* '] ifFalse: [nil]. nil}

@@ -743,6 +743,7 @@ SBEditor >> createEmptyClass [
 { #category : #actions }
 SBEditor >> createEmptyMethod [
 	<addAction>
+	<action>
 
 	| method |
 	self openMorphInView: (method := SBMethod new
@@ -761,15 +762,6 @@ SBEditor >> createEmptyRepresentation [
 	representation := SBRepresentationEditor new class: nil.
 	self openMorphInView: representation.
 	self startInput: representation childSandblocks first at: 1 replacingContents: false
-]
-
-{ #category : #actions }
-SBEditor >> createEmptySchemeModule [
-	<addAction>
-
-	| module |
-	self openMorphInView: (module := SBScmModule new).
-	self startInput: module at: 1 replacingContents: true
 ]
 
 { #category : #accessing }
@@ -1395,6 +1387,7 @@ SBEditor >> openProfiler [
 { #category : #actions }
 SBEditor >> openRepl [
 	<addAction>
+	<action>
 
 	| repl |
 	repl := self openMorphInView: SBRepl new.
