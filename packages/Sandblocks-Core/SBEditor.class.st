@@ -732,7 +732,7 @@ SBEditor >> countModifier [
 
 { #category : #actions }
 SBEditor >> createEmptyClass [
-	<action>
+	<addAction>
 
 	| class |
 	class := SBClass new category: (self anyNearbyClass ifNotNil: #category ifNil: ['UserObjects']).
@@ -742,7 +742,7 @@ SBEditor >> createEmptyClass [
 
 { #category : #actions }
 SBEditor >> createEmptyMethod [
-	<action>
+	<addAction>
 
 	| method |
 	self openMorphInView: (method := SBMethod new
@@ -755,12 +755,21 @@ SBEditor >> createEmptyMethod [
 
 { #category : #actions }
 SBEditor >> createEmptyRepresentation [
-	<action>
+	<addAction>
 
 	| representation |
 	representation := SBRepresentationEditor new class: nil.
 	self openMorphInView: representation.
 	self startInput: representation childSandblocks first at: 1 replacingContents: false
+]
+
+{ #category : #actions }
+SBEditor >> createEmptySchemeModule [
+	<addAction>
+
+	| module |
+	self openMorphInView: (module := SBScmModule new).
+	self startInput: module at: 1 replacingContents: true
 ]
 
 { #category : #accessing }
@@ -1385,7 +1394,7 @@ SBEditor >> openProfiler [
 
 { #category : #actions }
 SBEditor >> openRepl [
-	<action>
+	<addAction>
 
 	| repl |
 	repl := self openMorphInView: SBRepl new.
@@ -1458,17 +1467,11 @@ SBEditor >> performShortcutFor: anEvent [
 { #category : #'as yet unclassified' }
 SBEditor >> promptAddArtifact [
 
-	| index |
-	index := UIManager default chooseFrom: {
-		('Add method ', (self class shortcutStringForAction: #createEmptyMethod)).
-		('Add class ', (self class shortcutStringForAction: #createEmptyClass)).
-		('Open Workspace ', (self class shortcutStringForAction: #openRepl))
-	}.
+	| index pragmas |
+	pragmas := Pragma allNamed: #addAction in: self class.
+	index := UIManager default chooseFrom: (pragmas collect: #selector).
 	
-	index = 1 ifTrue: [^ self createEmptyMethod].
-	index = 2 ifTrue: [^ self createEmptyClass].
-	index = 3 ifTrue: [^ self openRepl]
-	
+	index > 0 ifTrue: [self perform: (pragmas at: index) selector]
 ]
 
 { #category : #'as yet unclassified' }

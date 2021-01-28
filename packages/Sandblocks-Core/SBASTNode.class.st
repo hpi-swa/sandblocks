@@ -258,7 +258,7 @@ SBASTNode >> insertStatementAboveOrBelow: anAboveBoolean [
 
 	| currentStatement index newStatement |
 	newStatement := self newNullBlock.
-	currentStatement := self containingStatement.
+	currentStatement := self containingStatement ifNil: [^ self containingArtefact insertStatementAboveOrBelow: anAboveBoolean].
 	
 	index := currentStatement owner submorphIndexOf: currentStatement.
 	self sandblockEditor do: ((SBInsertCommand newFor: self containingArtefact)

@@ -15,7 +15,7 @@ SBStPalette >> initialize [
 
 	super initialize.
 	
-	self	
+	self
 		addSectionHeader: 'Expressions';
 		addBlock: 'Message Send' as: (SBMessageSend new receiver: (self newNullBlock: 'receiver') selector: #message);
 		addBlock: 'Assignment' as: (SBAssignment new binding: (self newNullBlock: 'name') value: (self newNullBlock: 'expr'));
