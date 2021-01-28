@@ -256,9 +256,14 @@ SBBlock >> clearCache [
 
 	" this block may have just been duplicated or moved somewhere else, ensure to clear all caches and present yourself neatly "
 	self allMorphsDo: [:morph | morph layoutChanged].
-	self allBlocksDo: [:morph | morph removeProperty: #sandblockBlockColor].
-	
-	colorPolicyCache := nil
+	self allBlocksDo: [:morph | morph clearCacheSelf]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> clearCacheSelf [
+
+	colorPolicyCache := nil.
+	self removeProperty: #sandblockBlockColor
 ]
 
 { #category : #'as yet unclassified' }
@@ -303,7 +308,9 @@ SBBlock >> color [
 { #category : #'as yet unclassified' }
 SBBlock >> colorPolicy [
 
-	^ colorPolicyCache ifNil: [colorPolicyCache := self valueOfProperty: #localColorPolicy ifAbsent: [self parentSandblock ifNotNil: [:p | p colorPolicy] ifNil: [SBDefaultColorPolicy new]]]
+	^ colorPolicyCache ifNil: [
+		self valueOfProperty: #localColorPolicy ifPresentDo: [:c | ^ colorPolicyCache := c].
+		self parentSandblock ifNotNil: [:p | colorPolicyCache := p colorPolicy] ifNil: [SBDefaultColorPolicy new]]
 ]
 
 { #category : #hierarchy }

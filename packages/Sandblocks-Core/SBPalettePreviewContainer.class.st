@@ -33,9 +33,23 @@ SBPalettePreviewContainer >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBPalettePreviewContainer >> intoWorld: aWorld [
+
+	super intoWorld: aWorld.
+	
+	self clearCache
+]
+
+{ #category : #'as yet unclassified' }
 SBPalettePreviewContainer >> isBlockBody [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBPalettePreviewContainer >> parentSandblock [
+
+	^ self owner ifNotNil: #containingSandblock
 ]
 
 { #category : #'as yet unclassified' }

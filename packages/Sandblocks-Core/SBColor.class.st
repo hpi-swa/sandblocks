@@ -27,7 +27,7 @@ SBColor class >> matches: aMessage [
 		ifTrue: [
 			(Color respondsTo: aMessage selector asSymbol)
 				and: [#('named colors' 'named colors - crayons') includes: (Color class organization categoryOfElement: aMessage selector asSymbol)]]
-		ifFalse: [(aMessage selector = 'r:g:b:' or: [aMessage selector = 'r:g:b:a:']) and: [aMessage arguments allSatisfy: #isLiteralBlock]]
+		ifFalse: [(aMessage selector = 'r:g:b:' or: [aMessage selector = 'r:g:b:a:' or: [aMessage selector = 'fromString:']]) and: [aMessage arguments allSatisfy: #isLiteralBlock]]
 ]
 
 { #category : #'as yet unclassified' }

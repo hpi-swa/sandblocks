@@ -20,7 +20,21 @@ SBStPalette >> initialize [
 		addBlock: 'Message Send' as: (SBMessageSend new receiver: (self newNullBlock: 'receiver') selector: #message);
 		addBlock: 'Assignment' as: (SBAssignment new binding: (self newNullBlock: 'name') value: (self newNullBlock: 'expr'));
 		
-		addSectionHeader: 'Data';
+		addSectionHeader: 'Data & Methods';
 		addBlock: 'Array' as: (SBArray new contents: {self newNullBlock: 'array element 1'});
-		addBlock: 'Block' as: (SBBlockBody new statements: {self newNullBlock: 'expr'}; temporaries: {}; bindings: {self newNullBlock: 'block arg'}; yourself)
+		addBlock: 'Block' as: (SBBlockBody new statements: {self newNullBlock: 'expr'}; temporaries: {}; bindings: {self newNullBlock: 'block arg'}; yourself);
+		addBlock: 'Method' as: (SBMethod new
+			selector: 'method'
+			arguments: #()
+			class: Morph;
+			hResizing: #shrinkWrap;
+			body: (SBBlockBody new in: [:b | b statements: {self newNullBlock: 'body'}]));
+		addBlock: 'Class' as: (SBClass new className: 'class'; category: 'UserObjects');
+		
+		addSectionHeader: 'Operators';
+		addBlock: 'Addition' as: (SBMessageSend new receiver: (self newNullBlock: 'a') selector: #+ arguments: {self newNullBlock: 'b'});
+		addBlock: 'Subtraction' as: (SBMessageSend new receiver: (self newNullBlock: 'a') selector: #- arguments: {self newNullBlock: 'b'});
+		addBlock: 'Multiplication' as: (SBMessageSend new receiver: (self newNullBlock: 'a') selector: #* arguments: {self newNullBlock: 'b'});
+		addBlock: 'Division' as: (SBMessageSend new receiver: (self newNullBlock: 'a') selector: #/ arguments: {self newNullBlock: 'b'});
+		addBlock: 'Equals' as: (SBMessageSend new receiver: (self newNullBlock: 'a') selector: #= arguments: {self newNullBlock: 'b'})
 ]
