@@ -36,5 +36,12 @@ SBStPalette >> initialize [
 		addBlock: 'Subtraction' as: (SBMessageSend new receiver: (self newNullBlock: 'a') selector: #- arguments: {self newNullBlock: 'b'});
 		addBlock: 'Multiplication' as: (SBMessageSend new receiver: (self newNullBlock: 'a') selector: #* arguments: {self newNullBlock: 'b'});
 		addBlock: 'Division' as: (SBMessageSend new receiver: (self newNullBlock: 'a') selector: #/ arguments: {self newNullBlock: 'b'});
-		addBlock: 'Equals' as: (SBMessageSend new receiver: (self newNullBlock: 'a') selector: #= arguments: {self newNullBlock: 'b'})
+		addBlock: 'Equals' as: (SBMessageSend new receiver: (self newNullBlock: 'a') selector: #= arguments: {self newNullBlock: 'b'});
+		
+		addSectionHeader: 'Lists';
+		addBlock: 'Select' as: (SBMessageSend new receiver: (self newNullBlock: 'list') selector: #select: arguments: {SBBlockBody emptyWithDeclarations: {'each'}});
+		
+		addSectionHeader: 'Control Flow';
+		addBlock: 'ifTrue:' as: (SBMessageSend new receiver: (self newNullBlock: 'bool') selector: #ifTrue: arguments: {SBBlockBody empty});
+		addBlock: 'ifTrue:ifFalse:' as: (SBMessageSend new receiver: (self newNullBlock: 'bool') selector: #ifTrue:ifFalse: arguments: {SBBlockBody empty. SBBlockBody empty})
 ]

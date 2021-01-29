@@ -8,6 +8,9 @@ Class {
 SBPalettePreviewContainer >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	self flag: #fixme. " may break things catastrophically "
+	
+	(block isDeclaration and: [block isBlockBinding and: [block parentSandblock isBlockBody]]) ifTrue: [^ nil].
+	
 	^ aBlock value: SBUnknown new
 ]
 

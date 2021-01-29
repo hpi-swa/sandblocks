@@ -144,6 +144,9 @@ SBBasicMethod >> collapsed: aBoolean [
 { #category : #'as yet unclassified' }
 SBBasicMethod >> commandPaletteClass [
 
+	(self selector = 'drawOn:' and: [self arguments size = 1 and: [self arguments first contents = 'aCanvas']])
+		ifTrue: [^ SBStCanvasPalette].
+	
 	^ SBStPalette
 ]
 
