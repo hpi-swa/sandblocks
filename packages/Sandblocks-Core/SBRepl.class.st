@@ -93,6 +93,12 @@ SBRepl >> canDeleteChild: aBlock [
 	^ aBlock owner = bindings
 ]
 
+{ #category : #'artefact protocol' }
+SBRepl >> canEvaluate [
+
+	^ true
+]
+
 { #category : #'as yet unclassified' }
 SBRepl >> childSandblocksDo: aBlock [
 

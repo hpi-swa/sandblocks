@@ -180,3 +180,9 @@ Object >> sandblockColor [
 	" the identity hashes for classes appear to be rather close together, so we raise them to get larger differences "
 	^ (Color colorFromPixelValue: (16rFF000000 bitOr: (self identityHash ** 3 \\ 16rffffff max: 1)) depth: 32)
 ]
+
+{ #category : #'*Sandblocks-Core' }
+Object >> satisfies: aCollection [
+
+	^ aCollection allSatisfy: [:obj | obj value: self]
+]

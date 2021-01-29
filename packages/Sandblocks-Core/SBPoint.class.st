@@ -14,17 +14,35 @@ Class {
 { #category : #'as yet unclassified' }
 SBPoint class >> matches: aBlock [
 
+	(aBlock isKindOf: SBPoint) ifTrue: [^ true].
+	
 	(super matches: aBlock) ifFalse: [^ false].
-
+	
 	^ (aBlock selector = '@' or: [aBlock selector = ',']) and: [aBlock receiver isNumberBlock] and: [aBlock arguments first isNumberBlock]
 ]
 
 { #category : #'as yet unclassified' }
 SBPoint class >> newFor: aBlock [
 
+	(aBlock isKindOf: SBPoint) ifTrue: [^ aBlock veryDeepCopy].
+
 	^ self new
 		x: aBlock receiver y: aBlock arguments first;
 		type: Point
+]
+
+{ #category : #'as yet unclassified' }
+SBPoint class >> newForPoint: aPoint [
+
+	^ self new
+		x: (SBNumber new contents: aPoint x asString) y: (SBNumber new contents: aPoint y asString);
+		type: Point
+]
+
+{ #category : #'as yet unclassified' }
+SBPoint class >> priority [
+
+	^ 21000
 ]
 
 { #category : #'as yet unclassified' }
@@ -119,6 +137,26 @@ SBPoint >> mouseUp: anEvent [
 SBPoint >> parsedContents [
 
 	^ self firstSubmorph parsedContents @ self lastSubmorph parsedContents
+]
+
+{ #category : #'as yet unclassified' }
+SBPoint >> pickCoordinate [
+	<action>
+
+	| p |
+	p := Cursor crossHair showWhile: [Sensor waitButton].
+	self contents: p
+]
+
+{ #category : #'as yet unclassified' }
+SBPoint >> pickExtent [
+	<action>
+
+	| corner origin |
+	Cursor crossHair showWhile: [
+		origin := Sensor waitButton.
+		corner := Sensor waitNoButton].
+	self contents: (Rectangle encompassing: {origin. corner}) extent
 ]
 
 { #category : #'as yet unclassified' }

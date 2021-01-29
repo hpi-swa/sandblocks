@@ -261,7 +261,7 @@ SBBasicMethod >> evaluationContext [
 { #category : #'as yet unclassified' }
 SBBasicMethod >> evaluationReceiver [
 
-	^ self relatedClass basicNew
+	^ self valueOfProperty: #evaluationReceiver ifAbsent: [self relatedClass basicNew]
 ]
 
 { #category : #'as yet unclassified' }
@@ -274,6 +274,13 @@ SBBasicMethod >> exists [
 SBBasicMethod >> externalModification: aBoolean [
 
 	^ self setProperty: #externalModificationFlag toValue: aBoolean
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> handleDroppedBlock: aBlock event: anEvent [
+
+	(aBlock isKindOf: TransferMorph) ifTrue: [
+		self tryUseAsSelf: aBlock passenger value]
 ]
 
 { #category : #'as yet unclassified' }
@@ -475,6 +482,13 @@ SBBasicMethod >> outOfWorld: aWorld [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> pickSelf [
+	<action>
+	
+	self tryUseAsSelf: (self outermostWorldMorph morphsAt: (Cursor crossHair showWhile: [Sensor waitButton])) first
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> postDuplicateSelf [
 
 	currentSelector asSymbol isBinary ifTrue: [^ self shouldBeImplemented].
@@ -615,6 +629,23 @@ SBBasicMethod >> toggleCollapsed [
 		disableLayout: self body visible not.
 	
 	(self body visible not and: [self isSelected not and: [self sandblockEditor notNil]]) ifTrue: [self select]
+]
+
+{ #category : #'as yet unclassified' }
+SBBasicMethod >> tryUseAsSelf: anObject [
+
+	(anObject class = self relatedClass or: [anObject class inheritsFrom: self relatedClass])
+		ifTrue: [
+			self setProperty: #evaluationReceiver toValue: anObject.
+			
+			(Array streamContents: [:str |
+				self allBlocksDo: [:block |
+					(SBSelfThumbnailRepresentation matches: block) ifTrue: [str nextPut: block]]])
+						ifNotEmpty: [:selfs |
+							self sandblockEditor do: (SBCombinedCommand newWith: (selfs
+										collect: [:block | (SBReplaceCommand newFor: self) replacer: (SBSelfThumbnailRepresentation newFor: block); target: block])).
+							" why do we need this? "
+							Project current addDeferredUIMessage: [self layoutChanged]]]
 ]
 
 { #category : #'as yet unclassified' }

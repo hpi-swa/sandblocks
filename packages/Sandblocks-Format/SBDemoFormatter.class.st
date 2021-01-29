@@ -318,6 +318,9 @@ SBDemoFormatter >> visitBlockNode: aNode [
 SBDemoFormatter >> visitBraceNode: aNode [
 
 	| width multiLine |
+	1 / 0.
+	true ifTrue: [Transcript showln: 'Hello World'].
+	{1. 2. 3. 4} select: #positive.
 	width := aNode elements inject: 0 into: [:sum :element | sum + ((self preFormat: element) size + 2)].
 	multiLine := width > self maxLineLength.
 	stream nextPut: ${.
