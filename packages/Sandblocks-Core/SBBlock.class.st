@@ -1642,7 +1642,7 @@ SBBlock >> pasteAboveOrBelow: anAboveBoolean [
 								shouldMergeWithNext: index < copyBuffer submorphCount).
 							repr postDuplicateSelf]
 						ifNone: [SBLabel text: ['undo last command?']].
-					anAboveBoolean ifTrue: [self submorphBefore select] ifFalse: [self submorphAfter select]]]
+					anAboveBoolean ifTrue: [self submorphBefore ifNotNil: #select] ifFalse: [self submorphAfter ifNotNil: #select]]]
 		}
 ]
 

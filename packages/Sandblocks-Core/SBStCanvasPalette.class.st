@@ -30,6 +30,7 @@ SBStCanvasPalette >> initialize [
 		addBlock: 'Point Projection' as: (SBPoint newForPoint: 0 @ 0);
 		addBlock: 'Position' as: (SBMessageSend new receiver: (SBName contents: 'self') selector: #position);
 		addBlock: 'Bounds' as: (SBMessageSend new receiver: (SBName contents: 'self') selector: #bounds);
+		addBlock: 'Color' as: (SBMessageSend new receiver: (SBName contents: 'self') selector: #color);
 		
 		addSectionHeader: 'Transforms';
 		addBlock: 'Translate' as: (SBMessageSend new receiver: (SBName contents: 'aCanvas') selector: #translateBy:during: arguments: {self newNullBlock: 'offset'. SBBlockBody emptyWithDeclarations: {'canvas'}})

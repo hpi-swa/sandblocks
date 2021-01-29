@@ -457,7 +457,7 @@ SBEditor >> artefacts [
 SBEditor >> batchedChangeStep: aBlock [
 
 	" send this message when you are updating the tree rapidly for each update, but don't want to submit a command for each update, only at the end "
-	compileTime = #compileOnChange ifTrue: [ | artefact |
+	self compileTime = #compileOnChange ifTrue: [ | artefact |
 		self save: aBlock containingArtefact tryFixing: false quick: true.
 		artefact := self selectedArtefact.
 		artefact triggerEvent: #changed.
@@ -673,6 +673,12 @@ SBEditor >> colorPolicy: aPolicy [
 	self allMorphsDo: #layoutChanged.
 	self clearCache.
 	self changed
+]
+
+{ #category : #'initialize-release' }
+SBEditor >> compileTime [
+
+	^ self errors hasSubmorphs ifTrue: [#compileOnSave] ifFalse: [compileTime]
 ]
 
 { #category : #'as yet unclassified' }
@@ -1089,7 +1095,7 @@ SBEditor >> markChangesAfterCommand: aCommand [
 	aCommand wasEdit ifTrue: [
 		aCommand affectedArtefacts do: [:artefact | | saved |
 			saved := false.
-			compileTime = #compileOnChange ifTrue: [
+			self compileTime = #compileOnChange ifTrue: [
 				saved := self save: artefact tryFixing: false quick: false].
 			artefact hasUnsavedChanges: saved not.
 			artefact triggerEvent: #changed.

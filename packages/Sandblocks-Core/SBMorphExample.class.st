@@ -173,11 +173,11 @@ SBMorphExample >> reportError: anError [
 	true ifTrue: [
 		(reportedError notNil and: [reportedError expanded not]) ifTrue: [reportedError delete].
 		
-		^ reportedError := self sandblockEditor reportError: anError process: ((Process
+		^ Project current addDeferredUIMessage: [reportedError := self sandblockEditor reportError: anError process: ((Process
 			forContext: anError signalerContext copyStack
 			priority: Processor activeProcess priority)
 				shouldResumeFromDebugger: false;
-				yourself)"ToolSet debugException: anError"].
+				yourself)"ToolSet debugException: anError"]].
 	
 	editor := self sandblockEditor.
 	i := 1.

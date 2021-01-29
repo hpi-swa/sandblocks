@@ -145,7 +145,11 @@ SBPoint >> pickCoordinate [
 
 	| p |
 	p := Cursor crossHair showWhile: [Sensor waitButton].
-	self contents: p
+	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
+		oldValue: self contents;
+		selector: #contents;
+		value: p;
+		target: self)
 ]
 
 { #category : #'as yet unclassified' }
@@ -156,7 +160,11 @@ SBPoint >> pickExtent [
 	Cursor crossHair showWhile: [
 		origin := Sensor waitButton.
 		corner := Sensor waitNoButton].
-	self contents: (Rectangle encompassing: {origin. corner}) extent
+	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
+		oldValue: self contents;
+		selector: #contents;
+		value: (Rectangle encompassing: {origin. corner}) extent;
+		target: self)
 ]
 
 { #category : #'as yet unclassified' }

@@ -118,7 +118,7 @@ SBAlgebraLayout >> layout: aMorph in: aRectangle [
 	
 	cache := Dictionary new.
 	
-	initial := ((SBAlgebraState new offset: aRectangle topLeft) startX: aRectangle left).
+	initial := ((SBAlgebraState new offset: aRectangle topLeft) startX: aRectangle left) containerWidth: aRectangle left.
 	final := self
 		layoutDocument: (self commandsForRoot: aMorph)
 		at: initial
@@ -151,7 +151,7 @@ SBAlgebraLayout >> layoutDocument: command at: aState limit: maxRight wrap: aWra
 			inset := command morph layoutInset asEdgeInsets.
 			state := self
 				layoutDocument: (SBAlgebraCommand group data: command data)
-				at: (aState offset: aState offset + inset topLeft lineHeight: inset top startX: aState offset x + inset left containerWidth: 0)
+				at: (aState offset: aState offset + inset topLeft lineHeight: inset top startX: aState offset x + inset left containerWidth: aState offset x + inset left)
 				limit: maxRight
 				wrap: aWrapBoolean.
 			state := state offset: (state offset + (inset right @ 0)) lineHeight: state lineHeight + inset bottom containerWidth: state containerWidth + inset right.
@@ -203,7 +203,7 @@ SBAlgebraLayout >> minExtentOf: aMorph in: aRectangle [
 	commands := self commandsForRoot: aMorph.
 	(commands type = #morph and: [commands data = aMorph]) ifTrue: [^ aRectangle extent].
 	
-	initial := ((SBAlgebraState new offset: aRectangle topLeft) startX: aRectangle left).
+	initial := ((SBAlgebraState new offset: aRectangle topLeft) startX: aRectangle left) containerWidth: aRectangle left.
 	measure := true.
 	state := self layoutDocument: commands at: initial limit: aRectangle right wrap: false.
 	measure := false.

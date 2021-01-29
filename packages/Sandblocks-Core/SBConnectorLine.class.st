@@ -56,8 +56,14 @@ SBConnectorLine >> connect: anObject to: anotherObject [
 	from addDependent: self.
 	to addDependent: self.
 	self update: nil.
-	from when: #outOfWorld send: #delete to: self.
-	to when: #outOfWorld send: #delete to: self
+	self connectAutoDelete: to.
+	self connectAutoDelete: from
+]
+
+{ #category : #'as yet unclassified' }
+SBConnectorLine >> connectAutoDelete: aBlock [
+
+	aBlock when: #outOfWorld send: #delete to: self
 ]
 
 { #category : #'as yet unclassified' }
