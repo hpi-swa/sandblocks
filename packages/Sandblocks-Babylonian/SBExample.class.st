@@ -28,16 +28,26 @@ SBExample class >> matches: aMessage [
 
 	(super matches: aMessage) ifFalse: [^ false].
 	
-	^ aMessage receiver isBinding and: [aMessage receiver contents = self name] and: [aMessage selector = 'self:args:label:']
+	^ aMessage receiver isBinding
+		and: [aMessage receiver contents = self name]
+		and: [#('self:args:label:' 'self:args:label:assert:') includes: aMessage selector]
 ]
 
 { #category : #'as yet unclassified' }
 SBExample class >> newFor: aMessage [
 
-	^ self new
-		self: aMessage arguments first statements first
-		args: aMessage arguments second statements first
-		label: aMessage arguments third contents
+	^ aMessage arguments size = 4
+		ifTrue: [
+			self new
+				self: aMessage arguments first statements first
+				args: aMessage arguments second statements first
+				label: aMessage arguments third contents
+				assert: aMessage arguments fourth]
+		ifFalse: [
+			self new
+				self: aMessage arguments first statements first
+				args: aMessage arguments second statements first
+				label: aMessage arguments third contents]
 ]
 
 { #category : #'as yet unclassified' }
@@ -48,14 +58,34 @@ SBExample class >> self: aBlock args: aCollection [
 
 { #category : #'as yet unclassified' }
 SBExample class >> self: aBlock args: aCollection label: aString [
+	
+]
 
-	" marker "
+{ #category : #'as yet unclassified' }
+SBExample class >> self: aBlock args: aCollection label: aString assert: anAssertBlock [
+
+	
 ]
 
 { #category : #'as yet unclassified' }
 SBExample >> active [
 
 	^ active
+]
+
+{ #category : #'as yet unclassified' }
+SBExample >> addAssertion [
+	<action>
+
+	
+	self addAssertion: self newNullBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBExample >> addAssertion: aBlock [
+
+	self addMorphBack: (SBStringMorph new contents: 'assert:').
+	^ self addMorphBack: aBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -78,11 +108,18 @@ SBExample >> artefactSaved: aMethod [
 ]
 
 { #category : #'as yet unclassified' }
+SBExample >> assertionBlock [
+
+	^ self submorphCount > 7 ifTrue: [self submorphs ninth] ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
 SBExample >> childSandblocksDo: aBlock [
 
 	aBlock value: nameInput.
 	aBlock value: self selfBlock.
-	aBlock value: self argumentsBlock
+	aBlock value: self argumentsBlock.
+	self assertionBlock ifNotNil: [:block | aBlock value: block]
 ]
 
 { #category : #'as yet unclassified' }
@@ -105,6 +142,9 @@ SBExample >> collectTypeInfo [
 	receiver := [self evaluateSelf] on: Error do: [^ self].
 	arguments := [self evaluateArguments] on: Error do: [^ self].
 	selector := self containingArtefact selector asSymbol.
+	
+	self containingArtefact arguments with: arguments do: [:arg :obj |
+		self containingArtefact cacheType: obj class for: arg].
 	
 	SBTypeCollectSimulator new
 		methodMap: self sandblockEditor currentMethodMap;
@@ -241,11 +281,8 @@ SBExample >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
-		"data: (Array streamContents: [:str |
-			self submorphs withIndexDo: [:morph :index |
-				str nextPut: morph layoutCommands.
-				(index \\ 2 = 1 and: [index > 1]) ifTrue: [str nextPut: SBAlgebraCommand softLineOrGap]]]);"
-		data: (self submorphs pairsCollect: [:a :b | SBAlgebraCommand group data: {a layoutCommands. SBAlgebraCommand gap. b layoutCommands. SBAlgebraCommand softLineOrGap}]), {self lastSubmorph layoutCommands}
+		data: (self submorphs pairsCollect: [:a :b |
+			SBAlgebraCommand group data: {a layoutCommands. SBAlgebraCommand gap. b layoutCommands. SBAlgebraCommand softLineOrGap}]), {self lastSubmorph layoutCommands}
 ]
 
 { #category : #'as yet unclassified' }
@@ -314,6 +351,13 @@ SBExample >> self: aBlock args: aCollectionBlock label: aString [
 		addMorphBack: aCollectionBlock;
 		addMorphBack: (returnValue := SBNewWatchView new);
 		updateIcon
+]
+
+{ #category : #'as yet unclassified' }
+SBExample >> self: aBlock args: aCollectionBlock label: aString assert: anAssertBlock [
+
+	self self: aBlock args: aCollectionBlock label: aString.
+	self addAssertion: anAssertBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -408,10 +452,22 @@ SBExample >> veryDeepCopyWith: aCopier [
 SBExample >> writeSourceOn: aStream [
 
 	aStream nextPut: $(.
-	aStream nextPutAll: self className; space.
+	aStream
+		nextPutAll: self className;
+		space.
 	aStream nextPutAll: 'self: ['.
 	self selfBlock writeSourceOn: aStream.
 	aStream nextPutAll: '] args: ['.
 	self argumentsBlock writeSourceOn: aStream.
-	aStream nextPutAll: '] label: '''; nextPutAll: nameInput contents; nextPutAll: ''')'
+	aStream
+		nextPutAll: '] label: ''';
+		nextPutAll: nameInput contents;
+		nextPut: $'.
+	
+	self assertionBlock ifNotNil: [:block |
+		aStream nextPutAll: ' assert: ['.
+		block writeSourceOn: aStream.
+		aStream nextPut: $]].
+	
+	aStream nextPut: $)
 ]

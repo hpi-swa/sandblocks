@@ -60,6 +60,7 @@ SBMethod >> currentTextMorph [
 SBMethod >> deleteCommandFor: aBlock [
 
 	aBlock = self body ifTrue: [^ nil].
+	aBlock = classPrefix ifTrue: [^ nil].
 	
 	^ signature deleteCommandFor: aBlock
 ]

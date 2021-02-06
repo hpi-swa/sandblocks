@@ -9,6 +9,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBPalette class >> context [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBPalette class >> matchBlock: aBlock [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBPalette >> addBlock: aString as: aBlock [
 
 	content

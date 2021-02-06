@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStPalette class >> context [
+
+	^ #isSmalltalkExpression
+]
+
+{ #category : #'as yet unclassified' }
 SBStPalette >> grammarHandler [
 
 	^ SBSmalltalkGrammarHandler new

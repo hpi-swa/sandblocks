@@ -44,12 +44,6 @@ SBPragma >> contents: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBPragma >> currentTextMorph [
-
-	^ signature currentTextMorph
-]
-
-{ #category : #'as yet unclassified' }
 SBPragma >> initialize [
 
 	super initialize.

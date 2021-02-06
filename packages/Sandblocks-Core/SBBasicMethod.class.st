@@ -267,7 +267,7 @@ SBBasicMethod >> evaluationReceiver [
 { #category : #'as yet unclassified' }
 SBBasicMethod >> exists [
 
-	^ self currentClass respondsTo: self currentSelector
+	^ self currentClass canUnderstand: self currentSelector
 ]
 
 { #category : #'as yet unclassified' }

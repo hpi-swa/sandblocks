@@ -21,6 +21,12 @@ SBDeclarationBehavior >> allUsagesDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBDeclarationBehavior >> guessedClass [
+
+	^ (self block containingArtefact ifNotNil: [:a | a typeFor: self block]) ifNil: [super guessedClass]
+]
+
+{ #category : #'as yet unclassified' }
 SBDeclarationBehavior >> isDeclaration [
 
 	^ true

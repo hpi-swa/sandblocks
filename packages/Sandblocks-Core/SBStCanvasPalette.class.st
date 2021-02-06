@@ -5,6 +5,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStCanvasPalette class >> matchesBlock: aBlock [
+
+	SBExample self: [SBStCanvasPalette] args: [{(Morph >> #drawOn:) asSandblock statements first}] label: 'example'.
+	^ aBlock containingArtefact arguments contains: [:arg | arg contents = 'aCanvas']
+]
+
+{ #category : #'as yet unclassified' }
 SBStCanvasPalette >> grammarHandler [
 
 	^ SBSmalltalkGrammarHandler new
