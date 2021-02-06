@@ -42,7 +42,7 @@ SBExample class >> newFor: aMessage [
 				self: aMessage arguments first statements first
 				args: aMessage arguments second statements first
 				label: aMessage arguments third contents
-				assert: aMessage arguments fourth]
+				assert: aMessage arguments fourth statements first]
 		ifFalse: [
 			self new
 				self: aMessage arguments first statements first
@@ -330,6 +330,14 @@ SBExample >> run [
 ]
 
 { #category : #'as yet unclassified' }
+SBExample >> runOnlyThis [
+	<action>
+	
+	self sandblockEditor allBlocksDo: [:block | (block isExample and: [block ~= self]) ifTrue: [block stopRunning]].
+	self startRunning
+]
+
+{ #category : #'as yet unclassified' }
 SBExample >> scheduleLastError: anError [
 
 	Project current addDeferredUIMessage: [self lastError: anError]
@@ -395,7 +403,8 @@ SBExample >> showReachability [
 { #category : #'as yet unclassified' }
 SBExample >> startRunning [
 
-	"self startSteppingSelector: #run."
+	active ifTrue: [^ self].
+	
 	active := true.
 	self updateIcon.
 	self run
@@ -410,6 +419,8 @@ SBExample >> stepTime [
 { #category : #'as yet unclassified' }
 SBExample >> stopRunning [
 
+	active ifFalse: [^ false].
+	
 	self stopSteppingSelector: #run.
 	active := false.
 	returnValue clear.

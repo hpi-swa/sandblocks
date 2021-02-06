@@ -17,7 +17,7 @@ SBStateMachinePalette class >> matchesBlock: aBlock [
 		self: [SBStateMachinePalette]
 		args: [{(SBStateMachineEditor >> #exampleStateMachine) asSandblock statements last expression}]
 		label: 'toplevel'
-		assert: [[true]].
+		assert: [true].
 	SBExample
 		self: [SBStateMachinePalette]
 		args: [
@@ -25,7 +25,7 @@ SBStateMachinePalette class >> matchesBlock: aBlock [
 				(SBStateMachineEditor >> #exampleStateMachine) asSandblock statements last expression firstSubmorph
 			}]
 		label: 'nested'
-		assert: [[true]].
+		assert: [true].
 	(aBlock isKindOf: SBStateMachineEditor) ifTrue: [^ true].
 	^ (aBlock ownerSatisfying: [:owner | owner isKindOf: SBStateMachineEditor]) notNil
 ]
