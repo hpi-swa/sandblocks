@@ -200,7 +200,7 @@ SBExample >> evaluateArguments [
 { #category : #'as yet unclassified' }
 SBExample >> evaluateSelf [
 
-	^ Compiler evaluate: (SBMessageSend new receiver: self selfBlock veryDeepCopy selector: #value) sourceString
+	^ Compiler evaluate: self selfBlock veryDeepCopy sourceString
 ]
 
 { #category : #'as yet unclassified' }

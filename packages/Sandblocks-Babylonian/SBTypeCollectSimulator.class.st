@@ -232,10 +232,13 @@ SBTypeCollectSimulator >> send: selector super: supered numArgs: numArgs [
 		" report primitives "
 		method primitive > 0 ifTrue: [ | ret |
 			" perform:withArguments "
-			method primitive = 84 ifTrue: [ | actualSelector actualReceiver actualClass |
+			method primitive = 84 ifTrue: [ | actualSelector actualReceiver actualClass actualMethod |
 				actualReceiver := currentContext at: currentContext stackPtr - 2.
 				actualSelector := currentContext at: currentContext stackPtr - 1.
-				actualClass := ((currentContext objectClass: actualReceiver) lookupSelector: actualSelector) methodClass.
+				actualMethod := (currentContext objectClass: actualReceiver) lookupSelector: actualSelector.
+				actualMethod ifNil: [^ currentContext send: selector super: supered numArgs: numArgs].
+				
+				actualClass := actualMethod methodClass.
 				(currentContext at: currentContext stackPtr) withIndexDo: [:argument :index |
 					self
 						reportTypeInfo: argument
@@ -252,7 +255,7 @@ SBTypeCollectSimulator >> send: selector super: supered numArgs: numArgs [
 					self
 						reportTypeInfo: argument
 						at: (SBCodeContext for: ret)
-						findNode: [:methodMorph | (methodMorph blockForPC: ret previousPc) ifNotNil: [:block | block bindings at: index]]]].
+						findNode: [:methodMorph | (methodMorph blockBodyForPC: ret method -> ret pc) ifNotNil: [:block | block bindings at: index]]]].
 			
 			^ ret]].
 	

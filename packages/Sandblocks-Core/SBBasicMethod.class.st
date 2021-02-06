@@ -64,6 +64,13 @@ SBBasicMethod >> binding: aString for: block class: aClass ifPresent: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> blockBodyForPC: assocPc [
+
+	self allBlocksDo: [:m | (m isBlockBody and: [m startPC = assocPc]) ifTrue: [^ m]].
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> blockForContext: aContext [
 
 	^ self blockForPC: aContext pc

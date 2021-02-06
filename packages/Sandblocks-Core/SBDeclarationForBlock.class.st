@@ -13,7 +13,7 @@ SBDeclarationForBlock >> asSuggestionItem [
 { #category : #accessing }
 SBDeclarationForBlock >> guessedClass [
 
-	^ self block containingArtefact typeFor: self
+	^ self block containingArtefact typeFor: self block
 ]
 
 { #category : #accessing }

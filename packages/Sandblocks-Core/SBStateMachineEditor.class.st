@@ -191,7 +191,7 @@ SBStateMachineEditor >> exampleStateMachine [
 	super initialize.
 	a := 5.
 	
-	b := SBStateMachineEditor new
+	b := SBStateMachine new
 		initialState: #idle;
 		uponEnter: #evasion do: [self accelerate];
 		uponLeave: #evasion do: [self stop];

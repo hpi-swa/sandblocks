@@ -1558,8 +1558,9 @@ SBBlock >> object [
 SBBlock >> openPalette [
 	<action>
 	<actionValidIf: #hasCommandPalette>
-	
-	self commandPaletteClass ifNotNil: [:class | self sandblockEditor openMorphInView: class new]
+
+	SBExample self: [(SBBlock >> #openPalette) asSandblock statements last] args: [{}] label: 'example'.
+	(SBPalette allSubclasses select: [:palette | palette context = self acceptedRepresentation and: [palette matchesBlock: self]]) do: [:class | self sandblockEditor openMorphInView: class new]
 ]
 
 { #category : #'as yet unclassified' }

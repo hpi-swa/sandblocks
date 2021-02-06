@@ -15,7 +15,7 @@ SBPalette class >> context [
 ]
 
 { #category : #'as yet unclassified' }
-SBPalette class >> matchBlock: aBlock [
+SBPalette class >> matchesBlock: aBlock [
 
 	^ true
 ]

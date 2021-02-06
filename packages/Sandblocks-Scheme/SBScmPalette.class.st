@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBScmPalette class >> context [
+
+	^ #isScmExpression
+]
+
+{ #category : #'as yet unclassified' }
 SBScmPalette >> grammarHandler [
 
 	^ SBScmGrammarHandler new

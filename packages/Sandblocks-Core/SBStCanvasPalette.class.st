@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStCanvasPalette class >> context [
+
+	^ #isSmalltalkExpression
+]
+
+{ #category : #'as yet unclassified' }
 SBStCanvasPalette class >> matchesBlock: aBlock [
 
 	SBExample self: [SBStCanvasPalette] args: [{(Morph >> #drawOn:) asSandblock statements first}] label: 'example'.
