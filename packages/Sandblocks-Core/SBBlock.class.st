@@ -1559,8 +1559,13 @@ SBBlock >> openPalette [
 	<action>
 	<actionValidIf: #hasCommandPalette>
 
-	SBExample self: [(SBBlock >> #openPalette) asSandblock statements last] args: [{}] label: 'example'.
-	(SBPalette allSubclasses select: [:palette | palette context = self acceptedRepresentation and: [palette matchesBlock: self]]) do: [:class | self sandblockEditor openMorphInView: class new]
+	| palettes |
+	palettes := SBPalette allSubclasses select: [:palette |
+		palette context = (self containingBlock contextAcceptedRepresentationAt: self containingBlock childSandblocks size) and: [palette matchesBlock: self]].
+	palettes ifNotEmpty: [ | container |
+		container := SBPaletteContainer new.
+		palettes do: [:class | class buildOn: container].
+		self sandblockEditor openMorphInView: container]
 ]
 
 { #category : #'as yet unclassified' }

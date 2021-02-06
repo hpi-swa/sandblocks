@@ -62,6 +62,7 @@ SBNumber >> mouseDown: anEvent [
 	super mouseDown: anEvent.
 	
 	self valid ifFalse: [^ self].
+	anEvent redButtonPressed ifFalse: [^ self].
 	
 	anEvent hand newMouseFocus: self.
 	isDown := true.

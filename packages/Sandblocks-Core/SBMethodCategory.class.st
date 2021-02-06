@@ -47,6 +47,12 @@ SBMethodCategory >> class: aClass category: aString collapsed: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBMethodCategory >> deleteCommandFor: aBlock [
+
+	^ aBlock isMethod ifTrue: [(SBDeleteMethodCommand newFor: self) target: aBlock] ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
 SBMethodCategory >> drawSubmorphsOn: aCanvas [
 
 	super drawSubmorphsOn: aCanvas.

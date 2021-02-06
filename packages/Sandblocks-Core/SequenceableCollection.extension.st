@@ -76,6 +76,22 @@ SequenceableCollection >> viewFrom: aNumber to: anotherNumber by: aThirdNumber [
 ]
 
 { #category : #'*Sandblocks-Core' }
+SequenceableCollection >> viewFrom: aNumber until: aBlock [
+
+	| end |
+	end := aNumber.
+	[end <= self size and: [(aBlock value: (self at: end)) not]] whileTrue: [end := end + 1].
+
+	^ self viewFrom: aNumber to: end - 1
+]
+
+{ #category : #'*Sandblocks-Core' }
+SequenceableCollection >> viewUntil: aBlock [
+
+	^ self viewFrom: 1 until: aBlock
+]
+
+{ #category : #'*Sandblocks-Core' }
 SequenceableCollection >> with: otherCollection and: thirdCollection do: threeArgBlock [
 
 	self isOfSameSizeCheck: otherCollection.
