@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBClassRepresentation class >> isClassEditor [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBClassRepresentation class >> isToplevelMorph [
 
 	^ true

@@ -803,7 +803,7 @@ SBEditor >> declareClassVariable: aString for: aClass [
 SBEditor >> declareInstanceVariable: aString for: aClass [
 
 	| class |
-	class := self openClass: aClass.
+	class := self open: aClass.
 	self do: ((SBInsertCommand newFor: class)
 		container: class instanceVariables;
 		index: class instanceVariables submorphCount + 1;
@@ -976,6 +976,7 @@ SBEditor >> goToMark [
 { #category : #'submorphs-add/remove' }
 SBEditor >> handleDroppedBlock: aMorph event: anEvent [
 
+	self halt.
 	aMorph object
 		representIn: self
 		as: #isToplevelMorph

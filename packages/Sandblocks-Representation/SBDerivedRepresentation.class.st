@@ -30,6 +30,12 @@ SBDerivedRepresentation >> causesSideEffects [
 ]
 
 { #category : #'as yet unclassified' }
+SBDerivedRepresentation >> derive: anObject [
+
+	^ to derive: (from newFor: anObject)
+]
+
+{ #category : #'as yet unclassified' }
 SBDerivedRepresentation >> from [
 
 	^ from

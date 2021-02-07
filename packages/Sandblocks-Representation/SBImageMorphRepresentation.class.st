@@ -5,12 +5,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBImageMorphRepresentation class >> isLeaf [
-
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
 SBImageMorphRepresentation class >> isMorph [
 
 	^ true

@@ -1,32 +1,29 @@
 Class {
 	#name : #SBWatchView,
-	#superclass : #Morph,
+	#superclass : #SBBlock,
 	#instVars : [
 		'display',
 		'lastValue',
 		'dark',
 		'hadValue',
-		'count'
+		'count',
+		'currentRepresentation'
 	],
 	#category : #'Sandblocks-Watch'
 }
 
 { #category : #'as yet unclassified' }
-SBWatchView class >> watchTypes [
+SBWatchView >> changeDisplay [
+	<action>
 
-	^ {
-		SBDisplayBarChart.
-		"Smalltalk at: #SBDisplayActiveExpressionMarbles ifAbsent: [nil]."
-		Smalltalk at: #SBDisplayActiveExpression ifAbsent: [nil].
-		SBDisplayColor.
-		SBDisplayPoint.
-		SBDisplayMorph.
-		SBDisplayCanvas.
-		SBDisplayForm.
-		SBDisplayPrint.
-		SBDisplayText.
-		SBDisplayMultiple.
-	} select: #notNil
+	| index options |
+	options := lastValue representationsThat: self representationTypes.
+	index := UIManager default chooseFrom: options.
+	index = 0 ifTrue: [^ self].
+	
+	currentRepresentation := options at: index.
+	
+	self useDisplay: (currentRepresentation newFor: lastValue)
 ]
 
 { #category : #'event handling' }
@@ -44,6 +41,12 @@ SBWatchView >> dark: aBoolean [
 	display dark: aBoolean
 ]
 
+{ #category : #'as yet unclassified' }
+SBWatchView >> drawnColor [
+
+	^ Color transparent
+]
+
 { #category : #'event handling' }
 SBWatchView >> exampleFinished: anExample [ 
 
@@ -54,7 +57,7 @@ SBWatchView >> exampleFinished: anExample [
 SBWatchView >> exampleStarting: anExample [
 
 	self clear.
-	display exampleStarting: anExample
+	"display exampleStarting: anExample"
 ]
 
 { #category : #'as yet unclassified' }
@@ -77,48 +80,55 @@ SBWatchView >> initialize [
 		color: Color transparent;
 		cellGap: 8;
 		vResizing: #shrinkWrap;
-		hResizing: #spaceFill;
-		addMorphBack: (SBIcon iconSearch
-			large;
-			on: #click send: #exploreLastValue to: self;
-			balloonText: 'Explore last value';
-			yourself);
-		addMorphBack: (SBIcon iconBar_chart
-			large;
-			on: #click send: #promptChangeDisplay to: self;
-			balloonText: 'Change display type';
-			yourself);
+		hResizing: #shrinkWrap;
 		addMorphBack: (count := SBBadge new
 			contents: '0';
 			balloonText: 'Number of reported values';
-			yourself);
-		useDisplay: SBDisplayPrint
+			yourself)
 ]
 
 { #category : #'as yet unclassified' }
-SBWatchView >> promptChangeDisplay [
+SBWatchView >> lastValue: anObject [
 
-	| choices index |
-	choices := self validDisplaysFor: lastValue.
-	
-	index := UIManager default chooseFrom: choices.
-	index < 1 ifTrue: [^ self].
-	
-	self useDisplay: (choices at: index)
+	lastValue := anObject
+]
+
+{ #category : #'event handling' }
+SBWatchView >> noValue [
+
+	display ifNotNil: #delete
+]
+
+{ #category : #'as yet unclassified' }
+SBWatchView >> object [
+
+	^ lastValue
+]
+
+{ #category : #'as yet unclassified' }
+SBWatchView >> printOn: aStream [
+
+	aStream nextPutAll: 'watch on '.
+	self object printOn: aStream
 ]
 
 { #category : #'as yet unclassified' }
 SBWatchView >> reportValue: anObject [
 
-	hadValue ifFalse: [
-		hadValue := true.
-		self useDisplay: (self validDisplaysFor: anObject) first].
+	hadValue ifFalse: [hadValue := true].
 	
-	(display class matches: anObject) ifFalse: [self useDisplay: SBDisplayPrint].
-	
+	(currentRepresentation notNil and: [currentRepresentation matches: anObject])
+		ifTrue: [display replace: (currentRepresentation derive: anObject)]
+		ifFalse: [self useDisplay: (anObject anyRepresentationThat: self representationTypes)].
+
 	count contents: (count contents asInteger + 1) asString.
-	lastValue := anObject.
-	^ display reportValue: anObject
+	lastValue := anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBWatchView >> representationTypes [
+
+	^ #(isToplevelMorph)
 ]
 
 { #category : #'as yet unclassified' }
@@ -133,18 +143,11 @@ SBWatchView >> storeAsExample [
 ]
 
 { #category : #'as yet unclassified' }
-SBWatchView >> useDisplay: aDisplayClass [
+SBWatchView >> useDisplay: aDisplay [
 
 	display ifNotNil: #delete.
-	display := aDisplayClass new.
-	self addMorphBack: display.
-	lastValue ifNotNil: [display reportValue: lastValue]
-]
-
-{ #category : #'as yet unclassified' }
-SBWatchView >> validDisplaysFor: anObject [
-
-	^ self class watchTypes select: [:display | anObject isNil or: [display matches: anObject]]
+	display := aDisplay.
+	self addMorphBack: display
 ]
 
 { #category : #'as yet unclassified' }
@@ -156,6 +159,7 @@ SBWatchView >> veryDeepCopyWith: deepCopier [
 	
 	new := super veryDeepCopyWith: deepCopier.
 	lastValue := oldLastValue.
+	new lastValue: lastValue.
 	
 	^ new
 ]

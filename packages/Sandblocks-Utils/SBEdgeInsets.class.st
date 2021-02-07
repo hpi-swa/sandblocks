@@ -70,6 +70,12 @@ SBEdgeInsets >> asEdgeInsets [
 ]
 
 { #category : #'as yet unclassified' }
+SBEdgeInsets >> asPoint [
+
+	^ self horizontal @ self vertical
+]
+
+{ #category : #'as yet unclassified' }
 SBEdgeInsets >> bottom [
 
 	^ bottom

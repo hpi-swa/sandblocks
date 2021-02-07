@@ -17,6 +17,12 @@ SBMethodSubstitution class >> causesSideEffects [
 ]
 
 { #category : #'as yet unclassified' }
+SBMethodSubstitution class >> derive: anObject [
+
+	^ anObject
+]
+
+{ #category : #'as yet unclassified' }
 SBMethodSubstitution class >> identity [
 
 	^ false

@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBClassMethodRepresentation class >> isClassEditor [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBClassMethodRepresentation class >> isLeaf [
 
 	^ true

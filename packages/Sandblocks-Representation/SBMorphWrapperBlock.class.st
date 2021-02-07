@@ -37,6 +37,7 @@ SBMorphWrapperBlock >> intoWorld: aWorld [
 	" since our newFrom: needs to be side-effect free, we queue up adding the morph until we're actually being used "	
 	addMorphLater ifNotNil: [
 		self addMorphBack: addMorphLater.
+		self extent: (addMorphLater extent + self layoutInset asEdgeInsets asPoint).
 		addMorphLater := nil]
 ]
 
@@ -44,4 +45,11 @@ SBMorphWrapperBlock >> intoWorld: aWorld [
 SBMorphWrapperBlock >> object [
 
 	^ self firstSubmorph
+]
+
+{ #category : #'as yet unclassified' }
+SBMorphWrapperBlock >> replace: anObject [
+
+	self removeAllMorphs.
+	self addMorphBack: anObject
 ]

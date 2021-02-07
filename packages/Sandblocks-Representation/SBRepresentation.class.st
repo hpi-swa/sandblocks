@@ -17,6 +17,12 @@ SBRepresentation class >> causesSideEffects [
 ]
 
 { #category : #'as yet unclassified' }
+SBRepresentation class >> derive: anObject [
+
+	^ anObject
+]
+
+{ #category : #'as yet unclassified' }
 SBRepresentation class >> eagerNewFor: anObject [
 	" called when eagerly evaluating representations for finding nested combinations.
 	Override if eagerly evaluating will be costly or cause side effects "

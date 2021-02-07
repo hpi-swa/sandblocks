@@ -138,7 +138,7 @@ SBRepresentationPrompt >> options: aCollection target: anObject current: aRepres
 		self: [SBRepresentationPrompt new]
 		args: [{5 representationsThat: #isToplevelMorph. 5. nil}]
 		label: 'example'.
-	currentRepresentation := SBNewWatch report: aRepresentation for: 779709522.
+	currentRepresentation := SBWatch report: aRepresentation for: 779709522.
 	target := anObject.
 	
 	aCollection do: [:option |
