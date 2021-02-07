@@ -398,6 +398,12 @@ SBBasicMethod >> isCollapsed [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> isEditor [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> isInstanceSideMethod [
 
 	^ self isClassSideMethod not

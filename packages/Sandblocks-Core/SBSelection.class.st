@@ -222,7 +222,7 @@ SBSelection >> parentSandblock [
 { #category : #'as yet unclassified' }
 SBSelection >> placeholder [
 
-	self allMorphsDo: [:m | (m isKindOf: SBPastePlaceholder) ifTrue: [^ m]].
+	self allMorphsDo: [:m | (m valueOfProperty: #copyPlaceholder ifAbsent: [false]) ifTrue: [^ m]].
 	^ nil
 ]
 

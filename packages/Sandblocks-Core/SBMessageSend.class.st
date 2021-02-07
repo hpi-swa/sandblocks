@@ -325,6 +325,8 @@ SBMessageSend >> noteNewOwner: aMorph [
 SBMessageSend >> objectInterfaceAt: aNumber adding: aBoolean [
 
 	| base |
+	aBoolean ifTrue: [^ SBInterfaces never].
+	
 	base := self isInCascade ifTrue: [0] ifFalse: 1.
 	aNumber = base ifTrue: [^ SBInterfaces stExpression].
 	^ (aNumber + base) odd

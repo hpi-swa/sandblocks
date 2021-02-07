@@ -221,6 +221,18 @@ SBClass >> isClassContainer [
 ]
 
 { #category : #'as yet unclassified' }
+SBClass >> isEditor [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBClass >> isTopLevel [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBClass >> object [
 
 	^ self relatedClass

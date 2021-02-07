@@ -17,13 +17,11 @@ SBWatchView >> changeDisplay [
 	<action>
 
 	| index options |
-	options := lastValue representationsThat: self representationTypes.
-	index := UIManager default chooseFrom: options.
+	options := Array streamContents: [:stream | lastValue allConversionsFor: SBInterfaces topLevel do: [:pair | stream nextPut: pair]].
+	index := UIManager default chooseFrom: (options collect: #first).
 	index = 0 ifTrue: [^ self].
 	
-	currentRepresentation := options at: index.
-	
-	self useDisplay: (currentRepresentation newFor: lastValue)
+	self useDisplay: (options at: index) second
 ]
 
 { #category : #'event handling' }
@@ -108,18 +106,13 @@ SBWatchView >> reportValue: anObject [
 
 	hadValue ifFalse: [hadValue := true].
 	
-	(currentRepresentation notNil and: [currentRepresentation matches: anObject])
-		ifTrue: [display replace: (currentRepresentation derive: anObject)]
-		ifFalse: [self useDisplay: (anObject anyRepresentationThat: self representationTypes)].
-
+	SBToggledCode
+		comment: 'we want to check if we can/should reuse the previous conversion procedure'
+		active: 1
+		do: {[self useDisplay: (anObject convertedFor: SBInterfaces topLevel do: #yourself)]}.
+	
 	count contents: (count contents asInteger + 1) asString.
 	lastValue := anObject
-]
-
-{ #category : #'as yet unclassified' }
-SBWatchView >> representationTypes [
-
-	^ #(isToplevelMorph)
 ]
 
 { #category : #'as yet unclassified' }

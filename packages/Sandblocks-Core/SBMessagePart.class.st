@@ -49,15 +49,6 @@ SBMessagePart >> currentTextMorph [
 	^ text
 ]
 
-{ #category : #actions }
-SBMessagePart >> deleteAround [
-	<action>
-
-	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-		target: self messageSend;
-		replacer: (SBName contents: self actualContents))
-]
-
 { #category : #'as yet unclassified' }
 SBMessagePart >> deleteBeforeCursor [
 	<inputAction>

@@ -54,6 +54,12 @@ SBPragma >> insertCommandRequest: anAfterBoolean near: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBPragma >> isExpression [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBPragma >> isPragma [
 
 	^ true

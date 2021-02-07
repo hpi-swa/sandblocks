@@ -373,6 +373,12 @@ SBASTNode >> object [
 	^ self
 ]
 
+{ #category : #'object interface' }
+SBASTNode >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	^ (self fixedNumberOfChildren and: [aBoolean]) ifTrue: [SBInterfaces never] ifFalse: [SBInterfaces stExpression]
+]
+
 { #category : #actions }
 SBASTNode >> pasteString [
 	<action>

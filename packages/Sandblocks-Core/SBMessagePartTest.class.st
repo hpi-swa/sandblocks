@@ -46,7 +46,7 @@ SBMessagePartTest >> testDeleteAround [
 	self editorFor: block.
 	
 	block statements first messageParts second deleteAround.
-	self assert: block statements first contents = 'send'
+	self assert: block statements first contents = 'send:'
 ]
 
 { #category : #'as yet unclassified' }

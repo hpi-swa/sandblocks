@@ -85,6 +85,18 @@ SBClassMethodEditor >> isArtefact [
 ]
 
 { #category : #'as yet unclassified' }
+SBClassMethodEditor >> isEditor [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBClassMethodEditor >> isTopLevel [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBClassMethodEditor >> layoutCommands [
 
 	^ SBAlgebraCommand container

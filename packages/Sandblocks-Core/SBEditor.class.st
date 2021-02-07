@@ -803,7 +803,7 @@ SBEditor >> declareClassVariable: aString for: aClass [
 SBEditor >> declareInstanceVariable: aString for: aClass [
 
 	| class |
-	class := self open: aClass.
+	class := self openForEdit: aClass.
 	self do: ((SBInsertCommand newFor: class)
 		container: class instanceVariables;
 		index: class instanceVariables submorphCount + 1;
@@ -1311,13 +1311,19 @@ SBEditor >> okToChange [
 { #category : #actions }
 SBEditor >> open: anObject [
 
-	^ self allBlocksDetect: [:morph | morph isSandblock and: [morph object = anObject]]
+	^ self open: anObject withInterfaces: #()
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> open: anObject withInterfaces: aCollection [
+
+	self
+		allBlocksDetect: [:morph | morph isSandblock and: [morph object = anObject and: [morph satisfies: aCollection]]]
 		ifFound: #select
 		ifNone: [
-		 	anObject
-				representIn: self
-				as: #isToplevelMorph
-				near: scroll offset + (self extent // 2)]
+			anObject
+				convertedFor: (self objectInterfaceAt: 1 adding: true), aCollection
+				do: [:repr | self openMorphInView: repr]]
 ]
 
 { #category : #actions }
@@ -1342,6 +1348,12 @@ SBEditor >> openCompiledMethod: aMethod [
 		detect: [:m | m selector = aMethod selector and: [m methodClass = aMethod methodClass]]
 		ifFound: [:m | m select]
 		ifNone: [self openMorphInView: aMethod asSandblock]
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> openForEdit: anObject [
+
+	^ self open: anObject withInterfaces: SBInterfaces editor
 ]
 
 { #category : #'initialize-release' }
@@ -1393,7 +1405,7 @@ SBEditor >> openOpenWindow [
 	selected := self selectedArtefact.
 	((selected notNil and: [selected object isCompiledCode or: [selected object isBehavior]])
 		ifTrue: [SBCodeOpener new positionNear: self; openFor: selected object]
-		ifFalse: [SBCodeOpener new positionNear: self; open]) ifNotNil: [:methodOrClass | self open: methodOrClass]
+		ifFalse: [SBCodeOpener new positionNear: self; open]) ifNotNil: [:methodOrClass | self openForEdit: methodOrClass]
 ]
 
 { #category : #'submorphs-add/remove' }

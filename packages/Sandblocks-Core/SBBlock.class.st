@@ -434,16 +434,15 @@ SBBlock >> convertTo [
 SBBlock >> copyAround [
 	<action>
 
-	| replacer editor target |
+	| editor target |
 	" create a copy of our surroundings with ourselves replaced "
 	editor := self sandblockEditor.
 	target := self parentSandblock.
 	editor countModifier - 1 timesRepeat: [target := target parentSandblock].
 	
-	replacer := SBPastePlaceholder new.
-	self replaceBy: replacer.
+	self setProperty: #copyPlaceholder toValue: true.
 	editor copyBuffer: target.
-	replacer replaceBy: self
+	self removeProperty: #copyPlaceholder
 ]
 
 { #category : #actions }
@@ -507,29 +506,36 @@ SBBlock >> deleteAround [
 	<action>
 
 	| editor target |
+	SBExample self: ['3 squared' parseInMethod receiver] args: [{}] label: 'example'.
 	editor := self sandblockEditor.
 	target := self parentSandblock.
 	editor countModifier - 1 timesRepeat: [target := target parentSandblock].
 	
 	target parentSandblock ifNil: [^ self].
 	
-	" if we have multiple siblings and our destination can take multiple children, move all "
-	(self parentSandblock childSandblocks size > 1 and: [target parentHasDynamicNumberOfChildren and: [self isStatement]]) ifTrue: [ 
-		SBPastePlaceholder forAll: self parentSandblock childSandblocks root: target copyIn: editor.
+	(self parentSandblock childSandblocks size > 1 and: [target parentHasDynamicNumberOfChildren and: [self isStatement]]) ifTrue: [
+		self setProperty: #copyPlaceholder toValue: true.
+		SBToggledCode
+			comment: 'TODO: we still need to delete adjacent elements before copying'
+			active: 1
+			do: {[editor copyBuffer: target]}.
+		self removeProperty: #copyPlaceholder.
 		
 		editor do: ((SBRecordedCommand newFor: self containingArtefact) record: [:recorder |
 			recorder moveAll: self parentSandblock childSandblocks in: target owner at: target submorphIndex + 1.
 			recorder remove: target]).
 		^ self].
 	
-	(self canDeleteAroundTo: target) ifTrue: [ | replacer |
-		SBPastePlaceholder for: self root: target copyIn: editor.
-		
-		replacer := self "veryDeepCopy".
-		editor do: ((SBReplaceCommand newFor: self containingArtefact)
-			target: target;
-			replacer: replacer).
-		replacer postDuplicate]
+	self
+		convertedFor: target objectInterface
+		do: [:replacer |
+			self setProperty: #copyPlaceholder toValue: true.
+			editor copyBuffer: target.
+			self removeProperty: #copyPlaceholder.
+			editor do: ((SBReplaceCommand newFor: self containingArtefact)
+				target: target;
+				replacer: replacer).
+			replacer postDuplicate]
 ]
 
 { #category : #actions }
@@ -1089,6 +1095,12 @@ SBBlock >> isDeclaration [
 ]
 
 { #category : #testing }
+SBBlock >> isEditor [
+
+	^ false
+]
+
+{ #category : #testing }
 SBBlock >> isExample [
 
 	^ false
@@ -1530,7 +1542,7 @@ SBBlock >> objectInterface [
 { #category : #'object interface' }
 SBBlock >> objectInterfaceAt: aNumber adding: aBoolean [
 
-	^ SBInterfaces stExpression
+	^ SBInterfaces never
 ]
 
 { #category : #'as yet unclassified' }
@@ -1606,37 +1618,19 @@ SBBlock >> pasteAboveOrBelow: anAboveBoolean [
 	| copyBuffer |
 	copyBuffer := self sandblockEditor copyBuffer ifNil: [^ self].
 	copyBuffer wrapsAround ifTrue: [^ self wrapSelectionWith: copyBuffer].
-	SBToggledCode
-		comment: ''
-		active: 2
-		do: {
-			[
-				self sandblockEditor do: (SBCombinedCommand newWith: (copyBuffer submorphs reversed collect: [:target | | index adjacent morph actualTarget |
-					actualTarget := self parentThatAccepts: target ifNone: [^ self].
-					index := adjacent getIndexInOwner.
-					morph := actualTarget veryDeepCopy
-						topCenter: self bottomCenter;
-						postDuplicate;
-						yourself.
-					(adjacent parentSandblock containingArtefact ifNil: [SBInsertCommand newNonEdit] ifNotNil: [:artefact | SBInsertCommand newFor: artefact])
-						index: (anAboveBoolean ifTrue: [index] ifFalse: [index + 1]);
-						container: adjacent owner;
-						morph: morph;
-						yourself]))].
-			[
-				copyBuffer submorphs withIndexDo: [:target :index |
-					target object
-						safeRepresentationThat: (self parentSandblock contextAcceptedRepresentationAt: (anAboveBoolean ifTrue: [self childIndex] ifFalse: [self childIndex + index]))
-						do: [:repr |
-							self sandblockEditor do: ((self containingArtefact = self ifFalse: [SBInsertCommand newFor: self containingArtefact] ifTrue: [SBInsertCommand newNonEdit])
-								morph: (repr center: self center);
-								container: self owner;
-								index: (anAboveBoolean ifTrue: [self submorphIndex] ifFalse: [self submorphIndex + index]);
-								shouldMergeWithNext: index < copyBuffer submorphCount).
-							repr postDuplicateSelf]
-						ifNone: [SBLabel text: ['undo last command?']].
-					anAboveBoolean ifTrue: [self submorphBefore ifNotNil: #select] ifFalse: [self submorphAfter ifNotNil: #select]]]
-		}
+	copyBuffer submorphs veryDeepCopy withIndexDo: [:target :index |
+		target object
+			convertedFor: (self parentSandblock
+				objectInterfaceAt: (anAboveBoolean ifTrue: [self childIndex] ifFalse: [self childIndex + index])
+				adding: true)
+			do: [:repr |
+				self sandblockEditor do: ((self containingArtefact = self ifFalse: [SBInsertCommand newFor: self containingArtefact] ifTrue: [SBInsertCommand newNonEdit])
+					morph: (repr center: self center);
+					container: self owner;
+					index: (anAboveBoolean ifTrue: [self submorphIndex] ifFalse: [self submorphIndex + index]);
+					shouldMergeWithNext: index < copyBuffer submorphCount).
+				repr postDuplicateSelf.
+				repr select]]
 ]
 
 { #category : #actions }
@@ -1817,13 +1811,15 @@ SBBlock >> replaceWithCopyBuffer [
 	copyBuffer := self sandblockEditor copyBuffer.
 	
 	copyBuffer ifNotNil: [ | new |
-		new := (copyBuffer isSelection ifTrue: [copyBuffer firstSubmorph] ifFalse: [copyBuffer]) veryDeepCopy.
+		new := copyBuffer unpackSelection veryDeepCopy.
 		
-		new safeRepresentationThat: self acceptedRepresentation do: [:repr |
-			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-				target: self;
-				replacer: repr).
-			repr postDuplicate] ifNone: []]
+		new
+			convertedFor: self objectInterface
+			do: [:repr |
+				self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+					target: self;
+					replacer: repr).
+				repr postDuplicate]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -2201,7 +2197,7 @@ SBBlock >> swap: aNumber [
 	offset := aNumber.
 	canSwap := [:a :b | (a satisfies: b objectInterface) and: [b satisfies: a objectInterface]].
 	[
-		offset <= children size and: [(canSwap value: self value: (next := children atWrap: (children indexOf: self) + offset)) not]] whileTrue: [offset := offset + aNumber].
+		offset abs <= children size and: [(canSwap value: self value: (next := children atWrap: (children indexOf: self) + offset)) not]] whileTrue: [offset := offset + aNumber].
 	offset = children size ifTrue: [^ self].
 	
 	self sandblockEditor do: ((SBSwapCommand newFor: self containingArtefact)
@@ -2408,6 +2404,11 @@ SBBlock >> withParentChainDo: aBlock [
 { #category : #'as yet unclassified' }
 SBBlock >> wrapSelectionWith: aSelection [
 
+	SBToggledCode
+		comment: 'TODO: this is not quite correct yet'
+		active: 1
+		do: {[(aSelection unpackSelection satisfies: self objectInterface) ifFalse: [^ self]]}.
+	
 	self sandblockEditor doMultiSelection: [:selected |
 		(SBRecordedCommand newFor: self containingArtefact) record: [:recorder | | new placeholder |
 			new := aSelection veryDeepCopy.
