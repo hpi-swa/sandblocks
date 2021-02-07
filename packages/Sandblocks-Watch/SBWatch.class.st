@@ -17,7 +17,7 @@ SBWatch class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
 
-	^ aBlock receiver isBinding and: [aBlock receiver contents = 'SBNewWatch'] and: [aBlock selector = 'report:for:']
+	^ aBlock receiver isBinding and: [aBlock receiver contents = 'SBWatch'] and: [aBlock selector = 'report:for:']
 ]
 
 { #category : #'as yet unclassified' }
@@ -231,7 +231,7 @@ SBWatch >> veryDeepCopyWith: deepCopier [
 { #category : #'as yet unclassified' }
 SBWatch >> writeSourceOn: aStream [
 
-	aStream nextPutAll: '(SBNewWatch report: '.
+	aStream nextPutAll: '(SBWatch report: '.
 	self expression writeSourceOn: aStream.
 	aStream nextPutAll: ' for: '.
 	self identifier storeOn: aStream.

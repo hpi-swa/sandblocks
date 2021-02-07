@@ -33,15 +33,6 @@ SBWatchView >> clear [
 ]
 
 { #category : #'as yet unclassified' }
-SBWatchView >> dark: aBoolean [
-
-	self submorphs from: 1 to: 2 do: [:morph | morph color: (aBoolean ifTrue: [Color lightGray] ifFalse: [Color black])].
-	
-	dark := aBoolean.
-	display dark: aBoolean
-]
-
-{ #category : #'as yet unclassified' }
 SBWatchView >> drawnColor [
 
 	^ Color transparent
@@ -96,7 +87,7 @@ SBWatchView >> lastValue: anObject [
 { #category : #'event handling' }
 SBWatchView >> noValue [
 
-	display ifNotNil: #delete
+	display ifNotNil: [display replaceBy: (display := Morph new color: Color transparent; extent: display fullBounds extent)]
 ]
 
 { #category : #'as yet unclassified' }
