@@ -181,6 +181,12 @@ SBSelection >> methodClass: aClass [
 ]
 
 { #category : #'as yet unclassified' }
+SBSelection >> mode [
+
+	^ #command
+]
+
+{ #category : #'as yet unclassified' }
 SBSelection >> multiSelection [
 
 	^ #()
@@ -254,6 +260,12 @@ SBSelection >> sourceBlock: aBlock [
 SBSelection >> statements [
 
 	^ #()
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> unpackSelection [
+
+	^ self firstSubmorph
 ]
 
 { #category : #'as yet unclassified' }

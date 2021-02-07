@@ -11,6 +11,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInsertCommand >> container [
+
+	^ container
+]
+
+{ #category : #'as yet unclassified' }
 SBInsertCommand >> container: aMorph [
 
 	container := aMorph
@@ -27,6 +33,12 @@ SBInsertCommand >> do [
 SBInsertCommand >> index: aNumber [
 
 	index := aNumber
+]
+
+{ #category : #'as yet unclassified' }
+SBInsertCommand >> morph [
+
+	^ morph
 ]
 
 { #category : #'as yet unclassified' }

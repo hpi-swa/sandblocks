@@ -5,3 +5,9 @@ TransferMorph >> object [
 
 	^ self passenger
 ]
+
+{ #category : #'*Sandblocks-Core' }
+TransferMorph >> unpackSelection [
+
+	^ self passenger
+]

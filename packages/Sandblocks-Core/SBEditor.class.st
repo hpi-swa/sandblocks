@@ -951,6 +951,12 @@ SBEditor >> filterEvent: anEvent for: aMorph [
 	^ anEvent ignore
 ]
 
+{ #category : #accessing }
+SBEditor >> fixedNumberOfChildren [
+
+	^ false
+]
+
 { #category : #'actions input' }
 SBEditor >> focusNextSuggestion [
 	<inputAction>
@@ -976,12 +982,7 @@ SBEditor >> goToMark [
 { #category : #'submorphs-add/remove' }
 SBEditor >> handleDroppedBlock: aMorph event: anEvent [
 
-	self halt.
-	aMorph object
-		representIn: self
-		as: #isToplevelMorph
-		near: ((scroll transformFrom: nil) globalPointToLocal: anEvent position)
-		from: ([aMorph sourceBlock] on: MessageNotUnderstood do: [nil])
+	super handleDroppedBlock: aMorph event: anEvent
 ]
 
 { #category : #'initialize-release' }
@@ -1026,6 +1027,12 @@ SBEditor >> initialize [
 		registerGlobalShortcutListener: errors;
 		
 		resetState
+]
+
+{ #category : #actions }
+SBEditor >> insertCommandRequest: anAfterBoolean near: aBlock [
+
+	^ self openMorphInViewCommand: SBBlock new
 ]
 
 { #category : #selection }
@@ -1281,6 +1288,18 @@ SBEditor >> noteNewOwner: aMorph [
 SBEditor >> object [
 
 	^ nil
+]
+
+{ #category : #'object interface' }
+SBEditor >> objectInterface [
+
+	^ SBInterfaces never
+]
+
+{ #category : #accessing }
+SBEditor >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	^ SBInterfaces block, SBInterfaces topLevel
 ]
 
 { #category : #actions }

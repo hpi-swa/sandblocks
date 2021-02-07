@@ -11,12 +11,6 @@ SBEmptyLine >> canAppearInBlockBody [
 ]
 
 { #category : #'as yet unclassified' }
-SBEmptyLine >> canSwap [
-
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
 SBEmptyLine >> childSandblocksDo: aBlock [
 ]
 

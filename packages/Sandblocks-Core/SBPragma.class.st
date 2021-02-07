@@ -26,12 +26,6 @@ SBPragma >> canAppearInBlockBody [
 ]
 
 { #category : #'as yet unclassified' }
-SBPragma >> canSwap [
-
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
 SBPragma >> childSandblocksDo: aBlock [
 
 	signature childSandblocksDo: aBlock

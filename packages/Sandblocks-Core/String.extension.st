@@ -92,6 +92,16 @@ String >> parseAsSandblockWithoutSubstitution [
 ]
 
 { #category : #'*Sandblocks-Core' }
+String >> parseInMethod [
+	" convenience method making it easier to construct a valid environment for code blocks "
+
+	| block |
+	block := self parseAsSandblock.
+	SBTest editorFor: block.
+	^ block
+]
+
+{ #category : #'*Sandblocks-Core' }
 String >> sandblockMatch: aString [
 	" matching specific to what appears a good heuristic in auto completion "
 

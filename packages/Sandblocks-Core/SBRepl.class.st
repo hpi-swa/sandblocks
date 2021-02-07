@@ -214,6 +214,12 @@ SBRepl >> isRepl [
 	^ true
 ]
 
+{ #category : #testing }
+SBRepl >> isTopLevel [
+
+	^ true
+]
+
 { #category : #'as yet unclassified' }
 SBRepl >> layoutCommands [
 

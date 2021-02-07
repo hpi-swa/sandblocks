@@ -417,6 +417,12 @@ SBBasicMethod >> isMyArgument: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBBasicMethod >> isTopLevel [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBBasicMethod >> methodChanged: anEvent [
 
 	((self hasProperty: #ignoreChangeNotifier) not and: (anEvent item selector = self selector and: [anEvent item methodClass = self methodClass])) ifTrue: [

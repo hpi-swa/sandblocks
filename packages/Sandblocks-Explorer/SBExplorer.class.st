@@ -172,6 +172,12 @@ SBExplorer >> isCollapsed [
 ]
 
 { #category : #'as yet unclassified' }
+SBExplorer >> isTopLevel [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBExplorer >> label [
 
 	^ self firstSubmorph lastSubmorph
@@ -187,6 +193,12 @@ SBExplorer >> object [
 SBExplorer >> object: anObject [
 
 	object := anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBExplorer >> objectInterface [
+
+	^ SBInterfaces topLevel
 ]
 
 { #category : #'as yet unclassified' }

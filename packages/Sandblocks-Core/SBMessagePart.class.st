@@ -13,6 +13,13 @@ SBMessagePart >> actualContents [
 	^ text contents
 ]
 
+{ #category : #actions }
+SBMessagePart >> asName: aConverter [
+	<convert>
+	
+	^ aConverter do: [SBName new contents: self contents]
+]
+
 { #category : #'as yet unclassified' }
 SBMessagePart >> childSandblocksDo: aBlock [
 ]

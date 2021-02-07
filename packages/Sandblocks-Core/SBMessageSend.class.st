@@ -52,12 +52,6 @@ SBMessageSend >> browseImplementors [
 ]
 
 { #category : #'as yet unclassified' }
-SBMessageSend >> canSwap [
-
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
 SBMessageSend >> cellGap [
 
 	^ self colorPolicy messageCellGap
@@ -325,6 +319,17 @@ SBMessageSend >> noteNewOwner: aMorph [
 	super noteNewOwner: aMorph.
 	
 	self isInCascade ifTrue: [self receiver: nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBMessageSend >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	| base |
+	base := self isInCascade ifTrue: [0] ifFalse: 1.
+	aNumber = base ifTrue: [^ SBInterfaces stExpression].
+	^ (aNumber + base) odd
+		ifTrue: [SBInterfaces stMessagePart]
+		ifFalse: [SBInterfaces stExpression]
 ]
 
 { #category : #'as yet unclassified' }

@@ -40,7 +40,9 @@ SBBlock >> acceptDroppingMorph: aMorph event: anEvent [
 	self sandblockEditor containingWindow ifNotNil: #beKeyWindow.
 	self allOwnersDo: #resetHighlightForDrop.
 	self resetHighlightForDrop.
-	self handleDroppedBlock: aMorph event: anEvent
+	
+	self dropLocationDo: [:position :morph :horizontal |
+		self handleDroppedBlock: aMorph event: anEvent adding: self fixedNumberOfChildren not near: morph]
 ]
 
 { #category : #'as yet unclassified' }
@@ -181,12 +183,6 @@ SBBlock >> canDeleteChild: aBlock [
 	^ self fixedNumberOfChildren not
 ]
 
-{ #category : #testing }
-SBBlock >> canEvaluate [
-
-	^ self isExpression
-]
-
 { #category : #actions }
 SBBlock >> canInput [
 
@@ -200,12 +196,6 @@ SBBlock >> canInput [
 SBBlock >> canJumpTo: aBlock [
 
 	^ aBlock parentSandblock containingArtefact = self containingArtefact or: [self containingArtefact notNil and: [self containingArtefact floating not]]
-]
-
-{ #category : #testing }
-SBBlock >> canSwap [
-
-	^ self isExpression
 ]
 
 { #category : #'as yet unclassified' }
@@ -426,6 +416,21 @@ SBBlock >> contextAcceptedRepresentationAt: aNumber [
 ]
 
 { #category : #actions }
+SBBlock >> convertTo [
+	<action>
+
+	| options index |
+	options := Array streamContents: [:stream | self object allConversionsFor: self objectInterface do: [:pair | stream nextPut: pair]].
+	options ifEmpty: [^ self].
+	
+	index := UIManager default chooseFrom: (options collect: #first).
+	index > 0 ifTrue: [
+		self sandblockEditor do: ((SBReplaceCommand newOrEditFor: self containingArtefact)
+			target: self;
+			replacer: (options at: index) second)]
+]
+
+{ #category : #actions }
 SBBlock >> copyAround [
 	<action>
 
@@ -620,8 +625,8 @@ SBBlock >> drawDropHighlightOn: aCanvas [
 		self fixedNumberOfChildren
 			ifTrue: [
 				aCanvas frameRectangle: self bounds width: 3 color: Color red]
-			ifFalse: [ | dropLocation |
-				dropLocation := self dropLocationDo: [:position :morph :horizontal |
+			ifFalse: [
+				self dropLocationDo: [:position :morph :horizontal |
 					aCanvas
 						frameRectangle: self bounds width: 3 color: (Color red alpha: 0.3);
 						line: position
@@ -746,54 +751,6 @@ SBBlock >> ensureVisible [
 		self isInWorld ifTrue: [self sandblockEditor ifNotNil: [:e | e scrollToShow: self]]]
 ]
 
-{ #category : #'as yet unclassified' }
-SBBlock >> evaluate [
-
-	^ self containingArtefact
-		ifNotNil: [:artefact | | context |
-			context := artefact evaluationContext.
-			Compiler new
-				evaluate: self sourceString
-				in: context
-				to: (context ifNil: [artefact evaluationReceiver] ifNotNil: #receiver)
-				notifying: artefact
-				ifFail: nil]
-		ifNil: [Compiler evaluate: self sourceString]
-]
-
-{ #category : #actions }
-SBBlock >> evaluateExpression [
-	<action>
-	<actionValidIf: #canEvaluate>
-
-	| result explorer |
-	result := self evaluate.
-	self containingArtefact ifNotNil: [
-		self containingArtefact cacheType: result class for: self].
-	
-	explorer := result representIn: self sandblockEditor as: #isToplevelMorph near: self.
-	explorer focusAfterDelete: self.
-	self sandblockEditor connectFrom: self to: explorer
-]
-
-{ #category : #'as yet unclassified' }
-SBBlock >> evaluateWith: aRequestor for: aContext [
-
-	^ Compiler new evaluate: self sourceString readStream in: aContext to: (aContext ifNotNil: #receiver ifNil: [self containingArtefact relatedClass]) notifying: aRequestor ifFail: nil
-]
-
-{ #category : #'artefact protocol' }
-SBBlock >> evaluationContext [
-
-	^ nil
-]
-
-{ #category : #'artefact protocol' }
-SBBlock >> evaluationReceiver [
-
-	^ nil
-]
-
 { #category : #hierarchy }
 SBBlock >> firstDeepChild [
 
@@ -886,27 +843,25 @@ SBBlock >> handleDropMorph: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBBlock >> handleDroppedBlock: aBlock event: anEvent [
+SBBlock >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
-	aBlock isSelection ifTrue: [ | replacer |
-		replacer := aBlock childSandblocks first.
-		self isExpression ifTrue: [
-			replacer isExpression
-				ifTrue: [
-					self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-						replacer: replacer;
-						target: self)]
-				ifFalse: [ | index |
-					index := UIManager default chooseFrom: {'Store into new Class Variable'}.
-					index > 0 ifTrue: [ | class name |
-						name := UIManager default request: 'Name for class variable?'.
-						class := self containingArtefact relatedClass.
-						self sandblockEditor declareClassVariable: name for: class.
-						((self sandblockEditor open: class) saveTryFixing: false quick: false) ifTrue: [
-							(class classBindingOf: name) value: replacer object.
-							self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-								replacer: (SBName contents: name);
-								target: self)]]]]]
+	aBlock unpackSelection convertedFor: self objectInterfaceForDrop do: [:block | | reference |
+		self sandblockEditor do: (aBoolean
+			ifTrue: [ | insert |
+				insert := self insertCommandRequest: false near: aMorph.
+				reference := insert container.
+				SBCombinedCommand newWith: {
+					insert.
+					(SBReplaceCommand newOrEditFor: self containingArtefact)
+						target: insert morph;
+						replacer: block
+				}]
+			ifFalse: [
+				reference := self.
+				(SBReplaceCommand newOrEditFor: self containingArtefact)
+					target: self;
+					replacer: block]).
+		block position: ((reference transformFrom: nil) globalPointToLocal: anEvent position)]
 ]
 
 { #category : #'event handling' }
@@ -1278,6 +1233,12 @@ SBBlock >> isSelection [
 ]
 
 { #category : #testing }
+SBBlock >> isSmalltalk [
+
+	^ false
+]
+
+{ #category : #testing }
 SBBlock >> isStringBlock [
 
 	^ false
@@ -1291,6 +1252,12 @@ SBBlock >> isSymbolBlock [
 
 { #category : #testing }
 SBBlock >> isTemporaries [
+
+	^ false
+]
+
+{ #category : #testing }
+SBBlock >> isTopLevel [
 
 	^ false
 ]
@@ -1552,6 +1519,26 @@ SBBlock >> object [
 
 	"Should be self subclassResponsibility but often causes non-recoverable errors with drag and drop"
 	^ nil
+]
+
+{ #category : #'object interface' }
+SBBlock >> objectInterface [
+
+	^ self parentSandblock objectInterfaceAt: self childIndex adding: false
+]
+
+{ #category : #'object interface' }
+SBBlock >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	^ SBInterfaces stExpression
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> objectInterfaceForDrop [
+
+	^ self fixedNumberOfChildren
+		ifTrue: [self objectInterface]
+		ifFalse: [self dropLocationDo: [:position :morph :horizontal | self objectInterfaceAt: morph childIndex adding: true]]
 ]
 
 { #category : #actions }
@@ -2204,16 +2191,22 @@ SBBlock >> suggestionsMenu [
 { #category : #'as yet unclassified' }
 SBBlock >> swap: aNumber [
 
-	| next children |
-	children := self parentSandblock childSandblocks select: #canSwap.
-	children ifEmpty: [^ self].
+	| next children offset canSwap |
+	SBExample
+		self: ['3 + 4' parseInMethod receiver]
+		args: [{1}]
+		label: 'example'
+		assert: [[:o | o parentSandblock receiver contents = '4']].
+	children := self parentSandblock childSandblocks.
+	offset := aNumber.
+	canSwap := [:a :b | (a satisfies: b objectInterface) and: [b satisfies: a objectInterface]].
+	[
+		offset <= children size and: [(canSwap value: self value: (next := children atWrap: (children indexOf: self) + offset)) not]] whileTrue: [offset := offset + aNumber].
+	offset = children size ifTrue: [^ self].
 	
-	next := children atWrap: (children indexOf: self) + aNumber.
-	next ifNotNil: [
-		self sandblockEditor
-			do: ((SBSwapCommand newFor: self containingArtefact)
-				a: self;
-				b: next)]
+	self sandblockEditor do: ((SBSwapCommand newFor: self containingArtefact)
+		a: (SBExampleWatch report: self for: 1023101891);
+		b: (SBExampleWatch report: next for: 63958237))
 ]
 
 { #category : #actions }
@@ -2357,19 +2350,12 @@ SBBlock >> veryDeepCopyWith: aCopier [
 { #category : #'as yet unclassified' }
 SBBlock >> wantsDroppedMorph: aMorph event: evt [
 
-	^ (aMorph respondsTo: #object) and: [
-		SBToggledCode
-			comment: 'strong hit on performance'
-			active: 2
-			do: {
-				[
-					aMorph object hasRepresentationThat: (self fixedNumberOfChildren
-						ifTrue: [self acceptedRepresentation]
-						ifFalse: [
-							self dropLocationDo: [:position :morph :horizontal |
-								self parentSandblock contextAcceptedRepresentationAt: morph childIndex]])].
-				[true]
-			}]
+	((aMorph isSandblock and: [aMorph isSelection]) or: [aMorph isKindOf: TransferMorph]) ifFalse: [^ false].
+
+	aMorph unpackSelection
+		convertedFor: self objectInterfaceForDrop
+		do: [:repr | ^ true].
+	^ false
 ]
 
 { #category : #testing }

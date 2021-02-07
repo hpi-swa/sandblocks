@@ -14,6 +14,13 @@ SBMorphWrapperBlock >> addMorphLater: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBMorphWrapperBlock >> asMorphBlock: convert [
+	<convert>
+	
+	" we ignore requests to wrap ourselves "
+]
+
+{ #category : #'as yet unclassified' }
 SBMorphWrapperBlock >> childSandblocksDo: aBlock [
 ]
 
@@ -39,6 +46,12 @@ SBMorphWrapperBlock >> intoWorld: aWorld [
 		self addMorphBack: addMorphLater.
 		self extent: (addMorphLater extent + self layoutInset asEdgeInsets asPoint).
 		addMorphLater := nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBMorphWrapperBlock >> isTopLevel [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

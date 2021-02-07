@@ -1,5 +1,31 @@
 Extension { #name : #Object }
 
+{ #category : #'*Sandblocks-Core-converting' }
+Object >> allConversionsFor: anInterfaceCollection do: aBlock [
+
+	^ self allConversionsFor: anInterfaceCollection do: aBlock depth: 2 pathName: ''
+]
+
+{ #category : #'*Sandblocks-Core-converting' }
+Object >> allConversionsFor: anInterfaceCollection do: aBlock depth: aNumber pathName: aString [
+
+	| convert current |
+	current := nil.
+	convert := SBConvert new success: [:object | | path |
+		path := aString, (aString ifEmpty: [''] ifNotEmpty: [' -> ']), current selector.
+		(object satisfies: anInterfaceCollection) ifTrue: [aBlock value: {path. object}].
+		aNumber > 0 ifTrue: [
+			object
+				allConversionsFor: anInterfaceCollection
+				do: aBlock
+				depth: aNumber - 1
+				pathName: path]].
+	
+	(Pragma allNamed: #convert from: self class to: Object) do: [:pragma |
+		current := pragma.
+		(self perform: pragma selector with: convert)]
+]
+
 { #category : #'*Sandblocks-Core' }
 Object >> anyRepresentationThat: aSymbol [
 
@@ -14,6 +40,26 @@ Object >> asSandblock [
 
 	SBDataProjection allSubclassesDo: [:class | (class matches: self) ifTrue: [^ class new object: self]].
 	^ SBExplorer on: self
+]
+
+{ #category : #'*Sandblocks-Core-converting' }
+Object >> bindToPlayground: convert [
+	<convert>
+	
+	convert do: [SBRepl new receiver: self; statements: {SBName contents: 'self'}]
+]
+
+{ #category : #'*Sandblocks-Core-converting' }
+Object >> convertedFor: anInterfaceCollection do: aBlock [
+
+	| convert |
+	(self satisfies: anInterfaceCollection) ifTrue: [^ aBlock value: self].
+	
+	convert := SBConvert new success: [:object |
+		(object satisfies: anInterfaceCollection) ifTrue: [^ aBlock value: object]].
+	
+	(Pragma allNamed: #convert from: self class to: Object) do: [:pragma |
+		(self perform: pragma selector with: convert)]
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -47,6 +93,13 @@ Object >> isSandblock [
 Object >> newFirstSafeOptionFrom: aCollection [
 
 	^ (self firstSafeOptionFrom: aCollection) newFor: self
+]
+
+{ #category : #'*Sandblocks-Core-converting' }
+Object >> openExplorer: convert [
+	<convert>
+	
+	convert do: [SBExplorer on: self]
 ]
 
 { #category : #'*Sandblocks-Core' }

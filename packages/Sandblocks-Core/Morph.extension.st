@@ -7,6 +7,17 @@ Morph >> allMorphsDoBreadthFirst: aBlock [
 	self submorphsDo: [:m | m allMorphsDoBreadthFirst: aBlock]
 ]
 
+{ #category : #'*Sandblocks-Core' }
+Morph >> asMorphBlock: converter [
+	<convert>
+	
+	^ converter
+		if: [
+			" morph blocks purpose is to allow other morphs to be toplevel, so not needed if we already are "
+			(self satisfies: SBInterfaces topLevel) not]
+		do: [SBMorphWrapperBlock new addMorphLater: self]
+]
+
 { #category : #'*Sandblocks-Core-layout' }
 Morph >> calculateSizeForWidth: aNumber [
 
@@ -401,6 +412,12 @@ Morph >> topFirstMorphThat: aBlock [
 
 	self allMorphsDoBreadthFirst: [:m | (aBlock value: m) ifTrue: [^ m]].
 	^ nil
+]
+
+{ #category : #'*Sandblocks-Core' }
+Morph >> unpackSelection [
+
+	^ self
 ]
 
 { #category : #'*Sandblocks-Core' }

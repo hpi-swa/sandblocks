@@ -51,3 +51,10 @@ CompiledMethod >> enumerateInstructions: aDebuggerMap of: aCompiledCode on: aStr
 		instruction selector = #pushFullClosure:numCopied: ifTrue: [
 			self enumerateInstructions: aDebuggerMap of: instruction arguments first on: aStream]]
 ]
+
+{ #category : #'*Sandblocks-Core' }
+CompiledMethod >> open: convert [
+	<convert>
+	
+	convert do: [self asSandblock]
+]

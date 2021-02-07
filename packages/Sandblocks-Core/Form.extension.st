@@ -1,6 +1,13 @@
 Extension { #name : #Form }
 
 { #category : #'*Sandblocks-Core' }
+Form >> asMorph: convert [
+	<convert>
+	
+	^ convert do: [self asMorph]
+]
+
+{ #category : #'*Sandblocks-Core' }
 Form >> fillColor: aColor [
 
 	self getCanvas fillColor: aColor

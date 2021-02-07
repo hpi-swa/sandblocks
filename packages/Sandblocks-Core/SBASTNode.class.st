@@ -28,6 +28,22 @@ SBASTNode >> addExample [
 			label: 'example'))
 ]
 
+{ #category : #converting }
+SBASTNode >> asMessagePart: aConverter [
+	<convert>
+	
+	^ aConverter
+		if: [self currentTextMorph notNil]
+		do: [SBMessagePart new contents: self contents]
+]
+
+{ #category : #converting }
+SBASTNode >> asMorphBlock: converter [
+	<convert>
+	
+	" we can't generally convert ourselves to morphs since we need our artefact owner "
+]
+
 { #category : #actions }
 SBASTNode >> browseImplementors [
 	<action>
@@ -77,7 +93,7 @@ SBASTNode >> changeToUnknown [
 			startInput: new at: 0 replacingContents: false]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBASTNode >> contextAcceptedRepresentationAt: aNumber [
 
 	^ #isSmalltalkExpression
@@ -104,6 +120,49 @@ SBASTNode >> debugExpression [
 		receiver: (context ifNotNil: #receiver).
 	
 	self sandblockEditor reportError: nil process: process
+]
+
+{ #category : #evaluate }
+SBASTNode >> evaluate [
+
+	^ self containingArtefact
+		ifNotNil: [:artefact | | context |
+			context := artefact evaluationContext.
+			Compiler new
+				evaluate: self sourceString
+				in: context
+				to: (context ifNil: [artefact evaluationReceiver] ifNotNil: #receiver)
+				notifying: artefact
+				ifFail: nil]
+		ifNil: [Compiler evaluate: self sourceString]
+]
+
+{ #category : #evaluate }
+SBASTNode >> evaluateExpression [
+	<action>
+	<actionValidIf: #isExpression>
+
+	| result |
+	result := self evaluate.
+	self containingArtefact ifNotNil: [
+		self containingArtefact cacheType: result class for: self].
+	
+	result convertedFor: SBInterfaces topLevel do: [:morph |
+		self sandblockEditor openMorphInView: morph.
+		morph focusAfterDelete: self.
+		self sandblockEditor connectFrom: self to: morph]
+]
+
+{ #category : #evaluate }
+SBASTNode >> evaluationContext [
+
+	^ nil
+]
+
+{ #category : #evaluate }
+SBASTNode >> evaluationReceiver [
+
+	^ nil
 ]
 
 { #category : #actions }
@@ -169,23 +228,23 @@ SBASTNode >> fixedNumberOfChildren [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBASTNode >> guessClassExpensive [
 
 	^ self guessedClass ifNil: [[(SBSandboxSimulator new simulate: [self evaluate]) ifNotNil: #class] on: Error do: [nil]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBASTNode >> guessedClass [
 
 	" return a non-nil value to help services like autocompletion do their job "
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBASTNode >> handleDroppedBlock: aBlock event: anEvent [
 
-	self fixedNumberOfChildren
+	"self fixedNumberOfChildren
 		ifTrue: [ | replacer |
 			replacer := (aBlock object anyRepresentationThat: self acceptedRepresentation) ifNil: [aBlock firstSubmorph].
 			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
@@ -198,7 +257,7 @@ SBASTNode >> handleDroppedBlock: aBlock event: anEvent [
 				self sandblockEditor do: ((self insertCommandRequest: false near: morph) shouldMergeWithNext: true).
 				self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
 					target: self sandblockEditor selection;
-					replacer: replacer)]]
+					replacer: replacer)]]"
 ]
 
 { #category : #'actions input' }
@@ -219,7 +278,7 @@ SBASTNode >> insertLabelAbove [
 	self insertLabelAboveOrBelow: true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBASTNode >> insertLabelAboveOrBelow: anAboveBoolean [
 
 	| currentStatement index newStatement |
@@ -278,7 +337,7 @@ SBASTNode >> insertStatementBelow [
 	self insertStatementAboveOrBelow: false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBASTNode >> isASTNode [
 
 	^ true
@@ -288,6 +347,12 @@ SBASTNode >> isASTNode [
 SBASTNode >> isReturn [
 
 	^ false
+]
+
+{ #category : #testing }
+SBASTNode >> isSmalltalk [
+
+	^ true
 ]
 
 { #category : #testing }
@@ -302,7 +367,7 @@ SBASTNode >> newNullBlock [
 	^ SBUnknown new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBASTNode >> object [
 
 	^ self
@@ -328,19 +393,19 @@ SBASTNode >> pasteString [
 	block postDuplicate
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBASTNode >> pc [
 
 	^ 0
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBASTNode >> pc: aNumber [
 
 	" save a pc if you are an accessible point during execution "
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBASTNode >> prettySourceString [
 
 	^ SBFormatter formatString: self sourceString class: self containingArtefact relatedClass noPattern: self ~= self containingArtefact
@@ -395,7 +460,7 @@ SBASTNode >> selectionLabel [
 		self guessedClass ifNotNil: [:c | stream space; nextPut: $(. c printOn: stream. stream nextPut: $)]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBASTNode >> sourceString [
 
 	^ String streamContents: [:s | self writeSourceOn: s]
@@ -409,7 +474,7 @@ SBASTNode >> unpackList [
 	self sandblockEditor do: ((SBUnwrapConsecutiveCommand newFor: self containingArtefact) target: self)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBASTNode >> updatePCFrom: aBlock [
 
 	self pc: aBlock pc
@@ -573,6 +638,13 @@ SBASTNode >> wrapInMessageSend: aString [
 		yourself).
 	self sandblockEditor startInput: msg at: 900000000 replacingContents: false.
 	^ msg
+]
+
+{ #category : #converting }
+SBASTNode >> wrapInPlayground: convert [
+	<convert>
+	
+	convert do: [SBRepl new statements: {self veryDeepCopy}]
 ]
 
 { #category : #actions }

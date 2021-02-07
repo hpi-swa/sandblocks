@@ -11,12 +11,6 @@ SBScmASTNode >> canEvaluate [
 ]
 
 { #category : #'as yet unclassified' }
-SBScmASTNode >> canSwap [
-
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
 SBScmASTNode >> changeToUnknown [
 	<action>
 
