@@ -94,12 +94,14 @@ SBMessageSend >> contents: aString [
 { #category : #'as yet unclassified' }
 SBMessageSend >> deleteCommandFor: aBlock [
 
+	aBlock = self receiver ifTrue: [^ super deleteCommandFor: aBlock].
+
 	self isUnary ifTrue: [
 		^ (SBReplaceCommand newFor: self containingArtefact)
 			target: self;
 			replacer: self receiver].
 	
-	^ aBlock = self receiver ifTrue: [super deleteCommandFor: aBlock] ifFalse: [signature deleteCommandFor: aBlock]
+	^ signature deleteCommandFor: aBlock
 ]
 
 { #category : #'as yet unclassified' }

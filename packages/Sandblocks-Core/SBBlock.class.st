@@ -2308,12 +2308,22 @@ SBBlock >> veryDeepCopyWith: aCopier [
 { #category : #'as yet unclassified' }
 SBBlock >> wantsDroppedMorph: aMorph event: evt [
 
+	| response |
 	((aMorph isSandblock and: [aMorph isSelection]) or: [aMorph isKindOf: TransferMorph]) ifFalse: [^ false].
-
-	aMorph unpackSelection
-		convertedFor: self objectInterfaceForDrop
-		do: [:repr | ^ true].
-	^ false
+	" we may sometimes be asked this for a morph that is not in a valid environment "
+	self sandblockEditor ifNil: [^ false].
+	
+	response := nil.
+	aMorph
+		valueOfProperty: #cachedWantsDropResponse
+		ifPresentDo: [:assoc | (assoc key hasEqualElements: self objectInterfaceForDrop) ifTrue: [response := assoc value]].
+	
+	response ifNil: [ | interface |
+		interface := self objectInterfaceForDrop.
+		response := (aMorph unpackSelection convertedFor: interface do: [:repr | repr]) notNil.
+		aMorph setProperty: #cachedWantsDropResponse toValue: interface -> response].
+	
+	^ response
 ]
 
 { #category : #testing }

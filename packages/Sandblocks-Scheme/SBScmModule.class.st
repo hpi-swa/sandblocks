@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBScmModule class >> fromString: aString [
+
+	^ SBScmParser new parse: aString readStream
+]
+
+{ #category : #'as yet unclassified' }
 SBScmModule >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	| sym |

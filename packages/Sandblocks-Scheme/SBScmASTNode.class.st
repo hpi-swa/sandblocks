@@ -63,6 +63,13 @@ SBScmASTNode >> evaluateExpression [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmASTNode >> inSmalltalk: converter [
+	<convert>
+	
+	^ converter do: [SBLanguageBox new source: self sourceString lang: 'scheme']
+]
+
+{ #category : #'as yet unclassified' }
 SBScmASTNode >> initialize [
 
 	super initialize.
