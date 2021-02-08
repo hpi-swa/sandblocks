@@ -46,7 +46,7 @@ Object >> asSandblock [
 Object >> bindToPlayground: convert [
 	<convert>
 	
-	convert do: [SBRepl new receiver: self; statements: {SBName contents: 'self'}]
+	convert do: [SBStPlayground new receiver: self; statements: {SBStName contents: 'self'}]
 ]
 
 { #category : #'*Sandblocks-Core-converting' }

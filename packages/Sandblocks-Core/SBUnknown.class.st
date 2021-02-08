@@ -1,6 +1,6 @@
 Class {
 	#name : #SBUnknown,
-	#superclass : #SBStLiteral,
+	#superclass : #SBBlock,
 	#instVars : [
 		'grammarHandler',
 		'deleteIfDismissed'
@@ -15,12 +15,35 @@ SBUnknown >> acceptCharacter: aCharacter [
 ]
 
 { #category : #'as yet unclassified' }
+SBUnknown >> acceptInputEvent: anEvent [
+
+	self currentTextMorph keyStroke: anEvent.
+	
+	self flag: #fixme. " auto-complete unambiguous matches? "
+	self validContents ifFalse: [
+		self currentTextMorph deleteBeforeCursor.
+		SBScmGrammarHandler new perform: anEvent keyCharacter for: self empty: false]
+]
+
+{ #category : #'as yet unclassified' }
+SBUnknown >> contents [
+
+	^ self currentTextMorph contents
+]
+
+{ #category : #accessing }
 SBUnknown >> contents: aString [
 
 	aString ifNotEmpty: [ | editor |
 		editor := self sandblockEditor.
 		self acceptCharacter: aString first.
 		editor currentInput contents: editor currentInput contents, aString allButFirst]
+]
+
+{ #category : #accessing }
+SBUnknown >> currentTextMorph [
+
+	^ self firstSubmorph
 ]
 
 { #category : #accessing }
@@ -56,7 +79,7 @@ SBUnknown >> endInput [
 { #category : #accessing }
 SBUnknown >> grammarHandler [
 
-	^ grammarHandler ifNil: [SBSmalltalkGrammarHandler new]
+	^ grammarHandler
 ]
 
 { #category : #accessing }
@@ -70,15 +93,21 @@ SBUnknown >> initialize [
 
 	super initialize.
 	
+	self
+		addMorphBack: SBOwnTextMorph new;
+		layoutPolicy: SBAlgebraLayout new;
+		hResizing: #shrinkWrap;
+		vResizing: #shrinkWrap.
+	
 	deleteIfDismissed := false.
 	
-	text italic; colorAlpha: 0.7
+	self currentTextMorph italic; colorAlpha: 0.7
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBUnknown >> isExpression [
 
-	^ self grammarHandler isKindOf: SBSmalltalkGrammarHandler
+	^ true
 ]
 
 { #category : #testing }
@@ -99,6 +128,20 @@ SBUnknown >> label: aString [
 	text contents: aString
 ]
 
+{ #category : #'as yet unclassified' }
+SBUnknown >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: {self currentTextMorph layoutCommands}
+]
+
+{ #category : #accessing }
+SBUnknown >> moveCursorTo: aNumber [
+
+	self currentTextMorph moveCursorTo: aNumber
+]
+
 { #category : #accessing }
 SBUnknown >> newNullBlock [
 
@@ -109,6 +152,39 @@ SBUnknown >> newNullBlock [
 SBUnknown >> printOn: aStream [
 
 	aStream nextPutAll: 'unknown'
+]
+
+{ #category : #'as yet unclassified' }
+SBUnknown >> startInputAt: aNumber replacingContents: aBoolean [
+
+	| cmd |
+	cmd := (SBInputCommand newOrEditFor: self containingArtefact)
+		oldMorph: self;
+		previousText: self currentTextMorph contents;
+		yourself.
+	
+	aBoolean
+		ifTrue: [self contents: ''; moveCursorTo: 0]
+		ifFalse: [self moveCursorTo: aNumber].
+	
+	^ cmd
+]
+
+{ #category : #'as yet unclassified' }
+SBUnknown >> stopEditing [
+
+	self currentTextMorph stopEditing.
+	self removeSuggestionMenu
+]
+
+{ #category : #'as yet unclassified' }
+SBUnknown >> stopEditing: aCommand [
+
+	aCommand
+		newText: self currentTextMorph contents;
+		newMorph: self.
+	
+	self stopEditing
 ]
 
 { #category : #accessing }

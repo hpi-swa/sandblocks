@@ -19,5 +19,5 @@ SBStMessagePartRepresentation class >> matches: anObject [
 { #category : #'as yet unclassified' }
 SBStMessagePartRepresentation class >> newFor: anObject [
 
-	^ SBMessagePart new contents: anObject
+	^ SBStMessagePart new contents: anObject
 ]

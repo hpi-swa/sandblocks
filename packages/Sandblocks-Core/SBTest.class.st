@@ -43,9 +43,9 @@ SBTest class >> methodFor: aBlock [
 
 	| editor |
 	editor := SBEditor new useVimInput.
-	editor openMorphInView: (SBMethod new
+	editor openMorphInView: (SBStMethod new
 		selector: #test arguments: #() class: nil class;
-		body: (SBBlockBody new statements: {aBlock})).
+		body: (SBStBlockBody new statements: {aBlock})).
 	aBlock select.
 	^ editor
 ]

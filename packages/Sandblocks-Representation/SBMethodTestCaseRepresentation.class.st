@@ -21,7 +21,7 @@ SBMethodTestCaseRepresentation class >> newFor: anObject [
 
 	| block |
 	block := anObject asSandblock.
-	^ SBTestCase new
+	^ SBStTestCase new
 		selector: block selector arguments: block arguments class: block methodClass;
 		body: block body;
 		yourself

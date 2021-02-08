@@ -31,7 +31,7 @@ SBPlaygroundBindRepresentation class >> matches: anObject [
 { #category : #'as yet unclassified' }
 SBPlaygroundBindRepresentation class >> newFor: anObject [
 
-	^ SBRepl new receiver: anObject; statements: {SBName contents: 'self'}
+	^ SBStPlayground new receiver: anObject; statements: {SBStName contents: 'self'}
 ]
 
 { #category : #'as yet unclassified' }

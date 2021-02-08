@@ -30,7 +30,7 @@ SBStExpressionRepresentation class >> newFor: anObject [
 	- deep copy is generally better, but we want the representation as ast nodes, even if we're a projection 
 	- #sourceString produces errors when unknowns are in the expression
 	"
-	^ (anObject isKindOf: SBSubstitution)
+	^ (anObject isKindOf: SBStSubstitution)
 		ifTrue: [anObject sourceString parseAsSandblockWithoutSubstitution]
 		ifFalse: [anObject veryDeepCopy]
 ]

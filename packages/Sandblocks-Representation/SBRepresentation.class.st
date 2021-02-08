@@ -70,8 +70,8 @@ SBRepresentation class >> priority [
 SBRepresentation class >> representationsDo: aBlock for: anObject [
 
 	self allSubclassesDo: aBlock.
-	SBSubstitution allSubclassesDo: aBlock.
-	SBMethodSubstitution allSubclassesDo: aBlock.
+	SBStSubstitution allSubclassesDo: aBlock.
+	SBStMethodSubstitution allSubclassesDo: aBlock.
 	
 	"n := anObject class allInstVarNames.
 	n size > 0 ifTrue: [

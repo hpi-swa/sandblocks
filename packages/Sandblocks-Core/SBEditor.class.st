@@ -469,7 +469,7 @@ SBEditor >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	Symbol hasInterned: aString ifTrue: [:sym | | binding |
 		binding := aClass bindingOf: sym environment: aClass environment.
-		binding ifNotNil: [^ aBlock value: ((SBName poolDeclaration: aString) binding: binding)]].
+		binding ifNotNil: [^ aBlock value: ((SBStName poolDeclaration: aString) binding: binding)]].
 	
 	^ nil
 ]
@@ -735,7 +735,7 @@ SBEditor >> createEmptyClass [
 	<addAction>
 
 	| class |
-	class := SBClass new category: (self anyNearbyClass ifNotNil: #category ifNil: ['UserObjects']).
+	class := SBStClass new category: (self anyNearbyClass ifNotNil: #category ifNil: ['UserObjects']).
 	self openMorphInView: class.
 	self startInput: class childSandblocks first at: 1 replacingContents: false
 ]
@@ -746,11 +746,11 @@ SBEditor >> createEmptyMethod [
 	<action>
 
 	| method |
-	self openMorphInView: (method := SBMethod new
+	self openMorphInView: (method := SBStMethod new
 		selector: ''
 		arguments: #()
 		class: ((self selectedArtefact ifNotNil: [:container | container relatedClass]) ifNil: [UIManager default chooseClassOrTrait]);
-		body: (SBBlockBody new in: [:b | b statements: {b newNullBlock}])).
+		body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}])).
 	self startInput: method at: 1 replacingContents: true
 ]
 
@@ -790,7 +790,7 @@ SBEditor >> declareClassVariable: aString for: aClass [
 	self do: ((SBInsertCommand newFor: class)
 		container: class classVariables;
 		index: class classVariables submorphCount + 1;
-		morph: (SBName contents: aString))
+		morph: (SBStName contents: aString))
 ]
 
 { #category : #actions }
@@ -801,7 +801,7 @@ SBEditor >> declareInstanceVariable: aString for: aClass [
 	self do: ((SBInsertCommand newFor: class)
 		container: class instanceVariables;
 		index: class instanceVariables submorphCount + 1;
-		morph: (SBName contents: aString))
+		morph: (SBStName contents: aString))
 ]
 
 { #category : #'actions input' }
@@ -1392,8 +1392,8 @@ SBEditor >> openOpenWindow [
 	| selected |
 	selected := self selectedArtefact.
 	((selected notNil and: [selected object isCompiledCode or: [selected object isBehavior]])
-		ifTrue: [SBCodeOpener new positionNear: self; openFor: selected object]
-		ifFalse: [SBCodeOpener new positionNear: self; open]) ifNotNil: [:methodOrClass | self openForEdit: methodOrClass]
+		ifTrue: [SBStCodeOpener new positionNear: self; openFor: selected object]
+		ifFalse: [SBStCodeOpener new positionNear: self; open]) ifNotNil: [:methodOrClass | self openForEdit: methodOrClass]
 ]
 
 { #category : #'submorphs-add/remove' }
@@ -1416,7 +1416,7 @@ SBEditor >> openRepl [
 	<action>
 
 	| repl |
-	repl := self openMorphInView: SBRepl new.
+	repl := self openMorphInView: SBStPlayground new.
 	self startInput: repl body childSandblocks first at: 1 replacingContents: true
 ]
 

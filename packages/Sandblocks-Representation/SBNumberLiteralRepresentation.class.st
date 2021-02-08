@@ -19,7 +19,7 @@ SBNumberLiteralRepresentation class >> matches: anObject [
 { #category : #'as yet unclassified' }
 SBNumberLiteralRepresentation class >> newFor: anObject [
 
-	^ SBNumber new contents: anObject asString
+	^ SBStNumber new contents: anObject asString
 ]
 
 { #category : #'as yet unclassified' }

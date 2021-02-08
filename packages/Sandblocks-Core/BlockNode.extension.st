@@ -8,7 +8,7 @@ BlockNode >> asMethodBodySandblock [
 		ifTrue: [self statements allButLast]
 		ifFalse: [self statements].
 	
-	^ SBBlockBody new
+	^ SBStBlockBody new
 		statements: (s collect: #asSandblock);
 		temporaries: (self temporaries collect: #asSandblock);
 		bindings: #();
@@ -19,7 +19,7 @@ BlockNode >> asMethodBodySandblock [
 { #category : #'*Sandblocks-Core' }
 BlockNode >> asSandblock [
 	
-	^ SBBlockBody new
+	^ SBStBlockBody new
 		statements: (Array streamContents: [:stream |
 			self isEmptyBlock ifFalse: [
 				self statements do: [:statement |

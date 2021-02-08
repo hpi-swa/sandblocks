@@ -223,7 +223,7 @@ SBTypeCollectSimulator >> send: selector super: supered numArgs: numArgs [
 	(lookupClass lookupSelector: selector) ifNotNil: [:method |
 		" report argument types "
 		(currentContext stackPtr - numArgs + 1 to: currentContext stackPtr) withIndexDo: [:stackIndex :index |
-			SBCodeContext class: lookupClass selector: selector ifValid: [:location |
+			SBStCodeContext class: lookupClass selector: selector ifValid: [:location |
 				self
 					reportTypeInfo: (currentContext at: stackIndex)
 					at: location
@@ -242,7 +242,7 @@ SBTypeCollectSimulator >> send: selector super: supered numArgs: numArgs [
 				(currentContext at: currentContext stackPtr) withIndexDo: [:argument :index |
 					self
 						reportTypeInfo: argument
-						at: (SBCodeContext class: actualClass selector: actualSelector)
+						at: (SBStCodeContext class: actualClass selector: actualSelector)
 						findNode: [:methodMorph | methodMorph arguments at: index]].].
 			self flag: #todo. " other perform: variants "
 			
@@ -254,7 +254,7 @@ SBTypeCollectSimulator >> send: selector super: supered numArgs: numArgs [
 				ret arguments withIndexDo: [:argument :index |
 					self
 						reportTypeInfo: argument
-						at: (SBCodeContext for: ret)
+						at: (SBStCodeContext for: ret)
 						findNode: [:methodMorph | (methodMorph blockBodyForPC: ret method -> ret pc) ifNotNil: [:block | block bindings at: index]]]].
 			
 			^ ret]].

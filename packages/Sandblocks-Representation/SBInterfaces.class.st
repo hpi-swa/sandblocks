@@ -76,7 +76,7 @@ SBInterfaces class >> stName [
 	^ #(isSandblock isSmalltalk isName)
 ]
 
-{ #category : #smalltalk }
+{ #category : #core }
 SBInterfaces class >> topLevel [
 
 	^ #(isSandblock isTopLevel)

@@ -91,7 +91,7 @@ SBScmExpression >> ifDefinition: aBlock otherwise: anotherBlock [
 		ifNone: anotherBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'special form checking' }
 SBScmExpression >> ifSpecialFormDo: aBlock ifNone: anotherBlock [
 
 	^ (self elements notEmpty and: [self elements first isIdentifier and: [(self specialForms includes: self elements first contents)]])

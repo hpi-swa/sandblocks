@@ -44,8 +44,8 @@ SBPositionableStreamView >> initialize [
 		vResizing: #shrinkWrap;
 		changeTableLayout;
 		addMorphBack: SBRow new;
-		addMorphBack: (SBNumberWithPrefix new prefix: 'Position: ');
-		addMorphBack: (SBNumberWithPrefix new prefix: 'Limit: ')
+		addMorphBack: (SBStNumberWithPrefix new prefix: 'Position: ');
+		addMorphBack: (SBStNumberWithPrefix new prefix: 'Limit: ')
 ]
 
 { #category : #'as yet unclassified' }

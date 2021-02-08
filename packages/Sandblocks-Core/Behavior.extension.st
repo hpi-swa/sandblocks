@@ -4,12 +4,12 @@ Extension { #name : #Behavior }
 Behavior >> open: converter [
 	<convert>
 	
-	converter do: [SBClass newFor: self at: 0 @ 0]
+	converter do: [SBStClass newFor: self at: 0 @ 0]
 ]
 
 { #category : #'*Sandblocks-Core-converting' }
 Behavior >> openFull: converter [
 	<convert>
 	
-	converter do: [SBClassMethodEditor new class: self]
+	converter do: [SBStClassMethodEditor new class: self]
 ]

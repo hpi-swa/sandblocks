@@ -57,10 +57,10 @@ SBRepresentationEditor >> class: aClass [
 	object := aClass.
 	self classLabel contents: ((aClass ifNotNil: #name) ifNil: ['']).
 	self
-		addMorph: (aClass class methodDict at: #matches: ifPresent: [:method | method methodNode body asSandblock] ifAbsent: [SBBlockBody empty])
+		addMorph: (aClass class methodDict at: #matches: ifPresent: [:method | method methodNode body asSandblock] ifAbsent: [SBStBlockBody empty])
 		asElementNumber: 4.
 	self
-		addMorph: (aClass class methodDict at: #newFor: ifPresent: [:method | method methodNode body asSandblock] ifAbsent: [SBBlockBody empty])
+		addMorph: (aClass class methodDict at: #newFor: ifPresent: [:method | method methodNode body asSandblock] ifAbsent: [SBStBlockBody empty])
 		asElementNumber: 6
 ]
 
@@ -114,16 +114,16 @@ SBRepresentationEditor >> initialize [
 			addMorphBack: SBTextBubble new);
 		addMorphBack: (SBRow new
 			addMorphBack: (SBStringMorph new contents: 'Match against: ');
-			addMorphBack: (SBName new
+			addMorphBack: (SBStName new
 				autoCast: false;
 				contents: 'anObject';
-				behavior: SBDeclarationForMethodArgument new;
+				behavior: SBStDeclarationForMethodArgument new;
 				yourself));
 		addMorphBack: (SBStringMorph new contents: 'Matcher:');
 		addMorphBack: (SBStringMorph new contents: 'Constructor:');
 		addMorphBack: (SBRow new
 			addMorphBack: (SBStringMorph new contents: 'Capabilities: ');
-			addMorphBack: SBArray new);
+			addMorphBack: SBStArray new);
 		attachDecorator: SBMoveDecorator new
 ]
 
@@ -149,7 +149,7 @@ SBRepresentationEditor >> object [
 SBRepresentationEditor >> saveTryFixing: aBoolean quick: anotherBoolean [
 
 	(object isNil or: [object name ~= self classLabel contents]) ifTrue: [ | class |
-		class := SBClass new.
+		class := SBStClass new.
 		object
 			ifNotNil: [class class: object]
 			ifNil: [

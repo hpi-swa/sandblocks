@@ -22,7 +22,7 @@ SBOpenClassRepresentation class >> matches: anObject [
 { #category : #'as yet unclassified' }
 SBOpenClassRepresentation class >> newFor: anObject [
 
-^ SBClassMethodEditor new class: anObject class
+^ SBStClassMethodEditor new class: anObject class
 ]
 
 { #category : #'as yet unclassified' }

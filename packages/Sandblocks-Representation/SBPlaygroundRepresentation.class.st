@@ -25,7 +25,7 @@ SBPlaygroundRepresentation class >> matches: anObject [
 { #category : #'as yet unclassified' }
 SBPlaygroundRepresentation class >> newFor: anObject [
 
-	^ SBRepl new statements: {anObject veryDeepCopy}
+	^ SBStPlayground new statements: {anObject veryDeepCopy}
 ]
 
 { #category : #'as yet unclassified' }

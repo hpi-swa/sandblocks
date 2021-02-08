@@ -45,7 +45,7 @@ SBInputDeleteTest >> testDeleteInBlock [
 SBInputDeleteTest >> testDeleteInEmptyString [
 
 	| block editor string |
-	string := SBString new contents: ''.
+	string := SBStString new contents: ''.
 	block := '[]' parseAsSandblock.
 	editor := self methodFor: block.
 	block addMorphBack: string.

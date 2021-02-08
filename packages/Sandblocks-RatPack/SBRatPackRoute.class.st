@@ -1,6 +1,6 @@
 Class {
 	#name : #SBRatPackRoute,
-	#superclass : #SBMethodSubstitution,
+	#superclass : #SBStMethodSubstitution,
 	#category : #'Sandblocks-RatPack'
 }
 
@@ -74,8 +74,8 @@ SBRatPackRoute >> initialize [
 		addMorphBack: (SBRow new
 			layoutPolicy: SBAlgebraLayout new;
 			addMorphBack: (SBMethodSelect new object: #get);
-			addMorphBack: SBArray new;
-			addMorphBack: (SBSignature new hResizing: #spaceFill));
+			addMorphBack: SBStArray new;
+			addMorphBack: (SBStSignature new hResizing: #spaceFill));
 		layoutInset: 4;
 		attachDecorator: SBResizableDecorator new
 ]
@@ -149,7 +149,7 @@ SBRatPackRoute >> writeSourceOn: aStream [
 
 	self writeSignatureSourceOn: aStream.
 	aStream space.
-	(SBPragma new selector: self methodInput object asSimpleSetter arguments: {self pathArray submorphs first veryDeepCopy}) writeSourceOn: aStream.
+	(SBStPragma new selector: self methodInput object asSimpleSetter arguments: {self pathArray submorphs first veryDeepCopy}) writeSourceOn: aStream.
 	aStream space.
 	self body writeSourceOn: aStream
 ]

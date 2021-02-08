@@ -8,9 +8,9 @@ Class {
 SBBlockBodyTest >> testInsertCommandRequest [
 
 	| editor block |
-	block := SBBlockBody emptyWithDeclarations: {'a'. 'b'. 'c'}.
+	block := SBStBlockBody emptyWithDeclarations: {'a'. 'b'. 'c'}.
 	editor := self methodFor: block.
-	block statements: {SBNumber new. SBNumber new. SBNumber new}.
+	block statements: {SBStNumber new. SBStNumber new. SBStNumber new}.
 	editor do: (block insertCommandRequest: true near: block statements first).
 	self assert: block statements second isUnknown
 ]

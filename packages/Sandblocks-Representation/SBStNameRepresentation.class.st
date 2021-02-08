@@ -38,7 +38,7 @@ SBStNameRepresentation class >> matches: anObject [
 { #category : #'as yet unclassified' }
 SBStNameRepresentation class >> newFor: anObject [
 
-	^ SBName contents: ((anObject isString or: [anObject isText]) ifTrue: [anObject] ifFalse: [anObject contents])
+	^ SBStName contents: ((anObject isString or: [anObject isText]) ifTrue: [anObject] ifFalse: [anObject contents])
 ]
 
 { #category : #'as yet unclassified' }

@@ -6,7 +6,7 @@ CascadeNode >> asSandblock [
 	| send |
 	send := self asSandblockWithoutSubstitution.
 	
-	SBSubstitution allSubclassesDo: [:substitution |
+	SBStSubstitution allSubclassesDo: [:substitution |
 		(substitution matchesCascades and: [substitution matches: send]) ifTrue: [
 			^ (substitution newFor: send) pc: self pc]].
 	
@@ -16,7 +16,7 @@ CascadeNode >> asSandblock [
 { #category : #'*Sandblocks-Core' }
 CascadeNode >> asSandblockWithoutSubstitution [
 
-	^ SBCascade new
+	^ SBStCascade new
 		receiver: self receiver asSandblock
 		messages: (self messages collect: #asCascadePartSandblock)
 ]

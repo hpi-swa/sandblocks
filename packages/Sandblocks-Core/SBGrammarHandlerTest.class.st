@@ -8,7 +8,7 @@ Class {
 SBGrammarHandlerTest >> testContinueBinaryMessage [
 
 	| block editor send |
-	send := SBMessageSend new receiver: SBUnknown new selector: #+ arguments: {SBUnknown new}.
+	send := SBStMessageSend new receiver: SBUnknown new selector: #+ arguments: {SBUnknown new}.
 	block := '[]' parseAsSandblock.
 	editor := self methodFor: block.
 	block addMorphBack: send.
@@ -40,9 +40,9 @@ SBGrammarHandlerTest >> testInsertNewStatement [
 
 	| block editor |
 	{
-		SBNumber new contents: '123'.
-		SBName new contents: 'abc'.
-		SBMessageSend new receiver: SBUnknown new selector: #abc arguments: #()
+		SBStNumber new contents: '123'.
+		SBStName new contents: 'abc'.
+		SBStMessageSend new receiver: SBUnknown new selector: #abc arguments: #()
 	} do: [:leaf |
 		block := '[]' parseAsSandblock.
 		editor := self methodFor: block.
@@ -73,10 +73,10 @@ SBGrammarHandlerTest >> testWrapWithArray [
 
 	| block editor |
 	{
-		SBNumber new contents: '123'.
-		SBName new contents: 'abc'.
+		SBStNumber new contents: '123'.
+		SBStName new contents: 'abc'.
 		SBUnknown new.
-		SBMessageSend new receiver: SBUnknown new selector: #abc arguments: #()
+		SBStMessageSend new receiver: SBUnknown new selector: #abc arguments: #()
 	} do: [:leaf |
 		block := '[]' parseAsSandblock.
 		editor := self methodFor: block.
@@ -91,9 +91,9 @@ SBGrammarHandlerTest >> testWrapWithBinaryMessageSend [
 
 	| block editor |
 	{
-		SBNumber new contents: '123'.
-		SBName new contents: 'abc'.
-		SBMessageSend new receiver: SBUnknown new selector: #abc arguments: #()
+		SBStNumber new contents: '123'.
+		SBStName new contents: 'abc'.
+		SBStMessageSend new receiver: SBUnknown new selector: #abc arguments: #()
 	} do: [:leaf |
 		block := '[]' parseAsSandblock.
 		editor := self methodFor: block.
@@ -108,9 +108,9 @@ SBGrammarHandlerTest >> testWrapWithMessageSend [
 
 	| block editor |
 	{
-		SBNumber new contents: '123'.
-		SBName new contents: 'abc'.
-		SBMessageSend new receiver: SBUnknown new selector: #abc arguments: #()
+		SBStNumber new contents: '123'.
+		SBStName new contents: 'abc'.
+		SBStMessageSend new receiver: SBUnknown new selector: #abc arguments: #()
 	} do: [:leaf |
 		block := '[]' parseAsSandblock.
 		editor := self methodFor: block.

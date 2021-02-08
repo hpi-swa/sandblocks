@@ -24,9 +24,9 @@ SBProfileRepresentation class >> newFor: anObject [
 
 
 	anObject evaluate timeProfile.
-	^ SBRepl new
+	^ SBStPlayground new
 		receiver: nil;
 		statements: {
-			(SBMessageSend new receiver: anObject selector: #timeProfile)
+			(SBStMessageSend new receiver: anObject selector: #timeProfile)
 		}
 ]

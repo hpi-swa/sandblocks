@@ -41,9 +41,9 @@ SBStringView >> initialize [
 			yourself);
 		addMorphBack: (SBRow new
 			cellGap: 4;
-			addMorphBack: (SBNumberWithPrefix new prefix: 'Start: ');
-			addMorphBack: (SBNumberWithPrefix new prefix: 'Stop: ');
-			addMorphBack: (SBNumberWithPrefix new prefix: 'Length: '));
+			addMorphBack: (SBStNumberWithPrefix new prefix: 'Start: ');
+			addMorphBack: (SBStNumberWithPrefix new prefix: 'Stop: ');
+			addMorphBack: (SBStNumberWithPrefix new prefix: 'Length: '));
 		updateSelectionLabels
 ]
 

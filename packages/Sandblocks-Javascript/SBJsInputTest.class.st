@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBJsInputTest >> editorFor: aBlock [
+SBJsInputTest >> methodFor: aBlock [
 
 	| editor |
 	editor := SBEditor new useVimInput.

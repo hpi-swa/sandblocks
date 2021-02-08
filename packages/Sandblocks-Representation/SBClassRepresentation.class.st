@@ -25,5 +25,5 @@ SBClassRepresentation class >> matches: anObject [
 { #category : #'as yet unclassified' }
 SBClassRepresentation class >> newFor: anObject [
 
-	^ SBClass new class: anObject
+	^ SBStClass new class: anObject
 ]

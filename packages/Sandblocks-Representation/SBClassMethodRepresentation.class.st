@@ -28,5 +28,5 @@ SBClassMethodRepresentation class >> matches: anObject [
 { #category : #'as yet unclassified' }
 SBClassMethodRepresentation class >> newFor: anObject [
 
-^ SBClassMethodEditor new class: anObject
+^ SBStClassMethodEditor new class: anObject
 ]

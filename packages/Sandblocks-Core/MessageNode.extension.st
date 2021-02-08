@@ -17,7 +17,7 @@ MessageNode >> asSandblock [
 	
 	" only if we're not in a cascade ... "
 	send receiver ifNotNil: [
-		SBSubstitution allSubclassesDo: [:substition |
+		SBStSubstitution allSubclassesDo: [:substition |
 			((substition matches: send) and: [substition applyAutomatically]) ifTrue: [
 				^ (substition newFor: send) pc: self pc]]].
 	
@@ -32,7 +32,7 @@ MessageNode >> asSandblockWithoutSubstitution [
 	" the originalReceiver may not have gotten a pc set, so we copy it from the generated receiver "
 	(blockReceiver pc = 0 and: [self receiver notNil]) ifTrue: [blockReceiver pc: self receiver pc].
 	
-	^ SBMessageSend new
+	^ SBStMessageSend new
 		receiver: blockReceiver
 		selector: originalSelector
 		arguments: (originalArguments collect: #asSandblock);

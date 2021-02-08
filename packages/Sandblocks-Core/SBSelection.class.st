@@ -197,7 +197,7 @@ SBSelection >> object [
 
 	^ self submorphCount > 1
 		ifTrue: [
-			SBBlockBody new statements: (self submorphs collect: [:morph | morph object])]
+			SBStBlockBody new statements: (self submorphs collect: [:morph | morph object])]
 		ifFalse: [self firstSubmorph object]
 ]
 

@@ -61,11 +61,11 @@ SBEditorCanvas >> doubleClick: anEvent [
 		(a center squaredDistanceTo: point) < (b center squaredDistanceTo: point) ifTrue: [a] ifFalse: [b]].
 	
 	self sandblockEditor
-		openMorphInView: (method := SBMethod new
+		openMorphInView: (method := SBStMethod new
 			selector: ''
 			arguments: #()
 			class: (closest ifNotNil: [:container | container relatedClass] ifNil: [UIManager default chooseClassOrTrait]);
-			body: (SBBlockBody new in: [:body | body statements: {body newNullBlock}])).
+			body: (SBStBlockBody new in: [:body | body statements: {body newNullBlock}])).
 	
 	method center: point.
 	method hasUnsavedChanges: true.

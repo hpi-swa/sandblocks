@@ -19,5 +19,5 @@ SBSymbolLiteralRepresentation class >> matches: anObject [
 { #category : #'as yet unclassified' }
 SBSymbolLiteralRepresentation class >> newFor: aSymbol [
 
-	^ SBSymbol new contents: aSymbol asString
+	^ SBStSymbol new contents: aSymbol asString
 ]

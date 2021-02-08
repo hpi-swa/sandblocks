@@ -40,7 +40,7 @@ SBReachabilitySimulatorTest >> testReachability [
 	| policy m |
 	m := SBReachabilitySimulatorTest >> #exampleMethod.
 	policy := SBReachabilityColorPolicy new.
-	SBReachabilitySimulator new
+	SBStReachabilitySimulator new
 		store: policy;
 		simulate: [self exampleMethod].
 	

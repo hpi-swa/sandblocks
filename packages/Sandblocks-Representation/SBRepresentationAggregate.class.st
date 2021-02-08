@@ -27,7 +27,7 @@ SBRepresentationAggregate >> initialize [
 		layoutInset: 8;
 		cellPositioning: #center;
 		addMorphBack: SBBadge new;
-		addMorphBack: (SBNumberWithPrefix new
+		addMorphBack: (SBStNumberWithPrefix new
 			value: 5;
 			prefix: '#');
 		attachDecorator: SBMoveDecorator new
