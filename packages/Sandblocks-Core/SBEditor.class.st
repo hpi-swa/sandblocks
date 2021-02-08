@@ -979,12 +979,6 @@ SBEditor >> goToMark [
 		self allBlocksDo: [:morph | (morph withDecorator: SBMarkedDecorator do: [:mark | mark letter = letter ifTrue: [^ self select: morph]])]]
 ]
 
-{ #category : #'submorphs-add/remove' }
-SBEditor >> handleDroppedBlock: aMorph event: anEvent [
-
-	super handleDroppedBlock: aMorph event: anEvent
-]
-
 { #category : #'initialize-release' }
 SBEditor >> initialize [
 
@@ -1317,7 +1311,7 @@ SBEditor >> open: anObject [
 { #category : #'as yet unclassified' }
 SBEditor >> open: anObject withInterfaces: aCollection [
 
-	self
+	^ self
 		allBlocksDetect: [:morph | morph isSandblock and: [morph object = anObject and: [morph satisfies: aCollection]]]
 		ifFound: #select
 		ifNone: [

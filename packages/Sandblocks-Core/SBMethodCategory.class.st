@@ -10,12 +10,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBMethodCategory >> acceptedRepresentation [
-
-	^ self firstSubmorph contents = 'as yet unclassified' ifTrue: [nil] ifFalse: [#isMethod]
-]
-
-{ #category : #'as yet unclassified' }
 SBMethodCategory >> addMethods [
 
 	(class organization listAtCategoryNamed: savedCategoryName) do: [:method |
@@ -62,32 +56,29 @@ SBMethodCategory >> drawSubmorphsOn: aCanvas [
 ]
 
 { #category : #'as yet unclassified' }
-SBMethodCategory >> handleDroppedBlock: aBlock event: anEvent [
+SBMethodCategory >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
 	| insertCommand changeCategoryCommand |
 	SBExample
 		self: [
-			SBMethodCategory new class: FrameRateMorph category: 'stepping and presenter' collapsed: false]
-		args: [{(FrameRateMorph >> #step) asSandblock. nil}]
+			(SBMethodCategory new class: FrameRateMorph category: 'stepping and presenter' collapsed: false) wrapEditor]
+		args: [{(FrameRateMorph >> #step) asSandblock. nil. false. nil}]
 		label: 'example'.
-	insertCommand := (SBInsertCommand newFor: self)
-		index: 2;
-		morph: ((aBlock object representationThat: #isMethodBlock)
-			toggleCollapsed;
-			hResizing: #spaceFill;
-			yourself);
-		container: self.
+	insertCommand := aBlock convertedFor: SBInterfaces stMethod do: [:m |
+		(SBInsertCommand newFor: self)
+			index: 2;
+			morph: (m
+				toggleCollapsed;
+				hResizing: #spaceFill;
+				yourself);
+			container: self].
 	changeCategoryCommand := (SBChangeMethodCategoryCommand newFor: self)
 		method: aBlock object;
 		category: self firstSubmorph contents;
 		class: class.
 	self sandblockEditor do: (SBCombinedCommand newWith: (aBlock isSelection
 		ifTrue: [
-			{
-				changeCategoryCommand.
-				((SBDeleteCommand newFor: self) target: aBlock sourceBlock).
-				insertCommand
-			}]
+			{changeCategoryCommand. (SBDeleteCommand newFor: self) target: aBlock sourceBlock. insertCommand}]
 		ifFalse: [{changeCategoryCommand. insertCommand}]))
 ]
 
@@ -145,6 +136,12 @@ SBMethodCategory >> isArtefact [
 SBMethodCategory >> object [
 
 	^ self firstSubmorph contents
+]
+
+{ #category : #'as yet unclassified' }
+SBMethodCategory >> objectInterface [
+
+	^ self firstSubmorph contents = 'as yet unclassified' ifTrue: [SBInterfaces never] ifFalse: [SBInterfaces stMethod]
 ]
 
 { #category : #'as yet unclassified' }

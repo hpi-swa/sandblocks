@@ -16,7 +16,7 @@ SBMessagePartTest >> testBinaryMessageEdit [
 
 	| message editor |
 	message := '5 + 2' parseAsSandblock.
-	editor := self editorFor: message.
+	editor := self methodFor: message.
 	editor startInput: message at: 0 replacingContents: false.
 	message messageParts first keyStroke: (self keyboardEvent: $-).
 	self assert: message selector = '-+'.
@@ -32,7 +32,7 @@ SBMessagePartTest >> testChangeDoesNothing [
 
 	| message |
 	message := '5 yourself' parseAsSandblock.
-	self editorFor: message.
+	self methodFor: message.
 	message messageParts first select.
 	message messageParts first changeToUnknown.
 	self assert: message messageParts first isMessagePart
@@ -43,7 +43,7 @@ SBMessagePartTest >> testDeleteAround [
 
 	| block |
 	block := '[5 yourself: 2 send: 8]' parseAsSandblock.
-	self editorFor: block.
+	self methodFor: block.
 	
 	block statements first messageParts second deleteAround.
 	self assert: block statements first contents = 'send:'
@@ -67,7 +67,7 @@ SBMessagePartTest >> testInsertMessagePartAtEnd [
 
 	| message |
 	message := 'a do: b' parseAsSandblock.
-	self editorFor: message.
+	self methodFor: message.
 	message arguments last insertElementAfter.
 	self assert: message selector = 'do::'.
 	self assert: message arguments last isUnknown
@@ -79,7 +79,7 @@ SBMessagePartTest >> testInsertMessagePartAtStart [
 	| message |
 	{[message receiver insertElementAfter]. [message messageParts first insertElementBefore]} do: [:cmd |
 		message := 'a do: b' parseAsSandblock.
-		self editorFor: message.
+		self methodFor: message.
 		cmd value.
 		self assert: message selector = ':do:']
 ]
@@ -89,7 +89,7 @@ SBMessagePartTest >> testInsertMessagePartBeforeEnd [
 
 	| message |
 	message := 'a do: b' parseAsSandblock.
-	self editorFor: message.
+	self methodFor: message.
 	message messageParts last insertElementAfter.
 	self assert: message selector = 'do::'.
 	self assert: message arguments first isUnknown
@@ -102,7 +102,7 @@ SBMessagePartTest >> testPressColonInExistingMessage [
 	message := '5 yourself: 2' parseAsSandblock.
 	part := message messageParts first.
 	argument := message arguments first.
-	(self editorFor: message) startInput: message at: 3 replacingContents: false.
+	(self methodFor: message) startInput: message at: 3 replacingContents: false.
 	part keyStroke: (self keyboardEvent: $:).
 	self assert: message selector = 'yourself:'.
 	self assert: message arguments first = argument
@@ -113,7 +113,7 @@ SBMessagePartTest >> testTypeBinary [
 
 	| receiver message editor |
 	receiver := SBUnknown new.
-	editor := self editorFor: receiver.
+	editor := self methodFor: receiver.
 	message := receiver wrapInMessageSend.
 	self assert: message selector isEmpty.
 	self assert: editor currentInput = message messageParts first.
@@ -133,7 +133,7 @@ SBMessagePartTest >> testUseSuggestion [
 
 	| message editor |
 	message := '5 yourself' parseAsSandblock.
-	(editor := self editorFor: message) startInput: message at: 1 replacingContents: false.
+	(editor := self methodFor: message) startInput: message at: 1 replacingContents: false.
 	message useSuggestion: 'yourself:'.
 	self assert: message arguments last isSelected.
 	self assert: message arguments first isUnknown.

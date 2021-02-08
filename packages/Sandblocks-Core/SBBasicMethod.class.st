@@ -284,10 +284,9 @@ SBBasicMethod >> externalModification: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBBasicMethod >> handleDroppedBlock: aBlock event: anEvent [
+SBBasicMethod >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
-	(aBlock isKindOf: TransferMorph) ifTrue: [
-		self tryUseAsSelf: aBlock passenger value]
+	self tryUseAsSelf: aBlock unpackSelection
 ]
 
 { #category : #'as yet unclassified' }

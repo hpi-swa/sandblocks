@@ -81,7 +81,7 @@ SBNameBehavior >> guessedClass [
 ]
 
 { #category : #'as yet unclassified' }
-SBNameBehavior >> handleDroppedBlock: aBlock event: anEvent [
+SBNameBehavior >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
 	^ false
 ]

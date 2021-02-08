@@ -10,7 +10,7 @@ SBGrammarHandlerTest >> testContinueBinaryMessage [
 	| block editor send |
 	send := SBMessageSend new receiver: SBUnknown new selector: #+ arguments: {SBUnknown new}.
 	block := '[]' parseAsSandblock.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	block addMorphBack: send.
 	editor startInput: send at: 0 replacingContents: false.
 	editor selection keyStroke: (self keyboardEvent: $+).
@@ -22,7 +22,7 @@ SBGrammarHandlerTest >> testDoNotJumpAfterCompletingUnknown [
 
 	| block editor |
 	block := '[]' parseAsSandblock.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	
 	block addMorphBack: block newNullBlock.
 	block addMorphBack: block newNullBlock.
@@ -45,7 +45,7 @@ SBGrammarHandlerTest >> testInsertNewStatement [
 		SBMessageSend new receiver: SBUnknown new selector: #abc arguments: #()
 	} do: [:leaf |
 		block := '[]' parseAsSandblock.
-		editor := self editorFor: block.
+		editor := self methodFor: block.
 		block addMorphBack: leaf.
 		editor startInput: leaf at: 0 replacingContents: false.
 		editor selection keyStroke: (self keyboardEvent: Character cr).
@@ -57,7 +57,7 @@ SBGrammarHandlerTest >> testUndoAfterReplacingUnknown [
 
 	| unknown editor body |
 	unknown := SBUnknown new.
-	editor := self editorFor: unknown.
+	editor := self methodFor: unknown.
 	body := unknown parentSandblock.
 	editor
 		startInput: unknown at: 0 replacingContents: true;
@@ -79,7 +79,7 @@ SBGrammarHandlerTest >> testWrapWithArray [
 		SBMessageSend new receiver: SBUnknown new selector: #abc arguments: #()
 	} do: [:leaf |
 		block := '[]' parseAsSandblock.
-		editor := self editorFor: block.
+		editor := self methodFor: block.
 		block addMorphBack: leaf.
 		editor startInput: leaf at: 0 replacingContents: false.
 		editor selection keyStroke: (self keyboardEvent: ${).
@@ -96,7 +96,7 @@ SBGrammarHandlerTest >> testWrapWithBinaryMessageSend [
 		SBMessageSend new receiver: SBUnknown new selector: #abc arguments: #()
 	} do: [:leaf |
 		block := '[]' parseAsSandblock.
-		editor := self editorFor: block.
+		editor := self methodFor: block.
 		block addMorphBack: leaf.
 		editor startInput: leaf at: 0 replacingContents: false.
 		editor selection keyStroke: (self keyboardEvent: $+).
@@ -113,7 +113,7 @@ SBGrammarHandlerTest >> testWrapWithMessageSend [
 		SBMessageSend new receiver: SBUnknown new selector: #abc arguments: #()
 	} do: [:leaf |
 		block := '[]' parseAsSandblock.
-		editor := self editorFor: block.
+		editor := self methodFor: block.
 		block addMorphBack: leaf.
 		editor startInput: leaf at: 0 replacingContents: false.
 		editor selection keyStroke: (self keyboardEvent: $ ).

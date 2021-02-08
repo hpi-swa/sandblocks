@@ -27,7 +27,7 @@ SBReachabilitySimulatorTest >> testColorPolicy [
 	| editor method nestedSend compiledMethod |
 	compiledMethod := SBReachabilitySimulatorTest >> #exampleColorPolicy.
 	method := compiledMethod asSandblock.
-	editor := self editorFor: method.
+	editor := self methodFor: method.
 	nestedSend := method body statements second arguments first statements first.
 	
 	method body statements first showReachability.

@@ -9,7 +9,7 @@ SBInputDeleteTest >> testDeleteInBinaryExpression [
 
 	| block editor b |
 	block := '[a + b]' parseAsSandblock.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	
 	b := block statements first arguments first.
 	editor startInput: b at: 3 replacingContents: false.
@@ -30,7 +30,7 @@ SBInputDeleteTest >> testDeleteInBlock [
 
 	| a block editor |
 	block := '[[a]]' parseAsSandblock.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	a := block statements first statements first.
 	
 	editor startInput: a at: 3 replacingContents: false.
@@ -47,7 +47,7 @@ SBInputDeleteTest >> testDeleteInEmptyString [
 	| block editor string |
 	string := SBString new contents: ''.
 	block := '[]' parseAsSandblock.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	block addMorphBack: string.
 	editor startInput: string at: 0 replacingContents: false.
 	editor performForSelection: #deleteBeforeCursor.
@@ -59,7 +59,7 @@ SBInputDeleteTest >> testDeleteInNestedArray [
 
 	| block editor a |
 	block := '[self square: {a}]' parseAsSandblock.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	
 	a := block statements first arguments first submorphs first.
 	editor startInput: a at: 3 replacingContents: false.

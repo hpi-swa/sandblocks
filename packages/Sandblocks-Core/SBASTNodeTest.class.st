@@ -9,7 +9,7 @@ SBASTNodeTest >> testCanUndoAppendLine [
 
 	| block selection editor |
 	block := '[5]' parseAsSandblock.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	selection := block statements first.
 	selection insertStatementBelow.
 	
@@ -64,7 +64,7 @@ SBASTNodeTest >> testInsertStatementAboveOrBelow [
 	| block selection |
 	block := '[5]' parseAsSandblock.
 	selection := block statements first.
-	self editorFor: block.
+	self methodFor: block.
 	selection insertStatementBelow.
 	self assert: block statements last isUnknown.
 	selection insertStatementAbove.
@@ -77,7 +77,7 @@ SBASTNodeTest >> testUndoWrapInArray [
 	| block selection editor |
 	block := '[self squared. self changeTableLayout. self resize]' parseAsSandblock.
 	selection := block statements first.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	editor startOrAddToMultiSelection: block statements first.
 	editor startOrAddToMultiSelection: block statements second.
 	editor startOrAddToMultiSelection: block statements third.
@@ -100,7 +100,7 @@ SBASTNodeTest >> testUndoWrapInBlock [
 	| block selection editor |
 	block := '[self squared. self changeTableLayout. self resize]' parseAsSandblock.
 	selection := block statements first.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	editor startOrAddToMultiSelection: block statements first.
 	editor startOrAddToMultiSelection: block statements second.
 	editor startOrAddToMultiSelection: block statements third.
@@ -123,7 +123,7 @@ SBASTNodeTest >> testUndoWrapInCascade [
 	| block selection editor |
 	block := '[self squared. self changeTableLayout. self resize]' parseAsSandblock.
 	selection := block statements first.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	editor startOrAddToMultiSelection: block statements first.
 	editor startOrAddToMultiSelection: block statements second.
 	editor startOrAddToMultiSelection: block statements third.
@@ -143,7 +143,7 @@ SBASTNodeTest >> testWrapAsArgument [
 
 	| block selection |
 	block := '[5]' parseAsSandblock.
-	self editorFor: block.
+	self methodFor: block.
 	selection := block statements first.
 	selection wrapAsArgument.
 	self assert: block statements first isMessageSend.
@@ -157,7 +157,7 @@ SBASTNodeTest >> testWrapInArrayType [
 	| block selection |
 	block := '[5]' parseAsSandblock.
 	selection := block statements first.
-	(self editorFor: block) select: selection.
+	(self methodFor: block) select: selection.
 	selection wrapInArrayType: #dynamic.
 	self assert: block statements first isArrayBlock.
 	self assert: block statements first firstSubmorph = selection
@@ -169,7 +169,7 @@ SBASTNodeTest >> testWrapInBlock [
 	| block selection |
 	block := '[5]' parseAsSandblock.
 	selection := block statements first.
-	(self editorFor: block) select: selection.
+	(self methodFor: block) select: selection.
 	selection wrapInBlock.
 	self assert: block statements first isBlockBody.
 	self assert: block statements first statements first = selection
@@ -181,7 +181,7 @@ SBASTNodeTest >> testWrapInCascade [
 	| block selection |
 	block := '[5 squared]' parseAsSandblock.
 	selection := block statements first.
-	(self editorFor: block) select: selection.
+	(self methodFor: block) select: selection.
 	selection wrapInCascade.
 	self assert: block statements first isCascade.
 	self assert: block statements first messages first = selection
@@ -193,7 +193,7 @@ SBASTNodeTest >> testWrapInCascadeMessageParts [
 	| block selection editor |
 	block := '[5 yourself. 5 parse: 2]' parseAsSandblock.
 	selection := block statements first.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	editor startOrAddToMultiSelection: block statements first.
 	editor startOrAddToMultiSelection: block statements second messageParts first.
 	editor select: selection.
@@ -210,7 +210,7 @@ SBASTNodeTest >> testWrapInCascadeMultiSelection [
 	| block selection editor |
 	block := '[5 squared. 5 + 2]' parseAsSandblock.
 	selection := block statements first.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	editor startOrAddToMultiSelection: block statements first.
 	editor startOrAddToMultiSelection: block statements second.
 	editor select: selection.
@@ -227,7 +227,7 @@ SBASTNodeTest >> testWrapInMessageSend [
 	| block selection |
 	block := '[5]' parseAsSandblock.
 	selection := block statements first.
-	self editorFor: block.
+	self methodFor: block.
 	selection wrapInMessageSend: 'hello'.
 	self assert: block statements first isMessageSend.
 	self assert: block statements first selector = 'hello'.
@@ -239,7 +239,7 @@ SBASTNodeTest >> testWrapInReturn [
 
 	| block selection |
 	block := '[5]' parseAsSandblock.
-	self editorFor: block.
+	self methodFor: block.
 	selection := block statements first.
 	selection wrapInReturn.
 	self assert: block statements first isReturn.

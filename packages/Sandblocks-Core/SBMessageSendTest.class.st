@@ -9,7 +9,7 @@ SBMessageSendTest >> testKeywordToUnary [
 
 	| message |
 	message := 'self assert: 5' parseAsSandblock.
-	self editorFor: message.
+	self methodFor: message.
 	message select.
 	message arguments first
 		select;
@@ -23,7 +23,7 @@ SBMessageSendTest >> testMergeWithParentSend [
 
 	| message |
 	message := 'self assert: (5 equals: 6 more: 7)' parseAsSandblock.
-	self editorFor: message.
+	self methodFor: message.
 	message arguments first
 		select;
 		mergeWithParentSend.

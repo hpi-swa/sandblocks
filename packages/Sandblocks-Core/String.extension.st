@@ -97,7 +97,7 @@ String >> parseInMethod [
 
 	| block |
 	block := self parseAsSandblock.
-	SBTest editorFor: block.
+	SBTest methodFor: block.
 	^ block
 ]
 

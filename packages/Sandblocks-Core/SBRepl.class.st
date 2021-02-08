@@ -162,13 +162,11 @@ SBRepl >> getOrCreateLocalBinding: aString [
 ]
 
 { #category : #'compilation cue protocol' }
-SBRepl >> handleDroppedBlock: aBlock event: anEvent [
+SBRepl >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
-	aBlock object
-		representationThat: #isObject
-		do: [:repr |
-			(self createBinding: repr name asLegalSelector) binding value: repr]
-		ifNone: [nil]
+	| object |
+	object := aBlock unpackSelection object.
+	(self createBinding: object name asLegalSelector) binding value: object
 ]
 
 { #category : #'artefact protocol' }

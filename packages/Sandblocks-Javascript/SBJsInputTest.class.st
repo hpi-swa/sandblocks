@@ -20,7 +20,7 @@ SBJsInputTest >> testAddMemberAccess [
 
 	| editor closure access |
 	access := SBJsInfixOperator new lhs: (SBJsVariable new contents: 'abc') operator: '.' rhs: (SBJsVariable new contents: 'def').
-	editor := self editorFor: access.
+	editor := self methodFor: access.
 	closure := access parentSandblock.
 	
 	editor startInput: access lhs at: 9e8 replacingContents: false.
@@ -35,7 +35,7 @@ SBJsInputTest >> testAddMemberAccessViaSpace [
 
 	| editor closure access |
 	access := SBJsInfixOperator new lhs: (SBJsVariable new contents: 'abc') operator: '.' rhs: (SBJsVariable new contents: 'def').
-	editor := self editorFor: access.
+	editor := self methodFor: access.
 	closure := access parentSandblock.
 	
 	access rhs select.
@@ -57,7 +57,7 @@ SBJsInputTest >> testBinaryExprPrecedence [
 
 	| editor number closure |
 	number := SBJsNumber new contents: '2'.
-	editor := self editorFor: number.
+	editor := self methodFor: number.
 	closure := number parentSandblock.
 	
 	editor startInput: number at: 900000000 replacingContents: false.
@@ -82,7 +82,7 @@ SBJsInputTest >> testDeleteDereferenceWithParenthesis [
 		method: (SBJsInfixOperator new lhs: (SBJsVariable new contents: 'a') operator: '.' rhs: (SBJsVariable new contents: 'b'))
 		arguments: {unknown}.
 	deref := methodCall method.
-	editor := self editorFor: methodCall.
+	editor := self methodFor: methodCall.
 	closure := methodCall parentSandblock.
 	
 	editor startInput: unknown at: 0 replacingContents: true.
@@ -100,11 +100,11 @@ SBJsInputTest >> testDeleteDereferenceWithParenthesis [
 { #category : #'as yet unclassified' }
 SBJsInputTest >> testDeleteWithinClosure [
 
-	| deref editor closure unknown innerClosure |
+	| editor closure unknown innerClosure |
 	innerClosure := SBJsClosure new.
 	unknown := innerClosure newNullBlock.
 	innerClosure arguments: {unknown} statements: {}.
-	editor := self editorFor: innerClosure.
+	editor := self methodFor: innerClosure.
 	closure := innerClosure parentSandblock.
 	
 	editor startInput: unknown at: 0 replacingContents: true.
@@ -120,7 +120,7 @@ SBJsInputTest >> testIfKeyword [
 
 	| editor closure var |
 	var := SBJsVariable new contents: 'if'.
-	editor := self editorFor: var.
+	editor := self methodFor: var.
 	closure := var parentSandblock.
 	
 	editor startInput: var at: 9e8 replacingContents: false.
@@ -137,7 +137,7 @@ SBJsInputTest >> testLetKeyword [
 
 	| editor closure var |
 	var := SBJsVariable new contents: 'let'.
-	editor := self editorFor: var.
+	editor := self methodFor: var.
 	closure := var parentSandblock.
 	
 	editor startInput: var at: 9e8 replacingContents: false.
@@ -155,7 +155,7 @@ SBJsInputTest >> testPrecedenceAdaptAfterFunctionCall [
 
 	| call editor |
 	call := SBJsInfixOperator new lhs: (SBJsVariable new contents: 'abc') operator: '(' rhs: (SBJsNumber new contents: '1').
-	editor := self editorFor: call.
+	editor := self methodFor: call.
 	
 	editor startInput: call rhs at: 900000000 replacingContents: false.
 	editor filterEvent: (self keyboardEvent: $.) for: nil.
@@ -167,7 +167,7 @@ SBJsInputTest >> testTypeBinaryExpression [
 
 	| editor number closure |
 	number := SBJsNumber new contents: '2'.
-	editor := self editorFor: number.
+	editor := self methodFor: number.
 	closure := number parentSandblock.
 	
 	editor startInput: number at: 9e8 replacingContents: false.

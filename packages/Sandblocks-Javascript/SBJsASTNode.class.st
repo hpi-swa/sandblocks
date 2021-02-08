@@ -14,17 +14,18 @@ SBJsASTNode >> centerAlignSymbols [
 SBJsASTNode >> changeToUnknown [
 	<action>
 
-	| new |
-	new := self newNullBlock anyRepresentationThat: self acceptedRepresentation.
-	new ifNotNil: [
-		self sandblockEditor
-			copyBuffer: self;
-			do: ((SBReplaceCommand newFor: self containingArtefact)
-				target: self;
-				replacer: new;
-				shouldMergeWithNext: true;
-				yourself);
-			startInput: new at: 0 replacingContents: false]
+	self newNullBlock
+		convertedFor: self objectInterface
+		do: [:new |
+			new ifNotNil: [
+				self sandblockEditor
+					copyBuffer: self;
+					do: ((SBReplaceCommand newFor: self containingArtefact)
+						target: self;
+						replacer: new;
+						shouldMergeWithNext: true;
+						yourself);
+					startInput: new at: 0 replacingContents: false]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -38,25 +39,6 @@ SBJsASTNode >> copyString [
 	<action>
 
 	Clipboard clipboardText: self sourceString
-]
-
-{ #category : #'as yet unclassified' }
-SBJsASTNode >> handleDroppedBlock: aBlock event: anEvent [
-
-	self fixedNumberOfChildren
-		ifTrue: [ | replacer |
-			replacer := aBlock object anyRepresentationThat: self acceptedRepresentation.
-			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-				target: self;
-				replacer: replacer).
-			replacer postDuplicate]
-		ifFalse: [ | replacer |
-			self dropLocationDo: [:position :morph :horizontal |
-				replacer := aBlock object anyRepresentationThat: (self contextAcceptedRepresentationAt: morph childIndex).
-				self sandblockEditor do: ((self insertCommandRequest: false near: morph) shouldMergeWithNext: true).
-				self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-					target: self sandblockEditor selection;
-					replacer: replacer)]]
 ]
 
 { #category : #'as yet unclassified' }

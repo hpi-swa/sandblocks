@@ -727,9 +727,11 @@ SBBlock >> dropLocationDo: aBlock [
 		dist < closestDist ifTrue: [
 			closestDist := dist.
 			closestMorph := block]].
-	^ closestMorph ifNotNil: [ | delta |
-		delta := (((closestMorph adjacentBlock: 1) ifNil: [closestMorph adjacentBlock: -1]) ifNotNil: [:next | next topLeft - closestMorph topLeft] ifNil: [1 @ 0]) abs.
-		aBlock value: closestMorph topLeft - (0 @ 4) value: closestMorph value: delta x < delta y]
+	^ closestMorph
+		ifNil: [aBlock value: self center value: nil value: false]
+		ifNotNil: [ | delta |
+			delta := (((closestMorph adjacentBlock: 1) ifNil: [closestMorph adjacentBlock: -1]) ifNotNil: [:next | next topLeft - closestMorph topLeft] ifNil: [1 @ 0]) abs.
+			aBlock value: closestMorph topLeft - (0 @ 4) value: closestMorph value: delta x < delta y]
 ]
 
 { #category : #decorators }
@@ -2399,6 +2401,14 @@ SBBlock >> withParentChainDo: aBlock [
 	[aBlock] whileNotNil: [
 		aBlock value: p.
 		p := aBlock parentSandblock]
+]
+
+{ #category : #utilities }
+SBBlock >> wrapEditor [
+	" provide an editor around the object, for use during testing "
+	
+	SBTest editorFor: self.
+	^ self
 ]
 
 { #category : #'as yet unclassified' }

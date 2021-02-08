@@ -103,87 +103,6 @@ Object >> openExplorer: convert [
 ]
 
 { #category : #'*Sandblocks-Core' }
-Object >> representIn: aMorph as: aSymbol near: aPointOrMorph [
-
-	| options representation |
-	options := self representationsThat: aSymbol.
-	options ifEmpty: [^ self].
-	representation := self newFirstSafeOptionFrom: options.
-	options size > 1 ifTrue: [ | prompt |
-		prompt := SBRepresentationPrompt new options: options target: self current: representation.
-		aMorph openMorphInView: prompt.
-		prompt position: (aPointOrMorph isPoint ifTrue: [aPointOrMorph] ifFalse: [aPointOrMorph position]).
-		aMorph openMorphInView: representation].
-	^ representation
-]
-
-{ #category : #'*Sandblocks-Core' }
-Object >> representIn: aSBEditor as: aSymbol near: aPointOrMorph from: aSourceMorph [
-
-	| options position |
-	options := self representationsThat: aSymbol.
-	options ifEmpty: [^ self].
-	position := aPointOrMorph isPoint ifTrue: [aPointOrMorph] ifFalse: [aPointOrMorph position].
-	options size > 1
-		ifTrue: [ | prompt |
-			prompt := SBRepresentationPrompt new.
-			aSBEditor openMorphInView: prompt.
-			prompt options: options target: self at: position from: aSourceMorph]
-		ifFalse: [
-			aSBEditor openMorphInView: ((self newFirstSafeOptionFrom: options)
-				position: position;
-				yourself)]
-]
-
-{ #category : #'*Sandblocks-Core' }
-Object >> representationCapabilities [
-
-	| set |
-	SBExample self: [Morph new] args: [{}] label: 'simple'.
-	set := Set new.
-	self representationsDo: [:repr |
-		set addAll: (repr class methodDictionary values collect: #selector)].
-	set
-		remove: #matches: ifAbsent: [nil];
-		remove: #newFor: ifAbsent: [nil].
-	^ set
-]
-
-{ #category : #'*Sandblocks-Core' }
-Object >> representationThat: aSymbol [
-
-	^ self representationThat: aSymbol do: #yourself ifNone: [self error: 'no suitable representation found']
-]
-
-{ #category : #'*Sandblocks-Core' }
-Object >> representationThat: aSymbol do: aBlock ifNone: anotherBlock [
-
-	| options index representation |
-	options := self representationsThat: aSymbol.
-	options size = 1 ifTrue: [^ aBlock value: (options first newFor: self)].
-	options ifEmpty: [^ anotherBlock value].
-	index := UIManager default
-		chooseFrom: (options collect: [:repr | repr prettyName])
-		title: ('How to represent {1} ({2})' format: {self asString. self className}).
-	index = 0 ifTrue: [^ anotherBlock value].
-	representation := (options at: index) newFor: self.
-	^ aBlock value: representation
-]
-
-{ #category : #'*Sandblocks-Core' }
-Object >> representations [
-
-	^ Array streamContents: [:stream |
-		self representationsDo: [:class | stream nextPut: class]]
-]
-
-{ #category : #'*Sandblocks-Core' }
-Object >> representationsDo: aBlock [
-
-	^ SBRepresentation representationsDo: [:class | (class matches: self) ifTrue: [aBlock value: class]] for: self
-]
-
-{ #category : #'*Sandblocks-Core' }
 Object >> representationsThat: aSymbol [
 
 	^ (Array streamContents: [:stream |
@@ -214,16 +133,6 @@ Object >> representationsThat: aSymbol do: aBlock deep: aBoolean [
 					do: [:nestedRepr |
 						aBlock value: (SBDerivedRepresentation from: repr to: nestedRepr)]
 					deep: aBoolean + 1]]] for: self
-]
-
-{ #category : #'*Sandblocks-Core' }
-Object >> safeRepresentationThat: aSymbol do: aBlock ifNone: anotherBlock [
-
-	| options |
-	options := self representationsThat: aSymbol.
-	options size = 1 ifTrue: [^ aBlock value: (options first newFor: self)].
-	options ifEmpty: [^ anotherBlock value].
-	^ aBlock value: (self newFirstSafeOptionFrom: options)
 ]
 
 { #category : #'*Sandblocks-Core' }

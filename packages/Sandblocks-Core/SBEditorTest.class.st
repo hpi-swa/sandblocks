@@ -9,7 +9,7 @@ SBEditorTest >> testActionsWithConditional [
 
 	| block |
 	block := SBMockBlock new.
-	self editorFor: block.
+	self methodFor: block.
 	self assert: ((block validActions collect: #selector) includes: #mockAction).
 	self deny: ((block validActions collect: #selector) includes: #conditionalMockAction).
 	block actionValid: true.
@@ -21,7 +21,7 @@ SBEditorTest >> testPerformConditionalShortcutFor [
 
 	| editor block |
 	block := SBMockBlock new.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	editor
 		shortcutsOverride: {($a asSandblockShortcut -> #conditionalMockAction)};
 		performShortcutFor: $a asSandblockShortcut.
@@ -36,7 +36,7 @@ SBEditorTest >> testPerformShortcutFor [
 
 	| block |
 	block := SBMockBlock new.
-	(self editorFor: block)
+	(self methodFor: block)
 		shortcutsOverride: {($a asSandblockShortcut -> #mockAction)};
 		performShortcutFor: $a asSandblockShortcut.
 	self assert: block mockActionTaken

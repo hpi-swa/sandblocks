@@ -55,12 +55,6 @@ SBExplorer >> containingArtefact [
 	^ self
 ]
 
-{ #category : #'as yet unclassified' }
-SBExplorer >> contextAcceptedRepresentationAt: aNumber [
-
-	^ #isToplevelMorph
-]
-
 { #category : #actions }
 SBExplorer >> copyString [
 	<action>
@@ -129,10 +123,10 @@ SBExplorer >> field: aField [
 ]
 
 { #category : #'as yet unclassified' }
-SBExplorer >> handleDroppedBlock: aBlock event: anEvent [
+SBExplorer >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
 	| newObject |
-	newObject := aBlock object representationThat: #isObject.
+	newObject := aBlock unpackSelection object.
 	self on: newObject.
 	field ifNotNil: [field setValueFor: field inspector to: newObject].
 	self select.
@@ -197,6 +191,12 @@ SBExplorer >> object: anObject [
 
 { #category : #'as yet unclassified' }
 SBExplorer >> objectInterface [
+
+	^ SBInterfaces topLevel
+]
+
+{ #category : #'as yet unclassified' }
+SBExplorer >> objectInterfaceAt: aNumber adding: aBoolean [
 
 	^ SBInterfaces topLevel
 ]

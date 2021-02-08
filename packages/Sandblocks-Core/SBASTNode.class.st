@@ -80,17 +80,18 @@ SBASTNode >> canAppearInBlockBody [
 SBASTNode >> changeToUnknown [
 	<action>
 
-	| new |
-	new := self newNullBlock anyRepresentationThat: self acceptedRepresentation.
-	new ifNotNil: [
-		self sandblockEditor
-			copyBuffer: self;
-			do: ((SBReplaceCommand newFor: self containingArtefact)
-				target: self;
-				replacer: new;
-				shouldMergeWithNext: true;
-				yourself);
-			startInput: new at: 0 replacingContents: false]
+	self newNullBlock
+		convertedFor: self objectInterface
+		do: [:new |
+			new ifNotNil: [
+				self sandblockEditor
+					copyBuffer: self;
+					do: ((SBReplaceCommand newFor: self containingArtefact)
+						target: self;
+						replacer: new;
+						shouldMergeWithNext: true;
+						yourself);
+					startInput: new at: 0 replacingContents: false]]
 ]
 
 { #category : #'object interface' }
@@ -239,25 +240,6 @@ SBASTNode >> guessedClass [
 
 	" return a non-nil value to help services like autocompletion do their job "
 	^ nil
-]
-
-{ #category : #'object interface' }
-SBASTNode >> handleDroppedBlock: aBlock event: anEvent [
-
-	"self fixedNumberOfChildren
-		ifTrue: [ | replacer |
-			replacer := (aBlock object anyRepresentationThat: self acceptedRepresentation) ifNil: [aBlock firstSubmorph].
-			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-				target: self;
-				replacer: replacer).
-			replacer postDuplicate]
-		ifFalse: [ | replacer |
-			self dropLocationDo: [:position :morph :horizontal |
-				replacer := (aBlock object anyRepresentationThat: (self contextAcceptedRepresentationAt: morph childIndex)) ifNil: [aBlock firstSubmorph].
-				self sandblockEditor do: ((self insertCommandRequest: false near: morph) shouldMergeWithNext: true).
-				self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-					target: self sandblockEditor selection;
-					replacer: replacer)]]"
 ]
 
 { #category : #'actions input' }

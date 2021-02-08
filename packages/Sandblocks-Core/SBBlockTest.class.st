@@ -9,7 +9,7 @@ SBBlockTest >> testLeftRotateBinaryMessages [
 
 	| block selection editor |
 	block := '[(a + b) * c]' parseAsSandblock.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	selection := block statements first receiver.
 	selection leftRotate.
 	self assert: block statements first selector = '+'.
@@ -25,7 +25,7 @@ SBBlockTest >> testPasteBelow [
 	| block selection editor |
 	block := '[a. b. c. self selected: 5]' parseAsSandblock.
 	selection := block statements last.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	(block statements viewFrom: 1 to: 3) do: #startOrAddToMultiSelection.
 	block statements first
 		select;
@@ -41,7 +41,7 @@ SBBlockTest >> testRotateBlock [
 
 	| block selection editor |
 	block := '[a or: [b]]' parseAsSandblock.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	selection := block statements first arguments first.
 	selection leftRotate.
 	self assert: block statements first isBlockBody.
@@ -56,7 +56,7 @@ SBBlockTest >> testRotateKeywordMessage [
 
 	| block selection editor |
 	block := '[(a or: b) ifTrue: c]' parseAsSandblock.
-	editor := self editorFor: block.
+	editor := self methodFor: block.
 	selection := block statements first receiver.
 	selection leftRotate.
 	self assert: 'or:' equals: block statements first selector.
@@ -71,7 +71,7 @@ SBBlockTest >> testSwap [
 
 	| block selection n5 n3 |
 	block := '[5 squared: 3]' parseAsSandblock.
-	self editorFor: block.
+	self methodFor: block.
 	selection := block statements first.
 	n5 := selection receiver.
 	n3 := selection arguments first.

@@ -38,9 +38,9 @@ SBDeclarationForLocalVariable >> guessedClass [
 ]
 
 { #category : #'as yet unclassified' }
-SBDeclarationForLocalVariable >> handleDroppedBlock: aBlock event: anEvent [
+SBDeclarationForLocalVariable >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
-	self block binding value: aBlock evaluate.
+	self block binding value: aBlock unpackSelection evaluate.
 	^ true
 ]
 
@@ -48,6 +48,12 @@ SBDeclarationForLocalVariable >> handleDroppedBlock: aBlock event: anEvent [
 SBDeclarationForLocalVariable >> inputCommandClass [
 
 	^ SBBindingRenameCommand
+]
+
+{ #category : #'as yet unclassified' }
+SBDeclarationForLocalVariable >> objectInterface [
+
+	^ SBInterfaces stExpression
 ]
 
 { #category : #'as yet unclassified' }

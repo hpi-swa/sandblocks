@@ -53,6 +53,12 @@ SBInterfaces class >> stMessagePart [
 ]
 
 { #category : #smalltalk }
+SBInterfaces class >> stMethod [
+
+	^ #(isSandblock isArtefact isSmalltalk isMethod)
+]
+
+{ #category : #smalltalk }
 SBInterfaces class >> stName [
 
 	^ #(isSandblock isSmalltalk isName)

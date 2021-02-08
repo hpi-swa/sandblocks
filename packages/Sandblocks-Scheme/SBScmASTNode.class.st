@@ -14,17 +14,18 @@ SBScmASTNode >> canEvaluate [
 SBScmASTNode >> changeToUnknown [
 	<action>
 
-	| new |
-	new := self newNullBlock anyRepresentationThat: self acceptedRepresentation.
-	new ifNotNil: [
-		self sandblockEditor
-			copyBuffer: self;
-			do: ((SBReplaceCommand newFor: self containingArtefact)
-				target: self;
-				replacer: new;
-				shouldMergeWithNext: true;
-				yourself);
-			startInput: new at: 0 replacingContents: false]
+	self newNullBlock
+		convertedFor: self objectInterface
+		do: [:new |
+			new ifNotNil: [
+				self sandblockEditor
+					copyBuffer: self;
+					do: ((SBReplaceCommand newFor: self containingArtefact)
+						target: self;
+						replacer: new;
+						shouldMergeWithNext: true;
+						yourself);
+					startInput: new at: 0 replacingContents: false]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -55,27 +56,6 @@ SBScmASTNode >> copyString [
 SBScmASTNode >> evaluate [
 
 	^ QoppaInterpreter new readAndEvaluate: self sourceString
-]
-
-{ #category : #'as yet unclassified' }
-SBScmASTNode >> handleDroppedBlock: aBlock event: anEvent [
-
-	| replacer |
-	self fixedNumberOfChildren
-		ifTrue: [
-			replacer := aBlock object anyRepresentationThat: self acceptedRepresentation.
-			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-				target: self;
-				replacer: replacer).
-			replacer postDuplicate]
-		ifFalse: [
-			self dropLocationDo: [:position :morph :horizontal |
-				replacer := aBlock object anyRepresentationThat: (self contextAcceptedRepresentationAt: morph childIndex).
-				self sandblockEditor do: ((self insertCommandRequest: false near: morph) shouldMergeWithNext: true).
-				self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-					target: self sandblockEditor selection;
-					replacer: replacer)]].
-	replacer containsUnknown ifTrue: [replacer inputNextUnknown]
 ]
 
 { #category : #'as yet unclassified' }

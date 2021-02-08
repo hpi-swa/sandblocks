@@ -9,9 +9,7 @@ SBTest class >> editorFor: aBlock [
 
 	| editor |
 	editor := SBEditor new useVimInput.
-	editor openMorphInView: (SBMethod new
-		selector: #test arguments: #() class: nil class;
-		body: (SBBlockBody new statements: {aBlock})).
+	editor openMorphInView: aBlock.
 	aBlock select.
 	^ editor
 ]
@@ -41,6 +39,18 @@ SBTest class >> keyboardEvent: aCharacter shift: aBoolean command: anotherBoolea
 ]
 
 { #category : #'as yet unclassified' }
+SBTest class >> methodFor: aBlock [
+
+	| editor |
+	editor := SBEditor new useVimInput.
+	editor openMorphInView: (SBMethod new
+		selector: #test arguments: #() class: nil class;
+		body: (SBBlockBody new statements: {aBlock})).
+	aBlock select.
+	^ editor
+]
+
+{ #category : #'as yet unclassified' }
 SBTest >> editorFor: aBlock [
 
 	^ self class editorFor: aBlock
@@ -50,4 +60,10 @@ SBTest >> editorFor: aBlock [
 SBTest >> keyboardEvent: aCharacter [
 
 	^ self class keyboardEvent: aCharacter
+]
+
+{ #category : #'as yet unclassified' }
+SBTest >> methodFor: aBlock [
+
+	^ self class methodFor: aBlock
 ]
