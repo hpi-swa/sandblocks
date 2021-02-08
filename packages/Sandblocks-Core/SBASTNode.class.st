@@ -94,12 +94,6 @@ SBASTNode >> changeToUnknown [
 					startInput: new at: 0 replacingContents: false]]
 ]
 
-{ #category : #'object interface' }
-SBASTNode >> contextAcceptedRepresentationAt: aNumber [
-
-	^ #isSmalltalkExpression
-]
-
 { #category : #actions }
 SBASTNode >> copyString [
 	<action>

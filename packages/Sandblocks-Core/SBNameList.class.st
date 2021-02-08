@@ -8,12 +8,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBNameList >> contextAcceptedRepresentationAt: aNumber [
-
-	^ #isSmalltalkName
-]
-
-{ #category : #'as yet unclassified' }
 SBNameList >> isExpression [
 
 	^ false
@@ -23,4 +17,10 @@ SBNameList >> isExpression [
 SBNameList >> newChild [
 
 	^ SBName new
+]
+
+{ #category : #'as yet unclassified' }
+SBNameList >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	^ SBInterfaces stName
 ]

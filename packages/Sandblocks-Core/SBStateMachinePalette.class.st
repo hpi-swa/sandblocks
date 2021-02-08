@@ -13,7 +13,7 @@ SBStateMachinePalette class >> buildOn: aContainer [
 { #category : #'as yet unclassified' }
 SBStateMachinePalette class >> context [
 
-	^ #isSmalltalkExpression
+	^ #(isSmalltalk)
 ]
 
 { #category : #'as yet unclassified' }

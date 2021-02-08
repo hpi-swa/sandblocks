@@ -223,6 +223,16 @@ SBSignature >> numArguments: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBSignature >> objectInterfaceAt: aNumber adding: aBoolean argumentInterface: anInterfaceCollection [
+
+	aBoolean ifTrue: [^ SBInterfaces never].
+	
+	aNumber odd
+		ifTrue: [^ SBInterfaces stMessagePart]
+		ifFalse: [^ anInterfaceCollection]
+]
+
+{ #category : #'as yet unclassified' }
 SBSignature >> removedMorph: aMorph [
 
 	self messageParts do: #layoutChanged

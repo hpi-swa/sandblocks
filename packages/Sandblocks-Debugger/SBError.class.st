@@ -46,12 +46,6 @@ SBError >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBError >> contextAcceptedRepresentationAt: aNumber [
-
-	^ #isToplevelMorph
-]
-
-{ #category : #'as yet unclassified' }
 SBError >> createFrameForContext: aContext [
 
 	| frame |
@@ -167,6 +161,12 @@ SBError >> intoWorld: aWorld [
 SBError >> maxFrames [
 
 	^ 40
+]
+
+{ #category : #'as yet unclassified' }
+SBError >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	^ SBInterfaces topLevel
 ]
 
 { #category : #'as yet unclassified' }

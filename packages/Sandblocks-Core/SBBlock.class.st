@@ -46,14 +46,6 @@ SBBlock >> acceptDroppingMorph: aMorph event: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBBlock >> acceptedRepresentation [
-	" return what representations may replace you "
-
-	^ self parentSandblock ifNotNil: [
-		self parentSandblock contextAcceptedRepresentationAt: self childIndex] ifNil: [nil]
-]
-
-{ #category : #'as yet unclassified' }
 SBBlock >> actions [
 
 	^ Array streamContents: [:stream |
@@ -169,12 +161,6 @@ SBBlock >> canAppearInBlockBody [
 SBBlock >> canCopy [
 
 	^ true
-]
-
-{ #category : #testing }
-SBBlock >> canDeleteAroundTo: aParentBlock [
-
-	^ self hasRepresentationThat: (aParentBlock parentSandblock contextAcceptedRepresentationAt: aParentBlock childIndex)
 ]
 
 { #category : #testing }
@@ -406,13 +392,6 @@ SBBlock >> containsUnknown [
 
 	self allBlocksDo: [:b | b isUnknown ifTrue: [^ true]].
 	^ false
-]
-
-{ #category : #'as yet unclassified' }
-SBBlock >> contextAcceptedRepresentationAt: aNumber [
-	" return any constraints on the representation of your child block at aNumber "
-
-	^ nil
 ]
 
 { #category : #actions }
@@ -1229,12 +1208,6 @@ SBBlock >> isSandblock [
 ]
 
 { #category : #testing }
-SBBlock >> isScmExpression [
-
-	^ false
-]
-
-{ #category : #testing }
 SBBlock >> isSelected [
 
 	^ self sandblockEditor ifNil: [false] ifNotNil: [:editor | editor selection = self]
@@ -1562,7 +1535,7 @@ SBBlock >> openPalette [
 
 	| palettes |
 	palettes := SBPalette allSubclasses select: [:palette |
-		palette context = (self containingBlock contextAcceptedRepresentationAt: self containingBlock childSandblocks size) and: [palette matchesBlock: self]].
+		(self satisfies: palette context) and: [palette matchesBlock: self]].
 	palettes ifNotEmpty: [ | container |
 		container := SBPaletteContainer new.
 		palettes do: [:class | class buildOn: container].
@@ -1822,19 +1795,6 @@ SBBlock >> replaceWithCopyBuffer [
 					target: self;
 					replacer: repr).
 				repr postDuplicate]]
-]
-
-{ #category : #'as yet unclassified' }
-SBBlock >> representAs [
-	<action>
-
-	| options prompt |
-	options := self object representationsThat: self acceptedRepresentation.
-	options ifEmpty: [^ self].
-	
-	prompt := SBRepresentationPrompt new options: options target: self object current: self.
-	self sandblockEditor openPopup: prompt.
-	prompt position: self positionInWorld + (self width @ 0)
 ]
 
 { #category : #'event handling' }

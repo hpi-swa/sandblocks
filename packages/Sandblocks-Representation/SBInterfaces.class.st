@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #core }
+SBInterfaces class >> always [
+
+	^ #()
+]
+
+{ #category : #core }
 SBInterfaces class >> block [
 
 	^ #(isSandblock)
@@ -32,6 +38,12 @@ SBInterfaces class >> morph [
 SBInterfaces class >> never [
 
 	^ {[:o | false]}
+]
+
+{ #category : #smalltalk }
+SBInterfaces class >> stBlock [
+
+	^ self stExpression, #(isMessageSend)
 ]
 
 { #category : #smalltalk }

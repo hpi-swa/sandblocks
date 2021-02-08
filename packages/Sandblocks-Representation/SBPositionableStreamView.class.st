@@ -22,12 +22,6 @@ SBPositionableStreamView >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBPositionableStreamView >> contextAcceptedRepresentationAt: aNumber [
-
-	^ aNumber < (self childSandblocks size - 2) ifTrue: [#isSandblock] ifFalse: [nil]
-]
-
-{ #category : #'as yet unclassified' }
 SBPositionableStreamView >> hasUnsavedChanges [
 
 	^ false
@@ -72,6 +66,12 @@ SBPositionableStreamView >> next [
 SBPositionableStreamView >> object [
 
 	^ stream
+]
+
+{ #category : #'as yet unclassified' }
+SBPositionableStreamView >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	^ aNumber < (self childSandblocks size - 2) ifTrue: [SBInterfaces block] ifFalse: [SBInterfaces never]
 ]
 
 { #category : #'as yet unclassified' }

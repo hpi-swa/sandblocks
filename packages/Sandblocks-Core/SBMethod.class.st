@@ -41,16 +41,6 @@ SBMethod >> collapsed: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBMethod >> contextAcceptedRepresentationAt: aNumber [
-
-	SBToggledCode
-		comment: 'need insert vs replace semantics for this :('
-		active: 0
-		do: {[aNumber = self childSandblocks size ifTrue: [^ #isSmalltalkBlock]]}.
-	^ aNumber odd ifTrue: [#isSmalltalkMessagePart] ifFalse: [#isSmalltalkExpression]
-]
-
-{ #category : #'as yet unclassified' }
 SBMethod >> currentTextMorph [
 
 	^ nil
@@ -135,6 +125,16 @@ SBMethod >> messageParts [
 SBMethod >> methodClass [
 
 	^ classPrefix selectedClass
+]
+
+{ #category : #'as yet unclassified' }
+SBMethod >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	aBoolean ifTrue: [^ SBInterfaces never].
+	
+	^ aNumber = self childSandblocks size
+		ifTrue: [SBInterfaces stBlock]
+		ifFalse: [signature objectInterfaceAt: aNumber - 1 adding: aBoolean argumentInterface: SBInterfaces stName]
 ]
 
 { #category : #'as yet unclassified' }

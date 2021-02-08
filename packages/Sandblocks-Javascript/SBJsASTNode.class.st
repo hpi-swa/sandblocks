@@ -29,12 +29,6 @@ SBJsASTNode >> changeToUnknown [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsASTNode >> contextAcceptedRepresentationAt: aNumber [
-
-	^ #isJsExpression
-]
-
-{ #category : #'as yet unclassified' }
 SBJsASTNode >> copyString [
 	<action>
 
@@ -110,11 +104,11 @@ SBJsASTNode >> isClosure [
 { #category : #'as yet unclassified' }
 SBJsASTNode >> isExpression [
 
-	^ false
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBJsASTNode >> isJsExpression [
+SBJsASTNode >> isJavascript [
 
 	^ true
 ]
@@ -138,6 +132,12 @@ SBJsASTNode >> object [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsASTNode >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	^ (self fixedNumberOfChildren and: [aBoolean]) ifTrue: [SBInterfaces never] ifFalse: [SBInterfaces jsExpression]
+]
+
+{ #category : #'as yet unclassified' }
 SBJsASTNode >> sourceString [
 
 	^ String streamContents: [:s | self writeSourceOn: s]
@@ -146,7 +146,7 @@ SBJsASTNode >> sourceString [
 { #category : #'as yet unclassified' }
 SBJsASTNode >> wrapAsArgument [
 	<action>
-	<actionValidIf: #isJsExpression>
+	<actionValidIf: #isExpression>
 
 	| operator |
 	self flag: #todo. " figure out a way to make the terminology language dependent: the shortcut comes from Smalltalk "

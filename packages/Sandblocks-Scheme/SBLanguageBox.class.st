@@ -19,16 +19,18 @@ SBLanguageBox class >> matches: aMessageSend [
 { #category : #'as yet unclassified' }
 SBLanguageBox class >> newFor: aBlock [
 
-	^ self new source: aBlock arguments first contents
+	^ self new source: aBlock arguments first contents lang: aBlock arguments second contents
 ]
 
 { #category : #'as yet unclassified' }
 SBLanguageBox class >> suggestion [
 
-	^ [:block |
+	^ [:block | | box |
+		box := (SBLanguageBox new source: '' lang: 'scheme').
 		block sandblockEditor do: ((SBReplaceCommand newFor: block containingArtefact)
 			target: block;
-			replacer: (SBLanguageBox new source: ''))]
+			replacer: box).
+		box inputNextUnknown]
 ]
 
 { #category : #'as yet unclassified' }
@@ -66,10 +68,10 @@ SBLanguageBox >> root [
 ]
 
 { #category : #'as yet unclassified' }
-SBLanguageBox >> source: aString [
+SBLanguageBox >> source: aString lang: anotherString [
 
 	self removeAllMorphs.
-	self addMorphBack: (SBStringMorph new contents: 'SCHEME').
+	self addMorphBack: (SBStringMorph new contents: anotherString).
 	self addMorphBack: (aString ifEmpty: [SBScmModule new] ifNotEmpty: [SBScmModule fromString: aString])
 ]
 

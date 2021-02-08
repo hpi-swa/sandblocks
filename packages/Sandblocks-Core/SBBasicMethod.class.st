@@ -170,13 +170,6 @@ SBBasicMethod >> containingArtefact [
 ]
 
 { #category : #'as yet unclassified' }
-SBBasicMethod >> contextAcceptedRepresentationAt: aNumber [
-
-	aNumber = self childSandblocks size ifTrue: [^ #isSmalltalkBlock].
-	^ #isSmalltalkName
-]
-
-{ #category : #'as yet unclassified' }
 SBBasicMethod >> createTestMethod [
 	<action>
 

@@ -92,17 +92,6 @@ SBMessageSend >> contents: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBMessageSend >> contextAcceptedRepresentationAt: aNumber [
-
-	| base |
-	base := self isInCascade ifTrue: [0] ifFalse: 1.
-	aNumber = base ifTrue: [^ #isSmalltalkExpression].
-	^ (aNumber + base) odd
-		ifTrue: [#isSmalltalkMessagePart]
-		ifFalse: [#isSmalltalkExpression]
-]
-
-{ #category : #'as yet unclassified' }
 SBMessageSend >> deleteCommandFor: aBlock [
 
 	self isUnary ifTrue: [
@@ -329,9 +318,7 @@ SBMessageSend >> objectInterfaceAt: aNumber adding: aBoolean [
 	
 	base := self isInCascade ifTrue: [0] ifFalse: 1.
 	aNumber = base ifTrue: [^ SBInterfaces stExpression].
-	^ (aNumber + base) odd
-		ifTrue: [SBInterfaces stMessagePart]
-		ifFalse: [SBInterfaces stExpression]
+	^ signature objectInterfaceAt: aNumber - base adding: aBoolean argumentInterface: SBInterfaces stExpression
 ]
 
 { #category : #'as yet unclassified' }

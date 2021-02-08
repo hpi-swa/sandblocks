@@ -61,7 +61,7 @@ SBStCanvasPalette class >> buildOn: aContainer [
 { #category : #'as yet unclassified' }
 SBStCanvasPalette class >> context [
 
-	^ #isSmalltalkExpression
+	^ #(isSmalltalk)
 ]
 
 { #category : #'as yet unclassified' }

@@ -5,12 +5,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBScmASTNode >> canEvaluate [
-
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
 SBScmASTNode >> changeToUnknown [
 	<action>
 
@@ -40,12 +34,6 @@ SBScmASTNode >> containingStatement [
 ]
 
 { #category : #'as yet unclassified' }
-SBScmASTNode >> contextAcceptedRepresentationAt: aNumber [
-
-	^ #isScmExpression
-]
-
-{ #category : #'as yet unclassified' }
 SBScmASTNode >> copyString [
 	<action>
 	
@@ -56,6 +44,22 @@ SBScmASTNode >> copyString [
 SBScmASTNode >> evaluate [
 
 	^ QoppaInterpreter new readAndEvaluate: self sourceString
+]
+
+{ #category : #'as yet unclassified' }
+SBScmASTNode >> evaluateExpression [
+	<action>
+	<actionValidIf: #isExpression>
+
+	| result |
+	result := self evaluate.
+	self containingArtefact ifNotNil: [
+		self containingArtefact cacheType: result class for: self].
+	
+	result convertedFor: SBInterfaces topLevel do: [:morph |
+		self sandblockEditor openMorphInView: morph.
+		morph focusAfterDelete: self.
+		self sandblockEditor connectFrom: self to: morph]
 ]
 
 { #category : #'as yet unclassified' }
@@ -101,6 +105,12 @@ SBScmASTNode >> insertStatementBelow [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmASTNode >> isExpression [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBScmASTNode >> isIdentifier [
 
 	^ false
@@ -113,7 +123,7 @@ SBScmASTNode >> isSExpr [
 ]
 
 { #category : #'as yet unclassified' }
-SBScmASTNode >> isScmExpression [
+SBScmASTNode >> isScheme [
 
 	^ true
 ]
@@ -143,6 +153,12 @@ SBScmASTNode >> object [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmASTNode >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	^ SBInterfaces scmExpression
+]
+
+{ #category : #'as yet unclassified' }
 SBScmASTNode >> sourceString [
 
 	^ String streamContents: [:s | self writeSourceOn: s]
@@ -158,7 +174,7 @@ SBScmASTNode >> wrapAsArgument [
 { #category : #'as yet unclassified' }
 SBScmASTNode >> wrapInMessageSend [
 	<action>	
-	<actionValidIf: #isScmExpression>
+	<actionValidIf: #isExpression>
 	
 	self insertElementAfter
 ]

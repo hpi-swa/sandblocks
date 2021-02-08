@@ -169,6 +169,16 @@ SBTestCase >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
+SBTestCase >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	aBoolean ifTrue: [^ SBInterfaces never].
+	
+	^ aNumber = self childSandblocks size
+		ifTrue: [SBInterfaces stBlock]
+		ifFalse: [SBInterfaces stName]
+]
+
+{ #category : #'as yet unclassified' }
 SBTestCase >> outOfWorld: aWorld [
 
 	super outOfWorld: aWorld.

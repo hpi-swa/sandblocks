@@ -5,12 +5,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBMailPrototype >> contextAcceptedRepresentationAt: aNumber [
-
-	^ #isMIMEDocument
-]
-
-{ #category : #'as yet unclassified' }
 SBMailPrototype >> initialize [
 
 	super initialize.
@@ -20,4 +14,10 @@ SBMailPrototype >> initialize [
 		vResizing: #rigid;
 		extent: 50 @ 50;
 		layoutInset: 8
+]
+
+{ #category : #'as yet unclassified' }
+SBMailPrototype >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	^ #(isMIMEDocument)
 ]

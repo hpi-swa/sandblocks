@@ -44,13 +44,6 @@ SBCascade >> codeActions [
 ]
 
 { #category : #'as yet unclassified' }
-SBCascade >> contextAcceptedRepresentationAt: aNumber [
-
-	aNumber = 1 ifTrue: [^ #isSmalltalkExpression].
-	^ #isSmalltalkMessage
-]
-
-{ #category : #'as yet unclassified' }
 SBCascade >> fixedNumberOfChildren [
 
 	^ false
@@ -98,6 +91,12 @@ SBCascade >> layoutCommands [
 SBCascade >> messages [
 
 	^ self submorphs allButFirst
+]
+
+{ #category : #'as yet unclassified' }
+SBCascade >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	^ aNumber = 1 ifTrue: [SBInterfaces stExpression] ifFalse: [SBInterfaces stMessage]
 ]
 
 { #category : #'as yet unclassified' }

@@ -93,12 +93,6 @@ SBRepl >> canDeleteChild: aBlock [
 	^ aBlock owner = bindings
 ]
 
-{ #category : #'artefact protocol' }
-SBRepl >> canEvaluate [
-
-	^ true
-]
-
 { #category : #'as yet unclassified' }
 SBRepl >> childSandblocksDo: aBlock [
 
@@ -111,12 +105,6 @@ SBRepl >> childSandblocksDo: aBlock [
 SBRepl >> containingArtefact [
 
 	^ self
-]
-
-{ #category : #'artefact protocol' }
-SBRepl >> contextAcceptedRepresentationAt: aNumber [
-
-	^ #isObject
 ]
 
 { #category : #'artefact protocol' }
@@ -257,6 +245,12 @@ SBRepl >> name: aString [
 SBRepl >> object [
 
 	^ receiver
+]
+
+{ #category : #'compilation cue protocol' }
+SBRepl >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	^ SBInterfaces always
 ]
 
 { #category : #'artefact protocol' }

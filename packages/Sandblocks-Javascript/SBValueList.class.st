@@ -56,7 +56,7 @@ SBValueList >> insertCommandRequest: anAfterBoolean near: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBValueList >> isJsExpression [
+SBValueList >> isExpression [
 
 	^ false
 ]

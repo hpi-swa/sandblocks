@@ -98,7 +98,7 @@ SBScmPalette class >> buildOn: aContainer [
 { #category : #'as yet unclassified' }
 SBScmPalette class >> context [
 
-	^ #isScmExpression
+	^ #(isScheme)
 ]
 
 { #category : #'as yet unclassified' }
