@@ -89,13 +89,6 @@ SBExample >> addAssertion: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBExample >> addExample [
-	<action>
-
-	self toggleRunning
-]
-
-{ #category : #'as yet unclassified' }
 SBExample >> argumentsBlock [
 
 	^ self submorphs sixth

@@ -11,9 +11,22 @@ SBStClassNameInput >> doubleClick: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBStClassNameInput >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
+
+	aBlock unpackSelection object convertedFor: self objectInterfaceForDrop do: [:class |
+		self selectedClass: class]
+]
+
+{ #category : #'as yet unclassified' }
 SBStClassNameInput >> object [
 
 	^ self selectedClass
+]
+
+{ #category : #'as yet unclassified' }
+SBStClassNameInput >> objectInterface [
+
+	^ SBInterfaces stClass
 ]
 
 { #category : #'as yet unclassified' }
@@ -27,10 +40,7 @@ SBStClassNameInput >> printOn: aStream [
 SBStClassNameInput >> promptChangeClass [
 
 	(UIManager default chooseClassOrTrait) ifNotNil: [:class |
-		self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
-			target: self;
-			selector: #contents;
-			value: class name)]
+		self selectedClass: class]
 ]
 
 { #category : #'as yet unclassified' }
@@ -39,6 +49,15 @@ SBStClassNameInput >> selectedClass [
 	^ (self contents endsWith: ' class')
 		ifTrue: [(Smalltalk at: (self contents allButLast: ' class' size) asSymbol) class]
 		ifFalse: [Smalltalk at: self contents asSymbol]
+]
+
+{ #category : #'as yet unclassified' }
+SBStClassNameInput >> selectedClass: aClass [
+
+	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
+		target: self;
+		selector: #contents;
+		value: aClass name)
 ]
 
 { #category : #'as yet unclassified' }

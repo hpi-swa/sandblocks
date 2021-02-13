@@ -93,7 +93,7 @@ String >> parseAsSandblockWithoutSubstitution [
 
 { #category : #'*Sandblocks-Core' }
 String >> parseAsScheme: converter [
-	<convert>
+	"<convert>"
 
 	converter
 		do: [SBScmModule fromString: self]

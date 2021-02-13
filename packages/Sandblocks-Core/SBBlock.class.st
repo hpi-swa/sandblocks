@@ -850,7 +850,7 @@ SBBlock >> handleDropMorph: anEvent [
 { #category : #'as yet unclassified' }
 SBBlock >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
-	aBlock unpackSelection convertedFor: self objectInterfaceForDrop do: [:block | | reference |
+	aBlock unpackSelection object convertedFor: self objectInterfaceForDrop do: [:block | | reference |
 		self sandblockEditor do: (aBoolean
 			ifTrue: [ | insert |
 				insert := self insertCommandRequest: false near: aMorph.

@@ -12,6 +12,8 @@ SBStGrammarHandler >> addExample [
 	<action>
 
 	| method class |
+	self block isExample ifTrue: [^ self block toggleRunning].
+	
 	method := self block containingArtefact.
 	class := method methodClass.
 	

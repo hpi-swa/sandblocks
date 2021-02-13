@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBScmASTNode,
 	#instVars : [
 		'interpreter',
-		'filename'
+		'filename',
+		'unsavedChanges'
 	],
 	#category : #'Sandblocks-Scheme'
 }
@@ -59,9 +60,19 @@ SBScmModule >> commandPaletteClass [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmModule >> drawSubmorphsOn: aCanvas [
+
+	super drawSubmorphsOn: aCanvas.
+	
+	self hasUnsavedChanges ifTrue: [ | adornment |
+		adornment := PluggableTextMorph adornmentWithColor: Color orange.
+		aCanvas translucentImage: adornment at: self position + ((self width - adornment width) @ 0)]
+]
+
+{ #category : #'as yet unclassified' }
 SBScmModule >> expressions [
 
-	^ self submorphs
+	^ self filename ifNotNil: [self submorphs viewAllButFirst] ifNil: [self submorphs]
 ]
 
 { #category : #'as yet unclassified' }
@@ -74,9 +85,10 @@ SBScmModule >> filename [
 SBScmModule >> filename: aString [
 
 	filename := aString.
-	"self addMorphFront: (SBTextBubble new
+	self addMorphFront: (SBFileReference new
+		prefix: 'File: ';
 		contents: aString;
-		yourself)"
+		yourself)
 ]
 
 { #category : #'as yet unclassified' }
@@ -88,17 +100,23 @@ SBScmModule >> fixedNumberOfChildren [
 { #category : #'as yet unclassified' }
 SBScmModule >> hasUnsavedChanges [
 
-	^ false
+	^ unsavedChanges
 ]
 
 { #category : #'as yet unclassified' }
 SBScmModule >> hasUnsavedChanges: aBoolean [
+
+	unsavedChanges ~= aBoolean ifTrue: [
+		unsavedChanges := aBoolean.
+		self changed]
 ]
 
 { #category : #'as yet unclassified' }
 SBScmModule >> initialize [
 
 	super initialize.
+	
+	unsavedChanges := false.
 	
 	self
 		layoutInset: 8;
@@ -153,7 +171,7 @@ SBScmModule >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
-		data: (self expressions collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine withGap: true])
+		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine withGap: true])
 ]
 
 { #category : #'as yet unclassified' }
@@ -165,6 +183,13 @@ SBScmModule >> sandblockBlockColorIfAbsent: aBlock [
 { #category : #'artefact protocol' }
 SBScmModule >> saveTryFixing: aBoolean quick: anotherBoolean [
 
+	self allBlocksDo: [:b | b valid ifFalse: [^ false]].
+	self filename ifNotNil: [
+		FileStream
+			fileNamed: self filename
+			do: [:file |
+				self writeSourceOn: file indent: 0.
+				self hasUnsavedChanges: false]].
 	^ true
 ]
 

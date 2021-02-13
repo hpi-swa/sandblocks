@@ -13,6 +13,12 @@ SBInterfaces class >> stCanAppearInBlock [
 ]
 
 { #category : #'*Sandblocks-Smalltalk' }
+SBInterfaces class >> stClass [
+
+	^ {#isBehavior}
+]
+
+{ #category : #'*Sandblocks-Smalltalk' }
 SBInterfaces class >> stClassEditor [
 
 	^ {#className: understood. #isArtefact understood. #instanceVariables understood. #classVariables understood}

@@ -83,7 +83,7 @@ SBExplorer >> doubleClick: anEvent [
 { #category : #'as yet unclassified' }
 SBExplorer >> drawnColor [
 
-	^ self object sandblockColor
+	^ "self object sandblockColor"Color r: 0.95 g: 0.95 b: 0.95
 ]
 
 { #category : #'as yet unclassified' }

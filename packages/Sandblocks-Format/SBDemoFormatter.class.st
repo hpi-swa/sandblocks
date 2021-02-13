@@ -318,7 +318,7 @@ SBDemoFormatter >> visitBlockNode: aNode [
 SBDemoFormatter >> visitBraceNode: aNode [
 
 	| width multiLine |
-	width := aNode elements inject: 0 into: [:sum :element | sum + ((self preFormat: element) size + 2)].
+	width := (SBExampleWatch report: aNode elements for: 186574757) inject: 0 into: [:sum :element | sum + ((self preFormat: element) size + 2)].
 	multiLine := width > self maxLineLength.
 	stream nextPut: ${.
 	self
