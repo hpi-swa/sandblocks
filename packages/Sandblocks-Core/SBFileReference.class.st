@@ -9,3 +9,9 @@ SBFileReference >> drawnColor [
 
 	^ Color white
 ]
+
+{ #category : #'as yet unclassified' }
+SBFileReference >> object [
+
+	^ FileStream readOnlyFileNamed: self contents
+]

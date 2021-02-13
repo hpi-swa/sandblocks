@@ -98,6 +98,12 @@ SBScmModule >> fixedNumberOfChildren [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmModule >> hasFilename [
+
+	^ filename notNil
+]
+
+{ #category : #'as yet unclassified' }
 SBScmModule >> hasUnsavedChanges [
 
 	^ unsavedChanges
@@ -175,6 +181,14 @@ SBScmModule >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmModule >> reloadModule [
+	<action>
+	<actionValidIf: #hasFilename>
+
+	^ self replaceBy: ((SBScmModule fromPath: self filename) position: self position)
+]
+
+{ #category : #'as yet unclassified' }
 SBScmModule >> sandblockBlockColorIfAbsent: aBlock [
 
 	^ Color r: 0.271 g: 0.682 b: 0.851
@@ -186,11 +200,19 @@ SBScmModule >> saveTryFixing: aBoolean quick: anotherBoolean [
 	self allBlocksDo: [:b | b valid ifFalse: [^ false]].
 	self filename ifNotNil: [
 		FileStream
-			fileNamed: self filename
+			forceNewFileNamed: self selectedFilename
 			do: [:file |
 				self writeSourceOn: file indent: 0.
-				self hasUnsavedChanges: false]].
+				self hasUnsavedChanges: false.
+				self flag: #todo. " delete old file if renamed? "
+				filename := self selectedFilename]].
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBScmModule >> selectedFilename [
+
+	^ filename ifNotNil: [self firstSubmorph contents]
 ]
 
 { #category : #'as yet unclassified' }
