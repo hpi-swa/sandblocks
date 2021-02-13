@@ -110,17 +110,25 @@ SBStLiteral >> replaceWithUnknown [
 SBStLiteral >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
+	(aBoolean and: [self castToUnknownWhenEmpty]) ifTrue: [ | unknown |
+		unknown := self newNullBlock.
+		self sandblockEditor
+			do: ((SBReplaceCommand newFor: self containingArtefact)
+				target: self;
+				shouldMergeWithNext: true;
+				replacer: unknown);
+			replaceInput: unknown.
+		^ unknown startInputAt: 0 replacingContents: false].
+	
 	cmd := (self inputCommandClass newOrEditFor: self containingArtefact)
 		oldMorph: self;
 		previousText: self contents;
 		yourself.
 	
-	aBoolean
-		ifTrue: [
-			self castToUnknownWhenEmpty
-				ifTrue: [self replaceWithUnknown]
-				ifFalse: [self contents: ''; moveCursorTo: 0]]
-		ifFalse: [self moveCursorTo: aNumber].
+	aBoolean ifTrue: [
+		self
+			contents: '';
+			moveCursorTo: 0] ifFalse: [self moveCursorTo: aNumber].
 	
 	^ cmd
 ]

@@ -1,6 +1,12 @@
 Extension { #name : #SBUnknown }
 
 { #category : #'*Sandblocks-Smalltalk' }
+SBUnknown >> canAppearInBlockBody [
+
+	^ true
+]
+
+{ #category : #'*Sandblocks-Smalltalk' }
 SBUnknown >> guessClassExpensive [
 
 	^ nil
