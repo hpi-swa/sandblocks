@@ -58,3 +58,62 @@ SBJsGrammarHandler >> wrap: aBlock do: aWrapBlock with: anOuterBlock [
 		anOuterBlock leftRotate.
 		anOuterBlock inputNextUnknown]
 ]
+
+{ #category : #actions }
+SBJsGrammarHandler >> wrapAsArgument [
+	<action>
+	<actionValidIf: #isExpression>
+
+	| operator |
+	self flag: #todo. " figure out a way to make the terminology language dependent: the shortcut comes from Smalltalk "
+	operator := SBJsPrefixOperator new.
+	self block sandblockEditor
+		do: ((SBWrapCommand newFor: self block containingArtefact)
+			inner: self block;
+			outer: operator;
+			wrap: [:outer :inner | outer operator: '' rhs: inner]);
+		startInput: operator at: 0 replacingContents: false
+]
+
+{ #category : #actions }
+SBJsGrammarHandler >> wrapInDynamicArray [
+	<action>
+	<actionValidIf: #isExpression>
+	
+	| key |
+	self flag: #todo. " figure out a way to make the terminology language dependent: the shortcut comes from Smalltalk where { is an array but in JS it's an object "
+	key := self block newNullBlock.
+	self block sandblockEditor
+		do: ((SBWrapCommand newFor: self block containingArtefact)
+			inner: self block;
+			outer: SBJsObjectLiteral new;
+			wrap: [:outer :inner | outer pairs: {key -> inner}]);
+		startInput: key at: 0 replacingContents: false
+]
+
+{ #category : #actions }
+SBJsGrammarHandler >> wrapInMessageSend [
+	<action>
+	<actionValidIf: #isExpression>
+	
+	| operator |
+	self flag: #todo. " figure out a way to make the terminology language dependent: the shortcut comes from Smalltalk "
+	operator := SBJsInfixOperator new.
+	self block sandblockEditor
+		do: ((SBWrapCommand newFor: self block containingArtefact)
+			inner: self block;
+			outer: operator;
+			wrap: [:outer :inner | outer lhs: inner operator: '' rhs: operator newNullBlock]);
+		startInput: operator at: 0 replacingContents: false
+]
+
+{ #category : #actions }
+SBJsGrammarHandler >> wrapInReturn [
+	<action>
+	<actionValidIf: #isStatement>
+	
+	self block sandblockEditor do: ((SBWrapCommand newFor: self block containingArtefact)
+		outer: (SBJsPrefixOperator new contents: 'return');
+		inner: self block;
+		wrap: [:outer :inner | outer expression: inner])
+]

@@ -89,7 +89,10 @@ SBJsInputTest >> testDeleteDereferenceWithParenthesis [
 	editor startInput: unknown at: 0 replacingContents: true.
 	
 	editor performForSelection: #deleteBeforeCursor.
+	editor performForSelection: #deleteBeforeCursor.
+	editor performForSelection: #deleteBeforeCursor.
 	self assert: deref equals: closure statements first.
+	self assert: 'b' equals: editor selection contents.
 	
 	editor performForSelection: #deleteBeforeCursor.
 	editor performForSelection: #deleteBeforeCursor.

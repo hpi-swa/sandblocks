@@ -112,9 +112,11 @@ SBMessagePartTest >> testPressColonInExistingMessage [
 SBMessagePartTest >> testTypeBinary [
 
 	| receiver message editor |
-	receiver := SBUnknown new.
+	receiver := SBUnknown new grammarHandler: SBStGrammarHandler new.
 	editor := self methodFor: receiver.
-	message := receiver wrapInMessageSend.
+	receiver performAction: #wrapInMessageSend.
+	message := receiver parentSandblock.
+	
 	self assert: message selector isEmpty.
 	self assert: editor currentInput = message messageParts first.
 	message messageParts first keyStroke: (self keyboardEvent: $+).

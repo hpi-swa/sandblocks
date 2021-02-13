@@ -4,13 +4,32 @@ Class {
 	#category : #'Sandblocks-Core'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
+SBGrammarHandler >> block [
+
+	^ currentBlock
+]
+
+{ #category : #'action helpers' }
+SBGrammarHandler >> block: aBlock [
+
+	currentBlock := aBlock
+]
+
+{ #category : #actions }
+SBGrammarHandler >> copyString [
+	<action>
+
+	Clipboard clipboardText: self block prettySourceString
+]
+
+{ #category : #'callback helpers' }
 SBGrammarHandler >> focusNextFrom: aMorph at: aNumber [
 
 	self focusNextFrom: aMorph at: aNumber wasInput: aMorph sandblockEditor mode = #input
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'callback helpers' }
 SBGrammarHandler >> focusNextFrom: aMorph at: aNumber wasInput: aBoolean [
 
 	SBToggledCode
@@ -40,19 +59,62 @@ SBGrammarHandler >> focusNextFrom: aMorph at: aNumber wasInput: aBoolean [
 				aMorph sandblockEditor startInput: aMorph at: aNumber replacingContents: false]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
+SBGrammarHandler >> insertStatementAbove [
+	<action>
+
+	self insertStatementAboveOrBelow: true
+]
+
+{ #category : #'action helpers' }
+SBGrammarHandler >> insertStatementAboveOrBelow: anAboveBoolean [
+
+	| currentStatement index newStatement |
+	newStatement := self block newNullBlock.
+	currentStatement := self block containingStatement ifNil: [^ self block containingArtefact insertStatementAboveOrBelow: anAboveBoolean].
+	
+	(anAboveBoolean not and: [self block containingBlock = currentStatement or: [self block containingBlock hasOwner: currentStatement]]) ifTrue: [
+		^ self block sandblockEditor
+			do: ((SBInsertCommand newFor: self block containingArtefact)
+				index: self block containingBlock statementsIndex;
+				container: self block containingBlock;
+				morph: newStatement;
+				shouldMergeWithNext: true;
+				yourself);
+			startInput: newStatement at: 1 replacingContents: false].
+	
+	index := currentStatement owner submorphIndexOf: currentStatement.
+	self block sandblockEditor
+		do: ((SBInsertCommand newFor: self block containingArtefact)
+			index: (anAboveBoolean ifTrue: [index] ifFalse: [index + 1]);
+			container: currentStatement owner;
+			morph: newStatement;
+			shouldMergeWithNext: true;
+			yourself);
+		startInput: newStatement at: 1 replacingContents: false
+]
+
+{ #category : #actions }
+SBGrammarHandler >> insertStatementBelow [
+	<action>
+	<actionValidIf: #hasNoSuggestions>
+
+	self insertStatementAboveOrBelow: false
+]
+
+{ #category : #callbacks }
 SBGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'callback helpers' }
 SBGrammarHandler >> replace: aBlock with: aMorph [
 
 	self replace: aBlock with: aMorph mergeInput: true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'callback helpers' }
 SBGrammarHandler >> replace: aBlock with: aMorph mergeInput: aBoolean [
 
 	| wasInput |
@@ -66,7 +128,17 @@ SBGrammarHandler >> replace: aBlock with: aMorph mergeInput: aBoolean [
 	self focusNextFrom: aMorph at: 9e8 wasInput: wasInput
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
+SBGrammarHandler >> selectStartOfStatement [
+	<multiSelectAction>
+	<inputAction>
+	
+	self block containingStatement firstDeepChild select.
+	
+	self block sandblockEditor maybeStartInputFromStart
+]
+
+{ #category : #'callback helpers' }
 SBGrammarHandler >> tryDelete: aBlock [
 
 	| editor p |
@@ -77,13 +149,21 @@ SBGrammarHandler >> tryDelete: aBlock [
 	editor startInput: p at: 9e8 replacingContents: false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
+SBGrammarHandler >> unpackList [
+	<action>
+	<actionValidIf: #parentHasDynamicNumberOfChildren>
+
+	self sandblockEditor do: ((SBUnwrapConsecutiveCommand newFor: self containingArtefact) target: self)
+]
+
+{ #category : #'callback helpers' }
 SBGrammarHandler >> wrap: aBlock do: aWrapBlock with: aNode [
 
 	^ self wrap: aBlock do: aWrapBlock with: aNode focusOuter: false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'callback helpers' }
 SBGrammarHandler >> wrap: aBlock do: aWrapBlock with: aNode focusOuter: aBoolean [
 
 	| cursorIndex |

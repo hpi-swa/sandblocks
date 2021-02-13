@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBEmptyLine >> actionProviders [
+
+	^ super actionProviders, {self grammarHandler}
+]
+
+{ #category : #'as yet unclassified' }
 SBEmptyLine >> canAppearInBlockBody [
 
 	^ true
@@ -33,11 +39,23 @@ SBEmptyLine >> extent: aPoint [
 ]
 
 { #category : #'as yet unclassified' }
+SBEmptyLine >> grammarHandler [
+
+	^ self parentSandblock grammarHandler
+]
+
+{ #category : #'as yet unclassified' }
 SBEmptyLine >> initialize [
 
 	super initialize.
 	
 	self extent: self extent
+]
+
+{ #category : #'as yet unclassified' }
+SBEmptyLine >> newNullBlock [
+
+	^ self parentSandblock newNullBlock
 ]
 
 { #category : #'as yet unclassified' }

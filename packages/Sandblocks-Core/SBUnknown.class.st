@@ -8,13 +8,13 @@ Class {
 	#category : #'Sandblocks-Core'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'text input' }
 SBUnknown >> acceptCharacter: aCharacter [
 
 	self grammarHandler perform: aCharacter for: self empty: true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'text input' }
 SBUnknown >> acceptInputEvent: anEvent [
 
 	self currentTextMorph keyStroke: anEvent.
@@ -25,7 +25,13 @@ SBUnknown >> acceptInputEvent: anEvent [
 		SBScmGrammarHandler new perform: anEvent keyCharacter for: self empty: false]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
+SBUnknown >> actionProviders [
+
+	^ super actionProviders, {self grammarHandler}
+]
+
+{ #category : #accessing }
 SBUnknown >> contents [
 
 	^ self currentTextMorph contents
@@ -58,7 +64,7 @@ SBUnknown >> deleteIfDismissed: aBoolean [
 	deleteIfDismissed := aBoolean
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 SBUnknown >> drawInvalidBorderOn: aCanvas [
 
 	" if we have a label do not draw a strong red border "
@@ -116,19 +122,19 @@ SBUnknown >> isUnknown [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'text input' }
 SBUnknown >> keyStroke: anEvent [
 
 	self acceptCharacter: anEvent keyCharacter
 ]
 
-{ #category : #actions }
+{ #category : #accessing }
 SBUnknown >> label: aString [
 
 	self currentTextMorph contents: aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBUnknown >> layoutCommands [
 
 	^ SBAlgebraCommand container
@@ -148,13 +154,13 @@ SBUnknown >> newNullBlock [
 	^ self veryDeepCopy
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBUnknown >> printOn: aStream [
 
 	aStream nextPutAll: 'unknown'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'text input' }
 SBUnknown >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
@@ -170,14 +176,14 @@ SBUnknown >> startInputAt: aNumber replacingContents: aBoolean [
 	^ cmd
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'text input' }
 SBUnknown >> stopEditing [
 
 	self currentTextMorph stopEditing.
 	self removeSuggestionMenu
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'text input' }
 SBUnknown >> stopEditing: aCommand [
 
 	aCommand
@@ -191,17 +197,6 @@ SBUnknown >> stopEditing: aCommand [
 SBUnknown >> symbols [
 
 	^ self colorPolicy symbolsForUnknown: self
-]
-
-{ #category : #actions }
-SBUnknown >> tryDelete [
-
-	| editor p |
-	p := self previousBlock.
-	editor := self sandblockEditor.
-	
-	self deleteBlock.
-	editor startInput: p at: 9e8 replacingContents: false
 ]
 
 { #category : #testing }
@@ -225,6 +220,6 @@ SBUnknown >> wasDeselected [
 			wasInput ifTrue: [editor startInput: previousSelection at: 900000000 replacingContents: false]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBUnknown >> writeSourceOn: aStream [
 ]

@@ -116,11 +116,13 @@ SBScmParserTest >> testSkipComments [
 ; hello!
 
 3 ; hello' as: '(+ 2 3)
+
 3'.
 	self assertParses: '(+ 2 3)
 ; test
 ; hello!
 ; abc
 3 ; hello' as: '(+ 2 3)
+
 3'
 ]

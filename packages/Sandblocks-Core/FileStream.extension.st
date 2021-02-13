@@ -17,11 +17,3 @@ FileStream >> asStringReopened: converter [
 		if: [self closed]
 		do: [self reopen; ascii; contents]
 ]
-
-{ #category : #'*Sandblocks-Core-converting' }
-FileStream >> parseAsScheme: converter [
-	<convert>
-	
-	converter
-		do: [SBScmModule fromFilestream: self]
-]

@@ -45,16 +45,23 @@ SBBlock >> acceptDroppingMorph: aMorph event: anEvent [
 		self handleDroppedBlock: aMorph event: anEvent adding: self fixedNumberOfChildren not near: morph]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
+SBBlock >> actionProviders [
+
+	^ {self}
+]
+
+{ #category : #'action helpers' }
 SBBlock >> actions [
 
 	^ Array streamContents: [:stream |
-		self class withAllSuperclassesDo: [:class |
-			Pragma
-				withPragmasIn: class
-				do: [:pragma |
-					(#(#action #multiSelectAction #inputAction) includes: pragma keyword) ifTrue: [stream nextPut: pragma]].
-			SBBlock = class ifTrue: [^ stream contents]]]
+		self actionProviders do: [:obj |
+			obj class withAllSuperclassesDo: [:class |
+				Pragma
+					withPragmasIn: class
+					do: [:pragma |
+						(#(#action #multiSelectAction #inputAction) includes: pragma keyword) ifTrue: [stream nextPut: pragma]].
+				SBBlock = class ifTrue: [^ stream contents]]]]
 ]
 
 { #category : #actions }
@@ -202,7 +209,18 @@ SBBlock >> changeLocalColorPolicy [
 SBBlock >> changeToUnknown [
 	<action>
 	
-	" if support, change to prepare for arbitrary input to replace you "
+	self newNullBlock
+		convertedFor: self objectInterface
+		do: [:new |
+			new ifNotNil: [
+				self sandblockEditor
+					copyBuffer: self;
+					do: ((SBReplaceCommand newFor: self containingArtefact)
+						target: self;
+						replacer: new;
+						shouldMergeWithNext: true;
+						yourself);
+					startInput: new at: 0 replacingContents: false]]
 ]
 
 { #category : #hierarchy }
@@ -1226,6 +1244,12 @@ SBBlock >> isSmalltalk [
 ]
 
 { #category : #testing }
+SBBlock >> isStatement [
+
+	^ self owner isBlockBody
+]
+
+{ #category : #testing }
 SBBlock >> isStringBlock [
 
 	^ false
@@ -1327,10 +1351,12 @@ SBBlock >> localNestingDepth [
 	^ 1 + (self parentSandblock ifNotNil: [:p | p localNestingDepth] ifNil: [0])
 ]
 
-{ #category : #accessing }
+{ #category : #'action helpers' }
 SBBlock >> lookupAction: aSymbol [
 
-	^ self class lookupSelector: aSymbol
+	^ self actionProviders
+		detect: [:obj | obj respondsTo: aSymbol]
+		ifFound: [:obj | obj class lookupSelector: aSymbol]
 ]
 
 { #category : #'as yet unclassified' }
@@ -1632,10 +1658,13 @@ SBBlock >> pc [
 SBBlock >> pc: aNumber [
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
 SBBlock >> performAction: aSymbol [
 
-	self perform: aSymbol
+	self actionProviders do: [:obj |
+		(obj respondsTo: aSymbol) ifTrue: [
+			obj ~= self ifTrue: [obj block: self].
+			obj perform: aSymbol]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -1962,9 +1991,12 @@ SBBlock >> selectPreviousGroup [
 
 { #category : #actions }
 SBBlock >> selectRightMostBlock [
-	<action>
+	<multiSelectAction>
+	<inputAction>
 
-	self rightMostBlock select
+	self containingStatement ifNil: [self rightMostBlock select] ifNotNil: [:statement | statement rightMostBlock select].
+	
+	self sandblockEditor maybeStartInputFromEnd
 ]
 
 { #category : #actions }
@@ -2283,7 +2315,7 @@ SBBlock >> valid [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
 SBBlock >> validActions [
 
 	| mode |

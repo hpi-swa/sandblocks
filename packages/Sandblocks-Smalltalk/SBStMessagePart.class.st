@@ -281,16 +281,7 @@ SBStMessagePart >> wrapInCascade [
 SBStMessagePart >> wrapInMessageSend [
 	<action>
 	
-	self messageSend wrapInMessageSend: ''
-]
-
-{ #category : #'as yet unclassified' }
-SBStMessagePart >> wrapInMessageSend: anEvent [
-
-	self messageSend isExpression ifFalse: [^ self].
-	
-	self sandblockEditor endInput.
-	^ self messageSend wrapInMessageSend: (anEvent keyCharacter isSpecial ifTrue: [anEvent keyCharacter asString] ifFalse: [''])
+	self messageSend grammarHandler wrapInMessageSend: ''
 ]
 
 { #category : #'as yet unclassified' }

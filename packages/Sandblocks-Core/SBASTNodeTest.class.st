@@ -11,7 +11,7 @@ SBASTNodeTest >> testCanUndoAppendLine [
 	block := '[5]' parseAsSandblock.
 	editor := self methodFor: block.
 	selection := block statements first.
-	selection insertStatementBelow.
+	selection performAction: #insertStatementBelow.
 	
 	block statements last keyStroke: (self keyboardEvent: $s).
 	editor endInput.
@@ -65,9 +65,9 @@ SBASTNodeTest >> testInsertStatementAboveOrBelow [
 	block := '[5]' parseAsSandblock.
 	selection := block statements first.
 	self methodFor: block.
-	selection insertStatementBelow.
+	selection performAction: #insertStatementBelow.
 	self assert: block statements last isUnknown.
-	selection insertStatementAbove.
+	selection performAction: #insertStatementAbove.
 	self assert: block statements first isUnknown
 ]
 
@@ -82,7 +82,7 @@ SBASTNodeTest >> testUndoWrapInArray [
 	editor startOrAddToMultiSelection: block statements second.
 	editor startOrAddToMultiSelection: block statements third.
 	editor select: selection.
-	selection wrapInArrayType: #dynamic.
+	selection performAction: #wrapInDynamicArray.
 	self assert: block statements first isArrayBlock.
 	self assert: block statements first submorphs first = selection.
 	self assert: block statements first submorphs second selector = 'changeTableLayout'.
@@ -105,7 +105,7 @@ SBASTNodeTest >> testUndoWrapInBlock [
 	editor startOrAddToMultiSelection: block statements second.
 	editor startOrAddToMultiSelection: block statements third.
 	editor select: selection.
-	selection wrapInBlock.
+	selection performAction: #wrapInBlock.
 	self assert: block statements first isBlockBody.
 	self assert: block statements first statements first = selection.
 	self assert: block statements first statements second selector = 'changeTableLayout'.
@@ -145,7 +145,7 @@ SBASTNodeTest >> testWrapAsArgument [
 	block := '[5]' parseAsSandblock.
 	self methodFor: block.
 	selection := block statements first.
-	selection wrapAsArgument.
+	selection performAction: #wrapAsArgument.
 	self assert: block statements first isMessageSend.
 	self assert: block statements first arguments first = selection.
 	self assert: block statements first receiver isUnknown
@@ -158,7 +158,7 @@ SBASTNodeTest >> testWrapInArrayType [
 	block := '[5]' parseAsSandblock.
 	selection := block statements first.
 	(self methodFor: block) select: selection.
-	selection wrapInArrayType: #dynamic.
+	selection performAction: #wrapInDynamicArray.
 	self assert: block statements first isArrayBlock.
 	self assert: block statements first firstSubmorph = selection
 ]
@@ -170,7 +170,7 @@ SBASTNodeTest >> testWrapInBlock [
 	block := '[5]' parseAsSandblock.
 	selection := block statements first.
 	(self methodFor: block) select: selection.
-	selection wrapInBlock.
+	selection performAction: #wrapInBlock.
 	self assert: block statements first isBlockBody.
 	self assert: block statements first statements first = selection
 ]
@@ -228,7 +228,9 @@ SBASTNodeTest >> testWrapInMessageSend [
 	block := '[5]' parseAsSandblock.
 	selection := block statements first.
 	self methodFor: block.
-	selection wrapInMessageSend: 'hello'.
+	selection grammarHandler
+		block: selection;
+		wrapInMessageSend: 'hello'.
 	self assert: block statements first isMessageSend.
 	self assert: block statements first selector = 'hello'.
 	self assert: block statements first receiver = selection
@@ -241,7 +243,7 @@ SBASTNodeTest >> testWrapInReturn [
 	block := '[5]' parseAsSandblock.
 	self methodFor: block.
 	selection := block statements first.
-	selection wrapInReturn.
+	selection performAction: #wrapInReturn.
 	self assert: block statements first isReturn.
 	self assert: block statements first expression = selection
 ]

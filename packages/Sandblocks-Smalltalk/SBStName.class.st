@@ -51,9 +51,9 @@ SBStName >> acceptInputEvent: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBStName >> actions [
+SBStName >> actionsProviders [
 
-	^ super actions, self behavior actions
+	^ super actionProviders, {self behavior}
 ]
 
 { #category : #'as yet unclassified' }
@@ -246,12 +246,6 @@ SBStName >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBStName >> lookupAction: aSymbol [
-
-	^ (self behavior class lookupSelector: aSymbol) ifNil: [self class lookupSelector: aSymbol]
-]
-
-{ #category : #'as yet unclassified' }
 SBStName >> lowercaseSuggestions [
 
 	^ Array streamContents: [:str |
@@ -294,12 +288,6 @@ SBStName >> noteNewOwner: aMorph [
 	
 	aMorph isAssignment ifTrue: [^ self behavior: (self isFirstChild ifTrue: [SBStAssignmentLabel new] ifFalse: [SBStBinding new])].
 	self behavior: SBStBinding new
-]
-
-{ #category : #'as yet unclassified' }
-SBStName >> performAction: aSymbol [
-
-	(self behavior respondsTo: aSymbol) ifTrue: [self behavior perform: aSymbol] ifFalse: [super performAction: aSymbol]
 ]
 
 { #category : #'as yet unclassified' }

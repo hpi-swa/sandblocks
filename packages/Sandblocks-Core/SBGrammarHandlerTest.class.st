@@ -56,7 +56,7 @@ SBGrammarHandlerTest >> testInsertNewStatement [
 SBGrammarHandlerTest >> testUndoAfterReplacingUnknown [
 
 	| unknown editor body |
-	unknown := SBUnknown new.
+	unknown := SBUnknown new grammarHandler: SBStGrammarHandler new.
 	editor := self methodFor: unknown.
 	body := unknown parentSandblock.
 	editor
@@ -75,7 +75,7 @@ SBGrammarHandlerTest >> testWrapWithArray [
 	{
 		SBStNumber new contents: '123'.
 		SBStName new contents: 'abc'.
-		SBUnknown new.
+		SBUnknown new grammarHandler: SBStGrammarHandler new.
 		SBStMessageSend new receiver: SBUnknown new selector: #abc arguments: #()
 	} do: [:leaf |
 		block := '[]' parseAsSandblock.

@@ -4,7 +4,35 @@ Class {
 	#category : #'Sandblocks-Scheme'
 }
 
-{ #category : #helper }
+{ #category : #actions }
+SBScmGrammarHandler >> evaluateExpression [
+	<action>
+	<actionValidIf: #isExpression>
+
+	| result |
+	result := self block evaluate.
+	self block containingArtefact ifNotNil: [
+		self block containingArtefact cacheType: result class for: self block].
+	
+	result convertedFor: SBInterfaces topLevel do: [:morph |
+		self block sandblockEditor openMorphInView: morph.
+		morph focusAfterDelete: self block.
+		self block sandblockEditor connectFrom: self block to: morph]
+]
+
+{ #category : #actions }
+SBScmGrammarHandler >> leftRotate [
+	<action>
+	<inputAction>
+	
+	self block sandblockEditor
+		do: ((SBWrapCommand newFor: self block containingArtefact)
+			outer: SBScmExpression new;
+			inner: self block;
+			wrap: [:outer :inner | outer addMorphBack: inner])
+]
+
+{ #category : #callbacks }
 SBScmGrammarHandler >> perform: aCharacter for: aBlock empty: aBoolean [ 
 
 	aBoolean ifTrue: [
@@ -25,4 +53,19 @@ SBScmGrammarHandler >> perform: aCharacter for: aBlock empty: aBoolean [
 	
 	aCharacter = $) ifTrue: [
 		^ (aBlock parentSandblock insertElementAfter) deleteIfDismissed: true]
+]
+
+{ #category : #actions }
+SBScmGrammarHandler >> wrapAsArgument [
+	<action>
+	
+	self block insertElementBefore
+]
+
+{ #category : #actions }
+SBScmGrammarHandler >> wrapInMessageSend [
+	<action>	
+	<actionValidIf: #isExpression>
+	
+	self block insertElementAfter
 ]
