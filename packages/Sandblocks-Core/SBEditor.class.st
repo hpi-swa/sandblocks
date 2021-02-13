@@ -874,6 +874,23 @@ SBEditor >> dragCopyBuffer: anEvent [
 	anEvent hand grabMorph: self copyBuffer
 ]
 
+{ #category : #'event handling' }
+SBEditor >> dropFiles: anEvent [
+
+	| numFiles |
+	numFiles := anEvent contents.
+	1
+		to: numFiles
+		do: [:i |
+			(FileStream primDropRequestFileName: i) ifNotNil: [:name |
+				FileStream
+					readOnlyFileNamed: '/', name
+					do: [:file |
+						file
+							convertedFor: self objectInterfaceForDrop
+							do: [:converted | self handleDroppedBlock: converted event: anEvent adding: true near: nil]]]]
+]
+
 { #category : #'actions input' }
 SBEditor >> endInput [
 	<inputAction>
@@ -971,6 +988,12 @@ SBEditor >> goToMark [
 
 	self waitForLetterDo: [:letter |
 		self allBlocksDo: [:morph | (morph withDecorator: SBMarkedDecorator do: [:mark | mark letter = letter ifTrue: [^ self select: morph]])]]
+]
+
+{ #category : #'event handling' }
+SBEditor >> handleDroppedItem: anItem event: anEvent [
+
+	self halt
 ]
 
 { #category : #'initialize-release' }
@@ -1962,6 +1985,12 @@ SBEditor >> waitForLetterDo: aBlock [
 		Sensor anyButtonPressed not and: [(character := Sensor peekKeyboard) isNil]] whileTrue: [delay wait].
 	character ifNotNil: [
 		character isLetter ifTrue: [aBlock value: character]]
+]
+
+{ #category : #'event handling' }
+SBEditor >> wantsDropFiles: anEvent [
+
+	^ true
 ]
 
 { #category : #actions }

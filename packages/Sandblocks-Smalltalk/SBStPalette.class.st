@@ -8,6 +8,8 @@ Class {
 SBStPalette class >> buildOn: aContainer [
 
 	aContainer
+		addHeader: 'Smalltalk';
+		
 		addSectionHeader: 'Expressions';
 		addBlock: 'Message Send'
 			as: (SBStMessageSend new receiver: (self newNullBlock: 'receiver') selector: #message);
@@ -66,4 +68,10 @@ SBStPalette class >> context [
 SBStPalette class >> grammarHandler [
 
 	^ SBStGrammarHandler new
+]
+
+{ #category : #'as yet unclassified' }
+SBStPalette class >> title [
+
+	^ 'Smalltalk'
 ]

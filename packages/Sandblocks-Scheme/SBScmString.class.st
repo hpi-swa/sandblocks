@@ -17,3 +17,9 @@ SBScmString >> writeSourceOn: aStream [
 	aStream nextPutAll: (self contents copyReplaceAll: '"' with: '\"').
 	aStream nextPut: $"
 ]
+
+{ #category : #'as yet unclassified' }
+SBScmString >> writeSourceOn: aStream indent: aNumber [
+
+	self writeSourceOn: aStream
+]

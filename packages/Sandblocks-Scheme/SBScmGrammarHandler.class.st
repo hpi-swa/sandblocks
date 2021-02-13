@@ -9,7 +9,7 @@ SBScmGrammarHandler >> perform: aCharacter for: aBlock empty: aBoolean [
 
 	aBoolean ifTrue: [
 		aCharacter = $' ifTrue: [^ self replace: aBlock with: SBScmSymbol new].
-		
+		aCharacter = Character space ifTrue: [^ self replace: aBlock with: SBEmptyLine new].
 		aCharacter = $" ifTrue: [^ self replace: aBlock with: SBScmString new].
 		
 		aCharacter = $( ifTrue: [^ self replace: aBlock with: (SBScmExpression new in: [:e | e addMorphBack: e newNullBlock])].

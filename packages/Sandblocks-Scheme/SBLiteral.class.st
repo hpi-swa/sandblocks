@@ -135,3 +135,9 @@ SBLiteral >> writeSourceOn: aStream [
 
 	aStream nextPutAll: self contents
 ]
+
+{ #category : #'as yet unclassified' }
+SBLiteral >> writeSourceOn: aStream indent: aNumber [
+
+	aStream nextPutAll: self contents
+]

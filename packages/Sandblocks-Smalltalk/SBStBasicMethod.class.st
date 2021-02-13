@@ -66,7 +66,7 @@ SBStBasicMethod >> binding: aString for: block class: aClass ifPresent: aBlock [
 { #category : #'as yet unclassified' }
 SBStBasicMethod >> blockBodyForPC: assocPc [
 
-	self allBlocksDo: [:m | (m isBlockBody and: [m startPC = assocPc]) ifTrue: [^ m]].
+	self allBlocksDo: [:m | (m isBlockBody and: [m isSmalltalk and: [m startPC = assocPc]]) ifTrue: [^ m]].
 	^ nil
 ]
 

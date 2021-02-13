@@ -1525,7 +1525,7 @@ SBBlock >> objectInterfaceForDrop [
 
 	^ self fixedNumberOfChildren
 		ifTrue: [self objectInterface]
-		ifFalse: [self dropLocationDo: [:position :morph :horizontal | self objectInterfaceAt: morph childIndex adding: true]]
+		ifFalse: [self dropLocationDo: [:position :morph :horizontal | self objectInterfaceAt: (morph ifNotNil: #childIndex ifNil: [0]) adding: true]]
 ]
 
 { #category : #actions }

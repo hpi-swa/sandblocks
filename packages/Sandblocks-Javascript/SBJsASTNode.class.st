@@ -197,7 +197,7 @@ SBJsASTNode >> wrapInReturn [
 	<actionValidIf: #isStatement>
 	
 	self sandblockEditor do: ((SBWrapCommand newFor: self containingArtefact)
-		outer: SBJsReturn new;
+		outer: (SBJsPrefixOperator new contents: 'return');
 		inner: self;
 		wrap: [:outer :inner | outer expression: inner])
 ]

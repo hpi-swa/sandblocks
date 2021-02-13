@@ -8,6 +8,8 @@ Class {
 SBScmPalette class >> buildOn: aContainer [
 
 	aContainer
+		addHeader: 'Scheme';
+		
 		addSectionHeader: 'Operators / Procedures';
 		addBlock: 'Generic'
 			as: (SBScmExpression new addAllMorphs: {self newNullBlock: 'operator'. self newNullBlock: 'operand1'. self newNullBlock: 'operand2'});
@@ -105,4 +107,10 @@ SBScmPalette class >> context [
 SBScmPalette class >> grammarHandler [
 
 	^ SBScmGrammarHandler new
+]
+
+{ #category : #'as yet unclassified' }
+SBScmPalette class >> title [
+
+	^ 'Scheme'
 ]

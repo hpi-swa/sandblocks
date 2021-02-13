@@ -17,15 +17,44 @@ SBScmParserTest >> assertParses: aString as: anotherString [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmParserTest >> testKeepEmptyLines [
+
+	| string |
+	string := '(a)
+
+(b)'.
+	self assert: string equals: (SBScmParser new parse: string readStream) prettySourceString
+]
+
+{ #category : #'as yet unclassified' }
 SBScmParserTest >> testParseBinaryExpr [
 
 	self assertParses: '(+ 3 4)'
 ]
 
 { #category : #'as yet unclassified' }
+SBScmParserTest >> testParseBraceInString [
+
+	self assertParses: '")"'
+]
+
+{ #category : #'as yet unclassified' }
 SBScmParserTest >> testParseDefineProcedure [
 
 	self assertParses: '(define (my-proc x) (* x x))'
+]
+
+{ #category : #'as yet unclassified' }
+SBScmParserTest >> testParseDottedTail [
+
+	self assertParses: '(a . b)'
+]
+
+{ #category : #'as yet unclassified' }
+SBScmParserTest >> testParseEmptyList [
+
+	self assertParses: '''()'.
+	self assertParses: '(test ''())'
 ]
 
 { #category : #'as yet unclassified' }
@@ -86,6 +115,12 @@ SBScmParserTest >> testSkipComments [
 
 ; hello!
 
+3 ; hello' as: '(+ 2 3)
+3'.
+	self assertParses: '(+ 2 3)
+; test
+; hello!
+; abc
 3 ; hello' as: '(+ 2 3)
 3'
 ]

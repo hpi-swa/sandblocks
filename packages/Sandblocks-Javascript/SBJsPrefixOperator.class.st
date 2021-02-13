@@ -7,7 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBJsPrefixOperator class >> validPrefixOperators [
 
-	^ #('new' 'delete' '++' '--' 'await' 'yield' 'yield*')
+	^ #('new' 'delete' '++' '--' 'await' 'yield' 'yield*' 'return')
 ]
 
 { #category : #'as yet unclassified' }
@@ -40,6 +40,21 @@ SBJsPrefixOperator >> continueInputInRhs: anEvent [
 SBJsPrefixOperator >> currentTextMorph [
 
 	^ self operator
+]
+
+{ #category : #'as yet unclassified' }
+SBJsPrefixOperator >> expression: aBlock [
+
+	self submorphCount > 1 ifTrue: [self lastSubmorph delete].
+	self addMorphBack: aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBJsPrefixOperator >> initialize [
+
+	super initialize.
+	
+	self addMorphBack: SBOwnTextMorph new
 ]
 
 { #category : #'as yet unclassified' }
@@ -82,8 +97,8 @@ SBJsPrefixOperator >> operator [
 { #category : #'as yet unclassified' }
 SBJsPrefixOperator >> operator: anOperatorString rhs: aRhsBlock [
 
-	self addMorphBack: (SBOwnTextMorph new contents: anOperatorString).
-	self addMorphBack: aRhsBlock
+	self operator contents: anOperatorString.
+	self expression: aRhsBlock
 ]
 
 { #category : #'as yet unclassified' }

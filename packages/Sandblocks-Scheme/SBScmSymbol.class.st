@@ -33,3 +33,10 @@ SBScmSymbol >> writeSourceOn: aStream [
 	aStream nextPut: $'.
 	aStream nextPutAll: self contents
 ]
+
+{ #category : #'as yet unclassified' }
+SBScmSymbol >> writeSourceOn: aStream indent: aNumber [
+
+	aStream nextPut: $'.
+	super writeSourceOn: aStream indent: aNumber
+]

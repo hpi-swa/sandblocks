@@ -37,7 +37,15 @@ SBScmASTNode >> containingStatement [
 SBScmASTNode >> copyString [
 	<action>
 	
-	Clipboard clipboardText: self sourceString
+	Clipboard clipboardText: self prettySourceString
+]
+
+{ #category : #'as yet unclassified' }
+SBScmASTNode >> crIndent: aNumber on: aStream [
+
+	aStream cr.
+	aNumber timesRepeat: [
+		aStream space; space]
 ]
 
 { #category : #'as yet unclassified' }
@@ -166,6 +174,13 @@ SBScmASTNode >> objectInterfaceAt: aNumber adding: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmASTNode >> prettySourceString [
+
+	^ String streamContents: [:s |
+		self writeSourceOn: s indent: 0]
+]
+
+{ #category : #'as yet unclassified' }
 SBScmASTNode >> sourceString [
 
 	^ String streamContents: [:s | self writeSourceOn: s]
@@ -184,4 +199,10 @@ SBScmASTNode >> wrapInMessageSend [
 	<actionValidIf: #isExpression>
 	
 	self insertElementAfter
+]
+
+{ #category : #'as yet unclassified' }
+SBScmASTNode >> writeSourceOn: aStream indent: aNumber [
+
+	^ self subclassResponsibility
 ]

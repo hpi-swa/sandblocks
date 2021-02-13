@@ -77,11 +77,12 @@ SBJsInputTest >> testBinaryExprPrecedence [
 SBJsInputTest >> testDeleteDereferenceWithParenthesis [
 
 	| deref unknown editor closure methodCall |
-	unknown := SBJsMethodCall new newNullBlock.
-	methodCall := SBJsMethodCall new
-		method: (SBJsInfixOperator new lhs: (SBJsVariable new contents: 'a') operator: '.' rhs: (SBJsVariable new contents: 'b'))
-		arguments: {unknown}.
-	deref := methodCall method.
+	unknown := SBJsASTNode new newNullBlock.
+	methodCall := SBJsInfixOperator new
+		lhs: (SBJsInfixOperator new lhs: (SBJsVariable new contents: 'a') operator: '.' rhs: (SBJsVariable new contents: 'b'))
+		operator: '('
+		rhs: unknown.
+	deref := methodCall lhs.
 	editor := self methodFor: methodCall.
 	closure := methodCall parentSandblock.
 	

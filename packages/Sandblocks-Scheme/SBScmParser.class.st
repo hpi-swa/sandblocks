@@ -12,11 +12,11 @@ SBScmParser >> parse: aStream [
 
 	| module |
 	stream := aStream.
-	self skipWhitespaces.
 	module := SBScmModule new removeAllMorphs.
+	self skipWhitespacesOn: module.
 	[stream atEnd] whileFalse: [
 		module addMorphBack: self parseExpression.
-		self skipWhitespaces].
+		self skipWhitespacesOn: module].
 	^ module
 ]
 
@@ -35,16 +35,16 @@ SBScmParser >> parseLiteral [
 	(stream size - stream position) >= 2 ifTrue: [
 		(stream next: 2) = '''(' ifTrue: [
 			stream peek = $) ifTrue: [
-				SBToggledCode comment: '()' active: 1 do: {[stream next: 2]}.
+				SBToggledCode comment: '()' active: 1 do: {[stream next: 1]}.
 				^ SBScmExpression new quoted: true].
 			stream back.
 			^ self parseSExpression quoted: true].
 		stream
 			back;
 			back].
-	endCheck := stream peek caseOf: {[$"] -> [[:c | c = $"]]} otherwise: [[:c | c isSeparator]].
+	endCheck := stream peek caseOf: {[$"] -> [[:c | c = $"]]} otherwise: [[:c | c isSeparator or: [c = $)]]].
 	contents := String streamContents: [:str |
-		[str nextPut: stream next] doWhileTrue: [stream peek notNil and: [(endCheck value: stream peek) not and: [stream peek ~= $)]]]].
+		[str nextPut: stream next] doWhileTrue: [stream peek notNil and: [(endCheck value: stream peek) not]]].
 	(contents first isDigit or: [contents first = $-]) ifTrue: [^ SBScmNumber new contents: contents].
 	contents first = $' ifTrue: [^ SBScmSymbol new contents: contents allButFirst].
 	contents first = $" ifTrue: [
@@ -58,20 +58,24 @@ SBScmParser >> parseSExpression [
 
 	| sexpr |
 	SBToggledCode comment: '(' active: 1 do: {[stream next]}.
-	self skipWhitespaces.
 	sexpr := SBScmExpression new.
+	self skipWhitespacesOn: sexpr.
 	[stream peek ~= $)] whileTrue: [
-		self skipWhitespaces.
+		self skipWhitespacesOn: sexpr.
 		sexpr addMorphBack: self parseExpression.
-		self skipWhitespaces].
+		self skipWhitespacesOn: sexpr].
 	SBToggledCode comment: ')' active: 1 do: {[stream next]}.
 	^ sexpr
 ]
 
 { #category : #'as yet unclassified' }
-SBScmParser >> skipWhitespaces [
+SBScmParser >> skipWhitespacesOn: aMorph [
 
+	| crCount |
+	crCount := 0.
 	[stream atEnd not and: [stream peek isSeparator or: [stream peek = $;]]] whileTrue: [
-		stream peek = $; ifTrue: [[stream peek ~= Character cr and: [stream atEnd not]] whileTrue: [stream next]].
-		stream next]
+		stream peek = $; ifTrue: [
+			[({Character cr. Character lf} includes: stream peek) not and: [stream atEnd not]] whileTrue: [stream next]].
+		({Character cr. Character lf} includes: stream next) ifTrue: [crCount := crCount + 1]].
+	crCount > 1 ifTrue: [aMorph addMorphBack: SBEmptyLine new]
 ]

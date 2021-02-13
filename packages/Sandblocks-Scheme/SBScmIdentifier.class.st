@@ -11,6 +11,13 @@ SBScmIdentifier >> isIdentifier [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmIdentifier >> printOn: aStream [
+
+	aStream nextPutAll: 'identifier '.
+	aStream nextPutAll: self contents
+]
+
+{ #category : #'as yet unclassified' }
 SBScmIdentifier >> resolveBinding [
 
 	self binding: self contents for: self class: self containingArtefact relatedClass ifPresent: [:binding | ^ binding].

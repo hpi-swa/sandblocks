@@ -111,7 +111,7 @@ SBScmExpression >> ifWellFormedSpecialFormDo: aBlock ifNone: anotherBlock [
 		(form := f) caseOf: {
 			['if'] -> [self elements size = 4].
 			['define'] -> [self elements size >= 3 and: [(self elements second isSExpr and: [self elements second elements allSatisfy: [:e | e isIdentifier or: [e isUnknown]]]) or: [self elements second in: [:e | e isIdentifier or: [e isUnknown]]]]].
-			['lambda'] -> [self elements size >= 3].
+			['lambda'] -> [self elements size >= 3 and: [self elements second isSExpr]].
 			['let'] -> [let value].
 			['let*'] -> [let value].
 			['letrec'] -> [let value].
@@ -231,6 +231,18 @@ SBScmExpression >> symbols [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmExpression >> toggleQuoted [
+	<action>
+	
+	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
+		target: self;
+		selector: #quoted;
+		value: self quoted not;
+		oldValue: self quoted).
+	self layoutChanged
+]
+
+{ #category : #'as yet unclassified' }
 SBScmExpression >> valid [
 
 	^ self ifSpecialFormDo: [:f | self ifWellFormedSpecialFormDo: [:fi | true] ifNone: [false]] ifNone: [true]
@@ -268,5 +280,26 @@ SBScmExpression >> writeSourceOn: aStream [
 	
 	aStream nextPut: $(.
 	self elements do: [:e | e writeSourceOn: aStream] separatedBy: [aStream space].
+	aStream nextPut: $)
+]
+
+{ #category : #'special form checking' }
+SBScmExpression >> writeSourceOn: aStream indent: aNumber [
+
+	| multiLine print printSeparator |
+	self isQuoted ifTrue: [aStream nextPut: $'].
+	aStream nextPut: $(.
+	multiLine := self elements size > 2 and: [((SBCounterStream count: [:s | self writeSourceOn: s]) + (aNumber * 2)) > 70].
+	printSeparator := [multiLine ifTrue: [self crIndent: aNumber + 1 on: aStream] ifFalse: [aStream space]].
+	print := [:elements | elements do: [:el | el writeSourceOn: aStream indent: aNumber + 1] separatedBy: printSeparator].
+	self
+		ifWellFormedSpecialFormDo: [:form |
+			(#('if' 'define') includes: form)
+				ifTrue: [
+					self elements first writeSourceOn: aStream indent: aNumber.
+					aStream space.
+					print value: self elements viewAllButFirst]
+				ifFalse: [print value: self elements]]
+		ifNone: [print value: self elements].
 	aStream nextPut: $)
 ]

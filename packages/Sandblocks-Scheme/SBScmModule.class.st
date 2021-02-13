@@ -2,10 +2,23 @@ Class {
 	#name : #SBScmModule,
 	#superclass : #SBScmASTNode,
 	#instVars : [
-		'interpreter'
+		'interpreter',
+		'filename'
 	],
 	#category : #'Sandblocks-Scheme'
 }
+
+{ #category : #'as yet unclassified' }
+SBScmModule class >> fromFilestream: file [
+
+	^ (SBScmParser new parse: file ascii) filename: file name
+]
+
+{ #category : #'as yet unclassified' }
+SBScmModule class >> fromPath: aString [
+
+	^ FileStream readOnlyFileNamed: aString do: [:file | self fromFilestream: file]
+]
 
 { #category : #'as yet unclassified' }
 SBScmModule class >> fromString: aString [
@@ -52,6 +65,21 @@ SBScmModule >> expressions [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmModule >> filename [
+
+	^ filename
+]
+
+{ #category : #'as yet unclassified' }
+SBScmModule >> filename: aString [
+
+	filename := aString.
+	"self addMorphFront: (SBTextBubble new
+		contents: aString;
+		yourself)"
+]
+
+{ #category : #'as yet unclassified' }
 SBScmModule >> fixedNumberOfChildren [
 
 	^ false
@@ -93,7 +121,7 @@ SBScmModule >> insertCommandRequest: anAfterBoolean near: aBlock [
 { #category : #'as yet unclassified' }
 SBScmModule >> interpreter [
 
-	^ interpreter ifNil: [interpreter := QoppaInterpreter new.]
+	^ interpreter ifNil: [interpreter := QoppaInterpreter new]
 ]
 
 { #category : #'as yet unclassified' }
@@ -112,6 +140,12 @@ SBScmModule >> isBlockBody [
 SBScmModule >> isMethodBody [
 
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBScmModule >> isTopLevel [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -150,4 +184,12 @@ SBScmModule >> withStatementsDo: aBlock ifNotApplicable: anotherBlock [
 SBScmModule >> writeSourceOn: aStream [
 
 	self statements do: [:s | s writeSourceOn: aStream] separatedBy: [aStream cr]
+]
+
+{ #category : #'as yet unclassified' }
+SBScmModule >> writeSourceOn: aStream indent: aNumber [
+
+	self statements
+		do: [:s | s writeSourceOn: aStream indent: aNumber]
+		separatedBy: [aStream cr]
 ]

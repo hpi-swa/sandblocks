@@ -125,7 +125,7 @@ SBUnknown >> keyStroke: anEvent [
 { #category : #actions }
 SBUnknown >> label: aString [
 
-	text contents: aString
+	self currentTextMorph contents: aString
 ]
 
 { #category : #'as yet unclassified' }

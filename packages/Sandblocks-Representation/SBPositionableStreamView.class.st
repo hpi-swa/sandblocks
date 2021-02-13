@@ -55,6 +55,12 @@ SBPositionableStreamView >> isArtefact [
 ]
 
 { #category : #'as yet unclassified' }
+SBPositionableStreamView >> isTopLevel [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBPositionableStreamView >> next [
 	<action>
 	

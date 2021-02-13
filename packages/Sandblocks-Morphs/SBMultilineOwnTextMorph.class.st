@@ -110,9 +110,9 @@ SBMultilineOwnTextMorph >> keyStroke: anEvent [
 	char = Character arrowRight ifTrue: [
 		^ self moveCursor: 1 selecting: anEvent shiftPressed].
 	char = Character arrowUp ifTrue: [
-		^ self moveCursorVertically: -1 selecting: anEvent shiftPressed].
+		^ self moveCursorVertically: -1 selecting: anEvent shiftPressed ifAtBound: []].
 	char = Character arrowDown ifTrue: [
-		^ self moveCursorVertically: 1 selecting: anEvent shiftPressed].
+		^ self moveCursorVertically: 1 selecting: anEvent shiftPressed ifAtBound: []].
 	
 	^ super keyStroke: anEvent
 ]

@@ -12,7 +12,7 @@ SBJsMethod class >> example [
 	value: (SBJsClosure new
 		arguments: {SBJsVariable new contents: 'abc'}
 		statements: {
-			SBJsReturn new expression: (SBJsString new contents: '12332')
+			SBJsPrefixOperator new contents: 'return'; expression: (SBJsString new contents: '12332')
 		}))
 ]
 
@@ -90,6 +90,12 @@ SBJsMethod >> isArtefact [
 
 { #category : #'as yet unclassified' }
 SBJsMethod >> isMethod [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBJsMethod >> isTopLevel [
 
 	^ true
 ]

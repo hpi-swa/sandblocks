@@ -92,6 +92,14 @@ String >> parseAsSandblockWithoutSubstitution [
 ]
 
 { #category : #'*Sandblocks-Core' }
+String >> parseAsScheme: converter [
+	<convert>
+
+	converter
+		do: [SBScmModule fromString: self]
+]
+
+{ #category : #'*Sandblocks-Core' }
 String >> parseInMethod [
 	" convenience method making it easier to construct a valid environment for code blocks "
 

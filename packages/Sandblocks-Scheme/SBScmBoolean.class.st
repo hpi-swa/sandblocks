@@ -15,3 +15,10 @@ SBScmBoolean >> validContents [
 
 	^ self contents = 't' or: [self contents = 'f']
 ]
+
+{ #category : #'as yet unclassified' }
+SBScmBoolean >> writeSourceOn: aStream indent: aNumber [
+
+	aStream nextPut: $#.
+	super writeSourceOn: aStream indent: aNumber
+]

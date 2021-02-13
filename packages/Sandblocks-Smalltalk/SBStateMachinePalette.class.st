@@ -7,7 +7,10 @@ Class {
 { #category : #'as yet unclassified' }
 SBStateMachinePalette class >> buildOn: aContainer [
 
-	aContainer addBlock: 'State' as: (SBStateMachineState new name: 'unnamed state')
+	aContainer
+		addHeader: 'Statemachine';
+		
+		addBlock: 'State' as: (SBStateMachineState new name: 'unnamed state')
 ]
 
 { #category : #'as yet unclassified' }
@@ -40,4 +43,10 @@ SBStateMachinePalette class >> matchesBlock: aBlock [
 		assert: [true].
 	(aBlock isKindOf: SBStateMachineEditor) ifTrue: [^ true].
 	^ (aBlock ownerSatisfying: [:owner | owner isKindOf: SBStateMachineEditor]) notNil
+]
+
+{ #category : #'as yet unclassified' }
+SBStateMachinePalette class >> title [
+
+	^ 'Statemachine'
 ]

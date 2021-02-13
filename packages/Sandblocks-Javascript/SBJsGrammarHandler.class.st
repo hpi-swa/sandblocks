@@ -23,10 +23,6 @@ SBJsGrammarHandler >> checkKeyword: aString for: aBlock [
 		self replace: aBlock with: (SBJsDeclaration new lhs: aBlock newNullBlock rhs: aBlock newNullBlock) mergeInput: false.
 		^ true].
 	
-	aString = 'return' ifTrue: [
-		self replace: aBlock with: (SBJsReturn new expression: (aBlock newNullBlock deleteIfDismissed: true)) mergeInput: false.
-		^ true].
-	
 	^ false
 ]
 
@@ -36,10 +32,10 @@ SBJsGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 	aBoolean ifTrue: [
 		(char isDigit or: [char = $-]) ifTrue: [^ self replace: aBlock with: (SBJsNumber new contents: char asString)].
 		(char isAlphaNumeric or: [char = $_]) ifTrue: [^ self replace: aBlock with: (SBJsVariable new contents: char asString)].
-		char = $" ifTrue: [^ self replace: aBlock with: SBJsString new].
+		(char = $" or: [char = $']) ifTrue: [^ self replace: aBlock with: SBJsString new].
 		char = $( ifTrue: [ ^ SBJsClosure new in: [:closure | self replace: aBlock with: (closure statements: {closure newNullBlock})]].
 		" borrowed from Smalltalk "
-		char = $^ ifTrue: [^ SBJsReturn new in: [:return | self replace: aBlock with: (return expression: return newNullBlock)]].
+		char = $^ ifTrue: [^ SBJsPrefixOperator new contents: 'return'; in: [:return | self replace: aBlock with: (return expression: return newNullBlock)]].
 		char = ${ ifTrue: [^ self replace: aBlock with: SBJsObjectLiteral new]].
 	
 	"char = $. ifTrue: [

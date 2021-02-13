@@ -30,6 +30,18 @@ SBPaletteContainer >> addBlock: aString as: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBPaletteContainer >> addHeader: aString [
+
+	categories submorphs ifNotEmpty: [
+		categories addMorphBack: (Morph new
+			color: Color transparent;
+			height: 8)].
+	categories addMorphBack: (SBStringMorph new
+		contents: aString;
+		bold)
+]
+
+{ #category : #'as yet unclassified' }
 SBPaletteContainer >> addSectionHeader: aString [
 
 	| header |
