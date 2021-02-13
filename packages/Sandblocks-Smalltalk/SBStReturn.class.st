@@ -7,32 +7,32 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStReturn >> canAppearInBlockBody [
 
 	^ true
 ]
 
-{ #category : #formatting }
+{ #category : #hierarchy }
 SBStReturn >> childSandblocksDo: aBlock [
 
 	self hasSubmorphs ifTrue: [aBlock value: self firstSubmorph]
 ]
 
-{ #category : #formatting }
+{ #category : #accessing }
 SBStReturn >> expression [
 
 	^ self firstSubmorph
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStReturn >> expression: aBlock [
 
 	self removeAllMorphs.
 	self addMorphBack: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBStReturn >> initialize [
 
 	super initialize.
@@ -40,13 +40,13 @@ SBStReturn >> initialize [
 	pc := 0
 ]
 
-{ #category : #formatting }
+{ #category : #testing }
 SBStReturn >> isReturn [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBStReturn >> layoutCommands [
 
 	^ SBAlgebraCommand container
@@ -54,50 +54,44 @@ SBStReturn >> layoutCommands [
 		data: {self expression layoutCommands}
 ]
 
-{ #category : #formatting }
+{ #category : #accessing }
 SBStReturn >> pc [
 
 	^ pc
 ]
 
-{ #category : #formatting }
+{ #category : #accessing }
 SBStReturn >> pc: aNumber [
 
 	pc := aNumber
 ]
 
-{ #category : #'as yet unclassified' }
-SBStReturn >> prefix [
-
-	^ '^ '
-]
-
-{ #category : #formatting }
+{ #category : #printing }
 SBStReturn >> printOn: aStream [
 
 	aStream nextPutAll: 'return '.
 	self firstSubmorph printOn: aStream
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 SBStReturn >> symbols [
 
 	^ self colorPolicy symbolsForReturn: self
 ]
 
-{ #category : #formatting }
+{ #category : #testing }
 SBStReturn >> valid [
 
 	^ self containingStatement = self and: [self containingBlock submorphs last = self]
 ]
 
-{ #category : #testing }
+{ #category : #drawing }
 SBStReturn >> wantsExtraSpace [
 
 	^ false
 ]
 
-{ #category : #formatting }
+{ #category : #printing }
 SBStReturn >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '^ '.

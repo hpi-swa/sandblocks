@@ -40,42 +40,6 @@ SBInterfaces class >> never [
 	^ {[:o | false]}
 ]
 
-{ #category : #smalltalk }
-SBInterfaces class >> stBlock [
-
-	^ self stExpression, #(isMessageSend)
-]
-
-{ #category : #smalltalk }
-SBInterfaces class >> stClassEditor [
-
-	^ {#className: understood. #isArtefact understood. #instanceVariables understood. #classVariables understood}
-]
-
-{ #category : #smalltalk }
-SBInterfaces class >> stExpression [
-
-	^ #(isSandblock isSmalltalk isExpression)
-]
-
-{ #category : #smalltalk }
-SBInterfaces class >> stMessagePart [
-
-	^ #(isSandblock isSmalltalk isMessagePart)
-]
-
-{ #category : #smalltalk }
-SBInterfaces class >> stMethod [
-
-	^ #(isSandblock isArtefact isSmalltalk isMethod)
-]
-
-{ #category : #smalltalk }
-SBInterfaces class >> stName [
-
-	^ #(isSandblock isSmalltalk isName)
-]
-
 { #category : #core }
 SBInterfaces class >> topLevel [
 

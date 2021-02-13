@@ -293,6 +293,12 @@ SBStBlockBody >> multiSelectChildren [
 	self statements do: #startOrAddToMultiSelection
 ]
 
+{ #category : #'object interface' }
+SBStBlockBody >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	^ SBInterfaces stCanAppearInBlock
+]
+
 { #category : #converting }
 SBStBlockBody >> pc [
 
