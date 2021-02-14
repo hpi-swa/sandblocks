@@ -145,7 +145,11 @@ SBScmModule >> insertCommandRequest: anAfterBoolean near: aBlock [
 { #category : #'as yet unclassified' }
 SBScmModule >> interpreter [
 
-	^ interpreter ifNil: [interpreter := QoppaInterpreter new]
+	^ interpreter ifNil: [
+		interpreter := QoppaInterpreter new.
+		interpreter
+			bindInGlobalEnv: #'eval-lang'
+			value: (interpreter wrapPrim: [:lang :source | Compiler evaluate: source content] countingArgs: true)]
 ]
 
 { #category : #'as yet unclassified' }

@@ -280,9 +280,10 @@ Is this really what you want to do?') asText makeBoldFrom: 1 to: newClassName si
 				ifFalse: [^ false]].
 	
 	self flag: #fixme. " also hits comments??? "
-	references := (self systemNavigation allCallsOn: oldName asSymbol)
-		collect: [:m | m actualClass -> (m sourceString copyReplaceTokens: oldName with: newClassName)].
-	oldClass ifNotNil: [oldClass rename: newClassName].
+	oldClass ifNotNil: [
+		references := (self systemNavigation allCallsOn: oldName asSymbol)
+			collect: [:m | m actualClass -> (m sourceString copyReplaceTokens: oldName with: newClassName)].
+		oldClass rename: newClassName].
 	
 	class := environment beCurrentDuring: [
 		self superclass subclassDefinerClass
@@ -291,7 +292,8 @@ Is this really what you want to do?') asText makeBoldFrom: 1 to: newClassName si
 			notifying: nil
 			logged: false].
 	
-	references do: [:pair | (pair key = oldClass ifTrue: [class] ifFalse: [pair key]) compile: pair value].
+	oldClass ifNotNil: [
+		references do: [:pair | (pair key = oldClass ifTrue: [class] ifFalse: [pair key]) compile: pair value]].
 	
 	^ true
 ]

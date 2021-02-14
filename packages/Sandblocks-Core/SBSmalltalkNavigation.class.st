@@ -9,7 +9,7 @@ SBSmalltalkNavigation >> nextFrom: aBlock [
 
 	| next |
 	next := SBDepthFirstPreOrderNavigation new nextFrom: aBlock.
-	^ self nextWithoutMessageSend: next
+	^ next ifNotNil: [self nextWithoutMessageSend: next]
 ]
 
 { #category : #'as yet unclassified' }
@@ -36,7 +36,7 @@ SBSmalltalkNavigation >> previousFrom: aBlock [
 
 	| previous |
 	previous := SBDepthFirstPreOrderNavigation new previousFrom: aBlock.
-	^ self previousWithoutMessageSend: previous
+	^ previous ifNotNil: [self previousWithoutMessageSend: previous]
 ]
 
 { #category : #'as yet unclassified' }

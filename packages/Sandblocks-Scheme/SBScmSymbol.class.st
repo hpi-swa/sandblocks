@@ -16,6 +16,20 @@ SBScmSymbol >> acceptInputEvent: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmSymbol >> asIdentifier: converter [
+	<convert>
+	
+	converter do: [SBScmIdentifier new contents: self contents]
+]
+
+{ #category : #'as yet unclassified' }
+SBScmSymbol >> asString: converter [
+	<convert>
+
+	converter do: [SBScmSymbol new contents: self contents]
+]
+
+{ #category : #'as yet unclassified' }
 SBScmSymbol >> symbols [
 
 	^ #('''' nil)

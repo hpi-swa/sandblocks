@@ -25,5 +25,5 @@ SBScmToStRepresentation class >> matches: aBlock [
 { #category : #'as yet unclassified' }
 SBScmToStRepresentation class >> newFor: aBlock [
 
-	^ SBLanguageBox new source: aBlock sourceString
+	^ SBStLanguageBox new source: aBlock sourceString
 ]

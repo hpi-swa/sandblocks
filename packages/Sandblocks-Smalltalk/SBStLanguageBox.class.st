@@ -1,32 +1,32 @@
 Class {
-	#name : #SBLanguageBox,
+	#name : #SBStLanguageBox,
 	#superclass : #SBStSubstitution,
 	#category : #'Sandblocks-Smalltalk'
 }
 
 { #category : #'as yet unclassified' }
-SBLanguageBox class >> eval: aString lang: anotherString [
+SBStLanguageBox class >> eval: aString lang: anotherString [
 
 	^ QoppaInterpreter new readAndEvaluate: aString
 ]
 
 { #category : #'as yet unclassified' }
-SBLanguageBox class >> matches: aMessageSend [
+SBStLanguageBox class >> matches: aMessageSend [
 
 	^ (super matches: aMessageSend) and: [aMessageSend selector = 'eval:lang:']
 ]
 
 { #category : #'as yet unclassified' }
-SBLanguageBox class >> newFor: aBlock [
+SBStLanguageBox class >> newFor: aBlock [
 
 	^ self new source: aBlock arguments first contents lang: aBlock arguments second contents
 ]
 
 { #category : #'as yet unclassified' }
-SBLanguageBox class >> suggestion [
+SBStLanguageBox class >> suggestion [
 
 	^ [:block | | box |
-		box := (SBLanguageBox new source: '' lang: 'scheme').
+		box := (SBStLanguageBox new source: '' lang: 'scheme').
 		block sandblockEditor do: ((SBReplaceCommand newFor: block containingArtefact)
 			target: block;
 			replacer: box).
@@ -34,19 +34,19 @@ SBLanguageBox class >> suggestion [
 ]
 
 { #category : #'as yet unclassified' }
-SBLanguageBox >> childSandblocksDo: aBlock [
+SBStLanguageBox >> childSandblocksDo: aBlock [
 
 	aBlock value: self root
 ]
 
 { #category : #'as yet unclassified' }
-SBLanguageBox >> drawnColor [
+SBStLanguageBox >> drawnColor [
 
 	^ Color white
 ]
 
 { #category : #'as yet unclassified' }
-SBLanguageBox >> initialize [
+SBStLanguageBox >> initialize [
 
 	super initialize.
 	
@@ -54,7 +54,7 @@ SBLanguageBox >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBLanguageBox >> layoutCommands [
+SBStLanguageBox >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
@@ -62,13 +62,13 @@ SBLanguageBox >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
-SBLanguageBox >> root [
+SBStLanguageBox >> root [
 
 	^ self submorphs second
 ]
 
 { #category : #'as yet unclassified' }
-SBLanguageBox >> source: aString lang: anotherString [
+SBStLanguageBox >> source: aString lang: anotherString [
 
 	self removeAllMorphs.
 	self addMorphBack: (SBStringMorph new contents: anotherString).
@@ -76,7 +76,7 @@ SBLanguageBox >> source: aString lang: anotherString [
 ]
 
 { #category : #'as yet unclassified' }
-SBLanguageBox >> writeSourceOn: aStream [
+SBStLanguageBox >> writeSourceOn: aStream [
 
 	aStream nextPut: $(.
 	aStream nextPutAll: self className.

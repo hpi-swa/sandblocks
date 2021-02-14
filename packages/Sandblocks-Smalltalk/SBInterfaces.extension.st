@@ -31,6 +31,12 @@ SBInterfaces class >> stExpression [
 ]
 
 { #category : #'*Sandblocks-Smalltalk' }
+SBInterfaces class >> stMessage [
+
+	^ self stExpression, #(isMessageSend)
+]
+
+{ #category : #'*Sandblocks-Smalltalk' }
 SBInterfaces class >> stMessagePart [
 
 	^ #(isSandblock isSmalltalk isMessagePart)

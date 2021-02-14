@@ -15,6 +15,17 @@ SBScmExpression >> addedMorph: aMorph [
 	self clearCache
 ]
 
+{ #category : #converting }
+SBScmExpression >> asLanguageBox: converter [
+	<convert>
+
+	converter
+		if: [
+			self elements size = 3 and: [
+				self elements first contents = 'eval-lang' and: [self elements viewAllButFirst allSatisfy: [:e | e isKindOf: SBScmString]]]]
+		do: [SBScmLanguageBox lang: self elements second contents source: self elements third contents]
+]
+
 { #category : #'special form checking' }
 SBScmExpression >> binding: aString for: block class: aClass ifPresent: aBlock [
 

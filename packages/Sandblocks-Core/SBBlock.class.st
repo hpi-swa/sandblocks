@@ -1664,7 +1664,7 @@ SBBlock >> performAction: aSymbol [
 	self actionProviders do: [:obj |
 		(obj respondsTo: aSymbol) ifTrue: [
 			obj ~= self ifTrue: [obj block: self].
-			obj perform: aSymbol]]
+			^ obj perform: aSymbol]]
 ]
 
 { #category : #'as yet unclassified' }

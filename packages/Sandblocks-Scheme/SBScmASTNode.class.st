@@ -21,7 +21,7 @@ SBScmASTNode >> crIndent: aNumber on: aStream [
 { #category : #evaluation }
 SBScmASTNode >> evaluate [
 
-	^ QoppaInterpreter new readAndEvaluate: self sourceString
+	^ self containingArtefact interpreter veryDeepCopy readAndEvaluate: self sourceString
 ]
 
 { #category : #accessing }
@@ -34,7 +34,7 @@ SBScmASTNode >> grammarHandler [
 SBScmASTNode >> inSmalltalk: converter [
 	<convert>
 	
-	^ converter do: [SBLanguageBox new source: self sourceString lang: 'scheme']
+	^ converter do: [SBStLanguageBox new source: self sourceString lang: 'scheme']
 ]
 
 { #category : #'initialize-release' }

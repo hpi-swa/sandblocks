@@ -281,7 +281,9 @@ SBStMessagePart >> wrapInCascade [
 SBStMessagePart >> wrapInMessageSend [
 	<action>
 	
-	self messageSend grammarHandler wrapInMessageSend: ''
+	self messageSend grammarHandler
+		block: self messageSend;
+		wrapInMessageSend: ''
 ]
 
 { #category : #'as yet unclassified' }

@@ -566,6 +566,7 @@ SBStBasicMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
 	self ignoreChangeNotifierDuring: [
 		newSelector := self methodClass compile: text asText.
 		(self currentClass ~= self methodClass or: [self currentSelector ~= #'' and: [newSelector ~=self  currentSelector]]) ifTrue: [
+			self clearCache.
 			self currentClass removeSelector: self currentSelector]].
 	self currentSelector: newSelector.
 	self currentClass: self methodClass.

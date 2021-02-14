@@ -1,24 +1,21 @@
 Class {
 	#name : #SBStPlayground,
-	#superclass : #SBBlock,
+	#superclass : #SBStContainer,
 	#instVars : [
-		'localBindings',
-		'bindings',
-		'typeCache',
-		'receiver'
+		'bindings'
 	],
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBStPlayground class >> newFromSource: aString at: aPoint [
 
-	^ (self newFromSource: aString named: 'REPL')
+	^ (self newFromSource: aString named: 'Playground')
 		position: aPoint;
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBStPlayground class >> newFromSource: aString named: anotherString [
 
 	^ self new
@@ -27,7 +24,7 @@ SBStPlayground class >> newFromSource: aString named: anotherString [
 		 yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBStPlayground class >> newFromSource: aString named: anotherString at: aPoint [
 
 	^ (self newFromSource: aString named: anotherString)
@@ -35,56 +32,34 @@ SBStPlayground class >> newFromSource: aString named: anotherString at: aPoint [
 		yourself
 ]
 
-{ #category : #'artefact protocol' }
-SBStPlayground >> artefact [
-
-	^ nil
-]
-
-{ #category : #'artefact protocol' }
+{ #category : #'as yet unclassified' }
 SBStPlayground >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	bindings submorphs detect: [:b | b contents = aString] ifFound: [:v | ^ aBlock value: v].
 	
-	Symbol hasInterned: aString ifTrue: [:sym | | binding |
-		binding := aClass bindingOf: sym environment: self methodClass environment.
-		binding ifNotNil: [^ aBlock value: ((SBStName poolDeclaration: aString) binding: binding)]].
-	
 	aString = 'sbEditor' ifTrue: [^ aBlock value: ((SBStName poolDeclaration: aString) binding: #sbEditor -> self sandblockEditor)].
 	
-	^ nil
+	^ super binding: aString for: block class: aClass ifPresent: aBlock
 ]
 
-{ #category : #'compilation cue protocol' }
+{ #category : #'as yet unclassified' }
 SBStPlayground >> bindingOf: aString [
 
 	aString = 'sbEditor' ifTrue: [^ #sbEditor -> self sandblockEditor].
-
+	
 	^ (self getOrCreateLocalBinding: aString) binding
 ]
 
-{ #category : #'artefact protocol' }
+{ #category : #'as yet unclassified' }
 SBStPlayground >> bindings [
 
 	^ bindings
 ]
 
-{ #category : #'artefact protocol' }
+{ #category : #'as yet unclassified' }
 SBStPlayground >> bindings: aDictionary [
 
 	bindings := aDictionary
-]
-
-{ #category : #'method protocol' }
-SBStPlayground >> body [
-
-	^ self lastSubmorph
-]
-
-{ #category : #'artefact protocol' }
-SBStPlayground >> cacheType: aClass for: aBlock [
-
-	self typeCache at: aBlock put: aClass
 ]
 
 { #category : #'as yet unclassified' }
@@ -98,16 +73,10 @@ SBStPlayground >> childSandblocksDo: aBlock [
 
 	aBlock value: self firstSubmorph firstSubmorph.
 	bindings submorphsDo: aBlock.
-	aBlock value: self lastSubmorph
+	super childSandblocksDo: aBlock
 ]
 
-{ #category : #'artefact protocol' }
-SBStPlayground >> containingArtefact [
-
-	^ self
-]
-
-{ #category : #'artefact protocol' }
+{ #category : #'as yet unclassified' }
 SBStPlayground >> createBinding: aString [
 
 	| decl |
@@ -119,37 +88,19 @@ SBStPlayground >> createBinding: aString [
 	^ decl
 ]
 
-{ #category : #'artefact protocol' }
+{ #category : #'as yet unclassified' }
 SBStPlayground >> declarations [
 
 	^ bindings submorphs
 ]
 
-{ #category : #'artefact protocol' }
-SBStPlayground >> ensureExpanded [
-]
-
-{ #category : #'compilation cue protocol' }
-SBStPlayground >> evaluationContext [
-
-	^ nil
-]
-
-{ #category : #'compilation cue protocol' }
-SBStPlayground >> evaluationReceiver [
-
-	^ self receiver
-]
-
 { #category : #'as yet unclassified' }
 SBStPlayground >> getOrCreateLocalBinding: aString [
 
-	^ bindings submorphs
-		detect: [:block | block contents = aString]
-		ifNone: [self createBinding: aString]
+	^ bindings submorphs detect: [:block | block contents = aString] ifNone: [self createBinding: aString]
 ]
 
-{ #category : #'compilation cue protocol' }
+{ #category : #'as yet unclassified' }
 SBStPlayground >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
 	| object |
@@ -157,51 +108,26 @@ SBStPlayground >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean nea
 	(self createBinding: object name asLegalSelector) binding value: object
 ]
 
-{ #category : #'artefact protocol' }
-SBStPlayground >> hasUnsavedChanges [
-
-	^ false
-]
-
-{ #category : #'artefact protocol' }
-SBStPlayground >> hasUnsavedChanges: aBoolean [
-]
-
 { #category : #'as yet unclassified' }
 SBStPlayground >> initialize [
 
 	super initialize.
 	
-	typeCache := Dictionary new.
-	
 	self
-		layoutPolicy: SBAlgebraLayout new;
-		layoutInset: 6 withScalingFactor;
-		addMorphBack: (SBRow new
+		addMorphFront: (SBRow new
 			cellGap: 8 withScalingFactor;
-			addMorphBack: (SBTextBubble new layoutInset: 4 withScalingFactor; contents: 'Workspace');
+			addMorphBack: (SBTextBubble new
+				layoutInset: 4 withScalingFactor;
+				contents: 'Workspace');
 			addMorphBack: (bindings := SBRow new cellGap: 4 withScalingFactor));
-		addMorphBack: SBStBlockBody empty;
 		vResizing: #shrinkWrap;
 		hResizing: #rigid;
 		attachDecorator: SBMoveDecorator new;
 		attachDecorator: SBResizableDecorator new
 ]
 
-{ #category : #'artefact protocol' }
-SBStPlayground >> isArtefact [
-
-	^ true
-]
-
-{ #category : #'artefact protocol' }
+{ #category : #'as yet unclassified' }
 SBStPlayground >> isRepl [
-
-	^ true
-]
-
-{ #category : #testing }
-SBStPlayground >> isTopLevel [
 
 	^ true
 ]
@@ -214,7 +140,8 @@ SBStPlayground >> layoutCommands [
 		data: {
 			SBAlgebraCommand morph data: self firstSubmorph.
 			SBAlgebraCommand hardLine withGap: true.
-			self lastSubmorph layoutCommands}
+			self lastSubmorph layoutCommands
+		}
 ]
 
 { #category : #'as yet unclassified' }
@@ -223,105 +150,38 @@ SBStPlayground >> localVariables [
 	^ bindings
 ]
 
-{ #category : #'artefact protocol' }
-SBStPlayground >> methodClass [
-
-	^ receiver ifNotNil: #class ifNil: [UndefinedObject]
-]
-
-{ #category : #'artefact protocol' }
+{ #category : #'as yet unclassified' }
 SBStPlayground >> name [
 
 	^ self firstSubmorph firstSubmorph contents
 ]
 
-{ #category : #'artefact protocol' }
+{ #category : #'as yet unclassified' }
 SBStPlayground >> name: aString [
 
 	self firstSubmorph firstSubmorph contents: aString
 ]
 
-{ #category : #'method protocol' }
-SBStPlayground >> object [
-
-	^ receiver
-]
-
-{ #category : #'compilation cue protocol' }
+{ #category : #'as yet unclassified' }
 SBStPlayground >> objectInterfaceAt: aNumber adding: aBoolean [
 
 	^ SBInterfaces always
 ]
 
-{ #category : #'artefact protocol' }
-SBStPlayground >> printOn: aStream [
-
-	aStream nextPutAll: 'workspace '.
-	aStream nextPutAll: (self name truncateWithElipsisTo: 20)
-]
-
-{ #category : #'compilation cue protocol' }
-SBStPlayground >> receiver [
-
-	^ receiver
-]
-
-{ #category : #'compilation cue protocol' }
+{ #category : #'as yet unclassified' }
 SBStPlayground >> receiver: anObject [
 
 	anObject ifNotNil: [self name: (anObject asString truncateWithElipsisTo: 20)].
-	receiver := anObject
-]
-
-{ #category : #'artefact protocol' }
-SBStPlayground >> relatedClass [
-
-	^ self methodClass
-]
-
-{ #category : #'artefact protocol' }
-SBStPlayground >> saveTryFixing: aBoolean quick: aQuickBoolean [
-
-	self allBlocksDo: [:block |
-		block valid ifFalse: [
-			"block isBinding ifTrue: [self addLocalBindingFor: block]."
-			
-			aBoolean ifFalse: [^ false] ifTrue: [block tryFixIfFail: [^ false]]]].
-	
-	^ true
-]
-
-{ #category : #'artefact protocol' }
-SBStPlayground >> setFromSelection: aSelectionBlock [
-
-	self body removeAllMorphs.
-	aSelectionBlock childSandblocksDo: [:block |
-		self body addMorphBack: block]
-]
-
-{ #category : #'artefact protocol' }
-SBStPlayground >> setFromSource: aString [
-
-	self removeMorph: self lastSubmorph.
-	self addMorphBack: aString parseAsSandblock
-]
-
-{ #category : #'compilation cue protocol' }
-SBStPlayground >> sourceString [
-
-	^ String streamContents: [:s | self writeSourceOn: s]
-]
-
-{ #category : #'artefact protocol' }
-SBStPlayground >> statements: aCollection [
-
-	self body statements: aCollection
+	super receiver: anObject
 ]
 
 { #category : #'as yet unclassified' }
 SBStPlayground >> storeOn: aStream [
 
-	SBExample self: [SBStPlayground newFromSource: '5 + 5 squared' named: 'REPL'] args: [{'' writeStream}] label: 'simple'.
+	SBExample
+		self: [SBStPlayground newFromSource: '5 + 5 squared' named: 'REPL']
+		args: [{'' writeStream}]
+		label: 'simple'.
 	aStream nextPut: $(.
 	aStream nextPutAll: self className.
 	aStream nextPutAll: ' newFromSource: '.
@@ -333,44 +193,8 @@ SBStPlayground >> storeOn: aStream [
 	aStream nextPut: $)
 ]
 
-{ #category : #'artefact protocol' }
+{ #category : #'as yet unclassified' }
 SBStPlayground >> textContents [
 
 	^ self name
-]
-
-{ #category : #'artefact protocol' }
-SBStPlayground >> typeCache [
-
-	^ typeCache
-]
-
-{ #category : #'artefact protocol' }
-SBStPlayground >> typeFor: aBlock [
-
-	^ self typeCache at: aBlock ifAbsent: [nil]
-]
-
-{ #category : #'artefact protocol' }
-SBStPlayground >> veryDeepCopyWith: deepCopier [
-
-	| new previousReceiver |
-	previousReceiver := self receiver.
-	new := super veryDeepCopyWith: deepCopier.
-	new receiver: previousReceiver.
-	receiver := previousReceiver.
-	^ new
-]
-
-{ #category : #'compilation cue protocol' }
-SBStPlayground >> wantsInteractiveErrorCorrection [
-
-	^ false
-]
-
-{ #category : #'compilation cue protocol' }
-SBStPlayground >> writeSourceOn: aStream [
-
-	self body writeSourceOn: aStream.
-	aStream nextPutAll: ' value'
 ]

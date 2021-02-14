@@ -5,6 +5,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBScmIdentifier >> asSymbol: converter [
+	<convert>
+	
+	converter do: [SBScmSymbol new contents: self contents]
+]
+
+{ #category : #'as yet unclassified' }
 SBScmIdentifier >> isIdentifier [
 
 	^ true

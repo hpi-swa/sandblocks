@@ -5,6 +5,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBScmString >> asSymbol: converter [
+	<convert>
+
+	converter do: [SBScmString new contents: self contents]
+]
+
+{ #category : #'as yet unclassified' }
 SBScmString >> symbols [
 
 	^ #('"' '"')
