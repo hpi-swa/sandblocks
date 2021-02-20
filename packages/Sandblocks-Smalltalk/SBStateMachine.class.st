@@ -125,13 +125,10 @@ SBStateMachine >> state: newState [
 { #category : #transitions }
 SBStateMachine >> tick: dt [
 
-	| passedDuration |
-	passedDuration := dt seconds.
-	
 	(conditionalTransitions at: self state) keysAndValuesDo: [:conditionalBlock :endState | conditionalBlock value ifTrue: [^ self state: endState]].
 	
 	(timeTransitions at: self state) keysAndValuesDo: [:endState :time |
-		time at: 1 put: time first - passedDuration.
+		time at: 1 put: time first - dt.
 		time first negative ifTrue: [^ self state: endState]]
 ]
 

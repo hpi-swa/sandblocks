@@ -283,7 +283,7 @@ SBStMessagePart >> wrapInMessageSend [
 	
 	self messageSend grammarHandler
 		block: self messageSend;
-		wrapInMessageSend: ''
+		wrapInMessageSend
 ]
 
 { #category : #'as yet unclassified' }

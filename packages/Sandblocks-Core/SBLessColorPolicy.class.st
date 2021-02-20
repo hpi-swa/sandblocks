@@ -11,9 +11,9 @@ Class {
 SBLessColorPolicy >> colorForBlock: aBlock [
 
 	^ aBlock isBlockBody
-		ifTrue: [Color white]
+		ifTrue: [Color gray: 1]
 		ifFalse: [
-			aBlock parentSandblock ifNotNil: [:p | p color adjustBrightness: -0.15] ifNil: [Color white]]
+			aBlock parentSandblock ifNotNil: [:p | p color adjustBrightness: -0.09] ifNil: [Color white]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -33,11 +33,12 @@ SBLessColorPolicy >> foregroundColorForBlock: aBlock [
 { #category : #'as yet unclassified' }
 SBLessColorPolicy >> layoutInsetFor: aBlock [
 
-	aBlock isBlockBody ifTrue: [^ 2 @ 1].
+	^ super layoutInsetFor: aBlock
+	"aBlock isBlockBody ifTrue: [^ 2 @ 1].
 	aBlock isMessageSend ifFalse: [^ 2 @ 0].
 	aBlock childSandblocksDo: [:child |
 		(child isMessageSend and: [child precedence > aBlock precedence or: [aBlock precedence = 3 and: [child precedence = 3]]]) ifTrue: [^ 2 @ 10]].
-	^ 2 @ 0
+	^ 2 @ 0"
 ]
 
 { #category : #'as yet unclassified' }

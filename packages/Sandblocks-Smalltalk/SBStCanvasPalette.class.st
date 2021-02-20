@@ -52,12 +52,17 @@ SBStCanvasPalette class >> buildOn: aContainer [
 		addBlock: 'Position' as: (SBStMessageSend new receiver: (SBStName contents: 'self') selector: #position);
 		addBlock: 'Bounds' as: (SBStMessageSend new receiver: (SBStName contents: 'self') selector: #bounds);
 		addBlock: 'Color' as: (SBStMessageSend new receiver: (SBStName contents: 'self') selector: #color);
+		
 		addSectionHeader: 'Transforms';
 		addBlock: 'Translate'
 			as: (SBStMessageSend new
 				receiver: (SBStName contents: 'aCanvas')
 				selector: #translateBy:during:
-				arguments: {self newNullBlock: 'offset'. SBStBlockBody emptyWithDeclarations: {'canvas'}})
+				arguments: {self newNullBlock: 'offset'. SBStBlockBody emptyWithDeclarations: {'canvas'}});
+		
+		addSectionHeader: 'Styles';
+		addBlock: 'Color' as: (SBColor new colorContents: Color green);
+		addBlock: 'Gradient' as: '(GradientFillStyle colors: {Color red. Color green}) origin: self position; direction: 0 @ self height' parseAsSandblock
 ]
 
 { #category : #'as yet unclassified' }

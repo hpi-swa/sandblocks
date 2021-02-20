@@ -33,6 +33,11 @@ SBStNameBehavior >> block [
 ]
 
 { #category : #'as yet unclassified' }
+SBStNameBehavior >> block: aBlock [
+	" ignore, we already know which block we belong to "
+]
+
+{ #category : #'as yet unclassified' }
 SBStNameBehavior >> contents [
 
 	^ self block contents

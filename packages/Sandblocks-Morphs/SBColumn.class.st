@@ -30,7 +30,7 @@ SBColumn >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
-		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine])
+		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine withGap: (self cellGap > 0)])
 ]
 
 { #category : #'as yet unclassified' }

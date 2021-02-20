@@ -507,6 +507,14 @@ SBStMessageSend >> veryDeepCopyWith: deepCopier [
 	^ new
 ]
 
+{ #category : #'as yet unclassified' }
+SBStMessageSend >> veryDeepFixupWith: deepCopier [
+
+	super veryDeepFixupWith: deepCopier.
+	
+	self isInCascade ifTrue: [self receiver: nil]
+]
+
 { #category : #testing }
 SBStMessageSend >> wantsExtraSpace [
 

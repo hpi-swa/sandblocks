@@ -104,6 +104,7 @@ SBPaletteContainer >> initialize [
 	self lastSubmorph scroller addMorphBack: (content := SBColumn new
 		useAlgebraLayout;
 		minimumWidth: 300;
+		cellGap: 4;
 		layoutInset: 8)
 ]
 

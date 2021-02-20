@@ -18,13 +18,34 @@ SBDefaultColorPolicy >> colorForBlock: aBlock [
 			ifTrue: [
 				aBlock sandblockBlockColorIfAbsentPut: [
 					(aBlock containingBlock isNil or: [aBlock isMethodBody])
-						ifTrue: [aBlock containingArtefact relatedClass sandblockColor]
+						ifTrue: [
+							SBToggledCode
+								comment: ''
+								active: 2
+								do: {[aBlock containingArtefact relatedClass sandblockColor]. [Color r: 0.216 g: 0.249 b: 0.436]}]
 						ifFalse: [self mutateColor: (self colorForBlock: aBlock containingBlock)]]]
-			ifFalse: [aBlock parentSandblock ifNotNil: [:o | o color adjustSaturation: -0.1 brightness: 0.1] ifNil: [Color white]]]
+			ifFalse: [
+				aBlock parentSandblock ifNotNil: [:o | o color adjustSaturation: -0.1 brightness: 0.09] ifNil: [Color white]]]
 ]
 
 { #category : #'as yet unclassified' }
 SBDefaultColorPolicy >> mutateColor: aColor [
 
-	^ Color h: aColor hue + 30 s: aColor saturation v: (aColor brightness > 0.6 ifTrue: [aColor brightness - 0.3] ifFalse: [0.3 + aColor brightness])
+	^ SBToggledCode
+		comment: ''
+		active: 1
+		do: {
+			[
+				Color
+					h: aColor hue + 15
+					s: aColor saturation
+					v: (SBToggledCode
+						comment: ''
+						active: 2
+						do: {
+							[aColor brightness > 0.6 ifTrue: [aColor brightness - 0.3] ifFalse: [0.3 + aColor brightness]].
+							[aColor brightness]
+						})].
+			[aColor]
+		}
 ]

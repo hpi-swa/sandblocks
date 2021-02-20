@@ -7,7 +7,7 @@ Class {
 { #category : #'action helpers' }
 SBStASTNode >> actionProviders [
 
-	^ super actionProviders, {self grammarHandler}
+	^ {self grammarHandler}, super actionProviders
 ]
 
 { #category : #converting }

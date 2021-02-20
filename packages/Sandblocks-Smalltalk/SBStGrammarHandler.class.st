@@ -183,7 +183,7 @@ SBStGrammarHandler >> pasteString [
 	block := doIt block statements last expr asSandblock.
 	baseIndex := self block containingStatement owner submorphIndexOf: self block containingStatement.
 	
-	self block sandblockEditor do: ((SBCombinedCommand newFor: self containingArtefact)
+	self block sandblockEditor do: ((SBCombinedCommand newFor: self block containingArtefact)
 		commands:
 			{(SBReplaceCommand newFor: self block containingArtefact) target: self block; replacer: block},
 			(doIt block statements allButLast withIndexCollect: [:statement :index |
@@ -284,7 +284,7 @@ SBStGrammarHandler >> watchWith: aWatchClass [
 	self block isExpression ifFalse: [^ self].
 	
 	self block isWatch
-		ifTrue: [^ self block sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact) target: self; replacer: self childSandblocks first)].
+		ifTrue: [^ self block sandblockEditor do: ((SBReplaceCommand newFor: self block containingArtefact) target: self block; replacer: self block childSandblocks first)].
 	
 	self block parentSandblock isWatch ifTrue: [^ self block deleteAround].
 	

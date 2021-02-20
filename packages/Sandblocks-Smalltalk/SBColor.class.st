@@ -71,7 +71,8 @@ SBColor >> doubleClick: anEvent [
 	previousColor := self colorContents.
 	
 	(NewColorPickerMorph on: self originalColor: indicator color setColorSelector: #colorContentsUpdate:)
-		openNear: self;
+		openInWorld;
+		bottomLeft: self positionInWorld - (30 @ 30);
 		when: #closed send: #saveColor to: self
 ]
 

@@ -681,7 +681,7 @@ SBStBasicMethod >> updatePCs [
 	new := Array streamContents: [:stream | method allBlocksDo: [:block | stream nextPut: block]].
 	old := Array streamContents: [:stream | self allBlocksDo: [:block | stream nextPut: block]].
 	
-	new size = old size ifTrue: [new with: old do: [:newBlock :oldBlock | (oldBlock isSmalltalk and: [newBlock isSmalltalk]) ifTrue: [oldBlock updatePCFrom: newBlock]]]
+	new size = old size ifTrue: [new with: old do: [:newBlock :oldBlock | (oldBlock isSmalltalk and: [newBlock isSmalltalk]) ifTrue: [oldBlock class == newBlock class ifTrue: [oldBlock updatePCFrom: newBlock]]]]
 ]
 
 { #category : #'as yet unclassified' }

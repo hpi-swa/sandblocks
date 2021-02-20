@@ -17,19 +17,21 @@ SBAlternatingColorPolicy >> borderColorForBlock: aBlock [
 { #category : #'as yet unclassified' }
 SBAlternatingColorPolicy >> borderWidthForBlock: aBlock [
 
-	^ aBlock isBlockBody ifTrue: [1] ifFalse: [0]
+	aBlock prefersNoBorder ifTrue: [^ 0].
+	^ aBlock isBlockBody ifTrue: [1] ifFalse: [1]
 ]
 
 { #category : #'as yet unclassified' }
 SBAlternatingColorPolicy >> colorForBlock: aBlock [
 
+	aBlock isArtefact ifTrue: [^ Color white].
 	^ (aBlock parentSandblock ifNil: [^ self colors first]) drawnColor = self colors first ifTrue: [self colors second] ifFalse: [self colors first]
 ]
 
 { #category : #'as yet unclassified' }
 SBAlternatingColorPolicy >> colors [
 
-	^ {Color white. Color r: 0.85 g: 0.85 b: 0.85. Color blue}
+	^ {Color white. Color gray: 0.95. Color blue}
 ]
 
 { #category : #'as yet unclassified' }
@@ -47,6 +49,13 @@ SBAlternatingColorPolicy >> initialize [
 	super initialize.
 	
 	nameColorCache := Dictionary new
+]
+
+{ #category : #'as yet unclassified' }
+SBAlternatingColorPolicy >> layoutInsetFor: aBlock [
+
+	((aBlock isKindOf: SBStLiteral) or: [aBlock isBlockBody]) ifTrue: [^ 2 @ 1].
+	^ aBlock wantsExtraSpace ifTrue: [2 @ 2] ifFalse: [2 @ 0]
 ]
 
 { #category : #'as yet unclassified' }

@@ -18,6 +18,7 @@ SBLessBorderColorPolicy >> borderColorForBlock: aBlock [
 { #category : #'as yet unclassified' }
 SBLessBorderColorPolicy >> borderWidthForBlock: aBlock [
 
+	aBlock prefersNoBorder ifTrue: [^ 0].
 	aBlock isMessagePart ifTrue: [^ 0].
 	^ aBlock isBlockBody ifTrue: [1] ifFalse: [1]
 ]
@@ -25,10 +26,10 @@ SBLessBorderColorPolicy >> borderWidthForBlock: aBlock [
 { #category : #'as yet unclassified' }
 SBLessBorderColorPolicy >> colorForBlock: aBlock [
 
-	^ Color white"aBlock isBlockBody
+	"(aBlock childSandblocks isEmpty and: [aBlock prefersNoBorder not]) ifTrue: [^ Color gray: 0.9]."
+	^ aBlock height > 100
 		ifTrue: [Color white]
-		ifFalse: [
-			aBlock parentSandblock ifNotNil: [:p | p color adjustBrightness: -0.15] ifNil: [Color white]]"
+		ifFalse: [Color gray: 0.95]
 ]
 
 { #category : #'as yet unclassified' }
@@ -43,11 +44,12 @@ SBLessBorderColorPolicy >> foregroundColorForBlock: aBlock [
 { #category : #'as yet unclassified' }
 SBLessBorderColorPolicy >> layoutInsetFor: aBlock [
 
-	| parent |
+	^ super layoutInsetFor: aBlock
+	"| parent |
 	aBlock isMessageSend ifFalse: [^ 2 @ 0].
 	parent := aBlock parentSandblock.
 	^ (parent isMessageSend and: [
-			aBlock precedence > parent precedence or: [parent precedence = 3 and: [aBlock precedence = 3]]]) ifTrue: [2 @ 2] ifFalse: [2 @ 0]
+			aBlock precedence > parent precedence or: [parent precedence = 3 and: [aBlock precedence = 3]]]) ifTrue: [2 @ 2] ifFalse: [2 @ 0]"
 ]
 
 { #category : #'as yet unclassified' }

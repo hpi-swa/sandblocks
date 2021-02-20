@@ -62,40 +62,43 @@ SBStateMachineEditor >> buildFrom: aNode [
 			}]
 		label: 'simple'.
 	
-	states := OrderedDictionary newFrom: (((aNode messages gather: [:message | 
+	states := OrderedDictionary newFrom: (((aNode messages gather: [:message |
 		message selector caseOf: {
-			([#from:to:if:] -> [message arguments copyFrom: 1 to: 2]).
-			([#from:to:when:] -> [message arguments copyFrom: 1 to: 2]).
-			([#from:to:after:] -> [message arguments copyFrom: 1 to: 2]).
-			([#initialState:] -> [{message arguments first}]).
-			([#uponEnter:do:] -> [{message arguments first}]).
-			([#uponLeave:do:] -> [{message arguments first}]).
-			([#start] -> [{}]).
-			([#yourself] -> [{}])
+			[#from:to:if:] -> [message arguments copyFrom: 1 to: 2].
+			[#from:to:when:] -> [message arguments copyFrom: 1 to: 2].
+			[#from:to:after:] -> [message arguments copyFrom: 1 to: 2].
+			[#initialState:] -> [{message arguments first}].
+			[#uponEnter:do:] -> [{message arguments first}].
+			[#uponLeave:do:] -> [{message arguments first}].
+			[#start] -> [{}].
+			[#yourself] -> [{}]
 		}]) collect: #contents) withoutDuplicates collect: [:name | name -> (SBStateMachineState new name: name)]).
 	states do: [:state | self addMorphBack: state].
-	aNode messages do: [:message | 
+	aNode messages do: [:message |
 		message selector caseOf: {
-			([#initialState:] -> [initialState := states at: message arguments first contents]).
-			([#from:to:if:] -> [ 
+			[#initialState:] -> [initialState := states at: message arguments first contents].
+			[#from:to:if:] -> [
 				self
 					connect: message arguments first contents
 					to: message arguments second contents
-					if: message arguments third]).
-			([#from:to:when:] -> [ 
+					type: #condition
+					data: message arguments third].
+			[#from:to:when:] -> [
 				self
 					connect: message arguments first contents
 					to: message arguments second contents
-					if: message arguments third]).
-			([#from:to:after:] -> [ 
+					type: #signal
+					data: message arguments third].
+			[#from:to:after:] -> [
 				self
 					connect: message arguments first contents
 					to: message arguments second contents
-					if: message arguments third]).
-			([#uponEnter:do:] -> [(states at: message arguments first contents) addUponEnter: message arguments second]).
-			([#uponLeave:do:] -> [(states at: message arguments first contents) addUponLeave: message arguments second]).
-			([#yourself] -> [nil]).
-			([#start] -> [nil]).
+					type: #time
+					data: message arguments third].
+			[#uponEnter:do:] -> [(states at: message arguments first contents) addUponEnter: message arguments second].
+			[#uponLeave:do:] -> [(states at: message arguments first contents) addUponLeave: message arguments second].
+			[#yourself] -> [nil].
+			[#start] -> [nil]
 		}].
 	self initializePositions
 ]
@@ -132,23 +135,21 @@ SBStateMachineEditor >> commandPaletteClass [
 ]
 
 { #category : #'as yet unclassified' }
-SBStateMachineEditor >> connect: aStateName to: anotherStateName if: aBlock [
+SBStateMachineEditor >> connect: aStateName to: anotherStateName type: aSymbol data: aBlock [
 
 	| line connectors |
 	connectors := self connectors.
 	line := connectors
-		detect: [:transition |
-			transition from name = aStateName and: [transition to name = anotherStateName]]
+		detect: [:transition | transition from name = aStateName and: [transition to name = anotherStateName]]
 		ifFound: #yourself
 		ifNone: [
 			SBStateMachineTransition connect: (self stateNamed: aStateName) to: (self stateNamed: anotherStateName)].
 	connectors
-		detect: [:transition |
-			transition to name = aStateName and: [transition from name = anotherStateName]]
+		detect: [:transition | transition to name = aStateName and: [transition from name = anotherStateName]]
 		ifFound: [:transition |
 			transition evade: #right.
 			line evade: #right].
-	line addCondition: aBlock.
+	line addCondition: (SBStateMachineTransitionCondition new type: aSymbol data: aBlock).
 	self addMorphBack: line.
 	^ line
 ]
@@ -283,7 +284,8 @@ SBStateMachineEditor >> states [
 SBStateMachineEditor >> writeSourceOn: aStream [
 
 	SBExample
-		self: [SBStateMachineEditor new buildFrom: 'SBStateMachine new
+		self: [
+			SBStateMachineEditor new buildFrom: 'SBStateMachine new
 		initialState: #idle;
 		
 		uponEnter: #combat do: [ self combat ];
@@ -297,38 +299,26 @@ SBStateMachineEditor >> writeSourceOn: aStream [
 		nextPutAll: ' new';
 		nextPutAll: ' initialState: ';
 		nextPutAll: self initialState name asSymbol storeString.
-	self states do: [:state | 
-		state uponEnterBlocks do: [:block | 
+	self states do: [:state |
+		state uponEnterBlocks do: [:block |
 			aStream nextPut: $;.
 			aStream nextPutAll: 'uponEnter: '.
 			state name asSymbol storeOn: aStream.
 			aStream nextPutAll: ' do: '.
 			block writeSourceOn: aStream].
-		state uponLeaveBlocks do: [:block | 
+		state uponLeaveBlocks do: [:block |
 			aStream nextPut: $;.
 			aStream nextPutAll: 'uponLeave: '.
 			state name asSymbol storeOn: aStream.
 			aStream nextPutAll: ' do: '.
 			block writeSourceOn: aStream]].
-	self connectors do: [:transition | 
-		transition conditions do: [:condition | 
+	self connectors do: [:transition |
+		transition conditions do: [:condition |
 			aStream nextPut: $;.
 			aStream nextPutAll: 'from: '.
 			transition from name asSymbol storeOn: aStream.
 			aStream nextPutAll: ' to: '.
 			transition to name asSymbol storeOn: aStream.
-			SBToggledCode
-				comment: 'is a duration'
-				active: 1
-				do: {[condition isMessageSend ifTrue: [aStream nextPutAll: ' after: ']]}.
-			SBToggledCode
-				comment: 'condition evaluated at each tick'
-				active: 1
-				do: {[condition isBlockBody ifTrue: [aStream nextPutAll: ' if: ']]}.
-			SBToggledCode
-				comment: 'is a trigger symbol'
-				active: 1
-				do: {[condition isSymbolBlock ifTrue: [aStream nextPutAll: ' when: ']]}.
 			condition writeSourceOn: aStream]].
 	aStream nextPutAll: '; start)'
 ]

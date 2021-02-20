@@ -4850,6 +4850,7 @@ SBIcon >> extent: aPoint [
 
 	super extent: (TextStyle defaultFont height asPoint * (size caseOf: {
 		[#large] -> [1.2].
+		[#veryLarge] -> [2].
 		[#small] -> [2/3].
 		[#regular] ->  [1].
 	})) rounded
@@ -4932,4 +4933,11 @@ SBIcon >> svgColor: aColor [
 	cachedForm := nil.
 	self svg allMorphsDo: [:morph | morph style at: 'fill' put: aColor].
 	self svg changed
+]
+
+{ #category : #drawing }
+SBIcon >> veryLarge [
+
+	size := #veryLarge.
+	self extent: 0 @ 0
 ]

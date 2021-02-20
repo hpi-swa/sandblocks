@@ -12,3 +12,11 @@ SBSandboxPasteUpMorph >> drawSubmorphsOn: aCanvas [
 
 	[super drawSubmorphsOn: aCanvas] on: Error do: [:error | self triggerEvent: #reportError with: error]
 ]
+
+{ #category : #painting }
+SBSandboxPasteUpMorph >> initialize [
+
+	super initialize.
+	
+	self enableDrop: false
+]

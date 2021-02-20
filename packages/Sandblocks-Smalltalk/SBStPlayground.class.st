@@ -77,6 +77,13 @@ SBStPlayground >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBStPlayground >> copyString [
+	<action>
+
+	self body performAction: #copyString
+]
+
+{ #category : #'as yet unclassified' }
 SBStPlayground >> createBinding: aString [
 
 	| decl |
@@ -92,6 +99,16 @@ SBStPlayground >> createBinding: aString [
 SBStPlayground >> declarations [
 
 	^ bindings submorphs
+]
+
+{ #category : #'as yet unclassified' }
+SBStPlayground >> evaluateExpression [
+	<action>
+	
+	| send |
+	send := SBStMessageSend new receiver: self body veryDeepCopy selector: #value.
+	[self addMorphBack: send.
+	send evaluateExpression] ensure: [send delete]
 ]
 
 { #category : #'as yet unclassified' }

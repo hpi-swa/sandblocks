@@ -80,7 +80,7 @@ SBTextBubble >> dismiss [
 { #category : #'as yet unclassified' }
 SBTextBubble >> drawnColor [
 
-	^ self colored ifTrue: [super drawnColor] ifFalse: [Color transparent]
+	^ self colored ifTrue: [super drawnColor] ifFalse: [self parentSandblock ifNotNil: [: p | p drawnColor] ifNil: [Color transparent]]
 ]
 
 { #category : #'as yet unclassified' }

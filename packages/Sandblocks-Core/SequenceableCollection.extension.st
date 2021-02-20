@@ -46,6 +46,12 @@ SequenceableCollection >> viewAllButLast [
 ]
 
 { #category : #'*Sandblocks-Core' }
+SequenceableCollection >> viewCollect: aBlock [
+
+	^ SBCollectionViewCollect on: self block: aBlock
+]
+
+{ #category : #'*Sandblocks-Core' }
 SequenceableCollection >> viewCopyFrom: aNumber to: anotherNumber [
 
 	^ SBCollectionView on: self from: aNumber to: anotherNumber

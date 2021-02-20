@@ -55,7 +55,13 @@ SBStateMachineState >> connectTo [
 	states := self owner states collect: #name.
 	index := UIManager default chooseFrom: states.
 	index > 0 ifTrue: [
-		self owner connect: self name to: (states at: index) if: SBStBlockBody empty]
+		self owner connect: self name to: (states at: index) type: #condition data: SBStBlockBody empty]
+]
+
+{ #category : #'as yet unclassified' }
+SBStateMachineState >> deleteCommandFor: aBlock [
+
+	^ (SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock owner
 ]
 
 { #category : #'as yet unclassified' }
@@ -70,6 +76,23 @@ SBStateMachineState >> initialize [
 		layoutInset: 6 withScalingFactor;
 		attachDecorator: SBMoveDecorator new;
 		attachDecorator: SBResizableDecorator new
+]
+
+{ #category : #'as yet unclassified' }
+SBStateMachineState >> insertCommandRequest: anAfterBoolean near: aBlock [
+
+	| body |
+	body := SBStBlockBody empty.
+	^ (SBInsertCommand newFor: self containingArtefact)
+		index: ((self childSandblocks indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]) max: 2);
+		container: self;
+		morph: (SBRow new
+			cellGap: 4 withScalingFactor;
+			addMorphBack: (SBStringMorph new contents: 'Enter:');
+			addMorphBack: body);
+		select: body childSandblocks first;
+		shouldMergeWithNext: true;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }
@@ -113,7 +136,7 @@ SBStateMachineState >> startInputAt: aNumber replacingContents: aBoolean [
 { #category : #'as yet unclassified' }
 SBStateMachineState >> symbols [
 
-	^ {((self owner isKindOf: SBStateMachine) and: [self owner initialState = self]) ifTrue: ['* '] ifFalse: [nil]. nil}
+	^ {((self owner isKindOf: SBStateMachineEditor) and: [self owner initialState = self]) ifTrue: ['* '] ifFalse: [nil]. nil}
 ]
 
 { #category : #'as yet unclassified' }

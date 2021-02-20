@@ -51,9 +51,9 @@ SBStName >> acceptInputEvent: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBStName >> actionsProviders [
+SBStName >> actionProviders [
 
-	^ super actionProviders, {self behavior}
+	^ {self behavior}, super actionProviders
 ]
 
 { #category : #'as yet unclassified' }

@@ -150,7 +150,7 @@ SBBlock >> binding: aString for: block class: aClass ifPresent: aBlock [
 SBBlock >> browse [
 	<action>
 	" you were asked to be browsed. you may ignore this "
-	
+
 	self relatedClass browse
 ]
 
@@ -1355,7 +1355,7 @@ SBBlock >> localNestingDepth [
 SBBlock >> lookupAction: aSymbol [
 
 	^ self actionProviders
-		detect: [:obj | obj respondsTo: aSymbol]
+		detect: [:obj | (obj class lookupSelector: aSymbol) ifNotNil: [:m | #(inputAction action multiSelectAction) anySatisfy: [:s | (m pragmaAt: s) notNil]] ifNil: [false]]
 		ifFound: [:obj | obj class lookupSelector: aSymbol]
 ]
 
@@ -1641,13 +1641,6 @@ SBBlock >> pasteBelow [
 	self pasteAboveOrBelow: false
 ]
 
-{ #category : #actions }
-SBBlock >> pasteString [
-	<action>
-
-	^ self subclassResponsibility
-]
-
 { #category : #accessing }
 SBBlock >> pc [
 
@@ -1662,9 +1655,10 @@ SBBlock >> pc: aNumber [
 SBBlock >> performAction: aSymbol [
 
 	self actionProviders do: [:obj |
-		(obj respondsTo: aSymbol) ifTrue: [
-			obj ~= self ifTrue: [obj block: self].
-			^ obj perform: aSymbol]]
+		(obj class lookupSelector: aSymbol) ifNotNil: [:m |
+			(#(action inputAction multiSelectAction) anySatisfy: [:s | (m method pragmaAt: s) notNil]) ifTrue: [
+				obj ~= self ifTrue: [obj block: self].
+				^ obj perform: aSymbol]]]
 ]
 
 { #category : #'as yet unclassified' }

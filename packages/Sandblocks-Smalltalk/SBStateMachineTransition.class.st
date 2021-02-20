@@ -64,11 +64,17 @@ SBStateMachineTransition >> endPointsDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBStateMachineTransition >> handlesMouseDown: anEvent [
+
+	^ (super handlesMouseDown: anEvent) or: [(self morphsAt: anEvent position) size > 1]
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachineTransition >> initialize [
 
 	super initialize.
 	
-	conditions := SBStArray new useAlgebraLayout.
+	conditions := SBStateMachineConditionList new useAlgebraLayout.
 	
 	self addMorphBack: conditions
 ]
