@@ -9,8 +9,16 @@ SBStateMachinePalette class >> buildOn: aContainer [
 
 	aContainer
 		addHeader: 'Statemachine';
-		
-		addBlock: 'State' as: (SBStateMachineState new name: 'unnamed state')
+		addBlock: 'State' as: (SBStateMachineState new name: 'unnamed state');
+		addSectionHeader: 'Transitions';
+		addBlock: 'Time Transition'
+			as: (SBStateMachineTransitionCondition new type: #time data: (SBStMessageSend new receiver: (self newNullBlock: 'time') selector: #seconds));
+		addBlock: 'Signal Transition'
+			as: (SBStateMachineTransitionCondition new type: #signal data: (self newNullBlock: 'signal'));
+		addBlock: 'Condition Transition'
+			as: (SBStateMachineTransitionCondition new type: #condition data: (SBStBlockBody new
+				statements: {self newNullBlock: 'signal'};
+				yourself))
 ]
 
 { #category : #'as yet unclassified' }

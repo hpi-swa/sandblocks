@@ -28,6 +28,24 @@ SBScmModule class >> fromString: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmModule class >> newInterpreter [
+
+	| interpreter |
+	interpreter := QoppaInterpreter new.
+	interpreter
+		bindInGlobalEnv: #'eval-lang'
+			value: (interpreter wrapPrim: [:lang :source | Compiler evaluate: source content] countingArgs: true);
+		bindInGlobalEnv: #perform
+			value: (interpreter
+				wrapPrim: [:args |
+					self halt.
+					args size < 2 ifTrue: [QoppaArityMismatchError signal: 'ArityMismatch for perform'].
+					args first perform: args second asSymbol withArguments: (args allButFirst: 2)]
+				countingArgs: false).
+	^ interpreter
+]
+
+{ #category : #'as yet unclassified' }
 SBScmModule >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	| sym |
@@ -145,11 +163,7 @@ SBScmModule >> insertCommandRequest: anAfterBoolean near: aBlock [
 { #category : #'as yet unclassified' }
 SBScmModule >> interpreter [
 
-	^ interpreter ifNil: [
-		interpreter := QoppaInterpreter new.
-		interpreter
-			bindInGlobalEnv: #'eval-lang'
-			value: (interpreter wrapPrim: [:lang :source | Compiler evaluate: source content] countingArgs: true)]
+	^ interpreter ifNil: [self class newInterpreter]
 ]
 
 { #category : #'as yet unclassified' }

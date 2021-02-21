@@ -50,11 +50,29 @@ SBStateMachineTransitionCondition >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBStateMachineTransitionCondition >> isSmalltalk [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBStateMachineTransitionCondition >> isTransitionCondition [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachineTransitionCondition >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
 		data: {self submorphs first layoutCommands. SBAlgebraCommand gap. self submorphs second layoutCommands}
+]
+
+{ #category : #'as yet unclassified' }
+SBStateMachineTransitionCondition >> object [
+
+	
 ]
 
 { #category : #'as yet unclassified' }
@@ -92,7 +110,11 @@ SBStateMachineTransitionCondition >> type: aSymbol data: aBlock [
 { #category : #'as yet unclassified' }
 SBStateMachineTransitionCondition >> updateIcon [
 
-	self firstSubmorph replaceBy: (type caseOf: {[#time] -> [SBIcon iconClock_o]. [#condition] -> [SBIcon iconCheck]. [#signal] -> [SBIcon iconFlash]})
+	self firstSubmorph replaceBy: (type caseOf: {[#time] -> [SBIcon iconClock_o]. [#condition] -> [SBIcon iconCheck]. [#signal] -> [SBIcon iconFlash]}) large
+]
+
+{ #category : #'as yet unclassified' }
+SBStateMachineTransitionCondition >> updatePCFrom: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
@@ -101,7 +123,7 @@ SBStateMachineTransitionCondition >> valid [
 	^ type caseOf: {
 		[#time] -> [self lastSubmorph isMessageSend].
 		[#condition] -> [self lastSubmorph isBlockBody].
-		[#signal] -> [self lastSubmorph isSymbolBlock]
+		[#signal] -> [self lastSubmorph isSymbolBlock or: [self lastSubmorph isUnknown]]
 	}
 ]
 

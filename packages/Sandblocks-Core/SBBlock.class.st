@@ -756,6 +756,13 @@ SBBlock >> ensureVisible [
 		self isInWorld ifTrue: [self sandblockEditor ifNotNil: [:e | e scrollToShow: self]]]
 ]
 
+{ #category : #actions }
+SBBlock >> exploreSelf [
+	<action>
+	
+	self sandblockEditor openMorphInView: (SBExplorer on: self)
+]
+
 { #category : #hierarchy }
 SBBlock >> firstDeepChild [
 
@@ -1407,7 +1414,7 @@ SBBlock >> mouseEnterDragging: anEvent [
 	(anEvent hand firstSubmorph respondsTo: #noteDragEnter:) ifTrue: [anEvent hand firstSubmorph noteDragEnter: self].
 	
 	self resetParentHighlights.
-	self highlightForDrop: true
+	(self handlesMouseOverDragging: anEvent) ifTrue: [self highlightForDrop: true]
 ]
 
 { #category : #'event handling' }
@@ -2336,8 +2343,11 @@ SBBlock >> wantsDroppedMorph: aMorph event: evt [
 
 	| response |
 	((aMorph isSandblock and: [aMorph isSelection]) or: [aMorph isKindOf: TransferMorph]) ifFalse: [^ false].
-	" we may sometimes be asked this for a morph that is not in a valid environment "
-	self sandblockEditor ifNil: [^ false].
+	
+	SBToggledCode
+		comment: 'we may sometimes be asked this for a morph that is not in a valid environment'
+		active: 1
+		do: {[self sandblockEditor ifNil: [^ false]]}.
 	
 	response := nil.
 	aMorph

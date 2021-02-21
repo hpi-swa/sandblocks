@@ -55,11 +55,11 @@ Object >> convertedFor: anInterfaceCollection do: aBlock [
 	| convert |
 	(self satisfies: anInterfaceCollection) ifTrue: [^ aBlock value: self].
 	
-	convert := SBConvert new success: [:object |
-		(object satisfies: anInterfaceCollection) ifTrue: [^ aBlock value: object]].
+	convert := SBConvert new success: [:object | (object satisfies: anInterfaceCollection) ifTrue: [^ aBlock value: object]].
 	
-	(Pragma allNamed: #convert from: self class to: Object) do: [:pragma |
-		(self perform: pragma selector with: convert)]
+	(Pragma allNamed: #convert from: self class to: Object) do: [:pragma | self perform: pragma selector with: convert].
+	
+	^ nil
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -93,6 +93,13 @@ Object >> isSandblock [
 Object >> newFirstSafeOptionFrom: aCollection [
 
 	^ (self firstSafeOptionFrom: aCollection) newFor: self
+]
+
+{ #category : #'*Sandblocks-Core-converting' }
+Object >> openClass: converter [
+	<convert>
+	
+	converter do: [SBStClassMethodEditor new class: self class]
 ]
 
 { #category : #'*Sandblocks-Core-converting' }

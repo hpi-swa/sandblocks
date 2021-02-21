@@ -7,7 +7,14 @@ Class {
 { #category : #'as yet unclassified' }
 SBStLanguageBox class >> eval: aString lang: anotherString [
 
-	^ QoppaInterpreter new readAndEvaluate: aString
+	^ [SBScmModule newInterpreter readAndEvaluate: aString]
+		on: QoppaUnboundVariableFailure
+		do: [:e | | temps context name |
+			name := e variableName asSymbol asString.
+			context := thisContext methodReturnContext sender.
+			e resume: (QoppaWCons
+				withCar: e variableName
+				cdr: (QoppaWCons withCar: (context namedTempAt: (context tempNames indexOf: name ifAbsent: [^ e signal])) cdr: nil))]
 ]
 
 { #category : #'as yet unclassified' }

@@ -53,6 +53,8 @@ SBConnectorLine >> connect: anObject to: anotherObject [
 	to := anotherObject.
 	from when: #positionChanged send: #update: to: self with: nil.
 	to when: #positionChanged send: #update: to: self with: nil.
+	from when: #extentChanged send: #update: to: self with: nil.
+	to when: #extentChanged send: #update: to: self with: nil.
 	from addDependent: self.
 	to addDependent: self.
 	self update: nil.
@@ -346,8 +348,7 @@ SBConnectorLine >> outerBounds [
 { #category : #'as yet unclassified' }
 SBConnectorLine >> rejectsEvent: anEvent [
 
-	^ anEvent isMouse not or: [
-		anEvent isMouseDown not or: [(self handlesMouseDown: anEvent) not]]
+	^ (anEvent isMouse and: [anEvent isMouseDown]) ifTrue: [(self handlesMouseDown: anEvent) not] ifFalse: [false]
 ]
 
 { #category : #'as yet unclassified' }

@@ -25,18 +25,22 @@ SBStateMachineState >> addLeaveAction [
 SBStateMachineState >> addUponEnter: aBlock [
 
 	self addMorphBack: (SBRow new
-		 cellGap: 4 withScalingFactor;
-		 addMorphBack: (SBStringMorph new contents: 'Enter:');
-		 addMorphBack: aBlock)
+		softWrap: false;
+		useAlgebraLayout;
+		cellGap: 4 withScalingFactor;
+		addMorphBack: (SBStringMorph new contents: 'Enter:');
+		addMorphBack: aBlock)
 ]
 
 { #category : #'as yet unclassified' }
 SBStateMachineState >> addUponLeave: aBlock [
 
 	self addMorphBack: (SBRow new
-		 cellGap: 4 withScalingFactor;
-		 addMorphBack: (SBStringMorph new contents: 'Leave:');
-		 addMorphBack: aBlock)
+		softWrap: false;
+		useAlgebraLayout;
+		cellGap: 4 withScalingFactor;
+		addMorphBack: (SBStringMorph new contents: 'Leave:');
+		addMorphBack: aBlock)
 ]
 
 { #category : #'as yet unclassified' }
@@ -70,9 +74,10 @@ SBStateMachineState >> initialize [
 	super initialize.
 	self addMorphBack: (label := SBTextBubble new).
 	self
-		changeTableLayout;
+		useAlgebraLayout;
+		extent: 280 @ 10;
 		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap;
+		hResizing: #rigid;
 		layoutInset: 6 withScalingFactor;
 		attachDecorator: SBMoveDecorator new;
 		attachDecorator: SBResizableDecorator new
@@ -99,6 +104,14 @@ SBStateMachineState >> insertCommandRequest: anAfterBoolean near: aBlock [
 SBStateMachineState >> isASTNode [
 
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBStateMachineState >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine withGap: true])
 ]
 
 { #category : #'as yet unclassified' }

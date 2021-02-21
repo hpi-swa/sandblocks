@@ -7,7 +7,7 @@ Class {
 { #category : #'action helpers' }
 SBScmASTNode >> actionProviders [
 
-	^ super actionProviders, {self grammarHandler}
+	^ {self grammarHandler}, super actionProviders
 ]
 
 { #category : #printing }

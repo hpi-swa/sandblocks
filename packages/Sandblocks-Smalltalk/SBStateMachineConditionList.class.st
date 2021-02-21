@@ -9,3 +9,9 @@ SBStateMachineConditionList >> newNullBlock [
 
 	^ SBStateMachineTransitionCondition new type: #condition data: SBStBlockBody empty
 ]
+
+{ #category : #'as yet unclassified' }
+SBStateMachineConditionList >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	^ {#isSmalltalk. #isTransitionCondition understood}
+]
