@@ -372,6 +372,14 @@ SBBlock >> containingBlocksDo: aBlock [
 		current := current containingBlock]
 ]
 
+{ #category : #actions }
+SBBlock >> containingFloat [
+
+	self floating ifTrue: [^ self].
+	
+	^ self ownerSatisfying: [:o | o isSandblock and: [o floating]]
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> containingFullBlock [
 
@@ -1286,6 +1294,23 @@ SBBlock >> isUnknown [
 	^ false
 ]
 
+{ #category : #'action helpers' }
+SBBlock >> isValidAction: aPragmaOrMethod [
+
+	| mode validInvocation validMode allPragmas method |
+	allPragmas := #(#action #inputAction #multiSelectAction).
+	
+	aPragmaOrMethod isCompiledMethod
+		ifTrue: [method := aPragmaOrMethod]
+		ifFalse: [method := aPragmaOrMethod method].
+	
+	mode := self sandblockEditor mode.
+	validMode := (mode = #input ifTrue: [allPragmas] ifFalse: [#(#action #multiSelectAction)]) anySatisfy: [:s | (method pragmaAt: s) notNil].
+	validInvocation := (method pragmaAt: #actionValidIf:) ifNotNil: [:p | self perform: p arguments first] ifNil: [true].
+	
+	^ validMode and: [validInvocation]
+]
+
 { #category : #testing }
 SBBlock >> isWatch [
 
@@ -1362,7 +1387,7 @@ SBBlock >> localNestingDepth [
 SBBlock >> lookupAction: aSymbol [
 
 	^ self actionProviders
-		detect: [:obj | (obj class lookupSelector: aSymbol) ifNotNil: [:m | #(inputAction action multiSelectAction) anySatisfy: [:s | (m pragmaAt: s) notNil]] ifNil: [false]]
+		detect: [:obj | (obj class lookupSelector: aSymbol) ifNotNil: [:m | self isValidAction: m] ifNil: [false]]
 		ifFound: [:obj | obj class lookupSelector: aSymbol]
 ]
 
@@ -1663,7 +1688,7 @@ SBBlock >> performAction: aSymbol [
 
 	self actionProviders do: [:obj |
 		(obj class lookupSelector: aSymbol) ifNotNil: [:m |
-			(#(action inputAction multiSelectAction) anySatisfy: [:s | (m method pragmaAt: s) notNil]) ifTrue: [
+			(self isValidAction: m) ifTrue: [
 				obj ~= self ifTrue: [obj block: self].
 				^ obj perform: aSymbol]]]
 ]
@@ -1925,7 +1950,7 @@ SBBlock >> selectLast [
 	<multiSelectAction>
 	<inputAction>
 
-	self containingArtefact lastDeepChild select.
+	self containingFloat lastDeepChild select.
 	
 	self sandblockEditor maybeStartInputFromEnd
 ]
@@ -2321,10 +2346,7 @@ SBBlock >> validActions [
 
 	| mode |
 	mode := self sandblockEditor mode.
-	^ self actions select: [:action | | validInvocation validMode |
-		validMode := (mode = #input ifTrue: [#(#action #inputAction #multiSelectAction)] ifFalse: [#(#action #multiSelectAction)]) includes: action keyword.
-		validInvocation := (action method pragmaAt: #actionValidIf:) ifNotNil: [:pragma | self perform: pragma arguments first] ifNil: [true].
-		validMode and: [validInvocation]]
+	^ self actions select: [:action | self isValidAction: action]
 ]
 
 { #category : #'event handling' }
