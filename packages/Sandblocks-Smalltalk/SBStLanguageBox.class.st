@@ -9,12 +9,10 @@ SBStLanguageBox class >> eval: aString lang: anotherString [
 
 	^ [SBScmModule newInterpreter readAndEvaluate: aString]
 		on: QoppaUnboundVariableFailure
-		do: [:e | | temps context name |
+		do: [:e | | context name |
 			name := e variableName asSymbol asString.
 			context := thisContext methodReturnContext sender.
-			e resume: (QoppaWCons
-				withCar: e variableName
-				cdr: (QoppaWCons withCar: (context namedTempAt: (context tempNames indexOf: name ifAbsent: [^ e signal])) cdr: nil))]
+			e resumeWithValue: (context namedTempAt: (context tempNames indexOf: name ifAbsent: [^ e signal]))]
 ]
 
 { #category : #'as yet unclassified' }

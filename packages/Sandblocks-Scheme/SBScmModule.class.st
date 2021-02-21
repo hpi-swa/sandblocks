@@ -38,7 +38,6 @@ SBScmModule class >> newInterpreter [
 		bindInGlobalEnv: #perform
 			value: (interpreter
 				wrapPrim: [:args |
-					self halt.
 					args size < 2 ifTrue: [QoppaArityMismatchError signal: 'ArityMismatch for perform'].
 					args first perform: args second asSymbol withArguments: (args allButFirst: 2)]
 				countingArgs: false).
@@ -163,7 +162,7 @@ SBScmModule >> insertCommandRequest: anAfterBoolean near: aBlock [
 { #category : #'as yet unclassified' }
 SBScmModule >> interpreter [
 
-	^ interpreter ifNil: [self class newInterpreter]
+	^ interpreter ifNil: [interpreter := self class newInterpreter]
 ]
 
 { #category : #'as yet unclassified' }
