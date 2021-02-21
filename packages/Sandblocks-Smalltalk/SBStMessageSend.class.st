@@ -91,6 +91,16 @@ SBStMessageSend >> contents: aString [
 	signature selector: aString
 ]
 
+{ #category : #converting }
+SBStMessageSend >> converterOptionsDo: aBlock [
+
+	super converterOptionsDo: aBlock.
+	
+	SBStSubstitution allSubclassesDo: [:substitution |
+		(substitution matches: self) ifTrue: [
+			aBlock value: (SBConvertOption named: substitution prettyName do: [:converter | converter do: [substitution newFor: self]])]]
+]
+
 { #category : #'as yet unclassified' }
 SBStMessageSend >> deleteCommandFor: aBlock [
 

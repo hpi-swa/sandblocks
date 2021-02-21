@@ -98,6 +98,13 @@ SBStSubstitution class >> supports: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBStSubstitution >> asSmalltalk: converter [
+	<convert>
+	
+	converter do: [self sourceString parseAsSandblockWithoutSubstitution]
+]
+
+{ #category : #'as yet unclassified' }
 SBStSubstitution >> codeActions [
 
 	^super codeActions, {SBCodeAction

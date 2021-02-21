@@ -9,7 +9,9 @@ SBStateMachinePalette class >> buildOn: aContainer [
 
 	aContainer
 		addHeader: 'Statemachine';
-		addBlock: 'State' as: (SBStateMachineState new name: 'unnamed state'; hResizing: #shrinkWrap);
+		addBlock: 'State' as: (SBStateMachineState new
+			name: 'unnamed state';
+			hResizing: #shrinkWrap);
 		addSectionHeader: 'Transitions';
 		addBlock: 'Time Transition'
 			as: (SBStateMachineTransitionCondition new type: #time data: (SBStMessageSend new receiver: (self newNullBlock: 'time') selector: #seconds));

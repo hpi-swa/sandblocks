@@ -12,7 +12,7 @@ Object >> allConversionsFor: anInterfaceCollection do: aBlock depth: aNumber pat
 	| convert current |
 	current := nil.
 	convert := SBConvert new success: [:object | | path |
-		path := aString, (aString ifEmpty: [''] ifNotEmpty: [' -> ']), current selector.
+		path := aString, (aString ifEmpty: [''] ifNotEmpty: [' -> ']), current name.
 		(object satisfies: anInterfaceCollection) ifTrue: [aBlock value: {path. object}].
 		aNumber > 0 ifTrue: [
 			object
@@ -21,9 +21,9 @@ Object >> allConversionsFor: anInterfaceCollection do: aBlock depth: aNumber pat
 				depth: aNumber - 1
 				pathName: path]].
 	
-	(Pragma allNamed: #convert from: self class to: Object) do: [:pragma |
-		current := pragma.
-		(self perform: pragma selector with: convert)]
+	self converterOptionsDo: [:option |
+		current := option.
+		option apply: convert]
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -57,9 +57,15 @@ Object >> convertedFor: anInterfaceCollection do: aBlock [
 	
 	convert := SBConvert new success: [:object | (object satisfies: anInterfaceCollection) ifTrue: [^ aBlock value: object]].
 	
-	(Pragma allNamed: #convert from: self class to: Object) do: [:pragma | self perform: pragma selector with: convert].
+	self converterOptionsDo: [:option | option apply: convert].
 	
 	^ nil
+]
+
+{ #category : #'*Sandblocks-Core-converting' }
+Object >> converterOptionsDo: aBlock [
+
+	(Pragma allNamed: #convert from: self class to: Object) do: [:pragma | aBlock value: (SBConvertOption on: self send: pragma selector)]
 ]
 
 { #category : #'*Sandblocks-Core' }

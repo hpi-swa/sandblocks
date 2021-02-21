@@ -44,6 +44,16 @@ SBStCascade >> codeActions [
 ]
 
 { #category : #'as yet unclassified' }
+SBStCascade >> converterOptionsDo: aBlock [
+
+	super converterOptionsDo: aBlock.
+	
+	SBStSubstitution allSubclassesDo: [:substitution |
+		(substitution matches: self) ifTrue: [
+			aBlock value: (SBConvertOption named: substitution prettyName do: [:converter | converter do: [substitution newFor: self]])]]
+]
+
+{ #category : #'as yet unclassified' }
 SBStCascade >> fixedNumberOfChildren [
 
 	^ false

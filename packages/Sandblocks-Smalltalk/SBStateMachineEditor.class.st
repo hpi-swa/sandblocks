@@ -82,21 +82,21 @@ SBStateMachineEditor >> buildFrom: aNode [
 					connect: message arguments first contents
 					to: message arguments second contents
 					type: #condition
-					data: message arguments third].
+					data: message arguments third veryDeepCopy].
 			[#from:to:when:] -> [
 				self
 					connect: message arguments first contents
 					to: message arguments second contents
 					type: #signal
-					data: message arguments third].
+					data: message arguments third veryDeepCopy].
 			[#from:to:after:] -> [
 				self
 					connect: message arguments first contents
 					to: message arguments second contents
 					type: #time
-					data: message arguments third].
-			[#uponEnter:do:] -> [(states at: message arguments first contents) addUponEnter: message arguments second].
-			[#uponLeave:do:] -> [(states at: message arguments first contents) addUponLeave: message arguments second].
+					data: message arguments third veryDeepCopy].
+			[#uponEnter:do:] -> [(states at: message arguments first contents) addUponEnter: message arguments second veryDeepCopy].
+			[#uponLeave:do:] -> [(states at: message arguments first contents) addUponLeave: message arguments second veryDeepCopy].
 			[#yourself] -> [nil].
 			[#start] -> [nil]
 		}].
