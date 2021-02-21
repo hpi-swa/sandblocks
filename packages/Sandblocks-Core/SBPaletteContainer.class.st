@@ -143,3 +143,9 @@ SBPaletteContainer >> scrollToSection: aBlock event: anEvent morph: aMorph [
 
 	content owner owner vScrollBar setValue: aBlock top
 ]
+
+{ #category : #'as yet unclassified' }
+SBPaletteContainer >> selectedBlock [
+
+	^ nil
+]

@@ -16,6 +16,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBMorphExample class >> buildTemplateFor: aBlock extent: aPoint [
+
+	| setUp |
+	setUp := SBStBlockBody empty.
+	aBlock sandblockEditor selectedArtefact relatedClass ifNotNil: [:class | setUp statements: {SBStMessageSend new receiver: (SBStName contents: class name) selector: #new}].
+	
+	^ (SBMorphExample new setUp: setUp cases: {} extent: aPoint)
+		addCase: ((SBStBlockBody emptyWithDeclarations: {'m'}) statements: {SBStName contents: 'm'})
+		name: 'example 1'
+]
+
+{ #category : #'as yet unclassified' }
 SBMorphExample class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
@@ -41,20 +53,11 @@ SBMorphExample class >> setUp: aBlock cases: aCollectionOfBlocks extent: aPoint 
 { #category : #'as yet unclassified' }
 SBMorphExample class >> suggestion [
 
-	^ [:block | | setUp |
-		setUp := SBStBlockBody empty.
-		block sandblockEditor selectedArtefact relatedClass ifNotNil: [:class |
-			setUp statements: {SBStMessageSend new
-				receiver: (SBStName contents: class name)
-				selector: #new}].
+	^ [:block |
 		block sandblockEditor do: ((SBReplaceCommand newFor: block containingArtefact)
 			target: block;
-			replacer: ((SBMorphExample new
-				setUp: setUp
-				cases: {}
-				extent: 300 asPoint)
-					addCase: ((SBStBlockBody emptyWithDeclarations: {'m'}) statements: {SBStName contents: 'm'}) name: 'example 1');
-					yourself)]
+			replacer: (self buildTemplateFor: block extent: 300 asPoint);
+			yourself)]
 ]
 
 { #category : #callbacks }
@@ -236,12 +239,12 @@ SBMorphExample >> setUp: aBlock cases: aCollectionOfBlocks extent: aPoint [
 	self addMorph: (header := SBRow new
 		cellGap: 4 * self scalingFactor;
 		addMorphBack: (SBStringMorph new contents: 'Setup:');
-		addMorphBack: (aBlock statements first);
+		addMorphBack: aBlock statements first veryDeepCopy;
 		addMorphBack: (SBIcon iconSpinner
 			balloonText: 'Toggle stepping';
 			on: #click send: #toggleStepping to: self)).
 	
-	aCollectionOfBlocks do: [:m | self addCase: m arguments second name: m arguments first contents].
+	aCollectionOfBlocks do: [:m | self addCase: m arguments second veryDeepCopy name: m arguments first contents].
 	
 	view extent: aPoint
 ]

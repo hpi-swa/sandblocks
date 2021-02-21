@@ -620,6 +620,12 @@ SBStBasicMethod >> statements [
 ]
 
 { #category : #'as yet unclassified' }
+SBStBasicMethod >> statements: aCollection [
+
+	(self body ifNil: [self body: SBStBlockBody empty. self body]) statements: aCollection
+]
+
+{ #category : #'as yet unclassified' }
 SBStBasicMethod >> stopEditing: aCommand [
 
 	signature stopEditing: aCommand.

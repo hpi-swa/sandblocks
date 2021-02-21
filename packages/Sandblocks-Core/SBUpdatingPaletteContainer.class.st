@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBPaletteContainer,
 	#instVars : [
 		'currentPalettes',
-		'paletteMapping'
+		'paletteMapping',
+		'selectedBlock'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -36,7 +37,7 @@ SBUpdatingPaletteContainer >> initialize [
 { #category : #'as yet unclassified' }
 SBUpdatingPaletteContainer >> removeNoPalettesNotice [
 
-	self assert: categories submorphCount = 1.
+	self assert: categories submorphCount <= 1.
 	categories removeAllMorphs
 ]
 
@@ -47,11 +48,18 @@ SBUpdatingPaletteContainer >> removePalette: aPalette [
 ]
 
 { #category : #'as yet unclassified' }
+SBUpdatingPaletteContainer >> selectedBlock [
+
+	^ selectedBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBUpdatingPaletteContainer >> selectionChanged: aBlock [
 
 	| newPalettes |
 	(aBlock isNil or: [aBlock hasOwner: self]) ifTrue: [^ self].
 	
+	selectedBlock := aBlock.
 	currentPalettes ifEmpty: [self removeNoPalettesNotice].
 	
 	newPalettes := SBPalette allSubclasses select: [:palette | (aBlock satisfies: palette context) and: [palette matchesBlock: aBlock]].
