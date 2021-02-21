@@ -55,6 +55,12 @@ SBMorphWrapperBlock >> isTopLevel [
 ]
 
 { #category : #'as yet unclassified' }
+SBMorphWrapperBlock >> isViewer [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBMorphWrapperBlock >> object [
 
 	^ self firstSubmorph

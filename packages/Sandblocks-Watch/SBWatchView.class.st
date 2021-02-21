@@ -69,7 +69,7 @@ SBWatchView >> initialize [
 	hadValue := false.
 	
 	self
-		layoutPolicy: SBHorizontalLayout new;
+		changeTableLayout;
 		listDirection: #leftToRight;
 		color: Color transparent;
 		cellGap: 8;
@@ -121,7 +121,7 @@ SBWatchView >> reportValue: anObject [
 	SBToggledCode
 		comment: 'we want to check if we can/should reuse the previous conversion procedure'
 		active: 1
-		do: {[self useDisplay: (anObject convertedFor: SBInterfaces topLevel, SBInterfaces viewer do: #yourself)]}.
+		do: {[self useDisplay: (anObject convertedFor: SBInterfaces topLevel do: #yourself)]}.
 	
 	count contents: (count contents asInteger + 1) asString.
 	lastValue := anObject

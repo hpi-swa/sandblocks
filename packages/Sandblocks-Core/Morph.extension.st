@@ -14,7 +14,7 @@ Morph >> asMorphBlock: converter [
 	^ converter
 		if: [
 			" morph blocks purpose is to allow other morphs to be toplevel, so not needed if we already are "
-			(self satisfies: SBInterfaces topLevel) not]
+			(self satisfies: SBInterfaces topLevel) not and: [self owner isNil]]
 		do: [SBMorphWrapperBlock new addMorphLater: self]
 ]
 

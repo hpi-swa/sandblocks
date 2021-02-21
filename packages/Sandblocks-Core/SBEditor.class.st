@@ -48,6 +48,13 @@ SBEditor class >> clearShortcuts [
 	Shortcuts := nil
 ]
 
+{ #category : #'initialize-release' }
+SBEditor class >> current [
+	" find the most recently used SBEditor instance "
+	
+	^ (SystemWindow windowsIn: ActiveWorld satisfying: [:w | w model isKindOf: SBEditor]) first model
+]
+
 { #category : #configuration }
 SBEditor class >> defaultColorPolicy [
 
@@ -1400,7 +1407,7 @@ SBEditor >> openMorphInView: aMorph [
 SBEditor >> openMorphInViewCommand: aMorph [
 
 	| position |
-	position := (self selection ifNotNil: #center ifNil: [scroll offset + (self extent // 2)]).
+	position := scroll offset + (self extent // 2).
 	^ SBInsertCommand newNonEdit
 		index: 1;
 		container: scroll;
@@ -1496,6 +1503,7 @@ SBEditor >> performShortcutFor: anEvent [
 	self shortcuts do: [:assoc |
 		(assoc key matchesEvent: anEvent) ifTrue: [
 			(self selection notNil and: [self perform: assoc value for: self selection event: anEvent]) ifTrue: [^ true].
+			
 			globalShortcutListeners do: [:listener |
 				(self perform: assoc value for: listener event: anEvent) ifTrue: [^ true]]]].
 	

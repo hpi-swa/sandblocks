@@ -140,38 +140,50 @@ SBStGrammarHandler >> extractVariable [
 		})
 ]
 
+{ #category : #'action helpers' }
+SBStGrammarHandler >> insert: aBlock aboveOrBelow: anAboveBoolean [
+
+	| currentStatement index |
+	currentStatement := self block containingStatement.
+	index := currentStatement owner submorphIndexOf: currentStatement.
+	
+	self block sandblockEditor do: ((SBInsertCommand newFor: self block containingArtefact)
+		index: (anAboveBoolean
+			ifTrue: [index] ifFalse: [index + 1]);
+		container: currentStatement owner;
+		morph: aBlock;
+		shouldMergeWithNext: true;
+		yourself).
+	
+	self block sandblockEditor startInput: aBlock at: 1 replacingContents: false
+]
+
+{ #category : #actions }
+SBStGrammarHandler >> insertHaltAbove [
+	<action>
+
+	self insert: SBHalt new aboveOrBelow: true
+]
+
+{ #category : #actions }
+SBStGrammarHandler >> insertHaltBelow [
+	<action>
+
+	self insert: SBHalt new aboveOrBelow: false
+]
+
 { #category : #actions }
 SBStGrammarHandler >> insertLabelAbove [
 	<action>
 
-	self insertLabelAboveOrBelow: true
-]
-
-{ #category : #'action helpers' }
-SBStGrammarHandler >> insertLabelAboveOrBelow: anAboveBoolean [
-
-	| currentStatement index newStatement |
-	newStatement :=  SBLabel new.
-	
-	currentStatement := self containingStatement.
-	index := currentStatement owner submorphIndexOf: currentStatement.
-	
-	self sandblockEditor do: ((SBInsertCommand newFor: self containingArtefact)
-		index: (anAboveBoolean
-			ifTrue: [index] ifFalse: [index + 1]);
-		container: currentStatement owner;
-		morph: newStatement;
-		shouldMergeWithNext: true;
-		yourself).
-	
-	self sandblockEditor startInput: newStatement at: 1 replacingContents: false
+	self insert: SBLabel new aboveOrBelow: true
 ]
 
 { #category : #actions }
 SBStGrammarHandler >> insertLabelBelow [
 	<action>
 
-	self insertLabelAboveOrBelow: false
+	self insert: SBLabel new aboveOrBelow: false
 ]
 
 { #category : #actions }

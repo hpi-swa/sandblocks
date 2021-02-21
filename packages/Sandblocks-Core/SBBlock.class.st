@@ -131,6 +131,15 @@ SBBlock >> asSandblock [
 	^ self
 ]
 
+{ #category : #converting }
+SBBlock >> asThumbnail: converter [
+	<convert>
+	
+	converter
+		if: [self sandblockEditor notNil]
+		do: [self thumbnail]
+]
+
 { #category : #decorators }
 SBBlock >> attachDecorator: aDecorator [
 

@@ -9,27 +9,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBPalette class >> addBlock: aString as: aBlock [
-
-	content addMorphBack: (self container: aBlock)
-]
-
-{ #category : #'as yet unclassified' }
-SBPalette class >> addSectionHeader: aString [
-
-	content submorphCount > 0 ifTrue: [
-		content addMorphBack: (Morph new
-			color: Color transparent;
-			height: 16)].
-	content addMorphBack: (SBStringMorph new
-		contents: aString;
-		bold).
-	content addMorphBack: (Morph new
-		color: Color transparent;
-		height: 4)
-]
-
-{ #category : #'as yet unclassified' }
 SBPalette class >> buildOn: aContainer [
 
 	^ self subclassResponsibility

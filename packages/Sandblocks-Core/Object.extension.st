@@ -155,6 +155,27 @@ Object >> sandblockColor [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Object >> sandblocksHalt [
+
+	| process parent processCopy uiBlock |
+	process := Processor activeProcess.
+	
+	Project current spawnNewProcessIfThisIsUI: process.
+	
+	processCopy := (Process forContext: thisContext copyStack priority: process priority)
+		shouldResumeFromDebugger: false;
+		yourself.
+	
+	uiBlock := [SBEditor current reportError: Halt new process: processCopy].
+	
+	(Project current uiProcess isActiveProcess not or: [process isActiveProcess]) ifTrue: [Project current addDeferredUIMessage: uiBlock] ifFalse: uiBlock.
+	
+	parent := thisContext sender.
+	[processCopy popTo: processCopy suspendedContext sender; step] fork.
+	process suspend
+]
+
+{ #category : #'*Sandblocks-Core' }
 Object >> satisfies: aCollection [
 
 	^ aCollection allSatisfy: [:obj | obj value: self]

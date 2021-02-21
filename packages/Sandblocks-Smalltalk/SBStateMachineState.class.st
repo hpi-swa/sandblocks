@@ -107,6 +107,12 @@ SBStateMachineState >> isASTNode [
 ]
 
 { #category : #'as yet unclassified' }
+SBStateMachineState >> isSmalltalk [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachineState >> layoutCommands [
 
 	^ SBAlgebraCommand container

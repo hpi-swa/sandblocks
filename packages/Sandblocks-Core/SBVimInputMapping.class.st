@@ -95,6 +95,8 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		" modify smalltalk "
 		registerShortcut: $" do: #wrapInToggledCode;
 		registerShortcut: $D do: #insertLabelAbove;
+		registerShortcut: $b do: #insertHaltBelow;
+		registerShortcut: $B do: #insertHaltAbove;
 		registerShortcut: $O do: #insertStatementAbove;
 		registerShortcut: $o do: #insertStatementBelow;
 		registerShortcut: $[ do: #wrapInBlock;
@@ -131,7 +133,7 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $= do: #extractVariable;
 		
 		" debugging "
-		registerShortcut: $> do: #stepOver;
+		registerShortcut: $> shift do: #stepOver;
 		registerShortcut: $< do: #stepInto;
 		registerShortcut: $y command do: #stepThrough;
 		registerShortcut: $Y command do: #restartFrame;

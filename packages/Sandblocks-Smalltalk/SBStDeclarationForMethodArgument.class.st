@@ -19,7 +19,7 @@ SBStDeclarationForMethodArgument >> guessedClass [
 				className := (self contents second = $n
 					ifTrue: [self contents allButFirst: 2]
 					ifFalse: [self contents allButFirst]) asSymbol.
-				Smalltalk at: className ifAbsent: [nil]]]
+				Smalltalk at: className ifPresent: [:obj | obj isBehavior ifTrue: [obj] ifFalse: [nil]] ifAbsent: [nil]]]
 ]
 
 { #category : #'as yet unclassified' }
