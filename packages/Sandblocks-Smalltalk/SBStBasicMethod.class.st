@@ -160,7 +160,7 @@ SBStBasicMethod >> commandPaletteClass [
 { #category : #'as yet unclassified' }
 SBStBasicMethod >> compiledMethod [
 
-	^ self methodClass compiledMethodAt: self selector asSymbol ifAbsent: []
+	^ self methodClass compiledMethodAt: self selector asSymbol ifAbsent: [self]
 ]
 
 { #category : #'as yet unclassified' }

@@ -49,7 +49,7 @@ SBEditorCanvas >> currentPosition [
 { #category : #'geometry testing' }
 SBEditorCanvas >> defaultColor [
 
-	^ (self owner ifNotNil: [:editor | editor colorPolicy ifNotNil: #colorForEditor]) ifNil: [Color white]
+	^ ((self ownerThatIsA: SBEditor) ifNotNil: [:editor | editor colorPolicy ifNotNil: #colorForEditor]) ifNil: [Color white]
 ]
 
 { #category : #'event handling' }

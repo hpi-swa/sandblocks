@@ -133,6 +133,12 @@ SBStateMachineState >> name: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBStateMachineState >> preferredColor [
+
+	^ SBStASTNode preferredColor
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachineState >> printOn: aStream [
 
 	aStream nextPutAll: self className; nextPut: $(; nextPutAll: self name; nextPut: $)

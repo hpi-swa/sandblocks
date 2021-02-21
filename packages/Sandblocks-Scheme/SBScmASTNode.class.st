@@ -90,6 +90,12 @@ SBScmASTNode >> objectInterfaceAt: aNumber adding: aBoolean [
 	^ SBInterfaces scmExpression
 ]
 
+{ #category : #accessing }
+SBScmASTNode >> preferredColor [
+
+	^ Color r: 0.949 g: 0.743 b: 0.28
+]
+
 { #category : #printing }
 SBScmASTNode >> prettySourceString [
 

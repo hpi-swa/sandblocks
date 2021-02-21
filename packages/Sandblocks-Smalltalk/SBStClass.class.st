@@ -235,7 +235,7 @@ SBStClass >> isTopLevel [
 { #category : #'as yet unclassified' }
 SBStClass >> object [
 
-	^ self relatedClass
+	^ self relatedClass ifNil: [self]
 ]
 
 { #category : #'as yet unclassified' }

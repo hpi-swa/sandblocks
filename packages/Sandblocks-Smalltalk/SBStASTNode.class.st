@@ -4,6 +4,12 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
+{ #category : #'as yet unclassified' }
+SBStASTNode class >> preferredColor [
+
+	^ Color r: 0.216 g: 0.249 b: 0.436
+]
+
 { #category : #'action helpers' }
 SBStASTNode >> actionProviders [
 
@@ -145,6 +151,12 @@ SBStASTNode >> pc [
 SBStASTNode >> pc: aNumber [
 
 	" save a pc if you are an accessible point during execution "
+]
+
+{ #category : #accessing }
+SBStASTNode >> preferredColor [
+
+	^ self class preferredColor
 ]
 
 { #category : #printing }

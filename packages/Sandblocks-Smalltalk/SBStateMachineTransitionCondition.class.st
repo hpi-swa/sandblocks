@@ -84,6 +84,12 @@ SBStateMachineTransitionCondition >> objectInterfaceAt: aNumber adding: aBoolean
 ]
 
 { #category : #'as yet unclassified' }
+SBStateMachineTransitionCondition >> preferredColor [
+
+	^ SBStASTNode preferredColor
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachineTransitionCondition >> type [
 
 	^ type

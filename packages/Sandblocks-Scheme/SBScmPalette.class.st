@@ -9,8 +9,7 @@ SBScmPalette class >> buildOn: aContainer [
 
 	aContainer
 		addHeader: 'Scheme';
-		
-		addSectionHeader: 'Operators / Procedures';
+		addSectionHeader: 'Operators';
 		addBlock: 'Generic'
 			as: (SBScmExpression new addAllMorphs: {self newNullBlock: 'operator'. self newNullBlock: 'operand1'. self newNullBlock: 'operand2'});
 		addBlock: 'Addition'
@@ -23,7 +22,7 @@ SBScmPalette class >> buildOn: aContainer [
 			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: 'or'. self newNullBlock: 'bool1'. self newNullBlock: 'bool2'});
 		addBlock: 'And'
 			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: 'and'. self newNullBlock: 'bool1'. self newNullBlock: 'bool2'});
-		addSectionHeader: 'Variables & Definitions';
+		addSectionHeader: 'Definitions';
 		addBlock: 'Define Function'
 			as: (SBScmExpression new addAllMorphs: {
 				SBScmIdentifier new contents: 'define'.
@@ -69,7 +68,7 @@ SBScmPalette class >> buildOn: aContainer [
 				SBScmIdentifier new contents: 'cond'.
 				SBScmExpression new addAllMorphs: {self newNullBlock: 'condition1'. self newNullBlock: 'expr1'}
 			});
-		addSectionHeader: 'Higher-Order-Procedures';
+		addSectionHeader: 'Higher-Order';
 		addBlock: 'map'
 			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: 'map'. self newNullBlock: 'proc'. self newNullBlock: 'list'});
 		addBlock: 'reduce'

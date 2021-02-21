@@ -78,3 +78,9 @@ SBStateMachineTransition >> initialize [
 	
 	self addMorphBack: conditions
 ]
+
+{ #category : #'as yet unclassified' }
+SBStateMachineTransition >> preferredColor [
+
+	^ SBStASTNode preferredColor
+]

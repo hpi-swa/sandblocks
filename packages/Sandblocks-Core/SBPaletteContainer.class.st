@@ -87,17 +87,18 @@ SBPaletteContainer >> initialize [
 	super initialize.
 	
 	self
-		addMorphBack: (categories := SBColumn new);
+		addMorphBack: (categories := SBColumn new layoutInset: 4);
 		addMorphBack: (ScrollPane new
-			hResizing: #shrinkWrap;
+			hResizing: #spaceFill;
 			vResizing: #spaceFill);
-		cellGap: 4;
+		layoutInset: 0;
+		cellGap: 8;
 		hResizing: #shrinkWrap;
 		vResizing: #rigid;
 		changeTableLayout;
 		height: 300;
+		width: 300;
 		listDirection: #leftToRight;
-		layoutInset: 8;
 		attachDecorator: SBMoveDecorator new;
 		attachDecorator: SBResizableDecorator new.
 	

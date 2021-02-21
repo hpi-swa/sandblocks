@@ -1755,6 +1755,12 @@ SBBlock >> precedence [
 	^ 0
 ]
 
+{ #category : #accessing }
+SBBlock >> preferredColor [
+
+	^ nil
+]
+
 { #category : #colors }
 SBBlock >> prefersNoBorder [
 
