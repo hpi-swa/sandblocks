@@ -208,7 +208,7 @@ SBScmModule >> reloadModule [
 { #category : #'as yet unclassified' }
 SBScmModule >> sandblockBlockColorIfAbsent: aBlock [
 
-	^ Color r: 0.271 g: 0.682 b: 0.851
+	^ Color r: 0.949 g: 0.743 b: 0.28
 ]
 
 { #category : #'artefact protocol' }

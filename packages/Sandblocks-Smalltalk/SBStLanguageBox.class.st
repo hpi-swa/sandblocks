@@ -47,7 +47,7 @@ SBStLanguageBox >> childSandblocksDo: aBlock [
 { #category : #'as yet unclassified' }
 SBStLanguageBox >> drawnColor [
 
-	^ Color white
+	^ self root drawnColor
 ]
 
 { #category : #'as yet unclassified' }
