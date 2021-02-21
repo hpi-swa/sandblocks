@@ -159,14 +159,26 @@ SBExplorer >> initialize [
 		attachDecorator: SBMoveDecorator new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBExplorer >> isCollapsed [
 
 	^ self submorphCount = 1
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
+SBExplorer >> isEditor [
+
+	^ true
+]
+
+{ #category : #testing }
 SBExplorer >> isTopLevel [
+
+	^ true
+]
+
+{ #category : #testing }
+SBExplorer >> isViewer [
 
 	^ true
 ]

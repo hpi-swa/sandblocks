@@ -245,6 +245,14 @@ SBStClass >> preventOcclusion [
 ]
 
 { #category : #'as yet unclassified' }
+SBStClass >> references [
+
+	^ Array streamContents: [:stream |
+		self sandblockEditor allBlocksDo: [:block |
+			(block object = self object and: [block ~= self]) ifTrue: [stream nextPut: block]]]
+]
+
+{ #category : #'as yet unclassified' }
 SBStClass >> relatedClass [
 
 	^ class
@@ -264,7 +272,7 @@ SBStClass >> renameClass [
 { #category : #'as yet unclassified' }
 SBStClass >> saveTryFixing: aBoolean quick: aQuickBoolean [
 
-	| oldClass environment newClassName oldName references |
+	| oldClass environment newClassName oldName references blockReferences |
 	self valid ifFalse: [^ false].
 	
 	oldClass := self shownClass.
@@ -280,7 +288,9 @@ Is this really what you want to do?') asText makeBoldFrom: 1 to: newClassName si
 				ifFalse: [^ false]].
 	
 	self flag: #fixme. " also hits comments??? "
+	
 	oldClass ifNotNil: [
+		blockReferences := self references.
 		references := (self systemNavigation allCallsOn: oldName asSymbol)
 			collect: [:m | m actualClass -> (m sourceString copyReplaceTokens: oldName with: newClassName)].
 		oldClass rename: newClassName].
@@ -293,6 +303,7 @@ Is this really what you want to do?') asText makeBoldFrom: 1 to: newClassName si
 			logged: false].
 	
 	oldClass ifNotNil: [
+		blockReferences do: [:b | b class: oldClass].
 		references do: [:pair | (pair key = oldClass ifTrue: [class] ifFalse: [pair key]) compile: pair value]].
 	
 	^ true

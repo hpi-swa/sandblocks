@@ -8,6 +8,13 @@ Form >> asMorph: convert [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Form >> asMorphViewer: convert [
+	<convert>
+	
+	^ convert do: [SBFormViewer new replace: self]
+]
+
+{ #category : #'*Sandblocks-Core' }
 Form >> fillColor: aColor [
 
 	self getCanvas fillColor: aColor

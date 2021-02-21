@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStClassNameInput >> class: aClass [
+
+	self contents: aClass name
+]
+
+{ #category : #'as yet unclassified' }
 SBStClassNameInput >> doubleClick: anEvent [
 
 	self promptChangeClass

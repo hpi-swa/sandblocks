@@ -2,7 +2,6 @@ Class {
 	#name : #SBWatchView,
 	#superclass : #SBBlock,
 	#instVars : [
-		'display',
 		'lastValue',
 		'dark',
 		'hadValue',
@@ -28,6 +27,12 @@ SBWatchView >> changeDisplay [
 SBWatchView >> clear [
 
 	count contents: '0'
+]
+
+{ #category : #'event handling' }
+SBWatchView >> display [
+
+	^ self lastSubmorph
 ]
 
 { #category : #'as yet unclassified' }
@@ -73,7 +78,8 @@ SBWatchView >> initialize [
 		addMorphBack: (count := SBBadge new
 			contents: '0';
 			balloonText: 'Number of reported values';
-			yourself)
+			yourself);
+		addMorphBack: (self placeholder: 0 @ 0)
 ]
 
 { #category : #'as yet unclassified' }
@@ -85,13 +91,19 @@ SBWatchView >> lastValue: anObject [
 { #category : #'event handling' }
 SBWatchView >> noValue [
 
-	display ifNotNil: [display replaceBy: (display := Morph new color: Color transparent; extent: display fullBounds extent)]
+	self display ifNotNil: [self display replaceBy: (self placeholder: self display fullBounds extent)]
 ]
 
 { #category : #'as yet unclassified' }
 SBWatchView >> object [
 
 	^ lastValue
+]
+
+{ #category : #'event handling' }
+SBWatchView >> placeholder: aPoint [
+
+	^ Morph new color: Color transparent; extent: aPoint
 ]
 
 { #category : #'as yet unclassified' }
@@ -109,7 +121,7 @@ SBWatchView >> reportValue: anObject [
 	SBToggledCode
 		comment: 'we want to check if we can/should reuse the previous conversion procedure'
 		active: 1
-		do: {[self useDisplay: (anObject convertedFor: SBInterfaces topLevel do: #yourself)]}.
+		do: {[self useDisplay: (anObject convertedFor: SBInterfaces topLevel, SBInterfaces viewer do: #yourself)]}.
 	
 	count contents: (count contents asInteger + 1) asString.
 	lastValue := anObject
@@ -129,9 +141,8 @@ SBWatchView >> storeAsExample [
 { #category : #'as yet unclassified' }
 SBWatchView >> useDisplay: aDisplay [
 
-	display ifNotNil: #delete.
-	display := aDisplay.
-	self addMorphBack: display
+	self display ifNotNil: #delete.
+	self addMorphBack: aDisplay
 ]
 
 { #category : #'as yet unclassified' }

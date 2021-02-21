@@ -7,7 +7,7 @@ Morph >> allMorphsDoBreadthFirst: aBlock [
 	self submorphsDo: [:m | m allMorphsDoBreadthFirst: aBlock]
 ]
 
-{ #category : #'*Sandblocks-Core' }
+{ #category : #'*Sandblocks-Core-converting' }
 Morph >> asMorphBlock: converter [
 	<convert>
 	
@@ -16,6 +16,13 @@ Morph >> asMorphBlock: converter [
 			" morph blocks purpose is to allow other morphs to be toplevel, so not needed if we already are "
 			(self satisfies: SBInterfaces topLevel) not]
 		do: [SBMorphWrapperBlock new addMorphLater: self]
+]
+
+{ #category : #'*Sandblocks-Core-converting' }
+Morph >> asThumbnail: converter [
+	<convert>
+	
+	converter do: [self thumbnail]
 ]
 
 { #category : #'*Sandblocks-Core-layout' }
