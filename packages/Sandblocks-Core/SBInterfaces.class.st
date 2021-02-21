@@ -1,7 +1,7 @@
 Class {
 	#name : #SBInterfaces,
 	#superclass : #Object,
-	#category : #'Sandblocks-Representation'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #core }
