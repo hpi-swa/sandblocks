@@ -1,7 +1,7 @@
 Class {
 	#name : #SBStMorphPalette,
 	#superclass : #SBPalette,
-	#category : #'Sandblocks-Core'
+	#category : #'Sandblocks-Smalltalk'
 }
 
 { #category : #'as yet unclassified' }
@@ -22,17 +22,11 @@ SBStMorphPalette class >> buildOn: aContainer [
 { #category : #'as yet unclassified' }
 SBStMorphPalette class >> context [
 
-	^ #(#isSmalltalk)
+	^ {#isSmalltalk. [:block | block containingArtefact satisfies: {#isMethod. [:a | a relatedClass inheritsFrom: Morph]}]}
 ]
 
 { #category : #'as yet unclassified' }
-SBStMorphPalette >> grammarHandler [
+SBStMorphPalette class >> grammarHandler [
 
 	^ SBStGrammarHandler new
-]
-
-{ #category : #'as yet unclassified' }
-SBStMorphPalette >> matchesBlock: aBlock [
-
-	^ aBlock containingArtefact relatedClass inheritsFrom: Morph
 ]

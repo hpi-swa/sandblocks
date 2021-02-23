@@ -62,6 +62,13 @@ SBStName >> allUsagesDo: aBlock [
 	^ self behavior resolveBinding ifNotNil: [:binding | binding allUsagesDo: aBlock]
 ]
 
+{ #category : #converting }
+SBStName >> asSchemeIdentifier: converter [
+	<convert>
+	
+	converter do: [SBScmIdentifier new contents: self contents]
+]
+
 { #category : #'as yet unclassified' }
 SBStName >> asSuggestionItem [
 

@@ -18,6 +18,14 @@ SBScmPalette class >> buildOn: aContainer [
 			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: '-'. self newNullBlock: 'operand1'. self newNullBlock: 'operand2'});
 		addBlock: 'Equals'
 			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: '='. self newNullBlock: 'operand1'. self newNullBlock: 'operand2'});
+		addBlock: 'Larger than'
+			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: '>'. self newNullBlock: 'operand1'. self newNullBlock: 'operand2'});
+		addBlock: 'Larger or equal than'
+			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: '>='. self newNullBlock: 'operand1'. self newNullBlock: 'operand2'});
+		addBlock: 'Smaller than'
+			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: '<'. self newNullBlock: 'operand1'. self newNullBlock: 'operand2'});
+		addBlock: 'Smaller or equal than'
+			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: '<='. self newNullBlock: 'operand1'. self newNullBlock: 'operand2'});
 		addBlock: 'Or'
 			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: 'or'. self newNullBlock: 'bool1'. self newNullBlock: 'bool2'});
 		addBlock: 'And'

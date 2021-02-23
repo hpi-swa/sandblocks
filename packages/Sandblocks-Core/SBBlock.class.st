@@ -742,7 +742,7 @@ SBBlock >> dropLocationDo: aBlock [
 			closestDist := dist.
 			closestMorph := block]].
 	^ closestMorph
-		ifNil: [aBlock value: self center value: nil value: false]
+		ifNil: [aBlock value: self center value: self value: false]
 		ifNotNil: [ | delta |
 			delta := (((closestMorph adjacentBlock: 1) ifNil: [closestMorph adjacentBlock: -1]) ifNotNil: [:next | next topLeft - closestMorph topLeft] ifNil: [1 @ 0]) abs.
 			aBlock value: closestMorph topLeft - (0 @ 4) value: closestMorph value: delta x < delta y]

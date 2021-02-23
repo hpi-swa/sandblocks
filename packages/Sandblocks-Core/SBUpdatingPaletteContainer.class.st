@@ -12,7 +12,8 @@ Class {
 { #category : #'as yet unclassified' }
 SBUpdatingPaletteContainer >> addNoPalettesNotice [
 
-	categories addMorphBack: (SBStringMorph new contents: 'No Palettes')
+	categories addMorphBack: (SBStringMorph new contents: 'No Palettes').
+	content removeAllMorphs
 ]
 
 { #category : #'as yet unclassified' }

@@ -39,7 +39,8 @@ SBScratchColorPolicy >> schemeColors: aBlock [
 			ifNone: [nil].
 		(aBlock submorphs notEmpty and: [aBlock firstSubmorph isSExpr not]) ifTrue: [ | op |
 			op := aBlock firstSubmorph contents.
-			(#('display' 'newline') includes: op) ifTrue: [^ Color r: 0.608 g: 0.4 b: 1]].
+			(#('display' 'newline') includes: op) ifTrue: [^ Color r: 0.608 g: 0.4 b: 1].
+			(#('perform') includes: op) ifTrue: [^ Color r: 1 g: 0.4 b: 0.506]].
 		^ Color r: 0.349 g: 0.757 b: 0.349].
 	
 	^ super colorForBlock: aBlock

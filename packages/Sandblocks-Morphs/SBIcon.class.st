@@ -4900,6 +4900,13 @@ SBIcon >> initialize [
 	self extent: 0 @ 0
 ]
 
+{ #category : #colors }
+SBIcon >> intoWorld: aWorld [
+
+	super intoWorld: aWorld.
+	cachedForm := nil
+]
+
 { #category : #drawing }
 SBIcon >> large [
 

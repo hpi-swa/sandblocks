@@ -97,7 +97,7 @@ SBPaletteContainer >> initialize [
 		vResizing: #rigid;
 		changeTableLayout;
 		height: 300;
-		width: 300;
+		width: 350;
 		listDirection: #leftToRight;
 		attachDecorator: SBMoveDecorator new;
 		attachDecorator: SBResizableDecorator new.
