@@ -205,6 +205,12 @@ SBUnknown >> valid [
 	^ false
 ]
 
+{ #category : #testing }
+SBUnknown >> wantsInput [
+
+	^ true
+]
+
 { #category : #accessing }
 SBUnknown >> wasDeselected [
 

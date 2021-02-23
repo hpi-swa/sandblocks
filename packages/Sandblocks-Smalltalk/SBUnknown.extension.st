@@ -21,5 +21,5 @@ SBUnknown >> guessedClass [
 { #category : #'*Sandblocks-Smalltalk' }
 SBUnknown >> isSmalltalk [
 
-	^ true
+	^ self grammarHandler isKindOf: SBStGrammarHandler
 ]

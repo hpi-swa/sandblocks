@@ -225,7 +225,7 @@ SBScmExpression >> quoted: aBoolean [
 { #category : #'as yet unclassified' }
 SBScmExpression >> specialForms [
 
-	^ #('lambda' 'if' 'define' 'set!' 'let' 'let*' 'letrec' 'cond' 'begin')
+	^ #('lambda' 'if' 'define' 'set!' 'let' 'let*' 'letrec' 'cond' 'begin' 'set-car!' 'set-cdr!')
 ]
 
 { #category : #'as yet unclassified' }

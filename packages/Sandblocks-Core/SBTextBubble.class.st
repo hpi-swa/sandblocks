@@ -6,7 +6,8 @@ Class {
 		'colored',
 		'prefix',
 		'bordered',
-		'suffix'
+		'suffix',
+		'emphasis'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -84,8 +85,15 @@ SBTextBubble >> drawnColor [
 ]
 
 { #category : #'as yet unclassified' }
+SBTextBubble >> emphasis [
+
+	^ emphasis ifNil: [TextEmphasis normal]
+]
+
+{ #category : #'as yet unclassified' }
 SBTextBubble >> emphasis: aTextEmphasis [
 
+	emphasis := aTextEmphasis.
 	text emphasis: aTextEmphasis
 ]
 
@@ -122,6 +130,12 @@ SBTextBubble >> keyStroke: anEvent [
 SBTextBubble >> object [
 
 	^ self
+]
+
+{ #category : #'as yet unclassified' }
+SBTextBubble >> placeholderText: aString [
+
+	self currentTextMorph placeholderText: aString
 ]
 
 { #category : #'as yet unclassified' }
@@ -197,4 +211,10 @@ SBTextBubble >> textContents [
 SBTextBubble >> textMorph [
 
 	^ text
+]
+
+{ #category : #'as yet unclassified' }
+SBTextBubble >> wantsInput [
+
+	^ self contents isEmpty
 ]

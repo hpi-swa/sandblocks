@@ -37,7 +37,7 @@ SBUpdatingPaletteContainer >> initialize [
 { #category : #'as yet unclassified' }
 SBUpdatingPaletteContainer >> removeNoPalettesNotice [
 
-	self assert: categories submorphCount <= 1.
+	"self assert: categories submorphCount <= 1."
 	categories removeAllMorphs
 ]
 

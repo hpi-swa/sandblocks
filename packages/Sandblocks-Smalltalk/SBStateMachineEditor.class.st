@@ -269,6 +269,14 @@ SBStateMachineEditor >> minExtent [
 ]
 
 { #category : #'as yet unclassified' }
+SBStateMachineEditor >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	aBoolean ifFalse: [^ SBInterfaces never].
+	
+	^ {#isSandblock. [:obj | obj isKindOf: SBStateMachineState]}
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachineEditor >> stateNamed: aName [
 
 	^ self states detect: [:s | s name = aName]

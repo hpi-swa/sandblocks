@@ -13,5 +13,5 @@ SBStateMachineConditionList >> newNullBlock [
 { #category : #'as yet unclassified' }
 SBStateMachineConditionList >> objectInterfaceAt: aNumber adding: aBoolean [
 
-	^ {#isSmalltalk. #isTransitionCondition understood}
+	^ {#isSandblock. #isSmalltalk. #isTransitionCondition understood}
 ]

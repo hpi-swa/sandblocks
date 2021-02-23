@@ -874,23 +874,29 @@ SBBlock >> handleDropMorph: anEvent [
 { #category : #'as yet unclassified' }
 SBBlock >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
-	aBlock unpackSelection object convertedFor: self objectInterfaceForDrop do: [:block | | reference |
-		self sandblockEditor do: (aBoolean
-			ifTrue: [ | insert |
-				insert := self insertCommandRequest: false near: aMorph.
-				reference := insert container.
-				SBCombinedCommand newWith: {
-					insert.
+	aBlock unpackSelection object
+		convertedFor: self objectInterfaceForDrop
+		do: [:block | | reference |
+			self sandblockEditor do: (aBoolean
+				ifTrue: [ | insert |
+					insert := self insertCommandRequest: false near: aMorph.
+					reference := insert container.
+					SBCombinedCommand newWith: {
+						insert.
+						(SBReplaceCommand newOrEditFor: self containingArtefact)
+							target: insert morph;
+							replacer: block
+					}]
+				ifFalse: [
+					reference := self.
 					(SBReplaceCommand newOrEditFor: self containingArtefact)
-						target: insert morph;
-						replacer: block
-				}]
-			ifFalse: [
-				reference := self.
-				(SBReplaceCommand newOrEditFor: self containingArtefact)
-					target: self;
-					replacer: block]).
-		block position: ((reference transformFrom: nil) globalPointToLocal: anEvent position)]
+						target: self;
+						replacer: block]).
+			block
+				position: (reference containingSandblock = self sandblockEditor
+					ifTrue: [((reference transformFrom: nil) globalPointToLocal: anEvent position) asIntegerPoint]
+					ifFalse: [anEvent position]);
+				inputUnknownIfInside]
 ]
 
 { #category : #'event handling' }
@@ -995,6 +1001,15 @@ SBBlock >> inputPreviousUnknown [
 
 	(self previousMorphThat: [:m | m isSandblock and: [m isUnknown]])
 		ifNotNil: [:m | self sandblockEditor startInput: m at: 1 replacingContents: true]
+]
+
+{ #category : #actions }
+SBBlock >> inputUnknownIfInside [
+
+	(self nextBlockThat: [:m | m wantsInput])
+		ifNotNil: [:m |
+			(m hasOwner: self) ifTrue: [
+				self sandblockEditor startInput: m at: 1 replacingContents: true]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -2403,6 +2418,12 @@ SBBlock >> wantsDroppedMorph: aMorph event: evt [
 SBBlock >> wantsExtraSpace [
 
 	^ true
+]
+
+{ #category : #testing }
+SBBlock >> wantsInput [
+
+	^ false
 ]
 
 { #category : #'artefact protocol' }

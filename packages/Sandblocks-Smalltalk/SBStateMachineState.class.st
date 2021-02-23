@@ -72,7 +72,7 @@ SBStateMachineState >> deleteCommandFor: aBlock [
 SBStateMachineState >> initialize [
 
 	super initialize.
-	self addMorphBack: (label := SBTextBubble new).
+	self addMorphBack: (label := SBTextBubble new placeholderText: 'unnamed state').
 	self
 		useAlgebraLayout;
 		extent: 280 @ 10;
@@ -133,6 +133,12 @@ SBStateMachineState >> name: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBStateMachineState >> object [
+
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachineState >> preferredColor [
 
 	^ SBStASTNode preferredColor
@@ -162,6 +168,10 @@ SBStateMachineState >> startInputAt: aNumber replacingContents: aBoolean [
 SBStateMachineState >> symbols [
 
 	^ {((self owner isKindOf: SBStateMachineEditor) and: [self owner initialState = self]) ifTrue: ['* '] ifFalse: [nil]. nil}
+]
+
+{ #category : #'as yet unclassified' }
+SBStateMachineState >> updatePCFrom: anObject [
 ]
 
 { #category : #'as yet unclassified' }

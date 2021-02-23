@@ -7,7 +7,8 @@ Class {
 		'emphasis',
 		'suffix',
 		'font',
-		'colorAlpha'
+		'colorAlpha',
+		'placeholderText'
 	],
 	#category : #'Sandblocks-Morphs'
 }
@@ -81,6 +82,12 @@ SBOwnTextMorph >> contentsBeforeCursor [
 ]
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> contentsToDisplay [
+
+	^ self contents ifEmpty: [self placeholderText]
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> cursor [
 
 	^ cursor
@@ -145,13 +152,16 @@ SBOwnTextMorph >> drawOn: aCanvas [
 	| font cursorX colorToUse |
 	font := self fontToUse.
 	colorToUse := self color.
-	self drawString: self contents on: aCanvas at: self position font: font color: colorToUse.
+	
+	self contents
+		ifEmpty: [self drawString: self placeholderText on: aCanvas at: self position font: self placeholderFont color: (colorToUse alpha: 0.7)]
+		ifNotEmpty: [self drawString: self contentsToDisplay on: aCanvas at: self position font: font color: colorToUse].
 	
 	suffix ifNotEmpty: [
 		self drawString: self suffix on: aCanvas at: self position x + (font widthOfString: self contents) @ self position y font: font color: colorToUse].
 	
 	cursor > 0 ifTrue: [
-		cursorX := (font widthOfString: self contents from: 1 to: cursor - 1) + self left.
+		cursorX := (font widthOfString: self contentsToDisplay from: 1 to: cursor - 1) + self left.
 		aCanvas line: cursorX @ self top to: cursorX @ self bottom width: 2 color: Color red]
 ]
 
@@ -323,7 +333,7 @@ SBOwnTextMorph >> minExtent [
 
 	| font |
 	font := self fontToUse.
-	^ (font widthOfString: self contents) @ font height max: 4 withScalingFactor @ font height
+	^ (font widthOfString: self contentsToDisplay) @ font height max: 4 withScalingFactor @ font height
 ]
 
 { #category : #'as yet unclassified' }
@@ -374,6 +384,24 @@ SBOwnTextMorph >> moveCursorVertically: aNumber ifAtBound: aBlock [
 SBOwnTextMorph >> multiLine [
 
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBOwnTextMorph >> placeholderFont [
+
+	^ (font ifNil: [TextStyle defaultFont]) emphasized: TextEmphasis italic emphasisCode
+]
+
+{ #category : #'as yet unclassified' }
+SBOwnTextMorph >> placeholderText [
+
+	^ placeholderText ifNil: ['']
+]
+
+{ #category : #'as yet unclassified' }
+SBOwnTextMorph >> placeholderText: aString [
+
+	placeholderText := aString
 ]
 
 { #category : #'as yet unclassified' }

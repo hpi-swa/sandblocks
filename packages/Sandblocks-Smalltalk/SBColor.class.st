@@ -37,6 +37,16 @@ SBColor class >> newFor: aMessage [
 ]
 
 { #category : #'as yet unclassified' }
+SBColor class >> suggestion [
+
+	^ [:block |
+		block sandblockEditor do: ((SBReplaceCommand newFor: block containingArtefact)
+			target: block;
+			replacer: (self new colorContents: Color red);
+			yourself)]
+]
+
+{ #category : #'as yet unclassified' }
 SBColor >> childSandblocksDo: aBlock [
 ]
 

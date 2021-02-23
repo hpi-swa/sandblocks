@@ -154,7 +154,7 @@ SBGrammarHandler >> unpackList [
 	<action>
 	<actionValidIf: #parentHasDynamicNumberOfChildren>
 
-	self sandblockEditor do: ((SBUnwrapConsecutiveCommand newFor: self containingArtefact) target: self)
+	self block sandblockEditor do: ((SBUnwrapConsecutiveCommand newFor: self block containingArtefact) target: self block)
 ]
 
 { #category : #'callback helpers' }

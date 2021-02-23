@@ -165,6 +165,13 @@ SBMorphExample >> isMorphExample [
 	^ true
 ]
 
+{ #category : #initialization }
+SBMorphExample >> pickAndExplore [
+	<action>
+
+	self sandblockEditor openMorphInView: (SBExplorer on: (self outermostWorldMorph morphsAt: (Cursor crossHair showWhile: [Sensor waitButton])) first)
+]
+
 { #category : #errors }
 SBMorphExample >> reportError: anError [
 
@@ -237,12 +244,15 @@ SBMorphExample >> sendStartNotification [
 SBMorphExample >> setUp: aBlock cases: aCollectionOfBlocks extent: aPoint [
 
 	self addMorph: (header := SBRow new
-		cellGap: 4 * self scalingFactor;
+		cellGap: 8 * self scalingFactor;
 		addMorphBack: (SBStringMorph new contents: 'Setup:');
 		addMorphBack: aBlock statements first veryDeepCopy;
 		addMorphBack: (SBIcon iconSpinner
 			balloonText: 'Toggle stepping';
-			on: #click send: #toggleStepping to: self)).
+			on: #click send: #toggleStepping to: self);
+		addMorphBack: (SBIcon iconCrosshairs
+			balloonText: 'Pick & Explore';
+			on: #click send: #pickAndExplore to: self)).
 	
 	aCollectionOfBlocks do: [:m | self addCase: m arguments second veryDeepCopy name: m arguments first contents].
 	

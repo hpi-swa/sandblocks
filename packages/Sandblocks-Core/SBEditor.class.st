@@ -26,7 +26,8 @@ Class {
 		'verticalSelectionPosition',
 		'globalShortcutListeners',
 		'inputMapping',
-		'ignoreNext'
+		'ignoreNext',
+		'paletteContainer'
 	],
 	#classVars : [
 		'DefaultColorPolicy',
@@ -533,6 +534,7 @@ SBEditor >> buildCommandBar [
 		hResizing: #spaceFill;
 		cellGap: 4 withScalingFactor;
 		layoutInset: 4 withScalingFactor;
+		addMorphBack: (SBButton new icon: SBIcon iconColumns shortcut: nil do: [self togglePalette]);
 		addMorphBack: (SBButton new icon: SBIcon iconUndo shortcut: (self class anyShortcutForAction: #undo) do: [self undo]);
 		addMorphBack: (SBButton new icon: SBIcon iconRepeat shortcut: (self class anyShortcutForAction: #redo) do: [self redo]);
 		addMorphBack: (SBButton new icon: SBIcon iconFolder_open shortcut: (self class anyShortcutForAction: #openOpenWindow) do: [self openOpenWindow]);
@@ -679,6 +681,7 @@ SBEditor >> colorPolicy: aPolicy [
 	colorPolicy := aPolicy.
 	self allMorphsDo: #layoutChanged.
 	self clearCache.
+	paletteContainer clearCache.
 	self changed
 ]
 
@@ -1006,7 +1009,6 @@ SBEditor >> handleDroppedItem: anItem event: anEvent [
 { #category : #'initialize-release' }
 SBEditor >> initialize [
 
-	| paletteContainer |
 	super initialize.
 	
 	multiSelection := OrderedCollection new.
@@ -1037,7 +1039,8 @@ SBEditor >> initialize [
 			addMorphBack: (paletteContainer := SBUpdatingPaletteContainer new
 				vResizing: #spaceFill;
 				hResizing: #rigid;
-				width: 330);
+				width: 330;
+				yourself);
 			addMorphBack: (scroll := SBEditorCanvas new
 				hResizing: #spaceFill;
 				vResizing: #spaceFill;
@@ -1917,6 +1920,13 @@ SBEditor >> toggleHelperTimer: aBoolean [
 		ifTrue: [
 			self addAlarm: #showHelper after: 1 second asMilliSeconds]
 		ifFalse: [self removeHelperTimer]
+]
+
+{ #category : #actions }
+SBEditor >> togglePalette [
+	<action>
+	
+	paletteContainer owner ifNotNil: [paletteContainer delete] ifNil: [self submorphs third addMorphFront: paletteContainer]
 ]
 
 { #category : #actions }
