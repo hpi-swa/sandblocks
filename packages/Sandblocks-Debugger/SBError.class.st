@@ -85,6 +85,12 @@ SBError >> drawnColor [
 ]
 
 { #category : #'as yet unclassified' }
+SBError >> error [
+
+	^ error
+]
+
+{ #category : #'as yet unclassified' }
 SBError >> error: anError process: aProcess [
 
 	error := anError.

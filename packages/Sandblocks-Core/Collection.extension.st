@@ -1,5 +1,14 @@
 Extension { #name : #Collection }
 
+{ #category : #'*Sandblocks-Core-converting' }
+Collection >> asCollectionView: converter [
+	<convert>
+	
+	converter
+		if: [self size < 20]
+		do: [SBCollection new object: self]
+]
+
 { #category : #'*Sandblocks-Core' }
 Collection >> asSandblockShortcut [
 

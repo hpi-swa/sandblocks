@@ -105,15 +105,6 @@ SBStSubstitution >> asSmalltalk: converter [
 ]
 
 { #category : #'as yet unclassified' }
-SBStSubstitution >> codeActions [
-
-	^super codeActions, {SBCodeAction
-		labeled: 'Show as Message Send'
-		for: self
-		do: #replaceWithMessageSend}
-]
-
-{ #category : #'as yet unclassified' }
 SBStSubstitution >> constructorString: aString arguments: aCollection on: aStream [
 
 	SBExample
@@ -157,15 +148,4 @@ SBStSubstitution >> pc [
 SBStSubstitution >> pc: aNumber [
 
 	pc := aNumber
-]
-
-{ #category : #'as yet unclassified' }
-SBStSubstitution >> replaceWithMessageSend [
-
-	| doIt |
-	doIt := Parser new parse: self sourceString class: nil class noPattern: true notifying: nil ifFail: nil.
-	
-	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-			replacer: (doIt block statements first expr asSandblockWithoutSubstitution pc: self pc);
-			target: self)
 ]

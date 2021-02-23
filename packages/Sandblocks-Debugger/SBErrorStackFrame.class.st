@@ -125,7 +125,7 @@ SBErrorStackFrame >> updateSelection [
 	self currentBlock ifNotNil: [:block | 
 		block
 			select;
-			attachDecorator: (pcIndicator := SBErrorDecorator new)]
+			attachDecorator: (pcIndicator := SBErrorDecorator new message: (self parentSandblock ifNotNil: [self parentSandblock error asString]))]
 ]
 
 { #category : #'as yet unclassified' }

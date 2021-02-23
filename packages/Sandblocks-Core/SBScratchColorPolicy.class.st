@@ -7,7 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBScratchColorPolicy >> borderWidthForBlock: aBlock [
 
-	^ aBlock isMessagePart ifTrue: [0] ifFalse: [1]
+	^ (aBlock isMessagePart or: [aBlock prefersNoBorder]) ifTrue: [0] ifFalse: [1]
 ]
 
 { #category : #'as yet unclassified' }
