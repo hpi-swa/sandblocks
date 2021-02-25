@@ -151,6 +151,7 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $n command do: #browseSenders;
 		registerShortcut: $x command do: #openOpenWindow;
 		registerShortcut: $b command do: #browse;
+		registerShortcut: $q do: #convertTo;
 		
 		" editor "
 		registerShortcut: $u do: #undo;

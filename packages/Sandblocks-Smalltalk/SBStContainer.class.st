@@ -147,6 +147,12 @@ SBStContainer >> relatedClass [
 	^ self methodClass
 ]
 
+{ #category : #'compilation cue protocol' }
+SBStContainer >> sandblockBlockColorIfAbsent: aBlock [
+
+	^ SBStASTNode preferredColor
+]
+
 { #category : #'artefact protocol' }
 SBStContainer >> saveTryFixing: aBoolean quick: aQuickBoolean [
 

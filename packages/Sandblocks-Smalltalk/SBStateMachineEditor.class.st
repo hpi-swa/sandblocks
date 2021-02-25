@@ -168,6 +168,17 @@ SBStateMachineEditor >> copyExampleStateMachine [
 ]
 
 { #category : #'as yet unclassified' }
+SBStateMachineEditor >> drawBackgroundOn: aCanvas [
+
+	aCanvas
+		frameAndFillRoundRect: self bounds
+		radius: 10
+		fillStyle: self drawnColor
+		borderWidth: (self colorPolicy borderWidthForBlock: self)
+		borderColor: (self colorPolicy borderColorForBlock: self)
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachineEditor >> drawnColor [
 
 	^ Color white

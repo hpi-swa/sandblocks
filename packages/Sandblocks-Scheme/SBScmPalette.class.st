@@ -101,7 +101,10 @@ SBScmPalette class >> buildOn: aContainer [
 			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: 'display'. self newNullBlock: 'expr'});
 		addBlock: 'Newline on console'
 			as: (SBScmExpression new addMorphBack: (SBScmIdentifier new contents: 'newline'));
-		yourself
+		addSectionHeader: 'Smalltalk';
+		addBlock: 'Perform'
+			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: 'perform'. self newNullBlock: 'object'. self newNullBlock: 'symbol'});
+		addBlock: 'Language Box' as: (SBScmLanguageBox lang: 'smalltalk' source: '')
 ]
 
 { #category : #'as yet unclassified' }

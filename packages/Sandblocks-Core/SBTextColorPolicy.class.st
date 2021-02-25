@@ -7,6 +7,8 @@ Class {
 { #category : #'as yet unclassified' }
 SBTextColorPolicy >> borderWidthForBlock: aBlock [
 
+	(aBlock isKindOf: SBStateMachineEditor) ifTrue: [^ 1].
+	
 	^ aBlock isMethod ifTrue: [1] ifFalse: [0]
 ]
 
@@ -19,6 +21,8 @@ SBTextColorPolicy >> centerAlignSymbols [
 { #category : #'as yet unclassified' }
 SBTextColorPolicy >> colorForBlock: aBlock [
 
+	(aBlock isKindOf: SBStateMachineState) ifTrue: [^ Color gray: 0.9].
+	
 	^ Color white
 ]
 

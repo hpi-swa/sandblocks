@@ -29,6 +29,18 @@ SBScmLanguageBox >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmLanguageBox >> drawnColor [
+
+	^ self root drawnColor
+]
+
+{ #category : #'as yet unclassified' }
+SBScmLanguageBox >> ifDefinition: aBlock otherwise: anotherBlock [
+
+	^ anotherBlock value
+]
+
+{ #category : #'as yet unclassified' }
 SBScmLanguageBox >> initialize [
 
 	super initialize.

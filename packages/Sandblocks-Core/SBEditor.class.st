@@ -508,12 +508,16 @@ SBEditor >> buildBottomPanel [
 			extent: 0 @ 0;
 			hResizing: #spaceFill;
 			color: Color transparent);
-		"addMorphBack: (compileTimeButton := StringMorph new
-			contents: 'Compile on save';
-			on: #click send: #promptChangeCompile to: self);"
+		addMorphBack: (SBButton new
+			balloonText: 'Convert to ...';
+			icon: SBIcon iconRetweet
+				shortcut: (self class anyShortcutForAction: #convertTo)
+				do: [self selection convertTo]);
 		addMorphBack: (SBButton new
 			balloonText: 'Copy';
-			icon: SBIcon iconCopy shortcut: (self class anyShortcutForAction: #copyToBuffer) do: [self selection copyToBuffer]);
+			icon: SBIcon iconCopy
+				shortcut: (self class anyShortcutForAction: #copyToBuffer)
+				do: [self selection copyToBuffer]);
 		addMorphBack: (SBButton new
 			balloonText: 'Copy around';
 			icon: SBIcon iconClipboard
@@ -537,7 +541,10 @@ SBEditor >> buildCommandBar [
 		addMorphBack: (SBButton new icon: SBIcon iconColumns shortcut: nil do: [self togglePalette]);
 		addMorphBack: (SBButton new icon: SBIcon iconUndo shortcut: (self class anyShortcutForAction: #undo) do: [self undo]);
 		addMorphBack: (SBButton new icon: SBIcon iconRepeat shortcut: (self class anyShortcutForAction: #redo) do: [self redo]);
-		addMorphBack: (SBButton new icon: SBIcon iconFolder_open shortcut: (self class anyShortcutForAction: #openOpenWindow) do: [self openOpenWindow]);
+		addMorphBack: (SBButton new
+			icon: SBIcon iconFolder_open
+			shortcut: (self class anyShortcutForAction: #openOpenWindow)
+			do: [self openOpenWindow]);
 		addMorphBack: (SBButton new
 			icon: SBIcon iconPlus shortcut: nil do: [self promptAddArtifact];
 			balloonText: 'Add artifact');
@@ -545,10 +552,26 @@ SBEditor >> buildCommandBar [
 			height: 0;
 			color: Color transparent;
 			hResizing: #spaceFill);
+		addMorphBack: (SBRow new
+			addMorphBack: (SBButton new
+				cornerStyle: #square;
+				icon: SBIcon iconAlign_left shortcut: nil do: [self colorPolicy: SBTextColorPolicy new];
+				balloonText: 'Text-like Layout');
+			addMorphBack: (SBButton new
+				cornerStyle: #square;
+				icon: SBIcon iconTh shortcut: nil do: [self colorPolicy: SBColorMinimalPolicy new];
+				balloonText: 'Compact Layout');
+			addMorphBack: (SBButton new
+				cornerStyle: #square;
+				icon: SBIcon iconTh_large shortcut: nil do: [self colorPolicy: SBScratchColorPolicy new];
+				balloonText: 'Scratch Layout'));
 		addMorphBack: (SBButton new
 			icon: SBIcon iconWindow_maximize shortcut: nil do: [self promptWorkspaceActions];
 			balloonText: 'Manage Workspaces');
-		addMorphBack: (SBButton new icon: SBIcon iconExpand shortcut: (self class anyShortcutForAction: #toggleFullscreen) do: [self toggleFullscreen])
+		addMorphBack: (SBButton new
+			icon: SBIcon iconExpand
+			shortcut: (self class anyShortcutForAction: #toggleFullscreen)
+			do: [self toggleFullscreen])
 ]
 
 { #category : #ui }

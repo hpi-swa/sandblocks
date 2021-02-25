@@ -69,6 +69,17 @@ SBStateMachineState >> deleteCommandFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBStateMachineState >> drawBackgroundOn: aCanvas [
+
+	aCanvas
+		frameAndFillRoundRect: self bounds
+		radius: 15
+		fillStyle: self drawnColor
+		borderWidth: (self colorPolicy borderWidthForBlock: self)
+		borderColor: (self colorPolicy borderColorForBlock: self)
+]
+
+{ #category : #'as yet unclassified' }
 SBStateMachineState >> initialize [
 
 	super initialize.
