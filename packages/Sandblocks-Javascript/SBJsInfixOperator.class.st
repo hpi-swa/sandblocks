@@ -87,14 +87,6 @@ SBJsInfixOperator >> currentTextMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsInfixOperator >> deleteBeforeCursor [
-	<inputAction>
-	
-	self contents ifEmpty: [^ self tryDelete].
-	self sandblockEditor deleteBeforeCursor
-]
-
-{ #category : #'as yet unclassified' }
 SBJsInfixOperator >> drawSymbolsOn: aCanvas [
 
 	| symbols fg font space centerAlign |

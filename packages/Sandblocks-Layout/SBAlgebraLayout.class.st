@@ -118,7 +118,7 @@ SBAlgebraLayout >> layoutDocument: command at: aState limit: maxRight wrap: aWra
 			measure ifFalse: [
 				command morph layoutInBounds: (aState offset extent: ((state containerExtentFrom: aState) max: 0 @ command morph minimumHeight))].
 			
-			aState placeSized: (state containerExtentFrom: aState)].
+			aState placeSized: ((state containerExtentFrom: aState) max: 0 @ command morph minimumHeight)].
 		[#hardLine] -> [aState newLineWithGap: command withGap].
 		[#softLine] -> [
 			aWrapBoolean

@@ -565,9 +565,9 @@ SBBlock >> deleteBeforeCursor [
 	adjacent := self adjacentBlock: -1.
 	
 	self childSandblocks ifNotEmpty: [ | new |
-		new := self childSandblocks last.
-		new deleteAround.
-		^ editor startInput: new at: 900000000 replacingContents: false].
+		new := self childSandblocks first.
+		self childSandblocks first deleteAround.
+		^ editor startInput: new lastDeepChild at: 900000000 replacingContents: false].
 	
 	self deleteBlock.
 	editor startInput: parent at: 900000000 replacingContents: false.

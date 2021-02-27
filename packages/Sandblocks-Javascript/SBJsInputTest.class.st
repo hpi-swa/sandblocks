@@ -90,6 +90,8 @@ SBJsInputTest >> testDeleteDereferenceWithParenthesis [
 	
 	editor performForSelection: #deleteBeforeCursor.
 	editor performForSelection: #deleteBeforeCursor.
+	self assert: methodCall equals: editor selection.
+	
 	editor performForSelection: #deleteBeforeCursor.
 	self assert: deref equals: closure statements first.
 	self assert: 'b' equals: editor selection contents.
@@ -98,7 +100,8 @@ SBJsInputTest >> testDeleteDereferenceWithParenthesis [
 	editor performForSelection: #deleteBeforeCursor.
 	editor performForSelection: #deleteBeforeCursor.
 	editor performForSelection: #deleteBeforeCursor.
-	self assert: closure statements first contents = 'a'
+	self assert: 'a' equals: closure statements first contents.
+	self assert: closure statements first isSelected
 ]
 
 { #category : #'as yet unclassified' }
