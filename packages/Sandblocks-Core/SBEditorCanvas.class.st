@@ -23,7 +23,7 @@ SBEditorCanvas >> animateToPosition: aPoint [
 { #category : #viewport }
 SBEditorCanvas >> basicViewportPosition: aPoint [
 
-	aPoint - self position ~= self transform offset ifTrue: [
+	(aPoint - self position) ~= self transform offset ifTrue: [
 		self transform: (self transform withOffset: aPoint - self position).
 		self changed]
 ]
@@ -196,6 +196,12 @@ SBEditorCanvas >> scrollToShow: aMorph [
 		y := (target top - viewport top) + c y].
 	
 	self animateToPosition: x @ y
+]
+
+{ #category : #accessing }
+SBEditorCanvas >> scroller [
+
+	^ self
 ]
 
 { #category : #'event handling' }

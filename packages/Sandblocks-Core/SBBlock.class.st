@@ -386,7 +386,7 @@ SBBlock >> containingFloat [
 
 	self floating ifTrue: [^ self].
 	
-	^ self ownerSatisfying: [:o | o isSandblock and: [o floating]]
+	^ (self ownerSatisfying: [:o | o isSandblock and: [o floating]]) ifNil: [self sandblockEditor]
 ]
 
 { #category : #'as yet unclassified' }

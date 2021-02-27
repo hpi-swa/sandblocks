@@ -458,7 +458,7 @@ SBEditor >> anyNearbyClass [
 { #category : #actions }
 SBEditor >> artefacts [
 
-	^ scroll submorphs select: [:s | s isSandblock and: [s isArtefact]]
+	^ scroll scroller submorphs select: [:s | s isSandblock and: [s isArtefact]]
 ]
 
 { #category : #artefacts }
@@ -485,7 +485,7 @@ SBEditor >> binding: aString for: block class: aClass ifPresent: aBlock [
 { #category : #accessing }
 SBEditor >> blockForClass: aClass ifPresent: aBlock ifAbsent: anotherBlock [
 
-	^ scroll submorphs detect: [:morph | morph isSandblock and: [morph isClassContainer and: [morph shownClass = aClass]]] ifFound: aBlock ifNone: anotherBlock
+	^ scroll scroller submorphs detect: [:morph | morph isSandblock and: [morph isClassContainer and: [morph shownClass = aClass]]] ifFound: aBlock ifNone: anotherBlock
 ]
 
 { #category : #'initialize-release' }
@@ -628,13 +628,13 @@ SBEditor >> canvas [
 { #category : #actions }
 SBEditor >> childSandblocksDo: aBlock [
 
-	scroll submorphsDo: [:b | b isSandblock ifTrue: [aBlock value: b]]
+	scroll scroller submorphsDo: [:b | b isSandblock ifTrue: [aBlock value: b]]
 ]
 
 { #category : #accessing }
 SBEditor >> classes [
 
-	^ scroll submorphs select: [:morph | morph isSandblock and: [morph isClassContainer]]
+	^ scroll scroller submorphs select: [:morph | morph isSandblock and: [morph isClassContainer]]
 ]
 
 { #category : #'actions input' }
@@ -682,7 +682,7 @@ SBEditor >> close [
 SBEditor >> closeAll [
 	<action>
 	
-	scroll hasSubmorphs ifTrue: [
+	scroll scroller hasSubmorphs ifTrue: [
 		self do: (SBCombinedCommand newWith: (scroll submorphs collect: [:m | SBDeleteCommand newNonEdit target: m]))]
 ]
 
@@ -717,7 +717,7 @@ SBEditor >> compileTime [
 { #category : #'as yet unclassified' }
 SBEditor >> connectFrom: aMorph to: anotherMorph [
 
-	scroll addMorph: ((SBConnectorLine new connectorType: #dots)
+	scroll scroller addMorph: ((SBConnectorLine new connectorType: #dots)
 		color: Color black;
 		connect: aMorph to: anotherMorph;
 		yourself)
@@ -1064,7 +1064,7 @@ SBEditor >> initialize [
 				hResizing: #rigid;
 				width: 330;
 				yourself);
-			addMorphBack: (scroll := SBEditorCanvas new
+			addMorphBack: (scroll := self scrollerClass new
 				hResizing: #spaceFill;
 				vResizing: #spaceFill;
 				yourself));
@@ -1421,7 +1421,7 @@ SBEditor >> openInWindow [
 { #category : #'submorphs-add/remove' }
 SBEditor >> openMorph: aMorph [
 
-	scroll addMorphFront: aMorph
+	scroll scroller addMorphFront: aMorph
 ]
 
 { #category : #'submorphs-add/remove' }
@@ -1435,11 +1435,14 @@ SBEditor >> openMorphInView: aMorph [
 SBEditor >> openMorphInViewCommand: aMorph [
 
 	| position |
-	position := scroll offset + (self extent // 2).
+	position := scroll scroller offset + (self extent // 2).
 	^ SBInsertCommand newNonEdit
 		index: 1;
-		container: scroll;
-		morph: (aMorph fullBounds; center: position; yourself);
+		container: scroll scroller;
+		morph: (aMorph
+			fullBounds;
+			center: position;
+			yourself);
 		yourself
 ]
 
@@ -1763,8 +1766,14 @@ SBEditor >> saveWorkspace [
 { #category : #selection }
 SBEditor >> scrollToShow: aBlock [
 
-	(aBlock hasOwner: scroll) ifTrue: [
+	(aBlock isMorph not or: [aBlock hasOwner: scroll scroller]) ifTrue: [
 		scroll scrollToShow: aBlock]
+]
+
+{ #category : #accessing }
+SBEditor >> scrollerClass [
+
+	^ SBEditorCanvas
 ]
 
 { #category : #selection }
@@ -1893,7 +1902,7 @@ SBEditor >> storeOn: aStream [
 		nextPut: $(;
 		nextPutAll: self className;
 		nextPutAll: ' new'.
-	scroll submorphs do: [:morph |
+	scroll scroller submorphs do: [:morph |
 		aStream cr.
 		aStream nextPutAll: 'openMorph: '.
 		morph storeOn: aStream.
