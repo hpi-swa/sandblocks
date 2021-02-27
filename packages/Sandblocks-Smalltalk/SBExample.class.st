@@ -191,6 +191,15 @@ SBExample >> evaluateArguments [
 ]
 
 { #category : #'as yet unclassified' }
+SBExample >> evaluateIn: aBlock [
+
+	| arguments |
+	currentSelf := self evaluateSelf.
+	arguments := self evaluateArguments.
+	^ aBlock value: [currentSelf perform: self containingArtefact selector asSymbol withArguments: arguments]
+]
+
+{ #category : #'as yet unclassified' }
 SBExample >> evaluateSelf [
 
 	^ Compiler evaluate: self selfBlock veryDeepCopy sourceString
@@ -387,9 +396,10 @@ SBExample >> showReachability [
 
 	| policy |
 	policy := SBReachabilityColorPolicy new.
-	SBStReachabilitySimulator new
-		store: policy;
-		simulate: [self evaluate].
+	self evaluateIn: [:exec |
+		SBStReachabilitySimulator new
+			store: policy;
+			simulate: exec].
 	self sandblockEditor colorPolicy: policy
 ]
 

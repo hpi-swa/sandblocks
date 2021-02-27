@@ -70,6 +70,20 @@ SBStASTNode >> evaluateExpression [
 ]
 
 { #category : #evaluate }
+SBStASTNode >> evaluateIn: aBlock [
+
+	| artefact method |
+	artefact := self containingArtefact.
+	method := (Compiler new
+		compileNoPattern: self sourceString
+		in: (Compiler new classForReceiver: (artefact ifNotNil: #evaluationReceiver) context: (artefact ifNotNil: #evaluationContext))
+		notifying: artefact
+		ifFail: nil) generate.
+	^ aBlock value: [
+		(artefact ifNotNil: [artefact evaluationContext ifNil: [artefact evaluationReceiver] ifNotNil: #receiver]) withArgs: #() executeMethod: method]
+]
+
+{ #category : #evaluate }
 SBStASTNode >> evaluationContext [
 
 	^ nil
