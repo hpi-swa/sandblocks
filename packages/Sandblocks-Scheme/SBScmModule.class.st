@@ -65,6 +65,12 @@ SBScmModule >> canDeleteChild: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmModule >> canPersist [
+
+	^ self hasFilename
+]
+
+{ #category : #'as yet unclassified' }
 SBScmModule >> childSandblocksDo: aBlock [
 
 	self expressions do: aBlock

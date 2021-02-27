@@ -1148,10 +1148,11 @@ SBEditor >> labelString [
 SBEditor >> markChangesAfterCommand: aCommand [
 
 	aCommand wasEdit ifTrue: [
-		aCommand affectedArtefacts do: [:artefact | | saved |
+		aCommand affectedArtefacts do: [:candidate | | saved artefact |
+			artefact := candidate canPersist ifTrue: [candidate] ifFalse: [candidate artefactForPersisting ifNil: [candidate]].
+			
 			saved := false.
-			self compileTime = #compileOnChange ifTrue: [
-				saved := self save: artefact tryFixing: false quick: false].
+			self compileTime = #compileOnChange ifTrue: [saved := self save: artefact tryFixing: false quick: false].
 			artefact hasUnsavedChanges: saved not.
 			artefact triggerEvent: #changed.
 			self allBlocksDo: [:block | block artefactChanged: artefact]]]
@@ -1733,7 +1734,7 @@ SBEditor >> save [
 	<inputAction>
 
 	self interruptInputDuring: [
-		self selection ifNotNil: [self save: self selectedArtefact tryFixing: true quick: false]]
+		self selection ifNotNil: [self save: self selection artefactForPersisting tryFixing: true quick: false]]
 ]
 
 { #category : #artefacts }

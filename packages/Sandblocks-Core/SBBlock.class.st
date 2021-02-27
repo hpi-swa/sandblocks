@@ -113,10 +113,19 @@ SBBlock >> allBlocksSelect: aBlock [
 		self allBlocksDo: [:b | (aBlock value: b) ifTrue: [stream nextPut: b]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #artefacts }
 SBBlock >> artefactChanged: aMethodBlock [
 
 	" callback fired after each change to a method "
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> artefactForPersisting [
+
+	| candidate |
+	candidate := self containingArtefact.
+	[candidate notNil and: [candidate canPersist]] whileFalse: [candidate := candidate parentSandblock containingArtefact].
+	^ candidate
 ]
 
 { #category : #'as yet unclassified' }
@@ -198,6 +207,12 @@ SBBlock >> canInput [
 SBBlock >> canJumpTo: aBlock [
 
 	^ aBlock parentSandblock containingArtefact = self containingArtefact or: [self containingArtefact notNil and: [self containingArtefact floating not]]
+]
+
+{ #category : #testing }
+SBBlock >> canPersist [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -354,7 +369,7 @@ SBBlock >> completionSuggestionsFor: aString [
 		ifFalse: [#()]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #artefacts }
 SBBlock >> containingArtefact [
 
 	^ self isArtefact
