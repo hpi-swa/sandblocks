@@ -1042,6 +1042,12 @@ SBEditor >> initialize [
 	inputMapping := self class newInputMapping.
 	inputMapping applyFor: self.
 	
+	paletteContainer := SBUpdatingPaletteContainer new
+		vResizing: #spaceFill;
+		hResizing: #rigid;
+		width: 330;
+		yourself.
+	
 	self
 		addKeyboardCaptureFilter: self;
 		addMouseCaptureFilter: self;
@@ -1059,11 +1065,6 @@ SBEditor >> initialize [
 			changeTableLayout;
 			hResizing: #spaceFill;
 			vResizing: #spaceFill;
-			addMorphBack: (paletteContainer := SBUpdatingPaletteContainer new
-				vResizing: #spaceFill;
-				hResizing: #rigid;
-				width: 330;
-				yourself);
 			addMorphBack: (scroll := self scrollerClass new
 				hResizing: #spaceFill;
 				vResizing: #spaceFill;
