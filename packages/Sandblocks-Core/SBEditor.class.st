@@ -1550,7 +1550,7 @@ SBEditor >> performShortcutFor: anEvent [
 SBEditor >> promptAddArtifact [
 
 	| index pragmas |
-	pragmas := Pragma allNamed: #addAction in: self class.
+	pragmas := Pragma allNamed: #addAction from: self class to: Object.
 	index := UIManager default chooseFrom: (pragmas collect: #selector).
 	
 	index > 0 ifTrue: [self perform: (pragmas at: index) selector]

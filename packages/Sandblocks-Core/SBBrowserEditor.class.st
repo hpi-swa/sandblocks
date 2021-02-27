@@ -19,6 +19,7 @@ SBBrowserEditor >> ensureOpened: aMethod [
 	| found |
 	found := false.
 	self childSandblocks do: [:block | block isSandblock and: [block object = aMethod ifTrue: [found := true] ifFalse: [block delete]]].
+	
 	found ifFalse: [
 		aMethod
 			convertedFor: self objectInterfaceForDrop
@@ -46,6 +47,25 @@ SBBrowserEditor >> model: aModel [
 	model ifNotNil: [model removeDependent: self].
 	model := aModel.
 	model ifNotNil: [model addDependent: self]
+]
+
+{ #category : #'as yet unclassified' }
+SBBrowserEditor >> openMorphInView: aMorph [
+
+	"| valid |
+	valid := false.
+	aMorph object isBehavior ifTrue: [
+		valid := true.
+		self model selectClass: aMorph object].
+	aMorph object isCompiledMethod ifTrue: [
+		valid := true.
+		self model selectClass: aMorph object methodClass.
+		self model selectMessageNamed: aMorph object selector].
+	
+	valid ifFalse: [^ self]."
+	
+	self childSandblocks do: [:block | block isSandblock ifTrue: [block delete]].
+	super openMorphInView: aMorph
 ]
 
 { #category : #'as yet unclassified' }

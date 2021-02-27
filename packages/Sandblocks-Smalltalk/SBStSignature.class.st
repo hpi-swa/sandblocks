@@ -233,6 +233,13 @@ SBStSignature >> objectInterfaceAt: aNumber adding: aBoolean argumentInterface: 
 ]
 
 { #category : #'as yet unclassified' }
+SBStSignature >> possibleArgumentNamesFor: aString [
+
+	(self systemNavigation allImplementorsOf: aString asSymbol) do: [:impl | ^ impl compiledMethod asSandblock arguments collect: #contents].
+	^ #()
+]
+
+{ #category : #'as yet unclassified' }
 SBStSignature >> removedMorph: aMorph [
 
 	self messageParts do: #layoutChanged
@@ -285,18 +292,23 @@ SBStSignature >> selector: aString arguments: aCollection [
 { #category : #'as yet unclassified' }
 SBStSignature >> selectorAndEdit: aString [
 
-	" end the current input and pretend it never happened so that we can override with the suggestion "
-	| current |
+	| current possibleArgumentNames |
 	current := self containingSandblock sandblockEditor currentInputCommand.
 	current oldMorph contents: current previousText.
 	self containingSandblock sandblockEditor endInput.
+	
+	possibleArgumentNames := self possibleArgumentNamesFor: aString.
 	
 	self sandblockEditor do: ((SBInputMessageCommand newFor: self containingSandblock containingArtefact)
 		messageSend: self containingSandblock;
 		previousArguments: self arguments;
 		previousSelector: self selector;
 		newSelector: aString;
-		newArguments: ((1 to: (self numArguments: aString)) collect: [:index | self arguments at: index ifAbsent: [self containingSandblock newNullBlock]]);
+		newArguments: ((1 to: (self numArguments: aString)) collect: [:index |
+			self arguments
+				at: index
+				ifAbsent: [
+					self containingSandblock newNullBlock label: (possibleArgumentNames at: index ifAbsent: [''])]]);
 		shouldMergeWithNext: true;
 		yourself).
 	
