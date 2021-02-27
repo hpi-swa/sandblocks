@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBBrowserEditor >> canDiscardEdits [
+
+	^ self artefacts ifEmpty: [true] ifNotEmpty: [:m | m first hasUnsavedChanges not]
+]
+
+{ #category : #'as yet unclassified' }
 SBBrowserEditor >> ensureOpened: aMethod [
 
 	| found |
@@ -65,7 +71,10 @@ SBBrowserEditor >> update: aSymbol [
 				self ensureOpened: (model selectedMessageName
 					ifNotNil: [:msg | model selectedClassOrMetaClass compiledMethodAt: msg]
 					ifNil: [model selectedClassOrMetaClass])].
-			[#wantToChange] -> [self okToClose].
+			[#wantToChange] -> [
+				self canDiscardEdits ifFalse: [
+					(self confirm: 'Changes have not been saved.
+Is it OK to cancel those changes?' translated) ifTrue: [self artefacts first hasUnsavedChanges: false]]].
 			[#accept] -> [self save]
 		}
 		otherwise: [nil]
