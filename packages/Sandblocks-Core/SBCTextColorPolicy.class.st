@@ -61,11 +61,36 @@ SBCTextColorPolicy >> symbolsForCharacter: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBCTextColorPolicy >> symbolsForKeywordBinding: aBlock [
+
+	^ self symbolsCheckStatement: aBlock for: #(nil nil)
+]
+
+{ #category : #'as yet unclassified' }
 SBCTextColorPolicy >> symbolsForMessagePart: aBlock [
 
 	| first |
-	first := aBlock childIndex = 2 ifTrue: ['.'] ifFalse: [nil].
+	first := aBlock childIndex = 2 ifTrue: ['.'] ifFalse: [aBlock childIndex = 1 ifTrue: ['..'] ifFalse: [nil]].
 	^ aBlock isUnary ifTrue: [{first. '()'}] ifFalse: [{first. nil}]
+]
+
+{ #category : #'as yet unclassified' }
+SBCTextColorPolicy >> symbolsForMessageSend: aBlock [
+
+	| parent |
+	parent := aBlock parentSandblock.
+	parent ifNil: [^ self symbolsCheckStatement: aBlock for: #(nil nil)].
+	
+	^ self
+		symbolsCheckStatement: aBlock
+		for: ((parent isMessageSend and: [
+			aBlock precedence > parent precedence or: [parent precedence = 3 and: [aBlock precedence = 3]]]) ifTrue: [#('(' ')')] ifFalse: [#(nil nil)])
+]
+
+{ #category : #'as yet unclassified' }
+SBCTextColorPolicy >> symbolsForName: aBlock [
+
+	^ self symbolsCheckStatement: aBlock for: #(nil nil)
 ]
 
 { #category : #'as yet unclassified' }
@@ -78,4 +103,10 @@ SBCTextColorPolicy >> symbolsForReturn: aBlock [
 SBCTextColorPolicy >> symbolsForString: aBlock [
 
 	^ self symbolsCheckStatement: aBlock for: #('"' '"')
+]
+
+{ #category : #'as yet unclassified' }
+SBCTextColorPolicy >> symbolsForSymbol: aBlock [
+
+	^ self symbolsCheckStatement: aBlock for: #('#' nil)
 ]
