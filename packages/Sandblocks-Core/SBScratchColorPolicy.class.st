@@ -55,7 +55,7 @@ SBScratchColorPolicy >> smalltalkColors: aBlock [
 			active: 1
 			do: {
 				[
-					(#(#ifTrue: #ifFalse: #to:do: #to:by:do: #do:) includes: aBlock selector) ifTrue: [^ Color r: 1 g: 0.678 b: 0.074]]
+					(#(#ifTrue: #ifFalse: #ifTrue:ifFalse: #ifNil: #to:do: #to:by:do: #do:) includes: aBlock selector) ifTrue: [^ Color r: 1 g: 0.678 b: 0.074]]
 			}.
 		SBToggledCode
 			comment: 'Operators'

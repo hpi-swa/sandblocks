@@ -11,7 +11,8 @@ Class {
 		'currentPanelIndex',
 		'result',
 		'showingClassSide',
-		'preview'
+		'preview',
+		'colorPolicy'
 	],
 	#category : #'Sandblocks-Smalltalk'
 }
@@ -38,6 +39,12 @@ SBStCodeOpener >> classIconAt: anIndex [
 SBStCodeOpener >> classes [
 
 	^ self systemOrganizer listAtCategoryNamed: (self categories at: self selectedCategoryIndex)
+]
+
+{ #category : #'as yet unclassified' }
+SBStCodeOpener >> colorPolicy: aColorPolicy [
+
+	colorPolicy := aColorPolicy
 ]
 
 { #category : #'as yet unclassified' }
@@ -359,7 +366,7 @@ SBStCodeOpener >> selectedMethodIndex: aNumber moved: aBoolean [
 	(selectedMethodIndex > 0 and: [selectedClassIndex > 0 and: [self methods notEmpty]]) ifTrue: [
 		preview := SBSelection new
 			methodClass: self selectedClass;
-			colorPolicy: SBEditor defaultColorPolicy new;
+			colorPolicy: (colorPolicy ifNil: [SBEditor defaultColorPolicy new]);
 			addMorphBack: self selectedMethod asSandblock.
 		preview openInWorld.
 		preview topCenter: self bottomCenter]

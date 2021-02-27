@@ -276,7 +276,7 @@ SBStateMachineEditor >> minExtent [
 	| area |
 	self hasSubmorphs ifFalse: [^ 100 asPoint].
 	area := Rectangle merging: self submorphs.
-	^ area extent + (area origin - self position)
+	^ area extent + self layoutInset asEdgeInsets
 ]
 
 { #category : #'as yet unclassified' }

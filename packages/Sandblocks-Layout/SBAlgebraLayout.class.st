@@ -41,43 +41,6 @@ SBAlgebraLayout >> commandsForRoot: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBAlgebraLayout >> fitsDocument: command at: aState limit: maxRight [
-
-	| state |
-	^ cache at: {aState. command} ifAbsentPut: [
-		command type caseOf: {
-			[#group] -> [
-				state := aState.
-				command data do: [:el |
-					state := self fitsDocument: el at: state limit: maxRight].
-				state].
-			[#indent] -> [self fitsDocument: (SBAlgebraCommand group data: command data) at: aState limit: maxRight].
-			[#container] -> [ | inset |
-				inset := command morph layoutInset asEdgeInsets.
-				state := self
-					fitsDocument: (SBAlgebraCommand group data: command data)
-					at: (aState offset: aState offset + inset topLeft lineHeight: inset top startX: aState offset x + inset left containerWidth: 0)
-					limit: maxRight.
-				state := state offset: (state offset + (inset right @ 0)) lineHeight: state lineHeight + inset bottom containerWidth: state containerWidth + inset right.
-				state
-					offset: (state offset x max: state containerWidth) @ state offset y
-					lineHeight: (state lineHeight max: aState lineHeight)
-					startX: aState startX
-					containerWidth: (aState containerWidth max: state containerWidth) + inset right].
-			[#hardLine] -> [aState offset: aState startX @ (aState offset y + aState lineHeight) lineHeight: 0].
-			[#softLine] -> [aState].
-			[#softLineOrGap] -> [aState offset: aState offset + (self gap @ 0)].
-			[#gap] -> [aState offset: aState offset + (self gap @ 0)].
-			[#morph] -> [ | extent |
-				extent := command data minExtent.
-				aState
-					offset: aState offset + (extent x @ 0)
-					lineHeight: (aState lineHeight max: extent y)].
-			[#noop] -> [aState].
-		}]
-]
-
-{ #category : #'as yet unclassified' }
 SBAlgebraLayout >> flushLayoutCache [
 
 	minExtentCache := nil
@@ -118,7 +81,7 @@ SBAlgebraLayout >> layout: aMorph in: aRectangle [
 	
 	cache := Dictionary new.
 	
-	initial := ((SBAlgebraState new offset: aRectangle topLeft) startX: aRectangle left) containerWidth: aRectangle left.
+	initial := SBAlgebraState new offset: aRectangle topLeft lineHeight: 0 startX: aRectangle left containerBottomRight: aRectangle topLeft.
 	final := self
 		layoutDocument: (self commandsForRoot: aMorph)
 		at: initial
@@ -129,7 +92,7 @@ SBAlgebraLayout >> layout: aMorph in: aRectangle [
 	
 	" if we do not have an owner, enforce our minSize ourselves"
 	(aMorph owner isNil or: [aMorph owner layoutPolicy isNil]) ifTrue: [
-		aMorph extent: ((final extentFrom: initial) max: aRectangle extent) + aMorph layoutInset asEdgeInsets]
+		aMorph extent: ((final containerExtentFrom: initial) max: aRectangle extent) + aMorph layoutInset asEdgeInsets]
 ]
 
 { #category : #'as yet unclassified' }
@@ -138,35 +101,25 @@ SBAlgebraLayout >> layoutDocument: command at: aState limit: maxRight wrap: aWra
 	| state |
 	^ command type caseOf: {
 		[#group] -> [ | fits |
-			state := aState.
-			fits := (self fitsDocument: command at: aState limit: maxRight) offset x <= maxRight.
-			command data do: [:el |
-				state := self layoutDocument: el at: state limit: maxRight wrap: fits not].
-			state].
+			fits := (self lineFitsDocument: command at: aState limit: maxRight) offset x <= maxRight.
+			command data inject: aState into: [:s :el | self layoutDocument: el at: s limit: maxRight wrap: fits not]].
 		[#indent] -> [
 			state := aState startX: aState startX + self indent.
 			state := self layoutDocument: (SBAlgebraCommand group data: command data) at: state limit: maxRight wrap: aWrapBoolean.
 			state startX: state startX - self indent].
-		[#container] -> [ | inset |
-			inset := command morph layoutInset asEdgeInsets.
-			state := self
-				layoutDocument: (SBAlgebraCommand group data: command data)
-				at: (aState offset: aState offset + inset topLeft lineHeight: inset top startX: aState offset x + inset left containerWidth: aState offset x + inset left)
-				limit: maxRight
-				wrap: aWrapBoolean.
-			state := state offset: (state offset + (inset right @ 0)) lineHeight: state lineHeight + inset bottom containerWidth: state containerWidth + inset right.
+		[#container] -> [
+			state := aState nestedInset: command morph layoutInset asEdgeInsets do: [:shiftedState |
+				self
+					layoutDocument: (SBAlgebraCommand group data: command data)
+					at: shiftedState
+					limit: maxRight
+					wrap: aWrapBoolean].
 			
-			measure ifFalse: [command morph layoutInBounds: (aState offset extent: ((state extentFrom: aState) max: 0 @ command morph minimumHeight))].
-			state
-				offset: (state offset x max: state containerWidth) @ state offset y
-				lineHeight: ((state lineHeight max: aState lineHeight) max: command morph minimumHeight)
-				startX: aState startX
-				containerWidth: (aState containerWidth max: state containerWidth) + inset right].
-		[#hardLine] -> [
-			aState
-				offset: aState startX @ (aState offset y + aState lineHeight + (command withGap ifTrue: [self gap] ifFalse: [0]))
-				lineHeight: 0
-				containerWidth: (aState containerWidth max: aState offset x)].
+			measure ifFalse: [
+				command morph layoutInBounds: (aState offset extent: ((state containerExtentFrom: aState) max: 0 @ command morph minimumHeight))].
+			
+			aState placeSized: (state containerExtentFrom: aState)].
+		[#hardLine] -> [aState newLineWithGap: command withGap].
 		[#softLine] -> [
 			aWrapBoolean
 				ifTrue: [self layoutDocument: (SBAlgebraCommand hardLine withGap: command withGap) at: aState limit: maxRight wrap: aWrapBoolean]
@@ -179,10 +132,8 @@ SBAlgebraLayout >> layoutDocument: command at: aState limit: maxRight wrap: aWra
 		[#morph] -> [ | extent |
 			extent := command data minExtent.
 			measure ifFalse: [command data bounds: (aState offset extent: extent)].
-			aState
-				offset: aState offset + (extent x @ 0)
-				lineHeight: (aState lineHeight max: extent y)].
-		[#noop] -> [aState].
+			aState placeSized: extent].
+		[#noop] -> [aState]
 	}
 ]
 
@@ -190,6 +141,33 @@ SBAlgebraLayout >> layoutDocument: command at: aState limit: maxRight wrap: aWra
 SBAlgebraLayout >> layoutDocument: command limit: aNumber [
 
 	^ self layoutDocument: command at: SBAlgebraState new limit: aNumber wrap: false
+]
+
+{ #category : #'as yet unclassified' }
+SBAlgebraLayout >> lineFitsDocument: command at: aState limit: maxRight [
+
+	| state |
+	^ cache
+		at: {aState. command}
+		ifAbsentPut: [
+			command type caseOf: {
+				[#group] -> [command data inject: aState into: [:s :el | self lineFitsDocument: el at: s limit: maxRight]].
+				[#indent] -> [self lineFitsDocument: (SBAlgebraCommand group data: command data) at: aState limit: maxRight].
+				[#container] -> [
+					state := aState nestedInset: command morph layoutInset asEdgeInsets do: [:shiftedState |
+						self
+							layoutDocument: (SBAlgebraCommand group data: command data)
+							at: shiftedState
+							limit: maxRight
+							wrap: false].
+					aState placeSized: (state containerExtentFrom: aState)].
+				[#hardLine] -> [aState newLineWithGap: command withGap].
+				[#softLine] -> [aState].
+				[#softLineOrGap] -> [aState offset: aState offset + (self gap @ 0)].
+				[#gap] -> [aState offset: aState offset + (self gap @ 0)].
+				[#morph] -> [aState placeSized: command data minExtent].
+				[#noop] -> [aState]
+			}]
 ]
 
 { #category : #'as yet unclassified' }
@@ -203,7 +181,7 @@ SBAlgebraLayout >> minExtentOf: aMorph in: aRectangle [
 	commands := self commandsForRoot: aMorph.
 	(commands type = #morph and: [commands data = aMorph]) ifTrue: [^ aRectangle extent].
 	
-	initial := ((SBAlgebraState new offset: aRectangle topLeft) startX: aRectangle left) containerWidth: aRectangle left.
+	initial := SBAlgebraState new offset: aRectangle topLeft lineHeight: 0 startX: aRectangle left containerBottomRight: aRectangle topLeft.
 	measure := true.
 	state := self layoutDocument: commands at: initial limit: aRectangle right wrap: false.
 	measure := false.
@@ -214,8 +192,8 @@ SBAlgebraLayout >> minExtentOf: aMorph in: aRectangle [
 	  the final result, as this would for example give us too much height. instead we choose a
 	  small threshold that we can assume our layout will be able to be condensed into and
 	  only start reporting proper min widths if the provided space is less than that "
-	minExtent := state extentFrom: initial.
+	minExtent := state containerExtentFrom: initial.
 	^ minExtentCache := "aRectangle width <= minExtent x"true
-		ifTrue: [state extentFrom: initial]
-		ifFalse: [50 @ (state extentFrom: initial) y]
+		ifTrue: [state containerExtentFrom: initial]
+		ifFalse: [50 @ (state containerExtentFrom: initial) y]
 ]

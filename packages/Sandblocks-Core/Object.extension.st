@@ -3,7 +3,7 @@ Extension { #name : #Object }
 { #category : #'*Sandblocks-Core-converting' }
 Object >> allConversionsFor: anInterfaceCollection do: aBlock [
 
-	^ self allConversionsFor: anInterfaceCollection do: aBlock depth: 1 pathName: ''
+	^ self allConversionsFor: anInterfaceCollection do: aBlock depth: 0 pathName: ''
 ]
 
 { #category : #'*Sandblocks-Core-converting' }

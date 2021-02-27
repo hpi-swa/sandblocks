@@ -92,35 +92,38 @@ SBStGrammarHandler >> extractMethod [
 	self block sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
 	
 	self block sandblockEditor doMultiSelection: [:extracting | | arguments localBindings method |
-		self flag: #todo. " consider write vs read access "
+		SBLabel text: [' consider write vs read access '].
+		self flag: #todo.
 		localBindings := extracting gather: #resolveLocalBindings.
-		localBindings := ((KeyedSet keyBlock: #name) addAll: localBindings; yourself) asArray.
+		localBindings := ((KeyedSet keyBlock: #name)
+			addAll: localBindings;
+			yourself) asArray.
 		arguments := localBindings collect: [:arg | SBStName contents: arg contents].
 		
 		method := SBStMethod new
-				selector: (#extracted numArgs: localBindings size)
+			selector: (localBindings size = 0
+					ifTrue: [(UIManager default request: 'Name of Method?') ifEmpty: [^ self]]
+					ifFalse: [#extracted numArgs: localBindings size])
 				arguments: localBindings veryDeepCopy
 				class: self block containingArtefact methodClass;
-				body: SBStBlockBody new.
+			body: SBStBlockBody new.
 		
-		SBCombinedCommand newWith:
-			{(SBReplaceConsecutiveCommand newFor: self block containingArtefact)
+		SBCombinedCommand newWith: ({
+			(SBReplaceConsecutiveCommand newFor: self block containingArtefact)
 				targets: extracting;
-				replacer: (SBStMessageSend new
-					receiver: (SBStName contents: 'self')
-					selector: method selector
-					arguments: arguments veryDeepCopy)},
-			(extracting withIndexCollect: [:stmt :index | (SBInsertCommand newFor: method)
+				replacer: (SBStMessageSend new receiver: (SBStName contents: 'self') selector: method selector arguments: arguments veryDeepCopy)
+		}, (extracting withIndexCollect: [:stmt :index |
+			(SBInsertCommand newFor: method)
 				container: method body;
 				index: index + 1;
 				morph: stmt;
-				yourself]),
-			{
-				(SBWrapCommand newFor: self block containingArtefact)
-					inner: extracting last;
-					outer: SBStReturn new;
-					wrap: [:outer :inner | outer expression: inner].
-				self block sandblockEditor openMorphInViewCommand: method}]
+				yourself])), {
+			(SBWrapCommand newFor: self block containingArtefact)
+				inner: extracting last;
+				outer: SBStReturn new;
+				wrap: [:outer :inner | outer expression: inner].
+			self block sandblockEditor openMorphInViewCommand: method
+		}]
 ]
 
 { #category : #actions }

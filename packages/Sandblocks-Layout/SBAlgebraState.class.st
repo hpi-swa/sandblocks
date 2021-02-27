@@ -8,7 +8,7 @@ Class {
 		'offset',
 		'startX',
 		'lineHeight',
-		'containerWidth'
+		'containerBottomRight'
 	],
 	#category : #'Sandblocks-Layout'
 }
@@ -16,13 +16,13 @@ Class {
 { #category : #'as yet unclassified' }
 SBAlgebraState >> = aState [
 
-	^ aState lineHeight = lineHeight and: [aState offset = offset and: [aState startX = startX and: [aState containerWidth = containerWidth]]]
+	^ aState lineHeight = lineHeight and: [aState offset = offset and: [aState startX = startX and: [aState containerBottomRight = containerBottomRight]]]
 ]
 
 { #category : #'as yet unclassified' }
-SBAlgebraState >> basicContainerWidth: aNumber [
+SBAlgebraState >> basicContainerBottomRight: aPoint [
 
-	containerWidth := aNumber
+	containerBottomRight := aPoint
 ]
 
 { #category : #'as yet unclassified' }
@@ -44,27 +44,21 @@ SBAlgebraState >> basicStartX: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
-SBAlgebraState >> containerWidth [
+SBAlgebraState >> containerBottomRight [
 
-	^ containerWidth
+	^ containerBottomRight
 ]
 
 { #category : #'as yet unclassified' }
-SBAlgebraState >> containerWidth: aNumber [
+SBAlgebraState >> containerExtentFrom: anOldState [
 
-	^ self copy basicContainerWidth: aNumber
-]
-
-{ #category : #'as yet unclassified' }
-SBAlgebraState >> extentFrom: anOldState [
-
-	^ ((self offset x max: self containerWidth) @ self offset y) - anOldState offset + (0 @ self lineHeight)
+	^ self containerBottomRight - anOldState offset
 ]
 
 { #category : #'as yet unclassified' }
 SBAlgebraState >> hash [
 
-	^ (startX hash bitXor: offset hash) bitXor: (lineHeight hash bitXor: containerWidth hash)
+	^ (startX hash bitXor: offset hash) bitXor: (lineHeight hash bitXor: containerBottomRight hash)
 ]
 
 { #category : #'as yet unclassified' }
@@ -73,7 +67,7 @@ SBAlgebraState >> initialize [
 	startX := 0.
 	lineHeight := 0.
 	offset := 0 @ 0.
-	containerWidth := 0
+	containerBottomRight := 0
 ]
 
 { #category : #'as yet unclassified' }
@@ -85,7 +79,32 @@ SBAlgebraState >> lineHeight [
 { #category : #'as yet unclassified' }
 SBAlgebraState >> lineHeight: aNumber [
 
-	^ self copy basicLineHeight: aNumber
+	^ self copy basicLineHeight: aNumber; yourself
+]
+
+{ #category : #'as yet unclassified' }
+SBAlgebraState >> nestedInset: anEdgeInsets do: aBlock [
+
+	| topLeftState bottomRightState |
+	topLeftState := self
+		offset: self offset + anEdgeInsets topLeft
+		lineHeight: 0
+		startX: self offset x + anEdgeInsets left
+		containerBottomRight: self offset + anEdgeInsets topLeft.
+	
+	bottomRightState := aBlock value: topLeftState.
+	
+	^ topLeftState
+		offset: bottomRightState offset + anEdgeInsets bottomRight
+		containerBottomRight: bottomRightState containerBottomRight + anEdgeInsets bottomRight
+]
+
+{ #category : #'as yet unclassified' }
+SBAlgebraState >> newLineWithGap: aBoolean [
+
+	^ self
+		offset: self startX @ (self offset y + self lineHeight + (aBoolean ifTrue: [SBAlgebraLayout gap] ifFalse: [0]))
+		lineHeight: 0
 ]
 
 { #category : #'as yet unclassified' }
@@ -97,7 +116,16 @@ SBAlgebraState >> offset [
 { #category : #'as yet unclassified' }
 SBAlgebraState >> offset: aNumber [
 
-	^ self copy basicOffset: aNumber
+	^ self copy basicOffset: aNumber; yourself
+]
+
+{ #category : #'as yet unclassified' }
+SBAlgebraState >> offset: aPoint containerBottomRight: anotherPoint [
+
+	^ self copy
+		basicOffset: aPoint;
+		basicContainerBottomRight: anotherPoint;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }
@@ -107,19 +135,33 @@ SBAlgebraState >> offset: aPoint lineHeight: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
-SBAlgebraState >> offset: aPoint lineHeight: aNumber containerWidth: anotherNumber [
+SBAlgebraState >> offset: aPoint lineHeight: aNumber containerBottomRight: anotherPoint [
 
-	^ self copy basicOffset: aPoint; basicLineHeight: aNumber; basicContainerWidth: anotherNumber; yourself
+	^ self copy
+		basicOffset: aPoint;
+		basicLineHeight: aNumber;
+		basicContainerBottomRight: anotherPoint;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }
-SBAlgebraState >> offset: aPoint lineHeight: aNumber startX: anotherNumber containerWidth: aThirdNumber [
+SBAlgebraState >> offset: aPoint lineHeight: aNumber startX: anotherNumber containerBottomRight: anotherPoint [
 
 	^ self copy
 		basicOffset: aPoint;
 		basicLineHeight: aNumber;
 		basicStartX: anotherNumber;
-		basicContainerWidth: aThirdNumber;
+		basicContainerBottomRight: anotherPoint;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
+SBAlgebraState >> placeSized: aPoint [
+
+	^ self copy
+		basicOffset: self offset + (aPoint x @ 0);
+		basicLineHeight: (self lineHeight max: aPoint y);
+		basicContainerBottomRight: (self containerBottomRight max: self offset + aPoint);
 		yourself
 ]
 
@@ -132,5 +174,5 @@ SBAlgebraState >> startX [
 { #category : #'as yet unclassified' }
 SBAlgebraState >> startX: aNumber [
 
-	^ self copy basicStartX: aNumber
+	^ self copy basicStartX: aNumber; yourself
 ]

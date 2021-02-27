@@ -1140,7 +1140,7 @@ SBEditor >> keyboardFocusChange: aBoolean [
 { #category : #accessing }
 SBEditor >> labelString [
 
-	^ 'Sandblocks Editor', (workspace ifNotNil: [:w | ' - ', w name] ifNil: [''])
+	^ 'Editor', (workspace ifNotNil: [:w | ' - ', w name] ifNil: [''])
 ]
 
 { #category : #'initialize-release' }
@@ -1450,8 +1450,8 @@ SBEditor >> openOpenWindow [
 	| selected |
 	selected := self selectedArtefact.
 	((selected notNil and: [selected object isCompiledCode or: [selected object isBehavior]])
-		ifTrue: [SBStCodeOpener new positionNear: self; openFor: selected object]
-		ifFalse: [SBStCodeOpener new positionNear: self; open]) ifNotNil: [:methodOrClass | self openForEdit: methodOrClass]
+		ifTrue: [SBStCodeOpener new colorPolicy: self colorPolicy; positionNear: self; openFor: selected object]
+		ifFalse: [SBStCodeOpener new colorPolicy: self colorPolicy; positionNear: self; open]) ifNotNil: [:methodOrClass | self openForEdit: methodOrClass]
 ]
 
 { #category : #'submorphs-add/remove' }

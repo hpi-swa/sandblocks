@@ -48,7 +48,7 @@ SBMorphExampleCase >> initialize [
 
 	super initialize.
 	
-	status := #manualRestart.
+	status := #restartOnSave.
 	
 	self
 		layoutPolicy: SBHorizontalLayout new;

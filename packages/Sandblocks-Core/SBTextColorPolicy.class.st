@@ -7,7 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBTextColorPolicy >> borderWidthForBlock: aBlock [
 
-	(aBlock isKindOf: SBStateMachineEditor) ifTrue: [^ 1].
+	(aBlock isKindOf: SBStSubstitution) ifTrue: [^ 1].
 	
 	^ aBlock isMethod ifTrue: [1] ifFalse: [0]
 ]
@@ -33,7 +33,7 @@ SBTextColorPolicy >> foregroundColorForBlock: aBlock [
 	aBlock isMessagePart ifTrue: [^ Color blue].
 	aBlock isPragma ifTrue: [^ Color green].
 	aBlock isLiteralBlock ifTrue: [^ Color red muchDarker].
-	^ Color black
+	^ super foregroundColorForBlock: aBlock
 ]
 
 { #category : #'as yet unclassified' }
