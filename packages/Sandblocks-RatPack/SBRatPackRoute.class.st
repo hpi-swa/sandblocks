@@ -4,6 +4,22 @@ Class {
 	#category : #'Sandblocks-RatPack'
 }
 
+{ #category : #utils }
+SBRatPackRoute class >> findRouteDescribtion: aCompiledMethod [
+
+	^ (self findRoutePragma: aCompiledMethod)
+		ifNotNil: [:routePragma | routePragma keyword -> routePragma arguments first]
+]
+
+{ #category : #utils }
+SBRatPackRoute class >> findRoutePragma: aCompiledMethod [
+
+	#(get: post: head: put: delete: options: trace:) do: [:method |
+		(aCompiledMethod pragmaAt: method)
+			ifNotNil: [:pragma | ^ pragma]].
+	^ nil
+]
+
 { #category : #'as yet unclassified' }
 SBRatPackRoute class >> matches: aMethod [
 
@@ -27,23 +43,19 @@ SBRatPackRoute class >> validMethods [
 	^ #(get: put: post: delete: patch: head: options: trace: connect:)
 ]
 
-{ #category : #nil }
-SBRatPackRoute >> SBRPModelAccessTrqacker [
-]
-
 { #category : #'as yet unclassified' }
 SBRatPackRoute >> argumentsDo: aBlock [
 
 	self signature argumentsDo: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBRatPackRoute >> body [
 
 	^ self submorphs second
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBRatPackRoute >> body: aBlock [
 
 	super body: aBlock.
@@ -58,23 +70,31 @@ SBRatPackRoute >> body: aBlock [
 	self addMorphBack: (SBRatPackRequestLog new
 		serverClass: self rpApplication;
 		handlerSelector: self selector;
+		name: #requestLogMorph;
+		yourself).
+
+	self addMorphBack: (SBButton new
+		label: 'send empty request'
+		shortcut: nil
+		do: [self sendEmptyRequest];
+		name: #sendEmptyRequestButton;
 		yourself).
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBRatPackRoute >> childSandblocksDo: aBlock [
 
 	aBlock value: self pathArray.
 	aBlock value: self body
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #colors }
 SBRatPackRoute >> drawnColor [
 
 	^ Color veryDarkGray
 ]
 
-{ #category : #'actions input' }
+{ #category : #initialization }
 SBRatPackRoute >> initialize [
 
 	super initialize.
@@ -89,13 +109,13 @@ SBRatPackRoute >> initialize [
 		attachDecorator: SBResizableDecorator new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBRatPackRoute >> methodInput [
 
 	^ self firstSubmorph firstSubmorph
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBRatPackRoute >> openRequestTracker [
 	<action>
 	
@@ -103,13 +123,13 @@ SBRatPackRoute >> openRequestTracker [
 		serverClass: self rpApplication).
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBRatPackRoute >> pathArray [
 
 	^ self firstSubmorph submorphs second
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBRatPackRoute >> reload [
 	<action>
 	
@@ -129,12 +149,18 @@ SBRatPackRoute >> reloadMethodInPlace [
 ]
 
 { #category : #accessing }
+SBRatPackRoute >> requestLogMorph [
+
+	^ self submorphNamed: #requestLogMorph
+]
+
+{ #category : #accessing }
 SBRatPackRoute >> rpApplication [
 
 	^ self methodClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBRatPackRoute >> selector [
 
 	^ self currentSelector
@@ -148,19 +174,47 @@ SBRatPackRoute >> selector: aSymbol arguments: aCollection class: aClass [
 	self signature selector: aSymbol arguments: aCollection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
+SBRatPackRoute >> sendEmptyRequest [
+	<action>
+
+	| service routeDescription localUrl |
+	"this will use the first running service it finds"
+	service := self rpApplication runningServices anyOne.
+	routeDescription := self class findRouteDescribtion: self compiledMethod.
+	localUrl := 'http://localhost:', service portNumber asString, routeDescription value.
+
+	"fail on post and put"
+	(#(put: post:) includes: routeDescription key)
+		ifFalse: [
+			| webClientMethod response |
+			webClientMethod := routeDescription key asString.
+			webClientMethod at: 1 put: (webClientMethod at: 1) asUppercase.
+			webClientMethod := ('http', webClientMethod) asSymbol.
+			response := WebClient perform: webClientMethod with: localUrl.
+			response explore.]
+		ifTrue: [self error: 'Empty requests cannot be created for put and post routes'].
+]
+
+{ #category : #accessing }
+SBRatPackRoute >> sendEmptyRequestButton [
+
+	^ self submorphNamed: #sendEmptyRequestButton
+]
+
+{ #category : #accessing }
 SBRatPackRoute >> signature [
 
 	^ self firstSubmorph submorphs third
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBRatPackRoute >> writeSignatureSourceOn: aStream [
 
 	self signature writeSourceOn: aStream
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBRatPackRoute >> writeSourceOn: aStream [
 
 	self writeSignatureSourceOn: aStream.

@@ -10,6 +10,8 @@ SBRatPackRoute >> layoutCommands [
 			SBAlgebraCommand hardLine withGap: true.
 			self body layoutCommands.
 			SBAlgebraCommand hardLine withGap: true.
-			self lastSubmorph layoutCommands.
+			self requestLogMorph layoutCommands.
+			SBAlgebraCommand hardLine withGap: true.
+			self sendEmptyRequestButton layoutCommands.
 		}
 ]

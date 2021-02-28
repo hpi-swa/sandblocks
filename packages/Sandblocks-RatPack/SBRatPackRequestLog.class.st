@@ -10,16 +10,42 @@ Class {
 	#category : #'Sandblocks-RatPack'
 }
 
-{ #category : #nil }
-SBRatPackRequestLog class >> get [
+{ #category : #'as yet unclassified' }
+SBRatPackRequestLog class >> labelNoRequests [
 
-	^ tmp
+	^ '<no request yet>'
 ]
 
-{ #category : #nil }
-SBRatPackRequestLog class >> set: sbrprl [
+{ #category : #'as yet unclassified' }
+SBRatPackRequestLog class >> labelRequestCount: anInt [
 
-	tmp := sbrprl.
+	^ 'total requests: ', anInt
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRequestLog class >> labelRouteLastRequest: aStatusString [
+
+	^ 'last request: "', aStatusString, '"'
+]
+
+{ #category : #'as yet unclassified' }
+SBRatPackRequestLog class >> labelRouteNotRequested [
+
+	^ '<route not requested yet>'
+]
+
+{ #category : #actions }
+SBRatPackRequestLog >> clearRequestLog [
+
+	<action>
+	self requestLog: LinkedList new.
+	self changed: #requestLog.
+]
+
+{ #category : #accessing }
+SBRatPackRequestLog >> clearRequestLogButton [
+
+	^ self submorphNamed: #clearRequestLogButton
 ]
 
 { #category : #'submorphs-add/remove' }
@@ -29,24 +55,35 @@ SBRatPackRequestLog >> delete [
 	self service removeDependent: self.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBRatPackRequestLog >> exploreLatestRequest [
 
+	<action>
 	self requestLog ifNotEmpty: [
 		Project current addDeferredUIMessage: [
 			"self lastRequest explore"
-			self sandblockEditor
-				openMorphInView: (SBMorphWrapperBlock new
-					addMorphBack: (ToolBuilder build: (ObjectExplorer explore: self lastRequest))
-						submorphs third)]].
+			self sandblockEditor openMorphInView: (SBRatPackRequestViewer newFor: self lastRequest)]].
 ]
 
-{ #category : #'as yet unclassified' }
-SBRatPackRequestLog >> handleRequestTracking: aSBRPRequestTracker [
+{ #category : #accessing }
+SBRatPackRequestLog >> exploreRequestButton [
 
-	(self handlerSelector = aSBRPRequestTracker handler) ifTrue: [
-		self requestLog addLast: aSBRPRequestTracker.
-		self changed: #lastRequest].
+	^ self submorphNamed: #exploreRequestButton
+]
+
+{ #category : #actions }
+SBRatPackRequestLog >> exploreRequestLog [
+
+	<action>
+	self requestLog explore
+]
+
+{ #category : #updating }
+SBRatPackRequestLog >> handleRequestTracking: aSBRPRequestAnalytics [
+
+	(self handlerSelector = aSBRPRequestAnalytics handlerSymbol) ifTrue: [
+		self requestLog addLast: aSBRPRequestAnalytics.
+		self changed: #requestLog].
 ]
 
 { #category : #accessing }
@@ -66,11 +103,20 @@ SBRatPackRequestLog >> initialize [
 	self requestLog: LinkedList new.
 	
 	self
-		addMorph: (SBStringMorph contents: '<no request yet>');
+		addMorph: ((SBStringMorph contents: self class labelNoRequests)
+			name: #requestCountLabel;
+			yourself);
 		addMorphBack: (SBButton new
-			label: '<route not requested yet>'
+			label: (self class labelRouteNotRequested)
 			shortcut: nil
 			do: [self exploreLatestRequest];
+			name: #exploreRequestButton;
+			yourself);
+		addMorphBack: (SBButton new
+			label: 'clear recent requests'
+			shortcut: nil
+			do: [self clearRequestLog];
+			name: #clearRequestLogButton;
 			yourself);
 		changeTableLayout;
 		hResizing: #shrinkWrap;
@@ -98,6 +144,12 @@ SBRatPackRequestLog >> outOfWorld: aWorld [
 ]
 
 { #category : #accessing }
+SBRatPackRequestLog >> requestCountLabel [
+
+	^ self submorphNamed: #requestCountLabel
+]
+
+{ #category : #accessing }
 SBRatPackRequestLog >> requestLog [
 	^ requestLog
 ]
@@ -105,6 +157,13 @@ SBRatPackRequestLog >> requestLog [
 { #category : #accessing }
 SBRatPackRequestLog >> requestLog: anSequenceableCollection [
 	requestLog := anSequenceableCollection
+]
+
+{ #category : #actions }
+SBRatPackRequestLog >> resendLatestRequest [
+
+	<action>
+	(WebClient httpGet: self lastRequest buildLocalUrl) explore.
 ]
 
 { #category : #accessing }
@@ -122,10 +181,8 @@ SBRatPackRequestLog >> serverClass: aRPApplicationClass [
 
 	RPApplication services
 		detect: [:s | s class = aRPApplicationClass]
-		ifFound: [:server |
-			self service: server]
+		ifFound: [:server | self service: server]
 		ifNone: [self error: 'No running services for this class'].
-	
 ]
 
 { #category : #accessing }
@@ -142,9 +199,15 @@ SBRatPackRequestLog >> service: aRPApplication [
 { #category : #updating }
 SBRatPackRequestLog >> update: aSymbol [
 
-	(aSymbol = #lastRequest) ifTrue: [
-		self firstSubmorph contents: 'total requests: ', requestLog size.
-		self lastSubmorph label: 'last request: "', self lastRequest statusString, '"'].
+	(aSymbol = #requestLog) ifTrue: [
+		self requestCountLabel contents:
+			(requestLog isEmpty
+				ifTrue: [self class labelNoRequests]
+				ifFalse: [self class labelRequestCount: requestLog size]).
+		self exploreRequestButton label:
+			(requestLog isEmpty
+				ifTrue: [self class labelRouteNotRequested]
+				ifFalse: [self class labelRouteLastRequest: self lastRequest statusString])].
 ]
 
 { #category : #updating }
