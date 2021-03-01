@@ -915,13 +915,12 @@ SBEditor >> dropFiles: anEvent [
 	1
 		to: numFiles
 		do: [:i |
-			(FileStream primDropRequestFileName: i) ifNotNil: [:name |
-				FileStream
-					readOnlyFileNamed: '/', name
-					do: [:file |
-						file
-							convertedFor: self objectInterfaceForDrop
-							do: [:converted | self handleDroppedBlock: converted event: anEvent adding: true near: nil]]]]
+			(FileStream primDropRequestFileName: i) ifNotNil: [:name | | folderRef isFolder |
+				folderRef := FileDirectory on: '/', name.
+				isFolder := folderRef / '..' directoryExists: folderRef localName.
+				isFolder
+					ifTrue: [self handleDroppedFolder: folderRef event: anEvent]
+					ifFalse: [self handleDroppedFile: folderRef name event: anEvent]]]
 ]
 
 { #category : #'actions input' }
@@ -1021,6 +1020,25 @@ SBEditor >> goToMark [
 
 	self waitForLetterDo: [:letter |
 		self allBlocksDo: [:morph | (morph withDecorator: SBMarkedDecorator do: [:mark | mark letter = letter ifTrue: [^ self select: morph]])]]
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> handleDroppedFile: name event: anEvent [
+
+	^ FileStream
+		readOnlyFileNamed: name
+		do: [:file |
+			file
+				convertedFor: self objectInterfaceForDrop
+				do: [:converted | self handleDroppedBlock: converted event: anEvent adding: true near: nil]]
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> handleDroppedFolder: aFileDirectory event: anEvent [
+
+	aFileDirectory
+		convertedFor: self objectInterfaceForDrop
+		do: [:converted | self handleDroppedBlock: converted event: anEvent adding: true near: nil]
 ]
 
 { #category : #'event handling' }

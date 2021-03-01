@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBBlock,
 	#instVars : [
 		'grammarHandler',
-		'deleteIfDismissed'
+		'deleteIfDismissed',
+		'hadOwner'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -105,6 +106,7 @@ SBUnknown >> initialize [
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap.
 	
+	hadOwner := false.
 	deleteIfDismissed := false.
 	
 	self currentTextMorph italic; colorAlpha: 0.7
@@ -152,6 +154,14 @@ SBUnknown >> moveCursorTo: aNumber [
 SBUnknown >> newNullBlock [
 
 	^ self veryDeepCopy
+]
+
+{ #category : #'as yet unclassified' }
+SBUnknown >> noteNewOwner: aMorph [
+
+	" we're guessing that, if we changed owners, our label is no longer relevant "
+	hadOwner == true ifTrue: [self label: ''].
+	hadOwner := true
 ]
 
 { #category : #printing }

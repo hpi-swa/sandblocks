@@ -101,6 +101,12 @@ Object >> newFirstSafeOptionFrom: aCollection [
 	^ (self firstSafeOptionFrom: aCollection) newFor: self
 ]
 
+{ #category : #'*Sandblocks-Core' }
+Object >> object [
+
+	^ self
+]
+
 { #category : #'*Sandblocks-Core-converting' }
 Object >> openClass: converter [
 	<convert>
