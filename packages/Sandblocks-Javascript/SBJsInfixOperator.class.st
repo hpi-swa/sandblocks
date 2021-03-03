@@ -44,7 +44,7 @@ SBJsInfixOperator >> canDeleteChild: aMorph [
 { #category : #'as yet unclassified' }
 SBJsInfixOperator >> canMakeDeclaration [
 
-	^ self isStatement and: [self operator contents = '=']
+	^ self isStatement and: [self operator contents = '=' and: [self lhs isVariable]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -190,7 +190,7 @@ SBJsInfixOperator >> makeDeclaration [
 	
 	self sandblockEditor do: ((SBRecordedCommand newFor: self containingArtefact) record: [:recorder |
 		recorder restore: {self lhs. self rhs} after: [
-			recorder replace: self with: (SBJsDeclaration new lhs: self lhs rhs: self rhs)]])
+			recorder replace: self with: (SBJsDeclaration new binding: self lhs value: self rhs declarationType: 'const')]])
 ]
 
 { #category : #'as yet unclassified' }

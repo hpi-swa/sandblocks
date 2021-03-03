@@ -1,6 +1,9 @@
 Class {
 	#name : #SBJsDeclaration,
 	#superclass : #SBJsInfixOperator,
+	#instVars : [
+		'declarationType'
+	],
 	#category : #'Sandblocks-Javascript'
 }
 
@@ -11,8 +14,9 @@ SBJsDeclaration >> binding [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsDeclaration >> binding: aVariable value: aBlock [
+SBJsDeclaration >> binding: aVariable value: aBlock declarationType: aString [
 
+	self declarationType: aString.
 	self addMorphBack: aVariable.
 	self addMorphBack: (SBStringMorph new contents: ' = ').
 	self addMorphBack: aBlock
@@ -28,6 +32,12 @@ SBJsDeclaration >> contents [
 SBJsDeclaration >> currentTextMorph [
 
 	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBJsDeclaration >> declarationType: aString [
+
+	declarationType := aString
 ]
 
 { #category : #'as yet unclassified' }
@@ -65,7 +75,7 @@ SBJsDeclaration >> layoutCommands [
 { #category : #'as yet unclassified' }
 SBJsDeclaration >> lhs: aVariable rhs: aBlock [
 
-	self binding: aVariable value: aBlock
+	self binding: aVariable value: aBlock declarationType: 'let'
 ]
 
 { #category : #'as yet unclassified' }
@@ -77,7 +87,7 @@ SBJsDeclaration >> startInputAt: aNumber replacingContents: aBoolean [
 { #category : #'as yet unclassified' }
 SBJsDeclaration >> symbols [
 
-	^ #('let ' nil)
+	^ {declarationType, ' '. nil}
 ]
 
 { #category : #'as yet unclassified' }

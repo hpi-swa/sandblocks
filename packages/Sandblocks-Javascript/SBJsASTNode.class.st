@@ -57,6 +57,12 @@ SBJsASTNode >> isJavascript [
 	^ true
 ]
 
+{ #category : #'as yet unclassified' }
+SBJsASTNode >> isVariable [
+
+	^ false
+]
+
 { #category : #accessing }
 SBJsASTNode >> newNullBlock [
 
@@ -73,6 +79,12 @@ SBJsASTNode >> object [
 SBJsASTNode >> objectInterfaceAt: aNumber adding: aBoolean [
 
 	^ (self fixedNumberOfChildren and: [aBoolean]) ifTrue: [SBInterfaces never] ifFalse: [SBInterfaces jsExpression]
+]
+
+{ #category : #'as yet unclassified' }
+SBJsASTNode >> preferredColor [
+
+	^ Color r: 0.795 g: 0.57 b: 0.063
 ]
 
 { #category : #printing }

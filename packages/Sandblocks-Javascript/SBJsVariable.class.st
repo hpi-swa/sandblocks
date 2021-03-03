@@ -45,6 +45,12 @@ SBJsVariable >> isValidCharacter: aCharacter [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsVariable >> isVariable [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBJsVariable >> printOn: aStream [
 
 	aStream nextPutAll: 'identifier '.

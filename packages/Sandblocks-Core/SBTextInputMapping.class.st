@@ -54,7 +54,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		
 		" refactor "
 		registerShortcut: $T command do: #extractMethod;
-		registerShortcut: $t command do: #createEmptyMethod;
+		registerShortcut: $t command do: #createEmptySmalltalkMethod;
 		registerShortcut: $= do: #extractVariable;
 		
 		" debugging "

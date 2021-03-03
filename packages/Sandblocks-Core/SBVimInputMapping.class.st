@@ -129,7 +129,7 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		
 		" refactor "
 		registerShortcut: $T do: #extractMethod;
-		registerShortcut: $t do: #createEmptyMethod;
+		registerShortcut: $t do: #createEmptySmalltalkMethod;
 		registerShortcut: $= do: #extractVariable;
 		
 		" debugging "

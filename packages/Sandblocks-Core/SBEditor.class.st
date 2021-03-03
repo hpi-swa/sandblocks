@@ -204,7 +204,7 @@ SBEditor class >> registerDefaultShortcuts [
 		
 		" refactor "
 		registerShortcut: $T do: #extractMethod;
-		registerShortcut: $t do: #createEmptyMethod;
+		registerShortcut: $t do: #createEmptySmalltalkMethod;
 		registerShortcut: $= do: #extractVariable;
 		
 		" debugging "
@@ -372,7 +372,7 @@ SBEditor >> addDefaultShortcuts [
 		addCommandShortcut: $S command do: #saveWorkspace;
 		addCommandShortcut: $O command do: #promptOpenWorkspace;
 		addCommandShortcut: $f command do: #toggleFullscreen;
-		addCommandShortcut: $t do: #createEmptyMethod.
+		addCommandShortcut: $t do: #createEmptySmalltalkMethod.
 	SBLabel text: ['Tools: Debugger'].
 	self
 		addCommandShortcut: $> do: #stepOver;
@@ -761,40 +761,6 @@ SBEditor >> copyBufferPreviewSize [
 SBEditor >> countModifier [
 
 	^ inputMapping countModifier
-]
-
-{ #category : #actions }
-SBEditor >> createEmptyClass [
-	<addAction>
-
-	| class |
-	class := SBStClass new category: (self anyNearbyClass ifNotNil: #category ifNil: ['UserObjects']).
-	self openMorphInView: class.
-	self startInput: class childSandblocks first at: 1 replacingContents: false
-]
-
-{ #category : #actions }
-SBEditor >> createEmptyMethod [
-	<addAction>
-	<action>
-
-	| method |
-	self openMorphInView: (method := SBStMethod new
-		selector: ''
-		arguments: #()
-		class: ((self selectedArtefact ifNotNil: [:container | container relatedClass]) ifNil: [UIManager default chooseClassOrTrait]);
-		body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}])).
-	self startInput: method at: 1 replacingContents: true
-]
-
-{ #category : #actions }
-SBEditor >> createEmptyRepresentation [
-	<addAction>
-
-	| representation |
-	representation := SBRepresentationEditor new class: nil.
-	self openMorphInView: representation.
-	self startInput: representation childSandblocks first at: 1 replacingContents: false
 ]
 
 { #category : #accessing }
@@ -1491,16 +1457,6 @@ SBEditor >> openProfiler [
 	self openMorphInView: SBProfiler new
 ]
 
-{ #category : #actions }
-SBEditor >> openRepl [
-	<addAction>
-	<action>
-
-	| repl |
-	repl := self openMorphInView: SBStPlayground new.
-	self startInput: repl body childSandblocks first at: 1 replacingContents: true
-]
-
 { #category : #'initialize-release' }
 SBEditor >> outOfWorld: aWorld [
 
@@ -1570,7 +1526,7 @@ SBEditor >> promptAddArtifact [
 
 	| index pragmas |
 	pragmas := Pragma allNamed: #addAction from: self class to: Object.
-	index := UIManager default chooseFrom: (pragmas collect: #selector).
+	index := UIManager default chooseFrom: (pragmas collect: [:p | (p method pragmaAt: #label:) ifNotNil: [:label | label arguments first] ifNil: [p selector]]).
 	
 	index > 0 ifTrue: [self perform: (pragmas at: index) selector]
 ]
@@ -1604,8 +1560,7 @@ SBEditor >> promptMenu [
 		({'Change UI Theme'. [self promptChangeColorPolicy]}).
 		({'Reset UI Theme'. [self resetColorPolicy]}).
 		({'Change Compile Method'. [self promptChangeCompile]}).
-		({'New Class'. [self createEmptyClass]}).
-		({'New Representation'. [self createEmptyRepresentation]}).
+		({'New Class'. [self createEmptySmalltalkClass]}).
 	}.
 	(UIManager default chooseFrom: (options collect: #first) values: (options collect: #second)) ifNotNil: #value
 ]
@@ -1752,7 +1707,9 @@ SBEditor >> save [
 	<inputAction>
 
 	self interruptInputDuring: [
-		self selection ifNotNil: [self save: self selection artefactForPersisting tryFixing: true quick: false]]
+		self selection ifNotNil: [
+			self selection artefactForPersisting ifNotNil: [:a |
+				self save: a tryFixing: true quick: false]]]
 ]
 
 { #category : #artefacts }

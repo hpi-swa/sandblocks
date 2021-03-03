@@ -1,23 +1,24 @@
 Class {
-	#name : #SBJsMethod,
+	#name : #SBJsModule,
 	#superclass : #SBJsASTNode,
 	#category : #'Sandblocks-Javascript'
 }
 
 { #category : #'as yet unclassified' }
-SBJsMethod class >> example [
+SBJsModule class >> example [
 
-	^ SBJsMethod new body: (SBJsDeclaration new
+	^ SBJsModule new body: (SBJsDeclaration new
 	binding: (SBJsVariable new contents: 'hello')
 	value: (SBJsClosure new
 		arguments: {SBJsVariable new contents: 'abc'}
 		statements: {
 			SBJsPrefixOperator new contents: 'return'; expression: (SBJsString new contents: '12332')
-		}))
+		})
+	declarationType: 'const')
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethod >> binding: aString for: block class: aClass ifPresent: aBlock [
+SBJsModule >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	| globals |
 	globals := #('console' 'window' 'true' 'false' 'undefined' 'null' 'this' 'require').
@@ -27,36 +28,36 @@ SBJsMethod >> binding: aString for: block class: aClass ifPresent: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethod >> body [
+SBJsModule >> body [
 
 	^ self firstSubmorph
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethod >> body: aMorph [
+SBJsModule >> body: aMorph [
 
 	self removeAllMorphs.
 	self addMorphBack: (SBJsClosure new addMorphBack: aMorph)
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethod >> childSandblocksDo: aBlock [
+SBJsModule >> childSandblocksDo: aBlock [
 
 	aBlock value: self body
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethod >> hasUnsavedChanges [
+SBJsModule >> hasUnsavedChanges [
 
 	^ false
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethod >> hasUnsavedChanges: aBoolean [
+SBJsModule >> hasUnsavedChanges: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethod >> initialize [
+SBJsModule >> initialize [
 
 	super initialize.
 	
@@ -64,11 +65,11 @@ SBJsMethod >> initialize [
 		layoutInset: 8;
 		attachDecorator: SBMoveDecorator new;
 		attachDecorator: SBResizableDecorator new;
-		addMorphBack: SBJsClosure new
+		addMorphBack: (SBJsBlockScope new addMorphBack: self newNullBlock)
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethod >> insertStatementAboveOrBelow: anAboveBoolean [
+SBJsModule >> insertStatementAboveOrBelow: anAboveBoolean [
 
 	| statement |
 	statement := self newNullBlock.
@@ -83,25 +84,25 @@ SBJsMethod >> insertStatementAboveOrBelow: anAboveBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethod >> isArtefact [
+SBJsModule >> isArtefact [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethod >> isMethod [
+SBJsModule >> isMethod [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethod >> isTopLevel [
+SBJsModule >> isTopLevel [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethod >> layoutCommands [
+SBJsModule >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
@@ -109,7 +110,13 @@ SBJsMethod >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
+SBJsModule >> sandblockBlockColorIfAbsent: aBlock [
+
+	^ self preferredColor
+]
+
+{ #category : #'as yet unclassified' }
+SBJsModule >> saveTryFixing: aBoolean quick: aQuickBoolean [
 
 	(self tryFixingMethod: aBoolean) ifFalse: [^ false].
 	
@@ -117,7 +124,7 @@ SBJsMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethod >> tryFixingMethod: aFixBoolean [
+SBJsModule >> tryFixingMethod: aFixBoolean [
 
 	self allBlocksDo: [:block |
 		block valid ifFalse: [
@@ -129,7 +136,7 @@ SBJsMethod >> tryFixingMethod: aFixBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsMethod >> writeSourceOn: aStream [
+SBJsModule >> writeSourceOn: aStream [
 
 	self body writeSourceOn: aStream
 ]

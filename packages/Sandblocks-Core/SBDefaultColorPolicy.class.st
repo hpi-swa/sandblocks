@@ -18,11 +18,7 @@ SBDefaultColorPolicy >> colorForBlock: aBlock [
 			ifTrue: [
 				aBlock sandblockBlockColorIfAbsentPut: [
 					(aBlock containingBlock isNil or: [aBlock isMethodBody])
-						ifTrue: [
-							SBToggledCode
-								comment: ''
-								active: 2
-								do: {[aBlock containingArtefact relatedClass sandblockColor]. [Color r: 0.216 g: 0.249 b: 0.436]}]
+						ifTrue: [aBlock preferredColor ifNil: [Color r: 0.216 g: 0.249 b: 0.436]]
 						ifFalse: [self mutateColor: (self colorForBlock: aBlock containingBlock)]]]
 			ifFalse: [
 				aBlock parentSandblock ifNotNil: [:o | o color adjustSaturation: -0.1 brightness: 0.09] ifNil: [Color white]]]

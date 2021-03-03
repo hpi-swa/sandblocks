@@ -124,7 +124,7 @@ SBBlock >> artefactForPersisting [
 
 	| candidate |
 	candidate := self containingArtefact.
-	[candidate notNil and: [candidate canPersist]] whileFalse: [candidate := candidate parentSandblock containingArtefact].
+	[candidate isNil or: [candidate canPersist]] whileFalse: [candidate := candidate parentSandblock containingArtefact].
 	^ candidate
 ]
 
@@ -245,6 +245,20 @@ SBBlock >> changeToUnknown [
 						shouldMergeWithNext: true;
 						yourself);
 					startInput: new at: 0 replacingContents: false]]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> childClosestTo: aPoint [
+
+	| closestDistance closestMorph |
+	closestDistance := 900000000.
+	closestMorph := nil.
+	self childSandblocksDo: [:block | | distance |
+		distance := block topLeft squaredDistanceTo: aPoint.
+		distance < aPoint ifTrue: [
+			closestDistance := distance.
+			closestMorph := block]].
+	^ closestMorph
 ]
 
 { #category : #hierarchy }
@@ -748,23 +762,16 @@ SBBlock >> drawnColor [
 { #category : #'as yet unclassified' }
 SBBlock >> dropLocationDo: aBlock [
 
-	| mousePosition closestDist closestMorph |
+	| mousePosition |
 	mousePosition := self
 		valueOfProperty: #dropLocation
 		ifAbsent: [
 			^ self childSandblocks
 				ifEmpty: [aBlock value: self center value: self value: false]
 				ifNotEmpty: [aBlock value: self center value: self childSandblocks first value: false]].
-	closestDist := 900000000.
-	closestMorph := nil.
-	self childSandblocksDo: [:block | | dist |
-		dist := block topLeft squaredDistanceTo: mousePosition.
-		dist < closestDist ifTrue: [
-			closestDist := dist.
-			closestMorph := block]].
-	^ closestMorph
+	^ (self childClosestTo: mousePosition)
 		ifNil: [aBlock value: self center value: self value: false]
-		ifNotNil: [ | delta |
+		ifNotNil: [:closestMorph | | delta |
 			delta := (((closestMorph adjacentBlock: 1) ifNil: [closestMorph adjacentBlock: -1]) ifNotNil: [:next | next topLeft - closestMorph topLeft] ifNil: [1 @ 0]) abs.
 			aBlock value: closestMorph topLeft - (0 @ 4) value: closestMorph value: delta x < delta y]
 ]

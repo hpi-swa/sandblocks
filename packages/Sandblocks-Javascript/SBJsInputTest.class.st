@@ -9,7 +9,7 @@ SBJsInputTest >> methodFor: aBlock [
 
 	| editor |
 	editor := SBEditor new useVimInput.
-	editor openMorphInView: (SBJsMethod new
+	editor openMorphInView: (SBJsModule new
 		body: aBlock).
 	aBlock select.
 	^ editor
@@ -49,7 +49,7 @@ SBJsInputTest >> testAddMemberAccessViaSpace [
 	
 	editor undo.
 	self assert: closure statements first = access.
-	self assert: (closure parentSandblock isKindOf: SBJsMethod)
+	self assert: (closure parentSandblock isKindOf: SBJsModule)
 ]
 
 { #category : #'as yet unclassified' }

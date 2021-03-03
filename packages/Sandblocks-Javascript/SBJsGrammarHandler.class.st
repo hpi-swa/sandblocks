@@ -19,8 +19,8 @@ SBJsGrammarHandler >> checkKeyword: aString for: aBlock [
 		block inputNextUnknown.
 		^ true].
 	
-	aString = 'let' ifTrue: [
-		self replace: aBlock with: (SBJsDeclaration new lhs: aBlock newNullBlock rhs: aBlock newNullBlock) mergeInput: false.
+	(#('let' 'var' 'const') includes: aString) ifTrue: [
+		self replace: aBlock with: (SBJsDeclaration new binding: aBlock newNullBlock value: aBlock newNullBlock declarationType: aString) mergeInput: false.
 		^ true].
 	
 	^ false
