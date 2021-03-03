@@ -65,5 +65,5 @@ SBStDeclarationForInstanceVariable >> symbolsFor: aColorPolicy [
 { #category : #'as yet unclassified' }
 SBStDeclarationForInstanceVariable >> valid [
 
-	^ true
+	^ self block containingArtefact object instVarNames includes: self contents
 ]

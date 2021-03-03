@@ -56,6 +56,17 @@ SBStNameBehavior >> declareBlockVariable [
 ]
 
 { #category : #'as yet unclassified' }
+SBStNameBehavior >> declareInstanceVariable [
+	<action>
+	<actionValidIf: #noValidBinding>
+
+	self block sandblockEditor do: (SBStDeclareInstVarCommand newNonEdit
+		class: self block containingArtefact methodClass;
+		name: self contents;
+		source: self block)
+]
+
+{ #category : #'as yet unclassified' }
 SBStNameBehavior >> declareMethodVariable [
 	<action>
 	<actionValidIf: #noValidBinding>

@@ -445,6 +445,14 @@ SBEditor >> allActiveMorphExamples [
 		self allBlocksDo: [:b | (b isMorphExample and: [b visible]) ifTrue: [stream nextPut: b]]]
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> allBlocksFor: anObject withInterfaces: aCollection [
+
+	^ Array streamContents: [:stream |
+		self allBlocksDo: [:morph |
+			(morph isSandblock and: [morph object = anObject and: [morph satisfies: aCollection]]) ifTrue: [stream nextPut: morph]]]
+]
+
 { #category : #actions }
 SBEditor >> anyNearbyClass [
 
@@ -480,6 +488,15 @@ SBEditor >> binding: aString for: block class: aClass ifPresent: aBlock [
 		binding ifNotNil: [^ aBlock value: ((SBStName poolDeclaration: aString) binding: binding)]].
 	
 	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> blockFor: anObject withInterfaces: aCollection ifOpen: aBlock ifClosed: anotherBlock [
+
+	^ self
+		allBlocksDetect: [:morph | morph isSandblock and: [morph object = anObject and: [morph satisfies: aCollection]]]
+		ifFound: aBlock
+		ifNone: anotherBlock
 ]
 
 { #category : #accessing }
@@ -1349,13 +1366,10 @@ SBEditor >> open: anObject [
 { #category : #'as yet unclassified' }
 SBEditor >> open: anObject withInterfaces: aCollection [
 
-	^ self
-		allBlocksDetect: [:morph | morph isSandblock and: [morph object = anObject and: [morph satisfies: aCollection]]]
-		ifFound: #select
-		ifNone: [
-			anObject
-				convertedFor: (self objectInterfaceAt: 1 adding: true), aCollection
-				do: [:repr | self openMorphInView: repr]]
+	^ self blockFor: anObject withInterfaces: aCollection ifOpen: #select ifClosed: [
+		anObject
+			convertedFor: (self objectInterfaceAt: 1 adding: true), aCollection
+			do: [:repr | self openMorphInView: repr]]
 ]
 
 { #category : #actions }
