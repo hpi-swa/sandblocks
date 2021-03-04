@@ -74,6 +74,14 @@ SBJsClosure >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsClosure >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	aNumber = 1 ifTrue: [^ SBInterfaces never].
+	
+	^ SBInterfaces jsExpression
+]
+
+{ #category : #'as yet unclassified' }
 SBJsClosure >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| new |

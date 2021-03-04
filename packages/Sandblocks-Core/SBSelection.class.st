@@ -263,6 +263,12 @@ SBSelection >> statements [
 ]
 
 { #category : #'as yet unclassified' }
+SBSelection >> typeFor: aBlock [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBSelection >> unpackSelection [
 
 	^ self firstSubmorph

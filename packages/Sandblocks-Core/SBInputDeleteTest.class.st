@@ -38,7 +38,8 @@ SBInputDeleteTest >> testDeleteInBlock [
 	a deleteBeforeCursor.
 	block statements first statements first deleteBeforeCursor.
 	
-	self assert: '[]' equals: block sourceString
+	self assert: block statements first isUnknown.
+	self assert: editor mode = #input
 ]
 
 { #category : #'as yet unclassified' }

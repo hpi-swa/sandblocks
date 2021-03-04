@@ -294,6 +294,12 @@ SBOwnTextMorph >> isCursorAtStart [
 ]
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> isTextMorph [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> italic [
 
 	self emphasis: TextEmphasis italic

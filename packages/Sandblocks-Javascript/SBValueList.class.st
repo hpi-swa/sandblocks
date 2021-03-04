@@ -8,12 +8,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBValueList >> canDeleteAroundTo: aParentBlock [
-
-	^ false
-]
-
-{ #category : #'as yet unclassified' }
 SBValueList >> centerAlignSymbols [
 
 	^ true

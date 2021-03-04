@@ -72,15 +72,6 @@ SBBlock >> addElement [
 ]
 
 { #category : #hierarchy }
-SBBlock >> adjacentBlock: aNumber [
-
-	| adjacent index |
-	adjacent := (self parentSandblock ifNil: [^ nil]) childSandblocks.
-	index := adjacent indexOf: self.
-	^ adjacent at: index + aNumber ifAbsent: [nil]
-]
-
-{ #category : #hierarchy }
 SBBlock >> allBlocksDetect: aBlock ifFound: aSuccessBlock ifNone: aFailureBlock [
 
 	self allBlocksDo: [:b | (aBlock value: b) ifTrue: [^ aSuccessBlock value: b]].
@@ -512,9 +503,8 @@ SBBlock >> deleteAround [
 	SBExample self: ['3 squared' parseInMethod receiver] args: [{}] label: 'example'.
 	editor := self sandblockEditor.
 	target := self parentSandblock.
-	editor countModifier - 1 timesRepeat: [target := target parentSandblock].
 	
-	target parentSandblock ifNil: [^ self].
+	editor countModifier - 1 timesRepeat: [target := target parentSandblock ifNil: [^ self]].
 	
 	(self parentSandblock childSandblocks size > 1 and: [target parentHasDynamicNumberOfChildren and: [self isStatement]]) ifTrue: [
 		self setProperty: #copyPlaceholder toValue: true.
@@ -529,16 +519,20 @@ SBBlock >> deleteAround [
 			recorder remove: target]).
 		^ self].
 	
-	self
-		convertedFor: target objectInterface
-		do: [:replacer |
-			self setProperty: #copyPlaceholder toValue: true.
-			editor copyBuffer: target.
-			self removeProperty: #copyPlaceholder.
-			editor do: ((SBReplaceCommand newFor: self containingArtefact)
-				target: target;
-				replacer: replacer).
-			replacer postDuplicate]
+	[
+		self
+			convertedFor: target objectInterface
+			do: [:replacer |
+				self setProperty: #copyPlaceholder toValue: true.
+				editor copyBuffer: target.
+				self removeProperty: #copyPlaceholder.
+				editor do: ((SBReplaceCommand newFor: self containingArtefact)
+					target: target;
+					replacer: replacer).
+				replacer postDuplicate.
+				^ self].
+		" if we did not find a valid conversion, try again with the parent "
+		target := target parentSandblock ifNil: [^ self]] repeat
 ]
 
 { #category : #actions }
@@ -546,35 +540,25 @@ SBBlock >> deleteBeforeCursor [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
-	| editor p parent adjacent |
+	| editor adjacent |
+	self currentTextMorph cursor ~= 1 ifTrue: [^ self currentTextMorph deleteBeforeCursor].
+	
 	editor := self sandblockEditor.
 	
-	self currentTextMorph contents ifNotEmpty: [
-		^ self currentTextMorph cursor = 1
-			ifTrue: [
-				self deleteAround.
-				editor startInput: self at: 1 replacingContents: false]
-			ifFalse: [self currentTextMorph deleteBeforeCursor]].
+	adjacent := self currentTextMorph previousMorphThat: [:b | b isTextMorph].
 	
-	p := self previousBlock.
-	parent := self parentSandblock.
-	adjacent := self adjacentBlock: -1.
-	
-	self childSandblocks ifNotEmpty: [ | new |
-		new := self childSandblocks first.
-		self childSandblocks first deleteAround.
-		^ editor startInput: new lastDeepChild at: 900000000 replacingContents: false].
-	
-	self deleteBlock.
-	editor startInput: parent at: 900000000 replacingContents: false.
-	editor mode = #input ifFalse: [
-		adjacent ifNil: [^ parent nextDeletableBlock deleteBlock].
-		
-		parent childSandblocks size <= 2
-			ifTrue: [
-				adjacent deleteAround.
-				editor startInput: editor selection lastDeepChild at: 900000000 replacingContents: false]
-			ifFalse: [editor startInput: p at: 900000000 replacingContents: false]]
+	(adjacent notNil and: [adjacent hasOwner: self parentSandblock])
+		ifTrue: [ | target |
+			target := adjacent containingSandblock.
+			self currentTextMorph contents isEmpty ifTrue: [
+				self childSandblocks isEmpty
+					ifTrue: [self deleteBlock]
+					ifFalse: [
+						(target = self childSandblocks first or: [target hasOwner: self childSandblocks first]) ifTrue: [self childSandblocks first deleteAround]]].
+			editor startInput: target at: 900000000 replacingContents: false]
+		ifFalse: [
+			self deleteAround.
+			editor startInput: self at: 900000000 replacingContents: false]
 ]
 
 { #category : #actions }
@@ -1417,25 +1401,6 @@ SBBlock >> newNullBlock [
 ]
 
 { #category : #hierarchy }
-SBBlock >> nextBlock [
-
-	self childSandblocksDo: [:first | ^ first].
-	
-	^ (self adjacentBlock: 1) ifNil: [
-		self parentSandblock parentAdjacentBlock: 1]
-]
-
-{ #category : #hierarchy }
-SBBlock >> nextBlockThat: aBlock [
-
-	| n |
-	n := self nextBlock.
-	n ifNil: [^ nil].
-	(aBlock value: n) ifTrue: [^ n].
-	^ n nextBlockThat: aBlock
-]
-
-{ #category : #hierarchy }
 SBBlock >> nextDeletableBlock [
 
 	^ ((self parentSandblock ifNil: [^ nil]) deleteCommandFor: self)
@@ -1671,24 +1636,6 @@ SBBlock >> prefersNoBorder [
 SBBlock >> preventOcclusion [
 
 	^ true
-]
-
-{ #category : #hierarchy }
-SBBlock >> previousBlock [
-
-	^ (self adjacentBlock: -1)
-			ifNil: [self parentSandblock]
-			ifNotNil: [:adj | adj rightMostBlock]
-]
-
-{ #category : #hierarchy }
-SBBlock >> previousBlockThat: aBlock [
-
-	| n |
-	n := self previousBlock.
-	n ifNil: [^ nil].
-	(aBlock value: n) ifTrue: [^ n].
-	^ n previousBlockThat: aBlock
 ]
 
 { #category : #hierarchy }

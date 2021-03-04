@@ -1,5 +1,14 @@
 Extension { #name : #Morph }
 
+{ #category : #'*Sandblocks-Core-hierarchy' }
+Morph >> adjacentBlock: aNumber [
+
+	| adjacent index |
+	adjacent := (self parentSandblock ifNil: [^ nil]) childSandblocks.
+	index := adjacent indexOf: self.
+	^ adjacent at: index + aNumber ifAbsent: [nil]
+]
+
 { #category : #'*Sandblocks-Core' }
 Morph >> allMorphsDoBreadthFirst: aBlock [
 
@@ -224,6 +233,25 @@ Morph >> nextAdjacentMorphThat: aBlock [
 	(next firstMorphThat: aBlock) ifNotNil: [:m | ^ m]] repeat
 ]
 
+{ #category : #'*Sandblocks-Core-hierarchy' }
+Morph >> nextBlock [
+
+	self childSandblocksDo: [:first | ^ first].
+	
+	^ (self adjacentBlock: 1) ifNil: [
+		self parentSandblock parentAdjacentBlock: 1]
+]
+
+{ #category : #'*Sandblocks-Core-hierarchy' }
+Morph >> nextBlockThat: aBlock [
+
+	| n |
+	n := self nextBlock.
+	n ifNil: [^ nil].
+	(aBlock value: n) ifTrue: [^ n].
+	^ n nextBlockThat: aBlock
+]
+
 { #category : #'*Sandblocks-Core' }
 Morph >> onHoverHighlight: aMorph labeled: aString [
 
@@ -303,10 +331,40 @@ Morph >> previousAdjacentMorphThat: aBlock [
 	(next lastMorphThat: aBlock) ifNotNil: [:m | ^ m]] repeat
 ]
 
-{ #category : #'*Sandblocks-Core' }
+{ #category : #'*Sandblocks-Core-hierarchy' }
+Morph >> previousBlock [
+
+	^ (self adjacentBlock: -1)
+			ifNil: [self parentSandblock]
+			ifNotNil: [:adj | adj rightMostBlock]
+]
+
+{ #category : #'*Sandblocks-Core-hierarchy' }
+Morph >> previousBlockThat: aBlock [
+
+	| n |
+	n := self previousBlock.
+	n ifNil: [^ nil].
+	(aBlock value: n) ifTrue: [^ n].
+	^ n previousBlockThat: aBlock
+]
+
+{ #category : #'*Sandblocks-Core-hierarchy' }
+Morph >> previousMorph [
+
+	^ self submorphBefore
+			ifNil: [self owner]
+			ifNotNil: [:adj | adj rightMostMorph]
+]
+
+{ #category : #'*Sandblocks-Core-hierarchy' }
 Morph >> previousMorphThat: aBlock [
 
-	^ (self previousAdjacentMorphThat: aBlock) ifNil: [(self owner ifNil: [^ nil]) previousMorphThat: aBlock]
+	| n |
+	n := self previousMorph.
+	n ifNil: [^ nil].
+	(aBlock value: n) ifTrue: [^ n].
+	^ n previousMorphThat: aBlock
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -326,6 +384,12 @@ Morph >> reverseAllMorphsDo: aBlock [
 
 	submorphs reverseDo: [:m | m reverseAllMorphsDo: aBlock].
 	aBlock value: self
+]
+
+{ #category : #'*Sandblocks-Core-hierarchy' }
+Morph >> rightMostMorph [
+
+	^ self submorphs ifEmpty: [self] ifNotEmpty: [:c | c last rightMostMorph]
 ]
 
 { #category : #'*Sandblocks-Core' }
