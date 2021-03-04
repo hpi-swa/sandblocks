@@ -21,14 +21,6 @@ SBStMethod >> argumentsDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBStMethod >> childSandblocksDo: aBlock [
-
-	aBlock value: classPrefix.
-	signature childSandblocksDo: aBlock.
-	self body visible ifTrue: [aBlock value: self body]
-]
-
-{ #category : #'as yet unclassified' }
 SBStMethod >> collapsed: aBoolean [
 
 	self body visible not = aBoolean ifTrue: [^ self].

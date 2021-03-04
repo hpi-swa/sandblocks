@@ -11,12 +11,6 @@ SBFormProjection class >> matches: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBFormProjection >> childSandblocksDo: aBlock [
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBFormProjection >> initialize [
 
 	super initialize.

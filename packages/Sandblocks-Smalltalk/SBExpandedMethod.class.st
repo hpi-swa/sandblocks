@@ -29,12 +29,6 @@ SBExpandedMethod class >> priority [
 ]
 
 { #category : #'as yet unclassified' }
-SBExpandedMethod >> childSandblocksDo: aBlock [
-
-	self submorphsDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBExpandedMethod >> initialize [
 
 	super initialize.

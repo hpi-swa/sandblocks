@@ -21,12 +21,6 @@ SBMockBlock >> actionValid: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBMockBlock >> childSandblocksDo: aBlock [
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBMockBlock >> conditionalMockAction [
 	<action>
 	<actionValidIf: #actionValid>

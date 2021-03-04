@@ -47,10 +47,6 @@ SBColor class >> suggestion [
 ]
 
 { #category : #'as yet unclassified' }
-SBColor >> childSandblocksDo: aBlock [
-]
-
-{ #category : #'as yet unclassified' }
 SBColor >> click: anEvent [
 
 	super click: anEvent

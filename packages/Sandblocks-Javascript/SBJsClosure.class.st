@@ -32,14 +32,6 @@ SBJsClosure >> canDeleteChild: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsClosure >> childSandblocksDo: aBlock [
-
-	"self arguments childSandblocksDo: aBlock."
-	aBlock value: self arguments.
-	super childSandblocksDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBJsClosure >> deleteCommandFor: aBlock [
 
 	^ aBlock = self arguments

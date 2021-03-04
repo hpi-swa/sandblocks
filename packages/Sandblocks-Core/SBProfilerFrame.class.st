@@ -8,12 +8,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBProfilerFrame >> childSandblocksDo: aBlock [
-
-	self submorphs allButFirstDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBProfilerFrame >> drawnColor [
 
 	^ tally method methodClass sandblockColor

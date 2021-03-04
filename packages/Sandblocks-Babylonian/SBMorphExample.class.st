@@ -87,13 +87,6 @@ SBMorphExample >> cases [
 	^ cases submorphs
 ]
 
-{ #category : #accessing }
-SBMorphExample >> childSandblocksDo: aBlock [
-
-	aBlock value: self setUpMorph.
-	self cases do: aBlock
-]
-
 { #category : #errors }
 SBMorphExample >> clearErrors [
 

@@ -27,10 +27,6 @@ SBForm class >> newFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBForm >> childSandblocksDo: aBlock [
-]
-
-{ #category : #'as yet unclassified' }
 SBForm >> doubleClick: anEvent [
 
 	(UIManager default chooseFileMatching: '*') ifNotNil: [:f | self filename: f]

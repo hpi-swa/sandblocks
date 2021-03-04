@@ -13,12 +13,6 @@ SBJsBlockScope >> binding: aString for: block class: aClass ifPresent: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsBlockScope >> childSandblocksDo: aBlock [
-
-	self statements do: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBJsBlockScope >> fixedArity [
 
 	^ true

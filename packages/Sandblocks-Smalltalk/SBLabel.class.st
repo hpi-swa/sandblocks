@@ -66,10 +66,6 @@ SBLabel >> changeToSmallHeading [
 ]
 
 { #category : #'as yet unclassified' }
-SBLabel >> childSandblocksDo: aBlock [
-]
-
-{ #category : #'as yet unclassified' }
 SBLabel >> contents [
 
 	^ text contents

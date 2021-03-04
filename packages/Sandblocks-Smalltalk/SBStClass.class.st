@@ -47,17 +47,6 @@ SBStClass >> category: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBStClass >> childSandblocksDo: aBlock [
-
-	aBlock value: className.
-	aBlock value: superClassName.
-	aBlock value: instanceVariables.
-	aBlock value: classVariables.
-	aBlock value: poolDictionaries.
-	aBlock value: category
-]
-
-{ #category : #'as yet unclassified' }
 SBStClass >> class: aClass [
 
 	className contents: aClass name.

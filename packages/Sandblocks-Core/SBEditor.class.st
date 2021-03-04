@@ -1538,7 +1538,7 @@ SBEditor >> updateSelectionLabel [
 SBEditor >> updateVerticalSelectionPosition [
 
 	selection ifNotNil: [
-		verticalSelectionPosition := selection center x - (selection containingArtefact ifNotNil: [:a | a left] ifNil: [0])]
+		verticalSelectionPosition := selection center x - (selection containingFloat ifNotNil: [:a | a left] ifNil: [0])]
 ]
 
 { #category : #input }

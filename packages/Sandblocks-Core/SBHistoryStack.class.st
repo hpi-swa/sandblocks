@@ -25,8 +25,7 @@ SBHistoryStack >> do: aCommand previousSelection: aMorph selectDo: aBlock [
 		ifFalse: [undoStack addLast: aCommand].
 	
 	redoStack removeAll.
-	
-	changedArtefacts addAll: aCommand affectedArtefacts.
+	self markChanged: aCommand affectedArtefacts.
 	
 	aCommand previousSelection: aMorph.
 	aBlock value: aCommand do value: aCommand affectedArtefacts.
@@ -43,6 +42,13 @@ SBHistoryStack >> hasUnsavedChanges: anArtefact [
 SBHistoryStack >> initialize [
 
 	self clearUndoStack
+]
+
+{ #category : #actions }
+SBHistoryStack >> markChanged: aCollection [
+
+	changedArtefacts addAll: aCollection.
+	aCollection do: [:artefact | artefact changed]
 ]
 
 { #category : #actions }

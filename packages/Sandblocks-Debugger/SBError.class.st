@@ -40,12 +40,6 @@ SBError >> canCopy [
 ]
 
 { #category : #'as yet unclassified' }
-SBError >> childSandblocksDo: aBlock [
-
-	frames submorphsDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBError >> createFrameForContext: aContext [
 
 	| frame |

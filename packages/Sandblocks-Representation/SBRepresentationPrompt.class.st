@@ -20,12 +20,6 @@ SBRepresentationPrompt >> candidates [
 ]
 
 { #category : #'as yet unclassified' }
-SBRepresentationPrompt >> childSandblocksDo: aBlock [
-
-	options submorphsDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBRepresentationPrompt >> close [
 
 	self delete.

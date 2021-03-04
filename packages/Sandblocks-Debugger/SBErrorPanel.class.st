@@ -47,12 +47,6 @@ SBErrorPanel >> buildDebugCommandBar [
 			balloonText: 'Restart frame')
 ]
 
-{ #category : #hierarchy }
-SBErrorPanel >> childSandblocksDo: aBlock [
-
-	self submorphsDo: aBlock
-]
-
 { #category : #'as yet unclassified' }
 SBErrorPanel >> deleteCommandFor: aMorph [
 

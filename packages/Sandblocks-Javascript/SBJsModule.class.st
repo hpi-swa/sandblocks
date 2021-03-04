@@ -41,12 +41,6 @@ SBJsModule >> body: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsModule >> childSandblocksDo: aBlock [
-
-	aBlock value: self body
-]
-
-{ #category : #'as yet unclassified' }
 SBJsModule >> initialize [
 
 	super initialize.

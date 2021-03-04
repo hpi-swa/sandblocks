@@ -66,13 +66,6 @@ SBStMessageSend >> cellGap [
 	^ self colorPolicy messageCellGap
 ]
 
-{ #category : #'as yet unclassified' }
-SBStMessageSend >> childSandblocksDo: aBlock [
-
-	self receiver ifNotNil: aBlock.
-	signature childSandblocksDo: aBlock
-]
-
 { #category : #accessing }
 SBStMessageSend >> codeActions [
 

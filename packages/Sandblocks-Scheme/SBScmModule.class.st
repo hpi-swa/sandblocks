@@ -70,12 +70,6 @@ SBScmModule >> canPersist [
 ]
 
 { #category : #'as yet unclassified' }
-SBScmModule >> childSandblocksDo: aBlock [
-
-	self expressions do: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBScmModule >> commandPaletteClass [
 
 	^ SBScmPalette

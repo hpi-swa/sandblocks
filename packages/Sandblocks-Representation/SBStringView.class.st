@@ -5,14 +5,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBStringView >> childSandblocksDo: aBlock [
-
-	aBlock value: self submorphs second submorphs first.
-	aBlock value: self submorphs second submorphs second.
-	aBlock value: self submorphs second submorphs third
-]
-
-{ #category : #'as yet unclassified' }
 SBStringView >> initialize [
 
 	super initialize.

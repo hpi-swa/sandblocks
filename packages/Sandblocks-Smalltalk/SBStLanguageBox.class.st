@@ -39,12 +39,6 @@ SBStLanguageBox class >> suggestion [
 ]
 
 { #category : #'as yet unclassified' }
-SBStLanguageBox >> childSandblocksDo: aBlock [
-
-	aBlock value: self root
-]
-
-{ #category : #'as yet unclassified' }
 SBStLanguageBox >> drawnColor [
 
 	^ self root drawnColor

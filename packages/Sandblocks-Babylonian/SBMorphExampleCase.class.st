@@ -30,13 +30,6 @@ SBMorphExampleCase >> caseBlock [
 	^ self submorphs third
 ]
 
-{ #category : #accessing }
-SBMorphExampleCase >> childSandblocksDo: aBlock [
-
-	aBlock value: nameInput.
-	aBlock value: self caseBlock
-]
-
 { #category : #helper }
 SBMorphExampleCase >> evaluateFor: aMorph in: aWorld [
 

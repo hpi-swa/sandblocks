@@ -97,15 +97,6 @@ SBToggledCode >> buildRowFor: aBlock active: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBToggledCode >> childSandblocksDo: aBlock [
-
-	comment owner
-		ifNotNil: [aBlock value: comment].
-	
-	self optionRows do: [:b | b submorphsDo: aBlock]
-]
-
-{ #category : #'as yet unclassified' }
 SBToggledCode >> color [
 
 	^ self parentSandblock color

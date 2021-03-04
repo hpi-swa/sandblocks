@@ -21,10 +21,6 @@ SBStMessagePart >> asName: aConverter [
 ]
 
 { #category : #'as yet unclassified' }
-SBStMessagePart >> childSandblocksDo: aBlock [
-]
-
-{ #category : #'as yet unclassified' }
 SBStMessagePart >> contents [
 
 	^ text contents, (self hasColon ifTrue: [':'] ifFalse: [''])

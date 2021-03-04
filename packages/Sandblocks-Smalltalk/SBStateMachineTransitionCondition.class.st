@@ -34,12 +34,6 @@ SBStateMachineTransitionCondition >> changeType [
 ]
 
 { #category : #'as yet unclassified' }
-SBStateMachineTransitionCondition >> childSandblocksDo: aBlock [
-
-	aBlock value: self lastSubmorph
-]
-
-{ #category : #'as yet unclassified' }
 SBStateMachineTransitionCondition >> initialize [
 
 	super initialize.

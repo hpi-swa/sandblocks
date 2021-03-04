@@ -11,12 +11,6 @@ Class {
 	#category : #'Sandblocks-Core'
 }
 
-{ #category : #accessing }
-SBCodeContainer >> childSandblocksDo: aBlock [
-
-	self submorphsDo: [:b | b isSandblock ifTrue: [aBlock value: b]]
-]
-
 { #category : #testing }
 SBCodeContainer >> codeContainer [
 

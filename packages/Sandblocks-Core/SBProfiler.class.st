@@ -14,12 +14,6 @@ SBProfiler >> canCopy [
 ]
 
 { #category : #'as yet unclassified' }
-SBProfiler >> childSandblocksDo: aBlock [
-
-	self hasSubmorphs ifTrue: [aBlock value: self firstSubmorph]
-]
-
-{ #category : #'as yet unclassified' }
 SBProfiler >> initialize [
 
 	super initialize.

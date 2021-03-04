@@ -26,12 +26,6 @@ SBStPragma >> canAppearInBlockBody [
 ]
 
 { #category : #'as yet unclassified' }
-SBStPragma >> childSandblocksDo: aBlock [
-
-	signature childSandblocksDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBStPragma >> contents: aString [
 
 	signature selector: aString

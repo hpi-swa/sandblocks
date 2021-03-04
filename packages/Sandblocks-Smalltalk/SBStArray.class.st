@@ -52,12 +52,6 @@ SBStArray >> changeTypeToLiteral [
 	self changeTypeTo: #literal
 ]
 
-{ #category : #converting }
-SBStArray >> childSandblocksDo: aBlock [
-
-	self submorphsDo: aBlock
-]
-
 { #category : #'as yet unclassified' }
 SBStArray >> contents: aCollection [
 

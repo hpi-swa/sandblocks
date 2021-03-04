@@ -61,13 +61,6 @@ SBRegex >> checkExamples [
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> childSandblocksDo: aBlock [
-
-	aBlock value: text.
-	examples owner ifNotNil: [examples submorphsDo: aBlock]
-]
-
-{ #category : #'as yet unclassified' }
 SBRegex >> contents [
 
 	^ text contents

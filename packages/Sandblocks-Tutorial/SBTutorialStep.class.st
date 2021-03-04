@@ -622,12 +622,6 @@ SBTutorialStep >> checkConditions [
 ]
 
 { #category : #'as yet unclassified' }
-SBTutorialStep >> childSandblocksDo: aBlock [
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBTutorialStep >> createStepMethod: aBlock in: anEditor [
 
 	| selector |

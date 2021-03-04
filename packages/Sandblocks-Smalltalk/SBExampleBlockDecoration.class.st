@@ -16,13 +16,6 @@ SBExampleBlockDecoration >> allWatchesDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBExampleBlockDecoration >> childSandblocksDo: aBlock [
-
-	self hasSubmorphs ifTrue: [
-		self firstSubmorph childSandblocksDo: aBlock]
-]
-
-{ #category : #'as yet unclassified' }
 SBExampleBlockDecoration >> exampleFinished: anExample [
 
 	| slider |

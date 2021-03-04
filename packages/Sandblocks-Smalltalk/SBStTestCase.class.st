@@ -61,14 +61,6 @@ SBStTestCase >> autoRun: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBStTestCase >> childSandblocksDo: aBlock [
-
-	aBlock value: selectorInput.
-	aBlock value: autoRun.
-	aBlock value: self body
-]
-
-{ #category : #'as yet unclassified' }
 SBStTestCase >> clearErrors [
 
 	errorIndicator ifNotNil: [

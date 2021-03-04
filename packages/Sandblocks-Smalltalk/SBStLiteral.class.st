@@ -20,10 +20,6 @@ SBStLiteral >> castToUnknownWhenEmpty [
 ]
 
 { #category : #'as yet unclassified' }
-SBStLiteral >> childSandblocksDo: aBlock [
-]
-
-{ #category : #'as yet unclassified' }
 SBStLiteral >> contents [
 
 	^ text contents

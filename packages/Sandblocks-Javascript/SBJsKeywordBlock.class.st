@@ -42,13 +42,6 @@ SBJsKeywordBlock >> binding: aString for: block class: aClass ifPresent: aBlock 
 ]
 
 { #category : #'as yet unclassified' }
-SBJsKeywordBlock >> childSandblocksDo: aBlock [
-
-	self header do: aBlock.
-	super childSandblocksDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBJsKeywordBlock >> condition [
 
 	^ self submorphs third

@@ -36,13 +36,6 @@ SBExampleReplace class >> suggestion [
 ]
 
 { #category : #'as yet unclassified' }
-SBExampleReplace >> childSandblocksDo: aBlock [
-
-	aBlock value: self submorphs first submorphs second.
-	aBlock value: self submorphs second submorphs second
-]
-
-{ #category : #'as yet unclassified' }
 SBExampleReplace >> drawnColor [
 
 	^ Color veryDarkGray

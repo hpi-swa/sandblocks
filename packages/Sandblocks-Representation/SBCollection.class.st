@@ -8,12 +8,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBCollection >> childSandblocksDo: aBlock [
-
-	self submorphsDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBCollection >> fixedNumberOfChildren [
 
 	^ false

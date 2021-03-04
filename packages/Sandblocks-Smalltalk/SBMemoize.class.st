@@ -70,12 +70,6 @@ SBMemoize >> cacheChanged: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
-SBMemoize >> childSandblocksDo: aBlock [
-
-	aBlock value: self expression
-]
-
-{ #category : #'as yet unclassified' }
 SBMemoize >> drawnColor [
 
 	^ Color veryDarkGray

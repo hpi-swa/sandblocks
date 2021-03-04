@@ -55,12 +55,6 @@ SBSelection >> blockForClass: aClass ifPresent: aBlock ifAbsent: anotherBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBSelection >> childSandblocksDo: aBlock [
-
-	self submorphsDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBSelection >> colorPolicy [
 
 	^ colorPolicy ifNil: [super colorPolicy]

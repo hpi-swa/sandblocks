@@ -46,13 +46,6 @@ SBPoint class >> priority [
 ]
 
 { #category : #'as yet unclassified' }
-SBPoint >> childSandblocksDo: aBlock [
-
-	aBlock value: self firstSubmorph.
-	aBlock value: self lastSubmorph
-]
-
-{ #category : #'as yet unclassified' }
 SBPoint >> contents [
 
 	^ self firstSubmorph parsedContents @ self lastSubmorph parsedContents

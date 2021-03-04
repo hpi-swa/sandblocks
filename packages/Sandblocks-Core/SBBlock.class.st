@@ -279,13 +279,6 @@ SBBlock >> childIndex [
 	^ self parentSandblock childSandblocks indexOf: self
 ]
 
-{ #category : #hierarchy }
-SBBlock >> childSandblocksDo: aBlock [
-
-	" FIXME: at this point I believe we should assume leaf blocks by default, but I'm not sure "
-	"^ self subclassResponsibility"
-]
-
 { #category : #caching }
 SBBlock >> clearCache [
 
@@ -1463,7 +1456,7 @@ SBBlock >> nextVerticalNear: aNumber [
 SBBlock >> nextVerticalNear: aNumber calcDistance: aDistBlock validBlock: aValidBlock [
 
 	| allCandidates candidates candidatesBestDistance tolerance artefact |
-	artefact := self parentSandblock containingArtefact ifNil: [self containingArtefact].
+	artefact := self containingFloat.
 	tolerance := 10.
 	
 	allCandidates := Array streamContents: [:stream |

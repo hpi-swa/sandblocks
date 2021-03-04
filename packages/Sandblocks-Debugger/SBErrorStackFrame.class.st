@@ -13,12 +13,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBErrorStackFrame >> childSandblocksDo: aBlock [
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBErrorStackFrame >> closed [
 
 	pcIndicator ifNotNil: #detach.

@@ -62,12 +62,6 @@ SBPaletteContainer >> addSectionHeader: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBPaletteContainer >> childSandblocksDo: aBlock [
-
-	content submorphsDo: [:m | m isSandblock ifTrue: [aBlock value: m]]
-]
-
-{ #category : #'as yet unclassified' }
 SBPaletteContainer >> container: aBlock [
 
 	^ SBPalettePreviewContainer new

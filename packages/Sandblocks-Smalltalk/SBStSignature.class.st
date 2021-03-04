@@ -45,12 +45,6 @@ SBStSignature >> cellGap [
 ]
 
 { #category : #'as yet unclassified' }
-SBStSignature >> childSandblocksDo: aBlock [
-
-	self submorphsDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBStSignature >> color [
 
 	^ self owner color

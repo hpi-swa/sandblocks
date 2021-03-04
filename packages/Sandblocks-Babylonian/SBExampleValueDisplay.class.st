@@ -56,6 +56,7 @@ SBExampleValueDisplay >> initialize [
 		cellGap: 4;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
+		changeTableLayout;
 		changeListDirection: #leftToRight;
 		addMorphBack: (label := SBStringMorph new);
 		addMorphBack: (statusLabel := SBStringMorph new contents: '');

@@ -8,12 +8,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBPlainTextBlock >> childSandblocksDo: aBlock [
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBPlainTextBlock >> contents [
 
 	^ text contents

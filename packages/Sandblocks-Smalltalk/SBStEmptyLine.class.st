@@ -11,10 +11,6 @@ SBStEmptyLine >> canAppearInBlockBody [
 ]
 
 { #category : #'as yet unclassified' }
-SBStEmptyLine >> childSandblocksDo: aBlock [
-]
-
-{ #category : #'as yet unclassified' }
 SBStEmptyLine >> drawnColor [
 
 	^ Color transparent

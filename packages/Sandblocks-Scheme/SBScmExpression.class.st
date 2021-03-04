@@ -67,12 +67,6 @@ SBScmExpression >> centerAlignSymbols [
 ]
 
 { #category : #'as yet unclassified' }
-SBScmExpression >> childSandblocksDo: aBlock [
-
-	self elements do: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBScmExpression >> elements [
 
 	^ self submorphs

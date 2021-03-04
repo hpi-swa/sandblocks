@@ -16,12 +16,6 @@ SBCheckbox >> changeValue: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBCheckbox >> childSandblocksDo: aBlock [
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBCheckbox >> click: anEvent [
 
 	super click: anEvent.

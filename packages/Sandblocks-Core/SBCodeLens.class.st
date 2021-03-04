@@ -68,12 +68,6 @@ SBCodeLens >> applyMode: aSymbol [
 				layoutPolicy: TableLayout new]
 ]
 
-{ #category : #accessing }
-SBCodeLens >> childSandblocksDo: aBlock [
-
-	aBlock value: scroll firstSubmorph
-]
-
 { #category : #menus }
 SBCodeLens >> collapse [
 

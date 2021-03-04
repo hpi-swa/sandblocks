@@ -5,12 +5,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBStClassMethodEditor >> childSandblocksDo: aBlock [
-
-	self submorphsDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBStClassMethodEditor >> class: aClass [
 
 	self addMorphBack: (SBStClass newFor: aClass at: 0 @ 0).

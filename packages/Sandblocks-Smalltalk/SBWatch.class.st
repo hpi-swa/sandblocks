@@ -52,12 +52,6 @@ SBWatch class >> report: aValue for: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
-SBWatch >> childSandblocksDo: aBlock [
-
-	self submorphCount = 2 ifTrue: [aBlock value: self expression]
-]
-
-{ #category : #'as yet unclassified' }
 SBWatch >> chooseViewMode [
 	<action>
 

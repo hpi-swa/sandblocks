@@ -110,14 +110,6 @@ SBStBlockBody >> cellGap [
 	^ self colorPolicy lineGap
 ]
 
-{ #category : #converting }
-SBStBlockBody >> childSandblocksDo: aBlock [
-
-	bindings submorphsDo: aBlock.
-	temporaries submorphsDo: aBlock.
-	self submorphs allButFirstDo: aBlock
-]
-
 { #category : #'as yet unclassified' }
 SBStBlockBody >> declareTemporaryVariable: aString [
 

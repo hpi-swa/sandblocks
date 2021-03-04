@@ -13,12 +13,6 @@ SBBlockRow >> bindings: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
-SBBlockRow >> childSandblocksDo: aBlock [
-
-	self submorphsDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBBlockRow >> initialize [
 
 	super initialize.

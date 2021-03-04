@@ -54,14 +54,6 @@ SBJsInfixOperator >> centerAlignSymbols [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsInfixOperator >> childSandblocksDo: aBlock [
-
-	(self submorphCount >= 2 and: [self firstSubmorph isSandblock]) ifTrue: [
-		aBlock value: self firstSubmorph.
-		self allRhs do: aBlock]
-]
-
-{ #category : #'as yet unclassified' }
 SBJsInfixOperator >> contents [
 
 	^ self submorphCount >= 2 ifTrue: [self currentTextMorph contents] ifFalse: [nil]

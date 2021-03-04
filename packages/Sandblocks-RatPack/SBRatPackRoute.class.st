@@ -53,13 +53,6 @@ SBRatPackRoute >> body: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBRatPackRoute >> childSandblocksDo: aBlock [
-
-	aBlock value: self pathArray.
-	aBlock value: self body
-]
-
-{ #category : #'as yet unclassified' }
 SBRatPackRoute >> drawnColor [
 
 	^ Color veryDarkGray

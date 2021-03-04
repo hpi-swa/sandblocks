@@ -16,14 +16,6 @@ SBJsObjectLiteral >> buildEmptyRow [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsObjectLiteral >> childSandblocksDo: aBlock [
-
-	self pairsDo: [:key :value |
-		aBlock value: key.
-		aBlock value: value]
-]
-
-{ #category : #'as yet unclassified' }
 SBJsObjectLiteral >> deleteCommandFor: aBlock [
 
 	^ (SBDeleteCommand newFor: self containingArtefact)

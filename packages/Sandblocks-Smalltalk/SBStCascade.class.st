@@ -17,12 +17,6 @@ SBStCascade >> cellGap [
 ]
 
 { #category : #'as yet unclassified' }
-SBStCascade >> childSandblocksDo: aBlock [
-
-	self submorphsDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBStCascade >> codeActions [
 
 	^ super codeActions, (SBStSubstitution allSubclasses

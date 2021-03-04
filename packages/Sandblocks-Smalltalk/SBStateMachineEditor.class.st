@@ -122,13 +122,6 @@ SBStateMachineEditor >> checkNearbyEnemies [
 ]
 
 { #category : #'as yet unclassified' }
-SBStateMachineEditor >> childSandblocksDo: aBlock [
-
-	self states do: [:state | aBlock value: state].
-	self connectors do: [:transition | aBlock value: transition conditions]
-]
-
-{ #category : #'as yet unclassified' }
 SBStateMachineEditor >> commandPaletteClass [
 
 	^ SBStateMachinePalette

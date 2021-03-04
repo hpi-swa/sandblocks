@@ -44,14 +44,6 @@ SBStateMachineState >> addUponLeave: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBStateMachineState >> childSandblocksDo: aBlock [
-
-	aBlock value: label.
-	self submorphs from: 2 to: self submorphCount do: [:m |
-		aBlock value: m submorphs second]
-]
-
-{ #category : #'as yet unclassified' }
 SBStateMachineState >> connectTo [
 	<action>
 

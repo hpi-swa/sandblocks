@@ -23,12 +23,6 @@ SBHelpShortcut >> below: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBHelpShortcut >> childSandblocksDo: aBlock [
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBHelpShortcut >> drawnColor [
 
 	^ self color

@@ -14,14 +14,6 @@ SBPositionableStreamView >> canDeleteChild: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBPositionableStreamView >> childSandblocksDo: aBlock [
-
-	self firstSubmorph submorphs do: [:morph | morph isSandblock ifTrue: [aBlock value: morph]].
-	aBlock value: self submorphs second.
-	aBlock value: self submorphs third
-]
-
-{ #category : #'as yet unclassified' }
 SBPositionableStreamView >> initialize [
 
 	super initialize.

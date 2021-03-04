@@ -15,10 +15,6 @@ SBFormViewer >> asMorphBlock: convert [
 ]
 
 { #category : #'as yet unclassified' }
-SBFormViewer >> childSandblocksDo: aBlock [
-]
-
-{ #category : #'as yet unclassified' }
 SBFormViewer >> initialize [
 
 	super initialize.

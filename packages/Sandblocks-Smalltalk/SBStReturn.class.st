@@ -13,12 +13,6 @@ SBStReturn >> canAppearInBlockBody [
 	^ true
 ]
 
-{ #category : #hierarchy }
-SBStReturn >> childSandblocksDo: aBlock [
-
-	self hasSubmorphs ifTrue: [aBlock value: self firstSubmorph]
-]
-
 { #category : #accessing }
 SBStReturn >> expression [
 

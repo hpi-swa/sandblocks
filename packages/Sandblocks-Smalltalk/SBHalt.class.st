@@ -50,10 +50,6 @@ SBHalt >> active: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBHalt >> childSandblocksDo: aBlock [
-]
-
-{ #category : #'as yet unclassified' }
 SBHalt >> doubleClick: anEvent [
 
 	super doubleClick: anEvent.

@@ -21,10 +21,6 @@ SBMorphWrapperBlock >> asMorphBlock: convert [
 ]
 
 { #category : #'as yet unclassified' }
-SBMorphWrapperBlock >> childSandblocksDo: aBlock [
-]
-
-{ #category : #'as yet unclassified' }
 SBMorphWrapperBlock >> initialize [
 
 	super initialize.

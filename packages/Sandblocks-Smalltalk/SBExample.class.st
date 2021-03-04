@@ -107,15 +107,6 @@ SBExample >> assertionBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBExample >> childSandblocksDo: aBlock [
-
-	aBlock value: nameInput.
-	aBlock value: self selfBlock.
-	aBlock value: self argumentsBlock.
-	self assertionBlock ifNotNil: [:block | aBlock value: block]
-]
-
-{ #category : #'as yet unclassified' }
 SBExample >> click: anEvent [
 
 	super click: anEvent.

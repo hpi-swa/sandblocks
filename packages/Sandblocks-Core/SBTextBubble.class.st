@@ -32,10 +32,6 @@ SBTextBubble >> changeToUnknown [
 ]
 
 { #category : #'as yet unclassified' }
-SBTextBubble >> childSandblocksDo: aBlock [
-]
-
-{ #category : #'as yet unclassified' }
 SBTextBubble >> colorAlpha: aNumber [
 
 	text colorAlpha: aNumber

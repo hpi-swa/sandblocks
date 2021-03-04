@@ -11,12 +11,6 @@ SBGraphProjection class >> matches: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBGraphProjection >> childSandblocksDo: aBlock [
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBGraphProjection >> copyObject: anObject [
 
 	self removeAllMorphs.

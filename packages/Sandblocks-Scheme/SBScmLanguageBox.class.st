@@ -23,12 +23,6 @@ SBScmLanguageBox >> asSExpression: convert [
 ]
 
 { #category : #'as yet unclassified' }
-SBScmLanguageBox >> childSandblocksDo: aBlock [
-
-	aBlock value: self root
-]
-
-{ #category : #'as yet unclassified' }
 SBScmLanguageBox >> drawnColor [
 
 	^ self root drawnColor

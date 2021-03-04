@@ -11,13 +11,6 @@ SBJsPrefixOperator class >> validPrefixOperators [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsPrefixOperator >> childSandblocksDo: aBlock [
-
-	self submorphCount = 2 ifTrue: [
-		aBlock value: self lastSubmorph]
-]
-
-{ #category : #'as yet unclassified' }
 SBJsPrefixOperator >> contents [
 
 	^ self currentTextMorph contents

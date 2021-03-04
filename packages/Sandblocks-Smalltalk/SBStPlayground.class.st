@@ -69,14 +69,6 @@ SBStPlayground >> canDeleteChild: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBStPlayground >> childSandblocksDo: aBlock [
-
-	aBlock value: self firstSubmorph firstSubmorph.
-	bindings submorphsDo: aBlock.
-	super childSandblocksDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBStPlayground >> copyString [
 	<action>
 

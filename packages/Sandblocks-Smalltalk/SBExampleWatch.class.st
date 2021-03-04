@@ -63,12 +63,6 @@ SBExampleWatch class >> unregisterWatch: aWatch [
 ]
 
 { #category : #'as yet unclassified' }
-SBExampleWatch >> childSandblocksDo: aBlock [
-
-	self hasSubmorphs ifTrue: [aBlock value: self expression]
-]
-
-{ #category : #'as yet unclassified' }
 SBExampleWatch >> color [
 
 	^ self parentSandblock color

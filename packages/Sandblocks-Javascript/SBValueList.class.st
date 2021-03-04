@@ -20,12 +20,6 @@ SBValueList >> centerAlignSymbols [
 ]
 
 { #category : #'as yet unclassified' }
-SBValueList >> childSandblocksDo: aBlock [
-
-	self submorphsDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBValueList >> extent: aPoint [
 
 	super extent: (aPoint max: self layoutInset asEdgeInsets x @ self minimumHeight)

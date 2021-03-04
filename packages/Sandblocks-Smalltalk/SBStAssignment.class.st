@@ -22,14 +22,6 @@ SBStAssignment >> binding: aBlock value: anotherBlock [
 	self addMorphBack: anotherBlock
 ]
 
-{ #category : #converting }
-SBStAssignment >> childSandblocksDo: aBlock [
-
-	aBlock value: self firstSubmorph.
-	self submorphCount = 3 ifTrue: [
-		aBlock value: self lastSubmorph]
-]
-
 { #category : #'as yet unclassified' }
 SBStAssignment >> expression [
 

@@ -24,12 +24,6 @@ SBStMethodCategory >> category [
 ]
 
 { #category : #'as yet unclassified' }
-SBStMethodCategory >> childSandblocksDo: aBlock [
-
-	self submorphsDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBStMethodCategory >> class: aClass category: aString collapsed: aBoolean [
 
 	self firstSubmorph contents: aString.

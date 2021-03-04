@@ -38,12 +38,6 @@ SBStContainer >> cacheType: aClass for: aBlock [
 	self typeCache at: aBlock put: aClass
 ]
 
-{ #category : #'as yet unclassified' }
-SBStContainer >> childSandblocksDo: aBlock [
-
-	aBlock value: self body
-]
-
 { #category : #'artefact protocol' }
 SBStContainer >> containingArtefact [
 
