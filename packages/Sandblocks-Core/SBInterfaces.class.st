@@ -43,7 +43,7 @@ SBInterfaces class >> never [
 { #category : #core }
 SBInterfaces class >> topLevel [
 
-	^ {#isSandblock. #isTopLevel. [:o | o owner isNil]}
+	^ {#isSandblock. #isTopLevel. [:o | o owner isNil or: [o owner satisfies: #(isSandblock isSelection)]]}
 ]
 
 { #category : #core }

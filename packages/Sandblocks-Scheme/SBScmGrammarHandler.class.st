@@ -37,7 +37,7 @@ SBScmGrammarHandler >> perform: aCharacter for: aBlock empty: aBoolean [
 		(aCharacter isAlphabetic or: [aCharacter isSpecial or: [aCharacter = $#]]) ifTrue: [^ self replace: aBlock with: (SBScmIdentifier new contents: aCharacter asString)]].
 
 	aCharacter = Character space ifTrue: [
-		^ aBlock insertElementAfter].
+		^ ActiveEvent shiftPressed ifTrue: [aBlock insertElementBefore] ifFalse: [aBlock insertElementAfter]].
 	
 	aCharacter = $) ifTrue: [
 		^ (aBlock parentSandblock insertElementAfter) deleteIfDismissed: true]
@@ -67,5 +67,7 @@ SBScmGrammarHandler >> wrapInSExpr [
 		do: ((SBWrapCommand newFor: self block containingArtefact)
 			outer: SBScmExpression new;
 			inner: self block;
-			wrap: [:outer :inner | outer addMorphBack: inner])
+			wrap: [:outer :inner | outer addMorphBack: inner]).
+	
+	self block sandblockEditor maybeStartInputFromStart
 ]

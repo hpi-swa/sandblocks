@@ -540,25 +540,31 @@ SBBlock >> deleteBeforeCursor [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
-	| editor adjacent |
+	| editor adjacent parent |
 	self currentTextMorph cursor ~= 1 ifTrue: [^ self currentTextMorph deleteBeforeCursor].
 	
 	editor := self sandblockEditor.
+	parent := self parentSandblock.
 	
 	adjacent := self currentTextMorph previousMorphThat: [:b | b isTextMorph].
 	
-	(adjacent notNil and: [adjacent hasOwner: self parentSandblock])
+	(adjacent notNil and: [adjacent hasOwner: parent])
 		ifTrue: [ | target |
 			target := adjacent containingSandblock.
 			self currentTextMorph contents isEmpty ifTrue: [
-				self childSandblocks isEmpty
+				self hasChildSandblocks not
 					ifTrue: [self deleteBlock]
 					ifFalse: [
 						(target = self childSandblocks first or: [target hasOwner: self childSandblocks first]) ifTrue: [self childSandblocks first deleteAround]]].
 			editor startInput: target at: 900000000 replacingContents: false]
 		ifFalse: [
-			self deleteAround.
-			editor startInput: self at: 900000000 replacingContents: false]
+			(self parentHasDynamicNumberOfChildren and: [parent childSandblocks size > 1])
+				ifTrue: [
+					self deleteBlock.
+					editor startInput: parent childSandblocks first at: 900000000 replacingContents: false]
+				ifFalse: [
+					self deleteAround.
+					editor startInput: self at: 900000000 replacingContents: false]]
 ]
 
 { #category : #actions }
@@ -1819,7 +1825,9 @@ SBBlock >> selectNext [
 	self sandblockEditor selectionDownHistory removeAll.
 	self class navigation nextFrom: self do: [:b | (self canJumpTo: b) ifTrue: [b select]].
 	
-	self sandblockEditor maybeStartInputFromStart
+	self isSelected
+		ifTrue: [self sandblockEditor maybeStartInputFromEnd]
+		ifFalse: [	self sandblockEditor maybeStartInputFromStart]
 ]
 
 { #category : #actions }

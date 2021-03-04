@@ -5,6 +5,25 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInputDeleteTest >> testDeleteInArray [
+
+	| block editor array |
+	block := '[{a. b}]' parseAsSandblock.
+	editor := self methodFor: block.
+	
+	array := block statements first.
+	editor startInput: array childSandblocks first at: 2 replacingContents: false.
+	
+	editor performForSelection: #deleteBeforeCursor.
+	editor performForSelection: #deleteBeforeCursor.
+	self assert: 1 equals: array childSandblocks size.
+	
+	editor performForSelection: #deleteBeforeCursor.
+	editor performForSelection: #deleteBeforeCursor.
+	self assert: 0 equals: array childSandblocks size
+]
+
+{ #category : #'as yet unclassified' }
 SBInputDeleteTest >> testDeleteInBinaryExpression [
 
 	| block editor b |
