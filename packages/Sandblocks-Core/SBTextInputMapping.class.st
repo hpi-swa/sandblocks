@@ -18,44 +18,30 @@ SBTextInputMapping >> handledEvent: anEvent in: anEditor [
 SBTextInputMapping >> registerDefaultShortcuts [
 
 	self
-		" modify smalltalk "
-		registerShortcut: $" do: #wrapInToggledCode;
-		registerShortcut: $D do: #insertLabelAbove;
-		registerShortcut: $[ do: #wrapInBlock;
-		registerShortcut: ${ do: #wrapInDynamicArray;
-		registerShortcut: $# do: #wrapInLiteralArray;
-		registerShortcut: $: do: #wrapInAssignment;
-		registerShortcut: $; do: #wrapInCascade;
-		registerShortcut: $^ do: #wrapInReturn;
-		registerShortcut: Character space shift do: #wrapAsArgument;
-		registerShortcut: Character space do: #wrapInMessageSend;
-		
 		" input "
-		registerShortcut: Character arrowLeft asSandblockShortcut, Character arrowLeft shift, Character arrowLeft command do: #moveCursorLeft;
-		registerShortcut: Character arrowRight asSandblockShortcut, Character arrowRight shift, Character arrowRight command do: #moveCursorRight;
-		registerShortcut: Character arrowUp asSandblockShortcut do: #moveCursorUp;
-		registerShortcut: Character arrowDown do: #moveCursorDown;
-		registerShortcut: Character arrowUp do: #moveCursorUp;
-		"registerShortcut: Character home do: #moveCursorToStart;"
-		"registerShortcut: Character end do: #moveCursorToEnd;"
-		registerShortcut: Character backspace do: #deleteBeforeCursor;
-		registerShortcut: Character delete do: #deleteAfterCursor;
-		registerShortcut: $a command do: #clearInput;
-		registerShortcut: $j command do: #focusNextSuggestion;
-		registerShortcut: $k command do: #focusPreviousSuggestion;
+		inputShortcut: Character arrowLeft asSandblockShortcut, Character arrowLeft shift, Character arrowLeft command do: #moveCursorLeft;
+		inputShortcut: Character arrowRight asSandblockShortcut, Character arrowRight shift, Character arrowRight command do: #moveCursorRight;
+		inputShortcut: Character arrowUp asSandblockShortcut do: #moveCursorUp;
+		inputShortcut: Character arrowDown do: #moveCursorDown;
+		inputShortcut: Character arrowUp do: #moveCursorUp;
+		inputShortcut: Character backspace do: #deleteBeforeCursor;
+		inputShortcut: Character delete do: #deleteAfterCursor;
+		inputShortcut: $a command do: #clearInput;
+		inputShortcut: $j command do: #focusNextSuggestion;
+		inputShortcut: $k command do: #focusPreviousSuggestion;
 		registerShortcut: $1 command do: #useFirstArgument;
 		registerShortcut: $2 command do: #useSecondArgument;
 		registerShortcut: $3 command do: #useThirdArgument;
 		registerShortcut: $4 command do: #useFourthArgument;
 		registerShortcut: $5 command do: #useFifthArgument;
-		registerShortcut: $' command do: #splitStringAtCursor;
+		inputShortcut: $' command do: #splitStringAtCursor;
 		registerShortcut: $+ command do: #insertElementAfter;
 		registerShortcut: $* command do: #insertElementBefore;
 		
 		" refactor "
 		registerShortcut: $T command do: #extractMethod;
 		registerShortcut: $t command do: #createEmptySmalltalkMethod;
-		registerShortcut: $= do: #extractVariable;
+		cmdShortcut: $= do: #extractVariable;
 		
 		" debugging "
 		registerShortcut: $> command do: #stepOver;
@@ -85,13 +71,11 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $; command do: #promptMenu;
 		registerShortcut: $f command do: #startSearch;
 		registerShortcut: $g command do: #nextSearchResult;
-		registerShortcut: $S command do: #saveWorkspace;
-		registerShortcut: $O command do: #promptOpenWorkspace;
 		registerShortcut: $f command do: #toggleFullscreen;
 		
 		" navigation "
-		registerShortcut: Character arrowLeft asSandblockShortcut withCommand, Character arrowLeft do: #selectPrevious;
-		registerShortcut: Character arrowRight asSandblockShortcut withCommand, Character arrowRight do: #selectNext;
+		cmdShortcut: Character arrowLeft asSandblockShortcut withCommand, Character arrowLeft do: #selectPrevious;
+		cmdShortcut: Character arrowRight asSandblockShortcut withCommand, Character arrowRight do: #selectNext;
 		registerShortcut: Character arrowDown shift do: #selectDown;
 		registerShortcut: Character arrowUp shift do: #selectUp;
 		registerShortcut: Character pageDown do: #selectLast;
@@ -102,9 +86,9 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character tab do: #inputNextUnknown;
 		registerShortcut: Character arrowUp do: #selectPreviousGroup;
 		registerShortcut: Character arrowDown do: #selectNextGroup;
-		
+
 		registerShortcut: Character escape do: #dismiss;
-		
+
 		" modify general "
 		registerShortcut: $, command do: #promptAction;
 		"registerShortcut: $c do: #changeToUnknown;"
@@ -114,21 +98,35 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $V command do: #pasteAbove;
 		registerShortcut: $r command do: #replaceWithCopyBuffer;
 		"registerShortcut: $d do: #deleteAdjacent;"
-		registerShortcut: $( do: #leftRotate;
+		cmdShortcut: $( do: #leftRotate;
 		"registerShortcut: $. do: #addElement;"
 		registerShortcut: Character arrowLeft command withShift do: #swapLeft;
 		registerShortcut: Character arrowRight command withShift do: #swapRight;
 		registerShortcut: $c asSandblockShortcut withOption do: #copyString;
 		registerShortcut: $v asSandblockShortcut withOption do: #pasteString;
-		registerShortcut: Character backspace do: #deleteBlock;
+		cmdShortcut: Character backspace do: #deleteBlock;
 		registerShortcut: $x command do: #deleteBlock;
 		registerShortcut: Character backspace shift do: #deleteAround;
-		registerShortcut: $X command do: #deleteBlock;
-		"registerShortcut: Character delete do: #deleteAround;"
-		
+		registerShortcut: $X command do: #deleteAround;
+
 		registerShortcut: Character cr shift do: #insertStatementAbove;
 		registerShortcut: Character cr do: #insertStatementBelow;
-		registerShortcut: Character cr do: #useSuggestion
+		registerShortcut: Character cr do: #useSuggestion;
+
+		" modify smalltalk "
+		cmdShortcut: $" do: #wrapInToggledCode;
+		cmdShortcut: $D do: #insertLabelAbove;
+		cmdShortcut: $[ do: #wrapInBlock;
+		cmdShortcut: ${ do: #wrapInDynamicArray;
+		cmdShortcut: $# do: #wrapInLiteralArray;
+		cmdShortcut: $: do: #wrapInAssignment;
+		cmdShortcut: $; do: #wrapInCascade;
+		cmdShortcut: $^ do: #wrapInReturn;
+		cmdShortcut: Character space shift do: #wrapAsArgument;
+		cmdShortcut: Character space do: #wrapInMessageSend;
+		
+		" modify scheme "
+		cmdShortcut: $( do: #wrapInSExpr
 ]
 
 { #category : #'as yet unclassified' }

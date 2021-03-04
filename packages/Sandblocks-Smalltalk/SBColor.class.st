@@ -22,7 +22,7 @@ SBColor class >> matches: aMessage [
 	
 	(super matches: aMessage) ifFalse: [^ false].
 	
-	(aMessage receiver isBinding and: [#('Color' 'ECSColor') includes: aMessage receiver contents]) ifFalse: [^ false].
+	((aMessage receiver satisfies: #(notNil isBinding)) and: [#('Color' 'ECSColor') includes: aMessage receiver contents]) ifFalse: [^ false].
 	^ aMessage selector asSymbol isUnary
 		ifTrue: [
 			(Color respondsTo: aMessage selector asSymbol)
@@ -72,7 +72,7 @@ SBColor >> colorContents: aColor [
 SBColor >> colorContentsUpdate: aColor [
 
 	self colorContents: aColor.
-	self sandblockEditor batchedChangeStep: self
+	self sandblockEditor commands batchedChangeStep: self
 ]
 
 { #category : #'as yet unclassified' }

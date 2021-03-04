@@ -19,7 +19,7 @@ SBHalt class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
 
-	^ (aBlock selector = 'sandblocksHalt' and: [aBlock isInCascade not]) or: [aBlock receiver isName and: [aBlock receiver contents = 'SBHalt' and: [aBlock selector = #deactivated]]]
+	^ (aBlock selector = 'sandblocksHalt' and: [aBlock isInCascade not]) or: [(aBlock receiver satisfies: #(notNil isName)) and: [aBlock receiver contents = 'SBHalt' and: [aBlock selector = #deactivated]]]
 ]
 
 { #category : #'as yet unclassified' }

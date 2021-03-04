@@ -15,7 +15,7 @@ SBASTNodeTest >> testCanUndoAppendLine [
 	
 	block statements last keyStroke: (self keyboardEvent: $s).
 	editor endInput.
-	self assert: 2 equals: (editor instVarNamed: #undoStack) size.
+	self assert: 2 equals: ((editor instVarNamed: #history) instVarNamed: #undoStack) size.
 	
 	editor undo.
 	

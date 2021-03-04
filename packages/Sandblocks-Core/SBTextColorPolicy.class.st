@@ -29,10 +29,14 @@ SBTextColorPolicy >> colorForBlock: aBlock [
 { #category : #'as yet unclassified' }
 SBTextColorPolicy >> foregroundColorForBlock: aBlock [
 
-	aBlock isMessageSend ifTrue: [^ Color blue].
-	aBlock isMessagePart ifTrue: [^ Color blue].
+	aBlock isMessageSend ifTrue: [^ Color blue muchDarker].
+	(aBlock isMessagePart and: [aBlock messageSend isMethod]) ifTrue: [^ Color black].
+	aBlock isMessagePart ifTrue: [^ Color blue muchDarker].
 	aBlock isPragma ifTrue: [^ Color green].
 	aBlock isLiteralBlock ifTrue: [^ Color red muchDarker].
+	(aBlock isName and: [aBlock contents = 'self']) ifTrue: [^ Color red muchDarker].
+	(aBlock isName and: [aBlock isTemporaryVariable]) ifTrue: [^ Color gray muchDarker].
+	(aBlock isName and: [aBlock isBinding and: [aBlock resolveBinding ifNotNil: #isTemporaryVariable ifNil: [false]]]) ifTrue: [^ Color gray muchDarker].
 	^ super foregroundColorForBlock: aBlock
 ]
 

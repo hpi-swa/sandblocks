@@ -16,12 +16,6 @@ SBStArray class >> withContents: aCollection [
 	^ array
 ]
 
-{ #category : #converting }
-SBStArray >> acceptChild: aMorph [
-
-	^ aMorph isExpression
-]
-
 { #category : #'as yet unclassified' }
 SBStArray >> canDeleteChild: aBlock [
 

@@ -18,7 +18,7 @@ SBExampleWatch class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
 
-	^ aBlock receiver isBinding and: [aBlock receiver contents = self name] and: [aBlock selector = 'report:for:']
+	^ (aBlock receiver satisfies: #(notNil isBinding)) and: [aBlock receiver contents = self name] and: [aBlock selector = 'report:for:']
 ]
 
 { #category : #'as yet unclassified' }

@@ -20,18 +20,6 @@ SBScmGrammarHandler >> evaluateExpression [
 		self block sandblockEditor connectFrom: self block to: morph]
 ]
 
-{ #category : #actions }
-SBScmGrammarHandler >> leftRotate [
-	<action>
-	<inputAction>
-	
-	self block sandblockEditor
-		do: ((SBWrapCommand newFor: self block containingArtefact)
-			outer: SBScmExpression new;
-			inner: self block;
-			wrap: [:outer :inner | outer addMorphBack: inner])
-]
-
 { #category : #callbacks }
 SBScmGrammarHandler >> perform: aCharacter for: aBlock empty: aBoolean [ 
 
@@ -68,4 +56,16 @@ SBScmGrammarHandler >> wrapInMessageSend [
 	<actionValidIf: #isExpression>
 	
 	self block insertElementAfter
+]
+
+{ #category : #actions }
+SBScmGrammarHandler >> wrapInSExpr [
+	<action>
+	<inputAction>
+	
+	self block sandblockEditor
+		do: ((SBWrapCommand newFor: self block containingArtefact)
+			outer: SBScmExpression new;
+			inner: self block;
+			wrap: [:outer :inner | outer addMorphBack: inner])
 ]

@@ -12,7 +12,7 @@ Class {
 		'errorIcon',
 		'reportedError'
 	],
-	#category : #'Sandblocks-Smalltalk'
+	#category : #'Sandblocks-Babylonian'
 }
 
 { #category : #'as yet unclassified' }
@@ -32,7 +32,7 @@ SBMorphExample class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
 
-	^ aBlock receiver isBinding and: [aBlock receiver contents = self name] and: [aBlock selector = 'setUp:cases:extent:']
+	^ (aBlock receiver satisfies: #(notNil isBinding)) and: [aBlock receiver contents = self name] and: [aBlock selector = 'setUp:cases:extent:']
 ]
 
 { #category : #'as yet unclassified' }
@@ -165,6 +165,15 @@ SBMorphExample >> isMorphExample [
 	^ true
 ]
 
+{ #category : #helper }
+SBMorphExample >> methodForContext: aContext ifOpen: aBlock ifClosed: anotherBlock [
+
+	^ self sandblockEditor methods
+		detect: [:m | m methodClass = aContext methodClass and: [m selector = aContext selector]]
+		ifFound: aBlock
+		ifNone: anotherBlock
+]
+
 { #category : #initialization }
 SBMorphExample >> pickAndExplore [
 	<action>
@@ -205,7 +214,7 @@ SBMorphExample >> reportError: anError [
 			^ self].
 		
 		" error was elsewhere, see if we have an open artefact with this context "
-		editor
+		self
 			methodForContext: ctx
 			ifOpen: [:method |
 				(method blockForPC: ctx previousPc) ifNotNil: [:b |

@@ -25,8 +25,8 @@ SBStAssignment >> binding: aBlock value: anotherBlock [
 { #category : #converting }
 SBStAssignment >> childSandblocksDo: aBlock [
 
-	self hasSubmorphs ifTrue: [
-		aBlock value: self firstSubmorph.
+	aBlock value: self firstSubmorph.
+	self submorphCount = 3 ifTrue: [
 		aBlock value: self lastSubmorph]
 ]
 

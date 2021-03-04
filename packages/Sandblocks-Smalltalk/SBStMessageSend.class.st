@@ -26,6 +26,15 @@ SBStMessageSend >> arguments [
 	^ signature arguments
 ]
 
+{ #category : #converting }
+SBStMessageSend >> asMessageSend: converter [
+	<convert>
+	
+	converter
+		if: [self isInCascade]
+		do: [self veryDeepCopy]
+]
+
 { #category : #'as yet unclassified' }
 SBStMessageSend >> browse [
 
@@ -173,7 +182,7 @@ SBStMessageSend >> isBinary [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> isConstructor: aString for: aClass [
 
-	^ self receiver isBinding and: [self receiver contents = aClass name] and: [self selector = aString]
+	^ (self receiver satisfies: #(notNil isBinding)) and: [self receiver contents = aClass name] and: [self selector = aString]
 ]
 
 { #category : #'as yet unclassified' }

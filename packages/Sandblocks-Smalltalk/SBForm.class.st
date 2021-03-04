@@ -14,7 +14,7 @@ SBForm class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
 
-	^ aBlock receiver isBinding
+	^ (aBlock receiver satisfies: #(notNil isBinding))
 		and: [aBlock receiver contents = 'Form']
 		and: [aBlock selector = 'fromFileNamed:']
 		and: [aBlock arguments first isStringBlock]

@@ -20,7 +20,9 @@ SBCombinedCommand class >> newWith: aCollection [
 SBCombinedCommand >> affectedArtefacts [
 
 	" if we non-edit commands within our list we also may get nil artifacts "
-	^ ((self commands gather: #affectedArtefacts) select: #notNil) asSet
+	^ self wasEdit
+		ifTrue: [((self commands gather: #affectedArtefacts) select: #notNil) asSet]
+		ifFalse: [#()]
 ]
 
 { #category : #'as yet unclassified' }

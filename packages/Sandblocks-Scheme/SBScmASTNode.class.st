@@ -72,6 +72,17 @@ SBScmASTNode >> isScheme [
 	^ true
 ]
 
+{ #category : #testing }
+SBScmASTNode >> leftRotate [
+	<actionValidIf: #never>
+]
+
+{ #category : #testing }
+SBScmASTNode >> never [
+
+	^ false
+]
+
 { #category : #accessing }
 SBScmASTNode >> newNullBlock [
 

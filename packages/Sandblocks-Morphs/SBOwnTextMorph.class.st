@@ -214,7 +214,8 @@ SBOwnTextMorph >> font: aFont [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> fontToUse [
 
-	^ (font ifNil: [TextStyle defaultFont]) emphasized: self emphasis emphasisCode
+	^ (font ifNil: [TextStyle defaultFont])
+		emphasized: (self emphasis == #derive ifTrue: [self containingSandblock emphasis] ifFalse: [self emphasis]) emphasisCode
 ]
 
 { #category : #'as yet unclassified' }

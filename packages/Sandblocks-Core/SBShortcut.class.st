@@ -6,7 +6,8 @@ Class {
 		'ctrl',
 		'command',
 		'shift',
-		'option'
+		'option',
+		'modes'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -70,7 +71,8 @@ SBShortcut >> initialize [
 	ctrl := false.
 	command := false.
 	shift := false.
-	option := false
+	option := false.
+	modes := #()
 ]
 
 { #category : #'as yet unclassified' }
@@ -95,6 +97,24 @@ SBShortcut >> matchesEvent: anEvent [
 			anEvent optionKeyPressed = self option and: [
 				(shift or: [character isUppercase]) = anEvent shiftPressed or: [
 					(anEvent keyCharacter <= 32 and: [shift = anEvent shiftPressed]) or: [shiftedKeys includes: anEvent keyCharacter]]]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBShortcut >> matchesEvent: anEvent mode: aMode [
+
+	^ (self modes isEmpty or: [self modes includes: aMode]) and: [self matchesEvent: anEvent]
+]
+
+{ #category : #'as yet unclassified' }
+SBShortcut >> modes [
+
+	^ modes
+]
+
+{ #category : #'as yet unclassified' }
+SBShortcut >> modes: aCollection [
+
+	modes := aCollection
 ]
 
 { #category : #'as yet unclassified' }

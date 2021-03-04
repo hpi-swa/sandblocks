@@ -54,13 +54,19 @@ SBStMessagePart >> deleteBeforeCursor [
 	<inputAction>
 	
 	(self actualContents isEmpty and: [self isFirstPart]) ifTrue: [^ self messageSend tryDelete].
-	self sandblockEditor deleteBeforeCursor
+	super deleteBeforeCursor
 ]
 
 { #category : #'as yet unclassified' }
 SBStMessagePart >> drawnColor [
 
 	^ self messageSend drawnColor alpha: 0
+]
+
+{ #category : #'as yet unclassified' }
+SBStMessagePart >> emphasis [
+
+	^ self colorPolicy emphasisForMessagePart: self
 ]
 
 { #category : #'as yet unclassified' }
@@ -72,7 +78,7 @@ SBStMessagePart >> evaluate [
 { #category : #'as yet unclassified' }
 SBStMessagePart >> fontToUse [
 
-	^ super fontToUse emphasized: TextEmphasis bold emphasisCode
+	^ super fontToUse emphasized: self emphasis emphasisCode
 ]
 
 { #category : #'as yet unclassified' }
@@ -87,7 +93,7 @@ SBStMessagePart >> initialize [
 	super initialize.
 	
 	self
-		addMorphBack: (text := SBOwnTextMorph new emphasis: TextEmphasis bold);
+		addMorphBack: (text := SBOwnTextMorph new emphasis: #derive);
 		layoutPolicy: SBAlgebraLayout new;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap

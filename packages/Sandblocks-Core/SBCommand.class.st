@@ -46,7 +46,7 @@ SBCommand class >> newOrEditFor: anArtefactOrNil [
 { #category : #'as yet unclassified' }
 SBCommand >> affectedArtefacts [
 
-	^ {self artefact}
+	^ self wasEdit ifTrue: [{self artefact}] ifFalse: [#()]
 ]
 
 { #category : #'as yet unclassified' }

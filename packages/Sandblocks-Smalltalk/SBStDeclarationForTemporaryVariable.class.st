@@ -11,6 +11,17 @@ SBStDeclarationForTemporaryVariable >> asSuggestionItem [
 ]
 
 { #category : #'as yet unclassified' }
+SBStDeclarationForTemporaryVariable >> fixActions [
+
+	^ self hasUsages
+		ifTrue: [#()]
+		ifFalse: [{
+			SBCodeAction
+				labeled: 'Remove unused declaration' for: self block
+				do: [:node | node deleteBlock]}]
+]
+
+{ #category : #'as yet unclassified' }
 SBStDeclarationForTemporaryVariable >> inputCommandClass [
 
 	^ SBStBindingRenameCommand
@@ -49,5 +60,5 @@ SBStDeclarationForTemporaryVariable >> symbolsFor: aColorPolicy [
 { #category : #'as yet unclassified' }
 SBStDeclarationForTemporaryVariable >> valid [
 
-	^ true
+	^ self block isInWorld not or: [self hasUsages]
 ]

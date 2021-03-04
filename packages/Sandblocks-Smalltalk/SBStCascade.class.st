@@ -5,12 +5,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBStCascade >> acceptChild: aMorph [
-
-	^ aMorph isMessageSend
-]
-
-{ #category : #'as yet unclassified' }
 SBStCascade >> canDeleteChild: aBlock [
 
 	^ aBlock ~= self receiver

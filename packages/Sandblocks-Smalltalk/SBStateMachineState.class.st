@@ -112,12 +112,6 @@ SBStateMachineState >> insertCommandRequest: anAfterBoolean near: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBStateMachineState >> isASTNode [
-
-	^ false
-]
-
-{ #category : #'as yet unclassified' }
 SBStateMachineState >> isSmalltalk [
 
 	^ true

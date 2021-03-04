@@ -255,7 +255,7 @@ SBStBasicMethod >> ensureExpanded [
 { #category : #'as yet unclassified' }
 SBStBasicMethod >> evaluationContext [
 
-	^ self sandblockEditor errorContextFor: self ifNone: [nil]
+	^ self sandblockEditor errors focusedArtefact = self ifTrue: [self sandblockEditor editor errors focusedContext] ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -348,12 +348,10 @@ SBStBasicMethod >> instanceVariables [
 	editor := self sandblockEditor.
 	^ Array streamContents: [:stream |
 		self methodClass withAllSuperclassesDo: [:class |
-			editor
-				ifNil: [class allInstVarNames collect: [:name | SBStName instanceVariable: name]]
-				ifNotNil: [
-					editor blockForClass: class ifPresent: [:c | stream nextPutAll: c instanceVariables] ifAbsent: [
-						class instVarNames do: [:name |
-							stream nextPut: (SBStName instanceVariable: name)]]]]]
+			self sandblockEditor
+				blockFor: class withInterfaces: #(isEditor)
+				ifOpen: #instanceVariables
+				ifClosed: [class instVarNames collect: [:name | SBStName instanceVariable: name]]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -623,13 +621,6 @@ SBStBasicMethod >> statements [
 SBStBasicMethod >> statements: aCollection [
 
 	(self body ifNil: [self body: SBStBlockBody empty. self body]) statements: aCollection
-]
-
-{ #category : #'as yet unclassified' }
-SBStBasicMethod >> stopEditing: aCommand [
-
-	signature stopEditing: aCommand.
-	self removeSuggestionMenu
 ]
 
 { #category : #'as yet unclassified' }

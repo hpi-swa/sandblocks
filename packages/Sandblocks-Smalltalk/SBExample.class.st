@@ -28,7 +28,7 @@ SBExample class >> matches: aMessage [
 
 	(super matches: aMessage) ifFalse: [^ false].
 	
-	^ aMessage receiver isBinding
+	^ (aMessage receiver satisfies: #(notNil isBinding))
 		and: [aMessage receiver contents = self name]
 		and: [#('self:args:label:' 'self:args:label:assert:') includes: aMessage selector]
 ]
@@ -140,8 +140,14 @@ SBExample >> collectTypeInfo [
 		self containingArtefact cacheType: obj class for: arg].
 	
 	SBTypeCollectSimulator new
-		methodMap: self sandblockEditor currentMethodMap;
+		methodMap: self currentMethodMap;
 		simulate: [[receiver perform: selector withArguments: arguments] on: Error do: []]
+]
+
+{ #category : #'as yet unclassified' }
+SBExample >> currentMethodMap [
+
+	^ (self sandblockEditor methods select: #exists) collect: [:method | method compiledMethod sandblocksFastHash -> method] as: Dictionary
 ]
 
 { #category : #'as yet unclassified' }

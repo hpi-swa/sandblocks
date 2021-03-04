@@ -27,6 +27,13 @@ SBStDeclarationBehavior >> guessedClass [
 ]
 
 { #category : #'as yet unclassified' }
+SBStDeclarationBehavior >> hasUsages [
+
+	self allUsagesDo: [:u | ^ true].
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBStDeclarationBehavior >> isDeclaration [
 
 	^ true

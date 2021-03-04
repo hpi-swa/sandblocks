@@ -63,6 +63,13 @@ SBStName >> allUsagesDo: aBlock [
 ]
 
 { #category : #converting }
+SBStName >> asBinding: converter [
+	<convert>
+	
+	converter do: [SBStName new contents: self contents; behavior: SBStBinding new; yourself]
+]
+
+{ #category : #converting }
 SBStName >> asSchemeIdentifier: converter [
 	<convert>
 	
@@ -282,7 +289,7 @@ SBStName >> noteNewOwner: aMorph [
 	((aMorph parentSandblock ifNotNil: #isMethod ifNil: [false]) and: [aMorph parentSandblock isMyArgument: self]) ifTrue: [^ self behavior: SBStDeclarationForMethodArgument new].
 	aMorph isTemporaries ifTrue: [^ self behavior: SBStDeclarationForTemporaryVariable new].
 	aMorph isBlockBindings ifTrue: [^ self behavior: SBStDeclarationForBlock new].
-	(self containingArtefact ifNotNil: #isClassContainer ifNil: [false]) ifTrue: [
+	((self containingArtefact satisfies: {#notNil. #isEditor. [:a | a object isBehavior]})) ifTrue: [
 		aMorph = self containingArtefact instanceVariables ifTrue: [^ self behavior: SBStDeclarationForInstanceVariable new].
 		aMorph = self containingArtefact classVariables ifTrue: [^ self behavior: SBStDeclarationForPoolVariable new]].
 	

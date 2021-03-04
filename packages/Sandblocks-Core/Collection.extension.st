@@ -26,3 +26,9 @@ Collection >> matchesEvent: anEvent [
 
 	^ self anySatisfy: [:shortcut | shortcut matchesEvent: anEvent]
 ]
+
+{ #category : #'*Sandblocks-Core' }
+Collection >> matchesEvent: anEvent mode: aSymbol [
+
+	^ self anySatisfy: [:shortcut | shortcut matchesEvent: anEvent mode: aSymbol]
+]

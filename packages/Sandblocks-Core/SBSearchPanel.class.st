@@ -45,7 +45,8 @@ SBSearchPanel >> matchesQuery: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBSearchPanel >> nextResult [
+SBSearchPanel >> nextSearchResult [
+	<globalAction>
 
 	| start |
 	start := currentFocus ifNil: [self sandblockEditor].
@@ -68,6 +69,7 @@ SBSearchPanel >> searchFrom: aMorph ifNone: aBlock [
 
 { #category : #'as yet unclassified' }
 SBSearchPanel >> startSearch [
+	<globalAction>
 
 	currentFocus := self sandblockEditor selection.
 	self sandblockEditor startInput: self at: 900000000 replacingContents: true
@@ -83,5 +85,5 @@ SBSearchPanel >> textContents [
 SBSearchPanel >> updateSearch [
 
 	self contents ifEmpty: [^ self].
-	(currentFocus isNil or: [(self matchesQuery: currentFocus) not]) ifTrue: [self nextResult]
+	(currentFocus isNil or: [(self matchesQuery: currentFocus) not]) ifTrue: [self nextSearchResult]
 ]

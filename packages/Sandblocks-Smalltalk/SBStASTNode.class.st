@@ -39,6 +39,21 @@ SBStASTNode >> canAppearInBlockBody [
 ]
 
 { #category : #evaluate }
+SBStASTNode >> compilationCueWith: aRequestor for: aContext [
+
+	| receiver class |
+	receiver := aContext ifNotNil: #receiver.
+	class := Compiler new classForReceiver: receiver context: aContext.
+	^ CompilationCue
+		source: self sourceString readStream
+		context: aContext
+		receiver: receiver
+		class: class
+		environment: class environment
+		requestor: aRequestor
+]
+
+{ #category : #evaluate }
 SBStASTNode >> evaluate [
 
 	^ self containingArtefact
@@ -179,6 +194,21 @@ SBStASTNode >> prettySourceString [
 	^ SBFormatter formatString: self sourceString class: self containingArtefact relatedClass noPattern: self ~= self containingArtefact
 ]
 
+{ #category : #refactoring }
+SBStASTNode >> resolveLocalBindings [
+
+	| bindings |
+	bindings := Array streamContents: [:stream |
+		self allBlocksDo: [:block |
+			block isBinding ifTrue: [ | binding |
+				binding := block resolveBinding.
+				
+				(binding notNil and: [binding isDeclaration] and: [binding isMethodLocal] and: [(binding hasOwner: self) not]) ifTrue: [
+					stream nextPut: binding]]]].
+	
+	^ (KeyedSet keyBlock: #name) addAll: bindings
+]
+
 { #category : #printing }
 SBStASTNode >> selectionLabel [
 
@@ -186,6 +216,13 @@ SBStASTNode >> selectionLabel [
 		self printOn: stream.
 		
 		self guessedClass ifNotNil: [:c | stream space; nextPut: $(. c printOn: stream. stream nextPut: $)]]
+]
+
+{ #category : #accessing }
+SBStASTNode >> selector [
+	" if this node represents any selector, return it here "
+
+	^ nil
 ]
 
 { #category : #printing }

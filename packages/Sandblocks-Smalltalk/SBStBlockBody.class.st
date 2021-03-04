@@ -32,12 +32,6 @@ SBStBlockBody class >> emptyWithDeclarations: aCollectionOfStrings [
 			yourself]
 ]
 
-{ #category : #'as yet unclassified' }
-SBStBlockBody >> acceptChild: aMorph [
-
-	^ aMorph canAppearInBlockBody
-]
-
 { #category : #converting }
 SBStBlockBody >> addBlockArgument [
 

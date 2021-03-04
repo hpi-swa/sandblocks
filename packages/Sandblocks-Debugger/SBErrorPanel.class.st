@@ -10,7 +10,7 @@ Class {
 	#category : #'Sandblocks-Debugger'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBErrorPanel >> activeErrorDo: aBlock [
 
 	self submorphs detect: [:m | m expanded] ifFound: aBlock
@@ -25,7 +25,7 @@ SBErrorPanel >> addError: anError process: aProcess [
 	^ error
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBErrorPanel >> buildDebugCommandBar [
 
 	^ SBRow new
@@ -47,7 +47,7 @@ SBErrorPanel >> buildDebugCommandBar [
 			balloonText: 'Restart frame')
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBErrorPanel >> childSandblocksDo: aBlock [
 
 	self submorphsDo: aBlock
@@ -59,7 +59,7 @@ SBErrorPanel >> deleteCommandFor: aMorph [
 	^ SBDeleteCommand newNonEdit target: aMorph
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #colors }
 SBErrorPanel >> drawnColor [
 
 	^ Color white
@@ -72,35 +72,37 @@ SBErrorPanel >> focusError: anError [
 	commandBar ifNil: [self sandblockEditor addMorph: (commandBar := self buildDebugCommandBar) asElementNumber: 4]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBErrorPanel >> focusErrors [
 	<action>
+	<globalAction>
 
 	self hasSubmorphs ifTrue: [self focusError: self firstSubmorph]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBErrorPanel >> focusPreviousErrorFrame [
 	<action>
+	<globalAction>
 
 	self activeErrorDo: [:m | m focusPreviousFrame]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBErrorPanel >> focusedArtefact [
 
 	self activeErrorDo: [:error | ^ self sandblockEditor open: error currentStackFrame context method].
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBErrorPanel >> focusedContext [
 
 	self activeErrorDo: [:error | ^ error currentStackFrame context].
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBErrorPanel >> initialize [
 
 	super initialize.
@@ -110,7 +112,7 @@ SBErrorPanel >> initialize [
 		changeTableLayout
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBErrorPanel >> removedMorph: aMorph [
 
 	super removedMorph: aMorph.
@@ -121,30 +123,34 @@ SBErrorPanel >> removedMorph: aMorph [
 			commandBar := nil]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBErrorPanel >> restartFrame [
 	<action>
+	<globalAction>
 
 	self activeErrorDo: #restart
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBErrorPanel >> stepInto [
 	<action>
+	<globalAction>
 
 	self activeErrorDo: #stepInto
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBErrorPanel >> stepOver [
 	<action>
+	<globalAction>
 
 	self activeErrorDo: #stepOver
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBErrorPanel >> stepThrough [
 	<action>
+	<globalAction>
 
 	self activeErrorDo: #stepThrough
 ]

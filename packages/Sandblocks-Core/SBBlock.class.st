@@ -28,13 +28,7 @@ SBBlock class >> navigation: aNavigation [
 	Navigation := aNavigation
 ]
 
-{ #category : #testing }
-SBBlock >> acceptChild: aMorph [
-
-	^ false
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #'dropping/grabbing' }
 SBBlock >> acceptDroppingMorph: aMorph event: anEvent [
 
 	self sandblockEditor containingWindow ifNotNil: #beKeyWindow.
@@ -87,12 +81,6 @@ SBBlock >> adjacentBlock: aNumber [
 ]
 
 { #category : #hierarchy }
-SBBlock >> allBlocks [
-
-	^ Array streamContents: [:stream | self allBlocksDo: [:block | stream nextPut: block]]
-]
-
-{ #category : #hierarchy }
 SBBlock >> allBlocksDetect: aBlock ifFound: aSuccessBlock ifNone: aFailureBlock [
 
 	self allBlocksDo: [:b | (aBlock value: b) ifTrue: [^ aSuccessBlock value: b]].
@@ -107,19 +95,27 @@ SBBlock >> allBlocksDo: aBlock [
 ]
 
 { #category : #hierarchy }
+SBBlock >> allBlocksFor: anObject withInterfaces: aCollection [
+
+	^ Array streamContents: [:stream |
+		self allBlocksDo: [:morph |
+			(morph isSandblock and: [morph object = anObject and: [morph satisfies: aCollection]]) ifTrue: [stream nextPut: morph]]]
+]
+
+{ #category : #hierarchy }
 SBBlock >> allBlocksSelect: aBlock [
 
 	^ Array streamContents: [:stream |
 		self allBlocksDo: [:b | (aBlock value: b) ifTrue: [stream nextPut: b]]]
 ]
 
-{ #category : #artefacts }
+{ #category : #callbacks }
 SBBlock >> artefactChanged: aMethodBlock [
 
 	" callback fired after each change to a method "
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBlock >> artefactForPersisting [
 
 	| candidate |
@@ -128,7 +124,7 @@ SBBlock >> artefactForPersisting [
 	^ candidate
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #callbacks }
 SBBlock >> artefactSaved: aMethodBlock [
 
 	" callback fired after each save of a method/artefact "
@@ -158,22 +154,27 @@ SBBlock >> attachDecorator: aDecorator [
 	self updateSteppingDecorators
 ]
 
-{ #category : #testing }
+{ #category : #'ast helpers' }
 SBBlock >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	^ self parentSandblock binding: aString for: block class: aClass ifPresent: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
+SBBlock >> blockFor: anObject withInterfaces: aCollection ifOpen: aBlock ifClosed: anotherBlock [
+
+	^ self
+		allBlocksDetect: [:morph | morph isSandblock and: [morph object = anObject and: [morph satisfies: aCollection]]]
+		ifFound: aBlock
+		ifNone: anotherBlock
+]
+
+{ #category : #actions }
 SBBlock >> browse [
 	<action>
 	" you were asked to be browsed. you may ignore this "
 
 	self relatedClass browse
-]
-
-{ #category : #'artefact protocol' }
-SBBlock >> cacheType: aClass for: aBlock [
 ]
 
 { #category : #testing }
@@ -188,22 +189,24 @@ SBBlock >> canCopy [
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : #'insert/delete' }
 SBBlock >> canDeleteChild: aBlock [
 
 	^ self fixedNumberOfChildren not
 ]
 
-{ #category : #actions }
+{ #category : #'actions tests' }
 SBBlock >> canInput [
 
 	self flag: #fixme.
 	" see if we specialize startInput. FIXME: we can currently not just call startInput and
 	see what we get back because some classes cause side-effects, which they shouldn't "
-	^ (self class lookupSelector: #startInputAt:replacingContents:) methodClass ~= SBBlock
+	"(self class lookupSelector: #startInputAt:replacingContents:) methodClass ~= SBBlock"
+	
+	^ self currentTextMorph notNil
 ]
 
-{ #category : #actions }
+{ #category : #'actions tests' }
 SBBlock >> canJumpTo: aBlock [
 
 	^ aBlock parentSandblock containingArtefact = self containingArtefact or: [self containingArtefact notNil and: [self containingArtefact floating not]]
@@ -215,13 +218,13 @@ SBBlock >> canPersist [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBBlock >> centerAlignSymbols [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBBlock >> changeLocalColorPolicy [
 	<action>
 
@@ -247,7 +250,7 @@ SBBlock >> changeToUnknown [
 					startInput: new at: 0 replacingContents: false]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> childClosestTo: aPoint [
 
 	| closestDistance closestMorph |
@@ -283,7 +286,7 @@ SBBlock >> childSandblocksDo: aBlock [
 	"^ self subclassResponsibility"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #caching }
 SBBlock >> clearCache [
 
 	" this block may have just been duplicated or moved somewhere else, ensure to clear all caches and present yourself neatly "
@@ -291,14 +294,22 @@ SBBlock >> clearCache [
 	self allBlocksDo: [:morph | morph clearCacheSelf]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #caching }
 SBBlock >> clearCacheSelf [
 
 	colorPolicyCache := nil.
 	self removeProperty: #sandblockBlockColor
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
+SBBlock >> clearInput [
+	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
+	
+	self currentTextMorph clear
+]
+
+{ #category : #'event handling' }
 SBBlock >> click: anEvent [
 
 	self sandblockEditor selectClick: self at: anEvent position.
@@ -325,19 +336,13 @@ SBBlock >> closestAdjacentFrom: mySide to: theirSide [
 				((a perform: theirSide) squaredDistanceTo: myPoint) < ((b perform: theirSide) squaredDistanceTo: myPoint) ifTrue: [a] ifFalse: [b]]]
 ]
 
-{ #category : #testing }
-SBBlock >> codeContainer [
-
-	^ self parentSandblock ifNotNil: #codeContainer
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBBlock >> color [
 
 	^ self colorPolicy ifNotNil: [:p | p colorForBlock: self] ifNil: [Color white]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBBlock >> colorPolicy [
 
 	^ colorPolicyCache ifNil: [
@@ -345,25 +350,10 @@ SBBlock >> colorPolicy [
 		self parentSandblock ifNotNil: [:p | colorPolicyCache := p colorPolicy] ifNil: [SBDefaultColorPolicy new]]
 ]
 
-{ #category : #hierarchy }
+{ #category : #'ast helpers' }
 SBBlock >> commandPaletteClass [
 
 	^ self parentSandblock ifNotNil: #commandPaletteClass
-]
-
-{ #category : #'as yet unclassified' }
-SBBlock >> compilationCueWith: aRequestor for: aContext [
-
-	| receiver class |
-	receiver := aContext ifNotNil: #receiver.
-	class := Compiler new classForReceiver: receiver context: aContext.
-	^ CompilationCue
-		source: self sourceString readStream
-		context: aContext
-		receiver: receiver
-		class: class
-		environment: class environment
-		requestor: aRequestor
 ]
 
 { #category : #suggestions }
@@ -383,7 +373,7 @@ SBBlock >> completionSuggestionsFor: aString [
 		ifFalse: [#()]
 ]
 
-{ #category : #artefacts }
+{ #category : #accessing }
 SBBlock >> containingArtefact [
 
 	^ self isArtefact
@@ -391,7 +381,7 @@ SBBlock >> containingArtefact [
 		ifFalse: [self parentSandblock ifNotNil: [:b | b containingArtefact]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> containingBlock [
 
 	| next |
@@ -400,7 +390,7 @@ SBBlock >> containingBlock [
 	^ next
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> containingBlocksDo: aBlock [
 
 	| current |
@@ -410,7 +400,7 @@ SBBlock >> containingBlocksDo: aBlock [
 		current := current containingBlock]
 ]
 
-{ #category : #actions }
+{ #category : #hierarchy }
 SBBlock >> containingFloat [
 
 	self floating ifTrue: [^ self].
@@ -418,22 +408,13 @@ SBBlock >> containingFloat [
 	^ (self ownerSatisfying: [:o | o isSandblock and: [o floating]]) ifNil: [self sandblockEditor]
 ]
 
-{ #category : #'as yet unclassified' }
-SBBlock >> containingFullBlock [
-
-	| next |
-	next := self.
-	[next := next parentSandblock ifNil: [^ nil]] doWhileFalse: [next isBlockBody and: [next startPC notNil]].
-	^ next
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> containingSandblock [
 
 	^ self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> containingStatement [
 
 	| parent |
@@ -444,18 +425,11 @@ SBBlock >> containingStatement [
 	^ parent containingStatement
 ]
 
-{ #category : #actions }
+{ #category : #hierarchy }
 SBBlock >> containingToplevel [
 	" first parent that is floating "
 	
 	^ self floating ifTrue: [self] ifFalse: [self parentSandblock containingToplevel]
-]
-
-{ #category : #testing }
-SBBlock >> containsUnknown [
-
-	self allBlocksDo: [:b | b isUnknown ifTrue: [^ true]].
-	^ false
 ]
 
 { #category : #actions }
@@ -506,13 +480,6 @@ SBBlock >> copyToBuffer [
 SBBlock >> currentTextMorph [
 
 	^ nil
-]
-
-{ #category : #'artefact protocol' }
-SBBlock >> declarations [
-	" return any SBName declarations you may know "
-
-	^ #()
 ]
 
 { #category : #decorators }
@@ -584,13 +551,20 @@ SBBlock >> deleteAround [
 { #category : #actions }
 SBBlock >> deleteBeforeCursor [
 	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
 
 	| editor p parent adjacent |
-	self currentTextMorph contents ifNotEmpty: [^ self currentTextMorph deleteBeforeCursor].
+	editor := self sandblockEditor.
+	
+	self currentTextMorph contents ifNotEmpty: [
+		^ self currentTextMorph cursor = 1
+			ifTrue: [
+				self deleteAround.
+				editor startInput: self at: 1 replacingContents: false]
+			ifFalse: [self currentTextMorph deleteBeforeCursor]].
 	
 	p := self previousBlock.
 	parent := self parentSandblock.
-	editor := self sandblockEditor.
 	adjacent := self adjacentBlock: -1.
 	
 	self childSandblocks ifNotEmpty: [ | new |
@@ -624,7 +598,7 @@ SBBlock >> deleteBlock [
 		maybeStartInputFromEnd
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBBlock >> deleteCommandFor: aBlock [
 
 	^ (self canDeleteChild: aBlock)
@@ -667,7 +641,7 @@ SBBlock >> doExpression [
 		self containingArtefact cacheType: result class for: self]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 SBBlock >> drawBackgroundOn: aCanvas [
 
 	^ aCanvas
@@ -677,7 +651,7 @@ SBBlock >> drawBackgroundOn: aCanvas [
 		borderColor: (self colorPolicy borderColorForBlock: self)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 SBBlock >> drawDropHighlightOn: aCanvas [
 
 	self highlightedForDrop ifTrue: [
@@ -694,7 +668,7 @@ SBBlock >> drawDropHighlightOn: aCanvas [
 							color: Color red]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 SBBlock >> drawFrame: aColor on: aCanvas [
 
 	aCanvas
@@ -702,13 +676,13 @@ SBBlock >> drawFrame: aColor on: aCanvas [
 		color: aColor
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 SBBlock >> drawInvalidBorderOn: aCanvas [
 
 	aCanvas frameRectangle: self bounds width: 2 * self scalingFactor color: Color red
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 SBBlock >> drawOn: aCanvas [
 
 	self decorators do: [:d | d preDrawOn: aCanvas].
@@ -718,7 +692,7 @@ SBBlock >> drawOn: aCanvas [
 	self drawSymbolsOn: aCanvas
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 SBBlock >> drawSubmorphsOn: aCanvas [
 
 	super drawSubmorphsOn: aCanvas.
@@ -728,7 +702,7 @@ SBBlock >> drawSubmorphsOn: aCanvas [
 	self decorators do: [:d | d postDrawOn: aCanvas]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 SBBlock >> drawSymbolsOn: aCanvas [
 
 	| symbols fg font space y centerAlign |
@@ -753,13 +727,13 @@ SBBlock >> drawSymbolsOn: aCanvas [
 			color: (fg alpha: 0.7)]
 ]
 
-{ #category : #colors }
+{ #category : #'colors and color policies' }
 SBBlock >> drawnColor [
 
 	^ self color
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'dropping/grabbing' }
 SBBlock >> dropLocationDo: aBlock [
 
 	| mousePosition |
@@ -774,6 +748,21 @@ SBBlock >> dropLocationDo: aBlock [
 		ifNotNil: [:closestMorph | | delta |
 			delta := (((closestMorph adjacentBlock: 1) ifNil: [closestMorph adjacentBlock: -1]) ifNotNil: [:next | next topLeft - closestMorph topLeft] ifNil: [1 @ 0]) abs.
 			aBlock value: closestMorph topLeft - (0 @ 4) value: closestMorph value: delta x < delta y]
+]
+
+{ #category : #actions }
+SBBlock >> endInput [
+	<inputAction>
+
+	self sandblockEditor endInput
+]
+
+{ #category : #actions }
+SBBlock >> endMultiSelection [
+	<multiSelectAction>
+
+	self sandblockEditor clearMultiSelection.
+	self sandblockEditor mode: #command
 ]
 
 { #category : #decorators }
@@ -817,27 +806,20 @@ SBBlock >> firstDeepChild [
 	^ current
 ]
 
-{ #category : #'as yet unclassified' }
-SBBlock >> firstInput [
-
-	self allMorphsDo: [:m | (m isKindOf: SBOwnTextMorph) ifTrue: [^ m]].
-	^ nil
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #'ast helpers' }
 SBBlock >> fixActions [
 
 	^ #()
 ]
 
-{ #category : #actions }
+{ #category : #'testing hierarchy' }
 SBBlock >> fixedNumberOfChildren [
 	" return whether you may only take a fixed number of children "
 
 	^ true
 ]
 
-{ #category : #actions }
+{ #category : #testing }
 SBBlock >> floating [
 
 	^ self owner layoutPolicy isNil
@@ -861,7 +843,7 @@ SBBlock >> focusAfterDeleteIfNone: aBlock [
 { #category : #actions }
 SBBlock >> focusNextSuggestion [
 	<inputAction>
-	<actionValidIf: #hasCurrentTextMorph>
+	<actionValidIf: #hasSuggestions>
 	
 	self suggestionMenuDo: #next
 ]
@@ -869,24 +851,24 @@ SBBlock >> focusNextSuggestion [
 { #category : #actions }
 SBBlock >> focusPreviousSuggestion [
 	<inputAction>
-	<actionValidIf: #hasCurrentTextMorph>
+	<actionValidIf: #hasSuggestions>
 	
 	self suggestionMenuDo: #previous
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBBlock >> foregroundColor [
 
 	^ self colorPolicy foregroundColorForBlock: self
 ]
 
-{ #category : #testing }
+{ #category : #decorators }
 SBBlock >> forwardAlarm: aSelector to: anObject [
 
 	anObject perform: aSelector
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 SBBlock >> frameSize [
 
 	^ self colorPolicy ifNotNil: [:c | c selectionBorderWidth] ifNil: [0]
@@ -899,7 +881,7 @@ SBBlock >> handleDropMorph: anEvent [
 	^ super handleDropMorph: anEvent
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'dropping/grabbing' }
 SBBlock >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
 	aBlock unpackSelection object
@@ -924,7 +906,7 @@ SBBlock >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMor
 				position: (reference containingSandblock = self sandblockEditor
 					ifTrue: [((reference transformFrom: nil) globalPointToLocal: anEvent position) asIntegerPoint]
 					ifFalse: [anEvent position]);
-				inputUnknownIfInside]
+				inputContainedUnknown]
 ]
 
 { #category : #'event handling' }
@@ -946,20 +928,20 @@ SBBlock >> handlesMouseOverDragging: anEvent [
 	^ anEvent hand hasSubmorphs and: [self wantsDroppedMorph: anEvent hand firstSubmorph event: anEvent]
 ]
 
-{ #category : #hierarchy }
+{ #category : #'testing hierarchy' }
 SBBlock >> hasChildSandblocks [
 
 	self childSandblocksDo: [:b | ^ true].
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : #'actions tests' }
 SBBlock >> hasCommandPalette [
 
 	^ self commandPaletteClass notNil
 ]
 
-{ #category : #testing }
+{ #category : #'actions tests' }
 SBBlock >> hasCurrentTextMorph [
 
 	^ self currentTextMorph notNil
@@ -971,25 +953,25 @@ SBBlock >> hasDecorator: aClass [
 	^ decorators anySatisfy: [:d | d class = aClass]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBBlock >> hasInput [
 
 	^ self sandblockEditor currentInput = self
 ]
 
-{ #category : #suggestions }
+{ #category : #'actions tests' }
 SBBlock >> hasNoSuggestions [
 
 	^ self hasSuggestions not
 ]
 
-{ #category : #suggestions }
+{ #category : #'actions tests' }
 SBBlock >> hasSuggestions [
 
 	^ (self valueOfProperty: #sandblockSuggestionMenu ifAbsent: [^ false]) isInWorld
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'dropping/grabbing' }
 SBBlock >> highlightForDrop: aBoolean [
 
 	" override because we send this quite often and the base impl always calls changed "
@@ -998,7 +980,7 @@ SBBlock >> highlightForDrop: aBoolean [
 		self changed]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBBlock >> initialize [
 
 	super initialize.
@@ -1011,6 +993,17 @@ SBBlock >> initialize [
 		layoutInset: 0;
 		cellGap: 1 withScalingFactor;
 		extent: 0 @ 0
+]
+
+{ #category : #actions }
+SBBlock >> inputContainedUnknown [
+	<action>
+	<inputAction>
+
+	(self nextBlockThat: [:m | m wantsInput])
+		ifNotNil: [:m |
+			(m hasOwner: self) ifTrue: [
+				self sandblockEditor startInput: m at: 1 replacingContents: true]]
 ]
 
 { #category : #actions }
@@ -1031,23 +1024,14 @@ SBBlock >> inputPreviousUnknown [
 		ifNotNil: [:m | self sandblockEditor startInput: m at: 1 replacingContents: true]
 ]
 
-{ #category : #actions }
-SBBlock >> inputUnknownIfInside [
-
-	(self nextBlockThat: [:m | m wantsInput])
-		ifNotNil: [:m |
-			(m hasOwner: self) ifTrue: [
-				self sandblockEditor startInput: m at: 1 replacingContents: true]]
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBBlock >> insertCommandRequest: anAfterBoolean near: aBlock [
 
 	" the user pressed + on us, do we want to do something now? "
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
 SBBlock >> insertElement: aBoolean [
 
 	| cmd |
@@ -1077,7 +1061,7 @@ SBBlock >> insertElementBefore [
 	^ self insertElement: false
 ]
 
-{ #category : #testing }
+{ #category : #initialization }
 SBBlock >> intoWorld: aWorld [
 
 	super intoWorld: aWorld.
@@ -1085,24 +1069,12 @@ SBBlock >> intoWorld: aWorld [
 	self updateSteppingDecorators
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'dropping/grabbing' }
 SBBlock >> invokeMetaMenu: anEvent [
 
 	SBLabel text: [
 		'We hijack this event because it''s the only way to cleanly access ctrl+click'].
 	self pickUp: anEvent
-]
-
-{ #category : #testing }
-SBBlock >> isASTNode [
-
-	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isArrayBlock [
-
-	^ false
 ]
 
 { #category : #testing }
@@ -1113,43 +1085,7 @@ SBBlock >> isArtefact [
 ]
 
 { #category : #testing }
-SBBlock >> isAssignment [
-
-	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isBinding [
-
-	^ false
-]
-
-{ #category : #'as yet unclassified' }
-SBBlock >> isBlockBindings [
-
-	^ false
-]
-
-{ #category : #testing }
 SBBlock >> isBlockBody [
-
-	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isCascade [
-
-	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isClassContainer [
-
-	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isCodeContainer [
 
 	^ false
 ]
@@ -1167,48 +1103,24 @@ SBBlock >> isEditor [
 ]
 
 { #category : #testing }
-SBBlock >> isExample [
-
-	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isExampleWatch [
-
-	^ false
-]
-
-{ #category : #testing }
 SBBlock >> isExpression [
 
 	^ false
 ]
 
-{ #category : #hierarchy }
+{ #category : #'testing hierarchy' }
 SBBlock >> isFirstChild [
 
 	^ self parentSandblock childSandblocks first = self
 ]
 
-{ #category : #testing }
-SBBlock >> isGlobalWatch [
-
-	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isIdentifier [
-
-	^ false
-]
-
-{ #category : #hierarchy }
+{ #category : #'testing hierarchy' }
 SBBlock >> isLastChild [
 
 	^ self parentSandblock childSandblocks last = self
 ]
 
-{ #category : #hierarchy }
+{ #category : #'testing hierarchy' }
 SBBlock >> isLastDeepChild [
 
 	^ self = self lastDeepChild
@@ -1221,67 +1133,13 @@ SBBlock >> isLiteralBlock [
 ]
 
 { #category : #testing }
-SBBlock >> isMessagePart [
-
-	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isMessageSend [
-
-	^ false
-]
-
-{ #category : #testing }
 SBBlock >> isMethod [
 
 	^ false
 ]
 
 { #category : #testing }
-SBBlock >> isMorphExample [
-
-	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isName [
-
-	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isNumber [
-
-	^ false
-]
-
-{ #category : #testing }
 SBBlock >> isNumberBlock [
-
-	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isPragma [
-
-	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isRepl [
-
-	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isReturn [
-
-	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isSExpr [
 
 	^ false
 ]
@@ -1305,33 +1163,9 @@ SBBlock >> isSelection [
 ]
 
 { #category : #testing }
-SBBlock >> isSmalltalk [
-
-	^ false
-]
-
-{ #category : #testing }
 SBBlock >> isStatement [
 
 	^ self owner isBlockBody
-]
-
-{ #category : #testing }
-SBBlock >> isStringBlock [
-
-	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isSymbolBlock [
-
-	^ false
-]
-
-{ #category : #testing }
-SBBlock >> isTemporaries [
-
-	^ false
 ]
 
 { #category : #testing }
@@ -1363,12 +1197,6 @@ SBBlock >> isValidAction: aPragmaOrMethod [
 	^ validMode and: [validInvocation]
 ]
 
-{ #category : #testing }
-SBBlock >> isWatch [
-
-	^ false
-]
-
 { #category : #hierarchy }
 SBBlock >> lastDeepChild [
 
@@ -1378,13 +1206,13 @@ SBBlock >> lastDeepChild [
 	^ current
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBBlock >> layoutCommands [
 
 	^ SBAlgebraCommand morph data: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBBlock >> layoutInset [
 
 	| space inset |
@@ -1397,7 +1225,7 @@ SBBlock >> layoutInset [
 		ifFalse: [inset]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> leftMostBlock [
 
 	^ self childSandblocks ifEmpty: [self] ifNotEmpty: [:c | c first leftMostBlock]
@@ -1407,7 +1235,7 @@ SBBlock >> leftMostBlock [
 SBBlock >> leftRotate [
 	<action>
 
-	self hasChildSandblocks ifFalse: [^ self].
+	(self hasChildSandblocks not or: [self parentSandblock isNil]) ifTrue: [^ self].
 	(self isFirstChild or: [self isLastChild]) ifFalse: [^ self].
 	
 	self sandblockEditor do: ((SBSubtreeRotateCommand newFor: self containingArtefact)
@@ -1415,13 +1243,7 @@ SBBlock >> leftRotate [
 		yourself)
 ]
 
-{ #category : #testing }
-SBBlock >> listensToExamples [
-
-	^ false
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBBlock >> localColorPolicy: aPolicy [
 
 	self setProperty: #localColorPolicy toValue: aPolicy new;
@@ -1443,7 +1265,13 @@ SBBlock >> lookupAction: aSymbol [
 		ifFound: [:obj | obj class lookupSelector: aSymbol]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
+SBBlock >> lookupGlobalAction: aSymbol [
+
+	^ (self class lookupSelector: aSymbol) ifNotNil: [:m | ((m pragmaAt: #globalAction) notNil and: [(m pragmaAt: #actionValidIf:) ifNotNil: [:p | self perform: p arguments first] ifNil: [true]]) ifTrue: [m] ifFalse: [nil]]
+]
+
+{ #category : #layout }
 SBBlock >> minExtent [
 	"Layout specific. Return the minimum size the receiver can be represented in.
 	Implementation note: When this message is sent from an owner trying to lay out its children it will traverse down the morph tree and recompute the minimal arrangement of the morphs based on which the minimal extent is returned. When a morph with some layout strategy is encountered, the morph will ask its strategy to compute the new arrangement. However, since the final size given to the receiver is unknown at the point of the query, the assumption is made that the current bounds of the receiver are the base on which the layout should be computed. This scheme prevents strange layout changes when for instance, a table is contained in another table. Unless the inner table has been resized manually (which means its bounds are already enlarged) the arrangement of the inner table will not change here. Thus the entire layout computation is basically an iterative process which may have different results depending on the incremental changes applied."
@@ -1512,6 +1340,70 @@ SBBlock >> mouseMove: anEvent [
 ]
 
 { #category : #actions }
+SBBlock >> moveCursorDown [
+	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
+
+	self currentTextMorph moveCursorVertically: 1 ifAtBound: [ | next |
+		next := self nextVerticalNear: self sandblockEditor verticalSelectionPosition.
+		next ifNotNil: [self sandblockEditor startInput: next at: 9e8 replacingContents: false]]
+]
+
+{ #category : #actions }
+SBBlock >> moveCursorLeft [
+	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
+
+	self currentTextMorph
+		moveCursor: -1
+		ifAtBound: [ | next |
+			next := self sandblockEditor class navigation previousFrom: self do: [:b |
+				(self canJumpTo: b) ifTrue: [b] ifFalse: [nil]].
+			next ifNotNil: [self sandblockEditor select: next; startInput: next at: 900000000 replacingContents: false]]
+		wordWise: (ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed])
+]
+
+{ #category : #actions }
+SBBlock >> moveCursorRight [
+	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
+
+	self currentTextMorph
+		moveCursor: 1
+		ifAtBound: [ | next |
+			next := self sandblockEditor class navigation nextFrom: self do: [:b |
+				(self canJumpTo: b) ifTrue: [b] ifFalse: [nil]].
+			next ifNotNil: [self sandblockEditor select: next; startInput: next at: 0 replacingContents: false]]
+		wordWise: (ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed])
+]
+
+{ #category : #actions }
+SBBlock >> moveCursorToEnd [
+	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
+
+	self currentTextMorph moveCursorTo: 9e8
+]
+
+{ #category : #actions }
+SBBlock >> moveCursorToStart [
+	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
+
+	self currentTextMorph moveCursorTo: 1
+]
+
+{ #category : #actions }
+SBBlock >> moveCursorUp [
+	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
+
+	self currentTextMorph moveCursorVertically: -1 ifAtBound: [ | next |
+		next := self previousVerticalNear: self sandblockEditor verticalSelectionPosition.
+		next ifNotNil: [self sandblockEditor startInput: next at: 9e8 replacingContents: false]]
+]
+
+{ #category : #actions }
 SBBlock >> multiSelectChildren [
 	<multiSelectAction>
 
@@ -1519,21 +1411,7 @@ SBBlock >> multiSelectChildren [
 	self childSandblocks do: #startOrAddToMultiSelection
 ]
 
-{ #category : #hierarchy }
-SBBlock >> nestingDepth [
-
-	| d node |
-	d := 1.
-	node := self.
-	
-	[node isArtefact not and: [node parentSandblock notNil]] whileTrue: [
-		node := node parentSandblock.
-		d := d + 1].
-	
-	^ d
-]
-
-{ #category : #testing }
+{ #category : #'ast helpers' }
 SBBlock >> newNullBlock [
 
 	^ nil
@@ -1566,7 +1444,7 @@ SBBlock >> nextDeletableBlock [
 		ifNil: [self parentSandblock nextDeletableBlock]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> nextVerticalNear: aNumber [
 
 	^ self
@@ -1575,7 +1453,7 @@ SBBlock >> nextVerticalNear: aNumber [
 		validBlock: [:candidate | candidate top >= self bottom]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> nextVerticalNear: aNumber calcDistance: aDistBlock validBlock: aValidBlock [
 
 	| allCandidates candidates candidatesBestDistance tolerance artefact |
@@ -1601,7 +1479,7 @@ SBBlock >> nextVerticalNear: aNumber calcDistance: aDistBlock validBlock: aValid
 		((candidate center x - artefact left) - aNumber) abs]
 ]
 
-{ #category : #testing }
+{ #category : #callbacks }
 SBBlock >> noteNewOwner: aMorph [
 
 	super noteNewOwner: aMorph.
@@ -1611,7 +1489,7 @@ SBBlock >> noteNewOwner: aMorph [
 	self allBlocksDo: [:block | block isName ifTrue: [block noteNewOwner: block owner]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBBlock >> object [
 
 	"Should be self subclassResponsibility but often causes non-recoverable errors with drag and drop"
@@ -1630,7 +1508,7 @@ SBBlock >> objectInterfaceAt: aNumber adding: aBoolean [
 	^ SBInterfaces never
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'dropping/grabbing' }
 SBBlock >> objectInterfaceForDrop [
 
 	^ self fixedNumberOfChildren
@@ -1652,7 +1530,7 @@ SBBlock >> openPalette [
 		self sandblockEditor openMorphInView: container]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBBlock >> outOfWorld: aWorld [
 
 	super outOfWorld: aWorld.
@@ -1661,7 +1539,7 @@ SBBlock >> outOfWorld: aWorld [
 	self triggerEvent: #outOfWorld
 ]
 
-{ #category : #testing }
+{ #category : #layout }
 SBBlock >> outerBounds [
 
 	^ super outerBounds expandBy: self frameSize
@@ -1674,20 +1552,10 @@ SBBlock >> parentAdjacentBlock: aNumber [
 		ifNil: [self parentSandblock ifNotNil: [:p | p parentAdjacentBlock: aNumber]]
 ]
 
-{ #category : #hierarchy }
+{ #category : #'testing hierarchy' }
 SBBlock >> parentHasDynamicNumberOfChildren [
 
 	^ self parentSandblock fixedNumberOfChildren not
-]
-
-{ #category : #'as yet unclassified' }
-SBBlock >> parentThatAccepts: target ifNone: aBlock [
-
-	| adjacent |
-	adjacent := self.
-	[
-		(adjacent parentSandblock ifNil: [^ aBlock value]) acceptChild: target] whileFalse: [adjacent := adjacent parentSandblock].
-	^ adjacent
 ]
 
 { #category : #actions }
@@ -1697,7 +1565,7 @@ SBBlock >> pasteAbove [
 	self pasteAboveOrBelow: true
 ]
 
-{ #category : #actions }
+{ #category : #'action helpers' }
 SBBlock >> pasteAboveOrBelow: anAboveBoolean [
 
 	| copyBuffer |
@@ -1725,16 +1593,6 @@ SBBlock >> pasteBelow [
 	self pasteAboveOrBelow: false
 ]
 
-{ #category : #accessing }
-SBBlock >> pc [
-
-	^ 0
-]
-
-{ #category : #accessing }
-SBBlock >> pc: aNumber [
-]
-
 { #category : #'action helpers' }
 SBBlock >> performAction: aSymbol [
 
@@ -1745,7 +1603,7 @@ SBBlock >> performAction: aSymbol [
 				^ obj perform: aSymbol]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'dropping/grabbing' }
 SBBlock >> pickUp: anEvent [
 
 	| editor |
@@ -1776,7 +1634,7 @@ SBBlock >> placeMark [
 				self attachDecorator: (SBMarkedDecorator new letter: letter)]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #caching }
 SBBlock >> postDuplicate [
 
 	self allBlocksDo: [:morph | morph postDuplicateSelf].
@@ -1784,7 +1642,7 @@ SBBlock >> postDuplicate [
 	self clearCache
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #caching }
 SBBlock >> postDuplicateSelf [
 
 	" this block has been duplicated, adjust any identifiers if need be "
@@ -1798,22 +1656,16 @@ SBBlock >> precedence [
 	^ 0
 ]
 
-{ #category : #accessing }
+{ #category : #'colors and color policies' }
 SBBlock >> preferredColor [
 
 	^ nil
 ]
 
-{ #category : #colors }
+{ #category : #'colors and color policies' }
 SBBlock >> prefersNoBorder [
 
 	^ false
-]
-
-{ #category : #'as yet unclassified' }
-SBBlock >> prefix [
-
-	^ self symbols first
 ]
 
 { #category : #testing }
@@ -1822,7 +1674,7 @@ SBBlock >> preventOcclusion [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> previousBlock [
 
 	^ (self adjacentBlock: -1)
@@ -1830,7 +1682,7 @@ SBBlock >> previousBlock [
 			ifNotNil: [:adj | adj rightMostBlock]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> previousBlockThat: aBlock [
 
 	| n |
@@ -1840,7 +1692,7 @@ SBBlock >> previousBlockThat: aBlock [
 	^ n previousBlockThat: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> previousVerticalNear: aNumber [
 
 	^ self
@@ -1861,12 +1713,19 @@ SBBlock >> promptAction [
 	index > 0 ifTrue: [self performAction: (options at: index) method selector]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'ast helpers' }
 SBBlock >> proposeCodeActions: aCollection for: aBlock [
 
 	| index |
 	index := UIManager default chooseFrom: (aCollection collect: #label).
 	index > 0 ifTrue: [(aCollection at: index) do]
+]
+
+{ #category : #actions }
+SBBlock >> refocus [
+	<multiSelectAction>
+
+	self ensureVisible
 ]
 
 { #category : #'artefact protocol' }
@@ -1875,7 +1734,7 @@ SBBlock >> relatedClass [
 	^ self object class
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBBlock >> removeLocalColorPolicy [
 
 	self
@@ -1910,41 +1769,26 @@ SBBlock >> replaceWithCopyBuffer [
 				repr postDuplicate]]
 ]
 
-{ #category : #'event handling' }
+{ #category : #'dropping/grabbing' }
 SBBlock >> resetParentHighlights [
 
 	self allOwnersDo: [:m |
 		(m valueOfProperty: #highlightedForDrop ifAbsent: [false]) ifTrue: [m resetHighlightForDrop]]
 ]
 
-{ #category : #'as yet unclassified' }
-SBBlock >> resolveLocalBindings [
-
-	| bindings |
-	bindings := Array streamContents: [:stream |
-		self allBlocksDo: [:block |
-			block isBinding ifTrue: [ | binding |
-				binding := block resolveBinding.
-				
-				(binding notNil and: [binding isDeclaration] and: [binding isMethodLocal] and: [(binding hasOwner: self) not]) ifTrue: [
-					stream nextPut: binding]]]].
-	
-	^ (KeyedSet keyBlock: #name) addAll: bindings
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> rightMostBlock [
 
 	^ self childSandblocks ifEmpty: [self] ifNotEmpty: [:c | c last rightMostBlock]
 ]
 
-{ #category : #accessing }
+{ #category : #'colors and color policies' }
 SBBlock >> sandblockBlockColorIfAbsent: aBlock [
 
 	^ self valueOfProperty: #sandblockBlockColor ifAbsent: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : #'colors and color policies' }
 SBBlock >> sandblockBlockColorIfAbsentPut: aBlock [
 
 	^ self sandblockBlockColorIfAbsent: [ | newColor |
@@ -1952,14 +1796,15 @@ SBBlock >> sandblockBlockColorIfAbsentPut: aBlock [
 		self setProperty: #sandblockBlockColor toValue: newColor. newColor]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBBlock >> sandblockForegroundColor [
 
 	^ self foregroundColor
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBBlock >> select [
+	<action>
 
 	self sandblockEditor select: self
 ]
@@ -2097,7 +1942,7 @@ SBBlock >> selectTopToplevel [
 	self selectToplevelTowards: #top
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
 SBBlock >> selectToplevelTowards: aSideSymbol [
 
 	| opposite |
@@ -2123,36 +1968,13 @@ SBBlock >> selectionLabel [
 	^ self printString
 ]
 
-{ #category : #'as yet unclassified' }
-SBBlock >> selector [
-	" if this node represents any selector, return it here "
-
-	^ nil
-]
-
-{ #category : #'as yet unclassified' }
-SBBlock >> showOverlayFor: anEvent [
-
-	| overlay |
-	overlay := SBOverlay new
-		openInWorld;
-		sandblockEditor: self sandblockEditor;
-		center: (self localPointToGlobal: anEvent position).
-	
-	anEvent hand newMouseFocus: overlay
-]
-
-{ #category : #testing }
-SBBlock >> showUsageInfo [
-]
-
 { #category : #testing }
 SBBlock >> skipLeftRightNavigation [
 
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBBlock >> spaceForSymbols [
 
 	| symbols |
@@ -2172,7 +1994,7 @@ SBBlock >> startContinuousMultiSelection [
 		addToMultiSelection: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBBlock >> startDrag: anEvent [
 
 	(SBToggledCode
@@ -2197,7 +2019,7 @@ SBBlock >> startDrag: anEvent [
 	self sandblockEditor select: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #input }
 SBBlock >> startInputAt: aNumber replacingContents: aBoolean [
 
 	^ nil
@@ -2234,13 +2056,13 @@ SBBlock >> startOrAddToMultiSelection [
 	self sandblockEditor startOrAddToMultiSelection: self
 ]
 
-{ #category : #testing }
+{ #category : #decorators }
 SBBlock >> stepDecorator: aDecorator [
 
 	aDecorator step
 ]
 
-{ #category : #accessing }
+{ #category : #input }
 SBBlock >> stopEditing: aCommand [
 ]
 
@@ -2262,7 +2084,7 @@ SBBlock >> suggestionsMenu [
 	^ self valueOfProperty: #sandblockSuggestionMenu ifAbsentPut: [SBSuggestionMenu new]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
 SBBlock >> swap: aNumber [
 
 	| next children offset canSwap |
@@ -2299,7 +2121,7 @@ SBBlock >> swapRight [
 	self swap: 1
 ]
 
-{ #category : #testing }
+{ #category : #'colors and color policies' }
 SBBlock >> symbols [
 
 	^ #(nil nil)
@@ -2327,7 +2149,7 @@ SBBlock >> toggleDecorator: aDecorator [
 		ifNone: [self attachDecorator: aDecorator]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'ast helpers' }
 SBBlock >> tryFixIfFail: aBlock [
 
 	self sandblockEditor select: self.
@@ -2336,17 +2158,11 @@ SBBlock >> tryFixIfFail: aBlock [
 	^ self valid ifTrue: [true] ifFalse: aBlock
 ]
 
-{ #category : #'artefact protocol' }
-SBBlock >> typeFor: aBlock [
-
-	^ nil
-]
-
 { #category : #'event handling' }
 SBBlock >> update [
 ]
 
-{ #category : #testing }
+{ #category : #decorators }
 SBBlock >> updateSteppingDecorators [
 
 	| anyStepping |
@@ -2393,7 +2209,7 @@ SBBlock >> useSuggestion [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBBlock >> valid [
 
 	^ true
@@ -2407,7 +2223,7 @@ SBBlock >> validActions [
 	^ self actions select: [:action | self isValidAction: action]
 ]
 
-{ #category : #'event handling' }
+{ #category : #copying }
 SBBlock >> veryDeepCopyWith: aCopier [
 
 	| new previousDecorators |
@@ -2418,7 +2234,7 @@ SBBlock >> veryDeepCopyWith: aCopier [
 	^ new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'dropping/grabbing' }
 SBBlock >> wantsDroppedMorph: aMorph event: evt [
 
 	| response |
@@ -2442,7 +2258,7 @@ SBBlock >> wantsDroppedMorph: aMorph event: evt [
 	^ response
 ]
 
-{ #category : #testing }
+{ #category : #'colors and color policies' }
 SBBlock >> wantsExtraSpace [
 
 	^ true
@@ -2460,13 +2276,13 @@ SBBlock >> wantsInteractiveErrorCorrection [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : #callbacks }
 SBBlock >> wasDeselected [
 
 	" may be overriden "
 ]
 
-{ #category : #testing }
+{ #category : #callbacks }
 SBBlock >> wasSelected [
 
 	" may be overriden "
@@ -2485,16 +2301,6 @@ SBBlock >> withDecorator: aClass do: aBlock ifAbsent: anotherBlock [
 	^ decorators detect: [:d | d class = aClass] ifFound: aBlock ifNone: anotherBlock
 ]
 
-{ #category : #'as yet unclassified' }
-SBBlock >> withParentChainDo: aBlock [
-
-	| p |
-	p := aBlock.
-	[aBlock] whileNotNil: [
-		aBlock value: p.
-		p := aBlock parentSandblock]
-]
-
 { #category : #utilities }
 SBBlock >> wrapEditor [
 	" provide an editor around the object, for use during testing "
@@ -2503,7 +2309,7 @@ SBBlock >> wrapEditor [
 	^ self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
 SBBlock >> wrapSelectionWith: aSelection [
 
 	SBToggledCode

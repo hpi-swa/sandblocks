@@ -40,133 +40,136 @@ SBVimInputMapping >> initialize [
 SBVimInputMapping >> registerDefaultShortcuts [
 
 	self
-		" auto completion "
-		registerShortcut: $j command do: #focusNextSuggestion;
-		registerShortcut: $k command do: #focusPreviousSuggestion;
-		
 		" navigation "
-		registerShortcut: $h do: #selectPrevious;
-		registerShortcut: $l do: #selectNext;
-		registerShortcut: $J do: #selectDown;
-		registerShortcut: $K do: #selectUp;
-		registerShortcut: $G do: #selectLast;
-		registerShortcut: $g do: #selectArtefact;
-		registerShortcut: $$ do: #selectRightMostBlock;
+		cmdShortcut: $h do: #selectPrevious;
+		cmdShortcut: $l do: #selectNext;
+		cmdShortcut: $J do: #selectDown;
+		cmdShortcut: $K do: #selectUp;
+		cmdShortcut: $G do: #selectLast;
+		cmdShortcut: $g do: #selectArtefact;
+		cmdShortcut: $$ do: #selectRightMostBlock;
 		registerShortcut: Character tab shift do: #inputPreviousUnknown;
 		registerShortcut: Character tab do: #inputNextUnknown;
-		registerShortcut: $z do: #toggleCollapsed;
-		registerShortcut: $m do: #placeMark;
-		registerShortcut: $' do: #goToMark;
-		registerShortcut: $h command do: #selectLeftToplevel;
-		registerShortcut: $j command do: #selectBottomToplevel;
-		registerShortcut: $k command do: #selectTopToplevel;
-		registerShortcut: $l command do: #selectRightToplevel;
-		registerShortcut: $k do: #selectPreviousGroup;
-		registerShortcut: $j do: #selectNextGroup;
-		registerShortcut: $! do: #ensureVisible;
-		registerShortcut: $0 do: #selectStartOfStatement;
+		cmdShortcut: $z do: #toggleCollapsed;
+		cmdShortcut: $m do: #placeMark;
+		cmdShortcut: $' do: #goToMark;
+		cmdShortcut: $h command do: #selectLeftToplevel;
+		cmdShortcut: $j command do: #selectBottomToplevel;
+		cmdShortcut: $k command do: #selectTopToplevel;
+		cmdShortcut: $l command do: #selectRightToplevel;
+		cmdShortcut: $k do: #selectPreviousGroup;
+		cmdShortcut: $j do: #selectNextGroup;
+		cmdShortcut: $! do: #ensureVisible;
+		cmdShortcut: $0 do: #selectStartOfStatement;
 		
 		" modify general "
-		registerShortcut: $, do: #promptAction;
-		registerShortcut: $i do: #startInputAtStart;
-		registerShortcut: $a do: #startInputAtEnd;
-		registerShortcut: $s do: #startInputSubstituting;
-		registerShortcut: $c do: #changeToUnknown;
-		registerShortcut: $Y do: #copyAround;
-		registerShortcut: $y do: #copyToBuffer;
-		registerShortcut: $X do: #deleteAround;
-		registerShortcut: $x do: #deleteBlock;
-		registerShortcut: $d do: #deleteAdjacent;
-		registerShortcut: $( do: #leftRotate;
-		registerShortcut: $. do: #addElement;
-		registerShortcut: $+ do: #insertElementAfter;
-		registerShortcut: $* do: #insertElementBefore;
-		registerShortcut: $H do: #swapLeft;
-		registerShortcut: $L do: #swapRight;
+		cmdShortcut: $, do: #promptAction;
+		cmdShortcut: $i do: #startInputAtStart;
+		cmdShortcut: $a do: #startInputAtEnd;
+		cmdShortcut: $s do: #startInputSubstituting;
+		cmdShortcut: $c do: #changeToUnknown;
+		cmdShortcut: $Y do: #copyAround;
+		cmdShortcut: $y do: #copyToBuffer;
+		cmdShortcut: $X do: #deleteAround;
+		cmdShortcut: $x do: #deleteBlock;
+		cmdShortcut: $d do: #deleteAdjacent;
+		cmdShortcut: $( do: #leftRotate;
+		cmdShortcut: $. do: #addElement;
+		cmdShortcut: $+ do: #insertElementAfter;
+		cmdShortcut: $* do: #insertElementBefore;
+		cmdShortcut: $H do: #swapLeft;
+		cmdShortcut: $L do: #swapRight;
 		registerShortcut: $c command do: #copyString;
 		registerShortcut: $v command do: #pasteString;
-		registerShortcut: $p do: #pasteBelow;
-		registerShortcut: $P do: #pasteAbove;
-		registerShortcut: $v do: #startOrAddToMultiSelection;
-		registerShortcut: $V command do: #startContinuousMultiSelection;
-		registerShortcut: $V do: #multiSelectChildren;
-		registerShortcut: $r do: #replaceWithCopyBuffer;
+		cmdShortcut: $p do: #pasteBelow;
+		cmdShortcut: $P do: #pasteAbove;
+		cmdShortcut: $v do: #startOrAddToMultiSelection;
+		cmdShortcut: $V command do: #startContinuousMultiSelection;
+		cmdShortcut: $V do: #multiSelectChildren;
+		cmdShortcut: $r do: #replaceWithCopyBuffer;
 
-		" modify smalltalk "
-		registerShortcut: $" do: #wrapInToggledCode;
-		registerShortcut: $D do: #insertLabelAbove;
-		registerShortcut: $b do: #insertHaltBelow;
-		registerShortcut: $B do: #insertHaltAbove;
-		registerShortcut: $O do: #insertStatementAbove;
-		registerShortcut: $o do: #insertStatementBelow;
-		registerShortcut: $[ do: #wrapInBlock;
-		registerShortcut: ${ do: #wrapInDynamicArray;
-		registerShortcut: $# do: #wrapInLiteralArray;
-		registerShortcut: $: do: #wrapInAssignment;
-		registerShortcut: $; do: #wrapInCascade;
-		registerShortcut: $^ do: #wrapInReturn;
-		registerShortcut: Character space shift do: #wrapAsArgument;
-		registerShortcut: Character space do: #wrapInMessageSend;
-		
 		" input "
-		registerShortcut: Character escape do: #endInput;
-		registerShortcut: Character cr do: #useSuggestion;
-		registerShortcut: Character arrowLeft do: #moveCursorLeft;
-		registerShortcut: $h command do: #moveCursorLeft;
-		registerShortcut: Character arrowRight do: #moveCursorRight;
-		registerShortcut: $l command do: #moveCursorRight;
-		registerShortcut: $a command do: #moveCursorToStart;
-		registerShortcut: $e command do: #moveCursorToEnd;
-		registerShortcut: $x command do: #clearInput;
+		inputShortcut: Character escape do: #endInput;
+		inputShortcut: Character cr do: #useSuggestion;
+		inputShortcut: $j command do: #focusNextSuggestion;
+		inputShortcut: $k command do: #focusPreviousSuggestion;
+		inputShortcut: Character arrowLeft do: #moveCursorLeft;
+		inputShortcut: $h command do: #moveCursorLeft;
+		inputShortcut: Character arrowRight do: #moveCursorRight;
+		inputShortcut: $l command do: #moveCursorRight;
+		inputShortcut: $a command do: #moveCursorToStart;
+		inputShortcut: $e command do: #moveCursorToEnd;
+		inputShortcut: $x command do: #clearInput;
 		registerShortcut: $1 command do: #useFirstArgument;
 		registerShortcut: $2 command do: #useSecondArgument;
 		registerShortcut: $3 command do: #useThirdArgument;
 		registerShortcut: $4 command do: #useFourthArgument;
 		registerShortcut: $5 command do: #useFifthArgument;
-		registerShortcut: $' command do: #splitStringAtCursor;
-		registerShortcut: Character backspace do: #deleteBeforeCursor;
-		registerShortcut: Character delete do: #deleteAfterCursor;
+		inputShortcut: $' command do: #splitStringAtCursor;
+		inputShortcut: Character backspace do: #deleteBeforeCursor;
+		inputShortcut: Character delete do: #deleteAfterCursor;
 		
 		" refactor "
-		registerShortcut: $T do: #extractMethod;
-		registerShortcut: $t do: #createEmptySmalltalkMethod;
-		registerShortcut: $= do: #extractVariable;
+		cmdShortcut: $T do: #extractMethod;
+		cmdShortcut: $t do: #createEmptySmalltalkMethod;
+		cmdShortcut: $= do: #extractVariable;
 		
 		" debugging "
-		registerShortcut: $> shift do: #stepOver;
-		registerShortcut: $< do: #stepInto;
-		registerShortcut: $y command do: #stepThrough;
-		registerShortcut: $Y command do: #restartFrame;
-		registerShortcut: $e do: #focusErrors;
-		registerShortcut: $E do: #focusPreviousErrorFrame;
+		cmdShortcut: $> shift do: #stepOver;
+		cmdShortcut: $< do: #stepInto;
+		cmdShortcut: $y command do: #stepThrough;
+		cmdShortcut: $Y command do: #restartFrame;
+		cmdShortcut: $e do: #focusErrors;
+		cmdShortcut: $E do: #focusPreviousErrorFrame;
 		
 		" tools "
-		registerShortcut: $W do: #wrapWithWatch;
-		registerShortcut: $w do: #wrapWithExampleWatch;
+		cmdShortcut: $W do: #wrapWithWatch;
+		cmdShortcut: $w do: #wrapWithExampleWatch;
 		registerShortcut: $p command do: #evaluateExpression;
 		registerShortcut: $d command do: #doExpression;
 		registerShortcut: $P command do: #debugExpression;
 		registerShortcut: $a command do: #addExample;
 		registerShortcut: $m command do: #browseImplementors;
 		registerShortcut: $n command do: #browseSenders;
-		registerShortcut: $x command do: #openOpenWindow;
+		cmdShortcut: $x command do: #openOpenWindow;
 		registerShortcut: $b command do: #browse;
-		registerShortcut: $q do: #convertTo;
+		cmdShortcut: $q do: #convertTo;
 		
 		" editor "
-		registerShortcut: $u do: #undo;
-		registerShortcut: $U do: #redo;
+		cmdShortcut: $u do: #undo;
+		cmdShortcut: $U do: #redo;
 		registerShortcut: $s command do: #save;
 		registerShortcut: $r command do: #openRepl;
 		registerShortcut: $, command do: #promptMenu;
-		registerShortcut: $/ do: #startSearch;
-		registerShortcut: $n do: #nextSearchResult;
-		registerShortcut: $S command do: #saveWorkspace;
-		registerShortcut: $O command do: #promptOpenWorkspace;
+		cmdShortcut: $/ do: #startSearch;
+		cmdShortcut: $n do: #nextSearchResult;
 		registerShortcut: $f command do: #toggleFullscreen;
 
-		registerShortcut: Character escape do: #endMultiSelection;
-		registerShortcut: Character escape do: #dismiss
+		cmdShortcut: Character escape do: #endMultiSelection;
+		cmdShortcut: Character escape do: #dismiss;
+
+		" smalltalk "
+		cmdShortcut: $" do: #wrapInToggledCode;
+		cmdShortcut: $D do: #insertLabelAbove;
+		cmdShortcut: $b do: #insertHaltBelow;
+		cmdShortcut: $B do: #insertHaltAbove;
+		cmdShortcut: $O do: #insertStatementAbove;
+		cmdShortcut: $o do: #insertStatementBelow;
+		cmdShortcut: $[ do: #wrapInBlock;
+		cmdShortcut: ${ do: #wrapInDynamicArray;
+		cmdShortcut: $# do: #wrapInLiteralArray;
+		cmdShortcut: $: do: #wrapInAssignment;
+		cmdShortcut: $; do: #wrapInCascade;
+		cmdShortcut: $^ do: #wrapInReturn;
+		cmdShortcut: Character space shift do: #wrapAsArgument;
+		cmdShortcut: Character space do: #wrapInMessageSend;
+		
+		" scheme "
+		cmdShortcut: $( do: #wrapInSExpr;
+
+		" javascript "
+		cmdShortcut: ${ do: #wrapInObjectLiteral
+
 ]
 
 { #category : #'as yet unclassified' }

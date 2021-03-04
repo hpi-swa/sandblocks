@@ -16,6 +16,17 @@ SBInputMapping >> applyFor: anEditor [
 ]
 
 { #category : #'as yet unclassified' }
+SBInputMapping >> cmdShortcut: aShortcut do: aSymbol [
+
+	| shortcut |
+	shortcut := aShortcut isCollection
+		ifTrue: [aShortcut do: [:s | s modes: #(command)]. aShortcut]
+		ifFalse: [aShortcut asSandblockShortcut modes: #(command); yourself].
+	
+	editor registerShortcut: shortcut do: aSymbol
+]
+
+{ #category : #'as yet unclassified' }
 SBInputMapping >> countModifier [
 
 	^ 0
@@ -29,6 +40,17 @@ SBInputMapping >> defaultState [
 
 { #category : #'as yet unclassified' }
 SBInputMapping >> handledEvent: anEvent in: anEditor [
+]
+
+{ #category : #'as yet unclassified' }
+SBInputMapping >> inputShortcut: aShortcut do: aSymbol [
+
+	| shortcut |
+	shortcut := aShortcut isCollection
+		ifTrue: [aShortcut do: [:s | s modes: #(input)]. aShortcut]
+		ifFalse: [aShortcut asSandblockShortcut modes: #(input); yourself].
+	
+	editor registerShortcut: shortcut do: aSymbol
 ]
 
 { #category : #'as yet unclassified' }

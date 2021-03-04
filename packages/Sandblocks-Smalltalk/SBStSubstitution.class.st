@@ -52,7 +52,7 @@ SBStSubstitution class >> isSmalltalkExpression [
 { #category : #'as yet unclassified' }
 SBStSubstitution class >> matches: aMessageSend [
 
-	^ aMessageSend isSandblock and: [aMessageSend isMessageSend or: [self matchesCascades and: [aMessageSend isCascade]]]
+	^ aMessageSend isSandblock and: [(aMessageSend isMessageSend and: [aMessageSend receiver notNil]) or: [self matchesCascades and: [aMessageSend isCascade]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -82,7 +82,7 @@ SBStSubstitution class >> priority [
 { #category : #'as yet unclassified' }
 SBStSubstitution class >> selector: aString receiverMatches: aMessage [
 
-	^ aMessage receiver isBinding and: [self name = aMessage receiver contents and: [aMessage selector = aString]]
+	^ (aMessage receiver satisfies: #(notNil isBinding)) and: [self name = aMessage receiver contents and: [aMessage selector = aString]]
 ]
 
 { #category : #'as yet unclassified' }

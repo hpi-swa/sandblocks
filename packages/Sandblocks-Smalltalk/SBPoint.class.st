@@ -118,7 +118,7 @@ SBPoint >> mouseMove: anEvent [
 		self flag: #todo. "preserve formatting like base"
 		self contents: self parsedContents + delta.
 		lastMousePosition := anEvent position.
-		self sandblockEditor batchedChangeStep: self]
+		self sandblockEditor commands batchedChangeStep: self]
 ]
 
 { #category : #'as yet unclassified' }

@@ -13,7 +13,7 @@ SBLabel class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
 
-	^ aBlock receiver isBinding and: [aBlock receiver contents = self name] and: [aBlock selector = 'text:']
+	^ (aBlock receiver satisfies: #(notNil isBinding)) and: [aBlock receiver contents = self name] and: [aBlock selector = 'text:']
 ]
 
 { #category : #'as yet unclassified' }
