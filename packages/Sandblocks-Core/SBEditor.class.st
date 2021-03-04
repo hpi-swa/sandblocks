@@ -558,6 +558,17 @@ SBEditor >> countModifier [
 	^ inputMapping countModifier
 ]
 
+{ #category : #'submorphs-add/remove' }
+SBEditor >> createArtefactInView: aMorph [
+	" open this morph and mark it has currently being unsaved "
+
+	self assert: aMorph isArtefact.
+	
+	self openMorphInView: aMorph.
+	self do: (SBDoItCommand newFor: aMorph).
+	^ aMorph
+]
+
 { #category : #'actions creating' }
 SBEditor >> createEmptyJavascriptModule [
 	<addAction>
@@ -565,8 +576,8 @@ SBEditor >> createEmptyJavascriptModule [
 	<globalAction>
 
 	| module |
-	self openMorphInView: (module := SBJsModule new).
-	self startInput: module at: 1 replacingContents: true
+	self createArtefactInView: (module := SBJsModule new).
+	module inputContainedUnknown
 ]
 
 { #category : #'actions creating' }
@@ -576,8 +587,8 @@ SBEditor >> createEmptySchemeModule [
 	<globalAction>
 
 	| module |
-	self openMorphInView: (module := SBScmModule new).
-	self startInput: module at: 1 replacingContents: true
+	self createArtefactInView: (module := SBScmModule new).
+	module inputContainedUnknown
 ]
 
 { #category : #'actions creating' }
@@ -588,8 +599,8 @@ SBEditor >> createEmptySmalltalkClass [
 
 	| class |
 	class := SBStClass new category: ((self selectedArtefact ifNotNil: [:container | container relatedClass]) ifNotNil: #category ifNil: ['UserObjects']).
-	self openMorphInView: class.
-	self startInput: class childSandblocks first at: 1 replacingContents: false
+	self createArtefactInView: class.
+	class inputContainedUnknown
 ]
 
 { #category : #'actions creating' }
@@ -599,7 +610,7 @@ SBEditor >> createEmptySmalltalkMethod [
 	<globalAction>
 
 	| method |
-	self openMorphInView: (method := SBStMethod new
+	self createArtefactInView: (method := SBStMethod new
 		selector: ''
 		arguments: #()
 		class: ((self selectedArtefact ifNotNil: [:container | container relatedClass]) ifNil: [UIManager default chooseClassOrTrait ifNil: [^ self]]);
@@ -779,6 +790,12 @@ SBEditor >> handleDroppedFolder: aFileDirectory event: anEvent [
 		do: [:converted | self handleDroppedBlock: converted event: anEvent adding: true near: nil]
 ]
 
+{ #category : #'do/undo/redo' }
+SBEditor >> hasUnsavedChanges: anArtefact [
+
+	^ history hasUnsavedChanges: anArtefact
+]
+
 { #category : #initialization }
 SBEditor >> initialize [
 
@@ -892,12 +909,12 @@ SBEditor >> labelString [
 { #category : #'do/undo/redo' }
 SBEditor >> markChangesAfterCommand: artefacts [
 
-	artefacts do: [:candidate | | saved artefact |
+	artefacts do: [:candidate | | artefact |
 		artefact := candidate canPersist ifTrue: [candidate] ifFalse: [candidate artefactForPersisting ifNil: [candidate]].
 		
-		saved := false.
-		self compileTime = #compileOnChange ifTrue: [saved := self save: artefact tryFixing: false quick: false].
-		artefact hasUnsavedChanges: saved not.
+		(self compileTime = #compileOnChange and: [self save: artefact tryFixing: false quick: false])
+			ifTrue: [history markSaved: true].
+		
 		artefact triggerEvent: #changed.
 		self allBlocksDo: [:block | block artefactChanged: artefact]]
 ]
@@ -1302,7 +1319,7 @@ SBEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean [
 
 	^ (anArtefact saveTryFixing: aFixBoolean quick: aQuickBoolean)
 		ifTrue: [
-			anArtefact hasUnsavedChanges: false.
+			history markSaved: anArtefact.
 			self triggerEvent: #artefactSaved with: anArtefact.
 			self allBlocksDo: [:block | block artefactSaved: self selectedArtefact].
 			true]

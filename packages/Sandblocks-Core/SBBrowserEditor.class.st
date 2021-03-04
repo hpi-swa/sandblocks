@@ -94,7 +94,7 @@ SBBrowserEditor >> update: aSymbol [
 			[#wantToChange] -> [
 				self canDiscardEdits ifFalse: [
 					(self confirm: 'Changes have not been saved.
-Is it OK to cancel those changes?' translated) ifTrue: [self artefacts first hasUnsavedChanges: false]]].
+Is it OK to cancel those changes?' translated) ifTrue: [history markSaved: self artefacts first]]].
 			[#accept] -> [self save]
 		}
 		otherwise: [nil]

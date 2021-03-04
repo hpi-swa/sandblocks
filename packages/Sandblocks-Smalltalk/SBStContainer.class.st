@@ -66,16 +66,6 @@ SBStContainer >> evaluationReceiver [
 	^ self receiver
 ]
 
-{ #category : #'artefact protocol' }
-SBStContainer >> hasUnsavedChanges [
-
-	^ false
-]
-
-{ #category : #'artefact protocol' }
-SBStContainer >> hasUnsavedChanges: aBoolean [
-]
-
 { #category : #'as yet unclassified' }
 SBStContainer >> initialize [
 

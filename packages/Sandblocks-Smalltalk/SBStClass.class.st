@@ -6,7 +6,6 @@ Class {
 		'superClassName',
 		'instanceVariables',
 		'class',
-		'hasUnsavedChanges',
 		'classVariables',
 		'poolDictionaries',
 		'category'
@@ -92,9 +91,8 @@ SBStClass >> containingArtefact [
 SBStClass >> createInitialize [
 	<action>
 
-	self sandblockEditor openMorphInView: (SBStMethod new
+	self sandblockEditor createArtefactInView: (SBStMethod new
 		selector: 'initialize' arguments: #() class: self shownClass;
-		hasUnsavedChanges: true;
 		body: (SBStBlockBody new statements: {
 			(SBStMessageSend new receiver: (SBStName contents: 'super') selector: 'initialize' arguments: #())
 		}))
@@ -104,8 +102,7 @@ SBStClass >> createInitialize [
 SBStClass >> createSubclass [
 	<action>
 
-	self sandblockEditor openMorphInView: (SBStClass new
-		hasUnsavedChanges: true;
+	self sandblockEditor createArtefactInView: (SBStClass new
 		category: self category;
 		superClassName: className contents;
 		yourself)
@@ -163,25 +160,9 @@ SBStClass >> ensureExpanded [
 ]
 
 { #category : #'as yet unclassified' }
-SBStClass >> hasUnsavedChanges [
-
-	^ hasUnsavedChanges
-]
-
-{ #category : #'as yet unclassified' }
-SBStClass >> hasUnsavedChanges: aBoolean [
-
-	hasUnsavedChanges ~= aBoolean ifTrue: [
-		hasUnsavedChanges := aBoolean.
-		self changed]
-]
-
-{ #category : #'as yet unclassified' }
 SBStClass >> initialize [
 
 	super initialize.
-	
-	hasUnsavedChanges := false.
 	
 	self
 		changeTableLayout;

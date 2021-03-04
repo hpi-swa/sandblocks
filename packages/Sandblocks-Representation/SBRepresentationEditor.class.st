@@ -86,19 +86,6 @@ SBRepresentationEditor >> drawSubmorphsOn: aCanvas [
 ]
 
 { #category : #'as yet unclassified' }
-SBRepresentationEditor >> hasUnsavedChanges [
-
-	^ hasUnsavedChanges
-]
-
-{ #category : #'as yet unclassified' }
-SBRepresentationEditor >> hasUnsavedChanges: aBoolean [
-
-	hasUnsavedChanges := aBoolean.
-	self changed
-]
-
-{ #category : #'as yet unclassified' }
 SBRepresentationEditor >> initialize [
 
 	super initialize.

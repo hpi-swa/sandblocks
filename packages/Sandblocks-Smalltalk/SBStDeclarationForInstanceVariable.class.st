@@ -22,14 +22,12 @@ SBStDeclarationForInstanceVariable >> defineGetterSetter [
 	<action>
 
 	self block sandblockEditor
-		openMorphInView: (SBStMethod new
-			hasUnsavedChanges: true;
+		createArtefactInView: (SBStMethod new
 			selector: self contents asSymbol arguments: #() class: self block containingArtefact shownClass;
 			body: (SBStBlockBody new statements: {
 				(SBStReturn new expression: (SBStName contents: self contents))
 			}));
-		openMorphInView: (SBStMethod new
-			hasUnsavedChanges: true;
+		createArtefactInView: (SBStMethod new
 			selector: self contents asSymbol asSimpleSetter
 				arguments: {(SBStName contents: 'anObject')}
 				class: self block containingArtefact shownClass;

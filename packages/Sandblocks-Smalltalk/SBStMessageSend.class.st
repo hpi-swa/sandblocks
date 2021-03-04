@@ -142,12 +142,11 @@ SBStMessageSend >> fixActions [
 					labeled: 'Create method on ', (class ifNotNil: #name ifNil: ['...'])
 					for: self
 					do: [:node | 
-						self sandblockEditor openMorphInView: (SBStMethod new
+						self sandblockEditor createArtefactInView: (SBStMethod new
 							selector: self selector
 								arguments: (self arguments collectWithIndex: [:arg :index | arg isName ifTrue: [arg veryDeepCopy] ifFalse: [SBStName contents: 'anObject', index asString]])
 								class: (class ifNil: [UIManager default chooseClassOrTrait ifNil: [^ self]]);
-							body: SBStBlockBody new;
-							hasUnsavedChanges: true)])
+							body: SBStBlockBody new)])
 			}]
 		ifFalse: [#()]
 ]

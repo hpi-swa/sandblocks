@@ -3,8 +3,7 @@ Class {
 	#superclass : #SBScmASTNode,
 	#instVars : [
 		'interpreter',
-		'filename',
-		'unsavedChanges'
+		'filename'
 	],
 	#category : #'Sandblocks-Scheme'
 }
@@ -127,25 +126,9 @@ SBScmModule >> hasFilename [
 ]
 
 { #category : #'as yet unclassified' }
-SBScmModule >> hasUnsavedChanges [
-
-	^ unsavedChanges
-]
-
-{ #category : #'as yet unclassified' }
-SBScmModule >> hasUnsavedChanges: aBoolean [
-
-	unsavedChanges ~= aBoolean ifTrue: [
-		unsavedChanges := aBoolean.
-		self changed]
-]
-
-{ #category : #'as yet unclassified' }
 SBScmModule >> initialize [
 
 	super initialize.
-	
-	unsavedChanges := false.
 	
 	self
 		layoutInset: 8;
@@ -221,12 +204,12 @@ SBScmModule >> sandblockBlockColorIfAbsent: aBlock [
 SBScmModule >> saveTryFixing: aBoolean quick: anotherBoolean [
 
 	self allBlocksDo: [:b | b valid ifFalse: [^ false]].
+	
 	self filename ifNotNil: [
 		FileStream
 			forceNewFileNamed: self selectedFilename
 			do: [:file |
 				self writeSourceOn: file indent: 0.
-				self hasUnsavedChanges: false.
 				self flag: #todo. " delete old file if renamed? "
 				filename := self selectedFilename]].
 	^ true

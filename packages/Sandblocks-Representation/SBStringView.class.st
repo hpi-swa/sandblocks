@@ -13,18 +13,6 @@ SBStringView >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBStringView >> hasUnsavedChanges [
-
-	^ false
-]
-
-{ #category : #'as yet unclassified' }
-SBStringView >> hasUnsavedChanges: aBoolean [
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBStringView >> initialize [
 
 	super initialize.

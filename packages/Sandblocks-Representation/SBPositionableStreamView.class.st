@@ -22,18 +22,6 @@ SBPositionableStreamView >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBPositionableStreamView >> hasUnsavedChanges [
-
-	^ false
-]
-
-{ #category : #'as yet unclassified' }
-SBPositionableStreamView >> hasUnsavedChanges: aBoolean [
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBPositionableStreamView >> initialize [
 
 	super initialize.

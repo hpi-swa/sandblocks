@@ -971,6 +971,12 @@ SBBlock >> hasSuggestions [
 	^ (self valueOfProperty: #sandblockSuggestionMenu ifAbsent: [^ false]) isInWorld
 ]
 
+{ #category : #testing }
+SBBlock >> hasUnsavedChanges [
+
+	^ self sandblockEditor hasUnsavedChanges: self
+]
+
 { #category : #'dropping/grabbing' }
 SBBlock >> highlightForDrop: aBoolean [
 

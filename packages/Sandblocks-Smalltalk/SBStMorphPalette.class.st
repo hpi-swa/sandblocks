@@ -15,7 +15,6 @@ SBStMorphPalette class >> buildOn: aContainer [
 			addBlock: 'Example'
 			as: (SBStMethod new
 				selector: #example arguments: #() class: aContainer selectedBlock containingArtefact relatedClass;
-				hasUnsavedChanges: true;
 				statements: {SBMorphExample buildTemplateFor: aContainer selectedBlock extent: 40 asPoint})]
 ]
 

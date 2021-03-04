@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'inspector',
 		'object',
-		'hasUnsavedChanges',
 		'label',
 		'field'
 	],
@@ -132,18 +131,6 @@ SBExplorer >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: a
 	self select.
 	self toggleCollapsed.
 	^ true
-]
-
-{ #category : #'as yet unclassified' }
-SBExplorer >> hasUnsavedChanges [
-
-	^ hasUnsavedChanges
-]
-
-{ #category : #'as yet unclassified' }
-SBExplorer >> hasUnsavedChanges: aBoolean [
-
-	hasUnsavedChanges := aBoolean
 ]
 
 { #category : #'as yet unclassified' }

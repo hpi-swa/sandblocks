@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'undoStack',
-		'redoStack'
+		'redoStack',
+		'changedArtefacts'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -12,7 +13,8 @@ Class {
 SBHistoryStack >> clearUndoStack [
 
 	undoStack := OrderedCollection new.
-	redoStack := OrderedCollection new
+	redoStack := OrderedCollection new.
+	changedArtefacts := Set new
 ]
 
 { #category : #actions }
@@ -24,9 +26,30 @@ SBHistoryStack >> do: aCommand previousSelection: aMorph selectDo: aBlock [
 	
 	redoStack removeAll.
 	
+	changedArtefacts addAll: aCommand affectedArtefacts.
+	
 	aCommand previousSelection: aMorph.
 	aBlock value: aCommand do value: aCommand affectedArtefacts.
 	aCommand postDo
+]
+
+{ #category : #actions }
+SBHistoryStack >> hasUnsavedChanges: anArtefact [
+
+	^ changedArtefacts includes: anArtefact
+]
+
+{ #category : #actions }
+SBHistoryStack >> initialize [
+
+	self clearUndoStack
+]
+
+{ #category : #actions }
+SBHistoryStack >> markSaved: anArtefact [
+
+	changedArtefacts remove: anArtefact ifAbsent: [].
+	anArtefact changed
 ]
 
 { #category : #actions }

@@ -3,7 +3,6 @@ Class {
 	#superclass : #SBBlock,
 	#instVars : [
 		'class',
-		'hasUnsavedChanges',
 		'savedCategoryName'
 	],
 	#category : #'Sandblocks-Smalltalk'
@@ -80,19 +79,6 @@ SBStMethodCategory >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean
 		ifTrue: [
 			{changeCategoryCommand. (SBDeleteCommand newFor: self) target: aBlock sourceBlock. insertCommand}]
 		ifFalse: [{changeCategoryCommand. insertCommand}]))
-]
-
-{ #category : #'as yet unclassified' }
-SBStMethodCategory >> hasUnsavedChanges [
-
-	^ hasUnsavedChanges
-]
-
-{ #category : #'as yet unclassified' }
-SBStMethodCategory >> hasUnsavedChanges: aBoolean [
-
-	hasUnsavedChanges := aBoolean.
-	self changed
 ]
 
 { #category : #'as yet unclassified' }

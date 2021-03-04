@@ -3,7 +3,6 @@ Class {
 	#superclass : #SBStASTNode,
 	#instVars : [
 		'methodClass',
-		'hasUnsavedChanges',
 		'typeCache',
 		'currentSelector',
 		'currentClass',
@@ -191,9 +190,8 @@ SBStBasicMethod >> createTestMethod [
 	guessedMethodName := ('test', self selector capitalized copyReplaceAll: ':' with: '') asSymbol.
 	[
 		testClass methodDictionary includesKey: guessedMethodName] whileTrue: [guessedMethodName := guessedMethodName, 'x'].
-	method := self sandblockEditor openMorphInView: (SBStMethod new
+	method := self sandblockEditor createArtefactInView: (SBStMethod new
 		selector: guessedMethodName arguments: #() class: testClass;
-		hasUnsavedChanges: true;
 		body: SBStBlockBody empty).
 	self sandblockEditor startInput: method body statements first at: 1 replacingContents: true
 ]
@@ -289,20 +287,6 @@ SBStBasicMethod >> hasExternalModification [
 ]
 
 { #category : #'as yet unclassified' }
-SBStBasicMethod >> hasUnsavedChanges [
-
-	^ hasUnsavedChanges
-]
-
-{ #category : #'as yet unclassified' }
-SBStBasicMethod >> hasUnsavedChanges: aBoolean [
-
-	hasUnsavedChanges ~= aBoolean ifTrue: [
-		hasUnsavedChanges := aBoolean.
-		self changed]
-]
-
-{ #category : #'as yet unclassified' }
 SBStBasicMethod >> ignoreChangeNotifierDuring: aBlock [
 
 	self setProperty: #ignoreChangeNotifier toValue: true.
@@ -315,9 +299,7 @@ SBStBasicMethod >> initialize [
 
 	super initialize.
 	
-	self
-		hasUnsavedChanges: false;
-		attachDecorator: SBMoveDecorator new
+	self attachDecorator: SBMoveDecorator new
 ]
 
 { #category : #'as yet unclassified' }
@@ -507,8 +489,10 @@ SBStBasicMethod >> postDuplicateSelf [
 	
 	super postDuplicateSelf.
 	
+	" mark a change as we're unsaved "
+	self sandblockEditor do: (SBDoItCommand newFor: self).
+	
 	self
-		hasUnsavedChanges: true;
 		detachDecorators: SBMoveDecorator;
 		attachDecorator: SBMoveDecorator new
 ]

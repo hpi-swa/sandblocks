@@ -44,18 +44,6 @@ SBStClassMethodEditor >> deleteCommandFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBStClassMethodEditor >> hasUnsavedChanges [
-
-	^ false
-]
-
-{ #category : #'as yet unclassified' }
-SBStClassMethodEditor >> hasUnsavedChanges: aBoolean [
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBStClassMethodEditor >> initialize [
 
 	super initialize.

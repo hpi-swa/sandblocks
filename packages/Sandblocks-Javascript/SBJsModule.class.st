@@ -47,16 +47,6 @@ SBJsModule >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsModule >> hasUnsavedChanges [
-
-	^ false
-]
-
-{ #category : #'as yet unclassified' }
-SBJsModule >> hasUnsavedChanges: aBoolean [
-]
-
-{ #category : #'as yet unclassified' }
 SBJsModule >> initialize [
 
 	super initialize.

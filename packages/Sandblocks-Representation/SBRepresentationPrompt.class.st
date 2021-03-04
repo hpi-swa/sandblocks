@@ -47,12 +47,6 @@ SBRepresentationPrompt >> handlesMouseOver: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBRepresentationPrompt >> hasUnsavedChanges: aBoolean [
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBRepresentationPrompt >> initialize [
 
 	super initialize.
