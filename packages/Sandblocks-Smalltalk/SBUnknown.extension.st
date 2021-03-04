@@ -1,6 +1,13 @@
 Extension { #name : #SBUnknown }
 
 { #category : #'*Sandblocks-Smalltalk' }
+SBUnknown >> asMessagePart: converter [
+	<convert>
+	
+	converter do: [SBStMessagePart new contents: '']
+]
+
+{ #category : #'*Sandblocks-Smalltalk' }
 SBUnknown >> canAppearInBlockBody [
 
 	^ true
