@@ -17,6 +17,7 @@ CodeHolder >> installBlockEditor [
 			model: self;
 			hResizing: #spaceFill;
 			vResizing: #spaceFill;
+			updateArtefact;
 			yourself).
 	
 	self containingWindow

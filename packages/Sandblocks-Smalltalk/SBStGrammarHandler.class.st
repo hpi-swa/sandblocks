@@ -39,10 +39,13 @@ SBStGrammarHandler >> browseImplementors [
 
 	| list |
 	self block selector ifNotNil: [:sel |
+		self block sandblockEditor isSingleArtefactView ifTrue: [^ self changeToBlockView: (self systemNavigation browseAllImplementorsOf: sel asSymbol)].
+		
 		list := self systemNavigation allImplementorsOf: sel asSymbol.
 		list size = 1
 			ifTrue: [self block sandblockEditor open: list first compiledMethod]
-			ifFalse: [self block sandblockEditor openMorphInView: (SBCodeAccordion newFor: (list collect: #compiledMethod))]]
+			ifFalse: [
+				self block sandblockEditor openMorphInView: (SBCodeAccordion newFor: (list collect: #compiledMethod))]]
 ]
 
 { #category : #actions }
@@ -50,13 +53,22 @@ SBStGrammarHandler >> browseSenders [
 	<action>
 
 	self block selector ifNotNil: [:sel | | calls container |
+		self block sandblockEditor isSingleArtefactView ifTrue: [^ self changeToBlockView: (self systemNavigation browseAllCallsOn: sel asSymbol)].
+		
 		calls := self systemNavigation allCallsOn: sel asSymbol.
 		calls ifEmpty: [^ self].
 		calls size = 1 ifTrue: [^ self block sandblockEditor open: calls first compiledMethod].
 		
 		container := SBCodeAccordion new.
-		calls do: [:call | container  addMorphBack: (SBCodeLens forMethod: call compiledMethod selector: sel)].
+		calls do: [:call | container addMorphBack: (SBCodeLens forMethod: call compiledMethod selector: sel)].
 		container openNear: self block]
+]
+
+{ #category : #'as yet unclassified' }
+SBStGrammarHandler >> changeToBlockView: aWindow [
+
+	aWindow model toggleBlockEditor.
+	^ aWindow
 ]
 
 { #category : #actions }

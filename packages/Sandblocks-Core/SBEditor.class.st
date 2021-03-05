@@ -763,6 +763,12 @@ SBEditor >> fixedNumberOfChildren [
 	^ false
 ]
 
+{ #category : #testing }
+SBEditor >> floating [
+
+	^ true
+]
+
 { #category : #actions }
 SBEditor >> goToMark [
 	<globalAction>
@@ -886,6 +892,12 @@ SBEditor >> interruptInputDuring: aBlock [
 	cursor ifNotNil: [self maybeStartInputAt: cursor]
 ]
 
+{ #category : #testing }
+SBEditor >> isSingleArtefactView [
+
+	^ false
+]
+
 { #category : #'as yet unclassified' }
 SBEditor >> keepVerticalSelectionPositionDuring: aBlock [
 
@@ -923,7 +935,7 @@ SBEditor >> markChangesAfterCommand: artefacts [
 SBEditor >> maybeStartInputAt: aNumber [
 
 	inputMapping defaultState = #input ifTrue: [
-		self selection currentTextMorph ifNotNil: [:textMorph |
+		(self selection ifNotNil: #currentTextMorph) ifNotNil: [:textMorph |
 			self startInput: self selection at: aNumber replacingContents: false]]
 ]
 

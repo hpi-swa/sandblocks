@@ -42,15 +42,10 @@ SBStMessageSend >> browse [
 ]
 
 { #category : #'as yet unclassified' }
-SBStMessageSend >> browseAllImplementors [
-	<action>
-
-	super browseImplementors
-]
-
-{ #category : #'as yet unclassified' }
 SBStMessageSend >> browseImplementors [
 	<action>
+
+	self sandblockEditor isSingleArtefactView ifTrue: [^ super browseImplementors].
 
 	self actualReceiver guessClassExpensive
 		ifNotNil: [:class |

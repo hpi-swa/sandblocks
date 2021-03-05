@@ -153,6 +153,12 @@ SBTextBubble >> prefix: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBTextBubble >> printOn: aStream [
+
+	aStream nextPutAll: 'text bubble'
+]
+
+{ #category : #'as yet unclassified' }
 SBTextBubble >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |

@@ -7,7 +7,7 @@ Class {
 	#category : #'Sandblocks-Core'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'dependents access' }
 SBBrowserEditor >> canDiscardEdits [
 
 	^ self artefacts ifEmpty: [true] ifNotEmpty: [:m | m first hasUnsavedChanges not]
@@ -30,7 +30,7 @@ SBBrowserEditor >> ensureOpened: aMethod [
 				repr position: 0 @ 0]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBBrowserEditor >> initialize [
 
 	super initialize.
@@ -41,6 +41,12 @@ SBBrowserEditor >> initialize [
 	scroll scroller layoutPolicy: SBSimpleLayout new
 ]
 
+{ #category : #testing }
+SBBrowserEditor >> isSingleArtefactView [
+
+	^ true
+]
+
 { #category : #'as yet unclassified' }
 SBBrowserEditor >> model: aModel [
 
@@ -49,7 +55,24 @@ SBBrowserEditor >> model: aModel [
 	model ifNotNil: [model addDependent: self]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'model access' }
+SBBrowserEditor >> modelSelection [
+
+	^ model selectedMessageName
+		ifNotNil: [:msg | model selectedClassOrMetaClass compiledMethodAt: msg]
+		ifNil: [model selectedClassOrMetaClass]
+]
+
+{ #category : #'model access' }
+SBBrowserEditor >> modelSelection: anObject [
+
+	anObject isBehavior ifTrue: [^ model selectClass: anObject].
+	anObject isCompiledMethod ifTrue: [
+		model selectedClass ~= anObject methodClass ifTrue: [model selectClass: anObject methodClass].
+		^ model selectMessageNamed: anObject selector]
+]
+
+{ #category : #'submorphs-add/remove' }
 SBBrowserEditor >> openMorphInView: aMorph [
 
 	"| valid |
@@ -68,7 +91,16 @@ SBBrowserEditor >> openMorphInView: aMorph [
 	super openMorphInView: aMorph
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #artefacts }
+SBBrowserEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean [
+
+	| ret |
+	ret := super save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean.
+	((anArtefact object isBehavior or: [anArtefact object isCompiledMethod]) and: [self modelSelection ~= anArtefact object]) ifTrue: [self modelSelection: anArtefact object].
+	^ ret
+]
+
+{ #category : #selection }
 SBBrowserEditor >> scrollToShow: aRectangle [
 
 	SBLabel text: ['if we''re larger than the total size and intersect already, don''t move'].
@@ -82,20 +114,42 @@ SBBrowserEditor >> scrollerClass [
 	^ ScrollPane
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #updating }
 SBBrowserEditor >> update: aSymbol [
 
 	aSymbol
 		caseOf: {
-			[#contents] -> [
-				self ensureOpened: (model selectedMessageName
-					ifNotNil: [:msg | model selectedClassOrMetaClass compiledMethodAt: msg]
-					ifNil: [model selectedClassOrMetaClass])].
+			[#contents] -> [SBToggledCode comment: '' active: 0 do: {[self ensureOpened: self modelSelection]}].
 			[#wantToChange] -> [
 				self canDiscardEdits ifFalse: [
 					(self confirm: 'Changes have not been saved.
 Is it OK to cancel those changes?' translated) ifTrue: [history markSaved: self artefacts first]]].
-			[#accept] -> [self save]
+			[#accept] -> [self save].
+			[#editSelection] -> [self updateArtefact]
 		}
 		otherwise: [nil]
+]
+
+{ #category : #'model access' }
+SBBrowserEditor >> updateArtefact [
+
+	(model respondsTo: #editSelection) ifFalse: [
+		^ self ensureOpened: (model selectedMessageName
+			ifNotNil: [:msg | model selectedClassOrMetaClass compiledMethodAt: msg]
+			ifNil: [model selectedClassOrMetaClass])].
+
+	({#editClass. #editMessage} includes: model editSelection) ifTrue: [
+		^ self ensureOpened: (model selectedMessageName
+			ifNotNil: [:msg | model selectedClassOrMetaClass compiledMethodAt: msg]
+			ifNil: [model selectedClassOrMetaClass])].
+	
+	#newClass = model editSelection ifTrue: [ | class |
+		class := SBStClass new category: ((self selectedArtefact ifNotNil: [:container | container relatedClass]) ifNotNil: #category ifNil: ['UserObjects']).
+		self openMorphInView: class.
+		class inputContainedUnknown].
+	#newMessage = model editSelection ifTrue: [ | method |
+		self createArtefactInView: (method := SBStMethod new
+			selector: '' arguments: #() class: model selectedClassOrMetaClass;
+			body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}])).
+		^ self startInput: method at: 1 replacingContents: true]
 ]

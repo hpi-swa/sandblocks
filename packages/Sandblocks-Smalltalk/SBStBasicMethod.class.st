@@ -330,10 +330,10 @@ SBStBasicMethod >> instanceVariables [
 	editor := self sandblockEditor.
 	^ Array streamContents: [:stream |
 		self methodClass withAllSuperclassesDo: [:class |
-			self sandblockEditor
+			stream nextPutAll: (self sandblockEditor
 				blockFor: class withInterfaces: #(isEditor)
-				ifOpen: #instanceVariables
-				ifClosed: [class instVarNames collect: [:name | SBStName instanceVariable: name]]]]
+				ifOpen: [:c | c instanceVariables]
+				ifClosed: [class instVarNames collect: [:name | SBStName instanceVariable: name]])]]
 ]
 
 { #category : #'as yet unclassified' }
