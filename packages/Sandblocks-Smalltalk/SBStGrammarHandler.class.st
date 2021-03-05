@@ -265,44 +265,59 @@ SBStGrammarHandler >> replaceWithPragma: aBlock [
 	^ pragma sandblockEditor startInput: pragma at: 1 replacingContents: true
 ]
 
+{ #category : #'action helpers' }
+SBStGrammarHandler >> useArgument: aNumber [
+
+	| artefact |
+	artefact := self block containingArtefact.
+	artefact arguments size >= aNumber ifTrue: [ | content |
+		content := (artefact arguments at: aNumber) contents.
+		self block sandblockEditor mode = #input
+			ifTrue: [self block sandblockEditor endInputWith: content]
+			ifFalse: [
+				self block sandblockEditor do: ((SBReplaceCommand newFor: artefact)
+					replacer: (SBStName contents: content);
+					target: self block)]]
+]
+
 { #category : #'actions input' }
 SBStGrammarHandler >> useFifthArgument [
 	<inputAction>
-	
-	self block containingArtefact arguments size >= 5 ifTrue: [
-		self block sandblockEditor endInputWith: self block containingArtefact arguments fifth contents]
+	<action>
+
+	self useArgument: 5
 ]
 
 { #category : #'actions input' }
 SBStGrammarHandler >> useFirstArgument [
 	<inputAction>
-	
-	self block containingArtefact arguments ifNotEmpty: [
-		self block sandblockEditor endInputWith: self block containingArtefact arguments first contents]
+	<action>
+
+	self useArgument: 1
 ]
 
 { #category : #'actions input' }
 SBStGrammarHandler >> useFourthArgument [
 	<inputAction>
-	
-	self block containingArtefact arguments size >= 4 ifTrue: [
-		self block sandblockEditor endInputWith: self block containingArtefact arguments fourth contents]
+	<action>
+
+	self useArgument: 3
 ]
 
 { #category : #'actions input' }
 SBStGrammarHandler >> useSecondArgument [
 	<inputAction>
-	
-	self block containingArtefact arguments size >= 2 ifTrue: [
-		self block sandblockEditor endInputWith: self block containingArtefact arguments second contents]
+	<action>
+
+	self useArgument: 2
 ]
 
 { #category : #'actions input' }
 SBStGrammarHandler >> useThirdArgument [
 	<inputAction>
-	
-	self block containingArtefact arguments size >= 3 ifTrue: [
-		self block sandblockEditor endInputWith: self block containingArtefact arguments third contents]
+	<action>
+
+	self useArgument: 3
 ]
 
 { #category : #'action helpers' }
