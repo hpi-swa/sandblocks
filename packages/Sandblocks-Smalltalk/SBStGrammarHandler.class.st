@@ -64,7 +64,7 @@ SBStGrammarHandler >> browseSenders [
 		container openNear: self block]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'callback helpers' }
 SBStGrammarHandler >> changeToBlockView: aWindow [
 
 	aWindow model toggleBlockEditor.

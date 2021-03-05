@@ -9,12 +9,7 @@ SBScmGrammarHandler >> evaluateExpression [
 	<action>
 	<actionValidIf: #isExpression>
 
-	| result |
-	result := self block evaluate.
-	self block containingArtefact ifNotNil: [
-		self block containingArtefact cacheType: result class for: self block].
-	
-	result convertedFor: SBInterfaces topLevel do: [:morph |
+	self block evaluate convertedFor: SBInterfaces topLevel do: [:morph |
 		self block sandblockEditor openMorphInView: morph.
 		morph focusAfterDelete: self block.
 		self block sandblockEditor connectFrom: self block to: morph]

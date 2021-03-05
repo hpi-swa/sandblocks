@@ -935,22 +935,19 @@ SBEditor >> markChangesAfterCommand: artefacts [
 SBEditor >> maybeStartInputAt: aNumber [
 
 	inputMapping defaultState = #input ifTrue: [
-		(self selection ifNotNil: #currentTextMorph) ifNotNil: [:textMorph |
-			self startInput: self selection at: aNumber replacingContents: false]]
+		(self selection ifNotNil: #currentTextMorph) ifNotNil: [:textMorph | self startInput: self selection at: aNumber replacingContents: false]]
 ]
 
 { #category : #input }
 SBEditor >> maybeStartInputFromEnd [
 
-	inputMapping defaultState = #input ifTrue: [
-		self startInput: self selection at: 9e8 replacingContents: false]
+	(inputMapping defaultState = #input and: [self selection currentTextMorph notNil]) ifTrue: [self startInput: self selection at: 900000000 replacingContents: false]
 ]
 
 { #category : #input }
 SBEditor >> maybeStartInputFromStart [
 
-	inputMapping defaultState = #input ifTrue: [
-		self startInput: self selection at: 0 replacingContents: false]
+	(inputMapping defaultState = #input and: [self selection currentTextMorph notNil]) ifTrue: [self startInput: self selection at: 0 replacingContents: false]
 ]
 
 { #category : #input }

@@ -1335,7 +1335,9 @@ SBBlock >> moveCursorDown [
 
 	self currentTextMorph moveCursorVertically: 1 ifAtBound: [ | next |
 		next := self nextVerticalNear: self sandblockEditor verticalSelectionPosition.
-		next ifNotNil: [self sandblockEditor startInput: next at: 9e8 replacingContents: false]]
+		next ifNotNil: [
+			next select.
+			next currentTextMorph ifNotNil: [self sandblockEditor startInput: next at: 9e8 replacingContents: false]]]
 ]
 
 { #category : #actions }
@@ -1348,7 +1350,10 @@ SBBlock >> moveCursorLeft [
 		ifAtBound: [ | next |
 			next := self sandblockEditor class navigation previousFrom: self do: [:b |
 				(self canJumpTo: b) ifTrue: [b] ifFalse: [nil]].
-			next ifNotNil: [self sandblockEditor select: next; startInput: next at: 900000000 replacingContents: false]]
+			next ifNotNil: [
+				self sandblockEditor select: next.
+				next currentTextMorph ifNotNil: [
+					self sandblockEditor startInput: next at: 900000000 replacingContents: false]]]
 		wordWise: (ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed])
 ]
 
@@ -1362,7 +1367,10 @@ SBBlock >> moveCursorRight [
 		ifAtBound: [ | next |
 			next := self sandblockEditor class navigation nextFrom: self do: [:b |
 				(self canJumpTo: b) ifTrue: [b] ifFalse: [nil]].
-			next ifNotNil: [self sandblockEditor select: next; startInput: next at: 0 replacingContents: false]]
+			next ifNotNil: [
+				self sandblockEditor select: next.
+				next currentTextMorph ifNotNil: [
+					self sandblockEditor startInput: next at: 0 replacingContents: false]]]
 		wordWise: (ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed])
 ]
 
@@ -1389,7 +1397,9 @@ SBBlock >> moveCursorUp [
 
 	self currentTextMorph moveCursorVertically: -1 ifAtBound: [ | next |
 		next := self previousVerticalNear: self sandblockEditor verticalSelectionPosition.
-		next ifNotNil: [self sandblockEditor startInput: next at: 9e8 replacingContents: false]]
+		next ifNotNil: [
+			next select.
+			next currentTextMorph ifNotNil: [self sandblockEditor startInput: next at: 9e8 replacingContents: false]]]
 ]
 
 { #category : #actions }

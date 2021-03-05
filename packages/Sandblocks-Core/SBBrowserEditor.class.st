@@ -148,7 +148,7 @@ SBBrowserEditor >> updateArtefact [
 		self openMorphInView: class.
 		class inputContainedUnknown].
 	#newMessage = model editSelection ifTrue: [ | method |
-		self createArtefactInView: (method := SBStMethod new
+		self openMorphInView: (method := SBStMethod new
 			selector: '' arguments: #() class: model selectedClassOrMetaClass;
 			body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}])).
 		^ self startInput: method at: 1 replacingContents: true]

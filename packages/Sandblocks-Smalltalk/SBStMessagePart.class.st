@@ -193,6 +193,12 @@ SBStMessagePart >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMessagePart >> selector [
+
+	^ self messageSend selector
+]
+
+{ #category : #'as yet unclassified' }
 SBStMessagePart >> selectorContentsBeforeMe [
 
 	^ self messageSend messageParts in: [:parts |

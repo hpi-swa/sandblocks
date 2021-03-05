@@ -8,9 +8,19 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBComboBox >> currentTextMorph [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBComboBox >> display: anObject [
 
 	^ anObject printString
+]
+
+{ #category : #'as yet unclassified' }
+SBComboBox >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
