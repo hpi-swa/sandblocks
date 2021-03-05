@@ -35,7 +35,7 @@ SBStBinding >> fixActions [
 				do: [:node | node containingArtefact body declareTemporaryVariable: node contents].
 			SBCodeAction
 				labeled: 'Declare instance variable' for: self block
-				do: [:node | node declareInstanceVariable].
+				do: [:node | self declareInstanceVariable].
 		}]
 ]
 

@@ -23,11 +23,7 @@ SBBrowserEditor >> ensureOpened: aMethod [
 	found ifFalse: [
 		aMethod
 			convertedFor: self objectInterfaceForDrop
-			do: [:repr |
-				self openMorphInView: (repr
-					hResizing: #spaceFill;
-					vResizing: #shrinkWrap).
-				repr position: 0 @ 0]]
+			do: [:repr | self openMorphInView: repr]]
 ]
 
 { #category : #initialization }
@@ -88,7 +84,10 @@ SBBrowserEditor >> openMorphInView: aMorph [
 	valid ifFalse: [^ self]."
 	
 	self childSandblocks do: [:block | block isSandblock ifTrue: [block delete]].
-	super openMorphInView: aMorph
+	super openMorphInView: (aMorph
+					hResizing: #spaceFill;
+					vResizing: #shrinkWrap).
+	aMorph position: 0 @ 0
 ]
 
 { #category : #artefacts }
@@ -137,19 +136,20 @@ SBBrowserEditor >> updateArtefact [
 		^ self ensureOpened: (model selectedMessageName
 			ifNotNil: [:msg | model selectedClassOrMetaClass compiledMethodAt: msg]
 			ifNil: [model selectedClassOrMetaClass])].
-
+	
 	({#editClass. #editMessage} includes: model editSelection) ifTrue: [
 		^ self ensureOpened: (model selectedMessageName
 			ifNotNil: [:msg | model selectedClassOrMetaClass compiledMethodAt: msg]
 			ifNil: [model selectedClassOrMetaClass])].
 	
 	#newClass = model editSelection ifTrue: [ | class |
-		class := SBStClass new category: ((self selectedArtefact ifNotNil: [:container | container relatedClass]) ifNotNil: #category ifNil: ['UserObjects']).
+		class := SBStClass new category: model selectedSystemCategoryName.
 		self openMorphInView: class.
 		class inputContainedUnknown].
 	#newMessage = model editSelection ifTrue: [ | method |
 		self openMorphInView: (method := SBStMethod new
 			selector: '' arguments: #() class: model selectedClassOrMetaClass;
-			body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}])).
+			body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}]);
+			category: model selectedMessageCategoryName).
 		^ self startInput: method at: 1 replacingContents: true]
 ]

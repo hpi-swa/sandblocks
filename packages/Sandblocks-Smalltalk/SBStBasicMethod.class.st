@@ -6,7 +6,8 @@ Class {
 		'typeCache',
 		'currentSelector',
 		'currentClass',
-		'body'
+		'body',
+		'category'
 	],
 	#category : #'Sandblocks-Smalltalk'
 }
@@ -126,6 +127,19 @@ SBStBasicMethod >> browse [
 SBStBasicMethod >> cacheType: aClass for: aBlock [
 
 	self typeCache at: aBlock put: aClass
+]
+
+{ #category : #'as yet unclassified' }
+SBStBasicMethod >> category [
+
+	SBExample self: [(SBStBasicMethod >> #category) asSandblock] args: [{}] label: 'example'.
+	^ category ifNil: [self methodClass organization categoryOfElement: self selector]
+]
+
+{ #category : #'as yet unclassified' }
+SBStBasicMethod >> category: aString [
+
+	category := aString
 ]
 
 { #category : #'as yet unclassified' }
@@ -533,21 +547,18 @@ SBStBasicMethod >> reloadMethodInPlace [
 SBStBasicMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
 
 	| text newSelector |
-	(self savedMethodHasComments and: [(UIManager default confirm: 'Currently saved version has comments that will be removed. Still save?') not]) ifTrue: [^ false].
+	(self savedMethodHasComments and: [
+		(UIManager default confirm: 'Currently saved version has comments that will be removed. Still save?') not]) ifTrue: [^ false].
 	
-	self allBlocksDo: [:block |
-		block valid ifFalse: [
-			aBoolean ifFalse: [^ false] ifTrue: [block tryFixIfFail: [^ false]]]].
+	self allBlocksDo: [:block | block valid ifFalse: [aBoolean ifFalse: [^ false] ifTrue: [block tryFixIfFail: [^ false]]]].
 	
-	(self hasExternalModification not or: [(UIManager default confirm: 'Method may have changed elsewhere, continue?')])
-		ifTrue: [self externalModification: false]
-		ifFalse: [^ false].
+	(self hasExternalModification not or: [UIManager default confirm: 'Method may have changed elsewhere, continue?']) ifTrue: [self externalModification: false] ifFalse: [^ false].
 	
 	text := aQuickBoolean ifTrue: [self sourceString] ifFalse: [self prettySourceString].
 	
 	self ignoreChangeNotifierDuring: [
-		newSelector := self methodClass compile: text asText.
-		(self currentClass ~= self methodClass or: [self currentSelector ~= #'' and: [newSelector ~=self  currentSelector]]) ifTrue: [
+		newSelector := self methodClass compile: text asText classified: self category.
+		(self currentClass ~= self methodClass or: [self currentSelector ~= #'' and: [newSelector ~= self currentSelector]]) ifTrue: [
 			self clearCache.
 			self currentClass removeSelector: self currentSelector]].
 	self currentSelector: newSelector.
