@@ -28,7 +28,7 @@ SBDemoFormatter class >> format: aMethodNode [
 { #category : #'as yet unclassified' }
 SBDemoFormatter class >> formatString: aString class: aClass noPattern: aBoolean [
 
-	| formatter node methodNode |
+	| formatter node |
 	SBExample
 		self: [SBDemoFormatter]
 		args: [{'testMethod
@@ -318,7 +318,7 @@ SBDemoFormatter >> visitBlockNode: aNode [
 SBDemoFormatter >> visitBraceNode: aNode [
 
 	| width multiLine |
-	width := (SBExampleWatch report: aNode elements for: 186574757) inject: 0 into: [:sum :element | sum + ((self preFormat: element) size + 2)].
+	width := aNode elements inject: 0 into: [:sum :element | sum + ((self preFormat: element) size + 2)].
 	multiLine := width > self maxLineLength.
 	stream nextPut: ${.
 	self

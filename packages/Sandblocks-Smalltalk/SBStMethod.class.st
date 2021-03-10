@@ -66,7 +66,7 @@ SBStMethod >> initialize [
 		
 		attachDecorator: SBResizableDecorator new;
 		addMorphBack: (SBRow new
-			layoutPolicy: nil;
+			layoutPolicy: SBAlgebraLayout new;
 			addMorphBack: (classPrefix := SBStClassNameInput new suffix: ' >> '; bordered: false);
 			addMorphBack: (signature := SBStSignature new))
 ]

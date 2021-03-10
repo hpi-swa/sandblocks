@@ -52,16 +52,13 @@ SBStGrammarHandler >> browseImplementors [
 SBStGrammarHandler >> browseSenders [
 	<action>
 
-	self block selector ifNotNil: [:sel | | calls container |
-		self block sandblockEditor isSingleArtefactView ifTrue: [^ self changeToBlockView: (self systemNavigation browseAllCallsOn: sel asSymbol)].
-		
+	self block selector ifNotNil: [:sel | | calls |
 		calls := self systemNavigation allCallsOn: sel asSymbol.
 		calls ifEmpty: [^ self].
-		calls size = 1 ifTrue: [^ self block sandblockEditor open: calls first compiledMethod].
 		
-		container := SBCodeAccordion new.
-		calls do: [:call | container addMorphBack: (SBCodeLens forMethod: call compiledMethod selector: sel)].
-		container openNear: self block]
+		(self block sandblockEditor isSingleArtefactView or: [calls size > 1]) ifTrue: [^ self changeToBlockView: (self systemNavigation browseAllCallsOn: sel asSymbol)].
+		
+		self block sandblockEditor open: calls first compiledMethod]
 ]
 
 { #category : #'callback helpers' }

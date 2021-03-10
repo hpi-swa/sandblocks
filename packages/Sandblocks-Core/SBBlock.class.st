@@ -1455,8 +1455,7 @@ SBBlock >> nextVerticalNear: aNumber calcDistance: aDistBlock validBlock: aValid
 			ifFalse: [
 				(distance between: candidatesBestDistance and: candidatesBestDistance + tolerance) ifTrue: [candidates add: candidate]]].
 	
-	^ candidates detectMin: [:candidate |
-		((candidate center x - artefact left) - aNumber) abs]
+	^ candidates detectMin: [:candidate | ((candidate center x - artefact left) - aNumber) abs]
 ]
 
 { #category : #callbacks }

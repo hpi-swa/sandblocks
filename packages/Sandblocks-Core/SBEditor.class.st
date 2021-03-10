@@ -973,23 +973,28 @@ SBEditor >> mode [
 { #category : #accessing }
 SBEditor >> mode: aSymbol [
 
+	| defaultModeColor specialModeColor |
 	self clearMultiSelection.
-		
+	
 	aSymbol = #input ifTrue: [self assert: currentInput notNil] ifFalse: [self assert: currentInput isNil].
 	(aSymbol = #selection or: [aSymbol = #continuousSelection]) ifFalse: [self assert: multiSelection isEmpty].
 	
 	mode := aSymbol.
 	modeLabel contents: (mode caseOf: {
-		([#input] -> ['INPUT']).
-		([#selection] -> ['SELECTION']).
-		([#continuousSelection] -> ['CONT. SELECTION']).
-		([#command] -> ['COMMAND'])
+		[#input] -> ['INPUT'].
+		[#selection] -> ['SELECTION'].
+		[#continuousSelection] -> ['CONT. SELECTION'].
+		[#command] -> ['COMMAND']
 	}).
+	
+	defaultModeColor := Color white.
+	specialModeColor := Color red alpha: 0.2.
+	
 	bottomPanel color: (mode caseOf: {
-		([#input] -> [Color red alpha: 0.2]).
-		([#selection] -> [Color blue alpha: 0.2]).
-		([#continuousSelection] -> [Color blue alpha: 0.2]).
-		([#command] -> [Color white])
+		[#input] -> [inputMapping defaultState = #input ifTrue: [defaultModeColor] ifFalse: [specialModeColor]].
+		[#selection] -> [Color blue alpha: 0.2].
+		[#continuousSelection] -> [Color blue alpha: 0.2].
+		[#command] -> [inputMapping defaultState = #command ifTrue: [defaultModeColor] ifFalse: [specialModeColor]]
 	}).
 	self selection ifNotNil: [:s | s invalidRect: (s outerBounds expandBy: 4)].
 	self updateSelectionLabel

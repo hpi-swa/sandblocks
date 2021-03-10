@@ -116,7 +116,7 @@ SBError >> focus [
 	stack from: 1 to: (self maxFrames min: stack size) do: [:context | frames addMorphBack: (self createFrameForContext: context)].
 	
 	frames sandblockEditor select: (frames submorphs
-		detect: [:frame | self sandblockEditor blockFor: frame context method homeMethod withInterfaces: #() ifOpen: [true] ifClosed: [false]]
+		detect: [:frame | self sandblockEditor blockFor: frame context method homeMethod withInterfaces: #() ifOpen: [:b | true] ifClosed: [false]]
 		ifNone: [frames firstSubmorph])
 ]
 
