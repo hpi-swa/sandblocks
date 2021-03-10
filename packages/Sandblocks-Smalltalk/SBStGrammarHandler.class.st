@@ -39,13 +39,13 @@ SBStGrammarHandler >> browseImplementors [
 
 	| list |
 	self block selector ifNotNil: [:sel |
-		self block sandblockEditor isSingleArtefactView ifTrue: [^ self changeToBlockView: (self systemNavigation browseAllImplementorsOf: sel asSymbol)].
-		
 		list := self systemNavigation allImplementorsOf: sel asSymbol.
-		list size = 1
-			ifTrue: [self block sandblockEditor open: list first compiledMethod]
-			ifFalse: [
-				self block sandblockEditor openMorphInView: (SBCodeAccordion newFor: (list collect: #compiledMethod))]]
+		
+		(self block sandblockEditor isSingleArtefactView or: [list size > 1]) ifTrue: [
+			self block sandblockEditor model ifNotNil: [:model | (model isKindOf: MessageTrace) ifTrue: [^ model browseAllImplementorsOf: sel asSymbol]].
+			^ self changeToBlockView: (self systemNavigation browseAllImplementorsOf: sel asSymbol)].
+		
+		self block sandblockEditor open: list first compiledMethod]
 ]
 
 { #category : #actions }
@@ -56,7 +56,9 @@ SBStGrammarHandler >> browseSenders [
 		calls := self systemNavigation allCallsOn: sel asSymbol.
 		calls ifEmpty: [^ self].
 		
-		(self block sandblockEditor isSingleArtefactView or: [calls size > 1]) ifTrue: [^ self changeToBlockView: (self systemNavigation browseAllCallsOn: sel asSymbol)].
+		(self block sandblockEditor isSingleArtefactView or: [calls size > 1]) ifTrue: [
+			self block sandblockEditor model ifNotNil: [:model | (model isKindOf: MessageTrace) ifTrue: [^ model browseAllCallsOn: sel asSymbol]].
+			^ self changeToBlockView: (self systemNavigation browseAllCallsOn: sel asSymbol)].
 		
 		self block sandblockEditor open: calls first compiledMethod]
 ]

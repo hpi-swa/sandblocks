@@ -43,6 +43,12 @@ SBBrowserEditor >> isSingleArtefactView [
 	^ true
 ]
 
+{ #category : #'model access' }
+SBBrowserEditor >> model [
+
+	^ model
+]
+
 { #category : #'as yet unclassified' }
 SBBrowserEditor >> model: aModel [
 
