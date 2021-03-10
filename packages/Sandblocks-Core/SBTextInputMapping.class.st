@@ -86,6 +86,10 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character tab do: #inputNextUnknown;
 		registerShortcut: Character arrowUp do: #selectPreviousGroup;
 		registerShortcut: Character arrowDown do: #selectNextGroup;
+		registerShortcut: Character arrowLeft asSandblockShortcut withOption withCtrl do: #selectLeftToplevel;
+		registerShortcut: Character arrowDown asSandblockShortcut withOption withCtrl do: #selectBottomToplevel;
+		registerShortcut: Character arrowUp asSandblockShortcut withOption withCtrl do: #selectTopToplevel;
+		registerShortcut: Character arrowRight asSandblockShortcut withOption withCtrl do: #selectRightToplevel;
 
 		registerShortcut: Character escape do: #dismiss;
 
