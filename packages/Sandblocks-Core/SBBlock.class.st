@@ -2026,6 +2026,10 @@ SBBlock >> stepDecorator: aDecorator [
 ]
 
 { #category : #input }
+SBBlock >> stopEditing [
+]
+
+{ #category : #input }
 SBBlock >> stopEditing: aCommand [
 ]
 

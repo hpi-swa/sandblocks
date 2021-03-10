@@ -229,13 +229,19 @@ SBStMessagePart >> startInputAt: aNumber replacingContents: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMessagePart >> stopEditing [
+
+	text stopEditing
+]
+
+{ #category : #'as yet unclassified' }
 SBStMessagePart >> stopEditing: aCommand [
 
 	aCommand
 		newText: self contents;
 		newMorph: self.
 	
-	text stopEditing.
+	self stopEditing.
 	
 	self removeSuggestionMenu
 ]

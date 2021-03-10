@@ -39,7 +39,8 @@ SBSelection >> addedMorph: aMorph [
 		aMorph allBlocksDo: [:block |
 			block
 				detachDecorators: SBSelectionDecorator;
-				detachDecorators: SBMultiSelectionDecorator]]
+				detachDecorators: SBMultiSelectionDecorator;
+				stopEditing]]
 ]
 
 { #category : #'as yet unclassified' }

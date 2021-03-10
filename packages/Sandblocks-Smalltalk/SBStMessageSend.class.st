@@ -36,6 +36,14 @@ SBStMessageSend >> asMessageSend: converter [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMessageSend >> balloonText [
+
+	(self isInWorld and: [self selectorAppearsValid not]) ifTrue: [
+		^ 'Object of guessed class ', (self actualReceiver guessedClass name, ' does not understand this selector.')].
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBStMessageSend >> browse [
 
 	self browseImplementors
@@ -115,8 +123,7 @@ SBStMessageSend >> deleteCommandFor: aBlock [
 SBStMessageSend >> drawSubmorphsOn: aCanvas [
 
 	super drawSubmorphsOn: aCanvas.
-	self actualReceiver ifNotNil: [:r | r guessedClass ifNotNil: [:class |
-		(class canUnderstand: self selector asSymbol) ifFalse: [self drawFrame: Color yellow on: aCanvas]]]
+	self selectorAppearsValid ifFalse: [self drawFrame: Color yellow on: aCanvas]
 ]
 
 { #category : #accessing }
@@ -408,6 +415,12 @@ SBStMessageSend >> selector [
 SBStMessageSend >> selector: aSymbol arguments: aCollection [
 
 	signature selector: aSymbol arguments: aCollection
+]
+
+{ #category : #testing }
+SBStMessageSend >> selectorAppearsValid [
+
+	^ self actualReceiver ifNotNil: [:r | r guessedClass ifNotNil: [:class | class canUnderstand: self selector asSymbol] ifNil: [true]]
 ]
 
 { #category : #accessing }
