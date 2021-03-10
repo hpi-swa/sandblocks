@@ -34,6 +34,12 @@ SBStringView >> isArtefact [
 ]
 
 { #category : #'as yet unclassified' }
+SBStringView >> isTopLevel [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBStringView >> object [
 
 	^ self textContents

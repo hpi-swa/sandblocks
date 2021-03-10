@@ -37,6 +37,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		inputShortcut: $' command do: #splitStringAtCursor;
 		registerShortcut: $+ command do: #insertElementAfter;
 		registerShortcut: $* command do: #insertElementBefore;
+		inputShortcut: Character cr command do: #typeNewLine;
 		
 		" refactor "
 		registerShortcut: $T command do: #extractMethod;

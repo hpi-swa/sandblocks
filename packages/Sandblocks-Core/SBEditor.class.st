@@ -994,7 +994,7 @@ SBEditor >> mode: aSymbol [
 		[#input] -> [inputMapping defaultState = #input ifTrue: [defaultModeColor] ifFalse: [specialModeColor]].
 		[#selection] -> [Color blue alpha: 0.2].
 		[#continuousSelection] -> [Color blue alpha: 0.2].
-		[#command] -> [inputMapping defaultState = #command ifTrue: [defaultModeColor] ifFalse: [specialModeColor]]
+		[#command] -> [defaultModeColor]
 	}).
 	self selection ifNotNil: [:s | s invalidRect: (s outerBounds expandBy: 4)].
 	self updateSelectionLabel
@@ -1187,8 +1187,7 @@ SBEditor >> performForSelection: anActionSymbol [
 SBEditor >> performShortcutFor: anEvent [
 
 	self shortcuts do: [:assoc |
-		(assoc key matchesEvent: anEvent mode: self mode) ifTrue: [
-			(self performForSelection: assoc value) ifTrue: [^ true]]].
+		(assoc key matchesEvent: anEvent mode: self mode) ifTrue: [(self performForSelection: assoc value) ifTrue: [^ true]]].
 	
 	mode = #input ifTrue: [
 		currentInput keyStroke: anEvent.

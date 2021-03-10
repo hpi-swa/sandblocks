@@ -10,12 +10,13 @@ CompiledMethod >> asSandblock [
 		do: {
 			[
 				class := self methodClass.
-				parser := (SBToggledCode comment: '' active: 2 do: {[SBParserOverride new]. [class newParser]}) encoderClass: self encoderClass.
+				parser := class newParser encoderClass: self encoderClass.
+				parser class = Parser ifTrue: [parser := SBParser new encoderClass: self encoderClass].
+				
 				source := self getSourceFor: (self selector ifNil: [self defaultSelector]) in: class.
-				methodNode := parser parse: source asString "codeWithEmptyLineMarkers" class: class.
-				"generated := methodNode generate."
+				methodNode := parser parse: source asString class: class.
 				nodeToRange := parser encoder rawSourceRanges.
-				debuggerMap := "DebuggerMethodMap forMethod: generated methodNode: (generated methodNode sourceText: source asString codeWithEmptyLineMarkers)" self debuggerMap.
+				debuggerMap := self debuggerMap.
 				instructions := InstructionStream on: self.
 				rangeToPCList := Array streamContents: [:stream |
 					self enumerateInstructions: debuggerMap of: self on: stream].

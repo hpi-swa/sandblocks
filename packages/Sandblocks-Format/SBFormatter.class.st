@@ -6,9 +6,10 @@ Class {
 		'indent',
 		'parents',
 		'preFormatCache',
-		'literalLines'
+		'literalLines',
+		'comments'
 	],
-	#category : 'Sandblocks-Format'
+	#category : #'Sandblocks-Format'
 }
 
 { #category : #'as yet unclassified' }
@@ -21,49 +22,25 @@ SBFormatter class >> format: aMethodNode [
 	aMethodNode accept: formatter.
 	SBExampleWatch report: (result := formatter contents) for: 971329700.
 	SBLabel text: ['Sanity check to not produce invalid code'].
-	self assert: aMethodNode asString = (Parser new parse: result class: aMethodNode methodClass) asString.
+	self assert: aMethodNode asString = (SBParser new parse: result class: aMethodNode methodClass) asString.
 	^ result
 ]
 
 { #category : #'as yet unclassified' }
-SBFormatter class >> formatString: aString class: aClass noPattern: aBoolean [ 
+SBFormatter class >> formatString: aString class: aClass noPattern: aBoolean [
+
 	| result formatter node methodNode |
-	SBExample
-		self: [SBFormatter]
-		args: [{'self halt; yourself'. UndefinedObject. true}]
-		label: 'string test'.
-	methodNode := Parser new
-				parse: aString
-				class: aClass
-				noPattern: aBoolean
-				notifying: nil
-				ifFail: nil.
-	node := aBoolean
-				ifTrue: [methodNode body statements first expr]
-				ifFalse: [methodNode].
+	SBExample self: [SBFormatter] args: [{'self halt; yourself'. UndefinedObject. true}] label: 'string test'.
+	methodNode := SBParser new parse: aString class: aClass noPattern: aBoolean notifying: nil ifFail: nil.
+	node := aBoolean ifTrue: [methodNode body statements first expr] ifFalse: [methodNode].
 	formatter := self new initForNode: node.
 	node accept: formatter.
 	result := formatter contents.
-	SBLabel
-		text: ['Sanity check to not produce invalid code'].
+	SBLabel text: ['Sanity check to not produce invalid code'].
 	
 	methodNode accept: (ParseNodeEnumerator ofBlock: [:n | n comment: nil]).
 	
-	"self assert: methodNode asString = (Parser new
-				parse: result
-				class: aClass
-				noPattern: aBoolean
-				notifying: nil
-				ifFail: nil) asString."
 	^ result
-]
-
-{ #category : #'as yet unclassified' }
-SBFormatter >> blockStatementsOf: aNode [
-
-	aNode statements ifEmpty: [^ #()].
-	SBLabel text: ['note: this will also strip away legitimate return selfs'].
-	^ (((self parentFor: aNode) isKindOf: MethodNode) and: [(aNode statements last isKindOf: ReturnNode) and: [aNode statements last isReturnSelf]]) ifTrue: [aNode statements allButLast] ifFalse: [aNode statements]
 ]
 
 { #category : #'as yet unclassified' }
@@ -113,7 +90,8 @@ SBFormatter >> initialize [
 	stream := '' writeStream.
 	indent := 0.
 	preFormatCache := Dictionary new.
-	literalLines := OrderedCollection new
+	literalLines := OrderedCollection new.
+	comments := OrderedCollection new
 ]
 
 { #category : #'as yet unclassified' }
@@ -171,6 +149,17 @@ SBFormatter >> parents: aDictionary [
 ]
 
 { #category : #'as yet unclassified' }
+SBFormatter >> popCurrentComments: aBoolean [
+
+	comments do: [:comment |
+		stream nextPut: $".
+		stream nextPutAll: comment.
+		stream nextPut: $".
+		(aBoolean or: [comment ~= comments last]) ifTrue: [self newLine]].
+	comments removeAll
+]
+
+{ #category : #'as yet unclassified' }
 SBFormatter >> preFormat: aNode [
 
 	| formatter |
@@ -193,6 +182,17 @@ SBFormatter >> preFormatCache: aDictionary [
 { #category : #'as yet unclassified' }
 SBFormatter >> precedenceOf: aNode [ 
 	^ aNode accept: SBPrecedenceVisitor new
+]
+
+{ #category : #'as yet unclassified' }
+SBFormatter >> printMethodComment: aNode [
+
+	aNode comment ifNotNil: [
+		aNode comment do: [:comment |
+			stream crtab: 1.
+			stream nextPut: $".
+			stream nextPutAll: comment.
+			stream nextPut: $"]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -262,7 +262,7 @@ SBFormatter >> visitBlockNode: aNode [
 	| isMethodBlock startWithNewLine |
 	isMethodBlock := (self parentFor: aNode) isKindOf: MethodNode.
 	startWithNewLine := isMethodBlock not and: [
-		aNode statements size > 1 or: [self willBeMultiLine: aNode statements first]].
+		aNode statements size > 1 or: [(self willBeMultiLine: aNode statements first) or: [aNode statements first comment notNil]]].
 	
 	isMethodBlock ifFalse: [
 		stream nextPut: $[.
@@ -279,17 +279,19 @@ SBFormatter >> visitBlockNode: aNode [
 	self
 		indent: (startWithNewLine ifTrue: [1] ifFalse: [0])
 		around: [ | statements |
-			statements := self blockStatementsOf: aNode.
+			statements := aNode statements.
 			startWithNewLine ifTrue: [self newLine].
 			
+			self popCurrentComments: true.
 			statements do: [:statement |
 				(statement isLiteralNode and: [statement key = #sbEmptyLine])
 					ifTrue: [self newLine]
 					ifFalse: [
 						self visitNode: statement.
-						statement ~= statements last ifTrue: [
+						(statement ~= statements last or: [comments notEmpty]) ifTrue: [
 							stream nextPut: $..
-							self newLine]]]].
+							self newLine]].
+				self popCurrentComments: statement ~= statements last]].
 	isMethodBlock ifFalse: [stream nextPut: $]]
 ]
 
@@ -395,11 +397,12 @@ SBFormatter >> visitMethodNode: aNode [
 			self
 				with: aNode selector keywords
 				and: aNode arguments
-				do: [:part :arg | 
+				do: [:part :arg |
 					stream nextPutAll: part.
 					stream space.
 					self visitNode: arg]
 				separatedBy: [stream space]].
+	self printMethodComment: aNode.
 	self printPragmas: aNode.
 	self newLine.
 	self indent: 1 around: [
@@ -408,18 +411,17 @@ SBFormatter >> visitMethodNode: aNode [
 ]
 
 { #category : #'as yet unclassified' }
-SBFormatter >> visitNode: aNode [ 
+SBFormatter >> visitNode: aNode [
+
 	| needsParens |
+	aNode comment ifNotNil: [comments addAll: aNode comment].
+	
 	needsParens := self needsParenthesisFor: aNode.
-	needsParens
-		ifTrue: [stream nextPut: $(].
-	preFormatCache
-		at: aNode
-		ifPresent: [:pair | stream
-				nextPutAll: (self reindent: pair)]
-		ifAbsent: [aNode accept: self].
-	needsParens
-		ifTrue: [stream nextPut: $)]
+	needsParens ifTrue: [stream nextPut: $(].
+	
+	preFormatCache at: aNode ifPresent: [:pair | stream nextPutAll: (self reindent: pair)] ifAbsent: [aNode accept: self].
+	
+	needsParens ifTrue: [stream nextPut: $)]
 ]
 
 { #category : #'as yet unclassified' }

@@ -75,6 +75,13 @@ SBStString >> textMorphClass [
 ]
 
 { #category : #'as yet unclassified' }
+SBStString >> typeNewLine [
+	<inputAction>
+	
+	self currentTextMorph insertString: String cr
+]
+
+{ #category : #'as yet unclassified' }
 SBStString >> writeSourceOn: aStream [
 
 	self contents asString storeOn: aStream

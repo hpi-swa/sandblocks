@@ -41,6 +41,13 @@ asdas''.
 	^ write contents
 ]
 
+{ #category : #'*Sandblocks-Core-converting' }
+String >> inStringView: converter [
+	<convert>
+
+	converter do: [SBStringView new string: self]
+]
+
 { #category : #'*Sandblocks-Core' }
 String >> parseAsMethod [
 

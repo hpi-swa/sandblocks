@@ -40,7 +40,7 @@ SBStMessageSend >> balloonText [
 
 	(self isInWorld and: [self selectorAppearsValid not]) ifTrue: [
 		^ 'Object of guessed class ', (self actualReceiver guessedClass name, ' does not understand this selector.')].
-	^ nil
+	^ super balloonText
 ]
 
 { #category : #'as yet unclassified' }
