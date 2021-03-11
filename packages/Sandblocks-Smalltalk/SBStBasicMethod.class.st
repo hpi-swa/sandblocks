@@ -429,6 +429,14 @@ SBStBasicMethod >> methodClass [
 ]
 
 { #category : #'as yet unclassified' }
+SBStBasicMethod >> methodComment: aCollection [
+
+	aCollection ifNil: [^ self].
+	
+	self statements: (aCollection reversed collect: [:c | SBLabel new contents: c]), self statements
+]
+
+{ #category : #'as yet unclassified' }
 SBStBasicMethod >> moveToClass [
 	<action>
 

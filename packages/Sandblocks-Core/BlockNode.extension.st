@@ -51,6 +51,8 @@ BlockNode >> isEmptyBlock [
 BlockNode >> statementsAsSandblocks: aCollection [
 
 	^ Array streamContents: [:stream |
+		self comment ifNotNil: [self comment do: [:c | stream nextPut: (SBLabel new contents: c)]].
+		
 		aCollection do: [:statement |
 			stream nextPut: statement asSandblock.
 			statement accept: (PPOriginalEnumerator

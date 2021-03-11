@@ -7,6 +7,7 @@ MethodNode >> asSandblock [
 	method := SBStMethod new
 		selector: self selector arguments: (self arguments collect: #asSandblock) class: self methodClass;
 		body: (self block asMethodBodySandblock temporaries: (self temporaries collect: #asSandblock));
+		methodComment: self comment;
 		yourself.
 	
 	SBStMethodSubstitution allSubclassesDo: [:substitution | 
