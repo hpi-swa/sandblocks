@@ -95,7 +95,7 @@ SBAlgebraCommand >> data: anObject [
 { #category : #'as yet unclassified' }
 SBAlgebraCommand >> debugStoreString [
 
-	^ SBFormatter
+	^ PPFormatter
 		formatString: (String streamContents: [:stream | self storeOn: stream])
 		class: nil class
 		noPattern: true

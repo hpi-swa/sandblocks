@@ -191,7 +191,7 @@ SBStASTNode >> preferredColor [
 { #category : #printing }
 SBStASTNode >> prettySourceString [
 
-	^ SBFormatter formatString: self sourceString class: self containingArtefact relatedClass noPattern: self ~= self containingArtefact
+	^ PPFormatter formatString: self sourceString class: self containingArtefact relatedClass noPattern: self ~= self containingArtefact
 ]
 
 { #category : #refactoring }

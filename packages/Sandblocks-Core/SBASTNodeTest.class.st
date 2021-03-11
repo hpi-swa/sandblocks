@@ -23,42 +23,6 @@ SBASTNodeTest >> testCanUndoAppendLine [
 ]
 
 { #category : #'as yet unclassified' }
-SBASTNodeTest >> testInsertEmptyLineMarkers [
-
-	self
-		assert: 'a.
-	#sbEmptyLine.
-	b.
-      #sbEmptyLine.
-     ''abc
-     
-     def''.
-#sbEmptyLine.
-     ^ a'
-		equals: 'a.
-	#sbEmptyLine.
-	b.
-      
-     ''abc
-     
-     def''.
-
-     ^ a' codeWithEmptyLineMarkers
-]
-
-{ #category : #'as yet unclassified' }
-SBASTNodeTest >> testInsertEmptyLineMarkersAfterReturn [
-
-	self assert: 'a
-    ^ test.
-
-    " hello "' equals: 'a
-    ^ test.
-
-    " hello "' codeWithEmptyLineMarkers
-]
-
-{ #category : #'as yet unclassified' }
 SBASTNodeTest >> testInsertStatementAboveOrBelow [
 
 	| block selection |

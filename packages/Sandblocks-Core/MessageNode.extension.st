@@ -38,21 +38,3 @@ MessageNode >> asSandblockWithoutSubstitution [
 		arguments: (originalArguments collect: #asSandblock);
 		pc: self pc
 ]
-
-{ #category : #'*Sandblocks-Core' }
-MessageNode >> originalArguments [
-
-	^ originalArguments
-]
-
-{ #category : #'*Sandblocks-Core' }
-MessageNode >> originalReceiver [
-
-	^ originalReceiver
-]
-
-{ #category : #'*Sandblocks-Core' }
-MessageNode >> originalSelector [
-
-	^ originalSelector
-]

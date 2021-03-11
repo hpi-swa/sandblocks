@@ -20,9 +20,3 @@ CascadeNode >> asSandblockWithoutSubstitution [
 		receiver: self receiver asSandblock
 		messages: (self messages collect: #asCascadePartSandblock)
 ]
-
-{ #category : #'*Sandblocks-Core' }
-CascadeNode >> originalReceiver [
-
-	^ receiver
-]

@@ -51,5 +51,5 @@ SBStEmptyLine >> printOn: aStream [
 { #category : #'as yet unclassified' }
 SBStEmptyLine >> writeSourceOn: aStream [
 
-	aStream nextPutAll: '#sbEmptyLine'
+	aStream nextPutAll: '#ppEmptyLine'
 ]

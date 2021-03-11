@@ -9,7 +9,7 @@ LiteralNode >> asSandblock [
 { #category : #'*Sandblocks-Core' }
 LiteralNode class >> sandblockForLiteral: anObject [
 
-	anObject = #sbEmptyLine ifTrue: [^ SBStEmptyLine new].
+	anObject = #ppEmptyLine ifTrue: [^ SBStEmptyLine new].
 	anObject isNumber ifTrue: [^ SBStNumber new contents: anObject asString].
 	anObject isSymbol ifTrue: [^ SBStSymbol new contents: anObject asString].
 	anObject isString ifTrue: [^ SBStString new contents: anObject].

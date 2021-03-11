@@ -11,7 +11,7 @@ CompiledMethod >> asSandblock [
 			[
 				class := self methodClass.
 				parser := class newParser encoderClass: self encoderClass.
-				parser class = Parser ifTrue: [parser := SBParser new encoderClass: self encoderClass].
+				parser class = Parser ifTrue: [parser := PPParser new encoderClass: self encoderClass].
 				
 				source := self getSourceFor: (self selector ifNil: [self defaultSelector]) in: class.
 				methodNode := parser parse: source asString class: class.

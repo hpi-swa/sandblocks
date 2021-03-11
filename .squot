@@ -1,6 +1,5 @@
 OrderedDictionary {
 	'packages/Sandblocks-Representation' : #SquotTonelSerializer,
-	'packages/Sandblocks-Format' : #SquotTonelSerializer,
 	'packages/Sandblocks-Explorer' : #SquotTonelSerializer,
 	'packages/Sandblocks-Compiler' : #SquotTonelSerializer,
 	'packages/Sandblocks-Tutorial' : #SquotTonelSerializer,
