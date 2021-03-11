@@ -131,7 +131,8 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		cmdShortcut: Character space do: #wrapInMessageSend;
 		
 		" modify scheme "
-		registerShortcut: $( do: #wrapInSExpr
+		registerShortcut: $( do: #wrapInSExpr;
+		registerShortcut: $) do: #splitSExpr
 ]
 
 { #category : #'as yet unclassified' }

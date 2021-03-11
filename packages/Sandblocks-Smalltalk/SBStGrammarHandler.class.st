@@ -103,8 +103,7 @@ SBStGrammarHandler >> extractMethod [
 	self block sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
 	
 	self block sandblockEditor doMultiSelection: [:extracting | | arguments localBindings method |
-		SBLabel text: [' consider write vs read access '].
-		self flag: #todo.
+		self flag: #todo. " consider write vs read access "
 		localBindings := extracting gather: #resolveLocalBindings.
 		localBindings := ((KeyedSet keyBlock: #name)
 			addAll: localBindings;
@@ -190,14 +189,14 @@ SBStGrammarHandler >> insertHaltBelow [
 SBStGrammarHandler >> insertLabelAbove [
 	<action>
 
-	self insert: SBLabel new aboveOrBelow: true
+	self insert: self block newCommentBlock aboveOrBelow: true
 ]
 
 { #category : #actions }
 SBStGrammarHandler >> insertLabelBelow [
 	<action>
 
-	self insert: SBLabel new aboveOrBelow: false
+	self insert: self block newCommentBlock aboveOrBelow: false
 ]
 
 { #category : #actions }

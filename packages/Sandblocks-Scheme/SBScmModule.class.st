@@ -194,6 +194,15 @@ SBScmModule >> sandblockBlockColorIfAbsent: aBlock [
 	^ self preferredColor
 ]
 
+{ #category : #'as yet unclassified' }
+SBScmModule >> saveAs [
+	<action>
+
+	
+	self filename: ((UIManager default saveFilenameRequest: 'Choose a filename' initialAnswer: 'file.scm') ifNil: [^ self]).
+	self sandblockEditor save
+]
+
 { #category : #'artefact protocol' }
 SBScmModule >> saveTryFixing: aBoolean quick: anotherBoolean [
 

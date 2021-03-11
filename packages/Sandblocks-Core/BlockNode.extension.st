@@ -3,13 +3,14 @@ Extension { #name : #BlockNode }
 { #category : #'*Sandblocks-Core' }
 BlockNode >> asMethodBodySandblock [
 	
-	| s |
+	| s body |
 	s := (self statements last class = ReturnNode and: [(self statements last expr isKindOf: VariableNode) and: [self statements last expr key = 'self']])
 		ifTrue: [self statements allButLast]
 		ifFalse: [self statements].
+	body := SBStBlockBody new.
 	
-	^ SBStBlockBody new
-		statements: (self statementsAsSandblocks: s);
+	^ body
+		statements: (self statementsAsSandblocks: s in: body);
 		temporaries: (self temporaries collect: #asSandblock);
 		bindings: #();
 		pc: self pc;
@@ -19,8 +20,10 @@ BlockNode >> asMethodBodySandblock [
 { #category : #'*Sandblocks-Core' }
 BlockNode >> asSandblock [
 	
-	^ SBStBlockBody new
-		statements: (self isEmptyBlock ifTrue: [#()] ifFalse: [self statementsAsSandblocks: self statements]);
+	| body |
+	body := SBStBlockBody new.
+	^ body
+		statements: (self isEmptyBlock ifTrue: [#()] ifFalse: [self statementsAsSandblocks: self statements in: body]);
 		temporaries: (self temporaries select: [:node | node scope ~= -2] thenCollect: #asSandblock);
 		bindings: (self arguments collect: #asSandblock);
 		pc: (closureCreationNode ifNotNil: [:n | n pc] ifNil: [0]);
@@ -48,14 +51,14 @@ BlockNode >> isEmptyBlock [
 ]
 
 { #category : #'*Sandblocks-Core' }
-BlockNode >> statementsAsSandblocks: aCollection [
+BlockNode >> statementsAsSandblocks: aCollection in: aBlock [
 
 	^ Array streamContents: [:stream |
-		self comment ifNotNil: [self comment do: [:c | stream nextPut: (SBLabel new contents: c)]].
+		self comment ifNotNil: [self comment do: [:c | stream nextPut: (aBlock newCommentBlock contents: c)]].
 		
 		aCollection do: [:statement |
 			stream nextPut: statement asSandblock.
 			statement accept: (PPOriginalEnumerator
-				ofBlock: [:node | node comment ifNotNil: [node comment do: [:c | stream nextPut: (SBLabel new contents: c)]]]
+				ofBlock: [:node | node comment ifNotNil: [node comment do: [:c | stream nextPut: (aBlock newCommentBlock contents: c)]]]
 				select: [:node | node isBlockNode not])]]
 ]

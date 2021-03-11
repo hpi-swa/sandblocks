@@ -433,7 +433,7 @@ SBStBasicMethod >> methodComment: aCollection [
 
 	aCollection ifNil: [^ self].
 	
-	self statements: (aCollection reversed collect: [:c | SBLabel new contents: c]), self statements
+	self statements: (aCollection reversed collect: [:c | self newCommentBlock contents: c]), self statements
 ]
 
 { #category : #'as yet unclassified' }

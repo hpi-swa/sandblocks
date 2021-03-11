@@ -22,7 +22,8 @@ SBCollection >> initialize [
 		changeTableLayout;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
-		listDirection: #leftToRight
+		listDirection: #leftToRight;
+		attachDecorator: SBMoveDecorator new
 ]
 
 { #category : #'as yet unclassified' }

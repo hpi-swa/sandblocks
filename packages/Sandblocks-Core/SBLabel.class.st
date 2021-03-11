@@ -1,30 +1,17 @@
 Class {
 	#name : #SBLabel,
-	#superclass : #SBStSubstitution,
+	#superclass : #SBBlock,
 	#instVars : [
 		'headingLevel',
-		'text'
+		'text',
+		'delimiter',
+		'grammarHandler'
 	],
-	#category : #'Sandblocks-Smalltalk'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
-SBLabel class >> matches: aBlock [
-
-	(super matches: aBlock) ifFalse: [^ false].
-
-	^ (aBlock receiver satisfies: #(notNil isBinding)) and: [aBlock receiver contents = self name] and: [aBlock selector = 'text:']
-]
-
-{ #category : #'as yet unclassified' }
-SBLabel class >> newFor: aBlock [
-
-	^ self new textBlock: aBlock arguments first
-]
-
-{ #category : #'as yet unclassified' }
-SBLabel class >> text: aBlock [
-
+SBLabel class >> text: aString [
 	" marker "
 ]
 
@@ -84,9 +71,27 @@ SBLabel >> currentTextMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBLabel >> delimiter: aCollection [
+
+	delimiter := aCollection
+]
+
+{ #category : #'as yet unclassified' }
 SBLabel >> drawnColor [
 
 	^ Color white
+]
+
+{ #category : #'as yet unclassified' }
+SBLabel >> grammarHandler [
+
+	^ grammarHandler ifNil: [super grammarHandler]
+]
+
+{ #category : #'as yet unclassified' }
+SBLabel >> grammarHandler: aHandler [
+
+	grammarHandler := aHandler
 ]
 
 { #category : #'as yet unclassified' }
@@ -174,7 +179,7 @@ SBLabel >> stopEditing: aCommand [
 { #category : #'as yet unclassified' }
 SBLabel >> symbols [
 
-	^ self colorPolicy symbolsForComment: self
+	^ delimiter ifNil: [self colorPolicy symbolsForComment: self]
 ]
 
 { #category : #'as yet unclassified' }
@@ -210,7 +215,13 @@ SBLabel >> writeSourceOn: aStream [
 	
 	aStream nextPutAll: '])'"
 
-	aStream nextPut: $".
+	aStream nextPutAll: (delimiter ifNotNil: [delimiter first] ifNil: ['"']).
 	aStream nextPutAll: ((String new: headingLevel withAll: $#), text contents).
-	aStream nextPut: $"
+	(delimiter ifNotNil: [delimiter second] ifNil: ['"']) ifNotNil: [:s | aStream nextPutAll: s]
+]
+
+{ #category : #'as yet unclassified' }
+SBLabel >> writeSourceOn: aStream indent: aNumber [
+
+	self writeSourceOn: aStream
 ]

@@ -16,7 +16,7 @@ SBScmGrammarHandler >> evaluateExpression [
 ]
 
 { #category : #callbacks }
-SBScmGrammarHandler >> perform: aCharacter for: aBlock empty: aBoolean [ 
+SBScmGrammarHandler >> perform: aCharacter for: aBlock empty: aBoolean [
 
 	aBoolean ifTrue: [
 		aCharacter = $' ifTrue: [^ self replace: aBlock with: SBScmSymbol new].
@@ -28,14 +28,46 @@ SBScmGrammarHandler >> perform: aCharacter for: aBlock empty: aBoolean [
 		aCharacter = $# ifTrue: [^ self replace: aBlock with: SBScmBoolean new].
 		
 		(aCharacter isDigit or: [aCharacter = $-]) ifTrue: [^ self replace: aBlock with: (SBScmNumber new contents: aCharacter asString)].
+		
+		(aCharacter isAlphabetic or: [aCharacter isSpecial or: [aCharacter = $#]]) ifTrue: [^ self replace: aBlock with: (SBScmIdentifier new contents: aCharacter asString)].
+		
+		aCharacter = $; ifTrue: [
+			^ self replace: aBlock with: self block newCommentBlock]].
 	
-		(aCharacter isAlphabetic or: [aCharacter isSpecial or: [aCharacter = $#]]) ifTrue: [^ self replace: aBlock with: (SBScmIdentifier new contents: aCharacter asString)]].
-
 	aCharacter = Character space ifTrue: [
-		^ ActiveEvent shiftPressed ifTrue: [aBlock insertElementBefore] ifFalse: [aBlock insertElementAfter]].
+		^ ActiveEvent shiftPressed
+			ifTrue: [aBlock insertElementBefore]
+			ifFalse: [aBlock insertElementAfter]].
 	
-	aCharacter = $) ifTrue: [
-		^ (aBlock parentSandblock insertElementAfter) deleteIfDismissed: true]
+	aCharacter = $) ifTrue: [^ aBlock parentSandblock insertElementAfter deleteIfDismissed: true]
+]
+
+{ #category : #actions }
+SBScmGrammarHandler >> splitSExpr [
+	<action>
+	<inputAction>
+
+	| newExpr newChildren |
+	self block parentSandblock isSExpr ifFalse: [^ self].
+	
+	self block childIndex = self block parentSandblock childSandblocks size ifTrue: [^ self block parentSandblock insertElementAfter deleteIfDismissed: true].
+	
+	newExpr := SBScmExpression new.
+	newChildren := self block parentSandblock childSandblocks
+		copyFrom: self block childIndex + 1
+		to: self block parentSandblock childSandblocks size.
+	
+	self block sandblockEditor do: (SBCombinedCommand newWith: {
+		(SBInsertCommand newFor: self block containingArtefact)
+			container: self block parentSandblock parentSandblock;
+			index: self block parentSandblock childIndex + 1;
+			morph: newExpr}, (newChildren collectWithIndex: [:child :index |
+		(SBMoveCommand newFor: self block containingArtefact)
+			morph: child;
+			index: index;
+			container: newExpr])).
+	
+	self block sandblockEditor maybeStartInputFromStart
 ]
 
 { #category : #actions }

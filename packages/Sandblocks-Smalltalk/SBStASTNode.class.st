@@ -153,9 +153,18 @@ SBStASTNode >> isSmalltalk [
 ]
 
 { #category : #accessing }
+SBStASTNode >> newCommentBlock [
+
+	^ SBLabel new
+		grammarHandler: self grammarHandler;
+		delimiter: #('"' '"');
+		yourself
+]
+
+{ #category : #accessing }
 SBStASTNode >> newNullBlock [
 
-	^ SBUnknown new grammarHandler: SBStGrammarHandler new
+	^ SBUnknown new grammarHandler: self grammarHandler
 ]
 
 { #category : #'object interface' }

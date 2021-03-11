@@ -84,6 +84,15 @@ SBScmASTNode >> never [
 ]
 
 { #category : #accessing }
+SBScmASTNode >> newCommentBlock [
+
+	^ SBLabel new
+		grammarHandler: self grammarHandler;
+		delimiter: #(';' nil);
+		yourself
+]
+
+{ #category : #accessing }
 SBScmASTNode >> newNullBlock [
 
 	^ SBUnknown new grammarHandler: SBScmGrammarHandler new

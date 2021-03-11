@@ -111,7 +111,7 @@ SBStMessageSend >> deleteCommandFor: aBlock [
 
 	aBlock = self receiver ifTrue: [^ super deleteCommandFor: aBlock].
 
-	self isUnary ifTrue: [
+	(self isUnary and: [self isInCascade not]) ifTrue: [
 		^ (SBReplaceCommand newFor: self containingArtefact)
 			target: self;
 			replacer: self receiver].
