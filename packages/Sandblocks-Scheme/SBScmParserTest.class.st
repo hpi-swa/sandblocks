@@ -17,6 +17,31 @@ SBScmParserTest >> assertParses: aString as: anotherString [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmParserTest >> testComments [
+
+	self assertParses: '(+ 2 3)
+
+; hello!
+
+3 ; hello' as: '(+ 2 3)
+
+; hello!
+
+3
+; hello'.
+	self assertParses: '(+ 2 3)
+; test
+; hello!
+; abc
+3 ; hello' as: '(+ 2 3)
+; test
+; hello!
+; abc
+3
+; hello'
+]
+
+{ #category : #'as yet unclassified' }
 SBScmParserTest >> testKeepEmptyLines [
 
 	| string |
@@ -106,23 +131,4 @@ SBScmParserTest >> testQuote [
 
 	self assertParses: '''()
 ''(+ 2 3)'
-]
-
-{ #category : #'as yet unclassified' }
-SBScmParserTest >> testSkipComments [
-
-	self assertParses: '(+ 2 3)
-
-; hello!
-
-3 ; hello' as: '(+ 2 3)
-
-3'.
-	self assertParses: '(+ 2 3)
-; test
-; hello!
-; abc
-3 ; hello' as: '(+ 2 3)
-
-3'
 ]

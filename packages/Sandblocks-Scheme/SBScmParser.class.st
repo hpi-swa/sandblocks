@@ -75,11 +75,13 @@ SBScmParser >> skipWhitespacesOn: aMorph [
 	crCount := 0.
 	[stream atEnd not and: [stream peek isSeparator or: [stream peek = $;]]] whileTrue: [
 		stream peek = $; ifTrue: [
+			crCount := 0.
 			stream next.
 			aMorph addMorphBack: (aMorph newCommentBlock contents: (String streamContents: [:s |
 				[({Character cr. Character lf} includes: stream peek) not and: [stream atEnd not]] whileTrue: [s nextPut: stream next]]))].
 		({Character cr. Character lf} includes: stream next) ifTrue: [crCount := crCount + 1].
-		crCount > 1 ifTrue: [
+		
+		crCount = 2 ifTrue: [
 			aMorph addMorphBack: SBEmptyLine new.
 			crCount := 0]]
 ]
