@@ -201,12 +201,16 @@ SBLabel >> useAsString [
 { #category : #'as yet unclassified' }
 SBLabel >> writeSourceOn: aStream [
 
-	aStream
+	"aStream
 		nextPut: $(;
 		nextPutAll: self className;
 		nextPutAll: ' text: ['.
 	
 	((String new: headingLevel withAll: $#), text contents) storeOn: aStream.
 	
-	aStream nextPutAll: '])'
+	aStream nextPutAll: '])'"
+
+	aStream nextPut: $".
+	aStream nextPutAll: ((String new: headingLevel withAll: $#), text contents).
+	aStream nextPut: $"
 ]

@@ -4,12 +4,12 @@ Extension { #name : #BlockNode }
 BlockNode >> asMethodBodySandblock [
 	
 	| s |
-	s := (self statements last class = ReturnNode and: [self statements last expr class = VariableNode and: [self statements last expr key = 'self']])
+	s := (self statements last class = ReturnNode and: [(self statements last expr isKindOf: VariableNode) and: [self statements last expr key = 'self']])
 		ifTrue: [self statements allButLast]
 		ifFalse: [self statements].
 	
 	^ SBStBlockBody new
-		statements: (s collect: #asSandblock);
+		statements: (self statementsAsSandblocks: s);
 		temporaries: (self temporaries collect: #asSandblock);
 		bindings: #();
 		pc: self pc;
@@ -20,11 +20,7 @@ BlockNode >> asMethodBodySandblock [
 BlockNode >> asSandblock [
 	
 	^ SBStBlockBody new
-		statements: (Array streamContents: [:stream |
-			self isEmptyBlock ifFalse: [
-				self statements do: [:statement |
-					statement comment ifNotNil: [:comment | stream nextPut: (SBLabel new contents: comment first)].
-				stream nextPut: statement asSandblock]]]);
+		statements: (self isEmptyBlock ifTrue: [#()] ifFalse: [self statementsAsSandblocks: self statements]);
 		temporaries: (self temporaries select: [:node | node scope ~= -2] thenCollect: #asSandblock);
 		bindings: (self arguments collect: #asSandblock);
 		pc: (closureCreationNode ifNotNil: [:n | n pc] ifNil: [0]);
@@ -49,4 +45,15 @@ BlockNode >> closureCreationNode: aNode [
 BlockNode >> isEmptyBlock [
 
 	^ self statements size = 1 and: [self statements first isVariableNode and: [self statements first key = 'nil' and: [self startOfLastStatement isNil]]]
+]
+
+{ #category : #'*Sandblocks-Core' }
+BlockNode >> statementsAsSandblocks: aCollection [
+
+	^ Array streamContents: [:stream |
+		aCollection do: [:statement |
+			stream nextPut: statement asSandblock.
+			statement accept: (PPOriginalEnumerator
+				ofBlock: [:node | node comment ifNotNil: [node comment do: [:c | stream nextPut: (SBLabel new contents: c)]]]
+				select: [:node | node isBlockNode not])]]
 ]
