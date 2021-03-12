@@ -51,6 +51,16 @@ SBTest class >> methodFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBTest class >> mouseEventAt: aPoint [
+
+	^ MouseEvent new
+		setType: #mouseDown
+		position: 0 @ 0
+		buttons: MouseEvent blueButton
+		hand: nil
+]
+
+{ #category : #'as yet unclassified' }
 SBTest >> editorFor: aBlock [
 
 	^ self class editorFor: aBlock

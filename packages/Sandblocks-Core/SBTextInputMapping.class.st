@@ -91,9 +91,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character arrowDown asSandblockShortcut withOption withCtrl do: #selectBottomToplevel;
 		registerShortcut: Character arrowUp asSandblockShortcut withOption withCtrl do: #selectTopToplevel;
 		registerShortcut: Character arrowRight asSandblockShortcut withOption withCtrl do: #selectRightToplevel;
-
-		registerShortcut: Character escape do: #dismiss;
-
+		
 		" modify general "
 		registerShortcut: $, command do: #promptAction;
 		"registerShortcut: $c do: #changeToUnknown;"
@@ -132,7 +130,13 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		
 		" modify scheme "
 		registerShortcut: $( do: #wrapInSExpr;
-		registerShortcut: $) do: #splitSExpr
+		registerShortcut: $) do: #splitSExpr;
+		
+		" multi selection "
+		registerShortcut: Character space do: #startOrAddToMultiSelection;
+		registerShortcut: Character escape do: #endMultiSelection;
+		
+		registerShortcut: Character escape do: #dismiss
 ]
 
 { #category : #'as yet unclassified' }

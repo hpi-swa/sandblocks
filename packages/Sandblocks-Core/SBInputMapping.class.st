@@ -18,12 +18,7 @@ SBInputMapping >> applyFor: anEditor [
 { #category : #'as yet unclassified' }
 SBInputMapping >> cmdShortcut: aShortcut do: aSymbol [
 
-	| shortcut |
-	shortcut := aShortcut isCollection
-		ifTrue: [aShortcut do: [:s | s modes: #(command)]. aShortcut]
-		ifFalse: [aShortcut asSandblockShortcut modes: #(command); yourself].
-	
-	editor registerShortcut: shortcut do: aSymbol
+	self shortcut: aShortcut modes: #(command selection) do: aSymbol
 ]
 
 { #category : #'as yet unclassified' }
@@ -45,12 +40,7 @@ SBInputMapping >> handledEvent: anEvent in: anEditor [
 { #category : #'as yet unclassified' }
 SBInputMapping >> inputShortcut: aShortcut do: aSymbol [
 
-	| shortcut |
-	shortcut := aShortcut isCollection
-		ifTrue: [aShortcut do: [:s | s modes: #(input)]. aShortcut]
-		ifFalse: [aShortcut asSandblockShortcut modes: #(input); yourself].
-	
-	editor registerShortcut: shortcut do: aSymbol
+	self shortcut: aShortcut modes: #(input) do: aSymbol
 ]
 
 { #category : #'as yet unclassified' }
@@ -63,6 +53,17 @@ SBInputMapping >> registerDefaultShortcuts [
 SBInputMapping >> registerShortcut: aShortcut do: aSymbol [
 
 	editor registerShortcut: aShortcut do: aSymbol
+]
+
+{ #category : #'as yet unclassified' }
+SBInputMapping >> shortcut: aShortcut modes: aCollection do: aSymbol [
+
+	| shortcut |
+	shortcut := aShortcut isCollection
+		ifTrue: [aShortcut do: [:s | s modes: aCollection]. aShortcut]
+		ifFalse: [aShortcut asSandblockShortcut modes: aCollection; yourself].
+	
+	editor registerShortcut: shortcut do: aSymbol
 ]
 
 { #category : #'as yet unclassified' }

@@ -303,6 +303,8 @@ SBBlock >> clearInput [
 { #category : #'event handling' }
 SBBlock >> click: anEvent [
 
+	(anEvent redButtonPressed and: [anEvent shiftPressed]) ifTrue: [^ self startOrAddToMultiSelection].
+	
 	self sandblockEditor selectClick: self at: anEvent position.
 	(anEvent yellowButtonPressed and: [SBPreferences rightClickContextMenu]) ifTrue: [self promptAction]
 ]

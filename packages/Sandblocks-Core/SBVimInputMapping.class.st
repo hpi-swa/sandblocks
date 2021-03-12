@@ -83,7 +83,7 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $v command do: #pasteString;
 		cmdShortcut: $p do: #pasteBelow;
 		cmdShortcut: $P do: #pasteAbove;
-		cmdShortcut: $v do: #startOrAddToMultiSelection;
+		shortcut: $v modes: #(command selection) do: #startOrAddToMultiSelection;
 		cmdShortcut: $V command do: #startContinuousMultiSelection;
 		cmdShortcut: $V do: #multiSelectChildren;
 		cmdShortcut: $r do: #replaceWithCopyBuffer;
@@ -145,7 +145,7 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		cmdShortcut: $n do: #nextSearchResult;
 		registerShortcut: $f command do: #toggleFullscreen;
 
-		cmdShortcut: Character escape do: #endMultiSelection;
+		shortcut: Character escape modes: #(selection) do: #endMultiSelection;
 		cmdShortcut: Character escape do: #dismiss;
 
 		" smalltalk "

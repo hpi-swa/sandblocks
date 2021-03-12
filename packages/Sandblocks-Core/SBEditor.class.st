@@ -934,28 +934,31 @@ SBEditor >> markChangesAfterCommand: artefacts [
 { #category : #input }
 SBEditor >> maybeStartInputAt: aNumber [
 
-	inputMapping defaultState = #input ifTrue: [
-		(self selection ifNotNil: #currentTextMorph) ifNotNil: [:textMorph | self startInput: self selection at: aNumber replacingContents: false]]
+	self maybeStartInputDo: [:textMorph | self startInput: self selection at: aNumber replacingContents: false]
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> maybeStartInputDo: aBlock [
+
+	^ (inputMapping defaultState = #input and: [(self selection ifNotNil: #currentTextMorph) notNil and: [mode = #command]]) ifTrue: [aBlock value: self selection currentTextMorph]
 ]
 
 { #category : #input }
 SBEditor >> maybeStartInputFromEnd [
 
-	(inputMapping defaultState = #input and: [self selection currentTextMorph notNil]) ifTrue: [self startInput: self selection at: 900000000 replacingContents: false]
+	self maybeStartInputDo: [:textMorph | self startInput: self selection at: 900000000 replacingContents: false]
 ]
 
 { #category : #input }
 SBEditor >> maybeStartInputFromStart [
 
-	(inputMapping defaultState = #input and: [self selection currentTextMorph notNil]) ifTrue: [self startInput: self selection at: 0 replacingContents: false]
+	self maybeStartInputDo: [:textMorph | self startInput: self selection at: 0 replacingContents: false]
 ]
 
 { #category : #input }
 SBEditor >> maybeStartInputNear: aPoint [
 
-	inputMapping defaultState = #input ifTrue: [
-		self selection currentTextMorph ifNotNil: [:textMorph |
-			self startInput: self selection at: (textMorph cursorIndexForPosition: aPoint) replacingContents: false]]
+	self maybeStartInputDo: [:textMorph | self startInput: self selection at: (textMorph cursorIndexForPosition: aPoint) replacingContents: false]
 ]
 
 { #category : #accessing }
@@ -976,7 +979,7 @@ SBEditor >> mode: aSymbol [
 	| defaultModeColor specialModeColor |
 	self clearMultiSelection.
 	
-	aSymbol = #input ifTrue: [self assert: currentInput notNil] ifFalse: [self assert: currentInput isNil].
+	aSymbol = #input ifTrue: [self assert: currentInput notNil] ifFalse: [self cancelInput].
 	(aSymbol = #selection or: [aSymbol = #continuousSelection]) ifFalse: [self assert: multiSelection isEmpty].
 	
 	mode := aSymbol.

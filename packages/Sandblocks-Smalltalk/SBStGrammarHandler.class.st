@@ -66,6 +66,8 @@ SBStGrammarHandler >> browseSenders [
 { #category : #'callback helpers' }
 SBStGrammarHandler >> changeToBlockView: aWindow [
 
+	aWindow isSystemWindow ifFalse: [^ self].
+	
 	aWindow model toggleBlockEditor.
 	^ aWindow
 ]
