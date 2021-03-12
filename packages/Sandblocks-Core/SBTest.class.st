@@ -63,6 +63,18 @@ SBTest >> keyboardEvent: aCharacter [
 ]
 
 { #category : #'as yet unclassified' }
+SBTest >> keyboardEvent: aCharacter shift: aBoolean command: anotherBoolean [
+
+	^ self class keyboardEvent: aCharacter shift: aBoolean command: anotherBoolean
+]
+
+{ #category : #'as yet unclassified' }
+SBTest >> keyboardEvent: aCharacter shift: aBoolean command: anotherBoolean control: aThirdBoolean [
+
+	^ self class keyboardEvent: aCharacter shift: aBoolean command: anotherBoolean control: aThirdBoolean
+]
+
+{ #category : #'as yet unclassified' }
 SBTest >> methodFor: aBlock [
 
 	^ self class methodFor: aBlock

@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBJsString >> absorbsInput: anEvent [
+
+	^ SBGrammarHandler eventValidForString: anEvent
+]
+
+{ #category : #'as yet unclassified' }
 SBJsString >> centerAlignSymbols [
 
 	^ true

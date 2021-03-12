@@ -4,6 +4,16 @@ Class {
 	#category : #'Sandblocks-Core'
 }
 
+{ #category : #helper }
+SBGrammarHandler class >> eventValidForString: anEvent [
+
+	(anEvent commandKeyPressed or: [anEvent optionKeyPressed or: [anEvent controlKeyPressed]]) ifTrue: [^ false].
+	
+	({Character arrowDown. Character arrowUp. Character arrowLeft. Character arrowRight} includes: anEvent keyCharacter) ifTrue: [^ false].
+	
+	^ true
+]
+
 { #category : #'action helpers' }
 SBGrammarHandler >> block [
 

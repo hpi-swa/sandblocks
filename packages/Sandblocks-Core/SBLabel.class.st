@@ -16,6 +16,12 @@ SBLabel class >> text: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBLabel >> absorbsInput: anEvent [
+
+	^ SBGrammarHandler eventValidForString: anEvent
+]
+
+{ #category : #'as yet unclassified' }
 SBLabel >> changeHeadingLevel: aNumber [
 
 	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)

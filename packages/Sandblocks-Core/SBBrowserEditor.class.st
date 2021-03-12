@@ -61,7 +61,7 @@ SBBrowserEditor >> model: aModel [
 SBBrowserEditor >> modelSelection [
 
 	^ model selectedMessageName
-		ifNotNil: [:msg | model selectedClassOrMetaClass compiledMethodAt: msg]
+		ifNotNil: [:msg | model selectedClassOrMetaClass compiledMethodAt: msg ifAbsent: [nil]]
 		ifNil: [model selectedClassOrMetaClass]
 ]
 

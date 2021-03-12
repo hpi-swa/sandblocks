@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStString >> absorbsInput: anEvent [
+
+	^ SBGrammarHandler eventValidForString: anEvent
+]
+
+{ #category : #'as yet unclassified' }
 SBStString >> guessedClass [
 
 	^ String

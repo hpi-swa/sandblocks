@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBScmString >> absorbsInput: anEvent [
+
+	^ SBGrammarHandler eventValidForString: anEvent
+]
+
+{ #category : #'as yet unclassified' }
 SBScmString >> asSymbol: converter [
 	<convert>
 

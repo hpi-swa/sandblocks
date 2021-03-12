@@ -1069,7 +1069,7 @@ SBEditor >> open: anObject withInterfaces: aCollection [
 	^ self blockFor: anObject withInterfaces: aCollection ifOpen: #select ifClosed: [
 		anObject
 			convertedFor: (self objectInterfaceAt: 1 adding: true), aCollection
-			do: [:repr | self openMorphInView: repr]]
+			do: [:repr | self openMorphInView: repr. repr]]
 ]
 
 { #category : #'insert/delete' }
@@ -1186,6 +1186,10 @@ SBEditor >> performForSelection: anActionSymbol [
 { #category : #shortcuts }
 SBEditor >> performShortcutFor: anEvent [
 
+	(mode = #input and: [self currentInput absorbsInput: anEvent]) ifTrue: [
+		currentInput keyStroke: anEvent.
+		^ true].
+	
 	self shortcuts do: [:assoc |
 		(assoc key matchesEvent: anEvent mode: self mode) ifTrue: [(self performForSelection: assoc value) ifTrue: [^ true]]].
 	

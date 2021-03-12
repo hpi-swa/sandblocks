@@ -28,6 +28,13 @@ SBBlock class >> navigation: aNavigation [
 	Navigation := aNavigation
 ]
 
+{ #category : #input }
+SBBlock >> absorbsInput: anEvent [
+	" a chance for you to block this event from being dispatched as shortcut "
+
+	^ false
+]
+
 { #category : #'dropping/grabbing' }
 SBBlock >> acceptDroppingMorph: aMorph event: anEvent [
 
