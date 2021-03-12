@@ -152,6 +152,28 @@ SBLabel >> label: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBLabel >> lookupAction: aSymbol [
+	" first try our leaf class, then the grammar handler, then our base classes "
+
+	^ self class methodDict at: aSymbol ifPresent: [:m | self] ifAbsent: [
+		(self grammarHandler class lookupSelector: aSymbol) ifNotNil: [self grammarHandler] ifNil: [
+			(self class lookupSelector: aSymbol) ifNotNil: [self]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBLabel >> newNullBlock [
+
+	^ SBUnknown new grammarHandler: self grammarHandler
+]
+
+{ #category : #'as yet unclassified' }
+SBLabel >> pasteString [
+	<inputAction>
+	
+	self currentTextMorph insertString: Clipboard clipboardText
+]
+
+{ #category : #'as yet unclassified' }
 SBLabel >> printOn: aStream [
 
 	aStream nextPutAll: 'label ', (self contents truncateWithElipsisTo: 20)

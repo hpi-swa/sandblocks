@@ -1178,7 +1178,7 @@ SBEditor >> parentSandblock [
 { #category : #shortcuts }
 SBEditor >> performForSelection: anActionSymbol [
 
-	self selection notNil and: [(self selection lookupAction: anActionSymbol) ifNotNil: [self selection performAction: anActionSymbol. ^ true]].
+	self selection notNil ifTrue: [(self selection performAction: anActionSymbol) ifTrue: [^ true]].
 	
 	globalShortcutListeners do: [:listener |
 		(listener lookupGlobalAction: anActionSymbol) ifNotNil: [listener perform: anActionSymbol. ^ true]].

@@ -142,7 +142,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 { #category : #'as yet unclassified' }
 SBTextInputMapping >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 
-	(anEvent keyCharacter isAlphaNumeric and: [anEditor selection notNil]) ifTrue: [
+	(anEvent keyCharacter isAlphaNumeric and: [anEditor selection notNil and: [anEvent commandKeyPressed not and: [anEvent optionKeyPressed not and: [anEvent controlKeyPressed not]]]]) ifTrue: [
 		"anEditor startInput: anEditor selection at: 0 replacingContents: true."
 		anEditor selection changeToUnknown.
 		anEditor selection keyStroke: anEvent.

@@ -206,8 +206,8 @@ SBStGrammarHandler >> pasteString [
 	<action>
 
 	| doIt block baseIndex |
-	doIt := Parser new parse: Clipboard clipboardText class: nil class noPattern: true notifying: nil ifFail: [^ nil].
-	block := doIt block statements last expr asSandblock.
+	doIt := PPParser new parse: Clipboard clipboardText class: nil class noPattern: true notifying: nil ifFail: [^ nil].
+	block := doIt block statements last asSandblock.
 	baseIndex := self block containingStatement owner submorphIndexOf: self block containingStatement.
 	
 	self block sandblockEditor do: ((SBCombinedCommand newFor: self block containingArtefact)
@@ -230,6 +230,7 @@ SBStGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 		char = $$ ifTrue: [^ self replace: aBlock with: (SBStCharacter new contents: '')].
 		char = $' ifTrue: [^ self replace: aBlock with: (SBStString new contents: '')].
 		char = $# ifTrue: [^ self replace: aBlock with: (SBStSymbol new contents: '')].
+		char = $" ifTrue: [^ self replace: aBlock with: aBlock parentSandblock newCommentBlock].
 		((char = Character space or: [char = Character cr]) and: [aBlock isStatement]) ifTrue: [^ self emptyLine: aBlock].
 		(char = $: and: [aBlock parentSandblock isBlockBody and: [aBlock parentSandblock isMethodBody not]]) ifTrue: [ | block |
 			block := aBlock parentSandblock.

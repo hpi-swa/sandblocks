@@ -315,3 +315,10 @@ SBStMessagePart >> wrapWithWatch [
 
 	self messageSend wrapWithWatch
 ]
+
+{ #category : #'as yet unclassified' }
+SBStMessagePart >> writeSourceOn: aStream [
+	" probably meant to address my parent message send "
+
+	self messageSend writeSourceOn: aStream
+]

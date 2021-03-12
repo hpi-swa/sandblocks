@@ -1257,9 +1257,10 @@ SBBlock >> localNestingDepth [
 { #category : #'action helpers' }
 SBBlock >> lookupAction: aSymbol [
 
-	^ self actionProviders
-		detect: [:obj | (obj class lookupSelector: aSymbol) ifNotNil: [:m | self isValidAction: m] ifNil: [false]]
-		ifFound: [:obj | obj class lookupSelector: aSymbol]
+	self actionProviders do: [:provider |
+		((provider class lookupSelector: aSymbol) ifNotNil: [:m | self isValidAction: m] ifNil: [false]) ifTrue: [
+			^ provider]].
+	^ nil
 ]
 
 { #category : #'action helpers' }
@@ -1583,11 +1584,16 @@ SBBlock >> pasteBelow [
 { #category : #'action helpers' }
 SBBlock >> performAction: aSymbol [
 
-	self actionProviders do: [:obj |
+	(self lookupAction: aSymbol) ifNotNil: [:obj |
+		obj ~= self ifTrue: [obj block: self].
+		obj perform: aSymbol.
+		^ true].
+	^ false
+	"self actionProviders do: [:obj |
 		(obj class lookupSelector: aSymbol) ifNotNil: [:m |
 			(self isValidAction: m) ifTrue: [
 				obj ~= self ifTrue: [obj block: self].
-				^ obj perform: aSymbol]]]
+				^ obj perform: aSymbol]]]"
 ]
 
 { #category : #'dropping/grabbing' }
