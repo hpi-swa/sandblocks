@@ -25,6 +25,12 @@ Character >> isLikelyUnmodifiedOnKeyboard [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Character >> isPrintable [
+
+	^ self asInteger >= 16r20 or: [{Character cr. Character tab. Character space. Character linefeed} includes: self]
+]
+
+{ #category : #'*Sandblocks-Core' }
 Character >> shift [
 
 	^ self asSandblockShortcut withShift

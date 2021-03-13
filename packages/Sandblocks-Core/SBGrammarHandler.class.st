@@ -9,7 +9,7 @@ SBGrammarHandler class >> eventValidForString: anEvent [
 
 	(anEvent commandKeyPressed or: [anEvent optionKeyPressed or: [anEvent controlKeyPressed]]) ifTrue: [^ false].
 	
-	^ anEvent keyCharacter asInteger >= 16r20
+	^ anEvent keyCharacter isPrintable
 ]
 
 { #category : #'action helpers' }
