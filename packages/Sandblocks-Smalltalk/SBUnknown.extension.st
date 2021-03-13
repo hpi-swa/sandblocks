@@ -1,6 +1,13 @@
 Extension { #name : #SBUnknown }
 
 { #category : #'*Sandblocks-Smalltalk' }
+SBUnknown >> absorbsInput: anEvent [
+
+	self flag: #fixme. " this is a shaky assumption that all langs use space in unknowns to create emptylines "
+	^ anEvent keyCharacter = Character space and: [anEvent anyModifierKeyPressed not]
+]
+
+{ #category : #'*Sandblocks-Smalltalk' }
 SBUnknown >> asMessagePart: converter [
 	<convert>
 	

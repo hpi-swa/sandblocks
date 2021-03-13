@@ -108,6 +108,21 @@ SBTextInputTest >> testSpaceDuringInput [
 ]
 
 { #category : #'as yet unclassified' }
+SBTextInputTest >> testSpaceForEmptyLine [
+
+	| editor block space |
+	block := '[3]' parseAsSandblock.
+	editor := self methodFor: block.
+	space := block newNullBlock.
+	
+	block addMorphBack: space.
+	editor startInput: space at: 1 replacingContents: false.
+	editor filterEvent: (self class keyboardEvent: Character space) for: nil.
+	
+	self assert: (block statements last isKindOf: SBEmptyLine)
+]
+
+{ #category : #'as yet unclassified' }
 SBTextInputTest >> tick [
 
 	World doOneCycle

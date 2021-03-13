@@ -22,6 +22,12 @@ SBLabel >> absorbsInput: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBLabel >> canAppearInBlockBody [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBLabel >> changeHeadingLevel: aNumber [
 
 	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
