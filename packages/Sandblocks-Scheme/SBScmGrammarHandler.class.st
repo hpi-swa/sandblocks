@@ -38,7 +38,7 @@ SBScmGrammarHandler >> perform: aCharacter for: aBlock empty: aBoolean [
 		
 		(aCharacter isDigit or: [aCharacter = $-]) ifTrue: [^ self replace: aBlock with: (SBScmNumber new contents: aCharacter asString)].
 		
-		(aCharacter isAlphabetic or: [aCharacter isSpecial or: [aCharacter = $#]]) ifTrue: [^ self replace: aBlock with: (SBScmIdentifier new contents: aCharacter asString)].
+		(aCharacter isLetter or: [aCharacter isSpecial or: [aCharacter = $#]]) ifTrue: [^ self replace: aBlock with: (SBScmIdentifier new contents: aCharacter asString)].
 		
 		aCharacter = $; ifTrue: [
 			^ self replace: aBlock with: self newCommentBlock]].

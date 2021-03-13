@@ -43,7 +43,7 @@ SBScmIdentifier >> validContents [
 	| initial subsequent |
 	self contents ifEmpty: [^ false].
 	
-	initial := [:c | c isAlphabetic or: [#($! $$ $% $& $* $/ $: $< $= $> $? $^ $_ $~ $+ $- $. $#) includes: c]].
+	initial := [:c | c isLetter or: [#($! $$ $% $& $* $/ $: $< $= $> $? $^ $_ $~ $+ $- $. $#) includes: c]].
 	subsequent := [:c | (initial value: c) or: [c isDigit or: [#($+ $- $. $@) includes: c]]].
 	^ (initial value: self contents first) and: [self contents viewAllButFirst allSatisfy: subsequent]
 ]
