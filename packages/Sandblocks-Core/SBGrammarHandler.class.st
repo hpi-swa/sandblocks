@@ -129,7 +129,9 @@ SBGrammarHandler >> selectStartOfStatement [
 	
 	self block containingStatement firstDeepChild select.
 	
-	self block sandblockEditor maybeStartInputFromStart
+	self block sandblockEditor
+		maybeStartInputFromStart;
+		updateVerticalSelectionPosition
 ]
 
 { #category : #'callback helpers' }

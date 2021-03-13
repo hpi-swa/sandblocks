@@ -1846,7 +1846,9 @@ SBBlock >> selectLast [
 
 	self containingFloat lastDeepChild select.
 	
-	self sandblockEditor maybeStartInputFromEnd
+	self sandblockEditor
+		maybeStartInputFromEnd;
+		updateVerticalSelectionPosition
 ]
 
 { #category : #actions }

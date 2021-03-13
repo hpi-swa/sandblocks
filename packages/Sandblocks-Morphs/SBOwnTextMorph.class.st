@@ -124,21 +124,27 @@ SBOwnTextMorph >> cursorPosition [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> deleteAfterCursor [
 
-	self cursor <= self contents size ifTrue: [
-		self contents: (self contents first: self cursor - 1), (self contents allButFirst: self cursor)]
+	self cursor <= self contents size ifTrue: [ | range rangeStop |
+		range := self selectionBounds.
+		rangeStop := range first = range second ifTrue: [range second] ifFalse: [range second - 1].
+		self contents: (self contents first: range first - 1), (self contents allButFirst: rangeStop).
+		self moveCursorTo: range first]
 ]
 
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> deleteBeforeCursor [
 
+	| range rangeStart |
 	self cursor <= 1 ifTrue: [^ self].
 	
 	self cursor = (self contents size + 1) ifTrue: [
 		self contents: self contents allButLast.
 		^ self].
 	
-	self contents: (self contents first: self cursor - 2), (self contents allButFirst: self cursor - 1).
-	self moveCursorTo: self cursor - 1
+	range := self selectionBounds.
+	rangeStart := range first = range second ifTrue: [range first - 2] ifFalse: [range first - 1].
+	self contents: (self contents first: rangeStart), (self contents allButFirst: range second - 1).
+	self moveCursorTo: rangeStart + 1
 ]
 
 { #category : #'as yet unclassified' }
@@ -397,6 +403,12 @@ SBOwnTextMorph >> placeholderText [
 SBOwnTextMorph >> placeholderText: aString [
 
 	placeholderText := aString
+]
+
+{ #category : #'as yet unclassified' }
+SBOwnTextMorph >> selectionBounds [
+
+	^ {self cursor. self cursor}
 ]
 
 { #category : #'as yet unclassified' }
