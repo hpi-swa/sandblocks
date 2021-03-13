@@ -168,10 +168,7 @@ SBStASTNode >> lookupAction: aSymbol [
 { #category : #accessing }
 SBStASTNode >> newCommentBlock [
 
-	^ SBLabel new
-		grammarHandler: self grammarHandler;
-		delimiter: #('"' '"');
-		yourself
+	^ self grammarHandler newCommentBlock
 ]
 
 { #category : #accessing }

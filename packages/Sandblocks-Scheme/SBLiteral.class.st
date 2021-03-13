@@ -57,6 +57,12 @@ SBLiteral >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBLiteral >> isExpression [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBLiteral >> keyStroke: anEvent [
 
 	self acceptInputEvent: anEvent

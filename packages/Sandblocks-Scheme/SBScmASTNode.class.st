@@ -10,6 +10,12 @@ SBScmASTNode >> actionProviders [
 	^ {self grammarHandler}, super actionProviders
 ]
 
+{ #category : #'initialize-release' }
+SBScmASTNode >> canAppearInBlockBody [
+
+	^ self isExpression
+]
+
 { #category : #printing }
 SBScmASTNode >> crIndent: aNumber on: aStream [
 
@@ -86,10 +92,7 @@ SBScmASTNode >> never [
 { #category : #accessing }
 SBScmASTNode >> newCommentBlock [
 
-	^ SBLabel new
-		grammarHandler: self grammarHandler;
-		delimiter: #(';' nil);
-		yourself
+	^ self grammarHandler newCommentBlock
 ]
 
 { #category : #accessing }

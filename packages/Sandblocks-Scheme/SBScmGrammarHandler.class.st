@@ -15,6 +15,15 @@ SBScmGrammarHandler >> evaluateExpression [
 		self block sandblockEditor connectFrom: self block to: morph]
 ]
 
+{ #category : #'block creation' }
+SBScmGrammarHandler >> newCommentBlock [
+
+	^ SBLabel new
+		grammarHandler: self;
+		delimiter: #(';' nil);
+		yourself
+]
+
 { #category : #callbacks }
 SBScmGrammarHandler >> perform: aCharacter for: aBlock empty: aBoolean [
 
@@ -32,7 +41,7 @@ SBScmGrammarHandler >> perform: aCharacter for: aBlock empty: aBoolean [
 		(aCharacter isAlphabetic or: [aCharacter isSpecial or: [aCharacter = $#]]) ifTrue: [^ self replace: aBlock with: (SBScmIdentifier new contents: aCharacter asString)].
 		
 		aCharacter = $; ifTrue: [
-			^ self replace: aBlock with: self block newCommentBlock]].
+			^ self replace: aBlock with: self newCommentBlock]].
 	
 	aCharacter = Character space ifTrue: [
 		^ ActiveEvent shiftPressed

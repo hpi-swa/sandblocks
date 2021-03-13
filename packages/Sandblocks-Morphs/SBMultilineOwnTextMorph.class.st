@@ -70,7 +70,7 @@ SBMultilineOwnTextMorph >> drawOn: aCanvas [
 { #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> handlesMouseDown: anEvent [
 
-	^ self hasCursor
+	^ self hasCursor and: [anEvent redButtonPressed]
 ]
 
 { #category : #'as yet unclassified' }
@@ -83,10 +83,11 @@ SBMultilineOwnTextMorph >> hasSelection [
 SBMultilineOwnTextMorph >> indexAtLine: aNumber x: anotherNumber [
 	| line p |
 	p := self paragraph.
-	
 	line := p lines at: (aNumber clampLow: 1 high: p numberOfLines).
-	^ {((CharacterBlockScanner new text: p text textStyle: p textStyle)
-		characterBlockAtPoint: (anotherNumber + self position x) @ line top index: nil in: line) stringIndex - 1. 0}
+	^ {"((CharacterBlockScanner new text: p text textStyle: p textStyle)
+		characterBlockAtPoint: (anotherNumber + self position x) @ line top index: nil in: line) stringIndex."
+		(self paragraph characterBlockAtPoint: anotherNumber @ line top) stringIndex.
+		0}
 ]
 
 { #category : #'as yet unclassified' }
@@ -127,8 +128,8 @@ SBMultilineOwnTextMorph >> keyboardFocusColor [
 SBMultilineOwnTextMorph >> lineNumberOfIndex: aNumber [
 
 	| block |
-	block := self paragraph characterBlockForIndex: aNumber + 1.
-	^ {self paragraph lines indexOf: block textLine. block center x - self position x}
+	block := self paragraph characterBlockForIndex: aNumber.
+	^ {self paragraph lines indexOf: block textLine. block left - self position x}
 ]
 
 { #category : #'as yet unclassified' }
@@ -149,7 +150,9 @@ SBMultilineOwnTextMorph >> mouseDown: anEvent [
 	| block |
 	block := self paragraph characterBlockAtPoint: anEvent position.
 	self paragraph selectionStart: block selectionStop: block.
-	self moveCursorTo: block stringIndex
+	self moveCursorTo: block stringIndex.
+	
+	self sandblockEditor ifNotNil: #updateVerticalSelectionPosition
 ]
 
 { #category : #'as yet unclassified' }
@@ -199,7 +202,7 @@ SBMultilineOwnTextMorph >> moveCursorVertically: aNumber selecting: aBoolean ifA
 					aBlock value]
 				ifFalse: [
 					line := data first + aNumber.
-					data := self indexAtLine: line x: data second.
+					data := self indexAtLine: line x: (self sandblockEditor ifNotNil: [:e | e globalVerticalSelectionPosition] ifNil: [data second]).
 					
 					self cursor: data first + data second]].
 	

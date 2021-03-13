@@ -47,19 +47,6 @@ SBTextInputTest >> testCursorKeepsHorizontalPosition [
 	self assert: 3 equals: block statements third currentTextMorph cursor.
 	editor filterEvent: (self class keyboardEvent: Character arrowUp) for: nil.
 	self tick.
-	self assert: 3 equals: block statements second currentTextMorph cursor.
-	
-	" now from command mode "
-	editor filterEvent: (self class keyboardEvent: Character arrowUp shift: true command: false) for: nil.
-	self tick.
-	editor filterEvent: (self class keyboardEvent: Character arrowDown) for: nil.
-	self tick.
-	self assert: 3 equals: block statements third currentTextMorph cursor.
-	
-	editor filterEvent: (self class keyboardEvent: Character arrowUp shift: true command: false) for: nil.
-	self tick.
-	editor filterEvent: (self class keyboardEvent: Character arrowUp) for: nil.
-	self tick.
 	self assert: 3 equals: block statements second currentTextMorph cursor
 ]
 

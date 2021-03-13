@@ -154,6 +154,12 @@ SBScmExpression >> isBlockBody [
 		[f = 'define' and: [self elements size >= 2 and: [self elements second isSExpr]]]] ifNone: [false]
 ]
 
+{ #category : #'special form checking' }
+SBScmExpression >> isExpression [
+
+	^ true
+]
+
 { #category : #'as yet unclassified' }
 SBScmExpression >> isMethodBody [
 

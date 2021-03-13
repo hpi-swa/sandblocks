@@ -1348,9 +1348,9 @@ SBBlock >> moveCursorDown [
 		next ifNotNil: [
 			next select.
 			next currentTextMorph ifNotNil: [:textMorph |
-				self sandblockEditor
+				next sandblockEditor
 					startInput: next
-					at: (textMorph cursorIndexForPosition: pos + (self containingFloat ifNotNil: [:a | a left] ifNil: [0]) @ next center y)
+					at: (textMorph cursorIndexForPosition: pos + (next containingFloat ifNotNil: [:a | a left] ifNil: [0]) @ (next top + 4))
 					replacingContents: false]]]
 ]
 
@@ -1359,17 +1359,19 @@ SBBlock >> moveCursorLeft [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
+	| editor |
+	editor := self sandblockEditor.
 	self currentTextMorph
 		moveCursor: -1
 		ifAtBound: [ | next |
-			next := self sandblockEditor class navigation previousFrom: self do: [:b |
+			next := editor class navigation previousFrom: self do: [:b |
 				(self canJumpTo: b) ifTrue: [b] ifFalse: [nil]].
 			next ifNotNil: [
-				self sandblockEditor select: next.
+				editor select: next.
 				next currentTextMorph ifNotNil: [
-					self sandblockEditor startInput: next at: 900000000 replacingContents: false]]]
+					next sandblockEditor startInput: next at: 900000000 replacingContents: false]]]
 		wordWise: (ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed]).
-	self sandblockEditor updateVerticalSelectionPosition
+	editor updateVerticalSelectionPosition
 ]
 
 { #category : #actions }
@@ -1377,17 +1379,19 @@ SBBlock >> moveCursorRight [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
+	| editor |
+	editor := self sandblockEditor.
 	self currentTextMorph
 		moveCursor: 1
 		ifAtBound: [ | next |
-			next := self sandblockEditor class navigation nextFrom: self do: [:b |
+			next := editor class navigation nextFrom: self do: [:b |
 				(self canJumpTo: b) ifTrue: [b] ifFalse: [nil]].
 			next ifNotNil: [
-				self sandblockEditor select: next.
+				editor select: next.
 				next currentTextMorph ifNotNil: [
-					self sandblockEditor startInput: next at: 0 replacingContents: false]]]
+					editor startInput: next at: 0 replacingContents: false]]]
 		wordWise: (ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed]).
-	self sandblockEditor updateVerticalSelectionPosition
+	editor updateVerticalSelectionPosition
 ]
 
 { #category : #actions }
@@ -1417,9 +1421,9 @@ SBBlock >> moveCursorUp [
 		next ifNotNil: [
 			next select.
 			next currentTextMorph ifNotNil: [:textMorph |
-				self sandblockEditor
+				next sandblockEditor
 					startInput: next
-					at: (textMorph cursorIndexForPosition: pos + (self containingFloat ifNotNil: [:a | a left] ifNil: [0]) @ next center y)
+					at: (textMorph cursorIndexForPosition: pos + (next containingFloat ifNotNil: [:a | a left] ifNil: [0]) @ (next bottom - 4))
 					replacingContents: false]]]
 ]
 
@@ -1862,7 +1866,9 @@ SBBlock >> selectNext [
 	
 	self isSelected
 		ifTrue: [self sandblockEditor maybeStartInputFromEnd]
-		ifFalse: [	self sandblockEditor maybeStartInputFromStart]
+		ifFalse: [	self sandblockEditor maybeStartInputFromStart].
+	
+	self sandblockEditor updateVerticalSelectionPosition
 ]
 
 { #category : #actions }
@@ -1873,7 +1879,7 @@ SBBlock >> selectNextGroup [
 		(self nextVerticalNear: self sandblockEditor verticalSelectionPosition)
 			ifNotNil: #select
 			ifNil: [(self hasChildSandblocks or: [self containingArtefact notNil and: [self containingArtefact floating not]]) ifTrue: [self selectNext]]].
-	self sandblockEditor maybeStartInput
+	self sandblockEditor maybeStartInput: #top
 ]
 
 { #category : #actions }
@@ -1884,7 +1890,9 @@ SBBlock >> selectPrevious [
 	self sandblockEditor selectionDownHistory removeAll.
 	self class navigation previousFrom: self do: [:b | (self canJumpTo: b) ifTrue: [b select]].
 	
-	self sandblockEditor maybeStartInputFromEnd
+	self sandblockEditor
+		maybeStartInputFromEnd;
+		updateVerticalSelectionPosition
 ]
 
 { #category : #actions }
@@ -1896,7 +1904,7 @@ SBBlock >> selectPreviousGroup [
 			ifNil: [self parentSandblock ~= self sandblockEditor ifTrue: [self parentSandblock] ifFalse: [nil]])
 				ifNotNil: #select].
 	
-	self sandblockEditor maybeStartInput
+	self sandblockEditor maybeStartInput: #bottom
 ]
 
 { #category : #actions }
@@ -1936,11 +1944,13 @@ SBBlock >> selectUp [
 	<multiSelectAction>
 	<inputAction>
 
-	self sandblockEditor mode = #input ifTrue: [^ self sandblockEditor endInput].
+	self sandblockEditor mode = #input ifTrue: [^ self sandblockEditor endInput; updateVerticalSelectionPosition].
 	
 	self parentSandblock ifNotNil: [:b |
 		self sandblockEditor selectionDownHistory addLast: self.
-		b select]
+		b select].
+	
+	self sandblockEditor updateVerticalSelectionPosition
 ]
 
 { #category : #printing }

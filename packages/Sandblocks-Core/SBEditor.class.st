@@ -648,7 +648,7 @@ SBEditor >> do: aCommand [
 
 	" the command may interrupt/replace an input "
 	currentInputCommand notNil ifTrue: [self endInput].
-
+	
 	history do: aCommand previousSelection: self selection selectDo: [:block :artefacts |
 		self select: block.
 		self markChangesAfterCommand: artefacts.
@@ -702,8 +702,8 @@ SBEditor >> endInput [
 	self cancelInput.
 	
 	command hasChange
-		ifTrue: [self do: command]
-		ifFalse: [history noMoreMerge]
+		ifTrue: [self do: command].
+	history noMoreMerge
 ]
 
 { #category : #'action helpers' }
@@ -767,6 +767,12 @@ SBEditor >> fixedNumberOfChildren [
 SBEditor >> floating [
 
 	^ true
+]
+
+{ #category : #accessing }
+SBEditor >> globalVerticalSelectionPosition [
+
+	^ verticalSelectionPosition + self selection containingFloat left
 ]
 
 { #category : #actions }
@@ -931,12 +937,13 @@ SBEditor >> markChangesAfterCommand: artefacts [
 ]
 
 { #category : #input }
-SBEditor >> maybeStartInput [
+SBEditor >> maybeStartInput: aSymbol [
+	" provide #top or #bottom for the entry point "
 
 	self maybeStartInputDo: [:textMorph |
 		self
 			startInput: self selection
-			at: (textMorph cursorIndexForPosition: self verticalSelectionPosition + (self selection containingFloat ifNotNil: [:a | a left] ifNil: [0]) @ (textMorph top + 4))
+			at: (textMorph cursorIndexForPosition: self verticalSelectionPosition + (self selection containingFloat ifNotNil: [:a | a left] ifNil: [0]) @ ((textMorph perform: aSymbol) + (aSymbol = #top ifTrue: [4] ifFalse: [-4])))
 			replacingContents: false]
 ]
 
@@ -944,6 +951,16 @@ SBEditor >> maybeStartInput [
 SBEditor >> maybeStartInputAt: aNumber [
 
 	self maybeStartInputDo: [:textMorph | self startInput: self selection at: aNumber replacingContents: false]
+]
+
+{ #category : #input }
+SBEditor >> maybeStartInputBottom: aBoolean [
+
+	self maybeStartInputDo: [:textMorph |
+		self
+			startInput: self selection
+			at: (textMorph cursorIndexForPosition: self verticalSelectionPosition + (self selection containingFloat ifNotNil: [:a | a left] ifNil: [0]) @ (textMorph top + 4))
+			replacingContents: false]
 ]
 
 { #category : #'as yet unclassified' }
@@ -989,7 +1006,7 @@ SBEditor >> mode: aSymbol [
 	| defaultModeColor specialModeColor |
 	self clearMultiSelection.
 	
-	aSymbol = #input ifTrue: [self assert: currentInput notNil] ifFalse: [self cancelInput].
+	aSymbol = #input ifTrue: [self assert: currentInput notNil] ifFalse: [self endInput].
 	(aSymbol = #selection or: [aSymbol = #continuousSelection]) ifFalse: [self assert: multiSelection isEmpty].
 	
 	mode := aSymbol.
@@ -1389,7 +1406,8 @@ SBEditor >> select: aBlock [
 SBEditor >> selectClick: aBlock at: aPoint [
 
 	aBlock select.
-	self maybeStartInputNear: aPoint
+	self maybeStartInputNear: aPoint.
+	self updateVerticalSelectionPosition
 ]
 
 { #category : #artefacts }
@@ -1575,12 +1593,12 @@ SBEditor >> updateVerticalSelectionPosition [
 			reference := self mode = #input
 				ifTrue: [self currentInput currentTextMorph cursorPosition x]
 				ifFalse: [selection center x].
-			verticalSelectionPosition := reference - selection containingFloat left]].
-	
-	" debug visualization "
-	false ifTrue: [
-		Display getCanvas fillRectangle: (selection containingFloat positionInWorld + (0 @ -10) extent: 10 @ 10) color: Color random.
-		Display getCanvas fillRectangle: (selection containingFloat positionInWorld + (verticalSelectionPosition @ -10) extent: 10 @ 10) color: Color random]
+			verticalSelectionPosition := reference - selection containingFloat left].
+		
+		" debug visualization "
+		false ifTrue: [
+			Display getCanvas fillRectangle: (selection containingFloat positionInWorld + (0 @ -10) extent: 10 @ 10) color: Color random.
+			Display getCanvas fillRectangle: (selection containingFloat positionInWorld + (verticalSelectionPosition @ -10) extent: 10 @ 10) color: Color random]]
 ]
 
 { #category : #input }

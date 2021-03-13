@@ -40,31 +40,11 @@ SBGrammarHandler >> focusNextFrom: aMorph at: aNumber [
 { #category : #'callback helpers' }
 SBGrammarHandler >> focusNextFrom: aMorph at: aNumber wasInput: aBoolean [
 
-	SBToggledCode
-		comment: ''
-		active: 1
-		do: {
-			[
-				aMorph sandblockEditor
-					endInput;
-					startInput: aMorph at: 900000000 replacingContents: false].
-			[
-				aMorph sandblockEditor mode = #input ifTrue: [
-					aMorph sandblockEditor replaceInput: aMorph.
-					aMorph currentTextMorph ifNotNil: [:m | m moveCursorTo: aNumber]]].
-			[
-				aBoolean ifTrue: [
-					aMorph sandblockEditor
-						endInput;
-						startInput: aMorph at: 900000000 replacingContents: false]]
-		}.
+	aMorph sandblockEditor
+		endInput;
+		startInput: aMorph at: 900000000 replacingContents: false.
 	
-	aMorph sandblockEditor mode = #input ifFalse: [
-		(aMorph nextBlockThat: [:m | m isUnknown])
-			ifNotNil: [:m |
-				aMorph sandblockEditor startInput: m at: aNumber replacingContents: false]
-			ifNil: [
-				aMorph sandblockEditor startInput: aMorph at: aNumber replacingContents: false]]
+	aMorph sandblockEditor mode = #input ifFalse: [aMorph inputContainedUnknown]
 ]
 
 { #category : #actions }
@@ -108,6 +88,12 @@ SBGrammarHandler >> insertStatementBelow [
 	<actionValidIf: #hasNoSuggestions>
 
 	self insertStatementAboveOrBelow: false
+]
+
+{ #category : #'block creation' }
+SBGrammarHandler >> newCommentBlock [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #callbacks }

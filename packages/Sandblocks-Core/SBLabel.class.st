@@ -136,7 +136,7 @@ SBLabel >> initialize [
 { #category : #'as yet unclassified' }
 SBLabel >> isExpression [
 
-	^ true
+	^ false
 ]
 
 { #category : #'as yet unclassified' }
@@ -244,17 +244,15 @@ SBLabel >> useAsString [
 { #category : #'as yet unclassified' }
 SBLabel >> writeSourceOn: aStream [
 
-	"aStream
-		nextPut: $(;
-		nextPutAll: self className;
-		nextPutAll: ' text: ['.
-	
-	((String new: headingLevel withAll: $#), text contents) storeOn: aStream.
-	
-	aStream nextPutAll: '])'"
-
-	aStream nextPutAll: (delimiter ifNotNil: [delimiter first] ifNil: ['"']).
-	aStream nextPutAll: ((String new: headingLevel withAll: $#), text contents).
+	(delimiter notNil and: [delimiter last isNil])
+		ifTrue: [
+			aStream nextPutAll: (String new: headingLevel withAll: $#).
+			text contents lines
+				do: [:line | aStream nextPutAll: delimiter first, line]
+				separatedBy: [aStream cr]]
+		ifFalse: [
+			aStream nextPutAll: (delimiter ifNotNil: [delimiter first] ifNil: ['"']).
+			aStream nextPutAll: (String new: headingLevel withAll: $#), text contents].
 	(delimiter ifNotNil: [delimiter second] ifNil: ['"']) ifNotNil: [:s | aStream nextPutAll: s]
 ]
 

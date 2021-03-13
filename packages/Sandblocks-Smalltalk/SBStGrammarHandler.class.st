@@ -201,6 +201,15 @@ SBStGrammarHandler >> insertLabelBelow [
 	self insert: self block newCommentBlock aboveOrBelow: false
 ]
 
+{ #category : #'block creation' }
+SBStGrammarHandler >> newCommentBlock [
+
+	^ SBLabel new
+		grammarHandler: self;
+		delimiter: #('"' '"');
+		yourself
+]
+
 { #category : #actions }
 SBStGrammarHandler >> pasteString [
 	<action>
