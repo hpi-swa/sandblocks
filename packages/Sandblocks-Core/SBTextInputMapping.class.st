@@ -19,6 +19,11 @@ SBTextInputMapping >> registerDefaultShortcuts [
 
 	self
 		" input "
+		inputShortcut: Character arrowDown do: #focusNextSuggestion;
+		inputShortcut: Character arrowUp do: #focusPreviousSuggestion;
+		inputShortcut: $j command do: #focusNextSuggestion;
+		inputShortcut: $k command do: #focusPreviousSuggestion;
+		
 		inputShortcut: Character arrowLeft asSandblockShortcut, Character arrowLeft shift, Character arrowLeft command do: #moveCursorLeft;
 		inputShortcut: Character arrowRight asSandblockShortcut, Character arrowRight shift, Character arrowRight command do: #moveCursorRight;
 		inputShortcut: Character arrowUp asSandblockShortcut do: #moveCursorUp;
@@ -27,8 +32,6 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		inputShortcut: Character backspace do: #deleteBeforeCursor;
 		inputShortcut: Character delete do: #deleteAfterCursor;
 		inputShortcut: $a command do: #clearInput;
-		inputShortcut: $j command do: #focusNextSuggestion;
-		inputShortcut: $k command do: #focusPreviousSuggestion;
 		registerShortcut: $1 command do: #useFirstArgument;
 		registerShortcut: $2 command do: #useSecondArgument;
 		registerShortcut: $3 command do: #useThirdArgument;

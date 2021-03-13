@@ -543,7 +543,7 @@ SBEditor >> copyBuffer: aMorphOrCollection [
 	
 	list do: [:m | copyBuffer addMorphBack: m veryDeepCopy].
 	form := copyBuffer imageForm.
-	copyBufferPreview image: ((form scaledToHeight: self copyBufferPreviewSize y)" collectColors: [:c | c alpha: c alpha * 0.7]")
+	copyBufferPreview image: (form scaledToFit: self copyBufferPreviewSize)
 ]
 
 { #category : #accessing }
@@ -1576,12 +1576,16 @@ SBEditor >> unsavedChanges [
 { #category : #selection }
 SBEditor >> updateSelectionLabel [
 
-	selectionLabel contents: (mode = #selection
+	| text maxLength |
+	maxLength := 30.
+	text := mode = #selection
 		ifTrue: [multiSelection size asString, (' element' asPluralBasedOn: multiSelection)]
 		ifFalse: [
 			(self selection notNil and: [self selection isInWorld])
 				ifTrue: [self selection selectionLabel]
-				ifFalse: ['']])
+				ifFalse: ['']].
+	text size > maxLength ifTrue: [text := (text first: maxLength - 3), '...'].
+	selectionLabel contents: text
 ]
 
 { #category : #selection }
