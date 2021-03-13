@@ -152,6 +152,19 @@ SBStASTNode >> isSmalltalk [
 	^ true
 ]
 
+{ #category : #'action helpers' }
+SBStASTNode >> lookupAction: aSymbol [
+	" first try our leaf class, then the grammar handler, then our base classes "
+
+	self class lookupSelector: aSymbol upTo: SBStASTNode ifPresent: [:m | (self isValidAction: m) ifTrue: [^ self]] ifAbsent: [].
+	
+	(self grammarHandler class lookupSelector: aSymbol) ifNotNil: [:m | (self isValidAction: m) ifTrue: [^ self grammarHandler]].
+	
+	(SBStASTNode superclass lookupSelector: aSymbol) ifNotNil: [:m | (self isValidAction: m) ifTrue: [^ self]].
+	
+	^ nil
+]
+
 { #category : #accessing }
 SBStASTNode >> newCommentBlock [
 

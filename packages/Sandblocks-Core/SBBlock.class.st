@@ -1342,11 +1342,16 @@ SBBlock >> moveCursorDown [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
-	self currentTextMorph moveCursorVertically: 1 ifAtBound: [ | next |
-		next := self nextVerticalNear: self sandblockEditor verticalSelectionPosition.
+	self currentTextMorph moveCursorVertically: 1 ifAtBound: [ | next pos |
+		pos := self sandblockEditor verticalSelectionPosition.
+		next := self nextVerticalNear: pos.
 		next ifNotNil: [
 			next select.
-			next currentTextMorph ifNotNil: [self sandblockEditor startInput: next at: 9e8 replacingContents: false]]]
+			next currentTextMorph ifNotNil: [:textMorph |
+				self sandblockEditor
+					startInput: next
+					at: (textMorph cursorIndexForPosition: pos + (self containingFloat ifNotNil: [:a | a left] ifNil: [0]) @ next center y)
+					replacingContents: false]]]
 ]
 
 { #category : #actions }
@@ -1363,7 +1368,8 @@ SBBlock >> moveCursorLeft [
 				self sandblockEditor select: next.
 				next currentTextMorph ifNotNil: [
 					self sandblockEditor startInput: next at: 900000000 replacingContents: false]]]
-		wordWise: (ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed])
+		wordWise: (ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed]).
+	self sandblockEditor updateVerticalSelectionPosition
 ]
 
 { #category : #actions }
@@ -1380,7 +1386,8 @@ SBBlock >> moveCursorRight [
 				self sandblockEditor select: next.
 				next currentTextMorph ifNotNil: [
 					self sandblockEditor startInput: next at: 0 replacingContents: false]]]
-		wordWise: (ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed])
+		wordWise: (ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed]).
+	self sandblockEditor updateVerticalSelectionPosition
 ]
 
 { #category : #actions }
@@ -1404,11 +1411,16 @@ SBBlock >> moveCursorUp [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
-	self currentTextMorph moveCursorVertically: -1 ifAtBound: [ | next |
-		next := self previousVerticalNear: self sandblockEditor verticalSelectionPosition.
+	self currentTextMorph moveCursorVertically: -1 ifAtBound: [ | next pos |
+		pos := self sandblockEditor verticalSelectionPosition.
+		next := self previousVerticalNear: pos.
 		next ifNotNil: [
 			next select.
-			next currentTextMorph ifNotNil: [self sandblockEditor startInput: next at: 9e8 replacingContents: false]]]
+			next currentTextMorph ifNotNil: [:textMorph |
+				self sandblockEditor
+					startInput: next
+					at: (textMorph cursorIndexForPosition: pos + (self containingFloat ifNotNil: [:a | a left] ifNil: [0]) @ next center y)
+					replacingContents: false]]]
 ]
 
 { #category : #actions }
@@ -1857,14 +1869,11 @@ SBBlock >> selectNext [
 SBBlock >> selectNextGroup [
 	<multiSelectAction>
 
-	| oldCursorPos |
-	oldCursorPos := self currentTextMorph ifNotNil: [:m | m cursorPosition] ifNil: [self center].
-	
 	self sandblockEditor keepVerticalSelectionPositionDuring: [
 		(self nextVerticalNear: self sandblockEditor verticalSelectionPosition)
 			ifNotNil: #select
 			ifNil: [(self hasChildSandblocks or: [self containingArtefact notNil and: [self containingArtefact floating not]]) ifTrue: [self selectNext]]].
-	self sandblockEditor maybeStartInputNear: oldCursorPos
+	self sandblockEditor maybeStartInput
 ]
 
 { #category : #actions }
@@ -1882,17 +1891,12 @@ SBBlock >> selectPrevious [
 SBBlock >> selectPreviousGroup [
 	<multiSelectAction>
 
-	| oldCursorPos |
-	oldCursorPos := self currentTextMorph ifNotNil: [:m | m cursorPosition] ifNil: [self center].
-	
 	self sandblockEditor keepVerticalSelectionPositionDuring: [
 		((self previousVerticalNear: self sandblockEditor verticalSelectionPosition)
 			ifNil: [self parentSandblock ~= self sandblockEditor ifTrue: [self parentSandblock] ifFalse: [nil]])
 				ifNotNil: #select].
-	oldCursorPos
-		ifNil: [self sandblockEditor maybeStartInputFromStart]
-		ifNotNil: [
-			self sandblockEditor maybeStartInputNear: oldCursorPos]
+	
+	self sandblockEditor maybeStartInput
 ]
 
 { #category : #actions }

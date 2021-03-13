@@ -863,7 +863,6 @@ SBEditor >> internalSelect: aBlock [
 		previousSelection := selection.
 		selection := aBlock.
 		selection ifNotNil: [
-			self updateVerticalSelectionPosition.
 			selection
 				attachDecorator: SBSelectionDecorator new;
 				wasSelected;
@@ -932,6 +931,16 @@ SBEditor >> markChangesAfterCommand: artefacts [
 ]
 
 { #category : #input }
+SBEditor >> maybeStartInput [
+
+	self maybeStartInputDo: [:textMorph |
+		self
+			startInput: self selection
+			at: (textMorph cursorIndexForPosition: self verticalSelectionPosition + (self selection containingFloat ifNotNil: [:a | a left] ifNil: [0]) @ (textMorph top + 4))
+			replacingContents: false]
+]
+
+{ #category : #input }
 SBEditor >> maybeStartInputAt: aNumber [
 
 	self maybeStartInputDo: [:textMorph | self startInput: self selection at: aNumber replacingContents: false]
@@ -940,7 +949,8 @@ SBEditor >> maybeStartInputAt: aNumber [
 { #category : #'as yet unclassified' }
 SBEditor >> maybeStartInputDo: aBlock [
 
-	^ (inputMapping defaultState = #input and: [(self selection ifNotNil: #currentTextMorph) notNil and: [mode = #command]]) ifTrue: [aBlock value: self selection currentTextMorph]
+	^ (inputMapping defaultState = #input and: [(self selection ifNotNil: #currentTextMorph) notNil and: [#(command input) includes: mode]])
+		ifTrue: [aBlock value: self selection currentTextMorph]
 ]
 
 { #category : #input }
@@ -1440,6 +1450,8 @@ SBEditor >> startInput: aMorph at: aNumber replacingContents: aBoolean [
 
 	aMorph ifNil: [^ nil].
 	
+	aMorph = self currentInput ifTrue: [^ aMorph currentTextMorph moveCursorTo: aNumber].
+	
 	" needs to be set first, as startInputAt: may choose to immediately replace this "
 	self select: aMorph.
 	
@@ -1557,8 +1569,18 @@ SBEditor >> updateSelectionLabel [
 { #category : #selection }
 SBEditor >> updateVerticalSelectionPosition [
 
-	selection ifNotNil: [
-		verticalSelectionPosition := selection center x - (selection containingFloat ifNotNil: [:a | a left] ifNil: [0])]
+	" we need to defer one step because we will frequently have morphs that are not fully layed-out just yet "
+	Project current addDeferredUIMessage: [
+		(selection notNil and: [selection containingFloat notNil]) ifTrue: [ | reference |
+			reference := self mode = #input
+				ifTrue: [self currentInput currentTextMorph cursorPosition x]
+				ifFalse: [selection center x].
+			verticalSelectionPosition := reference - selection containingFloat left]].
+	
+	" debug visualization "
+	false ifTrue: [
+		Display getCanvas fillRectangle: (selection containingFloat positionInWorld + (0 @ -10) extent: 10 @ 10) color: Color random.
+		Display getCanvas fillRectangle: (selection containingFloat positionInWorld + (verticalSelectionPosition @ -10) extent: 10 @ 10) color: Color random]
 ]
 
 { #category : #input }

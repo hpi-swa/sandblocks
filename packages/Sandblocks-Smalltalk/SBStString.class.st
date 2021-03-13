@@ -43,15 +43,6 @@ SBStString >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBStString >> lookupAction: aSymbol [
-	" first try our leaf class, then the grammar handler, then our base classes "
-
-	^ self class methodDict at: aSymbol ifPresent: [:m | self] ifAbsent: [
-		(self grammarHandler class lookupSelector: aSymbol) ifNotNil: [self grammarHandler] ifNil: [
-			(self class lookupSelector: aSymbol) ifNotNil: [self]]]
-]
-
-{ #category : #'as yet unclassified' }
 SBStString >> pasteString [
 	<inputAction>
 	

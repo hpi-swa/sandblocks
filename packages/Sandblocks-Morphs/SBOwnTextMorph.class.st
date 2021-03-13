@@ -116,14 +116,9 @@ SBOwnTextMorph >> cursorIndexForPosition: aPoint [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> cursorPosition [
 
-	| font offset index |
+	| font |
 	font := self fontToUse.
-	offset := self position x.
-	index := self cursor - 1.
-	[index > 0] whileTrue: [
-		index := index - 1.
-		offset := offset + (font widthOf: (self contents at: index))].
-	^ index @ self y
+	^ (self left + (font widthOfString: self contents from: 1 to: self cursor - 1)) @ self y
 ]
 
 { #category : #'as yet unclassified' }

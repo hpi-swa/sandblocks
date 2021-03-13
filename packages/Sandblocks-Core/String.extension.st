@@ -21,10 +21,9 @@ String >> parseAsMethod [
 { #category : #'*Sandblocks-Core' }
 String >> parseAsMethodFor: aClass [
 
-	| parser methodNode |
+	| methodNode |
 	SBExample self: ['test 5 + 12 squared'] args: [{}] label: 'simple'.
-	parser := aClass newParser.
-	methodNode := parser parse: self class: aClass noPattern: false notifying: nil ifFail: nil.
+	methodNode := PPParser new parse: self class: aClass noPattern: false notifying: nil ifFail: nil.
 	^ methodNode
 ]
 

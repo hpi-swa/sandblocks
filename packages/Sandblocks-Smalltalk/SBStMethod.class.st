@@ -130,6 +130,17 @@ SBStMethod >> objectInterfaceAt: aNumber adding: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMethod >> pasteString [
+	<action>
+
+	| method |
+	method := (Clipboard clipboardText string parseAsMethodFor: self relatedClass) asSandblock.
+	self sandblockEditor do: ((SBReplaceCommand newFor: method)
+		target: self;
+		replacer: method)
+]
+
+{ #category : #'as yet unclassified' }
 SBStMethod >> selector [
 
 	^ signature selector
