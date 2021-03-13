@@ -71,14 +71,22 @@ SBScmParser >> parseSExpression [
 { #category : #'as yet unclassified' }
 SBScmParser >> skipWhitespacesOn: aMorph [
 
-	| crCount |
+	| crCount currentComment |
 	crCount := 0.
+	currentComment := nil.
 	[stream atEnd not and: [stream peek isSeparator or: [stream peek = $;]]] whileTrue: [
-		stream peek = $; ifTrue: [
+		stream peek = $; ifTrue: [ | text |
 			crCount := 0.
 			stream next.
-			aMorph addMorphBack: (aMorph newCommentBlock contents: (String streamContents: [:s |
-				[({Character cr. Character lf} includes: stream peek) not and: [stream atEnd not]] whileTrue: [s nextPut: stream next]]))].
+			
+			text := String streamContents: [:s |
+				[({Character cr. Character lf} includes: stream peek) not and: [stream atEnd not]] whileTrue: [s nextPut: stream next]].
+			currentComment
+				ifNotNil: [currentComment contents: currentComment contents, String cr, text]
+				ifNil: [
+					currentComment := aMorph newCommentBlock.
+					aMorph addMorphBack: (currentComment contents: text)]]
+			ifFalse: [currentComment := nil].
 		({Character cr. Character lf} includes: stream next) ifTrue: [crCount := crCount + 1].
 		
 		crCount = 2 ifTrue: [
