@@ -135,7 +135,10 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $( do: #wrapInSExpr;
 		registerShortcut: $) do: #splitSExpr;
 		
-		shortcut: Character space modes: #(command) do: #wrapInOperator;
+		" javascript "
+		cmdShortcut: ${ do: #wrapInObjectLiteral;
+		cmdShortcut: Character space do: #wrapInInfixOp;
+		cmdShortcut: Character space shift do: #wrapInPrefixOp;
 		
 		" multi selection "
 		shortcut: Character space modes: #(selection) do: #startOrAddToMultiSelection;

@@ -171,9 +171,10 @@ SBJsInputTest >> testMoveCursorInInfixOp [
 	self assert: op rhs isSelected.
 	
 	editor filterEvent: (self keyboardEvent: Character arrowLeft) for: nil.
+	editor filterEvent: (self keyboardEvent: Character arrowLeft) for: nil.
 	self assert: op isSelected.
 	
-	editor filterEvent: (self keyboardEvent: Character arrowRight) for: nil.
+	editor filterEvent: (self keyboardEvent: Character arrowLeft) for: nil.
 	self assert: op lhs isSelected
 ]
 

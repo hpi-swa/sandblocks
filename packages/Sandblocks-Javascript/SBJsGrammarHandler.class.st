@@ -63,28 +63,26 @@ SBJsGrammarHandler >> wrap: aBlock do: aWrapBlock with: anOuterBlock [
 ]
 
 { #category : #actions }
-SBJsGrammarHandler >> wrapAsArgument [
+SBJsGrammarHandler >> wrapInInfixOp [
 	<action>
 	<actionValidIf: #isExpression>
 
 	| operator |
-	self flag: #todo. " figure out a way to make the terminology language dependent: the shortcut comes from Smalltalk "
-	operator := SBJsPrefixOperator new.
+	operator := SBJsInfixOperator new.
 	self block sandblockEditor
 		do: ((SBWrapCommand newFor: self block containingArtefact)
 			inner: self block;
 			outer: operator;
-			wrap: [:outer :inner | outer operator: '' rhs: inner]);
+			wrap: [:outer :inner | outer lhs: inner operator: '' rhs: operator newNullBlock]);
 		startInput: operator at: 0 replacingContents: false
 ]
 
 { #category : #actions }
-SBJsGrammarHandler >> wrapInDynamicArray [
+SBJsGrammarHandler >> wrapInObjectLiteral [
 	<action>
 	<actionValidIf: #isExpression>
-	
+
 	| key |
-	self flag: #todo. " figure out a way to make the terminology language dependent: the shortcut comes from Smalltalk where { is an array but in JS it's an object "
 	key := self block newNullBlock.
 	self block sandblockEditor
 		do: ((SBWrapCommand newFor: self block containingArtefact)
@@ -95,18 +93,17 @@ SBJsGrammarHandler >> wrapInDynamicArray [
 ]
 
 { #category : #actions }
-SBJsGrammarHandler >> wrapInOperator [
+SBJsGrammarHandler >> wrapInPrefixOp [
 	<action>
 	<actionValidIf: #isExpression>
-	
+
 	| operator |
-	self flag: #todo. " figure out a way to make the terminology language dependent: the shortcut comes from Smalltalk "
-	operator := SBJsInfixOperator new.
+	operator := SBJsPrefixOperator new.
 	self block sandblockEditor
 		do: ((SBWrapCommand newFor: self block containingArtefact)
 			inner: self block;
 			outer: operator;
-			wrap: [:outer :inner | outer lhs: inner operator: '' rhs: operator newNullBlock]);
+			wrap: [:outer :inner | outer operator: '' rhs: inner]);
 		startInput: operator at: 0 replacingContents: false
 ]
 

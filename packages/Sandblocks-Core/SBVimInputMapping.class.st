@@ -168,7 +168,9 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		cmdShortcut: $( do: #wrapInSExpr;
 
 		" javascript "
-		cmdShortcut: ${ do: #wrapInObjectLiteral
+		cmdShortcut: ${ do: #wrapInObjectLiteral;
+		cmdShortcut: Character space do: #wrapInInfixOp;
+		cmdShortcut: Character space shift do: #wrapInPrefixOp
 
 ]
 
