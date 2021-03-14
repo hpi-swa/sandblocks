@@ -122,7 +122,7 @@ SBJsKeywordBlock >> keyword: aString [
 	self addMorphBack: (SBStringMorph new contents: ' (').
 	1 to: self arity do: [:i | self addMorphBack: self newNullBlock].
 	self addMorphBack: (SBStringMorph new contents: ') {').
-	self statements: {self newNullBlock}
+	self statements: {self newNullBlock label: 'body'}
 ]
 
 { #category : #'as yet unclassified' }

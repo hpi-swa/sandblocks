@@ -10,9 +10,9 @@ SBJsObjectLiteral >> buildEmptyRow [
 	^ SBRow new
 		useAlgebraLayout;
 		softWrap: false;
-		addMorphBack: self newNullBlock;
+		addMorphBack: (self newNullBlock label: 'key');
 		addMorphBack: (SBStringMorph new contents: ':');
-		addMorphBack: self newNullBlock
+		addMorphBack: (self newNullBlock label: 'value')
 ]
 
 { #category : #'as yet unclassified' }

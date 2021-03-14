@@ -11,6 +11,10 @@ SBStEmptyLine >> isSmalltalk [
 ]
 
 { #category : #'as yet unclassified' }
+SBStEmptyLine >> updatePCFrom: aBlock [
+]
+
+{ #category : #'as yet unclassified' }
 SBStEmptyLine >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '#ppEmptyLine'

@@ -145,7 +145,7 @@ SBBrowserEditor >> updateArtefact [
 	
 	({#editClass. #editMessage} includes: model editSelection) ifTrue: [
 		^ self ensureOpened: (model selectedMessageName
-			ifNotNil: [:msg | model selectedClassOrMetaClass compiledMethodAt: msg]
+			ifNotNil: [:msg | model selectedClassOrMetaClass compiledMethodAt: msg ifAbsent: [model selectedClassOrMetaClass]]
 			ifNil: [model selectedClassOrMetaClass])].
 	
 	#newClass = model editSelection ifTrue: [ | class |

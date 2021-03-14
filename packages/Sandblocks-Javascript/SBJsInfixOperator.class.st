@@ -68,8 +68,18 @@ SBJsInfixOperator >> contents: aString [
 { #category : #'as yet unclassified' }
 SBJsInfixOperator >> continueInputInRhs: anEvent [
 
+	(self rhs isNil and: [self fixedNumberOfChildren not]) ifTrue: [
+		self sandblockEditor do: ((SBInsertCommand newFor: self containingArtefact)
+			index: self submorphCount + 1;
+			container: self;
+			morph: self newNullBlock;
+			shouldMergeWithNext: true;
+			yourself)].
+	
+	self rhs ifNil: [^ self].
+	
 	self sandblockEditor startInput: self rhs at: 0 replacingContents: false.
-	^ self sandblockEditor selection keyStroke: anEvent
+	self sandblockEditor selection keyStroke: anEvent
 ]
 
 { #category : #'as yet unclassified' }
@@ -171,7 +181,9 @@ SBJsInfixOperator >> lhs [
 SBJsInfixOperator >> lhs: aLeftBlock operator: anOperatorString rhs: aRhsBlock [
 
 	self addMorphBack: aLeftBlock.
-	self addMorphBack: (SBOwnTextMorph new contents: anOperatorString).
+	self addMorphBack: (SBOwnTextMorph new
+		contents: anOperatorString;
+		placeholderText: 'op').
 	self addMorphBack: aRhsBlock
 ]
 

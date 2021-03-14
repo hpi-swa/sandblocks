@@ -27,21 +27,13 @@ SBDefaultColorPolicy >> colorForBlock: aBlock [
 { #category : #'as yet unclassified' }
 SBDefaultColorPolicy >> mutateColor: aColor [
 
-	^ SBToggledCode
-		comment: ''
-		active: 1
-		do: {
-			[
-				Color
-					h: aColor hue + 15
-					s: aColor saturation
-					v: (SBToggledCode
-						comment: ''
-						active: 2
-						do: {
-							[aColor brightness > 0.6 ifTrue: [aColor brightness - 0.3] ifFalse: [0.3 + aColor brightness]].
-							[aColor brightness]
-						})].
-			[aColor]
-		}
+	^ SBToggledCode comment: '' active: 1 do: {
+		[
+			Color h: aColor hue + 30 s: aColor saturation v: (SBToggledCode comment: '' active: 2 do: {
+				[
+					aColor brightness > 0.6
+						ifTrue: [aColor brightness - 0.3]
+						ifFalse: [0.3 + aColor brightness]].
+				[aColor brightness]})].
+		[aColor]}
 ]

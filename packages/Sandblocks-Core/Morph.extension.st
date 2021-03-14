@@ -163,6 +163,12 @@ Morph >> layoutCommands [
 	^ SBAlgebraCommand morph data: self
 ]
 
+{ #category : #'*Sandblocks-Core-hierarchy' }
+Morph >> leftMostMorph [
+
+	^ self submorphs ifEmpty: [self] ifNotEmpty: [:c | c first leftMostMorph]
+]
+
 { #category : #'*Sandblocks-Core' }
 Morph >> morphAfterThat: aBlock [
 
@@ -250,6 +256,24 @@ Morph >> nextBlockThat: aBlock [
 	n ifNil: [^ nil].
 	(aBlock value: n) ifTrue: [^ n].
 	^ n nextBlockThat: aBlock
+]
+
+{ #category : #'*Sandblocks-Core-hierarchy' }
+Morph >> nextMorph [
+
+	^ self submorphAfter
+			ifNil: [self owner]
+			ifNotNil: [:adj | adj leftMostMorph]
+]
+
+{ #category : #'*Sandblocks-Core-hierarchy' }
+Morph >> nextMorphThat: aBlock [
+
+	| n |
+	n := self nextMorph.
+	n ifNil: [^ nil].
+	(aBlock value: n) ifTrue: [^ n].
+	^ n nextMorphThat: aBlock
 ]
 
 { #category : #'*Sandblocks-Core' }

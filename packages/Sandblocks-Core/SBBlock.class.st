@@ -1359,18 +1359,21 @@ SBBlock >> moveCursorLeft [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
-	| editor |
+	| editor wordWise |
+	
+	wordWise := ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed].
 	editor := self sandblockEditor.
 	self currentTextMorph
 		moveCursor: -1
 		ifAtBound: [ | next |
-			next := editor class navigation previousFrom: self do: [:b |
-				(self canJumpTo: b) ifTrue: [b] ifFalse: [nil]].
-			next ifNotNil: [
+			next := (self currentTextMorph previousMorphThat: [:b | b isTextMorph]) ifNotNil: #containingSandblock.
+			(next notNil and: [next containingFloat = self containingFloat]) ifTrue: [
 				editor select: next.
-				next currentTextMorph ifNotNil: [
-					next sandblockEditor startInput: next at: 900000000 replacingContents: false]]]
-		wordWise: (ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed]).
+				next sandblockEditor
+					startInput: next
+					at: (wordWise ifTrue: [0] ifFalse: [900000000])
+					replacingContents: false]]
+		wordWise: wordWise.
 	editor updateVerticalSelectionPosition
 ]
 
@@ -1379,18 +1382,18 @@ SBBlock >> moveCursorRight [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
-	| editor |
+	| editor wordWise |
+	
+	wordWise := ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed].
 	editor := self sandblockEditor.
 	self currentTextMorph
 		moveCursor: 1
 		ifAtBound: [ | next |
-			next := editor class navigation nextFrom: self do: [:b |
-				(self canJumpTo: b) ifTrue: [b] ifFalse: [nil]].
-			next ifNotNil: [
+			next := (self currentTextMorph nextMorphThat: [:b | b isTextMorph]) ifNotNil: #containingSandblock.
+			(next notNil and: [next containingFloat = self containingFloat]) ifTrue: [
 				editor select: next.
-				next currentTextMorph ifNotNil: [
-					editor startInput: next at: 0 replacingContents: false]]]
-		wordWise: (ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed]).
+				editor startInput: next at: (wordWise ifTrue: [900000000] ifFalse: [0]) replacingContents: false]]
+		wordWise: wordWise.
 	editor updateVerticalSelectionPosition
 ]
 

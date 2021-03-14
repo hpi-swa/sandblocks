@@ -157,6 +157,27 @@ SBJsInputTest >> testLetKeyword [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsInputTest >> testMoveCursorInInfixOp [
+
+	| editor op closure |
+	op := SBJsInfixOperator new
+		lhs: (SBJsNumber new contents: '2')
+		operator: '+'
+		rhs: (SBJsNumber new contents: '2').
+	editor := self methodFor: op.
+	closure := op parentSandblock.
+	
+	editor startInput: op rhs at: 1 replacingContents: false.
+	self assert: op rhs isSelected.
+	
+	editor filterEvent: (self keyboardEvent: Character arrowLeft) for: nil.
+	self assert: op isSelected.
+	
+	editor filterEvent: (self keyboardEvent: Character arrowRight) for: nil.
+	self assert: op lhs isSelected
+]
+
+{ #category : #'as yet unclassified' }
 SBJsInputTest >> testPrecedenceAdaptAfterFunctionCall [
 
 	| call editor |

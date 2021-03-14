@@ -116,7 +116,7 @@ SBScmASTNode >> objectInterfaceAt: aNumber adding: aBoolean [
 { #category : #accessing }
 SBScmASTNode >> preferredColor [
 
-	^ Color r: 0.949 g: 0.382 b: 0.28
+	^ Color r: 0.398 g: 0.128 b: 0.079
 ]
 
 { #category : #printing }

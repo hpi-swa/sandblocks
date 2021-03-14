@@ -14,13 +14,21 @@ SBJsGrammarHandler >> checkKeyword: aString for: aBlock [
 		^ true].
 	
 	(SBJsPrefixOperator validPrefixOperators includes: aString) ifTrue: [ | block |
-		block := SBJsPrefixOperator new operator: aString rhs: aBlock newNullBlock.
+		block := SBJsPrefixOperator new
+			operator: aString
+			rhs: (aBlock newNullBlock label: 'expr').
 		self replace: aBlock with: block mergeInput: false.
 		block inputNextUnknown.
 		^ true].
 	
 	(#('let' 'var' 'const') includes: aString) ifTrue: [
-		self replace: aBlock with: (SBJsDeclaration new binding: aBlock newNullBlock value: aBlock newNullBlock declarationType: aString) mergeInput: false.
+		self
+			replace: aBlock
+			with: (SBJsDeclaration new
+				binding: (aBlock newNullBlock label: 'name')
+				value: (aBlock newNullBlock label: 'expr')
+				declarationType: aString)
+			mergeInput: false.
 		^ true].
 	
 	^ false
@@ -33,15 +41,10 @@ SBJsGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 		(char isDigit or: [char = $-]) ifTrue: [^ self replace: aBlock with: (SBJsNumber new contents: char asString)].
 		(char isAlphaNumeric or: [char = $_]) ifTrue: [^ self replace: aBlock with: (SBJsVariable new contents: char asString)].
 		(char = $" or: [char = $']) ifTrue: [^ self replace: aBlock with: SBJsString new].
-		char = $( ifTrue: [ ^ SBJsClosure new in: [:closure | self replace: aBlock with: (closure statements: {closure newNullBlock})]].
+		char = $( ifTrue: [ ^ SBJsClosure new in: [:closure | self replace: aBlock with: (closure statements: {closure newNullBlock label: 'body'})]].
 		" borrowed from Smalltalk "
 		char = $^ ifTrue: [^ SBJsPrefixOperator new contents: 'return'; in: [:return | self replace: aBlock with: (return expression: return newNullBlock)]].
 		char = ${ ifTrue: [^ self replace: aBlock with: SBJsObjectLiteral new]].
-	
-	"char = $. ifTrue: [
-		^ self wrap: aBlock do: [:outer :inner | outer lhs: inner rhs: ''] with: SBJsDereference new]."
-	"char = $( ifTrue: [
-		^ SBJsMethodCall new in: [:call | self wrap: aBlock do: [:outer :inner | outer method: inner arguments: {call newNullBlock deleteIfDismissed: true}] with: call]]."
 	
 	((SBJsInfixOperator validInfixOperators collect: #first) includes: char) ifTrue: [
 		^ self wrap: aBlock do: [:outer :inner | outer lhs: inner operator: char asString rhs: (outer newNullBlock deleteIfDismissed: char = $()] with: SBJsInfixOperator new].
@@ -92,7 +95,7 @@ SBJsGrammarHandler >> wrapInDynamicArray [
 ]
 
 { #category : #actions }
-SBJsGrammarHandler >> wrapInMessageSend [
+SBJsGrammarHandler >> wrapInOperator [
 	<action>
 	<actionValidIf: #isExpression>
 	
