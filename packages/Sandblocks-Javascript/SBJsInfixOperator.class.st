@@ -184,7 +184,8 @@ SBJsInfixOperator >> lhs: aLeftBlock operator: anOperatorString rhs: aRhsBlock [
 	self addMorphBack: (SBOwnTextMorph new
 		contents: anOperatorString;
 		placeholderText: 'op').
-	self addMorphBack: aRhsBlock
+	
+	aRhsBlock isCollection ifTrue: [aRhsBlock do: [:b | self addMorphBack: b]] ifFalse: [self addMorphBack: aRhsBlock]
 ]
 
 { #category : #'as yet unclassified' }

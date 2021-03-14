@@ -42,7 +42,7 @@ SBScmParser >> parseLiteral [
 		stream
 			back;
 			back].
-	endCheck := stream peek caseOf: {[$"] -> [[:c | c = $"]]} otherwise: [[:c | c isSeparator or: [c = $)]]].
+	endCheck := stream peek caseOf: {[$"] -> [[:c | c = $"]]} otherwise: [[:c | c isSeparator or: [c = $) or: [c = $(]]]].
 	contents := String streamContents: [:str |
 		[str nextPut: stream next] doWhileTrue: [stream peek notNil and: [(endCheck value: stream peek) not]]].
 	(contents first isDigit or: [contents first = $-]) ifTrue: [^ SBScmNumber new contents: contents].

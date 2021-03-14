@@ -48,8 +48,7 @@ SBJsInputTest >> testAddMemberAccessViaSpace [
 	self assert: closure statements first ~= access.
 	
 	editor undo.
-	self assert: closure statements first = access.
-	self assert: (closure parentSandblock isKindOf: SBJsModule)
+	self assert: closure statements first = access
 ]
 
 { #category : #'as yet unclassified' }
@@ -182,7 +181,7 @@ SBJsInputTest >> testMoveCursorInInfixOp [
 SBJsInputTest >> testPrecedenceAdaptAfterFunctionCall [
 
 	| call editor |
-	call := SBJsInfixOperator new lhs: (SBJsVariable new contents: 'abc') operator: '(' rhs: (SBJsNumber new contents: '1').
+	call := SBJsInfixOperator new lhs: (SBJsVariable new contents: 'abc') operator: '(' rhs: (SBJsVariable new contents: 'a').
 	editor := self methodFor: call.
 	
 	editor startInput: call rhs at: 900000000 replacingContents: false.

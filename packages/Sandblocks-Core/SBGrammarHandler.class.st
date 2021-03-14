@@ -31,6 +31,20 @@ SBGrammarHandler >> copyString [
 	Clipboard clipboardText: self block prettySourceString
 ]
 
+{ #category : #actions }
+SBGrammarHandler >> evaluateExpression [
+	<action>
+	<actionValidIf: #isExpression>
+
+	| result |
+	result := self block evaluate.
+	result convertedFor: SBInterfaces topLevel do: [:morph |
+		self block sandblockEditor openMorphInView: morph.
+		morph focusAfterDelete: self block.
+		self block sandblockEditor connectFrom: self block to: morph].
+	^ result
+]
+
 { #category : #'callback helpers' }
 SBGrammarHandler >> focusNextFrom: aMorph at: aNumber [
 

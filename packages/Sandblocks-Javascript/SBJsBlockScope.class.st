@@ -78,6 +78,7 @@ SBJsBlockScope >> statements [
 { #category : #'as yet unclassified' }
 SBJsBlockScope >> statements: aCollection [
 
+	(self submorphs copyFrom: self statementsIndex to: self submorphCount) do: #delete.
 	self addAllMorphs: aCollection
 ]
 

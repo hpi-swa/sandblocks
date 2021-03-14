@@ -1,6 +1,6 @@
 Class {
 	#name : #SBJsModule,
-	#superclass : #SBJsASTNode,
+	#superclass : #SBJsBlockScope,
 	#category : #'Sandblocks-Javascript'
 }
 
@@ -18,6 +18,16 @@ SBJsModule class >> example [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsModule class >> fromString: aString [
+
+	| reader result |
+	reader := SBJsGrammar semanticAction: SBJsSemantic new.
+	result := reader grammar match: aString startingFrom: #File.
+	result failed ifTrue: [result failure signal].
+	^ reader value: result
+]
+
+{ #category : #'as yet unclassified' }
 SBJsModule >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	| globals |
@@ -30,14 +40,14 @@ SBJsModule >> binding: aString for: block class: aClass ifPresent: aBlock [
 { #category : #'as yet unclassified' }
 SBJsModule >> body [
 
-	^ self firstSubmorph
+	^ self
 ]
 
 { #category : #'as yet unclassified' }
 SBJsModule >> body: aMorph [
 
 	self removeAllMorphs.
-	self addMorphBack: (SBJsClosure new addMorphBack: aMorph)
+	self addMorphBack: aMorph
 ]
 
 { #category : #'as yet unclassified' }
@@ -49,7 +59,7 @@ SBJsModule >> initialize [
 		layoutInset: 8;
 		attachDecorator: SBMoveDecorator new;
 		attachDecorator: SBResizableDecorator new;
-		addMorphBack: (SBJsBlockScope new addMorphBack: self newNullBlock)
+		addMorphBack: self newNullBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -86,14 +96,6 @@ SBJsModule >> isTopLevel [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsModule >> layoutCommands [
-
-	^ SBAlgebraCommand container
-		morph: self;
-		data: {self body layoutCommands}
-]
-
-{ #category : #'as yet unclassified' }
 SBJsModule >> sandblockBlockColorIfAbsent: aBlock [
 
 	^ self preferredColor
@@ -122,5 +124,5 @@ SBJsModule >> tryFixingMethod: aFixBoolean [
 { #category : #'as yet unclassified' }
 SBJsModule >> writeSourceOn: aStream [
 
-	self body writeSourceOn: aStream
+	self statements do: [:s | s writeSourceOn: aStream] separatedBy: [aStream nextPut: $;; cr]
 ]

@@ -77,6 +77,7 @@ SBJsPrefixOperator >> layoutCommands [
 		data: {
 			SBAlgebraCommand morph data: self operator.
 			SBAlgebraCommand gap.
+			SBAlgebraCommand gap.
 			self rhs layoutCommands
 		}
 ]

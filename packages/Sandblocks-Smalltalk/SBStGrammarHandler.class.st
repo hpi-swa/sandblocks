@@ -99,6 +99,18 @@ SBStGrammarHandler >> emptyLine: aBlock [
 ]
 
 { #category : #actions }
+SBStGrammarHandler >> evaluateExpression [
+	<action>
+	<actionValidIf: #isExpression>
+	
+	| result |
+	result := super evaluateExpression.
+	self containingArtefact ifNotNil: [
+		self containingArtefact cacheType: result class for: self].
+	^ result
+]
+
+{ #category : #actions }
 SBStGrammarHandler >> extractMethod [
 	<multiSelectAction>
 

@@ -93,7 +93,7 @@ SBJsDeclaration >> symbols [
 { #category : #'as yet unclassified' }
 SBJsDeclaration >> writeSourceOn: aStream [
 
-	aStream nextPutAll: 'let '.
+	aStream nextPutAll: declarationType; space.
 	self binding writeSourceOn: aStream.
 	aStream nextPutAll: ' = '.
 	self rhs writeSourceOn: aStream

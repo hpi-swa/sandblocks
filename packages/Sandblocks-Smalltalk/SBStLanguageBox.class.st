@@ -53,17 +53,23 @@ SBStLanguageBox >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBStLanguageBox >> language [
+
+	^ self submorphs second contents
+]
+
+{ #category : #'as yet unclassified' }
 SBStLanguageBox >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
-		data: {self firstSubmorph layoutCommands. SBAlgebraCommand hardLine. self root layoutCommands}
+		data: {self firstSubmorph layoutCommands. SBAlgebraCommand gap. self submorphs second layoutCommands. SBAlgebraCommand hardLine. self root layoutCommands}
 ]
 
 { #category : #'as yet unclassified' }
 SBStLanguageBox >> root [
 
-	^ self submorphs second
+	^ self submorphs last
 ]
 
 { #category : #'as yet unclassified' }
@@ -71,7 +77,13 @@ SBStLanguageBox >> source: aString lang: anotherString [
 
 	self removeAllMorphs.
 	self addMorphBack: (SBStringMorph new contents: anotherString).
-	self addMorphBack: (aString ifEmpty: [SBScmModule new] ifNotEmpty: [SBScmModule fromString: aString])
+	self addMorphBack: (anotherString
+		caseOf: {
+			['scheme'] -> [aString ifEmpty: [SBScmModule new] ifNotEmpty: [SBScmModule fromString: aString]].
+			['js'] -> [SBJsModule fromString: aString]}
+		otherwise: [SBStringMorph new contents: 'unsupported language']).
+	
+	self addMorphFront: self root class icon asMorph
 ]
 
 { #category : #'as yet unclassified' }
@@ -81,5 +93,7 @@ SBStLanguageBox >> writeSourceOn: aStream [
 	aStream nextPutAll: self className.
 	aStream nextPutAll: ' eval: '.
 	aStream store: self root sourceString.
-	aStream nextPutAll: ' lang: ''scheme'')'
+	aStream nextPutAll: ' lang: '.
+	aStream nextPutAll: self language.
+	aStream nextPutAll: ')'
 ]

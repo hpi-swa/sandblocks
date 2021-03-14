@@ -38,6 +38,7 @@ SBJsGrammarHandler >> checkKeyword: aString for: aBlock [
 SBJsGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 
 	aBoolean ifTrue: [
+		char = Character space ifTrue: [^ self replace: aBlock with: SBEmptyLine new].
 		(char isDigit or: [char = $-]) ifTrue: [^ self replace: aBlock with: (SBJsNumber new contents: char asString)].
 		(char isAlphaNumeric or: [char = $_]) ifTrue: [^ self replace: aBlock with: (SBJsVariable new contents: char asString)].
 		(char = $" or: [char = $']) ifTrue: [^ self replace: aBlock with: SBJsString new].
@@ -47,10 +48,10 @@ SBJsGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 		char = ${ ifTrue: [^ self replace: aBlock with: SBJsObjectLiteral new]].
 	
 	((SBJsInfixOperator validInfixOperators collect: #first) includes: char) ifTrue: [
-		^ self wrap: aBlock do: [:outer :inner | outer lhs: inner operator: char asString rhs: (outer newNullBlock deleteIfDismissed: char = $()] with: SBJsInfixOperator new].
+		^ self wrap: aBlock do: [:outer :inner | outer lhs: inner operator: char asString rhs: (outer newNullBlock label: 'expr'; deleteIfDismissed: char = $()] with: SBJsInfixOperator new].
 	char = Character space ifTrue: [
 		(self checkKeyword: aBlock contents for: aBlock) ifFalse: [
-			self wrap: aBlock do: [:outer :inner | outer lhs: inner operator: '' rhs: outer newNullBlock] with: SBJsInfixOperator new]]
+			self wrap: aBlock do: [:outer :inner | outer lhs: inner operator: '' rhs: (outer newNullBlock label: 'expr')] with: SBJsInfixOperator new]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -73,7 +74,7 @@ SBJsGrammarHandler >> wrapInInfixOp [
 		do: ((SBWrapCommand newFor: self block containingArtefact)
 			inner: self block;
 			outer: operator;
-			wrap: [:outer :inner | outer lhs: inner operator: '' rhs: operator newNullBlock]);
+			wrap: [:outer :inner | outer lhs: inner operator: '' rhs: (operator newNullBlock label: 'expr')]);
 		startInput: operator at: 0 replacingContents: false
 ]
 
@@ -83,7 +84,7 @@ SBJsGrammarHandler >> wrapInObjectLiteral [
 	<actionValidIf: #isExpression>
 
 	| key |
-	key := self block newNullBlock.
+	key := self block newNullBlock label: 'key'.
 	self block sandblockEditor
 		do: ((SBWrapCommand newFor: self block containingArtefact)
 			inner: self block;

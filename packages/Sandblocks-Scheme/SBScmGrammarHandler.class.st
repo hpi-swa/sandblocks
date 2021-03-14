@@ -4,17 +4,6 @@ Class {
 	#category : #'Sandblocks-Scheme'
 }
 
-{ #category : #actions }
-SBScmGrammarHandler >> evaluateExpression [
-	<action>
-	<actionValidIf: #isExpression>
-
-	self block evaluate convertedFor: SBInterfaces topLevel do: [:morph |
-		self block sandblockEditor openMorphInView: morph.
-		morph focusAfterDelete: self block.
-		self block sandblockEditor connectFrom: self block to: morph]
-]
-
 { #category : #'block creation' }
 SBScmGrammarHandler >> newCommentBlock [
 
