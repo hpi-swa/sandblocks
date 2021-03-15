@@ -14,7 +14,7 @@ DEPLOY_PATH="deploy"
 DEPLOY_IMAGE="sandblocks.image"
 DEPLOY_CHANGES="sandblocks.changes"
 DEPLOY_PACKAGE="sandblocks.zip"
-COG_VM_PARAM="-nosound -nodisplay"
+COG_VM_PARAM="-nosound -vm-display-null"
 
 mkdir -p "${DEPLOY_PATH}" 
 cd "${DEPLOY_PATH}"
@@ -29,8 +29,10 @@ mv $BASE/shared/*.image "${DEPLOY_IMAGE}"
 mv $BASE/shared/*.changes "${DEPLOY_CHANGES}"
 mv $BASE/shared/SqueakV50.sources .
 
-$BASE/bin/squeak $COG_VM_PARAM "${DEPLOY_IMAGE}" "../scripts/prepare_image.st" || EXIT_STATUS=$?
+print_info "Preparing $BASE image..."
+$BASE/bin/squeak $COG_VM_PARAM "${DEPLOY_IMAGE}" "../prepare_image.st" || EXIT_STATUS=$?
 
+print_info "Zipping package ..."
 if [[ $EXIT_STATUS -eq 0 ]]; then
     zip "${DEPLOY_PACKAGE}" *.image *.changes *.sources
 else
