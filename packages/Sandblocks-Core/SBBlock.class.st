@@ -1070,9 +1070,15 @@ SBBlock >> intoWorld: aWorld [
 { #category : #'dropping/grabbing' }
 SBBlock >> invokeMetaMenu: anEvent [
 
-	" We hijack this event because it''s the only way to cleanly access ctrl+click "
+	" We hijack this event because it's the only way to cleanly access ctrl+click "
 	"self pickUp: anEvent"
-	anEvent transformBy: (self transformFrom: nil).
+	
+	anEvent
+		transformBy: (self transformFrom: nil);
+		" for some reason, this event gets modified buttons assignments (yellow instead of red) "
+		instVarNamed: #buttons put: ((anEvent buttons bitClear: MouseEvent anyButton) bitOr: MouseEvent redButton);
+		instVarNamed: #whichButton put: ((anEvent whichButton bitClear: MouseEvent anyButton) bitOr: MouseEvent redButton).
+	
 	anEvent sentTo: self
 ]
 
