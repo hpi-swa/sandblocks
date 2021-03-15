@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: github.ref == 'refs/heads/master' && matrix.smalltalk == 'Squeak64-5.3'
         with:
-          name: Babylonian-trunk.zip 
+          name: sandblocks.zip 
           path: ./deploy/sandblocks.zip
       - name: Upload SAR
         uses: actions/upload-artifact@v2
