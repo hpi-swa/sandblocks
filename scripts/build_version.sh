@@ -19,15 +19,15 @@ COG_VM_PARAM="-nosound -nodisplay"
 mkdir -p "${DEPLOY_PATH}" 
 cd "${DEPLOY_PATH}"
 
-BASE=Squeak5.3-19458-64bit-202003021730-Linux
+BASE="Squeak5.3-19458-64bit-202003021730-Linux"
 
 print_info "Downloading $BASE image..."
-wget --no-verbose "http://files.squeak.org/5.3/Squeak5.3-19458-64bit/$ZIP.zip"
-unzip -q $ZIP.zip
+wget --no-verbose "http://files.squeak.org/5.3/Squeak5.3-19458-64bit/$BASE.zip"
+unzip -q $BASE.zip
 
-mv $ZIP/shared/*.image "${DEPLOY_IMAGE}"
-mv $ZIP/shared/*.changes "${DEPLOY_CHANGES}"
-mv $ZIP/shared/SqueakV50.sources .
+mv $BASE/shared/*.image "${DEPLOY_IMAGE}"
+mv $BASE/shared/*.changes "${DEPLOY_CHANGES}"
+mv $BASE/shared/SqueakV50.sources .
 
 $BASE/bin/squeak $COG_VM_PARAM "${DEPLOY_IMAGE}" "../scripts/prepare_image.st" || EXIT_STATUS=$?
 

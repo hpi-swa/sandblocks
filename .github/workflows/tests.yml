@@ -21,7 +21,6 @@ jobs:
       - run: smalltalkci -s ${{ matrix.smalltalk }}
         shell: bash
         timeout-minutes: 15
-      - run: echo ${{github.ref}} ${{matrix.smalltalk}} ${{matrix.os}} ${{matrix}}
       - run: ./scripts/build_version.sh
         if: github.ref == 'refs/heads/master' && matrix.smalltalk == 'Squeak64-5.3'
         shell: bash
