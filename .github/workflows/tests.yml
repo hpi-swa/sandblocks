@@ -24,6 +24,7 @@ jobs:
       - run: ./scripts/build_version.sh
         if: github.ref == 'refs/heads/master' && matrix.smalltalk == 'Squeak64-5.3'
         shell: bash
+        timeout-minutes: 5
       - name: Upload Image
         uses: actions/upload-artifact@v2
         if: github.ref == 'refs/heads/master' && matrix.smalltalk == 'Squeak64-5.3'

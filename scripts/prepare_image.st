@@ -12,8 +12,7 @@
 
   (Smalltalk at: #Metacello) new
   baseline: 'Sandblocks';
-  "repository: 'tonel:///home/runner/work/sandblocks/sandblocks/packages';"
-  repository: 'tonel:///home/tom/Code/squeak/sandblocks/packages';
+  repository: 'tonel:///home/runner/work/sandblocks/sandblocks/packages';
   load: #default.
 
   "Prepare Image a little bit"
