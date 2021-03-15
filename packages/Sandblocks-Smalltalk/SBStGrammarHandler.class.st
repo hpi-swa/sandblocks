@@ -105,8 +105,8 @@ SBStGrammarHandler >> evaluateExpression [
 	
 	| result |
 	result := super evaluateExpression.
-	self containingArtefact ifNotNil: [
-		self containingArtefact cacheType: result class for: self].
+	self block containingArtefact ifNotNil: [
+		self block containingArtefact cacheType: result class for: self].
 	^ result
 ]
 

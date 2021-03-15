@@ -84,7 +84,7 @@ SBEditor class >> newFor: aMethodOrClass [
 { #category : #'initialize-release' }
 SBEditor class >> newInputMapping [
 
-	^ (InputMappingClass ifNil: [SBVimInputMapping]) new
+	^ (InputMappingClass ifNil: [SBTextInputMapping]) new
 ]
 
 { #category : #'initialize-release' }

@@ -2,10 +2,9 @@ Class {
 	#name : #SBExplorer,
 	#superclass : #SBBlock,
 	#instVars : [
-		'inspector',
 		'object',
 		'label',
-		'field'
+		'wrapper'
 	],
 	#category : #'Sandblocks-Explorer'
 }
@@ -13,13 +12,19 @@ Class {
 { #category : #'as yet unclassified' }
 SBExplorer class >> on: anObject [
 
-	^ self new on: anObject; yourself
+	^ self new on: anObject wrapper: nil; yourself
 ]
 
 { #category : #'as yet unclassified' }
 SBExplorer class >> on: anObject field: aField [
 
 	^ (self on: anObject) field: aField
+]
+
+{ #category : #'as yet unclassified' }
+SBExplorer class >> on: anObject wrapper: aWrapper [
+
+	^ self on: anObject wrapper: aWrapper
 ]
 
 { #category : #'as yet unclassified' }
@@ -107,21 +112,15 @@ SBExplorer >> evaluationReceiver [
 ]
 
 { #category : #'as yet unclassified' }
-SBExplorer >> field: aField [
-
-	field := aField
-]
-
-{ #category : #'as yet unclassified' }
 SBExplorer >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
-	| newObject |
+	"| newObject |
 	newObject := aBlock unpackSelection object.
 	self on: newObject.
 	field ifNotNil: [field setValueFor: field inspector to: newObject].
 	self select.
 	self toggleCollapsed.
-	^ true
+	^ true"
 ]
 
 { #category : #'as yet unclassified' }
@@ -192,19 +191,30 @@ SBExplorer >> objectInterfaceAt: aNumber adding: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBExplorer >> on: anObject [
+SBExplorer >> on: anObject wrapper: aWrapper [
 
+	| row icon |
 	self removeAllMorphs.
 	
-	inspector := anObject inspectorClass on: anObject.
 	object := anObject.
-	self addMorphBack: (SBRow new
-		cellGap: 4 withScalingFactor;
-		addMorphBack: (SBIcon iconBars
-			on: #startDrag send: #pickUp: to: self;
-			small;
-			yourself);
-		addMorphBack: (label := SBStringMorph new contents: (anObject asString truncateWithElipsisTo: 40)))
+	wrapper := aWrapper ifNil: [ObjectExplorerWrapper with: object model: self].
+	
+	row := SBRow new cellGap: 4 withScalingFactor.
+	row addMorphBack: (wrapper hasContents
+		ifTrue: [
+			SBIcon iconChevron_right
+				on: #click send: #toggleCollapsed to: self;
+				small;
+				yourself]
+		ifFalse: [
+			Morph new
+				color: Color transparent;
+				extent: 1 @ 1]).
+	icon := wrapper icon.
+	icon = (ToolIcons icons at: #blank) ifFalse: [row addMorphBack: icon asMorph].
+	row addMorphBack: (label := SBStringMorph new contents: (anObject printString truncateWithElipsisTo: 40)).
+	
+	self addMorphBack: row
 ]
 
 { #category : #'as yet unclassified' }
@@ -229,20 +239,20 @@ SBExplorer >> replace: anObject [
 { #category : #'as yet unclassified' }
 SBExplorer >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 
-	| newObject |
+	"| newObject |
 	self label isSandblock ifFalse: [^ false].
 	newObject := self label evaluate.
 	self on: newObject.
 	field ifNotNil: [field setValueFor: field inspector to: newObject].
 	self select.
 	self toggleCollapsed.
-	^ true
+	^ true"
 ]
 
 { #category : #'as yet unclassified' }
 SBExplorer >> startInputAt: aNumber replacingContents: aBoolean [
 
-	| new |
+	"| new |
 	new := [self object printString parseAsSandblockWithoutSubstitution] on: SyntaxErrorNotification do: [:error | 
 		self newNullBlock].
 	self sandblockEditor do: ((SBReplaceCommand newFor: self)
@@ -250,7 +260,7 @@ SBExplorer >> startInputAt: aNumber replacingContents: aBoolean [
 		replacer: new;
 		shouldMergeWithNext: true).
 	self sandblockEditor replaceInput: new.
-	^ new startInputAt: aNumber replacingContents: false
+	^ new startInputAt: aNumber replacingContents: false"
 ]
 
 { #category : #'as yet unclassified' }
@@ -262,18 +272,20 @@ SBExplorer >> toggleCollapsed [
 	self isCollapsed not
 		ifTrue: [
 			label clearEmphasis.
+			self firstSubmorph firstSubmorph changeIconName: #'iconChevron_right'.
 			self
 				removeAllMorphs;
 				addMorphBack: caption]
 		ifFalse: [
-			label bold.
-			inspector streamFieldsOn: (SBImmediateStream with: [:field | 
-				(#(#all #self) includes: field type) ifFalse: [
+			wrapper hasContents ifTrue: [
+				label bold.
+				self firstSubmorph firstSubmorph changeIconName: #'iconChevron_down'.
+				object explorerContents do: [:contents |
 					self addMorphBack: (SBRow new
 						cellGap: 4 withScalingFactor;
 						layoutInset: (SBEdgeInsets left: 12 withScalingFactor right: 0 top: 0 bottom: 0);
-						addMorphBack: (SBStringMorph new contents: field name asString);
-						addMorphBack: (SBExplorer on: ([field getValueFor: inspector] on: Error do: [nil]) field: (field inspector: inspector)))]])]
+						addMorphBack: (SBStringMorph new contents: contents itemName);
+						addMorphBack: (SBExplorer on: contents object))]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -285,21 +297,15 @@ SBExplorer >> typeFor: aBlock [
 { #category : #'as yet unclassified' }
 SBExplorer >> update [
 
-	| fields |
 	self isCollapsed ifTrue: [^ self].
 	
-	fields := Array streamContents: [:stream |
-		inspector streamFieldsOn: (SBImmediateStream with: [:subfield |
-			(#(#all #self) includes: subfield type) ifFalse: [stream nextPut: subfield]])].
-	
 	(self submorphs viewFrom: 2 to: self submorphCount)
-		with: fields
-		do: [:row :subField | | newObject |
-			newObject := [subField getValueFor: inspector] on: Error do: [nil].
-			row submorphs second object == newObject
+		with: object explorerContents
+		do: [:row :contents |
+			row submorphs second object == contents object
 				ifTrue: [row submorphs second update]
 				ifFalse: [
-					row submorphs second replaceBy: (SBExplorer on: newObject field: (subField inspector: inspector))]]
+					row submorphs second replaceBy: (SBExplorer on: contents object wrapper: contents)]]
 ]
 
 { #category : #'as yet unclassified' }
