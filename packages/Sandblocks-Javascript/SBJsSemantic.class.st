@@ -88,7 +88,7 @@ SBJsSemantic >> KeywordBodyWithBraces: aNode open: x statements: aCollection clo
 { #category : #'as yet unclassified' }
 SBJsSemantic >> ListOf: aNode collection: aCollection [
 
-	^ (aCollection children collect: [:o | self value: o]) select: #isSandblock
+	^ (aCollection children collect: [:o | self value: o]) flatten select: #isSandblock
 ]
 
 { #category : #'as yet unclassified' }
