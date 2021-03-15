@@ -47,10 +47,10 @@ SBScmASTNode >> grammarHandler [
 ]
 
 { #category : #converting }
-SBScmASTNode >> inSmalltalk: converter [
+SBScmASTNode >> inLanguageBox: converter [
 	<convert>
 	
-	^ converter do: [SBStLanguageBox new source: self sourceString lang: 'scheme']
+	^ converter do: [SBLanguageBox new source: self sourceString lang: 'scheme']
 ]
 
 { #category : #'initialize-release' }

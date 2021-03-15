@@ -5,6 +5,17 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBJsGrammar class >> example [
+
+	"SBJsGrammar recompile."
+	| reader result |
+	reader := SBJsGrammar semanticAction: SBJsSemantic new.
+	result := reader grammar match: 'if (a);' startingFrom: #File.
+	result failed ifTrue: [result failure signal].
+	SBEditor openFor: (reader value: result)
+]
+
+{ #category : #'as yet unclassified' }
 SBJsGrammar class >> serializedGrammar [
 
 	^ 'JS <: BuiltInRules {

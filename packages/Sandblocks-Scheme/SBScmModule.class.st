@@ -125,7 +125,6 @@ SBScmModule >> initialize [
 	super initialize.
 	
 	self
-		layoutInset: 8;
 		attachDecorator: SBMoveDecorator new;
 		attachDecorator: SBResizableDecorator new;
 		addMorphBack: self newNullBlock
@@ -178,6 +177,12 @@ SBScmModule >> layoutCommands [
 	^ SBAlgebraCommand container
 		morph: self;
 		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine withGap: true])
+]
+
+{ #category : #'as yet unclassified' }
+SBScmModule >> layoutInset [
+
+	^ self floating ifTrue: [8] ifFalse: [0]
 ]
 
 { #category : #'as yet unclassified' }

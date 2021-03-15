@@ -191,3 +191,9 @@ SBGrammarHandler >> wrap: aBlock do: aWrapBlock with: aNode focusOuter: aBoolean
 		ifTrue: [aNode sandblockEditor startInput: aNode at: 9e8 replacingContents: false]
 		ifFalse: [self focusNextFrom: aNode at: cursorIndex]
 ]
+
+{ #category : #printing }
+SBGrammarHandler >> writeSourceOn: aStream for: aBlock [
+
+	self subclassResponsibility
+]

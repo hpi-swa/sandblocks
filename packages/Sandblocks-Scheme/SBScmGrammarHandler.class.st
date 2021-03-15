@@ -96,3 +96,9 @@ SBScmGrammarHandler >> wrapInSExpr [
 	
 	self block sandblockEditor maybeStartInputFromStart
 ]
+
+{ #category : #printing }
+SBScmGrammarHandler >> writeSourceOn: aStream for: aBlock [
+
+	aBlock writeScmSourceOn: aStream
+]

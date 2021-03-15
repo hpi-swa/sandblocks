@@ -214,6 +214,12 @@ SBStMessagePart >> selectorContentsBeforeMe [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMessagePart >> startDrag: anEvent [
+
+	^ self parentSandblock startDrag: anEvent
+]
+
+{ #category : #'as yet unclassified' }
 SBStMessagePart >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
@@ -319,6 +325,4 @@ SBStMessagePart >> wrapWithWatch [
 { #category : #'as yet unclassified' }
 SBStMessagePart >> writeSourceOn: aStream [
 	" probably meant to address my parent message send "
-
-	self messageSend writeSourceOn: aStream
 ]

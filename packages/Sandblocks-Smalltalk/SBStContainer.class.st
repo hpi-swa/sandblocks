@@ -1,6 +1,6 @@
 Class {
 	#name : #SBStContainer,
-	#superclass : #SBBlock,
+	#superclass : #SBStASTNode,
 	#instVars : [
 		'localBindings',
 		'typeCache',
@@ -171,6 +171,12 @@ SBStContainer >> setFromSource: aString [
 SBStContainer >> sourceString [
 
 	^ String streamContents: [:s | self writeSourceOn: s]
+]
+
+{ #category : #accessing }
+SBStContainer >> statements [
+
+	^ self body statements
 ]
 
 { #category : #'artefact protocol' }

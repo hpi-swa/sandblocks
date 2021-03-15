@@ -68,7 +68,7 @@ SBStCanvasPalette class >> buildOn: aContainer [
 { #category : #'as yet unclassified' }
 SBStCanvasPalette class >> context [
 
-	^ {#isSmalltalk. [:b | b containingArtefact satisfies: {#notNil. #isMethod. [:a | a arguments contains: [:arg | arg contents = 'aCanvas']]}]}
+	^ {#isSmalltalk. [:b | b containingArtefact satisfies: {#notNil. #isMethod. #isSmalltalk. [:a | a arguments contains: [:arg | arg contents = 'aCanvas']]}]}
 ]
 
 { #category : #'as yet unclassified' }

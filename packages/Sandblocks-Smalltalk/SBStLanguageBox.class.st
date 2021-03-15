@@ -18,7 +18,7 @@ SBStLanguageBox class >> eval: aString lang: anotherString [
 { #category : #'as yet unclassified' }
 SBStLanguageBox class >> matches: aMessageSend [
 
-	^ (super matches: aMessageSend) and: [aMessageSend selector = 'eval:lang:']
+	^ (false) and: [aMessageSend selector = 'eval:lang:']
 ]
 
 { #category : #'as yet unclassified' }

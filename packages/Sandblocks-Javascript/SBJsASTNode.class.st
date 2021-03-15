@@ -41,10 +41,10 @@ SBJsASTNode >> grammarHandler [
 ]
 
 { #category : #converting }
-SBJsASTNode >> inSmalltalk: converter [
+SBJsASTNode >> inLanguageBox: converter [
 	<convert>
 	
-	^ converter do: [SBStLanguageBox new source: self sourceString lang: 'js']
+	^ converter do: [SBLanguageBox new source: self sourceString lang: 'js']
 ]
 
 { #category : #'initialize-release' }

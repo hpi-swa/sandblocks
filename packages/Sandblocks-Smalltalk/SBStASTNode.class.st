@@ -139,6 +139,13 @@ SBStASTNode >> guessedClass [
 	^ nil
 ]
 
+{ #category : #converting }
+SBStASTNode >> inLanguageBox: converter [
+	<convert>
+	
+	^ converter do: [SBLanguageBox new source: self sourceString lang: 'smalltalk']
+]
+
 { #category : #'initialize-release' }
 SBStASTNode >> initialize [
 

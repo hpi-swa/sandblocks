@@ -27,6 +27,16 @@ SBStMessageSend >> arguments [
 ]
 
 { #category : #converting }
+SBStMessageSend >> asLanguageBox: converter [
+	<convert>
+	<automatic>
+
+	converter
+		if: [self selector = 'eval:lang' and: [self receiver isBinding and: [self receiver contents = 'SBLanguageBox']]]
+		do: [SBLanguageBox new source: self arguments first contents lang: self arguments second contents]
+]
+
+{ #category : #converting }
 SBStMessageSend >> asMessageSend: converter [
 	<convert>
 	

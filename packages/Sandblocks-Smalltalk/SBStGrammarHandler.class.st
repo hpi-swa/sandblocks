@@ -506,3 +506,9 @@ SBStGrammarHandler >> wrapWithWatch [
 
 	self watchWith: SBWatch
 ]
+
+{ #category : #printing }
+SBStGrammarHandler >> writeSourceOn: aStream for: aBlock [
+
+	aBlock writeStSourceOn: aStream
+]

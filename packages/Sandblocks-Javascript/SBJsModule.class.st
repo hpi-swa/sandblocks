@@ -51,6 +51,12 @@ SBJsModule >> body: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsModule >> header [
+
+	^ #()
+]
+
+{ #category : #'as yet unclassified' }
 SBJsModule >> initialize [
 
 	super initialize.
@@ -93,6 +99,12 @@ SBJsModule >> isMethod [
 SBJsModule >> isTopLevel [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBJsModule >> layoutInset [
+
+	^ self floating ifTrue: [8] ifFalse: [0]
 ]
 
 { #category : #'as yet unclassified' }

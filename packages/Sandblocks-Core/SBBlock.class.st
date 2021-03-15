@@ -814,7 +814,7 @@ SBBlock >> fixedNumberOfChildren [
 { #category : #testing }
 SBBlock >> floating [
 
-	^ self owner layoutPolicy isNil
+	^ self owner isNil or: [self owner layoutPolicy isNil]
 ]
 
 { #category : #accessing }
@@ -1071,7 +1071,9 @@ SBBlock >> intoWorld: aWorld [
 SBBlock >> invokeMetaMenu: anEvent [
 
 	" We hijack this event because it''s the only way to cleanly access ctrl+click "
-	self pickUp: anEvent
+	"self pickUp: anEvent"
+	anEvent transformBy: (self transformFrom: nil).
+	anEvent sentTo: self
 ]
 
 { #category : #testing }

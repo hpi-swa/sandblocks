@@ -4,7 +4,7 @@ Class {
 	#category : #'Sandblocks-Javascript'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'callback helpers' }
 SBJsGrammarHandler >> checkKeyword: aString for: aBlock [
 
 	(SBJsKeywordBlock validBlockKeywords includes: aString) ifTrue: [ | block |
@@ -34,7 +34,7 @@ SBJsGrammarHandler >> checkKeyword: aString for: aBlock [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #callbacks }
 SBJsGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 
 	aBoolean ifTrue: [
@@ -54,7 +54,7 @@ SBJsGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 			self wrap: aBlock do: [:outer :inner | outer lhs: inner operator: '' rhs: (outer newNullBlock label: 'expr')] with: SBJsInfixOperator new]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'callback helpers' }
 SBJsGrammarHandler >> wrap: aBlock do: aWrapBlock with: anOuterBlock [
 
 	super wrap: aBlock do: aWrapBlock with: anOuterBlock.
@@ -117,4 +117,10 @@ SBJsGrammarHandler >> wrapInReturn [
 		outer: (SBJsPrefixOperator new contents: 'return');
 		inner: self block;
 		wrap: [:outer :inner | outer expression: inner])
+]
+
+{ #category : #printing }
+SBJsGrammarHandler >> writeSourceOn: aStream for: aBlock [
+
+	aBlock writeJsSourceOn: aStream
 ]

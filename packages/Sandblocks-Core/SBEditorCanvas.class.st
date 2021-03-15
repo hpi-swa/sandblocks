@@ -119,9 +119,7 @@ SBEditorCanvas >> mouseMove: anEvent [
 	dragging
 		ifTrue: [| delta |
 			delta := anEvent position - lastDragPosition.
-			anEvent shiftPressed
-				ifTrue: [self zoomViewport: delta y from: dragStartPosition]
-				ifFalse: [self moveViewport: delta].
+			self moveViewport: delta.
 			lastDragPosition := anEvent position.
 			"dragLeftOverVelocity := delta"]
 ]
@@ -136,9 +134,7 @@ SBEditorCanvas >> mouseUp: anEvent [
 { #category : #'event handling' }
 SBEditorCanvas >> mouseWheel: anEvent [
 
-	(anEvent commandKeyPressed and: [dragStartPosition notNil])
-		ifTrue: [self zoomViewport: anEvent wheelDelta y from: dragStartPosition]
-		ifFalse: [self viewportPosition: targetPosition - anEvent wheelDelta]
+	self viewportPosition: targetPosition - anEvent wheelDelta
 ]
 
 { #category : #viewport }
