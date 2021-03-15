@@ -30,7 +30,7 @@ mv $BASE/shared/*.changes "${DEPLOY_CHANGES}"
 mv $BASE/shared/SqueakV50.sources .
 
 print_info "Preparing $BASE image..."
-$BASE/bin/squeak $COG_VM_PARAM "${DEPLOY_IMAGE}" "../prepare_image.st" || EXIT_STATUS=$?
+$BASE/bin/squeak $COG_VM_PARAM "${DEPLOY_IMAGE}" "../scripts/prepare_image.st" || EXIT_STATUS=$?
 
 print_info "Zipping package ..."
 if [[ $EXIT_STATUS -eq 0 ]]; then
