@@ -10,6 +10,12 @@ Class {
 }
 
 { #category : #'artefact protocol' }
+SBStContainer >> arguments [
+
+	^ #()
+]
+
+{ #category : #'artefact protocol' }
 SBStContainer >> artefact [
 
 	^ nil
@@ -69,7 +75,6 @@ SBStContainer >> initialize [
 	
 	self
 		layoutPolicy: SBAlgebraLayout new;
-		layoutInset: 6 withScalingFactor;
 		addMorphBack: SBStBlockBody empty;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
@@ -79,6 +84,24 @@ SBStContainer >> initialize [
 SBStContainer >> isArtefact [
 
 	^ true
+]
+
+{ #category : #testing }
+SBStContainer >> isBlockBody [
+
+	^ true
+]
+
+{ #category : #testing }
+SBStContainer >> isMethod [
+
+	^ true
+]
+
+{ #category : #'artefact protocol' }
+SBStContainer >> isMyArgument: aBlock [
+
+	^ false
 ]
 
 { #category : #testing }
@@ -93,6 +116,12 @@ SBStContainer >> layoutCommands [
 	^ SBAlgebraCommand container
 		morph: self;
 		data: {self body layoutCommands}
+]
+
+{ #category : #'as yet unclassified' }
+SBStContainer >> layoutInset [
+
+	^ self floating ifTrue: [8] ifFalse: [0]
 ]
 
 { #category : #'artefact protocol' }
