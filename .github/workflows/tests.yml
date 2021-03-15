@@ -34,5 +34,5 @@ jobs:
         uses: actions/upload-artifact@v2
         if: github.ref == 'refs/heads/master' && matrix.smalltalk == 'Squeak64-5.3'
         with:
-          name: screenshot 
+          name: sandblocks.sar
           path: ./deploy/sandblocks.sar
