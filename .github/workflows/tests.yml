@@ -23,17 +23,17 @@ jobs:
         timeout-minutes: 15
 
       - run: ./scripts/build_version.sh
-        if: matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/master' && matrix.smalltalk == 'Squeak64-5.3'
+        if: github.ref == 'refs/heads/master'
         shell: bash
       - name: Upload Image
         uses: actions/upload-artifact@v2
-        if: matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/master' && matrix.smalltalk == 'Squeak64-5.3'
+        if: github.ref == 'refs/heads/master'
         with:
           name: Babylonian-trunk.zip 
           path: ./deploy/sandblocks.zip
       - name: Upload SAR
         uses: actions/upload-artifact@v2
-        if: matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/master' && matrix.smalltalk == 'Squeak64-5.3'
+        if: github.ref == 'refs/heads/master'
         with:
           name: screenshot 
           path: ./deploy/sandblocks.sar
