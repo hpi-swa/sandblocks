@@ -39,6 +39,8 @@ SBReachabilitySimulatorTest >> testReachability [
 
 	| policy m |
 	m := SBReachabilitySimulatorTest >> #exampleMethod.
+	m encoderClass supportsFullBlocks ifFalse: [^ self].
+	
 	policy := SBReachabilityColorPolicy new.
 	SBStReachabilitySimulator new
 		store: policy;

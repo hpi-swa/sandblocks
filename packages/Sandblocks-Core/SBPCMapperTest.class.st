@@ -64,8 +64,11 @@ SBPCMapperTest >> testMapFor [
 { #category : #'as yet unclassified' }
 SBPCMapperTest >> testMapForNestedBlocks [
 
-	| ast generated generatedStmts stmts |
-	ast := (self class >> #exampleNestedSends) methodNode.
+	| ast stmts m |
+	m := self class >> #exampleNestedSends.
+	m encoderClass supportsFullBlocks ifFalse: [^ self].
+	
+	ast := m methodNode.
 	stmts := ast body statements.
 	
 	SBPCMapper new applyMappingFor: ast.
