@@ -48,7 +48,7 @@ BaselineOfSandblocks >> baseline: spec [
 			"baseline: 'StatisticsWorkbench' with: [spec repository: 'github://hpi-swa-teaching/StatisticsWorkbench:dev/packages'];"
 			baseline: 'RatPack' with: [spec repository: 'github://hpi-swa-teaching/RatPack:develop/packages'];
 			baseline: 'QoppaS' with: [spec repository: 'github://hpi-swa-lab/QoppaS/packages'];
-			baseline: 'Ohm' with: [spec repository: 'github://hpi-swa/Ohm-S/packages'];
+			baseline: 'Ohm' with: [spec repository: 'github://hpi-swa/ohm-s/packages'];
 			package: 'SVG-Morphic' with: [spec repository: 'http://www.squeaksource.com/SVGMorph'];
 			package: 'PoppyPrint-Core' with: [spec repository: 'github://tom95/poppy-print/packages'];
 			
