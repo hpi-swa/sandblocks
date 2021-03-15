@@ -7,14 +7,14 @@ Class {
 { #category : #'as yet unclassified' }
 SBJsModule class >> example [
 
-	^ SBJsModule new body: (SBJsDeclaration new
-	binding: (SBJsVariable new contents: 'hello')
-	value: (SBJsClosure new
-		arguments: {SBJsVariable new contents: 'abc'}
-		statements: {
-			SBJsPrefixOperator new contents: 'return'; expression: (SBJsString new contents: '12332')
-		})
-	declarationType: 'const')
+	^ SBJsModule fromString: 'const path = require("path");
+const fs = require("fs");
+fs.readFileSync(path.join("User", "me"), (text, err) => {
+	if (err) {
+		return console.error(err);
+	}
+	console.log(text);
+})'
 ]
 
 { #category : #'as yet unclassified' }

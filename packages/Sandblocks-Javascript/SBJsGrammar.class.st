@@ -6,11 +6,12 @@ Class {
 
 { #category : #'as yet unclassified' }
 SBJsGrammar class >> example [
+	"self example"
 
 	"SBJsGrammar recompile."
 	| reader result |
 	reader := SBJsGrammar semanticAction: SBJsSemantic new.
-	result := reader grammar match: 'if (a);' startingFrom: #File.
+	result := reader grammar match: '() => {};' startingFrom: #File.
 	result failed ifTrue: [result failure signal].
 	SBEditor openFor: (reader value: result)
 ]
@@ -28,12 +29,13 @@ lineGap = "\n\n"
 terminateStatement = "\n" | ";" | end
 
 Expression = SimpleExpression | ExpressionWithBraces
-SimpleExpression = MethodCall | InfixOp | MemberAccess | name | PrefixOp | PostfixOp | literal | Function
+SimpleExpression = ArrowFunction | MethodCall | InfixOp | MemberAccess | name | PrefixOp | PostfixOp | literal | Function
 ExpressionWithBraces = "(" SimpleExpression ")"
 
 Declaration = ("let" | "const" | "var") name "=" Expression
 
 Function = "function" "(" ListOf<name,","> ")" KeywordBodyWithBraces
+ArrowFunction = "(" ListOf<name,","> ")" "=>" KeywordBody
 
 KeywordBlock = keyword "(" ListOf<Expression,";"> ")" KeywordBody
 KeywordBody = KeywordBodyWithBraces | Statement

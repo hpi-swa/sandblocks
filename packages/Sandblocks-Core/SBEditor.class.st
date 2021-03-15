@@ -97,6 +97,20 @@ SBEditor class >> open [
 ]
 
 { #category : #'initialize-release' }
+SBEditor class >> openExample [
+
+	| editor |
+	editor := self new.
+	
+	editor openMorphInView: SBScmModule example.
+	editor openMorphInView: SBJsModule example.
+	editor openMorphInView: SBStPlayground example.
+	
+	editor openInWindow.
+	^ editor
+]
+
+{ #category : #'initialize-release' }
 SBEditor class >> openFor: aMethodOrClass [
 
 	^ (self newFor: aMethodOrClass) openInWindow; yourself

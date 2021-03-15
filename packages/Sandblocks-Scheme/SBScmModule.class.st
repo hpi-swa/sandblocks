@@ -9,6 +9,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBScmModule class >> example [
+
+	^ SBScmModule fromString: '(define (filter list test)
+  (cond
+    ((null? list) list)
+    ((test (car list)) (cons (car list) (filter (cdr list) test)))
+    (else (filter (cdr list) test))))
+
+(filter (list 1 2 3 4) (lambda (x) (> x 3)))'
+]
+
+{ #category : #'as yet unclassified' }
 SBScmModule class >> fromFilestream: file [
 
 	^ (SBScmParser new parse: file ascii) filename: file name

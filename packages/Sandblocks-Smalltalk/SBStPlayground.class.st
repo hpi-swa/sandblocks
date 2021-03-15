@@ -8,9 +8,21 @@ Class {
 }
 
 { #category : #'instance creation' }
+SBStPlayground class >> example [
+
+	^ self newFromSource: '{1. 2. 3. 4} collect: [:ea | ea squared]'
+]
+
+{ #category : #'instance creation' }
+SBStPlayground class >> newFromSource: aString [
+
+	^ (self newFromSource: aString named: 'Workspace')
+]
+
+{ #category : #'instance creation' }
 SBStPlayground class >> newFromSource: aString at: aPoint [
 
-	^ (self newFromSource: aString named: 'Playground')
+	^ (self newFromSource: aString)
 		position: aPoint;
 		yourself
 ]

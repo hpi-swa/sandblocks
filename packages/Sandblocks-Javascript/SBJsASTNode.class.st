@@ -16,7 +16,7 @@ SBJsASTNode class >> icon [
 { #category : #'action helpers' }
 SBJsASTNode >> actionProviders [
 
-	^ super actionProviders, {self grammarHandler}
+	^ {self grammarHandler}, super actionProviders
 ]
 
 { #category : #drawing }
@@ -86,6 +86,19 @@ SBJsASTNode >> isJavascript [
 SBJsASTNode >> isVariable [
 
 	^ false
+]
+
+{ #category : #'action helpers' }
+SBJsASTNode >> lookupAction: aSymbol [
+	" first try our leaf class, then the grammar handler, then our base classes "
+
+	self class lookupSelector: aSymbol upTo: SBJsASTNode ifPresent: [:m | (self isValidAction: m) ifTrue: [^ self]] ifAbsent: [].
+	
+	(self grammarHandler class lookupSelector: aSymbol) ifNotNil: [:m | (self isValidAction: m) ifTrue: [^ self grammarHandler]].
+	
+	(SBStASTNode superclass lookupSelector: aSymbol) ifNotNil: [:m | (self isValidAction: m) ifTrue: [^ self]].
+	
+	^ nil
 ]
 
 { #category : #accessing }

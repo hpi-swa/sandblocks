@@ -143,5 +143,5 @@ SBJsPrefixOperator >> writeSourceOn: aStream [
 
 	aStream nextPutAll: self contents.
 	aStream space.
-	aStream nextPutAll: self rhs
+	self rhs writeSourceOn: aStream
 ]

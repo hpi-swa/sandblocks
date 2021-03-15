@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBJsSemantic >> ArrowFunction: aNode open: x parameters: aCollection close: xx arrow: xxx body: body [
+
+	| statements |
+	statements := self value: body.
+	^ SBJsClosure new
+		arguments: (self value: aCollection)
+		statements: (statements isCollection ifTrue: [statements] ifFalse: [statements ifNil: [#()] ifNotNil: [{statements}]])
+]
+
+{ #category : #'as yet unclassified' }
 SBJsSemantic >> Declaration: aNode type: type name: name eq: eq expr: expression [
 
 	^ SBJsDeclaration new
