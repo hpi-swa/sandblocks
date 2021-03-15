@@ -11,7 +11,7 @@ SBVimInputTest >> testEscapeLeavesInputMode [
 	message := '5' parseAsSandblock.
 	editor := self methodFor: message.
 	editor startInput: message at: 2 replacingContents: false.
-	editor filterEvent: (self keyboardEvent: Character escape) for: nil.
+	self send: (self keyboardEvent: Character escape) to: editor.
 	
 	self assert: #command equals: editor mode
 ]
@@ -23,7 +23,7 @@ SBVimInputTest >> testPrintableCharacterShortcut [
 	message := '5 + 2' parseAsSandblock.
 	editor := self methodFor: message.
 	editor startInput: message at: 2 replacingContents: false.
-	editor filterEvent: (self keyboardEvent: $+) for: nil.
+	self send: (self keyboardEvent: $+) to: editor.
 	
 	self assert: message selector = '++'
 ]
@@ -37,7 +37,7 @@ SBVimInputTest >> testSplitStringAtCursor [
 	
 	editor := self methodFor: block.
 	editor startInput: string at: 3 replacingContents: false.
-	editor filterEvent: (self class keyboardEvent: $' shift: false command: true) for: nil.
+	self send: (self class keyboardEvent: $' shift: false command: true) to: editor.
 	
 	self assert: block childSandblocks first isMessageSend.
 	self assert: 'ab' equals: block childSandblocks first receiver contents.

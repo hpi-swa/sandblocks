@@ -89,3 +89,9 @@ SBTest >> methodFor: aBlock [
 
 	^ self class methodFor: aBlock
 ]
+
+{ #category : #'as yet unclassified' }
+SBTest >> send: anEvent to: anEditor [
+
+	anEvent becomeActiveDuring: [anEditor filterEvent: anEvent for: nil]
+]

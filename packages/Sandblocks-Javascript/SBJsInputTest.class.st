@@ -25,7 +25,7 @@ SBJsInputTest >> testAddMemberAccess [
 	
 	editor startInput: access lhs at: 9e8 replacingContents: false.
 	
-	editor filterEvent: (self keyboardEvent: $.) for: nil.
+	self send: (self keyboardEvent: $.) to: editor.
 	
 	self assert: closure statements first contents = '.'
 ]
@@ -40,9 +40,9 @@ SBJsInputTest >> testAddMemberAccessViaSpace [
 	
 	access rhs select.
 	
-	editor filterEvent: (self keyboardEvent: $ ) for: nil.
-	editor filterEvent: (self keyboardEvent: $.) for: nil.
-	editor filterEvent: (self keyboardEvent: Character escape) for: nil.
+	self send: (self keyboardEvent: $ ) to: editor.
+	self send: (self keyboardEvent: $.) to: editor.
+	self send: (self keyboardEvent: Character escape) to: editor.
 	
 	self assert: closure statements first contents = '.'.
 	self assert: closure statements first ~= access.
@@ -61,13 +61,13 @@ SBJsInputTest >> testBinaryExprPrecedence [
 	
 	editor startInput: number at: 900000000 replacingContents: false.
 	
-	editor filterEvent: (self keyboardEvent: $*) for: nil.
+	self send: (self keyboardEvent: $*) to: editor.
 	self assert: '*' equals: closure statements first contents.
 	
-	editor filterEvent: (self keyboardEvent: $3) for: nil.
+	self send: (self keyboardEvent: $3) to: editor.
 	self assert: '3' equals: closure statements first rhs contents.
 	
-	editor filterEvent: (self keyboardEvent: $+) for: nil.
+	self send: (self keyboardEvent: $+) to: editor.
 	self assert: '+' equals: closure statements first contents.
 	self assert: '*' equals: closure statements first lhs contents
 ]
@@ -130,10 +130,10 @@ SBJsInputTest >> testIfKeyword [
 	
 	editor startInput: var at: 9e8 replacingContents: false.
 	
-	editor filterEvent: (self keyboardEvent: Character space) for: nil.
+	self send: (self keyboardEvent: $ ) to: editor.
 	self assert: ((closure statements first isKindOf: SBJsKeywordBlock) and: [closure statements first contents = 'if']).
 	
-	editor filterEvent: (self keyboardEvent: $5) for: nil.
+	self send: (self keyboardEvent: $5) to: editor.
 	self assert: (closure statements first condition contents = '5')
 ]
 
@@ -147,11 +147,11 @@ SBJsInputTest >> testLetKeyword [
 	
 	editor startInput: var at: 9e8 replacingContents: false.
 	
-	editor filterEvent: (self keyboardEvent: Character space) for: nil.
+	self send: (self keyboardEvent: $ ) to: editor.
 	self assert: (closure statements first isKindOf: SBJsDeclaration).
 	
-	editor filterEvent: (self keyboardEvent: $a) for: nil.
-	editor filterEvent: (self keyboardEvent: $b) for: nil.
+	self send: (self keyboardEvent: $a) to: editor.
+	self send: (self keyboardEvent: $b) to: editor.
 	self assert: 'ab' equals: closure statements first binding contents
 ]
 
@@ -169,11 +169,11 @@ SBJsInputTest >> testMoveCursorInInfixOp [
 	editor startInput: op rhs at: 1 replacingContents: false.
 	self assert: op rhs isSelected.
 	
-	editor filterEvent: (self keyboardEvent: Character arrowLeft) for: nil.
-	editor filterEvent: (self keyboardEvent: Character arrowLeft) for: nil.
+	self send: (self keyboardEvent: Character arrowLeft) to: editor.
+	self send: (self keyboardEvent: Character arrowLeft) to: editor.
 	self assert: op isSelected.
 	
-	editor filterEvent: (self keyboardEvent: Character arrowLeft) for: nil.
+	self send: (self keyboardEvent: Character arrowLeft) to: editor.
 	self assert: op lhs isSelected
 ]
 
@@ -185,7 +185,7 @@ SBJsInputTest >> testPrecedenceAdaptAfterFunctionCall [
 	editor := self methodFor: call.
 	
 	editor startInput: call rhs at: 900000000 replacingContents: false.
-	editor filterEvent: (self keyboardEvent: $.) for: nil.
+	self send: (self keyboardEvent: $.) to: editor.
 	self assert: (call rhs isKindOf: SBJsInfixOperator)
 ]
 
@@ -199,12 +199,12 @@ SBJsInputTest >> testTypeBinaryExpression [
 	
 	editor startInput: number at: 9e8 replacingContents: false.
 	
-	editor filterEvent: (self keyboardEvent: $+) for: nil.
+	self send: (self keyboardEvent: $+) to: editor.
 	self assert: '+' equals: closure statements first contents.
 	
-	editor filterEvent: (self keyboardEvent: $3) for: nil.
+	self send: (self keyboardEvent: $3) to: editor.
 	self assert: '3' equals: closure statements first rhs contents.
 	
-	editor filterEvent: (self keyboardEvent: $4) for: nil.
+	self send: (self keyboardEvent: $4) to: editor.
 	self assert: '34' equals: closure statements first rhs contents
 ]

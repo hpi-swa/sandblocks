@@ -14,8 +14,8 @@ SBScmInputTest >> testWrapString [
 	
 	editor startInput: string at: 1 replacingContents: false.
 	
-	editor filterEvent: (self keyboardEvent: Character arrowUp shift: true command: false) for: nil.
-	editor filterEvent: (self keyboardEvent: $() for: nil.
+	self send: (self keyboardEvent: Character arrowUp shift: true command: false) to: editor.
+	self send: (self keyboardEvent: $() to: editor.
 	
 	self assert: 'abc' equals: string contents.
 	self assert: string parentSandblock isSExpr.

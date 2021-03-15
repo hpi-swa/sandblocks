@@ -24,8 +24,8 @@ SBTextInputTest >> testAcceptAutoCompletion [
 	editor := self methodFor: block.
 	
 	editor startInput: block statements first at: 9e8 replacingContents: false.
-	editor filterEvent: (self class keyboardEvent: $r) for: nil.
-	editor filterEvent: (self class keyboardEvent: Character cr) for: nil.
+	self send: (self keyboardEvent: $r) to: editor.
+	self send: (self keyboardEvent: Character cr) to: editor.
 	
 	self assert: block statements first selector size > 5
 ]
@@ -38,14 +38,14 @@ SBTextInputTest >> testCursorKeepsHorizontalPosition [
 	editor := self methodFor: block.
 	
 	editor startInput: block statements second at: 2 replacingContents: false.
-	editor filterEvent: (self class keyboardEvent: Character arrowRight) for: nil.
+	self send: (self keyboardEvent: Character arrowRight) to: editor.
 	self tick.
 	
 	self assert: 3 equals: block statements second currentTextMorph cursor.
-	editor filterEvent: (self class keyboardEvent: Character arrowDown) for: nil.
+	self send: (self keyboardEvent: Character arrowDown) to: editor.
 	self tick.
 	self assert: 3 equals: block statements third currentTextMorph cursor.
-	editor filterEvent: (self class keyboardEvent: Character arrowUp) for: nil.
+	self send: (self keyboardEvent: Character arrowUp) to: editor.
 	self tick.
 	self assert: 3 equals: block statements second currentTextMorph cursor
 ]
@@ -74,7 +74,7 @@ SBTextInputTest >> testMultiSelectionThroughSpace [
 	block statements second select.
 	self assert: #selection equals: editor mode.
 	
-	editor filterEvent: (self class keyboardEvent: Character space) for: nil.
+	self send: (self keyboardEvent: $ ) to: editor.
 	
 	self assert: #selection equals: editor mode.
 	self assert: 2 equals: (editor multiSelection size)
@@ -88,7 +88,7 @@ SBTextInputTest >> testSpaceDuringInput [
 	editor := self methodFor: block.
 	
 	editor startInput: block statements first at: 9e8 replacingContents: false.
-	editor filterEvent: (self class keyboardEvent: Character space) for: nil.
+	self send: (self keyboardEvent: $ ) to: editor.
 	
 	self assert: #input equals: editor mode.
 	self assert: block statements first isMessageSend
@@ -104,7 +104,7 @@ SBTextInputTest >> testSpaceForEmptyLine [
 	
 	block addMorphBack: space.
 	editor startInput: space at: 1 replacingContents: false.
-	editor filterEvent: (self class keyboardEvent: Character space) for: nil.
+	self send: (self keyboardEvent: $ ) to: editor.
 	
 	self assert: (block statements last isKindOf: SBEmptyLine)
 ]

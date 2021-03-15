@@ -29,8 +29,8 @@ SBGrammarHandlerTest >> testDoNotJumpAfterCompletingUnknown [
 	
 	editor startInput: block statements first at: 0 replacingContents: false.
 	
-	editor filterEvent: (self keyboardEvent: $a) for: nil.
-	editor filterEvent: (self keyboardEvent: $b) for: nil.
+	self send: (self keyboardEvent: $a) to: editor.
+	self send: (self keyboardEvent: $b) to: editor.
 	
 	self assert: 'ab' equals: block statements first contents
 ]
@@ -48,7 +48,7 @@ SBGrammarHandlerTest >> testInsertNewStatement [
 		editor := self methodFor: block.
 		block addMorphBack: leaf.
 		editor startInput: leaf at: 0 replacingContents: false.
-		editor selection keyStroke: (self keyboardEvent: Character cr).
+		self send: (self keyboardEvent: Character cr) to: editor.
 		self assert: block statements size = 2]
 ]
 
@@ -59,10 +59,9 @@ SBGrammarHandlerTest >> testUndoAfterReplacingUnknown [
 	unknown := SBUnknown new grammarHandler: SBStGrammarHandler new.
 	editor := self methodFor: unknown.
 	body := unknown parentSandblock.
-	editor
-		startInput: unknown at: 0 replacingContents: true;
-		filterEvent: (self keyboardEvent: $1) for: nil;
-		filterEvent: (self keyboardEvent: $2) for: nil.
+	editor startInput: unknown at: 0 replacingContents: true.
+	self send: (self keyboardEvent: $1) to: editor.
+	self send: (self keyboardEvent: $2) to: editor.
 	self assert: body statements first isNumberBlock.
 	editor undo.
 	self assert: body statements first isUnknown
