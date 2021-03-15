@@ -3,17 +3,35 @@ name: smalltalkCI
 on: push
 
 jobs:
-  smalltalkci:
-    name: Test
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        smalltalk: [ Squeak64-trunk, Squeak64-5.3 ]
+    name: Test ${{ matrix.smalltalk }}
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
       - uses: hpi-swa/setup-smalltalkCI@v1
-        id: smalltalkci
         with:
-          smalltalk-version: 'Squeak64-trunk'
-      - run: smalltalkci -s ${{ steps.smalltalkci.outputs.smalltalk-version }}
+          smalltalk-version: ${{ matrix.smalltalk }}
+      - run: smalltalkci -s ${{ matrix.smalltalk }}
         shell: bash
         timeout-minutes: 15
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: ./scripts/build_version.sh
+        if: matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/master'
+        shell: bash
+      - name: Upload Image
+        uses: actions/upload-artifact@v2
+        if: matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/master'
+        with:
+          name: Babylonian-trunk.zip 
+          path: ./deploy/sandblocks.zip
+      - name: Upload SAR
+        uses: actions/upload-artifact@v2
+        if: matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/master'
+        with:
+          name: screenshot 
+          path: ./deploy/sandblocks.sar
