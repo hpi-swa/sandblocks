@@ -46,7 +46,8 @@ SBTextBubble >> colored [
 { #category : #'as yet unclassified' }
 SBTextBubble >> colored: aBoolean [
 
-	colored := aBoolean
+	colored := aBoolean.
+	self color: Color transparent
 ]
 
 { #category : #'as yet unclassified' }
@@ -77,7 +78,7 @@ SBTextBubble >> dismiss [
 { #category : #'as yet unclassified' }
 SBTextBubble >> drawnColor [
 
-	^ self colored ifTrue: [super drawnColor] ifFalse: [self parentSandblock ifNotNil: [: p | p drawnColor] ifNil: [Color transparent]]
+	^ self colored ifTrue: [super drawnColor] ifFalse: [(color = Color transparent and: [self parentSandblock notNil]) ifTrue: [self parentSandblock drawnColor] ifFalse: [color]]
 ]
 
 { #category : #'as yet unclassified' }

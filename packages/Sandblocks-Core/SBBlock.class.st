@@ -2012,14 +2012,13 @@ SBBlock >> startDrag: anEvent [
 		anEvent hand newMouseFocus: canvas.
 		^ canvas startDrag: (anEvent transformBy: self transformFromWorld asMatrixTransform2x3 inverseTransformation)].
 	
-	super startDrag: anEvent.
-	
-	(self hasDecorator: SBMoveDecorator) ifFalse: [
-		(self nearestOwnerThat: [:o | o isSandblock and: [o isSelected]]) ifNotNil: [:o | ^ o pickUp: anEvent].
+	((self hasDecorator: SBMoveDecorator) not or: [anEvent controlKeyPressed or: [anEvent commandKeyPressed]]) ifTrue: [
+		"(self nearestOwnerThat: [:o | o isSandblock and: [o isSelected]]) ifNotNil: [:o | ^ o pickUp: anEvent]."
 		^ self
 			select;
 			pickUp: anEvent].
 	
+	super startDrag: anEvent.
 	self sandblockEditor select: self
 ]
 

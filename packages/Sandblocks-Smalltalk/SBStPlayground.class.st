@@ -127,6 +127,8 @@ SBStPlayground >> initialize [
 			cellGap: 8 withScalingFactor;
 			addMorphBack: (SBTextBubble new
 				layoutInset: 4 withScalingFactor;
+				colored: false;
+				color: Color white;
 				contents: 'Workspace');
 			addMorphBack: (bindings := SBRow new cellGap: 4 withScalingFactor));
 		vResizing: #shrinkWrap;

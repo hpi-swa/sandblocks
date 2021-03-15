@@ -87,12 +87,6 @@ SBStContainer >> isArtefact [
 ]
 
 { #category : #testing }
-SBStContainer >> isBlockBody [
-
-	^ true
-]
-
-{ #category : #testing }
 SBStContainer >> isMethod [
 
 	^ true
