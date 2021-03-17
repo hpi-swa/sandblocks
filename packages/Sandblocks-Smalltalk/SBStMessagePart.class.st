@@ -97,7 +97,7 @@ SBStMessagePart >> initialize [
 	super initialize.
 	
 	self
-		addMorphBack: (text := SBOwnTextMorph new emphasis: #derive);
+		addMorphBack: (text := SBOwnTextMorph new emphasis: #derive; placeholderText: 'msg');
 		layoutPolicy: SBAlgebraLayout new;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
@@ -280,6 +280,12 @@ SBStMessagePart >> updateSuggestions [
 SBStMessagePart >> useSuggestion: aString [
 
 	self messageSend useSuggestion: aString
+]
+
+{ #category : #'as yet unclassified' }
+SBStMessagePart >> wantsInput [
+
+	^ self currentTextMorph contents isEmpty
 ]
 
 { #category : #'as yet unclassified' }

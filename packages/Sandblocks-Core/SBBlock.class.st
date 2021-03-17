@@ -1009,7 +1009,7 @@ SBBlock >> inputNextUnknown [
 	<action>
 	<inputAction>
 
-	(self nextBlockThat: [:m | m isUnknown])
+	(self nextBlockThat: [:m | m wantsInput])
 		ifNotNil: [:m | self sandblockEditor startInput: m at: 1 replacingContents: true]
 ]
 
@@ -1018,7 +1018,7 @@ SBBlock >> inputPreviousUnknown [
 	<action>
 	<inputAction>
 
-	(self previousMorphThat: [:m | m isSandblock and: [m isUnknown]])
+	(self previousMorphThat: [:m | m isSandblock and: [m wantsInput]])
 		ifNotNil: [:m | self sandblockEditor startInput: m at: 1 replacingContents: true]
 ]
 

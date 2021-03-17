@@ -31,7 +31,7 @@ SBJsModule class >> fromString: aString [
 SBJsModule >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	| globals |
-	globals := #('console' 'window' 'true' 'false' 'undefined' 'null' 'this' 'require').
+	globals := #('console' 'window' 'true' 'false' 'undefined' 'null' 'this' 'require' 'Math').
 	globals detect: [:global | global = aString] ifFound: [:inst | ^ aBlock value: inst] ifNone: [].
 	
 	^ super binding: aString for: block class: aClass ifPresent: aBlock

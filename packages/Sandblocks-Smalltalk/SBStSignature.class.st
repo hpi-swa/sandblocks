@@ -211,6 +211,7 @@ SBStSignature >> numArgs [
 { #category : #'as yet unclassified' }
 SBStSignature >> numArguments: aString [
 
+	aString ifEmpty: [^ 1].
 	aString last = $: ifTrue: [^ (self extractKeywords: aString) size].
 	aString first isSpecial ifTrue: [^ 1].
 	^ 0
@@ -251,7 +252,7 @@ SBStSignature >> selector [
 SBStSignature >> selector: aString [
 
 	| currentNum newNum arguments |
-	currentNum := self numArgs.
+	currentNum := self numArguments: aString.
 	newNum := aString numArgs.
 	
 	arguments := (self arguments copyFrom: 1 to: (newNum min: currentNum)), (Array streamContents: [:s |
@@ -273,12 +274,13 @@ SBStSignature >> selector: aString arguments: aCollection [
 			ifAbsent: [
 				self addMorph: (self textMorphFor: keyword) asElementNumber: (index * 2) - 1].
 		((keyword endsWith: ':') or: [
-			keyword notEmpty and: [keyword allSatisfy: #isSpecial]]) ifTrue: [
+			keyword isEmpty or: [keyword allSatisfy: #isSpecial]]) ifTrue: [
 			self arguments
 				at: index
 				ifPresent: [:a | a replaceBy: (aCollection at: index)]
 				ifAbsent: [
-					self addMorph: (aCollection at: index) asElementNumber: index * 2]]].
+					aCollection at: index ifPresent: [:arg |
+						self addMorph: arg asElementNumber: index * 2] ifAbsent: [self assert: aString isEmpty]]]].
 	[
 		self submorphs size > (aCollection size * 2 max: 1)] whileTrue: [self lastSubmorph delete]
 ]

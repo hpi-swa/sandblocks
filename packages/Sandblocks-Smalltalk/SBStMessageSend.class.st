@@ -9,12 +9,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBStMessageSend class >> placeholderSelector [
-
-	^ '----'
-]
-
-{ #category : #'as yet unclassified' }
 SBStMessageSend >> actualReceiver [
 
 	^ self isInCascade ifTrue: [self owner receiver] ifFalse: [self receiver]

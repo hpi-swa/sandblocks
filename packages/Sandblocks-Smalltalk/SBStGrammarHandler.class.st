@@ -371,7 +371,7 @@ SBStGrammarHandler >> wrapAsArgument [
 			inner: self block;
 			shouldMergeWithNext: true;
 			wrap: [:outer :inner |
-				outer receiver: self block newNullBlock selector: SBStMessageSend placeholderSelector arguments: {inner}];
+				outer receiver: self block newNullBlock selector: '' arguments: {inner}];
 			yourself);
 		startInput: msg receiver at: 0 replacingContents: false
 ]
