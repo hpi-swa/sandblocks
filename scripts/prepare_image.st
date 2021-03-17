@@ -13,7 +13,7 @@
   (Smalltalk at: #Metacello) new
   baseline: 'Sandblocks';
   repository: 'tonel:///home/runner/work/sandblocks/sandblocks/packages';
-  load: #default.
+  load: #tutorial.
 
   "Prepare Image a little bit"
   Preferences disable: #showSharedFlaps.

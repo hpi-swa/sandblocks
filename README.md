@@ -11,7 +11,7 @@ Make sure you're running on a Squeak-trunk image. Then run:
 Metacello new
   baseline: 'Sandblocks';
   repository: 'github://tom95/Sandblocks:master/packages';
-  load.
+  load: #tutorial.
 
 SBEditor openExample.
 
