@@ -234,6 +234,13 @@ SBStMessagePart >> startInputAt: aNumber replacingContents: aBoolean [
 	^ cmd
 ]
 
+{ #category : #actions }
+SBStMessagePart >> startOrAddToMultiSelection [
+	<multiSelectAction>
+	
+	self messageSend startOrAddToMultiSelection
+]
+
 { #category : #'as yet unclassified' }
 SBStMessagePart >> stopEditing [
 

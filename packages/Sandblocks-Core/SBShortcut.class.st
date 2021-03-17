@@ -132,11 +132,22 @@ SBShortcut >> optionKeyPressed [
 { #category : #'as yet unclassified' }
 SBShortcut >> printDisplayOn: aStream [
 
-	aStream.
+	| p |
 	command ifTrue: [aStream nextPutAll: 'Cmd+'].
-	shift ifTrue: [aStream nextPutAll: 'Shift+'].
+	(shift or: [character isLetter and: [character isUppercase]]) ifTrue: [aStream nextPutAll: 'Shift+'].
 	ctrl ifTrue: [aStream nextPutAll: 'Ctrl+'].
-	aStream nextPut: character
+	
+	character = Character cr ifTrue: [^ aStream nextPutAll: 'enter'].
+	character = Character arrowUp ifTrue: [^ aStream nextPutAll: 'up'].
+	character = Character arrowDown ifTrue: [^ aStream nextPutAll: 'down'].
+	character = Character arrowLeft ifTrue: [^ aStream nextPutAll: 'left'].
+	character = Character arrowRight ifTrue: [^ aStream nextPutAll: 'right'].
+	
+	p := character printString.
+	aStream nextPutAll: (p first = $$ ifTrue: [p allButFirst] ifFalse: [
+		(p beginsWith: 'Character ')
+			ifTrue: [p allButFirst: 'Character ' size]
+			ifFalse: [p]])
 ]
 
 { #category : #'as yet unclassified' }

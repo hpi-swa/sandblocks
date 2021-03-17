@@ -54,20 +54,6 @@ SBStMessageSend >> browse [
 ]
 
 { #category : #'as yet unclassified' }
-SBStMessageSend >> browseImplementors [
-	<action>
-
-	self sandblockEditor isSingleArtefactView ifTrue: [^ super browseImplementors].
-
-	self actualReceiver guessClassExpensive
-		ifNotNil: [:class |
-			(class lookupSelector: self selector asSymbol) ifNotNil: [:m |
-				^ self sandblockEditor open: m]].
-	
-	super browseImplementors
-]
-
-{ #category : #'as yet unclassified' }
 SBStMessageSend >> cellGap [
 
 	^ self colorPolicy messageCellGap

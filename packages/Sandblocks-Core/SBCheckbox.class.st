@@ -69,7 +69,7 @@ SBCheckbox >> toggle [
 	self sandblockEditor do: ((self nonEdit
 		ifTrue: [SBMutatePropertyCommand newNonEdit]
 		ifFalse: [
-			SBMutatePropertyCommand newFor: self containingArtefact])
+			SBMutatePropertyCommand newOrEditFor: self containingArtefact])
 		target: self;
 		selector: #value;
 		mutateSelector: #changeValue:;

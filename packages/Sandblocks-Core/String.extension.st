@@ -93,3 +93,11 @@ String >> truncateMiddleTo: aNumber [
 	self size <= aNumber ifTrue: [^ self].
 	^ ((self first: (aNumber * 0.3) floor), '...'), (self last: (aNumber * 0.7) floor)
 ]
+
+{ #category : #'*Sandblocks-Core' }
+String >> withSBShortcuts [
+
+	^ self copyWithRegex: '<#\w+>' matchesTranslatedUsing: [:match | | shortcut |
+		shortcut := SBEditor anyShortcutForAction: (match copyFrom: 3 to: match size - 1) asSymbol.
+		(shortcut isCollection ifTrue: [shortcut anyOne] ifFalse: [shortcut]) ifNotNil: #displayString ifNil: ['<not bound>']]
+]

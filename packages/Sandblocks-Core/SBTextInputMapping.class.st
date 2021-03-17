@@ -40,6 +40,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		inputShortcut: $' command do: #splitStringAtCursor;
 		registerShortcut: $+ command do: #insertElementAfter;
 		registerShortcut: $* command do: #insertElementBefore;
+		registerShortcut: $e command do: #addElement;
 		inputShortcut: Character cr command do: #typeNewLine;
 		
 		" refactor "
@@ -110,10 +111,10 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character arrowRight command withShift do: #swapRight;
 		registerShortcut: $c asSandblockShortcut withOption do: #copyString;
 		registerShortcut: $v asSandblockShortcut withOption do: #pasteString;
-		cmdShortcut: Character backspace do: #deleteBlock;
 		registerShortcut: $x command do: #deleteBlock;
-		registerShortcut: Character backspace shift do: #deleteAround;
 		registerShortcut: $X command do: #deleteAround;
+		cmdShortcut: Character backspace do: #deleteBlock;
+		registerShortcut: Character backspace shift do: #deleteAround;
 
 		registerShortcut: Character cr shift do: #insertStatementAbove;
 		registerShortcut: Character cr do: #insertStatementBelow;
@@ -150,9 +151,11 @@ SBTextInputMapping >> registerDefaultShortcuts [
 { #category : #'as yet unclassified' }
 SBTextInputMapping >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 
+	anEditor selection ifNil: [^ self].
+
 	((anEditor selection grammarHandler
 		ifNotNil: [:h | h characterCanStartInput: anEvent keyCharacter]
-		ifNil: [false]) and: [anEditor selection notNil and: [anEvent commandKeyPressed not and: [anEvent optionKeyPressed not and: [anEvent controlKeyPressed not]]]]) ifTrue: [
+		ifNil: [false]) and: [anEvent commandKeyPressed not and: [anEvent optionKeyPressed not and: [anEvent controlKeyPressed not]]]) ifTrue: [
 		"anEditor startInput: anEditor selection at: 0 replacingContents: true."
 		anEditor selection changeToUnknown.
 		anEditor selection keyStroke: anEvent.

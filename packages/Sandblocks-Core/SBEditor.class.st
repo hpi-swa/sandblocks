@@ -34,19 +34,19 @@ Class {
 	#category : #'Sandblocks-Core'
 }
 
-{ #category : #'initialize-release' }
+{ #category : #shortcuts }
 SBEditor class >> anyShortcutForAction: aSymbol [
 
 	^ (self shortcutsForAction: aSymbol) ifNotEmpty: #first ifEmpty: [nil]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #shortcuts }
 SBEditor class >> clearShortcuts [
 
 	Shortcuts := nil
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #accessing }
 SBEditor class >> current [
 	" find the most recently used SBEditor instance "
 	
@@ -81,13 +81,13 @@ SBEditor class >> newFor: aMethodOrClass [
 	^ editor
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #accessing }
 SBEditor class >> newInputMapping [
 
 	^ (InputMappingClass ifNil: [SBTextInputMapping]) new
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #opening }
 SBEditor class >> open [
 
 	| editor |
@@ -96,165 +96,19 @@ SBEditor class >> open [
 	^ editor
 ]
 
-{ #category : #'initialize-release' }
-SBEditor class >> openExample [
-
-	| editor |
-	editor := self new.
-	
-	editor openMorphInView: SBScmModule example.
-	editor openMorphInView: SBJsModule example.
-	editor openMorphInView: SBStPlayground example.
-	
-	editor openInWindow.
-	^ editor
-]
-
-{ #category : #'initialize-release' }
+{ #category : #opening }
 SBEditor class >> openFor: aMethodOrClass [
 
 	^ (self newFor: aMethodOrClass) openInWindow; yourself
 ]
 
-{ #category : #'initialize-release' }
-SBEditor class >> openWorkspace: aString [
-
-	SBWorkspaceHistory default items detect: [:workspace | workspace name = aString] ifFound: [:workspace | workspace open] ifNone: [self error: 'no such workspace']
-]
-
-{ #category : #'initialize-release' }
-SBEditor class >> registerDefaultShortcuts [
-	"self registerDefaultShortcuts"
-
-	(Shortcuts notNil and: [Shortcuts notEmpty and: [(UIManager default confirm: 'This will reset all custom shortcuts, continue?') not]]) ifTrue: [^ self].
-	
-	self clearShortcuts.
-	self
-		" navigation "
-		registerShortcut: $h do: #selectPrevious;
-		registerShortcut: $l do: #selectNext;
-		registerShortcut: $J do: #selectDown;
-		registerShortcut: $K do: #selectUp;
-		registerShortcut: $G do: #selectLast;
-		registerShortcut: $g do: #selectArtefact;
-		registerShortcut: $$ do: #selectRightMostBlock;
-		registerShortcut: Character tab shift do: #inputPreviousUnknown;
-		registerShortcut: Character tab do: #inputNextUnknown;
-		registerShortcut: $z do: #toggleCollapsed;
-		registerShortcut: $m do: #placeMark;
-		registerShortcut: $' do: #goToMark;
-		registerShortcut: $h command do: #selectLeftToplevel;
-		registerShortcut: $j command do: #selectBottomToplevel;
-		registerShortcut: $k command do: #selectTopToplevel;
-		registerShortcut: $l command do: #selectRightToplevel;
-		registerShortcut: $k do: #selectPreviousGroup;
-		registerShortcut: $j do: #selectNextGroup;
-		registerShortcut: $! do: #ensureVisible;
-		registerShortcut: $0 do: #selectStartOfStatement;
-		
-		" modify general "
-		registerShortcut: $, do: #promptAction;
-		registerShortcut: $i do: #startInputAtStart;
-		registerShortcut: $a do: #startInputAtEnd;
-		registerShortcut: $s do: #startInputSubstituting;
-		registerShortcut: $c do: #changeToUnknown;
-		registerShortcut: $Y do: #copyAround;
-		registerShortcut: $y do: #copyToBuffer;
-		registerShortcut: $X do: #deleteAround;
-		registerShortcut: $x do: #deleteBlock;
-		registerShortcut: $d do: #deleteAdjacent;
-		registerShortcut: $( do: #leftRotate;
-		registerShortcut: $. do: #addElement;
-		registerShortcut: $+ do: #insertElementAfter;
-		registerShortcut: $* do: #insertElementBefore;
-		registerShortcut: $H do: #swapLeft;
-		registerShortcut: $L do: #swapRight;
-		registerShortcut: $c command do: #copyString;
-		registerShortcut: $v command do: #pasteString;
-		registerShortcut: $p do: #pasteBelow;
-		registerShortcut: $P do: #pasteAbove;
-		registerShortcut: $v do: #startOrAddToMultiSelection;
-		registerShortcut: $V command do: #startContinuousMultiSelection;
-		registerShortcut: $V do: #multiSelectChildren;
-		registerShortcut: Character escape do: #endMultiSelection;
-		registerShortcut: $r do: #replaceWithCopyBuffer;
-
-		" modify smalltalk "
-		registerShortcut: $" do: #wrapInToggledCode;
-		registerShortcut: $D do: #insertLabelAbove;
-		registerShortcut: $O do: #insertStatementAbove;
-		registerShortcut: $o do: #insertStatementBelow;
-		registerShortcut: $[ do: #wrapInBlock;
-		registerShortcut: ${ do: #wrapInDynamicArray;
-		registerShortcut: $# do: #wrapInLiteralArray;
-		registerShortcut: $: do: #wrapInAssignment;
-		registerShortcut: $; do: #wrapInCascade;
-		registerShortcut: $^ do: #wrapInReturn;
-		registerShortcut: Character space shift do: #wrapAsArgument;
-		registerShortcut: Character space do: #wrapInMessageSend;
-		
-		" input "
-		registerShortcut: Character escape do: #endInput;
-		registerShortcut: Character cr do: #useSuggestion;
-		registerShortcut: Character arrowLeft do: #moveCursorLeft;
-		registerShortcut: $h command do: #moveCursorLeft;
-		registerShortcut: Character arrowRight do: #moveCursorRight;
-		registerShortcut: $l command do: #moveCursorRight;
-		registerShortcut: $a command do: #moveCursorToStart;
-		registerShortcut: $e command do: #moveCursorToEnd;
-		registerShortcut: $x command do: #clearInput;
-		registerShortcut: $j command do: #focusNextSuggestion;
-		registerShortcut: $k command do: #focusPreviousSuggestion;
-		registerShortcut: $1 command do: #useFirstArgument;
-		registerShortcut: $2 command do: #useSecondArgument;
-		registerShortcut: $3 command do: #useThirdArgument;
-		registerShortcut: $4 command do: #useFourthArgument;
-		registerShortcut: $5 command do: #useFifthArgument;
-		registerShortcut: $' command do: #splitStringAtCursor;
-		
-		" refactor "
-		registerShortcut: $T do: #extractMethod;
-		registerShortcut: $t do: #createEmptySmalltalkMethod;
-		registerShortcut: $= do: #extractVariable;
-		
-		" debugging "
-		registerShortcut: $> do: #stepOver;
-		registerShortcut: $< do: #stepInto;
-		registerShortcut: $y command do: #stepThrough;
-		registerShortcut: $Y command do: #restartFrame;
-		registerShortcut: $e do: #focusErrors;
-		registerShortcut: $E do: #focusPreviousErrorFrame;
-		
-		" tools "
-		registerShortcut: $W do: #wrapWithWatch;
-		registerShortcut: $w do: #wrapWithExampleWatch;
-		registerShortcut: $p command do: #evaluateExpression;
-		registerShortcut: $d command do: #doExpression;
-		registerShortcut: $P command do: #debugExpression;
-		registerShortcut: $a command do: #addExample;
-		registerShortcut: $m command do: #browseImplementors;
-		registerShortcut: $n command do: #browseSenders;
-		registerShortcut: $x command do: #openOpenWindow;
-		registerShortcut: $b command do: #browse;
-		
-		" editor "
-		registerShortcut: $u do: #undo;
-		registerShortcut: $U do: #redo;
-		registerShortcut: $s command do: #save;
-		registerShortcut: $r command do: #openRepl;
-		registerShortcut: $, command do: #promptMenu;
-		registerShortcut: $/ do: #startSearch;
-		registerShortcut: $n do: #nextSearchResult;
-		registerShortcut: $f command do: #toggleFullscreen
-]
-
-{ #category : #'initialize-release' }
+{ #category : #shortcuts }
 SBEditor class >> registerShortcut: aShortcut do: aSymbol [
 
 	self shortcuts add: aShortcut asSandblockShortcut -> aSymbol
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #shortcuts }
 SBEditor class >> shortcutStringForAction: anAction [
 
 	^ String streamContents: [:stream |
@@ -263,19 +117,19 @@ SBEditor class >> shortcutStringForAction: anAction [
 		stream nextPut: $)]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #shortcuts }
 SBEditor class >> shortcuts [
 
 	^ Shortcuts ifNil: [Shortcuts := OrderedCollection new]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #shortcuts }
 SBEditor class >> shortcutsForAction: anAction [
 
 	^ self shortcuts select: [:assoc | assoc value = anAction] thenCollect: [:assoc | assoc key]
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #configuration }
 SBEditor class >> useInputMapping: anInputMappingClass [
 	" self useInputMapping: SBTextInputMapping "
 
@@ -875,6 +729,12 @@ SBEditor >> initialize [
 		registerGlobalShortcutListener: self;
 		resetState;
 		when: #selectionChanged send: #selectionChanged: to: paletteContainer
+]
+
+{ #category : #testing }
+SBEditor >> inputIsDefault [
+
+	^ inputMapping defaultState = #input
 ]
 
 { #category : #'insert/delete' }

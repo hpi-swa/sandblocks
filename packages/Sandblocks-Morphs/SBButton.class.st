@@ -97,6 +97,6 @@ SBButton >> widget: aMorph shortcut: aShortcut do: aBlock [
 	self addMorphBack: aMorph.
 	aShortcut ifNotNil: [
 		self addMorphBack: (StringMorph new
-			contents: aShortcut displayString;
+			contents: (aShortcut isCollection ifTrue: [aShortcut anyOne displayString] ifFalse: [aShortcut displayString]);
 			color: Color gray)]
 ]

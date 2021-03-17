@@ -2063,7 +2063,8 @@ SBBlock >> startInputSubstituting [
 SBBlock >> startOrAddToMultiSelection [
 	<multiSelectAction>
 
-	self sandblockEditor startOrAddToMultiSelection: self
+	self sandblockEditor startOrAddToMultiSelection: self.
+	self select
 ]
 
 { #category : #decorators }
