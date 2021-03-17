@@ -47,6 +47,9 @@ SBJsGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 		char = $^ ifTrue: [^ SBJsPrefixOperator new contents: 'return'; in: [:return | self replace: aBlock with: (return expression: return newNullBlock)]].
 		char = ${ ifTrue: [^ self replace: aBlock with: SBJsObjectLiteral new]].
 	
+	" FIXME: collides with (rarely used) comma operator "
+	char = $, ifTrue: [^ aBlock insertElementAfter].
+	
 	((SBJsInfixOperator validInfixOperators collect: #first) includes: char) ifTrue: [
 		^ self wrap: aBlock do: [:outer :inner | outer lhs: inner operator: char asString rhs: (outer newNullBlock label: 'expr'; deleteIfDismissed: char = $()] with: SBJsInfixOperator new].
 	char = Character space ifTrue: [
