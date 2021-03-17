@@ -1,8 +1,23 @@
 Class {
 	#name : #SBScmASTNode,
 	#superclass : #SBBlock,
+	#classVars : [
+		'DisplayParens'
+	],
 	#category : #'Sandblocks-Scheme'
 }
+
+{ #category : #'as yet unclassified' }
+SBScmASTNode class >> displayParens [
+
+	^ DisplayParens ifNil: [true]
+]
+
+{ #category : #'as yet unclassified' }
+SBScmASTNode class >> displayParens: aBoolean [
+
+	DisplayParens := aBoolean
+]
 
 { #category : #'as yet unclassified' }
 SBScmASTNode class >> icon [

@@ -172,25 +172,58 @@ SBScmExpression >> isSExpr [
 	^ true
 ]
 
-{ #category : #'special form checking' }
+{ #category : #layout }
 SBScmExpression >> layoutCommands [
 
 	| list |
-	list := [self elements collect: #layoutCommands separatedBy: [SBAlgebraCommand softLineOrGap]].
+	list := [self elements collect: #layoutCommands separatedBy: [self layoutSoftLineOrGap]].
 	
-	self elements ifEmpty: [^ SBAlgebraCommand container morph: self; data: {}].
+	self elements ifEmpty: [
+		^ SBAlgebraCommand container
+			morph: self;
+			data: {}].
 	
 	^ SBAlgebraCommand container
 		morph: self;
-		data: (self ifWellFormedSpecialFormDo: [:f | | e |
-			e := self elements collect: #layoutCommands.
-			f caseOf: {
-				['if'] -> [{e first. SBAlgebraCommand gap. e second. SBAlgebraCommand indent data: {SBAlgebraCommand softLineOrGap. e third. SBAlgebraCommand softLineOrGap. e fourth}}].
-				['define'] -> [{e first. SBAlgebraCommand gap. e second. SBAlgebraCommand indent data: (list value viewAllButFirst: 3)}].
-				['lambda'] -> [{e first. SBAlgebraCommand gap. e second. SBAlgebraCommand indent data: (list value viewAllButFirst: 3)}].
-				['begin'] -> [{e first. SBAlgebraCommand indent data: {SBAlgebraCommand hardLine}, (self elements viewAllButFirst collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine])}].
-				['cond'] -> [{e first. SBAlgebraCommand indent data: {SBAlgebraCommand hardLine}, (self elements viewAllButFirst collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine])}]
-			} otherwise: list] ifNone: [{list value first. SBAlgebraCommand indent data: (list value viewAllButFirst: 1)}])
+		data: (self
+			ifWellFormedSpecialFormDo: [:f | | e |
+				e := self elements collect: #layoutCommands.
+				f
+					caseOf: {
+						['if'] -> [
+							{
+								e first.
+								SBAlgebraCommand gap.
+								e second.
+								SBAlgebraCommand indent data: {self layoutSoftLineOrGap. e third. self layoutSoftLineOrGap. e fourth}}].
+						['define'] -> [{e first. SBAlgebraCommand gap. e second. SBAlgebraCommand indent data: (list value viewAllButFirst: 3)}].
+						['lambda'] -> [{e first. SBAlgebraCommand gap. e second. SBAlgebraCommand indent data: (list value viewAllButFirst: 3)}].
+						['begin'] -> [
+							{
+								e first.
+								SBAlgebraCommand indent data: {self layoutHardLine}, (self elements viewAllButFirst
+									collect: #layoutCommands
+									separatedBy: [self layoutHardLine])}].
+						['cond'] -> [
+							{
+								e first.
+								SBAlgebraCommand indent data: {self layoutHardLine}, (self elements viewAllButFirst
+									collect: #layoutCommands
+									separatedBy: [self layoutHardLine])}]}
+					otherwise: list]
+			ifNone: [{list value first. SBAlgebraCommand indent data: (list value viewAllButFirst: 1)}])
+]
+
+{ #category : #layout }
+SBScmExpression >> layoutHardLine [
+
+	^ SBAlgebraCommand hardLine withGap: SBScmASTNode displayParens not
+]
+
+{ #category : #layout }
+SBScmExpression >> layoutSoftLineOrGap [
+
+	^ SBAlgebraCommand softLineOrGap withGap: SBScmASTNode displayParens not
 ]
 
 { #category : #'as yet unclassified' }
@@ -238,7 +271,7 @@ SBScmExpression >> statements [
 SBScmExpression >> symbols [
 
 	self quoted ifTrue: [^ #('''(' ')')].
-	^ #('(' ')')
+	^ SBScmASTNode displayParens ifTrue: [#('(' ')')] ifFalse: [#(' ' ' ')]
 ]
 
 { #category : #'as yet unclassified' }

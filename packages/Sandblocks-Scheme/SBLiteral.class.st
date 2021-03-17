@@ -57,6 +57,12 @@ SBLiteral >> deleteBeforeCursor [
 ]
 
 { #category : #'as yet unclassified' }
+SBLiteral >> drawnColor [
+
+	^ Color transparent
+]
+
+{ #category : #'as yet unclassified' }
 SBLiteral >> initialize [
 
 	super initialize.

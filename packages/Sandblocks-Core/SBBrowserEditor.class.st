@@ -14,6 +14,14 @@ SBBrowserEditor >> canDiscardEdits [
 ]
 
 { #category : #'as yet unclassified' }
+SBBrowserEditor >> createEmptySmalltalkMethod [
+	<addAction>
+	<globalAction>
+
+	^ super createEmptySmalltalkMethod category: model selectedMessageCategoryName
+]
+
+{ #category : #'as yet unclassified' }
 SBBrowserEditor >> ensureOpened: aMethod [
 
 	| found |

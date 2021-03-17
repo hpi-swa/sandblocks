@@ -624,12 +624,17 @@ SBEditor >> createEmptySmalltalkMethod [
 	<globalAction>
 
 	| method |
-	self createArtefactInView: (method := SBStMethod new
+	
+	method := SBStMethod new
 		selector: ''
-		arguments: #()
-		class: ((self selectedArtefact ifNotNil: [:container | container relatedClass]) ifNil: [UIManager default chooseClassOrTrait ifNil: [^ self]]);
-		body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}])).
-	self startInput: method at: 1 replacingContents: true
+			arguments: #()
+			class: ((self selectedArtefact ifNotNil: [:container | container relatedClass]) ifNil: [UIManager default chooseClassOrTrait ifNil: [^ self]]);
+		body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}]).
+	
+	self createArtefactInView: method.
+	self startInput: method at: 1 replacingContents: true.
+	
+	^ method
 ]
 
 { #category : #accessing }
@@ -759,7 +764,9 @@ SBEditor >> filterEvent: anEvent for: aMorph [
 	
 	anEvent isKeystroke ifFalse: [^ anEvent ignore].
 	
-	anEvent keyValue = 251 ifTrue: [self toggleHelperTimer: anEvent type = #keyDown] ifFalse: [self removeHelperTimer].
+	anEvent keyValue = 251
+		ifTrue: [self toggleHelperTimer: anEvent type = #keyDown]
+		ifFalse: [self removeHelperTimer].
 	
 	(self performShortcutFor: anEvent)
 		ifTrue: [
@@ -1120,6 +1127,20 @@ SBEditor >> open: anObject withInterfaces: aCollection [
 SBEditor >> openAll: aCollection [
 
 	aCollection do: [:object | self open: object]
+]
+
+{ #category : #'actions creating' }
+SBEditor >> openFile [
+	<addAction>
+	<label: 'Open file ...'>
+	<globalAction>
+
+	| file |
+	
+	file := (UIManager default chooseFileMatching: '*') ifNil: [^ self].
+	FileStream
+		readOnlyFileNamed: file
+		do: [:stream | stream convertedFor: self objectInterfaceForDrop do: [:morph | self openMorphInView: morph]]
 ]
 
 { #category : #'insert/delete' }
