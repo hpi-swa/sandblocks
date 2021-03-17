@@ -4,6 +4,12 @@ Class {
 	#category : #'Sandblocks-Scheme'
 }
 
+{ #category : #testing }
+SBScmGrammarHandler >> characterCanStartInput: aCharacter [
+
+	^ (super characterCanStartInput: aCharacter) or: [aCharacter = $(]
+]
+
 { #category : #'block creation' }
 SBScmGrammarHandler >> newCommentBlock [
 
@@ -87,6 +93,7 @@ SBScmGrammarHandler >> wrapInMessageSend [
 SBScmGrammarHandler >> wrapInSExpr [
 	<action>
 	<inputAction>
+	<actionValidIf: #isExpression>
 	
 	self block sandblockEditor
 		do: ((SBWrapCommand newFor: self block containingArtefact)

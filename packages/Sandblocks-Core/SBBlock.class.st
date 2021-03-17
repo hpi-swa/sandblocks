@@ -866,6 +866,12 @@ SBBlock >> frameSize [
 	^ self colorPolicy ifNotNil: [:c | c selectionBorderWidth] ifNil: [0]
 ]
 
+{ #category : #accessing }
+SBBlock >> grammarHandler [
+
+	^ nil
+]
+
 { #category : #'event handling' }
 SBBlock >> handleDropMorph: anEvent [
 
@@ -1239,6 +1245,7 @@ SBBlock >> leftMostBlock [
 { #category : #actions }
 SBBlock >> leftRotate [
 	<action>
+	<actionValidIf: #hasChildSandblocks>
 
 	(self hasChildSandblocks not or: [self parentSandblock isNil]) ifTrue: [^ self].
 	(self isFirstChild or: [self isLastChild]) ifFalse: [^ self].

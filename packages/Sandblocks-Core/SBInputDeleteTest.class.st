@@ -71,6 +71,8 @@ SBInputDeleteTest >> testDeleteInEmptyString [
 	block addMorphBack: string.
 	editor startInput: string at: 0 replacingContents: false.
 	editor performForSelection: #deleteBeforeCursor.
+	self assert: block statements notEmpty.
+	editor performForSelection: #deleteBeforeCursor.
 	self assert: block statements isEmpty
 ]
 

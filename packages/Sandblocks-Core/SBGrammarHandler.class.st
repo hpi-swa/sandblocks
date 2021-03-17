@@ -24,6 +24,15 @@ SBGrammarHandler >> block: aBlock [
 	currentBlock := aBlock
 ]
 
+{ #category : #testing }
+SBGrammarHandler >> characterCanStartInput: aCharacter [
+	" Return true if this character can be a valid start of an expression.
+	  If so, pressing this character on a selection will replace the selection by a new unknown that
+	  is input this character. "
+	
+	^ aCharacter isAlphaNumeric
+]
+
 { #category : #actions }
 SBGrammarHandler >> copyString [
 	<action>
