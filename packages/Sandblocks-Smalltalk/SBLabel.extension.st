@@ -5,3 +5,7 @@ SBLabel >> isSmalltalk [
 
 	^ true
 ]
+
+{ #category : #'*Sandblocks-Smalltalk' }
+SBLabel >> updatePCFrom: anObject [
+]

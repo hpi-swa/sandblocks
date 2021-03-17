@@ -162,14 +162,15 @@ SBEditorCanvas >> scrollToShow: aMorph [
 	c := self currentPosition.
 	x := c x.
 	y := c y.
-	target right > viewport right ifTrue: [
-		x := (target right - viewport right) + c x min: (target left - viewport left) + c x].
-	target left < viewport left ifTrue: [
-		x := (target left - viewport left) + c x].
-	target bottom > viewport bottom ifTrue: [
-		y := (target bottom - viewport bottom) + c y min: (target top - viewport top) + c y].
-	target top < viewport top ifTrue: [
-		y := (target top - viewport top) + c y].
+	target right > viewport right ifTrue: [x := target right - viewport right + c x min: target left - viewport left + c x].
+	target left < viewport left ifTrue: [x := target left - viewport left + c x].
+	target bottom > viewport bottom ifTrue: [y := target bottom - viewport bottom + c y min: target top - viewport top + c y].
+	target top < viewport top ifTrue: [y := target top - viewport top + c y].
+	
+	" don't move on an axis where we cannot fit "
+	(viewport intersects: target) ifTrue: [
+		target width > viewport width ifTrue: [x := c x].
+		target height > viewport height ifTrue: [y := c y]].
 	
 	self animateToPosition: x @ y
 ]
