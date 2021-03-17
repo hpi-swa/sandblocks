@@ -18,7 +18,7 @@ SBJsLiteral >> acceptInputEvent: anEvent [
 { #category : #'as yet unclassified' }
 SBJsLiteral >> castToUnknownWhenEmpty [
 
-	^ true
+	^ self symbols first isNil
 ]
 
 { #category : #'as yet unclassified' }
@@ -36,7 +36,7 @@ SBJsLiteral >> contents: aString [
 { #category : #'as yet unclassified' }
 SBJsLiteral >> contentsChanged [
 
-	(self castToUnknownWhenEmpty and: [self currentTextMorph contents isEmpty]) ifTrue: [
+	(self castToUnknownWhenEmpty and: [self currentTextMorph contents isEmpty and: [self sandblockEditor ifNotNil: [:e | e mode = #input] ifNil: [false]]]) ifTrue: [
 		self replaceWithUnknown]
 ]
 
@@ -44,6 +44,16 @@ SBJsLiteral >> contentsChanged [
 SBJsLiteral >> currentTextMorph [
 
 	^ self firstSubmorph
+]
+
+{ #category : #'as yet unclassified' }
+SBJsLiteral >> deleteBeforeCursor [
+	<action>
+	<inputAction>
+	
+	self contents ifEmpty: [^ self replaceWithUnknown].
+	
+	^ super deleteBeforeCursor
 ]
 
 { #category : #'as yet unclassified' }

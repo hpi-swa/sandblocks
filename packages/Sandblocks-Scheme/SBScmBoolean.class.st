@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBScmBoolean >> acceptInputEvent: anEvent [
+
+	(#($f $t) includes: anEvent keyCharacter)
+		ifTrue: [self contents: anEvent keyCharacter asString]
+		ifFalse: [
+			self currentTextMorph deleteBeforeCursor.
+			SBScmGrammarHandler new perform: anEvent keyCharacter for: self empty: false]
+]
+
+{ #category : #'as yet unclassified' }
 SBScmBoolean >> symbols [
 
 	^ #('#' nil)

@@ -18,7 +18,7 @@ SBLiteral >> acceptInputEvent: anEvent [
 { #category : #'as yet unclassified' }
 SBLiteral >> castToUnknownWhenEmpty [
 
-	^ true
+	^ self symbols first isNil
 ]
 
 { #category : #'as yet unclassified' }
@@ -44,6 +44,16 @@ SBLiteral >> contentsChanged [
 SBLiteral >> currentTextMorph [
 
 	^ self firstSubmorph
+]
+
+{ #category : #'as yet unclassified' }
+SBLiteral >> deleteBeforeCursor [
+	<action>
+	<inputAction>
+	
+	self contents ifEmpty: [^ self replaceWithUnknown].
+	
+	^ super deleteBeforeCursor
 ]
 
 { #category : #'as yet unclassified' }

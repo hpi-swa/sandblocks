@@ -16,7 +16,7 @@ SBStLiteral >> acceptInputEvent: anEvent [
 { #category : #'as yet unclassified' }
 SBStLiteral >> castToUnknownWhenEmpty [
 
-	^ false
+	^ self symbols first isNil
 ]
 
 { #category : #'as yet unclassified' }
@@ -42,6 +42,16 @@ SBStLiteral >> contentsChanged [
 SBStLiteral >> currentTextMorph [
 
 	^ text
+]
+
+{ #category : #'as yet unclassified' }
+SBStLiteral >> deleteBeforeCursor [
+	<action>
+	<inputAction>
+	
+	self contents ifEmpty: [^ self replaceWithUnknown].
+	
+	^ super deleteBeforeCursor
 ]
 
 { #category : #'as yet unclassified' }

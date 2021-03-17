@@ -96,6 +96,13 @@ SBLanguageBox >> layoutCommands [
 			self root layoutCommands}
 ]
 
+{ #category : #printing }
+SBLanguageBox >> printOn: aStream [
+
+	aStream nextPutAll: language.
+	aStream nextPutAll: ' language box'
+]
+
 { #category : #accessing }
 SBLanguageBox >> root [
 
