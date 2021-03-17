@@ -110,6 +110,12 @@ SBGrammarHandler >> newCommentBlock [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'block creation' }
+SBGrammarHandler >> newNullBlock [
+
+	^ SBUnknown new grammarHandler: self
+]
+
 { #category : #callbacks }
 SBGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 

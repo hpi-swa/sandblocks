@@ -203,14 +203,14 @@ SBStGrammarHandler >> insertHaltBelow [
 SBStGrammarHandler >> insertLabelAbove [
 	<action>
 
-	self insert: self block newCommentBlock aboveOrBelow: true
+	self insert: self newCommentBlock aboveOrBelow: true
 ]
 
 { #category : #actions }
 SBStGrammarHandler >> insertLabelBelow [
 	<action>
 
-	self insert: self block newCommentBlock aboveOrBelow: false
+	self insert: self newCommentBlock aboveOrBelow: false
 ]
 
 { #category : #'block creation' }
@@ -251,7 +251,7 @@ SBStGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 		char = $$ ifTrue: [^ self replace: aBlock with: (SBStCharacter new contents: '')].
 		char = $' ifTrue: [^ self replace: aBlock with: (SBStString new contents: '')].
 		char = $# ifTrue: [^ self replace: aBlock with: (SBStSymbol new contents: '')].
-		char = $" ifTrue: [^ self replace: aBlock with: aBlock parentSandblock newCommentBlock].
+		char = $" ifTrue: [^ self replace: aBlock with: self newCommentBlock].
 		((char = Character space or: [char = Character cr]) and: [aBlock isStatement]) ifTrue: [^ self emptyLine: aBlock].
 		(char = $: and: [aBlock parentSandblock isBlockBody and: [aBlock parentSandblock isMethodBody not]]) ifTrue: [ | block |
 			block := aBlock parentSandblock.

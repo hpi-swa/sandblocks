@@ -42,6 +42,12 @@ SBLanguageBox class >> suggestion [
 ]
 
 { #category : #testing }
+SBLanguageBox >> actionProviders [
+
+	^ {self grammarHandler. self}
+]
+
+{ #category : #testing }
 SBLanguageBox >> canAppearInBlockBody [
 
 	^ true
@@ -94,6 +100,12 @@ SBLanguageBox >> layoutCommands [
 				ifTrue: [SBAlgebraCommand hardLine withGap: true]
 				ifFalse: [SBAlgebraCommand gap].
 			self root layoutCommands}
+]
+
+{ #category : #testing }
+SBLanguageBox >> newNullBlock [
+
+	^ self grammarHandler newNullBlock
 ]
 
 { #category : #printing }
