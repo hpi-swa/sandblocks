@@ -5,24 +5,40 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStClassMethodEditor >> category: aString superclass: aClass methodsDo: aBlock [
+
+	self addMorphBack: (SBStClass new
+		category: aString;
+		superClassName: aClass name;
+		yourself).
+	
+	aBlock
+		value: [:category :methods |
+			methods do: [:m | m hResizing: #spaceFill].
+			self addMorphBack: ((SBStMethodCategory new class: nil category: category collapsed: true) addAllMorphs: methods)]
+		value: self firstSubmorph
+]
+
+{ #category : #'as yet unclassified' }
 SBStClassMethodEditor >> class: aClass [
 
+	self hasSubmorphs ifTrue: [^ self].
+	
 	self addMorphBack: (SBStClass newFor: aClass at: 0 @ 0).
 	
-	SBToggledCode
-		comment: ''
-		active: 2
-		do: {
-			[
-				aClass methodDict valuesDo: [:method |
-					self addMorphBack: ((SBStMethod newFor: method at: 0 @ 0)
-						toggleCollapsed;
-						hResizing: #spaceFill;
-						yourself)]].
-			[
-				aClass organization categories do: [:category |
-					self addMorphBack: (SBStMethodCategory new class: aClass category: category collapsed: aClass methodDict size > 20)]]
-		}
+	SBToggledCode comment: '' active: 2 do: {
+		[
+			aClass methodDict valuesDo: [:method |
+				self addMorphBack: ((SBStMethod newFor: method at: 0 @ 0)
+					toggleCollapsed;
+					hResizing: #spaceFill;
+					yourself)]].
+		[
+			aClass organization categories do: [:category |
+				self addMorphBack: (SBStMethodCategory new
+					class: aClass
+					category: category
+					collapsed: aClass methodDict size > 20)]]}
 ]
 
 { #category : #'as yet unclassified' }
@@ -46,7 +62,9 @@ SBStClassMethodEditor >> initialize [
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		cellGap: 4;
-		attachDecorator: SBMoveDecorator new
+		layoutInset: 4;
+		attachDecorator: SBMoveDecorator new;
+		attachDecorator: SBResizableDecorator new
 ]
 
 { #category : #'as yet unclassified' }

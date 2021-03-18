@@ -66,7 +66,7 @@ SBPaletteContainer >> container: aBlock [
 
 	^ SBPalettePreviewContainer new
 		methodClass: nil;
-		addMorphBack: aBlock
+		addMorphBack: (self markCopyPlaceholder: aBlock)
 ]
 
 { #category : #'as yet unclassified' }
@@ -109,6 +109,14 @@ SBPaletteContainer >> layoutCommands [
 	^ SBAlgebraCommand container
 		morph: self;
 		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine])
+]
+
+{ #category : #'as yet unclassified' }
+SBPaletteContainer >> markCopyPlaceholder: aBlock [
+
+	(aBlock nextBlockThat: [:m | m isUnknown]) ifNotNil: [:m |
+		m setProperty: #copyPlaceholder toValue: true].
+	^ aBlock
 ]
 
 { #category : #'as yet unclassified' }

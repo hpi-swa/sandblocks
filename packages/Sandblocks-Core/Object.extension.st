@@ -57,7 +57,7 @@ Object >> convertedFor: anInterfaceCollection do: aBlock [
 	
 	convert := SBConvert new success: [:object | (object satisfies: anInterfaceCollection) ifTrue: [^ aBlock value: object]].
 	
-	self converterOptionsDo: [:option | option apply: convert].
+	self object converterOptionsDo: [:option | option apply: convert].
 	
 	^ nil
 ]

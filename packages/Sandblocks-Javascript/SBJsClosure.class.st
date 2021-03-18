@@ -115,6 +115,6 @@ SBJsClosure >> writeSourceOn: aStream [
 	aStream nextPutAll: '('.
 	self arguments submorphs do: [:a | a writeSourceOn: aStream] separatedBy: [aStream nextPutAll: ', '].
 	aStream nextPutAll: ') => {'.
-	self statements do: [:s | s writeSourceOn: aStream] separatedBy: [aStream nextPut: $;; cr].
+	self statements do: [:s | s writeSourceOn: aStream. aStream nextPut: $;; cr].
 	aStream nextPut: $}
 ]

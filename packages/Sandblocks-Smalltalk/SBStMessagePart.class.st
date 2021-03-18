@@ -113,7 +113,6 @@ SBStMessagePart >> insertUnknownAfterAndInput: aBoolean [
 	self sandblockEditor currentInputCommand shouldMergeWithNext: true.
 	
 	self sandblockEditor
-		endInput;
 		do: ((SBInsertCommand newFor: self containingArtefact)
 			morph: new;
 			container: self owner;
@@ -332,7 +331,7 @@ SBStMessagePart >> wrapWithWatch [
 	<action>
 	<inputAction>
 
-	self messageSend wrapWithWatch
+	self messageSend performAction: #wrapWithWatch
 ]
 
 { #category : #'as yet unclassified' }

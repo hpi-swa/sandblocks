@@ -65,7 +65,9 @@ SBScmASTNode >> grammarHandler [
 SBScmASTNode >> inLanguageBox: converter [
 	<convert>
 	
-	^ converter do: [SBLanguageBox new source: self sourceString lang: 'scheme']
+	^ converter
+		if: [self validSubtree]
+		do: [SBLanguageBox new source: self sourceString lang: 'scheme']
 ]
 
 { #category : #'initialize-release' }

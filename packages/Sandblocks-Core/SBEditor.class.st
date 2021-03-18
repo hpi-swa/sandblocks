@@ -202,9 +202,14 @@ SBEditor >> buildBottomPanel [
 			color: Color transparent);
 		addMorphBack: (SBButton new
 			balloonText: 'Convert to ...';
+			icon: SBIcon iconEye
+				shortcut: (self class anyShortcutForAction: #wrapWithWatch)
+				do: [self selection performAction: #wrapWithWatch]);
+		addMorphBack: (SBButton new
+			balloonText: 'Convert to ...';
 			icon: SBIcon iconRetweet
 				shortcut: (self class anyShortcutForAction: #convertTo)
-				do: [self selection convertTo]);
+				do: [self selection performAction: #convertTo]);
 		addMorphBack: (SBButton new
 			balloonText: 'Copy';
 			icon: SBIcon iconCopy
@@ -338,6 +343,7 @@ SBEditor >> clearShortcuts [
 { #category : #'event handling' }
 SBEditor >> click: anEvent [
 
+	anEvent yellowButtonPressed ifTrue: [^ self promptGlobalAction].
 	self select: nil
 ]
 
@@ -575,8 +581,8 @@ SBEditor >> endInput [
 	self cancelInput.
 	
 	command hasChange
-		ifTrue: [self do: command].
-	history noMoreMerge
+		ifTrue: [self do: command]
+		ifFalse: [history noMoreMerge]
 ]
 
 { #category : #'action helpers' }
@@ -1138,6 +1144,7 @@ SBEditor >> promptAddArtifact [
 
 { #category : #'action helpers' }
 SBEditor >> promptChangeColorPolicy [
+	<globalAction>
 
 	| policy |
 	policy := (UIManager default chooseFrom: SBColorPolicy withAllSubclasses values: SBColorPolicy withAllSubclasses) ifNil: [^ self].
@@ -1147,6 +1154,7 @@ SBEditor >> promptChangeColorPolicy [
 
 { #category : #'action helpers' }
 SBEditor >> promptChangeCompile [
+	<globalAction>
 
 	| index labels |
 	labels := {'Compile on save'. 'Compile on change'}.
@@ -1154,6 +1162,22 @@ SBEditor >> promptChangeCompile [
 	index < 1 ifTrue: [^ self].
 	
 	compileTime := index = 1 ifTrue: [#compileOnSave] ifFalse: [#compileOnChange]
+]
+
+{ #category : #'action helpers' }
+SBEditor >> promptGlobalAction [
+	<action>
+
+	| options index |
+	options := Array streamContents: [:s |
+		globalShortcutListeners do: [:listener |
+			(Pragma allNamed: #globalAction in: listener class) do: [:p |
+				s nextPut: listener -> p]]].
+	
+	index := UIManager default chooseFrom: (options collect: [:option |
+		option value selector, (' ', (SBEditor shortcutStringForAction: option value selector))]).
+	
+	index > 0 ifTrue: [(options at: index) key perform: (options at: index) value selector]
 ]
 
 { #category : #actions }

@@ -44,7 +44,9 @@ SBJsASTNode >> grammarHandler [
 SBJsASTNode >> inLanguageBox: converter [
 	<convert>
 	
-	^ converter do: [SBLanguageBox new source: self sourceString lang: 'js']
+	^ converter
+		if: [self validSubtree]
+		do: [SBLanguageBox new source: self sourceString lang: 'js']
 ]
 
 { #category : #'initialize-release' }

@@ -173,7 +173,7 @@ SBStBasicMethod >> commandPaletteClass [
 { #category : #'as yet unclassified' }
 SBStBasicMethod >> compiledMethod [
 
-	^ self methodClass compiledMethodAt: self selector asSymbol ifAbsent: [self]
+	^ (self methodClass ifNil: [^ self]) compiledMethodAt: self selector asSymbol ifAbsent: [self]
 ]
 
 { #category : #'as yet unclassified' }
@@ -548,7 +548,10 @@ SBStBasicMethod >> reloadMethod [
 SBStBasicMethod >> reloadMethodInPlace [
 
 	self externalModification: false.
-	^ self replaceBy: (self compiledMethod asSandblock position: self position)
+	^ self replaceBy: (self compiledMethod asSandblock
+		position: self position;
+		hResizing: self hResizing;
+		yourself)
 ]
 
 { #category : #'as yet unclassified' }
@@ -566,7 +569,7 @@ SBStBasicMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
 	
 	self ignoreChangeNotifierDuring: [
 		newSelector := self methodClass compile: text asText classified: self category.
-		(self currentClass ~= self methodClass or: [self currentSelector ~= #'' and: [newSelector ~= self currentSelector]]) ifTrue: [
+		(self currentClass object ~= self methodClass object or: [self currentSelector ~= #'' and: [newSelector ~= self currentSelector]]) ifTrue: [
 			self clearCache.
 			self currentClass removeSelector: self currentSelector]].
 	self currentSelector: newSelector.

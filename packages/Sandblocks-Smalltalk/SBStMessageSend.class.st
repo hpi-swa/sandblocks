@@ -495,7 +495,7 @@ SBStMessageSend >> useSuggestion: aString [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> valid [
 
-	^ self validSelector and: [self isDefined]
+	^ self validSelector and: [self isDefined and: [self signature valid]]
 ]
 
 { #category : #'as yet unclassified' }

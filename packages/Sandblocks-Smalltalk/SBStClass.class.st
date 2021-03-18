@@ -34,6 +34,13 @@ SBStClass >> artefact [
 	^ self shownClass
 ]
 
+{ #category : #'class protocol' }
+SBStClass >> canUnderstand: aSymbol [
+	" we may not have been saved yet "
+	
+	^ class ifNotNil: [:c | c canUnderstand: aSymbol] ifNil: [false]
+]
+
 { #category : #'as yet unclassified' }
 SBStClass >> category [
 
@@ -70,6 +77,13 @@ SBStClass >> classVariables [
 	^ classVariables
 ]
 
+{ #category : #'class protocol' }
+SBStClass >> compiledMethodAt: aSymbol ifAbsent: aBlock [
+	" we may not have been saved yet "
+	
+	^ class ifNotNil: [:c | c compiledMethodAt: aSymbol ifAbsent: aBlock] ifNil: [aBlock value]
+]
+
 { #category : #'as yet unclassified' }
 SBStClass >> containingArtefact [
 
@@ -95,6 +109,12 @@ SBStClass >> createSubclass [
 		category: self category;
 		superClassName: className contents;
 		yourself)
+]
+
+{ #category : #'as yet unclassified' }
+SBStClass >> declarations [
+
+	^ #()
 ]
 
 { #category : #'as yet unclassified' }
@@ -148,6 +168,14 @@ SBStClass >> drawnColor [
 SBStClass >> ensureExpanded [
 ]
 
+{ #category : #'class protocol' }
+SBStClass >> inheritsFrom: aClass [
+
+	| superclass |
+	superclass := Smalltalk at: self superClassName asSymbol.
+	^ superclass = aClass or: [superclass inheritsFrom: aClass]
+]
+
 { #category : #'as yet unclassified' }
 SBStClass >> initialize [
 
@@ -162,6 +190,7 @@ SBStClass >> initialize [
 		layoutInset: 6 withScalingFactor;
 		addMorphBack: (className := SBTextBubble new
 			emphasis: TextEmphasis bold;
+			placeholderText: 'Class Name';
 			layoutInset: 6 withScalingFactor;
 			font: (TextStyle default fontOfPointSize: 12));
 		addRow: 'SuperClass' with: (superClassName := SBStClassNameInput new contents: 'Object');
@@ -203,6 +232,12 @@ SBStClass >> isTopLevel [
 ]
 
 { #category : #'as yet unclassified' }
+SBStClass >> name [
+
+	^ self shownClassName
+]
+
+{ #category : #'as yet unclassified' }
 SBStClass >> object [
 
 	^ self relatedClass ifNil: [self]
@@ -212,6 +247,12 @@ SBStClass >> object [
 SBStClass >> preventOcclusion [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBStClass >> printOn: aStream [
+
+	aStream nextPutAll: self shownClassName
 ]
 
 { #category : #'as yet unclassified' }
@@ -225,7 +266,7 @@ SBStClass >> references [
 { #category : #'as yet unclassified' }
 SBStClass >> relatedClass [
 
-	^ class
+	^ class ifNil: [self]
 ]
 
 { #category : #'as yet unclassified' }
@@ -250,19 +291,19 @@ SBStClass >> saveTryFixing: aBoolean quick: aQuickBoolean [
 	newClassName := self shownClassName.
 	environment := oldClass ifNotNil: #environment ifNil: [self environment].
 	
-	((oldClass isNil or: [oldName ~= newClassName])
-		and: [environment includesKey: newClassName asSymbol]) ifTrue:
-			[(self confirm: ((newClassName , ' is an existing class in this system.
+	((oldClass isNil or: [oldName ~= newClassName]) and: [environment includesKey: newClassName asSymbol]) ifTrue: [
+		(self confirm: ((newClassName, ' is an existing class in this system.
 Redefining it might cause serious problems.
-Is this really what you want to do?') asText makeBoldFrom: 1 to: newClassName size))
-				ifFalse: [^ false]].
+Is this really what you want to do?') asText
+			makeBoldFrom: 1
+			to: newClassName size)) ifFalse: [^ false]].
 	
-	self flag: #fixme. " also hits comments??? "
+	self flag: #fixme.
+	" also hits comments??? "
 	
 	oldClass ifNotNil: [
 		blockReferences := self references.
-		references := (self systemNavigation allCallsOn: oldName asSymbol)
-			collect: [:m | m actualClass -> (m sourceString copyReplaceTokens: oldName with: newClassName)].
+		references := (self systemNavigation allCallsOn: oldName asSymbol) collect: [:m | m actualClass -> (m sourceString copyReplaceTokens: oldName with: newClassName)].
 		oldClass rename: newClassName].
 	
 	class := environment beCurrentDuring: [
@@ -326,12 +367,6 @@ SBStClass >> superclass [
 SBStClass >> textContents [
 
 	^ self shownClass name
-]
-
-{ #category : #'as yet unclassified' }
-SBStClass >> valid [
-
-	^ className contents notEmpty and: [superClassName contents notEmpty]
 ]
 
 { #category : #'as yet unclassified' }

@@ -32,7 +32,7 @@ SBStASTNode >> asMessagePart: aConverter [
 	
 	^ aConverter
 		if: [self currentTextMorph notNil]
-		do: [SBStMessagePart new contents: self contents]
+		do: [SBStMessagePart new contents: self currentTextMorph contents]
 ]
 
 { #category : #converting }
@@ -143,7 +143,9 @@ SBStASTNode >> guessedClass [
 SBStASTNode >> inLanguageBox: converter [
 	<convert>
 	
-	^ converter do: [SBLanguageBox new source: self sourceString lang: 'smalltalk']
+	^ converter
+		if: [self validSubtree]
+		do: [SBLanguageBox new source: self sourceString lang: 'smalltalk']
 ]
 
 { #category : #'initialize-release' }

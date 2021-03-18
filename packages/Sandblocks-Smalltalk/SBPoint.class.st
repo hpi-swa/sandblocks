@@ -27,7 +27,7 @@ SBPoint class >> newFor: aBlock [
 	(aBlock isKindOf: SBPoint) ifTrue: [^ aBlock veryDeepCopy].
 
 	^ self new
-		x: aBlock receiver y: aBlock arguments first;
+		x: aBlock receiver veryDeepCopy y: aBlock arguments first veryDeepCopy;
 		type: Point
 ]
 
@@ -74,13 +74,14 @@ SBPoint >> initialize [
 	self
 		layoutPolicy: SBHorizontalLayout new;
 		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap
+		hResizing: #shrinkWrap;
+		x: (SBStNumber new contents: '0') y: (SBStNumber new contents: '0')
 ]
 
 { #category : #'as yet unclassified' }
 SBPoint >> messageSelector [
 
-	^ type = ECSVector2 ifTrue: [#,] ifFalse: [#@]
+	^ #@
 ]
 
 { #category : #'as yet unclassified' }
@@ -194,6 +195,7 @@ SBPoint >> writeSourceOn: aStream [
 SBPoint >> x: aXBlock y: aYBlock [
 
 	self
+		removeAllMorphs;
 		addMorphBack: aXBlock;
 		addMorphBack: (SBStringMorph new contents: '@');
 		addMorphBack: aYBlock

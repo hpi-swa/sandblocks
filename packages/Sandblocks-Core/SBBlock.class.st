@@ -435,7 +435,7 @@ SBBlock >> convertTo [
 	
 	index := UIManager default chooseFrom: (options collect: #first).
 	index > 0 ifTrue: [
-		self sandblockEditor do: ((SBReplaceCommand newOrEditFor: self containingArtefact)
+		self sandblockEditor do: ((SBReplaceCommand newOrEditFor: (self containingArtefact = self ifTrue: [nil] ifFalse: [self containingArtefact]))
 			target: self;
 			replacer: (options at: index) second)]
 ]
@@ -882,24 +882,27 @@ SBBlock >> handleDropMorph: anEvent [
 { #category : #'dropping/grabbing' }
 SBBlock >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
-	aBlock unpackSelection object
+	aBlock unpackSelection
 		convertedFor: self objectInterfaceForDrop
 		do: [:block | | reference |
-			self sandblockEditor do: (aBoolean
+			aBoolean
 				ifTrue: [ | insert |
 					insert := self insertCommandRequest: false near: aMorph.
 					reference := insert container.
-					SBCombinedCommand newWith: {
+					self sandblockEditor do: (SBCombinedCommand newWith: {
 						insert.
 						(SBReplaceCommand newOrEditFor: self containingArtefact)
 							target: insert morph;
 							replacer: block
-					}]
+					})]
 				ifFalse: [
 					reference := self.
-					(SBReplaceCommand newOrEditFor: self containingArtefact)
-						target: self;
-						replacer: block]).
+					aBlock wrapsAround
+						ifTrue: [self select; wrapSelectionWith: block]
+						ifFalse: [
+							self sandblockEditor do: ((SBReplaceCommand newOrEditFor: self containingArtefact)
+								target: self;
+								replacer: block)]].
 			block
 				position: (reference containingSandblock = self sandblockEditor
 					ifTrue: [((reference transformFrom: nil) globalPointToLocal: anEvent position) asIntegerPoint]
@@ -1561,6 +1564,14 @@ SBBlock >> outOfWorld: aWorld [
 	self triggerEvent: #outOfWorld
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> outerArtefact [
+
+	| a |
+	a := self containingArtefact.
+	^ a = self ifTrue: [self parentSandblock ifNotNil: #containingSandblock] ifFalse: [a]
+]
+
 { #category : #layout }
 SBBlock >> outerBounds [
 
@@ -1592,7 +1603,7 @@ SBBlock >> pasteAboveOrBelow: anAboveBoolean [
 
 	| copyBuffer |
 	copyBuffer := self sandblockEditor copyBuffer ifNil: [^ self].
-	copyBuffer wrapsAround ifTrue: [^ self wrapSelectionWith: copyBuffer].
+	copyBuffer wrapsAround ifTrue: [^ self wrapSelectionWith: copyBuffer unpackSelection veryDeepCopy].
 	copyBuffer submorphs veryDeepCopy withIndexDo: [:target :index |
 		target object
 			convertedFor: (self parentSandblock
@@ -1659,6 +1670,13 @@ SBBlock >> placeMark [
 		ifFalse: [
 			self sandblockEditor waitForLetterDo: [:letter |
 				self attachDecorator: (SBMarkedDecorator new letter: letter)]]
+]
+
+{ #category : #'insert/delete' }
+SBBlock >> placeholder [
+
+	self allMorphsDo: [:m | (m valueOfProperty: #copyPlaceholder ifAbsent: [false]) ifTrue: [^ m]].
+	^ nil
 ]
 
 { #category : #caching }
@@ -1740,7 +1758,7 @@ SBBlock >> refocus [
 { #category : #'artefact protocol' }
 SBBlock >> relatedClass [
 
-	^ self object class
+	^ self object
 ]
 
 { #category : #'colors and color policies' }
@@ -1767,8 +1785,9 @@ SBBlock >> replaceWithCopyBuffer [
 	copyBuffer := self sandblockEditor copyBuffer.
 	
 	copyBuffer ifNotNil: [ | new |
-		new := copyBuffer unpackSelection veryDeepCopy.
+		copyBuffer wrapsAround ifTrue: [^ self wrapSelectionWith: copyBuffer unpackSelection veryDeepCopy].
 		
+		new := copyBuffer unpackSelection veryDeepCopy.
 		new
 			convertedFor: self objectInterface
 			do: [:repr |
@@ -1934,7 +1953,9 @@ SBBlock >> selectRightMostBlock [
 
 	self containingStatement ifNil: [self rightMostBlock select] ifNotNil: [:statement | statement rightMostBlock select].
 	
-	self sandblockEditor maybeStartInputFromEnd
+	self sandblockEditor
+		maybeStartInputFromEnd;
+		updateVerticalSelectionPosition
 ]
 
 { #category : #actions }
@@ -2038,7 +2059,6 @@ SBBlock >> startInputAt: aNumber replacingContents: aBoolean [
 { #category : #actions }
 SBBlock >> startInputAtEnd [
 	<action>
-	<actionValidIf: #canInput>
 
 	self sandblockEditor startInput: self at: 9e8 replacingContents: false
 ]
@@ -2046,7 +2066,6 @@ SBBlock >> startInputAtEnd [
 { #category : #actions }
 SBBlock >> startInputAtStart [
 	<action>
-	<actionValidIf: #canInput>
 
 	self sandblockEditor startInput: self at: 1 replacingContents: false
 ]
@@ -2054,7 +2073,6 @@ SBBlock >> startInputAtStart [
 { #category : #actions }
 SBBlock >> startInputSubstituting [
 	<action>
-	<actionValidIf: #canInput>
 
 	self sandblockEditor startInput: self at: 1 replacingContents: true
 ]
@@ -2238,6 +2256,13 @@ SBBlock >> validActions [
 	^ self actions select: [:action | self isValidAction: action]
 ]
 
+{ #category : #testing }
+SBBlock >> validSubtree [
+
+	self allBlocksDo: [:b | b valid ifFalse: [^ false]].
+	^ true
+]
+
 { #category : #copying }
 SBBlock >> veryDeepCopyWith: aCopier [
 
@@ -2334,11 +2359,17 @@ SBBlock >> wrapSelectionWith: aSelection [
 	
 	self sandblockEditor doMultiSelection: [:selected |
 		(SBRecordedCommand newFor: self containingArtefact) record: [:recorder | | new placeholder |
-			new := aSelection veryDeepCopy.
+			new := aSelection.
 			placeholder := new placeholder.
-			recorder replace: selected first with: new firstSubmorph.
+			recorder replace: selected first with: new.
 			recorder replace: placeholder with: selected first.
 			recorder moveAll: selected allButFirst after: selected first]].
 	
 	self parentSandblock postDuplicate
+]
+
+{ #category : #'insert/delete' }
+SBBlock >> wrapsAround [
+
+	^ self placeholder notNil
 ]

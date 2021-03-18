@@ -220,13 +220,6 @@ SBSelection >> parentSandblock [
 ]
 
 { #category : #'as yet unclassified' }
-SBSelection >> placeholder [
-
-	self allMorphsDo: [:m | (m valueOfProperty: #copyPlaceholder ifAbsent: [false]) ifTrue: [^ m]].
-	^ nil
-]
-
-{ #category : #'as yet unclassified' }
 SBSelection >> relatedClass [
 
 	^ self methodClass
@@ -284,12 +277,6 @@ SBSelection >> wantsInteractiveErrorCorrection [
 SBSelection >> wantsToBeDroppedInto: aMorph [
 
 	^ aMorph isSandblock
-]
-
-{ #category : #'as yet unclassified' }
-SBSelection >> wrapsAround [
-
-	^ self placeholder notNil
 ]
 
 { #category : #'as yet unclassified' }

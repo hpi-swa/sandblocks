@@ -52,6 +52,8 @@ SBStClassNameInput >> promptChangeClass [
 { #category : #'as yet unclassified' }
 SBStClassNameInput >> selectedClass [
 
+	self contents ifEmpty: [^ nil].
+	
 	^ (self contents endsWith: ' class')
 		ifTrue: [(Smalltalk at: (self contents allButLast: ' class' size) asSymbol) class]
 		ifFalse: [Smalltalk at: self contents asSymbol]
@@ -72,4 +74,10 @@ SBStClassNameInput >> startInputAt: aNumber replacingContents: aBoolean [
 	self promptChangeClass.
 	
 	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBStClassNameInput >> wantsInput [
+
+	^ false
 ]

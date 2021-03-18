@@ -245,7 +245,7 @@ Morph >> nextBlock [
 	self childSandblocksDo: [:first | ^ first].
 	
 	^ (self adjacentBlock: 1) ifNil: [
-		self parentSandblock parentAdjacentBlock: 1]
+		(self parentSandblock ifNil: [^ nil]) parentAdjacentBlock: 1]
 ]
 
 { #category : #'*Sandblocks-Core-hierarchy' }

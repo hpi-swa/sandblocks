@@ -55,3 +55,9 @@ SBConvertOption >> name: aString [
 
 	name := aString
 ]
+
+{ #category : #'as yet unclassified' }
+SBConvertOption >> printOn: aStream [
+
+	aStream nextPutAll: self className; space; nextPutAll: self name
+]

@@ -48,6 +48,12 @@ SBStMethod >> deleteCommandFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMethod >> doubleClick: anEvent [
+
+	self toggleCollapsed
+]
+
+{ #category : #'as yet unclassified' }
 SBStMethod >> ensureExpanded [
 
 	self isCollapsed ifTrue: [self toggleCollapsed]
@@ -116,7 +122,7 @@ SBStMethod >> messageParts [
 { #category : #'as yet unclassified' }
 SBStMethod >> methodClass [
 
-	^ classPrefix selectedClass
+	^ classPrefix selectedClass ifNil: [self outerArtefact ifNotNil: #relatedClass]
 ]
 
 { #category : #'as yet unclassified' }
@@ -157,13 +163,7 @@ SBStMethod >> selector: aSymbol arguments: aCollection class: aClass [
 
 	super selector: aSymbol arguments: aCollection class: aClass.
 	signature selector: aSymbol arguments: aCollection.
-	classPrefix object: aClass.
-	self savedMethodHasComments ifTrue: [
-		self firstSubmorph
-			addMorphBack: (Morph new
-				color: Color transparent;
-				extent: 12 @ 0);
-			addMorphBack: (SBIcon iconWarning balloonText: 'Method has comments that cannot be saved')]
+	classPrefix object: aClass
 ]
 
 { #category : #'as yet unclassified' }

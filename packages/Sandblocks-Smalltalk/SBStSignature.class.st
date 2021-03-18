@@ -203,9 +203,12 @@ SBStSignature >> minExtent [
 ]
 
 { #category : #'as yet unclassified' }
-SBStSignature >> numArgs [
+SBStSignature >> numArguments [
 
-	^ self submorphCount // 2
+	self selector ifEmpty: [^ 1].
+	self selector last = $: ifTrue: [^ (self extractKeywords: self selector) size].
+	self selector first isSpecial ifTrue: [^ 1].
+	^ 0
 ]
 
 { #category : #'as yet unclassified' }
@@ -329,6 +332,12 @@ SBStSignature >> textMorphFor: aString [
 	text := SBStMessagePart new contents: aString.
 	"SBColorPolicy boldMessageSends ifTrue: [text emphasis: TextEmphasis bold]."
 	^ text
+]
+
+{ #category : #'as yet unclassified' }
+SBStSignature >> valid [
+
+	^ self submorphCount // 2 = self numArguments
 ]
 
 { #category : #'as yet unclassified' }

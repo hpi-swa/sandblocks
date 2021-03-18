@@ -9,7 +9,6 @@ SBStPalette class >> buildOn: aContainer [
 
 	aContainer
 		addHeader: 'Smalltalk';
-		
 		addSectionHeader: 'Expressions';
 		addBlock: 'Message Send'
 			as: (SBStMessageSend new receiver: (self newNullBlock: 'receiver') selector: #message);
@@ -17,45 +16,91 @@ SBStPalette class >> buildOn: aContainer [
 			as: (SBStAssignment new binding: (self newNullBlock: 'name') value: (self newNullBlock: 'expr'));
 		addSectionHeader: 'Data & Methods';
 		addBlock: 'Array' as: (SBStArray new contents: {self newNullBlock: 'array element 1'});
-		addBlock: 'Block'
-			as: (SBStBlockBody new
-				statements: {self newNullBlock: 'expr'};
-				temporaries: {};
-				bindings: {self newNullBlock: 'block arg'};
-				yourself);
-		addBlock: 'Method'
-			as: (SBStMethod new
-				selector: 'method' arguments: #() class: Morph;
-				hResizing: #shrinkWrap;
-				body: (SBStBlockBody new in: [:b | b statements: {self newNullBlock: 'body'}]));
-		addBlock: 'Class' as: (SBStClass new
-			className: 'class';
-			category: 'UserObjects');
-		addSectionHeader: 'Operators';
-		addBlock: 'Addition'
-			as: (SBStMessageSend new receiver: (self newNullBlock: 'a') selector: #+ arguments: {self newNullBlock: 'b'});
-		addBlock: 'Subtraction'
-			as: (SBStMessageSend new receiver: (self newNullBlock: 'a') selector: #- arguments: {self newNullBlock: 'b'});
-		addBlock: 'Multiplication'
-			as: (SBStMessageSend new receiver: (self newNullBlock: 'a') selector: #* arguments: {self newNullBlock: 'b'});
-		addBlock: 'Division'
-			as: (SBStMessageSend new receiver: (self newNullBlock: 'a') selector: #/ arguments: {self newNullBlock: 'b'});
-		addBlock: 'Equals'
-			as: (SBStMessageSend new receiver: (self newNullBlock: 'a') selector: #= arguments: {self newNullBlock: 'b'});
+		addBlock: 'Block' as: (SBStBlockBody new
+			statements: {self newNullBlock: 'expr'};
+			temporaries: {};
+			bindings: {self newNullBlock: 'block arg'};
+			yourself);
+		addBlock: 'Point' as: (SBStMessageSend new
+			receiver: (self newNullBlock: 'x')
+			selector: #@
+			arguments: {self newNullBlock: 'y'});
+		addBlock: 'Method' as: (SBStMethod new
+			selector: 'method' arguments: #() class: Morph;
+			hResizing: #shrinkWrap;
+			body: (SBStBlockBody new in: [:b | b statements: {self newNullBlock: 'body'}]));
+		addBlock: 'Class' as: (SBStClass new category: 'UserObjects');
+		addBlock: 'Custom Morph' as: (SBStClassMethodEditor new category: 'UserObjects' superclass: Morph methodsDo: [:add :class |
+			{
+				add value: #initialization value: {
+					SBStMethod new
+						selector: 'initialize' arguments: #() class: class;
+						body: (SBStBlockBody new in: [:b | b statements: {self newNullBlock: 'body'}])}.
+				add value: #stepping value: {
+					SBStMethod new
+						selector: 'step' arguments: #() class: class;
+						body: (SBStBlockBody new in: [:b | b statements: {self newNullBlock: 'body'}]).
+					SBStMethod new
+						selector: 'stepTime' arguments: #() class: class;
+						body: (SBStBlockBody new in: [:b | b statements: {SBStReturn new expression: (SBStNumber new contents: '1')}])}.
+				add value: #drawing value: {
+					SBStMethod new
+						selector: 'drawOn:' arguments: {SBStName contents: 'aCanvas'} class: class;
+						body: (SBStBlockBody new in: [:b | b statements: {self newNullBlock: 'body'}])}}]);
+		addSectionHeader: 'Arithmetic Operators';
+		addBlock: 'Addition' as: (SBStMessageSend new
+			receiver: (self newNullBlock: 'a')
+			selector: #+
+			arguments: {self newNullBlock: 'b'});
+		addBlock: 'Subtraction' as: (SBStMessageSend new
+			receiver: (self newNullBlock: 'a')
+			selector: #-
+			arguments: {self newNullBlock: 'b'});
+		addBlock: 'Multiplication' as: (SBStMessageSend new
+			receiver: (self newNullBlock: 'a')
+			selector: #*
+			arguments: {self newNullBlock: 'b'});
+		addBlock: 'Division' as: (SBStMessageSend new
+			receiver: (self newNullBlock: 'a')
+			selector: #/
+			arguments: {self newNullBlock: 'b'});
+		addBlock: 'Negation'
+			as: (SBStMessageSend new receiver: (self newNullBlock: 'a') selector: #negated);
+		addSectionHeader: 'Comparison Operators';
+		addBlock: 'Equals' as: (SBStMessageSend new
+			receiver: (self newNullBlock: 'a')
+			selector: #=
+			arguments: {self newNullBlock: 'b'});
+		addBlock: 'Greater than' as: (SBStMessageSend new
+			receiver: (self newNullBlock: 'a')
+			selector: #>
+			arguments: {self newNullBlock: 'b'});
+		addBlock: 'Less than' as: (SBStMessageSend new
+			receiver: (self newNullBlock: 'a')
+			selector: #<
+			arguments: {self newNullBlock: 'b'});
+		addBlock: 'Greater or equal to' as: (SBStMessageSend new
+			receiver: (self newNullBlock: 'a')
+			selector: #>=
+			arguments: {self newNullBlock: 'b'});
+		addBlock: 'Less or equal to' as: (SBStMessageSend new
+			receiver: (self newNullBlock: 'a')
+			selector: #<=
+			arguments: {self newNullBlock: 'b'});
 		addSectionHeader: 'Lists';
-		addBlock: 'Select'
-			as: (SBStMessageSend new
-				receiver: (self newNullBlock: 'list')
-				selector: #select:
-				arguments: {SBStBlockBody emptyWithDeclarations: {'each'}});
+		addBlock: 'Select' as: (SBStMessageSend new
+			receiver: (self newNullBlock: 'list')
+			selector: #select:
+			arguments: {SBStBlockBody emptyWithDeclarations: {'each'}});
 		addSectionHeader: 'Control Flow';
-		addBlock: 'ifTrue:'
-			as: (SBStMessageSend new receiver: (self newNullBlock: 'bool') selector: #ifTrue: arguments: {SBStBlockBody empty});
-		addBlock: 'ifTrue:ifFalse:'
-			as: (SBStMessageSend new
-				receiver: (self newNullBlock: 'bool')
-				selector: #ifTrue:ifFalse:
-				arguments: {SBStBlockBody empty. SBStBlockBody empty})
+		addBlock: 'ifTrue:' as: (SBStMessageSend new
+			receiver: (self newNullBlock: 'bool')
+			selector: #ifTrue:
+			arguments: {SBStBlockBody empty});
+		addBlock: 'ifTrue:ifFalse:' as: (SBStMessageSend new
+			receiver: (self newNullBlock: 'bool')
+			selector: #ifTrue:ifFalse:
+			arguments: {SBStBlockBody empty. SBStBlockBody empty})
 ]
 
 { #category : #'as yet unclassified' }

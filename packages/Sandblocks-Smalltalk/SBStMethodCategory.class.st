@@ -11,7 +11,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBStMethodCategory >> addMethods [
 
-	(class organization listAtCategoryNamed: savedCategoryName) do: [:method |
+	(self relatedClass organization listAtCategoryNamed: savedCategoryName) do: [:method |
 			self addMorphBack: ((class lookupSelector: method) asSandblock
 				toggleCollapsed;
 				hResizing: #spaceFill)]
@@ -68,7 +68,7 @@ SBStMethodCategory >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean
 	changeCategoryCommand := (SBStChangeMethodCategoryCommand newFor: self)
 		method: aBlock object;
 		category: self firstSubmorph contents;
-		class: class.
+		class: self relatedClass.
 	self sandblockEditor do: (SBCombinedCommand newWith: (aBlock isSelection
 		ifTrue: [
 			{changeCategoryCommand. (SBDeleteCommand newFor: self) target: aBlock sourceBlock. insertCommand}]
@@ -99,7 +99,7 @@ SBStMethodCategory >> insertCommandRequest: anAfterBoolean near: aBlock [
 		morph: (SBStMethod new
 			selector: ''
 			arguments: #()
-			class: class;
+			class: self relatedClass;
 			hResizing: #spaceFill;
 			body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}]));
 		shouldMergeWithNext: true;
@@ -139,12 +139,18 @@ SBStMethodCategory >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMethodCategory >> relatedClass [
+
+	^ class ifNil: [self parentSandblock relatedClass]
+]
+
+{ #category : #'as yet unclassified' }
 SBStMethodCategory >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 
 	| currentName |
 	currentName := self firstSubmorph contents.
 	savedCategoryName ~= currentName ifTrue: [
-		class organization renameCategory: savedCategoryName toBe: currentName.
+		self relatedClass organization renameCategory: savedCategoryName toBe: currentName.
 		savedCategoryName := currentName].
 	^ true
 ]

@@ -145,7 +145,8 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		shortcut: Character space modes: #(selection) do: #startOrAddToMultiSelection;
 		registerShortcut: Character escape do: #endMultiSelection;
 		
-		registerShortcut: Character escape do: #dismiss
+		registerShortcut: Character escape do: #dismiss;
+		shortcut: Character space modes: #(command) do: #startInputAtStart
 ]
 
 { #category : #'as yet unclassified' }
