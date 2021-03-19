@@ -66,14 +66,19 @@ SBCheckbox >> startInputAt: aNumber replacingContents: aBoolean [
 { #category : #'as yet unclassified' }
 SBCheckbox >> toggle [
 
-	self sandblockEditor do: ((self nonEdit
+	self sandblockEditor do: (self toggleCommandFor: self containingArtefact)
+]
+
+{ #category : #'as yet unclassified' }
+SBCheckbox >> toggleCommandFor: anArtefact [
+
+	^ (self nonEdit
 		ifTrue: [SBMutatePropertyCommand newNonEdit]
-		ifFalse: [
-			SBMutatePropertyCommand newOrEditFor: self containingArtefact])
+		ifFalse: [SBMutatePropertyCommand newOrEditFor: anArtefact])
 		target: self;
 		selector: #value;
 		mutateSelector: #changeValue:;
-		value: self value not).
+		value: self value not
 ]
 
 { #category : #'as yet unclassified' }

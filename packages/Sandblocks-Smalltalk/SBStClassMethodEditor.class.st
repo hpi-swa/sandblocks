@@ -14,7 +14,7 @@ SBStClassMethodEditor >> category: aString superclass: aClass methodsDo: aBlock 
 	
 	aBlock
 		value: [:category :methods |
-			methods do: [:m | m hResizing: #spaceFill].
+			methods do: [:m | m hResizing: #spaceFill; toggleCollapsed].
 			self addMorphBack: ((SBStMethodCategory new class: nil category: category collapsed: true) addAllMorphs: methods)]
 		value: self firstSubmorph
 ]

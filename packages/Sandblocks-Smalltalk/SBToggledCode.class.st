@@ -168,17 +168,23 @@ SBToggledCode >> initialize [
 { #category : #'as yet unclassified' }
 SBToggledCode >> insertCommandRequest: anAfterBoolean near: aBlock [
 
-	| block index |
-	index := (self submorphIndexOf: aBlock owner) ifNil: [2] ifNotNil: [:i | i   + (anAfterBoolean ifTrue: [1] ifFalse: [0])].
+	| block index row |
+	index := (self submorphIndexOf: aBlock owner)
+		ifNil: [2]
+		ifNotNil: [:i | i + (anAfterBoolean ifTrue: [1] ifFalse: [0])].
 	
 	block := SBStBlockBody empty.
-	^ (SBInsertCommand newFor: self containingArtefact)
-		index: index;
-		container: self;
-		morph: (self buildRowFor: block active: false);
-		select: block statements first;
-		shouldMergeWithNext: true;
-		yourself
+	row := self buildRowFor: block active: false.
+	
+	^ SBCombinedCommand newWith: {
+		row firstSubmorph toggleCommandFor: self containingArtefact.
+		(SBInsertCommand newFor: self containingArtefact)
+			index: index;
+			container: self;
+			morph: row;
+			select: block statements first;
+			shouldMergeWithNext: true;
+			yourself}
 ]
 
 { #category : #'as yet unclassified' }

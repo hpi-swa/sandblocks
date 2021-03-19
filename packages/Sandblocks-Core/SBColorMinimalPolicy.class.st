@@ -11,12 +11,6 @@ SBColorMinimalPolicy >> borderWidthForBlock: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBColorMinimalPolicy >> foregroundColorForBlock: aBlock [
-
-	^ self foregroundColorForColor: aBlock drawnColor
-]
-
-{ #category : #'as yet unclassified' }
 SBColorMinimalPolicy >> layoutInsetFor: aBlock [
 
 	((aBlock isKindOf: SBStLiteral) or: [aBlock isBlockBody]) ifTrue: [^ 2 @ 1].
