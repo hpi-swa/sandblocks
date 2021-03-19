@@ -172,6 +172,12 @@ SBScmModule >> isBlockBody [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmModule >> isEditor [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBScmModule >> isMethodBody [
 
 	^ false

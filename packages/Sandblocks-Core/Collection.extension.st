@@ -6,7 +6,7 @@ Collection >> asCollectionView: converter [
 	
 	converter
 		if: [self size < 20 and: [self isString not]]
-		do: [SBCollection new object: self]
+		do: [SBCollection new interface: converter objectInterface object: self]
 ]
 
 { #category : #'*Sandblocks-Core' }

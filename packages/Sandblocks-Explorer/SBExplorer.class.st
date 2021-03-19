@@ -143,12 +143,6 @@ SBExplorer >> isCollapsed [
 ]
 
 { #category : #testing }
-SBExplorer >> isEditor [
-
-	^ true
-]
-
-{ #category : #testing }
 SBExplorer >> isTopLevel [
 
 	^ true
@@ -197,7 +191,7 @@ SBExplorer >> on: anObject wrapper: aWrapper [
 	self removeAllMorphs.
 	
 	object := anObject.
-	wrapper := aWrapper ifNil: [ObjectExplorerWrapper with: object model: self].
+	wrapper := aWrapper ifNil: [ObjectExplorerWrapper with: 'root' -> object model: self].
 	
 	row := SBRow new cellGap: 4 withScalingFactor.
 	row addMorphBack: (wrapper hasContents

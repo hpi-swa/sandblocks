@@ -121,7 +121,7 @@ SBWatchView >> reportValue: anObject [
 	SBToggledCode
 		comment: 'we want to check if we can/should reuse the previous conversion procedure'
 		active: 1
-		do: {[self useDisplay: (anObject convertedFor: SBInterfaces topLevel do: #yourself)]}.
+		do: {[self useDisplay: (anObject convertedFor: self watchObjectInterface do: #yourself)]}.
 	
 	count contents: (count contents asInteger + 1) asString.
 	lastValue := anObject
@@ -157,4 +157,10 @@ SBWatchView >> veryDeepCopyWith: deepCopier [
 	new lastValue: lastValue.
 	
 	^ new
+]
+
+{ #category : #'as yet unclassified' }
+SBWatchView >> watchObjectInterface [
+
+	^ SBInterfaces topLevel, {[:o | o isEditor not]}
 ]

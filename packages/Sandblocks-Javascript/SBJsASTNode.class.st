@@ -45,7 +45,7 @@ SBJsASTNode >> inLanguageBox: converter [
 	<convert>
 	
 	^ converter
-		if: [self validSubtree]
+		if: [self completeSubtree]
 		do: [SBLanguageBox new source: self sourceString lang: 'js']
 ]
 

@@ -60,6 +60,10 @@ SBStBasicMethod >> binding: aString for: block class: aClass ifPresent: aBlock [
 	
 	self instanceVariables detect: [:inst | inst contents = aString] ifFound: [:inst | ^ aBlock value: inst] ifNone: [].
 	
+	Symbol hasInterned: aString ifTrue: [:sym | | binding |
+		binding := aClass bindingOf: sym environment: aClass environment.
+		binding ifNotNil: [^ aBlock value: ((SBStName poolDeclaration: aString) binding: binding)]].
+	
 	^ super binding: aString for: block class: aClass ifPresent: aBlock
 ]
 

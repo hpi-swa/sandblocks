@@ -90,6 +90,12 @@ SBJsModule >> isArtefact [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsModule >> isEditor [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBJsModule >> isMethod [
 
 	^ true

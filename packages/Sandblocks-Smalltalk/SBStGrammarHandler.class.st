@@ -323,7 +323,7 @@ SBStGrammarHandler >> useFourthArgument [
 	<inputAction>
 	<action>
 
-	self useArgument: 3
+	self useArgument: 4
 ]
 
 { #category : #'actions input' }

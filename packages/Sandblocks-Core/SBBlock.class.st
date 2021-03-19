@@ -349,6 +349,13 @@ SBBlock >> commandPaletteClass [
 	^ self parentSandblock ifNotNil: #commandPaletteClass
 ]
 
+{ #category : #testing }
+SBBlock >> completeSubtree [
+
+	self allBlocksDo: [:b | b isUnknown ifTrue: [^ false]].
+	^ true
+]
+
 { #category : #suggestions }
 SBBlock >> completionSuggestionsFor: aString [
 
@@ -884,7 +891,7 @@ SBBlock >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMor
 
 	aBlock unpackSelection
 		convertedFor: self objectInterfaceForDrop
-		do: [:block | | reference |
+		doWithChooser: [:block | | reference |
 			aBoolean
 				ifTrue: [ | insert |
 					insert := self insertCommandRequest: false near: aMorph.
@@ -907,7 +914,8 @@ SBBlock >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMor
 				position: (reference containingSandblock = self sandblockEditor
 					ifTrue: [((reference transformFrom: nil) globalPointToLocal: anEvent position) asIntegerPoint]
 					ifFalse: [anEvent position]);
-				inputContainedUnknown]
+				inputContainedUnknown.
+			block]
 ]
 
 { #category : #'event handling' }
@@ -1758,7 +1766,7 @@ SBBlock >> refocus [
 { #category : #'artefact protocol' }
 SBBlock >> relatedClass [
 
-	^ self object
+	^ self object class
 ]
 
 { #category : #'colors and color policies' }

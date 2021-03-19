@@ -45,6 +45,12 @@ SBStContainer >> cacheType: aClass for: aBlock [
 ]
 
 { #category : #'artefact protocol' }
+SBStContainer >> classVariables [
+
+	^ #()
+]
+
+{ #category : #'artefact protocol' }
 SBStContainer >> containingArtefact [
 
 	^ self
@@ -78,6 +84,12 @@ SBStContainer >> initialize [
 		addMorphBack: SBStBlockBody empty;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
+]
+
+{ #category : #'artefact protocol' }
+SBStContainer >> instanceVariables [
+
+	^ #()
 ]
 
 { #category : #'artefact protocol' }

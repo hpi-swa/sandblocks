@@ -11,15 +11,17 @@ Object >> allConversionsFor: anInterfaceCollection do: aBlock depth: aNumber pat
 
 	| convert current |
 	current := nil.
-	convert := SBConvert new success: [:object | | path |
-		path := aString, (aString ifEmpty: [''] ifNotEmpty: [' -> ']), current name.
-		(object satisfies: anInterfaceCollection) ifTrue: [aBlock value: {path. object}].
-		aNumber > 0 ifTrue: [
-			object
-				allConversionsFor: anInterfaceCollection
-				do: aBlock
-				depth: aNumber - 1
-				pathName: path]].
+	convert := SBConvert new
+		objectInterface: anInterfaceCollection;
+		success: [:object | | path |
+			path := aString, (aString ifEmpty: [''] ifNotEmpty: [' -> ']), current name.
+			(object satisfies: anInterfaceCollection) ifTrue: [aBlock value: {path. object}].
+			aNumber > 0 ifTrue: [
+				object
+					allConversionsFor: anInterfaceCollection
+					do: aBlock
+					depth: aNumber - 1
+					pathName: path]].
 	
 	self converterOptionsDo: [:option |
 		current := option.
@@ -54,8 +56,37 @@ Object >> convertedFor: anInterfaceCollection do: aBlock [
 
 	| convert |
 	(self satisfies: anInterfaceCollection) ifTrue: [^ aBlock value: self].
+	(self object satisfies: anInterfaceCollection) ifTrue: [^ aBlock value: self object].
 	
-	convert := SBConvert new success: [:object | (object satisfies: anInterfaceCollection) ifTrue: [^ aBlock value: object]].
+	convert := SBConvert new
+		objectInterface: anInterfaceCollection;
+		success: [:object | (object satisfies: anInterfaceCollection) ifTrue: [^ aBlock value: object]].
+	
+	self object converterOptionsDo: [:option | option apply: convert].
+	
+	^ nil
+]
+
+{ #category : #'*Sandblocks-Core-converting' }
+Object >> convertedFor: anInterfaceCollection doWithChooser: aBlock [
+
+	| convert |
+	(self satisfies: anInterfaceCollection) ifTrue: [^ aBlock value: self].
+	(self object satisfies: anInterfaceCollection) ifTrue: [^ aBlock value: self object].
+	
+	convert := SBConvert new
+		objectInterface: anInterfaceCollection;
+		success: [:object |
+			(object satisfies: anInterfaceCollection) ifTrue: [ | converted |
+				converted := aBlock value: object.
+				self assert: converted isSandblock.
+				self assert: converted sandblockEditor notNil.
+				SBDropChooser new
+					openFor: converted
+					interface: anInterfaceCollection
+					original: self
+					do: aBlock.
+				^ converted]].
 	
 	self object converterOptionsDo: [:option | option apply: convert].
 	

@@ -150,6 +150,12 @@ SBStPlayground >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBStPlayground >> isEditor [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBStPlayground >> isRepl [
 
 	^ true

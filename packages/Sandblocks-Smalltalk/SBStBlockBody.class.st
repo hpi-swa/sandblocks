@@ -285,6 +285,15 @@ SBStBlockBody >> objectInterfaceAt: aNumber adding: aBoolean [
 	^ SBInterfaces stCanAppearInBlock
 ]
 
+{ #category : #'object interface' }
+SBStBlockBody >> objectInterfaceForDrop [
+
+	^ self dropLocationDo: [:position :morph :horizontal |
+		(morph owner = bindings or: [morph owner = temporaries])
+			ifTrue: [SBInterfaces stName]
+			ifFalse: [SBInterfaces stCanAppearInBlock]]
+]
+
 { #category : #converting }
 SBStBlockBody >> pc [
 

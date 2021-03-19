@@ -4,7 +4,9 @@ Extension { #name : #String }
 String >> inStringView: converter [
 	<convert>
 
-	converter do: [SBStringView new string: self]
+	converter
+		if: [self isSymbol not]
+		do: [SBStringView new string: self]
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -56,12 +58,22 @@ String >> parseAsSandblockWithoutSubstitution [
 	^ methodNode block statements first expr asSandblockWithoutSubstitution
 ]
 
-{ #category : #'*Sandblocks-Core' }
+{ #category : #'*Sandblocks-Core-converting' }
 String >> parseAsScheme: converter [
 	<convert>
 
 	converter
+		if: [[SBScmModule fromString: self. true] on: Error do: [false]]
 		do: [SBScmModule fromString: self]
+]
+
+{ #category : #'*Sandblocks-Core-converting' }
+String >> parseAsSmalltalk: converter [
+	<convert>
+
+	converter
+		if: [[self parseAsMethod. true] on: Error do: [false]]
+		do: [self parseAsMethod asSandblock]
 ]
 
 { #category : #'*Sandblocks-Core' }

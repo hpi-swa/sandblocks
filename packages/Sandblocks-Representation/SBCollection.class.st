@@ -27,6 +27,17 @@ SBCollection >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBCollection >> interface: anInterfaceCollection object: aCollection [
+
+	collection := aCollection.
+	
+	self removeAllMorphs.
+	
+	aCollection do: [:e |
+		e convertedFor: self objectInterfaceForDrop, (anInterfaceCollection ifNil: [#()]) do: [:o | self addMorphBack: o]]
+]
+
+{ #category : #'as yet unclassified' }
 SBCollection >> isTopLevel [
 
 	^ true
@@ -36,17 +47,6 @@ SBCollection >> isTopLevel [
 SBCollection >> object [
 
 	^ collection
-]
-
-{ #category : #'as yet unclassified' }
-SBCollection >> object: aCollection [
-
-	collection := aCollection.
-	
-	self removeAllMorphs.
-	
-	aCollection do: [:e |
-		e convertedFor: self objectInterfaceForDrop do: [:o | self addMorphBack: o]]
 ]
 
 { #category : #'as yet unclassified' }
