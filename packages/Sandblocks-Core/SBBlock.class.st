@@ -152,6 +152,42 @@ SBBlock >> attachDecorator: aDecorator [
 	self updateSteppingDecorators
 ]
 
+{ #category : #actions }
+SBBlock >> barf [
+	<action>
+	<actionValidIf: #parentHasDynamicNumberOfChildren>
+
+	| insert |
+	
+	self hasChildSandblocks ifFalse: [^ self].
+	
+	insert := self parentSandblock insertCommandRequest: true near: self.
+	self sandblockEditor do: (SBCombinedCommand newWith: {
+		insert.
+		(SBReplaceCommand newFor: self containingArtefact)
+			target: insert morph;
+			replacer: self childSandblocks last}).
+	self select
+]
+
+{ #category : #actions }
+SBBlock >> barfFront [
+	<action>
+	<actionValidIf: #parentHasDynamicNumberOfChildren>
+
+	| insert |
+	
+	self hasChildSandblocks ifFalse: [^ self].
+	
+	insert := self parentSandblock insertCommandRequest: false near: self.
+	self sandblockEditor do: (SBCombinedCommand newWith: {
+		insert.
+		(SBReplaceCommand newFor: self containingArtefact)
+			target: insert morph;
+			replacer: self childSandblocks first}).
+	self select
+]
+
 { #category : #'ast helpers' }
 SBBlock >> binding: aString for: block class: aClass ifPresent: aBlock [
 
@@ -747,6 +783,12 @@ SBBlock >> dropLocationDo: aBlock [
 		ifNotNil: [:closestMorph | | delta |
 			delta := (((closestMorph adjacentBlock: 1) ifNil: [closestMorph adjacentBlock: -1]) ifNotNil: [:next | next topLeft - closestMorph topLeft] ifNil: [1 @ 0]) abs.
 			aBlock value: closestMorph topLeft - (0 @ 4) value: closestMorph value: delta x < delta y]
+]
+
+{ #category : #'testing hierarchy' }
+SBBlock >> dynamicNumberOfChildren [
+
+	^ self fixedNumberOfChildren not
 ]
 
 { #category : #actions }
@@ -2012,6 +2054,37 @@ SBBlock >> selectionLabel [
 SBBlock >> skipLeftRightNavigation [
 
 	^ false
+]
+
+{ #category : #actions }
+SBBlock >> slurp [
+	<action>
+	<actionValidIf: #dynamicNumberOfChildren>
+
+	
+	(self adjacentBlock: 1) ifNotNil: [:block | | insert |
+		insert := self insertCommandRequest: true near: self childSandblocks last.
+		self sandblockEditor do: (SBCombinedCommand newWith: {
+			insert.
+			(SBReplaceCommand newFor: self containingArtefact)
+				target: insert morph;
+				replacer: block}).
+		self select]
+]
+
+{ #category : #actions }
+SBBlock >> slurpFront [
+	<action>
+	<actionValidIf: #dynamicNumberOfChildren>
+	
+	(self adjacentBlock: -1) ifNotNil: [:block | | insert |
+		insert := self insertCommandRequest: false near: self childSandblocks first.
+		self sandblockEditor do: (SBCombinedCommand newWith: {
+			insert.
+			(SBReplaceCommand newFor: self containingArtefact)
+				target: insert morph;
+				replacer: block}).
+		self select]
 ]
 
 { #category : #layout }

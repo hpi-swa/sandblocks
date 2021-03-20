@@ -43,6 +43,12 @@ SBWatch class >> report: aValue for: aSymbol [
 	^ aValue
 ]
 
+{ #category : #'as yet unclassified' }
+SBWatch >> actionProviders [
+
+	^ {self grammarHandler. self}
+]
+
 { #category : #actions }
 SBWatch >> chooseViewMode [
 	<action>
@@ -133,6 +139,12 @@ SBWatch >> intoWorld: aWorld [
 	super intoWorld: aWorld.
 	
 	self class registerWatch: self
+]
+
+{ #category : #testing }
+SBWatch >> isExpression [
+
+	^ true
 ]
 
 { #category : #layout }

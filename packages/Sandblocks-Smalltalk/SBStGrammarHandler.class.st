@@ -342,22 +342,6 @@ SBStGrammarHandler >> useThirdArgument [
 	self useArgument: 3
 ]
 
-{ #category : #'action helpers' }
-SBStGrammarHandler >> watchWith: aWatchClass [
-
-	self block isExpression ifFalse: [^ self].
-	
-	self block isWatch
-		ifTrue: [^ self block sandblockEditor do: ((SBReplaceCommand newFor: self block containingArtefact) target: self block; replacer: self block childSandblocks first)].
-	
-	self block parentSandblock isWatch ifTrue: [^ self block deleteAround].
-	
-	self block sandblockEditor do: ((SBWrapCommand newFor: self block containingArtefact)
-			outer: aWatchClass new newIdentifier;
-			inner: self block;
-			wrap: [:outer :inner | outer expression: inner])
-]
-
 { #category : #actions }
 SBStGrammarHandler >> wrapAsArgument [
 	<action>
