@@ -292,7 +292,7 @@ SBBlock >> childClosestTo: aPoint [
 	closestMorph := nil.
 	self childSandblocksDo: [:block | | distance |
 		distance := block topLeft squaredDistanceTo: aPoint.
-		distance < aPoint ifTrue: [
+		distance < closestDistance ifTrue: [
 			closestDistance := distance.
 			closestMorph := block]].
 	^ closestMorph
@@ -772,16 +772,16 @@ SBBlock >> drawnColor [
 SBBlock >> dropLocationDo: aBlock [
 
 	| mousePosition |
-	mousePosition := self
-		valueOfProperty: #dropLocation
-		ifAbsent: [
-			^ self childSandblocks
-				ifEmpty: [aBlock value: self center value: self value: false]
-				ifNotEmpty: [aBlock value: self center value: self childSandblocks first value: false]].
+	mousePosition := self valueOfProperty: #dropLocation ifAbsent: [
+		^ self childSandblocks
+			ifEmpty: [aBlock value: self center value: self value: false]
+			ifNotEmpty: [aBlock value: self center value: self childSandblocks first value: false]].
 	^ (self childClosestTo: mousePosition)
 		ifNil: [aBlock value: self center value: self value: false]
 		ifNotNil: [:closestMorph | | delta |
-			delta := (((closestMorph adjacentBlock: 1) ifNil: [closestMorph adjacentBlock: -1]) ifNotNil: [:next | next topLeft - closestMorph topLeft] ifNil: [1 @ 0]) abs.
+			delta := (((closestMorph adjacentBlock: 1) ifNil: [closestMorph adjacentBlock: -1])
+				ifNotNil: [:next | next topLeft - closestMorph topLeft]
+				ifNil: [1 @ 0]) abs.
 			aBlock value: closestMorph topLeft - (0 @ 4) value: closestMorph value: delta x < delta y]
 ]
 

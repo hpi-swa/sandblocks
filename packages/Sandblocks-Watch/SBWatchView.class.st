@@ -6,7 +6,8 @@ Class {
 		'dark',
 		'hadValue',
 		'count',
-		'currentRepresentation'
+		'currentRepresentation',
+		'applyingChange'
 	],
 	#category : #'Sandblocks-Watch'
 }
@@ -67,6 +68,7 @@ SBWatchView >> initialize [
 	
 	dark := true.
 	hadValue := false.
+	applyingChange := false.
 	
 	self
 		changeTableLayout;
@@ -116,15 +118,19 @@ SBWatchView >> printOn: aStream [
 { #category : #'as yet unclassified' }
 SBWatchView >> reportValue: anObject [
 
-	hadValue ifFalse: [hadValue := true].
+	applyingChange ifTrue: [^ self].
 	
-	SBToggledCode
-		comment: 'we want to check if we can/should reuse the previous conversion procedure'
-		active: 1
-		do: {[self useDisplay: (anObject convertedFor: self watchObjectInterface do: #yourself)]}.
+	[
+		applyingChange := true.
+		hadValue ifFalse: [hadValue := true].
 	
-	count contents: (count contents asInteger + 1) asString.
-	lastValue := anObject
+		SBToggledCode
+			comment: 'we want to check if we can/should reuse the previous conversion procedure'
+			active: 1
+			do: {[self useDisplay: (anObject convertedFor: self watchObjectInterface do: #yourself)]}.
+	
+		count contents: (count contents asInteger + 1) asString.
+		lastValue := anObject] ensure: [applyingChange := false]
 ]
 
 { #category : #'as yet unclassified' }
