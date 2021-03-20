@@ -43,6 +43,8 @@ SBTextColorPolicy >> foregroundColorForBlock: aBlock [
 { #category : #'as yet unclassified' }
 SBTextColorPolicy >> layoutInsetFor: aBlock [
 
+
+	(aBlock isBlockBody and: [aBlock isSmalltalk and: [aBlock isMethodBody]]) ifTrue: [^ SBEdgeInsets left: 16 right: 0 top: 12 bottom: 0].
 	^ 1 @ 0
 ]
 
