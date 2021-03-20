@@ -143,6 +143,9 @@ SBShortcut >> printDisplayOn: aStream [
 	character = Character arrowLeft ifTrue: [^ aStream nextPutAll: 'left'].
 	character = Character arrowRight ifTrue: [^ aStream nextPutAll: 'right'].
 	
+	character = Character pageDown ifTrue: [^ aStream nextPutAll: 'page-down'].
+	character = Character pageUp ifTrue: [^ aStream nextPutAll: 'page-up'].
+	
 	p := character printString.
 	aStream nextPutAll: (p first = $$ ifTrue: [p allButFirst] ifFalse: [
 		(p beginsWith: 'Character ')
