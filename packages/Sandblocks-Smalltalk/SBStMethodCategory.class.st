@@ -141,7 +141,7 @@ SBStMethodCategory >> printOn: aStream [
 { #category : #'as yet unclassified' }
 SBStMethodCategory >> relatedClass [
 
-	^ class ifNil: [self parentSandblock relatedClass]
+	^ class ifNil: [self parentSandblock ifNotNil: #relatedClass]
 ]
 
 { #category : #'as yet unclassified' }

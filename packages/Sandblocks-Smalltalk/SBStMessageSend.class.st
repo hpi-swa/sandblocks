@@ -39,6 +39,20 @@ SBStMessageSend >> asMessageSend: converter [
 		do: [self veryDeepCopy]
 ]
 
+{ #category : #converting }
+SBStMessageSend >> asWatch: converter [
+	<convert>
+	<automatic>
+
+	converter
+		if: [true and: [self selector = 'report:for:' and: [self receiver isBinding and: [self receiver contents = 'SBWatch']]]]
+		do: [
+			SBXWatch new
+				identifier: self arguments second contents asNumber;
+				expression: self arguments first veryDeepCopy;
+				yourself]
+]
+
 { #category : #'as yet unclassified' }
 SBStMessageSend >> balloonText [
 

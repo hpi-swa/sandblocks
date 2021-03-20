@@ -18,11 +18,11 @@ Class {
 { #category : #'as yet unclassified' }
 SBMorphExample class >> buildTemplateFor: aBlock extent: aPoint [
 
-	| setUp |
+	"| setUp |
 	setUp := SBStBlockBody empty.
-	aBlock sandblockEditor selectedArtefact relatedClass ifNotNil: [:class | setUp statements: {SBStMessageSend new receiver: (SBStName contents: class name) selector: #new}].
+	aBlock sandblockEditor selectedArtefact relatedClass ifNotNil: [:class | setUp statements: {SBStMessageSend new receiver: (SBStName contents: class name) selector: #new}]."
 	
-	^ (SBMorphExample new setUp: setUp cases: {} extent: aPoint)
+	^ (SBMorphExample new setUp: '[self class new]' parseAsSandblock cases: {} extent: aPoint)
 		addCase: ((SBStBlockBody emptyWithDeclarations: {'m'}) statements: {SBStName contents: 'm'})
 		name: 'example 1'
 ]

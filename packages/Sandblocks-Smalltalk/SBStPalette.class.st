@@ -35,7 +35,10 @@ SBStPalette class >> buildOn: aContainer [
 				add value: #initialization value: {
 					SBStMethod new
 						selector: 'initialize' arguments: #() class: class;
-						body: (SBStBlockBody new in: [:b | b statements: {self newNullBlock: 'body'}])}.
+						body: (SBStBlockBody new in: [:b |
+							b statements: {
+								SBStMessageSend new receiver: (SBStName contents: 'super') selector: #initialize.
+								self newNullBlock: 'body'}])}.
 				add value: #stepping value: {
 					SBStMethod new
 						selector: 'step' arguments: #() class: class;
@@ -46,7 +49,11 @@ SBStPalette class >> buildOn: aContainer [
 				add value: #drawing value: {
 					SBStMethod new
 						selector: 'drawOn:' arguments: {SBStName contents: 'aCanvas'} class: class;
-						body: (SBStBlockBody new in: [:b | b statements: {self newNullBlock: 'body'}])}}]);
+						body: (SBStBlockBody new in: [:b | b statements: {self newNullBlock: 'body'}])}.
+				add value: #examples value: {
+					SBStMethod new
+						selector: #example arguments: #() class: class;
+						statements: {SBMorphExample buildTemplateFor: aContainer selectedBlock extent: 300 @ 200}}}]);
 		addSectionHeader: 'Arithmetic Operators';
 		addBlock: 'Addition' as: (SBStMessageSend new
 			receiver: (self newNullBlock: 'a')

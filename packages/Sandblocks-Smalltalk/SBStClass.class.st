@@ -168,6 +168,15 @@ SBStClass >> drawnColor [
 SBStClass >> ensureExpanded [
 ]
 
+{ #category : #'as yet unclassified' }
+SBStClass >> example [
+
+	SBMorphExample
+		setUp: [UndefinedObject new]
+		cases: {SBMorphExampleCase name: 'example 1' caseBlock: [:m | m]}
+		extent: 300 @ 200
+]
+
 { #category : #'class protocol' }
 SBStClass >> inheritsFrom: aClass [
 
@@ -267,6 +276,13 @@ SBStClass >> references [
 SBStClass >> relatedClass [
 
 	^ class ifNil: [self]
+]
+
+{ #category : #'class protocol' }
+SBStClass >> removeSelector: aSymbol [
+	" we may not have been saved yet "
+	
+	class ifNotNil: [:c | c removeSelector: aSymbol]
 ]
 
 { #category : #'as yet unclassified' }

@@ -9,11 +9,10 @@ SBLanguageBox >> isJavascript [
 { #category : #'*Sandblocks-Javascript' }
 SBLanguageBox >> writeJsSourceOn: aStream [
 
-	aStream nextPut: $(.
-	aStream nextPutAll: self className.
-	aStream nextPutAll: ' eval: '.
-	aStream store: self root sourceString.
-	aStream nextPutAll: ' lang: '.
-	aStream nextPutAll: self language.
-	aStream nextPutAll: ')'
+	aStream
+		nextPutAll: '(evalLang("';
+		nextPutAll: self root sourceString;
+		nextPutAll: '","';
+		nextPutAll: self language;
+		nextPutAll: '")'
 ]

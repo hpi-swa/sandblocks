@@ -77,6 +77,12 @@ SBDropChooser >> openFor: aBlock interface: aCollection original: anObject do: a
 ]
 
 { #category : #'as yet unclassified' }
+SBDropChooser >> preventOcclusion [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBDropChooser >> step [
 
 	currentBlock sandblockEditor ifNil: [self delete]

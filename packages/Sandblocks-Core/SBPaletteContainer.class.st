@@ -132,6 +132,12 @@ SBPaletteContainer >> newNullBlock: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBPaletteContainer >> objectInterface [
+
+	^ SBInterfaces never
+]
+
+{ #category : #'as yet unclassified' }
 SBPaletteContainer >> pickUp: anEvent [
 
 	" forward directly to our palette contents "

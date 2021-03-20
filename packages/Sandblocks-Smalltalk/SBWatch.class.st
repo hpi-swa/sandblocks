@@ -25,7 +25,7 @@ SBWatch class >> newFor: aBlock [
 
 	^ self new
 		identifier: aBlock arguments second contents asNumber;
-		expression: aBlock arguments first
+		expression: aBlock arguments first veryDeepCopy
 ]
 
 { #category : #'as yet unclassified' }

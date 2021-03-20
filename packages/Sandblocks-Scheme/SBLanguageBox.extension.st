@@ -9,11 +9,9 @@ SBLanguageBox >> isScheme [
 { #category : #'*Sandblocks-Scheme' }
 SBLanguageBox >> writeScmSourceOn: aStream [
 
-	aStream nextPut: $(.
-	aStream nextPutAll: self className.
-	aStream nextPutAll: ' eval: '.
-	aStream store: self root sourceString.
-	aStream nextPutAll: ' lang: '.
-	aStream nextPutAll: self language.
+	aStream nextPutAll: '(eval-lang '.
+	(SBScmString new contents: self firstSubmorph contents) writeSourceOn: aStream.
+	aStream space.
+	(SBScmString new contents: self submorphs second prettySourceString) writeSourceOn: aStream.
 	aStream nextPutAll: ')'
 ]

@@ -108,6 +108,12 @@ SBLanguageBox >> newNullBlock [
 	^ self grammarHandler newNullBlock
 ]
 
+{ #category : #testing }
+SBLanguageBox >> object [
+
+	^ self
+]
+
 { #category : #printing }
 SBLanguageBox >> printOn: aStream [
 

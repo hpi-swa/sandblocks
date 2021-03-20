@@ -24,12 +24,19 @@ SBLessBorderColorPolicy >> borderWidthForBlock: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBLessBorderColorPolicy >> centerAlignSymbols [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBLessBorderColorPolicy >> colorForBlock: aBlock [
 
 	"(aBlock childSandblocks isEmpty and: [aBlock prefersNoBorder not]) ifTrue: [^ Color gray: 0.9]."
-	^ aBlock height > 100
+	"^ aBlock height > 100
 		ifTrue: [Color white]
-		ifFalse: [Color gray: 0.95]
+		ifFalse: [Color gray: 0.95]"
+		^ Color white
 ]
 
 { #category : #'as yet unclassified' }
@@ -68,4 +75,16 @@ SBLessBorderColorPolicy >> selectionBorderWidth [
 SBLessBorderColorPolicy >> selectionColorForBlock: aBlock [
 
 	^ Color red
+]
+
+{ #category : #'as yet unclassified' }
+SBLessBorderColorPolicy >> symbolsForArray: aBlock [
+
+	^ #('{' '}')
+]
+
+{ #category : #'as yet unclassified' }
+SBLessBorderColorPolicy >> symbolsForBlock: aBlock [
+
+	^ #('[' ']')
 ]

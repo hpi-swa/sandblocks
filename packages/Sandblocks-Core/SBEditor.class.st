@@ -1143,7 +1143,7 @@ SBEditor >> promptChangeColorPolicy [
 	<globalAction>
 
 	| policy |
-	policy := (UIManager default chooseFrom: SBColorPolicy withAllSubclasses values: SBColorPolicy withAllSubclasses) ifNil: [^ self].
+	policy := (UIManager default chooseFrom: (SBColorPolicy withAllSubclasses collect: #name) values: SBColorPolicy withAllSubclasses) ifNil: [^ self].
 	self class defaultColorPolicy: policy.
 	self colorPolicy: policy new
 ]

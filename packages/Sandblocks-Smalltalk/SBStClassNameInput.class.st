@@ -55,8 +55,8 @@ SBStClassNameInput >> selectedClass [
 	self contents ifEmpty: [^ nil].
 	
 	^ (self contents endsWith: ' class')
-		ifTrue: [(Smalltalk at: (self contents allButLast: ' class' size) asSymbol) class]
-		ifFalse: [Smalltalk at: self contents asSymbol]
+		ifTrue: [(Smalltalk at: (self contents allButLast: ' class' size) asSymbol ifAbsent: [nil]) ifNotNil: #class]
+		ifFalse: [Smalltalk at: self contents asSymbol ifAbsent: [nil]]
 ]
 
 { #category : #'as yet unclassified' }

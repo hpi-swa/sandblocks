@@ -14,7 +14,7 @@ SBStClassMethodEditor >> category: aString superclass: aClass methodsDo: aBlock 
 	
 	aBlock
 		value: [:category :methods |
-			methods do: [:m | m hResizing: #spaceFill; toggleCollapsed].
+			methods do: [:m | m hResizing: #spaceFill; toggleCollapsed; category: category].
 			self addMorphBack: ((SBStMethodCategory new class: nil category: category collapsed: true) addAllMorphs: methods)]
 		value: self firstSubmorph
 ]
@@ -79,6 +79,12 @@ SBStClassMethodEditor >> insertCommandRequest: anAfterBoolean near: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBStClassMethodEditor >> instanceVariables [
+
+	^ self firstSubmorph instanceVariables
+]
+
+{ #category : #'as yet unclassified' }
 SBStClassMethodEditor >> isArtefact [
 
 	^ true
@@ -108,6 +114,12 @@ SBStClassMethodEditor >> layoutCommands [
 SBStClassMethodEditor >> object [
 
 	^ self firstSubmorph relatedClass
+]
+
+{ #category : #'as yet unclassified' }
+SBStClassMethodEditor >> relatedClass [
+
+	^ self object
 ]
 
 { #category : #'as yet unclassified' }
