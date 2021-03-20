@@ -1,19 +1,19 @@
-Extension { #name : #SBXWatch }
+Extension { #name : #SBWatch }
 
 { #category : #'*Sandblocks-Smalltalk' }
-SBXWatch >> guessedClass [
+SBWatch >> guessedClass [
 
 	^ self expression guessedClass
 ]
 
 { #category : #'*Sandblocks-Smalltalk' }
-SBXWatch >> isSmalltalk [
+SBWatch >> isSmalltalk [
 
 	^ true
 ]
 
 { #category : #'*Sandblocks-Smalltalk' }
-SBXWatch >> writeStSourceOn: aStream [
+SBWatch >> writeStSourceOn: aStream [
 
 	aStream nextPutAll: '(SBWatch report: '.
 	self expression writeSourceOn: aStream.

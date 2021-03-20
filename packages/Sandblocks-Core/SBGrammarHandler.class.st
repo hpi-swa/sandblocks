@@ -182,6 +182,20 @@ SBGrammarHandler >> unpackList [
 	self block sandblockEditor do: ((SBUnwrapConsecutiveCommand newFor: self block containingArtefact) target: self block)
 ]
 
+{ #category : #'action helpers' }
+SBGrammarHandler >> watchWith: aWatchClass [
+
+	self block isWatch
+		ifTrue: [^ self block sandblockEditor do: ((SBReplaceCommand newFor: self block containingArtefact) target: self block; replacer: self block childSandblocks first)].
+	
+	self block parentSandblock isWatch ifTrue: [^ self block deleteAround].
+	
+	self block sandblockEditor do: ((SBWrapCommand newFor: self block containingArtefact)
+			outer: aWatchClass new newIdentifier;
+			inner: self block;
+			wrap: [:outer :inner | outer expression: inner])
+]
+
 { #category : #'callback helpers' }
 SBGrammarHandler >> wrap: aBlock do: aWrapBlock with: aNode [
 
@@ -205,6 +219,15 @@ SBGrammarHandler >> wrap: aBlock do: aWrapBlock with: aNode focusOuter: aBoolean
 	aBoolean
 		ifTrue: [aNode sandblockEditor startInput: aNode at: 9e8 replacingContents: false]
 		ifFalse: [self focusNextFrom: aNode at: cursorIndex]
+]
+
+{ #category : #actions }
+SBGrammarHandler >> wrapWithWatch [
+	<action>
+	<inputAction>
+	<actionValidIf: #isExpression>
+
+	self watchWith: SBWatch
 ]
 
 { #category : #printing }

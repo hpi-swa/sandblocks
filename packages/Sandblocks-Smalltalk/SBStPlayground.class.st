@@ -108,11 +108,10 @@ SBStPlayground >> declarations [
 { #category : #'as yet unclassified' }
 SBStPlayground >> evaluateExpression [
 	<action>
-	
-	| send |
-	send := SBStMessageSend new receiver: self body veryDeepCopy selector: #value.
-	[self addMorphBack: send.
-	send evaluateExpression] ensure: [send delete]
+
+	self grammarHandler
+		block: self;
+		evaluateExpression
 ]
 
 { #category : #'as yet unclassified' }

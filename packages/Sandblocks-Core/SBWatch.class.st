@@ -1,6 +1,6 @@
 Class {
 	#name : #SBWatch,
-	#superclass : #SBStSubstitution,
+	#superclass : #SBBlock,
 	#instVars : [
 		'identifier',
 		'expression',
@@ -9,23 +9,15 @@ Class {
 	#classVars : [
 		'Registry'
 	],
-	#category : #'Sandblocks-Smalltalk'
+	#category : #'Sandblocks-Core'
 }
-
-{ #category : #'as yet unclassified' }
-SBWatch class >> matches: aBlock [
-
-	(super matches: aBlock) ifFalse: [^ false].
-
-	^ aBlock receiver isBinding and: [aBlock receiver contents = 'SBWatch'] and: [aBlock selector = 'report:for:']
-]
 
 { #category : #'as yet unclassified' }
 SBWatch class >> newFor: aBlock [
 
 	^ self new
 		identifier: aBlock arguments second contents asNumber;
-		expression: aBlock arguments first veryDeepCopy
+		expression: aBlock arguments first
 ]
 
 { #category : #'as yet unclassified' }
@@ -51,86 +43,77 @@ SBWatch class >> report: aValue for: aSymbol [
 	^ aValue
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBWatch >> chooseViewMode [
 	<action>
 
 	display promptChangeDisplay
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBWatch >> click: anEvent [
 
 	super click: anEvent
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBWatch >> color [
 
 	^ self parentSandblock color
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBWatch >> doubleClick: anEvent [
 
 	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact) replacer: self expression; target: self)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBWatch >> drawnColor [
 
 	^ Color veryDarkGray
 ]
 
-{ #category : #'as yet unclassified' }
-SBWatch >> exampleStarting: anExample [
-
-	" ensure that we're the active watch "
-	self class registerWatch: self.
-	
-	display exampleStarting: anExample
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBWatch >> exploreLastValue [
 	<action>
 
 	display exploreLastValue
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBWatch >> expression [
 
 	^ self firstSubmorph
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBWatch >> expression: aBlock [
 
 	self submorphCount > 1 ifTrue: [self firstSubmorph delete].
 	self addMorphFront: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
-SBWatch >> guessedClass [
+{ #category : #accessing }
+SBWatch >> grammarHandler [
 
-	^ self expression guessedClass
+	^ self parentSandblock grammarHandler
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBWatch >> identifier [
 
 	^ identifier
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBWatch >> identifier: aSymbol [
 
 	identifier := aSymbol.
 	self world ifNotNil: [self class registerWatch: self]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBWatch >> initialize [
 
 	super initialize.
@@ -138,10 +121,13 @@ SBWatch >> initialize [
 	self
 		cellGap: 4 withScalingFactor;
 		layoutInset: 2 withScalingFactor;
+		layoutPolicy: SBAlgebraLayout new;
+		hResizing: #shrinkWrap;
+		vResizing: #shrinkWrap;
 		addMorphBack: (display := SBWatchView new)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBWatch >> intoWorld: aWorld [
 
 	super intoWorld: aWorld.
@@ -149,19 +135,7 @@ SBWatch >> intoWorld: aWorld [
 	self class registerWatch: self
 ]
 
-{ #category : #'as yet unclassified' }
-SBWatch >> isGlobalWatch [
-
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
-SBWatch >> isWatch [
-
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBWatch >> layoutCommands [
 
 	^ SBAlgebraCommand container
@@ -172,7 +146,7 @@ SBWatch >> layoutCommands [
 			SBAlgebraCommand morph data: self submorphs second}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBWatch >> mouseDown: anEvent [
 
 	anEvent hand waitForClicksOrDrag: self event: anEvent
@@ -184,7 +158,7 @@ SBWatch >> newIdentifier [
 	self identifier: Random new nextValue
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBWatch >> printOn: aStream [
 
 	aStream nextPutAll: 'watch '.
@@ -197,14 +171,14 @@ SBWatch >> reportValue: anObject [
 	display reportValue: anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBWatch >> storeAsExample [
 	<action>
 
 	display storeAsExample
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #copying }
 SBWatch >> veryDeepCopyWith: deepCopier [
 
 	" assure that copies of us have a unique id "
@@ -222,12 +196,8 @@ SBWatch >> veryDeepCopyWith: deepCopier [
 	^ new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBWatch >> writeSourceOn: aStream [
 
-	aStream nextPutAll: '(SBWatch report: '.
-	self expression writeSourceOn: aStream.
-	aStream nextPutAll: ' for: '.
-	self identifier storeOn: aStream.
-	aStream nextPut: $)
+	self grammarHandler writeSourceOn: aStream for: self
 ]

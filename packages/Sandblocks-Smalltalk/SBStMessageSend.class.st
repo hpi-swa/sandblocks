@@ -47,7 +47,7 @@ SBStMessageSend >> asWatch: converter [
 	converter
 		if: [true and: [self selector = 'report:for:' and: [self receiver isBinding and: [self receiver contents = 'SBWatch']]]]
 		do: [
-			SBXWatch new
+			SBWatch new
 				identifier: self arguments second contents asNumber;
 				expression: self arguments first veryDeepCopy;
 				yourself]

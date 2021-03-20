@@ -252,6 +252,7 @@ SBStContainer >> wantsInteractiveErrorCorrection [
 { #category : #'compilation cue protocol' }
 SBStContainer >> writeSourceOn: aStream [
 
+	aStream nextPut: $[.
 	self body writeSourceOn: aStream.
-	aStream nextPutAll: ' value'
+	aStream nextPutAll: '] value'
 ]

@@ -1,13 +1,13 @@
-Extension { #name : #SBXWatch }
+Extension { #name : #SBWatch }
 
 { #category : #'*Sandblocks-Babylonian' }
-SBXWatch >> isGlobalWatch [
+SBWatch >> isGlobalWatch [
 
 	^ true
 ]
 
 { #category : #'*Sandblocks-Babylonian' }
-SBXWatch >> isWatch [
+SBWatch >> isWatch [
 
 	^ true
 ]

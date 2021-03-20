@@ -498,15 +498,6 @@ SBStGrammarHandler >> wrapWithExampleWatch [
 	self watchWith: SBExampleWatch
 ]
 
-{ #category : #actions }
-SBStGrammarHandler >> wrapWithWatch [
-	<action>
-	<inputAction>
-	<actionValidIf: #isExpression>
-
-	self watchWith: SBWatch
-]
-
 { #category : #printing }
 SBStGrammarHandler >> writeSourceOn: aStream for: aBlock [
 

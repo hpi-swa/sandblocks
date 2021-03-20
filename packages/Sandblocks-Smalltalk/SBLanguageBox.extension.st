@@ -1,6 +1,12 @@
 Extension { #name : #SBLanguageBox }
 
 { #category : #'*Sandblocks-Smalltalk' }
+SBLanguageBox >> guessClassExpensive [
+
+	^ nil
+]
+
+{ #category : #'*Sandblocks-Smalltalk' }
 SBLanguageBox >> guessedClass [
 
 	^ nil

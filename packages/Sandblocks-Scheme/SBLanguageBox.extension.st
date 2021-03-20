@@ -10,7 +10,7 @@ SBLanguageBox >> isScheme [
 SBLanguageBox >> writeScmSourceOn: aStream [
 
 	aStream nextPutAll: '(eval-lang '.
-	(SBScmString new contents: self firstSubmorph contents) writeSourceOn: aStream.
+	(SBScmString new contents: self language) writeSourceOn: aStream.
 	aStream space.
 	(SBScmString new contents: self submorphs second prettySourceString) writeSourceOn: aStream.
 	aStream nextPutAll: ')'

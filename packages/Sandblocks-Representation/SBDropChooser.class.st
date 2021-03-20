@@ -64,6 +64,12 @@ SBDropChooser >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBDropChooser >> intoWorld: aWorld [
+
+	self sandblockEditor when: #selectionChanged send: #delete to: self
+]
+
+{ #category : #'as yet unclassified' }
 SBDropChooser >> openFor: aBlock interface: aCollection original: anObject do: aBlockClosure [
 
 	interface := aCollection.
@@ -74,6 +80,12 @@ SBDropChooser >> openFor: aBlock interface: aCollection original: anObject do: a
 	self position: aBlock topRight.
 	
 	aBlock sandblockEditor openMorph: self
+]
+
+{ #category : #'as yet unclassified' }
+SBDropChooser >> outOfWorld: aWorld [
+
+	self sandblockEditor removeActionsWithReceiver: self
 ]
 
 { #category : #'as yet unclassified' }

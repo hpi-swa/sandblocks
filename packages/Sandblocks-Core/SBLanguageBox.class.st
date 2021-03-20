@@ -10,12 +10,16 @@ Class {
 { #category : #'as yet unclassified' }
 SBLanguageBox class >> eval: aString lang: anotherString [
 
+	anotherString = 'js' ifTrue: [^ self error: 'no runtime for js installed'].
+	
+	self assert: anotherString = 'scheme'.
+	
 	^ [SBScmModule newInterpreter readAndEvaluate: aString]
 		on: QoppaUnboundVariableFailure
 		do: [:e | | context name |
 			name := e variableName asSymbol asString.
 			context := thisContext methodReturnContext sender.
-			e resumeWithValue: (context namedTempAt: (context tempNames indexOf: name ifAbsent: [^ e signal]))]
+			e resumeWithValue: (self resolve: name inSmalltalk: context ifAbsent: [^ e signal])]
 ]
 
 { #category : #'as yet unclassified' }
@@ -28,6 +32,14 @@ SBLanguageBox class >> matches: aMessageSend [
 SBLanguageBox class >> newFor: aBlock [
 
 	^ self new source: aBlock arguments first contents lang: aBlock arguments second contents
+]
+
+{ #category : #'as yet unclassified' }
+SBLanguageBox class >> resolve: aString inSmalltalk: context ifAbsent: aBlock [
+
+	^ context namedTempAt: (context tempNames
+		indexOf: aString
+		ifAbsent: [^ Smalltalk globals at: aString asSymbol ifAbsent: [^ aBlock value]])
 ]
 
 { #category : #'as yet unclassified' }

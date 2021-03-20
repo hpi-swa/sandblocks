@@ -45,7 +45,10 @@ SBScmModule class >> newInterpreter [
 	interpreter := QoppaInterpreter new.
 	interpreter
 		bindInGlobalEnv: #'eval-lang'
-			value: (interpreter wrapPrim: [:lang :source | Compiler evaluate: source content] countingArgs: true);
+			value: (interpreter wrapPrim: [:lang :source |
+				lang content = 'js' ifTrue: [^ self error: 'no runtime for js installed'].
+				self assert: lang = 'smalltalk'.
+				Compiler evaluate: source content] countingArgs: true);
 		bindInGlobalEnv: #perform
 			value: (interpreter
 				wrapPrim: [:args |

@@ -14,5 +14,5 @@ SBLanguageBox >> writeJsSourceOn: aStream [
 		nextPutAll: self root sourceString;
 		nextPutAll: '","';
 		nextPutAll: self language;
-		nextPutAll: '")'
+		nextPutAll: '"))'
 ]
