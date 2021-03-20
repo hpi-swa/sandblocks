@@ -48,8 +48,18 @@ SBStLiteral >> currentTextMorph [
 SBStLiteral >> deleteBeforeCursor [
 	<action>
 	<inputAction>
-	
+
 	self contents ifEmpty: [^ self replaceWithUnknown].
+	
+	self currentTextMorph cursor = 1 ifTrue: [
+		{SBStNumber. SBStName} do: [:class | | name |
+			name := class new contents: self contents.
+			name validContents ifTrue: [
+				^ self sandblockEditor
+					do: ((SBReplaceCommand newFor: self containingArtefact)
+						target: self;
+						replacer: name);
+					maybeStartInputFromStart]]].
 	
 	^ super deleteBeforeCursor
 ]
@@ -160,6 +170,24 @@ SBStLiteral >> stopEditing: aCommand [
 SBStLiteral >> textMorphClass [
 
 	^ SBOwnTextMorph
+]
+
+{ #category : #'as yet unclassified' }
+SBStLiteral >> useAsStString [
+	<action>
+
+	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+		target: self;
+		replacer: (SBStString new contents: self contents))
+]
+
+{ #category : #'as yet unclassified' }
+SBStLiteral >> useAsStSymbol [
+	<action>
+
+	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+		target: self;
+		replacer: (SBStSymbol new contents: self contents))
 ]
 
 { #category : #'as yet unclassified' }

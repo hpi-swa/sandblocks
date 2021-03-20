@@ -139,6 +139,12 @@ SBStNumber >> valid [
 ]
 
 { #category : #'as yet unclassified' }
+SBStNumber >> validContents [
+
+	^ self valid
+]
+
+{ #category : #'as yet unclassified' }
 SBStNumber >> value [
 
 	^ self parsedContents

@@ -1,6 +1,6 @@
 Class {
 	#name : #SBScmNumber,
-	#superclass : #SBLiteral,
+	#superclass : #SBScmLiteral,
 	#category : #'Sandblocks-Scheme'
 }
 

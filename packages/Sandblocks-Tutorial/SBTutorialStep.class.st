@@ -326,6 +326,17 @@ Note that you always undo accidental changes with <#undo> (and redo with <#redo>
 				checkCondition: [:editor | editor selection = method body statements third receiver submorphs first]]
 ]
 
+{ #category : #methods }
+SBTutorialStep class >> stepMovementMethod [ | y x |
+true & false not & nil isNil
+		ifFalse: [52 squared].
+	y := self size + super size.
+	#($a #a 1 1.0)
+		do: [:each | Transcript show: each class name;
+				 show: ' '].
+	^ x < y
+]
+
 { #category : #steps }
 SBTutorialStep class >> stepMultiSelection: anEditor [
 

@@ -1,11 +1,11 @@
 Class {
-	#name : #SBLiteral,
+	#name : #SBScmLiteral,
 	#superclass : #SBScmASTNode,
 	#category : #'Sandblocks-Scheme'
 }
 
 { #category : #'as yet unclassified' }
-SBLiteral >> acceptInputEvent: anEvent [
+SBScmLiteral >> acceptInputEvent: anEvent [
 
 	self currentTextMorph keyStroke: anEvent.
 	
@@ -16,54 +16,64 @@ SBLiteral >> acceptInputEvent: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> castToUnknownWhenEmpty [
+SBScmLiteral >> castToUnknownWhenEmpty [
 
 	^ self symbols first isNil
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> contents [
+SBScmLiteral >> contents [
 
 	^ self currentTextMorph contents
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> contents: aString [
+SBScmLiteral >> contents: aString [
 
 	self currentTextMorph contents: aString
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> contentsChanged [
+SBScmLiteral >> contentsChanged [
 
 	(self castToUnknownWhenEmpty and: [self currentTextMorph contents isEmpty and: [self sandblockEditor ifNotNil: [:e | e mode = #input] ifNil: [false]]]) ifTrue: [
 		self replaceWithUnknown]
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> currentTextMorph [
+SBScmLiteral >> currentTextMorph [
 
 	^ self firstSubmorph
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> deleteBeforeCursor [
+SBScmLiteral >> deleteBeforeCursor [
 	<action>
 	<inputAction>
 	
 	self contents ifEmpty: [^ self replaceWithUnknown].
 	
+	self currentTextMorph cursor = 1 ifTrue: [
+		{SBScmNumber. SBScmIdentifier} do: [:class | | name |
+			name := class new contents: self contents.
+			name validContents ifTrue: [
+				^ self sandblockEditor
+					do: ((SBReplaceCommand newFor: self containingArtefact)
+						target: self;
+						replacer: name);
+					maybeStartInputFromStart]]].
+	
 	^ super deleteBeforeCursor
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> drawnColor [
+SBScmLiteral >> drawnColor [
 
 	^ Color transparent
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> initialize [
+SBScmLiteral >> initialize [
 
 	super initialize.
 	
@@ -73,25 +83,25 @@ SBLiteral >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> isExpression [
+SBScmLiteral >> isExpression [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> keyStroke: anEvent [
+SBScmLiteral >> keyStroke: anEvent [
 
 	self acceptInputEvent: anEvent
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> moveCursorTo: aNumber [
+SBScmLiteral >> moveCursorTo: aNumber [
 
 	self currentTextMorph moveCursorTo: aNumber
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> replaceWithUnknown [
+SBScmLiteral >> replaceWithUnknown [
 
 	| new |
 	self isUnknown ifTrue: [^ self].
@@ -105,7 +115,7 @@ SBLiteral >> replaceWithUnknown [
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> startInputAt: aNumber replacingContents: aBoolean [
+SBScmLiteral >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
 	cmd := (SBInputCommand newOrEditFor: self containingArtefact)
@@ -124,14 +134,14 @@ SBLiteral >> startInputAt: aNumber replacingContents: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> stopEditing [
+SBScmLiteral >> stopEditing [
 
 	self currentTextMorph stopEditing.
 	self removeSuggestionMenu
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> stopEditing: aCommand [
+SBScmLiteral >> stopEditing: aCommand [
 
 	aCommand
 		newText: self currentTextMorph contents;
@@ -141,25 +151,43 @@ SBLiteral >> stopEditing: aCommand [
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> textMorphClass [
+SBScmLiteral >> textMorphClass [
 
 	^ SBOwnTextMorph
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> validContents [
+SBScmLiteral >> useAsScmString [
+	<action>
+
+	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+		target: self;
+		replacer: (SBScmString new contents: self contents))
+]
+
+{ #category : #'as yet unclassified' }
+SBScmLiteral >> useAsScmSymbol [
+	<action>
+
+	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+		target: self;
+		replacer: (SBScmSymbol new contents: self contents))
+]
+
+{ #category : #'as yet unclassified' }
+SBScmLiteral >> validContents [
 
 	^ self valid
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> writeSourceOn: aStream [
+SBScmLiteral >> writeSourceOn: aStream [
 
 	aStream nextPutAll: self contents
 ]
 
 { #category : #'as yet unclassified' }
-SBLiteral >> writeSourceOn: aStream indent: aNumber [
+SBScmLiteral >> writeSourceOn: aStream indent: aNumber [
 
 	aStream nextPutAll: self contents
 ]

@@ -126,7 +126,9 @@ SBOwnTextMorph >> deleteAfterCursor [
 
 	self cursor <= self contents size ifTrue: [ | range rangeStop |
 		range := self selectionBounds.
-		rangeStop := range first = range second ifTrue: [range second] ifFalse: [range second - 1].
+		rangeStop := range first = range second
+			ifTrue: [range second]
+			ifFalse: [range second - 1].
 		self contents: (self contents first: range first - 1), (self contents allButFirst: rangeStop).
 		self moveCursorTo: range first]
 ]

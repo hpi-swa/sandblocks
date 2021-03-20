@@ -548,6 +548,14 @@ SBBlock >> deleteAdjacent [
 ]
 
 { #category : #actions }
+SBBlock >> deleteAfterCursor [
+	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
+	
+	self currentTextMorph deleteAfterCursor
+]
+
+{ #category : #actions }
 SBBlock >> deleteAround [
 	<action>
 
