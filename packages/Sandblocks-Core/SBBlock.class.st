@@ -243,6 +243,8 @@ SBBlock >> canInput [
 { #category : #'actions tests' }
 SBBlock >> canJumpTo: aBlock [
 
+	aBlock parentSandblock ifNil: [^ false].
+	
 	^ aBlock parentSandblock containingArtefact = self containingArtefact or: [self containingArtefact notNil and: [self containingArtefact floating not]]
 ]
 
@@ -1445,10 +1447,11 @@ SBBlock >> moveCursorLeft [
 			next := (self currentTextMorph previousMorphThat: [:b | b isTextMorph]) ifNotNil: #containingSandblock.
 			(next notNil and: [next containingFloat = self containingFloat]) ifTrue: [
 				editor select: next.
-				next sandblockEditor
-					startInput: next
-					at: (wordWise ifTrue: [0] ifFalse: [900000000])
-					replacingContents: false]]
+				next currentTextMorph ifNotNil: [
+					next sandblockEditor
+						startInput: next
+						at: (wordWise ifTrue: [0] ifFalse: [900000000])
+						replacingContents: false]]]
 		wordWise: wordWise.
 	editor updateVerticalSelectionPosition
 ]
@@ -1468,7 +1471,8 @@ SBBlock >> moveCursorRight [
 			next := (self currentTextMorph nextMorphThat: [:b | b isTextMorph]) ifNotNil: #containingSandblock.
 			(next notNil and: [next containingFloat = self containingFloat]) ifTrue: [
 				editor select: next.
-				editor startInput: next at: (wordWise ifTrue: [900000000] ifFalse: [0]) replacingContents: false]]
+				next currentTextMorph ifNotNil: [
+					editor startInput: next at: (wordWise ifTrue: [900000000] ifFalse: [0]) replacingContents: false]]]
 		wordWise: wordWise.
 	editor updateVerticalSelectionPosition
 ]

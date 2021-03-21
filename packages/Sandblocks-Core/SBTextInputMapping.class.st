@@ -26,8 +26,8 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		
 		inputShortcut: Character arrowLeft asSandblockShortcut, Character arrowLeft shift, Character arrowLeft command do: #moveCursorLeft;
 		inputShortcut: Character arrowRight asSandblockShortcut, Character arrowRight shift, Character arrowRight command do: #moveCursorRight;
-		inputShortcut: Character arrowUp asSandblockShortcut do: #moveCursorUp;
-		inputShortcut: Character arrowDown do: #moveCursorDown;
+		inputShortcut: Character arrowUp asSandblockShortcut, Character arrowUp command do: #moveCursorUp;
+		inputShortcut: Character arrowDown asSandblockShortcut, Character arrowDown command do: #moveCursorDown;
 		inputShortcut: Character arrowUp do: #moveCursorUp;
 		inputShortcut: Character backspace do: #deleteBeforeCursor;
 		inputShortcut: Character delete do: #deleteAfterCursor;
@@ -89,8 +89,8 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character end do: #selectRightMostBlock;
 		registerShortcut: Character tab shift do: #inputPreviousUnknown;
 		registerShortcut: Character tab do: #inputNextUnknown;
-		registerShortcut: Character arrowUp do: #selectPreviousGroup;
-		registerShortcut: Character arrowDown do: #selectNextGroup;
+		registerShortcut: Character arrowUp asSandblockShortcut, Character arrowUp command do: #selectPreviousGroup;
+		registerShortcut: Character arrowDown asSandblockShortcut, Character arrowDown command do: #selectNextGroup;
 		registerShortcut: Character arrowLeft asSandblockShortcut withOption withCtrl do: #selectLeftToplevel;
 		registerShortcut: Character arrowDown asSandblockShortcut withOption withCtrl do: #selectBottomToplevel;
 		registerShortcut: Character arrowUp asSandblockShortcut withOption withCtrl do: #selectTopToplevel;
