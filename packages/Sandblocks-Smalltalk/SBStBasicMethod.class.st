@@ -38,7 +38,7 @@ SBStBasicMethod >> allUsagesDo: aBlock [
 { #category : #'as yet unclassified' }
 SBStBasicMethod >> arguments [
 
-	^ Array streamContents: [:stream | self argumentsDo: [:a | stream nextPut: a]]
+	^ Array streamContents: [:stream | self argumentsDo: [:a | a isUnknown not ifTrue: [stream nextPut: a]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -482,6 +482,12 @@ SBStBasicMethod >> numArgs [
 SBStBasicMethod >> object [
 
 	^ self compiledMethod
+]
+
+{ #category : #'as yet unclassified' }
+SBStBasicMethod >> objectInterface [
+
+	^ SBInterfaces never
 ]
 
 { #category : #'as yet unclassified' }

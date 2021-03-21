@@ -32,6 +32,12 @@ SBEdgeInsets class >> left: leftNumber right: rightNumber top: topNumber bottom:
 ]
 
 { #category : #'as yet unclassified' }
+SBEdgeInsets class >> right: aNumber [
+
+	^ self basicNew left: 0 right: aNumber top: 0 bottom: 0
+]
+
+{ #category : #'as yet unclassified' }
 SBEdgeInsets >> + anObject [
 
 	^ anObject adaptToEdgeInsetsAndAdd: self

@@ -32,7 +32,16 @@ SBUpdatingPaletteContainer >> initialize [
 	super initialize.
 	
 	currentPalettes := Set new.
-	paletteMapping := Dictionary new
+	paletteMapping := Dictionary new.
+	
+	self
+		minimumWidth: 270;
+		shadowOffset: (-10 @ 0 corner: 10 @ 0);
+		hasDropShadow: true;
+		shadowColor: (Color black alpha: 0.01);
+		layoutInset: (SBEdgeInsets right: 4);
+		detachDecorators: SBResizableDecorator;
+		attachDecorator: (SBResizableDecorator new edge: #right)
 ]
 
 { #category : #'as yet unclassified' }

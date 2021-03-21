@@ -59,10 +59,9 @@ SBStNumber >> keyStroke: anEvent [
 { #category : #'as yet unclassified' }
 SBStNumber >> mouseDown: anEvent [
 
-	super mouseDown: anEvent.
+	(self valid not or: [anEvent redButtonPressed not or: [anEvent anyModifierKeyPressed]]) ifTrue: [^ super mouseDown: anEvent].
 	
-	self valid ifFalse: [^ self].
-	anEvent redButtonPressed ifFalse: [^ self].
+	self click: anEvent.
 	
 	anEvent hand newMouseFocus: self.
 	isDown := true.
@@ -115,8 +114,9 @@ SBStNumber >> printOn: aStream [
 
 { #category : #'as yet unclassified' }
 SBStNumber >> startDrag: anEvent [
-
 	" block the pick-up handler "
+
+	isDown ifFalse: [super startDrag: anEvent]
 ]
 
 { #category : #'as yet unclassified' }

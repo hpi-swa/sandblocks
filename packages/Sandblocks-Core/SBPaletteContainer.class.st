@@ -76,6 +76,12 @@ SBPaletteContainer >> grammarHandler [
 ]
 
 { #category : #'as yet unclassified' }
+SBPaletteContainer >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
+
+	aBlock delete
+]
+
+{ #category : #'as yet unclassified' }
 SBPaletteContainer >> initialize [
 
 	super initialize.
@@ -134,7 +140,7 @@ SBPaletteContainer >> newNullBlock: aString [
 { #category : #'as yet unclassified' }
 SBPaletteContainer >> objectInterface [
 
-	^ SBInterfaces never
+	^ SBInterfaces always
 ]
 
 { #category : #'as yet unclassified' }
