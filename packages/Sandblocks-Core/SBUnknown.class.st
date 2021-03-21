@@ -107,9 +107,7 @@ SBUnknown >> initialize [
 		vResizing: #shrinkWrap.
 	
 	hadOwner := false.
-	deleteIfDismissed := false.
-	
-	self currentTextMorph italic; colorAlpha: 0.7
+	deleteIfDismissed := false
 ]
 
 { #category : #testing }
@@ -133,7 +131,7 @@ SBUnknown >> keyStroke: anEvent [
 { #category : #accessing }
 SBUnknown >> label: aString [
 
-	self currentTextMorph contents: aString
+	self currentTextMorph placeholderText: aString
 ]
 
 { #category : #layout }

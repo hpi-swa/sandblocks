@@ -116,7 +116,7 @@ SBStLiteral >> replaceWithUnknown [
 	
 	self stopEditing.
 	
-	new := self newNullBlock.
+	new := self newNullBlock label: 'expr'.
 	self replaceBy: new.
 	new moveCursorTo: 0.
 	new sandblockEditor replaceInput: new

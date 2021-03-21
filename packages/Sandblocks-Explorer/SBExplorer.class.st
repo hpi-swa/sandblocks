@@ -45,6 +45,13 @@ SBExplorer >> canCopy [
 ]
 
 { #category : #'as yet unclassified' }
+SBExplorer >> color [
+
+	^ "self object sandblockColor"
+	Color r: 0.95 g: 0.95 b: 0.95
+]
+
+{ #category : #'as yet unclassified' }
 SBExplorer >> containingArtefact [
 
 	^ self
@@ -78,7 +85,8 @@ SBExplorer >> doubleClick: anEvent [
 { #category : #'as yet unclassified' }
 SBExplorer >> drawnColor [
 
-	^ "self object sandblockColor"Color r: 0.95 g: 0.95 b: 0.95
+	^ "self object sandblockColor"
+	Color r: 0.95 g: 0.95 b: 0.95
 ]
 
 { #category : #'as yet unclassified' }

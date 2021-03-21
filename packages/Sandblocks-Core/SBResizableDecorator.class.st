@@ -62,7 +62,9 @@ SBResizableDecorator >> mouseMove: anEvent [
 { #category : #'as yet unclassified' }
 SBResizableDecorator >> relevantPosition: anEvent [
 
-	(self morph morphsAt: anEvent position) first ~= self morph ifTrue: [^ false].
+	| morphs |
+	morphs := self morph morphsAt: anEvent position.
+	(morphs isEmpty or: [morphs first ~= self morph]) ifTrue: [^ false].
 
 	edge ifNotNil: [ | distance |
 		distance := (((anEvent position extent: 0 @ 0) perform: edge) - (self morph perform: edge)) abs.

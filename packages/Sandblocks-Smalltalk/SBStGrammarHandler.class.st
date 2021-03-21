@@ -262,7 +262,7 @@ SBStGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 	char = Character backspace ifTrue: [^ self tryDelete: aBlock]].
 	
 	char = Character space ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer receiver: inner selector: '' arguments: #()] with: SBStMessageSend new focusOuter: true].
-	char isSpecial ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer receiver: inner selector: char asString arguments: {outer newNullBlock}] with: SBStMessageSend new focusOuter: true].
+	char isSpecial ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer receiver: inner selector: char asString arguments: {outer newNullBlock label: 'arg'}] with: SBStMessageSend new focusOuter: true].
 	char = ${ ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer type: #dynamic contents: {inner}] with: SBStArray new].
 	char = $( ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer type: #literal contents: {inner}] with: SBStArray new].
 	char = $[ ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer statements: {inner}] with: SBStBlockBody new].
@@ -432,10 +432,10 @@ SBStGrammarHandler >> wrapInMessageSend: aString [
 
 	| msg |
 	msg := SBStMessageSend new
-		receiver: self block newNullBlock
+		receiver: (self block newNullBlock label: 'expr')
 		selector: aString
 		arguments: (aString numArgs > 0 ifTrue: [
-			(1 to: aString numArgs) collect: [:i | self block newNullBlock]] ifFalse: [#()]).
+			(1 to: aString numArgs) collect: [:i | self block newNullBlock label: 'arg']] ifFalse: [#()]).
 	self block sandblockEditor do: ((SBWrapCommand newFor: self block containingArtefact)
 		outer: msg;
 		inner: self block;
