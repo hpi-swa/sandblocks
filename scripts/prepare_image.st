@@ -17,6 +17,7 @@
 
   "Prepare Image a little bit"
   Preferences disable: #showSharedFlaps.
+  Preferences enable: #mouseOverForKeyboardFocus.
   PluggableSystemWindow allInstances do: #abandon.
   PreferenceWizardMorph allInstances do: #abandon.
 
