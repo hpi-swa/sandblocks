@@ -52,7 +52,7 @@ SBScmASTNode >> crIndent: aNumber on: aStream [
 { #category : #evaluation }
 SBScmASTNode >> evaluate [
 
-	^ self containingArtefact interpreter veryDeepCopy readAndEvaluate: self sourceString
+	^ SBLanguageBox eval: self sourceString lang: 'scheme'
 ]
 
 { #category : #accessing }

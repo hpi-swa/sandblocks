@@ -13,14 +13,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBWatch class >> newFor: aBlock [
-
-	^ self new
-		identifier: aBlock arguments second contents asNumber;
-		expression: aBlock arguments first
-]
-
-{ #category : #'as yet unclassified' }
 SBWatch class >> registerWatch: aWatch [
 
 	self registry at: aWatch identifier put: aWatch
@@ -47,6 +39,12 @@ SBWatch class >> report: aValue for: aSymbol [
 SBWatch >> actionProviders [
 
 	^ {self grammarHandler. self}
+]
+
+{ #category : #testing }
+SBWatch >> canAppearInBlockBody [
+
+	^ true
 ]
 
 { #category : #actions }
@@ -78,6 +76,15 @@ SBWatch >> doubleClick: anEvent [
 SBWatch >> drawnColor [
 
 	^ Color veryDarkGray
+]
+
+{ #category : #'as yet unclassified' }
+SBWatch >> evaluate [
+
+	| result |
+	result := self expression evaluate.
+	self reportValue: result.
+	^ result
 ]
 
 { #category : #actions }
@@ -168,6 +175,12 @@ SBWatch >> mouseDown: anEvent [
 SBWatch >> newIdentifier [
 
 	self identifier: Random new nextValue
+]
+
+{ #category : #accessing }
+SBWatch >> object [
+
+	^ self
 ]
 
 { #category : #printing }

@@ -26,6 +26,18 @@ SBScmExpression >> asLanguageBox: converter [
 		do: [SBScmLanguageBox lang: self elements second contents source: self elements third contents]
 ]
 
+{ #category : #converting }
+SBScmExpression >> asWatch: converter [
+	<convert>
+
+	converter
+		if: [self elements size = 4 and: [self elements first contents = 'SBWatch' and: [self elements second contents = 'report:for:']]]
+		do: [
+			SBWatch new
+				identifier: self elements fourth contents asNumber;
+				expression: self elements third veryDeepCopy]
+]
+
 { #category : #'special form checking' }
 SBScmExpression >> binding: aString for: block class: aClass ifPresent: aBlock [
 

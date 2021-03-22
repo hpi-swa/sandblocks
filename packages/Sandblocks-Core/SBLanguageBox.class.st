@@ -120,7 +120,7 @@ SBLanguageBox >> newNullBlock [
 	^ self grammarHandler newNullBlock
 ]
 
-{ #category : #testing }
+{ #category : #accessing }
 SBLanguageBox >> object [
 
 	^ self

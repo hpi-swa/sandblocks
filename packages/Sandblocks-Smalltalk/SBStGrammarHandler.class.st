@@ -88,6 +88,16 @@ SBStGrammarHandler >> debugExpression [
 	self block sandblockEditor reportError: nil process: process
 ]
 
+{ #category : #actions }
+SBStGrammarHandler >> doExpression [
+	<action>
+	
+	| result |
+	result := super doExpression.
+	self containingArtefact ifNotNil: [
+		self containingArtefact cacheType: result class for: self]
+]
+
 { #category : #'callback helpers' }
 SBStGrammarHandler >> emptyLine: aBlock [
 	<action>

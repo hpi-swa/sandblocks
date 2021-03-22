@@ -1,6 +1,15 @@
 Extension { #name : #SBWatch }
 
 { #category : #'*Sandblocks-Smalltalk' }
+SBWatch >> asStExpression: converter [
+	<convert>
+	
+	converter
+		if: [self expression isSmalltalk]
+		do: [(String streamContents: [:s | self writeStSourceOn: s]) parseAsSandblockWithoutSubstitution]
+]
+
+{ #category : #'*Sandblocks-Smalltalk' }
 SBWatch >> guessedClass [
 
 	^ self expression guessedClass

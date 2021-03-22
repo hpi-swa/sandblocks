@@ -41,6 +41,13 @@ SBGrammarHandler >> copyString [
 ]
 
 { #category : #actions }
+SBGrammarHandler >> doExpression [
+	<action>
+
+	^ self block evaluate	
+]
+
+{ #category : #actions }
 SBGrammarHandler >> evaluateExpression [
 	<action>
 	<actionValidIf: #isExpression>
