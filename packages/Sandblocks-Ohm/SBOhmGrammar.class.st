@@ -5,6 +5,15 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBOhmGrammar class >> from: aString [
+
+	| reader result |
+	reader := OhmGrammarOfOhm OhmInstance semanticAction: SBOhmSemantic new.
+	result := reader grammar match: aString startingFrom: 'Grammar'.
+	^ reader value: result
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmGrammar >> canDeleteChild: aBlock [
 
 	^ true
