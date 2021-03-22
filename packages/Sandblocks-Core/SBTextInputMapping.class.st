@@ -144,6 +144,12 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		cmdShortcut: Character space do: #wrapInInfixOp;
 		cmdShortcut: Character space shift do: #wrapInPrefixOp;
 		
+		" ohm "
+		cmdShortcut: $+ do: #wrapInPlus;
+		cmdShortcut: $* do: #wrapInStar;
+		cmdShortcut: $? do: #wrapInOptional;
+		cmdShortcut: $| do: #wrapInAlternative;
+		
 		" multi selection "
 		shortcut: Character space modes: #(selection) do: #startOrAddToMultiSelection;
 		registerShortcut: Character escape do: #endMultiSelection;

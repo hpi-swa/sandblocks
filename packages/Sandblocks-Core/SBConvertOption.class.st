@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'do',
-		'name'
+		'name',
+		'automatic'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -22,6 +23,7 @@ SBConvertOption class >> on: anObject send: aSymbol [
 
 	^ self new
 		name: aSymbol allButLast;
+		automatic: ((anObject class lookupSelector: aSymbol) pragmas anySatisfy: [:p | p keyword = #automatic]);
 		do: [:converter | anObject perform: aSymbol with: converter];
 		yourself
 ]
@@ -30,6 +32,18 @@ SBConvertOption class >> on: anObject send: aSymbol [
 SBConvertOption >> apply: aConverter [
 
 	self do value: aConverter
+]
+
+{ #category : #'as yet unclassified' }
+SBConvertOption >> automatic [
+
+	^ automatic
+]
+
+{ #category : #'as yet unclassified' }
+SBConvertOption >> automatic: aBoolean [
+
+	automatic := aBoolean
 ]
 
 { #category : #'as yet unclassified' }
@@ -42,6 +56,14 @@ SBConvertOption >> do [
 SBConvertOption >> do: aBlock [
 
 	do := aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBConvertOption >> initialize [
+
+	super initialize.
+	
+	automatic := false
 ]
 
 { #category : #'as yet unclassified' }

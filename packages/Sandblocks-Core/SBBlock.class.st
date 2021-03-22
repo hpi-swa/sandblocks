@@ -476,6 +476,18 @@ SBBlock >> containingToplevel [
 	^ self floating ifTrue: [self] ifFalse: [self parentSandblock containingToplevel]
 ]
 
+{ #category : #accessing }
+SBBlock >> contents [
+
+	^ self currentTextMorph ifNotNil: [:t | t contents]
+]
+
+{ #category : #accessing }
+SBBlock >> contents: aString [
+
+	self currentTextMorph ifNotNil: [:t | t contents: aString]
+]
+
 { #category : #actions }
 SBBlock >> convertTo [
 	<action>
@@ -1265,6 +1277,12 @@ SBBlock >> isValidAction: aPragmaOrMethod [
 	validInvocation := (method pragmaAt: #actionValidIf:) ifNotNil: [:p | self perform: p arguments first] ifNil: [true].
 	
 	^ validMode and: [validInvocation]
+]
+
+{ #category : #'event handling' }
+SBBlock >> keyStroke: anEvent [
+
+	self currentTextMorph ifNotNil: [:t | t keyStroke: anEvent]
 ]
 
 { #category : #hierarchy }
@@ -2142,6 +2160,14 @@ SBBlock >> startDrag: anEvent [
 { #category : #input }
 SBBlock >> startInputAt: aNumber replacingContents: aBoolean [
 
+	self currentTextMorph ifNotNil: [ | cmd |
+		cmd := (SBInputCommand newOrEditFor: self containingArtefact)
+			oldMorph: self;
+			previousText: self contents;
+			yourself.
+		self currentTextMorph moveCursorTo: aNumber.
+		^ cmd].
+	
 	^ nil
 ]
 
@@ -2186,6 +2212,12 @@ SBBlock >> stopEditing [
 
 { #category : #input }
 SBBlock >> stopEditing: aCommand [
+
+	aCommand
+		newText: self contents;
+		newMorph: self.
+	
+	self currentTextMorph stopEditing
 ]
 
 { #category : #hierarchy }

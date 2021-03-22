@@ -271,7 +271,14 @@ SBStGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 	char = $< ifTrue: [^ self replaceWithPragma: aBlock].
 	char = Character backspace ifTrue: [^ self tryDelete: aBlock]].
 	
-	char = Character space ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer receiver: inner selector: '' arguments: #()] with: SBStMessageSend new focusOuter: true].
+	char = Character space ifTrue: [
+		^ self
+				wrap: aBlock
+				do: [:outer :inner |
+					ActiveEvent shiftPressed
+						ifTrue: [outer receiver: (self newNullBlock label: 'receiver') selector: '' arguments: {inner}]
+						ifFalse: [outer receiver: inner selector: '' arguments: #()]]
+				with: SBStMessageSend new focusOuter: true].
 	char isSpecial ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer receiver: inner selector: char asString arguments: {outer newNullBlock label: 'arg'}] with: SBStMessageSend new focusOuter: true].
 	char = ${ ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer type: #dynamic contents: {inner}] with: SBStArray new].
 	char = $( ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer type: #literal contents: {inner}] with: SBStArray new].

@@ -61,6 +61,7 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Layout';
 			package: 'Sandblocks-Morphs';
 			package: 'Sandblocks-Drawing';
+			package: 'Sandblocks-Ohm' with: [spec requires: #('Sandblocks-Core' 'Ohm')];
 			package: 'Sandblocks-Javascript' with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Representation' 'Ohm')];
 			package: 'Sandblocks-Scheme' with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Representation' 'QoppaS')];
 			package: 'Sandblocks-Compiler';
@@ -72,7 +73,7 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-ActiveExpression' with: [spec requires: #('default' 'ActiveExpressions')];
 			package: 'JumpingCubes' with: [spec requires: #('Sandblocks-ActiveExpression')].
 		spec
-			group: 'default' with: #('Sandblocks-Core' 'Sandblocks-Smalltalk' 'Sandblocks-Layout' 'Sandblocks-Utils' 'Sandblocks-Debugger' 'Sandblocks-Morphs' 'Sandblocks-Explorer' 'Sandblocks-Watch' 'Sandblocks-Drawing' 'Sandblocks-Representation' 'Sandblocks-Compiler' 'Sandblocks-Babylonian' 'Sandblocks-Javascript' 'Sandblocks-Scheme');
+			group: 'default' with: #('Sandblocks-Core' 'Sandblocks-Smalltalk' 'Sandblocks-Layout' 'Sandblocks-Utils' 'Sandblocks-Debugger' 'Sandblocks-Morphs' 'Sandblocks-Explorer' 'Sandblocks-Watch' 'Sandblocks-Drawing' 'Sandblocks-Representation' 'Sandblocks-Compiler' 'Sandblocks-Babylonian' 'Sandblocks-Javascript' 'Sandblocks-Scheme' 'Sandblocks-Ohm');
 			group: 'tutorial' with: #('Sandblocks-Tutorial');
 			group: 'withActiveExpressions' with: #('Sandblocks-ActiveExpression' 'JumpingCubes');
 			group: 'withRatPack' with: #('Sandblocks-RatPack')]

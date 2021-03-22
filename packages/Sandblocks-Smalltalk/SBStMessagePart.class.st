@@ -299,6 +299,8 @@ SBStMessagePart >> wrapInCascade [
 	<multiSelectAction>
 
 	| cascade |
+	self messageSend isExpression ifFalse: [^ self].
+	
 	self assert: self isSelected.
 	cascade := SBStCascade new.
 	self sandblockEditor doMultiSelection: [:selected | | targets |
@@ -320,6 +322,8 @@ SBStMessagePart >> wrapInCascade [
 { #category : #'as yet unclassified' }
 SBStMessagePart >> wrapInMessageSend [
 	<action>
+	
+	self messageSend isExpression ifFalse: [^ self].
 	
 	self messageSend grammarHandler
 		block: self messageSend;
