@@ -24,11 +24,17 @@ SBStContainer >> artefact [
 { #category : #'as yet unclassified' }
 SBStContainer >> binding: aString for: block class: aClass ifPresent: aBlock [
 
+	| outer |
 	Symbol
 		hasInterned: aString
 		ifTrue: [:sym | | binding |
 			binding := aClass bindingOf: sym environment: self methodClass environment.
 			binding ifNotNil: [^ aBlock value: ((SBStName poolDeclaration: aString) binding: binding)]].
+	
+	outer := self outerArtefact.
+	(outer notNil and: [outer isSmalltalk])
+		ifTrue: [^ self outerArtefact binding: aString for: block class: aClass ifPresent: aBlock].
+	
 	^ nil
 ]
 
@@ -54,6 +60,12 @@ SBStContainer >> classVariables [
 SBStContainer >> containingArtefact [
 
 	^ self
+]
+
+{ #category : #'as yet unclassified' }
+SBStContainer >> declarations [
+
+	^ #()
 ]
 
 { #category : #'artefact protocol' }

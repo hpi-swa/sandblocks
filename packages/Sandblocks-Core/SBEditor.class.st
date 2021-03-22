@@ -729,8 +729,7 @@ SBEditor >> initialize [
 		addMorphBack: (bottomPanel := self buildBottomPanel);
 		registerGlobalShortcutListener: errors;
 		registerGlobalShortcutListener: self;
-		resetState;
-		when: #selectionChanged send: #selectionChanged: to: paletteContainer
+		resetState
 ]
 
 { #category : #testing }
@@ -1465,7 +1464,13 @@ SBEditor >> toggleHelperTimer: aBoolean [
 SBEditor >> togglePalette [
 	<globalAction>
 
-	paletteContainer owner ifNotNil: [paletteContainer delete] ifNil: [self submorphs third addMorphFront: paletteContainer]
+	paletteContainer owner
+		ifNotNil: [
+			paletteContainer delete.
+			self removeActionsWithReceiver: paletteContainer]
+		ifNil: [
+			self submorphs third addMorphFront: paletteContainer.
+			self when: #selectionChanged send: #selectionChanged: to: paletteContainer]
 ]
 
 { #category : #'do/undo/redo' }

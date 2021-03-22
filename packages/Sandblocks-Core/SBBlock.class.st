@@ -194,6 +194,12 @@ SBBlock >> binding: aString for: block class: aClass ifPresent: aBlock [
 	^ self parentSandblock binding: aString for: block class: aClass ifPresent: aBlock
 ]
 
+{ #category : #'ast helpers' }
+SBBlock >> bindingOf: aString [
+
+	^ self parentSandblock ifNotNil: [:p | p bindingOf: aString]
+]
+
 { #category : #hierarchy }
 SBBlock >> blockFor: anObject withInterfaces: aCollection ifOpen: aBlock ifClosed: anotherBlock [
 
@@ -674,16 +680,6 @@ SBBlock >> detachDecorators: aDecoratorClass [
 { #category : #actions }
 SBBlock >> dismiss [
 	<action>
-]
-
-{ #category : #actions }
-SBBlock >> doExpression [
-	<action>
-
-	| result |
-	result := self evaluate.
-	self containingArtefact ifNotNil: [
-		self containingArtefact cacheType: result class for: self]
 ]
 
 { #category : #drawing }

@@ -5,7 +5,7 @@ SBWatch >> asStExpression: converter [
 	<convert>
 	
 	converter
-		if: [self expression isSmalltalk]
+		if: [self expression isSmalltalk and: [self grammarHandler notNil]]
 		do: [(String streamContents: [:s | self writeStSourceOn: s]) parseAsSandblockWithoutSubstitution]
 ]
 

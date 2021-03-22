@@ -95,7 +95,7 @@ SBScmModule >> drawSubmorphsOn: aCanvas [
 
 	super drawSubmorphsOn: aCanvas.
 	
-	self hasUnsavedChanges ifTrue: [ | adornment |
+	(self hasUnsavedChanges and: [self artefactForPersisting = self]) ifTrue: [ | adornment |
 		adornment := PluggableTextMorph adornmentWithColor: Color orange.
 		aCanvas translucentImage: adornment at: self position + ((self width - adornment width) @ 0)]
 ]
@@ -254,6 +254,13 @@ SBScmModule >> selectedFilename [
 SBScmModule >> statements [
 
 	^ self expressions
+]
+
+{ #category : #'as yet unclassified' }
+SBScmModule >> statements: aCollection [
+
+	self statements copy do: #delete.
+	self addAllMorphs: aCollection
 ]
 
 { #category : #'as yet unclassified' }

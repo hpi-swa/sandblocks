@@ -94,8 +94,8 @@ SBStGrammarHandler >> doExpression [
 	
 	| result |
 	result := super doExpression.
-	self containingArtefact ifNotNil: [
-		self containingArtefact cacheType: result class for: self]
+	self block containingArtefact ifNotNil: [
+		self block containingArtefact cacheType: result class for: self]
 ]
 
 { #category : #'callback helpers' }

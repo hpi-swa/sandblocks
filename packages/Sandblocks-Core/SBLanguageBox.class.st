@@ -9,17 +9,28 @@ Class {
 
 { #category : #'as yet unclassified' }
 SBLanguageBox class >> eval: aString lang: anotherString [
-
-	anotherString = 'js' ifTrue: [^ self error: 'no runtime for js installed'].
 	
-	self assert: anotherString = 'scheme'.
+	anotherString = 'smalltalk' ifTrue: [
+		^ SBExecutionEnvironment value
+			ifNotNil: [:artefact | | context |
+				context := artefact evaluationContext.
+				Compiler new
+					evaluate: aString
+					in: context
+					to: (context ifNil: [artefact evaluationReceiver] ifNotNil: #receiver)
+					notifying: artefact
+					ifFail: nil]
+		ifNil: [Compiler evaluate: aString]].
 	
-	^ [SBScmModule newInterpreter readAndEvaluate: aString]
-		on: QoppaUnboundVariableFailure
-		do: [:e | | context name |
-			name := e variableName asSymbol asString.
-			context := thisContext methodReturnContext sender.
-			e resumeWithValue: (self resolve: name inSmalltalk: context ifAbsent: [^ e signal])]
+	anotherString = 'scheme' ifTrue: [
+		^ [SBScmModule newInterpreter readAndEvaluate: aString]
+			on: QoppaUnboundVariableFailure
+			do: [:e | | context name |
+				name := e variableName asSymbol asString.
+				context := thisContext methodReturnContext sender.
+				e resumeWithValue: (self resolve: name inSmalltalk: context ifAbsent: [^ e signal])]].
+	
+	^ self error: ('no runtime for {1} installed' format: {anotherString}).
 ]
 
 { #category : #'as yet unclassified' }
@@ -39,7 +50,9 @@ SBLanguageBox class >> resolve: aString inSmalltalk: context ifAbsent: aBlock [
 
 	^ context namedTempAt: (context tempNames
 		indexOf: aString
-		ifAbsent: [^ Smalltalk globals at: aString asSymbol ifAbsent: [^ aBlock value]])
+		ifAbsent: [
+			SBExecutionEnvironment value ifNotNil: [:env | (env bindingOf: aString asSymbol) ifNotNil: [:b | ^ b value]].
+			^ Smalltalk globals at: aString asSymbol ifAbsent: [^ aBlock value]])
 ]
 
 { #category : #'as yet unclassified' }
@@ -69,6 +82,12 @@ SBLanguageBox >> canAppearInBlockBody [
 SBLanguageBox >> drawnColor [
 
 	^ self root drawnColor
+]
+
+{ #category : #evaluation }
+SBLanguageBox >> evaluate [
+
+	^ self root evaluate
 ]
 
 { #category : #accessing }
@@ -139,6 +158,12 @@ SBLanguageBox >> root [
 	^ self submorphs last
 ]
 
+{ #category : #accessing }
+SBLanguageBox >> setEmptyWithHint: aString [
+
+	self statements: {self root newNullBlock label: aString}
+]
+
 { #category : #initialization }
 SBLanguageBox >> source: aString lang: anotherString [
 
@@ -155,6 +180,12 @@ SBLanguageBox >> source: aString lang: anotherString [
 	self addMorphFront: ((self root class respondsTo: #icon)
 		ifTrue: [self root class icon asMorph]
 		ifFalse: [SBIcon iconQuestion])
+]
+
+{ #category : #accessing }
+SBLanguageBox >> statements: aCollection [
+
+	self root statements: aCollection
 ]
 
 { #category : #printing }

@@ -128,6 +128,13 @@ SBJsModule >> saveTryFixing: aBoolean quick: aQuickBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsModule >> statements: aCollection [
+
+	self body removeAllMorphs.
+	self body addAllMorphs: aCollection
+]
+
+{ #category : #'as yet unclassified' }
 SBJsModule >> tryFixingMethod: aFixBoolean [
 
 	self allBlocksDo: [:block |

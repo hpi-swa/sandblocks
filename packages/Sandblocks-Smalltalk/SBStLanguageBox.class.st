@@ -5,17 +5,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBStLanguageBox class >> eval: aString lang: anotherString [
-
-	^ [SBScmModule newInterpreter readAndEvaluate: aString]
-		on: QoppaUnboundVariableFailure
-		do: [:e | | context name |
-			name := e variableName asSymbol asString.
-			context := thisContext methodReturnContext sender.
-			e resumeWithValue: (context namedTempAt: (context tempNames indexOf: name ifAbsent: [^ e signal]))]
-]
-
-{ #category : #'as yet unclassified' }
 SBStLanguageBox class >> matches: aMessageSend [
 
 	^ (false) and: [aMessageSend selector = 'eval:lang:']

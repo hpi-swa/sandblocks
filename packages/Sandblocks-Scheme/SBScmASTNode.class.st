@@ -52,6 +52,7 @@ SBScmASTNode >> crIndent: aNumber on: aStream [
 { #category : #evaluation }
 SBScmASTNode >> evaluate [
 
+	SBExecutionEnvironment value: self containingArtefact.
 	^ SBLanguageBox eval: self sourceString lang: 'scheme'
 ]
 

@@ -44,6 +44,7 @@ SBGrammarHandler >> copyString [
 SBGrammarHandler >> doExpression [
 	<action>
 
+	SBExecutionEnvironment value: self block containingArtefact.
 	^ self block evaluate	
 ]
 
@@ -53,6 +54,8 @@ SBGrammarHandler >> evaluateExpression [
 	<actionValidIf: #isExpression>
 
 	| result |
+	SBExecutionEnvironment value: self block containingArtefact.
+	
 	result := self block evaluate.
 	result convertedFor: SBInterfaces topLevel do: [:morph |
 		self block sandblockEditor openMorphInView: morph.

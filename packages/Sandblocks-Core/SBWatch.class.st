@@ -110,7 +110,7 @@ SBWatch >> expression: aBlock [
 { #category : #accessing }
 SBWatch >> grammarHandler [
 
-	^ self parentSandblock grammarHandler
+	^ self parentSandblock ifNotNil: #grammarHandler
 ]
 
 { #category : #accessing }

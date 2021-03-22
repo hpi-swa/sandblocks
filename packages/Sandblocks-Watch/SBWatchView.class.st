@@ -7,7 +7,8 @@ Class {
 		'hadValue',
 		'count',
 		'currentRepresentation',
-		'applyingChange'
+		'applyingChange',
+		'clear'
 	],
 	#category : #'Sandblocks-Watch'
 }
@@ -26,14 +27,21 @@ SBWatchView >> changeDisplay [
 
 { #category : #'event handling' }
 SBWatchView >> clear [
+	<action>
 
-	count contents: '0'
+	count contents: '0'.
+	self display replaceBy: (self placeholder: 0 @ 0).
+	clear
+		disableLayout: true;
+		visible: false
 ]
 
 { #category : #'event handling' }
 SBWatchView >> display [
 
-	^ self lastSubmorph
+	^ self submorphCount = 3
+		ifTrue: [self submorphs second]
+		ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -75,13 +83,18 @@ SBWatchView >> initialize [
 		listDirection: #leftToRight;
 		color: Color transparent;
 		cellGap: 8;
+		cellPositioning: #center;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		addMorphBack: (count := SBBadge new
 			contents: '0';
 			balloonText: 'Number of reported values';
 			yourself);
-		addMorphBack: (self placeholder: 0 @ 0)
+		addMorphBack: (self placeholder: 0 @ 0);
+		addMorphBack: (clear := SBIcon iconTrash
+			on: #click send: #clear to: self;
+			disableLayout: true;
+			visible: false)
 ]
 
 { #category : #'as yet unclassified' }
@@ -123,12 +136,16 @@ SBWatchView >> reportValue: anObject [
 	[
 		applyingChange := true.
 		hadValue ifFalse: [hadValue := true].
-	
+		
 		SBToggledCode
 			comment: 'we want to check if we can/should reuse the previous conversion procedure'
 			active: 1
 			do: {[self useDisplay: (anObject convertedFor: self watchObjectInterface do: #yourself)]}.
-	
+		
+		clear
+			disableLayout: false;
+			visible: true.
+		
 		count contents: (count contents asInteger + 1) asString.
 		lastValue := anObject] ensure: [applyingChange := false]
 ]
@@ -148,7 +165,7 @@ SBWatchView >> storeAsExample [
 SBWatchView >> useDisplay: aDisplay [
 
 	self display ifNotNil: #delete.
-	self addMorphBack: aDisplay
+	self addMorph: aDisplay asElementNumber: 2
 ]
 
 { #category : #'as yet unclassified' }

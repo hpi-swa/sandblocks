@@ -263,6 +263,7 @@ SBExplorer >> startInputAt: aNumber replacingContents: aBoolean [
 		shouldMergeWithNext: true).
 	self sandblockEditor replaceInput: new.
 	^ new startInputAt: aNumber replacingContents: false"
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }

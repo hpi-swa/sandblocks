@@ -66,8 +66,11 @@ SBStASTNode >> compilationCueWith: aRequestor for: aContext [
 { #category : #evaluate }
 SBStASTNode >> evaluate [
 
-	^ self containingArtefact
-		ifNotNil: [:artefact | | context |
+	| artefact |
+	artefact := SBExecutionEnvironment value ifNil: [self containingArtefact].
+	
+	^ artefact
+		ifNotNil: [ | context |
 			context := artefact evaluationContext.
 			Compiler new
 				evaluate: self sourceString

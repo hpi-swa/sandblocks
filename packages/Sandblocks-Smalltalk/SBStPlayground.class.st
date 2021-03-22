@@ -58,6 +58,7 @@ SBStPlayground >> binding: aString for: block class: aClass ifPresent: aBlock [
 SBStPlayground >> bindingOf: aString [
 
 	aString = 'sbEditor' ifTrue: [^ #sbEditor -> self sandblockEditor].
+	(super bindingOf: aString) ifNotNil: [:b | ^ b].
 	
 	^ (self getOrCreateLocalBinding: aString) binding
 ]
