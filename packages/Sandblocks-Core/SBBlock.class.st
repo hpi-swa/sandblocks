@@ -1075,9 +1075,9 @@ SBBlock >> inputContainedUnknown [
 	<action>
 	<inputAction>
 
-	(self nextBlockThat: [:m | m wantsInput])
+	(self wantsInput ifTrue: [self] ifFalse: [self nextBlockThat: [:m | m wantsInput]])
 		ifNotNil: [:m |
-			(m hasOwner: self) ifTrue: [
+			((m hasOwner: self) or: [m = self]) ifTrue: [
 				self sandblockEditor startInput: m at: 1 replacingContents: true]]
 ]
 
@@ -1768,6 +1768,7 @@ SBBlock >> postDuplicateSelf [
 
 	" this block has been duplicated, adjust any identifiers if need be "
 	
+	self detachDecorators: SBSelectionDecorator
 ]
 
 { #category : #accessing }

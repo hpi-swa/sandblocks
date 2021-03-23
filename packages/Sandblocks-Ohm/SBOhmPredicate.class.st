@@ -1,23 +1,23 @@
 Class {
-	#name : #SBOhmQuantifier,
+	#name : #SBOhmPredicate,
 	#superclass : #SBOhmASTNode,
 	#category : #'Sandblocks-Ohm'
 }
 
 { #category : #'as yet unclassified' }
-SBOhmQuantifier >> currentTextMorph [
+SBOhmPredicate >> currentTextMorph [
 
 	^ self lastSubmorph
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmQuantifier >> expression [
+SBOhmPredicate >> expression [
 
 	^ self firstSubmorph
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmQuantifier >> expression: anExpression quantifier: aCharacter [
+SBOhmPredicate >> expression: anExpression predicate: aCharacter [
 
 	self addMorphBack: anExpression.
 	self addMorphBack: (SBOwnTextMorph new
@@ -26,42 +26,42 @@ SBOhmQuantifier >> expression: anExpression quantifier: aCharacter [
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmQuantifier >> isExpression [
+SBOhmPredicate >> isExpression [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmQuantifier >> keyStroke: anEvent [
+SBOhmPredicate >> keyStroke: anEvent [
 
-	(#($+ $* $?) includes: anEvent keyCharacter)
-		ifTrue: [self quantifier: anEvent keyCharacter]
+	(#($~ $&) includes: anEvent keyCharacter)
+		ifTrue: [self predicate: anEvent keyCharacter]
 		ifFalse: [self grammarHandler perform: anEvent keyCharacter for: self empty: false]
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmQuantifier >> layoutCommands [
+SBOhmPredicate >> layoutCommands [
 
 	^ SBAlgebraCommand container
-		data: {self expression layoutCommands. self currentTextMorph layoutCommands};
+		data: {self currentTextMorph layoutCommands. self expression layoutCommands};
 		morph: self
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmQuantifier >> quantifier [
+SBOhmPredicate >> predicate [
 
 	^ self currentTextMorph contents first
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmQuantifier >> quantifier: aCharacter [
+SBOhmPredicate >> predicate: aCharacter [
 
 	self currentTextMorph contents: aCharacter asString
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmQuantifier >> writeSourceOn: aStream [
+SBOhmPredicate >> writeSourceOn: aStream [
 
-	self expression writeSourceOn: aStream.
-	aStream nextPut: self quantifier
+	aStream nextPut: self predicate.
+	self expression writeSourceOn: aStream
 ]

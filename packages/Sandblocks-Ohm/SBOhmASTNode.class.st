@@ -40,6 +40,12 @@ SBOhmASTNode >> isOhm [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmASTNode >> isRule [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmASTNode >> isSequence [
 
 	^ false
@@ -54,7 +60,7 @@ SBOhmASTNode >> maybeUnwrapList [
 { #category : #'as yet unclassified' }
 SBOhmASTNode >> newNullBlock [
 
-	^ self grammarHandler newNullBock
+	^ self grammarHandler newNullBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -73,4 +79,16 @@ SBOhmASTNode >> objectInterfaceAt: aNumber adding: aBoolean [
 SBOhmASTNode >> preferredColor [
 
 	^ Color r: 0.404 g: 0.641 b: 0.125
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmASTNode >> sourceString [
+
+	^ String streamContents: [:s | self writeSourceOn: s]
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmASTNode >> writeSourceOn: aStream [
+
+	^ self subclassResponsibility
 ]

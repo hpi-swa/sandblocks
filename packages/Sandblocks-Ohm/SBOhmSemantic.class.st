@@ -17,8 +17,11 @@ SBOhmSemantic >> Alt: aNode alt: alt [
 { #category : #'as yet unclassified' }
 SBOhmSemantic >> AltRec: aNode term: term pipe: pipe alt: alt [
 
+	| rec |
+	rec := self value: alt.
+	
 	^ SBOhmList new
-		connect: 'OR' expressions: {self value: term. self value: alt};
+		connect: 'OR' expressions: {self value: term}, (rec isAlternative ifTrue: [rec expressions] ifFalse: [{rec}]);
 		maybeUnwrapList
 ]
 
@@ -32,6 +35,12 @@ SBOhmSemantic >> Base: aNode base: base [
 SBOhmSemantic >> BaseApplication: aNode identifier: identifier params: params [
 
 	^ SBOhmIdentifier new contents: aNode interval contents
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmSemantic >> BaseParen: node with: x with: expr with: xx [
+
+	^ self value: expr
 ]
 
 { #category : #'as yet unclassified' }
@@ -86,6 +95,18 @@ SBOhmSemantic >> Pred: aNode lex: lex [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmSemantic >> PredLookahead: node with: x with: expr [
+
+	^ SBOhmPredicate new expression: (self value: expr) predicate: '&'
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmSemantic >> PredNot: node with: x with: expr [
+
+	^ SBOhmPredicate new expression: (self value: expr) predicate: '~'
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmSemantic >> Rule: aNode rule: rule [
 
 	^ self value: rule
@@ -95,6 +116,12 @@ SBOhmSemantic >> Rule: aNode rule: rule [
 SBOhmSemantic >> RuleDefine: aNode identifier: identifier formals: formals ruleDescription: ruleDescription assignment: assignment alternative: alternative [
 
 	^ SBOhmRule new name: identifier interval contents alternatives: (self value: alternative)
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmSemantic >> RuleExtend: node with: name with: parameters with: x with: body [
+
+	^ SBOhmRule new name: name interval contents alternatives: (self value: body)
 ]
 
 { #category : #'as yet unclassified' }
@@ -109,6 +136,12 @@ SBOhmSemantic >> Seq: aNode iter: iter [
 SBOhmSemantic >> Term: aNode term: aTerm [
 
 	^ self value: aTerm
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmSemantic >> TermInline: node with: expr with: name [
+
+	^ self value: expr
 ]
 
 { #category : #'as yet unclassified' }

@@ -20,6 +20,12 @@ SBOhmGrammar >> canDeleteChild: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmGrammar >> canPersist [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmGrammar >> fixedNumberOfChildren [
 
 	^ false
@@ -42,7 +48,7 @@ SBOhmGrammar >> insertCommandRequest: anAfterBoolean near: aBlock [
 	^ (SBInsertCommand newFor: self containingArtefact)
 		index: (self childSandblocks indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
 		container: self;
-		morph: (SBOhmRule new name: '' alternatives: self newNullBlock);
+		morph: (SBOhmRule new name: '' alternatives: SBOhmGrammarHandler new newNullBlock);
 		shouldMergeWithNext: true;
 		yourself
 ]
@@ -78,7 +84,7 @@ SBOhmGrammar >> objectInterfaceAt: aNumber adding: aBoolean [
 { #category : #'as yet unclassified' }
 SBOhmGrammar >> rules [
 
-	^ self submorphs
+	^ self submorphs, (OhmBuiltInRules rules associations, OhmBaseGrammar rules associations)
 ]
 
 { #category : #'as yet unclassified' }
@@ -90,5 +96,22 @@ SBOhmGrammar >> sandblockBlockColorIfAbsent: aBlock [
 { #category : #'as yet unclassified' }
 SBOhmGrammar >> statements [
 
-	^ self rules
+	^ self submorphs
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmGrammar >> writeOhmSourceOn: aStream [
+
+	aStream nextPutAll: 'G <: BuiltInRules {'; cr.
+	self statements do: [:s | s writeSourceOn: aStream] separatedBy: [
+		aStream
+			cr;
+			cr].
+	aStream nextPut: $}
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmGrammar >> writeSourceOn: aStream [
+
+	self grammarHandler writeSourceOn: aStream for: self
 ]

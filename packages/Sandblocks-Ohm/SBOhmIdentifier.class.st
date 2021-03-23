@@ -28,7 +28,8 @@ SBOhmIdentifier >> symbols [
 { #category : #'as yet unclassified' }
 SBOhmIdentifier >> valid [
 
-	^ self containingArtefact submorphs anySatisfy: [:rule | rule name = self contents]
+	self containingArtefact isOhm ifFalse: [^ false].
+	^ self containingArtefact rules anySatisfy: [:rule | rule key = self contents]
 ]
 
 { #category : #'as yet unclassified' }
@@ -36,4 +37,10 @@ SBOhmIdentifier >> validContents [
 
 	self contents ifEmpty: [^ false].
 	^ self contents first isLetter and: [self contents viewAllButFirst allSatisfy: [:c | c isAlphaNumeric]]
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmIdentifier >> writeSourceOn: aStream [
+
+	aStream nextPutAll: self contents
 ]

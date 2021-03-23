@@ -78,7 +78,7 @@ SBBrowserEditor >> modelSelection: anObject [
 
 	anObject isBehavior ifTrue: [^ model selectClass: anObject].
 	anObject isCompiledMethod ifTrue: [
-		model selectedClass ~= anObject methodClass ifTrue: [model selectClass: anObject methodClass].
+		model selectedClass ~= anObject methodClass ifTrue: [model selectClass: anObject methodClass theNonMetaClass].
 		^ model selectMessageNamed: anObject selector]
 ]
 

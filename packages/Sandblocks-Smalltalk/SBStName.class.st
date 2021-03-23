@@ -260,6 +260,14 @@ SBStName >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBStName >> lookupAction: aSymbol [
+
+	(self behavior class lookupSelector: aSymbol) ifNotNil: [:m | (self isValidAction: m) ifTrue: [^ self behavior]].
+	
+	^ super lookupAction: aSymbol
+]
+
+{ #category : #'as yet unclassified' }
 SBStName >> lowercaseSuggestions [
 
 	^ Array streamContents: [:str |

@@ -5,12 +5,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBOhmTerminal >> contents: aString [
-
-	self currentTextMorph contents: aString
-]
-
-{ #category : #'as yet unclassified' }
 SBOhmTerminal >> currentTextMorph [
 
 	^ self firstSubmorph
@@ -36,4 +30,12 @@ SBOhmTerminal >> isExpression [
 SBOhmTerminal >> symbols [
 
 	^ #('"' '"')
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmTerminal >> writeSourceOn: aStream [
+
+	aStream nextPut: $".
+	aStream nextPutAll: self contents.
+	aStream nextPut: $"
 ]

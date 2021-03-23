@@ -86,7 +86,7 @@ SBOhmList >> layoutCommands [
 					self submorphs first layoutCommands.
 					SBAlgebraCommand indent data: {SBAlgebraCommand softLineOrGap}, (self submorphs viewAllButFirst
 						collect: #layoutCommands
-						separatedBy: [SBAlgebraCommand softLineOrGap])};
+						separatedBy: [SBAlgebraCommand softLineOrGap withGap: true])};
 				morph: self]}
 ]
 
@@ -94,4 +94,17 @@ SBOhmList >> layoutCommands [
 SBOhmList >> maybeUnwrapList [
 
 	^ self expressions size < 2 ifTrue: [self expressions first] ifFalse: [self]
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmList >> writeSourceOn: aStream [
+
+	| needsParens |
+	needsParens := self parentSandblock isAlternative not and: [self parentSandblock isRule not].
+	
+	needsParens ifTrue: [aStream nextPut: $(].
+	self expressions
+		do: [:s | s writeSourceOn: aStream]
+		separatedBy: [aStream nextPutAll: (self connect = 'OR' ifTrue: [' | '] ifFalse: [' '])].
+	needsParens ifTrue: [aStream nextPut: $)]
 ]

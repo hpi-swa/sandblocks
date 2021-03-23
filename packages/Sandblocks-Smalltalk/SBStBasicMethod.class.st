@@ -569,7 +569,9 @@ SBStBasicMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
 
 	| text newSelector |
 	(self savedMethodHasComments and: [
-		(UIManager default confirm: 'Currently saved version has comments that will be removed. Still save?') not]) ifTrue: [^ false].
+		(self valueOfProperty: #alreadyWarnedComments ifAbsent: [false]) not]) ifTrue: [
+			(UIManager default confirm: 'Currently saved version has comments that will be removed. Still save?')
+				ifTrue: [self setProperty: #alreadyWarnedComments toValue: true] ifFalse: [^ false]].
 	
 	self allBlocksDo: [:block | block valid ifFalse: [aBoolean ifFalse: [^ false] ifTrue: [block tryFixIfFail: [^ false]]]].
 	

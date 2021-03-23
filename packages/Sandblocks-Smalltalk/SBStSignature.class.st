@@ -319,6 +319,36 @@ SBStSignature >> selectorAndEdit: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBStSignature >> selectorAndEdit: aString withFilledArgs: aBoolean [
+
+	| current possibleArgumentNames |
+	current := self containingSandblock sandblockEditor currentInputCommand.
+	current oldMorph contents: current previousText.
+	self containingSandblock sandblockEditor endInput.
+	
+	possibleArgumentNames := self possibleArgumentNamesFor: aString.
+	
+	self sandblockEditor do: ((SBInputMessageCommand newFor: self containingSandblock containingArtefact)
+		messageSend: self containingSandblock;
+		previousArguments: self arguments;
+		previousSelector: self selector;
+		newSelector: aString;
+		newArguments: ((1 to: (self numArguments: aString)) collect: [:index |
+			self arguments
+				at: index
+				ifAbsent: [
+					aBoolean ifTrue: [possibleArgumentNames at: index ifPresent: [:n | SBStName new contents: n] ifAbsent: [self containingSandblock newNullBlock]] ifFalse: [self containingSandblock newNullBlock label: (possibleArgumentNames at: index ifAbsent: [''])]]]);
+		shouldMergeWithNext: true;
+		yourself).
+	
+	self arguments
+		detect: #isUnknown
+		ifFound: [:u | self sandblockEditor startInput: u at: 0 replacingContents: false]
+		ifNone: [
+			self sandblockEditor do: ((SBDoItCommand newFor: self containingSandblock containingArtefact) do: [self messageParts last select])]
+]
+
+{ #category : #'as yet unclassified' }
 SBStSignature >> startInputAt: aNumber replacingContents: aBoolean [
 
 	self sandblockEditor replaceInput: self firstSubmorph.

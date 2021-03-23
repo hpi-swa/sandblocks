@@ -212,7 +212,8 @@ SBStMethod >> updateSuggestions [
 { #category : #'as yet unclassified' }
 SBStMethod >> useSuggestion: aString [
 
-	signature selectorAndEdit: aString
+	signature selectorAndEdit: aString withFilledArgs: true.
+	(signature arguments anySatisfy: #wantsInput) ifFalse: [self inputNextUnknown]
 ]
 
 { #category : #'as yet unclassified' }

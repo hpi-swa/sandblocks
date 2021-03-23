@@ -11,10 +11,28 @@ SBOhmRule >> currentTextMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmRule >> expression [
+
+	^ self lastSubmorph
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmRule >> initialize [
 
 	super initialize.
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmRule >> isRule [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmRule >> key [
+
+	^ self name
 ]
 
 { #category : #'as yet unclassified' }
@@ -35,6 +53,20 @@ SBOhmRule >> name [
 SBOhmRule >> name: aString alternatives: aBlock [
 
 	self addMorphBack: ((SBOwnTextMorph new placeholderText: 'name') contents: aString).
-	self addMorphBack: (SBStringMorph new contents: ' := ').
+	self addMorphBack: (SBStringMorph new contents: ' = ').
 	self addMorphBack: aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmRule >> wantsInput [
+
+	^ self contents isEmpty
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmRule >> writeSourceOn: aStream [
+
+	aStream nextPutAll: self name.
+	aStream nextPutAll: ' = '.
+	self expression writeSourceOn: aStream
 ]

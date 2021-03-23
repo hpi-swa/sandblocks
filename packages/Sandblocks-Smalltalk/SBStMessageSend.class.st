@@ -40,6 +40,16 @@ SBStMessageSend >> asMessageSend: converter [
 ]
 
 { #category : #converting }
+SBStMessageSend >> asOhmGrammar: converter [
+	<convert>
+	<automatic>
+
+	converter
+		if: [self selector = 'new:' and: [self receiver isBinding and: [self receiver contents = 'OhmGrammar']]]
+		do: [SBOhmGrammar from: self arguments first contents]
+]
+
+{ #category : #converting }
 SBStMessageSend >> asWatch: converter [
 	<convert>
 	<automatic>
@@ -503,7 +513,7 @@ SBStMessageSend >> useAsVariable [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> useSuggestion: aString [
 
-	signature selectorAndEdit: aString
+	signature selectorAndEdit: aString withFilledArgs: false
 ]
 
 { #category : #'as yet unclassified' }
