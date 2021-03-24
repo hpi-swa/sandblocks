@@ -25,12 +25,6 @@ jobs:
         if: github.ref == 'refs/heads/release' && matrix.smalltalk == 'Squeak64-5.3'
         shell: bash
         timeout-minutes: 5
-#      - name: Upload Package
-#        uses: actions/upload-artifact@v2
-#        if: github.ref == 'refs/heads/release' && matrix.smalltalk == 'Squeak64-5.3'
-#        with:
-#          name: sandblocks.zip 
-#          path: ./deploy/sandblocks.zip
       - name: Release
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/release' && matrix.smalltalk == 'Squeak64-5.3'
