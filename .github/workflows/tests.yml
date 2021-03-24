@@ -35,7 +35,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/release' && matrix.smalltalk == 'Squeak64-5.3'
         with:
-          fail_on_unmatched_files: true
+          tag_name: latest
           files: |
             *
         env:
