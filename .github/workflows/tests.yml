@@ -37,6 +37,6 @@ jobs:
         with:
           tag_name: latest
           files: |
-            *
+            deploy/sandblocks.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
