@@ -33,7 +33,6 @@ jobs:
 #          path: ./deploy/sandblocks.zip
       - name: Publish Release
         uses: softprops/action-gh-release@v1
-        prerelease: true
         with:
           files: sandblocks.zip
         if: github.ref == 'refs/heads/release' && matrix.smalltalk == 'Squeak64-5.3'
