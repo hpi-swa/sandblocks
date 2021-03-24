@@ -20,7 +20,7 @@ mkdir -p "${DEPLOY_PATH}"
 cd "${DEPLOY_PATH}"
 
 # BASE="Squeak5.3-19458-64bit-202003021730-Linux"
-BASE="Squeak5.3-19435-64bit-All-in-One"
+BASE="Squeak5.3-19458-64bit-All-in-One"
 BASE_SHARED="$BASE.app"
 
 print_info "Downloading $BASE image..."
