@@ -242,6 +242,12 @@ SBLabel >> useAsString [
 ]
 
 { #category : #'as yet unclassified' }
+SBLabel >> wantsInput [
+
+	^ self contents isEmpty
+]
+
+{ #category : #'as yet unclassified' }
 SBLabel >> writeSourceOn: aStream [
 
 	(delimiter notNil and: [delimiter last isNil])
