@@ -32,7 +32,7 @@ unzip -q $BASE.zip
 # mv $BASE_SHARED/shared/SqueakV50.sources .
 
 print_info "Preparing $BASE image..."
-$BASE_SHARED/Contents/Linux-x86_64/bin/squeak $COG_VM_PARAM "$BASE_SHARED/Contents/Resources/Squeak5.3-19458-64bit.image" "../scripts/prepare_image.st" || EXIT_STATUS=$?
+$BASE_SHARED/Contents/Linux-x86_64/bin/squeak $COG_VM_PARAM "$BASE_SHARED/Contents/Resources/Squeak5.3-19458-64bit.image" "$(pwd)/../scripts/prepare_image.st" || EXIT_STATUS=$?
 
 print_info "Zipping package ..."
 if [[ $EXIT_STATUS -eq 0 ]]; then
