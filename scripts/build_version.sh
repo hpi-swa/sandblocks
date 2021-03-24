@@ -35,11 +35,11 @@ rm "$BASE.zip"
 print_info "Preparing $BASE image..."
 $BASE_SHARED/Contents/Linux-x86_64/bin/squeak $COG_VM_PARAM "$BASE_SHARED/Contents/Resources/Squeak5.3-19458-64bit.image" "$(pwd)/../scripts/prepare_image.st" || EXIT_STATUS=$?
 
-#print_info "Zipping package ..."
-#if [[ $EXIT_STATUS -ne 0 ]]; then
-#    zip "${DEPLOY_PACKAGE}" *
-#else
-#    print_info "Preparation of image file failed."
-#fi
+print_info "Zipping package ..."
+if [[ $EXIT_STATUS -ne 0 ]]; then
+    zip "${DEPLOY_PACKAGE}" *
+else
+    print_info "Preparation of image file failed."
+fi
 
 exit $EXIT_STATUS

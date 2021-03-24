@@ -39,4 +39,4 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            *
+            deploy/sandblocks.zip
