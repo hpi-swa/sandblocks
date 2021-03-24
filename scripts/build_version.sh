@@ -19,22 +19,24 @@ COG_VM_PARAM="-nosound -vm-display-null"
 mkdir -p "${DEPLOY_PATH}" 
 cd "${DEPLOY_PATH}"
 
-BASE="Squeak5.3-19458-64bit-202003021730-Linux"
+# BASE="Squeak5.3-19458-64bit-202003021730-Linux"
+BASE="Squeak5.3-19435-64bit-All-in-One"
+BASE_SHARED="$BASE.app"
 
 print_info "Downloading $BASE image..."
 wget --no-verbose "http://files.squeak.org/5.3/Squeak5.3-19458-64bit/$BASE.zip"
 unzip -q $BASE.zip
 
-mv $BASE/shared/*.image "${DEPLOY_IMAGE}"
-mv $BASE/shared/*.changes "${DEPLOY_CHANGES}"
-mv $BASE/shared/SqueakV50.sources .
+# mv $BASE_SHARED/shared/*.image "${DEPLOY_IMAGE}"
+# mv $BASE_SHARED/shared/*.changes "${DEPLOY_CHANGES}"
+# mv $BASE_SHARED/shared/SqueakV50.sources .
 
 print_info "Preparing $BASE image..."
-$BASE/bin/squeak $COG_VM_PARAM "${DEPLOY_IMAGE}" "../scripts/prepare_image.st" || EXIT_STATUS=$?
+$BASE_SHARED/Contents/Linux-x86_64/bin/squeak $COG_VM_PARAM "$BASE_SHARED/Contents/Resources/Squeak5.3-19458-64bit.image" "../scripts/prepare_image.st" || EXIT_STATUS=$?
 
 print_info "Zipping package ..."
 if [[ $EXIT_STATUS -eq 0 ]]; then
-    zip "${DEPLOY_PACKAGE}" *.image *.changes *.sources
+    zip "${DEPLOY_PACKAGE}" *
 else
     print_info "Preparation of image file failed."
 fi
