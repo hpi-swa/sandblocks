@@ -13,6 +13,12 @@ SBOhmGrammar class >> from: aString [
 	^ reader value: result
 ]
 
+{ #category : #smalltalk }
+SBOhmGrammar >> canAppearInBlockBody [
+
+	^ true
+]
+
 { #category : #'as yet unclassified' }
 SBOhmGrammar >> canDeleteChild: aBlock [
 
@@ -29,6 +35,24 @@ SBOhmGrammar >> canPersist [
 SBOhmGrammar >> fixedNumberOfChildren [
 
 	^ false
+]
+
+{ #category : #smalltalk }
+SBOhmGrammar >> grammarHandler [
+
+	^ self parentSandblock grammarHandler
+]
+
+{ #category : #smalltalk }
+SBOhmGrammar >> guessClassExpensive [
+
+	^ self guessedClass
+]
+
+{ #category : #smalltalk }
+SBOhmGrammar >> guessedClass [
+
+	^ OhmGrammar
 ]
 
 { #category : #'as yet unclassified' }
@@ -61,6 +85,18 @@ SBOhmGrammar >> isArtefact [
 
 { #category : #'as yet unclassified' }
 SBOhmGrammar >> isBlockBody [
+
+	^ true
+]
+
+{ #category : #smalltalk }
+SBOhmGrammar >> isExpression [
+
+	^ true
+]
+
+{ #category : #smalltalk }
+SBOhmGrammar >> isSmalltalk [
 
 	^ true
 ]
@@ -99,6 +135,10 @@ SBOhmGrammar >> statements [
 	^ self submorphs
 ]
 
+{ #category : #smalltalk }
+SBOhmGrammar >> updatePCFrom: anObject [
+]
+
 { #category : #'as yet unclassified' }
 SBOhmGrammar >> writeOhmSourceOn: aStream [
 
@@ -114,4 +154,13 @@ SBOhmGrammar >> writeOhmSourceOn: aStream [
 SBOhmGrammar >> writeSourceOn: aStream [
 
 	self grammarHandler writeSourceOn: aStream for: self
+]
+
+{ #category : #smalltalk }
+SBOhmGrammar >> writeStSourceOn: aStream [
+
+	aStream nextPutAll: '(OhmGrammar new: '.
+	aStream store: (String streamContents: [:s |
+		self writeOhmSourceOn: s]).
+	aStream nextPut: $)
 ]
