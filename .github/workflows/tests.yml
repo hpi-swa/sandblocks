@@ -31,8 +31,11 @@ jobs:
 #        with:
 #          name: sandblocks.zip 
 #          path: ./deploy/sandblocks.zip
-      - name: Publish Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: sandblocks.zip
+      - uses: "marvinpinto/action-automatic-releases@latest"
         if: github.ref == 'refs/heads/release' && matrix.smalltalk == 'Squeak64-5.3'
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: *

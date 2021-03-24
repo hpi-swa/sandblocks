@@ -26,6 +26,7 @@ BASE_SHARED="$BASE.app"
 print_info "Downloading $BASE image..."
 wget --no-verbose "http://files.squeak.org/5.3/Squeak5.3-19458-64bit/$BASE.zip"
 unzip -q $BASE.zip
+rm "$BASE.zip"
 
 # mv $BASE_SHARED/shared/*.image "${DEPLOY_IMAGE}"
 # mv $BASE_SHARED/shared/*.changes "${DEPLOY_CHANGES}"
@@ -36,7 +37,7 @@ $BASE_SHARED/Contents/Linux-x86_64/bin/squeak $COG_VM_PARAM "$BASE_SHARED/Conten
 
 print_info "Zipping package ..."
 if [[ $EXIT_STATUS -eq 0 ]]; then
-    zip "${DEPLOY_PACKAGE}" *
+    # zip "${DEPLOY_PACKAGE}" *
 else
     print_info "Preparation of image file failed."
 fi
