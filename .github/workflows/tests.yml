@@ -31,12 +31,12 @@ jobs:
 #        with:
 #          name: sandblocks.zip 
 #          path: ./deploy/sandblocks.zip
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Release
+        uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/release' && matrix.smalltalk == 'Squeak64-5.3'
+        fail_on_unmatched_files: true
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
           files: |
-            deploy/sandblocks.zip
+            *
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
