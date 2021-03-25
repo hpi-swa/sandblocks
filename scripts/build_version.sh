@@ -11,9 +11,7 @@ function print_info {
 }
 
 DEPLOY_PATH="deploy"
-DEPLOY_IMAGE="sandblocks.image"
-DEPLOY_CHANGES="sandblocks.changes"
-DEPLOY_PACKAGE="sandblocks.zip"
+DEPLOY_PACKAGE="sandblocks-all.zip"
 COG_VM_PARAM="-nosound -vm-display-null"
 
 mkdir -p "${DEPLOY_PATH}" 
@@ -27,10 +25,6 @@ print_info "Downloading $BASE image..."
 wget --no-verbose "http://files.squeak.org/5.3/Squeak5.3-19458-64bit/$BASE.zip"
 unzip -q $BASE.zip
 rm "$BASE.zip"
-
-# mv $BASE_SHARED/shared/*.image "${DEPLOY_IMAGE}"
-# mv $BASE_SHARED/shared/*.changes "${DEPLOY_CHANGES}"
-# mv $BASE_SHARED/shared/SqueakV50.sources .
 
 print_info "Preparing $BASE image..."
 $BASE_SHARED/Contents/Linux-x86_64/bin/squeak $COG_VM_PARAM "$BASE_SHARED/Contents/Resources/Squeak5.3-19458-64bit.image" "$(pwd)/../scripts/prepare_image.st" || EXIT_STATUS=$?
