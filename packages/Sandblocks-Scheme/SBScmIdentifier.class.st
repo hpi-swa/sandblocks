@@ -12,6 +12,15 @@ SBScmIdentifier >> asSymbol: converter [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmIdentifier >> browseImplementors [
+	<action>
+
+	self resolveBinding ifNotNil: [:binding |
+		binding isInWorld ifFalse: [self sandblockEditor open: binding].
+		binding select]
+]
+
+{ #category : #'as yet unclassified' }
 SBScmIdentifier >> isIdentifier [
 
 	^ true

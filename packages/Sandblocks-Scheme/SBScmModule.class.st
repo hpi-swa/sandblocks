@@ -91,6 +91,15 @@ SBScmModule >> commandPaletteClass [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmModule >> definitions [
+
+	^ Array streamContents: [:stream |
+		self
+			withStatementsDo: [:l | l do: [:s | s isSExpr and: [s ifDefinition: [:d | stream nextPut: s] otherwise: []]]]
+			ifNotApplicable: []]
+]
+
+{ #category : #'as yet unclassified' }
 SBScmModule >> drawSubmorphsOn: aCanvas [
 
 	super drawSubmorphsOn: aCanvas.
@@ -132,6 +141,13 @@ SBScmModule >> fixedNumberOfChildren [
 SBScmModule >> hasFilename [
 
 	^ filename notNil
+]
+
+{ #category : #'as yet unclassified' }
+SBScmModule >> inBrowser: converter [
+	<convert>
+
+	converter do: [SBScmBrowser new module: self]
 ]
 
 { #category : #'as yet unclassified' }
@@ -261,6 +277,16 @@ SBScmModule >> statements: aCollection [
 
 	self statements copy do: #delete.
 	self addAllMorphs: aCollection
+]
+
+{ #category : #'as yet unclassified' }
+SBScmModule >> topLevelStatements [
+	" anything that is not a definition and will thus execute "
+
+	^ Array streamContents: [:stream |
+		self
+			withStatementsDo: [:l | l do: [:s | s isSExpr and: [s ifDefinition: [:d | ] otherwise: [stream nextPut: s]]]]
+			ifNotApplicable: []]
 ]
 
 { #category : #'as yet unclassified' }

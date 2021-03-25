@@ -21,7 +21,7 @@ SBDropChooser >> click: anEvent [
 
 	| options index |
 	self sandblockEditor undo.
-	options := Array streamContents: [:stream | original allConversionsFor: interface do: [:pair | stream nextPut: pair]].
+	options := Array streamContents: [:stream | original object allConversionsFor: interface do: [:pair | stream nextPut: pair]].
 	index := UIManager default chooseFrom: (options collect: #first).
 	index > 0 ifTrue: [applyBlock value: (options at: index) second].
 	self delete

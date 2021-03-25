@@ -22,6 +22,10 @@ SBWatch >> isSmalltalk [
 ]
 
 { #category : #'*Sandblocks-Smalltalk' }
+SBWatch >> updatePCFrom: anObject [
+]
+
+{ #category : #'*Sandblocks-Smalltalk' }
 SBWatch >> writeStSourceOn: aStream [
 
 	aStream nextPutAll: '(SBWatch report: '.
