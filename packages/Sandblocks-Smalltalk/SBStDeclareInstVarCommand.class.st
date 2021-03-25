@@ -23,7 +23,9 @@ SBStDeclareInstVarCommand >> do [
 	class addInstVarName: name.
 	newBindings := (source sandblockEditor allBlocksFor: class withInterfaces: SBInterfaces editor) collect: [:class | | binding |
 		binding := SBStName contents: name.
-		class instanceVariables addMorphBack: binding.
+		class instanceVariables submorphs
+			detect: [:m | m contents = name]
+			ifNone: [class instanceVariables addMorphBack: binding].
 		binding].
 	^ source
 ]

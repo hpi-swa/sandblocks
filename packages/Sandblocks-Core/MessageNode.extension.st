@@ -21,9 +21,11 @@ MessageNode >> asSandblock [
 			((substition matches: send) and: [substition applyAutomatically]) ifTrue: [
 				^ (substition newFor: send) pc: self pc]]].
 	
-	send converterOptionsDo: [:option | | c |
-		c := SBConvert new success: [:obj | ^ obj].
-		option automatic ifTrue: [option apply: c]].
+	send receiver ifNotNil: [
+		send converterOptionsDo: [:option | | c |
+			c := SBConvert new success: [:obj | ^ obj].
+			
+			option automatic ifTrue: [option apply: c]]].
 	
 	^ send
 ]

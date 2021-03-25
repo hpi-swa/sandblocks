@@ -5,7 +5,7 @@ String >> inStringView: converter [
 	<convert>
 
 	converter
-		if: [self isSymbol not]
+		if: [self isSymbol not and: [self size < 1000]]
 		do: [SBStringView new string: self]
 ]
 
@@ -63,7 +63,7 @@ String >> parseAsScheme: converter [
 	<convert>
 
 	converter
-		if: [[SBScmModule fromString: self. true] on: Error do: [false]]
+		if: [false and: [[SBScmModule fromString: self. true] on: Error do: [false]]]
 		do: [SBScmModule fromString: self]
 ]
 

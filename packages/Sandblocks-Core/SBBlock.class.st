@@ -118,7 +118,7 @@ SBBlock >> artefactForPersisting [
 
 	| candidate |
 	candidate := self containingArtefact.
-	[candidate isNil or: [candidate canPersist]] whileFalse: [candidate := candidate parentSandblock containingArtefact].
+	[candidate isNil or: [candidate canPersist]] whileFalse: [candidate := candidate parentSandblock ifNotNil: #containingArtefact].
 	^ candidate
 ]
 

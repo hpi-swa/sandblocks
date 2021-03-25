@@ -348,7 +348,7 @@ SBConnectorLine >> outerBounds [
 { #category : #'as yet unclassified' }
 SBConnectorLine >> rejectsEvent: anEvent [
 
-	^ (anEvent isMouse and: [anEvent isMouseDown]) ifTrue: [(self handlesMouseDown: anEvent) not] ifFalse: [false]
+	^ (anEvent isMouse and: [anEvent isMouseDown or: [anEvent isMouseMove]]) ifTrue: [(self handlesMouseDown: anEvent) not] ifFalse: [false]
 ]
 
 { #category : #'as yet unclassified' }

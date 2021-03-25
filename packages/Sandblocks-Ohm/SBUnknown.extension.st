@@ -3,5 +3,5 @@ Extension { #name : #SBUnknown }
 { #category : #'*Sandblocks-Ohm' }
 SBUnknown >> isOhm [
 
-	^ true
+	^ self grammarHandler isKindOf: SBScmGrammarHandler
 ]

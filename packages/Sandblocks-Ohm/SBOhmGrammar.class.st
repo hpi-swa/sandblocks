@@ -70,7 +70,7 @@ SBOhmGrammar >> initialize [
 SBOhmGrammar >> insertCommandRequest: anAfterBoolean near: aBlock [
 
 	^ (SBInsertCommand newFor: self containingArtefact)
-		index: (self childSandblocks indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
+		index: (self childSandblocks indexOf: aBlock ifAbsent: [anAfterBoolean ifTrue: [0] ifFalse: [1]]) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
 		container: self;
 		morph: (SBOhmRule new name: '' alternatives: SBOhmGrammarHandler new newNullBlock);
 		shouldMergeWithNext: true;
@@ -127,6 +127,12 @@ SBOhmGrammar >> rules [
 SBOhmGrammar >> sandblockBlockColorIfAbsent: aBlock [
 
 	^ self preferredColor
+]
+
+{ #category : #smalltalk }
+SBOhmGrammar >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
+
+	^ false
 ]
 
 { #category : #'as yet unclassified' }

@@ -31,5 +31,5 @@ SBWorkspacePalette class >> buildOn: aContainer [
 { #category : #'as yet unclassified' }
 SBWorkspacePalette class >> context [
 
-	^ {[:b | b containingArtefact isRepl]}
+	^ {#isSandblock. [:b | b containingArtefact ifNotNil: #isRepl ifNil: [false]]}
 ]

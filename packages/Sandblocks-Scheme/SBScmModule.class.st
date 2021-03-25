@@ -44,17 +44,19 @@ SBScmModule class >> newInterpreter [
 	| interpreter |
 	interpreter := QoppaInterpreter new.
 	interpreter
-		bindInGlobalEnv: #'eval-lang'
-			value: (interpreter wrapPrim: [:lang :source |
+		bindInGlobalEnv: #'eval-lang' value: (interpreter
+			wrapPrim: [:lang :source |
 				lang content = 'js' ifTrue: [^ self error: 'no runtime for js installed'].
 				self assert: lang = 'smalltalk'.
-				Compiler evaluate: source content] countingArgs: true);
-		bindInGlobalEnv: #perform
-			value: (interpreter
-				wrapPrim: [:args |
-					args size < 2 ifTrue: [QoppaArityMismatchError signal: 'ArityMismatch for perform'].
-					args first perform: args second asSymbol withArguments: (args allButFirst: 2)]
-				countingArgs: false).
+				Compiler evaluate: source content]
+			countingArgs: true);
+		bindInGlobalEnv: #perform value: (interpreter
+			wrapPrim: [:args |
+				args size < 2 ifTrue: [QoppaArityMismatchError signal: 'ArityMismatch for perform'].
+				args first perform: args second asSymbol withArguments: (args allButFirst: 2)]
+			countingArgs: false);
+		bindInGlobalEnv: #'array->cons'
+			value: (interpreter wrapPrim: [:array | QoppaWCons newListFrom: array] countingArgs: true).
 	^ interpreter
 ]
 

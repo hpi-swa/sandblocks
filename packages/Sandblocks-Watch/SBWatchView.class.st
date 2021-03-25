@@ -83,7 +83,7 @@ SBWatchView >> initialize [
 		listDirection: #leftToRight;
 		color: Color transparent;
 		cellGap: 8;
-		cellPositioning: #center;
+		cellPositioning: #topLeft;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		addMorphBack: (count := SBBadge new

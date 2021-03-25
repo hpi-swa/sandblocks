@@ -26,7 +26,7 @@ SBStMessageSend >> asLanguageBox: converter [
 	<automatic>
 
 	converter
-		if: [self selector = 'eval:lang' and: [self receiver isBinding and: [self receiver contents = 'SBLanguageBox']]]
+		if: [self selector = 'eval:lang:' and: [self receiver isBinding and: [self receiver contents = 'SBLanguageBox']]]
 		do: [SBLanguageBox new source: self arguments first contents lang: self arguments second contents]
 ]
 

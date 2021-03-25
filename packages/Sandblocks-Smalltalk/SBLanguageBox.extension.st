@@ -19,6 +19,10 @@ SBLanguageBox >> isSmalltalk [
 ]
 
 { #category : #'*Sandblocks-Smalltalk' }
+SBLanguageBox >> updatePCFrom: anObject [
+]
+
+{ #category : #'*Sandblocks-Smalltalk' }
 SBLanguageBox >> writeStSourceOn: aStream [
 
 	aStream nextPut: $(.

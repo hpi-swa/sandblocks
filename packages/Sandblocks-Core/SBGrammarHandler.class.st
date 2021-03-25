@@ -44,8 +44,7 @@ SBGrammarHandler >> copyString [
 SBGrammarHandler >> doExpression [
 	<action>
 
-	SBExecutionEnvironment value: self block containingArtefact.
-	^ self block evaluate	
+	^ SBExecutionEnvironment value: self block containingArtefact during: [self block evaluate]
 ]
 
 { #category : #actions }
@@ -54,13 +53,13 @@ SBGrammarHandler >> evaluateExpression [
 	<actionValidIf: #isExpression>
 
 	| result |
-	SBExecutionEnvironment value: self block containingArtefact.
+	result := SBExecutionEnvironment value: self block containingArtefact during: [self block evaluate].
 	
-	result := self block evaluate.
-	result convertedFor: SBInterfaces topLevel do: [:morph |
+	result convertedFor: SBInterfaces topLevel doWithChooser: [:morph |
 		self block sandblockEditor openMorphInView: morph.
 		morph focusAfterDelete: self block.
-		self block sandblockEditor connectFrom: self block to: morph].
+		self block sandblockEditor connectFrom: self block to: morph.
+		morph].
 	^ result
 ]
 
