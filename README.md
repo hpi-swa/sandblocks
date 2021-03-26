@@ -1,4 +1,7 @@
 # Sandblocks
+
+[![Latest Release][latest_badge]][latest_download] [![Build Status][gh_action_badge]][gh_action]
+
 A block-based editor for Squeak/Smalltalk.
 
 > This is a research prototype. Hiccups during usage are very much expected. Save often.
@@ -32,3 +35,7 @@ To cite this work, please use the [workshop paper presented at PX'20](https://do
 [px20_paper]: https://doi.org/10.1145/3397537.3397560
 [px20_src_doi]: https://img.shields.io/badge/doi-10.1145/3397537.3398477-blue.svg
 [px20_src_paper]: https://doi.org/10.1145/3397537.3398477
+[latest_badge]: https://img.shields.io/github/v/release/tom95/sandblocks
+[latest_download]: https://github.com/tom95/sandblocks/releases/latest/download/sandblocks-all.zip
+[gh_action]: https://github.com/tom95/sandblocks/actions
+[gh_action_badge]: https://img.shields.io/github/workflow/status/tom95/sandblocks/CI
