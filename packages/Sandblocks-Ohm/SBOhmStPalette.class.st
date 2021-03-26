@@ -10,7 +10,9 @@ SBOhmStPalette class >> buildOn: aBuilder [
 	aBuilder
 		addHeader: 'Grammar';
 		addSectionHeader: 'Grammar';
-		addBlock: 'Grammar' as: (SBOhmGrammar new addMorphBack: (SBOhmRule new name: '' alternatives: (self newNullBlock: 'expr')))
+		addBlock: 'Grammar' as: (SBOhmGrammar new addMorphBack: (SBOhmRule new
+			name: ''
+			alternatives: ((self newNullBlock: 'expr') grammarHandler: SBOhmGrammarHandler new)))
 ]
 
 { #category : #'as yet unclassified' }

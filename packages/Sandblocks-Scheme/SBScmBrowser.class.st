@@ -62,6 +62,12 @@ SBScmBrowser >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmBrowser >> isArtefact [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBScmBrowser >> isTopLevel [
 
 	^ true
@@ -70,10 +76,11 @@ SBScmBrowser >> isTopLevel [
 { #category : #'as yet unclassified' }
 SBScmBrowser >> module: aModule [
 
-	| defs |
+	| defs topLevel |
 	self fileReference contents: aModule filename.
 	
 	defs := aModule definitions.
+	
 	self definitions addAllMorphs: (defs collect: [:def |
 		def
 			ifDefinition: [:name | | definition |
@@ -84,17 +91,53 @@ SBScmBrowser >> module: aModule [
 					sexpr: definition;
 					yourself]
 			otherwise: [self assert: false]]).
-	self currentDefinition statements: {defs first veryDeepCopy}
+	self open: self definitions submorphs first sexpr.
+	
+	topLevel := aModule statements reject: [:s | (defs includes: s) or: [s isKindOf: SBEmptyLine]].
+	
+	self definitions addMorphBack: (SBScmDefinitionButton new
+		contents: '<toplevel>';
+		when: #selected send: #open: to: self with: topLevel;
+		sexpr: topLevel;
+		yourself)
 ]
 
 { #category : #'as yet unclassified' }
 SBScmBrowser >> moduleDefinitions [
 
-	^ self definitions submorphs collect: [:d | d sexpr]
+	^ self definitions submorphs allButLast collect: [:d | d sexpr]
 ]
 
 { #category : #'as yet unclassified' }
-SBScmBrowser >> open: anSExpr [
+SBScmBrowser >> open: anSExprOrCollection [
 
-	self currentDefinition statements: {anSExpr}
+	self currentDefinition statements: (anSExprOrCollection isCollection
+		ifTrue: [anSExprOrCollection]
+		ifFalse: [{anSExprOrCollection}])
+]
+
+{ #category : #'as yet unclassified' }
+SBScmBrowser >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
+
+	self definitions submorphsDo: [:b | b valid ifFalse: [^ false]].
+	
+	self selectedFilename ifNotNil: [:name |
+		FileStream
+			forceNewFileNamed: name
+			do: [:file |
+				self writeSourceOn: file.
+				self flag: #todo. " delete old file if renamed? "]].
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBScmBrowser >> selectedFilename [
+
+	^ self fileReference contents
+]
+
+{ #category : #'as yet unclassified' }
+SBScmBrowser >> writeSourceOn: aStream [
+
+	self definitions submorphs do: [:d | d writeSourceOn: aStream. aStream cr; cr]
 ]

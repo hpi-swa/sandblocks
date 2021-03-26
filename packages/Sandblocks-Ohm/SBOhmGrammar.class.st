@@ -5,6 +5,20 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBOhmGrammar class >> example [
+
+	| grammar |
+	SBExample self: [SBOhmGrammar] args: [{}] label: 'example'.
+	grammar := OhmGrammar new: 'G <: BuiltInRules {
+email = name "@" domain
+
+domain = (letter | digit)+ "." letter+
+
+name = (letter | digit)+}'.
+	^ grammar match: 'tom@example.com' startingFrom: 'email'
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmGrammar class >> from: aString [
 
 	| reader result |

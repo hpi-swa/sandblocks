@@ -276,8 +276,8 @@ SBStSignature >> selector: aString arguments: aCollection [
 				p contents ~= keyword ifTrue: [p replaceBy: (self textMorphFor: keyword)]]
 			ifAbsent: [
 				self addMorph: (self textMorphFor: keyword) asElementNumber: (index * 2) - 1].
-		((keyword endsWith: ':') or: [
-			keyword isEmpty or: [keyword allSatisfy: #isSpecial]]) ifTrue: [
+		(((keyword endsWith: ':') or: [
+			keyword isEmpty or: [keyword allSatisfy: #isSpecial]]) and: [aCollection size >= 1]) ifTrue: [
 			self arguments
 				at: index
 				ifPresent: [:a | a replaceBy: (aCollection at: index)]

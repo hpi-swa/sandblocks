@@ -79,6 +79,22 @@ SBScmExpression >> centerAlignSymbols [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmExpression >> definitionValue [
+
+	| expr |
+	self ifDefinition: [:n | ] otherwise: [^ nil].
+	
+	expr := self expressions second isSExpr
+		ifTrue: [
+			SBScmExpression new addAllMorphs: {
+				SBScmIdentifier new contents: 'lambda'.
+				(self expressions second submorphs size > 1 and: [self expressions second submorphs second contents = '.']) ifTrue: [self expressions second submorphs third veryDeepCopy] ifFalse: [SBScmExpression new addAllMorphs: self expressions second submorphs allButFirst veryDeepCopy]},
+				(self expressions allButFirst: 2) veryDeepCopy]
+		ifFalse: [self expressions first].
+	^ expr evaluate
+]
+
+{ #category : #'as yet unclassified' }
 SBScmExpression >> elements [
 
 	^ self submorphs

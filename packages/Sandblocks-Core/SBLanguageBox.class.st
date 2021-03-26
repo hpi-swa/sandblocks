@@ -22,13 +22,14 @@ SBLanguageBox class >> eval: aString lang: anotherString [
 					ifFail: nil]
 		ifNil: [Compiler evaluate: aString]].
 	
-	anotherString = 'scheme' ifTrue: [
-		^ [SBScmModule newInterpreter readAndEvaluate: aString]
+	anotherString = 'scheme' ifTrue: [ | interpreter |
+		interpreter := SBScmModule newInterpreter.
+		^ [interpreter readAndEvaluate: aString]
 			on: QoppaUnboundVariableFailure
 			do: [:e | | context name |
 				name := e variableName asSymbol asString.
 				context := thisContext methodReturnContext sender.
-				e resumeWithValue: (self resolve: name inSmalltalk: context ifAbsent: [^ e signal])]].
+				e resumeWithValue: (self resolve: name interpreter: interpreter inSmalltalk: context ifAbsent: [^ e signal])]].
 	
 	^ self error: ('no runtime for {1} installed' format: {anotherString}).
 ]
@@ -46,12 +47,13 @@ SBLanguageBox class >> newFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBLanguageBox class >> resolve: aString inSmalltalk: context ifAbsent: aBlock [
+SBLanguageBox class >> resolve: aString interpreter: anInterpreter inSmalltalk: context ifAbsent: aBlock [
 
 	^ context namedTempAt: (context tempNames
 		indexOf: aString
 		ifAbsent: [
-			SBExecutionEnvironment value ifNotNil: [:env | (env bindingOf: aString asSymbol) ifNotNil: [:b | ^ b value]].
+			SBExecutionEnvironment value ifNotNil: [:env |
+				anInterpreter bindInGlobalEnv: aString value: ((env bindingOf: aString asSymbol) ifNotNil: [:b | ^ b value])].
 			^ Smalltalk globals at: aString asSymbol ifAbsent: [^ aBlock value]])
 ]
 
