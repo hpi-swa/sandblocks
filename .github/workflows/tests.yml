@@ -22,14 +22,13 @@ jobs:
         shell: bash
         timeout-minutes: 15
       - run: ./scripts/build_version.sh
-        if: github.ref == 'refs/heads/release' && matrix.smalltalk == 'Squeak64-5.3'
+        if: startsWith(github.ref, 'refs/tags/') && matrix.smalltalk == 'Squeak64-5.3'
         shell: bash
         timeout-minutes: 5
       - name: Release
         uses: softprops/action-gh-release@v1
-        if: github.ref == 'refs/heads/release' && matrix.smalltalk == 'Squeak64-5.3'
+        if: startsWith(github.ref, 'refs/tags/') && matrix.smalltalk == 'Squeak64-5.3'
         with:
-          tag_name: latest
           files: |
             deploy/sandblocks-all.zip
         env:
