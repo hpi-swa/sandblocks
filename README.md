@@ -38,4 +38,4 @@ To cite this work, please use the [workshop paper presented at PX'20](https://do
 [latest_badge]: https://img.shields.io/github/v/release/tom95/sandblocks
 [latest_download]: https://github.com/tom95/sandblocks/releases/latest/download/sandblocks-all.zip
 [gh_action]: https://github.com/tom95/sandblocks/actions
-[gh_action_badge]: https://img.shields.io/github/workflow/status/tom95/sandblocks/CI
+[gh_action_badge]: https://img.shields.io/github/workflow/status/tom95/sandblocks/smalltalkCI
