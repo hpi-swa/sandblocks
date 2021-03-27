@@ -30,6 +30,20 @@ SBButton >> example [
 ]
 
 { #category : #'as yet unclassified' }
+SBButton >> icon: anIconMorph label: aString do: aBlock [
+
+	SBExample self: [SBButton new] args: [{SBIcon iconUndo. $u asSandblockShortcut. [nil]}] label: 'icon'.
+	
+	self widget: (anIconMorph
+		color: Color black;
+		yourself) shortcut: nil do: aBlock.
+	
+	self addMorphBack: (StringMorph new
+			contents: aString;
+			emphasis: TextEmphasis bold emphasisCode)
+]
+
+{ #category : #'as yet unclassified' }
 SBButton >> icon: anIconMorph shortcut: aShortcut do: aBlock [
 
 	SBExample self: [SBButton new] args: [{SBIcon iconUndo. $u asSandblockShortcut. [nil]}] label: 'icon'.
