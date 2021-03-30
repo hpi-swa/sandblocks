@@ -7,7 +7,9 @@ Class {
 	#instVars : [
 		'nameInput',
 		'statusLabel',
-		'status'
+		'status',
+		'recording',
+		'recordedEvents'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
@@ -27,7 +29,7 @@ SBMorphExampleCase >> artefactSaved: aMethod [
 { #category : #accessing }
 SBMorphExampleCase >> caseBlock [
 
-	^ self submorphs third
+	^ self submorphs fourth
 ]
 
 { #category : #helper }
@@ -42,6 +44,7 @@ SBMorphExampleCase >> initialize [
 	super initialize.
 	
 	status := #restartOnSave.
+	recording := false.
 	
 	self
 		layoutPolicy: SBHorizontalLayout new;
@@ -63,10 +66,11 @@ SBMorphExampleCase >> name: aString caseBlock: aBlock [
 
 	self
 		removeAllMorphs;
-		addMorphBack: (SBIcon iconRefresh color: Color white; on: #click send: #run to: self);
+		addMorphBack: (SBIcon iconRefresh on: #click send: #run to: self);
+		addMorphBack: (SBIcon iconCircle on: #click send: #toggleRecord to: self);
 		addMorphBack: (nameInput := SBTextBubble new contents: aString);
 		addMorphBack: aBlock;
-		addMorphBack: (statusLabel := (SBStringMorph new on: #click send: #toggleRestart to: self));
+		addMorphBack: (statusLabel := SBStringMorph new on: #click send: #toggleRestartMethod to: self);
 		updateLabel
 ]
 
@@ -74,6 +78,18 @@ SBMorphExampleCase >> name: aString caseBlock: aBlock [
 SBMorphExampleCase >> nameInput [
 
 	^ nameInput
+]
+
+{ #category : #'as yet unclassified' }
+SBMorphExampleCase >> recording [
+
+	^ recording
+]
+
+{ #category : #'as yet unclassified' }
+SBMorphExampleCase >> recording: aBoolean [
+
+	recording := aBoolean
 ]
 
 { #category : #'as yet unclassified' }
@@ -86,6 +102,9 @@ SBMorphExampleCase >> restartOnSave [
 { #category : #callbacks }
 SBMorphExampleCase >> run [
 
+	recording ifTrue: [
+		recording := false.
+		self triggerEvent: #stopRecord].
 	self triggerEvent: #run with: self
 ]
 
@@ -104,7 +123,22 @@ SBMorphExampleCase >> status: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
-SBMorphExampleCase >> toggleRestart [
+SBMorphExampleCase >> toggleRecord [
+	<action>
+
+	recording
+		ifTrue: [
+			recording := false.
+			self triggerEvent: #stopRecord.
+			self caseBlock statements: (recordedEvents collect: [:event | ('m owner handleEvent: (', (event sbStoreString, ')')) parseAsSandblock])]
+		ifFalse: [
+			recording := true.
+			self triggerEvent: #startRecord with: (recordedEvents := OrderedCollection new)]
+]
+
+{ #category : #'as yet unclassified' }
+SBMorphExampleCase >> toggleRestartMethod [
+	<action>
 
 	self status: (self status = #restartOnSave ifTrue: [#manualRestart] ifFalse: [#restartOnSave])
 ]
@@ -113,8 +147,8 @@ SBMorphExampleCase >> toggleRestart [
 SBMorphExampleCase >> updateLabel [
 
 	statusLabel contents: (status caseOf: {
-		[#restartOnSave] -> ['- Restart on Save -'].
-		[#manualRestart] -> ['- Manual Restart -']
+		[#restartOnSave] -> ['- On Save -'].
+		[#manualRestart] -> ['- Manual -']
 	})
 ]
 

@@ -10,7 +10,8 @@ Class {
 		'errorDecorator',
 		'header',
 		'errorIcon',
-		'reportedError'
+		'reportedError',
+		'recordedEvents'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
@@ -65,7 +66,9 @@ SBMorphExample >> addCase: aBlock name: aString [
 
 	cases addMorphBack: (SBMorphExampleCase new
 		name: aString caseBlock: aBlock;
-		when: #run send: #runCase: to: self)
+		when: #run send: #runCase: to: self;
+		when: #startRecord evaluate: [:list | recordedEvents := list];
+		when: #stopRecord evaluate: [recordedEvents := nil])
 ]
 
 { #category : #callbacks }
@@ -111,12 +114,21 @@ SBMorphExample >> drawnColor [
 	^ Color veryDarkGray
 ]
 
+{ #category : #'as yet unclassified' }
+SBMorphExample >> filterEvent: anEvent for: anObject [
+
+	recordedEvents ifNotNil: [(anEvent isMouseUp or: [anEvent isMouseDown or: [anEvent isKeyboard]]) ifTrue: [recordedEvents add: anEvent]].
+	^ anEvent
+]
+
 { #category : #initialization }
 SBMorphExample >> initialize [
 
 	super initialize.
 	
 	self
+		addKeyboardCaptureFilter: self;
+		addMouseCaptureFilter: self;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		changeTableLayout;
@@ -125,8 +137,7 @@ SBMorphExample >> initialize [
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap;
 			changeTableLayout;
-			addMorph: (view := SBSandboxPasteUpMorph new
-				when: #reportError send: #reportError: to: self));
+			addMorph: (view := SBSandboxPasteUpMorph new when: #reportError send: #reportError: to: self));
 		addMorphBack: (cases := SBColumn new layoutInset: 0)
 ]
 
