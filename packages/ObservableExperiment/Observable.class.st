@@ -10,13 +10,13 @@ Class {
 { #category : #'as yet unclassified' }
 Observable >> example [
 
-	| observable observer sub |
+	| observable observer |
 	observable := Observable new.
 	observer := Object new.
-
+	
 	observable notify: #test.
-
-	observable listen: observer.
+	
+	observable listen: observer
 ]
 
 { #category : #'as yet unclassified' }

@@ -1221,6 +1221,12 @@ SBBlock >> isMethod [
 ]
 
 { #category : #testing }
+SBBlock >> isMultiSelected [
+
+	^ self sandblockEditor ifNil: [false] ifNotNil: [:editor | editor multiSelection includes: self]
+]
+
+{ #category : #testing }
 SBBlock >> isNumberBlock [
 
 	^ false
@@ -1397,10 +1403,13 @@ SBBlock >> minExtent [
 { #category : #'event handling' }
 SBBlock >> mouseDown: anEvent [
 
-	self eventHandler
-		ifNotNil: [self eventHandler mouseDown: anEvent fromMorph: self].
+	self eventHandler ifNotNil: [self eventHandler mouseDown: anEvent fromMorph: self].
 	
-	anEvent hand waitForClicksOrDrag: self event: anEvent
+	anEvent hand
+		waitForClicksOrDrag: self
+		event: anEvent
+		selectors: #(#click: #doubleClick: #doubleClickTimeout: #startDrag:)
+		threshold: 30
 ]
 
 { #category : #'event handling' }
@@ -1529,7 +1538,7 @@ SBBlock >> multiSelectChildren [
 	<multiSelectAction>
 
 	self sandblockEditor mode = #select ifFalse: [self sandblockEditor mode: #selection].
-	self childSandblocks do: #startOrAddToMultiSelection
+	self childSandblocks do: [:c | c isMultiSelected ifFalse: [c startOrAddToMultiSelection]]
 ]
 
 { #category : #'ast helpers' }
@@ -2088,7 +2097,6 @@ SBBlock >> slurp [
 	<action>
 	<actionValidIf: #dynamicNumberOfChildren>
 
-	
 	(self adjacentBlock: 1) ifNotNil: [:block | | insert |
 		insert := self insertCommandRequest: true near: self childSandblocks last.
 		self sandblockEditor do: (SBCombinedCommand newWith: {

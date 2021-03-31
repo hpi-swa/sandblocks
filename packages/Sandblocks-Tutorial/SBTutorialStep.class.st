@@ -134,11 +134,17 @@ SBTutorialStep class >> stepAssignments: anEditor [
 				addStep: 'Hit save (<#save>) and declare the variable as block local.'
 				checkCondition: [:editor | method body temporaries notEmpty].
 			step
-				addStep: 'Next, create a new statement by pressing <#insertStatementBelow>. Type the name `var` and press : again while still in input mode. Assign 5 to this variable.'
+				addStep: 'Next, create a new statement by pressing <#insertStatementBelow>. Type the name `var` and press <:> again while still in input mode. Assign 5 to this variable.'
 				checkCondition: [:editor | method statements anySatisfy: [:s | s isAssignment and: [s binding contents = 'var']]].
 			step
-				addStep: 'The last way to create an assignment is to extract an expression. Select the 7>8 and press <#extractVariable>. Name the new variable comp.'
+				addStep: 'The last way to create an assignment is to extract an expression. Select the 7>8, press <#extractVariable>, and name the new variable `comp`.'
 				checkCondition: [:editor | method statements anySatisfy: [:s | s isMessageSend and: [s receiver in: [:r | r isName and: [r contents = 'comp']]]]]]
+]
+
+{ #category : #methods }
+SBTutorialStep class >> stepAssignmentsMethod [ 42 squared.
+	7 > 8
+		ifTrue: [Transcript showln: 'hi']
 ]
 
 { #category : #steps }
@@ -146,20 +152,24 @@ SBTutorialStep class >> stepBasicMessageSend: anEditor [
 
 	SBTutorialStep new
 		title: 'Basic Message Send';
-		addIntroText: 'The editor has a separate input mode that allows typing on the keyboard as normal. Let''s see how to use it for message sends.';
+		addIntroText: 'Let''s see how we can send messages to objects. Note that the autocompletion popup uses <#focusNextSuggestion> and <#focusPreviousSuggestion> to move in the suggestions list and <#useSuggestion> to accept a suggestion.';
 		addAction: #wrapInMessageSend;
 		addAction: #endInput if: anEditor inputIsDefault not;
 		setup: anEditor do: [:step | | method |
 			method := step createStepMethod: [self assert: 1024 = 2] in: anEditor.
-			step addStep: 'Select the 2 using <#selectLast>, which selects the last block in a method.' checkCondition: [:editor | editor selection contents = '2'].
+			step addStep: 'Using <#selectLast>, select the 2. <#selectLast> selects the last block in a method.' checkCondition: [:editor | editor selection contents = '2'].
 			step
-				addStep: 'Press <#wrapInMessageSend> to send a message to your selection, then type raisedTo:. Use <#focusNextSuggestion> and <#focusPreviousSuggestion> to move in the suggestions list and press enter to accept an autocompletion.'
+				addStep: 'Press <#wrapInMessageSend> to send a message to your selection, then type `rais` and select `raisedTo:` from the autocompletion popup.'
 				checkCondition: [:editor | method statements first arguments first arguments first selector = 'raisedTo:'].
 			step
-				addStep: 'Finally, type 10 in the now opened field', (anEditor inputIsDefault
+				addStep: 'Finally, type 10 in the now empty field for the argument', (anEditor inputIsDefault
 					ifTrue: ['.']
 					ifFalse: [' and press escpae to exit the input mode.'])
 				checkCondition: [:editor | method statements first arguments first arguments first arguments first contents = '10']]
+]
+
+{ #category : #methods }
+SBTutorialStep class >> stepBasicMessageSendMethod [ self assert: 1024 = 2
 ]
 
 { #category : #steps }
@@ -171,31 +181,26 @@ SBTutorialStep class >> stepCascade: anEditor [
 		addAction: #wrapInCascade;
 		addAction: #deleteAround;
 		addAction: #pasteBelow;
-		setup: anEditor
-			do: [:step | | method |
-				method := step
-					createStepMethod: [ | m |
-						m := Morph new.
-						m changeTableLayout.
-						m hResizing: #shrinkWrap.
-						m vResizing: #shrinkWrap]
-					in: anEditor.
-				step
-					addStep: 'First, multiselect the changeTableLayout, hResizing:, and vResizing: message sends.'
-					checkCondition: [:editor |
-						editor mode = #selection and: [
-							editor multiSelection size = 3 and: [
-								editor multiSelection allSatisfy: [:m | m isMessageSend or: [m isMessagePart]]]]].
-				step
-					addStep: 'Create a cascade from your multiselection by pressing <#wrapInCascade>'
-					checkCondition: [:editor | method statements second isCascade].
-				step
-					addStep: 'Let''s also move the cascade around our `Morph new` expression. The fastest way to do so is to select the receiver of the cascade `m` and press <#deleteAround>, which deletes and copies the element around your selection.'
-					checkCondition: [:editor |
-						method statements second in: [:m | m isBinding and: [m contents = 'm']]].
-				step
-					addStep: 'Next, select the full `Morph new` block and press <#pasteBelow> to paste the just copied surronding element around our selection.'
-					checkCondition: [:editor | method statements first expression isCascade]]
+		setup: anEditor do: [:step | | method |
+			method := step
+				createStepMethod: [ | m |
+					m := Morph new.
+					m changeTableLayout.
+					m hResizing: #shrinkWrap.
+					m vResizing: #shrinkWrap]
+				in: anEditor.
+			step
+				addStep: 'First, multiselect the changeTableLayout, hResizing:, and vResizing: message sends.'
+				checkCondition: [:editor | editor mode = #selection and: [editor multiSelection size = 3 and: [editor multiSelection allSatisfy: [:m | m isMessageSend or: [m isMessagePart]]]]].
+			step
+				addStep: 'Create a cascade from your multiselection by pressing <#wrapInCascade>'
+				checkCondition: [:editor | method statements second isCascade].
+			step
+				addStep: 'Let''s also move the cascade around our `Morph new` expression. The fastest way to do so is to select the receiver of the cascade `m` in the second row and press <#deleteAround>, which deletes and copies the element around your selection.'
+				checkCondition: [:editor | method statements second in: [:m | m isBinding and: [m contents = 'm']]].
+			step
+				addStep: 'Next, select the full `Morph new` block and press <#pasteBelow> to paste the just copied surronding element around our selection.'
+				checkCondition: [:editor | method statements first expression isCascade]]
 ]
 
 { #category : #steps }
@@ -206,17 +211,25 @@ SBTutorialStep class >> stepDeleting: anEditor [
 		addAction: #deleteBlock;
 		addAction: #pasteAbove;
 		addAction: #pasteBelow;
+		addAction: #replaceWithCopyBuffer;
 		setup: anEditor do: [:step | | method |
 			method := step createStepMethod: [{1. 2. 6. 3. 4. 5}] in: anEditor.
 			step
 				addStep: 'Delete the 6 in the list by pressing <#deleteBlock>'
 				checkCondition: [:editor | method body statements first submorphs noneSatisfy: [:el | el contents = '6']].
 			step
-				addStep: 'A deleted element is automatically copied. Paste it at the end of the list by walking to the 5 and pressing <#pasteBelow>.'
+				addStep: 'A deleted element is automatically copied. Your current copy buffer is shown in the bottom-right corner. Paste it at the end of the list by walking to the 5 and pressing <#pasteBelow>.'
 				checkCondition: [:editor | method body statements first lastSubmorph contents = '6'].
 			step
 				addStep: 'Paste the 6 again at the start of the list by walking to the 1 and pressing <#pasteAbove>'
-				checkCondition: [:editor | method body statements first firstSubmorph contents = '6']]
+				checkCondition: [:editor | method body statements first firstSubmorph contents = '6'].
+			step
+				addStep: 'Finally, replace the entire array with the copied 6 using <#replaceWithCopyBuffer>.'
+				checkCondition: [:editor | method body statements first contents = '6']]
+]
+
+{ #category : #methods }
+SBTutorialStep class >> stepDeletingMethod [ {1. 2. 6. 3. 4. 5}
 ]
 
 { #category : #steps }
@@ -266,30 +279,37 @@ SBTutorialStep class >> stepLists: anEditor [
 	SBTutorialStep new
 		title: 'Lists';
 		addIntroText: 'Many elements act as lists, for example arrays, statements in blocks, or even message sends.';
-		addAction: #addElement;
 		addAction: #insertElementAfter;
 		addAction: #insertElementBefore;
+		addAction: #addElement;
+		addAction: #insertStatementAbove;
+		addAction: #insertStatementBelow;
 		setup: anEditor do: [:step | | method |
-			method := step createStepMethod: [{3. 4. 5}] in: anEditor.
+			method := step
+				createStepMethod: [
+					{3. 4. 5}.
+					[]]
+				in: anEditor.
 			step
-				addStep: 'Select the array itself using <#selectUp>'
-				checkCondition: [:editor | editor selection isArrayBlock].
-			step
-				addStep: 'You can append an element to a list by pressing <#addElement>
-Append 6 to the array by pressing <#addElement> then typing 6.'
-				checkCondition: [:editor | method statements first lastSubmorph contents = '6'].
-			step
-				addStep: 'Add a 1 at the start of the array by selecting the 3 and pressing <#insertElementBefore>'
+				addStep: 'Add a 1 at the start of the array by selecting the 3 and pressing <#insertElementBefore>.'
 				checkCondition: [:editor | method statements first firstSubmorph contents = '1'].
 			step
-				addStep: 'Finally, to insert an element after the current, use <#insertElementAfter> and type 2.'
+				addStep: 'To insert an element after the 1, use <#insertElementAfter> and type 2.'
 				checkCondition: [:editor | method statements first submorphs second contents = '2'].
 			step
-				addStep: 'While <#insertElementBefore> and <#insertElementAfter> will always be adjacent to the current selection, for statements, there is a special type of insert. Create an empty statement above the array using <#insertStatementAbove>.'
-				checkCondition: [:editor | method statements size > 1 and: [method statements second isArrayBlock]].
+				addStep: 'While <#insertElementBefore> and <#insertElementAfter> will always be adjacent to the current selection, for lists of statements, there is a special type of insert. Create an empty statement above the array using <#insertStatementAbove>.'
+				checkCondition: [:editor | method statements size > 2 and: [method statements second isArrayBlock]].
 			step
 				addStep: 'Create an empty statement below the array by first moving the cursor to any number in the array and pressing <#insertStatementBelow>.'
-				checkCondition: [:editor | method statements size > 2 and: [method statements second isArrayBlock]]]
+				checkCondition: [:editor | method statements size > 3 and: [method statements second isArrayBlock]].
+			step
+				addStep: 'If you have an empty list, you can append an element by pressing <#addElement>. Select the empty block at the end of the method and insert a `6 squared` statement into it.'
+				checkCondition: [:editor | method statements last statements size > 0]]
+]
+
+{ #category : #methods }
+SBTutorialStep class >> stepListsMethod [ {3. 4. 5}.
+	[]
 ]
 
 { #category : #steps }
@@ -297,23 +317,25 @@ SBTutorialStep class >> stepMovement: anEditor [
 
 	SBTutorialStep new
 		title: 'Movement';
-		addIntroText: 'Hey! First we''ll look at moving your cursor. You can click on things, but try to only use your keyboard to get used to it. <#selectPrevious>/<#selectNextGroup>/<#selectPreviousGroup>/<#selectNext> moves your cursor around.
+		addIntroText: 'Hey, welcome to the tutorial! First we''ll look at moving your cursor. You can click on things, but try to only use your keyboard to get used to it. <#selectPrevious>/<#selectNextGroup>/<#selectPreviousGroup>/<#selectNext> moves your cursor around.
 
-Note that you always undo accidental changes with <#undo> (and redo with <#redo>) and you can reset the code sample with the refresh button on the center left. Once done, you can swap to the next chapter with the arrow button on the right.';
+Note that you always undo accidental changes with <#undo> (and redo with <#redo>) and you can reset the code sample with the refresh button on the center left. Once done, you can swap to the next chapter with the arrow button on the right.
+
+For Windows users: most shortcuts that ask for <Cmd> may require you to press <Alt> rather than <Ctrl>.';
 		addAction: #selectPrevious;
 		addAction: #selectNextGroup;
 		addAction: #selectPreviousGroup;
 		addAction: #selectNext;
 		setup: anEditor do: [:step | | method |
 			method := step
-				createStepMethod: [ | y x |
+				createStepMethod: [ | y |
 					true & false not & nil isNil ifFalse: [52 squared].
 					y := self size + super size.
 					#($a #a 1 1.0) do: [:each |
 						Transcript
 							show: each class name;
 							show: ' '].
-					^ x < y]
+					^ 433 < y]
 				in: anEditor.
 			step
 				addStep: 'Select the empty string in the Transcript show cascade by moving the cursor with the keyboard'
@@ -322,19 +344,19 @@ Note that you always undo accidental changes with <#undo> (and redo with <#redo>
 				addStep: 'Select the 52 in the ifFalse: block'
 				checkCondition: [:editor | editor selection = method body statements first arguments first statements first receiver].
 			step
-				addStep: 'Select the character $a'
+				addStep: 'Select the number 433 at the bottom'
 				checkCondition: [:editor | editor selection = method body statements third receiver submorphs first]]
 ]
 
 { #category : #methods }
-SBTutorialStep class >> stepMovementMethod [ | y x |
+SBTutorialStep class >> stepMovementMethod [ | y |
 true & false not & nil isNil
 		ifFalse: [52 squared].
 	y := self size + super size.
 	#($a #a 1 1.0)
 		do: [:each | Transcript show: each class name;
 				 show: ' '].
-	^ x < y
+	^ 433 < y
 ]
 
 { #category : #steps }
@@ -345,36 +367,40 @@ SBTutorialStep class >> stepMultiSelection: anEditor [
 		addIntroText: 'You can multiselect elements with a dedicated selection mode. Many commands will then act on all elements at once.';
 		addAction: #addElement;
 		addAction: #wrapInDynamicArray;
-		addAction: #unpackList;
+		addAction: #unwrapList;
 		addAction: #addElement;
 		addAction: #promptAction;
-		setup: anEditor
-			do: [:step | | method |
-				method := step createStepMethod: [
+		setup: anEditor do: [:step | | method |
+			method := step
+				createStepMethod: [
 					3 yourself.
 					4 squared.
-					5] in: anEditor.
-				step
-					addStep: 'Shift+click the `3 yourself`.'
-					checkCondition: [:editor |
-						editor mode = #selection and: [editor multiSelection first selector = 'yourself']].
-				step
-					addStep: 'Navigate to the `4 squared` and press <#startOrAddToMultiSelection> or Shift+click it again to add it to your multi selection.'
-					checkCondition: [:editor | editor multiSelection last selector = 'squared'].
-				step
-					addStep: 'Also add the 5 to your selection.'
-					checkCondition: [:editor | editor multiSelection last contents = '5'].
-				step
-					addStep: 'Press <#wrapInDynamicArray> to wrap your multi selection in an array.'
-					checkCondition: [:editor | method statements first isArrayBlock].
-				step
-					addStep: 'Add a 6 to the array using <#addElement> or <#insertElementAfter>.'
-					checkCondition: [:editor |
-						method statements first submorphCount = 4 and: [
-							method statements first lastSubmorph contents = '6']].
-				step
-					addStep: 'Finally, you can unpack the array again using the unpackList command, which might not be bound (<#unpackList>). If it is not bound, you can access it by selecting the array and pressing <#promptAction> or right clicking it to see all available commands and filter for unpack.'
-					checkCondition: [:editor | method statements size = 4]]
+					5]
+				in: anEditor.
+			step
+				addStep: 'Shift+click the `3 yourself` to start a multiselection. (You can deselect all using <#endMultiSelection>).'
+				checkCondition: [:editor | editor mode = #selection and: [editor multiSelection first selector = 'yourself']].
+			step
+				addStep: 'Navigate to the `4 squared` and press <#startOrAddToMultiSelection> or Shift+click it again to add it to your multi selection.'
+				checkCondition: [:editor | editor multiSelection last selector = 'squared'].
+			step
+				addStep: 'Also add the 5 to your selection.'
+				checkCondition: [:editor | editor multiSelection last contents = '5'].
+			step
+				addStep: 'Press <#wrapInDynamicArray> to wrap your multi selection in an array.'
+				checkCondition: [:editor | method statements first isArrayBlock].
+			step
+				addStep: 'Add a 6 to the array using <#addElement> or <#insertElementAfter>.'
+				checkCondition: [:editor | method statements first submorphCount = 4 and: [method statements first lastSubmorph contents = '6']].
+			step
+				addStep: 'Finally, you can unpack the array again using the unwrapList command, which might not be bound (<#unwrapist>). If it is not bound, you can access it by selecting the array and pressing <#promptAction> or right clicking it to see all available commands and filter for unpack.'
+				checkCondition: [:editor | method statements size = 4]]
+]
+
+{ #category : #methods }
+SBTutorialStep class >> stepMultiSelectionMethod [ 3 yourself.
+	4 squared.
+	5
 ]
 
 { #category : #steps }
@@ -398,14 +424,25 @@ SBTutorialStep class >> stepSelection: anEditor [
 					^ x < y]
 				in: anEditor.
 			step
-				addStep: 'First, select the block argument ''each'' in the 2nd to last line.'
+				addStep: 'First, select the block closure argument '':each''. Note that the type of your selection is displayed in the bottom-left corner.'
 				checkCondition: [:editor | editor selection = method body statements third arguments first bindings first].
 			step
-				addStep: 'Then repeatedly use <#selectUp> to enlargen your selection to select the full do: message send. You can use <#selectDown> to go down again.'
+				addStep: 'Then repeatedly use <#selectUp> to enlargen your selection to select the full `do:` message send. You can use <#selectDown> to go down again.'
 				checkCondition: [:editor | editor selection = method body statements third].
 			step
-				addStep: 'Finally, as an example use <#deleteBlock> to delete the full block.'
+				addStep: 'Finally, as an example use <#deleteBlock> to delete the full `do:` message send.'
 				checkCondition: [:editor | method body statements noneSatisfy: [:s | s selector = 'do:']]]
+]
+
+{ #category : #methods }
+SBTutorialStep class >> stepSelectionMethod [ | y x |
+true & false not & nil isNil
+		ifFalse: [52 squared].
+	y := self size + super size.
+	#($a #a 1 1.0)
+		do: [:each | Transcript show: each class name;
+				 show: ' '].
+	^ x < y
 ]
 
 { #category : #steps }
@@ -413,6 +450,9 @@ SBTutorialStep class >> stepSmalltalkThings: anEditor [
 
 	SBTutorialStep new
 		title: 'Smalltalk Things';
+		addIntroText: 'Some things are broken in this method and require us to wrap them with the correct language constructs.
+
+Note the yellow outline that indicates that a receiver will likely not understand the message we''re sending. So let''s fix these!';
 		addAction: #wrapInDynamicArray;
 		addAction: #wrapInBlock;
 		addAction: #wrapInReturn;
@@ -424,14 +464,23 @@ SBTutorialStep class >> stepSmalltalkThings: anEditor [
 					Morph new]
 				in: anEditor.
 			step
-				addStep: 'Wrap the argument to the ifTrue: in a block by selecting the whole message send via <#selectUp>, then press <#wrapInBlock>.'
+				addStep: 'Wrap the `Transcript showln: ''true` after the ifTrue: in a block by selecting the whole `showln:` message send via <#selectUp>, then press <#wrapInBlock>.'
 				checkCondition: [:editor | method statements first arguments first isBlockBody].
 			step
-				addStep: 'Next, wrap the 65 in an array by pressing <#wrapInDynamicArray>. Note that the yellow outline indicates that #do: is not understood by 65.'
+				addStep: 'Next, wrap the 65 in an array by pressing <#wrapInDynamicArray>.'
 				checkCondition: [:editor | method statements second receiver isArrayBlock].
 			step
 				addStep: 'Finally, wrap the last statement in a return by pressing <#wrapInReturn>.'
 				checkCondition: [:editor | method statements last isReturn]]
+]
+
+{ #category : #methods }
+SBTutorialStep class >> stepSmalltalkThingsMethod [ 5 = 2
+		ifTrue: (Transcript showln: 'true')
+		ifFalse: [123].
+	65
+		do: [:each | each].
+	Morph new
 ]
 
 { #category : #steps }
@@ -452,7 +501,7 @@ SBTutorialStep class >> stepSwapping: anEditor [
 				addStep: 'Select the 6 in the array'
 				checkCondition: [:editor | editor selection contents = '6'].
 			step
-				addStep: 'Using <#swapRight>, move it to the end of the array.'
+				addStep: 'Using <#swapRight>, swap the 6 until it reaches the end of the array.'
 				checkCondition: [:editor | method body statements first lastSubmorph contents = '6'].
 			step
 				addStep: 'Select the 2 in the message send below the array.'
@@ -460,6 +509,12 @@ SBTutorialStep class >> stepSwapping: anEditor [
 			step
 				addStep: 'Using <#swapLeft>, swap it with the number 10.'
 				checkCondition: [:editor | method body statements second arguments first receiver receiver contents = '2']]
+]
+
+{ #category : #methods }
+SBTutorialStep class >> stepSwappingMethod [ {3. 6. 4. 5}.
+	self assert: (10 raisedTo: 2)
+			= 1024
 ]
 
 { #category : #progress }
@@ -613,7 +668,11 @@ SBTutorialStep >> initialize [
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		addMorphBack: (SBRow new addMorphBack: (title := SBStringMorph new large bold));
-		addMorphBack: (shortcutsList := SBRow new cellGap: 8);
+		addMorphBack: (shortcutsList := SBRow new
+			hResizing: #spaceFill;
+			changeTableLayout;
+			wrapDirection: #leftToRight;
+			cellGap: 8);
 		addMorphBack: (steps := SBColumn new
 			cellGap: 8;
 			yourself);

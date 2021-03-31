@@ -59,6 +59,7 @@ SBSelectionDecorator >> postDrawOn: aCanvas [
 	
 	self morph sandblockEditor mode = #input
 		ifTrue: [
+			aCanvas line: b bottomLeft + (0 @ 1) to: b bottomRight + (0 @ 1) width: self morph frameSize color: color negated.
 			aCanvas line: b bottomLeft to: b bottomRight width: self morph frameSize color: color]
 		ifFalse: [
 			aCanvas frameRectangle: b width: self morph frameSize color: color]

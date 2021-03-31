@@ -289,6 +289,12 @@ SBStMessagePart >> useSuggestion: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMessagePart >> valid [
+
+	^ self contents notEmpty and: [self contents first ~= $:]
+]
+
+{ #category : #'as yet unclassified' }
 SBStMessagePart >> wantsInput [
 
 	^ self currentTextMorph contents isEmpty

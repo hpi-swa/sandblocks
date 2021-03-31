@@ -71,7 +71,7 @@ SBStNameBehavior >> declareMethodVariable [
 	<action>
 	<actionValidIf: #noValidBinding>
 	
-	self block containingArtefact declareTemporaryVariable: self contents
+	self block containingArtefact body declareTemporaryVariable: self contents
 ]
 
 { #category : #'as yet unclassified' }

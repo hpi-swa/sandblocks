@@ -196,7 +196,7 @@ SBStMessageSend >> isConstructor: aString for: aClass [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> isDefined [
 
-	^ Symbol hasInterned: self selector ifTrue: [:sym | true]
+	^ self selector isEmpty or: [Symbol hasInterned: self selector ifTrue: [:sym | true]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -434,7 +434,7 @@ SBStMessageSend >> selector: aSymbol arguments: aCollection [
 { #category : #testing }
 SBStMessageSend >> selectorAppearsValid [
 
-	^ self actualReceiver ifNotNil: [:r | r guessedClass ifNotNil: [:class | class canUnderstand: self selector asSymbol] ifNil: [true]]
+	^ self selector isEmpty or: [self actualReceiver ifNotNil: [:r | r guessedClass ifNotNil: [:class | class canUnderstand: self selector asSymbol] ifNil: [true]]]
 ]
 
 { #category : #accessing }
@@ -525,7 +525,7 @@ SBStMessageSend >> valid [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> validSelector [
 
-	^ self selector notEmpty and: [(self selector first canBeIdentifierInitial and: [self selector allSatisfy: [:c | c isAlphaNumeric or: [c = $: or: [c = $_]]]]) or: [self selector allSatisfy: #isSpecial]]
+	^ (self selector isEmpty or: [self selector = ':']) or: [(self selector first canBeIdentifierInitial and: [self selector allSatisfy: [:c | c isAlphaNumeric or: [c = $: or: [c = $_]]]]) or: [self selector allSatisfy: #isSpecial]]
 ]
 
 { #category : #'as yet unclassified' }

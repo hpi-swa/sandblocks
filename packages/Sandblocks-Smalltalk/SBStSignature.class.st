@@ -205,7 +205,7 @@ SBStSignature >> minExtent [
 { #category : #'as yet unclassified' }
 SBStSignature >> numArguments [
 
-	self selector ifEmpty: [^ 1].
+	self selector ifEmpty: [^ self submorphCount // 2].
 	self selector last = $: ifTrue: [^ (self extractKeywords: self selector) size].
 	self selector first isSpecial ifTrue: [^ 1].
 	^ 0

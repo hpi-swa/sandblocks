@@ -55,7 +55,9 @@ SBStBlockBody >> addElement [
 		container: self;
 		morph: self newNullBlock;
 		shouldMergeWithNext: true;
-		yourself)
+		yourself).
+	
+	self sandblockEditor startInput: self sandblockEditor selection at: 0 replacingContents: false
 ]
 
 { #category : #converting }
@@ -232,25 +234,31 @@ SBStBlockBody >> layoutCommands [
 	preamble := self firstSubmorph layoutCommands.
 	preambleHasContent := bindings hasSubmorphs or: [temporaries hasSubmorphs].
 	
-	self statementCount = 0 ifTrue: [^ SBAlgebraCommand container
+	self statementCount = 0 ifTrue: [
+		^ SBAlgebraCommand container
 			morph: self;
 			data: {preamble}].
 	
-	^ (self statementCount > 1 or: [bindings hasSubmorphs and: [temporaries hasSubmorphs]])
+	^ (self statementCount > 1 or: [temporaries hasSubmorphs])
 		ifTrue: [
 			SBAlgebraCommand container
 				morph: self;
 				data: {
 					preamble.
-					preambleHasContent ifTrue: [SBAlgebraCommand hardLine] ifFalse: [SBAlgebraCommand noop]},
-					(self statements collect: [:stmt | stmt layoutCommands] separatedBy: [SBAlgebraCommand hardLine withGap: true])]
+					preambleHasContent
+						ifTrue: [SBAlgebraCommand hardLine]
+						ifFalse: [SBAlgebraCommand noop]}, (self statements
+					collect: [:stmt | stmt layoutCommands]
+					separatedBy: [SBAlgebraCommand hardLine withGap: true])]
 		ifFalse: [
 			SBAlgebraCommand container
 				morph: self;
-				data: ({
+				data: {
 					preamble.
-					preambleHasContent ifTrue: [SBAlgebraCommand softLine] ifFalse: [SBAlgebraCommand noop].
-					self statements first layoutCommands})]
+					preambleHasContent
+						ifTrue: [SBAlgebraCommand softLine]
+						ifFalse: [SBAlgebraCommand noop].
+					self statements first layoutCommands}]
 ]
 
 { #category : #hierarchy }
@@ -276,7 +284,7 @@ SBStBlockBody >> multiSelectChildren [
 	<multiSelectAction>
 
 	self sandblockEditor mode = #select ifFalse: [self sandblockEditor mode: #selection].
-	self statements do: #startOrAddToMultiSelection
+	self statements do: [:c | c isMultiSelected ifFalse: [c startOrAddToMultiSelection]]
 ]
 
 { #category : #'object interface' }

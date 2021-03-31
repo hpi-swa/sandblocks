@@ -184,7 +184,7 @@ SBGrammarHandler >> tryDelete: aBlock [
 ]
 
 { #category : #actions }
-SBGrammarHandler >> unpackList [
+SBGrammarHandler >> unwrapList [
 	<action>
 	<actionValidIf: #parentHasDynamicNumberOfChildren>
 

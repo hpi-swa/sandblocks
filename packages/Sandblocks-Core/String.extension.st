@@ -111,5 +111,5 @@ String >> withSBShortcuts [
 
 	^ self copyWithRegex: '<#\w+>' matchesTranslatedUsing: [:match | | shortcut |
 		shortcut := SBEditor anyShortcutForAction: (match copyFrom: 3 to: match size - 1) asSymbol.
-		(shortcut isCollection ifTrue: [shortcut anyOne] ifFalse: [shortcut]) ifNotNil: #displayString ifNil: ['<not bound>']]
+		'<', ((shortcut isCollection ifTrue: [shortcut anyOne] ifFalse: [shortcut]) ifNotNil: #displayString ifNil: ['not bound']), '>']
 ]

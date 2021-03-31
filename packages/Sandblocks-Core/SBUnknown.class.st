@@ -224,12 +224,13 @@ SBUnknown >> wasDeselected [
 
 	| editor |
 	editor := self sandblockEditor.
+	
 	(self deleteIfDismissed and: [editor notNil]) ifTrue: [ | wasInput previousSelection |
 		previousSelection := editor selection.
 		wasInput := editor mode = #input.
 		self sandblockEditor do: ((SBDeleteCommand newFor: self containingArtefact) target: self).
 		
-		previousSelection ifNotNil: [
+		(previousSelection notNil and: [previousSelection sandblockEditor notNil]) ifTrue: [
 			previousSelection select.
 			wasInput ifTrue: [editor startInput: previousSelection at: 900000000 replacingContents: false]]]
 ]
