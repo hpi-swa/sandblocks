@@ -9,7 +9,9 @@ A block-based editor for Squeak/Smalltalk.
 ![The sandblocks editor](https://raw.githubusercontent.com/tom95/sandblocks/master/screenshots/sandblocks.png)
 
 ### Installing
-Make sure you're running on a Squeak-trunk image. Then run:
+You can either directly use the [latest release][latest_download] or install it in your Squeak 5.3 or trunk image as shown below.
+
+To install it in an existing image, run:
 ```smalltalk
 Metacello new
   baseline: 'Sandblocks';
@@ -18,8 +20,11 @@ Metacello new
 
 SBEditor openExample.
 
-" extend the default browser with a block display mode: "
+" Extend the default browser with a block display mode: "
 CodeHolder addSandblocks.
+
+" Note: by default squeak absorbs ctrl+up/down for scrolling. You can turn this off with this line:  "
+HandMorph synthesizeMouseWheelEvents: false.
 ```
 
 ### Publications
