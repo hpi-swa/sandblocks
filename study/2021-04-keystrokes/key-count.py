@@ -28,12 +28,16 @@ out = open(out_name, 'w')
 counts = {}
 
 def count(category, detail):
+    if not recording:
+        return
+
     if category not in counts:
         counts[category] = 1
     else:
         counts[category] += 1
     print_cat(category, detail)
 
+recording = False
 modifier_count = 0
 last_mouse_pos = (0, 0)
 ctrl_pressed = False
@@ -177,7 +181,9 @@ def print_part(p, num):
 
 current_part = -1
 def next_part():
-    global current_part, start_time
+    global current_part, start_time, recording
+
+    recording = True
 
     if not start_time:
         start_time = time.time()
