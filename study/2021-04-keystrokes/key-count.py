@@ -6,19 +6,22 @@ import time
 import os.path
 from pynput import mouse
 from pynput import keyboard
-from pynput.keyboard import Key
+from pynput.keyboard import Key, KeyCode
 from math import sqrt
 
-if not sys.argv[-1].startswith('vs') and not sys.argv[-1].startswith('sb'):
-    print('use with [vs1|vs2|sb1|sb2]')
+condition = sys.argv[-1]
+if not condition.startswith('vs') and not condition.startswith('sb') and not condition == 'test':
+    print('use with [vs1|vs2|sb1|sb2|test]')
     sys.exit(1)
 
-out_name = sys.argv[-1] + '.csv'
-if os.path.isfile(out_name):
+is_test = condition == 'test'
+has_secondary = is_test or condition.startswith('vs')
+
+out_name = condition + '.csv'
+if not is_test and os.path.isfile(out_name):
     print("{0} already exists, did you enter the right setup prefix?".format(out_name))
     sys.exit(0)
 out = open(out_name, 'w')
-has_secondary = sys.argv[-1].startswith('vs')
 
 # diambiguate backspace for edit vs for mistake?
 
@@ -34,7 +37,7 @@ def count(category, detail):
 modifier_count = 0
 last_mouse_pos = (0, 0)
 ctrl_pressed = False
-modifiers = [Key.ctrl_l, Key.ctrl_r, Key.cmd_l, Key.cmd, Key.cmd_r, Key.alt, Key.alt_gr, Key.alt_l, Key.alt_r]
+modifiers = [Key.ctrl_l, Key.ctrl_r, Key.ctrl, Key.cmd_l, Key.cmd, Key.cmd_r, Key.alt, Key.alt_gr, Key.alt_l, Key.alt_r]
 ctrl_keys = [Key.ctrl_l, Key.ctrl_r, Key.ctrl]
 
 # TODO:
@@ -75,7 +78,10 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 def print_cat(cat, key):
-    out.write('{0},{1},{2}\n'.format(time.time(), key, cat))
+    s = '{0},{1},{2}'.format(time.time(), key, cat)
+    out.write(s + '\n')
+    if is_test:
+        print(s)
 
 def on_click(x, y, button, pressed):
     global last_mouse_pos
@@ -106,6 +112,10 @@ def on_press(key):
             ctrl_pressed = True
         return
     if key in [Key.shift, Key.shift_l, Key.shift_r]:
+        return
+
+    # on linux, this is alt+gr for some reason, ignore it entirely
+    if key == KeyCode(65027):
         return
 
     # even with modifiers, these are navigation commands
@@ -154,9 +164,9 @@ def on_release(key):
 def print_part(p, num):
     print('{0}{1}{2}'.format('\033[1m', '\n\n\n\n=======\nTASK {0}:\n=======\n'.format(num), '\033[0m'))
     for l in p.splitlines():
-        if l[0] == '-':
+        if len(l) > 0 and l[0] == '-':
             print('{0}{1}{2}'.format('\033[31m', l, '\033[0m'))
-        elif l[0] == '+':
+        elif len(l) > 0 and l[0] == '+':
             print('{0}{1}{2}'.format('\033[32m', l, '\033[0m'))
         else:
             print(l)
@@ -179,7 +189,7 @@ def next_part():
     print_part(parts[current_part], current_part + 1)
     return True
 
-parts = [
+parts1 = [
 ''' { #category : #'initialization' }
  Observable >> initialize [
  
@@ -239,11 +249,51 @@ parts = [
  ]''',
 ]
 
+parts2 = [
+'''Sort >> partition: aCollection low: aLowNumber high: aHighNumber [
+    | pivot i |
+    pivot := aCollection at: aHighNumber.
+    i := aLowNumber - 1.
+    aLowNumber to: aHighNumber - 1 do: [:j |
+            (aCollection at: j) <= pivot ifTrue: [
+                            i := i + 1.
+                            aCollection swap: i with: j]].
+    aCollection swap: i + 1 with: aHighNumber.
+    ^ i + 1
+]''',
+'''Sort >> quicksort: aCollection low: aLowNumber high: aHighNumber [
+
+    aLowNumber < aHighNumber ifTrue: [ | p |
+            p := self partition: aCollection low: aLowNumber high: aHighNumber.
+            self quicksort: aCollection low: aLowNumber high: p - 1.
+            self quicksort: aCollection low: p + 1 high: aHighNumber].
+    ^ aCollection
+]''',
+]
+parts_test = [
+    'Please enter the square bracket [, then hit ctrl+alt+enter',
+    'Please enter the round bracket (, then hit ctrl+alt+enter',
+    'Please use your usual undo combination Cmd+z, then hit ctrl+alt+enter',
+]
+
+if is_test:
+    print('\n\n\n\nPlease focus any other window than this one.')
+    parts = parts_test
+    next_part()
+elif condition.endswith('1'):
+    parts = parts1
+elif condition.endswith('2'):
+    parts = parts2
+else:
+    print('invalid test condition')
+
 mouse_listener = mouse.Listener(
     on_click=on_click)
 mouse_listener.start()
 
-next_part()
+if not is_test:
+    print('This much should fit on one screen:')
+    print('----------------------------------------------------------------------------------')
 
 with keyboard.Listener(
     on_press=on_press,

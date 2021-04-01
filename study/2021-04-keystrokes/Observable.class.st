@@ -1,5 +1,5 @@
 Class {
-	#name : #Observable,
+	#name : #SBObservableExample,
 	#superclass : #Object,
 	#instVars : [
 		'listeners'
