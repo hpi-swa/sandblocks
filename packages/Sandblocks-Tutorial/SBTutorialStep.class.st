@@ -146,7 +146,7 @@ SBTutorialStep class >> stepAssignments: anEditor [
 				addStep: 'Wrap the expression `42 squared` in an assignment by selecting the expression (use <#selectUp>) and press <#wrapInAssignment>. Then type a name.'
 				checkCondition: [:editor | method statements first isAssignment].
 			step
-				addStep: 'Hit save (<#save>) and declare the variable as method local.'
+				addStep: 'Hit save (<#save>) and declare the variable as method local. Note that there is no other way to declare temporary variables currently (i.e., place them in the pipes)'
 				checkCondition: [:editor | method body temporaries notEmpty].
 			step
 				addStep: 'Next, create a new statement by pressing <#insertStatementBelow>. Type the name `var` and press <:> again while still in input mode. Assign 5 to this variable.'
@@ -165,16 +165,26 @@ SBTutorialStep class >> stepBasicMessageSend: anEditor [
 		addAction: #wrapInMessageSend;
 		addAction: #endInput if: anEditor inputIsDefault not;
 		setup: anEditor do: [:step | | method |
-			method := step createStepMethod: [self assert: 1024 = 2] in: anEditor.
-			step addStep: 'Using <#selectLast>, select the 2. <#selectLast> selects the last block in a method.' checkCondition: [:editor | editor selection contents = '2'].
+			method := step
+				createStepMethod: [
+					self assert: 1024 = 2.
+					Transcript showln: 'yep!']
+				in: anEditor.
+			step addStep: 'Select the 2.' checkCondition: [:editor | editor selection contents = '2'].
 			step
 				addStep: 'Press <#wrapInMessageSend> to send a message to your selection, then type `rais` and select `raisedTo:` from the autocompletion popup.'
 				checkCondition: [:editor | method statements first arguments first arguments first selector = 'raisedTo:'].
 			step
-				addStep: 'Finally, type 10 in the now empty field for the argument', (anEditor inputIsDefault
+				addStep: 'Type 10 in the now empty field for the argument', (anEditor inputIsDefault
 					ifTrue: ['.']
 					ifFalse: [' and press escpae to exit the input mode.'])
-				checkCondition: [:editor | method statements first arguments first arguments first arguments first contents = '10']]
+				checkCondition: [:editor | method statements first arguments first arguments first arguments first contents = '10'].
+			step
+				addStep: 'You can also use a block as the argument of a message using <#wrapAsArgument>. Select the full `Transcript showln:` expression, press <#wrapAsArgument> and type `true``.'
+				checkCondition: [:editor | method statements last isMessageSend and: [method statements last selector = ':']].
+			step
+				addStep: 'Finally, use <#inputNextUnknown> to jump to the hole for the message name. We want to send `ifTrue:ifFalse:`, to do so type `ifTri` to find the right element in the autocompletion, then use <#useSuggestion> to accept it.'
+				checkCondition: [:editor | method statements last selector = 'ifTrue:ifFalse:']]
 ]
 
 { #category : #steps }
@@ -201,7 +211,7 @@ SBTutorialStep class >> stepCascade: anEditor [
 				addStep: 'Create a cascade from your multiselection by pressing <#wrapInCascade>'
 				checkCondition: [:editor | method statements second isCascade].
 			step
-				addStep: 'Let''s also move the cascade around our `Morph new` expression. The fastest way to do so is to select the receiver of the cascade `m` in the second row and press <#deleteAround>, which deletes and copies the element around your selection.'
+				addStep: 'Let''s also move the cascade around our `Morph new` expression. Select the receiver of the cascade, the last `m`, and press <#deleteAround>, which deletes and copies the element around your selection (and leaving it there, we can delete it later).'
 				checkCondition: [:editor | method statements second in: [:m | m isBinding and: [m contents = 'm']]].
 			step
 				addStep: 'Next, select the full `Morph new` block and press <#pasteBelow> to paste the just copied surronding element around our selection.'
@@ -213,6 +223,7 @@ SBTutorialStep class >> stepDeleting: anEditor [
 
 	SBTutorialStep new
 		title: 'Deleting';
+		addIntroText: 'Let''s look at deleting in more detail.';
 		addAction: #deleteBlock;
 		addAction: #pasteAbove;
 		addAction: #pasteBelow;
@@ -300,23 +311,27 @@ SBTutorialStep class >> stepLists: anEditor [
 			method := step
 				createStepMethod: [
 					{3. 4. 5}.
-					[]]
+					[].
+					5 between: 2 + 2]
 				in: anEditor.
 			step
-				addStep: 'Add a 1 at the start of the array by selecting the 3 and pressing <#insertElementBefore>.'
+				addStep: 'Add a 1 at the start of the array by selecting the 3 and press <#insertElementBefore> to insert an element before.'
 				checkCondition: [:editor | method statements first firstSubmorph contents = '1'].
 			step
 				addStep: 'To insert an element after the 1, use <#insertElementAfter> and type 2.'
 				checkCondition: [:editor | method statements first submorphs second contents = '2'].
 			step
-				addStep: 'While <#insertElementBefore> and <#insertElementAfter> will always be adjacent to the current selection, for lists of statements, there is a special type of insert. Create an empty statement above the array using <#insertStatementAbove>.'
+				addStep: 'While <#insertElementBefore> and <#insertElementAfter> will always be adjacent to the current selection, for lists of statements, there is a special type of insert. Create an empty statement above the array using <#insertStatementAbove>. This works from any block independent of its nesting.'
 				checkCondition: [:editor | method statements size > 2 and: [method statements second isArrayBlock]].
-			step
+			"step
 				addStep: 'Create an empty statement below the array by first moving the cursor to any number in the array and pressing <#insertStatementBelow>.'
-				checkCondition: [:editor | method statements size > 3 and: [method statements second isArrayBlock]].
+				checkCondition: [:editor | method statements size > 3 and: [method statements second isArrayBlock]]."
 			step
 				addStep: 'If you have an empty list, you can append an element by pressing <#addElement>. Select the empty block at the end of the method and insert a `6 squared` statement into it.'
-				checkCondition: [:editor | method statements last statements size > 0]]
+				checkCondition: [:editor | (method statements detect: #isBlockBody) statements size > 0].
+			step
+				addStep: 'Message sends also act like lists. Complete the expression in the last line by selecting the full `+` message send, then insert an element after using <#insertElementAfter> and type `and: 6`.'
+				checkCondition: [:editor | method statements last prettySourceString = '5 between: 2 + 2 and: 6']]
 ]
 
 { #category : #steps }
@@ -352,7 +367,7 @@ For Windows users: most shortcuts that ask for <Cmd> may require you to press <A
 				checkCondition: [:editor | editor selection = method body statements first arguments first statements first receiver].
 			step
 				addStep: 'Select the number 433 at the bottom'
-				checkCondition: [:editor | editor selection = method body statements third receiver submorphs first]]
+				checkCondition: [:editor | editor selection contents = '433']]
 ]
 
 { #category : #steps }
@@ -386,7 +401,7 @@ SBTutorialStep class >> stepMultiSelection: anEditor [
 				addStep: 'Press <#wrapInDynamicArray> to wrap your multi selection in an array.'
 				checkCondition: [:editor | method statements first isArrayBlock].
 			step
-				addStep: 'Add a 6 to the array using <#addElement> or <#insertElementAfter>.'
+				addStep: 'Add a 6 to the array by selecting the 5 and then pressing <#insertElementAfter> to insert an element after it.'
 				checkCondition: [:editor | method statements first submorphCount = 4 and: [method statements first lastSubmorph contents = '6']].
 			step
 				addStep: 'Finally, you can unpack the array again using the unwrapList command, which might not be bound (<#unwrapist>). If it is not bound, you can access it by selecting the array and pressing <#promptAction> or right clicking it to see all available commands and filter for unpack.'
@@ -398,7 +413,7 @@ SBTutorialStep class >> stepRestructuring: anEditor [
 
 	SBTutorialStep new
 		title: 'Restructuring';
-		addIntroText: 'In this last chapter, we will take a quick look at some more complex transformations. You already know all the required commands, however.';
+		addIntroText: 'In this last chapter, we will take a quick look at some more complex transformations. You already know all the required commands.';
 		addAction: #insertElementAfter;
 		addAction: #wrapInReturn;
 		addAction: #deleteAround;
@@ -409,16 +424,21 @@ SBTutorialStep class >> stepRestructuring: anEditor [
 					({1. 4. 9. 16} includes: number) ifTrue: [^ OrderedCollection with: number sqrt + 1]]
 				in: anEditor.
 			step
-				addStep: 'First, let''s add an ifFalse: branch. We want to insert it in the message send''s list, so select the send''s last child, which is the ifTrue: block closure.'
+				addStep: 'First, let''s add an ifFalse: branch. We want to insert it in the message send''s list, so select the send''s last child, which is the block closure after the `ifTrue:`.'
 				checkCondition: [:editor | editor selection isBlockBody and: [editor selection isMethodBody not]].
 			step
 				addStep: 'Press <#insertElementAfter> to now insert a new element in the list. Type `ifFalse` and use <#inputNextUnknown> to jump to the next hole.'
 				checkCondition: [:editor | method statements last selector = 'ifTrue:ifFalse:'].
 			step
-				addStep: 'Usually, when you want to type an expression, you simply type it and the editor will restructure the tree for you. Try typing `[OrderedCollection with: number squared + 3`.'
+				addStep: 'Usually, when you want to type an expression, you simply type it and the editor will restructure the tree for you. Try typing `[OrderedCollection with: number squared + 3`.
+
+Be mindful of the space character: it will always start a new message send. Further, you can never type round parenthesis, these are inferred from the blocks'' structure. Square brackets, on the other hand symbolize your intent to open a block closure.'
 				checkCondition: [:editor | method statements last arguments second prettySourceString = '[OrderedCollection with: number squared + 3]'].
 			step
-				addStep: 'Finally, we want to move the return ("^") from inside the ifTrue: to the outside. Select the expression inside the return and press <#deleteAround>.'
+				addStep: 'Finally, we want to move the return ("^") from inside the ifTrue: to the outside. Select the expression inside the return.'
+				checkCondition: [:editor | method statements last arguments first statements first childSandblocks first isSelected].
+			step
+				addStep: 'Press <#deleteAround>.'
 				checkCondition: [:editor | method statements last arguments first statements first isReturn not].
 			step
 				addStep: 'Since our copy buffer now contains a hole, we can paste it around the target block. Select the entire ifTrue:ifFalse: block, press <#pasteBelow> and we''re done!'
@@ -518,8 +538,8 @@ SBTutorialStep class >> tutorialSteps [
 
 	^ {
 		#stepMovement:.
-		#stepDeleting:.
 		#stepSelection:.
+		#stepDeleting:.
 		#stepSwapping:.
 		#stepBasicMessageSend:.
 		SBEditor newInputMapping defaultState = #input
@@ -567,6 +587,8 @@ SBTutorialStep >> addIntroText: aString [
 SBTutorialStep >> addStep: aString checkCondition: aBlock [
 
 	steps addMorphBack: (SBRow new
+		cellPositioning: #topLeft;
+		changeTableLayout;
 		cellGap: 8;
 		addMorphBack: (SBCheckbox new
 			setProperty: #checkBlock toValue: aBlock;
@@ -595,9 +617,9 @@ SBTutorialStep >> checkConditions [
 	steps submorphs withIndexDo: [:step :index | | checkbox |
 		checkbox := step firstSubmorph.
 		checkbox value ifFalse: [
-			([
-				(checkbox valueOfProperty: #checkBlock) value: self sandblockEditor] on: Error do: [:error |
-				"error signal."
+			([(checkbox valueOfProperty: #checkBlock) value: self sandblockEditor]
+				on: Error
+				do: [:error | "error signal."
 				false]) ifTrue: [
 				checkbox value: true.
 				self class markStepCompleted: selector index: index]]]
