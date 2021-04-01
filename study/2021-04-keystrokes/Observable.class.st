@@ -14,15 +14,15 @@ Observable >> initialize [
 ]
 
 { #category : #'subscriptions' }
-Observable >> listeners [
-
-	^ listeners
-]
-
-{ #category : #'subscriptions' }
 Observable >> listen: anObject [
 
 	self listeners add: anObject
+]
+
+{ #category : #'subscriptions' }
+Observable >> listeners [
+
+	^ listeners
 ]
 
 { #category : #'subscriptions' }
@@ -41,7 +41,7 @@ Observable >> removeSubscription: anObject [
 Observable >> example [
 
 	| observable observer sub |
-	observable := Observable new.
+	observable := self class new.
 	observer := Object new.
 
 	observable notify: #test.

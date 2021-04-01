@@ -41,7 +41,7 @@ Observable >> removeSubscription: anObject [
 Observable >> example [
 
 	| observable observer sub |
-	observable := Observable new.
+	observable := self class new.
 	observer := Object new.
 
 	observable notify: #test.

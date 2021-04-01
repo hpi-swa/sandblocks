@@ -135,6 +135,10 @@ def on_press(key):
             count('command', key)
         return
 
+    if key == Key.esc:
+        count('command', key)
+        return
+
     if key in [Key.space, Key.tab]:
         if has_secondary:
             count('secondary', key)
@@ -192,21 +196,14 @@ def next_part():
 parts1 = [
 ''' { #category : #'initialization' }
  Observable >> initialize [
- 
+
 -   listeners := OrderedCollection new
 +   listenerMap := Dictionary new
- ]''',
-''' { #category : #'accessing' }
--Observable >> listeners [
-+Observable >> listenerMap [
- 
--   ^ listeners
-+   ^ listenerMap
  ]''',
 ''' { #category : #'observer' }
 -Observable >> listen: anObject [
 +Observable >> listen: anObject for: aString [
- 
+
 -   self listeners add: anObject.
 +   | sub |
 +   sub := Subscription new.
@@ -215,10 +212,17 @@ parts1 = [
 +       ifAbsentPut: [Dictionary new]) add: sub -> anObject.
 +   ^ sub
  ]''',
+''' { #category : #'accessing' }
+-Observable >> listeners [
++Observable >> listenerMap [
+
+-   ^ listeners
++   ^ listenerMap
+ ]''',
 ''' { #category : #'observer' }
 -Observable >> notify [
 +Observable >> notify: aTopicString [
- 
+
 -   self listeners do: [:listener | listener notify]
 +   (self listenerMap at: aTopicString)
 +       keysAndValuesDo: [:sub :listener | listener notify]
@@ -226,7 +230,7 @@ parts1 = [
 ''' { #category : #'observer' }
 -Observable >> removeSubscription: anObject [
 +Observable >> removeSubscription: aSubscription [
- 
+
 -   self listeners removeAllSuchThat: [:listener | listener ~= anObject]
 +   self listenerMap valuesDo: [:listener |
 +       listener at: aSubscription ifPresent: [listener removeKey: aSubscription]]
@@ -235,11 +239,11 @@ parts1 = [
 @@ -44,7 +48,13 @@ Observable >> example [
     observable := Observable new.
     observer := Object new.
- 
+
 -   observable notify: #test.
 +   observable notify: #test1.
 +   observable notify: #test2.
- 
+
 -   observable listen: observer.
 +   sub := observable listen: observer for: #test1.
 +   observer onDelete: [
@@ -276,7 +280,8 @@ parts_test = [
     'Please use your usual undo combination Cmd+z, then hit ctrl+alt+enter',
     'Please type "The quick brown fox" and hit backspace a couple of times, then hit ctrl+alt+enter',
     'Please enter the asterisk *, then hit ctrl+alt+enter',
-    'Please cmd/ctrl and the asterisk, then hit ctrl+alt+enter',
+    'Please cmd/ctrl and the asterisk (<cmd+*>), then hit ctrl+alt+enter',
+    'Please enter the pipe symbol |, then hit ctrl+alt+enter',
 ]
 
 if is_test:
