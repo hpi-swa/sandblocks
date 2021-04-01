@@ -87,6 +87,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character pageUp do: #selectArtefact;
 		registerShortcut: Character home do: #selectStartOfStatement;
 		registerShortcut: Character end do: #selectRightMostBlock;
+		registerShortcut: Character tab do: #useSuggestion;
 		registerShortcut: Character tab shift do: #inputPreviousUnknown;
 		registerShortcut: Character tab do: #inputNextUnknown;
 		registerShortcut: Character arrowUp asSandblockShortcut, Character arrowUp command do: #selectPreviousGroup;
@@ -118,7 +119,6 @@ SBTextInputMapping >> registerDefaultShortcuts [
 
 		registerShortcut: Character cr shift do: #insertStatementAbove;
 		registerShortcut: Character cr do: #insertStatementBelow;
-		registerShortcut: Character cr do: #useSuggestion;
 		
 		" modify smalltalk "
 		cmdShortcut: $" do: #wrapInToggledCode;

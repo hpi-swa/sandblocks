@@ -90,7 +90,7 @@ SBVimInputMapping >> registerDefaultShortcuts [
 
 		" input "
 		inputShortcut: Character escape do: #endInput;
-		inputShortcut: Character cr do: #useSuggestion;
+		inputShortcut: Character tab do: #useSuggestion;
 		inputShortcut: $j command do: #focusNextSuggestion;
 		inputShortcut: $k command do: #focusPreviousSuggestion;
 		inputShortcut: Character arrowLeft do: #moveCursorLeft;
