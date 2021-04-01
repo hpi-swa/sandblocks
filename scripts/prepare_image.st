@@ -25,7 +25,7 @@
   (Smalltalk at: #BaselineOfSandblocks) createSAR.
 
   (Smalltalk at: #SBEditor) openExample.
-  SystemWindow topWindow expandToFullScreen.
+  "SystemWindow topWindow expandToFullScreen."
   CodeHolder addSandblocks.
 
   "Wrap up the image and save it"
