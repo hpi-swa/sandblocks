@@ -11,7 +11,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBStMethodCategory >> addMethods [
 
-	(self relatedClass organization listAtCategoryNamed: savedCategoryName) do: [:method |
+	(self relatedClass organization listAtCategoryNamed: savedCategoryName) sorted do: [:method |
 			self addMorphBack: ((class lookupSelector: method) asSandblock
 				toggleCollapsed;
 				hResizing: #spaceFill)]
@@ -49,6 +49,12 @@ SBStMethodCategory >> drawSubmorphsOn: aCanvas [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMethodCategory >> expandAll [
+
+	self submorphs allButFirstDo: #ensureExpanded
+]
+
+{ #category : #'as yet unclassified' }
 SBStMethodCategory >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
 	| insertCommand changeCategoryCommand |
@@ -79,7 +85,7 @@ SBStMethodCategory >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean
 SBStMethodCategory >> initialize [
 
 	super initialize.
-	hasUnsavedChanges := false.
+	
 	self
 		changeTableLayout;
 		hResizing: #spaceFill;

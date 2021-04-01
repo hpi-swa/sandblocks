@@ -185,12 +185,13 @@ SBEditorCanvas >> scroller [
 SBEditorCanvas >> startDrag: anEvent [
 
 	| canvas |
-	(anEvent redButtonPressed and: [SBPreferences drawOnCanvas])
+	anEvent redButtonPressed
 		ifTrue: [
-			canvas := SBDrawCanvas new center: (self transform globalPointToLocal: anEvent position).
-			self addMorphBack: canvas.
-			canvas mouseDown: (anEvent transformedBy: self transform).
-			anEvent hand newMouseFocus: canvas]
+			SBPreferences drawOnCanvas ifTrue: [
+				canvas := SBDrawCanvas new center: (self transform globalPointToLocal: anEvent position).
+				self addMorphBack: canvas.
+				canvas mouseDown: (anEvent transformedBy: self transform).
+				anEvent hand newMouseFocus: canvas]]
 		ifFalse: [
 			dragging := true.
 			lastDragPosition := anEvent position.

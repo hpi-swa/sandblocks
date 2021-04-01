@@ -131,7 +131,7 @@ SBTutorialStep class >> stepAssignments: anEditor [
 				addStep: 'Wrap the expression `42 squared` in an assignment by selecting the expression (use <#selectUp>) and press <#wrapInAssignment>. Then type a name.'
 				checkCondition: [:editor | method statements first isAssignment].
 			step
-				addStep: 'Hit save (<#save>) and declare the variable as block local.'
+				addStep: 'Hit save (<#save>) and declare the variable as method local.'
 				checkCondition: [:editor | method body temporaries notEmpty].
 			step
 				addStep: 'Next, create a new statement by pressing <#insertStatementBelow>. Type the name `var` and press <:> again while still in input mode. Assign 5 to this variable.'
@@ -139,12 +139,6 @@ SBTutorialStep class >> stepAssignments: anEditor [
 			step
 				addStep: 'The last way to create an assignment is to extract an expression. Select the 7>8, press <#extractVariable>, and name the new variable `comp`.'
 				checkCondition: [:editor | method statements anySatisfy: [:s | s isMessageSend and: [s receiver in: [:r | r isName and: [r contents = 'comp']]]]]]
-]
-
-{ #category : #methods }
-SBTutorialStep class >> stepAssignmentsMethod [ 42 squared.
-	7 > 8
-		ifTrue: [Transcript showln: 'hi']
 ]
 
 { #category : #steps }
@@ -166,10 +160,6 @@ SBTutorialStep class >> stepBasicMessageSend: anEditor [
 					ifTrue: ['.']
 					ifFalse: [' and press escpae to exit the input mode.'])
 				checkCondition: [:editor | method statements first arguments first arguments first arguments first contents = '10']]
-]
-
-{ #category : #methods }
-SBTutorialStep class >> stepBasicMessageSendMethod [ self assert: 1024 = 2
 ]
 
 { #category : #steps }
@@ -228,8 +218,23 @@ SBTutorialStep class >> stepDeleting: anEditor [
 				checkCondition: [:editor | method body statements first contents = '6']]
 ]
 
-{ #category : #methods }
-SBTutorialStep class >> stepDeletingMethod [ {1. 2. 6. 3. 4. 5}
+{ #category : #steps }
+SBTutorialStep class >> stepFinal: anEditor [
+
+	SBTutorialStep new
+		title: 'Congratulations!';
+		addIntroText: 'You finished the tutorial, well done! Press the button below to create a copy of an example class where you can freely experiment with the shortcuts or jump into any existing Smalltalk method using <#openOpenWindow> (then use <Cmd+f> to directly jump to a class).';
+		addMorphBack: (SBButton new icon: SBIcon iconFlask label: 'Open Example Class' do: [ | newClass |
+			newClass := Compiler evaluate: ((SBObservableExample definition
+				copyReplaceAll: SBObservableExample name
+				with: 'Observable', DateAndTime now asUnixTime)
+				copyReplaceAll: SBObservableExample category
+				with: 'UserObjects').
+			newClass copyAllCategoriesFrom: SBObservableExample.
+			anEditor open: (SBStClassMethodEditor new
+				class: newClass;
+				expandAll)]);
+		setup: anEditor do: [:editor | ]
 ]
 
 { #category : #steps }
@@ -307,11 +312,6 @@ SBTutorialStep class >> stepLists: anEditor [
 				checkCondition: [:editor | method statements last statements size > 0]]
 ]
 
-{ #category : #methods }
-SBTutorialStep class >> stepListsMethod [ {3. 4. 5}.
-	[]
-]
-
 { #category : #steps }
 SBTutorialStep class >> stepMovement: anEditor [
 
@@ -346,17 +346,6 @@ For Windows users: most shortcuts that ask for <Cmd> may require you to press <A
 			step
 				addStep: 'Select the number 433 at the bottom'
 				checkCondition: [:editor | editor selection = method body statements third receiver submorphs first]]
-]
-
-{ #category : #methods }
-SBTutorialStep class >> stepMovementMethod [ | y |
-true & false not & nil isNil
-		ifFalse: [52 squared].
-	y := self size + super size.
-	#($a #a 1 1.0)
-		do: [:each | Transcript show: each class name;
-				 show: ' '].
-	^ 433 < y
 ]
 
 { #category : #steps }
@@ -397,10 +386,36 @@ SBTutorialStep class >> stepMultiSelection: anEditor [
 				checkCondition: [:editor | method statements size = 4]]
 ]
 
-{ #category : #methods }
-SBTutorialStep class >> stepMultiSelectionMethod [ 3 yourself.
-	4 squared.
-	5
+{ #category : #steps }
+SBTutorialStep class >> stepRestructuring: anEditor [
+
+	SBTutorialStep new
+		title: 'Restructuring';
+		addIntroText: 'In this last chapter, we will take a quick look at some more complex transformations. You already know all the required commands, however.';
+		addAction: #insertElementAfter;
+		addAction: #wrapInReturn;
+		addAction: #deleteAround;
+		setup: anEditor do: [:step | | method |
+			method := step
+				createStepMethod: [ | number |
+					number := 2.
+					({1. 4. 9. 16} includes: number) ifTrue: [^ OrderedCollection with: number sqrt + 1]]
+				in: anEditor.
+			step
+				addStep: 'First, let''s add an ifFalse: branch. We want to insert it in the message send''s list, so select the send''s last child, which is the ifTrue: block closure.'
+				checkCondition: [:editor | editor selection isBlockBody and: [editor selection isMethodBody not]].
+			step
+				addStep: 'Press <#insertElementAfter> to now insert a new element in the list. Type `ifFalse` and use <#inputNextUnknown> to jump to the next hole.'
+				checkCondition: [:editor | method statements last selector = 'ifTrue:ifFalse:'].
+			step
+				addStep: 'Usually, when you want to type an expression, you simply type it and the editor will restructure the tree for you. Try typing `[OrderedCollection with: number squared + 3`.'
+				checkCondition: [:editor | method statements last arguments second prettySourceString = '[OrderedCollection with: number squared + 3]'].
+			step
+				addStep: 'Finally, we want to move the return ("^") from inside the ifTrue: to the outside. Select the expression inside the return and press <#deleteAround>.'
+				checkCondition: [:editor | method statements last arguments first statements first isReturn not].
+			step
+				addStep: 'Since our copy buffer now contains a hole, we can paste it around the target block. Select the entire ifTrue:ifFalse: block, press <#pasteBelow> and we''re done!'
+				checkCondition: [:editor | method statements last isReturn]]
 ]
 
 { #category : #steps }
@@ -434,17 +449,6 @@ SBTutorialStep class >> stepSelection: anEditor [
 				checkCondition: [:editor | method body statements noneSatisfy: [:s | s selector = 'do:']]]
 ]
 
-{ #category : #methods }
-SBTutorialStep class >> stepSelectionMethod [ | y x |
-true & false not & nil isNil
-		ifFalse: [52 squared].
-	y := self size + super size.
-	#($a #a 1 1.0)
-		do: [:each | Transcript show: each class name;
-				 show: ' '].
-	^ x < y
-]
-
 { #category : #steps }
 SBTutorialStep class >> stepSmalltalkThings: anEditor [
 
@@ -472,15 +476,6 @@ Note the yellow outline that indicates that a receiver will likely not understan
 			step
 				addStep: 'Finally, wrap the last statement in a return by pressing <#wrapInReturn>.'
 				checkCondition: [:editor | method statements last isReturn]]
-]
-
-{ #category : #methods }
-SBTutorialStep class >> stepSmalltalkThingsMethod [ 5 = 2
-		ifTrue: (Transcript showln: 'true')
-		ifFalse: [123].
-	65
-		do: [:each | each].
-	Morph new
 ]
 
 { #category : #steps }
@@ -511,12 +506,6 @@ SBTutorialStep class >> stepSwapping: anEditor [
 				checkCondition: [:editor | method body statements second arguments first receiver receiver contents = '2']]
 ]
 
-{ #category : #methods }
-SBTutorialStep class >> stepSwappingMethod [ {3. 6. 4. 5}.
-	self assert: (10 raisedTo: 2)
-			= 1024
-]
-
 { #category : #progress }
 SBTutorialStep class >> tutorialSteps [
 
@@ -526,13 +515,16 @@ SBTutorialStep class >> tutorialSteps [
 		#stepSelection:.
 		#stepSwapping:.
 		#stepBasicMessageSend:.
-		SBEditor newInputMapping defaultState = #input ifTrue: [nil] ifFalse: [#stepInputMode:].
+		SBEditor newInputMapping defaultState = #input
+			ifTrue: [nil]
+			ifFalse: [#stepInputMode:].
 		#stepSmalltalkThings:.
 		#stepAssignments:.
 		#stepLists:.
 		#stepMultiSelection:.
-		#stepCascade:
-	} select: #notNil
+		#stepCascade:.
+		#stepRestructuring:.
+		#stepFinal:} select: #notNil
 ]
 
 { #category : #'as yet unclassified' }
@@ -614,12 +606,15 @@ SBTutorialStep >> childSandblocksDo: aBlock [
 { #category : #'as yet unclassified' }
 SBTutorialStep >> createStepMethod: aBlock in: anEditor [
 
-	| selector method |
+	| method selector |
 	selector := thisContext sender method homeMethod selector allButLast, 'Method'.
-	self class class
-		compile: selector, ' ', aBlock sourceString allButFirst allButLast
-		classified: 'methods'.
-	method := (self class class >> selector asSymbol) asSandblock category: '*user-methods'.
+	method := (self class respondsTo: selector asSymbol)
+		ifTrue: [(self class class >> selector asSymbol) asSandblock]
+		ifFalse: [
+			self class class
+				compile: selector, ' ', aBlock sourceString allButFirst allButLast
+				classified: '*user-methods'.
+			(self class class >> selector asSymbol) asSandblock category: '*user-methods'].
 	SBToggledCode comment: '' active: 2 do: {
 		[^ anEditor open: self class class >> selector asSymbol].
 		[
@@ -729,6 +724,7 @@ SBTutorialStep >> previous [
 SBTutorialStep >> reset [
 
 	self class resetProgressFor: selector.
+	self class class removeSelector: (selector allButLast, 'Method') asSymbol.
 	self reset: self sandblockEditor
 ]
 

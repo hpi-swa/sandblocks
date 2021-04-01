@@ -1114,6 +1114,7 @@ SBEditor >> performShortcutFor: anEvent [
 
 	(mode = #input and: [self currentInput absorbsInput: anEvent]) ifTrue: [
 		currentInput keyStroke: anEvent.
+		self updateVerticalSelectionPosition.
 		^ true].
 	
 	self shortcuts do: [:assoc |
@@ -1121,6 +1122,7 @@ SBEditor >> performShortcutFor: anEvent [
 	
 	mode = #input ifTrue: [
 		currentInput keyStroke: anEvent.
+		self updateVerticalSelectionPosition.
 		^ true].
 	
 	^ false
@@ -1493,6 +1495,17 @@ SBEditor >> unsavedChanges [
 
 	self allBlocksDo: [:block | (block isArtefact and: [block hasUnsavedChanges]) ifTrue: [^ true]].
 	^ false
+]
+
+{ #category : #actions }
+SBEditor >> updateSandblocks [
+	<action>
+	
+	(UIManager default confirm: 'Proceed to install the latest unstable version?') ifTrue: [
+		(Smalltalk at: #Metacello) new
+			baseline: 'Sandblocks';
+			repository: 'github://tom95/Sandblocks:master/packages';
+			get; load: #tutorial]
 ]
 
 { #category : #selection }

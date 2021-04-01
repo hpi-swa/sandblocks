@@ -711,7 +711,7 @@ SBStBasicMethod >> updateSuggestions [
 { #category : #'as yet unclassified' }
 SBStBasicMethod >> valid [
 
-	^ self selector notEmpty and: [
+	^ self selector isEmpty or: [
 		(self selector first canBeIdentifierInitial and: [
 			self selector allSatisfy: [:c | c isAlphaNumeric or: [c = $: or: [c = $_]]]]) or: [self selector allSatisfy: #isSpecial]]
 ]

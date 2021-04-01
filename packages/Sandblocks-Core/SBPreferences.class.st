@@ -14,7 +14,7 @@ SBPreferences class >> drawOnCanvas [
 	category: 'sandblocks'
 	description: ''
 	type: #Boolean>
-	^ DrawOnCanvas ifNil: [true]
+	^ DrawOnCanvas ifNil: [false]
 ]
 
 { #category : #accessing }

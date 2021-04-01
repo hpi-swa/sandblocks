@@ -35,9 +35,5 @@ SBWelcome >> initialize [
 		addMorphBack: (SBButton new icon: SBIcon iconVine label: 'Use Vim-like Shortcuts' do: [
 			self sandblockEditor useVimInput.
 			SBEditor useInputMapping: SBVimInputMapping]);
-		addMorphBack: (SBButton new icon: SBIcon iconCloud_download label: 'Update to bleeding-edge' do: [
-			(Smalltalk at: #Metacello) new
-				baseline: 'Sandblocks';
-				repository: 'github://tom95/Sandblocks:master/packages';
-				load: #tutorial])
+		addMorphBack: (SBButton new icon: SBIcon iconCloud_download label: 'Update to bleeding-edge' do: [self sandblockEditor updateSandblocks])
 ]

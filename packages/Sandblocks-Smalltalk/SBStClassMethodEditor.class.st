@@ -34,7 +34,7 @@ SBStClassMethodEditor >> class: aClass [
 					hResizing: #spaceFill;
 					yourself)]].
 		[
-			aClass organization categories do: [:category |
+			aClass organization categories sorted do: [:category |
 				self addMorphBack: (SBStMethodCategory new
 					class: aClass
 					category: category
@@ -51,6 +51,12 @@ SBStClassMethodEditor >> deleteCommandFor: aBlock [
 			class: self firstSubmorph relatedClass).
 		((SBDeleteCommand newFor: self) target: aBlock)
 	})
+]
+
+{ #category : #'as yet unclassified' }
+SBStClassMethodEditor >> expandAll [
+
+	self submorphs allButFirstDo: [:m | m expandAll]
 ]
 
 { #category : #'as yet unclassified' }

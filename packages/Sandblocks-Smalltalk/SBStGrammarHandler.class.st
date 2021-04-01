@@ -309,14 +309,16 @@ SBStGrammarHandler >> useArgument: aNumber [
 
 	| artefact |
 	artefact := self block containingArtefact.
-	artefact arguments size >= aNumber ifTrue: [ | content |
+	artefact arguments size >= aNumber ifTrue: [ | content editor |
 		content := (artefact arguments at: aNumber) contents.
-		self block sandblockEditor mode = #input
+		editor := self block sandblockEditor.
+		editor mode = #input
 			ifTrue: [self block sandblockEditor endInputWith: content]
 			ifFalse: [
 				self block sandblockEditor do: ((SBReplaceCommand newFor: artefact)
 					replacer: (SBStName contents: content);
-					target: self block)]]
+					target: self block)].
+		editor maybeStartInputFromEnd]
 ]
 
 { #category : #'actions input' }
