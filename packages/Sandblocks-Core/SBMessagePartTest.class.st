@@ -92,7 +92,7 @@ SBMessagePartTest >> testInsertMessagePartBeforeEnd [
 	self methodFor: message.
 	message messageParts last insertElementAfter.
 	self assert: message selector = 'do::'.
-	self assert: message arguments first isUnknown
+	self assert: message arguments last isUnknown
 ]
 
 { #category : #'as yet unclassified' }

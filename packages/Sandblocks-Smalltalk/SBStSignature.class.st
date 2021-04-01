@@ -106,8 +106,7 @@ SBStSignature >> insertCommandRequest: anAfterBoolean near: aBlock [
 			yourself].
 	
 	index := aBlock owner = self
-		ifTrue: [
-			anAfterBoolean ifTrue: [aBlock submorphIndex + 1] ifFalse: [aBlock submorphIndex]]
+		ifTrue: [(aBlock submorphIndex / 2) ceiling * 2 + (anAfterBoolean ifTrue: [1] ifFalse: [-1])]
 		ifFalse: [1].
 	part := SBStMessagePart new contents: ':'.
 	
@@ -122,7 +121,7 @@ SBStSignature >> insertCommandRequest: anAfterBoolean near: aBlock [
 		index: index;
 		morph: self containingSandblock newNullBlock;
 		yourself.
-	^ SBCombinedCommand newWith: (index odd ifTrue: [{insertArg. insertPart}] ifFalse: [{insertPart. insertArg}])
+	^ SBCombinedCommand newWith: {insertArg. insertPart}
 ]
 
 { #category : #'as yet unclassified' }

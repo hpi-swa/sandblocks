@@ -137,7 +137,7 @@ SBStMessageSend >> deleteCommandFor: aBlock [
 SBStMessageSend >> drawSubmorphsOn: aCanvas [
 
 	super drawSubmorphsOn: aCanvas.
-	self selectorAppearsValid ifFalse: [self drawFrame: Color yellow on: aCanvas]
+	(self selectorAppearsValid not and: [self isDefined]) ifTrue: [self drawFrame: Color yellow on: aCanvas]
 ]
 
 { #category : #accessing }
@@ -196,7 +196,7 @@ SBStMessageSend >> isConstructor: aString for: aClass [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> isDefined [
 
-	^ self selector isEmpty or: [Symbol hasInterned: self selector ifTrue: [:sym | true]]
+	^ Symbol hasInterned: self selector ifTrue: [:sym | true]
 ]
 
 { #category : #'as yet unclassified' }
@@ -434,7 +434,13 @@ SBStMessageSend >> selector: aSymbol arguments: aCollection [
 { #category : #testing }
 SBStMessageSend >> selectorAppearsValid [
 
-	^ self selector isEmpty or: [self actualReceiver ifNotNil: [:r | r guessedClass ifNotNil: [:class | class canUnderstand: self selector asSymbol] ifNil: [true]]]
+	^ self selectorIsIncomplete or: [self isDefined not or: [self actualReceiver ifNotNil: [:r | r guessedClass ifNotNil: [:class | class canUnderstand: self selector asSymbol] ifNil: [true]]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBStMessageSend >> selectorIsIncomplete [
+
+	^ self selector isEmpty or: [self selector includesSubstring: '::']
 ]
 
 { #category : #accessing }
@@ -518,14 +524,15 @@ SBStMessageSend >> useSuggestion: aString [
 
 { #category : #'as yet unclassified' }
 SBStMessageSend >> valid [
+	" the selector is handled by the message parts, if they are incomplete don't double the invalid signal "
 
-	^ self validSelector and: [self isDefined and: [self signature valid]]
+	^ self selectorIsIncomplete or: [self isDefined]
 ]
 
 { #category : #'as yet unclassified' }
 SBStMessageSend >> validSelector [
 
-	^ (self selector isEmpty or: [self selector = ':']) or: [(self selector first canBeIdentifierInitial and: [self selector allSatisfy: [:c | c isAlphaNumeric or: [c = $: or: [c = $_]]]]) or: [self selector allSatisfy: #isSpecial]]
+	^ (self selector isEmpty or: [self selector = ':']) or: [(self selector first canBeIdentifierInitial and: [(self selector allSatisfy: [:c | c isAlphaNumeric or: [c = $: or: [c = $_]]]) and: [(self selector includesSubstring: '::') not]]) or: [self selector allSatisfy: #isSpecial]]
 ]
 
 { #category : #'as yet unclassified' }
