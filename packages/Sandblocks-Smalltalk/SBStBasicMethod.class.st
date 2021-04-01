@@ -293,6 +293,12 @@ SBStBasicMethod >> externalModification: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBStBasicMethod >> guessedClass [
+
+	^ self relatedClass
+]
+
+{ #category : #'as yet unclassified' }
 SBStBasicMethod >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
 	self tryUseAsSelf: aBlock unpackSelection

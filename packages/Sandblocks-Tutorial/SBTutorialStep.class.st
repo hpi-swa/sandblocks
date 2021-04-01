@@ -734,7 +734,7 @@ SBTutorialStep >> next [
 { #category : #'as yet unclassified' }
 SBTutorialStep >> object [
 
-	^ nil
+	^ self
 ]
 
 { #category : #'as yet unclassified' }
