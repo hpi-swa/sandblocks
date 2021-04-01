@@ -272,7 +272,7 @@ SBOwnTextMorph >> insertCharacter: aCharacter [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> insertString: aString [
 
-	self cursor > self contents size
+	(self cursor > self contents size or: [self contents isEmpty])
 		ifTrue: [self contents: self contents, aString]
 		ifFalse: [self contents: (self contents first: self cursor - 1), aString, (self contents allButFirst: self cursor - 1)].
 	self moveCursorTo: self cursor + aString size

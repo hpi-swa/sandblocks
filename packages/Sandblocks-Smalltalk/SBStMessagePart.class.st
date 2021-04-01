@@ -20,6 +20,13 @@ SBStMessagePart >> asName: aConverter [
 	^ aConverter do: [SBStName new contents: self contents]
 ]
 
+{ #category : #actions }
+SBStMessagePart >> changeToUnknown [
+	<action>
+
+	self sandblockEditor startInput: self at: 0 replacingContents: true
+]
+
 { #category : #'as yet unclassified' }
 SBStMessagePart >> contents [
 

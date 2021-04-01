@@ -4,6 +4,10 @@ Class {
 	#category : #'Sandblocks-Tutorial'
 }
 
+{ #category : #'forward declarations' }
+SBSortExample class >> swap: anIndex with: anotherIndex [
+]
+
 { #category : #sorting }
 SBSortExample >> partition: aCollection low: aLowNumber high: aHighNumber [
 ]

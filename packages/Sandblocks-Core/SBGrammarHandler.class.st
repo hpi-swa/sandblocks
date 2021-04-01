@@ -88,26 +88,21 @@ SBGrammarHandler >> insertStatementAbove [
 
 { #category : #'action helpers' }
 SBGrammarHandler >> insertStatementAboveOrBelow: anAboveBoolean [
+	" try to find a suitable place to insert a statement, either above or below the current statement,
+	  or at the start of the containing block body, or at the start of first block body in the artefact "
 
-	| currentStatement index newStatement |
+	| newStatement topMost offset body |
 	newStatement := self block newNullBlock.
-	currentStatement := self block containingStatement ifNil: [^ self block containingArtefact insertStatementAboveOrBelow: anAboveBoolean].
+	topMost := self block.
+	[topMost parentSandblock notNil and: [topMost parentSandblock isBlockBody not]] whileTrue: [topMost := topMost parentSandblock].
+	body := (topMost parentSandblock ifNil: [self block containingArtefact nextBlockThat: [:b | b isBlockBody]]) ifNil: [^ self].
 	
-	(anAboveBoolean not and: [self block containingBlock = currentStatement or: [self block containingBlock hasOwner: currentStatement]]) ifTrue: [
-		^ self block sandblockEditor
-			do: ((SBInsertCommand newFor: self block containingArtefact)
-				index: self block containingBlock statementsIndex;
-				container: self block containingBlock;
-				morph: newStatement;
-				shouldMergeWithNext: true;
-				yourself);
-			startInput: newStatement at: 1 replacingContents: false].
+	offset := (body statements indexOf: topMost ifAbsent: [0]) + (anAboveBoolean ifTrue: [-1] ifFalse: [0]) max: 0.
 	
-	index := currentStatement owner submorphIndexOf: currentStatement.
 	self block sandblockEditor
 		do: ((SBInsertCommand newFor: self block containingArtefact)
-			index: (anAboveBoolean ifTrue: [index] ifFalse: [index + 1]);
-			container: currentStatement owner;
+			index: (body statements ifNotEmpty: [:s | s first submorphIndex + offset] ifEmpty: [body submorphCount + 1]);
+			container: body;
 			morph: newStatement;
 			shouldMergeWithNext: true;
 			yourself);

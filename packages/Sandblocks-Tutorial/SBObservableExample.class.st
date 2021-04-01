@@ -7,6 +7,10 @@ Class {
 	#category : #'Sandblocks-Tutorial'
 }
 
+{ #category : #'forward declarations' }
+SBObservableExample class >> onDelete: aBlock [
+]
+
 { #category : #'test/example' }
 SBObservableExample >> example [
 

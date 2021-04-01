@@ -168,6 +168,7 @@ SBTextInputMapping >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 		ifNil: [false]) and: [anEvent commandKeyPressed not and: [anEvent optionKeyPressed not and: [anEvent controlKeyPressed not]]]) ifTrue: [
 		"anEditor startInput: anEditor selection at: 0 replacingContents: true."
 		anEditor selection changeToUnknown.
-		anEditor selection keyStroke: anEvent.
-		^ aBlock value]
+		anEditor mode = #input ifTrue: [
+			anEditor selection keyStroke: anEvent.
+			aBlock value]]
 ]

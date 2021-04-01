@@ -277,7 +277,7 @@ SBBlock >> changeLocalColorPolicy [
 { #category : #actions }
 SBBlock >> changeToUnknown [
 	<action>
-	
+
 	self newNullBlock
 		convertedFor: self objectInterface
 		do: [:new |
@@ -1778,7 +1778,7 @@ SBBlock >> postDuplicateSelf [
 
 	" this block has been duplicated, adjust any identifiers if need be "
 	
-	self detachDecorators: SBSelectionDecorator
+	self isSelected ifFalse: [self detachDecorators: SBSelectionDecorator]
 ]
 
 { #category : #accessing }
