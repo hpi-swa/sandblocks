@@ -231,8 +231,8 @@ parts1 = [
 -Observable >> removeSubscription: anObject [
 +Observable >> removeSubscription: aSubscription [
 
--   self listeners removeAllSuchThat: [:listener | listener ~= anObject]
-+   self listenerMap valuesDo: [:listener |
+-   listeners removeAllSuchThat: [:listener | listener ~= anObject]
++   listenerMap valuesDo: [:listener |
 +       listener at: aSubscription ifPresent: [listener removeKey: aSubscription]]
  ]''',
 ''' { #category : #'example' }

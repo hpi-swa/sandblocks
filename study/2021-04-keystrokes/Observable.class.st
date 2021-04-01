@@ -34,7 +34,7 @@ Observable >> notify [
 { #category : #'subscriptions' }
 Observable >> removeSubscription: anObject [
 
-	self listeners removeAllSuchThat: [:listener | listener ~= anObject]
+	listeners removeAllSuchThat: [:listener | listener ~= anObject]
 ]
 
 { #category : #'test/example' }
