@@ -3,48 +3,70 @@
 import signal
 import sys
 import time
+import os.path
 from pynput import mouse
 from pynput import keyboard
 from pynput.keyboard import Key
+from math import sqrt
 
-has_secondary = '--sb' not in sys.argv
+if not sys.argv[-1].startswith('vs') and not sys.argv[-1].startswith('sb'):
+    print('use with [vs1|vs2|sb1|sb2]')
+    sys.exit(1)
+
+out_name = sys.argv[-1] + '.csv'
+if os.path.isfile(out_name):
+    print("{0} already exists, did you enter the right setup prefix?".format(out_name))
+    sys.exit(0)
+out = open(out_name, 'w')
+has_secondary = sys.argv[-1].startswith('vs')
 
 # diambiguate backspace for edit vs for mistake?
 
-navigation = 0
-deleting = 0
-input = 0
-commands = 0
-clicks = 0
-secondary = 0
+counts = {}
+
+def count(category, detail):
+    if category not in counts:
+        counts[category] = 1
+    else:
+        counts[category] += 1
+    print_cat(category, detail)
 
 modifier_count = 0
+last_mouse_pos = (0, 0)
 ctrl_pressed = False
 modifiers = [Key.ctrl_l, Key.ctrl_r, Key.cmd_l, Key.cmd, Key.cmd_r, Key.alt, Key.alt_gr, Key.alt_l, Key.alt_r]
 ctrl_keys = [Key.ctrl_l, Key.ctrl_r, Key.ctrl]
 
 # TODO:
 # control+z
-# dump entire history in file
 
 time_per_part = []
 start_time = None
 
+def print_twice(s):
+    print(s)
+    out.write(s + '\n')
+
 def print_results():
     global start_time
-    print('{0}{1}{2}'.format('\033[1m', '\n\n\n\n========\nRESULTS:\n========\n', '\033[0m'))
-    print('Navigation:\t{0}\nDeleting:\t{1}\nInput:\t\t{2}\nCommands:\t{3}\nClicks:\t\t{4}'.format(navigation, deleting, input, commands, clicks))
-    if has_secondary:
-        print('Secondary:\t{0}'.format(secondary))
 
-    print("\nTotal:\t\t{0}".format(navigation + deleting + input + commands + secondary))
-    print("\nTime:")
+    print_twice('\n')
+    print('{0}{1}{2}'.format('\033[1m', '\n\n\n========\nRESULTS:\n========\n', '\033[0m'))
+    for category, count in counts.items():
+        print_twice('{0}{1}\t{2}'.format(category, '\t' if len(category) < 8 else '', count))
+    # print_twice('Navigation:\t{0}\nDeleting:\t{1}\nInput:\t\t{2}\nCommands:\t{3}\nClicks:\t\t{4}'.format(navigation, deleting, input, commands, clicks))
+    #if has_secondary:
+    #    print_twice('Secondary:\t{0}'.format(secondary))
+
+    print_twice("\nTotal:\t\t{0}".format(sum(counts.values())))
+    print_twice("\nTime:")
     i = 1
     for t in time_per_part:
-        print("\tPart {0}: {1}s".format(i, t))
+        print_twice("\tPart {0}: {1}s".format(i, t))
         i = i + 1
-    print("\nTotal: {0}s".format(sum(time_per_part)))
+    print_twice("\nTotal: {0}s".format(sum(time_per_part)))
     print()
+    out.close()
 
 def signal_handler(sig, frame):
     print_results()
@@ -52,18 +74,23 @@ def signal_handler(sig, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
-def print_cat(cat):
-    print(cat)
-    pass
+def print_cat(cat, key):
+    out.write('{0},{1},{2}\n'.format(time.time(), key, cat))
 
 def on_click(x, y, button, pressed):
-    global clicks
-    clicks = clicks + 1
-    print_cat('click')
+    global last_mouse_pos
+    if pressed:
+        last_mouse_pos = (x, y)
+    else:
+        dx = last_mouse_pos[0] - x
+        dy = last_mouse_pos[1] - y
+        if sqrt(dx * dx + dy * dy) > 25:
+            count('drag', button)
+        else:
+            count('click', button)
 
 def on_press(key):
-    global navigation, deleting, input, commands, secondary, ctrl_pressed, modifier_count
-
+    global modifier_count, ctrl_pressed
     # our special shortcut that shouldn't be counted
     if key == Key.enter and ctrl_pressed:
         if not next_part():
@@ -83,39 +110,35 @@ def on_press(key):
 
     # even with modifiers, these are navigation commands
     if key in [Key.left, Key.right, Key.up, Key.down, Key.home, Key.end, Key.page_up, Key.page_down]:
-        navigation = navigation + 1
-        print_cat("Navigation")
+        count('navigation', key)
         return
 
     # even with modifiers, these are navigation commands
     if key in [Key.backspace, Key.delete]:
-        deleting = deleting + 1
-        print_cat("Deleting")
+        count('deleting', key)
         return
 
     if modifier_count > 0:
-        commands = commands + 1
-        print_cat("Command")
+        if hasattr(key, 'char') and key.char == 'z':
+            count('undo', key)
+        else:
+            count('command', key)
         return
 
     if key in [Key.space, Key.tab]:
         if has_secondary:
-            secondary = secondary + 1
-            print_cat("Secondary")
+            count('secondary', key)
         else:
-            input = input + 1
-            print_cat("Input")
+            count('input', key)
         return
 
     if key == Key.enter:
-        input = input + 1
-        print_cat("Input")
+        count('input', key)
         return
 
     try:
         key.char
-        input = input + 1
-        print_cat("Input")
+        count('input', key)
         # print('alphanumeric key {0} pressed'.format(key.char))
     except AttributeError:
         print('/!\ special key {0} pressed'.format(key))
