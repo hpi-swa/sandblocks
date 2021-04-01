@@ -115,7 +115,7 @@ def on_press(key):
         return
 
     # on linux, this is alt+gr for some reason, ignore it entirely
-    if key == KeyCode(65027):
+    if key == KeyCode(65027) or key == KeyCode(65032):
         return
 
     # even with modifiers, these are navigation commands
@@ -274,6 +274,9 @@ parts_test = [
     'Please enter the square bracket [, then hit ctrl+alt+enter',
     'Please enter the round bracket (, then hit ctrl+alt+enter',
     'Please use your usual undo combination Cmd+z, then hit ctrl+alt+enter',
+    'Please type "The quick brown fox" and hit backspace a couple of times, then hit ctrl+alt+enter',
+    'Please enter the asterisk *, then hit ctrl+alt+enter',
+    'Please cmd/ctrl and the asterisk, then hit ctrl+alt+enter',
 ]
 
 if is_test:
