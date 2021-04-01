@@ -148,6 +148,9 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		shortcut: Character escape modes: #(selection) do: #endMultiSelection;
 		cmdShortcut: Character escape do: #dismiss;
 
+		registerShortcut: Character cr shift do: #insertStatementAbove;
+		registerShortcut: Character cr do: #insertStatementBelow;
+
 		" smalltalk "
 		cmdShortcut: $" do: #wrapInToggledCode;
 		cmdShortcut: $D do: #insertLabelAbove;
@@ -155,14 +158,14 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		cmdShortcut: $B do: #insertHaltAbove;
 		cmdShortcut: $O do: #insertStatementAbove;
 		cmdShortcut: $o do: #insertStatementBelow;
-		cmdShortcut: $[ do: #wrapInBlock;
-		cmdShortcut: ${ do: #wrapInDynamicArray;
+		registerShortcut: $[ do: #wrapInBlock;
+		registerShortcut: ${ do: #wrapInDynamicArray;
 		cmdShortcut: $# do: #wrapInLiteralArray;
 		cmdShortcut: $: do: #wrapInAssignment;
 		cmdShortcut: $; do: #wrapInCascade;
-		cmdShortcut: $^ do: #wrapInReturn;
-		cmdShortcut: Character space shift do: #wrapAsArgument;
-		cmdShortcut: Character space do: #wrapInMessageSend;
+		registerShortcut: $^ do: #wrapInReturn;
+		shortcut: Character space shift modes: #(input command) do: #wrapAsArgument;
+		shortcut: Character space modes: #(input command) do: #wrapInMessageSend;
 		
 		" scheme "
 		cmdShortcut: $( do: #wrapInSExpr;

@@ -130,8 +130,8 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $^ do: #wrapInReturn;
 		cmdShortcut: $' do: #useAsStString;
 		cmdShortcut: $# do: #useAsStSymbol;
-		registerShortcut: Character space shift do: #wrapAsArgument;
-		registerShortcut: Character space do: #wrapInMessageSend;
+		shortcut: Character space shift modes: #(input command) do: #wrapAsArgument;
+		shortcut: Character space modes: #(input command) do: #wrapInMessageSend;
 		
 		" modify scheme "
 		registerShortcut: $( do: #wrapInSExpr;

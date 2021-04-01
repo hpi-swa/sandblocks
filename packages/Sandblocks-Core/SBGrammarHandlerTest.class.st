@@ -74,14 +74,13 @@ SBGrammarHandlerTest >> testWrapWithArray [
 	{
 		SBStNumber new contents: '123'.
 		SBStName new contents: 'abc'.
-		SBUnknown new grammarHandler: SBStGrammarHandler new.
-		SBStMessageSend new receiver: SBUnknown new selector: #abc arguments: #()
+		SBUnknown new grammarHandler: SBStGrammarHandler new
 	} do: [:leaf |
 		block := '[]' parseAsSandblock.
 		editor := self methodFor: block.
 		block addMorphBack: leaf.
 		editor startInput: leaf at: 0 replacingContents: false.
-		editor selection keyStroke: (self keyboardEvent: ${).
+		self send: (self keyboardEvent: ${) to: editor.
 		self assert: block statements first isArrayBlock]
 ]
 

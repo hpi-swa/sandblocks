@@ -622,6 +622,7 @@ SBBlock >> deleteBeforeCursor [
 
 	| editor adjacent parent |
 	self currentTextMorph cursor ~= 1 ifTrue: [^ self currentTextMorph deleteBeforeCursor].
+	self symbols first notNil ifTrue: [^ self changeToUnknown].
 	
 	editor := self sandblockEditor.
 	parent := self parentSandblock.
@@ -634,8 +635,7 @@ SBBlock >> deleteBeforeCursor [
 			self currentTextMorph contents isEmpty ifTrue: [
 				self hasChildSandblocks not
 					ifTrue: [self deleteBlock]
-					ifFalse: [
-						(target = self childSandblocks first or: [target hasOwner: self childSandblocks first]) ifTrue: [self childSandblocks first deleteAround]]].
+					ifFalse: [(target = self childSandblocks first or: [target hasOwner: self childSandblocks first]) ifTrue: [self childSandblocks first deleteAround]]].
 			editor startInput: target at: 900000000 replacingContents: false]
 		ifFalse: [
 			(self parentHasDynamicNumberOfChildren and: [parent childSandblocks size > 1])

@@ -193,6 +193,12 @@ SBStMessagePart >> messageSend [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMessagePart >> parentIsExpression [
+
+	^ self parentSandblock isExpression
+]
+
+{ #category : #'as yet unclassified' }
 SBStMessagePart >> prefersNoBorder [
 
 	^ true
@@ -307,9 +313,30 @@ SBStMessagePart >> wantsInput [
 	^ self currentTextMorph contents isEmpty
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
+SBStMessagePart >> wrapAsArgument [
+	<action>
+	<actionValidIf: #parentIsExpression>
+
+	self parentSandblock
+		select;
+		performAction: #wrapAsArgument
+]
+
+{ #category : #actions }
+SBStMessagePart >> wrapInBlock [
+	<action>
+	<actionValidIf: #parentIsExpression>
+
+	self parentSandblock
+		select;
+		performAction: #wrapInBlock
+]
+
+{ #category : #actions }
 SBStMessagePart >> wrapInCascade [
 	<multiSelectAction>
+	<actionValidIf: #parentIsExpression>
 
 	| cascade |
 	self messageSend isExpression ifFalse: [^ self].
@@ -332,9 +359,20 @@ SBStMessagePart >> wrapInCascade [
 						outer removeAllMorphs]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
+SBStMessagePart >> wrapInDynamicArray [
+	<multiSelectAction>
+	<actionValidIf: #parentIsExpression>
+
+	self parentSandblock
+		select;
+		performAction: #wrapInDynamicArray
+]
+
+{ #category : #actions }
 SBStMessagePart >> wrapInMessageSend [
 	<action>
+	<actionValidIf: #parentIsExpression>
 	
 	self messageSend isExpression ifFalse: [^ self].
 	
@@ -343,10 +381,20 @@ SBStMessagePart >> wrapInMessageSend [
 		wrapInMessageSend
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
+SBStMessagePart >> wrapInReturn [
+	<action>
+	<actionValidIf: #parentIsExpression>
+
+	self parentSandblock
+		select;
+		performAction: #wrapInReturn
+]
+
+{ #category : #actions }
 SBStMessagePart >> wrapWithWatch [
 	<action>
-	<inputAction>
+	<actionValidIf: #parentIsExpression>
 
 	self messageSend performAction: #wrapWithWatch
 ]

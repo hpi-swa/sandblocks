@@ -410,6 +410,7 @@ SBStGrammarHandler >> wrapInBlock [
 { #category : #actions }
 SBStGrammarHandler >> wrapInDynamicArray [
 	<multiSelectAction>
+	<actionValidIf: #isExpression>
 
 	self wrapInArrayType: #dynamic
 ]
@@ -417,6 +418,7 @@ SBStGrammarHandler >> wrapInDynamicArray [
 { #category : #actions }
 SBStGrammarHandler >> wrapInLiteralArray [
 	<multiSelectAction>
+	<actionValidIf: #isExpression>
 
 	self wrapInArrayType: #literal
 ]
@@ -463,6 +465,7 @@ SBStGrammarHandler >> wrapInReturn [
 { #category : #actions }
 SBStGrammarHandler >> wrapInToggledCode [
 	<multiSelectAction>
+	<actionValidIf: #isExpression>
 
 	| comment |
 	self assert: self block isSelected.
