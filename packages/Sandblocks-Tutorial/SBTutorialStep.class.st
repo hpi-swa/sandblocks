@@ -21,6 +21,21 @@ SBTutorialStep class >> checkIsComplete: aMethodSymbol index: aNumber [
 	^ self progress at: aMethodSymbol ifPresent: [:list | list includes: aNumber] ifAbsent: [false]
 ]
 
+{ #category : #helper }
+SBTutorialStep class >> copyClass: aClass in: anEditor [
+
+	| newClass |
+	newClass := Compiler evaluate: ((aClass definition
+		copyReplaceAll: aClass name
+		with: (aClass name copyFrom: 3 to: aClass name size - 'Example' size), DateAndTime now asUnixTime)
+		copyReplaceAll: aClass category
+		with: 'UserObjects').
+	newClass copyAllCategoriesFrom: aClass.
+	anEditor open: (SBStClassMethodEditor new
+		class: newClass;
+		expandAll)
+]
+
 { #category : #progress }
 SBTutorialStep class >> hasProgress: aSymbol [
 
@@ -224,16 +239,8 @@ SBTutorialStep class >> stepFinal: anEditor [
 	SBTutorialStep new
 		title: 'Congratulations!';
 		addIntroText: 'You finished the tutorial, well done! Press the button below to create a copy of an example class where you can freely experiment with the shortcuts or jump into any existing Smalltalk method using <#openOpenWindow> (then use <Cmd+f> to directly jump to a class).';
-		addMorphBack: (SBButton new icon: SBIcon iconFlask label: 'Open Example Class' do: [ | newClass |
-			newClass := Compiler evaluate: ((SBObservableExample definition
-				copyReplaceAll: SBObservableExample name
-				with: 'Observable', DateAndTime now asUnixTime)
-				copyReplaceAll: SBObservableExample category
-				with: 'UserObjects').
-			newClass copyAllCategoriesFrom: SBObservableExample.
-			anEditor open: (SBStClassMethodEditor new
-				class: newClass;
-				expandAll)]);
+		addMorphBack: (SBButton new icon: SBIcon iconFlask label: 'Open Example Class' do: [self copyClass: SBObservableExample in: anEditor]);
+		addMorphBack: (SBButton new icon: SBIcon iconFlask label: 'Open Example Methods' do: [self copyClass: SBSortExample in: anEditor]);
 		setup: anEditor do: [:editor | ]
 ]
 

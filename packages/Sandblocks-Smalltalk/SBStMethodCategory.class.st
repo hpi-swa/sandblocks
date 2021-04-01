@@ -12,9 +12,9 @@ Class {
 SBStMethodCategory >> addMethods [
 
 	(self relatedClass organization listAtCategoryNamed: savedCategoryName) sorted do: [:method |
-			self addMorphBack: ((class lookupSelector: method) asSandblock
-				toggleCollapsed;
-				hResizing: #spaceFill)]
+		self addMorphBack: ((class lookupSelector: method) asSandblock
+			toggleCollapsed;
+			hResizing: #spaceFill)]
 ]
 
 { #category : #'as yet unclassified' }

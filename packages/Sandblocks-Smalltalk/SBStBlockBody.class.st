@@ -230,16 +230,19 @@ SBStBlockBody >> isMethodBody [
 { #category : #'as yet unclassified' }
 SBStBlockBody >> layoutCommands [
 
-	| preamble preambleHasContent |
-	preamble := self firstSubmorph layoutCommands.
+	| preamble preambleHasContent multiLine |
+	multiLine := self statementCount > 1 or: [temporaries hasSubmorphs].
 	preambleHasContent := bindings hasSubmorphs or: [temporaries hasSubmorphs].
+	preamble := SBAlgebraCommand container
+		morph: self firstSubmorph;
+		data: ((self firstSubmorph submorphs select: #visible) collect: #layoutCommands separatedBy: [bindings hasSubmorphs ifTrue: [SBAlgebraCommand softLineOrGap] ifFalse: [SBAlgebraCommand noop]]).
 	
 	self statementCount = 0 ifTrue: [
 		^ SBAlgebraCommand container
 			morph: self;
 			data: {preamble}].
 	
-	^ (self statementCount > 1 or: [temporaries hasSubmorphs])
+	^ multiLine
 		ifTrue: [
 			SBAlgebraCommand container
 				morph: self;
