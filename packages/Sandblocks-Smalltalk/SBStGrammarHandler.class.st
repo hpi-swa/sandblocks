@@ -372,7 +372,8 @@ SBStGrammarHandler >> wrapInArrayType: aSymbol [
 			outer: SBStArray new;
 			targets: selected;
 			wrap: [:outer :inner | outer type: aSymbol contents: inner];
-			yourself]
+			yourself].
+	self block sandblockEditor maybeStartInputFromStart
 ]
 
 { #category : #actions }
@@ -404,7 +405,8 @@ SBStGrammarHandler >> wrapInBlock [
 			outer: SBStBlockBody new;
 			targets: selected;
 			wrap: [:outer :inner | outer statements: inner];
-			yourself]
+			yourself].
+	self block sandblockEditor maybeStartInputFromStart
 ]
 
 { #category : #actions }

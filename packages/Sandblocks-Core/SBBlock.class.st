@@ -689,6 +689,15 @@ SBBlock >> detachDecorators: aDecoratorClass [
 	self updateSteppingDecorators
 ]
 
+{ #category : #decorators }
+SBBlock >> detachDecoratorsThat: aBlock [
+
+	decorators do: [:d | (aBlock value: d) ifTrue: [d detached: self]].
+	decorators := decorators reject: [:d | aBlock value: d].
+	self changed.
+	self updateSteppingDecorators
+]
+
 { #category : #actions }
 SBBlock >> dismiss [
 	<action>
@@ -1087,7 +1096,9 @@ SBBlock >> inputNextUnknown [
 	<inputAction>
 
 	(self nextBlockThat: [:m | m wantsInput])
-		ifNotNil: [:m | self sandblockEditor startInput: m at: 1 replacingContents: true]
+		ifNotNil: [:m |
+			self containingFloat = m containingFloat ifTrue: [
+				self sandblockEditor startInput: m at: 1 replacingContents: true]]
 ]
 
 { #category : #actions }
@@ -1096,7 +1107,9 @@ SBBlock >> inputPreviousUnknown [
 	<inputAction>
 
 	(self previousMorphThat: [:m | m isSandblock and: [m wantsInput]])
-		ifNotNil: [:m | self sandblockEditor startInput: m at: 1 replacingContents: true]
+		ifNotNil: [:m |
+			self containingFloat = m containingFloat ifTrue: [
+				self sandblockEditor startInput: m at: 1 replacingContents: true]]
 ]
 
 { #category : #'insert/delete' }

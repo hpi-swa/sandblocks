@@ -30,6 +30,12 @@ SBButton >> example [
 ]
 
 { #category : #'as yet unclassified' }
+SBButton >> handlesMouseDown: anEvent [
+
+	^ anEvent redButtonPressed
+]
+
+{ #category : #'as yet unclassified' }
 SBButton >> icon: anIconMorph label: aString do: aBlock [
 
 	SBExample self: [SBButton new] args: [{SBIcon iconUndo. $u asSandblockShortcut. [nil]}] label: 'icon'.
@@ -72,6 +78,12 @@ SBButton >> initialize [
 		on: #mouseDown send: #mousePressed to: self;
 		on: #mouseLeaveDragging send: #mouseLeft to: self;
 		on: #click send: #clicked to: self
+]
+
+{ #category : #'as yet unclassified' }
+SBButton >> invokeMetaMenu: evt [
+
+	
 ]
 
 { #category : #'as yet unclassified' }

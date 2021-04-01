@@ -143,7 +143,7 @@ SBTutorialStep class >> stepAssignments: anEditor [
 					7 > 8 ifTrue: [Transcript showln: 'hi']]
 				in: anEditor.
 			step
-				addStep: 'Wrap the expression `42 squared` in an assignment by selecting the expression (use <#selectUp>) and press <#wrapInAssignment>. Then type a name.'
+				addStep: 'Wrap the expression `42 squared` in an assignment by selecting the expression (use <#selectUp>) and press <#wrapInAssignment>. Then type `largeNum` as name.'
 				checkCondition: [:editor | method statements first isAssignment].
 			step
 				addStep: 'Hit save (<#save>) and declare the variable as method local. Note that there is no other way to declare temporary variables currently (i.e., place them in the pipes)'
@@ -301,7 +301,7 @@ SBTutorialStep class >> stepLists: anEditor [
 
 	SBTutorialStep new
 		title: 'Lists';
-		addIntroText: 'Many elements act as lists, for example arrays, statements in blocks, or even message sends.';
+		addIntroText: 'Many elements act as lists, for example arrays, statements in blocks, or even message sends. <#insertElementBefore> will always insert an element before the current, <#insertElementAfter> after the current.';
 		addAction: #insertElementAfter;
 		addAction: #insertElementBefore;
 		addAction: #addElement;
@@ -404,7 +404,7 @@ SBTutorialStep class >> stepMultiSelection: anEditor [
 				addStep: 'Add a 6 to the array by selecting the 5 and then pressing <#insertElementAfter> to insert an element after it.'
 				checkCondition: [:editor | method statements first submorphCount = 4 and: [method statements first lastSubmorph contents = '6']].
 			step
-				addStep: 'Finally, you can unpack the array again using the unwrapList command, which might not be bound (<#unwrapist>). If it is not bound, you can access it by selecting the array and pressing <#promptAction> or right clicking it to see all available commands and filter for unpack.'
+				addStep: 'Finally, you can unwrap the array again using the unwrapList command, which might not be bound (<#unwrapist>). If it is not bound, you can access it by selecting the array and pressing <#promptAction> or right clicking it to see all available commands and filter for unpack.'
 				checkCondition: [:editor | method statements size = 4]]
 ]
 
@@ -427,16 +427,18 @@ SBTutorialStep class >> stepRestructuring: anEditor [
 				addStep: 'First, let''s add an ifFalse: branch. We want to insert it in the message send''s list, so select the send''s last child, which is the block closure after the `ifTrue:`.'
 				checkCondition: [:editor | editor selection isBlockBody and: [editor selection isMethodBody not]].
 			step
-				addStep: 'Press <#insertElementAfter> to now insert a new element in the list. Type `ifFalse` and use <#inputNextUnknown> to jump to the next hole.'
+				addStep: 'Press <#insertElementAfter> to now insert a new element in the list. Type `ifF`, use the autocompletion and then jump to the next hole using <#inputNextUnknown>.'
 				checkCondition: [:editor | method statements last selector = 'ifTrue:ifFalse:'].
 			step
-				addStep: 'Usually, when you want to type an expression, you simply type it and the editor will restructure the tree for you. Try typing `[OrderedCollection with: number squared + 3`.
+				addStep: 'Usually, when you want to type an expression, you simply type it and the editor will restructure the tree for you.
 
-Be mindful of the space character: it will always start a new message send. Further, you can never type round parenthesis, these are inferred from the blocks'' structure. Square brackets, on the other hand symbolize your intent to open a block closure.'
+Be mindful of the space character: it will always start a new message send. Further, you can never type round parenthesis, these are inferred from the blocks'' structure. Square or curly braces, on the other hand symbolize your intent to open a block closure or array.
+
+Try typing `[OrderedCollection with: number squared + 3`.'
 				checkCondition: [:editor | method statements last arguments second prettySourceString = '[OrderedCollection with: number squared + 3]'].
 			step
 				addStep: 'Finally, we want to move the return ("^") from inside the ifTrue: to the outside. Select the expression inside the return.'
-				checkCondition: [:editor | method statements last arguments first statements first childSandblocks first isSelected].
+				checkCondition: [:editor | method statements last selector = 'ifTrue:ifFalse:' and: [method statements last arguments first statements first childSandblocks first isSelected]].
 			step
 				addStep: 'Press <#deleteAround>.'
 				checkCondition: [:editor | method statements last arguments first statements first isReturn not].

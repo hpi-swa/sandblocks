@@ -82,22 +82,6 @@ SBStASTNode >> evaluate [
 ]
 
 { #category : #evaluate }
-SBStASTNode >> evaluateExpression [
-	<action>
-	<actionValidIf: #isExpression>
-
-	| result |
-	result := self evaluate.
-	self containingArtefact ifNotNil: [
-		self containingArtefact cacheType: result class for: self].
-	
-	result convertedFor: SBInterfaces topLevel do: [:morph |
-		self sandblockEditor openMorphInView: morph.
-		morph focusAfterDelete: self.
-		self sandblockEditor connectFrom: self to: morph]
-]
-
-{ #category : #evaluate }
 SBStASTNode >> evaluateIn: aBlock [
 
 	| artefact method |

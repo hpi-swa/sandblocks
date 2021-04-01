@@ -154,6 +154,12 @@ SBStContainer >> object [
 	^ receiver
 ]
 
+{ #category : #'method protocol' }
+SBStContainer >> objectInterfaceAt: aNumber adding: aBoolean [
+
+	^ SBInterfaces stBlock
+]
+
 { #category : #'compilation cue protocol' }
 SBStContainer >> prettySourceString [
 

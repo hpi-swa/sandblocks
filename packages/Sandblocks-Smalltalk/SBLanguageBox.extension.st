@@ -28,7 +28,7 @@ SBLanguageBox >> writeStSourceOn: aStream [
 	aStream nextPut: $(.
 	aStream nextPutAll: self className.
 	aStream nextPutAll: ' eval: '.
-	aStream store: self root sourceString.
+	aStream store: self root prettySourceString.
 	aStream nextPutAll: ' lang: '.
 	aStream store: self language.
 	aStream nextPutAll: ')'

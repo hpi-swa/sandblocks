@@ -17,7 +17,7 @@ SBStDeclarationBehavior >> allUsagesDo: aBlock [
 	^ self scope do: [:scope |
 		scope ifNotNil: [
 			scope allBlocksDo: [:block |
-				(block isBinding and: [block behavior resolveBinding = self block]) ifTrue: [aBlock value: block]]]]
+				(block isBinding and: [block ~= self block and: [block behavior resolveBinding = self block]]) ifTrue: [aBlock value: block]]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -60,7 +60,7 @@ SBStDeclarationBehavior >> keyStroke: anEvent [
 { #category : #'as yet unclassified' }
 SBStDeclarationBehavior >> resolveBinding [
 
-	^ self
+	^ self block
 ]
 
 { #category : #'as yet unclassified' }
@@ -73,18 +73,4 @@ SBStDeclarationBehavior >> scope [
 SBStDeclarationBehavior >> valid [
 
 	^ self isReserved not
-]
-
-{ #category : #'as yet unclassified' }
-SBStDeclarationBehavior >> wasDeselected [
-
-	self flag: #todo. " will not clean up on changed usages "
-	self isInWorld ifTrue: [
-		self allUsagesDo: [:b | b detachDecorators: SBHighlightDecorator]]
-]
-
-{ #category : #'as yet unclassified' }
-SBStDeclarationBehavior >> wasSelected [
-
-	self allUsagesDo: [:b | b attachDecorator: SBHighlightDecorator new]
 ]

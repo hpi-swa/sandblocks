@@ -59,7 +59,7 @@ SBStName >> actionProviders [
 { #category : #'as yet unclassified' }
 SBStName >> allUsagesDo: aBlock [
 
-	^ self behavior resolveBinding ifNotNil: [:binding | binding allUsagesDo: aBlock]
+	^ self behavior resolveBinding ifNotNil: [:binding | binding behavior allUsagesDo: aBlock]
 ]
 
 { #category : #converting }
@@ -402,13 +402,15 @@ SBStName >> wasDeselected [
 
 	self flag: #todo. " will not clean up on changed usages "
 	self isInWorld ifTrue: [
-		self allUsagesDo: [:b | b detachDecorators: SBHighlightDecorator]]
+		self allUsagesDo: [:b | b detachDecorators: SBHighlightDecorator].
+		self resolveBinding ifNotNil: [:b | b detachDecorators: SBHighlightDecorator]]
 ]
 
 { #category : #'as yet unclassified' }
 SBStName >> wasSelected [
 
-	self allUsagesDo: [:b | b attachDecorator: SBHighlightDecorator new]
+	self allUsagesDo: [:b | b attachDecorator: SBHighlightDecorator new].
+	self resolveBinding ifNotNil: [:b | b attachDecorator: SBHighlightDecorator new]
 ]
 
 { #category : #'as yet unclassified' }

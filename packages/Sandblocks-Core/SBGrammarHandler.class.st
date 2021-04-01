@@ -55,6 +55,8 @@ SBGrammarHandler >> evaluateExpression [
 	| result |
 	result := SBExecutionEnvironment value: self block containingArtefact during: [self block evaluate].
 	
+	self block sandblockEditor isSingleArtefactView ifTrue: [^ result explore].
+	
 	result convertedFor: SBInterfaces topLevel doWithChooser: [:morph |
 		self block sandblockEditor openMorphInView: morph.
 		morph focusAfterDelete: self block.

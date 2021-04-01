@@ -192,9 +192,9 @@ SBStArray >> type: aSymbol contents: aCollection [
 { #category : #converting }
 SBStArray >> valid [
 
-	type = #literal ifFalse: [^ true].
+	type = #byte ifTrue: [^ self childSandblocks allSatisfy: [:byte | byte isNumberBlock and: [byte parsedContents <= 255]]].
+	type = #literal ifTrue: [^ self childSandblocks allSatisfy: [:b | b isLiteralBlock]].
 	
-	self childSandblocksDo: [:b | b isLiteralBlock ifFalse: [^ false]].
 	^ true
 ]
 
