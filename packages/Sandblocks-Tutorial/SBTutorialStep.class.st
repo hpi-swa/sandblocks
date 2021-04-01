@@ -513,11 +513,12 @@ SBTutorialStep class >> stepSwapping: anEditor [
 		addIntroText: 'In a text editor, you usually move code by copy-pasting. Here, you can also use swap commands directly.';
 		addAction: #swapLeft;
 		addAction: #swapRight;
+		addAction: #clearInput;
 		setup: anEditor do: [:step | | method |
 			method := step
 				createStepMethod: [
 					{3. 6. 4. 5}.
-					self assert: (10 raisedTo: 2) = 1024]
+					self assert: (10 raisedTo: 2) = 77777]
 				in: anEditor.
 			step
 				addStep: 'Select the 6 in the array'
@@ -530,7 +531,10 @@ SBTutorialStep class >> stepSwapping: anEditor [
 				checkCondition: [:editor | editor selection contents = '2' and: [editor selection containingStatement = method body statements second]].
 			step
 				addStep: 'Using <#swapLeft>, swap it with the number 10.'
-				checkCondition: [:editor | method body statements second arguments first receiver receiver contents = '2']]
+				checkCondition: [:editor | method body statements second arguments first receiver receiver contents = '2'].
+			step
+				addStep: 'While we''re here, one more useful shortcut to know: move the cursor into the 77777, press <#clearInput> to empty it, then type 1024.'
+				checkCondition: [:editor | method lastDeepChild contents = '1024']]
 ]
 
 { #category : #progress }
@@ -762,9 +766,9 @@ SBTutorialStep >> reset: anEditor [
 
 	self lastSubmorph isMethod ifTrue: [self lastSubmorph delete].
 	steps removeAllMorphs.
-	anEditor openMorphInView: self.
-	setup value: self.
 	self extent: 0 @ 0.
+	setup value: self.
+	anEditor openMorphInView: self.
 	anEditor when: #selectionChanged send: #checkConditions to: self
 ]
 

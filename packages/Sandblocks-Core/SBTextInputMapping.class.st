@@ -123,15 +123,15 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		" modify smalltalk "
 		cmdShortcut: $" do: #wrapInToggledCode;
 		cmdShortcut: $D do: #insertLabelAbove;
-		cmdShortcut: $[ do: #wrapInBlock;
-		cmdShortcut: ${ do: #wrapInDynamicArray;
+		registerShortcut: $[ do: #wrapInBlock;
+		registerShortcut: ${ do: #wrapInDynamicArray;
 		cmdShortcut: $: do: #wrapInAssignment;
 		cmdShortcut: $; do: #wrapInCascade;
-		cmdShortcut: $^ do: #wrapInReturn;
+		registerShortcut: $^ do: #wrapInReturn;
 		cmdShortcut: $' do: #useAsStString;
 		cmdShortcut: $# do: #useAsStSymbol;
-		cmdShortcut: Character space shift do: #wrapAsArgument;
-		shortcut: Character space modes: #(input command) do: #wrapInMessageSend;
+		registerShortcut: Character space shift do: #wrapAsArgument;
+		registerShortcut: Character space do: #wrapInMessageSend;
 		
 		" modify scheme "
 		registerShortcut: $( do: #wrapInSExpr;

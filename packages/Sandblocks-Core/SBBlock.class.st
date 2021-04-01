@@ -2394,8 +2394,12 @@ SBBlock >> validSubtree [
 { #category : #copying }
 SBBlock >> veryDeepCopyWith: aCopier [
 
-	| new previousDecorators |
+	| new previousDecorators m |
+	m := self valueOfProperty: #sandblockSuggestionMenu.
+	self removeProperty: #sandblockSuggestionMenu.
 	new := super veryDeepCopyWith: aCopier.
+	m ifNotNil: [self setProperty: #sandblockSuggestionMenu toValue: m].
+	
 	previousDecorators := new decorators copy.
 	previousDecorators do: #detach.
 	previousDecorators do: [:decorator | new attachDecorator: decorator].

@@ -268,27 +268,10 @@ SBStGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 			aBlock parentSandblock statements size > 1 ifTrue: [
 				aBlock sandblockEditor do: ((SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock; shouldMergeWithNext: true)].
 			^ block addBlockArgument].
-	char = $< ifTrue: [^ self replaceWithPragma: aBlock].
-	char = Character backspace ifTrue: [^ self tryDelete: aBlock]].
+		char = $< ifTrue: [^ self replaceWithPragma: aBlock]].
 	
-	char = Character space ifTrue: [
-		^ self
-				wrap: aBlock
-				do: [:outer :inner |
-					ActiveEvent shiftPressed
-						ifTrue: [outer receiver: (self newNullBlock label: 'receiver') selector: '' arguments: {inner}]
-						ifFalse: [outer receiver: inner selector: '' arguments: #()]]
-				with: SBStMessageSend new focusOuter: true].
 	char isSpecial ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer receiver: inner selector: char asString arguments: {outer newNullBlock label: 'arg'}] with: SBStMessageSend new focusOuter: true].
-	char = ${ ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer type: #dynamic contents: {inner}] with: SBStArray new].
-	char = $( ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer type: #literal contents: {inner}] with: SBStArray new].
-	char = $[ ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer statements: {inner}] with: SBStBlockBody new].
-	char = $^ ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer expression: inner] with: SBStReturn new].
-	
-	char = Character cr ifTrue: [
-		ActiveEvent shiftPressed
-			ifTrue: [aBlock performAction: #insertStatementAbove]
-			ifFalse: [aBlock performAction: #insertStatementBelow]]
+	char = $( ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer type: #literal contents: {inner}] with: SBStArray new]
 ]
 
 { #category : #'callback helpers' }
@@ -374,7 +357,7 @@ SBStGrammarHandler >> wrapAsArgument [
 			inner: self block;
 			shouldMergeWithNext: true;
 			wrap: [:outer :inner |
-				outer receiver: self block newNullBlock selector: '' arguments: {inner}];
+				outer receiver: (self block newNullBlock label: 'rcvr') selector: '' arguments: {inner}];
 			yourself);
 		startInput: msg receiver at: 0 replacingContents: false
 ]
