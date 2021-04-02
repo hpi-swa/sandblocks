@@ -2,33 +2,30 @@ Class {
 	#name : #SBVimInputMapping,
 	#superclass : #SBInputMapping,
 	#instVars : [
-		'selectionDownHistory',
-		'selection',
-		'mode',
 		'countModifier'
 	],
 	#category : #'Sandblocks-Core'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBVimInputMapping >> countModifier [
 
 	^ countModifier ifEmpty: [0] ifNotEmpty: [countModifier asNumber]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBVimInputMapping >> defaultState [
 
 	^ #command
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBVimInputMapping >> handledEvent: anEvent in: anEditor [
 
 	countModifier := ''
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBVimInputMapping >> initialize [
 
 	super initialize.
@@ -36,8 +33,10 @@ SBVimInputMapping >> initialize [
 	countModifier := ''
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'shortcut execute' }
 SBVimInputMapping >> registerDefaultShortcuts [
+
+	super registerDefaultShortcuts.
 
 	self
 		" navigation "
@@ -74,19 +73,19 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		cmdShortcut: $x do: #deleteBlock;
 		cmdShortcut: $d do: #deleteAdjacent;
 		cmdShortcut: $( do: #leftRotate;
-		cmdShortcut: $. do: #addElement;
+		cmdShortcut: $. do: #appendElement;
 		cmdShortcut: $+ do: #insertElementAfter;
 		cmdShortcut: $* do: #insertElementBefore;
 		cmdShortcut: $H do: #swapLeft;
 		cmdShortcut: $L do: #swapRight;
 		registerShortcut: $c command do: #copyString;
 		registerShortcut: $v command do: #pasteString;
-		cmdShortcut: $p do: #pasteBelow;
-		cmdShortcut: $P do: #pasteAbove;
+		cmdShortcut: $p do: #pasteAfter;
+		cmdShortcut: $P do: #pasteBefore;
 		shortcut: $v modes: #(command selection) do: #startOrAddToMultiSelection;
 		cmdShortcut: $V command do: #startContinuousMultiSelection;
 		cmdShortcut: $V do: #multiSelectChildren;
-		cmdShortcut: $r do: #replaceWithCopyBuffer;
+		cmdShortcut: $r do: #pasteReplace;
 
 		" input "
 		inputShortcut: Character escape do: #endInput;
@@ -177,15 +176,7 @@ SBVimInputMapping >> registerDefaultShortcuts [
 
 ]
 
-{ #category : #'as yet unclassified' }
-SBVimInputMapping >> resetState [
-
-	selectionDownHistory := OrderedCollection new.
-	selection := nil.
-	self mode: #command
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBVimInputMapping >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 
 	anEvent keyCharacter isDigit ifTrue: [

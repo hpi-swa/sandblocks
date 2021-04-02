@@ -2,60 +2,79 @@ Class {
 	#name : #SBInputMapping,
 	#superclass : #Object,
 	#instVars : [
-		'editor'
+		'editor',
+		'registerBlock',
+		'extraShortcuts'
 	],
 	#category : #'Sandblocks-Core'
 }
 
-{ #category : #'as yet unclassified' }
-SBInputMapping >> applyFor: anEditor [
+{ #category : #'event handling' }
+SBInputMapping >> actionFor: anEvent mode: aMode do: aBlock ifNone: anotherBlock [
 
-	editor := anEditor.
-	editor clearShortcuts.
-	self registerDefaultShortcuts
+	registerBlock := [:shortcut :action | | ret |
+		(shortcut asSandblockShortcut matchesEvent: anEvent mode: aMode)
+			ifTrue: [(ret := aBlock value: action) ifTrue: [^ ret]]].
+	
+	self registerDefaultShortcuts.
+	
+	^ anotherBlock value
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
+SBInputMapping >> addShortcuts: aCollection [
+
+	extraShortcuts addAll: aCollection
+]
+
+{ #category : #'shortcut execute' }
 SBInputMapping >> cmdShortcut: aShortcut do: aSymbol [
 
 	self shortcut: aShortcut modes: #(command selection) do: aSymbol
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBInputMapping >> countModifier [
 
 	^ 0
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBInputMapping >> defaultState [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBInputMapping >> handledEvent: anEvent in: anEditor [
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
+SBInputMapping >> initialize [
+
+	super initialize.
+	extraShortcuts := OrderedCollection new
+]
+
+{ #category : #'shortcut execute' }
 SBInputMapping >> inputShortcut: aShortcut do: aSymbol [
 
 	self shortcut: aShortcut modes: #(input) do: aSymbol
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'shortcut execute' }
 SBInputMapping >> registerDefaultShortcuts [
 
-	^ self subclassResponsibility
+	extraShortcuts do: [:s | self registerShortcut: s key do: s value]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'shortcut execute' }
 SBInputMapping >> registerShortcut: aShortcut do: aSymbol [
 
-	editor registerShortcut: aShortcut do: aSymbol
+	registerBlock value: aShortcut value: aSymbol
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'shortcut execute' }
 SBInputMapping >> shortcut: aShortcut modes: aCollection do: aSymbol [
 
 	| shortcut |
@@ -63,10 +82,18 @@ SBInputMapping >> shortcut: aShortcut modes: aCollection do: aSymbol [
 		ifTrue: [aShortcut do: [:s | s modes: aCollection]. aShortcut]
 		ifFalse: [aShortcut asSandblockShortcut modes: aCollection; yourself].
 	
-	editor registerShortcut: shortcut do: aSymbol
+	self registerShortcut: shortcut do: aSymbol
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
+SBInputMapping >> shortcuts [
+
+	^ OrderedCollection streamContents: [:stream |
+		registerBlock := [:shortcut :action | stream nextPut: shortcut asSandblockShortcut -> action].
+		self registerDefaultShortcuts]
+]
+
+{ #category : #'event handling' }
 SBInputMapping >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 
 	

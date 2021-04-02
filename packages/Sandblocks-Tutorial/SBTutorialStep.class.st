@@ -91,8 +91,7 @@ SBTutorialStep class >> stepAdvancedMessageSends: anEditor [
 	SBTutorialStep new
 		title: 'Advanced Message Sends';
 		addIntroText: 'Let''s consider a complex example. Try to change the first expression to look like the second. Here, we will guide you through the steps once more. Maybe try resetting the tutorial after and try it again without following the steps exactly!';
-		addAction: #addElement;
-		addAction: #addElement;
+		addAction: #appendElement;
 		addAction: #promptAction;
 		setup: anEditor
 			do: [:step | | method |
@@ -146,7 +145,7 @@ SBTutorialStep class >> stepAssignments: anEditor [
 				addStep: 'Wrap the expression `42 squared` in an assignment by selecting the expression (use <#selectUp>) and press <#wrapInAssignment>. Then type `largeNum` as name.'
 				checkCondition: [:editor | method statements first isAssignment].
 			step
-				addStep: 'Hit save (<#save>) and declare the variable as method local. Note that there is no other way to declare temporary variables currently (i.e., place them in the pipes)'
+				addStep: 'Hit save (<#save>) and declare the variable as method temporary. Note that there is no other way to declare temporary variables currently (i.e., place them in the pipes)'
 				checkCondition: [:editor | method body temporaries notEmpty].
 			step
 				addStep: 'Next, create a new statement by pressing <#insertStatementBelow>. Type the name `var` and press <:> again while still in input mode. Assign 5 to this variable.'
@@ -180,7 +179,7 @@ SBTutorialStep class >> stepBasicMessageSend: anEditor [
 					ifFalse: [' and press escpae to exit the input mode.'])
 				checkCondition: [:editor | method statements first arguments first arguments first arguments first contents = '10'].
 			step
-				addStep: 'You can also use a block as the argument of a message using <#wrapAsArgument>. Select the full `Transcript showln:` expression, press <#wrapAsArgument> and type `true``.'
+				addStep: 'You can also use a block as the argument of a message using <#wrapAsArgument>. Select the full `Transcript showln:` expression, press <#wrapAsArgument> and type `true`.'
 				checkCondition: [:editor | method statements last isMessageSend and: [method statements last selector = ':']].
 			step
 				addStep: 'Finally, use <#inputNextUnknown> to jump to the hole for the message name. We want to send `ifTrue:ifFalse:`, to do so type `ifTri` to find the right element in the autocompletion, then use <#useSuggestion> to accept it.'
@@ -195,7 +194,7 @@ SBTutorialStep class >> stepCascade: anEditor [
 		addIntroText: 'Let''s format this morph construction code in a cascade. Remember you can press <#undo> to undo when anything goes wrong (and <#redo> to redo).';
 		addAction: #wrapInCascade;
 		addAction: #deleteAround;
-		addAction: #pasteBelow;
+		addAction: #pasteAfter;
 		setup: anEditor do: [:step | | method |
 			method := step
 				createStepMethod: [ | m |
@@ -214,7 +213,7 @@ SBTutorialStep class >> stepCascade: anEditor [
 				addStep: 'Let''s also move the cascade around our `Morph new` expression. Select the receiver of the cascade, the last `m`, and press <#deleteAround>, which deletes and copies the element around your selection (and leaving it there, we can delete it later).'
 				checkCondition: [:editor | method statements second in: [:m | m isBinding and: [m contents = 'm']]].
 			step
-				addStep: 'Next, select the full `Morph new` block and press <#pasteBelow> to paste the just copied surronding element around our selection.'
+				addStep: 'Next, select the full `Morph new` block and press <#pasteAfter> to paste the just copied surronding element around our selection.'
 				checkCondition: [:editor | method statements first expression isCascade]]
 ]
 
@@ -225,22 +224,22 @@ SBTutorialStep class >> stepDeleting: anEditor [
 		title: 'Deleting';
 		addIntroText: 'Let''s look at deleting in more detail.';
 		addAction: #deleteBlock;
-		addAction: #pasteAbove;
-		addAction: #pasteBelow;
-		addAction: #replaceWithCopyBuffer;
+		addAction: #pasteBefore;
+		addAction: #pasteAfter;
+		addAction: #pasteReplace;
 		setup: anEditor do: [:step | | method |
 			method := step createStepMethod: [{1. 2. 6. 3. 4. 5}] in: anEditor.
 			step
 				addStep: 'Delete the 6 in the list by pressing <#deleteBlock>'
 				checkCondition: [:editor | method body statements first submorphs noneSatisfy: [:el | el contents = '6']].
 			step
-				addStep: 'A deleted element is automatically copied. Your current copy buffer is shown in the bottom-right corner. Paste it at the end of the list by walking to the 5 and pressing <#pasteBelow>.'
+				addStep: 'A deleted element is automatically copied. Your current copy buffer is shown in the bottom-right corner. There are three commands for pasting. Paste after allows you to paste the copied element at the end of the list by walking to the 5 and pressing <#pasteAfter>.'
 				checkCondition: [:editor | method body statements first lastSubmorph contents = '6'].
 			step
-				addStep: 'Paste the 6 again at the start of the list by walking to the 1 and pressing <#pasteAbove>'
+				addStep: 'Paste the 6 again at the start of the list by walking to the 1 and pressing <#pasteBefore> for paste before.'
 				checkCondition: [:editor | method body statements first firstSubmorph contents = '6'].
 			step
-				addStep: 'Finally, replace the entire array with the copied 6 using <#replaceWithCopyBuffer>.'
+				addStep: 'Finally, select the entire array using <#selectUp> and replace it with the copied 6 using <#pasteReplace>, for paste replace.'
 				checkCondition: [:editor | method body statements first contents = '6']]
 ]
 
@@ -300,11 +299,13 @@ Then change it to 18.'
 SBTutorialStep class >> stepLists: anEditor [
 
 	SBTutorialStep new
-		title: 'Lists';
-		addIntroText: 'Many elements act as lists, for example arrays, statements in blocks, or even message sends. <#insertElementBefore> will always insert an element before the current, <#insertElementAfter> after the current.';
+		title: 'Sequences';
+		addIntroText: 'Many elements act as sequences, for example arrays, statements in blocks, or even message sends.
+
+<#insertElementBefore> will always insert an **empty** element before the current selection, <#insertElementAfter> after the current, similar to <#pasteBefore> and <#pasteAfter> that insert the **copied** element before and after the selection.';
 		addAction: #insertElementAfter;
 		addAction: #insertElementBefore;
-		addAction: #addElement;
+		addAction: #appendElement;
 		addAction: #insertStatementAbove;
 		addAction: #insertStatementBelow;
 		setup: anEditor do: [:step | | method |
@@ -321,16 +322,16 @@ SBTutorialStep class >> stepLists: anEditor [
 				addStep: 'To insert an element after the 1, use <#insertElementAfter> and type 2.'
 				checkCondition: [:editor | method statements first submorphs second contents = '2'].
 			step
-				addStep: 'While <#insertElementBefore> and <#insertElementAfter> will always be adjacent to the current selection, for lists of statements, there is a special type of insert. Create an empty statement above the array using <#insertStatementAbove>. This works from any block independent of its nesting.'
+				addStep: 'While <#insertElementBefore> and <#insertElementAfter> will always be adjacent to the current selection, for sequences of statements, there is a special type of insert. Create an empty statement above the array using <#insertStatementAbove>. This works from any block independent of its nesting.'
 				checkCondition: [:editor | method statements size > 2 and: [method statements second isArrayBlock]].
 			"step
 				addStep: 'Create an empty statement below the array by first moving the cursor to any number in the array and pressing <#insertStatementBelow>.'
 				checkCondition: [:editor | method statements size > 3 and: [method statements second isArrayBlock]]."
 			step
-				addStep: 'If you have an empty list, you can append an element by pressing <#addElement>. Select the empty block at the end of the method and insert a `6 squared` statement into it.'
+				addStep: 'If you have an empty sequence, you can append an empty element by pressing <#appendElement>. Select the empty block at the end of the method and insert a `6 squared` statement into it.'
 				checkCondition: [:editor | (method statements detect: #isBlockBody) statements size > 0].
 			step
-				addStep: 'Message sends also act like lists. Complete the expression in the last line by selecting the full `+` message send, then insert an element after using <#insertElementAfter> and type `and: 6`.'
+				addStep: 'Message sends also act like sequences, each message part with its argument is an element. Complete the expression in the last line by selecting the full `+` message send, then insert an element after using <#insertElementAfter> and type `and: 6` to form a `between:and:` call.'
 				checkCondition: [:editor | method statements last prettySourceString = '5 between: 2 + 2 and: 6']]
 ]
 
@@ -339,7 +340,7 @@ SBTutorialStep class >> stepMovement: anEditor [
 
 	SBTutorialStep new
 		title: 'Movement';
-		addIntroText: 'Hey, welcome to the tutorial! First we''ll look at moving your cursor. You can click on things, but try to only use your keyboard to get used to it. <#selectPrevious>/<#selectNextGroup>/<#selectPreviousGroup>/<#selectNext> moves your cursor around.
+		addIntroText: 'Hey, welcome to the tutorial! First we''ll look at moving your cursor. You can click on things, but try to get used to using your keyboard. <#selectPrevious>/<#selectNextGroup>/<#selectPreviousGroup>/<#selectNext> moves your cursor around.
 
 Note that you always undo accidental changes with <#undo> (and redo with <#redo>) and you can reset the code sample with the refresh button on the center left. Once done, you can swap to the next chapter with the arrow button on the right.
 
@@ -376,10 +377,9 @@ SBTutorialStep class >> stepMultiSelection: anEditor [
 	SBTutorialStep new
 		title: 'Multi Selection';
 		addIntroText: 'You can multiselect elements with a dedicated selection mode. Many commands will then act on all elements at once.';
-		addAction: #addElement;
 		addAction: #wrapInDynamicArray;
 		addAction: #unwrapList;
-		addAction: #addElement;
+		addAction: #appendElement;
 		addAction: #promptAction;
 		setup: anEditor do: [:step | | method |
 			method := step
@@ -404,7 +404,7 @@ SBTutorialStep class >> stepMultiSelection: anEditor [
 				addStep: 'Add a 6 to the array by selecting the 5 and then pressing <#insertElementAfter> to insert an element after it.'
 				checkCondition: [:editor | method statements first submorphCount = 4 and: [method statements first lastSubmorph contents = '6']].
 			step
-				addStep: 'Finally, you can unwrap the array again using the unwrapList command, which might not be bound (<#unwrapist>). If it is not bound, you can access it by selecting the array and pressing <#promptAction> or right clicking it to see all available commands and filter for unpack.'
+				addStep: 'Finally, you can unwrap the array again using the unwrapList command, which might not be bound (<#unwrapist>). If it is not bound, you can access it by selecting the array and pressing <#promptAction> or right clicking it to see all available commands and filter for unwrap.'
 				checkCondition: [:editor | method statements size = 4]]
 ]
 
@@ -432,7 +432,7 @@ SBTutorialStep class >> stepRestructuring: anEditor [
 			step
 				addStep: 'Usually, when you want to type an expression, you simply type it and the editor will restructure the tree for you.
 
-Be mindful of the space character: it will always start a new message send. Further, you can never type round parenthesis, these are inferred from the blocks'' structure. Square or curly braces, on the other hand symbolize your intent to open a block closure or array.
+Be mindful of the space character: it will always start a new message send. Further, you can never type round parentheses, these are inferred from the blocks'' structure. Square or curly braces, on the other hand symbolize your intent to open a block closure or array.
 
 Try typing `[OrderedCollection with: number squared + 3`.'
 				checkCondition: [:editor | method statements last arguments second prettySourceString = '[OrderedCollection with: number squared + 3]'].
@@ -443,7 +443,7 @@ Try typing `[OrderedCollection with: number squared + 3`.'
 				addStep: 'Press <#deleteAround>.'
 				checkCondition: [:editor | method statements last arguments first statements first isReturn not].
 			step
-				addStep: 'Since our copy buffer now contains a hole, we can paste it around the target block. Select the entire ifTrue:ifFalse: block, press <#pasteBelow> and we''re done!'
+				addStep: 'Since our copy buffer now contains a hole, we can paste it around the target block. Select the entire ifTrue:ifFalse: block, press <#pasteAfter> and we''re done!'
 				checkCondition: [:editor | method statements last isReturn]]
 ]
 
@@ -497,7 +497,7 @@ Note the yellow outline that indicates that a receiver will likely not understan
 					Morph new]
 				in: anEditor.
 			step
-				addStep: 'Wrap the `Transcript showln: ''true` after the ifTrue: in a block by selecting the whole `showln:` message send via <#selectUp>, then press <#wrapInBlock>.'
+				addStep: 'Wrap the `Transcript showln: ''true` after the ifTrue: in a block by selecting the whole `Transcript showln:` message send via <#selectUp>, then press <#wrapInBlock>.'
 				checkCondition: [:editor | method statements first arguments first isBlockBody].
 			step
 				addStep: 'Next, wrap the 65 in an array by pressing <#wrapInDynamicArray>.'
@@ -771,7 +771,8 @@ SBTutorialStep >> reset: anEditor [
 	self extent: 0 @ 0.
 	setup value: self.
 	anEditor openMorphInView: self.
-	anEditor when: #selectionChanged send: #checkConditions to: self
+	anEditor when: #selectionChanged send: #checkConditions to: self.
+	self lastSubmorph isMethod ifTrue: [self sandblockEditor startInput: self lastSubmorph at: 1 replacingContents: false]
 ]
 
 { #category : #'as yet unclassified' }
@@ -800,9 +801,21 @@ SBTutorialStep >> setup: anEditor do: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBTutorialStep >> step [
+
+	self checkConditions
+]
+
+{ #category : #'as yet unclassified' }
 SBTutorialStep >> stepIndex [
 
 	^ self class tutorialSteps indexOf: selector
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep >> stepTime [
+
+	^ 1000
 ]
 
 { #category : #'as yet unclassified' }

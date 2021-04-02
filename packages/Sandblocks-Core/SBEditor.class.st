@@ -28,8 +28,7 @@ Class {
 	],
 	#classVars : [
 		'DefaultColorPolicy',
-		'InputMappingClass',
-		'Shortcuts'
+		'InputMappingClass'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -38,12 +37,6 @@ Class {
 SBEditor class >> anyShortcutForAction: aSymbol [
 
 	^ (self shortcutsForAction: aSymbol) ifNotEmpty: #first ifEmpty: [nil]
-]
-
-{ #category : #shortcuts }
-SBEditor class >> clearShortcuts [
-
-	Shortcuts := nil
 ]
 
 { #category : #accessing }
@@ -103,12 +96,6 @@ SBEditor class >> openFor: aMethodOrClass [
 ]
 
 { #category : #shortcuts }
-SBEditor class >> registerShortcut: aShortcut do: aSymbol [
-
-	self shortcuts add: aShortcut asSandblockShortcut -> aSymbol
-]
-
-{ #category : #shortcuts }
 SBEditor class >> shortcutStringForAction: anAction [
 
 	^ String streamContents: [:stream |
@@ -118,15 +105,9 @@ SBEditor class >> shortcutStringForAction: anAction [
 ]
 
 { #category : #shortcuts }
-SBEditor class >> shortcuts [
-
-	^ Shortcuts ifNil: [Shortcuts := OrderedCollection new]
-]
-
-{ #category : #shortcuts }
 SBEditor class >> shortcutsForAction: anAction [
 
-	^ self shortcuts select: [:assoc | assoc value = anAction] thenCollect: [:assoc | assoc key]
+	^ InputMappingClass new shortcuts select: [:assoc | assoc value = anAction] thenCollect: [:assoc | assoc key]
 ]
 
 { #category : #configuration }
@@ -135,6 +116,12 @@ SBEditor class >> useInputMapping: anInputMappingClass [
 
 	InputMappingClass := anInputMappingClass.
 	anInputMappingClass new applyFor: self
+]
+
+{ #category : #shortcuts }
+SBEditor >> addShortcuts: aCollection [
+
+	inputMapping addShortcuts: aCollection
 ]
 
 { #category : #'action helpers' }
@@ -328,12 +315,6 @@ SBEditor >> clearMultiSelection [
 
 	multiSelection do: [:b | b detachDecorators: SBMultiSelectionDecorator].
 	multiSelection := OrderedCollection new
-]
-
-{ #category : #shortcuts }
-SBEditor >> clearShortcuts [
-
-	self shortcutsOverride: OrderedCollection new
 ]
 
 { #category : #'event handling' }
@@ -697,7 +678,6 @@ SBEditor >> initialize [
 	verticalSelectionPosition := 0.
 	globalShortcutListeners := OrderedCollection new.
 	inputMapping := self class newInputMapping.
-	inputMapping applyFor: self.
 	
 	paletteContainer := SBUpdatingPaletteContainer new
 		vResizing: #spaceFill;
@@ -1118,15 +1098,17 @@ SBEditor >> performShortcutFor: anEvent [
 		self updateVerticalSelectionPosition.
 		^ true].
 	
-	self shortcuts do: [:assoc |
-		(assoc key matchesEvent: anEvent mode: self mode) ifTrue: [(self performForSelection: assoc value) ifTrue: [^ true]]].
-	
-	mode = #input ifTrue: [
-		currentInput keyStroke: anEvent.
-		self updateVerticalSelectionPosition.
-		^ true].
-	
-	^ false
+	^ inputMapping
+		actionFor: anEvent
+		mode: self mode
+		do: [:action | self performForSelection: action]
+		ifNone: [
+			mode = #input
+				ifTrue: [
+					currentInput keyStroke: anEvent.
+					self updateVerticalSelectionPosition.
+					true]
+				ifFalse: [false]]
 ]
 
 { #category : #actions }
@@ -1208,12 +1190,6 @@ SBEditor >> redo [
 SBEditor >> registerGlobalShortcutListener: aMorph [
 
 	globalShortcutListeners add: aMorph
-]
-
-{ #category : #shortcuts }
-SBEditor >> registerShortcut: aShortcut do: aSymbol [
-
-	self shortcuts add: aShortcut asSandblockShortcut -> aSymbol
 ]
 
 { #category : #helper }
@@ -1345,18 +1321,6 @@ SBEditor >> selection [
 SBEditor >> selectionDownHistory [
 
 	^ selectionDownHistory
-]
-
-{ #category : #shortcuts }
-SBEditor >> shortcuts [
-
-	^ self valueOfProperty: #shortcutsOverride ifAbsent: [self class shortcuts]
-]
-
-{ #category : #shortcuts }
-SBEditor >> shortcutsOverride: aCollection [
-
-	self setProperty: #shortcutsOverride toValue: aCollection
 ]
 
 { #category : #helper }
@@ -1544,15 +1508,13 @@ SBEditor >> updateVerticalSelectionPosition [
 { #category : #input }
 SBEditor >> useTextInput [
 
-	inputMapping := SBTextInputMapping new.
-	inputMapping applyFor: self
+	inputMapping := SBTextInputMapping new
 ]
 
 { #category : #input }
 SBEditor >> useVimInput [
 
-	inputMapping := SBVimInputMapping new.
-	inputMapping applyFor: self
+	inputMapping := SBVimInputMapping new
 ]
 
 { #category : #accessing }

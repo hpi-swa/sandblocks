@@ -20,7 +20,7 @@ SBBlockTest >> testLeftRotateBinaryMessages [
 ]
 
 { #category : #'as yet unclassified' }
-SBBlockTest >> testPasteBelow [
+SBBlockTest >> testPasteAfter [
 
 	| block selection editor |
 	block := '[a. b. c. self selected: 5]' parseAsSandblock.
@@ -30,7 +30,7 @@ SBBlockTest >> testPasteBelow [
 	block statements first
 		select;
 		copyToBuffer.
-	selection pasteBelow.
+	selection pasteAfter.
 	self assert: 'a' equals: block statements fifth contents.
 	self assert: 'b' equals: block statements sixth contents.
 	self assert: 'c' equals: block statements seventh contents

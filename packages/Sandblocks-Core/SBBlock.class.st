@@ -65,19 +65,6 @@ SBBlock >> actions [
 				SBBlock = class ifTrue: [^ stream contents]]]]
 ]
 
-{ #category : #actions }
-SBBlock >> addElement [
-	<action>
-
-	| cmd |
-	cmd := (self insertCommandRequest: true near: (self childSandblocks ifNotEmpty: #last ifEmpty: [nil])) ifNil: [^ self].
-	
-	self sandblockEditor do: cmd.
-	
-	cmd shouldMergeWithNext ifTrue: [
-		self sandblockEditor startInput: self sandblockEditor selection at: 0 replacingContents: false]
-]
-
 { #category : #hierarchy }
 SBBlock >> allBlocksDetect: aBlock ifFound: aSuccessBlock ifNone: aFailureBlock [
 
@@ -105,6 +92,22 @@ SBBlock >> allBlocksSelect: aBlock [
 
 	^ Array streamContents: [:stream |
 		self allBlocksDo: [:b | (aBlock value: b) ifTrue: [stream nextPut: b]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> appendElement [
+	<action>
+
+	| cmd |
+	cmd := (self insertCommandRequest: true near: (self childSandblocks ifNotEmpty: #last ifEmpty: [nil])) ifNil: [^ self].
+	
+	self sandblockEditor do: cmd.
+	
+	cmd shouldMergeWithNext ifTrue: [
+		self sandblockEditor
+			startInput: self sandblockEditor selection
+			at: 0
+			replacingContents: false]
 ]
 
 { #category : #callbacks }
@@ -1690,15 +1693,22 @@ SBBlock >> parentHasDynamicNumberOfChildren [
 	^ self parentSandblock fixedNumberOfChildren not
 ]
 
-{ #category : #actions }
-SBBlock >> pasteAbove [
+{ #category : #'as yet unclassified' }
+SBBlock >> pasteAfter [
 	<action>
 
-	self pasteAboveOrBelow: true
+	self pasteBeforeOrAfter: false
 ]
 
-{ #category : #'action helpers' }
-SBBlock >> pasteAboveOrBelow: anAboveBoolean [
+{ #category : #'as yet unclassified' }
+SBBlock >> pasteBefore [
+	<action>
+
+	self pasteBeforeOrAfter: true
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> pasteBeforeOrAfter: aBeforeBoolean [
 
 	| copyBuffer |
 	copyBuffer := self sandblockEditor copyBuffer ifNil: [^ self].
@@ -1706,23 +1716,38 @@ SBBlock >> pasteAboveOrBelow: anAboveBoolean [
 	copyBuffer submorphs veryDeepCopy withIndexDo: [:target :index |
 		target object
 			convertedFor: (self parentSandblock
-				objectInterfaceAt: (anAboveBoolean ifTrue: [self childIndex] ifFalse: [self childIndex + index])
+				objectInterfaceAt: (aBeforeBoolean ifTrue: [self childIndex] ifFalse: [self childIndex + index])
 				adding: true)
 			do: [:repr |
-				self sandblockEditor do: ((self containingArtefact = self ifFalse: [SBInsertCommand newFor: self containingArtefact] ifTrue: [SBInsertCommand newNonEdit])
+				self sandblockEditor do: ((self containingArtefact = self
+					ifFalse: [SBInsertCommand newFor: self containingArtefact]
+					ifTrue: [SBInsertCommand newNonEdit])
 					morph: (repr center: self center);
 					container: self owner;
-					index: (anAboveBoolean ifTrue: [self submorphIndex] ifFalse: [self submorphIndex + index]);
+					index: (aBeforeBoolean ifTrue: [self submorphIndex] ifFalse: [self submorphIndex + index]);
 					shouldMergeWithNext: index < copyBuffer submorphCount).
 				repr postDuplicateSelf.
 				repr select]]
 ]
 
 { #category : #actions }
-SBBlock >> pasteBelow [
+SBBlock >> pasteReplace [
 	<action>
 
-	self pasteAboveOrBelow: false
+	| copyBuffer |
+	copyBuffer := self sandblockEditor copyBuffer.
+	
+	copyBuffer ifNotNil: [ | new |
+		copyBuffer wrapsAround ifTrue: [^ self wrapSelectionWith: copyBuffer unpackSelection veryDeepCopy].
+		
+		new := copyBuffer unpackSelection veryDeepCopy.
+		new
+			convertedFor: self objectInterface
+			do: [:repr |
+				self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+					target: self;
+					replacer: repr).
+				repr postDuplicate]]
 ]
 
 { #category : #'action helpers' }
@@ -1813,6 +1838,24 @@ SBBlock >> prefersNoBorder [
 	^ false
 ]
 
+{ #category : #actions }
+SBBlock >> prependElement [
+	<action>
+
+	| cmd |
+	cmd := (self
+		insertCommandRequest: false
+		near: (self childSandblocks ifNotEmpty: #first ifEmpty: [nil])) ifNil: [^ self].
+	
+	self sandblockEditor do: cmd.
+	
+	cmd shouldMergeWithNext ifTrue: [
+		self sandblockEditor
+			startInput: self sandblockEditor selection
+			at: 0
+			replacingContents: false]
+]
+
 { #category : #testing }
 SBBlock >> preventOcclusion [
 
@@ -1875,26 +1918,6 @@ SBBlock >> removeSuggestionMenu [
 
 	self valueOfProperty: #sandblockSuggestionMenu ifPresentDo: #delete.
 	self removeProperty: #sandblockSuggestionMenu
-]
-
-{ #category : #actions }
-SBBlock >> replaceWithCopyBuffer [
-	<action>
-
-	| copyBuffer |
-	copyBuffer := self sandblockEditor copyBuffer.
-	
-	copyBuffer ifNotNil: [ | new |
-		copyBuffer wrapsAround ifTrue: [^ self wrapSelectionWith: copyBuffer unpackSelection veryDeepCopy].
-		
-		new := copyBuffer unpackSelection veryDeepCopy.
-		new
-			convertedFor: self objectInterface
-			do: [:repr |
-				self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-					target: self;
-					replacer: repr).
-				repr postDuplicate]]
 ]
 
 { #category : #'dropping/grabbing' }

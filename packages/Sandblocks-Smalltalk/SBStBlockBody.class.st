@@ -46,8 +46,15 @@ SBStBlockBody >> addBlockArgument [
 		startInput: self sandblockEditor selection at: 0 replacingContents: false
 ]
 
+{ #category : #converting }
+SBStBlockBody >> addExampleSlider [
+	<action>
+	
+	SBExampleBlockDecoration new wrapAround: self
+]
+
 { #category : #'as yet unclassified' }
-SBStBlockBody >> addElement [
+SBStBlockBody >> appendElement [
 	<action>
 	
 	self sandblockEditor do: ((SBInsertCommand newFor: self containingArtefact)
@@ -58,13 +65,6 @@ SBStBlockBody >> addElement [
 		yourself).
 	
 	self sandblockEditor startInput: self sandblockEditor selection at: 0 replacingContents: false
-]
-
-{ #category : #converting }
-SBStBlockBody >> addExampleSlider [
-	<action>
-	
-	SBExampleBlockDecoration new wrapAround: self
 ]
 
 { #category : #converting }
