@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import subprocess
 import signal
 import sys
 import time
@@ -15,6 +16,7 @@ if not condition.startswith('vs') and not condition.startswith('sb') and not con
     sys.exit(1)
 
 is_test = condition == 'test'
+use_images = condition.startswith('sb')
 has_secondary = is_test or condition.startswith('vs')
 
 out_name = condition + '.csv'
@@ -171,13 +173,18 @@ def on_release(key):
 
 def print_part(p, num):
     print('{0}{1}{2}'.format('\033[1m', '\n\n\n\n=======\nTASK {0}:\n=======\n'.format(num), '\033[0m'))
-    for l in p.splitlines():
-        if len(l) > 0 and l[0] == '-':
-            print('{0}{1}{2}'.format('\033[31m', l, '\033[0m'))
-        elif len(l) > 0 and l[0] == '+':
-            print('{0}{1}{2}'.format('\033[32m', l, '\033[0m'))
-        else:
-            print(l)
+    if p.startswith('image:'):
+        bashCommand = "kitty +kitten icat ../" + p[len('image:'):]
+        process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+        output, error = process.communicate()
+    else:
+        for l in p.splitlines():
+            if len(l) > 0 and l[0] == '-':
+                print('{0}{1}{2}'.format('\033[31m', l, '\033[0m'))
+            elif len(l) > 0 and l[0] == '+':
+                print('{0}{1}{2}'.format('\033[32m', l, '\033[0m'))
+            else:
+                print(l)
 
 current_part = -1
 def next_part():
@@ -200,7 +207,7 @@ def next_part():
     print_part(parts[current_part], current_part + 1)
     return True
 
-parts1 = [
+parts1 = ['image:obs-part1.png', 'image:obs-part2.png', 'image:obs-part3.png', 'image:obs-part4.png', 'image:obs-part5.png', 'image:obs-part6.png'] if use_images else [
 ''' { #category : #'initialization' }
  Observable >> initialize [
 
@@ -260,7 +267,7 @@ Observable >> example [
  ]''',
 ]
 
-parts2 = [
+parts2 = ['image:sort-part1.png', 'image:sort-part2.png'] if use_images else [
 '''Sort >> partition: aCollection low: aLowNumber high: aHighNumber [
     | pivot i |
     pivot := aCollection at: aHighNumber.
