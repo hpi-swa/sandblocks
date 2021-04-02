@@ -212,13 +212,13 @@ parts1 = [
 
 -   self listeners add: anObject.
 +   | sub |
-+   sub := Subscription new.
++   sub := Notification new.
 +   (self listenerMap
 +       at: aString
 +       ifAbsentPut: [Dictionary new]) add: sub -> anObject.
 +   ^ sub
  ]''',
-''' { #category : #'accessing' }
+''' { #category : #'observer' }
 -Observable >> listeners [
 +Observable >> listenerMap [
 
@@ -242,8 +242,8 @@ parts1 = [
 +       listener at: aSubscription ifPresent: [listener removeKey: aSubscription]]
  ]''',
 ''' { #category : #'example' }
-@@ -44,7 +48,13 @@ Observable >> example [
-    observable := Observable new.
+Observable >> example [
+    observable := self class new.
     observer := Object new.
 
 -   observable notify: #test.
