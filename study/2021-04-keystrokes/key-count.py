@@ -196,6 +196,7 @@ def next_part():
     if current_part >= len(parts):
         return False
 
+    out.write('---- Part {0} ---\n'.format(current_part + 1))
     print_part(parts[current_part], current_part + 1)
     return True
 
