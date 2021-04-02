@@ -1,11 +1,14 @@
 Class {
 	#name : #SBColorPolicy,
 	#superclass : #Object,
+	#instVars : [
+		'enlarge'
+	],
 	#classVars : [
 		'BoldMessageSends',
 		'UsePango'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
@@ -48,6 +51,18 @@ SBColorPolicy >> colorForBlock: aBlock [
 SBColorPolicy >> colorForEditor [
 
 	^ Color white
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> enlarge [
+
+	^ enlarge ifNil: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> enlarge: aBoolean [
+
+	enlarge := aBoolean
 ]
 
 { #category : #'as yet unclassified' }
@@ -255,4 +270,10 @@ SBColorPolicy >> symbolsForTemporaryVariableDeclaration: aBlock [
 SBColorPolicy >> symbolsForUnknown: aBlock [
 
 	^ #(nil nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> toggleEnlarge [
+
+	self enlarge: self enlarge not
 ]

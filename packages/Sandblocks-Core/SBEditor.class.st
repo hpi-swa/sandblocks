@@ -219,8 +219,14 @@ SBEditor >> buildCommandBar [
 		cellGap: 4 withScalingFactor;
 		layoutInset: 4 withScalingFactor;
 		addMorphBack: (SBButton new icon: SBIcon iconColumns shortcut: nil do: [self togglePalette]);
-		addMorphBack: (SBButton new icon: SBIcon iconUndo shortcut: (self class anyShortcutForAction: #undo) do: [self undo]);
-		addMorphBack: (SBButton new icon: SBIcon iconRepeat shortcut: (self class anyShortcutForAction: #redo) do: [self redo]);
+		addMorphBack: (SBButton new
+			icon: SBIcon iconUndo
+			shortcut: (self class anyShortcutForAction: #undo)
+			do: [self undo]);
+		addMorphBack: (SBButton new
+			icon: SBIcon iconRepeat
+			shortcut: (self class anyShortcutForAction: #redo)
+			do: [self redo]);
 		addMorphBack: (SBButton new
 			icon: SBIcon iconFolder_open
 			shortcut: (self class anyShortcutForAction: #openOpenWindow)
@@ -232,6 +238,11 @@ SBEditor >> buildCommandBar [
 			height: 0;
 			color: Color transparent;
 			hResizing: #spaceFill);
+		addMorphBack: (SBButton new
+			icon: SBIcon iconSearch_plus shortcut: nil do: [
+				self colorPolicy toggleEnlarge.
+				self allMorphsDo: #layoutChanged];
+			balloonText: 'Toggle enlarge blocks insets');
 		addMorphBack: (SBRow new
 			addMorphBack: (SBButton new
 				cornerStyle: #square;

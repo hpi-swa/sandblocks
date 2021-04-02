@@ -457,6 +457,8 @@ SBStGrammarHandler >> wrapInReturn [
 	<action>
 	<actionValidIf: #isExpression>
 
+	self block parentSandblock isReturn ifTrue: [^ self].
+	
 	self block sandblockEditor do: ((SBWrapCommand newFor: self block containingArtefact)
 		outer: SBStReturn new;
 		inner: self block;

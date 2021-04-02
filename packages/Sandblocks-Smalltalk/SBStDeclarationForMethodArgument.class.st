@@ -13,13 +13,21 @@ SBStDeclarationForMethodArgument >> asSuggestionItem [
 { #category : #'as yet unclassified' }
 SBStDeclarationForMethodArgument >> guessedClass [
 
-	^ (self block containingArtefact typeFor: self block)
-		ifNil: [
-			(self contents size > 3 and: [self contents first = $a]) ifTrue: [ | className |
-				className := (self contents second = $n
-					ifTrue: [self contents allButFirst: 2]
-					ifFalse: [self contents allButFirst]) asSymbol.
-				Smalltalk at: className ifPresent: [:obj | obj isBehavior ifTrue: [obj] ifFalse: [nil]] ifAbsent: [nil]]]
+	^ SBToggledCode
+		comment: 'while generally a nice idea, way too often people just use generic superclasses for their arg names'
+		active: 2
+		do: {
+			[
+				(self block containingArtefact typeFor: self block) ifNil: [
+					(self contents size > 3 and: [self contents first = $a]) ifTrue: [ | className |
+						className := (self contents second = $n
+							ifTrue: [self contents allButFirst: 2]
+							ifFalse: [self contents allButFirst]) asSymbol.
+						Smalltalk
+							at: className
+							ifPresent: [:obj | obj isBehavior ifTrue: [obj] ifFalse: [nil]]
+							ifAbsent: [nil]]]].
+			[nil]}
 ]
 
 { #category : #'as yet unclassified' }

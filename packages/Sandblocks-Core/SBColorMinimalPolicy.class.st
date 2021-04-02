@@ -13,7 +13,9 @@ SBColorMinimalPolicy >> borderWidthForBlock: aBlock [
 { #category : #'as yet unclassified' }
 SBColorMinimalPolicy >> layoutInsetFor: aBlock [
 
+	self enlarge ifTrue: [^ 5].
 	(aBlock isUnknown or: [(aBlock isKindOf: SBStLiteral) or: [aBlock isBlockBody]]) ifTrue: [^ 2 @ 1].
+	(aBlock isMessageSend and: [aBlock messageParts size > 1]) ifTrue: [^ 4].
 	^ aBlock wantsExtraSpace ifTrue: [2 @ 2] ifFalse: [2 @ 0]
 ]
 
