@@ -114,7 +114,6 @@ SBGrammarHandler >> insertStatementAboveOrBelow: anAboveBoolean [
 { #category : #actions }
 SBGrammarHandler >> insertStatementBelow [
 	<action>
-	<actionValidIf: #hasNoSuggestions>
 
 	self insertStatementAboveOrBelow: false
 ]

@@ -55,6 +55,7 @@ SBStClassMethodEditor >> deleteCommandFor: aBlock [
 
 { #category : #'as yet unclassified' }
 SBStClassMethodEditor >> expandAll [
+	<action>
 
 	self submorphs allButFirstDo: [:m | m expandAll]
 ]
