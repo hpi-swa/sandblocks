@@ -29,25 +29,25 @@ SBObservableExample >> initialize [
 	listeners := OrderedCollection new
 ]
 
-{ #category : #subscriptions }
+{ #category : #observer }
 SBObservableExample >> listen: anObject [
 
-	listeners add: anObject.
+	self listeners add: anObject
 ]
 
-{ #category : #subscriptions }
+{ #category : #observer }
 SBObservableExample >> listeners [
 
 	^ listeners
 ]
 
-{ #category : #subscriptions }
+{ #category : #observer }
 SBObservableExample >> notify [
 
 	self listeners do: [:listener | listener notify]
 ]
 
-{ #category : #subscriptions }
+{ #category : #observer }
 SBObservableExample >> removeSubscription: anObject [
 
 	listeners removeAllSuchThat: [:listener | listener ~= anObject]
