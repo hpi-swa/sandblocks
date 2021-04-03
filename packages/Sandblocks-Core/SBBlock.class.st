@@ -341,10 +341,14 @@ SBBlock >> clearCacheSelf [
 
 { #category : #actions }
 SBBlock >> clearInput [
-	<inputAction>
-	<actionValidIf: #hasCurrentTextMorph>
-	
-	self currentTextMorph clear
+	<action>
+
+	self hasCurrentTextMorph
+		ifTrue: [
+			self hasInput
+				ifTrue: [self currentTextMorph clear]
+				ifFalse: [self sandblockEditor startInput: self at: 1 replacingContents: true]]
+		ifFalse: [self changeToUnknown]
 ]
 
 { #category : #'event handling' }
@@ -2024,7 +2028,7 @@ SBBlock >> selectNext [
 	<inputAction>
 
 	self sandblockEditor selectionDownHistory removeAll.
-	self class navigation nextFrom: self do: [:b | (self canJumpTo: b) ifTrue: [b select]].
+	self class navigation nextFrom: self lastDeepChild do: [:b | (self canJumpTo: b) ifTrue: [b select]].
 	
 	self isSelected
 		ifTrue: [self sandblockEditor maybeStartInputFromEnd]

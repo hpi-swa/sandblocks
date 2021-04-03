@@ -107,7 +107,7 @@ SBEditor class >> shortcutStringForAction: anAction [
 { #category : #shortcuts }
 SBEditor class >> shortcutsForAction: anAction [
 
-	^ InputMappingClass new shortcuts select: [:assoc | assoc value = anAction] thenCollect: [:assoc | assoc key]
+	^ self newInputMapping shortcuts select: [:assoc | assoc value = anAction] thenCollect: [:assoc | assoc key]
 ]
 
 { #category : #configuration }

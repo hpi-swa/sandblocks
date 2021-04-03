@@ -168,6 +168,14 @@ SBGrammarHandler >> selectStartOfStatement [
 		updateVerticalSelectionPosition
 ]
 
+{ #category : #callbacks }
+SBGrammarHandler >> startOverrideInput: anEvent in: anEditor [
+
+	anEditor selection changeToUnknown.
+	anEditor mode = #input ifTrue: [
+		anEditor selection keyStroke: anEvent]
+]
+
 { #category : #'callback helpers' }
 SBGrammarHandler >> tryDelete: aBlock [
 

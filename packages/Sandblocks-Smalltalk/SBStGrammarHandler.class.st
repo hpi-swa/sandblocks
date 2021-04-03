@@ -72,6 +72,12 @@ SBStGrammarHandler >> changeToBlockView: aWindow [
 	^ aWindow
 ]
 
+{ #category : #testing }
+SBStGrammarHandler >> characterCanStartInput: aCharacter [
+
+	^ aCharacter isAlphaNumeric or: [aCharacter isSpecial]
+]
+
 { #category : #actions }
 SBStGrammarHandler >> debugExpression [
 	<action>
@@ -287,6 +293,16 @@ SBStGrammarHandler >> replaceWithPragma: aBlock [
 	^ pragma sandblockEditor startInput: pragma at: 1 replacingContents: true
 ]
 
+{ #category : #callbacks }
+SBStGrammarHandler >> startOverrideInput: anEvent in: anEditor [
+
+	anEvent keyCharacter isSpecial ifTrue: [
+		^ anEditor selection grammarHandler
+			block: anEditor selection;
+			wrapInMessageSend: anEvent keyCharacter asString].
+	super startOverrideInput: anEvent in: anEditor
+]
+
 { #category : #'action helpers' }
 SBStGrammarHandler >> useArgument: aNumber [
 
@@ -437,18 +453,23 @@ SBStGrammarHandler >> wrapInMessageSend [
 SBStGrammarHandler >> wrapInMessageSend: aString [
 
 	| msg |
+	self block isExpression ifFalse: [^ self].
 	msg := SBStMessageSend new
 		receiver: (self block newNullBlock label: 'expr')
 		selector: aString
-		arguments: (aString numArgs > 0 ifTrue: [
-			(1 to: aString numArgs) collect: [:i | self block newNullBlock label: 'arg']] ifFalse: [#()]).
+		arguments: (aString numArgs > 0
+			ifTrue: [(1 to: aString numArgs) collect: [:i | self block newNullBlock label: 'arg']]
+			ifFalse: [#()]).
 	self block sandblockEditor do: ((SBWrapCommand newFor: self block containingArtefact)
 		outer: msg;
 		inner: self block;
 		shouldMergeWithNext: true;
 		wrap: [:outer :inner | outer receiver: inner];
 		yourself).
-	self block sandblockEditor startInput: msg at: 900000000 replacingContents: false.
+	self block sandblockEditor
+		startInput: msg
+		at: 900000000
+		replacingContents: false.
 	^ msg
 ]
 
@@ -463,7 +484,8 @@ SBStGrammarHandler >> wrapInReturn [
 		outer: SBStReturn new;
 		inner: self block;
 		wrap: [:outer :inner | outer expression: inner];
-		yourself)
+		yourself).
+	self block sandblockEditor maybeStartInputFromEnd
 ]
 
 { #category : #actions }

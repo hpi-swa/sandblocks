@@ -15,7 +15,7 @@ SBColorMinimalPolicy >> layoutInsetFor: aBlock [
 
 	self enlarge ifTrue: [
 		aBlock isArtefact ifTrue: [^ 2].
-		^ 5].
+		^ 4].
 	(aBlock isUnknown or: [(aBlock isKindOf: SBStLiteral) or: [aBlock isBlockBody]]) ifTrue: [^ 2 @ 1].
 	(aBlock isMessageSend and: [aBlock messageParts size > 1]) ifTrue: [^ 4].
 	^ aBlock wantsExtraSpace ifTrue: [2 @ 2] ifFalse: [2 @ 0]

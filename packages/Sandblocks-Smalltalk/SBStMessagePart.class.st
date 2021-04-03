@@ -373,8 +373,9 @@ SBStMessagePart >> wrapInDynamicArray [
 SBStMessagePart >> wrapInMessageSend [
 	<action>
 	<actionValidIf: #parentIsExpression>
-	
+
 	self messageSend isExpression ifFalse: [^ self].
+	self isUnary ifFalse: [^ self sandblockEditor startInput: self nextBlock at: 1 replacingContents: false].
 	
 	self messageSend grammarHandler
 		block: self messageSend;

@@ -35,7 +35,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		inputShortcut: Character arrowUp do: #moveCursorUp;
 		inputShortcut: Character backspace do: #deleteBeforeCursor;
 		inputShortcut: Character delete do: #deleteAfterCursor;
-		inputShortcut: $a command do: #clearInput;
+		registerShortcut: $a command do: #clearInput;
 		registerShortcut: $1 command do: #useFirstArgument;
 		registerShortcut: $2 command do: #useSecondArgument;
 		registerShortcut: $3 command do: #useThirdArgument;
@@ -69,7 +69,6 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $p command do: #evaluateExpression;
 		registerShortcut: $d command do: #doExpression;
 		registerShortcut: $P command do: #debugExpression;
-		registerShortcut: $a command do: #addExample;
 		registerShortcut: $m command do: #browseImplementors;
 		registerShortcut: $n command do: #browseSenders;
 		registerShortcut: $o command do: #openOpenWindow;
@@ -190,9 +189,6 @@ SBTextInputMapping >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 	((anEditor selection grammarHandler
 		ifNotNil: [:h | h characterCanStartInput: anEvent keyCharacter]
 		ifNil: [false]) and: [anEvent commandKeyPressed not and: [anEvent optionKeyPressed not and: [anEvent controlKeyPressed not]]]) ifTrue: [
-		"anEditor startInput: anEditor selection at: 0 replacingContents: true."
-		anEditor selection changeToUnknown.
-		anEditor mode = #input ifTrue: [
-			anEditor selection keyStroke: anEvent.
-			aBlock value]]
+			anEditor selection grammarHandler startOverrideInput: anEvent in: anEditor.
+			aBlock value]
 ]
