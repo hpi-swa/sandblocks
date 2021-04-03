@@ -293,7 +293,7 @@ SBStBlockBody >> multiSelectChildren [
 { #category : #'object interface' }
 SBStBlockBody >> objectInterfaceAt: aNumber adding: aBoolean [
 
-	({bindings. temporaries} includes: (self childSandblocks at: aNumber) owner)
+	({bindings. temporaries} includes: (self childSandblocks at: aNumber ifAbsent: [^ SBInterfaces stCanAppearInBlock]) owner)
 		ifTrue: [^ SBInterfaces stName].
 	^ SBInterfaces stCanAppearInBlock
 ]
