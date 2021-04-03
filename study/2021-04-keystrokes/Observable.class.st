@@ -1,4 +1,4 @@
-" keysAndValuesDo: ifAbsentPut: Dictionary ifPresent: removeKey: valuesDo: onDelete: "
+" keysAndValuesDo: ifAbsentPut: Dictionary ifPresent: removeKey: valuesDo: onDelete: Notification "
 Class {
 	#name : #SBObservableExample,
 	#superclass : #Object,
