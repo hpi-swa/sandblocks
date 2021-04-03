@@ -777,6 +777,13 @@ SBTutorialStep >> reset: anEditor [
 ]
 
 { #category : #'as yet unclassified' }
+SBTutorialStep >> resetAllProgress [
+	<action>
+	
+	self class resetAllProgress
+]
+
+{ #category : #'as yet unclassified' }
 SBTutorialStep >> selectionDo: aSymbol [
 
 	self sandblockEditor selection performAction: aSymbol

@@ -19,6 +19,7 @@ SBJsGrammar class >> example [
 { #category : #'as yet unclassified' }
 SBJsGrammar class >> serializedGrammar [
 
+	" commap op missing "
 	^ 'JS <: BuiltInRules {
 File = Statement*
 
@@ -60,7 +61,6 @@ infixOperator = "+" | "-" | "/" | "*" | "%" | "**"
 	| "&&" | "||" | "??"
 	| "?."
 	| "=" | "*=" | "**=" | "/=" | "%=" | "+=" | "-=" | "<<=" | ">>=" | ">>>=" | "&=" | "^=" | "|=" | "&&=" | "||=" | "??="
-	| ","
 
 PostfixOp = Expression postfixOperator
 postfixOperator = "++" | "--"
