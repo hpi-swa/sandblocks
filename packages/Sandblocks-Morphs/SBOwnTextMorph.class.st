@@ -97,6 +97,12 @@ SBOwnTextMorph >> cursor [
 SBOwnTextMorph >> cursor: aNumber [
 
 	cursor := aNumber.
+	
+	self containingSandblock
+		withDecorator: SBSelectionDecorator
+		do: [:d | d resetBlink]
+		ifAbsent: [].
+	
 	self changed
 ]
 

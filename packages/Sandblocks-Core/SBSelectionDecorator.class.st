@@ -66,6 +66,18 @@ SBSelectionDecorator >> postDrawOn: aCanvas [
 ]
 
 { #category : #'as yet unclassified' }
+SBSelectionDecorator >> resetBlink [
+
+	
+	blinkCount := 0.
+	cursorShown := false.
+	
+	self morph world ifNotNil: [:w |
+		w stopStepping: self.
+		w startStepping: self at: Time millisecondClockValue selector: #step arguments: {} stepTime: self stepTime]
+]
+
+{ #category : #'as yet unclassified' }
 SBSelectionDecorator >> step [
 
 	cursorShown := cursorShown not.
