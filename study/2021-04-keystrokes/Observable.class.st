@@ -14,25 +14,25 @@ Observable >> initialize [
 	listeners := OrderedCollection new
 ]
 
-{ #category : #'subscriptions' }
+{ #category : #'observer' }
 Observable >> listen: anObject [
 
 	self listeners add: anObject
 ]
 
-{ #category : #'subscriptions' }
+{ #category : #'observer' }
 Observable >> listeners [
 
 	^ listeners
 ]
 
-{ #category : #'subscriptions' }
+{ #category : #'observer' }
 Observable >> notify [
 
 	self listeners do: [:listener | listener notify]
 ]
 
-{ #category : #'subscriptions' }
+{ #category : #'observer' }
 Observable >> removeSubscription: anObject [
 
 	listeners removeAllSuchThat: [:listener | listener ~= anObject]
