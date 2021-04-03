@@ -59,12 +59,6 @@ SBEditor class >> defaultColorPolicy: aColorPolicyClass [
 ]
 
 { #category : #'initialize-release' }
-SBEditor class >> initialize [
-
-	self newInputMapping applyFor: self
-]
-
-{ #category : #'initialize-release' }
 SBEditor class >> newFor: aMethodOrClass [
 
 	| editor |
@@ -114,8 +108,7 @@ SBEditor class >> shortcutsForAction: anAction [
 SBEditor class >> useInputMapping: anInputMappingClass [
 	" self useInputMapping: SBTextInputMapping "
 
-	InputMappingClass := anInputMappingClass.
-	anInputMappingClass new applyFor: self
+	InputMappingClass := anInputMappingClass
 ]
 
 { #category : #shortcuts }
@@ -1076,6 +1069,13 @@ SBEditor >> openRepl [
 	self startInput: repl body childSandblocks first at: 1 replacingContents: true
 ]
 
+{ #category : #actions }
+SBEditor >> openWelcome [
+	<globalAction>
+	
+	self openMorphInView: SBWelcome new
+]
+
 { #category : #initialization }
 SBEditor >> outOfWorld: aWorld [
 
@@ -1475,7 +1475,7 @@ SBEditor >> unsavedChanges [
 
 { #category : #actions }
 SBEditor >> updateSandblocks [
-	<action>
+	<globalAction>
 	
 	(UIManager default confirm: 'Proceed to install the latest unstable version?') ifTrue: [
 		(Smalltalk at: #Metacello) new

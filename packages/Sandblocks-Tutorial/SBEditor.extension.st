@@ -5,9 +5,7 @@ SBEditor class >> openExample [
 	" self openExample "
 
 	| editor |
-	editor := self new.
-	
-	editor openMorphInView: SBWelcome new.
+	editor := self new openWelcome.
 	
 	editor openInWindow.
 	^ editor

@@ -161,7 +161,7 @@ SBStClass >> drawSubmorphsOn: aCanvas [
 { #category : #'as yet unclassified' }
 SBStClass >> drawnColor [
 
-	^ Color r: 0.258 g: 0.304 b: 0.558
+	^ SBStASTNode preferredColor
 ]
 
 { #category : #'as yet unclassified' }
