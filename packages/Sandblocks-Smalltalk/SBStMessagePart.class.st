@@ -114,7 +114,7 @@ SBStMessagePart >> initialize [
 SBStMessagePart >> insertUnknownAfterAndInput: aBoolean [
 
 	| new |
-	self owner arguments size > 0 ifTrue: [^ self].
+	self owner arguments size > 0 ifTrue: [^ self sandblockEditor startInput: self nextBlock firstDeepChild at: 1 replacingContents: false].
 	
 	new := self newNullBlock label: 'arg'.
 	self sandblockEditor currentInputCommand shouldMergeWithNext: true.
@@ -163,7 +163,6 @@ SBStMessagePart >> keyStroke: anEvent [
 			self isBinary not and: [anEvent keyCharacter isSpecial]]]) ifTrue: [^ self wrapInMessageSend: anEvent]."
 	
 	((anEvent keyCharacter isAlphaNumeric or: [#($' $#) includes: anEvent keyCharacter]) and: [self isBinary]) ifTrue: [^ self continueInputInArgument: anEvent].
-	
 	anEvent keyCharacter = $: ifTrue: [^ self insertUnknownAfterAndInput: true].
 	
 	(({Character backspace. Character delete. $_} includes: anEvent keyCharacter) or: [

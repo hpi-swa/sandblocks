@@ -14,5 +14,5 @@ SBHighlightDecorator >> attached: aMorph [
 { #category : #'as yet unclassified' }
 SBHighlightDecorator >> postDrawOn: aCanvas [
 
-	aCanvas fillRectangle: self morph bounds color: (Color white alpha: 0.5)
+	aCanvas fillRectangle: self morph bounds color: (Color white alpha: 0.2)
 ]

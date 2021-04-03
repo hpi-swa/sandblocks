@@ -122,6 +122,16 @@ SBOwnTextMorph >> cursorPosition [
 ]
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> cursorVisible [
+
+	^ cursor > 0 and: [
+		self containingSandblock
+			withDecorator: SBSelectionDecorator
+			do: [:d | d cursorVisible]
+			ifAbsent: [true]]
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> deleteAfterCursor [
 
 	self cursor <= self contents size ifTrue: [ | range rangeStop |
@@ -157,15 +167,28 @@ SBOwnTextMorph >> drawOn: aCanvas [
 	colorToUse := self color.
 	
 	self contents
-		ifEmpty: [self drawString: self placeholderText on: aCanvas at: self position font: self placeholderFont color: (colorToUse alpha: 0.7)]
+		ifEmpty: [
+			self
+				drawString: self placeholderText
+				on: aCanvas
+				at: self position
+				font: self placeholderFont
+				color: (colorToUse alpha: 0.7)]
 		ifNotEmpty: [self drawString: self contentsToDisplay on: aCanvas at: self position font: font color: colorToUse].
 	
 	suffix ifNotEmpty: [
-		self drawString: self suffix on: aCanvas at: self position x + (font widthOfString: self contents) @ self position y font: font color: colorToUse].
+		self
+			drawString: self suffix
+			on: aCanvas
+			at: self position x + (font widthOfString: self contents) @ self position y
+			font: font
+			color: colorToUse].
 	
-	cursor > 0 ifTrue: [
+	self cursorVisible ifTrue: [
 		cursorX := (font widthOfString: self contentsToDisplay from: 1 to: cursor - 1) + self left.
-		aCanvas line: cursorX @ self top to: cursorX @ self bottom width: 2 color: Color red]
+		aCanvas
+			line: cursorX @ self top to: cursorX @ self bottom color: colorToUse;
+			line: cursorX + 1 @ self top to: cursorX + 1 @ self bottom color: (colorToUse alpha: 0.3)]
 ]
 
 { #category : #'as yet unclassified' }

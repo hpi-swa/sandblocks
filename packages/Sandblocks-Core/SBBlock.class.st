@@ -918,7 +918,7 @@ SBBlock >> focusAfterDeleteIfNone: aBlock [
 { #category : #actions }
 SBBlock >> focusNextSuggestion [
 	<inputAction>
-	<actionValidIf: #hasSuggestions>
+	<actionValidIf: #hasMultipleSuggestions>
 	
 	self suggestionMenuDo: #next
 ]
@@ -926,7 +926,7 @@ SBBlock >> focusNextSuggestion [
 { #category : #actions }
 SBBlock >> focusPreviousSuggestion [
 	<inputAction>
-	<actionValidIf: #hasSuggestions>
+	<actionValidIf: #hasMultipleSuggestions>
 	
 	self suggestionMenuDo: #previous
 ]
@@ -1042,6 +1042,12 @@ SBBlock >> hasDecorator: aClass [
 SBBlock >> hasInput [
 
 	^ self sandblockEditor currentInput = self
+]
+
+{ #category : #'actions tests' }
+SBBlock >> hasMultipleSuggestions [
+
+	^ self hasSuggestions and: [(self valueOfProperty: #sandblockSuggestionMenu) submorphCount > 1]
 ]
 
 { #category : #'actions tests' }
@@ -1454,9 +1460,8 @@ SBBlock >> mouseLeaveDragging: anEvent [
 SBBlock >> mouseMove: anEvent [
 
 	super mouseMove: anEvent.
-	(anEvent isDraggingEvent and: [self handlesMouseOverDragging: anEvent]) ifTrue: [
-		self setProperty: #dropLocation toValue: anEvent position.
-		self highlightForDrop: true]
+	self setProperty: #dropLocation toValue: anEvent position.
+	(anEvent isDraggingEvent and: [self handlesMouseOverDragging: anEvent]) ifTrue: [self highlightForDrop: true]
 ]
 
 { #category : #actions }
@@ -1642,9 +1647,13 @@ SBBlock >> objectInterfaceAt: aNumber adding: aBoolean [
 { #category : #'dropping/grabbing' }
 SBBlock >> objectInterfaceForDrop [
 
-	^ self fixedNumberOfChildren
-		ifTrue: [self objectInterface]
-		ifFalse: [self dropLocationDo: [:position :morph :horizontal | self objectInterfaceAt: ((morph notNil and: [morph parentSandblock notNil]) ifTrue: [morph childIndex] ifFalse: [0]) adding: true]]
+	^ self fixedNumberOfChildren ifTrue: [self objectInterface] ifFalse: [
+		self dropLocationDo: [:position :morph :horizontal |
+			self
+				objectInterfaceAt: ((morph notNil and: [morph parentSandblock notNil])
+					ifTrue: [morph childIndex]
+					ifFalse: [0])
+				adding: true]]
 ]
 
 { #category : #actions }
@@ -2028,7 +2037,7 @@ SBBlock >> selectNext [
 	<inputAction>
 
 	self sandblockEditor selectionDownHistory removeAll.
-	self class navigation nextFrom: self lastDeepChild do: [:b | (self canJumpTo: b) ifTrue: [b select]].
+	self class navigation nextFrom: self do: [:b | (self canJumpTo: b) ifTrue: [b select]].
 	
 	self isSelected
 		ifTrue: [self sandblockEditor maybeStartInputFromEnd]
@@ -2296,6 +2305,7 @@ SBBlock >> swap: aNumber [
 		assert: [[:o | o parentSandblock receiver contents = '4']].
 	children := self parentSandblock childSandblocks.
 	offset := aNumber.
+	
 	canSwap := [:a :b | (a satisfies: b objectInterface) and: [b satisfies: a objectInterface]].
 	[
 		offset abs <= children size and: [(canSwap value: self value: (next := children atWrap: (children indexOf: self) + offset)) not]] whileTrue: [offset := offset + aNumber].
@@ -2504,7 +2514,7 @@ SBBlock >> wasSelected [
 { #category : #decorators }
 SBBlock >> withDecorator: aClass do: aBlock [
 
-	decorators detect: [:d | d class = aClass] ifFound: aBlock ifNone: []
+	^ decorators detect: [:d | d class = aClass] ifFound: aBlock ifNone: []
 ]
 
 { #category : #decorators }

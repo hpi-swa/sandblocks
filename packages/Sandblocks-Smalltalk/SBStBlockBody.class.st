@@ -293,16 +293,9 @@ SBStBlockBody >> multiSelectChildren [
 { #category : #'object interface' }
 SBStBlockBody >> objectInterfaceAt: aNumber adding: aBoolean [
 
+	({bindings. temporaries} includes: (self childSandblocks at: aNumber) owner)
+		ifTrue: [^ SBInterfaces stName].
 	^ SBInterfaces stCanAppearInBlock
-]
-
-{ #category : #'object interface' }
-SBStBlockBody >> objectInterfaceForDrop [
-
-	^ self dropLocationDo: [:position :morph :horizontal |
-		(morph owner = bindings or: [morph owner = temporaries])
-			ifTrue: [SBInterfaces stName]
-			ifFalse: [SBInterfaces stCanAppearInBlock]]
 ]
 
 { #category : #converting }

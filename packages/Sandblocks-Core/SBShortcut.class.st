@@ -133,9 +133,9 @@ SBShortcut >> optionKeyPressed [
 SBShortcut >> printDisplayOn: aStream [
 
 	| p |
-	command ifTrue: [aStream nextPutAll: 'Cmd+'].
-	(shift or: [character isLetter and: [character isUppercase]]) ifTrue: [aStream nextPutAll: 'Shift+'].
-	ctrl ifTrue: [aStream nextPutAll: 'Ctrl+'].
+	command ifTrue: [aStream nextPutAll: (Smalltalk os platformName = 'Mac OS' ifTrue: ['Cmd '] ifFalse: ['Ctrl '])].
+	(shift or: [character isLetter and: [character isUppercase]]) ifTrue: [aStream nextPutAll: 'Shift '].
+	ctrl ifTrue: [aStream nextPutAll: 'Ctrl '].
 	
 	character = Character cr ifTrue: [^ aStream nextPutAll: 'enter'].
 	character = Character arrowUp ifTrue: [^ aStream nextPutAll: 'up'].

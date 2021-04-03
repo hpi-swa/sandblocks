@@ -194,7 +194,7 @@ SBTutorialStep class >> stepCascade: anEditor [
 		addIntroText: 'Let''s format this morph construction code in a cascade. Remember you can press <#undo> to undo when anything goes wrong (and <#redo> to redo).';
 		addAction: #wrapInCascade;
 		addAction: #deleteAround;
-		addAction: #pasteAfter;
+		addAction: #pasteReplace;
 		setup: anEditor do: [:step | | method |
 			method := step
 				createStepMethod: [ | m |
@@ -210,10 +210,10 @@ SBTutorialStep class >> stepCascade: anEditor [
 				addStep: 'Create a cascade from your multiselection by pressing <#wrapInCascade>'
 				checkCondition: [:editor | method statements second isCascade].
 			step
-				addStep: 'Let''s also move the cascade around our `Morph new` expression. Select the receiver of the cascade, the last `m`, and press <#deleteAround>, which deletes and copies the element around your selection (and leaving it there, we can delete it later).'
+				addStep: 'Let''s also move the cascade around our `Morph new` expression. Select the receiver of the cascade, the last `m`, and press <#deleteAround>, which deletes the element around your selection. The surrounding element is placed in your copy buffer with a hole where the `m` used to be.'
 				checkCondition: [:editor | method statements second in: [:m | m isBinding and: [m contents = 'm']]].
 			step
-				addStep: 'Next, select the full `Morph new` block and press <#pasteAfter> to paste the just copied surronding element around our selection.'
+				addStep: 'Finally, select the full `Morph new` block and press <#pasteReplace> to paste the just copied surronding element around our selection. It will fit where the hole (the `m`) used to be.'
 				checkCondition: [:editor | method statements first expression isCascade]]
 ]
 
@@ -233,13 +233,14 @@ SBTutorialStep class >> stepDeleting: anEditor [
 				addStep: 'Delete the 6 in the list by pressing <#deleteBlock>'
 				checkCondition: [:editor | method body statements first submorphs noneSatisfy: [:el | el contents = '6']].
 			step
-				addStep: 'A deleted element is automatically copied. Your current copy buffer is shown in the bottom-right corner. There are three commands for pasting. Paste after allows you to paste the copied element at the end of the list by walking to the 5 and pressing <#pasteAfter>.'
+				addStep: 'A deleted element is automatically copied. Your current copy buffer is shown in the bottom-right corner. There are three commands for pasting. Use paste-after to paste the copied element at the end of the list by walking to the 5 and pressing <#pasteAfter>.'
 				checkCondition: [:editor | method body statements first lastSubmorph contents = '6'].
 			step
-				addStep: 'Paste the 6 again at the start of the list by walking to the 1 and pressing <#pasteBefore> for paste before.'
+				addStep: 'Many commands do the "inverse" or do "before" instead of "after" when holding shift (e.g. undo/redo).
+Paste the 6 again at the start of the list by walking to the 1 and pressing <#pasteBefore> for paste-before.'
 				checkCondition: [:editor | method body statements first firstSubmorph contents = '6'].
 			step
-				addStep: 'Finally, select the entire array using <#selectUp> and replace it with the copied 6 using <#pasteReplace>, for paste replace.'
+				addStep: 'Finally, select the entire array using <#selectUp> and replace it with the still copied 6 using <#pasteReplace> for paste-replace.'
 				checkCondition: [:editor | method body statements first contents = '6']]
 ]
 
@@ -328,7 +329,7 @@ SBTutorialStep class >> stepLists: anEditor [
 				addStep: 'Create an empty statement below the array by first moving the cursor to any number in the array and pressing <#insertStatementBelow>.'
 				checkCondition: [:editor | method statements size > 3 and: [method statements second isArrayBlock]]."
 			step
-				addStep: 'If you have an empty sequence, you can append an empty element by pressing <#appendElement>. Select the empty block at the end of the method and insert a `6 squared` statement into it.'
+				addStep: 'If you have an empty sequence, you can append an empty element by pressing <#appendElement>. Select the empty block near the end of the method and insert a `6 squared` statement into it.'
 				checkCondition: [:editor | (method statements detect: #isBlockBody) statements size > 0].
 			step
 				addStep: 'Message sends also act like sequences, each message part with its argument is an element. Complete the expression in the last line by selecting the full `+` message send, then insert an element after using <#insertElementAfter> and type `and: 6` to form a `between:and:` call.'
@@ -424,10 +425,10 @@ SBTutorialStep class >> stepRestructuring: anEditor [
 					({1. 4. 9. 16} includes: number) ifTrue: [^ OrderedCollection with: number sqrt + 1]]
 				in: anEditor.
 			step
-				addStep: 'First, let''s add an ifFalse: branch. We want to insert it in the message send''s list, so select the send''s last child, which is the block closure after the `ifTrue:`.'
+				addStep: 'First, let''s add an ifFalse: branch. We want to insert it in the message send''s sequence, so select the send''s last child, which is the block closure after the `ifTrue:`.'
 				checkCondition: [:editor | editor selection isBlockBody and: [editor selection isMethodBody not]].
 			step
-				addStep: 'Press <#insertElementAfter> to now insert a new element in the list. Type `ifF`, use the autocompletion and then jump to the next hole using <#inputNextUnknown>.'
+				addStep: 'Press <#insertElementAfter> to now insert a new element in the sequence. Type `ifF`, use the autocompletion and then jump to the next hole using <#inputNextUnknown>.'
 				checkCondition: [:editor | method statements last selector = 'ifTrue:ifFalse:'].
 			step
 				addStep: 'Usually, when you want to type an expression, you simply type it and the editor will restructure the tree for you.
@@ -443,7 +444,7 @@ Try typing `[OrderedCollection with: number squared + 3`.'
 				addStep: 'Press <#deleteAround>.'
 				checkCondition: [:editor | method statements last arguments first statements first isReturn not].
 			step
-				addStep: 'Since our copy buffer now contains a hole, we can paste it around the target block. Select the entire ifTrue:ifFalse: block, press <#pasteAfter> and we''re done!'
+				addStep: 'Since our copy buffer now contains a hole, we can paste it around the target block. Select the entire ifTrue:ifFalse: block, press <#pasteReplace> and we''re done!'
 				checkCondition: [:editor | method statements last isReturn]]
 ]
 

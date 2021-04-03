@@ -62,7 +62,9 @@ SBMultilineOwnTextMorph >> cursorPosition [
 SBMultilineOwnTextMorph >> drawOn: aCanvas [
 
 	aCanvas
-		paragraph: (self paragraph positionWhenComposed: self position)
+		paragraph: (self paragraph
+			positionWhenComposed: self position;
+			showCaret: self cursorVisible)
 		bounds: (self position extent: self paragraph extent)
 		color: self color
 ]
@@ -227,7 +229,7 @@ SBMultilineOwnTextMorph >> paragraph [
 			adjustRightX;
 			focused: true;
 			showCaret: self cursor > 0;
-			caretColor: Color red.
+			caretColor: self color.
 		
 		cursors := self selectionBounds.
 		paragraph
