@@ -139,7 +139,7 @@ SBStSignature >> isCascade [
 { #category : #'as yet unclassified' }
 SBStSignature >> isKeyword [
 
-	^ self selector asSymbol isKeyword
+	^ self selector includes: $:
 ]
 
 { #category : #'as yet unclassified' }
