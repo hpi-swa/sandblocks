@@ -36,6 +36,14 @@ SBColorPolicy >> borderWidthForBlock: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBColorPolicy >> brighten: aColor by: aNumber [
+
+	| lab |
+	lab := self colorToLAB: aColor.
+	^ self labToColor: (lab collect: [:c | c * 1.1])
+]
+
+{ #category : #'as yet unclassified' }
 SBColorPolicy >> centerAlignSymbols [
 
 	^ true
@@ -51,6 +59,27 @@ SBColorPolicy >> colorForBlock: aBlock [
 SBColorPolicy >> colorForEditor [
 
 	^ Color white
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> colorToLAB: aColor [
+
+	| red green adjustVal blue x y z adjustXYZ l a b |
+	adjustVal := [:val | (val > 0.04045 ifTrue: [val + 0.055 / 1.055 raisedTo: 2.4] ifFalse: [val / 12.92]) * 100].
+	red := adjustVal value: aColor red.
+	green := adjustVal value: aColor green.
+	blue := adjustVal value: aColor blue.
+	
+	adjustXYZ := [:val | val > 0.008856 ifTrue: [val raisedTo: 1.0 / 3.0] ifFalse: [7.787 * val + (16.0 / 116.0)]].
+	x := adjustXYZ value: red * 0.4124 + (green * 0.3576 + (blue * 0.1805)) / 95.047.
+	y := adjustXYZ value: red * 0.2126 + (green * 0.7152 + (blue * 0.0722)) / 100.0.
+	z := adjustXYZ value: red * 0.0193 + (green * 0.1192 + (blue * 0.9505)) / 108.883.
+	
+	l := 116 * y - 16.
+	a := 500 * (x - y).
+	b := 200 * (y - z).
+	
+	^ {l. a. b}
 ]
 
 { #category : #'as yet unclassified' }
@@ -78,6 +107,32 @@ SBColorPolicy >> foregroundColorForBlock: aBlock [
 SBColorPolicy >> foregroundColorForColor: aColor [
 
 	^ aColor luminance > 0.58 ifTrue: [Color black] ifFalse: [Color white]
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> labToColor: aCollection [
+
+	| y x z adjustVal r g b adjustRGB |
+	adjustVal := [:val |
+		(val raisedTo: 3) > 0.008856
+			ifTrue: [val raisedTo: 3]
+			ifFalse: [val - (16.0 / 116.0) / 7.787]].
+	
+	y := aCollection first + 16.0 / 116.0.
+	x := (adjustVal value: aCollection second / 500 + y) * 95.047 / 100.0.
+	z := (adjustVal value: y - (aCollection third / 200)) * 108.883 / 100.0.
+	y := adjustVal value: y.
+	
+	adjustRGB := [:val |
+		val > 0.0031308
+			ifTrue: [1.055 * (val raisedTo: 1.0 / 2.4) - 0.055]
+			ifFalse: [12.92 * val]].
+	
+	r := adjustRGB value: x * 3.2406 + (y * -1.5372 + (z * -0.4986)).
+	g := adjustRGB value: x * -0.9689 + (y * 1.8758 + (z * 0.0415)).
+	b := adjustRGB value: x * 0.0557 + (y * -0.204 + (z * 1.057)).
+	
+	^ Color r: r g: g b: b
 ]
 
 { #category : #'as yet unclassified' }

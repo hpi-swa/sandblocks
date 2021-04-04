@@ -27,6 +27,12 @@ SBScmIdentifier >> isIdentifier [
 ]
 
 { #category : #'as yet unclassified' }
+SBScmIdentifier >> prefersNoBorder [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBScmIdentifier >> printOn: aStream [
 
 	aStream nextPutAll: 'identifier '.

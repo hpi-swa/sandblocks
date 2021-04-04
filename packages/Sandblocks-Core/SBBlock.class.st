@@ -2348,7 +2348,8 @@ SBBlock >> textContents [
 SBBlock >> toggleCollapsed [
 	<action>
 
-	self containingArtefact ifNotNil: #toggleCollapsed
+	self isArtefact ifFalse: [
+		self containingArtefact ifNotNil: #toggleCollapsed]
 ]
 
 { #category : #decorators }

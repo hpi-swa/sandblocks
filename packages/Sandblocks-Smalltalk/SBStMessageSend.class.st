@@ -266,7 +266,7 @@ SBStMessageSend >> layoutCommands [
 			ifNotNil: [{
 				self receiver layoutCommands.
 				SBAlgebraCommand indent data: {
-					SBAlgebraCommand softLineOrGap withGap: self colorPolicy enlarge.
+					SBAlgebraCommand softLineOrGap withGap: true.
 					self signature layoutCommands}}])
 ]
 

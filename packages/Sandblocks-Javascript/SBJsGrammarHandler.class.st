@@ -38,23 +38,36 @@ SBJsGrammarHandler >> checkKeyword: aString for: aBlock [
 SBJsGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 
 	aBoolean ifTrue: [
-		char = Character space ifTrue: [^ self replace: aBlock with: SBEmptyLine new].
+		(char = Character space and: [aBlock isStatement]) ifTrue: [^ self replace: aBlock with: SBEmptyLine new].
 		(char isDigit or: [char = $-]) ifTrue: [^ self replace: aBlock with: (SBJsNumber new contents: char asString)].
 		(char isAlphaNumeric or: [char = $_]) ifTrue: [^ self replace: aBlock with: (SBJsVariable new contents: char asString)].
 		(char = $" or: [char = $']) ifTrue: [^ self replace: aBlock with: SBJsString new].
-		char = $( ifTrue: [ ^ SBJsClosure new in: [:closure | self replace: aBlock with: (closure statements: {closure newNullBlock label: 'body'})]].
+		char = $( ifTrue: [^ SBJsClosure new in: [:closure | self replace: aBlock with: (closure statements: {closure newNullBlock label: 'body'})]].
 		" borrowed from Smalltalk "
-		char = $^ ifTrue: [^ SBJsPrefixOperator new contents: 'return'; in: [:return | self replace: aBlock with: (return expression: return newNullBlock)]].
+		char = $^ ifTrue: [
+			^ SBJsPrefixOperator new
+				contents: 'return';
+				in: [:return | self replace: aBlock with: (return expression: return newNullBlock)]].
 		char = ${ ifTrue: [^ self replace: aBlock with: SBJsObjectLiteral new]].
 	
 	" FIXME: collides with (rarely used) comma operator "
 	char = $, ifTrue: [^ aBlock insertElementAfter].
 	
 	((SBJsInfixOperator validInfixOperators collect: #first) includes: char) ifTrue: [
-		^ self wrap: aBlock do: [:outer :inner | outer lhs: inner operator: char asString rhs: (outer newNullBlock label: 'expr'; deleteIfDismissed: char = $()] with: SBJsInfixOperator new].
+		^ self
+			wrap: aBlock
+			do: [:outer :inner |
+				outer lhs: inner operator: char asString rhs: (outer newNullBlock
+					label: 'expr';
+					deleteIfDismissed: char = $()]
+			with: SBJsInfixOperator new].
+	
 	char = Character space ifTrue: [
 		(self checkKeyword: aBlock contents for: aBlock) ifFalse: [
-			self wrap: aBlock do: [:outer :inner | outer lhs: inner operator: '' rhs: (outer newNullBlock label: 'expr')] with: SBJsInfixOperator new]]
+			self
+				wrap: aBlock
+				do: [:outer :inner | outer lhs: inner operator: '' rhs: (outer newNullBlock label: 'expr')]
+				with: SBJsInfixOperator new]]
 ]
 
 { #category : #'callback helpers' }

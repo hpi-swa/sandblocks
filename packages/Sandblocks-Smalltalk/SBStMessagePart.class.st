@@ -114,7 +114,9 @@ SBStMessagePart >> initialize [
 SBStMessagePart >> insertUnknownAfterAndInput: aBoolean [
 
 	| new |
-	self owner arguments size > 0 ifTrue: [^ self sandblockEditor startInput: self nextBlock firstDeepChild at: 1 replacingContents: false].
+	self owner arguments size > 0 ifTrue: [
+		^ aBoolean
+			ifTrue: [self sandblockEditor startInput: self nextBlock firstDeepChild at: 1 replacingContents: false] ifFalse: [self]].
 	
 	new := self newNullBlock label: 'arg'.
 	self sandblockEditor currentInputCommand shouldMergeWithNext: true.

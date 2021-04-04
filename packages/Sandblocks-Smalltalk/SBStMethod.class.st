@@ -109,7 +109,7 @@ SBStMethod >> layoutCommands [
 					SBAlgebraCommand indent data: {SBAlgebraCommand softLine. self firstSubmorph submorphs second layoutCommands}
 				}
 		}, (self body visible
-			ifTrue: [{SBAlgebraCommand hardLine. self body layoutCommands}]
+			ifTrue: [{SBAlgebraCommand hardLine withGap: true. self body layoutCommands}]
 			ifFalse: [{}])
 ]
 

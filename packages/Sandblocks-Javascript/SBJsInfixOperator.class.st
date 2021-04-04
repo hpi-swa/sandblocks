@@ -79,7 +79,8 @@ SBJsInfixOperator >> continueInputInRhs: anEvent [
 	self rhs ifNil: [^ self].
 	
 	self sandblockEditor startInput: self rhs at: 0 replacingContents: false.
-	self sandblockEditor selection keyStroke: anEvent
+	anEvent keyCharacter ~= Character space ifTrue: [
+		self sandblockEditor selection keyStroke: anEvent]
 ]
 
 { #category : #'as yet unclassified' }
@@ -104,7 +105,7 @@ SBJsInfixOperator >> drawSymbolsOn: aCanvas [
 			font: font
 			color: fg].
 	symbols second ifNotNil: [ | drawAtBottom |
-		drawAtBottom := self height > (self fontToUse height * 2).
+		drawAtBottom := self height > (self fontToUse height * 3).
 		aCanvas
 			drawString: symbols second
 			at: (drawAtBottom
