@@ -50,6 +50,20 @@ SBStMessageSend >> asOhmGrammar: converter [
 ]
 
 { #category : #converting }
+SBStMessageSend >> asReactComponent: converter [
+	<convert>
+	<automatic>
+
+	converter
+		if: [self selector = 'build' and: [self receiver isMessageSend and: [self receiver selector = 'asElementBuilder']]]
+		do: [
+			SBStReactComponent new
+				componentClass: self receiver receiver
+				props: SBStArray new
+				children: SBStArray new]
+]
+
+{ #category : #converting }
 SBStMessageSend >> asWatch: converter [
 	<convert>
 	<automatic>

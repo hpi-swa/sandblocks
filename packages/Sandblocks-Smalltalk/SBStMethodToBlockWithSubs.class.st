@@ -12,6 +12,10 @@ SBStMethodToBlockWithSubs >> visitCascadeNode: aNode [
 	
 	SBStSubstitution allSubclassesDo: [:substitution | (substitution matchesCascades and: [substitution matches: cascade]) ifTrue: [^ (substitution newFor: cascade) pc: cascade pc]].
 	
+	cascade converterOptionsDo: [:option | | c |
+		c := SBConvert new success: [:obj | ^ obj].
+		option automatic ifTrue: [option apply: c]].
+	
 	^ cascade
 ]
 

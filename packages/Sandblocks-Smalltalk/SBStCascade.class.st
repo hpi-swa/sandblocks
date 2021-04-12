@@ -4,6 +4,26 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
+{ #category : #converting }
+SBStCascade >> asReactComponent: converter [
+	<convert>
+	<automatic>
+
+	converter
+		if: [self receiver isMessageSend and: [self receiver selector = 'asElementBuilder' and: [self messages last selector = 'build']]]
+		do: [
+			SBStReactComponent new
+				componentClass: self receiver receiver
+				props: (self messages
+					detect: [:m | m selector = 'props:']
+					ifFound: [:m | m arguments first]
+					ifNone: [SBStArray new])
+				children: (self messages
+					detect: [:m | m selector = 'children:']
+					ifFound: [:m | m arguments first]
+					ifNone: [SBStArray new])]
+]
+
 { #category : #'as yet unclassified' }
 SBStCascade >> canDeleteChild: aBlock [
 

@@ -64,7 +64,7 @@ SBStMethodToBlocks >> visitBraceNode: aNode [
 SBStMethodToBlocks >> visitCascadeNode: aNode [
 
 	^ SBStCascade new receiver: (aNode receiver accept: self) messages: (aNode messages collect: [:b |
-		(b accept: self)
+		(self visitMessageNodeInCascade: b)
 			receiver: nil;
 			yourself])
 ]

@@ -125,7 +125,7 @@ SBStArray >> layoutCommands [
 SBStArray >> minExtent [
 
 	| inset |
-	inset := self layoutInset.
+	inset := self layoutInset asEdgeInsets.
 	^ super minExtent max: inset left + inset right @ (self fontToUse height + inset top + inset bottom)
 ]
 
@@ -133,7 +133,7 @@ SBStArray >> minExtent [
 SBStArray >> minimumHeight [
 
 	| inset |
-	inset := self layoutInset.
+	inset := self layoutInset asEdgeInsets.
 	^ (self fontToUse height + inset top + inset bottom)
 ]
 
