@@ -38,7 +38,6 @@ SBJsGrammarHandler >> checkKeyword: aString for: aBlock [
 SBJsGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 
 	aBoolean ifTrue: [
-		(char = Character space and: [aBlock isStatement]) ifTrue: [^ self replace: aBlock with: SBEmptyLine new].
 		(char isDigit or: [char = $-]) ifTrue: [^ self replace: aBlock with: (SBJsNumber new contents: char asString)].
 		(char isAlphaNumeric or: [char = $_]) ifTrue: [^ self replace: aBlock with: (SBJsVariable new contents: char asString)].
 		(char = $" or: [char = $']) ifTrue: [^ self replace: aBlock with: SBJsString new].

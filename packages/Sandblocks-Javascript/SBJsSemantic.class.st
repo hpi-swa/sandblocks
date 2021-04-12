@@ -137,7 +137,7 @@ SBJsSemantic >> emptyStatement: aNode statement: statement [
 { #category : #'as yet unclassified' }
 SBJsSemantic >> lineGap: aNode gap: x [
 
-	^ SBEmptyLine new
+	^ SBUnknown new grammarHandler: SBJsGrammarHandler new
 ]
 
 { #category : #'as yet unclassified' }

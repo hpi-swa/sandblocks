@@ -74,6 +74,12 @@ SBUnknown >> drawInvalidBorderOn: aCanvas [
 		ifEmpty: [super drawInvalidBorderOn: aCanvas]
 ]
 
+{ #category : #drawing }
+SBUnknown >> drawnColor [
+
+	^ Color transparent
+]
+
 { #category : #accessing }
 SBUnknown >> endInput [
 	<inputAction>
@@ -210,7 +216,7 @@ SBUnknown >> symbols [
 { #category : #testing }
 SBUnknown >> valid [
 
-	^ false
+	^ self isStatement
 ]
 
 { #category : #testing }
@@ -237,4 +243,6 @@ SBUnknown >> wasDeselected [
 
 { #category : #printing }
 SBUnknown >> writeSourceOn: aStream [
+
+	self valid ifTrue: [self grammarHandler writeSourceOn: aStream for: self]
 ]

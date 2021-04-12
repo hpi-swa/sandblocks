@@ -93,7 +93,7 @@ SBScmBrowser >> module: aModule [
 			otherwise: [self assert: false]]).
 	self open: self definitions submorphs first sexpr.
 	
-	topLevel := aModule statements reject: [:s | (defs includes: s) or: [s isKindOf: SBEmptyLine]].
+	topLevel := aModule statements reject: [:s | (defs includes: s) or: [s isKindOf: SBUnknown]].
 	
 	self definitions addMorphBack: (SBScmDefinitionButton new
 		contents: '<toplevel>';

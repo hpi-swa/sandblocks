@@ -24,7 +24,6 @@ SBScmGrammarHandler >> perform: aCharacter for: aBlock empty: aBoolean [
 
 	aBoolean ifTrue: [
 		aCharacter = $' ifTrue: [^ self replace: aBlock with: SBScmSymbol new].
-		aCharacter = Character space ifTrue: [^ self replace: aBlock with: SBEmptyLine new].
 		aCharacter = $" ifTrue: [^ self replace: aBlock with: SBScmString new].
 		
 		aCharacter = $( ifTrue: [^ self replace: aBlock with: (SBScmExpression new in: [:e | e addMorphBack: e newNullBlock])].
@@ -35,8 +34,7 @@ SBScmGrammarHandler >> perform: aCharacter for: aBlock empty: aBoolean [
 		
 		(aCharacter isLetter or: [aCharacter isSpecial or: [aCharacter = $#]]) ifTrue: [^ self replace: aBlock with: (SBScmIdentifier new contents: aCharacter asString)].
 		
-		aCharacter = $; ifTrue: [
-			^ self replace: aBlock with: self newCommentBlock]].
+		aCharacter = $; ifTrue: [^ self replace: aBlock with: self newCommentBlock]].
 	
 	aCharacter = Character space ifTrue: [
 		^ ActiveEvent shiftPressed

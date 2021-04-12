@@ -106,9 +106,7 @@ SBJsASTNode >> lookupAction: aSymbol [
 { #category : #accessing }
 SBJsASTNode >> newNullBlock [
 
-	^ SBUnknown new
-		grammarHandler: SBJsGrammarHandler new;
-		label: 'expr'
+	^ SBUnknown new grammarHandler: SBJsGrammarHandler new
 ]
 
 { #category : #'object interface' }

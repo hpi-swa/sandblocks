@@ -18,13 +18,14 @@ CodeHolder class >> addSandblocksDefault: aBoolean [
 CodeHolder >> contentsSymbol [
 	"Answer a symbol indicating what kind of content should be shown for the method; for normal showing of source code, this symbol is #source.  A nil value in the contentsSymbol slot will be set to #source by this method"
 
-	^ contentsSymbol ifNil:
-		[contentsSymbol := SystemBrowser browseWithPrettyPrint
-								ifTrue:
-									[#prettyPrint]
-								ifFalse:
-									[self contentsSymbolQuints first first].
-
+	^ contentsSymbol ifNil: [
+		contentsSymbol := SystemBrowser browseWithPrettyPrint
+			ifTrue: [#prettyPrint]
+			ifFalse: [
+				(self isKindOf: Debugger)
+					ifTrue: [#source]
+					ifFalse: [self contentsSymbolQuints first first]].
+		
 		" FIXME tobe: seriously, I have not found any other way to inform the browser to change its widget.
 		 Underlying problems is that the block editor installation depends on the finished morph hierarchy and
 		 there appear to be no callbacks back from Morphic back to ToolBuilder/the model when it is finished. "
@@ -54,15 +55,17 @@ CodeHolder >> installBlockEditor [
 CodeHolder >> restoreTextualCodingPane [
 	"If the receiver is showing tiles, restore the textual coding pane"
 
-	contentsSymbol == #tiles ifTrue:
-		[contentsSymbol := #source.
+	contentsSymbol == #tiles ifTrue: [
+		contentsSymbol := #source.
 		self installTextualCodingPane].
 	
-	contentsSymbol == #blockEditor ifTrue:
-		[contentsSymbol := #source.
-		self containingWindow
-			replacePane: (self containingWindow valueOfProperty: #blockEditor)
-			with: (self containingWindow valueOfProperty: #textEditor)]
+	contentsSymbol == #blockEditor ifTrue: [
+		contentsSymbol := #source.
+		(self containingWindow valueOfProperty: #blockEditor) ifNotNil: [:blockEditor |
+			blockEditor model: nil.
+			self containingWindow
+				replacePane: blockEditor
+				with: (self containingWindow valueOfProperty: #textEditor)]]
 ]
 
 { #category : #'*Sandblocks-Core' }

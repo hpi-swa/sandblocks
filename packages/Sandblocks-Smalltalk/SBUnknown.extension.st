@@ -37,3 +37,14 @@ SBUnknown >> isSmalltalk [
 
 	^ self grammarHandler isKindOf: SBStGrammarHandler
 ]
+
+{ #category : #'*Sandblocks-Smalltalk' }
+SBUnknown >> updatePCFrom: anObject [
+]
+
+{ #category : #'*Sandblocks-Smalltalk' }
+SBUnknown >> writeStSourceOn: aStream [
+
+	self assert: self isStatement.
+	aStream nextPutAll: '#ppEmptyLine'
+]

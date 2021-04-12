@@ -68,7 +68,8 @@ SBStGrammarHandler >> changeToBlockView: aWindow [
 
 	aWindow isSystemWindow ifFalse: [^ self].
 	
-	aWindow model toggleBlockEditor.
+	aWindow model contentsSymbol ~= #blockEditor
+		ifTrue: [aWindow model toggleBlockEditor].
 	^ aWindow
 ]
 
@@ -111,7 +112,7 @@ SBStGrammarHandler >> emptyLine: aBlock [
 	
 	aBlock sandblockEditor do: ((SBReplaceCommand newFor: aBlock containingArtefact)
 		target: aBlock;
-		replacer: SBStEmptyLine new)
+		replacer: self newNullBlock)
 ]
 
 { #category : #actions }

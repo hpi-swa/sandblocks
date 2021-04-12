@@ -75,21 +75,21 @@ SBScmParser >> skipWhitespacesOn: aMorph [
 	crCount := 0.
 	currentComment := nil.
 	[stream atEnd not and: [stream peek isSeparator or: [stream peek = $;]]] whileTrue: [
-		stream peek = $; ifTrue: [ | text |
-			crCount := 0.
-			stream next.
-			
-			text := String streamContents: [:s |
-				[({Character cr. Character lf} includes: stream peek) not and: [stream atEnd not]] whileTrue: [s nextPut: stream next]].
-			currentComment
-				ifNotNil: [currentComment contents: currentComment contents, String cr, text]
-				ifNil: [
-					currentComment := aMorph newCommentBlock.
-					aMorph addMorphBack: (currentComment contents: text)]]
+		stream peek = $;
+			ifTrue: [ | text |
+				crCount := 0.
+				stream next.
+				
+				text := String streamContents: [:s | [({Character cr. Character lf} includes: stream peek) not and: [stream atEnd not]] whileTrue: [s nextPut: stream next]].
+				currentComment
+					ifNotNil: [currentComment contents: currentComment contents, String cr, text]
+					ifNil: [
+						currentComment := aMorph newCommentBlock.
+						aMorph addMorphBack: (currentComment contents: text)]]
 			ifFalse: [currentComment := nil].
 		({Character cr. Character lf} includes: stream next) ifTrue: [crCount := crCount + 1].
 		
 		crCount = 2 ifTrue: [
-			aMorph addMorphBack: SBEmptyLine new.
+			aMorph addMorphBack: (SBUnknown new grammarHandler: SBScmGrammarHandler new).
 			crCount := 0]]
 ]

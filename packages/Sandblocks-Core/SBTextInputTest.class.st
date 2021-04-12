@@ -106,7 +106,7 @@ SBTextInputTest >> testSpaceForEmptyLine [
 	editor startInput: space at: 1 replacingContents: false.
 	self send: (self keyboardEvent: $ ) to: editor.
 	
-	self assert: (block statements last isKindOf: SBEmptyLine)
+	self assert: (block statements last isKindOf: SBUnknown)
 ]
 
 { #category : #'as yet unclassified' }
