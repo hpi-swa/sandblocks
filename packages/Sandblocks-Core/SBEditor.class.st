@@ -221,7 +221,7 @@ SBEditor >> buildCommandBar [
 			shortcut: (self class anyShortcutForAction: #redo)
 			do: [self redo]);
 		addMorphBack: (SBButton new
-			icon: SBIcon iconFolder_open
+			icon: SBIcon iconFolderOpen
 			shortcut: (self class anyShortcutForAction: #openOpenWindow)
 			do: [self openOpenWindow]);
 		addMorphBack: (SBButton new
@@ -232,14 +232,14 @@ SBEditor >> buildCommandBar [
 			color: Color transparent;
 			hResizing: #spaceFill);
 		addMorphBack: (SBButton new
-			icon: SBIcon iconSearch_plus shortcut: nil do: [
+			icon: SBIcon iconSearchPlus shortcut: nil do: [
 				self colorPolicy toggleEnlarge.
 				self allMorphsDo: #layoutChanged];
 			balloonText: 'Toggle enlarge blocks insets');
 		addMorphBack: (SBRow new
 			addMorphBack: (SBButton new
 				cornerStyle: #square;
-				icon: SBIcon iconAlign_left shortcut: nil do: [self colorPolicy: SBTextColorPolicy new];
+				icon: SBIcon iconAlignLeft shortcut: nil do: [self colorPolicy: SBTextColorPolicy new];
 				balloonText: 'Text-like Layout');
 			addMorphBack: (SBButton new
 				cornerStyle: #square;
@@ -247,10 +247,10 @@ SBEditor >> buildCommandBar [
 				balloonText: 'Compact Layout');
 			addMorphBack: (SBButton new
 				cornerStyle: #square;
-				icon: SBIcon iconTh_large shortcut: nil do: [self colorPolicy: SBScratchColorPolicy new];
+				icon: SBIcon iconThLarge shortcut: nil do: [self colorPolicy: SBScratchColorPolicy new];
 				balloonText: 'Scratch Layout'));
 		addMorphBack: (SBButton new
-			icon: SBIcon iconWindow_maximize shortcut: nil do: [self promptWorkspaceActions];
+			icon: SBIcon iconWindowMaximize shortcut: nil do: [self promptWorkspaceActions];
 			balloonText: 'Manage Workspaces');
 		addMorphBack: (SBButton new
 			icon: SBIcon iconExpand
@@ -267,16 +267,16 @@ SBEditor >> buildDebugCommandBar [
 		cellGap: 4 withScalingFactor;
 		layoutInset: 4 withScalingFactor;
 		addMorphBack: (SBButton new
-			icon: SBIcon iconLong_arrow_right shortcut: $> asSandblockShortcut do: [self stepOver];
+			icon: SBIcon iconLongArrowRight shortcut: $> asSandblockShortcut do: [self stepOver];
 			balloonText: 'Step over');
 		addMorphBack: (SBButton new
-			icon: SBIcon iconLevel_down shortcut: $< asSandblockShortcut do: [self stepInto];
+			icon: SBIcon iconLevelDown shortcut: $< asSandblockShortcut do: [self stepInto];
 			balloonText: 'Step into');
 		addMorphBack: (SBButton new
 			icon: SBIcon iconForward shortcut: nil do: [self stepThrough];
 			balloonText: 'Step through');
 		addMorphBack: (SBButton new
-			icon: SBIcon iconFast_backward shortcut: $R command do: [self restartFrame];
+			icon: SBIcon iconFastBackward shortcut: $R command do: [self restartFrame];
 			balloonText: 'Restart frame')
 ]
 

@@ -37,7 +37,7 @@ SBCheckbox >> initialize [
 	value := false.
 	
 	self
-		addMorphBack: SBIcon iconCheck_square_o;
+		addMorphBack: SBIcon iconCheckSquareO;
 		changeTableLayout;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap
@@ -90,6 +90,6 @@ SBCheckbox >> value [
 { #category : #'as yet unclassified' }
 SBCheckbox >> value: aBoolean [
 
-	self firstSubmorph changeIconName: (aBoolean ifTrue: [#iconCheck_square_o] ifFalse: [#iconSquare_o]).
+	self firstSubmorph changeIconName: (aBoolean ifTrue: [#iconCheckSquareO] ifFalse: [#iconSquareO]).
 	value := aBoolean
 ]

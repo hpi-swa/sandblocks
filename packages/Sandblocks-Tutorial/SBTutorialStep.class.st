@@ -801,11 +801,11 @@ SBTutorialStep >> setup: anEditor do: aBlock [
 	self stepIndex > 1 ifTrue: [
 		buttons addMorphBack: (SBButton new
 			balloonText: 'Previous Task';
-			icon: SBIcon iconArrow_left shortcut: nil do: [self previous])].
+			icon: SBIcon iconArrowLeft shortcut: nil do: [self previous])].
 	self stepIndex < self class tutorialSteps size ifTrue: [
 		buttons addMorphBack: (SBButton new
 			balloonText: 'Next Task';
-			icon: SBIcon iconArrow_right shortcut: nil do: [self next])]
+			icon: SBIcon iconArrowRight shortcut: nil do: [self next])]
 ]
 
 { #category : #'as yet unclassified' }

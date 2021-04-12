@@ -27,7 +27,7 @@ SBWelcome >> initialize [
 			icon: SBIcon iconRocket
 			label: 'Open Tutorial'
 			do: [SBTutorialStep resumeIn: self sandblockEditor]);
-		addMorphBack: (SBButton new icon: SBIcon iconNewspaper_o label: 'Open Code Samples' do: [
+		addMorphBack: (SBButton new icon: SBIcon iconNewspaperO label: 'Open Code Samples' do: [
 			self sandblockEditor
 				openMorphInView: SBScmModule example;
 				openMorphInView: SBJsModule example;
@@ -35,5 +35,8 @@ SBWelcome >> initialize [
 		addMorphBack: (SBButton new icon: SBIcon iconVine label: 'Use Vim-like Shortcuts' do: [
 			self sandblockEditor useVimInput.
 			SBEditor useInputMapping: SBVimInputMapping]);
-		addMorphBack: (SBButton new icon: SBIcon iconCloud_download label: 'Update to bleeding-edge' do: [self sandblockEditor updateSandblocks])
+		addMorphBack: (SBButton new
+			icon: SBIcon iconCloudDownload
+			label: 'Update to bleeding-edge'
+			do: [self sandblockEditor updateSandblocks])
 ]

@@ -33,6 +33,18 @@ SBStMethod >> collapsed: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMethod >> contents [
+
+	^ signature selector
+]
+
+{ #category : #'as yet unclassified' }
+SBStMethod >> contents: aString [
+
+	signature selector: aString
+]
+
+{ #category : #'as yet unclassified' }
 SBStMethod >> currentTextMorph [
 
 	^ nil

@@ -204,7 +204,7 @@ SBExplorer >> on: anObject wrapper: aWrapper [
 	row := SBRow new cellGap: 4 withScalingFactor.
 	row addMorphBack: (wrapper hasContents
 		ifTrue: [
-			SBIcon iconChevron_right
+			SBIcon iconChevronRight
 				on: #click send: #toggleCollapsed to: self;
 				small;
 				yourself]
@@ -275,14 +275,14 @@ SBExplorer >> toggleCollapsed [
 	self isCollapsed not
 		ifTrue: [
 			label clearEmphasis.
-			self firstSubmorph firstSubmorph changeIconName: #'iconChevron_right'.
+			self firstSubmorph firstSubmorph changeIconName: #iconChevronRight.
 			self
 				removeAllMorphs;
 				addMorphBack: caption]
 		ifFalse: [
 			wrapper hasContents ifTrue: [
 				label bold.
-				self firstSubmorph firstSubmorph changeIconName: #'iconChevron_down'.
+				self firstSubmorph firstSubmorph changeIconName: #iconChevronDown.
 				object explorerContents do: [:contents |
 					self addMorphBack: (SBRow new
 						cellGap: 4 withScalingFactor;
