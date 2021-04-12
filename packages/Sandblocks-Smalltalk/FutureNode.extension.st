@@ -1,12 +1,12 @@
 Extension { #name : #FutureNode }
 
-{ #category : #'*Sandblocks-Core' }
+{ #category : #'*Sandblocks-Smalltalk' }
 FutureNode >> futureArgs [
 
 	^ futureArgs
 ]
 
-{ #category : #'*Sandblocks-Core' }
+{ #category : #'*Sandblocks-Smalltalk' }
 FutureNode >> printOn: aStream indent: level [
 
 	aStream space; nextPutAll: originalSelector; space; nextPutAll: futureSelector.

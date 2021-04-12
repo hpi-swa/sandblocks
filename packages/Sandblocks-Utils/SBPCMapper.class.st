@@ -72,6 +72,8 @@ SBPCMapper >> buildNodeMapFor: aString in: aClass [
 		prettyMethodNode accept: (ParseNodeEnumerator ofBlock: [:node | (node isLiteralNode and: [node key = #ppEmptyLine]) ifFalse: [stream nextPut: node]])].
 	generatedNodes := Array streamContents: [:stream |
 		generatedMethodNode accept: (ParseNodeEnumerator ofBlock: [:node | stream nextPut: node])].
+	
+	prettyNodes size = generatedNodes size ifFalse: [^ prettyMethodNode].
 	prettyNodes with: generatedNodes do: [:original :new | nodeMap at: original put: new].
 	
 	" now generate the method, annotating the generated tree "

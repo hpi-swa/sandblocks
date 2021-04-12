@@ -163,6 +163,22 @@ SBStNameBehavior >> isTemporaryVariable [
 ]
 
 { #category : #'as yet unclassified' }
+SBStNameBehavior >> lowercaseSuggestions [
+
+	^ Array streamContents: [:str |
+		self block containingArtefact declarations
+			select: [:v | v contents sandblockMatch: self contents]
+			thenDo: [:v | str nextPut: v asSuggestionItem].
+		self block containingBlocksDo: [:block |
+			block temporaries
+				select: [:v | v contents sandblockMatch: self contents]
+				thenDo: [:v | str nextPut: v asSuggestionItem].
+			block bindings
+				select: [:v | v contents sandblockMatch: self contents]
+				thenCollect: [:v | str nextPut: v asSuggestionItem]]]
+]
+
+{ #category : #'as yet unclassified' }
 SBStNameBehavior >> noValidBinding [
 
 	^ self validBinding not
@@ -190,6 +206,31 @@ SBStNameBehavior >> resolveBinding [
 SBStNameBehavior >> symbolsFor: aColorPolicy [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBStNameBehavior >> updateSuggestions [
+
+	| suggestions |
+	suggestions := self contents ifEmpty: [#()] ifNotEmpty: [:text |
+		text first isUppercase
+			ifTrue: [self uppercaseSuggestions]
+			ifFalse: [self lowercaseSuggestions]].
+	self block updateSuggestions: suggestions showNear: self block
+]
+
+{ #category : #'as yet unclassified' }
+SBStNameBehavior >> uppercaseSuggestions [
+
+	self flag: #todo.
+	"pool dict etc"
+	^ Array streamContents: [:stream |
+		Smalltalk globals keysAndValuesDo: [:key :value |
+			(key sandblockMatch: self contents) ifTrue: [
+				stream nextPut: (SBSuggestionItem selector: key label: ((value isBehavior and: [key == value name])
+					ifTrue: ['class']
+					ifFalse: ['global']))]].
+		SBStSubstitution allSubclassesDo: [:class | (class name sandblockMatch: self contents) ifTrue: [class suggestion ifNotNil: [:block | stream nextPut: ((SBSuggestionItem selector: class name label: 'projection') completionAction: block)]]]]
 ]
 
 { #category : #'as yet unclassified' }

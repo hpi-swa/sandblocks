@@ -70,6 +70,12 @@ SBStDeclarationBehavior >> scope [
 ]
 
 { #category : #'as yet unclassified' }
+SBStDeclarationBehavior >> updateSuggestions [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBStDeclarationBehavior >> valid [
 
 	^ self isReserved not

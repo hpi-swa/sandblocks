@@ -1,12 +1,6 @@
 Extension { #name : #LiteralNode }
 
 { #category : #'*Sandblocks-Core' }
-LiteralNode >> asSandblock [
-
-	^ self class sandblockForLiteral: self key
-]
-
-{ #category : #'*Sandblocks-Core' }
 LiteralNode class >> sandblockForLiteral: anObject [
 
 	anObject = #ppEmptyLine ifTrue: [^ SBUnknown new grammarHandler: SBStGrammarHandler new].

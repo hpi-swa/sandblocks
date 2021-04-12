@@ -55,7 +55,7 @@ String >> parseAsSandblockWithoutSubstitution [
 	class := UndefinedObject.
 	parser := class newParser.
 	methodNode := parser parse: self class: class noPattern: true notifying: nil ifFail: nil.
-	^ methodNode block statements first expr asSandblockWithoutSubstitution
+	^ methodNode block statements first expr accept: SBStMethodToBlocks new
 ]
 
 { #category : #'*Sandblocks-Core-converting' }
