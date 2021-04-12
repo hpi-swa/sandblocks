@@ -11,3 +11,9 @@ SBUnknown >> writeScmSourceOn: aStream [
 
 	
 ]
+
+{ #category : #'*Sandblocks-Scheme' }
+SBUnknown >> writeSourceOn: aStream indent: aNumber [
+
+	self writeSourceOn: aStream
+]
