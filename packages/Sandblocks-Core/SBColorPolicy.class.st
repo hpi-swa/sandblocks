@@ -106,7 +106,7 @@ SBColorPolicy >> foregroundColorForBlock: aBlock [
 { #category : #'as yet unclassified' }
 SBColorPolicy >> foregroundColorForColor: aColor [
 
-	^ aColor luminance > 0.58 ifTrue: [Color black] ifFalse: [Color white]
+	^ aColor luminance > 0.57 ifTrue: [Color black] ifFalse: [Color white]
 ]
 
 { #category : #'as yet unclassified' }

@@ -161,7 +161,7 @@ SBGrammarHandler >> selectStartOfStatement [
 	<multiSelectAction>
 	<inputAction>
 	
-	self block containingStatement firstDeepChild select.
+	(self block containingStatement ifNil: [self block containingArtefact]) firstDeepChild select.
 	
 	self block sandblockEditor
 		maybeStartInputFromStart;

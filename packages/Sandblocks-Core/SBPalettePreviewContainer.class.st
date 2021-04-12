@@ -65,6 +65,7 @@ SBPalettePreviewContainer >> pickUp: anEvent [
 		homeArtefact: self containingArtefact;
 		methodClass: (self containingArtefact ifNotNil: #relatedClass);
 		colorPolicy: self colorPolicy;
+		color: (self sandblockBlockColorIfAbsent: [Color white]);
 		addMorphBack: self firstSubmorph veryDeepCopy;
 		yourself)
 ]

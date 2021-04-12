@@ -198,17 +198,16 @@ SBStateMachineEditor >> exampleStateMachine [
 	
 	b := SBStateMachine new
 		initialState: #idle;
-		uponEnter: #evasion do: [self accelerate];
+		uponEnter: #evasion do: [a accelerate];
 		uponLeave: #evasion do: [self stop];
-		uponEnter: #combat do: [self startShooting];
-		uponLeave: #combat do: [self stopShooting];
-		from: #idle to: #combat if: [self checkNearbyEnemies];
-		from: #idle to: #combat if: [self changed];
+		uponEnter: #combat do: [a startShooting];
+		uponLeave: #combat do: [a stopShooting];
 		from: #idle to: #combat if: [self checkNearbyEnemies];
 		from: #idle to: #combat if: [self changed];
 		from: #combat to: #evasion if: [self checkLowHealth];
 		from: #evasion to: #idle if: [true];
-		from: #combat to: #combat if: [self isMorph]
+		from: #combat to: #combat if: [self isMorph];
+		start
 ]
 
 { #category : #initialization }

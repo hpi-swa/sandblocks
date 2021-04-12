@@ -13,6 +13,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBShortcut class >> fromEvent: anEvent [
+
+	| s |
+	s := self new character: anEvent keyCharacter.
+	anEvent controlKeyPressed ifTrue: [s withCommand].
+	anEvent commandKeyPressed ifTrue: [s withCommand].
+	"anEvent shiftPressed ifTrue: [s withShift]."
+	anEvent optionKeyPressed ifTrue: [s withOption].
+	^ s
+]
+
+{ #category : #'as yet unclassified' }
 SBShortcut >> , aShortCut [
 
 	^ {self. aShortCut asSandblockShortcut}
@@ -60,7 +72,13 @@ SBShortcut >> displayString [
 	SBExample self: [$p asSandblockShortcut] args: [{}] label: 'p'.
 	SBExample self: [$p command] args: [{}] label: 'ctrl+p'.
 	SBExample self: [$P command] args: [{}] label: 'ctrl+P'.
-	^ String streamContents: [:stream | self printDisplayOn: stream]
+	^ String streamContents: [:stream | self printDisplayOn: stream automaticShift: true]
+]
+
+{ #category : #'as yet unclassified' }
+SBShortcut >> displayStringWithoutShift [
+
+	^ String streamContents: [:stream | self printDisplayOn: stream automaticShift: false]
 ]
 
 { #category : #'as yet unclassified' }
@@ -130,11 +148,11 @@ SBShortcut >> optionKeyPressed [
 ]
 
 { #category : #'as yet unclassified' }
-SBShortcut >> printDisplayOn: aStream [
+SBShortcut >> printDisplayOn: aStream automaticShift: aBoolean [
 
 	| p |
 	command ifTrue: [aStream nextPutAll: (Smalltalk os platformName = 'Mac OS' ifTrue: ['Cmd '] ifFalse: ['Ctrl '])].
-	(shift or: [character isLetter and: [character isUppercase]]) ifTrue: [aStream nextPutAll: 'Shift '].
+	(shift or: [aBoolean and: [character isLetter and: [character isUppercase]]]) ifTrue: [aStream nextPutAll: 'Shift '].
 	ctrl ifTrue: [aStream nextPutAll: 'Ctrl '].
 	
 	character = Character cr ifTrue: [^ aStream nextPutAll: 'enter'].

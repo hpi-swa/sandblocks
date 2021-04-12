@@ -1781,17 +1781,22 @@ SBBlock >> performAction: aSymbol [
 { #category : #'dropping/grabbing' }
 SBBlock >> pickUp: anEvent [
 
-	| editor |
+	| editor s |
 	editor := self sandblockEditor.
-	
-	anEvent hand grabMorph: (SBSelection new
+	s := SBSelection new
 		homeArtefact: self containingArtefact;
 		methodClass: (self containingArtefact ifNotNil: #relatedClass);
 		colorPolicy: self colorPolicy;
-		addMorphBack: self veryDeepCopy;
 		sourceBlock: self;
 		onAbortUndoIn: editor;
-		yourself).
+		yourself.
+	
+	self containingBlock ifNotNil: [:b |
+		(b sandblockBlockColorIfAbsent: [nil]) ifNotNil: [:c |
+			s color: c]].
+	
+	s addMorphBack: self veryDeepCopy.
+	anEvent hand grabMorph: s.
 	
 	anEvent shiftPressed ifFalse: [
 		(self parentSandblock deleteCommandFor: self) ifNotNil: [:cmd |

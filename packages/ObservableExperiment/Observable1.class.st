@@ -11,7 +11,7 @@ Class {
 Observable1 >> example [
 
 	| observable observer sub |
-	observable := Observable new.
+	observable := MailService new.
 	observer := Object new.
 
 	observable notify: #test.

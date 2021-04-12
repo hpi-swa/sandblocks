@@ -151,12 +151,16 @@ SBExample >> currentSelf [
 SBExample >> debug [
 	<action>
 
-	| process |
+	| process startMethod currentSelf arguments selector |
+	startMethod := self containingArtefact compiledMethod.
+	currentSelf := self evaluateSelf.
+	arguments := self evaluateArguments.
+	selector := self containingArtefact selector asSymbol.
+	
 	process := Process
-		forBlock: [self evaluate]
-		runUntil: [:context |
-			context method == self containingArtefact compiledMethod].
-	self sandblockEditor reportError: nil process: process.
+		forBlock: [currentSelf perform: selector withArguments: arguments]
+		runUntil: [:context | context method == startMethod].
+	self sandblockEditor reportError: Halt new process: process.
 	self sandblockEditor errors focusErrors
 ]
 
@@ -308,7 +312,7 @@ SBExample >> run [
 	errorDecorator := nil.
 	returnValue clear.
 	self sendStartNotification.
-	self collectTypeInfo.
+	"self collectTypeInfo."
 	
 	processRunning := true.
 	currentProcess := [

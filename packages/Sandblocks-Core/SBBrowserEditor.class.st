@@ -167,3 +167,9 @@ SBBrowserEditor >> updateArtefact [
 			category: model selectedMessageCategoryName).
 		^ self startInput: method at: 1 replacingContents: true]
 ]
+
+{ #category : #initialization }
+SBBrowserEditor >> wantsMinimalLayout [
+
+	^ true
+]

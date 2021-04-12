@@ -94,7 +94,7 @@ SBEditor class >> shortcutStringForAction: anAction [
 
 	^ String streamContents: [:stream |
 		stream nextPut: $(.
-		(self shortcutsForAction: anAction) do: [:shortcut | (shortcut isCollection ifTrue: [shortcut first] ifFalse: [shortcut]) printDisplayOn: stream] separatedBy: [stream space].
+		(self shortcutsForAction: anAction) do: [:shortcut | (shortcut isCollection ifTrue: [shortcut first] ifFalse: [shortcut]) printDisplayOn: stream automaticShift: true] separatedBy: [stream space].
 		stream nextPut: $)]
 ]
 
@@ -398,7 +398,7 @@ SBEditor >> copyBuffer: aMorphOrCollection [
 	
 	list do: [:m | copyBuffer addMorphBack: m veryDeepCopy].
 	form := copyBuffer imageForm.
-	copyBufferPreview image: (form scaledToFit: self copyBufferPreviewSize)
+	copyBufferPreview ifNotNil: [copyBufferPreview image: (form scaledToFit: self copyBufferPreviewSize)]
 ]
 
 { #category : #accessing }
@@ -700,17 +700,20 @@ SBEditor >> initialize [
 		addMorphBack: (errors := SBErrorPanel new
 			disableLayout: true;
 			topLeft: self topLeft;
-			yourself);
-		addMorphBack: self buildCommandBar;
-		addMorphBack: (SBRow new
-			changeTableLayout;
+			yourself).
+	
+	self wantsMinimalLayout ifFalse: [self addMorphBack: self buildCommandBar].
+	self addMorphBack: (SBRow new
+		changeTableLayout;
+		hResizing: #spaceFill;
+		vResizing: #spaceFill;
+		addMorphBack: (scroll := self scrollerClass new
 			hResizing: #spaceFill;
 			vResizing: #spaceFill;
-			addMorphBack: (scroll := self scrollerClass new
-				hResizing: #spaceFill;
-				vResizing: #spaceFill;
-				yourself));
-		addMorphBack: (bottomPanel := self buildBottomPanel);
+			yourself)).
+	self wantsMinimalLayout ifFalse: [self addMorphBack: (bottomPanel := self buildBottomPanel)].
+	
+	self
 		registerGlobalShortcutListener: errors;
 		registerGlobalShortcutListener: self;
 		resetState
@@ -877,22 +880,24 @@ SBEditor >> mode: aSymbol [
 	(aSymbol = #selection or: [aSymbol = #continuousSelection]) ifFalse: [self assert: multiSelection isEmpty].
 	
 	mode := aSymbol.
-	modeLabel contents: (mode caseOf: {
-		[#input] -> ['INPUT'].
-		[#selection] -> ['SELECTION'].
-		[#continuousSelection] -> ['CONT. SELECTION'].
-		[#command] -> ['COMMAND']
-	}).
+	modeLabel ifNotNil: [
+		modeLabel contents: (mode caseOf: {
+			[#input] -> ['INPUT'].
+			[#selection] -> ['SELECTION'].
+			[#continuousSelection] -> ['CONT. SELECTION'].
+			[#command] -> ['COMMAND']
+		})].
 	
 	defaultModeColor := Color white.
 	specialModeColor := Color red alpha: 0.2.
 	
-	bottomPanel color: (mode caseOf: {
-		[#input] -> [inputMapping defaultState = #input ifTrue: [defaultModeColor] ifFalse: [specialModeColor]].
-		[#selection] -> [Color blue alpha: 0.2].
-		[#continuousSelection] -> [Color blue alpha: 0.2].
-		[#command] -> [defaultModeColor]
-	}).
+	bottomPanel ifNotNil: [
+		bottomPanel color: (mode caseOf: {
+			[#input] -> [inputMapping defaultState = #input ifTrue: [defaultModeColor] ifFalse: [specialModeColor]].
+			[#selection] -> [Color blue alpha: 0.2].
+			[#continuousSelection] -> [Color blue alpha: 0.2].
+			[#command] -> [defaultModeColor]
+		})].
 	self selection ifNotNil: [:s | s invalidRect: (s outerBounds expandBy: 4)].
 	self updateSelectionLabel
 ]
@@ -1292,12 +1297,6 @@ SBEditor >> scrollerClass [
 	^ SBEditorCanvas
 ]
 
-{ #category : #accessing }
-SBEditor >> searchInput [
-
-	^ searchInput
-]
-
 { #category : #selection }
 SBEditor >> select: aBlock [
 
@@ -1488,6 +1487,8 @@ SBEditor >> updateSandblocks [
 SBEditor >> updateSelectionLabel [
 
 	| text maxLength |
+	selectionLabel ifNil: [^ self].
+	
 	maxLength := 30.
 	text := mode = #selection
 		ifTrue: [multiSelection size asString, (' element' asPluralBasedOn: multiSelection)]
@@ -1555,4 +1556,10 @@ SBEditor >> wantsDropFiles: anEvent [
 SBEditor >> wantsKeyboardFocus [
 
 	^ true
+]
+
+{ #category : #ui }
+SBEditor >> wantsMinimalLayout [
+
+	^ false
 ]

@@ -55,6 +55,12 @@ SBSelection >> blockForClass: aClass ifPresent: aBlock ifAbsent: anotherBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBSelection >> color [
+
+	^ color
+]
+
+{ #category : #'as yet unclassified' }
 SBSelection >> colorPolicy [
 
 	^ colorPolicy ifNil: [super colorPolicy]
@@ -75,7 +81,7 @@ SBSelection >> containingArtefact [
 { #category : #'as yet unclassified' }
 SBSelection >> drawnColor [
 
-	^ Color white
+	^ self sandblockBlockColorIfAbsent: [Color white]
 ]
 
 { #category : #'as yet unclassified' }

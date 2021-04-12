@@ -244,6 +244,7 @@ SBStName >> isTemporaryVariable [
 { #category : #'as yet unclassified' }
 SBStName >> keyStroke: anEvent [
 
+	| oldContents |
 	(self isExpression and: [anEvent keyCharacter = $:]) ifTrue: [ | new |
 		new := self newNullBlock.
 		^ self sandblockEditor
@@ -254,9 +255,11 @@ SBStName >> keyStroke: anEvent [
 				wrap: [:outer :inner | outer binding: self value: new]);
 			startInput: new at: 0 replacingContents: false].
 	
+	oldContents := self contents.
 	super keyStroke: anEvent.
 	
-	self updateSuggestions
+	oldContents ~= self contents ifTrue: [
+		self updateSuggestions]
 ]
 
 { #category : #'as yet unclassified' }

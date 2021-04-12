@@ -15,7 +15,6 @@ SBStringView >> initialize [
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		addMorphBack: (SBMultilineOwnTextMorph new
-			cursor: 1;
 			hResizing: #spaceFill;
 			when: #selectionChanged send: #updateSelectionLabels to: self;
 			yourself);
@@ -24,7 +23,9 @@ SBStringView >> initialize [
 			addMorphBack: (SBStNumberWithPrefix new prefix: 'Start: ');
 			addMorphBack: (SBStNumberWithPrefix new prefix: 'Stop: ');
 			addMorphBack: (SBStNumberWithPrefix new prefix: 'Length: '));
-		updateSelectionLabels
+		updateSelectionLabels.
+		
+	self firstSubmorph cursor: 1
 ]
 
 { #category : #'as yet unclassified' }

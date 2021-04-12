@@ -1,17 +1,42 @@
 Extension { #name : #CodeHolder }
 
 { #category : #'*Sandblocks-Core' }
-CodeHolder class >> addSandblocks [
-	" self addSandblocks "
+CodeHolder class >> addSandblocksDefault: aBoolean [
 
-	self
-		addContentsSymbolQuint: #(#blockEditor #toggleBlockEditor #showingBlockEditorString 'blocks' 'edit with the block editor')
-		afterEntry: ContentsSymbolQuints last first
+	| quint |
+	" self addSandblocksDefault: true "
+	quint := #(#blockEditor #toggleBlockEditor #showingBlockEditorString 'blocks' 'edit with the block editor').
+	
+	ContentsSymbolQuints removeAllSuchThat: [:q | q first = #blockEditor].
+	
+	aBoolean
+		ifTrue: [ContentsSymbolQuints addFirst: quint]
+		ifFalse: [self addContentsSymbolQuint: quint afterEntry: ContentsSymbolQuints last first]
+]
+
+{ #category : #'*Sandblocks-Core' }
+CodeHolder >> contentsSymbol [
+	"Answer a symbol indicating what kind of content should be shown for the method; for normal showing of source code, this symbol is #source.  A nil value in the contentsSymbol slot will be set to #source by this method"
+
+	^ contentsSymbol ifNil:
+		[contentsSymbol := SystemBrowser browseWithPrettyPrint
+								ifTrue:
+									[#prettyPrint]
+								ifFalse:
+									[self contentsSymbolQuints first first].
+
+		" FIXME tobe: seriously, I have not found any other way to inform the browser to change its widget.
+		 Underlying problems is that the block editor installation depends on the finished morph hierarchy and
+		 there appear to be no callbacks back from Morphic back to ToolBuilder/the model when it is finished. "
+		Project current addDeferredUIMessage: [self contentsSymbol == #blockEditor ifTrue: [self installBlockEditor]]]
 ]
 
 { #category : #'*Sandblocks-Core' }
 CodeHolder >> installBlockEditor [
 
+	" already installed? "
+	self containingWindow valueOfProperty: #blockEditor ifPresentDo: [:b | b owner notNil ifTrue: [^ self]].
+	
 	self containingWindow setProperty: #textEditor toValue: self codeTextMorph.
 	self containingWindow setProperty: #blockEditor toValue: (SBBrowserEditor new
 			model: self;

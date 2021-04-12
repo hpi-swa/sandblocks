@@ -5,7 +5,7 @@ Collection >> asCollectionView: converter [
 	<convert>
 	
 	converter
-		if: [self size < 20 and: [self isString not]]
+		if: [self size < 20 and: [self isString not and: [self isDictionary not]]]
 		do: [SBCollection new interface: converter objectInterface object: self]
 ]
 

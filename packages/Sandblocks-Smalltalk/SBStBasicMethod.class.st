@@ -277,7 +277,10 @@ SBStBasicMethod >> evaluationContext [
 { #category : #'as yet unclassified' }
 SBStBasicMethod >> evaluationReceiver [
 
-	^ self valueOfProperty: #evaluationReceiver ifAbsent: [self relatedClass basicNew]
+	^ self valueOfProperty: #evaluationReceiver ifAbsent: [
+		self relatedClass isMeta
+			ifTrue: [SBWatch report: self relatedClass theNonMetaClass for: 563751415]
+			ifFalse: [self relatedClass basicNew]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -574,14 +577,18 @@ SBStBasicMethod >> reloadMethodInPlace [
 SBStBasicMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
 
 	| text newSelector |
-	(self savedMethodHasComments and: [
-		(self valueOfProperty: #alreadyWarnedComments ifAbsent: [false]) not]) ifTrue: [
-			(UIManager default confirm: 'Currently saved version has comments that will be removed. Still save?')
-				ifTrue: [self setProperty: #alreadyWarnedComments toValue: true] ifFalse: [^ false]].
+	SBToggledCode comment: '' active: 0 do: {
+		[
+			(self savedMethodHasComments and: [(self valueOfProperty: #alreadyWarnedComments ifAbsent: [false]) not]) ifTrue: [
+				(UIManager default confirm: 'Currently saved version has comments that will be removed. Still save?')
+					ifTrue: [self setProperty: #alreadyWarnedComments toValue: true]
+					ifFalse: [^ false]]]}.
 	
 	self allBlocksDo: [:block | block valid ifFalse: [aBoolean ifFalse: [^ false] ifTrue: [block tryFixIfFail: [^ false]]]].
 	
-	(self hasExternalModification not or: [UIManager default confirm: 'Method may have changed elsewhere, continue?']) ifTrue: [self externalModification: false] ifFalse: [^ false].
+	(self hasExternalModification not or: [UIManager default confirm: 'Method may have changed elsewhere, continue?'])
+		ifTrue: [self externalModification: false]
+		ifFalse: [^ false].
 	
 	text := aQuickBoolean ifTrue: [self sourceString] ifFalse: [self prettySourceString].
 	
