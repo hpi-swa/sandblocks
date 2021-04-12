@@ -62,10 +62,10 @@ CodeHolder >> restoreTextualCodingPane [
 	contentsSymbol == #blockEditor ifTrue: [
 		contentsSymbol := #source.
 		(self containingWindow valueOfProperty: #blockEditor) ifNotNil: [:blockEditor |
-			blockEditor model: nil.
 			self containingWindow
 				replacePane: blockEditor
-				with: (self containingWindow valueOfProperty: #textEditor)]]
+				with: (self containingWindow valueOfProperty: #textEditor).
+			blockEditor model: nil]]
 ]
 
 { #category : #'*Sandblocks-Core' }
