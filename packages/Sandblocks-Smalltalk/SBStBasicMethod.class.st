@@ -279,7 +279,7 @@ SBStBasicMethod >> evaluationReceiver [
 
 	^ self valueOfProperty: #evaluationReceiver ifAbsent: [
 		self relatedClass isMeta
-			ifTrue: [SBWatch report: self relatedClass theNonMetaClass for: 563751415]
+			ifTrue: [self relatedClass theNonMetaClass]
 			ifFalse: [self relatedClass basicNew]]
 ]
 
