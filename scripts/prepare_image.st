@@ -26,7 +26,7 @@
 
   (Smalltalk at: #SBEditor) openExample.
   "SystemWindow topWindow expandToFullScreen."
-  CodeHolder addSandblocks.
+  CodeHolder addSandblocksDefault: true.
 
   "Wrap up the image and save it"
   TranscriptStream redirectToStdOut: false.

@@ -21,7 +21,7 @@ Metacello new
 SBEditor openExample.
 
 " Extend the default browser with a block display mode: "
-CodeHolder addSandblocks.
+CodeHolder addSandblocksDefault: false.
 
 " Note: by default squeak absorbs ctrl+up/down for scrolling. You can turn this off with this line:  "
 HandMorph synthesizeMouseWheelEvents: false.
