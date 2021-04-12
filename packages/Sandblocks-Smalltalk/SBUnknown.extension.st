@@ -46,5 +46,7 @@ SBUnknown >> updatePCFrom: anObject [
 SBUnknown >> writeStSourceOn: aStream [
 
 	self assert: self isStatement.
-	aStream nextPutAll: '#ppEmptyLine'
+	" don't place an empty line in an otherwise empty block "
+	self parentSandblock statements size > 1 ifTrue: [
+		aStream nextPutAll: '#ppEmptyLine']
 ]
