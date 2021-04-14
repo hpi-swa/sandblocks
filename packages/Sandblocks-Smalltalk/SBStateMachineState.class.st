@@ -87,23 +87,6 @@ SBStateMachineState >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBStateMachineState >> insertCommandRequest: anAfterBoolean near: aBlock [
-
-	| body |
-	body := SBStBlockBody empty.
-	^ (SBInsertCommand newFor: self containingArtefact)
-		index: ((self childSandblocks indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]) max: 2);
-		container: self;
-		morph: (SBRow new
-			cellGap: 4 withScalingFactor;
-			addMorphBack: (SBStringMorph new contents: 'Enter:');
-			addMorphBack: body);
-		select: body childSandblocks first;
-		shouldMergeWithNext: true;
-		yourself
-]
-
-{ #category : #'as yet unclassified' }
 SBStateMachineState >> isSmalltalk [
 
 	^ true
@@ -127,6 +110,15 @@ SBStateMachineState >> name [
 SBStateMachineState >> name: aString [
 
 	label contents: aString
+]
+
+{ #category : #'as yet unclassified' }
+SBStateMachineState >> newNullBlock [
+
+	^ SBRow new
+		cellGap: 4 withScalingFactor;
+		addMorphBack: (SBStringMorph new contents: 'Enter:');
+		addMorphBack: SBStBlockBody new
 ]
 
 { #category : #'as yet unclassified' }

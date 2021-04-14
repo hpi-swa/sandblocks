@@ -44,17 +44,6 @@ SBOhmList >> fixedNumberOfChildren [
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmList >> insertCommandRequest: anAfterBoolean near: aBlock [
-
-	^ (SBInsertCommand newFor: self containingArtefact)
-		index: (self childSandblocks indexOf: aBlock) + (anAfterBoolean ifTrue: [2] ifFalse: [1]);
-		container: self;
-		morph: (self newNullBlock label: 'seq');
-		shouldMergeWithNext: true;
-		yourself
-]
-
-{ #category : #'as yet unclassified' }
 SBOhmList >> isAlternative [
 
 	^ self connect = 'OR'
@@ -94,6 +83,12 @@ SBOhmList >> layoutCommands [
 SBOhmList >> maybeUnwrapList [
 
 	^ self expressions size < 2 ifTrue: [self expressions first] ifFalse: [self]
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmList >> newNullBlock [
+
+	^ super newNullBlock label: 'seq'
 ]
 
 { #category : #'as yet unclassified' }

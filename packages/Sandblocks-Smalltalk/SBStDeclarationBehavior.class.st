@@ -21,6 +21,12 @@ SBStDeclarationBehavior >> allUsagesDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBStDeclarationBehavior >> browseReferences [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBStDeclarationBehavior >> guessedClass [
 
 	^ (self block containingArtefact ifNotNil: [:a | a typeFor: self block]) ifNil: [super guessedClass]

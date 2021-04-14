@@ -5,6 +5,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStAssignmentLabel >> browseSenders [
+	<action>
+
+	self resolveBinding ifNotNil: [:binding | binding behavior browseReferences]
+]
+
+{ #category : #'as yet unclassified' }
 SBStAssignmentLabel >> fixActions [
 
 	^ (self valid or: [self block validContents not])

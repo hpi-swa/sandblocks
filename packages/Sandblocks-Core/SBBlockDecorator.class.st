@@ -56,6 +56,12 @@ SBBlockDecorator >> postDrawOn: aCanvas [
 	
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlockDecorator >> postDrawSelfOn: aCanvas [
+
+	
+]
+
 { #category : #drawing }
 SBBlockDecorator >> preDrawOn: aCanvas [
 

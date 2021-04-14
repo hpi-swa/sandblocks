@@ -12,6 +12,12 @@ SBStDeclarationForPoolVariable >> browse [
 ]
 
 { #category : #'as yet unclassified' }
+SBStDeclarationForPoolVariable >> browseReferences [
+
+	self systemNavigation browseAllCallsOnClass: self guessedClass
+]
+
+{ #category : #'as yet unclassified' }
 SBStDeclarationForPoolVariable >> guessedClass [
 
 	^ self block binding value class

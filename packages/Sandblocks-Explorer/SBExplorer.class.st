@@ -187,7 +187,7 @@ SBExplorer >> objectInterface [
 ]
 
 { #category : #'as yet unclassified' }
-SBExplorer >> objectInterfaceAt: aNumber adding: aBoolean [
+SBExplorer >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ SBInterfaces topLevel
 ]

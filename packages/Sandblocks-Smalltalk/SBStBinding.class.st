@@ -12,6 +12,13 @@ SBStBinding >> browse [
 ]
 
 { #category : #'as yet unclassified' }
+SBStBinding >> browseSenders [
+	<action>
+
+	self resolveBinding ifNotNil: [:binding | binding behavior browseReferences]
+]
+
+{ #category : #'as yet unclassified' }
 SBStBinding >> contentsChanged [
 
 	(self contents = 'true' or: [self contents = 'false'])

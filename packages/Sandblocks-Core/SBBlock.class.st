@@ -35,17 +35,6 @@ SBBlock >> absorbsInput: anEvent [
 	^ false
 ]
 
-{ #category : #'dropping/grabbing' }
-SBBlock >> acceptDroppingMorph: aMorph event: anEvent [
-
-	self sandblockEditor containingWindow ifNotNil: #beKeyWindow.
-	self allOwnersDo: #resetHighlightForDrop.
-	self resetHighlightForDrop.
-	
-	self dropLocationDo: [:position :morph :horizontal |
-		self handleDroppedBlock: aMorph event: anEvent adding: self fixedNumberOfChildren not near: morph]
-]
-
 { #category : #'action helpers' }
 SBBlock >> actionProviders [
 
@@ -105,7 +94,7 @@ SBBlock >> appendElement [
 	<action>
 
 	| cmd |
-	cmd := (self insertCommandRequest: true near: (self childSandblocks ifNotEmpty: #last ifEmpty: [nil])) ifNil: [^ self].
+	cmd := (self insertEmptyCommandRequestNear: (self childSandblocks ifNotEmpty: #last ifEmpty: [nil]) before: false) ifNil: [^ self].
 	
 	self sandblockEditor do: cmd.
 	
@@ -166,16 +155,10 @@ SBBlock >> barf [
 	<action>
 	<actionValidIf: #parentHasDynamicNumberOfChildren>
 
-	| insert |
 	
 	self hasChildSandblocks ifFalse: [^ self].
 	
-	insert := self parentSandblock insertCommandRequest: true near: self.
-	self sandblockEditor do: (SBCombinedCommand newWith: {
-		insert.
-		(SBReplaceCommand newFor: self containingArtefact)
-			target: insert morph;
-			replacer: self childSandblocks last}).
+	self sandblockEditor do: (self parentSandblock insertCommandRequest: self childSandblocks last near: self before: false).
 	self select
 ]
 
@@ -184,16 +167,10 @@ SBBlock >> barfFront [
 	<action>
 	<actionValidIf: #parentHasDynamicNumberOfChildren>
 
-	| insert |
 	
 	self hasChildSandblocks ifFalse: [^ self].
 	
-	insert := self parentSandblock insertCommandRequest: false near: self.
-	self sandblockEditor do: (SBCombinedCommand newWith: {
-		insert.
-		(SBReplaceCommand newFor: self containingArtefact)
-			target: insert morph;
-			replacer: self childSandblocks first}).
+	self sandblockEditor do: (self parentSandblock insertCommandRequest: self childSandblocks first near: self before: true).
 	self select
 ]
 
@@ -608,22 +585,23 @@ SBBlock >> deleteAround [
 		self removeProperty: #copyPlaceholder.
 		
 		editor do: ((SBRecordedCommand newFor: self containingArtefact) record: [:recorder |
-			recorder moveAll: self parentSandblock childSandblocks in: target owner at: target submorphIndex + 1.
+			recorder
+				moveAll: self parentSandblock childSandblocks
+				in: target owner
+				at: target submorphIndex + 1.
 			recorder remove: target]).
 		^ self].
 	
 	[
-		self
-			convertedFor: target objectInterface
-			do: [:replacer |
-				self setProperty: #copyPlaceholder toValue: true.
-				editor copyBuffer: target.
-				self removeProperty: #copyPlaceholder.
-				editor do: ((SBReplaceCommand newFor: self containingArtefact)
-					target: target;
-					replacer: replacer).
-				replacer postDuplicate.
-				^ self].
+		self convertedFor: target objectInterface do: [:replacer |
+			self setProperty: #copyPlaceholder toValue: true.
+			editor copyBuffer: target.
+			self removeProperty: #copyPlaceholder.
+			editor do: ((SBReplaceCommand newFor: self containingArtefact)
+				target: target;
+				replacer: replacer).
+			replacer postDuplicate.
+			^ self].
 		" if we did not find a valid conversion, try again with the parent "
 		target := target parentSandblock ifNil: [^ self]] repeat
 ]
@@ -764,7 +742,8 @@ SBBlock >> drawOn: aCanvas [
 	
 	self drawBackgroundOn: aCanvas.
 	
-	self drawSymbolsOn: aCanvas
+	self drawSymbolsOn: aCanvas.
+	self decorators do: [:d | d postDrawSelfOn: aCanvas]
 ]
 
 { #category : #drawing }
@@ -971,7 +950,7 @@ SBBlock >> handleDropMorph: anEvent [
 { #category : #'dropping/grabbing' }
 SBBlock >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
-	aBlock unpackSelection
+	"aBlock unpackSelection
 		convertedFor: self objectInterfaceForDrop
 		doWithChooser: [:block | | reference |
 			aBoolean
@@ -997,7 +976,7 @@ SBBlock >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMor
 					ifTrue: [((reference transformFrom: nil) globalPointToLocal: anEvent position) asIntegerPoint]
 					ifFalse: [anEvent position]);
 				inputContainedUnknown.
-			block]
+			block]"
 ]
 
 { #category : #'event handling' }
@@ -1131,18 +1110,22 @@ SBBlock >> inputPreviousUnknown [
 				self sandblockEditor startInput: m at: 1 replacingContents: true]]
 ]
 
-{ #category : #'insert/delete' }
-SBBlock >> insertCommandRequest: anAfterBoolean near: aBlock [
+{ #category : #'as yet unclassified' }
+SBBlock >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
+	" the user tries to add a block to us, do we want to do something now? "
 
-	" the user pressed + on us, do we want to do something now? "
-	^ nil
+	self fixedNumberOfChildren ifTrue: [^ nil].
+	
+	^ (SBRelInsertCommand newFor: self containingArtefact)
+		near: aBlock before: aBoolean in: self morph: aMorph;
+		yourself
 ]
 
 { #category : #'action helpers' }
 SBBlock >> insertElement: aBoolean [
 
 	| cmd |
-	cmd := (self parentSandblock insertCommandRequest: aBoolean near: self) ifNil: [^ self].
+	cmd := (self parentSandblock insertEmptyCommandRequestNear: self before: aBoolean) ifNil: [^ self].
 	
 	self sandblockEditor do: cmd.
 	
@@ -1157,7 +1140,7 @@ SBBlock >> insertElementAfter [
 	<action>
 	<inputAction>
 
-	^ self insertElement: true
+	^ self insertElement: false
 ]
 
 { #category : #actions }
@@ -1165,7 +1148,16 @@ SBBlock >> insertElementBefore [
 	<action>
 	<inputAction>
 
-	^ self insertElement: false
+	^ self insertElement: true
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> insertEmptyCommandRequestNear: aBlock before: aBoolean [
+
+	^ (self insertCommandRequest: self newNullBlock near: aBlock before: aBoolean) ifNotNil: [:cmd |
+		cmd
+			shouldMergeWithNext: true;
+			yourself]
 ]
 
 { #category : #initialization }
@@ -1446,15 +1438,6 @@ SBBlock >> mouseDown: anEvent [
 ]
 
 { #category : #'event handling' }
-SBBlock >> mouseEnterDragging: anEvent [
-
-	(anEvent hand firstSubmorph respondsTo: #noteDragEnter:) ifTrue: [anEvent hand firstSubmorph noteDragEnter: self].
-	
-	self resetParentHighlights.
-	(self handlesMouseOverDragging: anEvent) ifTrue: [self highlightForDrop: true]
-]
-
-{ #category : #'event handling' }
 SBBlock >> mouseLeaveDragging: anEvent [
 
 	(anEvent hand firstSubmorph respondsTo: #noteDragLeave:) ifTrue: [anEvent hand firstSubmorph noteDragLeave: self].
@@ -1641,25 +1624,13 @@ SBBlock >> object [
 { #category : #'object interface' }
 SBBlock >> objectInterface [
 
-	^ self parentSandblock objectInterfaceAt: self childIndex adding: false
+	^ self parentSandblock objectInterfaceNear: self at: #replace
 ]
 
 { #category : #'object interface' }
-SBBlock >> objectInterfaceAt: aNumber adding: aBoolean [
+SBBlock >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ SBInterfaces never
-]
-
-{ #category : #'dropping/grabbing' }
-SBBlock >> objectInterfaceForDrop [
-
-	^ self fixedNumberOfChildren ifTrue: [self objectInterface] ifFalse: [
-		self dropLocationDo: [:position :morph :horizontal |
-			self
-				objectInterfaceAt: ((morph notNil and: [morph parentSandblock notNil])
-					ifTrue: [morph childIndex]
-					ifFalse: [0])
-				adding: true]]
 ]
 
 { #category : #actions }
@@ -1735,8 +1706,8 @@ SBBlock >> pasteBeforeOrAfter: aBeforeBoolean [
 	copyBuffer submorphs veryDeepCopy withIndexDo: [:target :index |
 		target object
 			convertedFor: (self parentSandblock
-				objectInterfaceAt: (aBeforeBoolean ifTrue: [self childIndex] ifFalse: [self childIndex + index])
-				adding: true)
+				objectInterfaceNear: self
+				at: (aBeforeBoolean ifTrue: [#before] ifFalse: [#after]))
 			do: [:repr |
 				self sandblockEditor do: ((self containingArtefact = self
 					ifFalse: [SBInsertCommand newFor: self containingArtefact]
@@ -1869,7 +1840,8 @@ SBBlock >> prependElement [
 	| cmd |
 	cmd := (self
 		insertCommandRequest: false
-		near: (self childSandblocks ifNotEmpty: #first ifEmpty: [nil])) ifNil: [^ self].
+		near: (self childSandblocks ifNotEmpty: #first ifEmpty: [nil])
+		before: true) ifNil: [^ self].
 	
 	self sandblockEditor do: cmd.
 	
@@ -2158,13 +2130,8 @@ SBBlock >> slurp [
 	<action>
 	<actionValidIf: #dynamicNumberOfChildren>
 
-	(self adjacentBlock: 1) ifNotNil: [:block | | insert |
-		insert := self insertCommandRequest: true near: self childSandblocks last.
-		self sandblockEditor do: (SBCombinedCommand newWith: {
-			insert.
-			(SBReplaceCommand newFor: self containingArtefact)
-				target: insert morph;
-				replacer: block}).
+	(self adjacentBlock: 1) ifNotNil: [:block | 
+		self sandblockEditor do: (self insertCommandRequest: block near: self childSandblocks last before: false).
 		self select]
 ]
 
@@ -2172,14 +2139,9 @@ SBBlock >> slurp [
 SBBlock >> slurpFront [
 	<action>
 	<actionValidIf: #dynamicNumberOfChildren>
-	
-	(self adjacentBlock: -1) ifNotNil: [:block | | insert |
-		insert := self insertCommandRequest: false near: self childSandblocks first.
-		self sandblockEditor do: (SBCombinedCommand newWith: {
-			insert.
-			(SBReplaceCommand newFor: self containingArtefact)
-				target: insert morph;
-				replacer: block}).
+
+	(self adjacentBlock: -1) ifNotNil: [:block | 
+		self sandblockEditor do: (self insertCommandRequest: block near: self childSandblocks last before: true).
 		self select]
 ]
 
@@ -2466,30 +2428,6 @@ SBBlock >> veryDeepCopyWith: aCopier [
 	previousDecorators do: #detach.
 	previousDecorators do: [:decorator | new attachDecorator: decorator].
 	^ new
-]
-
-{ #category : #'dropping/grabbing' }
-SBBlock >> wantsDroppedMorph: aMorph event: evt [
-
-	| response |
-	((aMorph isSandblock and: [aMorph isSelection]) or: [aMorph isKindOf: TransferMorph]) ifFalse: [^ false].
-	
-	SBToggledCode
-		comment: 'we may sometimes be asked this for a morph that is not in a valid environment'
-		active: 1
-		do: {[self sandblockEditor ifNil: [^ false]]}.
-	
-	response := nil.
-	aMorph
-		valueOfProperty: #cachedWantsDropResponse
-		ifPresentDo: [:assoc | (assoc key hasEqualElements: self objectInterfaceForDrop) ifTrue: [response := assoc value]].
-	
-	response ifNil: [ | interface |
-		interface := self objectInterfaceForDrop.
-		response := (aMorph unpackSelection convertedFor: interface do: [:repr | repr]) notNil.
-		aMorph setProperty: #cachedWantsDropResponse toValue: interface -> response].
-	
-	^ response
 ]
 
 { #category : #'colors and color policies' }

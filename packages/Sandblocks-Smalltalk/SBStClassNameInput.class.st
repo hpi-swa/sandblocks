@@ -17,13 +17,6 @@ SBStClassNameInput >> doubleClick: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBStClassNameInput >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
-
-	aBlock unpackSelection object convertedFor: self objectInterfaceForDrop do: [:class |
-		self selectedClass: class]
-]
-
-{ #category : #'as yet unclassified' }
 SBStClassNameInput >> object [
 
 	^ self selectedClass

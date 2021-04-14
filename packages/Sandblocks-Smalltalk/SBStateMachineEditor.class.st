@@ -251,17 +251,6 @@ SBStateMachineEditor >> initializePositions [
 	states withIndexDo: [:state :index | state position: (Point r: 80 * states size degrees: (increment - 1) * index) + (self extent / 2)]
 ]
 
-{ #category : #initialization }
-SBStateMachineEditor >> insertCommandRequest: anAfterBoolean near: aBlock [
-
-	^ (SBInsertCommand newFor: self containingArtefact)
-		index: self submorphCount + 1;
-		container: self;
-		morph: (SBStateMachineState new name: ''; position: self position + (30 @ 30));
-		shouldMergeWithNext: true;
-		yourself
-]
-
 { #category : #'as yet unclassified' }
 SBStateMachineEditor >> minExtent [
 
@@ -269,6 +258,14 @@ SBStateMachineEditor >> minExtent [
 	self hasSubmorphs ifFalse: [^ 100 asPoint].
 	area := Rectangle merging: self submorphs.
 	^ area extent + self layoutInset asEdgeInsets
+]
+
+{ #category : #initialization }
+SBStateMachineEditor >> newNullBlock [
+
+	^ SBStateMachineState new
+		name: '';
+		position: self position + (30 @ 30)
 ]
 
 { #category : #'as yet unclassified' }

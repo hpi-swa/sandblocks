@@ -42,12 +42,12 @@ SBScmExpression >> asWatch: converter [
 SBScmExpression >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	self quoted ifTrue: [^ aBlock value: (SBScmSymbol new contents: aString)].
-	
 	self
 		withStatementsDo: [:l |
-			l detect: [:s | s isSExpr and: [s ifDefinition: [:d | d = aString] otherwise: [false]]] ifFound: [:s | aBlock value: s]]
+			l
+				detect: [:s | s isSExpr and: [s ifDefinition: [:d | d = aString] otherwise: [false]]]
+				ifFound: [:s | aBlock value: s]]
 		ifNotApplicable: [].
-	
 	self
 		ifWellFormedSpecialFormDo: [:f |
 			(#('let' 'let*' 'letrec') includes: f) ifTrue: [
@@ -57,11 +57,15 @@ SBScmExpression >> binding: aString for: block class: aClass ifPresent: aBlock [
 			f = 'define' ifTrue: [
 				self elements second isSExpr
 					ifTrue: [
-						self elements second elements detect: [:arg | arg contents = aString] ifFound: [:arg | ^ aBlock value: arg]]
+						self elements second elements
+							detect: [:arg | arg contents = aString]
+							ifFound: [:arg | ^ aBlock value: arg]]
 					ifFalse: [self elements second contents = aString ifTrue: [^ aBlock value: self elements second]]].
-			(f = 'cond' and: [aString = 'else' and: [self elements last elements first = block]]) ifTrue: [^ aBlock value: block].
+			(f = 'cond' and: [aString = 'else' and: [self elements last isSExpr and: [self elements last elements first = block]]]) ifTrue: [^ aBlock value: block].
 			f = 'lambda' ifTrue: [
-				self elements second elements detect: [:arg | arg contents = aString] ifFound: [:arg | ^ aBlock value: arg]]]
+				self elements second elements
+					detect: [:arg | arg contents = aString]
+					ifFound: [:arg | ^ aBlock value: arg]]]
 		ifNone: [nil].
 	^ super binding: aString for: block class: aClass ifPresent: aBlock
 ]
@@ -162,17 +166,6 @@ SBScmExpression >> initialize [
 	super initialize.
 	
 	quoted := false
-]
-
-{ #category : #'as yet unclassified' }
-SBScmExpression >> insertCommandRequest: anAfterBoolean near: aBlock [
-
-	^ (SBInsertCommand newFor: self containingArtefact)
-		index: (self childSandblocks indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
-		container: self;
-		morph: self newNullBlock;
-		shouldMergeWithNext: true;
-		yourself
 ]
 
 { #category : #'as yet unclassified' }

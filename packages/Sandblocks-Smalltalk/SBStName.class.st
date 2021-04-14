@@ -16,10 +16,10 @@ SBStName class >> contents: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBStName class >> instanceVariable: aString [
+SBStName class >> instanceVariable: aString class: aClass [
 
 	^ (self contents: aString)
-		behavior: SBStDeclarationForInstanceVariable new;
+		behavior: (SBStDeclarationForInstanceVariable new class: aClass);
 		yourself
 ]
 
@@ -290,16 +290,16 @@ SBStName >> noteNewOwner: aMorph [
 	((aMorph parentSandblock ifNotNil: #isMethod ifNil: [false]) and: [aMorph parentSandblock isMyArgument: self]) ifTrue: [^ self behavior: SBStDeclarationForMethodArgument new].
 	aMorph isTemporaries ifTrue: [^ self behavior: SBStDeclarationForTemporaryVariable new].
 	aMorph isBlockBindings ifTrue: [^ self behavior: SBStDeclarationForBlock new].
-	((self containingArtefact satisfies: {#notNil. #isEditor. [:a | a object isBehavior]})) ifTrue: [
-		aMorph = self containingArtefact instanceVariables ifTrue: [^ self behavior: SBStDeclarationForInstanceVariable new].
+	(self containingArtefact satisfies: {#notNil. #isEditor. [:a | a object isBehavior]}) ifTrue: [
+		aMorph = self containingArtefact instanceVariables ifTrue: [^ self behavior: (SBStDeclarationForInstanceVariable new class: self containingArtefact relatedClass)].
 		aMorph = self containingArtefact classVariables ifTrue: [^ self behavior: SBStDeclarationForPoolVariable new]].
 	
-	((self containingArtefact ifNotNil: #isRepl ifNil: [false]) and: [aMorph = self containingArtefact localVariables])
-		ifTrue: [^ self behavior: SBStDeclarationForLocalVariable new].
+	((self containingArtefact ifNotNil: #isRepl ifNil: [false]) and: [aMorph = self containingArtefact localVariables]) ifTrue: [^ self behavior: SBStDeclarationForLocalVariable new].
 	
 	(self contents = 'true' or: [self contents = 'false']) ifTrue: [^ self behavior: SBStBoolean new].
 	self isReserved ifTrue: [^ self behavior: SBStKeywordBinding new].
-	self flag: #fixme. " this may be too strict "
+	self flag: #fixme.
+	" this may be too strict "
 	
 	aMorph isAssignment ifTrue: [^ self behavior: (self isFirstChild ifTrue: [SBStAssignmentLabel new] ifFalse: [SBStBinding new])].
 	self behavior: SBStBinding new

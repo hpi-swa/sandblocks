@@ -84,17 +84,6 @@ SBStArray >> initialize [
 		extent: self minExtent
 ]
 
-{ #category : #'as yet unclassified' }
-SBStArray >> insertCommandRequest: anAfterBoolean near: aBlock [
-
-	^ (SBInsertCommand newFor: self containingArtefact)
-		index: (self childSandblocks indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
-		container: self;
-		morph: self newChild;
-		shouldMergeWithNext: true;
-		yourself
-]
-
 { #category : #converting }
 SBStArray >> isArrayBlock [
 
@@ -135,12 +124,6 @@ SBStArray >> minimumHeight [
 	| inset |
 	inset := self layoutInset asEdgeInsets.
 	^ (self fontToUse height + inset top + inset bottom)
-]
-
-{ #category : #converting }
-SBStArray >> newChild [
-
-	^ self newNullBlock
 ]
 
 { #category : #'as yet unclassified' }

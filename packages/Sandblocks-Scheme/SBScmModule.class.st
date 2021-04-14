@@ -164,17 +164,6 @@ SBScmModule >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBScmModule >> insertCommandRequest: anAfterBoolean near: aBlock [
-
-	^ (SBInsertCommand newFor: self containingArtefact)
-		index: (self childSandblocks indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
-		container: self;
-		morph: self newNullBlock;
-		shouldMergeWithNext: true;
-		yourself
-]
-
-{ #category : #'as yet unclassified' }
 SBScmModule >> interpreter [
 
 	^ interpreter ifNil: [interpreter := self class newInterpreter]

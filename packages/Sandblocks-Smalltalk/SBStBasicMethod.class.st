@@ -330,9 +330,9 @@ SBStBasicMethod >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBStBasicMethod >> insertCommandRequest: anAfterBoolean near: aBlock [
+SBStBasicMethod >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
-	^ signature insertCommandRequest: anAfterBoolean near: aBlock
+	^ self signature insertCommandRequest: aMorph near: aBlock before: aBoolean
 ]
 
 { #category : #'as yet unclassified' }
@@ -360,7 +360,8 @@ SBStBasicMethod >> instanceVariables [
 			stream nextPutAll: (self sandblockEditor
 				blockFor: class withInterfaces: #(isEditor)
 				ifOpen: [:c | c instanceVariables]
-				ifClosed: [class instVarNames collect: [:name | SBStName instanceVariable: name]])]]
+				ifClosed: [class instVarNames collect: [:name |
+					SBStName instanceVariable: name class: class]])]]
 ]
 
 { #category : #'as yet unclassified' }

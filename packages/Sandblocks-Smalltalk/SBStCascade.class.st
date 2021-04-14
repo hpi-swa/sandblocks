@@ -74,16 +74,6 @@ SBStCascade >> guessedClass [
 ]
 
 { #category : #'as yet unclassified' }
-SBStCascade >> insertCommandRequest: anAfterBoolean near: aBlock [
-
-	^ (SBInsertCommand newFor: self containingArtefact)
-		container: self;
-		index: (self submorphIndexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
-		shouldMergeWithNext: true;
-		morph: (SBStMessageSend new receiver: nil selector: #'' arguments: #())
-]
-
-{ #category : #'as yet unclassified' }
 SBStCascade >> isCascade [
 
 	^ true
@@ -109,6 +99,12 @@ SBStCascade >> layoutCommands [
 SBStCascade >> messages [
 
 	^ self submorphs allButFirst
+]
+
+{ #category : #'as yet unclassified' }
+SBStCascade >> newNullBlock [
+
+	^ SBStMessageSend new receiver: nil selector: #'' arguments: #()
 ]
 
 { #category : #'as yet unclassified' }

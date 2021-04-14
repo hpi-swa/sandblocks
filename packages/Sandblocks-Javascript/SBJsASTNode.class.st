@@ -115,10 +115,11 @@ SBJsASTNode >> object [
 	^ self
 ]
 
-{ #category : #'object interface' }
-SBJsASTNode >> objectInterfaceAt: aNumber adding: aBoolean [
+{ #category : #'as yet unclassified' }
+SBJsASTNode >> objectInterfaceNear: aBlock at: aSymbol [
 
-	^ (self fixedNumberOfChildren and: [aBoolean]) ifTrue: [SBInterfaces never] ifFalse: [SBInterfaces jsExpression]
+	(aSymbol = #replace or: [self dynamicNumberOfChildren]) ifTrue: [^ SBInterfaces jsExpression].
+	^ SBInterfaces never
 ]
 
 { #category : #'as yet unclassified' }

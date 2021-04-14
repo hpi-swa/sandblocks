@@ -90,12 +90,6 @@ SBStMethod >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBStMethod >> insertCommandRequest: anAfterBoolean near: aBlock [
-
-	^ signature insertCommandRequest: anAfterBoolean near: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBStMethod >> isCollapsed [
 
 	^ self body visible not

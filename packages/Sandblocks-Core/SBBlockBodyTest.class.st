@@ -11,6 +11,6 @@ SBBlockBodyTest >> testInsertCommandRequest [
 	block := SBStBlockBody emptyWithDeclarations: {'a'. 'b'. 'c'}.
 	editor := self methodFor: block.
 	block statements: {SBStNumber new. SBStNumber new. SBStNumber new}.
-	editor do: (block insertCommandRequest: true near: block statements first).
+	editor do: (block insertEmptyCommandRequestNear: block statements first before: false).
 	self assert: block statements second isUnknown
 ]

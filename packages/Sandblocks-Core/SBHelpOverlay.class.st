@@ -16,19 +16,19 @@ SBHelpOverlay class >> on: aBlock [
 { #category : #'as yet unclassified' }
 SBHelpOverlay >> canAdd: aBlock [
 
-	aBlock insertCommandRequest: true near: (aBlock childSandblocks ifNotEmpty: #last ifEmpty: [nil])
+	^ (aBlock insertEmptyCommandRequestNear: (aBlock childSandblocks ifNotEmpty: #last ifEmpty: [nil]) before: false) notNil
 ]
 
 { #category : #'as yet unclassified' }
 SBHelpOverlay >> canInsertAfter: aBlock [
 
-	aBlock parentSandblock insertCommandRequest: true near: aBlock
+	^ (aBlock parentSandblock insertEmptyCommandRequestNear: aBlock before: false) notNil
 ]
 
 { #category : #'as yet unclassified' }
 SBHelpOverlay >> canInsertBefore: aBlock [
 
-	aBlock parentSandblock insertCommandRequest: false near: aBlock
+	^ (aBlock parentSandblock insertEmptyCommandRequestNear: aBlock before: true) notNil
 ]
 
 { #category : #'as yet unclassified' }

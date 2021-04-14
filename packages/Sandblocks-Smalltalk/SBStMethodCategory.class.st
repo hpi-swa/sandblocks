@@ -97,25 +97,18 @@ SBStMethodCategory >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBStMethodCategory >> insertCommandRequest: anAfterBoolean near: aBlock [
-
-	^ (SBInsertCommand newFor: self containingArtefact)
-		index: (self childSandblocks indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
-		container: self;
-		morph: (SBStMethod new
-			selector: ''
-			arguments: #()
-			class: self relatedClass;
-			hResizing: #spaceFill;
-			body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}]));
-		shouldMergeWithNext: true;
-		yourself
-]
-
-{ #category : #'as yet unclassified' }
 SBStMethodCategory >> isArtefact [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBStMethodCategory >> newNullBlock [
+
+	^ SBStMethod new
+		selector: '' arguments: #() class: self relatedClass;
+		hResizing: #spaceFill;
+		body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}])
 ]
 
 { #category : #'as yet unclassified' }

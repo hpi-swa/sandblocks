@@ -11,16 +11,6 @@ SBJsKeywordBlock class >> validBlockKeywords [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsKeywordBlock >> addHeaderBlock [
-	<action>
-	<actionValidIf: #dynamicArity>
-	
-	self sandblockEditor
-		do: (self insertCommandRequest: true near: nil);
-		startInput: self sandblockEditor selection at: 9e8 replacingContents: false
-]
-
-{ #category : #'as yet unclassified' }
 SBJsKeywordBlock >> arity [
 
 	self contents = 'for' ifTrue: [^ 3].

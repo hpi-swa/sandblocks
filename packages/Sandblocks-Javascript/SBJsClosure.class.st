@@ -74,10 +74,9 @@ SBJsClosure >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsClosure >> objectInterfaceAt: aNumber adding: aBoolean [
+SBJsClosure >> objectInterfaceNear: aBlock at: aSymbol [
 
-	aNumber = 1 ifTrue: [^ SBInterfaces never].
-	
+	(aSymbol = #replace and: [aBlock ifNotNil: #isFirstChild]) ifTrue: [^ SBInterfaces never].
 	^ SBInterfaces jsExpression
 ]
 

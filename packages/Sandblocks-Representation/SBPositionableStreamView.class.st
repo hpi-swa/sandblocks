@@ -55,9 +55,11 @@ SBPositionableStreamView >> object [
 ]
 
 { #category : #'as yet unclassified' }
-SBPositionableStreamView >> objectInterfaceAt: aNumber adding: aBoolean [
+SBPositionableStreamView >> objectInterfaceNear: aBlock at: aSymbol [
 
-	^ aNumber < (self childSandblocks size - 2) ifTrue: [SBInterfaces block] ifFalse: [SBInterfaces never]
+	^ ((self firstSubmorph submorphs includes: aBlock) and: [aSymbol = #replace])
+		ifTrue: [SBInterfaces block]
+		ifFalse: [SBInterfaces never]
 ]
 
 { #category : #'as yet unclassified' }

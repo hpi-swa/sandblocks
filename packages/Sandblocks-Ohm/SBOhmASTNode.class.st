@@ -70,7 +70,7 @@ SBOhmASTNode >> object [
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmASTNode >> objectInterfaceAt: aNumber adding: aBoolean [
+SBOhmASTNode >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ SBInterfaces ohmExpression
 ]

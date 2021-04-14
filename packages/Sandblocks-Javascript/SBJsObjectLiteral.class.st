@@ -33,19 +33,6 @@ SBJsObjectLiteral >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsObjectLiteral >> insertCommandRequest: anAfterBoolean near: aBlock [
-
-	| row |
-	row := self buildEmptyRow.
-	^ (SBInsertCommand newFor: self containingArtefact)
-		morph: row;
-		select: row firstSubmorph;
-		container: self;
-		shouldMergeWithNext: true;
-		index: (self submorphIndexOf: aBlock owner) + (anAfterBoolean ifTrue: [1] ifFalse: [0])
-]
-
-{ #category : #'as yet unclassified' }
 SBJsObjectLiteral >> isExpression [
 
 	^ true
@@ -76,6 +63,12 @@ SBJsObjectLiteral >> layoutCommands [
 			stream nextPut: SBAlgebraCommand softLineOrGap.
 			stream nextPut: (SBAlgebraCommand morph data: self lastSubmorph).
 		])
+]
+
+{ #category : #'as yet unclassified' }
+SBJsObjectLiteral >> newNullBlock [
+
+	^ self buildEmptyRow
 ]
 
 { #category : #'as yet unclassified' }

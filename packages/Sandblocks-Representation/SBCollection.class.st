@@ -34,7 +34,9 @@ SBCollection >> interface: anInterfaceCollection object: aCollection [
 	self removeAllMorphs.
 	
 	aCollection do: [:e |
-		e convertedFor: self objectInterfaceForDrop, (anInterfaceCollection ifNil: [#()]) do: [:o | self addMorphBack: o]]
+		e
+			convertedFor: (self objectInterfaceNear: nil at: #after), (anInterfaceCollection ifNil: [#()])
+			do: [:o | self addMorphBack: o]]
 ]
 
 { #category : #'as yet unclassified' }

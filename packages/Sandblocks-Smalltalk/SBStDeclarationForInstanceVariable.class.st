@@ -1,6 +1,9 @@
 Class {
 	#name : #SBStDeclarationForInstanceVariable,
 	#superclass : #SBStDeclarationBehavior,
+	#instVars : [
+		'class'
+	],
 	#category : #'Sandblocks-Smalltalk'
 }
 
@@ -15,6 +18,20 @@ SBStDeclarationForInstanceVariable >> browse [
 	<action>
 
 	self systemNavigation browseAllAccessesTo: self contents from: self block containingArtefact shownClass
+]
+
+{ #category : #'as yet unclassified' }
+SBStDeclarationForInstanceVariable >> browseReferences [
+
+	self systemNavigation
+		browseAllAccessesTo: self contents
+		from: class
+]
+
+{ #category : #'as yet unclassified' }
+SBStDeclarationForInstanceVariable >> class: aClass [
+
+	class := aClass
 ]
 
 { #category : #'as yet unclassified' }

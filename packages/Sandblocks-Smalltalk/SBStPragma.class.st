@@ -42,9 +42,9 @@ SBStPragma >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBStPragma >> insertCommandRequest: anAfterBoolean near: aBlock [
+SBStPragma >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
-	^ signature insertCommandRequest: anAfterBoolean near: aBlock
+	^ signature insertCommandRequest: aMorph near: aBlock before: aBoolean
 ]
 
 { #category : #'as yet unclassified' }

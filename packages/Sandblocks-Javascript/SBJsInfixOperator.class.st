@@ -122,19 +122,6 @@ SBJsInfixOperator >> fixedNumberOfChildren [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsInfixOperator >> insertCommandRequest: anAfterBoolean near: aBlock [
-
-	self fixedNumberOfChildren ifTrue: [^ nil].
-	
-	^ (SBInsertCommand newFor: self containingArtefact)
-		index: ((self submorphs indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]) max: 3);
-		container: self;
-		morph: self newNullBlock;
-		shouldMergeWithNext: true;
-		yourself
-]
-
-{ #category : #'as yet unclassified' }
 SBJsInfixOperator >> isBinaryOperator [
 
 	^ true

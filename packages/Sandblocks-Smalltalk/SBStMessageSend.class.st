@@ -190,9 +190,9 @@ SBStMessageSend >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBStMessageSend >> insertCommandRequest: anAfterBoolean near: aBlock [
+SBStMessageSend >> insertCommandRequest: aBlock near: aMorph before: aBoolean [
 
-	^ signature insertCommandRequest: anAfterBoolean near: aBlock
+	^ self signature insertCommandRequest: aBlock near: aMorph before: aBoolean
 ]
 
 { #category : #'as yet unclassified' }

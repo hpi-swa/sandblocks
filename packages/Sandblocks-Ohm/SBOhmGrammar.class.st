@@ -81,17 +81,6 @@ SBOhmGrammar >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmGrammar >> insertCommandRequest: anAfterBoolean near: aBlock [
-
-	^ (SBInsertCommand newFor: self containingArtefact)
-		index: (self childSandblocks indexOf: aBlock ifAbsent: [anAfterBoolean ifTrue: [0] ifFalse: [1]]) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
-		container: self;
-		morph: (SBOhmRule new name: '' alternatives: SBOhmGrammarHandler new newNullBlock);
-		shouldMergeWithNext: true;
-		yourself
-]
-
-{ #category : #'as yet unclassified' }
 SBOhmGrammar >> isArtefact [
 
 	^ true
@@ -126,7 +115,13 @@ SBOhmGrammar >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmGrammar >> objectInterfaceAt: aNumber adding: aBoolean [
+SBOhmGrammar >> newNullBlock [
+
+	^ SBOhmRule new name: '' alternatives: SBOhmGrammarHandler new newNullBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmGrammar >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ {#isSandblock. #isOhm. [:o | o isExpression not]}
 ]

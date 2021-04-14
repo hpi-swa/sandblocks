@@ -75,17 +75,6 @@ SBStClassMethodEditor >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBStClassMethodEditor >> insertCommandRequest: anAfterBoolean near: aBlock [
-
-	^ (SBInsertCommand newFor: self containingArtefact)
-		index: (self childSandblocks indexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
-		container: self;
-		morph: (SBStMethodCategory new class: self firstSubmorph object category: 'untitled' collapsed: false);
-		shouldMergeWithNext: true;
-		yourself
-]
-
-{ #category : #'as yet unclassified' }
 SBStClassMethodEditor >> instanceVariables [
 
 	^ self firstSubmorph instanceVariables
@@ -115,6 +104,15 @@ SBStClassMethodEditor >> layoutCommands [
 	^ SBAlgebraCommand container
 		morph: self;
 		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine withGap: true])
+]
+
+{ #category : #'as yet unclassified' }
+SBStClassMethodEditor >> newNullBlock [
+
+	^ SBStMethodCategory new
+		class: self firstSubmorph object
+		category: 'untitled'
+		collapsed: false
 ]
 
 { #category : #'as yet unclassified' }

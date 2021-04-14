@@ -9,21 +9,17 @@ SBOhmGrammarHandler >> extractVariable [
 	<action>
 	<actionValidIf: #isExpression>
 
-	| name insert |
+	| name |
 	name := (UIManager default request: 'Name for rule?') ifEmpty: [^ self].
-	
-	insert := self block containingArtefact
-		insertCommandRequest: false
-		near: self block containingStatement.
 	
 	self block sandblockEditor do: (SBCombinedCommand newWith: {
 		(SBReplaceCommand newFor: self block containingArtefact)
 			target: self block;
 			replacer: (SBOhmIdentifier new contents: name).
-		insert.
-		(SBReplaceCommand newFor: self block containingArtefact)
-			target: insert morph;
-			replacer: (SBOhmRule new name: name alternatives: self block veryDeepCopy postDuplicate)})
+		self block containingArtefact
+			insertCommandRequest: (SBOhmRule new name: name alternatives: self block veryDeepCopy postDuplicate)
+			near: self block containingStatement
+			before: false})
 ]
 
 { #category : #'as yet unclassified' }

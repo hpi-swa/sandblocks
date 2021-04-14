@@ -24,7 +24,8 @@ Class {
 		'inputMapping',
 		'ignoreNext',
 		'paletteContainer',
-		'history'
+		'history',
+		'dragHelper'
 	],
 	#classVars : [
 		'DefaultColorPolicy',
@@ -600,6 +601,19 @@ SBEditor >> filterEvent: anEvent for: aMorph [
 					ifFalse: [
 						ignoreNext := true.
 						anEvent]]].
+		
+		anEvent isMouseMove ifTrue: [
+			(anEvent isDraggingEvent and: [anEvent hand hasSubmorphs])
+				ifTrue: [
+					(dragHelper ifNil: [dragHelper := SBDragHelper for: anEvent in: self]) mouseMove: anEvent.
+					^ anEvent ignore]
+				ifFalse: [
+					dragHelper ifNotNil: #delete.
+					dragHelper := nil]].
+		anEvent isMouseUp ifTrue: [
+			dragHelper ifNotNil: #delete.
+			dragHelper := nil].
+		
 		anEvent isMouseDown ifTrue: [anEvent hand newKeyboardFocus: self].
 		^ anEvent].
 	
@@ -648,19 +662,17 @@ SBEditor >> goToMark [
 { #category : #'event handling' }
 SBEditor >> handleDroppedFile: name event: anEvent [
 
-	^ FileStream
-		readOnlyFileNamed: name
-		do: [:file |
-			file
-				convertedFor: self objectInterfaceForDrop
-				do: [:converted | self handleDroppedBlock: converted event: anEvent adding: true near: nil]]
+	^ FileStream readOnlyFileNamed: name do: [:file |
+		file
+			convertedFor: (self objectInterfaceNear: nil at: #after)
+			do: [:converted | self handleDroppedBlock: converted event: anEvent adding: true near: nil]]
 ]
 
 { #category : #'event handling' }
 SBEditor >> handleDroppedFolder: aFileDirectory event: anEvent [
 
 	aFileDirectory
-		convertedFor: self objectInterfaceForDrop
+		convertedFor: (self objectInterfaceNear: nil at: #after)
 		do: [:converted | self handleDroppedBlock: converted event: anEvent adding: true near: nil]
 ]
 
@@ -725,10 +737,10 @@ SBEditor >> inputIsDefault [
 	^ inputMapping defaultState = #input
 ]
 
-{ #category : #'insert/delete' }
-SBEditor >> insertCommandRequest: anAfterBoolean near: aBlock [
+{ #category : #'as yet unclassified' }
+SBEditor >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
-	^ self openMorphInViewCommand: SBBlock new
+	^ self openMorphInViewCommand: aMorph
 ]
 
 { #category : #selection }
@@ -947,8 +959,8 @@ SBEditor >> objectInterface [
 	^ SBInterfaces never
 ]
 
-{ #category : #'object interface' }
-SBEditor >> objectInterfaceAt: aNumber adding: aBoolean [
+{ #category : #'as yet unclassified' }
+SBEditor >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ SBInterfaces block, SBInterfaces topLevel
 ]
@@ -970,7 +982,7 @@ SBEditor >> open: anObject withInterfaces: aCollection [
 
 	^ self blockFor: anObject withInterfaces: aCollection ifOpen: #select ifClosed: [
 		anObject
-			convertedFor: (self objectInterfaceAt: 1 adding: true), aCollection
+			convertedFor: (self objectInterfaceNear: nil at: #after), aCollection
 			do: [:repr | self openMorphInView: repr. repr]]
 ]
 
@@ -987,11 +999,11 @@ SBEditor >> openFile [
 	<globalAction>
 
 	| file |
-	
 	file := (UIManager default chooseFileMatching: '*') ifNil: [^ self].
-	FileStream
-		readOnlyFileNamed: file
-		do: [:stream | stream convertedFor: self objectInterfaceForDrop do: [:morph | self openMorphInView: morph]]
+	FileStream readOnlyFileNamed: file do: [:stream |
+		stream
+			convertedFor: (self objectInterfaceNear: nil at: #after)
+			do: [:morph | self openMorphInView: morph]]
 ]
 
 { #category : #'insert/delete' }

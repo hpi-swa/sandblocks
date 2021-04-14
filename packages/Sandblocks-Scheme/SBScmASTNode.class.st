@@ -136,8 +136,8 @@ SBScmASTNode >> object [
 	^ self
 ]
 
-{ #category : #'object interface' }
-SBScmASTNode >> objectInterfaceAt: aNumber adding: aBoolean [
+{ #category : #'as yet unclassified' }
+SBScmASTNode >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ SBInterfaces scmExpression
 ]

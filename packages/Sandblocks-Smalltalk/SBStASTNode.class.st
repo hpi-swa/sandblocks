@@ -190,9 +190,10 @@ SBStASTNode >> object [
 ]
 
 { #category : #'object interface' }
-SBStASTNode >> objectInterfaceAt: aNumber adding: aBoolean [
+SBStASTNode >> objectInterfaceNear: aBlock at: aSymbol [
 
-	^ (self fixedNumberOfChildren and: [aBoolean]) ifTrue: [SBInterfaces never] ifFalse: [SBInterfaces stExpression]
+	(aSymbol = #replace or: [self dynamicNumberOfChildren]) ifTrue: [^ SBInterfaces stExpression].
+	^ SBInterfaces never
 ]
 
 { #category : #accessing }

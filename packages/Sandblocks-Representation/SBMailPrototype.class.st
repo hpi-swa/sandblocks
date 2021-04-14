@@ -17,7 +17,7 @@ SBMailPrototype >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBMailPrototype >> objectInterfaceAt: aNumber adding: aBoolean [
+SBMailPrototype >> objectInterfaceNear: aBlock at: aSymbol [
 
-	^ #(isMIMEDocument)
+	^ #(#isMIMEDocument)
 ]

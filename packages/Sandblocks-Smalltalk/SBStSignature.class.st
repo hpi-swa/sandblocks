@@ -93,7 +93,7 @@ SBStSignature >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBStSignature >> insertCommandRequest: anAfterBoolean near: aBlock [
+SBStSignature >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
 	| part index insertArg insertPart |
 	self isBinary ifTrue: [^ nil].
@@ -101,12 +101,11 @@ SBStSignature >> insertCommandRequest: anAfterBoolean near: aBlock [
 		^ (SBInsertCommand newFor: self containingSandblock containingArtefact)
 			container: self;
 			index: self submorphCount + 1;
-			morph: self containingSandblock newNullBlock;
-			shouldMergeWithNext: true;
+			morph: aMorph;
 			yourself].
 	
 	index := aBlock owner = self
-		ifTrue: [(aBlock submorphIndex / 2) ceiling * 2 + (anAfterBoolean ifTrue: [1] ifFalse: [-1])]
+		ifTrue: [(aBlock submorphIndex / 2) ceiling * 2 + (aBoolean ifTrue: [-1] ifFalse: [1])]
 		ifFalse: [1].
 	part := SBStMessagePart new contents: ':'.
 	
@@ -119,7 +118,7 @@ SBStSignature >> insertCommandRequest: anAfterBoolean near: aBlock [
 	insertArg := (SBInsertCommand newFor: self containingSandblock containingArtefact)
 		container: self;
 		index: index;
-		morph: self containingSandblock newNullBlock;
+		morph: aMorph;
 		yourself.
 	^ SBCombinedCommand newWith: {insertArg. insertPart}
 ]

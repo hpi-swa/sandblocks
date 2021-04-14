@@ -30,7 +30,7 @@ SBBrowserEditor >> ensureOpened: aMethod [
 	
 	found ifFalse: [
 		aMethod
-			convertedFor: self objectInterfaceForDrop
+			convertedFor: (self objectInterfaceNear: nil at: #after)
 			do: [:repr | self openMorphInView: repr]]
 ]
 
@@ -79,7 +79,7 @@ SBBrowserEditor >> modelSelection: anObject [
 	anObject isBehavior ifTrue: [^ model selectClass: anObject].
 	anObject isCompiledMethod ifTrue: [
 		model selectedClass ~= anObject methodClass ifTrue: [model selectClass: anObject methodClass theNonMetaClass].
-		^ model selectMessageNamed: anObject selector]
+		(model respondsTo: #selectMessageNamed:) ifTrue: [^ model selectMessageNamed: anObject selector]]
 ]
 
 { #category : #'submorphs-add/remove' }
@@ -148,7 +148,7 @@ SBBrowserEditor >> updateArtefact [
 
 	(model respondsTo: #editSelection) ifFalse: [
 		^ self ensureOpened: (model selectedMessageName
-			ifNotNil: [:msg | model selectedClassOrMetaClass compiledMethodAt: msg]
+			ifNotNil: [:msg | model selectedClassOrMetaClass ifNotNil: [:c | c compiledMethodAt: msg ifAbsent: [nil]]]
 			ifNil: [model selectedClassOrMetaClass])].
 	
 	({#editClass. #editMessage} includes: model editSelection) ifTrue: [

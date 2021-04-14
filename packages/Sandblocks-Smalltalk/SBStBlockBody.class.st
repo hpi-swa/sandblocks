@@ -182,31 +182,19 @@ SBStBlockBody >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBStBlockBody >> insertCommandRequest: anAfterBoolean near: aBlock [
+SBStBlockBody >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
-	(aBlock notNil and: [
-		aBlock isName and: [aBlock isBlockBinding and: [self isMethodBody not]]]) ifTrue: [
-		^ (SBInsertCommand newFor: self containingArtefact)
-			index: (bindings submorphIndexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
-			container: bindings;
-			morph: SBStName new;
-			shouldMergeWithNext: true;
+	(aBlock notNil and: [aBlock owner = bindings]) ifTrue: [
+		^ (SBRelInsertCommand newFor: self containingArtefact)
+			near: aBlock before: aBoolean in: bindings morph: aMorph;
 			yourself].
 	
-	(aBlock notNil and: [aBlock isName and: [aBlock isTemporaryVariable]]) ifTrue: [
-		^ (SBInsertCommand newFor: self containingArtefact)
-			index: (temporaries submorphIndexOf: aBlock) + (anAfterBoolean ifTrue: [1] ifFalse: [0]);
-			container: temporaries;
-			morph: SBStName new;
-			shouldMergeWithNext: true;
+	(aBlock notNil and: [aMorph owner = temporaries]) ifTrue: [
+		^ (SBRelInsertCommand newFor: self containingArtefact)
+			near: aBlock before: aBoolean in: temporaries morph: aMorph;
 			yourself].
 	
-	^ (SBInsertCommand newFor: self containingArtefact)
-		index: (self statements indexOf: aBlock) + (anAfterBoolean ifTrue: [2] ifFalse: [1]);
-		container: self;
-		morph: self newNullBlock;
-		shouldMergeWithNext: true;
-		yourself
+	^ super insertCommandRequest: aMorph near: aBlock before: aBoolean
 ]
 
 { #category : #'as yet unclassified' }
@@ -290,11 +278,11 @@ SBStBlockBody >> multiSelectChildren [
 	self statements do: [:c | c isMultiSelected ifFalse: [c startOrAddToMultiSelection]]
 ]
 
-{ #category : #'object interface' }
-SBStBlockBody >> objectInterfaceAt: aNumber adding: aBoolean [
+{ #category : #'as yet unclassified' }
+SBStBlockBody >> objectInterfaceNear: aBlock at: aSymbol [
 
-	({bindings. temporaries} includes: (self childSandblocks at: aNumber ifAbsent: [^ SBInterfaces stCanAppearInBlock]) owner)
-		ifTrue: [^ SBInterfaces stName].
+	({bindings. temporaries} includes: (aBlock ifNotNil: #owner)) ifTrue: [^ SBInterfaces stName].
+	
 	^ SBInterfaces stCanAppearInBlock
 ]
 

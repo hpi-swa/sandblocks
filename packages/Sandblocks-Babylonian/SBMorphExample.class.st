@@ -141,22 +141,6 @@ SBMorphExample >> initialize [
 		addMorphBack: (cases := SBColumn new layoutInset: 0)
 ]
 
-{ #category : #callbacks }
-SBMorphExample >> insertCommandRequest: anAfterBoolean near: aBlock [
-
-	| index case |
-	index := (cases submorphIndexOf: aBlock) ifNil: [1] ifNotNil: [:i | i   + (anAfterBoolean ifTrue: [1] ifFalse: [0])].
-	
-	case := (SBMorphExampleCase new name: '' caseBlock: (SBStBlockBody emptyWithDeclarations: {'m'}))
-		when: #run send: #runCase: to: self.
-	
-	^ (SBInsertCommand newFor: self containingArtefact)
-		index: index;
-		container: cases;
-		morph: case;
-		yourself
-]
-
 { #category : #testing }
 SBMorphExample >> isExpression [
 
@@ -176,6 +160,17 @@ SBMorphExample >> methodForContext: aContext ifOpen: aBlock ifClosed: anotherBlo
 		detect: [:m | m methodClass = aContext methodClass and: [m selector = aContext selector]]
 		ifFound: aBlock
 		ifNone: anotherBlock
+]
+
+{ #category : #callbacks }
+SBMorphExample >> newNullBlock [
+
+	^ (SBMorphExampleCase new
+		name: ''
+		caseBlock: (SBStBlockBody emptyWithDeclarations: {'m'}))
+		when: #run
+		send: #runCase:
+		to: self
 ]
 
 { #category : #initialization }

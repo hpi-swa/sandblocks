@@ -166,25 +166,14 @@ SBToggledCode >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBToggledCode >> insertCommandRequest: anAfterBoolean near: aBlock [
+SBToggledCode >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
-	| block index row |
-	index := (self submorphIndexOf: aBlock owner)
-		ifNil: [2]
-		ifNotNil: [:i | i + (anAfterBoolean ifTrue: [1] ifFalse: [0])].
-	
-	block := SBStBlockBody empty.
-	row := self buildRowFor: block active: false.
-	
-	^ SBCombinedCommand newWith: {
-		row firstSubmorph toggleCommandFor: self containingArtefact.
-		(SBInsertCommand newFor: self containingArtefact)
-			index: index;
-			container: self;
-			morph: row;
-			select: block statements first;
-			shouldMergeWithNext: true;
-			yourself}
+	^ SBToggledCode comment: '' active: 2 do: {
+		[
+			SBCombinedCommand newWith: {
+				row firstSubmorph toggleCommandFor: self containingArtefact.
+				super insertCommandRequest: aMorph near: aBlock before: aBoolean}].
+		[super insertCommandRequest: aMorph near: aBlock before: aBoolean]}
 ]
 
 { #category : #'as yet unclassified' }
@@ -211,6 +200,12 @@ SBToggledCode >> layoutCommands [
 	^ SBAlgebraCommand container
 		morph: self;
 		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine withGap: true])
+]
+
+{ #category : #'as yet unclassified' }
+SBToggledCode >> newNullBlock [
+
+	^ self buildRowFor: SBStBlockBody empty active: false
 ]
 
 { #category : #accessing }
