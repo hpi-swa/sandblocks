@@ -76,7 +76,7 @@ SBStReturn >> symbols [
 { #category : #testing }
 SBStReturn >> valid [
 
-	^ self containingStatement = self and: [self containingBlock submorphs last = self]
+	^ self containingStatement = self and: [self containingBlock statements last = self]
 ]
 
 { #category : #drawing }

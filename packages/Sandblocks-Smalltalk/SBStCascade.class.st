@@ -108,9 +108,12 @@ SBStCascade >> newNullBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBStCascade >> objectInterfaceAt: aNumber adding: aBoolean [
+SBStCascade >> objectInterfaceNear: aBlock at: aSymbol [
 
-	^ aNumber = 1 ifTrue: [SBInterfaces stExpression] ifFalse: [SBInterfaces stMessage]
+	aSymbol = #replace ifFalse: [^ SBInterfaces never].
+	^ aBlock = self receiver
+		ifTrue: [SBInterfaces stExpression]
+		ifFalse: [SBInterfaces stMessage]
 ]
 
 { #category : #'as yet unclassified' }

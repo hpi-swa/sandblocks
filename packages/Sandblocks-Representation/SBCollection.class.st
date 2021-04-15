@@ -52,7 +52,7 @@ SBCollection >> object [
 ]
 
 { #category : #'as yet unclassified' }
-SBCollection >> objectInterfaceAt: aNumber adding: aBoolean [
+SBCollection >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ SBInterfaces topLevel
 ]

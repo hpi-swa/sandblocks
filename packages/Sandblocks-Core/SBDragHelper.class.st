@@ -31,7 +31,11 @@ SBDragHelper class >> for: anEvent in: anEditor [
 SBDragHelper >> applyHint [
 
 	onLeave ifNotNil: [onLeave value].
-	onApply ifNotNil: [onApply value]
+	^ onApply
+		ifNotNil: [
+			onApply value.
+			true]
+		ifNil: [false]
 ]
 
 { #category : #'as yet unclassified' }
@@ -83,22 +87,42 @@ SBDragHelper >> dropLocation: dropLocation [
 	currentDropLocation := dropLocation.
 	
 	dropLocation ifNotNil: [
-		dropLocation first = #insert ifTrue: [
-			morph
-				convertedFor: (dropLocation second
-					objectInterfaceNear: dropLocation third
-					at: (dropLocation fourth ifTrue: [#before] ifFalse: [#after]))
-				do: [:res |
-					self hintInsertWith: (currentDropLocation second
-						insertCommandRequest: res
-						near: dropLocation third
-						before: dropLocation fourth)]].
-		dropLocation first = #replace ifTrue: [
-			morph
-				convertedFor: dropLocation second objectInterface
-				do: [:res | self hintReplaceOf: dropLocation second with: res]]].
+		dropLocation first = #insert ifTrue: [self dropLocationForInsert: dropLocation].
+		dropLocation first = #replace ifTrue: [self dropLocationForReplace: dropLocation]].
 	
 	self ensurePositionOfFloats
+]
+
+{ #category : #'as yet unclassified' }
+SBDragHelper >> dropLocationForInsert: aDropLocation [
+
+	morph
+		convertedFor: (aDropLocation second
+			objectInterfaceNear: aDropLocation third
+			at: (aDropLocation fourth ifTrue: [#before] ifFalse: [#after]))
+		do: [:res |
+			self
+				hintInsertWith: (currentDropLocation second
+					insertCommandRequest: res
+					near: aDropLocation third
+					before: aDropLocation fourth)
+				of: res]
+]
+
+{ #category : #'as yet unclassified' }
+SBDragHelper >> dropLocationForReplace: dropLocation [
+
+	(morph wrapsAround and: [morph satisfies: dropLocation second objectInterface]) ifTrue: [
+		dropLocation second convertedFor: morph placeholder objectInterface do: [:res |
+			self hintWrap: morph around: dropLocation second as: res.
+			^ true]].
+	
+	" try replace then "
+	morph convertedFor: dropLocation second objectInterface do: [:res |
+		self hintReplaceOf: dropLocation second with: res.
+		^ true].
+	
+	^ false
 ]
 
 { #category : #'as yet unclassified' }
@@ -124,10 +148,12 @@ SBDragHelper >> ensurePositionOfFloats [
 ]
 
 { #category : #'as yet unclassified' }
-SBDragHelper >> hintInsertWith: aCommand [
+SBDragHelper >> hintInsertWith: aCommand of: aBlock [
 
 	aCommand do.
-	onApply := [editor do: aCommand].
+	onApply := [
+		editor do: aCommand.
+		aBlock inputContainedUnknown].
 	onLeave := [aCommand undo]
 ]
 
@@ -139,7 +165,20 @@ SBDragHelper >> hintReplaceOf: aMorph with: newBlock [
 	onApply := [
 		editor do: ((SBReplaceCommand newOrEditFor: aMorph containingArtefact)
 			target: aMorph;
-			replacer: newBlock)]
+			replacer: newBlock).
+		newBlock inputContainedUnknown]
+]
+
+{ #category : #'as yet unclassified' }
+SBDragHelper >> hintWrap: draggedBlock around: anOldMorph as: aNewMorph [
+
+	anOldMorph attachDecorator: (SBDropPreviewDecorator new outline: true).
+	onLeave := [anOldMorph detachDecorators: SBDropPreviewDecorator].
+	onApply := [
+		editor do: ((SBRecordedCommand newOrEditFor: anOldMorph containingArtefact) record: [:recorder |
+			recorder replace: anOldMorph with: draggedBlock.
+			recorder replace: draggedBlock placeholder with: aNewMorph]).
+		draggedBlock inputContainedUnknown]
 ]
 
 { #category : #'as yet unclassified' }
@@ -180,20 +219,29 @@ SBDragHelper >> mouseMove: anEvent [
 { #category : #'as yet unclassified' }
 SBDragHelper >> submorphOf: aMorph closestTo: aPoint do: aBlock [
 
-	| before best bestDistance |
+	| before best bestDistance horizontal calcDistanceBefore calcDistanceAfter |
 	before := false.
 	best := nil.
 	bestDistance := 900000000.
 	
-	aMorph submorphs do: [:morph | | distance |
+	horizontal := aMorph submorphs size < 2 or: [ | delta |
+		delta := aMorph submorphs first topLeft - aMorph submorphs second topLeft.
+		delta x < delta y].
+	calcDistanceBefore := horizontal
+		ifTrue: [[:m | (m left - aPoint x) abs]]
+		ifFalse: [[:m | (m top - aPoint y) abs]].
+	calcDistanceAfter := horizontal
+		ifTrue: [[:m | (m right - aPoint x) abs]]
+		ifFalse: [[:m | (m bottom - aPoint y) abs]].
+	
+	aMorph childSandblocks do: [:morph | | distance |
 		blockBounds at: morph ifPresent: [:bounds |
-			distance := bounds topLeft dist: aPoint.
+			distance := calcDistanceBefore value: bounds.
 			distance < bestDistance ifTrue: [
 				best := morph.
 				before := true.
 				bestDistance := distance].
-			
-			distance := bounds bottomRight dist: aPoint.
+			distance := calcDistanceAfter value: bounds.
 			distance < bestDistance ifTrue: [
 				best := morph.
 				before := false.

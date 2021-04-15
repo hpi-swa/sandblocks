@@ -70,9 +70,9 @@ SBStateMachineTransitionCondition >> object [
 ]
 
 { #category : #'as yet unclassified' }
-SBStateMachineTransitionCondition >> objectInterfaceAt: aNumber adding: aBoolean [
+SBStateMachineTransitionCondition >> objectInterfaceNear: aBlock at: aSymbol [
 
-	aBoolean ifTrue: [^ SBInterfaces never].
+	aSymbol = #replace ifFalse: [^ SBInterfaces never].
 	
 	^ SBInterfaces stExpression
 ]

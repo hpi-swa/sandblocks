@@ -269,9 +269,9 @@ SBStateMachineEditor >> newNullBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBStateMachineEditor >> objectInterfaceAt: aNumber adding: aBoolean [
+SBStateMachineEditor >> objectInterfaceNear: aBlock at: aSymbol [
 
-	aBoolean ifFalse: [^ SBInterfaces never].
+	aSymbol = #replace ifTrue: [^ SBInterfaces never].
 	
 	^ {#isSandblock. [:obj | obj isKindOf: SBStateMachineState]}
 ]

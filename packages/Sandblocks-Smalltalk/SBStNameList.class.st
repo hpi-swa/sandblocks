@@ -20,7 +20,7 @@ SBStNameList >> newNullBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBStNameList >> objectInterfaceAt: aNumber adding: aBoolean [
+SBStNameList >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ SBInterfaces stName
 ]

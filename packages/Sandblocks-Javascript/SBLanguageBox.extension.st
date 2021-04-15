@@ -7,6 +7,12 @@ SBLanguageBox >> isJavascript [
 ]
 
 { #category : #'*Sandblocks-Javascript' }
+SBLanguageBox >> isVariable [
+
+	^ false
+]
+
+{ #category : #'*Sandblocks-Javascript' }
 SBLanguageBox >> writeJsSourceOn: aStream [
 
 	aStream

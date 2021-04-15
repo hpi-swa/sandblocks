@@ -155,7 +155,7 @@ SBStContainer >> object [
 ]
 
 { #category : #'method protocol' }
-SBStContainer >> objectInterfaceAt: aNumber adding: aBoolean [
+SBStContainer >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ SBInterfaces stBlock
 ]

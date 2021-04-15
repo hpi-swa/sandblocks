@@ -354,14 +354,13 @@ SBStMessageSend >> noteNewOwner: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBStMessageSend >> objectInterfaceAt: aNumber adding: aBoolean [
+SBStMessageSend >> objectInterfaceNear: aBlock at: aSymbol [
 
-	| base |
-	aBoolean ifTrue: [^ SBInterfaces never].
+	aSymbol = #replace ifFalse: [^ SBInterfaces never].
 	
-	base := self isInCascade ifTrue: [0] ifFalse: 1.
-	aNumber = base ifTrue: [^ SBInterfaces stExpression].
-	^ signature objectInterfaceAt: aNumber - base adding: aBoolean argumentInterface: SBInterfaces stExpression
+	aBlock = self receiver ifTrue: [^ SBInterfaces stExpression].
+	
+	^ signature objectInterfaceNear: aBlock at: aSymbol argumentInterface: SBInterfaces stExpression
 ]
 
 { #category : #'as yet unclassified' }

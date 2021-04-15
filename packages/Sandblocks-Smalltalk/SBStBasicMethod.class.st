@@ -137,7 +137,7 @@ SBStBasicMethod >> cacheType: aClass for: aBlock [
 SBStBasicMethod >> category [
 
 	SBExample self: [(SBStBasicMethod >> #category) asSandblock] args: [{}] label: 'example'.
-	^ category ifNil: [self methodClass organization categoryOfElement: self selector]
+	^ category ifNil: [self methodClass organization categoryOfElement: self currentSelector]
 ]
 
 { #category : #'as yet unclassified' }

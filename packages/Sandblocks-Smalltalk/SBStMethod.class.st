@@ -132,13 +132,13 @@ SBStMethod >> methodClass [
 ]
 
 { #category : #'as yet unclassified' }
-SBStMethod >> objectInterfaceAt: aNumber adding: aBoolean [
+SBStMethod >> objectInterfaceNear: aBlock at: aSymbol [
 
-	aBoolean ifTrue: [^ SBInterfaces never].
+	aSymbol = #replace ifFalse: [^ SBInterfaces never].
 	
-	^ aNumber = self childSandblocks size
+	^ aBlock isBlockBody
 		ifTrue: [SBInterfaces stBlock]
-		ifFalse: [signature objectInterfaceAt: aNumber - 1 adding: aBoolean argumentInterface: SBInterfaces stName]
+		ifFalse: [signature objectInterfaceNear: aBlock at: aSymbol argumentInterface: SBInterfaces stName]
 ]
 
 { #category : #'as yet unclassified' }

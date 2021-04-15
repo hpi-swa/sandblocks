@@ -161,13 +161,11 @@ SBStTestCase >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
-SBStTestCase >> objectInterfaceAt: aNumber adding: aBoolean [
+SBStTestCase >> objectInterfaceNear: aBlock at: aSymbol [
 
-	aBoolean ifTrue: [^ SBInterfaces never].
+	aSymbol ~= #replace ifTrue: [^ SBInterfaces never].
 	
-	^ aNumber = self childSandblocks size
-		ifTrue: [SBInterfaces stBlock]
-		ifFalse: [SBInterfaces stName]
+	^ aBlock isLastChild ifTrue: [SBInterfaces stBlock] ifFalse: [SBInterfaces stName]
 ]
 
 { #category : #'as yet unclassified' }

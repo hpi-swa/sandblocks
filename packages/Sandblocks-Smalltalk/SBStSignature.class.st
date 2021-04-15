@@ -219,13 +219,13 @@ SBStSignature >> numArguments: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBStSignature >> objectInterfaceAt: aNumber adding: aBoolean argumentInterface: anInterfaceCollection [
+SBStSignature >> objectInterfaceNear: aBlock at: aSymbol argumentInterface: anInterfaceCollection [
 
-	aBoolean ifTrue: [^ SBInterfaces never].
+	aSymbol = #replace ifFalse: [^ SBInterfaces never].
 	
-	aNumber odd
-		ifTrue: [^ SBInterfaces stMessagePart]
-		ifFalse: [^ anInterfaceCollection]
+	^ aBlock submorphIndex odd
+		ifTrue: [SBInterfaces stMessagePart]
+		ifFalse: [anInterfaceCollection]
 ]
 
 { #category : #'as yet unclassified' }

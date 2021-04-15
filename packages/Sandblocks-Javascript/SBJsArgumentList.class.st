@@ -1,5 +1,5 @@
 Class {
-	#name : #SBValueList,
+	#name : #SBJsArgumentList,
 	#superclass : #SBJsASTNode,
 	#instVars : [
 		'symbols'
@@ -8,38 +8,38 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBValueList >> centerAlignSymbols [
+SBJsArgumentList >> centerAlignSymbols [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBValueList >> extent: aPoint [
+SBJsArgumentList >> extent: aPoint [
 
 	super extent: (aPoint max: self layoutInset asEdgeInsets x @ self minimumHeight)
 ]
 
 { #category : #'as yet unclassified' }
-SBValueList >> fixedNumberOfChildren [
+SBJsArgumentList >> fixedNumberOfChildren [
 
 	^ false
 ]
 
 { #category : #'as yet unclassified' }
-SBValueList >> initialize [
+SBJsArgumentList >> initialize [
 
 	symbols := #(nil nil).
 	super initialize
 ]
 
 { #category : #'as yet unclassified' }
-SBValueList >> isExpression [
+SBJsArgumentList >> isExpression [
 
 	^ false
 ]
 
 { #category : #'as yet unclassified' }
-SBValueList >> layoutCommands [
+SBJsArgumentList >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
@@ -47,49 +47,55 @@ SBValueList >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
-SBValueList >> minimumHeight [
+SBJsArgumentList >> minimumHeight [
 
 	^ TextStyle defaultFont height + 4
 ]
 
 { #category : #'as yet unclassified' }
-SBValueList >> newNullBlock [
+SBJsArgumentList >> newNullBlock [
 
 	^ SBJsVariable new
 ]
 
 { #category : #'as yet unclassified' }
-SBValueList >> symbols [
+SBJsArgumentList >> objectInterfaceNear: aBlock at: aSymbol [
+
+	^ SBInterfaces jsVariable
+]
+
+{ #category : #'as yet unclassified' }
+SBJsArgumentList >> symbols [
 
 	^ symbols
 ]
 
 { #category : #'as yet unclassified' }
-SBValueList >> symbols: aCollection [
+SBJsArgumentList >> symbols: aCollection [
 
 	symbols := aCollection
 ]
 
 { #category : #'as yet unclassified' }
-SBValueList >> valid [
+SBJsArgumentList >> valid [
 
 	^ self submorphs allSatisfy: [:m | (m isKindOf: SBJsVariable) or: [m isUnknown]]
 ]
 
 { #category : #'as yet unclassified' }
-SBValueList >> values [
+SBJsArgumentList >> values [
 
 	^ self submorphs
 ]
 
 { #category : #'as yet unclassified' }
-SBValueList >> values: aCollection [
+SBJsArgumentList >> values: aCollection [
 
 	self addAllMorphs: aCollection
 ]
 
 { #category : #'as yet unclassified' }
-SBValueList >> wantsExtraSpace [
+SBJsArgumentList >> wantsExtraSpace [
 
 	^ false
 ]

@@ -166,7 +166,7 @@ SBError >> maxFrames [
 ]
 
 { #category : #'as yet unclassified' }
-SBError >> objectInterfaceAt: aNumber adding: aBoolean [
+SBError >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ SBInterfaces topLevel
 ]

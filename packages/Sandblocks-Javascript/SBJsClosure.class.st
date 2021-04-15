@@ -49,7 +49,7 @@ SBJsClosure >> initialize [
 
 	super initialize.
 	
-	self addMorphBack: (SBValueList new symbols: #('(' ') => '))
+	self addMorphBack: (SBJsArgumentList new symbols: #('(' ') => '))
 ]
 
 { #category : #'as yet unclassified' }
@@ -76,7 +76,7 @@ SBJsClosure >> layoutCommands [
 { #category : #'as yet unclassified' }
 SBJsClosure >> objectInterfaceNear: aBlock at: aSymbol [
 
-	(aSymbol = #replace and: [aBlock ifNotNil: #isFirstChild]) ifTrue: [^ SBInterfaces never].
+	((#(#replace #before) includes: aSymbol) and: [aBlock ifNotNil: #isFirstChild]) ifTrue: [^ SBInterfaces never].
 	^ SBInterfaces jsExpression
 ]
 

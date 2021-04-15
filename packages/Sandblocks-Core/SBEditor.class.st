@@ -659,7 +659,7 @@ SBEditor >> goToMark [
 SBEditor >> handleDropMorph: anEvent [
 
 	dragHelper ifNotNil: [
-		dragHelper applyHint.
+		dragHelper applyHint ifTrue: [anEvent wasHandled: true].
 		dragHelper := nil]
 ]
 

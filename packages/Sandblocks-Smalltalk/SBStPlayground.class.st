@@ -192,12 +192,6 @@ SBStPlayground >> name: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBStPlayground >> objectInterfaceAt: aNumber adding: aBoolean [
-
-	^ SBInterfaces always
-]
-
-{ #category : #'as yet unclassified' }
 SBStPlayground >> receiver: anObject [
 
 	anObject ifNotNil: [self name: (anObject asString truncateWithElipsisTo: 20)].
