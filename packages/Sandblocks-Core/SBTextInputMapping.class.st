@@ -112,7 +112,10 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character arrowUp asSandblockShortcut withOption withCtrl
 			do: #selectTopToplevel;
 		registerShortcut: Character arrowRight asSandblockShortcut withOption withCtrl
-			do: #selectRightToplevel.
+			do: #selectRightToplevel;
+		registerShortcut: Character end shift do: #selectAdjacentAfter;
+		registerShortcut: Character home shift do: #selectAdjacentBefore;
+		registerShortcut: $A command do: #selectAdjacent.
 	
 	" modify general "
 	self

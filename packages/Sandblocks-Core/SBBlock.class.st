@@ -1536,10 +1536,10 @@ SBBlock >> moveCursorUp [
 
 { #category : #actions }
 SBBlock >> multiSelectChildren [
-	<multiSelectAction>
+	<action>
 
-	self sandblockEditor mode = #select ifFalse: [self sandblockEditor mode: #selection].
-	self childSandblocks do: [:c | c isMultiSelected ifFalse: [c startOrAddToMultiSelection]]
+	
+	self sandblockEditor multiSelection: self childSandblocks
 ]
 
 { #category : #'ast helpers' }
@@ -1669,21 +1669,21 @@ SBBlock >> parentHasDynamicNumberOfChildren [
 	^ self parentSandblock fixedNumberOfChildren not
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBBlock >> pasteAfter [
 	<action>
 
 	self pasteBeforeOrAfter: false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBBlock >> pasteBefore [
 	<action>
 
 	self pasteBeforeOrAfter: true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
 SBBlock >> pasteBeforeOrAfter: aBeforeBoolean [
 
 	| copyBuffer |
@@ -1948,6 +1948,27 @@ SBBlock >> select [
 	<action>
 
 	self sandblockEditor select: self
+]
+
+{ #category : #actions }
+SBBlock >> selectAdjacent [
+	<action>
+
+	self sandblockEditor multiSelection: self parentSandblock childSandblocks
+]
+
+{ #category : #actions }
+SBBlock >> selectAdjacentAfter [
+	<action>
+
+	self sandblockEditor multiSelection: (self parentSandblock childSandblocks allButFirst: self childIndex - 1)
+]
+
+{ #category : #actions }
+SBBlock >> selectAdjacentBefore [
+	<action>
+
+	self sandblockEditor multiSelection: (self parentSandblock childSandblocks first: self childIndex)
 ]
 
 { #category : #actions }

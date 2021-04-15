@@ -962,6 +962,14 @@ SBEditor >> multiSelection [
 	"^ multiSelection ifEmpty: [self selection ifNotNil: [{self selection}] ifNil: [#()]]"
 ]
 
+{ #category : #'action helpers' }
+SBEditor >> multiSelection: aCollectionOfBlocks [
+
+	self sandblockEditor mode = #select ifFalse: [self sandblockEditor mode: #selection].
+	
+	aCollectionOfBlocks do: [:block | self addToMultiSelection: block]
+]
+
 { #category : #selection }
 SBEditor >> multiSelectionIsConsecutive [
 
