@@ -1,5 +1,7 @@
 "
 A SBDragHelper takes direct user input events via SBEditor>>#filterEvent:for: and interprets them on the block hierarchy for dropping. When a drag is initiated, it will take a snapshot of the bounds of all submorphs in the editor and compare drop locations against this cached view, such that inserting a preview of a dropped morph will still result in stable layouting.
+
+Note that we have a preference (SBPreferences>>previewDropInsert) that indicates whether to show our insertion point as proper block or as a simple line.
 "
 Class {
 	#name : #SBDragHelper,
@@ -102,11 +104,10 @@ SBDragHelper >> dropLocationForInsert: aDropLocation [
 			at: (aDropLocation fourth ifTrue: [#before] ifFalse: [#after]))
 		do: [:res |
 			self
-				hintInsertWith: (currentDropLocation second
-					insertCommandRequest: res
-					near: aDropLocation third
-					before: aDropLocation fourth)
-				of: res]
+				hintInsertOf: res
+				in: currentDropLocation second
+				near: aDropLocation third
+				before: aDropLocation fourth]
 ]
 
 { #category : #'as yet unclassified' }
@@ -148,13 +149,33 @@ SBDragHelper >> ensurePositionOfFloats [
 ]
 
 { #category : #'as yet unclassified' }
-SBDragHelper >> hintInsertWith: aCommand of: aBlock [
+SBDragHelper >> hasHorizontalLayout: aMorph [
 
-	aCommand do.
+	^ aMorph submorphs size < 2 or: [ | delta |
+		delta := aMorph submorphs first topLeft - aMorph submorphs second topLeft.
+		delta x < delta y]
+]
+
+{ #category : #'as yet unclassified' }
+SBDragHelper >> hintInsertOf: aBlock in: aParentBlock near: aChildBlock before: aBoolean [
+
+	| command insertPreviewMarker |
+	command := aParentBlock insertCommandRequest: aBlock near: aChildBlock before: aBoolean.
+	
+	SBPreferences previewDropInsert ifTrue: [command do] ifFalse: [
+		insertPreviewMarker := SBDropInsertMarker new
+			bounds: (aChildBlock
+				ifNil: [10 @ 10 center: aParentBlock boundsInWorld center]
+				ifNotNil: [self insertMarkerFor: aChildBlock before: aBoolean]);
+			openInWorld].
+	
+	onLeave := [
+		SBPreferences previewDropInsert
+			ifTrue: [command undo]
+			ifFalse: [insertPreviewMarker delete]].
 	onApply := [
-		editor do: aCommand.
-		aBlock inputContainedUnknown].
-	onLeave := [aCommand undo]
+		editor do: command.
+		aBlock inputContainedUnknown]
 ]
 
 { #category : #'as yet unclassified' }
@@ -185,6 +206,25 @@ SBDragHelper >> hintWrap: draggedBlock around: anOldMorph as: aNewMorph [
 SBDragHelper >> initialize [
 
 	currentDropLocation := #(#none nil)
+]
+
+{ #category : #'as yet unclassified' }
+SBDragHelper >> insertMarkerFor: aBlock before: aBoolean [
+
+	| horizontal b width |
+	horizontal := self hasHorizontalLayout: aBlock parentSandblock.
+	b := aBlock boundsInWorld.
+	width := 6.
+	
+	^ aBoolean
+		ifTrue: [
+			horizontal
+				ifTrue: [b topLeft - (width @ 0) corner: b bottomLeft]
+				ifFalse: [b topLeft - (0 @ width) corner: b topRight]]
+		ifFalse: [
+			horizontal
+				ifTrue: [b topRight corner: b bottomRight + (width @ 0)]
+				ifFalse: [b bottomLeft corner: b bottomRight + (0 @ width)]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -219,20 +259,18 @@ SBDragHelper >> mouseMove: anEvent [
 { #category : #'as yet unclassified' }
 SBDragHelper >> submorphOf: aMorph closestTo: aPoint do: aBlock [
 
-	| before best bestDistance horizontal calcDistanceBefore calcDistanceAfter |
+	| before best bestDistance calcDistanceBefore calcDistanceAfter |
 	before := false.
 	best := nil.
 	bestDistance := 900000000.
 	
-	horizontal := aMorph submorphs size < 2 or: [ | delta |
-		delta := aMorph submorphs first topLeft - aMorph submorphs second topLeft.
-		delta x < delta y].
-	calcDistanceBefore := horizontal
-		ifTrue: [[:m | (m left - aPoint x) abs]]
-		ifFalse: [[:m | (m top - aPoint y) abs]].
-	calcDistanceAfter := horizontal
-		ifTrue: [[:m | (m right - aPoint x) abs]]
-		ifFalse: [[:m | (m bottom - aPoint y) abs]].
+	(self hasHorizontalLayout: aMorph)
+		ifTrue: [
+			calcDistanceBefore := [:m | (m left - aPoint x) abs].
+			calcDistanceAfter := [:m | (m right - aPoint x) abs]]
+		ifFalse: [
+			calcDistanceBefore := [:m | (m top - aPoint y) abs].
+			calcDistanceAfter := [:m | (m bottom - aPoint y) abs]].
 	
 	aMorph childSandblocks do: [:morph | | distance |
 		blockBounds at: morph ifPresent: [:bounds |

@@ -2105,6 +2105,12 @@ SBBlock >> selectionLabel [
 	^ self printString
 ]
 
+{ #category : #'actions tests' }
+SBBlock >> shouldAutocomplete [
+
+	^ self hasSuggestions and: [self suggestionsMenu activeSuggestion wouldChange: self]
+]
+
 { #category : #testing }
 SBBlock >> skipLeftRightNavigation [
 
@@ -2368,14 +2374,20 @@ SBBlock >> useAlgebraLayout [
 
 { #category : #actions }
 SBBlock >> useSuggestion [
+	" try to apply a suggestion, return whether anything was applied "
 	<inputAction>
 	<actionValidIf: #hasSuggestions>
-	" try to apply a suggestion, return whether anything was applied "
 
 	self suggestionMenuDo: [:menu | | editor |
 		editor := self sandblockEditor.
-		menu activeSuggestion ifNotNil: [:s | s useSuggestionOn: self].
-		editor maybeStartInputFromEnd.
+		menu activeSuggestion ifNotNil: [:s |
+			(s wouldChange: self)
+				ifTrue: [
+					s useSuggestionOn: self.
+					editor maybeStartInputFromEnd]
+				ifFalse: [
+					self removeSuggestionMenu.
+					self inputNextUnknown]].
 		^ true].
 	^ false
 ]

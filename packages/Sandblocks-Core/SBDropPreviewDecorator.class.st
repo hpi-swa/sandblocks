@@ -25,6 +25,6 @@ SBDropPreviewDecorator >> outline: aBoolean [
 SBDropPreviewDecorator >> postDrawOn: aCanvas [
 
 	outline
-		ifTrue: [aCanvas frameRectangle: self morph bounds width: 3 color: Color gray]
-		ifFalse: [aCanvas fillRectangle: self morph bounds color: Color gray]
+		ifTrue: [aCanvas frameRectangle: self morph bounds width: 3 color: SBDropInsertMarker markerColor]
+		ifFalse: [aCanvas fillRectangle: self morph bounds color: SBDropInsertMarker markerColor]
 ]

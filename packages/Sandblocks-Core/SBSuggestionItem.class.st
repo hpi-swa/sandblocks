@@ -132,3 +132,10 @@ SBSuggestionItem >> useSuggestionOn: aBlock [
 
 	self completionAction ifNotNil: [self completionAction value: aBlock] ifNil: [aBlock useSuggestion: self selector]
 ]
+
+{ #category : #'as yet unclassified' }
+SBSuggestionItem >> wouldChange: aBlock [
+	" indicate whether activating this item would cause any change in the current block"
+
+	^ self completionAction notNil or: [self selector ~= aBlock contents]
+]

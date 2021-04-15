@@ -3,6 +3,7 @@ Class {
 	#superclass : #Object,
 	#classVars : [
 		'DrawOnCanvas',
+		'PreviewDropInsert',
 		'RightClickContextMenu'
 	],
 	#category : #'Sandblocks-Core'
@@ -21,6 +22,19 @@ SBPreferences class >> drawOnCanvas [
 SBPreferences class >> drawOnCanvas: aBoolean [
 
 	DrawOnCanvas := aBoolean
+]
+
+{ #category : #'as yet unclassified' }
+SBPreferences class >> previewDropInsert [
+	<preference: 'Preview block positions while dragging' category: 'sandblocks' description: 'Preview the block that would be inserted when dragging' type: #Boolean>
+
+	^ PreviewDropInsert ifNil: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBPreferences class >> previewDropInsert: aBoolean [
+
+	PreviewDropInsert := aBoolean
 ]
 
 { #category : #accessing }
