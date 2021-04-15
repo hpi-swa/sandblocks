@@ -592,27 +592,23 @@ SBEditor >> errors [
 SBEditor >> filterEvent: anEvent for: aMorph [
 
 	anEvent isMouse ifTrue: [
-		anEvent isMouseOver not ifTrue: [
-			anEvent isMouseWheel ifTrue: [
-				^ (ignoreNext ifNil: [false])
-					ifTrue: [
-						ignoreNext := false.
-						anEvent hand sendMouseEvent: anEvent]
-					ifFalse: [
-						ignoreNext := true.
-						anEvent]]].
+		anEvent isMouseWheel ifTrue: [
+			^ (ignoreNext ifNil: [false])
+				ifTrue: [
+					ignoreNext := false.
+					anEvent hand sendMouseEvent: anEvent]
+				ifFalse: [
+					ignoreNext := true.
+					anEvent]].
 		
 		anEvent isMouseMove ifTrue: [
 			(anEvent isDraggingEvent and: [anEvent hand hasSubmorphs])
 				ifTrue: [
-					(dragHelper ifNil: [dragHelper := SBDragHelper for: anEvent in: self]) mouseMove: anEvent.
-					^ anEvent ignore]
+					(dragHelper ifNil: [dragHelper := SBDragHelper for: anEvent in: self]) ifNotNil: [:helper | helper mouseMove: anEvent].
+					^ anEvent wasHandled: true]
 				ifFalse: [
 					dragHelper ifNotNil: #delete.
 					dragHelper := nil]].
-		anEvent isMouseUp ifTrue: [
-			dragHelper ifNotNil: #delete.
-			dragHelper := nil].
 		
 		anEvent isMouseDown ifTrue: [anEvent hand newKeyboardFocus: self].
 		^ anEvent].
@@ -660,6 +656,14 @@ SBEditor >> goToMark [
 ]
 
 { #category : #'event handling' }
+SBEditor >> handleDropMorph: anEvent [
+
+	dragHelper ifNotNil: [
+		dragHelper applyHint.
+		dragHelper := nil]
+]
+
+{ #category : #'event handling' }
 SBEditor >> handleDroppedFile: name event: anEvent [
 
 	^ FileStream readOnlyFileNamed: name do: [:file |
@@ -674,6 +678,18 @@ SBEditor >> handleDroppedFolder: aFileDirectory event: anEvent [
 	aFileDirectory
 		convertedFor: (self objectInterfaceNear: nil at: #after)
 		do: [:converted | self handleDroppedBlock: converted event: anEvent adding: true near: nil]
+]
+
+{ #category : #'event handling' }
+SBEditor >> handlesMouseDown: anEvent [
+
+	^ true
+]
+
+{ #category : #'event handling' }
+SBEditor >> handlesMouseOverDragging: evt [
+
+	^ true
 ]
 
 { #category : #'do/undo/redo' }
@@ -920,6 +936,13 @@ SBEditor >> modelWakeUp [
 	" when our window takes focus again and we're detached, bring us back to the front "
 	Project current addDeferredUIMessage: [
 		self valueOfProperty: #previousWindow ifPresentDo: [:window | self owner addMorphFront: self]]
+]
+
+{ #category : #'event handling' }
+SBEditor >> mouseLeaveDragging: anEvent [
+
+	dragHelper ifNotNil: #delete.
+	dragHelper := nil
 ]
 
 { #category : #selection }

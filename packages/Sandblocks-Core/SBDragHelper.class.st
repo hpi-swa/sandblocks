@@ -1,3 +1,6 @@
+"
+A SBDragHelper takes direct user input events via SBEditor>>#filterEvent:for: and interprets them on the block hierarchy for dropping. When a drag is initiated, it will take a snapshot of the bounds of all submorphs in the editor and compare drop locations against this cached view, such that inserting a preview of a dropped morph will still result in stable layouting.
+"
 Class {
 	#name : #SBDragHelper,
 	#superclass : #Object,
@@ -6,7 +9,9 @@ Class {
 		'currentDropLocation',
 		'morph',
 		'onLeave',
-		'blockBounds'
+		'blockBounds',
+		'onApply',
+		'floatingMorphs'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -14,9 +19,19 @@ Class {
 { #category : #'as yet unclassified' }
 SBDragHelper class >> for: anEvent in: anEditor [
 
-	^ self new
-		editor: anEditor;
-		morph: anEvent hand firstSubmorph
+	| helper |
+	helper := self new editor: anEditor.
+	
+	(helper morph: anEvent hand firstSubmorph) ifFalse: [^ nil].
+	
+	^ helper
+]
+
+{ #category : #'as yet unclassified' }
+SBDragHelper >> applyHint [
+
+	onLeave ifNotNil: [onLeave value].
+	onApply ifNotNil: [onApply value]
 ]
 
 { #category : #'as yet unclassified' }
@@ -66,13 +81,24 @@ SBDragHelper >> dropLocation: dropLocation [
 			onLeave := nil]].
 	
 	currentDropLocation := dropLocation.
+	
 	dropLocation ifNotNil: [
 		dropLocation first = #insert ifTrue: [
-			self hintInsertWith: (currentDropLocation second
-				insertCommandRequest: morph
-				near: dropLocation third
-				before: dropLocation fourth)].
-		dropLocation first = #replace ifTrue: [self hintReplaceOf: dropLocation second]]
+			morph
+				convertedFor: (dropLocation second
+					objectInterfaceNear: dropLocation third
+					at: (dropLocation fourth ifTrue: [#before] ifFalse: [#after]))
+				do: [:res |
+					self hintInsertWith: (currentDropLocation second
+						insertCommandRequest: res
+						near: dropLocation third
+						before: dropLocation fourth)]].
+		dropLocation first = #replace ifTrue: [
+			morph
+				convertedFor: dropLocation second objectInterface
+				do: [:res | self hintReplaceOf: dropLocation second with: res]]].
+	
+	self ensurePositionOfFloats
 ]
 
 { #category : #'as yet unclassified' }
@@ -81,21 +107,39 @@ SBDragHelper >> editor: anEditor [
 	editor := anEditor.
 	
 	blockBounds := Dictionary new.
-	anEditor allMorphsDo: [:morph | morph ~= anEditor ifTrue: [blockBounds at: morph put: morph boundsInWorld]]
+	floatingMorphs := OrderedCollection new.
+	anEditor allMorphsDo: [:morph |
+		morph ~= anEditor ifTrue: [blockBounds at: morph put: morph boundsInWorld].
+		(morph isSandblock and: [morph floating]) ifTrue: [floatingMorphs add: morph]]
+]
+
+{ #category : #'as yet unclassified' }
+SBDragHelper >> ensurePositionOfFloats [
+	"floating elements may have been pushed around, fix their positions"
+
+	floatingMorphs do: [:morph |
+		blockBounds at: morph ifPresent: [:fixedBounds | | localBounds |
+			localBounds := morph bounds: fixedBounds from: editor world.
+			morph bounds ~= localBounds ifTrue: [morph bounds: localBounds]]]
 ]
 
 { #category : #'as yet unclassified' }
 SBDragHelper >> hintInsertWith: aCommand [
 
 	aCommand do.
+	onApply := [editor do: aCommand].
 	onLeave := [aCommand undo]
 ]
 
 { #category : #'as yet unclassified' }
-SBDragHelper >> hintReplaceOf: aMorph [
+SBDragHelper >> hintReplaceOf: aMorph with: newBlock [
 
 	aMorph attachDecorator: (SBDropPreviewDecorator new outline: true).
-	onLeave := [aMorph detachDecorators: SBDropPreviewDecorator]
+	onLeave := [aMorph detachDecorators: SBDropPreviewDecorator].
+	onApply := [
+		editor do: ((SBReplaceCommand newOrEditFor: aMorph containingArtefact)
+			target: aMorph;
+			replacer: newBlock)]
 ]
 
 { #category : #'as yet unclassified' }
@@ -107,9 +151,10 @@ SBDragHelper >> initialize [
 { #category : #'as yet unclassified' }
 SBDragHelper >> morph: aMorph [
 
-	morph := aMorph unpackSelection veryDeepCopy.
-	morph isSandblock ifTrue: [
-		morph allBlocksDo: [:block | block attachDecorator: SBDropPreviewDecorator new]]
+	((aMorph isSandblock and: [aMorph isSelection]) or: [aMorph isKindOf: TransferMorph]) ifFalse: [^ false].
+	
+	morph := aMorph unpackSelection.
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

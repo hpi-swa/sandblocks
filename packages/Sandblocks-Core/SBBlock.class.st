@@ -992,12 +992,6 @@ SBBlock >> handlesMouseMove: anEvent [
 	^ (super handlesMouseMove: anEvent) or: [anEvent isDraggingEvent]
 ]
 
-{ #category : #'event handling' }
-SBBlock >> handlesMouseOverDragging: anEvent [
-
-	^ anEvent hand hasSubmorphs and: [self wantsDroppedMorph: anEvent hand firstSubmorph event: anEvent]
-]
-
 { #category : #'testing hierarchy' }
 SBBlock >> hasChildSandblocks [
 
@@ -1435,14 +1429,6 @@ SBBlock >> mouseDown: anEvent [
 		event: anEvent
 		selectors: #(#click: #doubleClick: #doubleClickTimeout: #startDrag:)
 		threshold: 30
-]
-
-{ #category : #'event handling' }
-SBBlock >> mouseLeaveDragging: anEvent [
-
-	(anEvent hand firstSubmorph respondsTo: #noteDragLeave:) ifTrue: [anEvent hand firstSubmorph noteDragLeave: self].
-	
-	self highlightForDrop: false
 ]
 
 { #category : #'event handling' }
