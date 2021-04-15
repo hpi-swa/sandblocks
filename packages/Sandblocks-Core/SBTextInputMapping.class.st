@@ -79,12 +79,13 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $z command do: #undo;
 		registerShortcut: $Z command do: #redo;
 		registerShortcut: $s command do: #save;
+		registerShortcut: $S command do: #saveCopy;
+		registerShortcut: $l command do: #reloadArtefact;
 		registerShortcut: $; command do: #promptMenu;
 		registerShortcut: $f command do: #startSearch;
 		registerShortcut: $g command do: #nextSearchResult;
 		registerShortcut: $f command do: #toggleFullscreen.
 	"registerShortcut: $r command do: #openRepl;"
-	
 	" navigation "
 	self
 		cmdShortcut: Character arrowLeft asSandblockShortcut withCommand, Character arrowLeft
@@ -135,7 +136,6 @@ SBTextInputMapping >> registerDefaultShortcuts [
 	"registerShortcut: $c do: #changeToUnknown;"
 	"registerShortcut: $d do: #deleteAdjacent;"
 	"registerShortcut: $. do: #addElement;"
-	
 	" modify smalltalk "
 	self
 		cmdShortcut: $" do: #wrapInToggledCode;
@@ -149,7 +149,6 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		shortcut: Character space shift modes: #(#input #command) do: #wrapAsArgument;
 		shortcut: Character space modes: #(#input #command) do: #wrapInMessageSend.
 	"cmdShortcut: $D do: #insertLabelAbove;"
-	
 	" modify scheme "
 	self
 		registerShortcut: $( do: #wrapInSExpr;

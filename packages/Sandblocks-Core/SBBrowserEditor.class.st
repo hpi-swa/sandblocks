@@ -84,7 +84,6 @@ SBBrowserEditor >> modelSelection: anObject [
 
 { #category : #'submorphs-add/remove' }
 SBBrowserEditor >> openMorphInView: aMorph [
-
 	"| valid |
 	valid := false.
 	aMorph object isBehavior ifTrue: [
@@ -96,12 +95,13 @@ SBBrowserEditor >> openMorphInView: aMorph [
 		self model selectMessageNamed: aMorph object selector].
 	
 	valid ifFalse: [^ self]."
-	
+
 	self childSandblocks do: [:block | block isSandblock ifTrue: [block delete]].
 	super openMorphInView: (aMorph
-					hResizing: #spaceFill;
-					vResizing: #shrinkWrap).
-	aMorph position: 0 @ 0
+		hResizing: #spaceFill;
+		vResizing: #shrinkWrap).
+	aMorph position: 0 @ 0.
+	self sandblockEditor startInput: aMorph at: 1 replacingContents: false
 ]
 
 { #category : #artefacts }
@@ -109,7 +109,7 @@ SBBrowserEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean 
 
 	| ret |
 	ret := super save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean.
-	((anArtefact object isBehavior or: [anArtefact object isCompiledMethod]) and: [self modelSelection ~= anArtefact object]) ifTrue: [self modelSelection: anArtefact object].
+	((anArtefact object isBehavior or: [anArtefact object isCompiledMethod]) and: [self modelSelection ~~ anArtefact object]) ifTrue: [self modelSelection: anArtefact object].
 	^ ret
 ]
 

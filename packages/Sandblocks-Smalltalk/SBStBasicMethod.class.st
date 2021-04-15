@@ -558,7 +558,7 @@ SBStBasicMethod >> relatedClass [
 ]
 
 { #category : #'as yet unclassified' }
-SBStBasicMethod >> reloadMethod [
+SBStBasicMethod >> reloadArtefact [
 	<action>
 
 	self sandblockEditor select: self reloadMethodInPlace
@@ -572,6 +572,15 @@ SBStBasicMethod >> reloadMethodInPlace [
 		position: self position;
 		hResizing: self hResizing;
 		yourself)
+]
+
+{ #category : #'as yet unclassified' }
+SBStBasicMethod >> saveCopy [
+	<action>
+
+	category := self category.
+	self currentSelector: self selector.
+	self sandblockEditor save
 ]
 
 { #category : #'as yet unclassified' }

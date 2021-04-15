@@ -1319,6 +1319,13 @@ SBEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean [
 		ifFalse: [false]
 ]
 
+{ #category : #actions }
+SBEditor >> saveCopy [
+	<globalAction>
+
+	self interruptInputDuring: [self selection ifNotNil: [:selected | selected artefactForPersisting ifNotNil: [:a | a saveCopy]]]
+]
+
 { #category : #selection }
 SBEditor >> scrollToShow: aBlock [
 

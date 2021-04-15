@@ -1886,6 +1886,14 @@ SBBlock >> relatedClass [
 	^ self object class
 ]
 
+{ #category : #actions }
+SBBlock >> reloadArtefact [
+	<action>
+
+	
+	self isArtefact ifFalse: [self containingArtefact reloadArtefact]
+]
+
 { #category : #'colors and color policies' }
 SBBlock >> removeLocalColorPolicy [
 
