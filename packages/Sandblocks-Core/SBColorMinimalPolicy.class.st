@@ -14,8 +14,10 @@ SBColorMinimalPolicy >> borderColorForBlock: aBlock [
 SBColorMinimalPolicy >> borderWidthForBlock: aBlock [
 
 	self enlarge ifTrue: [^ aBlock prefersNoBorder ifTrue: [0] ifFalse: [1]].
-
-	^ (aBlock floating or: [(self colorForBlock: aBlock) luminance > 0.9 and: [aBlock prefersNoBorder not]]) ifTrue: [1] ifFalse: [0]
+	
+	^ (aBlock floating or: [(self drawnColorOfOpaque: aBlock) luminance > 0.9 and: [aBlock prefersNoBorder not]])
+		ifTrue: [1]
+		ifFalse: [0]
 ]
 
 { #category : #'as yet unclassified' }

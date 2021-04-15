@@ -29,7 +29,8 @@ CodeHolder >> contentsSymbol [
 		" FIXME tobe: seriously, I have not found any other way to inform the browser to change its widget.
 		 Underlying problems is that the block editor installation depends on the finished morph hierarchy and
 		 there appear to be no callbacks back from Morphic back to ToolBuilder/the model when it is finished. "
-		Project current addDeferredUIMessage: [self contentsSymbol == #blockEditor ifTrue: [self installBlockEditor]]]
+		Project current addDeferredUIMessage: [self contentsSymbol = #blockEditor ifTrue: [self installBlockEditor]].
+		contentsSymbol]
 ]
 
 { #category : #'*Sandblocks-Core' }

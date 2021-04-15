@@ -83,6 +83,15 @@ SBColorPolicy >> colorToLAB: aColor [
 ]
 
 { #category : #'as yet unclassified' }
+SBColorPolicy >> drawnColorOfOpaque: aBlock [
+
+	| block |
+	block := aBlock.
+	[block drawnColor alpha = 0 and: [block parentSandblock notNil]] whileTrue: [block := block parentSandblock].
+	^ block drawnColor
+]
+
+{ #category : #'as yet unclassified' }
 SBColorPolicy >> enlarge [
 
 	^ enlarge ifNil: [false]
@@ -98,8 +107,7 @@ SBColorPolicy >> enlarge: aBoolean [
 SBColorPolicy >> foregroundColorForBlock: aBlock [
 
 	| color |
-	color := aBlock drawnColor.
-	(color alpha = 0 and: [aBlock parentSandblock notNil]) ifTrue: [color := aBlock parentSandblock drawnColor].
+	color := self drawnColorOfOpaque: aBlock.
 	^ self foregroundColorForColor: color
 ]
 

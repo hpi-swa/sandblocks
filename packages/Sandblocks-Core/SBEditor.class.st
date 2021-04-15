@@ -1484,7 +1484,8 @@ SBEditor >> togglePalette [
 			self removeActionsWithReceiver: paletteContainer]
 		ifNil: [
 			self submorphs third addMorphFront: paletteContainer.
-			self when: #selectionChanged send: #selectionChanged: to: paletteContainer]
+			self when: #selectionChanged send: #selectionChanged: to: paletteContainer.
+			paletteContainer selectionChanged: self selection]
 ]
 
 { #category : #'do/undo/redo' }
