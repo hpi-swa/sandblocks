@@ -50,7 +50,7 @@ SBRelInsertCommand >> do [
 				ifFalse: [container addMorph: morph behind: adjacent]]
 		ifNil: [container addMorphBack: morph].
 	
-	^ select ifNil: [morph]
+	^ select ifNil: [morph containingSandblock]
 ]
 
 { #category : #'as yet unclassified' }

@@ -15,6 +15,12 @@ CodeHolder class >> addSandblocksDefault: aBoolean [
 ]
 
 { #category : #'*Sandblocks-Core' }
+CodeHolder >> blockEditor [
+
+	^ self containingWindow valueOfProperty: #blockEditor
+]
+
+{ #category : #'*Sandblocks-Core' }
 CodeHolder >> contentsSymbol [
 	"Answer a symbol indicating what kind of content should be shown for the method; for normal showing of source code, this symbol is #source.  A nil value in the contentsSymbol slot will be set to #source by this method"
 

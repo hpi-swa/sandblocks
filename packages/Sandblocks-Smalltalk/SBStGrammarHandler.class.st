@@ -134,7 +134,8 @@ SBStGrammarHandler >> extractMethod [
 	self block sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
 	
 	self block sandblockEditor doMultiSelection: [:extracting | | arguments localBindings method |
-		self flag: #todo. " consider write vs read access "
+		self flag: #todo.
+		" consider write vs read access "
 		localBindings := extracting gather: #resolveLocalBindings.
 		localBindings := ((KeyedSet keyBlock: #name)
 			addAll: localBindings;
@@ -149,22 +150,27 @@ SBStGrammarHandler >> extractMethod [
 				class: self block containingArtefact methodClass;
 			body: SBStBlockBody new.
 		
-		SBCombinedCommand newWith: ({
+		SBCombinedCommand newWith: {
 			(SBReplaceConsecutiveCommand newFor: self block containingArtefact)
 				targets: extracting;
-				replacer: (SBStMessageSend new receiver: (SBStName contents: 'self') selector: method selector arguments: arguments veryDeepCopy)
-		}, (extracting withIndexCollect: [:stmt :index |
+				replacer: (SBStMessageSend new
+					receiver: (SBStName contents: 'self')
+					selector: method selector
+					arguments: arguments veryDeepCopy)}, (extracting withIndexCollect: [:stmt :index |
 			(SBInsertCommand newFor: method)
 				container: method body;
 				index: index + 1;
 				morph: stmt;
-				yourself])), {
+				yourself]), {
 			(SBWrapCommand newFor: self block containingArtefact)
 				inner: extracting last;
 				outer: SBStReturn new;
 				wrap: [:outer :inner | outer expression: inner].
-			self block sandblockEditor openMorphInViewCommand: method
-		}]
+			(SBStOpenMorphCommand newFor: self block containingArtefact)
+				editor: self block sandblockEditor;
+				morph: method;
+				isUnsaved: true;
+				yourself}]
 ]
 
 { #category : #actions }

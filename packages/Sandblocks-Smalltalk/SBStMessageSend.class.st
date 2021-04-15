@@ -161,16 +161,21 @@ SBStMessageSend >> fixActions [
 		ifTrue: [ | class |
 			class := self actualReceiver guessClassExpensive.
 			{
-				(SBCodeAction
+				SBCodeAction
 					labeled: 'Create method on ', (class ifNotNil: #name ifNil: ['...'])
 					for: self
-					do: [:node | 
-						self sandblockEditor createArtefactInView: (SBStMethod new
+					do: [:node | | method |
+						method := SBStMethod new
 							selector: self selector
 								arguments: (self arguments collectWithIndex: [:arg :index | arg isName ifTrue: [arg veryDeepCopy] ifFalse: [SBStName contents: 'anObject', index asString]])
 								class: (class ifNil: [UIManager default chooseClassOrTrait ifNil: [^ self]]);
-							body: SBStBlockBody new)])
-			}]
+							body: SBStBlockBody new.
+						
+						self sandblockEditor do: (SBStOpenMorphCommand newNonEdit
+							morph: method;
+							editor: self sandblockEditor;
+							isUnsaved: true;
+							yourself)]}]
 		ifFalse: [#()]
 ]
 

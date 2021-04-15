@@ -82,28 +82,6 @@ SBBrowserEditor >> modelSelection: anObject [
 		(model respondsTo: #selectMessageNamed:) ifTrue: [^ model selectMessageNamed: anObject selector]]
 ]
 
-{ #category : #'submorphs-add/remove' }
-SBBrowserEditor >> openMorphInView: aMorph [
-	"| valid |
-	valid := false.
-	aMorph object isBehavior ifTrue: [
-		valid := true.
-		self model selectClass: aMorph object].
-	aMorph object isCompiledMethod ifTrue: [
-		valid := true.
-		self model selectClass: aMorph object methodClass.
-		self model selectMessageNamed: aMorph object selector].
-	
-	valid ifFalse: [^ self]."
-
-	self childSandblocks do: [:block | block isSandblock ifTrue: [block delete]].
-	super openMorphInView: (aMorph
-		hResizing: #spaceFill;
-		vResizing: #shrinkWrap).
-	aMorph position: 0 @ 0.
-	self sandblockEditor startInput: aMorph at: 1 replacingContents: false
-]
-
 { #category : #artefacts }
 SBBrowserEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean [
 
@@ -125,6 +103,16 @@ SBBrowserEditor >> scrollToShow: aRectangle [
 SBBrowserEditor >> scrollerClass [
 
 	^ ScrollPane
+]
+
+{ #category : #'as yet unclassified' }
+SBBrowserEditor >> tryOpenInNewWindow: anArtefact ifSuccess: aBlock [
+
+	(anArtefact isSmalltalk and: [anArtefact isMethod]) ifTrue: [ | browser |
+		browser := Browser fullOnClass: anArtefact relatedClass category: anArtefact category.
+		browser contentsSymbol ~= #blockEditor ifTrue: [browser model toggleBlockEditor].
+		Project current addDeferredUIMessage: [browser blockEditor openMorphInView: anArtefact].
+		aBlock value]
 ]
 
 { #category : #updating }

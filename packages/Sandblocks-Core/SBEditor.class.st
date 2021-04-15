@@ -420,8 +420,12 @@ SBEditor >> createArtefactInView: aMorph [
 
 	self assert: aMorph isArtefact.
 	
-	self openMorphInView: aMorph.
-	self do: (SBDoItCommand newFor: aMorph).
+	self do: (SBStOpenMorphCommand newNonEdit
+		morph: aMorph;
+		editor: self sandblockEditor;
+		isUnsaved: true;
+		yourself).
+	
 	^ aMorph
 ]
 
@@ -756,7 +760,11 @@ SBEditor >> inputIsDefault [
 { #category : #'as yet unclassified' }
 SBEditor >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
-	^ self openMorphInViewCommand: aMorph
+	^ SBStOpenMorphCommand newNonEdit
+		morph: aMorph;
+		editor: self;
+		isUnsaved: false;
+		yourself
 ]
 
 { #category : #selection }
@@ -1060,7 +1068,11 @@ SBEditor >> openMorph: aMorph [
 { #category : #'submorphs-add/remove' }
 SBEditor >> openMorphInView: aMorph [
 
-	self do: (self openMorphInViewCommand: aMorph).
+	self do: (SBStOpenMorphCommand newNonEdit
+		morph: aMorph;
+		editor: self sandblockEditor;
+		isUnsaved: false;
+		yourself).
 	^ aMorph
 ]
 
