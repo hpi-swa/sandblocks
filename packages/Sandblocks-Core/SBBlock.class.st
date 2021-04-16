@@ -1581,9 +1581,7 @@ SBBlock >> nextVerticalNear: aNumber calcDistance: aDistBlock validBlock: aValid
 	artefact := self containingFloat.
 	tolerance := 10.
 	
-	allCandidates := Array streamContents: [:stream |
-		artefact allBlocksDo: [:candidate |
-			(candidate hasChildSandblocks not and: [aValidBlock value: candidate]) ifTrue: [stream nextPut: candidate]]].
+	allCandidates := Array streamContents: [:stream | artefact allMorphsDo: [:candidate | (candidate isTextMorph and: [aValidBlock value: candidate]) ifTrue: [stream nextPut: candidate]]].
 	
 	candidates := OrderedCollection new.
 	candidatesBestDistance := 900000000.
@@ -1591,12 +1589,13 @@ SBBlock >> nextVerticalNear: aNumber calcDistance: aDistBlock validBlock: aValid
 		distance := aDistBlock value: candidate.
 		distance < candidatesBestDistance
 			ifTrue: [
-				(candidatesBestDistance between: distance and: distance + tolerance) ifTrue: [candidates add: candidate] ifFalse: [candidates := OrderedCollection with: candidate].
+				(candidatesBestDistance between: distance and: distance + tolerance)
+					ifTrue: [candidates add: candidate]
+					ifFalse: [candidates := OrderedCollection with: candidate].
 				candidatesBestDistance := distance]
-			ifFalse: [
-				(distance between: candidatesBestDistance and: candidatesBestDistance + tolerance) ifTrue: [candidates add: candidate]]].
+			ifFalse: [(distance between: candidatesBestDistance and: candidatesBestDistance + tolerance) ifTrue: [candidates add: candidate]]].
 	
-	^ candidates detectMin: [:candidate | (candidate left - artefact left to: candidate right - artefact left) distanceTo: aNumber]
+	^ (candidates detectMin: [:candidate | (candidate left - artefact left to: candidate right - artefact left) distanceTo: aNumber]) ifNotNil: #containingSandblock
 ]
 
 { #category : #callbacks }

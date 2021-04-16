@@ -219,7 +219,7 @@ SBStNewMessageSend >> useSuggestion: aString [
 				ifAbsent: [
 					stream nextPut: ((SBInsertCommand newFor: self containingArtefact)
 						container: self;
-						morph: (self newNullBlock
+						morph: ((self newEmptyChildNear: nil before: false)
 							contents: partContents;
 							argumentLabel: (possibleArgumentNames at: index ifAbsent: []));
 						index: index + 1)]].
