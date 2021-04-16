@@ -452,7 +452,7 @@ SBStMessageSend >> selector: aSymbol arguments: aCollection [
 { #category : #testing }
 SBStMessageSend >> selectorAppearsValid [
 
-	^ self selectorIsIncomplete or: [self isDefined not or: [self actualReceiver ifNotNil: [:r | r guessedClass ifNotNil: [:class | class canUnderstand: self selector asSymbol] ifNil: [true]]]]
+	^ self selectorIsIncomplete or: [self isDefined not or: [(self actualReceiver ifNotNil: [:r | r guessedClass ifNotNil: [:class | class canUnderstand: self selector asSymbol]]) ifNil: [true]]]
 ]
 
 { #category : #'as yet unclassified' }

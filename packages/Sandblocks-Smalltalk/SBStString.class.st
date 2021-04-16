@@ -43,6 +43,12 @@ SBStString >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBStString >> oneCharLong [
+
+	^ self contents size = 1
+]
+
+{ #category : #'as yet unclassified' }
 SBStString >> pasteString [
 	<inputAction>
 	
@@ -85,6 +91,16 @@ SBStString >> typeNewLine [
 	<inputAction>
 	
 	self currentTextMorph insertString: String cr
+]
+
+{ #category : #'as yet unclassified' }
+SBStString >> useAsStCharacter [
+	<action>
+	<actionValidIf: #oneCharLong>
+
+	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+		target: self;
+		replacer: (SBStCharacter new contents: self contents))
 ]
 
 { #category : #'as yet unclassified' }

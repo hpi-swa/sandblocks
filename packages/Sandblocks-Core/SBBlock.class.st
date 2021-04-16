@@ -1825,8 +1825,7 @@ SBBlock >> prependElement [
 
 	| cmd |
 	cmd := (self
-		insertCommandRequest: false
-		near: (self childSandblocks ifNotEmpty: #first ifEmpty: [nil])
+		insertEmptyCommandRequestNear: (self childSandblocks ifNotEmpty: #first ifEmpty: [nil])
 		before: true) ifNil: [^ self].
 	
 	self sandblockEditor do: cmd.
@@ -2215,7 +2214,12 @@ SBBlock >> startInputAt: aNumber replacingContents: aBoolean [
 			oldMorph: self;
 			previousText: self contents;
 			yourself.
-		self currentTextMorph moveCursorTo: aNumber.
+		aBoolean
+			ifTrue: [
+				self currentTextMorph
+					contents: '';
+					moveCursorTo: 0]
+			ifFalse: [self currentTextMorph moveCursorTo: aNumber].
 		^ cmd].
 	
 	^ nil
@@ -2267,7 +2271,8 @@ SBBlock >> stopEditing: aCommand [
 		newText: self contents;
 		newMorph: self.
 	
-	self currentTextMorph stopEditing
+	self currentTextMorph stopEditing.
+	self removeSuggestionMenu
 ]
 
 { #category : #hierarchy }
@@ -2414,9 +2419,8 @@ SBBlock >> useSuggestion [
 				ifTrue: [
 					s useSuggestionOn: self.
 					editor maybeStartInputFromEnd]
-				ifFalse: [
-					self removeSuggestionMenu.
-					self inputNextUnknown]].
+				ifFalse: [self inputNextUnknown]].
+		self removeSuggestionMenu.
 		^ true].
 	^ false
 ]

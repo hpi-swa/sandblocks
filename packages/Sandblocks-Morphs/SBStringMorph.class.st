@@ -29,7 +29,7 @@ SBStringMorph >> color [
 SBStringMorph >> drawOn: aCanvas [
 	" overriden so we can override color "
 
-	aCanvas drawString: contents in: self layoutBounds font: self fontToUse color: self color
+	aCanvas drawString: self contents in: self layoutBounds font: self fontToUse color: self color
 ]
 
 { #category : #'as yet unclassified' }

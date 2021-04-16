@@ -279,11 +279,18 @@ SBStGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 		(char = $: and: [aBlock parentSandblock isBlockBody and: [aBlock parentSandblock isMethodBody not]]) ifTrue: [ | block |
 			block := aBlock parentSandblock.
 			aBlock parentSandblock statements size > 1 ifTrue: [
-				aBlock sandblockEditor do: ((SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock; shouldMergeWithNext: true)].
+				aBlock sandblockEditor do: ((SBDeleteCommand newFor: aBlock containingArtefact)
+					target: aBlock;
+					shouldMergeWithNext: true)].
 			^ block addBlockArgument].
 		char = $< ifTrue: [^ self replaceWithPragma: aBlock]].
 	
-	char isSpecial ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer receiver: inner selector: char asString arguments: {outer newNullBlock label: 'arg'}] with: SBStMessageSend new focusOuter: true].
+	char isSpecial ifTrue: [
+		^ self
+			wrap: aBlock
+			do: [:outer :inner | outer receiver: inner selector: char asString arguments: {outer newNullBlock label: 'arg'}]
+			with: SBStMessageSend new
+			focusOuter: true].
 	char = $( ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer type: #literal contents: {inner}] with: SBStArray new]
 ]
 

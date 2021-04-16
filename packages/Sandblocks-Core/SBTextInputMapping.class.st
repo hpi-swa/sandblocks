@@ -149,6 +149,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $^ do: #wrapInReturn;
 		cmdShortcut: $' do: #useAsStString;
 		cmdShortcut: $# do: #useAsStSymbol;
+		cmdShortcut: $$ do: #useAsStCharacter;
 		shortcut: Character space shift modes: #(#input #command) do: #wrapAsArgument;
 		shortcut: Character space modes: #(#input #command) do: #wrapInMessageSend.
 	"cmdShortcut: $D do: #insertLabelAbove;"
