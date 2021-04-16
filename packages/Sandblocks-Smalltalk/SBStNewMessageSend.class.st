@@ -37,7 +37,7 @@ SBStNewMessageSend >> deleteCommandFor: aBlock [
 			ifFalse: [
 				(SBReplaceCommand newFor: self containingArtefact)
 					target: self receiver;
-					replacer: (SBUnknown new grammarHandler: SBStGrammarHandler new)]].
+					replacer: self newNullBlock]].
 	
 	^ self messageParts size = 1
 		ifTrue: [
@@ -139,11 +139,9 @@ SBStNewMessageSend >> messageParts [
 ]
 
 { #category : #'as yet unclassified' }
-SBStNewMessageSend >> newNullBlock [
+SBStNewMessageSend >> newEmptyChildNear: aBlock before: aBoolean [
 
-	^ SBStNewMessagePart new
-		selector: ':'
-		argument: (SBUnknown new grammarHandler: SBStGrammarHandler new)
+	^ SBStNewMessagePart new selector: ':' argument: self newNullBlock
 ]
 
 { #category : #'as yet unclassified' }

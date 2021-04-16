@@ -102,7 +102,7 @@ SBStCascade >> messages [
 ]
 
 { #category : #'as yet unclassified' }
-SBStCascade >> newNullBlock [
+SBStCascade >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ SBStMessageSend new receiver: nil selector: #'' arguments: #()
 ]

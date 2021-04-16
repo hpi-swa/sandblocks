@@ -53,7 +53,7 @@ SBJsArgumentList >> minimumHeight [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsArgumentList >> newNullBlock [
+SBJsArgumentList >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ SBJsVariable new
 ]

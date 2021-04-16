@@ -103,7 +103,7 @@ SBStMethodCategory >> isArtefact [
 ]
 
 { #category : #'as yet unclassified' }
-SBStMethodCategory >> newNullBlock [
+SBStMethodCategory >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ SBStMethod new
 		selector: '' arguments: #() class: self relatedClass;

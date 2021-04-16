@@ -28,12 +28,6 @@ SBOhmGrammarHandler >> insertStatementAboveOrBelow: aBoolean [
 	self block containingStatement insertElement: aBoolean not
 ]
 
-{ #category : #'as yet unclassified' }
-SBOhmGrammarHandler >> newNullBlock [
-
-	^ SBUnknown new grammarHandler: self
-]
-
 { #category : #callbacks }
 SBOhmGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 

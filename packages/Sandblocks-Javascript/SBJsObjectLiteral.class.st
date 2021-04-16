@@ -66,7 +66,7 @@ SBJsObjectLiteral >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsObjectLiteral >> newNullBlock [
+SBJsObjectLiteral >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ self buildEmptyRow
 ]

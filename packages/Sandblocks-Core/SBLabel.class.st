@@ -171,12 +171,6 @@ SBLabel >> lookupAction: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
-SBLabel >> newNullBlock [
-
-	^ SBUnknown new grammarHandler: self grammarHandler
-]
-
-{ #category : #'as yet unclassified' }
 SBLabel >> pasteString [
 	<inputAction>
 	

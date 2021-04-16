@@ -115,7 +115,7 @@ SBOhmGrammar >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmGrammar >> newNullBlock [
+SBOhmGrammar >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ SBOhmRule new name: '' alternatives: SBOhmGrammarHandler new newNullBlock
 ]

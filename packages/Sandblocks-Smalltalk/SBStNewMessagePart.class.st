@@ -183,7 +183,7 @@ SBStNewMessagePart >> stopEditing: aCommand [
 SBStNewMessagePart >> unaryToKeywordCommand [
 
 	^ (SBInsertCommand newFor: self containingArtefact)
-		morph: (SBUnknown new grammarHandler: SBStGrammarHandler new);
+		morph: self newNullBlock;
 		container: self;
 		index: 3
 ]

@@ -5,9 +5,11 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBStateMachineConditionList >> newNullBlock [
+SBStateMachineConditionList >> newEmptyChildNear: aBlock before: aBoolean [
 
-	^ SBStateMachineTransitionCondition new type: #condition data: SBStBlockBody empty
+	^ SBStateMachineTransitionCondition new
+		type: #condition
+		data: SBStBlockBody empty
 ]
 
 { #category : #'as yet unclassified' }

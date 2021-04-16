@@ -14,7 +14,7 @@ SBStNameList >> isExpression [
 ]
 
 { #category : #'as yet unclassified' }
-SBStNameList >> newNullBlock [
+SBStNameList >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ SBStName new
 ]

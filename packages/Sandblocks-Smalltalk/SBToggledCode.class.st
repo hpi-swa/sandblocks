@@ -209,7 +209,7 @@ SBToggledCode >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
-SBToggledCode >> newNullBlock [
+SBToggledCode >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ self buildRowFor: SBStBlockBody empty active: false
 ]

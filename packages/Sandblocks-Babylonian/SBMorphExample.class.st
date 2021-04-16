@@ -163,7 +163,7 @@ SBMorphExample >> methodForContext: aContext ifOpen: aBlock ifClosed: anotherBlo
 ]
 
 { #category : #callbacks }
-SBMorphExample >> newNullBlock [
+SBMorphExample >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ (SBMorphExampleCase new
 		name: ''

@@ -279,6 +279,13 @@ SBStBlockBody >> multiSelectChildren [
 ]
 
 { #category : #'as yet unclassified' }
+SBStBlockBody >> newEmptyChildNear: aBlock before: aBoolean [
+
+	(aBlock isName and: [aBlock isBlockBinding]) ifTrue: [^ SBStName new].
+	^ super newEmptyChildNear: aBlock before: aBoolean
+]
+
+{ #category : #'as yet unclassified' }
 SBStBlockBody >> objectInterfaceNear: aBlock at: aSymbol [
 
 	({bindings. temporaries} includes: (aBlock ifNotNil: #owner)) ifTrue: [^ SBInterfaces stName].

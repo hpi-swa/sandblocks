@@ -112,7 +112,7 @@ SBRegex >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> newNullBlock [
+SBRegex >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ self createExample: ''
 ]

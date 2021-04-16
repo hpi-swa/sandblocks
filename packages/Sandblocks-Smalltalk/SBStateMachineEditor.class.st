@@ -261,7 +261,7 @@ SBStateMachineEditor >> minExtent [
 ]
 
 { #category : #initialization }
-SBStateMachineEditor >> newNullBlock [
+SBStateMachineEditor >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ SBStateMachineState new
 		name: '';

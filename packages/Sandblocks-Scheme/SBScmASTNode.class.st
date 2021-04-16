@@ -124,12 +124,6 @@ SBScmASTNode >> newCommentBlock [
 	^ self grammarHandler newCommentBlock
 ]
 
-{ #category : #accessing }
-SBScmASTNode >> newNullBlock [
-
-	^ SBUnknown new grammarHandler: SBScmGrammarHandler new
-]
-
 { #category : #'object interface' }
 SBScmASTNode >> object [
 

@@ -103,12 +103,6 @@ SBJsASTNode >> lookupAction: aSymbol [
 	^ nil
 ]
 
-{ #category : #accessing }
-SBJsASTNode >> newNullBlock [
-
-	^ SBUnknown new grammarHandler: SBJsGrammarHandler new
-]
-
 { #category : #'object interface' }
 SBJsASTNode >> object [
 

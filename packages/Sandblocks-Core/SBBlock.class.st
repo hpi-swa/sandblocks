@@ -1148,7 +1148,10 @@ SBBlock >> insertElementBefore [
 { #category : #'as yet unclassified' }
 SBBlock >> insertEmptyCommandRequestNear: aBlock before: aBoolean [
 
-	^ (self insertCommandRequest: self newNullBlock near: aBlock before: aBoolean) ifNotNil: [:cmd |
+	^ (self
+		insertCommandRequest: (self newEmptyChildNear: aBlock before: aBoolean)
+		near: aBlock
+		before: aBoolean) ifNotNil: [:cmd |
 		cmd
 			shouldMergeWithNext: true;
 			yourself]
@@ -1542,10 +1545,16 @@ SBBlock >> multiSelectChildren [
 	self sandblockEditor multiSelection: self childSandblocks
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> newEmptyChildNear: aBlock before: aBoolean [
+
+	^ self newNullBlock
+]
+
 { #category : #'ast helpers' }
 SBBlock >> newNullBlock [
 
-	^ nil
+	^ SBUnknown new grammarHandler: self grammarHandler
 ]
 
 { #category : #hierarchy }

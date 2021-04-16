@@ -86,7 +86,7 @@ SBOhmList >> maybeUnwrapList [
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmList >> newNullBlock [
+SBOhmList >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ super newNullBlock label: 'seq'
 ]

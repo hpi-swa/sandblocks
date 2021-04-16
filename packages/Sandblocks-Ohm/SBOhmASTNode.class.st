@@ -58,12 +58,6 @@ SBOhmASTNode >> maybeUnwrapList [
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmASTNode >> newNullBlock [
-
-	^ self grammarHandler newNullBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBOhmASTNode >> object [
 
 	^ self

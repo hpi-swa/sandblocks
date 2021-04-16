@@ -107,7 +107,7 @@ SBStClassMethodEditor >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
-SBStClassMethodEditor >> newNullBlock [
+SBStClassMethodEditor >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ SBStMethodCategory new
 		class: self firstSubmorph object

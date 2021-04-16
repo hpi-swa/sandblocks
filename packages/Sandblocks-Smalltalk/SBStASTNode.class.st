@@ -177,12 +177,6 @@ SBStASTNode >> newCommentBlock [
 	^ self grammarHandler newCommentBlock
 ]
 
-{ #category : #accessing }
-SBStASTNode >> newNullBlock [
-
-	^ SBUnknown new grammarHandler: self grammarHandler
-]
-
 { #category : #'object interface' }
 SBStASTNode >> object [
 

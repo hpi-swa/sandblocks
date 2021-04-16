@@ -113,7 +113,7 @@ SBStateMachineState >> name: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBStateMachineState >> newNullBlock [
+SBStateMachineState >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ SBRow new
 		cellGap: 4 withScalingFactor;
