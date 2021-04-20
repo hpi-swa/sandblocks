@@ -55,6 +55,19 @@ SBShortcut >> character: aCharacter [
 ]
 
 { #category : #'as yet unclassified' }
+SBShortcut >> cmdKeyString [
+
+	Smalltalk os platformName = 'Mac OS' ifTrue: [^ 'Cmd '].
+	(Smalltalk os platformName = 'Win32' and: [
+		character isAlphaNumeric not and: [
+			((SBToggledCode
+				comment: 'there are some, but surprisingly few, characters that work with ctrl rather than alt on windows'
+				active: 1
+				do: {[{Character arrowLeft. Character arrowRight. Character escape. Character delete}]}) includes: character) not]]) ifTrue: [^ 'Alt '].
+	^ 'Ctrl '
+]
+
+{ #category : #'as yet unclassified' }
 SBShortcut >> commandKeyPressed [
 
 	^ command
@@ -151,7 +164,7 @@ SBShortcut >> optionKeyPressed [
 SBShortcut >> printDisplayOn: aStream automaticShift: aBoolean [
 
 	| p |
-	command ifTrue: [aStream nextPutAll: (Smalltalk os platformName = 'Mac OS' ifTrue: ['Cmd '] ifFalse: ['Ctrl '])].
+	command ifTrue: [aStream nextPutAll: self cmdKeyString].
 	(shift or: [aBoolean and: [character isLetter and: [character isUppercase]]]) ifTrue: [aStream nextPutAll: 'Shift '].
 	ctrl ifTrue: [aStream nextPutAll: 'Ctrl '].
 	
@@ -175,10 +188,7 @@ SBShortcut >> printDisplayOn: aStream automaticShift: aBoolean [
 SBShortcut >> printOn: aStream [
 
 	aStream nextPutAll: 'SBShortcut('.
-	ctrl ifTrue: [aStream nextPutAll: 'ctrl+'].
-	command ifTrue: [aStream nextPutAll: 'cmd+'].
-	shift ifTrue: [aStream nextPutAll: 'shift+'].
-	aStream nextPutAll: character printString.
+	self printDisplayOn: aStream automaticShift: true.
 	aStream nextPut: $)
 ]
 

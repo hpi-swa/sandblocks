@@ -519,7 +519,8 @@ SBBlock >> copyString [
 SBBlock >> copyToBuffer [
 	<multiSelectAction>
 
-	self sandblockEditor copyBuffer: self sandblockEditor multiSelection
+	self sandblockEditor copyBuffer: self sandblockEditor multiSelection.
+	self performAction: #copyString
 ]
 
 { #category : #accessing }
