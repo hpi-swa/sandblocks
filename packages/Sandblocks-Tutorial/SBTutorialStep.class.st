@@ -343,9 +343,7 @@ SBTutorialStep class >> stepMovement: anEditor [
 		title: 'Movement';
 		addIntroText: 'Hey, welcome to the tutorial! First we''ll look at moving your cursor. You can click on things, but try to get used to using your keyboard. <#selectPrevious>/<#selectNextGroup>/<#selectPreviousGroup>/<#selectNext> moves your cursor around.
 
-Note that you always undo accidental changes with <#undo> (and redo with <#redo>) and you can reset the code sample with the refresh button on the center left. Once done, you can swap to the next chapter with the arrow button on the right.
-
-For Windows users: most shortcuts that ask for <Cmd> may require you to press <Alt> rather than <Ctrl>.';
+Note that you always undo accidental changes with <#undo> (and redo with <#redo>) and you can reset the code sample with the refresh button on the center left. Once done, you can swap to the next chapter with the arrow button on the right.';
 		addAction: #selectPrevious;
 		addAction: #selectNextGroup;
 		addAction: #selectPreviousGroup;
