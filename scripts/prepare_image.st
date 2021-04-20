@@ -18,7 +18,7 @@
   "Prepare Image a little bit"
   Preferences disable: #showSharedFlaps.
   Preferences enable: #mouseOverForKeyboardFocus.
-  HandMorph synthesizeMouseWheelEvents: false.
+  "HandMorph synthesizeMouseWheelEvents: false."
   PluggableSystemWindow allInstances do: #abandon.
   PreferenceWizardMorph allInstances do: #abandon.
 
