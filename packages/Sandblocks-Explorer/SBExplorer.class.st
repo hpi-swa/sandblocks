@@ -219,6 +219,13 @@ SBExplorer >> on: anObject wrapper: aWrapper [
 	self addMorphBack: row
 ]
 
+{ #category : #actions }
+SBExplorer >> openExternal [
+	<action>
+
+	self object explore
+]
+
 { #category : #'as yet unclassified' }
 SBExplorer >> printOn: aStream [
 
