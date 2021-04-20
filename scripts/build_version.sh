@@ -29,6 +29,10 @@ rm "$BASE.zip"
 print_info "Preparing $BASE image..."
 $BASE_SHARED/Contents/Linux-x86_64/bin/squeak $COG_VM_PARAM "$BASE_SHARED/Contents/Resources/Squeak5.3-19458-64bit.image" "$(pwd)/../scripts/prepare_image.st" || EXIT_STATUS=$?
 
+# clean caches as they contain files that are sadly too long for windows to handle
+rm -rf "$BASE_SHARED/Contents/Resources/package-cache"
+rm -rf "$BASE_SHARED/Contents/Resources/github-cache"
+
 print_info "Zipping package ..."
 if [[ $EXIT_STATUS -eq 0 ]]; then
     zip -r "${DEPLOY_PACKAGE}" *
