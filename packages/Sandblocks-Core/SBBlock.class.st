@@ -525,7 +525,8 @@ SBBlock >> copyString [
 SBBlock >> copyToBuffer [
 	<multiSelectAction>
 
-	self sandblockEditor copyBuffer: self sandblockEditor multiSelection
+	self sandblockEditor copyBuffer: self sandblockEditor multiSelection.
+	self performAction: #copyString
 ]
 
 { #category : #accessing }
@@ -708,23 +709,6 @@ SBBlock >> drawBackgroundOn: aCanvas [
 		fillColor: self drawnColor
 		borderWidth: (self colorPolicy borderWidthForBlock: self)
 		borderColor: (self colorPolicy borderColorForBlock: self)
-]
-
-{ #category : #drawing }
-SBBlock >> drawDropHighlightOn: aCanvas [
-
-	self highlightedForDrop ifTrue: [
-		self fixedNumberOfChildren
-			ifTrue: [
-				aCanvas frameRectangle: self bounds width: 3 color: Color red]
-			ifFalse: [
-				self dropLocationDo: [:position :morph :horizontal |
-					aCanvas
-						frameRectangle: self bounds width: 3 color: (Color red alpha: 0.3);
-						line: position
-							to: position + (horizontal ifTrue: [morph width @ 0] ifFalse: [0 @ morph height])
-							width: 6
-							color: Color red]]]
 ]
 
 { #category : #drawing }
@@ -1051,15 +1035,6 @@ SBBlock >> hasSuggestions [
 SBBlock >> hasUnsavedChanges [
 
 	^ self sandblockEditor hasUnsavedChanges: self
-]
-
-{ #category : #'dropping/grabbing' }
-SBBlock >> highlightForDrop: aBoolean [
-
-	" override because we send this quite often and the base impl always calls changed "
-	(self valueOfProperty: #highlightedForDrop) ~= aBoolean ifTrue: [
-		self setProperty: #highlightedForDrop toValue: aBoolean.
-		self changed]
 ]
 
 { #category : #initialization }
@@ -1921,13 +1896,6 @@ SBBlock >> removeSuggestionMenu [
 
 	self valueOfProperty: #sandblockSuggestionMenu ifPresentDo: #delete.
 	self removeProperty: #sandblockSuggestionMenu
-]
-
-{ #category : #'dropping/grabbing' }
-SBBlock >> resetParentHighlights [
-
-	self allOwnersDo: [:m |
-		(m valueOfProperty: #highlightedForDrop ifAbsent: [false]) ifTrue: [m resetHighlightForDrop]]
 ]
 
 { #category : #hierarchy }

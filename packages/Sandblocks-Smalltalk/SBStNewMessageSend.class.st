@@ -297,21 +297,21 @@ SBStNewMessageSend >> useSuggestion: aString [
 	possibleArgumentNames := self possibleArgumentNamesFor: aString.
 	
 	self sandblockEditor do: (SBCombinedCommand newWith: (Array streamContents: [:stream |
-		aString keywords withIndexDo: [:partContents :index |
-			partContents := partContents copyReplaceAll: ':' with: ''.
+		aString keywords withIndexDo: [:partsContents :index | | p |
+			p := partsContents copyReplaceAll: ':' with: ''.
 			self messageParts
 				at: index
 				ifPresent: [:part |
 					stream nextPut: ((SBMutatePropertyCommand newFor: self containingArtefact)
 						target: part;
 						selector: #contents;
-						value: partContents;
+						value: p;
 						yourself)]
 				ifAbsent: [
 					stream nextPut: ((SBInsertCommand newFor: self containingArtefact)
 						container: self;
 						morph: ((self newEmptyChildNear: nil before: false)
-							contents: partContents;
+							contents: p;
 							argumentLabel: (possibleArgumentNames at: index ifAbsent: []));
 						index: index + 1)]].
 		
