@@ -7,25 +7,94 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStNewMessageSend >> actualReceiver [
 
 	^ self receiver
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStNewMessageSend >> arguments [
 
 	^ self messageParts collect: #argument
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #converting }
+SBStNewMessageSend >> asLanguageBox: converter [
+	<convert>
+	<automatic>
+
+	converter
+		if: [self selector = 'eval:lang:' and: [self receiver isBinding and: [self receiver contents = 'SBLanguageBox']]]
+		do: [
+			SBLanguageBox new
+				source: self arguments first contents
+				lang: self arguments second contents]
+]
+
+{ #category : #converting }
+SBStNewMessageSend >> asMessageSend: converter [
+	<convert>
+
+	converter if: [self receiver isNil] do: [self veryDeepCopy]
+]
+
+{ #category : #converting }
+SBStNewMessageSend >> asOhmGrammar: converter [
+	<convert>
+	<automatic>
+
+	converter
+		if: [self selector = 'new:' and: [self receiver isBinding and: [self receiver contents = 'OhmGrammar']]]
+		do: [SBOhmGrammar from: self arguments first contents]
+]
+
+{ #category : #converting }
+SBStNewMessageSend >> asReactComponent: converter [
+	<convert>
+	<automatic>
+
+	converter
+		if: [self selector = 'build' and: [self receiver isMessageSend and: [self receiver selector = 'asElementBuilder']]]
+		do: [
+			SBStReactComponent new
+				componentClass: self receiver receiver
+				props: SBStArray new
+				children: SBStArray new]
+]
+
+{ #category : #converting }
+SBStNewMessageSend >> asWatch: converter [
+	<convert>
+	<automatic>
+
+	converter
+		if: [self selector = 'report:for:' and: [self receiver isBinding and: [self receiver contents = 'SBWatch']]]
+		do: [
+			SBWatch new
+				identifier: self arguments second contents asNumber;
+				expression: self arguments first veryDeepCopy;
+				yourself]
+]
+
+{ #category : #testing }
 SBStNewMessageSend >> canAppearInBlockBody [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #converting }
+SBStNewMessageSend >> converterOptionsDo: aBlock [
+
+	super converterOptionsDo: aBlock.
+	SBStSubstitution allSubclassesDo: [:substitution |
+		(substitution matches: self) ifTrue: [
+			aBlock value: (SBConvertOption
+				named: substitution prettyName
+				do: [:converter | converter do: [substitution newFor: self]])]]
+]
+
+{ #category : #'insert/delete' }
 SBStNewMessageSend >> deleteCommandFor: aBlock [
 
 	aBlock = self receiver ifTrue: [
@@ -50,7 +119,7 @@ SBStNewMessageSend >> deleteCommandFor: aBlock [
 		ifFalse: [(SBDeleteCommand newFor: self containingArtefact) target: aBlock]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'testing hierarchy' }
 SBStNewMessageSend >> fixedNumberOfChildren [
 
 	^ false
@@ -64,7 +133,7 @@ SBStNewMessageSend >> initialize [
 	pc := 0
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBStNewMessageSend >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
 	self isUnary ifTrue: [^ self messageParts first unaryToKeywordCommand].
@@ -72,37 +141,45 @@ SBStNewMessageSend >> insertCommandRequest: aMorph near: aBlock before: aBoolean
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStNewMessageSend >> insetWithoutReceiver [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStNewMessageSend >> isBinary [
 
-	^ self selector allSatisfy: [:c | c isSpecial]
+	^ (self selector allSatisfy: [:c | c isSpecial]) or: [self selector = '::']
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
+SBStNewMessageSend >> isConstructor: aString for: aClass [
+
+	^ (self receiver satisfies: #(#notNil #isBinding))
+		and: [self receiver contents = aClass name]
+		and: [self selector = aString]
+]
+
+{ #category : #testing }
 SBStNewMessageSend >> isExpression [
 
 	^ self receiver notNil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStNewMessageSend >> isKeywords [
 
-	^ self selector includes: $:
+	^ self selector first isLetter and: [self selector includes: $:]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStNewMessageSend >> isMessageSend [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStNewMessageSend >> isUnary [
 
 	^ self isKeywords not and: [self isBinary not]
@@ -114,15 +191,15 @@ SBStNewMessageSend >> layoutCommands [
 	| partsLayout |
 	partsLayout := self messageParts
 		collect: #layoutCommands
-		separatedBy: SBAlgebraCommand softLine.
+		separatedBy: (SBAlgebraCommand softLineOrGap withGap: true).
 	^ SBAlgebraCommand container
 		morph: self;
 		data: (self receiver
-			ifNotNil: [{self receiver layoutCommands}, {SBAlgebraCommand indent data: {SBAlgebraCommand softLineOrGap}, partsLayout}]
+			ifNotNil: [{self receiver layoutCommands}, {SBAlgebraCommand indent data: {SBAlgebraCommand softLineOrGap withGap: true}, partsLayout}]
 			ifNil: [partsLayout])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBStNewMessageSend >> layoutInset [
 
 	^ (self receiver isNil and: [self insetWithoutReceiver])
@@ -138,13 +215,13 @@ SBStNewMessageSend >> messageParts [
 		ifFalse: [self submorphs allButFirst]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBStNewMessageSend >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ SBStNewMessagePart new selector: ':' argument: self newNullBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBStNewMessageSend >> objectInterfaceNear: aBlock at: aSymbol [
 
 	aBlock = self receiver ifTrue: [
@@ -180,23 +257,37 @@ SBStNewMessageSend >> receiver [
 		ifFalse: [self firstSubmorph]
 ]
 
+{ #category : #accessing }
+SBStNewMessageSend >> receiver: aBlock [
+
+	self receiver ifNotNil: #delete.
+	aBlock ifNotNil: [self addMorphFront: aBlock]
+]
+
 { #category : #'initialize-release' }
 SBStNewMessageSend >> receiver: aBlock selector: aSymbol arguments: aCollection [
 
 	aBlock ifNotNil: [self addMorphBack: aBlock].
 	
-	aSymbol keywords withIndexDo: [:keyword :index |
+	(aSymbol keywords ifEmpty: [#('')]) withIndexDo: [:keyword :index |
 		self addMorphBack: (SBStNewMessagePart new
 			selector: keyword
 			argument: (aCollection at: index ifAbsent: [nil]))]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStNewMessageSend >> selector [
 
-	^ ((self messageParts collect: #contents) joinSeparatedBy: ':'), ((self messageParts size = 1 and: [self messageParts first hasArgument and: [self messageParts first contents noneSatisfy: #isSpecial]])
+	^ ((self messageParts collect: #contents) joinSeparatedBy: ':'), ((self messageParts size > 1 or: [self messageParts first hasArgument and: [self messageParts first contents noneSatisfy: #isSpecial]])
 		ifTrue: [':']
 		ifFalse: [''])
+]
+
+{ #category : #input }
+SBStNewMessageSend >> startInputAt: aNumber replacingContents: aBoolean [
+
+	self sandblockEditor replaceInput: self messageParts first.
+	^ self messageParts first startInputAt: aNumber replacingContents: aBoolean
 ]
 
 { #category : #'as yet unclassified' }
@@ -235,6 +326,12 @@ SBStNewMessageSend >> useSuggestion: aString [
 	self inputNextUnknown
 ]
 
+{ #category : #'colors and color policies' }
+SBStNewMessageSend >> wantsExtraSpace [
+
+	^ false
+]
+
 { #category : #actions }
 SBStNewMessageSend >> wrapInCascade [
 	<action>
@@ -246,13 +343,19 @@ SBStNewMessageSend >> wrapInCascade [
 		wrap: [:outer :inner | outer receiver: self receiver messages: {self}])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
+SBStNewMessageSend >> writeSendSourceOn: aStream [
+
+	self messageParts do: [:p | p writeSourceOn: aStream] separatedBy: [aStream space]
+]
+
+{ #category : #printing }
 SBStNewMessageSend >> writeSourceOn: aStream [
 
 	self receiver ifNotNil: [
 		aStream nextPut: $(.
 		self receiver writeSourceOn: aStream.
 		aStream space.
-		self messageParts do: [:p | p writeSourceOn: aStream].
+		self messageParts do: [:p | p writeSourceOn: aStream] separatedBy: [aStream space].
 		aStream nextPut: $)]
 ]

@@ -246,6 +246,12 @@ SBBlock >> canPersist [
 	^ true
 ]
 
+{ #category : #'actions tests' }
+SBBlock >> canSelectPreviousSuggestion [
+
+	^ self hasMultipleSuggestions and: [self suggestionMenuDo: [:menu | menu activeIndex > 1]]
+]
+
 { #category : #'colors and color policies' }
 SBBlock >> centerAlignSymbols [
 
@@ -911,8 +917,8 @@ SBBlock >> focusNextSuggestion [
 { #category : #actions }
 SBBlock >> focusPreviousSuggestion [
 	<inputAction>
-	<actionValidIf: #hasMultipleSuggestions>
-	
+	<actionValidIf: #canSelectPreviousSuggestion>
+
 	self suggestionMenuDo: #previous
 ]
 
@@ -2314,13 +2320,12 @@ SBBlock >> swap: aNumber [
 	offset := aNumber.
 	
 	canSwap := [:a :b | (a satisfies: b objectInterface) and: [b satisfies: a objectInterface]].
-	[
-		offset abs <= children size and: [(canSwap value: self value: (next := children atWrap: (children indexOf: self) + offset)) not]] whileTrue: [offset := offset + aNumber].
+	[offset abs <= children size and: [(canSwap value: self value: (next := children atWrap: (children indexOf: self) + offset)) not]] whileTrue: [offset := offset + aNumber].
 	offset = children size ifTrue: [^ self].
 	
 	self sandblockEditor do: ((SBSwapCommand newFor: self containingArtefact)
-		a: (SBExampleWatch report: self for: 1023101891);
-		b: (SBExampleWatch report: next for: 63958237))
+		a: self;
+		b: next)
 ]
 
 { #category : #actions }

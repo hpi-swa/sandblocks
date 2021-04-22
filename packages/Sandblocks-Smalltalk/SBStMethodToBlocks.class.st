@@ -114,7 +114,7 @@ SBStMethodToBlocks >> visitMessageNode: aNode [
 	" the originalReceiver may not have gotten a pc set, so we copy it from the generated receiver "
 	(blockReceiver pc = 0 and: [aNode receiver notNil]) ifTrue: [blockReceiver pc: aNode receiver pc].
 	
-	^ SBStMessageSend new
+	^ SBStGrammarHandler messageSendClass new
 		receiver: blockReceiver
 			selector: aNode originalSelector
 			arguments: (aNode originalArguments collect: [:b | b accept: self]);

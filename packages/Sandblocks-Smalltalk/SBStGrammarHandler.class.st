@@ -7,6 +7,12 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
+{ #category : #'as yet unclassified' }
+SBStGrammarHandler class >> messageSendClass [
+
+	^ SBStMessageSend
+]
+
 { #category : #actions }
 SBStGrammarHandler >> addExample [
 	<action>
@@ -289,7 +295,7 @@ SBStGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 		^ self
 			wrap: aBlock
 			do: [:outer :inner | outer receiver: inner selector: char asString arguments: {outer newNullBlock label: 'arg'}]
-			with: SBStMessageSend new
+			with: self class messageSendClass new
 			focusOuter: true].
 	char = $( ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer type: #literal contents: {inner}] with: SBStArray new]
 ]
@@ -468,7 +474,7 @@ SBStGrammarHandler >> wrapInMessageSend: aString [
 
 	| msg |
 	self block isExpression ifFalse: [^ self].
-	msg := SBStMessageSend new
+	msg := self class messageSendClass new
 		receiver: (self block newNullBlock label: 'expr')
 		selector: aString
 		arguments: (aString numArgs > 0

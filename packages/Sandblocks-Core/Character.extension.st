@@ -31,6 +31,12 @@ Character >> isPrintable [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Character >> option [
+
+	^ self asSandblockShortcut withOption
+]
+
+{ #category : #'*Sandblocks-Core' }
 Character >> shift [
 
 	^ self asSandblockShortcut withShift

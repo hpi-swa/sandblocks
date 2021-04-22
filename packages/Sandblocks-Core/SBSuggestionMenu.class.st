@@ -9,6 +9,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBSuggestionMenu >> activeIndex [
+
+	^ activeIndex
+]
+
+{ #category : #'as yet unclassified' }
 SBSuggestionMenu >> activeSelector [
 
 	^ self activeSuggestion ifNotNil: #selector

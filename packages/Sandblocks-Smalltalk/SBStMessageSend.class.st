@@ -361,9 +361,7 @@ SBStMessageSend >> noteNewOwner: aMorph [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> objectInterfaceNear: aBlock at: aSymbol [
 
-	aSymbol = #replace ifFalse: [^ SBInterfaces never].
-	
-	aBlock = self receiver ifTrue: [^ SBInterfaces stExpression].
+	(aBlock = self receiver and: [aSymbol = #replace]) ifTrue: [^ SBInterfaces stExpression].
 	
 	^ signature objectInterfaceNear: aBlock at: aSymbol argumentInterface: SBInterfaces stExpression
 ]

@@ -36,11 +36,11 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		inputShortcut: Character backspace do: #deleteBeforeCursor;
 		inputShortcut: Character delete do: #deleteAfterCursor;
 		registerShortcut: $a command do: #clearInput;
-		registerShortcut: $1 command do: #useFirstArgument;
-		registerShortcut: $2 command do: #useSecondArgument;
-		registerShortcut: $3 command do: #useThirdArgument;
-		registerShortcut: $4 command do: #useFourthArgument;
-		registerShortcut: $5 command do: #useFifthArgument;
+		registerShortcut: $1 command, $1 option do: #useFirstArgument;
+		registerShortcut: $2 command, $2 option do: #useSecondArgument;
+		registerShortcut: $3 command, $3 option do: #useThirdArgument;
+		registerShortcut: $4 command, $4 option do: #useFourthArgument;
+		registerShortcut: $5 command, $5 option do: #useFifthArgument;
 		inputShortcut: $' command do: #splitStringAtCursor;
 		registerShortcut: $+ command do: #insertElementAfter;
 		registerShortcut: $* command do: #insertElementBefore;
@@ -105,14 +105,10 @@ SBTextInputMapping >> registerDefaultShortcuts [
 			do: #selectPreviousGroup;
 		registerShortcut: Character arrowDown asSandblockShortcut, Character arrowDown command
 			do: #selectNextGroup;
-		registerShortcut: Character arrowLeft asSandblockShortcut withOption withCtrl
-			do: #selectLeftToplevel;
-		registerShortcut: Character arrowDown asSandblockShortcut withOption withCtrl
-			do: #selectBottomToplevel;
-		registerShortcut: Character arrowUp asSandblockShortcut withOption withCtrl
-			do: #selectTopToplevel;
-		registerShortcut: Character arrowRight asSandblockShortcut withOption withCtrl
-			do: #selectRightToplevel;
+		registerShortcut: Character arrowLeft option do: #selectLeftToplevel;
+		registerShortcut: Character arrowDown option do: #selectBottomToplevel;
+		registerShortcut: Character arrowUp option do: #selectTopToplevel;
+		registerShortcut: Character arrowRight option do: #selectRightToplevel;
 		registerShortcut: Character end shift do: #selectAdjacentAfter;
 		registerShortcut: Character home shift do: #selectAdjacentBefore;
 		registerShortcut: $A command do: #selectAdjacent.

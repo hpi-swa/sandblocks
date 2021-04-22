@@ -26,8 +26,9 @@ SBSmalltalkNavigation >> nextWithoutMessageSend: aBlock [
 
 	^ aBlock skipLeftRightNavigation
 		ifTrue: [
-			(aBlock isMessageSend and: [aBlock isInCascade]) ifTrue: [aBlock messageParts first]
-			ifFalse: [self nextWithoutMessageSend: aBlock childSandblocks first]]
+			(aBlock isMessageSend and: [aBlock receiver isNil])
+				ifTrue: [aBlock messageParts first]
+				ifFalse: [self nextWithoutMessageSend: aBlock childSandblocks first]]
 		ifFalse: [aBlock]
 ]
 

@@ -73,6 +73,12 @@ SBStNewMessagePart >> hasArgument [
 ]
 
 { #category : #'as yet unclassified' }
+SBStNewMessagePart >> insertEmptyCommandRequestNear: aBlock before: aBoolean [
+
+	^ self messageSend insertEmptyCommandRequestNear: aBlock before: aBoolean
+]
+
+{ #category : #'as yet unclassified' }
 SBStNewMessagePart >> isMessagePart [
 
 	^ true
@@ -86,15 +92,22 @@ SBStNewMessagePart >> keyStroke: anEvent [
 	(anEvent keyCharacter = $: or: [self contents allSatisfy: #isSpecial]) ifTrue: [
 		self ensureArgument.
 		anEvent keyCharacter = $: ifTrue: [
-			self currentTextMorph deleteBeforeCursor.
+			self contents size = 1
+				ifTrue: []
+				ifFalse: [self currentTextMorph deleteBeforeCursor].
 			^ self continueInputInArgument]].
 	
 	self valid ifTrue: [self updateSuggestions] ifFalse: [
 		self currentTextMorph deleteBeforeCursor.
-		SBStGrammarHandler new
-			perform: anEvent keyCharacter
-			for: self argument
-			empty: true]
+		self argument
+			ifNotNil: [:a |
+				self continueInputInArgument.
+				a keyStroke: anEvent]
+			ifNil: [
+				SBStGrammarHandler new
+					perform: anEvent keyCharacter
+					for: self messageSend
+					empty: false]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -108,9 +121,14 @@ SBStNewMessagePart >> layoutCommands [
 					self submorphs first layoutCommands.
 					self submorphs second layoutCommands.
 					SBAlgebraCommand gap.
-					SBAlgebraCommand gap.
 					self submorphs third layoutCommands}]
 			ifFalse: [{self firstSubmorph layoutCommands. self submorphs second layoutCommands}])
+]
+
+{ #category : #'as yet unclassified' }
+SBStNewMessagePart >> layoutInset [
+
+	^ 0
 ]
 
 { #category : #'as yet unclassified' }
@@ -119,7 +137,7 @@ SBStNewMessagePart >> messageSend [
 	^ self parentSandblock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
 SBStNewMessagePart >> parentIsExpression [
 
 	^ self parentSandblock isExpression
@@ -129,6 +147,12 @@ SBStNewMessagePart >> parentIsExpression [
 SBStNewMessagePart >> prefersNoBorder [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBStNewMessagePart >> selector [
+
+	^ self messageSend selector
 ]
 
 { #category : #'as yet unclassified' }
@@ -210,7 +234,13 @@ SBStNewMessagePart >> useSuggestion: aString [
 { #category : #'as yet unclassified' }
 SBStNewMessagePart >> valid [
 
-	^ (self contents allSatisfy: #isSpecial) or: [self contents first canBeIdentifierInitial and: [self contents allSatisfy: [:c | c isAlphaNumeric or: [c = $_]]]]
+	^ (self contents allSatisfy: #isSpecial) or: [self contents = ':' or: [self contents first canBeIdentifierInitial and: [self contents allSatisfy: [:c | c isAlphaNumeric or: [c = $_]]]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBStNewMessagePart >> wantsExtraSpace [
+
+	^ false
 ]
 
 { #category : #'as yet unclassified' }
@@ -250,6 +280,17 @@ SBStNewMessagePart >> wrapInDynamicArray [
 ]
 
 { #category : #actions }
+SBStNewMessagePart >> wrapInMessageSend [
+	<action>
+	<actionValidIf: #parentIsExpression>
+
+	self messageSend isUnary ifFalse: [^ self sandblockEditor startInput: self nextBlock at: 1 replacingContents: false].
+	self messageSend grammarHandler
+		block: self messageSend;
+		wrapInMessageSend
+]
+
+{ #category : #actions }
 SBStNewMessagePart >> wrapInReturn [
 	<action>
 	<actionValidIf: #parentIsExpression>
@@ -272,7 +313,7 @@ SBStNewMessagePart >> writeSourceOn: aStream [
 
 	aStream nextPutAll: self contents.
 	self argument ifNotNil: [:a |
-		aStream nextPut: $:.
+		self contents first isSpecial ifFalse: [aStream nextPut: $:].
 		aStream space.
 		self argument writeSourceOn: aStream]
 ]
