@@ -42,8 +42,8 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $4 command, $4 option do: #useFourthArgument;
 		registerShortcut: $5 command, $5 option do: #useFifthArgument;
 		inputShortcut: $' command do: #splitStringAtCursor;
-		registerShortcut: $+ command do: #insertElementAfter;
-		registerShortcut: $* command do: #insertElementBefore;
+		registerShortcut: Character space command do: #insertElementAfter;
+		registerShortcut: Character space shift withCommand do: #insertElementBefore;
 		registerShortcut: $i command do: #appendElement;
 		registerShortcut: $I shift withCommand do: #prependElement;
 		inputShortcut: Character cr command do: #typeNewLine.
@@ -125,7 +125,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character arrowLeft command withShift do: #swapLeft;
 		registerShortcut: Character arrowRight command withShift do: #swapRight;
 		registerShortcut: $c asSandblockShortcut withOption do: #copyString;
-		registerShortcut: $v asSandblockShortcut withOption do: #pasteString;
+		registerShortcut: $V command do: #pasteString;
 		registerShortcut: $x command do: #deleteBlock;
 		registerShortcut: $X command do: #deleteAround;
 		cmdShortcut: Character backspace asSandblockShortcut, Character delete do: #deleteBlock;
