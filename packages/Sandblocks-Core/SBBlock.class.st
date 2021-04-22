@@ -1924,6 +1924,16 @@ SBBlock >> sandblockForegroundColor [
 	^ self foregroundColor
 ]
 
+{ #category : #saving }
+SBBlock >> saveString [
+
+	^ (self childSandblocks 
+		inject: (self className, ' new position: ', self position asString)
+		into: [:string :sandblock | string,';', Character cr,  'addMorph: (', sandblock saveString,')']
+		), '; yourself'
+
+]
+
 { #category : #actions }
 SBBlock >> select [
 	<action>

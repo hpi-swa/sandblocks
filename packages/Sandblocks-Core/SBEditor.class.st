@@ -90,6 +90,11 @@ SBEditor class >> openFor: aMethodOrClass [
 	^ (self newFor: aMethodOrClass) openInWindow; yourself
 ]
 
+{ #category : #generated }
+SBEditor class >> savedBlocks [
+^ {}
+]
+
 { #category : #shortcuts }
 SBEditor class >> shortcutStringForAction: anAction [
 
@@ -829,6 +834,14 @@ SBEditor >> labelString [
 	^ 'Editor', (workspace ifNotNil: [:w | ' - ', w name] ifNil: [''])
 ]
 
+{ #category : #actions }
+SBEditor >> loadBlocks [
+	<globalAction>
+	
+	self artefacts do: [:each | each deleteBlock].
+	self class savedBlocks do: [:each | self openMorph: each].
+]
+
 { #category : #'do/undo/redo' }
 SBEditor >> markChangesAfterCommand: artefacts [
 
@@ -1344,6 +1357,19 @@ SBEditor >> saveCopy [
 	<globalAction>
 
 	self interruptInputDuring: [self selection ifNotNil: [:selected | selected artefactForPersisting ifNotNil: [:a | a saveCopy]]]
+]
+
+{ #category : #actions }
+SBEditor >> saveCurrentBlocks [
+	<globalAction>
+	
+	| saveString |
+	
+	saveString := (self artefacts inject: '' into: [:string :artefact | string , artefact saveString, '.', Character cr]).
+	saveString := 'savedBlocks', Character cr, '^ {', saveString, '}'.
+	self class class compile: saveString classified: 'generated'
+
+
 ]
 
 { #category : #selection }
