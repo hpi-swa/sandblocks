@@ -211,7 +211,9 @@ SBStASTNode >> preferredColor [
 { #category : #printing }
 SBStASTNode >> prettySourceString [
 
-	^ PPFormatter formatString: self sourceString class: self containingArtefact relatedClass noPattern: self ~= self containingArtefact
+	| source |
+	source := self sourceString.
+	^ [PPFormatter formatString: source class: self containingArtefact relatedClass noPattern: self ~= self containingArtefact] on: SyntaxErrorNotification do: [source]
 ]
 
 { #category : #refactoring }
