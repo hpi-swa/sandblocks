@@ -225,7 +225,9 @@ SBEditor >> buildCommandBar [
 			shortcut: (self class anyShortcutForAction: #openOpenWindow)
 			do: [self openOpenWindow]);
 		addMorphBack: (SBButton new
-			icon: SBIcon iconPlus shortcut: nil do: [self promptAddArtifact];
+			icon: SBIcon iconPlus
+				shortcut: (self class anyShortcutForAction: #promptAddArtifact)
+				do: [self promptAddArtifact];
 			balloonText: 'Add artifact');
 		addMorphBack: (Morph new
 			height: 0;
@@ -1232,30 +1234,14 @@ SBEditor >> promptChangeCompile [
 { #category : #'action helpers' }
 SBEditor >> promptGlobalAction [
 	<action>
-
-	| options index |
-	options := Array streamContents: [:s |
-		globalShortcutListeners do: [:listener |
-			(Pragma allNamed: #globalAction in: listener class) do: [:p |
-				s nextPut: listener -> p]]].
-	
-	index := UIManager default chooseFrom: (options collect: [:option |
-		option value selector, (' ', (SBEditor shortcutStringForAction: option value selector))]).
-	
-	index > 0 ifTrue: [(options at: index) key perform: (options at: index) value selector]
-]
-
-{ #category : #actions }
-SBEditor >> promptMenu [
 	<globalAction>
 
-	| options |
-	options := {
-		({'Change UI Theme'. [self promptChangeColorPolicy]}).
-		({'Change Compile Method'. [self promptChangeCompile]}).
-		({'New Class'. [self createEmptySmalltalkClass]}).
-	}.
-	(UIManager default chooseFrom: (options collect: #first) values: (options collect: #second)) ifNotNil: #value
+	| options index |
+	options := Array streamContents: [:s | globalShortcutListeners do: [:listener | (Pragma allNamed: #globalAction from: listener class to: SBEditor) do: [:p | s nextPut: listener -> p]]].
+	
+	index := UIManager default chooseFrom: (options collect: [:option | option value selector, (' ', (SBEditor shortcutStringForAction: option value selector))]).
+	
+	index > 0 ifTrue: [(options at: index) key perform: (options at: index) value selector]
 ]
 
 { #category : #'do/undo/redo' }

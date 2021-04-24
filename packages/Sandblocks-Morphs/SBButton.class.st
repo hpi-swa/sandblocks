@@ -195,5 +195,5 @@ SBButton >> widget: aMorph shortcut: aShortcut do: aBlock [
 			contents: (aShortcut isCollection
 				ifTrue: [aShortcut anyOne displayString]
 				ifFalse: [aShortcut displayString]);
-			color: Color gray)]
+			opacity: 0.7)]
 ]

@@ -13,7 +13,8 @@ Class {
 		'cachedForm',
 		'svgColor',
 		'iconName',
-		'size'
+		'size',
+		'cachedColor'
 	],
 	#classVars : [
 		'FormCache',
@@ -6001,12 +6002,13 @@ SBIcon class >> supersamplingFactor [
 { #category : #colors }
 SBIcon >> cachedFormFor: aPoint [
 
-	| size |
+	| size currentColor |
 	size := aPoint x min: aPoint y.
+	currentColor := self color.
 	
-	(cachedForm isNil or: [cachedForm extent ~= size asPoint])
-		ifTrue: [cachedForm := self class cachedFormSvg: self svg color: self color size: size].
+	(cachedForm isNil or: [cachedForm extent ~= size asPoint or: [cachedColor ~= currentColor]]) ifTrue: [cachedForm := self class cachedFormSvg: self svg color: currentColor size: size].
 	
+	cachedColor := currentColor.
 	^ cachedForm
 ]
 
@@ -6018,6 +6020,12 @@ SBIcon >> changeIconName: anIconNameSymbol [
 	cachedForm := nil.
 	iconName := anIconNameSymbol.
 	self changed
+]
+
+{ #category : #'as yet unclassified' }
+SBIcon >> cleanCache [
+
+	cachedForm := nil
 ]
 
 { #category : #drawing }
