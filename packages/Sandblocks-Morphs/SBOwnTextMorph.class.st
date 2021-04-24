@@ -107,6 +107,15 @@ SBOwnTextMorph >> cursor: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> cursorColor [
+
+	^ self containingSandblock
+		withDecorator: SBSelectionDecorator
+		do: [:d | d color]
+		ifAbsent: [nil]
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> cursorIndexForPosition: aPoint [
 
 	| font offset index |
@@ -190,11 +199,12 @@ SBOwnTextMorph >> drawOn: aCanvas [
 			font: font
 			color: colorToUse].
 	
-	self cursorVisible ifTrue: [
+	self cursorVisible ifTrue: [ | cursorColor |
+		cursorColor := self cursorColor ifNil: [colorToUse].
 		cursorX := (font widthOfString: self contentsToDisplay from: 1 to: cursor - 1) + self left.
 		aCanvas
-			line: cursorX @ self top to: cursorX @ self bottom color: colorToUse;
-			line: cursorX + 1 @ self top to: cursorX + 1 @ self bottom color: (colorToUse alpha: 0.3)]
+			line: cursorX @ self top to: cursorX @ self bottom color: cursorColor;
+			line: cursorX + 1 @ self top to: cursorX + 1 @ self bottom color: (cursorColor alpha: 0.3)]
 ]
 
 { #category : #'as yet unclassified' }

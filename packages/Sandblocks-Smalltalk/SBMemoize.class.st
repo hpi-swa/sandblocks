@@ -72,7 +72,7 @@ SBMemoize >> cacheChanged: aNumber [
 { #category : #'as yet unclassified' }
 SBMemoize >> drawnColor [
 
-	^ Color veryDarkGray
+	^ self colorPolicy toolColorFor: self
 ]
 
 { #category : #'as yet unclassified' }

@@ -160,6 +160,12 @@ SBSelection >> isSelection [
 ]
 
 { #category : #'as yet unclassified' }
+SBSelection >> isSingleArtefactView [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBSelection >> keyStroke: anEvent [
 	"Abort the drag on an escape"
 

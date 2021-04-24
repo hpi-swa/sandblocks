@@ -75,7 +75,7 @@ SBWatch >> doubleClick: anEvent [
 { #category : #'colors and color policies' }
 SBWatch >> drawnColor [
 
-	^ Color veryDarkGray
+	^ self colorPolicy toolColorFor: self
 ]
 
 { #category : #'as yet unclassified' }

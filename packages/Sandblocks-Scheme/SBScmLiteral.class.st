@@ -66,7 +66,7 @@ SBScmLiteral >> deleteBeforeCursor [
 	^ super deleteBeforeCursor
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBScmLiteral >> drawnColor [
 
 	^ Color transparent
@@ -98,6 +98,12 @@ SBScmLiteral >> keyStroke: anEvent [
 SBScmLiteral >> moveCursorTo: aNumber [
 
 	self currentTextMorph moveCursorTo: aNumber
+]
+
+{ #category : #'as yet unclassified' }
+SBScmLiteral >> preferredColorIn: aColorPolicy [
+
+	^ aColorPolicy literal
 ]
 
 { #category : #'as yet unclassified' }

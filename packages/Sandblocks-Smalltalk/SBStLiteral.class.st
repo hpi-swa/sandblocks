@@ -88,6 +88,12 @@ SBStLiteral >> moveCursorTo: aNumber [
 	text moveCursorTo: aNumber
 ]
 
+{ #category : #'colors and color policies' }
+SBStLiteral >> preferredColorIn: aColorPolicy [
+
+	^ aColorPolicy literal
+]
+
 { #category : #'as yet unclassified' }
 SBStLiteral >> replaceWithUnknown [
 

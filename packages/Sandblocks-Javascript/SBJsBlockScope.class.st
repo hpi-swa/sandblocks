@@ -51,6 +51,12 @@ SBJsBlockScope >> layoutCommandsForStatements [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsBlockScope >> preferredColorIn: aColorPolicy [
+
+	^ aColorPolicy important
+]
+
+{ #category : #'as yet unclassified' }
 SBJsBlockScope >> statements [
 
 	^ self submorphs

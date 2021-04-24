@@ -107,6 +107,12 @@ SBJsPrefixOperator >> precedence [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsPrefixOperator >> preferredColorIn: aColorPolicy [
+
+	^ aColorPolicy keyword
+]
+
+{ #category : #'as yet unclassified' }
 SBJsPrefixOperator >> rhs [
 
 	^ self lastSubmorph

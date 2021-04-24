@@ -305,6 +305,12 @@ SBStBlockBody >> pc: aNumber [
 	pc := aNumber
 ]
 
+{ #category : #'colors and color policies' }
+SBStBlockBody >> preferredColorIn: aColorPolicy [
+
+	^ aColorPolicy important
+]
+
 { #category : #'as yet unclassified' }
 SBStBlockBody >> prependStatement: aBlock [
 

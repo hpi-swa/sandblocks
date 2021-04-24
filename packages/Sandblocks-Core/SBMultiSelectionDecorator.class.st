@@ -5,9 +5,17 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBMultiSelectionDecorator >> color [
+
+	^ self morph colorPolicy selectionColorForBlock: (self morph parentSandblock ifNil: [self morph])
+]
+
+{ #category : #'as yet unclassified' }
 SBMultiSelectionDecorator >> postDrawOn: aCanvas [
 
 	aCanvas
-		frameRectangle: (self morph bounds expandBy: 2) width: self morph frameSize
-		color: ((self morph parentSandblock ifNil: [self morph]) foregroundColor alpha: 0.6)
+		frameRoundRect: (self morph bounds expandBy: 2)
+		radius: self morph colorPolicy cornerRadius
+		width: self morph frameSize
+		color: (self color alpha: 0.6)
 ]

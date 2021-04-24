@@ -499,7 +499,7 @@ SBStBasicMethod >> object [
 { #category : #'as yet unclassified' }
 SBStBasicMethod >> objectInterface [
 
-	^ SBInterfaces never
+	^ SBInterfaces stMethod
 ]
 
 { #category : #'as yet unclassified' }
@@ -517,6 +517,16 @@ SBStBasicMethod >> outOfWorld: aWorld [
 ]
 
 { #category : #'as yet unclassified' }
+SBStBasicMethod >> pasteReplace [
+	<action>
+
+	
+	super pasteReplace ifNotNil: [:new |
+		new currentClass: self currentClass.
+		new category: self category]
+]
+
+{ #category : #'as yet unclassified' }
 SBStBasicMethod >> pickSelf [
 	<action>
 	
@@ -526,9 +536,10 @@ SBStBasicMethod >> pickSelf [
 { #category : #'as yet unclassified' }
 SBStBasicMethod >> postDuplicateSelf [
 
-	currentSelector asSymbol isBinary ifTrue: [^ self shouldBeImplemented].
-	
-	self currentSelector: 'copy', currentSelector capitalized.
+	SBToggledCode comment: '' active: 0 do: {
+		[
+			currentSelector asSymbol isBinary ifTrue: [^ self shouldBeImplemented].
+			self currentSelector: 'copy', currentSelector capitalized]}.
 	self selector: self currentSelector arguments: self arguments class: self methodClass.
 	
 	super postDuplicateSelf.
@@ -545,6 +556,12 @@ SBStBasicMethod >> postDuplicateSelf [
 SBStBasicMethod >> pragmas [
 
 	^ self statements select: [:s | s isPragma]
+]
+
+{ #category : #'as yet unclassified' }
+SBStBasicMethod >> prefersNoBorder [
+
+	^ self sandblockEditor isSingleArtefactView
 ]
 
 { #category : #'as yet unclassified' }

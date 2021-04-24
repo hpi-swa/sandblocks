@@ -659,7 +659,7 @@ SBTutorialStep >> createStepMethod: aBlock in: anEditor [
 { #category : #'as yet unclassified' }
 SBTutorialStep >> drawnColor [
 
-	^ Color veryDarkGray
+	^ self colorPolicy toolColorFor: self
 ]
 
 { #category : #'as yet unclassified' }

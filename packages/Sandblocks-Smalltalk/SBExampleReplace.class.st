@@ -38,7 +38,7 @@ SBExampleReplace class >> suggestion [
 { #category : #'as yet unclassified' }
 SBExampleReplace >> drawnColor [
 
-	^ Color veryDarkGray
+	^ self colorPolicy toolColorFor: self
 ]
 
 { #category : #'as yet unclassified' }

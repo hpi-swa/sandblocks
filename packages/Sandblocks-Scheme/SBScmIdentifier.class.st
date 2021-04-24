@@ -26,6 +26,16 @@ SBScmIdentifier >> isIdentifier [
 	^ true
 ]
 
+{ #category : #'colors and color policies' }
+SBScmIdentifier >> preferredColorIn: aColorPolicy [
+
+	(self parentSandblock notNil and: [self parentSandblock isSExpr and: [self isFirstChild]]) ifTrue: [
+		^ self parentSandblock
+			ifWellFormedSpecialFormDo: [:f | aColorPolicy builtIn]
+			ifNone: [aColorPolicy identifier]].
+	^ aColorPolicy default
+]
+
 { #category : #'as yet unclassified' }
 SBScmIdentifier >> prefersNoBorder [
 

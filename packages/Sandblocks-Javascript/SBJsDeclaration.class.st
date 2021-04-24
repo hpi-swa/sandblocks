@@ -79,6 +79,12 @@ SBJsDeclaration >> lhs: aVariable rhs: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsDeclaration >> preferredColorIn: aColorPolicy [
+
+	^ aColorPolicy keyword
+]
+
+{ #category : #'as yet unclassified' }
 SBJsDeclaration >> startInputAt: aNumber replacingContents: aBoolean [
 
 	^ nil

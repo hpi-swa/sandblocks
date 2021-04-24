@@ -59,7 +59,7 @@ SBHalt >> doubleClick: anEvent [
 { #category : #'as yet unclassified' }
 SBHalt >> drawnColor [
 
-	^ Color veryDarkGray
+	^ self colorPolicy toolColorFor: self
 ]
 
 { #category : #'as yet unclassified' }

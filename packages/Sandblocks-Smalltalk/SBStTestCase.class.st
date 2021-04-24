@@ -104,7 +104,7 @@ SBStTestCase >> debug [
 { #category : #'as yet unclassified' }
 SBStTestCase >> drawnColor [
 
-	^ Color veryDarkGray
+	^ self colorPolicy toolColorFor: self
 ]
 
 { #category : #'as yet unclassified' }

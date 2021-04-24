@@ -129,9 +129,9 @@ SBStASTNode >> guessedClass [
 { #category : #converting }
 SBStASTNode >> inLanguageBox: converter [
 	<convert>
-	
+
 	^ converter
-		if: [self completeSubtree]
+		if: [self completeSubtree and: [self isExpression]]
 		do: [SBLanguageBox new source: self sourceString lang: 'smalltalk']
 ]
 

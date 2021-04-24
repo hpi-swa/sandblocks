@@ -111,7 +111,7 @@ SBMorphExample >> displayError: anError [
 { #category : #colors }
 SBMorphExample >> drawnColor [
 
-	^ Color veryDarkGray
+	^ self colorPolicy toolColorFor: self
 ]
 
 { #category : #'as yet unclassified' }
