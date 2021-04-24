@@ -1571,7 +1571,7 @@ SBBlock >> nextVerticalNear: aNumber calcDistance: aDistBlock validBlock: aValid
 	artefact := self containingFloat.
 	tolerance := 10.
 	
-	allCandidates := Array streamContents: [:stream | artefact allMorphsDo: [:candidate | (candidate isTextMorph and: [aValidBlock value: candidate]) ifTrue: [stream nextPut: candidate]]].
+	allCandidates := Array streamContents: [:stream | artefact allMorphsDo: [:candidate | ((candidate isTextMorph or: [candidate isSandblock and: [candidate hasChildSandblocks not]]) and: [aValidBlock value: candidate]) ifTrue: [stream nextPut: candidate]]].
 	
 	candidates := OrderedCollection new.
 	candidatesBestDistance := 900000000.
