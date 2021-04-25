@@ -206,7 +206,7 @@ SBBlock >> browse [
 { #category : #testing }
 SBBlock >> canAppearInBlockBody [
 
-	^ false
+	^ self isExpression
 ]
 
 { #category : #testing }
@@ -1602,7 +1602,7 @@ SBBlock >> noteNewOwner: aMorph [
 SBBlock >> object [
 
 	"Should be self subclassResponsibility but often causes non-recoverable errors with drag and drop"
-	^ nil
+	^ self
 ]
 
 { #category : #'object interface' }

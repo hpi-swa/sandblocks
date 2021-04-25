@@ -25,7 +25,10 @@ SBPalette class >> container: aBlock [
 { #category : #'as yet unclassified' }
 SBPalette class >> context [
 
-	^ self subclassResponsibility
+	" have subclassResponsibility as a marker but use the more graceful failure for newly added palettes "
+	^ true
+		ifTrue: [[:b | false]]
+		ifFalse: [self subclassResponsibility]
 ]
 
 { #category : #'as yet unclassified' }
