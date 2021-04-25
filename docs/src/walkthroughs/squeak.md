@@ -4,22 +4,22 @@ In this walkthrough, we present a couple of preferences that we recommend you en
 
 In between our image even crashes, so we got to demonstrate recovering unsaved changes you made after a crash.
 
-<iframe src="https://player.vimeo.com/video/541134203" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;"><iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://player.vimeo.com/video/541134203" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
 
 # Recap
 
-1. Preferences mentioned
+1. **Preferences mentioned**
     * Open tools attached to cursor
     * Mouse over for keyboard focus
     * Auto enclose brackets
     * Enclose selection with brackets
-2. Packages mentioned
+2. **Packages mentioned**
     * [Autocompletion](https://github.com/LeonMatthes/Autocompletion)
     * [Sandblocks](https://github.com/tom95/sandblocks)
-3. Shortcuts mentioned
+3. **Shortcuts mentioned**
     * Global
-      * `Ctrl+w` close window (if enabled in `SystemWindow>>#filterEvent:for:`)
-      * `Ctrl+Shift+Q` save image (if enabled in `PasteUpMorph>>#tryInvokeKeyboardShortcut:`)
+      * `Ctrl+w` close window (if adapted in `SystemWindow>>#filterEvent:for:`)
+      * `Ctrl+Shift+Q` save image (if adapted in `PasteUpMorph>>#tryInvokeKeyboardShortcut:`)
       * `Ctrl+0` to focus search
       * `Middleclick`/`Alt+Leftclick` open halo (add `Shift` to start from the innermost)
       * `Alt+.` halt execution of current process (e.g. when in an infinite loop)
@@ -34,7 +34,7 @@ In between our image even crashes, so we got to demonstrate recovering unsaved c
       * `Ctrl+n` show senders of selected symbol
       * `Ctrl+m` show implementors of selected symbol
       * `Ctrl+Shift+N` show references to selected variable or class
-4. Methods mentioned
+4. **Methods mentioned**
     * `self halt`
     * `self haltOnce`
     * `1 setHaltOnce`

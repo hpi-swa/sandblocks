@@ -4,7 +4,7 @@ Here, we define a custom block that should act as a little weather widget.
 
 We show how to work with and debug layouts and how to get a live preview of our work while in Sandblocks.
 
-<iframe src="https://player.vimeo.com/video/541133346" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;"><iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://player.vimeo.com/video/541133346" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
 
 ## Recap: Interesting Commands
 
