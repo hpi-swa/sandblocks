@@ -1,0 +1,388 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Sandblocks</title>
+        
+        <meta name="robots" content="noindex" />
+        
+        
+
+
+        <!-- Custom HTML head -->
+        
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        
+        <link rel="icon" href="favicon.svg">
+        
+        
+        <link rel="shortcut icon" href="favicon.png">
+        
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        
+        <link rel="stylesheet" href="css/print.css" media="print">
+        
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        
+        <link rel="stylesheet" href="fonts/fonts.css">
+        
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        
+                    </div>
+
+                    <h1 class="menu-title">Sandblocks</h1>
+
+                    <div class="right-buttons">
+                        
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="sandblocks"><a class="header" href="#sandblocks">Sandblocks</a></h1>
+<p>Sandblocks is a projectional, block-based programming environment written in Squeak/Smalltalk.</p>
+<p>In this documentation, you will find some useful resources to help you get started with extending and working with the editor and environment.</p>
+<h1 id="frequently-asked-questions"><a class="header" href="#frequently-asked-questions">Frequently Asked Questions</a></h1>
+<p><strong>How do I open a morph in the editor?</strong></p>
+<blockquote>
+<p>In a Smalltalk workspace (open via the plus button up top), run:</p>
+<pre><code>sbEditor openMorphInView: MyBlock new
+</code></pre>
+</blockquote>
+<p><strong>How do I copy-paste text into the blocks?</strong></p>
+<blockquote>
+<p>Whenever you use ctrl+c on a block, it is also copied to the system clipboard as text.
+To paste text from the system clipboard, use ctrl+shift+V.</p>
+</blockquote>
+<p><strong>How do I select themes and which ones are recommended?</strong></p>
+<blockquote>
+<p>Right click into the editor or press ctrl+; to open the list of global actions.
+Filter for <code>color</code> and press enter.</p>
+<p>Currently recommended themes are <code>ColorMinimal</code>, as well as <code>LightPlus</code>, <code>Solarized</code>, and <code>SolarizedDark</code>.</p>
+</blockquote>
+<p><strong>Where can I find all the shortcuts?</strong></p>
+<blockquote>
+<p>Have a look at <code>SBTextInputMapping&gt;&gt;#registerDefaultShortcuts</code>.</p>
+</blockquote>
+<p><strong>How do I (no longer) use the Sandblocks editor as default in all the Squeak tools?</strong></p>
+<blockquote>
+<p>Run <code>CodeHolder addSandblocksDefault: true</code> or <code>false</code> to still have it as an option but not make it the default.</p>
+</blockquote>
+<h1 id="walkthroughs"><a class="header" href="#walkthroughs">Walkthroughs</a></h1>
+<p>In this chapter, we included a couple of videos that should give you an overview on how to work on and with the system.
+It concerns common tasks such as extending the system with new blocks or palettes.</p>
+<h1 id="setting-up-squeak"><a class="header" href="#setting-up-squeak">Setting up Squeak</a></h1>
+<p>In this walkthrough, we present a couple of preferences that we recommend you enable in Squeak, followed by a couple of debugging or exploration workflows.</p>
+<p>In between our image even crashes, so we got to demonstrate recovering unsaved changes you made after a crash.</p>
+<iframe src="https://player.vimeo.com/video/541134203" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+<h1 id="recap"><a class="header" href="#recap">Recap</a></h1>
+<ol>
+<li>Preferences mentioned
+<ul>
+<li>Open tools attached to cursor</li>
+<li>Mouse over for keyboard focus</li>
+<li>Auto enclose brackets</li>
+<li>Enclose selection with brackets</li>
+</ul>
+</li>
+<li>Packages mentioned
+<ul>
+<li><a href="https://github.com/LeonMatthes/Autocompletion">Autocompletion</a></li>
+<li><a href="https://github.com/tom95/sandblocks">Sandblocks</a></li>
+</ul>
+</li>
+<li>Shortcuts mentioned
+<ul>
+<li>Global
+<ul>
+<li><code>Ctrl+w</code> close window (if enabled in <code>SystemWindow&gt;&gt;#filterEvent:for:</code>)</li>
+<li><code>Ctrl+Shift+Q</code> save image (if enabled in <code>PasteUpMorph&gt;&gt;#tryInvokeKeyboardShortcut:</code>)</li>
+<li><code>Ctrl+0</code> to focus search</li>
+<li><code>Middleclick</code>/<code>Alt+Leftclick</code> open halo (add <code>Shift</code> to start from the innermost)</li>
+<li><code>Alt+.</code> halt execution of current process (e.g. when in an infinite loop)</li>
+</ul>
+</li>
+<li>Editing/Evaluating
+<ul>
+<li><code>Ctrl+f</code> in the class list to find a class</li>
+<li><code>Alt+num</code> to insert the num'th argument</li>
+<li><code>Ctrl+p</code> print selected expression or full line</li>
+<li><code>Ctrl+d</code> do selected expression or full line</li>
+<li><code>Ctrl+Shift+I</code> evaluate selected expression or full line and explore result</li>
+</ul>
+</li>
+<li>Exploring code
+<ul>
+<li><code>Ctrl+b</code> browse class of object or selected class name</li>
+<li><code>Ctrl+n</code> show senders of selected symbol</li>
+<li><code>Ctrl+m</code> show implementors of selected symbol</li>
+<li><code>Ctrl+Shift+N</code> show references to selected variable or class</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Methods mentioned
+<ul>
+<li><code>self halt</code></li>
+<li><code>self haltOnce</code></li>
+<li><code>1 setHaltOnce</code></li>
+</ul>
+</li>
+</ol>
+<h1 id="working-with-git"><a class="header" href="#working-with-git">Working with Git</a></h1>
+<p>Here, we walk through checking out a separate branch, pushing our work, and merging the work of our collaborators.</p>
+<p>We also detail how to add packages to an existing Tonel repo.</p>
+<iframe src="https://player.vimeo.com/video/541133065" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+<h2 id="git-commands-mentioned"><a class="header" href="#git-commands-mentioned">Git Commands Mentioned</a></h2>
+<ul>
+<li><code>git reset --hard</code> reset <strong>all</strong> files in the filesystem to the last commit</li>
+<li><code>git fetch --all</code> fetch changes onto our <code>origin/</code> branches but do not merge them just yet</li>
+<li><code>git push -u origin BRANCH</code> push a local branch to the remote and remember the <code>origin BRANCH</code> as its upstream so that you can leave it out next time</li>
+</ul>
+<h2 id="recommended-workflow"><a class="header" href="#recommended-workflow">Recommended Workflow</a></h2>
+<ol>
+<li>Perform changes in the image</li>
+<li>Commit using the Git Browser
+<ul>
+<li><code>Ctrl+x</code> to ignore change for commit</li>
+</ul>
+</li>
+<li><code>git push</code> using the CLI or setup credentials in the Git Browser and use the push button</li>
+<li>To merge other people's work, we have three options:
+<ol>
+<li>use the Git Browser's pull button (need to have credentials setup, no conflict resolution)</li>
+<li>run <code>git fetch --all</code> in the CLI, right click the origin branch and click <code>merge</code> (no conflict resolution)</li>
+<li><code>git pull</code> in the CLI, then right click new most recent commit and select <code>checkout</code> (might result in invalid Smalltalk, is not aware of uncommitted changes in your image)</li>
+</ol>
+</li>
+<li>When adding packages, right click the project and click &quot;change tracked packages&quot;, add the packages, then make sure to go to settings and re-select the right type of storage format</li>
+</ol>
+<h1 id="custom-palettes"><a class="header" href="#custom-palettes">Custom Palettes</a></h1>
+<p>In this walkthrough, we create a custom palette that is only active if we are in a subclass of the <code>System</code> class.</p>
+<iframe src="https://player.vimeo.com/video/541133965" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+<h2 id="recap-the-basic-steps"><a class="header" href="#recap-the-basic-steps">Recap: The Basic Steps</a></h2>
+<ol>
+<li>Create a subclass of <code>SBPalette</code>.</li>
+<li>Implement its <code>#context</code> method on the <strong>class</strong> side to match against the block selection.</li>
+<li>Implement the <code>#buildOn</code>: method on the <strong>class</strong> side to return pre-built blocks.</li>
+</ol>
+<h1 id="custom-blocks"><a class="header" href="#custom-blocks">Custom Blocks</a></h1>
+<p>Here, we define a custom block that should act as a little weather widget.</p>
+<p>We show how to work with and debug layouts and how to get a live preview of our work while in Sandblocks.</p>
+<iframe src="https://player.vimeo.com/video/541133346" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+<h2 id="recap-interesting-commands"><a class="header" href="#recap-interesting-commands">Recap: Interesting Commands</a></h2>
+<ul>
+<li><code>sbEditor openMorphInView: MyBlock new</code> when run in a Smalltalk workspace, opens <code>MyBlock</code> in the current editor</li>
+<li><code>SBMorphExample</code> autocompletion: expands to a preview window for your block that reloads when you change the code</li>
+<li><code>SBIcon</code> class for icons, here's the <a href="https://fontawesome.com/v4.7.0/icons/">full list</a></li>
+<li><code>self attachDecorator: SBMoveDecorator new</code>, make the block move when left-click-dragged</li>
+<li><code>&lt;action&gt;</code> pragma, mark a method as an action to show up in the context menu and be invokable via shortcuts</li>
+<li><code>&lt;globalAction&gt;</code> pragma, a method that should appear in the context menu of the editor (can also be mapped to shortcuts, <code>&lt;action&gt;</code> shortcuts take precedence before <code>&lt;globalAction&gt;</code> shortcuts)</li>
+<li><code>SBTextInputMapping&gt;&gt;#registerDefaultShortcuts</code>, list of all shortcut to action mappings</li>
+</ul>
+<h1 id="custom-projections"><a class="header" href="#custom-projections">Custom Projections</a></h1>
+<p>Here, we take the custom block from the previous walkthrough and map it a Smalltalk constructor. Using this mapping, whenever this constructor is seen in Smalltalk code, it will instead be displayed as our custom block.</p>
+<blockquote>
+<p><strong>NOTES / API CHANGES:</strong></p>
+<ul>
+<li>an <code>object ^ self</code> method is no longer necessary but the default</li>
+<li>instead of <code>#canAppearInBlockBody</code>, you should now only implement <code>#isExpression</code> (which also sets <code>#canAppearInBlockBody</code>)</li>
+</ul>
+</blockquote>
+<iframe src="https://player.vimeo.com/video/541133593" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+<h2 id="recap-basic-steps"><a class="header" href="#recap-basic-steps">Recap: Basic Steps</a></h2>
+<ol start="0">
+<li>prepare your custom projection/widget</li>
+<li>add a converter method to SBStMessageSend that matches the expressions you want to substitute for (optional: specify it as <code>&lt;automatic&gt;</code>)</li>
+<li>implement <code>#writeSourceOn:</code> on your widget to produce Smalltalk code</li>
+<li>mark the capabilities of your projection by returning <code>true</code> from <code>#isSmalltalk</code> and <code>#isExpression</code></li>
+<li>implement <code>#updatePCFrom:</code> to get debugging support (can leave it empty)</li>
+<li>optional: add a converter method back to smalltalk using your <code>#writeSourceOn:</code></li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+        
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+        
+        
+
+    </body>
+</html>
