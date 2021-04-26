@@ -190,7 +190,7 @@ SBBlock >> bindingOf: aString [
 SBBlock >> blockFor: anObject withInterfaces: aCollection ifOpen: aBlock ifClosed: anotherBlock [
 
 	^ self
-		allBlocksDetect: [:morph | morph isSandblock and: [morph object = anObject and: [morph satisfies: aCollection]]]
+		allBlocksDetect: [:morph | morph isSandblock and: [morph object == anObject and: [morph satisfies: aCollection]]]
 		ifFound: aBlock
 		ifNone: anotherBlock
 ]
