@@ -192,10 +192,39 @@ SBStPlayground >> name: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBStPlayground >> printMethodStringIntoStream: aStream [
+
+	"Print inside string quotes, doubling inbedded quotes. 
+	Inspired by String encodeDoublingQuoteOn: aStream "
+	
+	aStream nextPut: $'.
+	self body prettySourceString do: [:currentCharacter |
+		aStream nextPut: currentCharacter.
+		currentCharacter = $' 
+			ifTrue: [aStream nextPut: currentCharacter]].
+	aStream nextPut: $'
+]
+
+{ #category : #'as yet unclassified' }
 SBStPlayground >> receiver: anObject [
 
 	anObject ifNotNil: [self name: (anObject asString truncateWithElipsisTo: 20)].
 	super receiver: anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBStPlayground >> saveString [
+	
+	^ String streamContents: [:stream | 
+		stream 
+			nextPutAll: self className;
+			nextPutAll: ' newFromSource: '.
+		self printMethodStringIntoStream: stream.
+		stream 
+			nextPutAll: ' at: ';
+			nextPutAll:  self position asString.
+		]
+
 ]
 
 { #category : #'as yet unclassified' }

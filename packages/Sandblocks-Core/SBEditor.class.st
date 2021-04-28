@@ -92,7 +92,10 @@ SBEditor class >> openFor: aMethodOrClass [
 
 { #category : #generated }
 SBEditor class >> savedBlocks [
-^ {}
+^ {SBStPlayground newFromSource: 'sbEditor open: (CircleMorph compiledMethodAt: #extent:).
+Transcript show: ''Hallo!''' at: 892@276.
+SBStMethod newFor: (CircleMorph compiledMethodAt: #extent:) at: 513@129.
+}
 ]
 
 { #category : #shortcuts }

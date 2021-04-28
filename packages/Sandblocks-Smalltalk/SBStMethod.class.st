@@ -159,6 +159,12 @@ SBStMethod >> pasteString [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMethod >> saveString [
+
+	^ 'SBStMethod newFor: (', self currentClass name asString, ' compiledMethodAt: #', self currentSelector asString ,') at: ', self position asString asString asString
+]
+
+{ #category : #'as yet unclassified' }
 SBStMethod >> selector [
 
 	^ signature selector
