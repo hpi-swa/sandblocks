@@ -1939,11 +1939,21 @@ SBBlock >> sandblockForegroundColor [
 
 { #category : #saving }
 SBBlock >> saveString [
-
-	^ (self childSandblocks 
-		inject: (self className, ' new position: ', self position asString)
-		into: [:string :sandblock | string,';', Character cr,  'addMorph: (', sandblock saveString,')']
-		), '; yourself'
+	
+	String streamContents: [:stream | 
+		stream
+			nextPutAll:	self className;
+			nextPutAll: ' new position: ';
+			nextPutAll:  self position asString.
+		self childSandblocks do: [:each |
+			stream 
+				nextPutAll: ';';
+				cr;
+				nextPutAll: 'addMorph: (';
+				nextPutAll: each saveString;
+				nextPutAll: ')'
+			]
+	]
 
 ]
 

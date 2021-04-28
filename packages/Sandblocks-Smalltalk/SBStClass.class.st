@@ -296,6 +296,19 @@ SBStClass >> renameClass [
 	
 ]
 
+{ #category : #nil }
+SBStClass >> saveString [
+
+	^ String streamContents: [:stream |
+		stream
+			nextPutAll: self className;
+			nextPutAll: ' newFor: ';
+			nextPutAll:  self name asString;
+			nextPutAll: ' at:';
+			nextPutAll:  self position asString 
+		]
+]
+
 { #category : #'as yet unclassified' }
 SBStClass >> saveTryFixing: aBoolean quick: aQuickBoolean [
 

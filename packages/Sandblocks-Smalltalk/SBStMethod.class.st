@@ -161,7 +161,16 @@ SBStMethod >> pasteString [
 { #category : #'as yet unclassified' }
 SBStMethod >> saveString [
 
-	^ 'SBStMethod newFor: (', self currentClass name asString, ' compiledMethodAt: #', self currentSelector asString ,') at: ', self position asString asString asString
+	^ String streamContents: [:stream |
+		stream
+			nextPutAll: self className;
+			nextPutAll: ' newFor: (';
+			nextPutAll:  self currentClass name asString;
+			nextPutAll: ' compiledMethodAt: #';
+			nextPutAll: self currentSelector asString;
+			nextPutAll: ') at:';
+			nextPutAll:  self position asString 
+		]
 ]
 
 { #category : #'as yet unclassified' }
