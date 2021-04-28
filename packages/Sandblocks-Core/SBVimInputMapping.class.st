@@ -139,7 +139,7 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		cmdShortcut: $U do: #redo;
 		registerShortcut: $s command do: #save;
 		registerShortcut: $r command do: #openRepl;
-		registerShortcut: $, command do: #promptMenu;
+		registerShortcut: $, command do: #promptGlobalAction;
 		cmdShortcut: $/ do: #startSearch;
 		cmdShortcut: $n do: #nextSearchResult;
 		registerShortcut: $f command do: #toggleFullscreen;

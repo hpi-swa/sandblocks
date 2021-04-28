@@ -14,6 +14,7 @@ SBStMoveMethodCommand >> do [
 
 	fromClass := method methodClass.
 	method selector: method selector arguments: method arguments class: toClass.
+	method currentClass: toClass.
 	
 	^ method clearCache
 ]
@@ -34,6 +35,7 @@ SBStMoveMethodCommand >> toClass: aClass [
 SBStMoveMethodCommand >> undo [
 
 	method selector: method selector arguments: method arguments class: fromClass.
+	method currentClass: fromClass.
 	
 	^ method clearCache
 ]

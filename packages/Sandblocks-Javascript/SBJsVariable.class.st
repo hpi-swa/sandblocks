@@ -51,6 +51,12 @@ SBJsVariable >> isVariable [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsVariable >> preferredColorIn: aColorPolicy [
+
+	^ aColorPolicy identifier
+]
+
+{ #category : #'as yet unclassified' }
 SBJsVariable >> printOn: aStream [
 
 	aStream nextPutAll: 'identifier '.

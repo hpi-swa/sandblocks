@@ -7,7 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBStInvisibleArray >> drawnColor [
 
-	^ Color transparent
+	^ self colorPolicy toolColorFor: self
 ]
 
 { #category : #'as yet unclassified' }

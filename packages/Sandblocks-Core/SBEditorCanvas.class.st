@@ -49,7 +49,7 @@ SBEditorCanvas >> currentPosition [
 { #category : #'geometry testing' }
 SBEditorCanvas >> defaultColor [
 
-	^ ((self ownerThatIsA: SBEditor) ifNotNil: [:editor | editor colorPolicy ifNotNil: #colorForEditor]) ifNil: [Color white]
+	^ (self sandblockEditor ifNotNil: [:editor | editor colorPolicy ifNotNil: [:c | c colorForEditor: self]]) ifNil: [Color white]
 ]
 
 { #category : #drawing }

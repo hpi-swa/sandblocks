@@ -43,6 +43,8 @@ CodeHolder >> contentsSymbol [
 CodeHolder >> installBlockEditor [
 
 	" already installed? "
+	self containingWindow ifNil: [^ self].
+	
 	self containingWindow valueOfProperty: #blockEditor ifPresentDo: [:b | b owner notNil ifTrue: [^ self]].
 	
 	self containingWindow setProperty: #textEditor toValue: self codeTextMorph.

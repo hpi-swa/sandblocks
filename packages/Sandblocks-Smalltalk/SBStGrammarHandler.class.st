@@ -86,6 +86,14 @@ SBStGrammarHandler >> characterCanStartInput: aCharacter [
 ]
 
 { #category : #actions }
+SBStGrammarHandler >> createNewEmptyModule [
+	<action>
+
+	
+	self block sandblockEditor createEmptySmalltalkMethod
+]
+
+{ #category : #actions }
 SBStGrammarHandler >> debugExpression [
 	<action>
 	

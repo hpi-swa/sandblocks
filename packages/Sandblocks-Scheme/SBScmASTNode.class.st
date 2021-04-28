@@ -35,12 +35,6 @@ SBScmASTNode >> actionProviders [
 	^ {self grammarHandler}, super actionProviders
 ]
 
-{ #category : #'initialize-release' }
-SBScmASTNode >> canAppearInBlockBody [
-
-	^ self isExpression
-]
-
 { #category : #printing }
 SBScmASTNode >> crIndent: aNumber on: aStream [
 

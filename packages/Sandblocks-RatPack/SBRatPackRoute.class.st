@@ -55,7 +55,7 @@ SBRatPackRoute >> body: aBlock [
 { #category : #'as yet unclassified' }
 SBRatPackRoute >> drawnColor [
 
-	^ Color veryDarkGray
+	^ self colorPolicy toolColorFor: self
 ]
 
 { #category : #'as yet unclassified' }

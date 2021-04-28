@@ -30,6 +30,12 @@ SBColorPolicy >> borderColorForBlock: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBColorPolicy >> borderColorForButton: aColor [
+
+	^ Color veryLightGray
+]
+
+{ #category : #'as yet unclassified' }
 SBColorPolicy >> borderWidthForBlock: aBlock [
 
 	^ aBlock isMethod ifTrue: [0] ifFalse: [1]
@@ -56,7 +62,13 @@ SBColorPolicy >> colorForBlock: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBColorPolicy >> colorForEditor [
+SBColorPolicy >> colorForButton: aButton [
+
+	^ Color white
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> colorForEditor: anEditor [
 
 	^ Color white
 ]
@@ -80,6 +92,12 @@ SBColorPolicy >> colorToLAB: aColor [
 	b := 200 * (y - z).
 	
 	^ {l. a. b}
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> cornerRadius [
+
+	^ 0
 ]
 
 { #category : #'as yet unclassified' }
@@ -109,6 +127,12 @@ SBColorPolicy >> foregroundColorForBlock: aBlock [
 	| color |
 	color := self drawnColorOfOpaque: aBlock.
 	^ self foregroundColorForColor: color
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> foregroundColorForButton: aButton [
+
+	^ Color black
 ]
 
 { #category : #'as yet unclassified' }
@@ -176,7 +200,7 @@ SBColorPolicy >> selectionBorderWidth [
 { #category : #'as yet unclassified' }
 SBColorPolicy >> selectionColorForBlock: aBlock [
 
-	^ aBlock foregroundColor
+	^ (aBlock parentSandblock ifNil: [aBlock]) foregroundColor
 ]
 
 { #category : #'as yet unclassified' }
@@ -339,4 +363,10 @@ SBColorPolicy >> symbolsForUnknown: aBlock [
 SBColorPolicy >> toggleEnlarge [
 
 	self enlarge: self enlarge not
+]
+
+{ #category : #'as yet unclassified' }
+SBColorPolicy >> toolColorFor: aBlock [
+
+	^ Color veryDarkGray
 ]

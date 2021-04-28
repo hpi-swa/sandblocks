@@ -305,6 +305,13 @@ SBStName >> noteNewOwner: aMorph [
 	self behavior: SBStBinding new
 ]
 
+{ #category : #'colors and color policies' }
+SBStName >> preferredColorIn: aColorPolicy [
+
+	self isReserved ifTrue: [^ aColorPolicy keyword].
+	^ aColorPolicy identifier
+]
+
 { #category : #'as yet unclassified' }
 SBStName >> printOn: aStream [
 

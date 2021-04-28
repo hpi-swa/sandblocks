@@ -1,6 +1,9 @@
 Class {
 	#name : #SBStringMorph,
 	#superclass : #StringMorph,
+	#instVars : [
+		'opacity'
+	],
 	#category : #'Sandblocks-Morphs'
 }
 
@@ -22,7 +25,9 @@ SBStringMorph >> clearEmphasis [
 { #category : #accessing }
 SBStringMorph >> color [
 
-	^ self containingSandblock ifNotNil: [:b | b foregroundColor] ifNil: [super color]
+	^ (self containingSandblock
+		ifNotNil: [:b | b foregroundColor]
+		ifNil: [super color]) alpha: self opacity
 ]
 
 { #category : #drawing }
@@ -54,6 +59,18 @@ SBStringMorph >> large [
 SBStringMorph >> minExtent [
 
 	^ (self fontToUse widthOfString: self contents) @ self fontToUse height + (self layoutInset * 2)
+]
+
+{ #category : #'as yet unclassified' }
+SBStringMorph >> opacity [
+
+	^ opacity ifNil: [1]
+]
+
+{ #category : #'as yet unclassified' }
+SBStringMorph >> opacity: aNumber [
+
+	opacity := aNumber
 ]
 
 { #category : #accessing }

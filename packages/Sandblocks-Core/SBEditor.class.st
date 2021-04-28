@@ -164,7 +164,7 @@ SBEditor >> buildBottomPanel [
 
 	searchInput := SBSearchPanel new.
 	self registerGlobalShortcutListener: searchInput.
-
+	
 	^ Morph new
 		changeTableLayout;
 		cellPositioning: #center;
@@ -174,9 +174,8 @@ SBEditor >> buildBottomPanel [
 		wrapCentering: #center;
 		layoutInset: 4 withScalingFactor;
 		listDirection: #leftToRight;
-		color: Color transparent;
-		addMorphBack: (modeLabel := StringMorph new emphasis: TextEmphasis bold emphasisCode);
-		addMorphBack: (selectionLabel := StringMorph new contents: '');
+		addMorphBack: (modeLabel := SBStringMorph new emphasis: TextEmphasis bold emphasisCode);
+		addMorphBack: (selectionLabel := SBStringMorph new contents: '');
 		addMorphBack: searchInput;
 		addMorphBack: (Morph new
 			extent: 0 @ 0;
@@ -231,7 +230,9 @@ SBEditor >> buildCommandBar [
 			shortcut: (self class anyShortcutForAction: #openOpenWindow)
 			do: [self openOpenWindow]);
 		addMorphBack: (SBButton new
-			icon: SBIcon iconPlus shortcut: nil do: [self promptAddArtifact];
+			icon: SBIcon iconPlus
+				shortcut: (self class anyShortcutForAction: #promptAddArtifact)
+				do: [self promptAddArtifact];
 			balloonText: 'Add artifact');
 		addMorphBack: (Morph new
 			height: 0;
@@ -255,9 +256,6 @@ SBEditor >> buildCommandBar [
 				cornerStyle: #square;
 				icon: SBIcon iconThLarge shortcut: nil do: [self colorPolicy: SBScratchColorPolicy new];
 				balloonText: 'Scratch Layout'));
-		addMorphBack: (SBButton new
-			icon: SBIcon iconWindowMaximize shortcut: nil do: [self promptWorkspaceActions];
-			balloonText: 'Manage Workspaces');
 		addMorphBack: (SBButton new
 			icon: SBIcon iconExpand
 			shortcut: (self class anyShortcutForAction: #toggleFullscreen)
@@ -345,7 +343,7 @@ SBEditor >> close [
 { #category : #drawing }
 SBEditor >> color [
 
-	^ self colorPolicy ifNotNil: #colorForEditor ifNil: [Color white]
+	^ self colorPolicy ifNotNil: [:c | c colorForEditor: self] ifNil: [Color white]
 ]
 
 { #category : #accessing }
@@ -361,6 +359,11 @@ SBEditor >> colorPolicy: aPolicy [
 	self allMorphsDo: #layoutChanged.
 	self clearCache.
 	paletteContainer clearCache.
+	self containingWindow ifNotNil: [:w | | color |
+		color := aPolicy colorForEditor: self.
+		w
+			paneColor: color;
+			setStripeColorsFrom: color].
 	self changed
 ]
 
@@ -745,6 +748,7 @@ SBEditor >> initialize [
 		hResizing: #spaceFill;
 		vResizing: #spaceFill;
 		addMorphBack: (scroll := self scrollerClass new
+			color: Color transparent;
 			hResizing: #spaceFill;
 			vResizing: #spaceFill;
 			yourself)).
@@ -826,6 +830,12 @@ SBEditor >> keepVerticalSelectionPositionDuring: aBlock [
 SBEditor >> keyboardFocusChange: aBoolean [
 
 	self triggerEvent: #keyboardFocusChanged with: aBoolean
+]
+
+{ #category : #drawing }
+SBEditor >> keyboardFocusColor [
+
+	^ nil
 ]
 
 { #category : #accessing }
@@ -934,19 +944,20 @@ SBEditor >> mode: aSymbol [
 			[#input] -> ['INPUT'].
 			[#selection] -> ['SELECTION'].
 			[#continuousSelection] -> ['CONT. SELECTION'].
-			[#command] -> ['COMMAND']
-		})].
+			[#command] -> ['COMMAND']})].
 	
-	defaultModeColor := Color white.
+	defaultModeColor := Color transparent.
 	specialModeColor := Color red alpha: 0.2.
 	
 	bottomPanel ifNotNil: [
 		bottomPanel color: (mode caseOf: {
-			[#input] -> [inputMapping defaultState = #input ifTrue: [defaultModeColor] ifFalse: [specialModeColor]].
+			[#input] -> [
+				inputMapping defaultState = #input
+					ifTrue: [defaultModeColor]
+					ifFalse: [specialModeColor]].
 			[#selection] -> [Color blue alpha: 0.2].
 			[#continuousSelection] -> [Color blue alpha: 0.2].
-			[#command] -> [defaultModeColor]
-		})].
+			[#command] -> [defaultModeColor]})].
 	self selection ifNotNil: [:s | s invalidRect: (s outerBounds expandBy: 4)].
 	self updateSelectionLabel
 ]
@@ -1072,11 +1083,10 @@ SBEditor >> openInWindow [
 	window model: self.
 	
 	window := window openInWorldExtent: self extent.
-	(Project uiManager openToolsAttachedToMouseCursor)
-		ifTrue: [
-			window setProperty: #initialDrop toValue: true.
-			window hasDropShadow: false.
-			self currentHand attachMorph: window].
+	Project uiManager openToolsAttachedToMouseCursor ifTrue: [
+		window setProperty: #initialDrop toValue: true.
+		window hasDropShadow: false.
+		self currentHand attachMorph: window].
 	^ window
 ]
 
@@ -1195,6 +1205,12 @@ SBEditor >> performShortcutFor: anEvent [
 				ifFalse: [false]]
 ]
 
+{ #category : #drawing }
+SBEditor >> prefersNoBorder [
+
+	^ true
+]
+
 { #category : #actions }
 SBEditor >> promptAddArtifact [
 	<globalAction>
@@ -1231,30 +1247,14 @@ SBEditor >> promptChangeCompile [
 { #category : #'action helpers' }
 SBEditor >> promptGlobalAction [
 	<action>
-
-	| options index |
-	options := Array streamContents: [:s |
-		globalShortcutListeners do: [:listener |
-			(Pragma allNamed: #globalAction in: listener class) do: [:p |
-				s nextPut: listener -> p]]].
-	
-	index := UIManager default chooseFrom: (options collect: [:option |
-		option value selector, (' ', (SBEditor shortcutStringForAction: option value selector))]).
-	
-	index > 0 ifTrue: [(options at: index) key perform: (options at: index) value selector]
-]
-
-{ #category : #actions }
-SBEditor >> promptMenu [
 	<globalAction>
 
-	| options |
-	options := {
-		({'Change UI Theme'. [self promptChangeColorPolicy]}).
-		({'Change Compile Method'. [self promptChangeCompile]}).
-		({'New Class'. [self createEmptySmalltalkClass]}).
-	}.
-	(UIManager default chooseFrom: (options collect: #first) values: (options collect: #second)) ifNotNil: #value
+	| options index |
+	options := Array streamContents: [:s | globalShortcutListeners do: [:listener | (Pragma allNamed: #globalAction from: listener class to: SBEditor) do: [:p | s nextPut: listener -> p]]].
+	
+	index := UIManager default chooseFrom: (options collect: [:option | option value selector, (' ', (SBEditor shortcutStringForAction: option value selector))]).
+	
+	index > 0 ifTrue: [(options at: index) key perform: (options at: index) value selector]
 ]
 
 { #category : #'do/undo/redo' }
@@ -1641,6 +1641,12 @@ SBEditor >> wantsDropFiles: anEvent [
 	^ true
 ]
 
+{ #category : #drawing }
+SBEditor >> wantsExtraSpace [
+
+	^ false
+]
+
 { #category : #events }
 SBEditor >> wantsKeyboardFocus [
 
@@ -1651,4 +1657,10 @@ SBEditor >> wantsKeyboardFocus [
 SBEditor >> wantsMinimalLayout [
 
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> windowColorToUse [
+
+	^ self colorPolicy colorForEditor: self
 ]

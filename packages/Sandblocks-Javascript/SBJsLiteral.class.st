@@ -85,6 +85,12 @@ SBJsLiteral >> moveCursorTo: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsLiteral >> preferredColorIn: aColorPolicy [
+
+	^ aColorPolicy literal
+]
+
+{ #category : #'as yet unclassified' }
 SBJsLiteral >> replaceWithUnknown [
 
 	| new |

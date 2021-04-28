@@ -168,6 +168,12 @@ SBUnknown >> noteNewOwner: aMorph [
 	hadOwner := true
 ]
 
+{ #category : #'as yet unclassified' }
+SBUnknown >> prefersNoBorder [
+
+	^ self valid
+]
+
 { #category : #printing }
 SBUnknown >> printOn: aStream [
 

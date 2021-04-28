@@ -159,12 +159,6 @@ SBStClass >> drawSubmorphsOn: aCanvas [
 ]
 
 { #category : #'as yet unclassified' }
-SBStClass >> drawnColor [
-
-	^ SBStASTNode preferredColor
-]
-
-{ #category : #'as yet unclassified' }
 SBStClass >> ensureExpanded [
 ]
 
@@ -250,6 +244,12 @@ SBStClass >> name [
 SBStClass >> object [
 
 	^ self relatedClass ifNil: [self]
+]
+
+{ #category : #'as yet unclassified' }
+SBStClass >> preferredColor [
+
+	^ SBStASTNode preferredColor
 ]
 
 { #category : #'as yet unclassified' }

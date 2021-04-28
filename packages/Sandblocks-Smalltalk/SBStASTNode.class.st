@@ -42,12 +42,6 @@ SBStASTNode >> asMorphBlock: converter [
 	" we can't generally convert ourselves to morphs since we need our artefact owner "
 ]
 
-{ #category : #testing }
-SBStASTNode >> canAppearInBlockBody [
-
-	^ self isExpression
-]
-
 { #category : #evaluate }
 SBStASTNode >> compilationCueWith: aRequestor for: aContext [
 
@@ -129,9 +123,9 @@ SBStASTNode >> guessedClass [
 { #category : #converting }
 SBStASTNode >> inLanguageBox: converter [
 	<convert>
-	
+
 	^ converter
-		if: [self completeSubtree]
+		if: [self completeSubtree and: [self isExpression]]
 		do: [SBLanguageBox new source: self sourceString lang: 'smalltalk']
 ]
 

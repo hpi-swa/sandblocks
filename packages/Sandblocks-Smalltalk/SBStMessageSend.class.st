@@ -400,6 +400,12 @@ SBStMessageSend >> precedence [
 	^ 2
 ]
 
+{ #category : #'colors and color policies' }
+SBStMessageSend >> preferredColorIn: aColorPolicy [
+
+	^ aColorPolicy default
+]
+
 { #category : #converting }
 SBStMessageSend >> printOn: aStream [
 

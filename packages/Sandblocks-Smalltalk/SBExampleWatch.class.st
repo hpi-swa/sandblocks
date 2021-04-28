@@ -77,7 +77,7 @@ SBExampleWatch >> doubleClick: anEvent [
 { #category : #'as yet unclassified' }
 SBExampleWatch >> drawnColor [
 
-	^ Color veryDarkGray
+	^ self colorPolicy toolColorFor: self
 ]
 
 { #category : #'as yet unclassified' }

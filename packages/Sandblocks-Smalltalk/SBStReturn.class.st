@@ -60,6 +60,12 @@ SBStReturn >> pc: aNumber [
 	pc := aNumber
 ]
 
+{ #category : #'colors and color policies' }
+SBStReturn >> preferredColorIn: aColorPolicy [
+
+	^ aColorPolicy important
+]
+
 { #category : #printing }
 SBStReturn >> printOn: aStream [
 

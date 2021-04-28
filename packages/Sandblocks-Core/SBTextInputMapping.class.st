@@ -51,7 +51,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 	" refactor "
 	self
 		registerShortcut: $T command do: #extractMethod;
-		registerShortcut: $t command do: #createEmptySmalltalkMethod;
+		registerShortcut: $t command do: #createNewEmptyModule;
 		cmdShortcut: $= do: #extractVariable.
 	
 	" debugging "
@@ -81,10 +81,11 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $s command do: #save;
 		registerShortcut: $S command do: #saveCopy;
 		registerShortcut: $l command do: #reloadArtefact;
-		registerShortcut: $; command do: #promptMenu;
+		registerShortcut: $; command do: #promptGlobalAction;
 		registerShortcut: $f command do: #startSearch;
 		registerShortcut: $g command do: #nextSearchResult;
-		registerShortcut: $f command do: #toggleFullscreen.
+		registerShortcut: $f command do: #toggleFullscreen;
+		registerShortcut: $t command do: #promptAddArtifact.
 	"registerShortcut: $r command do: #openRepl;"
 	" navigation "
 	self

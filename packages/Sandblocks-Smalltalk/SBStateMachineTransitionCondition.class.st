@@ -110,7 +110,7 @@ SBStateMachineTransitionCondition >> type: aSymbol data: aBlock [
 { #category : #'as yet unclassified' }
 SBStateMachineTransitionCondition >> updateIcon [
 
-	self firstSubmorph replaceBy: (type caseOf: {[#time] -> [SBIcon iconClock_o]. [#condition] -> [SBIcon iconCheck]. [#signal] -> [SBIcon iconFlash]}) large
+	self firstSubmorph replaceBy: (type caseOf: {[#time] -> [SBIcon iconClockO]. [#condition] -> [SBIcon iconCheck]. [#signal] -> [SBIcon iconFlash]}) large
 ]
 
 { #category : #'as yet unclassified' }

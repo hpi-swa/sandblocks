@@ -173,7 +173,7 @@ SBExample >> doubleClick: anEvent [
 { #category : #'as yet unclassified' }
 SBExample >> drawnColor [
 
-	^ Color veryDarkGray
+	^ self colorPolicy toolColorFor: self
 ]
 
 { #category : #'as yet unclassified' }

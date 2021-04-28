@@ -2,16 +2,43 @@ Class {
 	#name : #SBButton,
 	#superclass : #Morph,
 	#instVars : [
-		'action'
+		'action',
+		'hovered',
+		'pressed'
 	],
 	#category : #'Sandblocks-Morphs'
 }
+
+{ #category : #'as yet unclassified' }
+SBButton >> borderStyle [
+
+	^ BorderStyle width: 1 color: (self colorPolicy borderColorForButton: self)
+]
 
 { #category : #'as yet unclassified' }
 SBButton >> clicked [
 
 	action value.
 	self mouseEntered
+]
+
+{ #category : #'as yet unclassified' }
+SBButton >> color [
+
+	| base |
+	SBToggledCode
+		comment: ''
+		active: 1
+		do: {[base := self containingSandblock drawnColor]. [base := self colorPolicy colorForButton: self]}.
+	self pressed ifTrue: [^ base darker darker].
+	self hovered ifTrue: [^ base darker].
+	^ base
+]
+
+{ #category : #'as yet unclassified' }
+SBButton >> colorPolicy [
+
+	^ self containingSandblock colorPolicy
 ]
 
 { #category : #'as yet unclassified' }
@@ -30,32 +57,53 @@ SBButton >> example [
 ]
 
 { #category : #'as yet unclassified' }
+SBButton >> fillStyle [
+
+	^ self color
+]
+
+{ #category : #'as yet unclassified' }
 SBButton >> handlesMouseDown: anEvent [
 
 	^ anEvent redButtonPressed
 ]
 
 { #category : #'as yet unclassified' }
+SBButton >> hovered [
+
+	^ hovered ifNil: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBButton >> hovered: aBoolean [
+
+	hovered := aBoolean.
+	self changed
+]
+
+{ #category : #'as yet unclassified' }
 SBButton >> icon: anIconMorph label: aString do: aBlock [
 
-	SBExample self: [SBButton new] args: [{SBIcon iconUndo. $u asSandblockShortcut. [nil]}] label: 'icon'.
+	SBExample
+		self: [SBButton new]
+		args: [{SBIcon iconUndo. $u asSandblockShortcut. [nil]}]
+		label: 'icon'.
 	
-	self widget: (anIconMorph
-		color: Color black;
-		yourself) shortcut: nil do: aBlock.
+	self widget: anIconMorph shortcut: nil do: aBlock.
 	
-	self addMorphBack: (StringMorph new
-			contents: aString;
-			emphasis: TextEmphasis bold emphasisCode)
+	self addMorphBack: (SBStringMorph new
+		contents: aString;
+		emphasis: TextEmphasis bold emphasisCode)
 ]
 
 { #category : #'as yet unclassified' }
 SBButton >> icon: anIconMorph shortcut: aShortcut do: aBlock [
 
-	SBExample self: [SBButton new] args: [{SBIcon iconUndo. $u asSandblockShortcut. [nil]}] label: 'icon'.
-	self widget: (anIconMorph
-		color: Color black;
-		yourself) shortcut: aShortcut do: aBlock
+	SBExample
+		self: [SBButton new]
+		args: [{SBIcon iconUndo. $u asSandblockShortcut. [nil]}]
+		label: 'icon'.
+	self widget: anIconMorph shortcut: aShortcut do: aBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -63,19 +111,20 @@ SBButton >> initialize [
 
 	super initialize.
 	
+	hovered := false.
+	
 	self
 		changeTableLayout;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
-		borderStyle: (BorderStyle width: 1 color: Color veryLightGray);
 		listDirection: #leftToRight;
 		cellGap: 8 withScalingFactor;
 		layoutInset: (8 @ 4) withScalingFactor;
-		color: Color white;
 		cornerStyle: #rounded;
 		on: #mouseEnter send: #mouseEntered to: self;
 		on: #mouseLeave send: #mouseLeft to: self;
-		on: #mouseDown send: #mousePressed to: self;
+		on: #mouseDown send: #mouseDown to: self;
+		on: #mouseUp send: #mouseUp to: self;
 		on: #mouseLeaveDragging send: #mouseLeft to: self;
 		on: #click send: #clicked to: self
 ]
@@ -91,7 +140,7 @@ SBButton >> label: aString shortcut: aShortcut do: aBlock [
 
 	SBExample self: [SBButton new] args: [{'hello'. $p command. [nil]}] label: 'label'.
 	self
-		widget: (StringMorph new
+		widget: (SBStringMorph new
 			contents: aString;
 			emphasis: TextEmphasis bold emphasisCode)
 		shortcut: aShortcut
@@ -99,21 +148,41 @@ SBButton >> label: aString shortcut: aShortcut do: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBButton >> mouseDown [
+
+	self pressed: true
+]
+
+{ #category : #'as yet unclassified' }
 SBButton >> mouseEntered [
 
-	self color: (Color r: 0.9 g: 0.9 b: 0.9)
+	self hovered: true
 ]
 
 { #category : #'as yet unclassified' }
 SBButton >> mouseLeft [
 
-	self color: Color white
+	self hovered: false.
+	self pressed: false
 ]
 
 { #category : #'as yet unclassified' }
-SBButton >> mousePressed [
+SBButton >> mouseUp [
 
-	self color: (Color r: 0.8 g: 0.8 b: 0.8)
+	self pressed: false
+]
+
+{ #category : #'as yet unclassified' }
+SBButton >> pressed [
+
+	^ pressed ifNil: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBButton >> pressed: aBoolean [
+
+	pressed := aBoolean.
+	self changed
 ]
 
 { #category : #'as yet unclassified' }
@@ -122,7 +191,9 @@ SBButton >> widget: aMorph shortcut: aShortcut do: aBlock [
 	action := aBlock.
 	self addMorphBack: aMorph.
 	aShortcut ifNotNil: [
-		self addMorphBack: (StringMorph new
-			contents: (aShortcut isCollection ifTrue: [aShortcut anyOne displayString] ifFalse: [aShortcut displayString]);
-			color: Color gray)]
+		self addMorphBack: (SBStringMorph new
+			contents: (aShortcut isCollection
+				ifTrue: [aShortcut anyOne displayString]
+				ifFalse: [aShortcut displayString]);
+			opacity: 0.7)]
 ]

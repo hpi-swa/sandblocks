@@ -45,6 +45,14 @@ SBStMethod >> contents: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMethod >> currentClass: aClass [
+
+	super currentClass: aClass.
+	
+	classPrefix object: aClass
+]
+
+{ #category : #'as yet unclassified' }
 SBStMethod >> currentTextMorph [
 
 	^ nil
@@ -134,10 +142,8 @@ SBStMethod >> methodClass [
 { #category : #'as yet unclassified' }
 SBStMethod >> objectInterfaceNear: aBlock at: aSymbol [
 
-	aSymbol = #replace ifFalse: [^ SBInterfaces never].
-	
 	^ aBlock isBlockBody
-		ifTrue: [SBInterfaces stBlock]
+		ifTrue: [aSymbol = #replace ifTrue: [SBInterfaces stBlock] ifFalse: [SBInterfaces never]]
 		ifFalse: [signature objectInterfaceNear: aBlock at: aSymbol argumentInterface: SBInterfaces stName]
 ]
 
@@ -168,8 +174,7 @@ SBStMethod >> selector: aSymbol arguments: aCollection [
 SBStMethod >> selector: aSymbol arguments: aCollection class: aClass [
 
 	super selector: aSymbol arguments: aCollection class: aClass.
-	signature selector: aSymbol arguments: aCollection.
-	classPrefix object: aClass
+	signature selector: aSymbol arguments: aCollection
 ]
 
 { #category : #'as yet unclassified' }

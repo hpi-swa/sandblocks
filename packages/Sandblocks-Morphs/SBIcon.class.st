@@ -1,7 +1,7 @@
 "
 A PHTIcon displays an icon. Create it with one of the many class methods.
 
-The current icon list is imported from FontAwesome. See https://fontawesome.com/icons for a full list. Names are changed, e.g. instead of 'align-center' write 'iconAlign_center'.
+The current icon list is imported from FontAwesome. See https://fontawesome.com/icons for a full list. Names are changed, e.g. instead of 'align-center' write 'iconAlignCenter'.
 
 Internally, it holds a reference to the requested SVGMorph (SVGCache) as well as a cached form of the rendered result of that SVG at the required size (FormCache).
 "
@@ -13,7 +13,8 @@ Class {
 		'cachedForm',
 		'svgColor',
 		'iconName',
-		'size'
+		'size',
+		'cachedColor'
 	],
 	#classVars : [
 		'FormCache',
@@ -6001,12 +6002,13 @@ SBIcon class >> supersamplingFactor [
 { #category : #colors }
 SBIcon >> cachedFormFor: aPoint [
 
-	| size |
+	| size currentColor |
 	size := aPoint x min: aPoint y.
+	currentColor := self color.
 	
-	(cachedForm isNil or: [cachedForm extent ~= size asPoint])
-		ifTrue: [cachedForm := self class cachedFormSvg: self svg color: self color size: size].
+	(cachedForm isNil or: [cachedForm extent ~= size asPoint or: [cachedColor ~= currentColor]]) ifTrue: [cachedForm := self class cachedFormSvg: self svg color: currentColor size: size].
 	
+	cachedColor := currentColor.
 	^ cachedForm
 ]
 
@@ -6018,6 +6020,12 @@ SBIcon >> changeIconName: anIconNameSymbol [
 	cachedForm := nil.
 	iconName := anIconNameSymbol.
 	self changed
+]
+
+{ #category : #'as yet unclassified' }
+SBIcon >> cleanCache [
+
+	cachedForm := nil
 ]
 
 { #category : #drawing }

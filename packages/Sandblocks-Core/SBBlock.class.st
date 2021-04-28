@@ -190,7 +190,7 @@ SBBlock >> bindingOf: aString [
 SBBlock >> blockFor: anObject withInterfaces: aCollection ifOpen: aBlock ifClosed: anotherBlock [
 
 	^ self
-		allBlocksDetect: [:morph | morph isSandblock and: [morph object = anObject and: [morph satisfies: aCollection]]]
+		allBlocksDetect: [:morph | morph isSandblock and: [morph object == anObject and: [morph satisfies: aCollection]]]
 		ifFound: aBlock
 		ifNone: anotherBlock
 ]
@@ -206,7 +206,7 @@ SBBlock >> browse [
 { #category : #testing }
 SBBlock >> canAppearInBlockBody [
 
-	^ false
+	^ self isExpression
 ]
 
 { #category : #testing }
@@ -704,11 +704,20 @@ SBBlock >> dismiss [
 { #category : #drawing }
 SBBlock >> drawBackgroundOn: aCanvas [
 
+	| policy |
+	policy := self colorPolicy.
 	^ aCanvas
-		frameAndFillRectangle: self bounds
-		fillColor: self drawnColor
-		borderWidth: (self colorPolicy borderWidthForBlock: self)
-		borderColor: (self colorPolicy borderColorForBlock: self)
+		frameAndFillRoundRect: self bounds
+		radius: policy cornerRadius
+		fillStyle: self drawnColor
+		borderWidth: (policy borderWidthForBlock: self)
+		borderColor: (policy borderColorForBlock: self)
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> drawDropHighlightOn: aCanvas [
+
+	
 ]
 
 { #category : #drawing }
@@ -1562,7 +1571,7 @@ SBBlock >> nextVerticalNear: aNumber calcDistance: aDistBlock validBlock: aValid
 	artefact := self containingFloat.
 	tolerance := 10.
 	
-	allCandidates := Array streamContents: [:stream | artefact allMorphsDo: [:candidate | (candidate isTextMorph and: [aValidBlock value: candidate]) ifTrue: [stream nextPut: candidate]]].
+	allCandidates := Array streamContents: [:stream | artefact allMorphsDo: [:candidate | ((candidate isTextMorph or: [candidate isSandblock and: [candidate hasChildSandblocks not]]) and: [aValidBlock value: candidate]) ifTrue: [stream nextPut: candidate]]].
 	
 	candidates := OrderedCollection new.
 	candidatesBestDistance := 900000000.
@@ -1593,7 +1602,7 @@ SBBlock >> noteNewOwner: aMorph [
 SBBlock >> object [
 
 	"Should be self subclassResponsibility but often causes non-recoverable errors with drag and drop"
-	^ nil
+	^ self
 ]
 
 { #category : #'object interface' }
@@ -1702,17 +1711,15 @@ SBBlock >> pasteReplace [
 	| copyBuffer |
 	copyBuffer := self sandblockEditor copyBuffer.
 	
-	copyBuffer ifNotNil: [ | new |
+	^ copyBuffer ifNotNil: [ | new |
 		copyBuffer wrapsAround ifTrue: [^ self wrapSelectionWith: copyBuffer unpackSelection veryDeepCopy].
 		
 		new := copyBuffer unpackSelection veryDeepCopy.
-		new
-			convertedFor: self objectInterface
-			do: [:repr |
-				self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-					target: self;
-					replacer: repr).
-				repr postDuplicate]]
+		new convertedFor: self objectInterface do: [:repr |
+			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+				target: self;
+				replacer: repr).
+			repr postDuplicate]]
 ]
 
 { #category : #'action helpers' }
@@ -1800,6 +1807,12 @@ SBBlock >> precedence [
 SBBlock >> preferredColor [
 
 	^ nil
+]
+
+{ #category : #'colors and color policies' }
+SBBlock >> preferredColorIn: aColorPolicy [
+
+	^ aColorPolicy default
 ]
 
 { #category : #'colors and color policies' }
@@ -2129,6 +2142,15 @@ SBBlock >> selectionLabel [
 SBBlock >> shouldAutocomplete [
 
 	^ self hasSuggestions and: [self suggestionsMenu activeSuggestion wouldChange: self]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> shownColor [
+
+	| ref col |
+	ref := self.
+	[(col := ref drawnColor) alpha < 0.7 and: [ref parentSandblock notNil]] whileTrue: [ref := ref parentSandblock].
+	^ col
 ]
 
 { #category : #testing }
