@@ -92,9 +92,8 @@ SBEditor class >> openFor: aMethodOrClass [
 
 { #category : #generated }
 SBEditor class >> savedBlocks [
-^ {SBStClass newFor: TextMorph at:416@23.
-SBStMethod newFor: (CircleMorph compiledMethodAt: #extent:) at:691@67.
-SBStPlayground newFromSource: 'sbEditor open: (CircleMorph compiledMethodAt: #extent:)' at: 924@273.
+^ {SBStPlayground newFromSource: '' at: 610@446.
+SBStPlayground newFromSource: '' at: 841@436.
 }
 ]
 
@@ -118,6 +117,15 @@ SBEditor class >> useInputMapping: anInputMappingClass [
 	" self useInputMapping: SBTextInputMapping "
 
 	InputMappingClass := anInputMappingClass
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> activateForces [
+	
+	<globalAction>
+	
+	self childSandblocksDo: [:each | each withDecorator: SBForceMoveDecorator do:
+		[:decorator | decorator activateForces]]
 ]
 
 { #category : #shortcuts }

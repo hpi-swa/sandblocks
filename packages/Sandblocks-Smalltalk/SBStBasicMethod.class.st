@@ -328,7 +328,7 @@ SBStBasicMethod >> initialize [
 
 	super initialize.
 	
-	self attachDecorator: SBMoveDecorator new
+	self attachDecorator: SBForceMoveDecorator new
 ]
 
 { #category : #'as yet unclassified' }
@@ -548,8 +548,8 @@ SBStBasicMethod >> postDuplicateSelf [
 	self sandblockEditor do: (SBDoItCommand newFor: self).
 	
 	self
-		detachDecorators: SBMoveDecorator;
-		attachDecorator: SBMoveDecorator new
+		detachDecorators: SBForceMoveDecorator;
+		attachDecorator: SBForceMoveDecorator new
 ]
 
 { #category : #'as yet unclassified' }

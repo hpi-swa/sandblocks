@@ -98,6 +98,15 @@ SBStMethod >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMethod >> isAttractedTo: aMorph [
+	
+	(aMorph class == SBStClass) ifTrue: [^ self currentClass == aMorph shownClass].
+	(aMorph class == SBStMethod) ifTrue: [^ self currentClass == aMorph currentClass].
+	
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBStMethod >> isCollapsed [
 
 	^ self body visible not

@@ -150,6 +150,27 @@ SBBlock >> attachDecorator: aDecorator [
 	self updateSteppingDecorators
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> attractionStrengthTo: aMorph [
+	
+	(self isAttractedTo: aMorph)
+		ifTrue: [^  0.01 * (aMorph center - self center) r]
+		ifFalse: [^ 0.0]
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> attractionTo: aMorph [
+
+	| direction |
+	direction := aMorph center - self center.
+	(direction closeTo: 0@0)
+		ifTrue: [^ 0@0]
+		ifFalse: [^ direction normalized * ((self attractionStrengthTo: aMorph) + (aMorph attractionStrengthTo: self))]
+	
+	
+]
+
 { #category : #actions }
 SBBlock >> barf [
 	<action>
@@ -915,6 +936,26 @@ SBBlock >> focusPreviousSuggestion [
 	self suggestionMenuDo: #previous
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> forceAgainst: aMorph [
+	
+	| direction |
+	direction := self center - aMorph center.
+	(direction closeTo: 0@0)
+		ifTrue: [^ ThreadSafeRandom next @ ThreadSafeRandom next]
+		ifFalse: [^ direction normalized * ((self forceStrengthAgainst: aMorph) + (aMorph forceStrengthAgainst: self))]
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> forceStrengthAgainst: aMorph [
+	
+	| distance |
+	distance := (self center - aMorph center) r.
+	distance = 0 ifTrue: [^ 1.0] ifFalse: [^ (100000.0 / distance / distance) min: 10.0]
+	
+]
+
 { #category : #'colors and color policies' }
 SBBlock >> foregroundColor [
 
@@ -1013,7 +1054,7 @@ SBBlock >> hasCurrentTextMorph [
 { #category : #decorators }
 SBBlock >> hasDecorator: aClass [
 
-	^ decorators anySatisfy: [:d | d class = aClass]
+	^ decorators anySatisfy: [:d | aClass subclasses includes: d class]
 ]
 
 { #category : #testing }
@@ -1176,6 +1217,12 @@ SBBlock >> isArtefact [
 	" we define an artefact in this context as a node that is in some way persisting information of its children such as a method or a class would "
 
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> isAttractedTo: aMorph [
+	
+	^ aMorph class == self class
 ]
 
 { #category : #testing }
