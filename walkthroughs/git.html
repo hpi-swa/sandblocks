@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="../faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="../chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="../walkthroughs/git.html" class="active"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="../walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="../walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="../walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="../faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="../chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="../walkthroughs/git.html" class="active"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="../walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="../walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="../walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="../walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.6.</strong> Lists of Blocks</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -173,6 +173,12 @@
 <li><code>git fetch --all</code> fetch changes onto our <code>origin/</code> branches but do not merge them just yet</li>
 <li><code>git push -u origin BRANCH</code> push a local branch to the remote and remember the <code>origin BRANCH</code> as its upstream so that you can leave it out next time</li>
 </ul>
+<h2 id="adding-your-repo-in-squeak"><a class="header" href="#adding-your-repo-in-squeak">Adding Your Repo in Squeak</a></h2>
+<ol>
+<li>Via the commandline, <code>git clone </code> your repo to any folder on your filesystem.</li>
+<li>When first opening the Git Browser, it will ask you to add a new project. Click yes.</li>
+<li>Locate the folder that you <code>git clone</code>d earlier.</li>
+</ol>
 <h2 id="recommended-workflow"><a class="header" href="#recommended-workflow">Recommended Workflow</a></h2>
 <ol>
 <li>Perform changes in the image</li>
@@ -191,6 +197,8 @@
 </li>
 <li>When adding packages, right click the project and click &quot;change tracked packages&quot;, add the packages, then make sure to go to settings and re-select the right type of storage format</li>
 </ol>
+<h2 id="difference-to-metacello"><a class="header" href="#difference-to-metacello">Difference to Metacello</a></h2>
+<p>Metacello is a dependency manager that will only fetch the most recent version of the packages you want to install. The Git Browser, on the other hand, will clone and manage the entire history of the repository and allow you to create and push new commits.</p>
 
                     </main>
 

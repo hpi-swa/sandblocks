@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.6.</strong> Lists of Blocks</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -265,6 +265,12 @@ It concerns common tasks such as extending the system with new blocks or palette
 <li><code>git fetch --all</code> fetch changes onto our <code>origin/</code> branches but do not merge them just yet</li>
 <li><code>git push -u origin BRANCH</code> push a local branch to the remote and remember the <code>origin BRANCH</code> as its upstream so that you can leave it out next time</li>
 </ul>
+<h2 id="adding-your-repo-in-squeak"><a class="header" href="#adding-your-repo-in-squeak">Adding Your Repo in Squeak</a></h2>
+<ol>
+<li>Via the commandline, <code>git clone </code> your repo to any folder on your filesystem.</li>
+<li>When first opening the Git Browser, it will ask you to add a new project. Click yes.</li>
+<li>Locate the folder that you <code>git clone</code>d earlier.</li>
+</ol>
 <h2 id="recommended-workflow"><a class="header" href="#recommended-workflow">Recommended Workflow</a></h2>
 <ol>
 <li>Perform changes in the image</li>
@@ -283,6 +289,8 @@ It concerns common tasks such as extending the system with new blocks or palette
 </li>
 <li>When adding packages, right click the project and click &quot;change tracked packages&quot;, add the packages, then make sure to go to settings and re-select the right type of storage format</li>
 </ol>
+<h2 id="difference-to-metacello"><a class="header" href="#difference-to-metacello">Difference to Metacello</a></h2>
+<p>Metacello is a dependency manager that will only fetch the most recent version of the packages you want to install. The Git Browser, on the other hand, will clone and manage the entire history of the repository and allow you to create and push new commits.</p>
 <h1 id="custom-palettes"><a class="header" href="#custom-palettes">Custom Palettes</a></h1>
 <p>In this walkthrough, we create a custom palette that is only active if we are in a subclass of the <code>System</code> class.</p>
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;"><iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://player.vimeo.com/video/541133965" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
@@ -325,6 +333,38 @@ It concerns common tasks such as extending the system with new blocks or palette
 <li>implement <code>#updatePCFrom:</code> to get debugging support (can leave it empty)</li>
 <li>optional: add a converter method back to smalltalk using your <code>#writeSourceOn:</code></li>
 </ol>
+<h1 id="lists-of-blocks"><a class="header" href="#lists-of-blocks">Lists of Blocks</a></h1>
+<p>A common pattern is to have an extensible list of blocks.
+For this, we need to do three things:</p>
+<ol>
+<li>inform the system that our block can take multiple children</li>
+<li>inform the system which blocks our block can take as multiple children</li>
+<li>add a method that creates new instances of our desired type of children</li>
+</ol>
+<p><img src="walkthroughs/../assets/lists-of-blocks.png" alt="" /></p>
+<h4 id="1-mark-as-list-block"><a class="header" href="#1-mark-as-list-block">1. Mark as List Block</a></h4>
+<p>The first step is simple. Assume we have a <code>MyListBlock</code> block subclass. All we need to do is:</p>
+<pre><code>MyListBlock&gt;&gt;fixedNumberOfChildren
+
+    ^ false
+</code></pre>
+<h4 id="2-communicate-block-interfaces"><a class="header" href="#2-communicate-block-interfaces">2. Communicate Block Interfaces</a></h4>
+<p>For the second step, we communicate the object interface that the block needs to fulfill:</p>
+<pre><code>MyListBlock&gt;&gt;objectInterfaceNear: aBlock at: aSymbol
+
+    ^ {[:o | o isKindOf: MyChildWidget]}
+    &quot; or &quot;
+    ^ {#isMyChildWidget}
+    &quot; or &quot;
+    ^ {#isMyChildWidget understood. #isMyChildWidget}
+</code></pre>
+<p>The symbols or blocks you provide in this list will be checked one by one on the incoming block and only if all return true, the block is allowed to be added.</p>
+<h4 id="3-provide-a-creator-method"><a class="header" href="#3-provide-a-creator-method">3. Provide a Creator Method</a></h4>
+<p>Lastly, we will want to inform the system what the default block should look like if the user presses the insert-child shortcut.</p>
+<pre><code>MyListBlock&gt;&gt;newEmptyChildNear: aBlock before: aBoolean
+
+    ^ MyChildWidget new contents: 'empty'
+</code></pre>
 
                     </main>
 

@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Frequently Asked Questions - Sandblocks</title>
+        <title>Lists of Blocks - Sandblocks</title>
         
         
 
@@ -18,28 +18,28 @@
         <meta name="theme-color" content="#ffffff" />
 
         
-        <link rel="icon" href="favicon.svg">
+        <link rel="icon" href="../favicon.svg">
         
         
-        <link rel="shortcut icon" href="favicon.png">
+        <link rel="shortcut icon" href="../favicon.png">
         
-        <link rel="stylesheet" href="css/variables.css">
-        <link rel="stylesheet" href="css/general.css">
-        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
         
-        <link rel="stylesheet" href="css/print.css" media="print">
+        <link rel="stylesheet" href="../css/print.css" media="print">
         
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
         
-        <link rel="stylesheet" href="fonts/fonts.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
         
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         
@@ -49,7 +49,7 @@
     <body>
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
-            var path_to_root = "";
+            var path_to_root = "../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="faq.html" class="active"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.6.</strong> Lists of Blocks</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="../faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="../chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="../walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="../walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="../walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="../walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="../walkthroughs/lists-of-blocks.html" class="active"><strong aria-hidden="true">3.6.</strong> Lists of Blocks</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -131,7 +131,7 @@
 
                     <div class="right-buttons">
                         
-                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                         
@@ -163,47 +163,49 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="frequently-asked-questions"><a class="header" href="#frequently-asked-questions">Frequently Asked Questions</a></h1>
-<p><strong>How do I open a morph in the editor?</strong></p>
-<blockquote>
-<p>In a Smalltalk workspace (open via the plus button up top), run:</p>
-<pre><code>sbEditor openMorphInView: MyBlock new
+                        <h1 id="lists-of-blocks"><a class="header" href="#lists-of-blocks">Lists of Blocks</a></h1>
+<p>A common pattern is to have an extensible list of blocks.
+For this, we need to do three things:</p>
+<ol>
+<li>inform the system that our block can take multiple children</li>
+<li>inform the system which blocks our block can take as multiple children</li>
+<li>add a method that creates new instances of our desired type of children</li>
+</ol>
+<p><img src="../assets/lists-of-blocks.png" alt="" /></p>
+<h4 id="1-mark-as-list-block"><a class="header" href="#1-mark-as-list-block">1. Mark as List Block</a></h4>
+<p>The first step is simple. Assume we have a <code>MyListBlock</code> block subclass. All we need to do is:</p>
+<pre><code>MyListBlock&gt;&gt;fixedNumberOfChildren
+
+    ^ false
 </code></pre>
-</blockquote>
-<p><strong>How do I copy-paste text into the blocks?</strong></p>
-<blockquote>
-<p>Whenever you use ctrl+c on a block, it is also copied to the system clipboard as text.
-To paste text from the system clipboard, use ctrl+shift+V.</p>
-</blockquote>
-<p><strong>How do I select themes and which ones are recommended?</strong></p>
-<blockquote>
-<p>Right click into the editor or press ctrl+; to open the list of global actions.
-Filter for <code>color</code> and press enter.</p>
-<p>Currently recommended themes are <code>ColorMinimal</code>, as well as <code>LightPlus</code>, <code>Solarized</code>, and <code>SolarizedDark</code>.</p>
-</blockquote>
-<p><strong>Where can I find all the shortcuts?</strong></p>
-<blockquote>
-<p>Have a look at <code>SBTextInputMapping&gt;&gt;#registerDefaultShortcuts</code>.</p>
-</blockquote>
-<p><strong>How do I (no longer) use the Sandblocks editor as default in all the Squeak tools?</strong></p>
-<blockquote>
-<p>Run <code>CodeHolder addSandblocksDefault: true</code> or <code>false</code> to still have it as an option but not make it the default.</p>
-</blockquote>
+<h4 id="2-communicate-block-interfaces"><a class="header" href="#2-communicate-block-interfaces">2. Communicate Block Interfaces</a></h4>
+<p>For the second step, we communicate the object interface that the block needs to fulfill:</p>
+<pre><code>MyListBlock&gt;&gt;objectInterfaceNear: aBlock at: aSymbol
+
+    ^ {[:o | o isKindOf: MyChildWidget]}
+    &quot; or &quot;
+    ^ {#isMyChildWidget}
+    &quot; or &quot;
+    ^ {#isMyChildWidget understood. #isMyChildWidget}
+</code></pre>
+<p>The symbols or blocks you provide in this list will be checked one by one on the incoming block and only if all return true, the block is allowed to be added.</p>
+<h4 id="3-provide-a-creator-method"><a class="header" href="#3-provide-a-creator-method">3. Provide a Creator Method</a></h4>
+<p>Lastly, we will want to inform the system what the default block should look like if the user presses the insert-child shortcut.</p>
+<pre><code>MyListBlock&gt;&gt;newEmptyChildNear: aBlock before: aBoolean
+
+    ^ MyChildWidget new contents: 'empty'
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="sandblocks.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../walkthroughs/projections.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
-                        
-                            <a rel="next" href="chapter_walkthroughs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
                         
 
                         <div style="clear: both"></div>
@@ -213,15 +215,11 @@ Filter for <code>color</code> and press enter.</p>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="sandblocks.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../walkthroughs/projections.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
-                
-                    <a rel="next" href="chapter_walkthroughs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
                 
             </nav>
 
@@ -242,14 +240,14 @@ Filter for <code>color</code> and press enter.</p>
         
 
         
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
         
 
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Custom JS scripts -->
         
