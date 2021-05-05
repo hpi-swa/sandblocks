@@ -735,7 +735,15 @@ SBBlock >> drawBackgroundOn: aCanvas [
 		borderColor: (policy borderColorForBlock: self)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
+SBBlock >> drawChangedMarker: aCanvas [
+
+	^ self hasUnsavedChanges ifTrue: [ | adornment |
+		adornment := PluggableTextMorph adornmentWithColor: Color orange.
+		aCanvas translucentImage: adornment at: self position + (self width - adornment width @ 0)]
+]
+
+{ #category : #drawing }
 SBBlock >> drawDropHighlightOn: aCanvas [
 
 	
@@ -772,6 +780,8 @@ SBBlock >> drawSubmorphsOn: aCanvas [
 	super drawSubmorphsOn: aCanvas.
 	
 	self valid ifFalse: [self drawInvalidBorderOn: aCanvas].
+	
+	self drawChangedMarker: aCanvas.
 	
 	self decorators do: [:d | d postDrawOn: aCanvas]
 ]
@@ -1154,8 +1164,7 @@ SBBlock >> insertElement: aBoolean [
 	
 	self sandblockEditor do: cmd.
 	
-	cmd shouldMergeWithNext ifTrue: [
-		self sandblockEditor startInput: self sandblockEditor selection at: 0 replacingContents: false].
+	cmd shouldMergeWithNext ifTrue: [self sandblockEditor selection inputContainedUnknown].
 	
 	^ self sandblockEditor selection
 ]
@@ -1227,6 +1236,12 @@ SBBlock >> isAttractedTo: aMorph [
 
 { #category : #testing }
 SBBlock >> isBlockBody [
+
+	^ false
+]
+
+{ #category : #testing }
+SBBlock >> isClassContainer [
 
 	^ false
 ]
@@ -1982,6 +1997,12 @@ SBBlock >> sandblockBlockColorIfAbsentPut: aBlock [
 SBBlock >> sandblockForegroundColor [
 
 	^ self foregroundColor
+]
+
+{ #category : #'artefact protocol' }
+SBBlock >> save [
+
+	(self saveTryFixing: false quick: false) ifFalse: [self error: 'failed to save block']
 ]
 
 { #category : #saving }

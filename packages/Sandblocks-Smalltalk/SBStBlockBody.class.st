@@ -67,6 +67,12 @@ SBStBlockBody >> appendElement [
 	self sandblockEditor startInput: self sandblockEditor selection at: 0 replacingContents: false
 ]
 
+{ #category : #'as yet unclassified' }
+SBStBlockBody >> appendStatements: aCollection [
+
+	self addAllMorphs: aCollection
+]
+
 { #category : #converting }
 SBStBlockBody >> binding: aString for: block class: aClass ifPresent: aBlock [
 

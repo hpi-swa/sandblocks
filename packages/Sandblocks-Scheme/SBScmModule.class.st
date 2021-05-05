@@ -102,16 +102,6 @@ SBScmModule >> definitions [
 ]
 
 { #category : #'as yet unclassified' }
-SBScmModule >> drawSubmorphsOn: aCanvas [
-
-	super drawSubmorphsOn: aCanvas.
-	
-	(self hasUnsavedChanges and: [self artefactForPersisting = self]) ifTrue: [ | adornment |
-		adornment := PluggableTextMorph adornmentWithColor: Color orange.
-		aCanvas translucentImage: adornment at: self position + ((self width - adornment width) @ 0)]
-]
-
-{ #category : #'as yet unclassified' }
 SBScmModule >> expressions [
 
 	^ self filename ifNotNil: [self submorphs viewAllButFirst] ifNil: [self submorphs]
