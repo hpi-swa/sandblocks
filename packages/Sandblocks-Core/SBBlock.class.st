@@ -962,7 +962,7 @@ SBBlock >> forceStrengthAgainst: aMorph [
 	
 	| distance |
 	distance := (self center - aMorph center) r.
-	distance = 0 ifTrue: [^ 1.0] ifFalse: [^ (100000.0 / distance / distance) min: 10.0]
+	distance = 0 ifTrue: [^ 1.0] ifFalse: [^ (100000000.0 / distance / distance / distance) min: 10.0]
 	
 ]
 

@@ -1115,6 +1115,8 @@ SBEditor >> openMorphInView: aMorph [
 		editor: self sandblockEditor;
 		isUnsaved: false;
 		yourself).
+	self activateForces;
+		openMorph: (SBOffscreenBlockIndicator newFor: aMorph withScroller: scroll).
 	^ aMorph
 ]
 
