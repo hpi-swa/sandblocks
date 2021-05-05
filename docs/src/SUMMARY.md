@@ -9,3 +9,4 @@
   - [Custom Blocks](walkthroughs/blocks.md)
   - [Custom Projections](walkthroughs/projections.md)
   - [Lists of Blocks](walkthroughs/lists-of-blocks.md)
+  - [Saving and Artefacts](walkthroughs/artefacts.md)
