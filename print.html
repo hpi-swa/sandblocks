@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.6.</strong> Lists of Blocks</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.6.</strong> Lists of Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/artefacts.html"><strong aria-hidden="true">3.7.</strong> Saving and Artefacts</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -365,6 +365,22 @@ For this, we need to do three things:</p>
 
     ^ MyChildWidget new contents: 'empty'
 </code></pre>
+<h1 id="saving-and-artefacts"><a class="header" href="#saving-and-artefacts">Saving and Artefacts</a></h1>
+<p>Artefacts collect changes to blocks and allow saving these changes to the system.
+In this video, we create an artefact that acts as a convenient editor over existing Squeak/Smalltalk classes.</p>
+<p>We also demonstrate how to generate blocks quickly and conveniently.</p>
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;"><iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://player.vimeo.com/video/545451309" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+<h3 id="basic-steps"><a class="header" href="#basic-steps">Basic Steps</a></h3>
+<ol>
+<li>Create a block subclass</li>
+<li>Return <code>true</code> from <code>isArtefact</code></li>
+<li>Implement <code>saveTryFixing:quick:</code> and return <code>true</code> or <code>false</code></li>
+</ol>
+<h3 id="generating-blocks"><a class="header" href="#generating-blocks">Generating Blocks</a></h3>
+<p>By using the SBStBuilder class, you can quickly generate or save blocks.
+Explore its methods to see more.</p>
+<p>To create a block without saving it, do <code>[:b | b to: (b name: 'Object') send: #new] sbStBuild</code>.
+If you are creating an artefact, such as a method or class, you can call <code>sbStSave</code> instead, which will build the block, call save on it, and finally return it.</p>
 
                     </main>
 
