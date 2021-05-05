@@ -11,6 +11,11 @@ We also detail how to add packages to an existing Tonel repo.
 * `git fetch --all` fetch changes onto our `origin/` branches but do not merge them just yet
 * `git push -u origin BRANCH` push a local branch to the remote and remember the `origin BRANCH` as its upstream so that you can leave it out next time
 
+## Adding Your Repo in Squeak
+1. Via the commandline, `git clone ` your repo to any folder on your filesystem.
+2. When first opening the Git Browser, it will ask you to add a new project. Click yes.
+3. Locate the folder that you `git clone`d earlier.
+
 ## Recommended Workflow
 1. Perform changes in the image
 2. Commit using the Git Browser
@@ -22,3 +27,5 @@ We also detail how to add packages to an existing Tonel repo.
     3. `git pull` in the CLI, then right click new most recent commit and select `checkout` (might result in invalid Smalltalk, is not aware of uncommitted changes in your image)
 5. When adding packages, right click the project and click "change tracked packages", add the packages, then make sure to go to settings and re-select the right type of storage format
 
+## Difference to Metacello
+Metacello is a dependency manager that will only fetch the most recent version of the packages you want to install. The Git Browser, on the other hand, will clone and manage the entire history of the repository and allow you to create and push new commits.
