@@ -290,7 +290,7 @@ SBStName >> noteNewOwner: aMorph [
 	((aMorph parentSandblock ifNotNil: #isMethod ifNil: [false]) and: [aMorph parentSandblock isMyArgument: self]) ifTrue: [^ self behavior: SBStDeclarationForMethodArgument new].
 	aMorph isTemporaries ifTrue: [^ self behavior: SBStDeclarationForTemporaryVariable new].
 	aMorph isBlockBindings ifTrue: [^ self behavior: SBStDeclarationForBlock new].
-	(self containingArtefact satisfies: {#notNil. #isEditor. [:a | a object isBehavior]}) ifTrue: [
+	(self containingArtefact satisfies: {#notNil. #isEditor. #isClassContainer}) ifTrue: [
 		aMorph = self containingArtefact instanceVariables ifTrue: [^ self behavior: (SBStDeclarationForInstanceVariable new class: self containingArtefact relatedClass)].
 		aMorph = self containingArtefact classVariables ifTrue: [^ self behavior: SBStDeclarationForPoolVariable new]].
 	
@@ -372,6 +372,12 @@ SBStName >> veryDeepCopyWith: aCopier [
 	binding := previousBinding.
 	new binding: previousBinding.
 	^ new
+]
+
+{ #category : #testing }
+SBStName >> wantsInput [
+
+	^ self contents isEmpty
 ]
 
 { #category : #'as yet unclassified' }

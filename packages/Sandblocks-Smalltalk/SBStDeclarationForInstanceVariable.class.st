@@ -39,18 +39,18 @@ SBStDeclarationForInstanceVariable >> defineGetterSetter [
 	<action>
 
 	self block sandblockEditor
-		createArtefactInView: (SBStMethod new
-			selector: self contents asSymbol arguments: #() class: self block containingArtefact shownClass;
-			body: (SBStBlockBody new statements: {
-				(SBStReturn new expression: (SBStName contents: self contents))
-			}));
-		createArtefactInView: (SBStMethod new
-			selector: self contents asSymbol asSimpleSetter
-				arguments: {(SBStName contents: 'anObject')}
-				class: self block containingArtefact shownClass;
-			body: (SBStBlockBody new statements: {
-				(SBStAssignment new binding: (SBStName contents: self contents) value: (SBStName contents: 'anObject'))
-			}))
+		createArtefactInView: self getterBlock;
+		createArtefactInView: self setterBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBStDeclarationForInstanceVariable >> getterBlock [
+
+	^ SBStMethod new
+		selector: self contents asSymbol
+			arguments: #()
+			class: self block containingArtefact shownClass;
+		body: (SBStBlockBody new statements: {SBStReturn new expression: (SBStName contents: self contents)})
 ]
 
 { #category : #'as yet unclassified' }
@@ -69,6 +69,19 @@ SBStDeclarationForInstanceVariable >> printBlockOn: aStream [
 SBStDeclarationForInstanceVariable >> scope [
 
 	^ self block sandblockEditor ifNotNil: [:e | e methods select: [:m | m methodClass = self block containingArtefact shownClass]] ifNil: [#()]
+]
+
+{ #category : #'as yet unclassified' }
+SBStDeclarationForInstanceVariable >> setterBlock [
+
+	^ SBStMethod new
+		selector: self contents asSymbol asSimpleSetter
+			arguments: {SBStName contents: 'anObject'}
+			class: self block containingArtefact shownClass;
+		body: (SBStBlockBody new statements: {
+			SBStAssignment new
+				binding: (SBStName contents: self contents)
+				value: (SBStName contents: 'anObject')})
 ]
 
 { #category : #'as yet unclassified' }

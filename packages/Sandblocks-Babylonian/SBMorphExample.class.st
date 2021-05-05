@@ -228,7 +228,7 @@ SBMorphExample >> reportError: anError [
 SBMorphExample >> runCase: aCase [
 
 	| morph |
-	self sendStartNotification.
+	"self sendStartNotification."
 	
 	self clearErrors.
 	view removeAllMorphs.

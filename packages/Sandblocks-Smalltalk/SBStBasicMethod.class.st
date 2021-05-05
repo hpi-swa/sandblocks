@@ -255,16 +255,6 @@ SBStBasicMethod >> deleteMethod [
 ]
 
 { #category : #'as yet unclassified' }
-SBStBasicMethod >> drawSubmorphsOn: aCanvas [
-
-	super drawSubmorphsOn: aCanvas.
-	
-	self hasUnsavedChanges ifTrue: [ | adornment |
-		adornment  := PluggableTextMorph adornmentWithColor: Color orange.
-		aCanvas translucentImage: adornment at: self position + (self width - adornment width @ 0)]
-]
-
-{ #category : #'as yet unclassified' }
 SBStBasicMethod >> ensureExpanded [
 
 	self isCollapsed ifTrue: [self toggleCollapsed]
@@ -358,12 +348,12 @@ SBStBasicMethod >> instanceVariables [
 	| editor |
 	editor := self sandblockEditor.
 	^ Array streamContents: [:stream |
-		self methodClass withAllSuperclassesDo: [:class |
-			stream nextPutAll: (self sandblockEditor
+		self methodClass withAllSuperclassesDo: [:class | | open |
+			open := [class instVarNames collect: [:name | SBStName instanceVariable: name class: class]].
+			stream nextPutAll: (editor ifNil: open ifNotNil: [editor
 				blockFor: class withInterfaces: #(isEditor)
 				ifOpen: [:c | c instanceVariables]
-				ifClosed: [class instVarNames collect: [:name |
-					SBStName instanceVariable: name class: class]])]]
+				ifClosed: open])]]
 ]
 
 { #category : #'as yet unclassified' }

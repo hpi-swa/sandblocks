@@ -2,7 +2,8 @@ Class {
 	#name : #SBComboBox,
 	#superclass : #SBTextBubble,
 	#instVars : [
-		'object'
+		'object',
+		'values'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -59,5 +60,11 @@ SBComboBox >> startInputAt: aNumber replacingContents: aBoolean [
 { #category : #'as yet unclassified' }
 SBComboBox >> values [
 
-	^ self subclassResponsibility
+	^ values
+]
+
+{ #category : #'as yet unclassified' }
+SBComboBox >> values: aCollection [
+
+	values := aCollection
 ]

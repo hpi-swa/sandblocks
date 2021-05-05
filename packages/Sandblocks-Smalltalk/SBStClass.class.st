@@ -72,6 +72,12 @@ SBStClass >> className: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBStClass >> classSide [
+
+	^ self shownClass class
+]
+
+{ #category : #'as yet unclassified' }
 SBStClass >> classVariables [
 
 	^ classVariables
@@ -94,11 +100,14 @@ SBStClass >> containingArtefact [
 SBStClass >> createInitialize [
 	<action>
 
-	self sandblockEditor createArtefactInView: (SBStMethod new
-		selector: 'initialize' arguments: #() class: self shownClass;
-		body: (SBStBlockBody new statements: {
-			(SBStMessageSend new receiver: (SBStName contents: 'super') selector: 'initialize' arguments: #())
-		}))
+	self sandblockEditor createArtefactInView: self initializeBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBStClass >> createNewEmptyModule [
+	<action>
+
+	self sandblockEditor createEmptySmalltalkMethod
 ]
 
 { #category : #'as yet unclassified' }
@@ -149,16 +158,6 @@ SBStClass >> deleteClass [
 ]
 
 { #category : #'as yet unclassified' }
-SBStClass >> drawSubmorphsOn: aCanvas [
-
-	super drawSubmorphsOn: aCanvas.
-	
-	self hasUnsavedChanges ifTrue: [ | adornment |
-		adornment  := PluggableTextMorph adornmentWithColor: Color orange.
-		aCanvas translucentImage: adornment at: self position + (self width - adornment width @ 0)]
-]
-
-{ #category : #'as yet unclassified' }
 SBStClass >> ensureExpanded [
 ]
 
@@ -205,9 +204,31 @@ SBStClass >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBStClass >> initializeBlock [
+
+	^ SBStMethod new
+		selector: 'initialize' arguments: #() class: self shownClass;
+		body: (SBStBlockBody new statements: {
+			SBStMessageSend new
+				receiver: (SBStName contents: 'super')
+				selector: 'initialize'
+				arguments: #()})
+]
+
+{ #category : #'as yet unclassified' }
 SBStClass >> instanceVariables [
 
 	^ instanceVariables
+]
+
+{ #category : #'as yet unclassified' }
+SBStClass >> instanceVariables: aCollection [
+
+	self instanceVariables removeAllMorphs.
+	
+	aCollection do: [:name |
+		self instanceVariables
+			addMorphBack: (SBStName instanceVariable: name class: self relatedClass)]
 ]
 
 { #category : #'as yet unclassified' }
@@ -267,6 +288,8 @@ SBStClass >> printOn: aStream [
 { #category : #'as yet unclassified' }
 SBStClass >> references [
 
+	self sandblockEditor ifNil: [^ #()].
+	
 	^ Array streamContents: [:stream |
 		self sandblockEditor allBlocksDo: [:block |
 			(block object = self object and: [block ~= self]) ifTrue: [stream nextPut: block]]]
