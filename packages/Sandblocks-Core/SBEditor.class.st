@@ -1117,8 +1117,6 @@ SBEditor >> openMorphInView: aMorph [
 		editor: self sandblockEditor;
 		isUnsaved: false;
 		yourself).
-	self activateForces;
-		openMorphInOverlay: (SBOffscreenBlockIndicator newFor: aMorph withScroller: scroll).
 	^ aMorph
 ]
 
@@ -1297,6 +1295,12 @@ SBEditor >> removeHelperTimer [
 	helpOverlay ifNotNil: #delete.
 	helpOverlay := nil.
 	self removeAlarm: #showHelper
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> removeIndicatorFor: aMorph [
+	
+	scroll removeIndicatorFor: aMorph
 ]
 
 { #category : #'action helpers' }

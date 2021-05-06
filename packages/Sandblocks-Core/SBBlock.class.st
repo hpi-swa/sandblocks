@@ -1064,7 +1064,7 @@ SBBlock >> hasCurrentTextMorph [
 { #category : #decorators }
 SBBlock >> hasDecorator: aClass [
 
-	^ decorators anySatisfy: [:d | aClass subclasses includes: d class]
+	^ decorators anySatisfy: [:d | d class = aClass or: [aClass subclasses includes: d class]]
 ]
 
 { #category : #testing }
@@ -1250,6 +1250,12 @@ SBBlock >> isClassContainer [
 SBBlock >> isDeclaration [
 
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> isDragging [ 
+	
+	self withDecorator: SBMoveDecorator do: [:decorator | ^ decorator isDragging] ifAbsent: [^ false]
 ]
 
 { #category : #testing }
@@ -2586,13 +2592,13 @@ SBBlock >> wasSelected [
 { #category : #decorators }
 SBBlock >> withDecorator: aClass do: aBlock [
 
-	^ decorators detect: [:d | d class = aClass] ifFound: aBlock ifNone: []
+	^ self withDecorator: aClass do: aBlock ifAbsent: []
 ]
 
 { #category : #decorators }
 SBBlock >> withDecorator: aClass do: aBlock ifAbsent: anotherBlock [
 
-	^ decorators detect: [:d | d class = aClass] ifFound: aBlock ifNone: anotherBlock
+	^ decorators detect: [:d | d class = aClass or: [aClass subclasses includes: d class]] ifFound: aBlock ifNone: anotherBlock
 ]
 
 { #category : #utilities }

@@ -132,3 +132,9 @@ SBStClassMethodEditor >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 
 	^ false
 ]
+
+{ #category : #'as yet unclassified' }
+SBStClassMethodEditor >> textContents [
+
+	^ self firstSubmorph textContents
+]

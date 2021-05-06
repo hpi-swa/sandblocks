@@ -14,6 +14,20 @@ Class {
 	#category : #'Sandblocks-Core'
 }
 
+{ #category : #'as yet unclassified' }
+SBEditorCanvas >> addMorphToOverlay: aMorph [
+	"Do nothing"
+]
+
+{ #category : #'as yet unclassified' }
+SBEditorCanvas >> addedMorph: aMorph [
+	
+	aMorph isSandblock ifTrue: [
+		self sandblockEditor
+			activateForces;
+			openMorphInOverlay: (SBOffscreenBlockIndicator newFor: aMorph withScroller: self)]
+]
+
 { #category : #viewport }
 SBEditorCanvas >> animateToPosition: aPoint [
 
@@ -141,6 +155,17 @@ SBEditorCanvas >> mouseWheel: anEvent [
 SBEditorCanvas >> moveViewport: aPoint [
 
 	self viewportPosition: targetPosition + aPoint negated
+]
+
+{ #category : #'as yet unclassified' }
+SBEditorCanvas >> removeIndicatorFor: aMorph [
+	"Do nothing"
+]
+
+{ #category : #'as yet unclassified' }
+SBEditorCanvas >> removedMorph: aMorph [
+	
+	self sandblockEditor removeIndicatorFor: aMorph
 ]
 
 { #category : #constants }

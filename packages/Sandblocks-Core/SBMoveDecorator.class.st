@@ -120,7 +120,8 @@ SBMoveDecorator >> step [
 			otherMorph preventOcclusion and: [
 				otherMorph ~= self morph and: [
 					(self morph bounds intersects: otherMorph bounds) and: [
-						(self morph bounds containsRect: otherMorph bounds) not]]]]) ifTrue: [
+						(self morph bounds containsRect: otherMorph bounds) not and: [
+							otherMorph isDragging not]]]]]) ifTrue: [
 			velocity := self resolveCollisionCenteredWith: otherMorph.
 			hadIntersect := true]].
 	(velocity closeTo: 0 @ 0)
