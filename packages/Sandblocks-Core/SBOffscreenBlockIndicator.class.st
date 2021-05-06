@@ -3,7 +3,9 @@ Class {
 	#superclass : #Morph,
 	#instVars : [
 		'target',
-		'scroller'
+		'scroller',
+		'iconMorph',
+		'labelMorph'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -18,13 +20,61 @@ SBOffscreenBlockIndicator class >> newFor: aMorph withScroller: aScroller [
 ]
 
 { #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> handlesMouseDown: anEvent [
+
+	^ true
+]
+
+{ #category : #accessing }
+SBOffscreenBlockIndicator >> iconMorph [
+
+	^ iconMorph
+]
+
+{ #category : #accessing }
+SBOffscreenBlockIndicator >> iconMorph: anObject [
+
+	iconMorph := anObject.
+]
+
+{ #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> initialize [
 
 	super initialize.
-	self addMorph: (SBIcon iconCaretSquareORight veryLarge).
+	
+	self iconMorph: SBIcon iconCaretSquareORight veryLarge.
+	self addMorph: self iconMorph.
+	
 	self color: Color transparent.
 	
 	
+]
+
+{ #category : #accessing }
+SBOffscreenBlockIndicator >> labelMorph [
+
+	^ labelMorph
+]
+
+{ #category : #accessing }
+SBOffscreenBlockIndicator >> labelMorph: anObject [
+
+	labelMorph := anObject.
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> mouseDown: anEvent [
+	
+	self scroller scrollToShow: self target.
+]
+
+{ #category : #nil }
+SBOffscreenBlockIndicator >> rejectsEvent: anEvent [
+	
+	(anEvent isMouse and: [anEvent isMouseDown] and: [anEvent redButtonChanged])
+		ifTrue: 
+			[^ (self iconMorph boundsInWorld containsPoint: anEvent position) not]
+		ifFalse: [^ true].
 ]
 
 { #category : #accessing }
@@ -42,7 +92,7 @@ SBOffscreenBlockIndicator >> scroller: aScroller [
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> step [
 
-	| viewCenter direction viewExtent distanceFromCenter |
+	| viewCenter direction intersections viewRectangle position |
 
 	self target ifNil: [^ self abandon].
 
@@ -51,11 +101,19 @@ SBOffscreenBlockIndicator >> step [
 		ifFalse: [self hide].
 	viewCenter := self scroller innerBounds center.
 	direction := (self target boundsInWorld center - viewCenter) normalized.
-	viewExtent := self scroller innerBounds extent.
-	distanceFromCenter := (viewExtent x min: viewExtent y) / 2.
-	self firstSubmorph rotationDegrees: direction degrees.
-	self position: (self scroller transform invertPoint: (viewCenter + (direction * distanceFromCenter))).
-	Transcript showln: self position.
+	viewRectangle := self scroller innerBounds.
+	
+	intersections := {LineSegment intersectFrom: viewCenter with: direction to: viewRectangle topLeft with: 0@1.
+		LineSegment intersectFrom: viewCenter with: direction to: viewRectangle topLeft with: 1@0.
+		LineSegment intersectFrom: viewCenter with: direction to: viewRectangle bottomRight with: -1@0.
+		LineSegment intersectFrom: viewCenter with: direction to: viewRectangle bottomRight with: 0@ -1}.
+	
+	position := (intersections detect: [:aPoint | aPoint notNil and: [viewRectangle containsPoint: aPoint - direction]]).
+	
+	self center: position - (direction * self iconMorph extent / 2).
+	self labelMorph center: self center - (direction * (self labelMorph extent / 2 + self iconMorph extent)).
+	
+	self iconMorph rotationDegrees: direction degrees.
 	
 
 ]
@@ -75,7 +133,10 @@ SBOffscreenBlockIndicator >> target [
 { #category : #accessing }
 SBOffscreenBlockIndicator >> target: aMorph [
 
-	target := aMorph
+	target := aMorph.
+	
+	self labelMorph: (SBStringMorph new contents: self target textContents).
+	self addMorph: self labelMorph.
 ]
 
 { #category : #'as yet unclassified' }

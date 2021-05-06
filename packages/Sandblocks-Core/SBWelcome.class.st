@@ -40,3 +40,9 @@ SBWelcome >> initialize [
 			label: 'Update to bleeding-edge'
 			do: [self sandblockEditor updateSandblocks])
 ]
+
+{ #category : #'as yet unclassified' }
+SBWelcome >> textContents [
+	
+	^ 'Welcome'
+]

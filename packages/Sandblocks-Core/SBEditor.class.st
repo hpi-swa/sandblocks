@@ -758,11 +758,7 @@ SBEditor >> initialize [
 		changeTableLayout;
 		hResizing: #spaceFill;
 		vResizing: #spaceFill;
-		addMorphBack: (scroll := self scrollerClass new
-			color: Color transparent;
-			hResizing: #spaceFill;
-			vResizing: #spaceFill;
-			yourself)).
+		addMorphBack: (scroll := SBEditorCanvasWithOverlay new)).
 	self wantsMinimalLayout ifFalse: [self addMorphBack: (bottomPanel := self buildBottomPanel)].
 	
 	self
@@ -1108,6 +1104,12 @@ SBEditor >> openMorph: aMorph [
 ]
 
 { #category : #'submorphs-add/remove' }
+SBEditor >> openMorphInOverlay: aMorph [
+
+	scroll addMorphToOverlay: aMorph
+]
+
+{ #category : #'submorphs-add/remove' }
 SBEditor >> openMorphInView: aMorph [
 
 	self do: (SBStOpenMorphCommand newNonEdit
@@ -1116,7 +1118,7 @@ SBEditor >> openMorphInView: aMorph [
 		isUnsaved: false;
 		yourself).
 	self activateForces;
-		openMorph: (SBOffscreenBlockIndicator newFor: aMorph withScroller: scroll).
+		openMorphInOverlay: (SBOffscreenBlockIndicator newFor: aMorph withScroller: scroll).
 	^ aMorph
 ]
 
