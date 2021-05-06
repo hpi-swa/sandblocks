@@ -7,7 +7,8 @@ Class {
 		'display'
 	],
 	#classVars : [
-		'Registry'
+		'Registry',
+		'WatchViewClass'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -33,6 +34,18 @@ SBWatch class >> report: aValue for: aSymbol [
 	watcher ifNil: [reg removeKey: aSymbol] ifNotNil: [watcher reportValue: aValue].
 	
 	^ aValue
+]
+
+{ #category : #'as yet unclassified' }
+SBWatch class >> watchViewClass [
+
+	^ WatchViewClass ifNil: [SBWatchView]
+]
+
+{ #category : #'as yet unclassified' }
+SBWatch class >> watchViewClass: aClass [
+
+	WatchViewClass := aClass
 ]
 
 { #category : #'as yet unclassified' }
@@ -137,7 +150,7 @@ SBWatch >> initialize [
 		layoutPolicy: SBAlgebraLayout new;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
-		addMorphBack: (display := SBWatchView new)
+		addMorphBack: (display := self class watchViewClass new)
 ]
 
 { #category : #initialization }
@@ -206,10 +219,10 @@ SBWatch >> storeAsExample [
 { #category : #copying }
 SBWatch >> veryDeepCopyWith: deepCopier [
 
-	" assure that copies of us have a unique id "
 	| new oldDisplay |
+	" assure that copies of us have a unique id "
 	oldDisplay := display.
-	display := SBWatchView new.
+	display := self class watchViewClass new.
 	oldDisplay replaceBy: display.
 	
 	new := super veryDeepCopyWith: deepCopier.
