@@ -63,6 +63,17 @@ SBASTNodeTest >> testInsertStatementAboveOrBelow [
 ]
 
 { #category : #'as yet unclassified' }
+SBASTNodeTest >> testMergeMessages [
+
+	| block editor |
+	block := '[self assert: (5 equals: 3)]' parseAsSandblock.
+	editor := self methodFor: block.
+	
+	block statements first arguments first performAction: #unwrapList.
+	self assert: #assert:equals: equals: block statements first selector
+]
+
+{ #category : #'as yet unclassified' }
 SBASTNodeTest >> testUndoChangeSendToAssignment [
 
 	| block selection editor |

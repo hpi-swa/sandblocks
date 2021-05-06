@@ -193,6 +193,12 @@ SBStMessageSend >> fixActions [
 		ifFalse: [#()]
 ]
 
+{ #category : #testing }
+SBStMessageSend >> fixedNumberOfChildren [
+
+	^ false
+]
+
 { #category : #'as yet unclassified' }
 SBStMessageSend >> guessedClass [
 
