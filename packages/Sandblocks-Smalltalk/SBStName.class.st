@@ -251,15 +251,14 @@ SBStName >> keyStroke: anEvent [
 			endInput;
 			do: ((SBWrapCommand newFor: self containingArtefact)
 				inner: self;
-				outer: SBStAssignment new;
+				outer: SBStMessageSend new;
 				wrap: [:outer :inner | outer binding: self value: new]);
 			startInput: new at: 0 replacingContents: false].
 	
 	oldContents := self contents.
 	super keyStroke: anEvent.
 	
-	oldContents ~= self contents ifTrue: [
-		self updateSuggestions]
+	oldContents ~= self contents ifTrue: [self updateSuggestions]
 ]
 
 { #category : #'as yet unclassified' }

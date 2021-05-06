@@ -290,6 +290,7 @@ SBColorPolicy >> symbolsForLocalVariableDeclaration: aBlock [
 { #category : #'as yet unclassified' }
 SBColorPolicy >> symbolsForMessagePart: aBlock [
 
+	aBlock isAssignment ifTrue: [^ #(nil '=')].
 	^ aBlock hasColon ifTrue: [#(nil ':')] ifFalse: [#(nil nil)]
 ]
 

@@ -20,7 +20,10 @@ SBStBuilder >> array: aCollection [
 { #category : #'as yet unclassified' }
 SBStBuilder >> assign: aString to: aBlock [
 
-	^ SBStAssignment new binding: (SBStName contents: aString) value: aBlock
+	^ SBStMessageSend new
+		receiver: (SBStName contents: aString)
+		selector: ':='
+		arguments: {aBlock}
 ]
 
 { #category : #'as yet unclassified' }
@@ -82,6 +85,12 @@ SBStBuilder >> method: aSymbol in: aClass with: aBlockOrCollection do: aStatemen
 SBStBuilder >> name: aString [
 
 	^ SBStName contents: aString
+]
+
+{ #category : #'as yet unclassified' }
+SBStBuilder >> number: aNumber [
+
+	^ SBStNumber new contents: aNumber asString
 ]
 
 { #category : #'as yet unclassified' }

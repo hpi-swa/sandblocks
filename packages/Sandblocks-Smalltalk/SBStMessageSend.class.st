@@ -85,6 +85,13 @@ SBStMessageSend >> balloonText [
 	^ super balloonText
 ]
 
+{ #category : #assignment }
+SBStMessageSend >> binding: aBlock value: anotherBlock [
+	" construct this send as an assignment "
+
+	self receiver: aBlock selector: ':=' arguments: {anotherBlock}
+]
+
 { #category : #'as yet unclassified' }
 SBStMessageSend >> browse [
 
@@ -154,6 +161,13 @@ SBStMessageSend >> drawSubmorphsOn: aCanvas [
 	(self selectorAppearsValid not and: [self isDefined]) ifTrue: [self drawFrame: Color yellow on: aCanvas]
 ]
 
+{ #category : #assignment }
+SBStMessageSend >> expression [
+
+	self assert: self isAssignment.
+	^ self arguments first
+]
+
 { #category : #accessing }
 SBStMessageSend >> fixActions [
 
@@ -200,6 +214,12 @@ SBStMessageSend >> insertCommandRequest: aBlock near: aMorph before: aBoolean [
 	^ self signature insertCommandRequest: aBlock near: aMorph before: aBoolean
 ]
 
+{ #category : #testing }
+SBStMessageSend >> isAssignment [
+
+	^ self selector = ':='
+]
+
 { #category : #'as yet unclassified' }
 SBStMessageSend >> isBinary [
 
@@ -236,10 +256,10 @@ SBStMessageSend >> isKeyword [
 	^ self signature isKeyword
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStMessageSend >> isMessageSend [
 
-	^ true
+	^ self isAssignment not
 ]
 
 { #category : #accessing }

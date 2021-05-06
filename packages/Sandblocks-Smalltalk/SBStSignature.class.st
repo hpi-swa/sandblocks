@@ -96,7 +96,7 @@ SBStSignature >> initialize [
 SBStSignature >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
 	| part index insertArg insertPart |
-	self isBinary ifTrue: [^ nil].
+	(self isBinary or: [self isAssignment]) ifTrue: [^ nil].
 	self isUnary ifTrue: [
 		^ (SBInsertCommand newFor: self containingSandblock containingArtefact)
 			container: self;
@@ -121,6 +121,12 @@ SBStSignature >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 		morph: aMorph;
 		yourself.
 	^ SBCombinedCommand newWith: {insertArg. insertPart}
+]
+
+{ #category : #'as yet unclassified' }
+SBStSignature >> isAssignment [
+
+	^ self messageParts size = 1 and: [self messageParts first isAssignment]
 ]
 
 { #category : #'as yet unclassified' }
@@ -213,6 +219,7 @@ SBStSignature >> numArguments [
 SBStSignature >> numArguments: aString [
 
 	aString ifEmpty: [^ 1].
+	aString = ':' ifTrue: [^ 1].
 	aString last = $: ifTrue: [^ (self extractKeywords: aString) size].
 	aString first isSpecial ifTrue: [^ 1].
 	^ 0
@@ -256,8 +263,7 @@ SBStSignature >> selector: aString [
 	currentNum := self numArguments: aString.
 	newNum := aString numArgs.
 	
-	arguments := (self arguments copyFrom: 1 to: (newNum min: currentNum)), (Array streamContents: [:s |
-		currentNum + 1 to: newNum do: [:i | s nextPut: self containingSandblock newNullBlock]]).
+	arguments := (self arguments copyFrom: 1 to: (newNum min: currentNum)), (Array streamContents: [:s | currentNum + 1 to: newNum do: [:i | s nextPut: self containingSandblock newNullBlock]]).
 	
 	self selector: aString arguments: arguments
 ]
@@ -266,24 +272,26 @@ SBStSignature >> selector: aString [
 SBStSignature >> selector: aString arguments: aCollection [
 
 	| messageParts |
-	messageParts := self messageParts.
-	(self extractKeywords: aString) withIndexDo: [:keyword :index |
-		messageParts
-			at: index
-			ifPresent: [:p |
-				p contents ~= keyword ifTrue: [p replaceBy: (self textMorphFor: keyword)]]
-			ifAbsent: [
-				self addMorph: (self textMorphFor: keyword) asElementNumber: (index * 2) - 1].
-		(((keyword endsWith: ':') or: [
-			keyword isEmpty or: [keyword allSatisfy: #isSpecial]]) and: [aCollection size >= 1]) ifTrue: [
-			self arguments
-				at: index
-				ifPresent: [:a | a replaceBy: (aCollection at: index)]
-				ifAbsent: [
-					aCollection at: index ifPresent: [:arg |
-						self addMorph: arg asElementNumber: index * 2] ifAbsent: [self assert: aString isEmpty]]]].
-	[
-		self submorphs size > (aCollection size * 2 max: 1)] whileTrue: [self lastSubmorph delete]
+	aString = ':='
+		ifTrue: [
+			self assert: aCollection size = 1.
+			self addMorphBack: (self textMorphFor: ':=').
+			self addMorphBack: aCollection first]
+		ifFalse: [
+			messageParts := self messageParts.
+			(self extractKeywords: aString) withIndexDo: [:keyword :index |
+				messageParts
+					at: index
+					ifPresent: [:p | p contents ~= keyword ifTrue: [p replaceBy: (self textMorphFor: keyword)]]
+					ifAbsent: [self addMorph: (self textMorphFor: keyword) asElementNumber: index * 2 - 1].
+				(((keyword endsWith: ':') or: [keyword isEmpty or: [keyword allSatisfy: #isSpecial]]) and: [aCollection size >= 1]) ifTrue: [
+					self arguments at: index ifPresent: [:a | a replaceBy: (aCollection at: index)] ifAbsent: [
+						aCollection
+							at: index
+							ifPresent: [:arg | self addMorph: arg asElementNumber: index * 2]
+							ifAbsent: [self assert: aString isEmpty]]]]].
+	
+	[self submorphs size > (aCollection size * 2 max: 1)] whileTrue: [self lastSubmorph delete]
 ]
 
 { #category : #'as yet unclassified' }

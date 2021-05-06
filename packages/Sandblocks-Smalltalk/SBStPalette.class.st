@@ -12,8 +12,9 @@ SBStPalette class >> buildOn: aContainer [
 		addSectionHeader: 'Expressions';
 		addBlock: 'Message Send'
 			as: (SBStMessageSend new receiver: (self newNullBlock: 'receiver') selector: #message);
-		addBlock: 'Assignment'
-			as: (SBStAssignment new binding: (self newNullBlock: 'name') value: (self newNullBlock: 'expr'));
+		addBlock: 'Assignment' as: (SBStMessageSend new
+			binding: (self newNullBlock: 'name')
+			value: (self newNullBlock: 'expr'));
 		addSectionHeader: 'Data & Methods';
 		addBlock: 'Array' as: (SBStArray new contents: {self newNullBlock: 'array element 1'});
 		addBlock: 'Block' as: (SBStBlockBody new

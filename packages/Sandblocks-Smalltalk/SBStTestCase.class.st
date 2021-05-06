@@ -129,6 +129,7 @@ SBStTestCase >> initialize [
 				yourself);
 			addMorphBack: (passIcon := SBIcon iconQuestion
 				color: Color white;
+				on: #click send: #openError to: self;
 				yourself);
 			addMorphBack: (Morph new
 				width: 6;
@@ -169,6 +170,12 @@ SBStTestCase >> objectInterfaceNear: aBlock at: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBStTestCase >> openError [
+
+	(self methodClass selector: self currentSelector) runCase
+]
+
+{ #category : #'as yet unclassified' }
 SBStTestCase >> outOfWorld: aWorld [
 
 	super outOfWorld: aWorld.
@@ -201,7 +208,7 @@ SBStTestCase >> runTest [
 	
 		self clearErrors.
 		passIcon
-			changeIconName: #'iconClock_o';
+			changeIconName: #'iconClockO';
 			color: Color yellow.
 		([(self methodClass selector: self currentSelector) runCase. true]
 			on: TestResult failure
