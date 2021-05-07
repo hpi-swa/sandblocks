@@ -38,7 +38,7 @@ SBExampleWatch class >> registerWatch: aWatch [
 { #category : #'as yet unclassified' }
 SBExampleWatch class >> registry [
 
-	^ Registry ifNil: [Registry := Dictionary new]
+	^ Registry ifNil: [Registry := WeakValueDictionary new]
 ]
 
 { #category : #'as yet unclassified' }
