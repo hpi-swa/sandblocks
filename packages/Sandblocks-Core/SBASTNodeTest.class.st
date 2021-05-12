@@ -5,6 +5,19 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBASTNodeTest >> testCanClearMessagePart [
+
+	| block selection editor |
+	block := '[a + 5]' parseAsSandblock.
+	selection := block statements first messageParts first.
+	editor := (self methodFor: block) select: selection.
+	editor startInput: selection at: 1 replacingContents: true.
+	editor endInput.
+	self assert: ':' equals: selection contents.
+	self assert: selection parentSandblock isMessageSend
+]
+
+{ #category : #'as yet unclassified' }
 SBASTNodeTest >> testCanUndoAppendLine [
 
 	| block selection editor |
@@ -23,6 +36,20 @@ SBASTNodeTest >> testCanUndoAppendLine [
 ]
 
 { #category : #'as yet unclassified' }
+SBASTNodeTest >> testChangeSendToAssignment [
+
+	| block selection editor |
+	block := '[a + 5]' parseAsSandblock.
+	selection := block statements first messageParts first.
+	editor := (self methodFor: block) select: selection.
+	editor startInput: selection at: 1 replacingContents: true.
+	selection keyStroke: (self keyboardEvent: $:).
+	self assert: block statements first isAssignment.
+	self assert: block statements first contents = ':='.
+	self assert: block statements first isMessageSend not
+]
+
+{ #category : #'as yet unclassified' }
 SBASTNodeTest >> testInsertStatementAboveOrBelow [
 
 	| block selection |
@@ -33,6 +60,34 @@ SBASTNodeTest >> testInsertStatementAboveOrBelow [
 	self assert: block statements last isUnknown.
 	selection performAction: #insertStatementAbove.
 	self assert: block statements first isUnknown
+]
+
+{ #category : #'as yet unclassified' }
+SBASTNodeTest >> testMergeMessages [
+
+	| block editor |
+	block := '[self assert: (5 equals: 3)]' parseAsSandblock.
+	editor := self methodFor: block.
+	
+	block statements first arguments first performAction: #unwrapList.
+	self assert: #assert:equals: equals: block statements first selector
+]
+
+{ #category : #'as yet unclassified' }
+SBASTNodeTest >> testUndoChangeSendToAssignment [
+
+	| block selection editor |
+	block := '[a + 5]' parseAsSandblock.
+	selection := block statements first messageParts first.
+	editor := (self methodFor: block) select: selection.
+	editor startInput: selection at: 1 replacingContents: true.
+	selection keyStroke: (self keyboardEvent: $:).
+	editor undo.
+	editor redo.
+	self assert: block statements first isAssignment.
+	self assert: block statements first messageParts first currentTextMorph contents = ':'.
+	self assert: block statements first contents = ':='.
+	self assert: block statements first isMessageSend not
 ]
 
 { #category : #'as yet unclassified' }

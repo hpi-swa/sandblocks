@@ -197,11 +197,18 @@ SBStGrammarHandler >> extractVariable [
 	block := self block containingBlock.
 	
 	self block sandblockEditor do: (SBCombinedCommand newWith: {
-			block declareTemporaryVariableCommand: name.
-			(SBReplaceCommand newFor: self block containingArtefact) target: self block; replacer: var.
-			(SBInsertCommand newFor: self block containingArtefact) container: block; index: 2; morph: self block.
-			(SBWrapCommand newFor: self block containingArtefact) inner: self block; outer: SBStAssignment new; wrap: [:outer :inner | outer binding: var veryDeepCopy value: inner].
-		})
+		block declareTemporaryVariableCommand: name.
+		(SBReplaceCommand newFor: self block containingArtefact)
+			target: self block;
+			replacer: var.
+		(SBInsertCommand newFor: self block containingArtefact)
+			container: block;
+			index: 2;
+			morph: self block.
+		(SBWrapCommand newFor: self block containingArtefact)
+			inner: self block;
+			outer: SBStMessageSend new;
+			wrap: [:outer :inner | outer binding: var veryDeepCopy value: inner]})
 ]
 
 { #category : #'action helpers' }
@@ -428,7 +435,7 @@ SBStGrammarHandler >> wrapInAssignment [
 	| binding |
 	binding := SBStName new.
 	self block sandblockEditor do: ((SBWrapCommand newFor: self block containingArtefact)
-		outer: SBStAssignment new;
+		outer: SBStMessageSend new;
 		inner: self block;
 		wrap: [:outer :inner | outer binding: binding value: inner];
 		shouldMergeWithNext: true;

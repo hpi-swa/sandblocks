@@ -78,10 +78,7 @@ SBStDeclarationForInstanceVariable >> setterBlock [
 		selector: self contents asSymbol asSimpleSetter
 			arguments: {SBStName contents: 'anObject'}
 			class: self block containingArtefact shownClass;
-		body: (SBStBlockBody new statements: {
-			SBStAssignment new
-				binding: (SBStName contents: self contents)
-				value: (SBStName contents: 'anObject')})
+		body: (SBStBlockBody new statements: {[:b | b assign: self contents to: (b name: 'anObject')] sbStBuild})
 ]
 
 { #category : #'as yet unclassified' }

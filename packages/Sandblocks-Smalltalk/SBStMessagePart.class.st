@@ -30,13 +30,26 @@ SBStMessagePart >> changeToUnknown [
 { #category : #'as yet unclassified' }
 SBStMessagePart >> contents [
 
-	^ text contents, (self hasColon ifTrue: [':'] ifFalse: [''])
+	^ text contents, self contentsSuffix
 ]
 
 { #category : #'as yet unclassified' }
 SBStMessagePart >> contents: aString [
 
-	text contents: ((aString notEmpty and: [aString last = $:]) ifTrue: [aString allButLast] ifFalse: [aString])
+	aString = ':=' ifTrue: [
+		text contents: ':'.
+		^ self].
+	
+	text contents: ((aString notEmpty and: [aString last = $:])
+		ifTrue: [aString allButLast]
+		ifFalse: [aString])
+]
+
+{ #category : #'as yet unclassified' }
+SBStMessagePart >> contentsSuffix [
+
+	text contents = ':' ifTrue: [^ '='].
+	^ self hasColon ifTrue: [':'] ifFalse: ['']
 ]
 
 { #category : #'as yet unclassified' }
@@ -95,7 +108,9 @@ SBStMessagePart >> fontToUse [
 { #category : #'as yet unclassified' }
 SBStMessagePart >> hasColon [
 
-	^ self owner ifNil: [false] ifNotNil: [self owner lastSubmorph ~= self and: [self isBinary not]]
+	^ self owner
+		ifNil: [false]
+		ifNotNil: [self owner lastSubmorph ~= self and: [self isBinary not and: [text contents ~= ':=']]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -134,6 +149,12 @@ SBStMessagePart >> insertUnknownAfterAndInput: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMessagePart >> isAssignment [
+
+	^ text contents = ':'
+]
+
+{ #category : #'as yet unclassified' }
 SBStMessagePart >> isBinary [
 
 	^ text contents notEmpty and: [text contents first isSpecial]
@@ -159,24 +180,24 @@ SBStMessagePart >> isUnary [
 
 { #category : #'as yet unclassified' }
 SBStMessagePart >> keyStroke: anEvent [
-
 	"(anEvent keyCharacter = Character space or: [
 		self actualContents notEmpty and: [
 			self isBinary not and: [anEvent keyCharacter isSpecial]]]) ifTrue: [^ self wrapInMessageSend: anEvent]."
-	
+
 	((anEvent keyCharacter isAlphaNumeric or: [#($' $#) includes: anEvent keyCharacter]) and: [self isBinary]) ifTrue: [^ self continueInputInArgument: anEvent].
-	anEvent keyCharacter = $: ifTrue: [^ self insertUnknownAfterAndInput: true].
+	anEvent keyCharacter = $: ifTrue: [
+		(self isFirstPart and: [self contents = ':']) ifTrue: [self contents: ':='].
+		^ self insertUnknownAfterAndInput: true].
 	
-	(({Character backspace. Character delete. $_} includes: anEvent keyCharacter) or: [
-		(anEvent keyCharacter isSpecial and: [self actualContents isEmpty or: [self isBinary]]) or: [
-			anEvent keyCharacter isAlphaNumeric and: [
-				self actualContents isEmpty or: [self isBinary not]]]]) ifTrue: [
+	(({Character backspace. Character delete. $_} includes: anEvent keyCharacter) or: [(anEvent keyCharacter isSpecial and: [self actualContents isEmpty or: [self isBinary]]) or: [anEvent keyCharacter isAlphaNumeric and: [self actualContents isEmpty or: [self isBinary not]]]]) ifTrue: [
 		text keyStroke: anEvent.
-		(anEvent keyCharacter isSpecial and: [
-			self actualContents size = 1 and: [self isFirstPart]]) ifTrue: [^ self insertUnknownAfterAndInput: false].
+		(anEvent keyCharacter isSpecial and: [self actualContents size = 1 and: [self isFirstPart]]) ifTrue: [^ self insertUnknownAfterAndInput: false].
 		^ self updateSuggestions].
 	
-	SBStGrammarHandler new perform: anEvent keyCharacter for: self parentSandblock empty: false
+	SBStGrammarHandler new
+		perform: anEvent keyCharacter
+		for: self parentSandblock
+		empty: false
 ]
 
 { #category : #'as yet unclassified' }
@@ -305,7 +326,7 @@ SBStMessagePart >> useSuggestion: aString [
 { #category : #'as yet unclassified' }
 SBStMessagePart >> valid [
 
-	^ self contents notEmpty and: [self contents first ~= $:]
+	^ self contents notEmpty and: [self contents ~= ':']
 ]
 
 { #category : #'as yet unclassified' }

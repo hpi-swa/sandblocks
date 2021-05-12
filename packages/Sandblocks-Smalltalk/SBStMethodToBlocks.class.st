@@ -26,7 +26,7 @@ SBStMethodToBlocks >> blockStatements: aCollection of: aBlockNode into: aBlock [
 { #category : #'as yet unclassified' }
 SBStMethodToBlocks >> visitAssignmentNode: anAssignmentNode [
 
-	^ SBStAssignment new
+	^ SBStMessageSend new
 		binding: (anAssignmentNode variable accept: self)
 			value: (anAssignmentNode value accept: self);
 		pc: anAssignmentNode pc;

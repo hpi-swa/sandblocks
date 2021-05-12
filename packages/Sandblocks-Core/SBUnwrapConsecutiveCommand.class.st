@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBCommand,
 	#instVars : [
 		'target',
-		'unwrapped'
+		'unwrapped',
+		'oldPositions'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -12,7 +13,9 @@ Class {
 SBUnwrapConsecutiveCommand >> do [
 
 	unwrapped := target childSandblocks.
-	target parentSandblock addAllMorphs: unwrapped after: target.
+	oldPositions := unwrapped collect: [:m | {m owner. m submorphIndex}].
+	
+	target owner addAllMorphs: unwrapped after: target.
 	target delete.
 	^ unwrapped first
 ]
@@ -27,6 +30,8 @@ SBUnwrapConsecutiveCommand >> target: aBlock [
 SBUnwrapConsecutiveCommand >> undo [
 
 	unwrapped first replaceBy: target.
-	target addAllMorphs: unwrapped.
+	oldPositions
+		with: unwrapped
+		do: [:pos :morph | pos first addMorph: morph asElementNumber: pos second].
 	^ target
 ]
