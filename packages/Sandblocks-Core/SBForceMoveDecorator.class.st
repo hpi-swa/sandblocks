@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'idealPosition',
 		'forceSteps',
-		'force'
+		'additionalForces'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -15,10 +15,16 @@ SBForceMoveDecorator >> activateForces [
 	forceSteps := 100.
 ]
 
-{ #category : #'as yet unclassified' }
-SBForceMoveDecorator >> addForce: aPoint [
-	
-	self force: self force + aPoint
+{ #category : #accessing }
+SBForceMoveDecorator >> additionalForces [
+
+	^ additionalForces
+]
+
+{ #category : #accessing }
+SBForceMoveDecorator >> additionalForces: anObject [
+
+	additionalForces := anObject.
 ]
 
 { #category : #'as yet unclassified' }
@@ -33,9 +39,7 @@ SBForceMoveDecorator >> applyForces [
 					otherMorph isDragging not]]]) ifTrue: [
 			velocity := velocity + (self forceAgainst: otherMorph) + (self attractionTo: otherMorph)]].
 	
-	Transcript showln: self force.
-	velocity := velocity + self force.
-	self force: 0@0.
+	self additionalForces do: [:forceConnection | velocity := velocity + (forceConnection forceFor: self morph)].
 	
 	(velocity r < 0.5)
 		ifTrue: [velocity := 0 @ 0]
@@ -64,16 +68,10 @@ SBForceMoveDecorator >> blockAtPoint: aPoint [
 	^ best
 ]
 
-{ #category : #accessing }
-SBForceMoveDecorator >> force [
-
-	^ force
-]
-
-{ #category : #accessing }
-SBForceMoveDecorator >> force: anObject [
-
-	force := anObject.
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> deactivateForces [
+	
+	forceSteps := 0.
 ]
 
 { #category : #'as yet unclassified' }
@@ -124,8 +122,8 @@ SBForceMoveDecorator >> immediatelyResolveCollisionWith: otherMorph [
 SBForceMoveDecorator >> initialize [
 	
 	super initialize.
-	self force: 0@0.
 	self activateForces.
+	self additionalForces: OrderedCollection new.
 ]
 
 { #category : #'as yet unclassified' }
@@ -133,9 +131,18 @@ SBForceMoveDecorator >> mouseUp: anEvent [
 	
 	self isDragging ifTrue: [ | otherBlock |
 		otherBlock := self blockAtPoint: anEvent position.
-		otherBlock ifNotNil: [self morph sandblockEditor openMorph: (SBForceConnector connect: self morph to: otherBlock)]].
+		otherBlock ifNotNil: 
+			[self morph sandblockEditor 
+				openMorphBack: (SBForceConnector connect: self morph to: otherBlock);
+				activateForces]].
 	super mouseUp: anEvent.
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> registerAdditionalForce: aForce [
+
+	self additionalForces add: aForce.
 ]
 
 { #category : #'as yet unclassified' }
@@ -152,8 +159,7 @@ SBForceMoveDecorator >> step [
 			self morph position: idealPosition]
 		ifFalse:
 			[super step.
-			idealPosition := self morph position.
-			self force: 0@0].
+			idealPosition := self morph position].
 	
 ]
 
@@ -161,4 +167,10 @@ SBForceMoveDecorator >> step [
 SBForceMoveDecorator >> stepTime [
 	
 	^ 25
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> unregisterAdditionalForce: aForce [
+
+	self additionalForces remove: aForce.
 ]

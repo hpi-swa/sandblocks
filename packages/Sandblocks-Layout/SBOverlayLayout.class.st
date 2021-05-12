@@ -11,7 +11,9 @@ SBOverlayLayout class >> layout: aMorph in: aRectangle [
 ]
 
 { #category : #'as yet unclassified' }
-SBOverlayLayout class >> minExtentOf: aMorph in: aRectangle [
+SBOverlayLayout class >> minExtentOf: aMorph in: aRectangle [	
 	
-	^ aRectangle extent 
+	| m |
+	m := aMorph firstSubmorph.
+	^ m layoutPolicy ifNil: [m minExtent] ifNotNil: [m layoutPolicy minExtentOf: m in: aRectangle]
 ]

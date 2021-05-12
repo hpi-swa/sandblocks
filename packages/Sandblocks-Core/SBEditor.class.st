@@ -514,6 +514,15 @@ SBEditor >> currentInputCommand [
 	^ currentInputCommand
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> deactivateForces [
+	
+	<globalAction>
+	
+	self childSandblocksDo: [:each | each withDecorator: SBForceMoveDecorator do:
+		[:decorator | decorator deactivateForces]]
+]
+
 { #category : #actions }
 SBEditor >> deleteBlock [
 	<action>
@@ -1101,6 +1110,12 @@ SBEditor >> openInWindow [
 SBEditor >> openMorph: aMorph [
 
 	scroll scroller addMorphFront: aMorph
+]
+
+{ #category : #'submorphs-add/remove' }
+SBEditor >> openMorphBack: aMorph [
+
+	scroll scroller addMorphBack: aMorph
 ]
 
 { #category : #'submorphs-add/remove' }
