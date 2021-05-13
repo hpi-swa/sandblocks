@@ -1156,8 +1156,12 @@ SBBlock >> insertElementBefore [
 { #category : #'as yet unclassified' }
 SBBlock >> insertEmptyCommandRequestNear: aBlock before: aBoolean [
 
+	| child |
+	child := self newEmptyChildNear: aBlock before: aBoolean.
+	child ifNil: [^ nil].
+	
 	^ (self
-		insertCommandRequest: (self newEmptyChildNear: aBlock before: aBoolean)
+		insertCommandRequest: child
 		near: aBlock
 		before: aBoolean) ifNotNil: [:cmd |
 		cmd
