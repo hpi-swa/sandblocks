@@ -2391,7 +2391,7 @@ SBBlock >> symbols [
 { #category : #accessing }
 SBBlock >> textContents [
 
-	^ ''
+	^ self currentTextMorph ifNotNil: [:t | t contents] ifNil: ['']
 ]
 
 { #category : #actions }

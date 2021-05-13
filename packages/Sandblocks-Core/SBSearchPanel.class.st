@@ -19,8 +19,8 @@ SBSearchPanel >> clearHighlights [
 SBSearchPanel >> currentFocus: m [
 
 	currentFocus := m.
-	self isSelected ifFalse: [^ m ifNotNil: #select].
 	currentFocusIndicator detach.
+	self isSelected ifFalse: [^ m ifNotNil: #select].
 	currentFocus ifNotNil: [
 		currentFocus attachDecorator: currentFocusIndicator.
 		currentFocus ensureVisible]
@@ -78,6 +78,8 @@ SBSearchPanel >> searchFrom: aMorph ifNone: aBlock [
 SBSearchPanel >> startSearch [
 	<globalAction>
 
+	self isSelected ifTrue: [^ self nextSearchResult].
+	
 	currentFocus := self sandblockEditor selection.
 	self sandblockEditor startInput: self at: 900000000 replacingContents: true
 ]
@@ -97,15 +99,23 @@ SBSearchPanel >> updateResultHighlights [
 		self sandblockEditor allBlocksDo: [:b |
 			(self ~= b and: [self matchesQuery: b]) ifTrue: [ | decorator |
 				decorator := SBHighlightDecorator new.
+				b attachDecorator: decorator.
 				stream nextPut: decorator]]]
 ]
 
 { #category : #'as yet unclassified' }
 SBSearchPanel >> updateSearch [
 
-	(SBWatch report: self contents for: 428507844) ifEmpty: [
+	self contents ifEmpty: [
 		self clearHighlights.
 		^ self].
 	(currentFocus isNil or: [(self matchesQuery: currentFocus) not]) ifTrue: [self nextSearchResult].
 	self updateResultHighlights
+]
+
+{ #category : #'as yet unclassified' }
+SBSearchPanel >> wasDeselected [
+
+	self currentFocus: nil.
+	currentHighlights do: #detach
 ]

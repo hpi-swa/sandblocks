@@ -158,13 +158,16 @@ SBStSignature >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
-		data: (self isUnary
-			ifTrue: [{self firstSubmorph layoutCommands}]
-			ifFalse: [
-				(Array new: self submorphCount streamContents: [:stream |
-					self submorphs pairsDo: [:messagePart :argument |
-						stream nextPut: (SBAlgebraCommand indent data: {messagePart layoutCommands. SBAlgebraCommand softLineOrGap. argument layoutCommands}).
-						argument ~= self lastSubmorph ifTrue: [stream nextPut: (SBAlgebraCommand softLineOrGap withGap: true)]]])])
+		data: (self isUnary ifTrue: [{self firstSubmorph layoutCommands}] ifFalse: [
+			Array new: self submorphCount streamContents: [:stream |
+				self submorphs pairsDo: [:messagePart :argument |
+					stream nextPut: (SBAlgebraCommand indent data: {
+						messagePart layoutCommands.
+						messagePart contents size > 4
+							ifTrue: [SBAlgebraCommand softLineOrGap]
+							ifFalse: [SBAlgebraCommand gap].
+						argument layoutCommands}).
+					argument ~= self lastSubmorph ifTrue: [stream nextPut: (SBAlgebraCommand softLineOrGap withGap: true)]]]])
 ]
 
 { #category : #'as yet unclassified' }
