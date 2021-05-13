@@ -1637,7 +1637,7 @@ SBBlock >> newEmptyChildNear: aBlock before: aBoolean [
 { #category : #'ast helpers' }
 SBBlock >> newNullBlock [
 
-	^ self grammarHandler ifNotNil: [:g | g newNullBock] ifNil: [nil]
+	^ self grammarHandler ifNotNil: [:g | g newNullBlock] ifNil: [nil]
 ]
 
 { #category : #hierarchy }

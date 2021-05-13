@@ -250,7 +250,7 @@ SBStMessagePart >> selectorContentsBeforeMe [
 { #category : #'as yet unclassified' }
 SBStMessagePart >> startDrag: anEvent [
 
-	^ self parentSandblock startDrag: anEvent
+	self parentSandblock isMessageSend ifTrue: [self parentSandblock startDrag: anEvent]
 ]
 
 { #category : #'as yet unclassified' }
