@@ -1123,10 +1123,12 @@ SBBlock >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 ]
 
 { #category : #'action helpers' }
-SBBlock >> insertElement: aBoolean [
+SBBlock >> insertElement: aBeforeBoolean [
 
 	| cmd |
-	cmd := (self parentSandblock insertEmptyCommandRequestNear: self before: aBoolean) ifNil: [^ self].
+	cmd := (self parentSandblock
+		insertEmptyCommandRequestNear: self
+		before: aBeforeBoolean) ifNil: [^ self].
 	
 	self sandblockEditor do: cmd.
 	
@@ -1161,6 +1163,30 @@ SBBlock >> insertEmptyCommandRequestNear: aBlock before: aBoolean [
 		cmd
 			shouldMergeWithNext: true;
 			yourself]
+]
+
+{ #category : #actions }
+SBBlock >> insertStatementAbove [
+	<action>
+
+	self insertStatementAboveOrBelow: true
+]
+
+{ #category : #'action helpers' }
+SBBlock >> insertStatementAboveOrBelow: anAboveBoolean [
+
+	| candidate |
+	" default behavior is to find the first parent that can take multiple children "
+	candidate := self.
+	[candidate parentSandblock fixedNumberOfChildren and: [candidate isArtefact not]] whileTrue: [candidate := candidate parentSandblock].
+	candidate isArtefact ifFalse: [candidate insertElement: anAboveBoolean]
+]
+
+{ #category : #actions }
+SBBlock >> insertStatementBelow [
+	<action>
+
+	self insertStatementAboveOrBelow: false
 ]
 
 { #category : #initialization }
@@ -1607,7 +1633,7 @@ SBBlock >> newEmptyChildNear: aBlock before: aBoolean [
 { #category : #'ast helpers' }
 SBBlock >> newNullBlock [
 
-	^ SBUnknown new grammarHandler: self grammarHandler
+	^ self grammarHandler ifNotNil: [:g | g newNullBock] ifNil: [nil]
 ]
 
 { #category : #hierarchy }
