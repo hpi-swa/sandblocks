@@ -90,7 +90,8 @@ SBDragHelper >> dropLocation: dropLocation [
 	
 	dropLocation ifNotNil: [
 		dropLocation first = #insert ifTrue: [self dropLocationForInsert: dropLocation].
-		dropLocation first = #replace ifTrue: [self dropLocationForReplace: dropLocation]].
+		dropLocation first = #replace ifTrue: [self dropLocationForReplace: dropLocation].
+		dropLocation first = #special ifTrue: [self dropLocationForSpecial: dropLocation]].
 	
 	self ensurePositionOfFloats
 ]
@@ -124,6 +125,13 @@ SBDragHelper >> dropLocationForReplace: dropLocation [
 		^ true].
 	
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBDragHelper >> dropLocationForSpecial: dropLocation [
+
+	self hintReplaceOf: dropLocation second with: morph.
+	onApply := [editor do: (dropLocation second specialDropCommand: morph)]
 ]
 
 { #category : #'as yet unclassified' }
@@ -164,6 +172,7 @@ SBDragHelper >> hintInsertOf: aBlock in: aParentBlock near: aChildBlock before: 
 	
 	SBPreferences previewDropInsert ifTrue: [command do] ifFalse: [
 		insertPreviewMarker := SBDropInsertMarker new
+			color: (aBlock colorPolicy dropMarkerColorFor: aBlock);
 			bounds: (aChildBlock
 				ifNil: [10 @ 10 center: aParentBlock boundsInWorld center]
 				ifNotNil: [self insertMarkerFor: aChildBlock before: aBoolean]);
@@ -244,13 +253,16 @@ SBDragHelper >> mouseMove: anEvent [
 	
 	dropLocation := blockAtCursor
 		ifNotNil: [
-			blockAtCursor fixedNumberOfChildren
-				ifTrue: [{#replace. blockAtCursor}]
-				ifFalse: [
-					self
-						closestAdjacentTo: anEvent position
-						in: blockAtCursor
-						do: [:adjacent :before | {#insert. blockAtCursor. adjacent. before}]]]
+			(blockAtCursor specialDropCommand: morph)
+				ifNotNil: [{#special. blockAtCursor}]
+				ifNil: [
+					blockAtCursor fixedNumberOfChildren
+						ifTrue: [{#replace. blockAtCursor}]
+						ifFalse: [
+							self
+								closestAdjacentTo: anEvent position
+								in: blockAtCursor
+								do: [:adjacent :before | {#insert. blockAtCursor. adjacent. before}]]]]
 		ifNil: [#(#none nil)].
 	
 	(currentDropLocation hasEqualElements: dropLocation) ifFalse: [self dropLocation: dropLocation]

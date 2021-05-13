@@ -40,6 +40,12 @@ SBCollection >> interface: anInterfaceCollection object: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBCollection >> isArtefact [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBCollection >> isTopLevel [
 
 	^ true

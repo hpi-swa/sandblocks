@@ -262,7 +262,7 @@ SBBlock >> centerAlignSymbols [
 SBBlock >> changeLocalColorPolicy [
 	<action>
 
-	^ (UIManager default chooseFrom: SBColorPolicy withAllSubclasses values: SBColorPolicy withAllSubclasses) ifNotNil: [:policy |
+	^ (UIManager default chooseFrom: (SBColorPolicy withAllSubclasses collect: #asString) values: SBColorPolicy withAllSubclasses) ifNotNil: [:policy |
 		self localColorPolicy: policy]
 ]
 
@@ -2277,6 +2277,12 @@ SBBlock >> spaceForSymbols [
 		(symbols first ifNil: [0] ifNotNil: [self fontToUse widthOfString: symbols first]).
 		(symbols second ifNil: [0] ifNotNil: [self fontToUse widthOfString: symbols second])
 	}
+]
+
+{ #category : #'dropping/grabbing' }
+SBBlock >> specialDropCommand: aBlock [
+
+	^ nil
 ]
 
 { #category : #actions }
