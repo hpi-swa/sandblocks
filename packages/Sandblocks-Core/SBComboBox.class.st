@@ -21,6 +21,12 @@ SBComboBox >> display: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBComboBox >> doubleClick: evt [
+
+	self promptChangeValue
+]
+
+{ #category : #'as yet unclassified' }
 SBComboBox >> keyStroke: anEvent [
 ]
 
