@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.6.</strong> Lists of Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/artefacts.html"><strong aria-hidden="true">3.7.</strong> Saving and Artefacts</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="walkthroughs/commands.html"><strong aria-hidden="true">3.6.</strong> Custom Commands</a></li><li class="chapter-item expanded "><a href="walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.7.</strong> Lists of Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/drag-and-drop.html"><strong aria-hidden="true">3.8.</strong> Drag and Drop</a></li><li class="chapter-item expanded "><a href="walkthroughs/artefacts.html"><strong aria-hidden="true">3.9.</strong> Saving and Artefacts</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -333,6 +333,56 @@ It concerns common tasks such as extending the system with new blocks or palette
 <li>implement <code>#updatePCFrom:</code> to get debugging support (can leave it empty)</li>
 <li>optional: add a converter method back to smalltalk using your <code>#writeSourceOn:</code></li>
 </ol>
+<h1 id="custom-commands"><a class="header" href="#custom-commands">Custom Commands</a></h1>
+<p>To allow for undo and change tracking, all mutations to state in Sandblocks must be performed through commands.
+When a command is instantiated, it always requires the artefact that will be marked as having unsaved changes after this command has been performed, which will usually be the current block's <code>containingArtefact</code>:</p>
+<pre><code>(SBReplaceCommand newFor: self containingArtefact)
+    target: ...;
+    replacer: ...;
+    yourself
+</code></pre>
+<p>To perform a command, call <code>do:</code> on the SBEditor:</p>
+<pre><code>self sandblockEditor do: ((SBReplaceCommand newFor: aBlock containingArtefact)
+    target: ...;
+    replacer: ...;
+    yourself)
+</code></pre>
+<p>If you have an edit that will not mark any artefact as having unsaved changes but will instead be immediately applied, use <code>newNonEdit</code> instead:</p>
+<pre><code>self sandblockEditor do: (SBStDeclareInstVarCommand newNonEdit
+    class: self containingArtefact relatedClass;
+    name: self contents;
+    yourself)
+</code></pre>
+<h2 id="combining-commands"><a class="header" href="#combining-commands">Combining Commands</a></h2>
+<p>Often, you will want to perform multiple things at once but they should be undo-able with a single click.
+For this purpose, you may use the <code>SBCombinedCommand</code>:</p>
+<pre><code>SBCombinedCommand newWith: (targets collect: [:target |
+    (SBDeleteCommand newFor: self containingArtefact) target: target])
+</code></pre>
+<h2 id="some-built-in-commands"><a class="header" href="#some-built-in-commands">Some Built-in Commands</a></h2>
+<p>Here is a quick overview of some built-in commands. Use Ctrl+Shift+N in the Squeak image to see how each is used.</p>
+<table><thead><tr><th>Command</th><th>Effect</th></tr></thead><tbody>
+<tr><td>SBMutateProperty</td><td>Change the field of an object, such the checked state of a checkbox</td></tr>
+<tr><td>SBDeleteCommand</td><td>Delete a block</td></tr>
+<tr><td>SBInsertCommand</td><td>Insert a block at a given index</td></tr>
+<tr><td>SBReplaceCommand</td><td>Replace a block with another</td></tr>
+</tbody></table>
+<h2 id="custom-commands-1"><a class="header" href="#custom-commands-1">Custom Commands</a></h2>
+<p>If you need to perform a more complicated side effect, often a custom command will be the easiest way to perform it.
+Custom commands are simple to implement: subclass <code>SBCommand</code> and implement <code>do</code> and <code>undo</code>.
+You can consider subclassing from a more specific command, such as the <code>SBDeleteCommand</code> if both a block should disappear and something else should happen in the system.</p>
+<p>For a more lightweight alternative, you can also use the general purpose <code>SBDoItCommand</code> and combine it with another command, e.g.:</p>
+<pre><code>SBCombinedCommand newWith: {
+    (SBDoItCommand newFor: self containingArtefact)
+        do: [Transcript showln: 'deleted block'];
+        undo: [Transcript showln: 'restored block'. self];
+        yourself.
+    (SBDeleteCommand newFor: self containingArtefact)
+        target: self;
+        yourself
+}
+</code></pre>
+<p>But generally, a custom subclass is a preferred, as it allows inspecting the data inside the command more easily.</p>
 <h1 id="lists-of-blocks"><a class="header" href="#lists-of-blocks">Lists of Blocks</a></h1>
 <p>A common pattern is to have an extensible list of blocks.
 For this, we need to do three things:</p>
@@ -364,6 +414,25 @@ For this, we need to do three things:</p>
 <pre><code>MyListBlock&gt;&gt;newEmptyChildNear: aBlock before: aBoolean
 
     ^ MyChildWidget new contents: 'empty'
+</code></pre>
+<h1 id="drag-and-drop"><a class="header" href="#drag-and-drop">Drag and Drop</a></h1>
+<p>Drag and drop is enabled on all blocks in Sandblocks by default.
+Those, that have a Move Decorator, can be picked up via Ctrl+Drag.
+If the user holds Shift when starting to drag, the block is instead duplicated instead of moved.</p>
+<p>In the previous chapter on lists, we saw that by implementing <code>fixedNumberOfChildren</code>, child blocks can be added to our custom block.
+If we do so, dragging another block onto our custom block, will prompt the user to insert the block.</p>
+<p>For blocks that do have a <code>fixedNumberOfChildren</code>, dropping a block will instead replace the block.</p>
+<h2 id="custom-drop-handling"><a class="header" href="#custom-drop-handling">Custom Drop Handling</a></h2>
+<p>If, instead, you want to have custom logic be performed when a block is dropped, implement <code>specialDropCommand:</code> on your block class.
+<code>specialDropCommand:</code> receives the candidate block that is about to be dropped onto your block and should return a command that would be executed if the block was released.</p>
+<blockquote>
+<p>You must never perform side effects in <code>specialDropCommand:</code>, as it is also called to just check whether a special command is available.</p>
+</blockquote>
+<p>For example, assume our custom block should log the name of the dropped block to the <code>Transcript</code>:</p>
+<pre><code>CustomBlock&gt;&gt;specialDropCommand: aBlock
+
+    ^ (SBDoItCommand newFor: self containingArtefact)
+        do: [Transcript showln: aBlock asString]
 </code></pre>
 <h1 id="saving-and-artefacts"><a class="header" href="#saving-and-artefacts">Saving and Artefacts</a></h1>
 <p>Artefacts collect changes to blocks and allow saving these changes to the system.

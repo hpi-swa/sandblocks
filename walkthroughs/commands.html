@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Custom Projections - Sandblocks</title>
+        <title>Custom Commands - Sandblocks</title>
         
         
 
@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="../faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="../chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="../walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="../walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="../walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="../walkthroughs/projections.html" class="active"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="../walkthroughs/commands.html"><strong aria-hidden="true">3.6.</strong> Custom Commands</a></li><li class="chapter-item expanded "><a href="../walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.7.</strong> Lists of Blocks</a></li><li class="chapter-item expanded "><a href="../walkthroughs/drag-and-drop.html"><strong aria-hidden="true">3.8.</strong> Drag and Drop</a></li><li class="chapter-item expanded "><a href="../walkthroughs/artefacts.html"><strong aria-hidden="true">3.9.</strong> Saving and Artefacts</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="../faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="../chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="../walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="../walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="../walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="../walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="../walkthroughs/commands.html" class="active"><strong aria-hidden="true">3.6.</strong> Custom Commands</a></li><li class="chapter-item expanded "><a href="../walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.7.</strong> Lists of Blocks</a></li><li class="chapter-item expanded "><a href="../walkthroughs/drag-and-drop.html"><strong aria-hidden="true">3.8.</strong> Drag and Drop</a></li><li class="chapter-item expanded "><a href="../walkthroughs/artefacts.html"><strong aria-hidden="true">3.9.</strong> Saving and Artefacts</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -163,38 +163,69 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="custom-projections"><a class="header" href="#custom-projections">Custom Projections</a></h1>
-<p>Here, we take the custom block from the previous walkthrough and map it to a Smalltalk constructor. Using this mapping, whenever this constructor is seen in Smalltalk code, it will instead be displayed as our custom block.</p>
-<blockquote>
-<p><strong>NOTES / API CHANGES:</strong></p>
-<ul>
-<li>an <code>object ^ self</code> method is no longer necessary but the default</li>
-<li>instead of <code>#canAppearInBlockBody</code>, you should now only implement <code>#isExpression</code> (which also sets <code>#canAppearInBlockBody</code>)</li>
-</ul>
-</blockquote>
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;"><iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://player.vimeo.com/video/541133593" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
-<h2 id="recap-basic-steps"><a class="header" href="#recap-basic-steps">Recap: Basic Steps</a></h2>
-<ol start="0">
-<li>prepare your custom projection/widget</li>
-<li>add a converter method to SBStMessageSend that matches the expressions you want to substitute for (optional: specify it as <code>&lt;automatic&gt;</code>)</li>
-<li>implement <code>#writeSourceOn:</code> on your widget to produce Smalltalk code</li>
-<li>mark the capabilities of your projection by returning <code>true</code> from <code>#isSmalltalk</code> and <code>#isExpression</code></li>
-<li>implement <code>#updatePCFrom:</code> to get debugging support (can leave it empty)</li>
-<li>optional: add a converter method back to smalltalk using your <code>#writeSourceOn:</code></li>
-</ol>
+                        <h1 id="custom-commands"><a class="header" href="#custom-commands">Custom Commands</a></h1>
+<p>To allow for undo and change tracking, all mutations to state in Sandblocks must be performed through commands.
+When a command is instantiated, it always requires the artefact that will be marked as having unsaved changes after this command has been performed, which will usually be the current block's <code>containingArtefact</code>:</p>
+<pre><code>(SBReplaceCommand newFor: self containingArtefact)
+    target: ...;
+    replacer: ...;
+    yourself
+</code></pre>
+<p>To perform a command, call <code>do:</code> on the SBEditor:</p>
+<pre><code>self sandblockEditor do: ((SBReplaceCommand newFor: aBlock containingArtefact)
+    target: ...;
+    replacer: ...;
+    yourself)
+</code></pre>
+<p>If you have an edit that will not mark any artefact as having unsaved changes but will instead be immediately applied, use <code>newNonEdit</code> instead:</p>
+<pre><code>self sandblockEditor do: (SBStDeclareInstVarCommand newNonEdit
+    class: self containingArtefact relatedClass;
+    name: self contents;
+    yourself)
+</code></pre>
+<h2 id="combining-commands"><a class="header" href="#combining-commands">Combining Commands</a></h2>
+<p>Often, you will want to perform multiple things at once but they should be undo-able with a single click.
+For this purpose, you may use the <code>SBCombinedCommand</code>:</p>
+<pre><code>SBCombinedCommand newWith: (targets collect: [:target |
+    (SBDeleteCommand newFor: self containingArtefact) target: target])
+</code></pre>
+<h2 id="some-built-in-commands"><a class="header" href="#some-built-in-commands">Some Built-in Commands</a></h2>
+<p>Here is a quick overview of some built-in commands. Use Ctrl+Shift+N in the Squeak image to see how each is used.</p>
+<table><thead><tr><th>Command</th><th>Effect</th></tr></thead><tbody>
+<tr><td>SBMutateProperty</td><td>Change the field of an object, such the checked state of a checkbox</td></tr>
+<tr><td>SBDeleteCommand</td><td>Delete a block</td></tr>
+<tr><td>SBInsertCommand</td><td>Insert a block at a given index</td></tr>
+<tr><td>SBReplaceCommand</td><td>Replace a block with another</td></tr>
+</tbody></table>
+<h2 id="custom-commands-1"><a class="header" href="#custom-commands-1">Custom Commands</a></h2>
+<p>If you need to perform a more complicated side effect, often a custom command will be the easiest way to perform it.
+Custom commands are simple to implement: subclass <code>SBCommand</code> and implement <code>do</code> and <code>undo</code>.
+You can consider subclassing from a more specific command, such as the <code>SBDeleteCommand</code> if both a block should disappear and something else should happen in the system.</p>
+<p>For a more lightweight alternative, you can also use the general purpose <code>SBDoItCommand</code> and combine it with another command, e.g.:</p>
+<pre><code>SBCombinedCommand newWith: {
+    (SBDoItCommand newFor: self containingArtefact)
+        do: [Transcript showln: 'deleted block'];
+        undo: [Transcript showln: 'restored block'. self];
+        yourself.
+    (SBDeleteCommand newFor: self containingArtefact)
+        target: self;
+        yourself
+}
+</code></pre>
+<p>But generally, a custom subclass is a preferred, as it allows inspecting the data inside the command more easily.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="../walkthroughs/blocks.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../walkthroughs/projections.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="../walkthroughs/commands.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../walkthroughs/lists-of-blocks.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -206,13 +237,13 @@
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="../walkthroughs/blocks.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../walkthroughs/projections.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a rel="next" href="../walkthroughs/commands.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="../walkthroughs/lists-of-blocks.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 

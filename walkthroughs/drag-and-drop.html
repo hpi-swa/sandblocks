@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Custom Projections - Sandblocks</title>
+        <title>Drag and Drop - Sandblocks</title>
         
         
 
@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="../faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="../chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="../walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="../walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="../walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="../walkthroughs/projections.html" class="active"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="../walkthroughs/commands.html"><strong aria-hidden="true">3.6.</strong> Custom Commands</a></li><li class="chapter-item expanded "><a href="../walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.7.</strong> Lists of Blocks</a></li><li class="chapter-item expanded "><a href="../walkthroughs/drag-and-drop.html"><strong aria-hidden="true">3.8.</strong> Drag and Drop</a></li><li class="chapter-item expanded "><a href="../walkthroughs/artefacts.html"><strong aria-hidden="true">3.9.</strong> Saving and Artefacts</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="../faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="../chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="../walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="../walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="../walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="../walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="../walkthroughs/commands.html"><strong aria-hidden="true">3.6.</strong> Custom Commands</a></li><li class="chapter-item expanded "><a href="../walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.7.</strong> Lists of Blocks</a></li><li class="chapter-item expanded "><a href="../walkthroughs/drag-and-drop.html" class="active"><strong aria-hidden="true">3.8.</strong> Drag and Drop</a></li><li class="chapter-item expanded "><a href="../walkthroughs/artefacts.html"><strong aria-hidden="true">3.9.</strong> Saving and Artefacts</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -163,38 +163,38 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="custom-projections"><a class="header" href="#custom-projections">Custom Projections</a></h1>
-<p>Here, we take the custom block from the previous walkthrough and map it to a Smalltalk constructor. Using this mapping, whenever this constructor is seen in Smalltalk code, it will instead be displayed as our custom block.</p>
+                        <h1 id="drag-and-drop"><a class="header" href="#drag-and-drop">Drag and Drop</a></h1>
+<p>Drag and drop is enabled on all blocks in Sandblocks by default.
+Those, that have a Move Decorator, can be picked up via Ctrl+Drag.
+If the user holds Shift when starting to drag, the block is instead duplicated instead of moved.</p>
+<p>In the previous chapter on lists, we saw that by implementing <code>fixedNumberOfChildren</code>, child blocks can be added to our custom block.
+If we do so, dragging another block onto our custom block, will prompt the user to insert the block.</p>
+<p>For blocks that do have a <code>fixedNumberOfChildren</code>, dropping a block will instead replace the block.</p>
+<h2 id="custom-drop-handling"><a class="header" href="#custom-drop-handling">Custom Drop Handling</a></h2>
+<p>If, instead, you want to have custom logic be performed when a block is dropped, implement <code>specialDropCommand:</code> on your block class.
+<code>specialDropCommand:</code> receives the candidate block that is about to be dropped onto your block and should return a command that would be executed if the block was released.</p>
 <blockquote>
-<p><strong>NOTES / API CHANGES:</strong></p>
-<ul>
-<li>an <code>object ^ self</code> method is no longer necessary but the default</li>
-<li>instead of <code>#canAppearInBlockBody</code>, you should now only implement <code>#isExpression</code> (which also sets <code>#canAppearInBlockBody</code>)</li>
-</ul>
+<p>You must never perform side effects in <code>specialDropCommand:</code>, as it is also called to just check whether a special command is available.</p>
 </blockquote>
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;"><iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://player.vimeo.com/video/541133593" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
-<h2 id="recap-basic-steps"><a class="header" href="#recap-basic-steps">Recap: Basic Steps</a></h2>
-<ol start="0">
-<li>prepare your custom projection/widget</li>
-<li>add a converter method to SBStMessageSend that matches the expressions you want to substitute for (optional: specify it as <code>&lt;automatic&gt;</code>)</li>
-<li>implement <code>#writeSourceOn:</code> on your widget to produce Smalltalk code</li>
-<li>mark the capabilities of your projection by returning <code>true</code> from <code>#isSmalltalk</code> and <code>#isExpression</code></li>
-<li>implement <code>#updatePCFrom:</code> to get debugging support (can leave it empty)</li>
-<li>optional: add a converter method back to smalltalk using your <code>#writeSourceOn:</code></li>
-</ol>
+<p>For example, assume our custom block should log the name of the dropped block to the <code>Transcript</code>:</p>
+<pre><code>CustomBlock&gt;&gt;specialDropCommand: aBlock
+
+    ^ (SBDoItCommand newFor: self containingArtefact)
+        do: [Transcript showln: aBlock asString]
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="../walkthroughs/blocks.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../walkthroughs/lists-of-blocks.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="../walkthroughs/commands.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../walkthroughs/artefacts.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -206,13 +206,13 @@
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="../walkthroughs/blocks.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../walkthroughs/lists-of-blocks.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a rel="next" href="../walkthroughs/commands.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="../walkthroughs/artefacts.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
