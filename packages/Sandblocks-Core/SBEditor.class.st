@@ -1292,10 +1292,21 @@ SBEditor >> replaceInput: aMorph [
 	self select: aMorph containingSandblock
 ]
 
-{ #category : #errors }
+{ #category : #'as yet unclassified' }
 SBEditor >> reportError: anError process: aProcess [
 
 	^ errors addError: anError process: aProcess
+]
+
+{ #category : #errors }
+SBEditor >> reportErrorWithProcessCopy: anError [
+
+	| stack priority |
+	stack := anError signalerContext copyStack.
+	priority := Processor activeProcess priority.
+	^ self reportError: anError process: ((Process forContext: stack priority: priority)
+		shouldResumeFromDebugger: false;
+		yourself)
 ]
 
 { #category : #initialization }

@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBGrammarTransformer class >> grammar: anOhmGrammar steps: aCollection [
+
+	^ self new grammar: anOhmGrammar steps: aCollection
+]
+
+{ #category : #'as yet unclassified' }
 SBGrammarTransformer >> canDeleteChild: aBlock [
 
 	^ aBlock isFirstChild not
@@ -14,6 +20,14 @@ SBGrammarTransformer >> canDeleteChild: aBlock [
 SBGrammarTransformer >> fixedNumberOfChildren [
 
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBGrammarTransformer >> grammar: aGrammar steps: aCollection [
+
+	self childSandblocks first replaceBy: (SBOhmGrammar from: aGrammar grammarDefinitionString).
+	self childSandblocks allButFirst do: #delete.
+	aCollection do: [:block | self addMorphBack: (SBGrammarTransformStep new block: block asSandblock)]
 ]
 
 { #category : #'as yet unclassified' }
@@ -54,4 +68,23 @@ SBGrammarTransformer >> objectInterfaceNear: aBlock at: aSymbol [
 			ifTrue: [{[:o | o isKindOf: SBOhmGrammar]}]
 			ifFalse: [SBInterfaces never]].
 	^ {[:o | o isKindOf: SBGrammarTransformStep]}
+]
+
+{ #category : #'as yet unclassified' }
+SBGrammarTransformer >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
+
+	| source |
+	source := String streamContents: [:stream |
+		stream nextPutAll: 'restore ^'.
+		stream nextPutAll: self className.
+		stream space.
+		stream nextPutAll: 'grammar: '.
+		self childSandblocks first writeStSourceOn: stream.
+		stream nextPutAll: ' steps: {'.
+		self childSandblocks viewAllButFirst do: [:step | step block body writeSourceOn: stream].
+		stream nextPutAll: '}'].
+	self class class
+		compile: (PPFormatter formatString: source class: nil class noPattern: false)
+		classified: '*generated'.
+	^ true
 ]

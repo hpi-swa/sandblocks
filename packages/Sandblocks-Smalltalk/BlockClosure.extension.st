@@ -1,6 +1,12 @@
 Extension { #name : #BlockClosure }
 
 { #category : #'*Sandblocks-Smalltalk' }
+BlockClosure >> asSandblock [
+
+	^ self sourceString parseAsSandblock
+]
+
+{ #category : #'*Sandblocks-Smalltalk' }
 BlockClosure >> sbStBuild [
 
 	^ self value: SBStBuilder new

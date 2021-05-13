@@ -2057,6 +2057,13 @@ SBBlock >> save [
 	(self saveTryFixing: false quick: false) ifFalse: [self error: 'failed to save block']
 ]
 
+{ #category : #'artefact protocol' }
+SBBlock >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
+	" only needed if this block is an artefact "
+
+	^ self subclassResponsibility
+]
+
 { #category : #actions }
 SBBlock >> select [
 	<action>

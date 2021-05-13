@@ -1,6 +1,9 @@
 Class {
 	#name : #SBGrammarTransformStep,
 	#superclass : #SBBlock,
+	#instVars : [
+		'lastError'
+	],
 	#category : #'Sandblocks-Ohm'
 }
 
@@ -10,6 +13,18 @@ SBGrammarTransformStep >> artefactChanged: aMethodBlock [
 	(aMethodBlock parentSandblock isKindOf: SBGrammarTransformStep) ifTrue: [ | step |
 		step := aMethodBlock parentSandblock.
 		step rerun]
+]
+
+{ #category : #'as yet unclassified' }
+SBGrammarTransformStep >> block [
+
+	^ self firstSubmorph
+]
+
+{ #category : #'as yet unclassified' }
+SBGrammarTransformStep >> block: aBlock [
+
+	self block replaceBy: (SBStContainer new statements: {aBlock})
 ]
 
 { #category : #'as yet unclassified' }
@@ -41,9 +56,9 @@ SBGrammarTransformStep >> rerun [
 	
 	block := self firstSubmorph statements first.
 	block validSubtree ifTrue: [
-		[block evaluate value: inputGrammar]
-			on: Error
-			do: [:err | Transcript showln: err].
+		[block evaluate value: inputGrammar] on: Error do: [:err |
+			lastError ifNotNil: #delete.
+			lastError := self sandblockEditor reportErrorWithProcessCopy: err].
 		self submorphCount = 2 ifTrue: [self lastSubmorph delete].
 		self addMorphBack: (inputGrammar hResizing: #spaceFill)]
 ]
