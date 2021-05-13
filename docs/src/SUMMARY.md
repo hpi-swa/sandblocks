@@ -8,5 +8,7 @@
   - [Custom Palettes](walkthroughs/palettes.md)
   - [Custom Blocks](walkthroughs/blocks.md)
   - [Custom Projections](walkthroughs/projections.md)
+  - [Custom Commands](walkthroughs/commands.md)
   - [Lists of Blocks](walkthroughs/lists-of-blocks.md)
+  - [Drag and Drop](walkthroughs/drag-and-drop.md)
   - [Saving and Artefacts](walkthroughs/artefacts.md)
