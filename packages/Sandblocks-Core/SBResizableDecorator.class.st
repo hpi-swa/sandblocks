@@ -12,7 +12,6 @@ SBResizableDecorator >> attached: aMorph [
 
 	super attached: aMorph.
 	(self installEventBroadcasterFor: aMorph)
-		when: #mouseMove send: #mouseMove: to: self;
 		when: #mouseDown send: #mouseDown: to: self;
 		when: #mouseLeave send: #mouseLeave: to: self
 ]
@@ -27,6 +26,19 @@ SBResizableDecorator >> clickSize [
 SBResizableDecorator >> edge: aSymbol [
 
 	edge := aSymbol
+]
+
+{ #category : #'as yet unclassified' }
+SBResizableDecorator >> mouseCursorAt: anEvent [
+
+	^ (self relevantPosition: anEvent)
+		ifTrue: [
+			{
+				edge
+					ifNotNil: [Cursor perform: ('resize', edge capitalized) asSymbol]
+					ifNil: [Cursor resizeBottomRight].
+				1}]
+		ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -48,15 +60,8 @@ SBResizableDecorator >> mouseLeave: anEvent [
 	Cursor normal show
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #events }
 SBResizableDecorator >> mouseMove: anEvent [
-
-	((self relevantPosition: anEvent)
-		ifTrue: [
-			edge
-				ifNotNil: [Cursor perform: ('resize', edge capitalized) asSymbol]
-				ifNil: [Cursor resizeBottomRight]]
-		ifFalse: [Cursor normal]) show
 ]
 
 { #category : #'as yet unclassified' }

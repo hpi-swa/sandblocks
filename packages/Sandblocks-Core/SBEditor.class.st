@@ -609,6 +609,7 @@ SBEditor >> filterEvent: anEvent for: aMorph [
 					anEvent]].
 		
 		anEvent isMouseMove ifTrue: [
+			self updateMouseCursorFor: anEvent.
 			(anEvent isDraggingEvent and: [anEvent hand hasSubmorphs])
 				ifTrue: [
 					(dragHelper ifNil: [dragHelper := SBDragHelper for: anEvent in: self]) ifNotNil: [:helper | helper mouseMove: anEvent].
@@ -1533,6 +1534,17 @@ SBEditor >> unsavedChanges [
 
 	self allBlocksDo: [:block | (block isArtefact and: [block hasUnsavedChanges]) ifTrue: [^ true]].
 	^ false
+]
+
+{ #category : #'event handling' }
+SBEditor >> updateMouseCursorFor: anEvent [
+
+	| event |
+	self hasChildSandblocks ifFalse: [^ self].
+	
+	event := anEvent transformedBy: (self childSandblocks first transformedFrom: self).
+	(self morphsAt: anEvent position) do: [:morph | morph isSandblock ifTrue: [(morph mouseCursorAt: event) ifNotNil: [:cursor | ^ cursor show]]].
+	Cursor currentCursor ~= Cursor normal ifTrue: [Cursor normal show]
 ]
 
 { #category : #actions }

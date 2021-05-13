@@ -1434,6 +1434,21 @@ SBBlock >> minExtent [
 	^ minExtent max: self minWidth @ self minHeight
 ]
 
+{ #category : #accessing }
+SBBlock >> mouseCursorAt: anEvent [
+
+	| cursor priority |
+	" return your preferred cursor here "
+	cursor := nil.
+	priority := -1.
+	self decorators do: [:decorator |
+		(decorator mouseCursorAt: anEvent) ifNotNil: [:pair |
+			pair second > priority ifTrue: [
+				cursor := pair first.
+				priority := pair second]]].
+	^ cursor
+]
+
 { #category : #'event handling' }
 SBBlock >> mouseDown: anEvent [
 
