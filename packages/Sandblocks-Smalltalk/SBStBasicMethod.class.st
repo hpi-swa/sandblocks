@@ -580,6 +580,7 @@ SBStBasicMethod >> reloadMethodInPlace [
 	^ self replaceBy: (self compiledMethod asSandblock
 		position: self position;
 		hResizing: self hResizing;
+		width: self width;
 		yourself)
 ]
 

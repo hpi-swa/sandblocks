@@ -54,20 +54,20 @@ SBStSignature >> color [
 SBStSignature >> deleteCommandFor: aBlock [
 
 	| index |
-	(self isUnary or: [self isBinary]) ifTrue: [
+	(self isUnary or: [self isBinary or: [self isAssignment]]) ifTrue: [
 		^ (SBReplaceCommand newFor: aBlock containingArtefact)
 			target: aBlock;
 			replacer: self containingSandblock newNullBlock].
 	
 	(self isKeyword and: self submorphCount = 2) ifTrue: [
-		^ aBlock submorphIndex = 1 ifTrue: [nil] ifFalse: [
-			(SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock]].
+		^ aBlock submorphIndex = 1
+			ifTrue: [nil]
+			ifFalse: [(SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock]].
 	
-	index := ((((self submorphs indexOf: aBlock) - 1) / 2) floor * 2) + 1.
+	index := ((self submorphs indexOf: aBlock) - 1 / 2) floor * 2 + 1.
 	^ SBCombinedCommand newWith: {
-		((SBDeleteCommand newFor: aBlock containingArtefact) target: (self submorphs at: index)).
-		((SBDeleteCommand newFor: aBlock containingArtefact) target: (self submorphs at: index + 1))
-	}
+		(SBDeleteCommand newFor: aBlock containingArtefact) target: (self submorphs at: index).
+		(SBDeleteCommand newFor: aBlock containingArtefact) target: (self submorphs at: index + 1)}
 ]
 
 { #category : #'as yet unclassified' }

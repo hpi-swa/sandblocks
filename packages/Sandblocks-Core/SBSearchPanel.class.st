@@ -3,10 +3,17 @@ Class {
 	#superclass : #SBTextBubble,
 	#instVars : [
 		'currentFocus',
-		'currentFocusIndicator'
+		'currentFocusIndicator',
+		'currentHighlights'
 	],
 	#category : #'Sandblocks-Core'
 }
+
+{ #category : #'as yet unclassified' }
+SBSearchPanel >> clearHighlights [
+
+	^ currentHighlights ifNotNil: [currentHighlights do: #detach]
+]
 
 { #category : #'as yet unclassified' }
 SBSearchPanel >> currentFocus: m [
@@ -82,8 +89,23 @@ SBSearchPanel >> textContents [
 ]
 
 { #category : #'as yet unclassified' }
+SBSearchPanel >> updateResultHighlights [
+
+	self clearHighlights.
+	
+	currentHighlights := Array streamContents: [:stream |
+		self sandblockEditor allBlocksDo: [:b |
+			(self ~= b and: [self matchesQuery: b]) ifTrue: [ | decorator |
+				decorator := SBHighlightDecorator new.
+				stream nextPut: decorator]]]
+]
+
+{ #category : #'as yet unclassified' }
 SBSearchPanel >> updateSearch [
 
-	self contents ifEmpty: [^ self].
-	(currentFocus isNil or: [(self matchesQuery: currentFocus) not]) ifTrue: [self nextSearchResult]
+	(SBWatch report: self contents for: 428507844) ifEmpty: [
+		self clearHighlights.
+		^ self].
+	(currentFocus isNil or: [(self matchesQuery: currentFocus) not]) ifTrue: [self nextSearchResult].
+	self updateResultHighlights
 ]

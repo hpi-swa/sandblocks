@@ -25,7 +25,7 @@ SBOhmGrammarHandler >> extractVariable [
 { #category : #'as yet unclassified' }
 SBOhmGrammarHandler >> insertStatementAboveOrBelow: aBoolean [
 
-	self block containingStatement insertElement: aBoolean not
+	self block containingStatement insertElement: aBoolean
 ]
 
 { #category : #callbacks }

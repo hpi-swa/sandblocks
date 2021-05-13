@@ -27,6 +27,12 @@ SBOhmTerminal >> isExpression [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmTerminal >> isTerminal [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmTerminal >> symbols [
 
 	^ #('"' '"')

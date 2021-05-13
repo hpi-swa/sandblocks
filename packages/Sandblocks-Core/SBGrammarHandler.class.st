@@ -37,7 +37,7 @@ SBGrammarHandler >> characterCanStartInput: aCharacter [
 SBGrammarHandler >> copyString [
 	<action>
 
-	Clipboard clipboardText: self block prettySourceString
+	Clipboard clipboardText: ((self block respondsTo: #prettySourceString) ifTrue: [self block prettySourceString] ifFalse: [self block sourceString])
 ]
 
 { #category : #actions }

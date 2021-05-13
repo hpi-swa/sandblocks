@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBOhmRule >> allUsages [
+
+	^ self parentSandblock allBlocksSelect: [:b | b isIdentifier and: [b valid and: [b associatedRule = self]]]
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmRule >> currentTextMorph [
 
 	^ self firstSubmorph

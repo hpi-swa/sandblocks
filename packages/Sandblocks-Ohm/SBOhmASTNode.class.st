@@ -34,6 +34,12 @@ SBOhmASTNode >> isAlternative [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmASTNode >> isIdentifier [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmASTNode >> isOhm [
 
 	^ true
@@ -47,6 +53,12 @@ SBOhmASTNode >> isRule [
 
 { #category : #'as yet unclassified' }
 SBOhmASTNode >> isSequence [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmASTNode >> isTerminal [
 
 	^ false
 ]

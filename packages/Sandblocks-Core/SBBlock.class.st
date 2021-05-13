@@ -888,6 +888,13 @@ SBBlock >> fixedNumberOfChildren [
 	^ true
 ]
 
+{ #category : #hierarchy }
+SBBlock >> flattenChildren [
+
+	self childSandblocks reverseDo: [:b | self parentSandblock addMorph: b after: self].
+	self delete
+]
+
 { #category : #testing }
 SBBlock >> floating [
 
@@ -1548,6 +1555,32 @@ SBBlock >> multiSelectChildren [
 
 	
 	self sandblockEditor multiSelection: self childSandblocks
+]
+
+{ #category : #actions }
+SBBlock >> multiSelectLeft [
+	<action>
+
+	| adjacent |
+	adjacent := self previousBlock.
+	self sandblockEditor mode ~= #selection ifTrue: [self sandblockEditor mode: #selection].
+	self sandblockEditor addToMultiSelection: adjacent.
+	SBToggledCode comment: '' active: 1 do: {[adjacent select]}
+]
+
+{ #category : #actions }
+SBBlock >> multiSelectRight [
+	<action>
+
+	| adjacent |
+	adjacent := self isLastChild
+		ifTrue: [self parentSandblock]
+		ifFalse: self nextBlock firstDeepChild.
+	
+	self sandblockEditor mode ~= #selection ifTrue: [self sandblockEditor mode: #selection].
+	self sandblockEditor addToMultiSelection: self.
+	self sandblockEditor addToMultiSelection: adjacent.
+	SBToggledCode comment: '' active: 1 do: {[adjacent select]}
 ]
 
 { #category : #'as yet unclassified' }
@@ -2279,12 +2312,6 @@ SBBlock >> startOrAddToMultiSelection [
 	self select
 ]
 
-{ #category : #decorators }
-SBBlock >> stepDecorator: aDecorator [
-
-	aDecorator step
-]
-
 { #category : #input }
 SBBlock >> stopEditing [
 ]
@@ -2393,6 +2420,12 @@ SBBlock >> tryFixIfFail: aBlock [
 	^ self valid ifTrue: [true] ifFalse: aBlock
 ]
 
+{ #category : #'artefact protocol' }
+SBBlock >> typeFor: aBlock [
+
+	^ nil
+]
+
 { #category : #'event handling' }
 SBBlock >> update [
 ]
@@ -2400,12 +2433,7 @@ SBBlock >> update [
 { #category : #decorators }
 SBBlock >> updateSteppingDecorators [
 
-	| anyStepping |
-	anyStepping := false.
-	self decorators do: [:d |
-		d stepTime >= 0 ifTrue: [
-			anyStepping := true.
-			self world ifNotNil: [:w | w startStepping: d at: Time millisecondClockValue selector: #step arguments: {} stepTime: d stepTime]]]
+	self decorators do: [:d | d stepTime >= 0 ifTrue: [self world ifNotNil: [:w | w startStepping: d at: Time millisecondClockValue selector: #step arguments: {} stepTime: d stepTime]]]
 ]
 
 { #category : #suggestions }

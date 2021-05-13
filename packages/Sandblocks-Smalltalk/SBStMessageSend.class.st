@@ -144,8 +144,11 @@ SBStMessageSend >> converterOptionsDo: aBlock [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> deleteCommandFor: aBlock [
 
-	aBlock = self receiver ifTrue: [^ super deleteCommandFor: aBlock].
-
+	aBlock = self receiver ifTrue: [
+		^ (SBReplaceCommand newFor: aBlock containingArtefact)
+			target: (self isUnary ifTrue: [self] ifFalse: [aBlock]);
+			replacer: (self isUnary ifTrue: [SBStName contents: self selector] ifFalse: [self newNullBlock])].
+	
 	(self isUnary and: [self isInCascade not]) ifTrue: [
 		^ (SBReplaceCommand newFor: self containingArtefact)
 			target: self;
