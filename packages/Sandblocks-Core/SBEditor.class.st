@@ -157,9 +157,6 @@ SBEditor >> binding: aString for: block class: aClass ifPresent: aBlock [
 { #category : #ui }
 SBEditor >> buildBottomPanel [
 
-	searchInput := SBSearchPanel new.
-	self registerGlobalShortcutListener: searchInput.
-	
 	^ Morph new
 		changeTableLayout;
 		cellPositioning: #center;
@@ -718,6 +715,8 @@ SBEditor >> initialize [
 	verticalSelectionPosition := 0.
 	globalShortcutListeners := OrderedCollection new.
 	inputMapping := self class newInputMapping.
+	searchInput := SBSearchPanel new.
+	self registerGlobalShortcutListener: searchInput.
 	
 	paletteContainer := SBUpdatingPaletteContainer new
 		vResizing: #spaceFill;
@@ -738,7 +737,9 @@ SBEditor >> initialize [
 			topLeft: self topLeft;
 			yourself).
 	
-	self wantsMinimalLayout ifFalse: [self addMorphBack: self buildCommandBar].
+	self wantsMinimalLayout
+		ifTrue: [self addMorphBack: searchInput toggleCollapsed]
+		ifFalse: [self addMorphBack: self buildCommandBar].
 	self addMorphBack: (SBRow new
 		changeTableLayout;
 		hResizing: #spaceFill;
@@ -1358,6 +1359,12 @@ SBEditor >> scrollToShow: aBlock [
 SBEditor >> scrollerClass [
 
 	^ SBEditorCanvas
+]
+
+{ #category : #accessing }
+SBEditor >> search [
+
+	^ searchInput
 ]
 
 { #category : #selection }

@@ -1172,6 +1172,7 @@ SBBlock >> insertEmptyCommandRequestNear: aBlock before: aBoolean [
 { #category : #actions }
 SBBlock >> insertStatementAbove [
 	<action>
+	<actionValidIf: #insertStatementHasCandidate>
 
 	self insertStatementAboveOrBelow: true
 ]
@@ -1189,8 +1190,28 @@ SBBlock >> insertStatementAboveOrBelow: anAboveBoolean [
 { #category : #actions }
 SBBlock >> insertStatementBelow [
 	<action>
+	<actionValidIf: #insertStatementHasCandidate>
 
 	self insertStatementAboveOrBelow: false
+]
+
+{ #category : #'action helpers' }
+SBBlock >> insertStatementFindCandidate [
+
+	| candidate |
+	" default behavior is to find the first parent that can take multiple children "
+	candidate := self.
+	[candidate parentSandblock fixedNumberOfChildren and: [candidate isArtefact not]] whileTrue: [candidate := candidate parentSandblock].
+	candidate isArtefact ifFalse: [^ candidate].
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> insertStatementHasCandidate [
+
+	^ self insertStatementFindCandidate
+		ifNotNil: [:c | (c parentSandblock insertEmptyCommandRequestNear: c before: false) notNil]
+		ifNil: [false]
 ]
 
 { #category : #initialization }
