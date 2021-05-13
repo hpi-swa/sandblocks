@@ -380,6 +380,12 @@ SBStMessageSend >> moveCursorTo: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMessageSend >> notInCascade [
+
+	^ self isInCascade not
+]
+
+{ #category : #'as yet unclassified' }
 SBStMessageSend >> noteNewOwner: aMorph [
 
 	super noteNewOwner: aMorph.
@@ -615,6 +621,7 @@ SBStMessageSend >> wantsExtraSpace [
 { #category : #actions }
 SBStMessageSend >> wrapInCascade [
 	<multiSelectAction>
+	<actionValidIf: #notInCascade>
 
 	| cascade |
 	self assert: self isSelected.
