@@ -723,6 +723,16 @@ SBBlock >> drawChangedMarker: aCanvas [
 ]
 
 { #category : #drawing }
+SBBlock >> drawDecoratorsOn: aCanvas during: aBlock [
+
+	self decorators do: [:d | d preDrawOn: aCanvas].
+	
+	aBlock value.
+	
+	self decorators do: [:d | d postDrawSelfOn: aCanvas]
+]
+
+{ #category : #drawing }
 SBBlock >> drawDropHighlightOn: aCanvas [
 
 	
@@ -745,12 +755,7 @@ SBBlock >> drawInvalidBorderOn: aCanvas [
 { #category : #drawing }
 SBBlock >> drawOn: aCanvas [
 
-	self decorators do: [:d | d preDrawOn: aCanvas].
-	
-	self drawBackgroundOn: aCanvas.
-	
-	self drawSymbolsOn: aCanvas.
-	self decorators do: [:d | d postDrawSelfOn: aCanvas]
+	self drawDecoratorsOn: (self drawBackgroundOn: aCanvas) during: [self drawSymbolsOn: aCanvas]
 ]
 
 { #category : #drawing }
@@ -1070,8 +1075,8 @@ SBBlock >> initialize [
 	
 	decorators := OrderedCollection new.
 	
+	color := Color transparent.
 	self
-		color: Color transparent;
 		cellPositioning: #topLeft;
 		layoutInset: 0;
 		cellGap: 1 withScalingFactor;

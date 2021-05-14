@@ -171,6 +171,12 @@ SBEdgeInsets >> vertical [
 ]
 
 { #category : #'as yet unclassified' }
+SBEdgeInsets >> withScalingFactor [
+
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
 SBEdgeInsets >> x [
 
 	^ self horizontal
