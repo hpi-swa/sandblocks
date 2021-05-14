@@ -514,6 +514,13 @@ SBBlock >> copyAround [
 	self removeProperty: #copyPlaceholder
 ]
 
+{ #category : #'insert/delete' }
+SBBlock >> copyPlaceholder [
+
+	self allMorphsDo: [:m | (m valueOfProperty: #copyPlaceholder ifAbsent: [false]) ifTrue: [^ m]].
+	^ nil
+]
+
 { #category : #actions }
 SBBlock >> copyString [
 	<action>
@@ -1892,13 +1899,6 @@ SBBlock >> placeMark [
 				self attachDecorator: (SBMarkedDecorator new letter: letter)]]
 ]
 
-{ #category : #'insert/delete' }
-SBBlock >> placeholder [
-
-	self allMorphsDo: [:m | (m valueOfProperty: #copyPlaceholder ifAbsent: [false]) ifTrue: [^ m]].
-	^ nil
-]
-
 { #category : #caching }
 SBBlock >> postDuplicate [
 
@@ -2659,7 +2659,7 @@ SBBlock >> wrapSelectionWith: aSelection [
 	self sandblockEditor doMultiSelection: [:selected |
 		(SBRecordedCommand newFor: self containingArtefact) record: [:recorder | | new placeholder |
 			new := aSelection.
-			placeholder := new placeholder.
+			placeholder := new copyPlaceholder.
 			recorder replace: selected first with: new.
 			recorder replace: placeholder with: selected first.
 			recorder moveAll: selected allButFirst after: selected first]].
@@ -2670,5 +2670,5 @@ SBBlock >> wrapSelectionWith: aSelection [
 { #category : #'insert/delete' }
 SBBlock >> wrapsAround [
 
-	^ self placeholder notNil
+	^ self copyPlaceholder notNil
 ]

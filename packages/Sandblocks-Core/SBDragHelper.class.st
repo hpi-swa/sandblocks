@@ -115,7 +115,7 @@ SBDragHelper >> dropLocationForInsert: aDropLocation [
 SBDragHelper >> dropLocationForReplace: dropLocation [
 
 	(morph wrapsAround and: [morph satisfies: dropLocation second objectInterface]) ifTrue: [
-		dropLocation second convertedFor: morph placeholder objectInterface do: [:res |
+		dropLocation second convertedFor: morph copyPlaceholder objectInterface do: [:res |
 			self hintWrap: morph around: dropLocation second as: res.
 			^ true]].
 	
@@ -207,7 +207,7 @@ SBDragHelper >> hintWrap: draggedBlock around: anOldMorph as: aNewMorph [
 	onApply := [
 		editor do: ((SBRecordedCommand newOrEditFor: anOldMorph containingArtefact) record: [:recorder |
 			recorder replace: anOldMorph with: draggedBlock.
-			recorder replace: draggedBlock placeholder with: aNewMorph]).
+			recorder replace: draggedBlock copyPlaceholder with: aNewMorph]).
 		draggedBlock inputContainedUnknown]
 ]
 
