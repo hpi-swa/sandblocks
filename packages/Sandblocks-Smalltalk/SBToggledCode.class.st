@@ -80,15 +80,14 @@ SBToggledCode >> buildRowFor: aBlock active: aBoolean [
 	row
 		layoutPolicy: SBAlgebraLayout new;
 		softWrap: false;
-		cellGap: 4 withScalingFactor;
+		cellGap: 4;
 		addMorphBack: (SBCheckbox new
 			nonEdit: false;
 			value: aBoolean;
-			when: #toggled
-				evaluate: [
-					self
-						deselectAllBut: (self optionRows indexOf: row);
-						updateSelected];
+			when: #toggled evaluate: [
+				self
+					deselectAllBut: (self optionRows indexOf: row);
+					updateSelected];
 			yourself);
 		addMorphBack: (aBlock
 			setProperty: #previousBlockColor
@@ -162,11 +161,13 @@ SBToggledCode >> initialize [
 
 	super initialize.
 	
-	comment := SBTextBubble new layoutInset: (6 @ 2) withScalingFactor; colored: false.
+	comment := SBTextBubble new
+		layoutInset: 6 @ 2;
+		colored: false.
 	
 	self
-		layoutInset: 2 withScalingFactor;
-		cellGap: 4 withScalingFactor;
+		layoutInset: 2;
+		cellGap: 4;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
 ]

@@ -71,7 +71,7 @@ SBHalt >> initialize [
 		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		layoutInset: (10 @ 4) withScalingFactor;
+		layoutInset: 10 @ 4;
 		addMorphBack: (activeIcon := SBIcon iconBug);
 		active: true
 ]

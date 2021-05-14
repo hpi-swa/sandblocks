@@ -1079,7 +1079,7 @@ SBBlock >> initialize [
 	self
 		cellPositioning: #topLeft;
 		layoutInset: 0;
-		cellGap: 1 withScalingFactor;
+		cellGap: 1;
 		extent: 0 @ 0
 ]
 

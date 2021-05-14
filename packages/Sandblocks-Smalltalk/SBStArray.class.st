@@ -80,7 +80,7 @@ SBStArray >> initialize [
 	type := #dynamic.
 	
 	self
-		cellGap: 4 withScalingFactor;
+		cellGap: 4;
 		extent: self minExtent
 ]
 

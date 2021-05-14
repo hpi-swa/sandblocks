@@ -16,7 +16,7 @@ SBBadge >> color [
 { #category : #drawing }
 SBBadge >> drawOn: aCanvas [
 
-	aCanvas fillRoundRect: self bounds radius: 4 withScalingFactor fillStyle: Color darkGray.
+	aCanvas fillRoundRect: self bounds radius: 4 fillStyle: Color darkGray.
 	super drawOn: aCanvas
 ]
 
@@ -32,7 +32,7 @@ SBBadge >> initialize [
 	super initialize.
 	
 	self
-		layoutInset: 4 withScalingFactor;
+		layoutInset: 4;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		cellPositioning: #center

@@ -140,7 +140,7 @@ SBExplorer >> initialize [
 		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		layoutInset: 2 withScalingFactor;
+		layoutInset: 2;
 		attachDecorator: SBMoveDecorator new
 ]
 
@@ -201,7 +201,7 @@ SBExplorer >> on: anObject wrapper: aWrapper [
 	object := anObject.
 	wrapper := aWrapper ifNil: [ObjectExplorerWrapper with: 'root' -> object model: self].
 	
-	row := SBRow new cellGap: 4 withScalingFactor.
+	row := SBRow new cellGap: 4.
 	row addMorphBack: (wrapper hasContents
 		ifTrue: [
 			SBIcon iconChevronRight
@@ -292,8 +292,8 @@ SBExplorer >> toggleCollapsed [
 				self firstSubmorph firstSubmorph changeIconName: #iconChevronDown.
 				object explorerContents do: [:contents |
 					self addMorphBack: (SBRow new
-						cellGap: 4 withScalingFactor;
-						layoutInset: (SBEdgeInsets left: 12 withScalingFactor right: 0 top: 0 bottom: 0);
+						cellGap: 4;
+						layoutInset: (SBEdgeInsets left: 12 right: 0 top: 0 bottom: 0);
 						addMorphBack: (SBStringMorph new contents: contents itemName);
 						addMorphBack: (SBExplorer on: contents object))]]]
 ]

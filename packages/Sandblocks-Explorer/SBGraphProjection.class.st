@@ -37,7 +37,7 @@ SBGraphProjection >> initialize [
 	self
 		changeTableLayout;
 		extent: 200 asPoint;
-		layoutInset: 4 withScalingFactor
+		layoutInset: 4
 ]
 
 { #category : #'as yet unclassified' }

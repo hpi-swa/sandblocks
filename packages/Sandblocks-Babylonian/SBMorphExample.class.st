@@ -132,7 +132,7 @@ SBMorphExample >> initialize [
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		changeTableLayout;
-		layoutInset: 6 withScalingFactor;
+		layoutInset: 6;
 		addMorphBack: (TransformMorph new
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap;

@@ -145,8 +145,8 @@ SBWatch >> initialize [
 	super initialize.
 	
 	self
-		cellGap: 4 withScalingFactor;
-		layoutInset: 2 withScalingFactor;
+		cellGap: 4;
+		layoutInset: 2;
 		layoutPolicy: SBAlgebraLayout new;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;

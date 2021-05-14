@@ -236,7 +236,7 @@ SBStateMachineEditor >> initialize [
 
 	super initialize.
 	self extent: 300 @ 300.
-	self layoutInset: 6 withScalingFactor.
+	self layoutInset: 6.
 	self layoutPolicy: nil.
 	self vResizing: #shrinkWrap.
 	self hResizing: #shrinkWrap

@@ -54,13 +54,13 @@ SBHelpShortcut >> shortcuts: aCollection [
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		listDirection: #topToBottom;
-		cellGap: 4 withScalingFactor;
-		layoutInset: 2 withScalingFactor;
+		cellGap: 4;
+		layoutInset: 2;
 		color: Color white;
-		borderStyle: (BorderStyle color: Color black width: 1 withScalingFactor).
+		borderStyle: (BorderStyle color: Color black width: 1).
 	aCollection do: [:shortcutDescriptor |
 		self addMorphBack: (SBRow new
-			cellGap: 4 withScalingFactor;
+			cellGap: 4;
 			addMorphBack: (SBStringMorph new
 				contents: shortcutDescriptor first displayString;
 				bold;

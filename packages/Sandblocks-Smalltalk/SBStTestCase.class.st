@@ -113,13 +113,13 @@ SBStTestCase >> initialize [
 	super initialize.
 	self
 		useAlgebraLayout;
-		layoutInset: 6 withScalingFactor;
-		cellGap: 8 withScalingFactor;
+		layoutInset: 6;
+		cellGap: 8;
 		addMorphBack: (SBRow new
-			cellGap: 8 withScalingFactor;
+			cellGap: 8;
 			addMorphBack: (selectorInput := SBTextBubble new
 				colored: false;
-				layoutInset: 5 withScalingFactor;
+				layoutInset: 5;
 				yourself);
 			addMorphBack: (SBIcon iconPlay on: #click send: #runTest to: self);
 			addMorphBack: (Morph new

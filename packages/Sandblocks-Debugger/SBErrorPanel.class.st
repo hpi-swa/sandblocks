@@ -31,8 +31,8 @@ SBErrorPanel >> buildDebugCommandBar [
 	^ SBRow new
 		changeTableLayout;
 		hResizing: #spaceFill;
-		cellGap: 4 withScalingFactor;
-		layoutInset: 4 withScalingFactor;
+		cellGap: 4;
+		layoutInset: 4;
 		addMorphBack: (SBButton new
 			icon: SBIcon iconLongArrowRight shortcut: $> asSandblockShortcut do: [self stepOver];
 			balloonText: 'Step over');

@@ -151,8 +151,8 @@ SBExampleWatch >> initialize [
 	exampleValues := Dictionary new.
 	
 	self
-		cellGap: 4 withScalingFactor;
-		layoutInset: 2 withScalingFactor;
+		cellGap: 4;
+		layoutInset: 2;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
 ]

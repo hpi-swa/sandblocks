@@ -13,5 +13,5 @@ SBStBlockBindings >> isBlockBindings [
 { #category : #'as yet unclassified' }
 SBStBlockBindings >> layoutInset [
 
-	^ self hasSubmorphs ifTrue: [2 withScalingFactor] ifFalse: [0]
+	^ self hasSubmorphs ifTrue: [2] ifFalse: [0]
 ]

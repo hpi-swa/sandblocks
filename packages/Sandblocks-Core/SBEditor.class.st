@@ -161,10 +161,10 @@ SBEditor >> buildBottomPanel [
 		changeTableLayout;
 		cellPositioning: #center;
 		vResizing: #shrinkWrap;
-		cellGap: 8 withScalingFactor;
+		cellGap: 8;
 		hResizing: #spaceFill;
 		wrapCentering: #center;
-		layoutInset: 4 withScalingFactor;
+		layoutInset: 4;
 		listDirection: #leftToRight;
 		addMorphBack: (modeLabel := SBStringMorph new emphasis: TextEmphasis bold emphasisCode);
 		addMorphBack: (selectionLabel := SBStringMorph new contents: '');
@@ -206,8 +206,8 @@ SBEditor >> buildCommandBar [
 	^ SBRow new
 		changeTableLayout;
 		hResizing: #spaceFill;
-		cellGap: 4 withScalingFactor;
-		layoutInset: 4 withScalingFactor;
+		cellGap: 4;
+		layoutInset: 4;
 		addMorphBack: (SBButton new icon: SBIcon iconColumns shortcut: nil do: [self togglePalette]);
 		addMorphBack: (SBButton new
 			icon: SBIcon iconUndo
@@ -260,8 +260,8 @@ SBEditor >> buildDebugCommandBar [
 	^ SBRow new
 		changeTableLayout;
 		hResizing: #spaceFill;
-		cellGap: 4 withScalingFactor;
-		layoutInset: 4 withScalingFactor;
+		cellGap: 4;
+		layoutInset: 4;
 		addMorphBack: (SBButton new
 			icon: SBIcon iconLongArrowRight shortcut: $> asSandblockShortcut do: [self stepOver];
 			balloonText: 'Step over');

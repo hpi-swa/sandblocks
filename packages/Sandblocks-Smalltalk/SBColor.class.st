@@ -97,7 +97,7 @@ SBColor >> initialize [
 		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		layoutInset: 2 withScalingFactor;
+		layoutInset: 1;
 		addMorphBack: (indicator := Morph new
 			extent: 16 asPoint * self scalingFactor;
 			color: Color red)

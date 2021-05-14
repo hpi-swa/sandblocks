@@ -29,7 +29,7 @@ SBConnectorLine class >> connect: anObject to: anotherObject [
 { #category : #'as yet unclassified' }
 SBConnectorLine >> arrowSize [
 
-	^ 15 withScalingFactor
+	^ 15
 ]
 
 { #category : #'as yet unclassified' }
@@ -152,7 +152,7 @@ SBConnectorLine >> drawConnectorsOn: aCanvas alignBetween: aPoint and: anotherPo
 SBConnectorLine >> drawOn: aCanvas [
 
 	self lineType = #line ifTrue: [
-		self endPointsDo: [:a :b | 
+		self endPointsDo: [:a :b |
 			aCanvas asBalloonCanvas
 				aaLevel: 4;
 				line: a to: b width: 3 color: self color.
@@ -161,7 +161,10 @@ SBConnectorLine >> drawOn: aCanvas [
 		points := self curvePoints.
 		aCanvas asBalloonCanvas
 			aaLevel: 4;
-			drawBezier3Shape: points color: Color transparent borderWidth: 2 withScalingFactor borderColor: self color.
+			drawBezier3Shape: points
+				color: Color transparent
+				borderWidth: 2
+				borderColor: self color.
 		self drawConnectorsOn: aCanvas alignBetween: points third and: points last]
 ]
 

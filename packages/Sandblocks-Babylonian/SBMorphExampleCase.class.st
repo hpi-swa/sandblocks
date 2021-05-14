@@ -48,10 +48,10 @@ SBMorphExampleCase >> initialize [
 	
 	self
 		layoutPolicy: SBHorizontalLayout new;
-		layoutInset: 8 withScalingFactor;
+		layoutInset: 8;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		cellGap: 4 withScalingFactor
+		cellGap: 4
 ]
 
 { #category : #'as yet unclassified' }

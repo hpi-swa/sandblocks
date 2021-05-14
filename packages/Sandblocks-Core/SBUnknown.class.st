@@ -148,6 +148,20 @@ SBUnknown >> layoutCommands [
 		data: {self currentTextMorph layoutCommands}
 ]
 
+{ #category : #'as yet unclassified' }
+SBUnknown >> lookupAction: aSymbol [
+	" first try our leaf class, then the grammar handler, then our base classes "
+
+	self class
+		lookupSelector: aSymbol
+		upTo: SBUnknown
+		ifPresent: [:m | (self isValidAction: m) ifTrue: [^ self]]
+		ifAbsent: [].
+	(self grammarHandler class lookupSelector: aSymbol) ifNotNil: [:m | (self isValidAction: m) ifTrue: [^ self grammarHandler]].
+	(SBStASTNode superclass lookupSelector: aSymbol) ifNotNil: [:m | (self isValidAction: m) ifTrue: [^ self]].
+	^ nil
+]
+
 { #category : #accessing }
 SBUnknown >> moveCursorTo: aNumber [
 
