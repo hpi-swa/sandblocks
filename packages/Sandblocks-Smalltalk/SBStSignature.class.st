@@ -163,7 +163,7 @@ SBStSignature >> layoutCommands [
 				self submorphs pairsDo: [:messagePart :argument |
 					stream nextPut: (SBAlgebraCommand indent data: {
 						messagePart layoutCommands.
-						messagePart contents size > 4
+						messagePart contents size > 8
 							ifTrue: [SBAlgebraCommand softLineOrGap]
 							ifFalse: [SBAlgebraCommand gap].
 						argument layoutCommands}).

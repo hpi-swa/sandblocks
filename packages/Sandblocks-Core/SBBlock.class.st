@@ -1042,7 +1042,7 @@ SBBlock >> hasCurrentTextMorph [
 { #category : #decorators }
 SBBlock >> hasDecorator: aClass [
 
-	^ decorators anySatisfy: [:d | d class = aClass]
+	^ decorators anySatisfy: [:d | d isKindOf: aClass]
 ]
 
 { #category : #testing }
@@ -1771,13 +1771,24 @@ SBBlock >> outerArtefact [
 
 	| a |
 	a := self containingArtefact.
-	^ a = self ifTrue: [self parentSandblock ifNotNil: #containingSandblock] ifFalse: [a]
+	^ a = self
+		ifTrue: [(self parentSandblock ifNotNil: #containingArtefact) ifNil: [a]]
+		ifFalse: [a]
 ]
 
 { #category : #layout }
 SBBlock >> outerBounds [
 
 	^ super outerBounds expandBy: self frameSize
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> outerMostArtefact [
+
+	| a |
+	a := self containingArtefact.
+	a ownerChain do: [:morph | (morph isSandblock and: [morph isArtefact]) ifTrue: [a := morph]].
+	^ a
 ]
 
 { #category : #hierarchy }
