@@ -25,7 +25,7 @@ SBMoveDecorator >> attached: aMorph [
 { #category : #'as yet unclassified' }
 SBMoveDecorator >> canMove [
 
-	^ self morph owner layoutPolicy isNil
+	^ self morph floating
 ]
 
 { #category : #callbacks }

@@ -5,16 +5,27 @@ Class {
 	#name : #SBMoveAssociatedDecorator,
 	#superclass : #SBMoveDecorator,
 	#instVars : [
-		'leaveHint'
+		'leaveHint',
+		'hintBlock'
 	],
 	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
+SBMoveAssociatedDecorator >> hintBlock: aBlock [
+
+	hintBlock := aBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBMoveAssociatedDecorator >> mouseMove: event [
 
 	super mouseMove: event.
-	self isDragging ifTrue: [self showLeaveHint: (self newArtefactAt: event position do: [:n | true] ifNone: [false])]
+	self isDragging ifTrue: [
+		self
+			newArtefactAt: event position
+			do: [:n | self showLeaveHint: true for: n]
+			ifNone: [self showLeaveHint: false for: nil]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -30,7 +41,7 @@ SBMoveAssociatedDecorator >> mouseUp: event [
 				container: newArtefact;
 				index: 1)]
 		ifNone: [].
-	self showLeaveHint: false
+	self showLeaveHint: false for: nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -52,12 +63,12 @@ SBMoveAssociatedDecorator >> newArtefactAt: aPoint do: aBlock ifNone: anotherBlo
 ]
 
 { #category : #'as yet unclassified' }
-SBMoveAssociatedDecorator >> showLeaveHint: aBoolean [
+SBMoveAssociatedDecorator >> showLeaveHint: aBoolean for: anArtefact [
 
 	aBoolean
 		ifTrue: [
 			leaveHint ifNil: [
-				leaveHint := SBStringMorph new contents: 'Move to this component'.
+				leaveHint := SBStringMorph new contents: (hintBlock ifNil: ['Move to this block'] ifNotNil: [hintBlock value: anArtefact]).
 				self morph sandblockEditor openMorph: leaveHint].
 			leaveHint bottomLeft: self morph topLeft]
 		ifFalse: [

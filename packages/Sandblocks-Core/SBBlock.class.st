@@ -910,7 +910,7 @@ SBBlock >> flattenChildren [
 { #category : #testing }
 SBBlock >> floating [
 
-	^ self owner isNil or: [self owner layoutPolicy isNil]
+	^ self owner isNil or: [self owner layoutPolicy isNil or: [self disableLayout]]
 ]
 
 { #category : #accessing }
@@ -1771,9 +1771,7 @@ SBBlock >> outerArtefact [
 
 	| a |
 	a := self containingArtefact.
-	^ a = self
-		ifTrue: [(self parentSandblock ifNotNil: #containingArtefact) ifNil: [a]]
-		ifFalse: [a]
+	^ a = self ifTrue: [self parentSandblock ifNotNil: #containingArtefact] ifFalse: [a]
 ]
 
 { #category : #layout }
