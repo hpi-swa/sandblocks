@@ -514,6 +514,13 @@ SBBlock >> copyAround [
 	self removeProperty: #copyPlaceholder
 ]
 
+{ #category : #testing }
+SBBlock >> copyOnDrag [
+	" return true if you always want to copy when drags are started "
+
+	^ false
+]
+
 { #category : #'insert/delete' }
 SBBlock >> copyPlaceholder [
 
@@ -1885,16 +1892,12 @@ SBBlock >> pickUp: anEvent [
 		onAbortUndoIn: editor;
 		yourself.
 	
-	self containingBlock ifNotNil: [:b |
-		(b sandblockBlockColorIfAbsent: [nil]) ifNotNil: [:c |
-			s color: c]].
+	self containingBlock ifNotNil: [:b | (b sandblockBlockColorIfAbsent: [nil]) ifNotNil: [:c | s color: c]].
 	
 	s addMorphBack: self veryDeepCopy.
 	anEvent hand grabMorph: s.
 	
-	anEvent shiftPressed ifFalse: [
-		(self parentSandblock deleteCommandFor: self) ifNotNil: [:cmd |
-			editor do: (cmd shouldMergeWithNext: true)]]
+	(anEvent shiftPressed not and: [self copyOnDrag not]) ifTrue: [(self parentSandblock deleteCommandFor: self) ifNotNil: [:cmd | editor do: (cmd shouldMergeWithNext: true)]]
 ]
 
 { #category : #actions }
