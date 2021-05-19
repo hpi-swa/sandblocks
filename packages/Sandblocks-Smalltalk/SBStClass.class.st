@@ -323,6 +323,7 @@ SBStClass >> renameClass [
 SBStClass >> saveString [
 
 	^ String streamContents: [:stream |
+		self printSaveStringPreambleOn: stream.
 		stream
 			nextPutAll: self className;
 			nextPutAll: ' newFor: ';

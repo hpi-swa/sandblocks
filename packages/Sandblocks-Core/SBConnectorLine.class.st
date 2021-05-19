@@ -314,6 +314,18 @@ SBConnectorLine >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBConnectorLine >> isArtefact [
+	
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBConnectorLine >> isConnector [
+	
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBConnectorLine >> isSelfConnection [
 
 	^ from = to

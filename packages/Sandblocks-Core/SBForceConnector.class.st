@@ -32,6 +32,12 @@ SBForceConnector >> connectorType [
 ]
 
 { #category : #'as yet unclassified' }
+SBForceConnector >> deleteBlock [
+	
+	self abandon
+]
+
+{ #category : #'as yet unclassified' }
 SBForceConnector >> forceFor: aMorph [
 	
 	^ (aMorph == self from) 
@@ -46,4 +52,19 @@ SBForceConnector >> mouseDown: anEvent [
 	self from withDecorator: SBForceMoveDecorator do: [:decorator | decorator unregisterAdditionalForce: self].
 	
 	self abandon.
+]
+
+{ #category : #'as yet unclassified' }
+SBForceConnector >> saveString [ 
+	
+	^ String streamContents: [:stream |
+		stream
+			nextPutAll: self className;
+			nextPutAll: ' connect: ';
+			nextPutAll:	self from className;
+			print:	self from identityHash;
+			nextPutAll: ' to: ';
+			nextPutAll:	self to className;
+			print:	self to identityHash
+		]
 ]

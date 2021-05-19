@@ -94,6 +94,12 @@ SBStMethodCategory >> isArtefact [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMethodCategory >> isCollapsed [
+	
+	^ self submorphCount <= 1
+]
+
+{ #category : #'as yet unclassified' }
 SBStMethodCategory >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ SBStMethod new
@@ -135,6 +141,24 @@ SBStMethodCategory >> relatedClass [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMethodCategory >> saveString [
+	
+	^ String streamContents: [:stream |
+		self printSaveStringPreambleOn: stream.
+		stream
+			nextPutAll: self className;
+			nextPutAll: ' new class: ';
+			nextPutAll:  class asString;
+			nextPutAll: ' category: ';
+			nextPut: $';
+			nextPutAll:  savedCategoryName;
+			nextPut: $';
+			nextPutAll: ' collapsed: ';
+			nextPutAll:  self isCollapsed asString
+		]
+]
+
+{ #category : #'as yet unclassified' }
 SBStMethodCategory >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 
 	| currentName |
@@ -149,7 +173,7 @@ SBStMethodCategory >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 SBStMethodCategory >> toggleCollapsed [
 	<action>
 	
-	self submorphCount > 1
-		ifTrue: [(self submorphs copyFrom: 2 to: self submorphCount) do: #delete]
-		ifFalse: [self addMethods]
+	self isCollapsed 
+		ifTrue: [self addMethods]
+		ifFalse: [(self submorphs copyFrom: 2 to: self submorphCount) do: #delete]
 ]

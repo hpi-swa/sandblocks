@@ -1922,6 +1922,16 @@ SBBlock >> previousVerticalNear: aNumber [
 		validBlock: [:candidate | self top >= candidate bottom]
 ]
 
+{ #category : #saving }
+SBBlock >> printSaveStringPreambleOn: aStream [
+	
+	aStream
+		nextPutAll:	self className;
+		print:	self identityHash;
+		nextPutAll:	' := '
+
+]
+
 { #category : #actions }
 SBBlock >> promptAction [
 	<multiSelectAction>
@@ -2014,7 +2024,8 @@ SBBlock >> save [
 { #category : #saving }
 SBBlock >> saveString [
 	
-	String streamContents: [:stream | 
+	^ String streamContents: [:stream |
+		self printSaveStringPreambleOn: stream.
 		stream
 			nextPutAll:	self className;
 			nextPutAll: ' new position: ';

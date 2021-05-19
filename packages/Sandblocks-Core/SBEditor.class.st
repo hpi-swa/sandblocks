@@ -92,8 +92,10 @@ SBEditor class >> openFor: aMethodOrClass [
 
 { #category : #generated }
 SBEditor class >> savedBlocks [
-^ {SBStPlayground newFromSource: '' at: 610@446.
-SBStPlayground newFromSource: '' at: 841@436.
+^ {SBStClassMethodEditor2733596 := SBStClassMethodEditor new position: 527@357;
+addMorph: (SBStClass567517 := SBStClass newFor: SBTextBubble at:533@363);
+addMorph: (SBStMethodCategory207812 := SBStMethodCategory new class: SBTextBubble category: 'as yet unclassified' collapsed: false).
+SBStPlayground531504 := SBStPlayground newFromSource: '' at: 1152@427.
 }
 ]
 
@@ -150,7 +152,7 @@ SBEditor >> addToMultiSelection: aBlock [
 { #category : #accessing }
 SBEditor >> artefacts [
 
-	^ scroll scroller submorphs select: [:s | s isSandblock and: [s isArtefact]]
+	^ scroll scroller submorphs select: [:s | (s isSandblock or: s isConnector) and: [s isArtefact]]
 ]
 
 { #category : #'do/undo/redo' }

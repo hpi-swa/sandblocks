@@ -121,6 +121,12 @@ Object >> hasRepresentationThat: aSymbol [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Object >> isConnector [
+
+	^ false
+]
+
+{ #category : #'*Sandblocks-Core' }
 Object >> isSandblock [
 
 	^ false

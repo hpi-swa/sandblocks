@@ -216,7 +216,8 @@ SBStPlayground >> receiver: anObject [
 SBStPlayground >> saveString [
 	
 	^ String streamContents: [:stream | 
-		stream 
+		self printSaveStringPreambleOn: stream.
+		stream
 			nextPutAll: self className;
 			nextPutAll: ' newFromSource: '.
 		self printMethodStringIntoStream: stream.
