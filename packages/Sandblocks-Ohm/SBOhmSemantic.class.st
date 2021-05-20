@@ -153,5 +153,5 @@ SBOhmSemantic >> ohmTerminal: aNode terminal: terminal [
 { #category : #'as yet unclassified' }
 SBOhmSemantic >> string: aNode open: x chars: chars close: xx [
 
-	^ SBOhmTerminal new contents: aNode interval contents viewAllButFirstAndLast asString
+	^ SBOhmTerminal new contents: (aNode interval contents viewAllButFirstAndLast joinSeparatedBy: '')
 ]

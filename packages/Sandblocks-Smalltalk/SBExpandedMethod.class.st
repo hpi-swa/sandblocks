@@ -49,9 +49,12 @@ SBExpandedMethod >> send: aBlock [
 			(class lookupSelector: aBlock selector asSymbol) ifNotNil: [:m |
 				self addMorphBack: m asSandblock]]."
 	
+	| impls |
 	self addMorphBack: aBlock veryDeepCopy.
 	
-	self addMorphBack: (self systemNavigation allImplementorsOf: aBlock selector asSymbol) first compiledMethod asSandblock
+	impls := self systemNavigation allImplementorsOf: aBlock selector asSymbol.
+	impls ifNotEmpty: [
+		self addMorphBack: (self systemNavigation allImplementorsOf: aBlock selector asSymbol) first compiledMethod asSandblock]
 ]
 
 { #category : #'as yet unclassified' }

@@ -25,7 +25,7 @@ SBFormViewer >> initialize [
 		changeTableLayout;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
-		layoutInset: 6 withScalingFactor
+		layoutInset: 6
 ]
 
 { #category : #'as yet unclassified' }

@@ -87,13 +87,14 @@ SBStMethod >> initialize [
 	self
 		useAlgebraLayout;
 		cellPositioning: #topLeft;
-		layoutInset: 6 withScalingFactor;
+		layoutInset: 6;
 		extent: 300 @ 50;
-		
 		attachDecorator: SBResizableDecorator new;
 		addMorphBack: (SBRow new
 			layoutPolicy: SBAlgebraLayout new;
-			addMorphBack: (classPrefix := SBStClassNameInput new suffix: ' >> '; bordered: false);
+			addMorphBack: (classPrefix := SBStClassNameInput new
+				suffix: ' >> ';
+				bordered: false);
 			addMorphBack: (signature := SBStSignature new))
 ]
 
@@ -162,9 +163,10 @@ SBStMethod >> pasteString [
 
 	| method |
 	method := (Clipboard clipboardText string parseAsMethodFor: self relatedClass) asSandblock.
-	self sandblockEditor do: ((SBReplaceCommand newFor: method)
+	self sandblockEditor do: (SBReplaceCommand new
 		target: self;
-		replacer: method)
+		replacer: method;
+		artefact: method)
 ]
 
 { #category : #'as yet unclassified' }

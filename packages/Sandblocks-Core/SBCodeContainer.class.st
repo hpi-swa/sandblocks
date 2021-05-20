@@ -32,10 +32,7 @@ SBCodeContainer >> containingArtefact [
 { #category : #callbacks }
 SBCodeContainer >> deleteCommandFor: aBlock [
 
-	^ SBCombinedCommand newWith: {
-		SBDeleteCommand newNonEdit target: self.
-		"(SBDeleteMethodCommand newFor: SBNullSavable new) method: self method"
-	}
+	^ SBCombinedCommand newWith: {SBDeleteCommand new target: self}
 ]
 
 { #category : #examples }

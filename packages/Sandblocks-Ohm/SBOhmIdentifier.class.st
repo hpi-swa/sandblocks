@@ -5,9 +5,27 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBOhmIdentifier >> associatedRule [
+
+	^ self containingArtefact rules detect: [:rule | rule key = self contents]
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmIdentifier >> contents: aString [
 
 	super contents: aString withBlanksTrimmed
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmIdentifier >> isIdentifier [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmIdentifier >> isTerminal [
+
+	^ false
 ]
 
 { #category : #'as yet unclassified' }

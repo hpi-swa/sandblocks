@@ -62,6 +62,12 @@ SBJsKeywordBlockInputCommand >> previousOperands: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsKeywordBlockInputCommand >> setArtefactFrom [
+
+	^ morph
+]
+
+{ #category : #'as yet unclassified' }
 SBJsKeywordBlockInputCommand >> undo [
 
 	morph contents: previousContents.

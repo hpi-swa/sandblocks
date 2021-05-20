@@ -36,7 +36,7 @@ SBStMethodCategory >> class: aClass category: aString collapsed: aBoolean [
 { #category : #'as yet unclassified' }
 SBStMethodCategory >> deleteCommandFor: aBlock [
 
-	^ aBlock isMethod ifTrue: [(SBStDeleteMethodCommand newFor: self) target: aBlock] ifFalse: [nil]
+	^ aBlock isMethod ifTrue: [SBStDeleteMethodCommand new target: aBlock] ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -51,24 +51,26 @@ SBStMethodCategory >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean
 	| insertCommand changeCategoryCommand |
 	SBExample
 		self: [
-			(SBStMethodCategory new class: FrameRateMorph category: 'stepping and presenter' collapsed: false) wrapEditor]
+			(SBStMethodCategory new
+				class: FrameRateMorph
+				category: 'stepping and presenter'
+				collapsed: false) wrapEditor]
 		args: [{(FrameRateMorph >> #step) asSandblock. nil. false. nil}]
 		label: 'example'.
 	insertCommand := aBlock convertedFor: SBInterfaces stMethod do: [:m |
-		(SBInsertCommand newFor: self)
+		SBInsertCommand new
 			index: 2;
 			morph: (m
 				toggleCollapsed;
 				hResizing: #spaceFill;
 				yourself);
 			container: self].
-	changeCategoryCommand := (SBStChangeMethodCategoryCommand newFor: self)
+	changeCategoryCommand := SBStChangeMethodCategoryCommand new
 		method: aBlock object;
 		category: self firstSubmorph contents;
 		class: self relatedClass.
 	self sandblockEditor do: (SBCombinedCommand newWith: (aBlock isSelection
-		ifTrue: [
-			{changeCategoryCommand. (SBDeleteCommand newFor: self) target: aBlock sourceBlock. insertCommand}]
+		ifTrue: [{changeCategoryCommand. SBDeleteCommand new target: aBlock sourceBlock. insertCommand}]
 		ifFalse: [{changeCategoryCommand. insertCommand}]))
 ]
 

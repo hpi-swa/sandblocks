@@ -50,7 +50,7 @@ SBScmLiteral >> currentTextMorph [
 SBScmLiteral >> deleteBeforeCursor [
 	<action>
 	<inputAction>
-	
+
 	self contents ifEmpty: [^ self replaceWithUnknown].
 	
 	self currentTextMorph cursor = 1 ifTrue: [
@@ -58,7 +58,7 @@ SBScmLiteral >> deleteBeforeCursor [
 			name := class new contents: self contents.
 			name validContents ifTrue: [
 				^ self sandblockEditor
-					do: ((SBReplaceCommand newFor: self containingArtefact)
+					do: (SBReplaceCommand new
 						target: self;
 						replacer: name);
 					maybeStartInputFromStart]]].
@@ -124,16 +124,17 @@ SBScmLiteral >> replaceWithUnknown [
 SBScmLiteral >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (SBInputCommand newOrEditFor: self containingArtefact)
+	cmd := SBInputCommand new
 		oldMorph: self;
 		previousText: self currentTextMorph contents;
 		yourself.
 	
 	aBoolean
 		ifTrue: [
-			self castToUnknownWhenEmpty
-				ifTrue: [self replaceWithUnknown]
-				ifFalse: [self contents: ''; moveCursorTo: 0]]
+			self castToUnknownWhenEmpty ifTrue: [self replaceWithUnknown] ifFalse: [
+				self
+					contents: '';
+					moveCursorTo: 0]]
 		ifFalse: [self moveCursorTo: aNumber].
 	
 	^ cmd
@@ -166,7 +167,7 @@ SBScmLiteral >> textMorphClass [
 SBScmLiteral >> useAsScmString [
 	<action>
 
-	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBReplaceCommand new
 		target: self;
 		replacer: (SBScmString new contents: self contents))
 ]
@@ -175,7 +176,7 @@ SBScmLiteral >> useAsScmString [
 SBScmLiteral >> useAsScmSymbol [
 	<action>
 
-	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBReplaceCommand new
 		target: self;
 		replacer: (SBScmSymbol new contents: self contents))
 ]

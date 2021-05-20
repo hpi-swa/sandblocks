@@ -67,7 +67,7 @@ SBError >> currentStackFrame: aFrameBlock [
 	(currentStackFrame notNil and: [currentStackFrame ~= aFrameBlock]) ifTrue: [currentStackFrame closed].
 	currentStackFrame := aFrameBlock.
 	
-	Project current addDeferredUIMessage: [scroll scrollToShow: (aFrameBlock bounds expandBy: 0 @ 60 withScalingFactor)].
+	Project current addDeferredUIMessage: [scroll scrollToShow: (aFrameBlock bounds expandBy: 0 @ 60)].
 	
 	self updateExplorers
 ]
@@ -140,8 +140,8 @@ SBError >> initialize [
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		changeTableLayout;
-		layoutInset: 6 withScalingFactor;
-		cellGap: 8 withScalingFactor.
+		layoutInset: 6;
+		cellGap: 8.
 	
 	frames := SBColumn new.
 	scroll := ScrollPane new

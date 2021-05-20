@@ -52,7 +52,7 @@ SBScmIdentifier >> printOn: aStream [
 { #category : #'as yet unclassified' }
 SBScmIdentifier >> resolveBinding [
 
-	self binding: self contents for: self class: self containingArtefact relatedClass ifPresent: [:binding | ^ binding].
+	self containingArtefact ifNotNil: [:a | self binding: self contents for: self class: a relatedClass ifPresent: [:binding | ^ binding]].
 	^ nil
 ]
 

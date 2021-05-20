@@ -82,7 +82,9 @@ SBWatch >> color [
 { #category : #'event handling' }
 SBWatch >> doubleClick: anEvent [
 
-	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact) replacer: self expression; target: self)
+	self sandblockEditor do: (SBReplaceCommand new
+		replacer: self expression;
+		target: self)
 ]
 
 { #category : #'colors and color policies' }
@@ -145,8 +147,8 @@ SBWatch >> initialize [
 	super initialize.
 	
 	self
-		cellGap: 4 withScalingFactor;
-		layoutInset: 2 withScalingFactor;
+		cellGap: 4;
+		layoutInset: 2;
 		layoutPolicy: SBAlgebraLayout new;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;

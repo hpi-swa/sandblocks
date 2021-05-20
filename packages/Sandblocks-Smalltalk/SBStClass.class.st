@@ -23,7 +23,7 @@ SBStClass class >> newFor: aClass at: aPoint [
 SBStClass >> addRow: aLabelString with: aBlock [
 
 	self addMorphBack: (SBRow new
-		cellGap: 4 withScalingFactor;
+		cellGap: 4;
 		addMorphBack: (SBStringMorph new contents: aLabelString);
 		addMorphBack: aBlock)
 ]
@@ -186,21 +186,21 @@ SBStClass >> initialize [
 	self
 		changeTableLayout;
 		listDirection: #topToBottom;
-		cellGap: 4 withScalingFactor;
+		cellGap: 4;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
-		layoutInset: 6 withScalingFactor;
+		layoutInset: 6;
 		addMorphBack: (className := SBTextBubble new
 			emphasis: TextEmphasis bold;
 			placeholderText: 'Class Name';
-			layoutInset: 6 withScalingFactor;
+			layoutInset: 6;
 			font: (TextStyle default fontOfPointSize: 12));
 		addRow: 'SuperClass' with: (superClassName := SBStClassNameInput new contents: 'Object');
 		addRow: 'Instance Variables:' with: (instanceVariables := SBStNameList new);
 		addRow: 'Class Variables:' with: (classVariables := SBStNameList new);
 		addRow: 'Pool Dictionaries:' with: (poolDictionaries := SBStArray new);
 		addRow: 'Category:' with: (category := SBTextBubble new);
-		attachDecorator: SBForceMoveDecorator new
+		attachDecorator: SBMoveDecorator new
 ]
 
 { #category : #'as yet unclassified' }

@@ -37,7 +37,7 @@ SBStBlockBody >> addBlockArgument [
 
 	self sandblockEditor
 		endInput;
-		do: ((SBInsertCommand newFor: self containingArtefact)
+		do: (SBInsertCommand new
 			index: bindings submorphCount + 1;
 			container: bindings;
 			morph: SBStName new;
@@ -56,15 +56,18 @@ SBStBlockBody >> addExampleSlider [
 { #category : #'as yet unclassified' }
 SBStBlockBody >> appendElement [
 	<action>
-	
-	self sandblockEditor do: ((SBInsertCommand newFor: self containingArtefact)
+
+	self sandblockEditor do: (SBInsertCommand new
 		index: self submorphCount + 1;
 		container: self;
 		morph: self newNullBlock;
 		shouldMergeWithNext: true;
 		yourself).
 	
-	self sandblockEditor startInput: self sandblockEditor selection at: 0 replacingContents: false
+	self sandblockEditor
+		startInput: self sandblockEditor selection
+		at: 0
+		replacingContents: false
 ]
 
 { #category : #'as yet unclassified' }
@@ -129,9 +132,9 @@ SBStBlockBody >> declareTemporaryVariableCommand: aString [
 
 	^ temporaries submorphs
 		detect: [:t | t contents = aString]
-		ifFound: [:temp | SBDoItCommand newNonEdit do: []]
+		ifFound: [:temp | SBDoItCommand new do: []]
 		ifNone: [
-			(SBInsertCommand newFor: self containingArtefact)
+			SBInsertCommand new
 				container: temporaries;
 				index: temporaries submorphCount + 1;
 				morph: (SBStName contents: aString);
@@ -191,12 +194,12 @@ SBStBlockBody >> initialize [
 SBStBlockBody >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
 	(aBlock notNil and: [aBlock owner = bindings]) ifTrue: [
-		^ (SBRelInsertCommand newFor: self containingArtefact)
+		^ SBRelInsertCommand new
 			near: aBlock before: aBoolean in: bindings morph: aMorph;
 			yourself].
 	
 	(aBlock notNil and: [aMorph owner = temporaries]) ifTrue: [
-		^ (SBRelInsertCommand newFor: self containingArtefact)
+		^ SBRelInsertCommand new
 			near: aBlock before: aBoolean in: temporaries morph: aMorph;
 			yourself].
 	

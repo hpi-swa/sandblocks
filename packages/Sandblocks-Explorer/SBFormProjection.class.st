@@ -17,7 +17,7 @@ SBFormProjection >> initialize [
 	self
 		changeTableLayout;
 		addMorph: ImageMorph new;
-		layoutInset: 4 withScalingFactor
+		layoutInset: 4
 ]
 
 { #category : #'as yet unclassified' }

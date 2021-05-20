@@ -93,7 +93,7 @@ SBReportedValueDecorator >> showLabel [
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		color: Color yellow;
-		layoutInset: 4 withScalingFactor;
+		layoutInset: 4;
 		fullBounds;
 		yourself.
 	indicator ifNotNil: #delete.

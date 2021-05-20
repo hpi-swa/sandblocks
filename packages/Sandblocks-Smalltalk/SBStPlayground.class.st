@@ -136,16 +136,16 @@ SBStPlayground >> initialize [
 	
 	self
 		addMorphFront: (SBRow new
-			cellGap: 8 withScalingFactor;
+			cellGap: 8;
 			addMorphBack: (SBTextBubble new
-				layoutInset: 4 withScalingFactor;
+				layoutInset: 4;
 				colored: false;
 				color: Color white;
 				contents: 'Workspace');
-			addMorphBack: (bindings := SBRow new cellGap: 4 withScalingFactor));
+			addMorphBack: (bindings := SBRow new cellGap: 4));
 		vResizing: #shrinkWrap;
 		hResizing: #rigid;
-		attachDecorator: SBForceMoveDecorator new;
+		attachDecorator: SBMoveDecorator new;
 		attachDecorator: SBResizableDecorator new
 ]
 

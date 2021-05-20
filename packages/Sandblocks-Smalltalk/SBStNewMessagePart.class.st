@@ -182,7 +182,7 @@ SBStNewMessagePart >> selectorContentsBeforeMe [
 SBStNewMessagePart >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (SBInputStructureCommand newOrEditFor: self containingArtefact)
+	cmd := SBInputStructureCommand new
 		oldMorph: self;
 		previousText: self contents;
 		oldMorphs: (self argument ifNotNil: [:a | {a}] ifNil: [{}]);
@@ -206,7 +206,7 @@ SBStNewMessagePart >> stopEditing: aCommand [
 { #category : #'as yet unclassified' }
 SBStNewMessagePart >> unaryToKeywordCommand [
 
-	^ (SBInsertCommand newFor: self containingArtefact)
+	^ SBInsertCommand new
 		morph: self newNullBlock;
 		container: self;
 		index: 3

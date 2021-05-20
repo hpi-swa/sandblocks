@@ -60,7 +60,7 @@ SBStNameBehavior >> declareInstanceVariable [
 	<action>
 	<actionValidIf: #noValidBinding>
 
-	self block sandblockEditor do: (SBStDeclareInstVarCommand newNonEdit
+	self block sandblockEditor do: (SBStDeclareInstVarCommand new
 		class: self block containingArtefact methodClass;
 		name: self contents;
 		source: self block)

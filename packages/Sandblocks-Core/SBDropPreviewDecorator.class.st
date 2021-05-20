@@ -24,7 +24,10 @@ SBDropPreviewDecorator >> outline: aBoolean [
 { #category : #'as yet unclassified' }
 SBDropPreviewDecorator >> postDrawOn: aCanvas [
 
+	| color |
+	color := self morph colorPolicy dropMarkerColorFor: self morph.
+	
 	outline
-		ifTrue: [aCanvas frameRectangle: self morph bounds width: 3 color: SBDropInsertMarker markerColor]
-		ifFalse: [aCanvas fillRectangle: self morph bounds color: SBDropInsertMarker markerColor]
+		ifTrue: [aCanvas frameRectangle: self morph bounds width: 3 color: color]
+		ifFalse: [aCanvas fillRectangle: self morph bounds color: color]
 ]

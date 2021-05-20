@@ -102,10 +102,16 @@ SBAlgebraLayout >> layoutDocument: command at: aState limit: maxRight wrap: aWra
 	^ command type caseOf: {
 		[#group] -> [ | fits |
 			fits := self lineFitsDocument: command at: aState limit: maxRight.
-			command data inject: aState into: [:s :el | self layoutDocument: el at: s limit: maxRight wrap: fits not]].
+			command data
+				inject: aState
+				into: [:s :el | self layoutDocument: el at: s limit: maxRight wrap: fits not]].
 		[#indent] -> [
 			state := aState startX: aState startX + self indent.
-			state := self layoutDocument: (SBAlgebraCommand group data: command data) at: state limit: maxRight wrap: aWrapBoolean.
+			state := self
+				layoutDocument: (SBAlgebraCommand group data: command data)
+				at: state
+				limit: maxRight
+				wrap: aWrapBoolean.
 			state startX: state startX - self indent].
 		[#container] -> [
 			state := aState nestedInset: command morph layoutInset asEdgeInsets do: [:shiftedState |
@@ -115,26 +121,34 @@ SBAlgebraLayout >> layoutDocument: command at: aState limit: maxRight wrap: aWra
 					limit: maxRight
 					wrap: aWrapBoolean].
 			
-			measure ifFalse: [
-				command morph layoutInBounds: (aState offset extent: ((state containerExtentFrom: aState) max: 0 @ command morph minimumHeight))].
+			measure ifFalse: [command morph layoutInBounds: (aState offset extent: ((state containerExtentFrom: aState) max: 0 @ command morph minimumHeight))].
 			
 			aState placeSized: ((state containerExtentFrom: aState) max: 0 @ command morph minimumHeight)].
 		[#hardLine] -> [aState newLineWithGap: command withGap].
 		[#softLine] -> [
 			aWrapBoolean
-				ifTrue: [self layoutDocument: (SBAlgebraCommand hardLine withGap: command withGap) at: aState limit: maxRight wrap: aWrapBoolean]
+				ifTrue: [
+					self
+						layoutDocument: (SBAlgebraCommand hardLine withGap: command withGap)
+						at: aState
+						limit: maxRight
+						wrap: aWrapBoolean]
 				ifFalse: [aState]].
 		[#softLineOrGap] -> [
 			aWrapBoolean
-				ifTrue: [self layoutDocument: (SBAlgebraCommand hardLine withGap: command withGap) at: aState limit: maxRight wrap: aWrapBoolean]
+				ifTrue: [
+					self
+						layoutDocument: (SBAlgebraCommand hardLine withGap: command withGap)
+						at: aState
+						limit: maxRight
+						wrap: aWrapBoolean]
 				ifFalse: [aState offset: aState offset + (self gap @ 0)]].
 		[#gap] -> [aState offset: aState offset + (self gap @ 0)].
 		[#morph] -> [ | extent |
 			extent := command data minExtent.
 			measure ifFalse: [command data bounds: (aState offset extent: extent)].
 			aState placeSized: extent].
-		[#noop] -> [aState]
-	}
+		[#noop] -> [aState]}
 ]
 
 { #category : #'as yet unclassified' }

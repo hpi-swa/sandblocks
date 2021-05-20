@@ -31,7 +31,10 @@ SBBrowserEditor >> ensureOpened: aMethod [
 	found ifFalse: [
 		aMethod
 			convertedFor: (self objectInterfaceNear: nil at: #after)
-			do: [:repr | self openMorphInView: repr]]
+			do: [:repr | self openMorphInView: repr]].
+	
+	((model respondsTo: #autoSelectString) and: [model autoSelectString notNil])
+		ifTrue: [self search search: model autoSelectString]
 ]
 
 { #category : #initialization }
@@ -121,13 +124,11 @@ SBBrowserEditor >> update: aSymbol [
 	aSymbol
 		caseOf: {
 			[#contents] -> [SBToggledCode comment: '' active: 0 do: {[self ensureOpened: self modelSelection]}].
-			[#wantToChange] -> [
-				self canDiscardEdits ifFalse: [
-					(self confirm: 'Changes have not been saved.
+			[#wantToChange] -> [self canDiscardEdits ifFalse: [(self confirm: 'Changes have not been saved.
 Is it OK to cancel those changes?' translated) ifTrue: [history markSaved: self artefacts first]]].
 			[#accept] -> [self save].
-			[#editSelection] -> [self updateArtefact]
-		}
+			[#editSelection] -> [self updateArtefact].
+			[#autoSelect] -> [self search search: model autoSelectString]}
 		otherwise: [nil]
 ]
 

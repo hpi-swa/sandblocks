@@ -33,9 +33,9 @@ SBStateMachineEditor class >> newFor: aNode [
 SBStateMachineEditor class >> suggestion [
 
 	^ [:block |
-		block sandblockEditor do: ((SBReplaceCommand newFor: block containingArtefact)
+		block sandblockEditor do: (SBReplaceCommand new
 			target: block;
-			replacer: (SBStateMachineEditor new);
+			replacer: SBStateMachineEditor new;
 			yourself)]
 ]
 
@@ -236,7 +236,7 @@ SBStateMachineEditor >> initialize [
 
 	super initialize.
 	self extent: 300 @ 300.
-	self layoutInset: 6 withScalingFactor.
+	self layoutInset: 6.
 	self layoutPolicy: nil.
 	self vResizing: #shrinkWrap.
 	self hResizing: #shrinkWrap

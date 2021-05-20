@@ -77,7 +77,8 @@ SBScmBrowser >> isTopLevel [
 SBScmBrowser >> module: aModule [
 
 	| defs topLevel |
-	self fileReference contents: aModule filename.
+	aModule filename ifNotNil: [
+		self fileReference contents: aModule filename].
 	
 	defs := aModule definitions.
 	

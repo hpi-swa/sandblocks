@@ -100,11 +100,11 @@ SBStNewMessageSend >> deleteCommandFor: aBlock [
 	aBlock = self receiver ifTrue: [
 		^ self isUnary
 			ifTrue: [
-				(SBReplaceCommand newFor: self containingArtefact)
+				SBReplaceCommand new
 					target: self;
 					replacer: (SBStName new contents: self messageParts first contents)]
 			ifFalse: [
-				(SBReplaceCommand newFor: self containingArtefact)
+				SBReplaceCommand new
 					target: self receiver;
 					replacer: self newNullBlock]].
 	
@@ -112,11 +112,11 @@ SBStNewMessageSend >> deleteCommandFor: aBlock [
 		ifTrue: [
 			self receiver
 				ifNotNil: [
-					(SBReplaceCommand newFor: self containingArtefact)
+					SBReplaceCommand new
 						target: self;
 						replacer: self receiver]
-				ifNil: [(SBDeleteCommand newFor: self containingArtefact) target: self]]
-		ifFalse: [(SBDeleteCommand newFor: self containingArtefact) target: aBlock]
+				ifNil: [SBDeleteCommand new target: self]]
+		ifFalse: [SBDeleteCommand new target: aBlock]
 ]
 
 { #category : #'testing hierarchy' }
@@ -203,7 +203,7 @@ SBStNewMessageSend >> layoutCommands [
 SBStNewMessageSend >> layoutInset [
 
 	^ (self receiver isNil and: [self insetWithoutReceiver])
-		ifTrue: [(SBEdgeInsets left: 20 withScalingFactor right: 0 top: 0 bottom: 0) + super layoutInset]
+		ifTrue: [(SBEdgeInsets left: 20 right: 0 top: 0 bottom: 0) + super layoutInset]
 		ifFalse: [super layoutInset]
 ]
 
@@ -302,13 +302,13 @@ SBStNewMessageSend >> useSuggestion: aString [
 			self messageParts
 				at: index
 				ifPresent: [:part |
-					stream nextPut: ((SBMutatePropertyCommand newFor: self containingArtefact)
+					stream nextPut: (SBMutatePropertyCommand new
 						target: part;
 						selector: #contents;
 						value: p;
 						yourself)]
 				ifAbsent: [
-					stream nextPut: ((SBInsertCommand newFor: self containingArtefact)
+					stream nextPut: (SBInsertCommand new
 						container: self;
 						morph: ((self newEmptyChildNear: nil before: false)
 							contents: p;
@@ -318,10 +318,10 @@ SBStNewMessageSend >> useSuggestion: aString [
 		self messageParts
 			from: aString keywords size + 1
 			to: self messageParts size
-			do: [:part | stream nextPut: ((SBDeleteCommand newFor: self containingArtefact) target: part)].
+			do: [:part | stream nextPut: (SBDeleteCommand new target: part)].
 		
 		aString asSymbol isUnary
-			ifTrue: [self messageParts first hasArgument ifTrue: [stream nextPut: ((SBDeleteCommand newFor: self containingArtefact) target: self messageParts first argument)]]
+			ifTrue: [self messageParts first hasArgument ifTrue: [stream nextPut: (SBDeleteCommand new target: self messageParts first argument)]]
 			ifFalse: [self messageParts first hasArgument ifFalse: [stream nextPut: self messageParts first unaryToKeywordCommand]]])).
 	self inputNextUnknown
 ]
@@ -336,8 +336,7 @@ SBStNewMessageSend >> wantsExtraSpace [
 SBStNewMessageSend >> wrapInCascade [
 	<action>
 
-	
-	self sandblockEditor do: ((SBWrapCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBWrapCommand new
 		outer: SBStCascade new;
 		inner: self;
 		wrap: [:outer :inner | outer receiver: self receiver messages: {self}])

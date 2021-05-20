@@ -72,9 +72,7 @@ SBCheckbox >> toggle [
 { #category : #'as yet unclassified' }
 SBCheckbox >> toggleCommandFor: anArtefact [
 
-	^ (self nonEdit
-		ifTrue: [SBMutatePropertyCommand newNonEdit]
-		ifFalse: [SBMutatePropertyCommand newOrEditFor: anArtefact])
+	^ SBMutatePropertyCommand new
 		target: self;
 		selector: #value;
 		mutateSelector: #changeValue:;

@@ -375,7 +375,7 @@ SBOwnTextMorph >> minExtent [
 
 	| font |
 	font := self fontToUse.
-	^ (font widthOfString: self contentsToDisplay) @ font height max: 4 withScalingFactor @ font height
+	^ (font widthOfString: self contentsToDisplay) @ font height max: 4 @ font height
 ]
 
 { #category : #'as yet unclassified' }

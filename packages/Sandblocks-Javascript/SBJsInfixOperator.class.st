@@ -69,7 +69,7 @@ SBJsInfixOperator >> contents: aString [
 SBJsInfixOperator >> continueInputInRhs: anEvent [
 
 	(self rhs isNil and: [self fixedNumberOfChildren not]) ifTrue: [
-		self sandblockEditor do: ((SBInsertCommand newFor: self containingArtefact)
+		self sandblockEditor do: (SBInsertCommand new
 			index: self submorphCount + 1;
 			container: self;
 			morph: self newNullBlock;
@@ -79,8 +79,7 @@ SBJsInfixOperator >> continueInputInRhs: anEvent [
 	self rhs ifNil: [^ self].
 	
 	self sandblockEditor startInput: self rhs at: 0 replacingContents: false.
-	anEvent keyCharacter ~= Character space ifTrue: [
-		self sandblockEditor selection keyStroke: anEvent]
+	anEvent keyCharacter ~= Character space ifTrue: [self sandblockEditor selection keyStroke: anEvent]
 ]
 
 { #category : #'as yet unclassified' }
@@ -182,10 +181,12 @@ SBJsInfixOperator >> lhs: aLeftBlock operator: anOperatorString rhs: aRhsBlock [
 SBJsInfixOperator >> makeDeclaration [
 	<action>
 	<actionValidIf: #canMakeDeclaration>
-	
-	self sandblockEditor do: ((SBRecordedCommand newFor: self containingArtefact) record: [:recorder |
+
+	self sandblockEditor do: (SBRecordedCommand new record: [:recorder |
 		recorder restore: {self lhs. self rhs} after: [
-			recorder replace: self with: (SBJsDeclaration new binding: self lhs value: self rhs declarationType: 'const')]])
+			recorder
+				replace: self
+				with: (SBJsDeclaration new binding: self lhs value: self rhs declarationType: 'const')]])
 ]
 
 { #category : #'as yet unclassified' }
@@ -249,14 +250,17 @@ SBJsInfixOperator >> skipLeftRightNavigation [
 SBJsInfixOperator >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (SBJsInfixOpInputCommand newFor: self containingArtefact)
+	cmd := SBJsInfixOpInputCommand new
 		previousOperator: self currentTextMorph contents;
 		previousRhs: self allRhs;
 		morph: self;
 		yourself.
 	
 	aBoolean
-		ifTrue: [self currentTextMorph contents: ''; moveCursorTo: 0]
+		ifTrue: [
+			self currentTextMorph
+				contents: '';
+				moveCursorTo: 0]
 		ifFalse: [self currentTextMorph moveCursorTo: aNumber].
 	
 	^ cmd
@@ -287,10 +291,10 @@ SBJsInfixOperator >> tryDelete [
 	lhs := self lhs.
 	^ self sandblockEditor
 		endInput;
-		do: ((SBReplaceCommand newFor: self containingArtefact)
+		do: (SBReplaceCommand new
 			target: self;
 			replacer: lhs);
-		startInput: lhs at: 9e8 replacingContents: false
+		startInput: lhs at: 900000000 replacingContents: false
 ]
 
 { #category : #'as yet unclassified' }

@@ -50,6 +50,12 @@ SBInputStructureCommand >> oldMorphs: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBInputStructureCommand >> setArtefactFrom [
+
+	^ oldMorphs first
+]
+
+{ #category : #'as yet unclassified' }
 SBInputStructureCommand >> undo [
 
 	super undo.

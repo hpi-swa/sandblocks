@@ -84,7 +84,6 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $; command do: #promptGlobalAction;
 		registerShortcut: $f command do: #startSearch;
 		registerShortcut: $g command do: #nextSearchResult;
-		registerShortcut: $f command do: #toggleFullscreen;
 		registerShortcut: $t command do: #promptAddArtifact.
 	"registerShortcut: $r command do: #openRepl;"
 	" navigation "
@@ -123,6 +122,8 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $e command do: #pasteAfter;
 		registerShortcut: $E shift withCommand do: #pasteBefore;
 		cmdShortcut: $( do: #leftRotate;
+		"registerShortcut: $k command do: #swapRight;
+		registerShortcut: $K command withShift do: #swapLeft;"
 		registerShortcut: Character arrowLeft command withShift do: #swapLeft;
 		registerShortcut: Character arrowRight command withShift do: #swapRight;
 		registerShortcut: $c asSandblockShortcut withOption do: #copyString;
@@ -149,7 +150,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		cmdShortcut: $$ do: #useAsStCharacter;
 		shortcut: Character space shift modes: #(#input #command) do: #wrapAsArgument;
 		shortcut: Character space modes: #(#input #command) do: #wrapInMessageSend.
-	"cmdShortcut: $D do: #insertLabelAbove;"
+	
 	" modify scheme "
 	self
 		registerShortcut: $( do: #wrapInSExpr;
@@ -173,8 +174,10 @@ SBTextInputMapping >> registerDefaultShortcuts [
 	" multi selection "
 	self
 		shortcut: Character space modes: #(#selection) do: #startOrAddToMultiSelection;
-		registerShortcut: Character escape do: #endMultiSelection.
-	
+		registerShortcut: Character escape do: #endMultiSelection";
+		registerShortcut: Character arrowLeft command withShift do: #multiSelectLeft;
+		registerShortcut: Character arrowRight command withShift do: #multiSelectRight".
+		
 	" special overrides "
 	self
 		registerShortcut: Character escape do: #dismiss;

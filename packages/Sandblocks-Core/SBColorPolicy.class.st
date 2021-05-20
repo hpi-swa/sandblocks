@@ -110,6 +110,12 @@ SBColorPolicy >> drawnColorOfOpaque: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBColorPolicy >> dropMarkerColorFor: aMorph [
+
+	^ Color r: 0.942 g: 0.968 b: 0.627
+]
+
+{ #category : #'as yet unclassified' }
 SBColorPolicy >> enlarge [
 
 	^ enlarge ifNil: [false]

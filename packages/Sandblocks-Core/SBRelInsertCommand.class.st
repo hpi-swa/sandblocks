@@ -49,6 +49,7 @@ SBRelInsertCommand >> do [
 				ifTrue: [container addMorph: morph inFrontOf: adjacent]
 				ifFalse: [container addMorph: morph behind: adjacent]]
 		ifNil: [container addMorphBack: morph].
+	self applyPositionTo: morph in: container.
 	
 	^ select ifNil: [morph containingSandblock]
 ]
@@ -78,6 +79,12 @@ SBRelInsertCommand >> near: aBlock before: aBoolean in: aContainer morph: aMorph
 SBRelInsertCommand >> select: aBlock [
 
 	select := aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBRelInsertCommand >> setArtefactFrom [
+
+	^ container
 ]
 
 { #category : #'as yet unclassified' }

@@ -157,11 +157,12 @@ SBEditor >> artefacts [
 
 { #category : #'do/undo/redo' }
 SBEditor >> batchedChangeStep: aBlock [
-	" send this message when you are updating the tree rapidly for each update, but don't want to submit a command for each update, only at the end "
 
-	self compileTime = #compileOnChange ifTrue: [ | artefact |
-		self save: aBlock containingArtefact tryFixing: false quick: true.
-		artefact := self selectedArtefact.
+	| artefact |
+	" send this message when you are updating the tree rapidly for each update, but don't want to submit a command for each update, only at the end "
+	artefact := aBlock containingArtefact.
+	(self compileTime = #compileOnChange and: [artefact notNil]) ifTrue: [
+		self save: artefact tryFixing: false quick: true.
 		artefact triggerEvent: #changed.
 		self allBlocksDo: [:block | block artefactChanged: artefact]]
 ]
@@ -175,17 +176,14 @@ SBEditor >> binding: aString for: block class: aClass ifPresent: aBlock [
 { #category : #ui }
 SBEditor >> buildBottomPanel [
 
-	searchInput := SBSearchPanel new.
-	self registerGlobalShortcutListener: searchInput.
-	
 	^ Morph new
 		changeTableLayout;
 		cellPositioning: #center;
 		vResizing: #shrinkWrap;
-		cellGap: 8 withScalingFactor;
+		cellGap: 8;
 		hResizing: #spaceFill;
 		wrapCentering: #center;
-		layoutInset: 4 withScalingFactor;
+		layoutInset: 4;
 		listDirection: #leftToRight;
 		addMorphBack: (modeLabel := SBStringMorph new emphasis: TextEmphasis bold emphasisCode);
 		addMorphBack: (selectionLabel := SBStringMorph new contents: '');
@@ -227,8 +225,8 @@ SBEditor >> buildCommandBar [
 	^ SBRow new
 		changeTableLayout;
 		hResizing: #spaceFill;
-		cellGap: 4 withScalingFactor;
-		layoutInset: 4 withScalingFactor;
+		cellGap: 4;
+		layoutInset: 4;
 		addMorphBack: (SBButton new icon: SBIcon iconColumns shortcut: nil do: [self togglePalette]);
 		addMorphBack: (SBButton new
 			icon: SBIcon iconUndo
@@ -281,8 +279,8 @@ SBEditor >> buildDebugCommandBar [
 	^ SBRow new
 		changeTableLayout;
 		hResizing: #spaceFill;
-		cellGap: 4 withScalingFactor;
-		layoutInset: 4 withScalingFactor;
+		cellGap: 4;
+		layoutInset: 4;
 		addMorphBack: (SBButton new
 			icon: SBIcon iconLongArrowRight shortcut: $> asSandblockShortcut do: [self stepOver];
 			balloonText: 'Step over');
@@ -441,7 +439,7 @@ SBEditor >> createArtefactInView: aMorph [
 
 	self assert: aMorph isArtefact.
 	
-	self do: (SBStOpenMorphCommand newNonEdit
+	self do: (SBEditorOpenMorphCommand new
 		morph: aMorph;
 		editor: self sandblockEditor;
 		isUnsaved: true;
@@ -535,7 +533,7 @@ SBEditor >> deleteBlock [
 { #category : #'submorphs-add/remove' }
 SBEditor >> deleteCommandFor: aBlock [
 
-	^ SBDeleteCommand newNonEdit target: aBlock
+	^ SBDeleteCommand new target: aBlock
 ]
 
 { #category : #'action helpers' }
@@ -636,6 +634,7 @@ SBEditor >> filterEvent: anEvent for: aMorph [
 					anEvent]].
 		
 		anEvent isMouseMove ifTrue: [
+			self updateMouseCursorFor: anEvent.
 			(anEvent isDraggingEvent and: [anEvent hand hasSubmorphs])
 				ifTrue: [
 					(dragHelper ifNil: [dragHelper := SBDragHelper for: anEvent in: self]) ifNotNil: [:helper | helper mouseMove: anEvent].
@@ -690,16 +689,25 @@ SBEditor >> goToMark [
 ]
 
 { #category : #'event handling' }
+SBEditor >> handleDropCancelMorph: aMorph [
+
+	dragHelper ifNotNil: [
+		dragHelper dragCancelled.
+		dragHelper := nil]
+]
+
+{ #category : #'event handling' }
 SBEditor >> handleDropMorph: anEvent [
 
 	dragHelper ifNotNil: [
-		dragHelper applyHint ifTrue: [anEvent wasHandled: true].
+		(dragHelper applyHintAt: anEvent) ifTrue: [anEvent wasHandled: true].
 		dragHelper := nil]
 ]
 
 { #category : #'event handling' }
 SBEditor >> handleDroppedFile: name event: anEvent [
 
+	self flag: #todo. "not adapted to new drag-and-drop system "
 	^ FileStream readOnlyFileNamed: name do: [:file |
 		file
 			convertedFor: (self objectInterfaceNear: nil at: #after)
@@ -709,6 +717,7 @@ SBEditor >> handleDroppedFile: name event: anEvent [
 { #category : #'event handling' }
 SBEditor >> handleDroppedFolder: aFileDirectory event: anEvent [
 
+	self flag: #todo. "not adapted to new drag-and-drop system "
 	aFileDirectory
 		convertedFor: (self objectInterfaceNear: nil at: #after)
 		do: [:converted | self handleDroppedBlock: converted event: anEvent adding: true near: nil]
@@ -744,6 +753,8 @@ SBEditor >> initialize [
 	verticalSelectionPosition := 0.
 	globalShortcutListeners := OrderedCollection new.
 	inputMapping := self class newInputMapping.
+	searchInput := SBSearchPanel new.
+	self registerGlobalShortcutListener: searchInput.
 	
 	paletteContainer := SBUpdatingPaletteContainer new
 		vResizing: #spaceFill;
@@ -764,12 +775,18 @@ SBEditor >> initialize [
 			topLeft: self topLeft;
 			yourself).
 	
-	self wantsMinimalLayout ifFalse: [self addMorphBack: self buildCommandBar].
+	self wantsMinimalLayout
+		ifTrue: [self addMorphBack: searchInput toggleCollapsed]
+		ifFalse: [self addMorphBack: self buildCommandBar].
 	self addMorphBack: (SBRow new
 		changeTableLayout;
 		hResizing: #spaceFill;
 		vResizing: #spaceFill;
-		addMorphBack: (scroll := SBEditorCanvasWithOverlay new)).
+		addMorphBack: (scroll := self scrollerClass new
+			color: Color transparent;
+			hResizing: #spaceFill;
+			vResizing: #spaceFill;
+			yourself)).
 	self wantsMinimalLayout ifFalse: [self addMorphBack: (bottomPanel := self buildBottomPanel)].
 	
 	self
@@ -787,7 +804,7 @@ SBEditor >> inputIsDefault [
 { #category : #'as yet unclassified' }
 SBEditor >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
-	^ SBStOpenMorphCommand newNonEdit
+	^ SBEditorOpenMorphCommand new
 		morph: aMorph;
 		editor: self;
 		isUnsaved: false;
@@ -1043,7 +1060,7 @@ SBEditor >> objectInterface [
 { #category : #'as yet unclassified' }
 SBEditor >> objectInterfaceNear: aBlock at: aSymbol [
 
-	^ SBInterfaces block, SBInterfaces topLevel
+	^ SBInterfaces block, (SBToggledCode comment: '' active: 1 do: {[SBInterfaces always]. [SBInterfaces topLevel]})
 ]
 
 { #category : #testing }
@@ -1129,11 +1146,7 @@ SBEditor >> openMorphInOverlay: aMorph [
 { #category : #'submorphs-add/remove' }
 SBEditor >> openMorphInView: aMorph [
 
-	self do: (SBStOpenMorphCommand newNonEdit
-		morph: aMorph;
-		editor: self sandblockEditor;
-		isUnsaved: false;
-		yourself).
+	self do: (self insertCommandRequest: aMorph near: nil before: false).
 	^ aMorph
 ]
 
@@ -1142,7 +1155,7 @@ SBEditor >> openMorphInViewCommand: aMorph [
 
 	| position |
 	position := scroll scroller offset + (self extent // 2).
-	^ SBInsertCommand newNonEdit
+	^ SBInsertCommand new
 		index: 1;
 		container: scroll scroller;
 		morph: (aMorph
@@ -1339,10 +1352,21 @@ SBEditor >> replaceInput: aMorph [
 	self select: aMorph containingSandblock
 ]
 
-{ #category : #errors }
+{ #category : #'as yet unclassified' }
 SBEditor >> reportError: anError process: aProcess [
 
 	^ errors addError: anError process: aProcess
+]
+
+{ #category : #errors }
+SBEditor >> reportErrorWithProcessCopy: anError [
+
+	| stack priority |
+	stack := anError signalerContext copyStack.
+	priority := Processor activeProcess priority.
+	^ self reportError: anError process: ((Process forContext: stack priority: priority)
+		shouldResumeFromDebugger: false;
+		yourself)
 ]
 
 { #category : #initialization }
@@ -1383,7 +1407,7 @@ SBEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean [
 		ifTrue: [
 			history markSaved: anArtefact.
 			self triggerEvent: #artefactSaved with: anArtefact.
-			self allBlocksDo: [:block | block artefactSaved: self selectedArtefact].
+			self allBlocksDo: [:block | block artefactSaved: anArtefact].
 			true]
 		ifFalse: [false]
 ]
@@ -1419,6 +1443,12 @@ SBEditor >> scrollToShow: aBlock [
 SBEditor >> scrollerClass [
 
 	^ SBEditorCanvas
+]
+
+{ #category : #accessing }
+SBEditor >> search [
+
+	^ searchInput
 ]
 
 { #category : #selection }
@@ -1595,6 +1625,17 @@ SBEditor >> unsavedChanges [
 
 	self allBlocksDo: [:block | (block isArtefact and: [block hasUnsavedChanges]) ifTrue: [^ true]].
 	^ false
+]
+
+{ #category : #'event handling' }
+SBEditor >> updateMouseCursorFor: anEvent [
+
+	| event |
+	self hasChildSandblocks ifFalse: [^ self].
+	
+	event := anEvent transformedBy: (self childSandblocks first transformedFrom: self).
+	(self morphsAt: anEvent position) do: [:morph | morph isSandblock ifTrue: [(morph mouseCursorAt: event) ifNotNil: [:cursor | ^ cursor show]]].
+	Cursor currentCursor ~= Cursor normal ifTrue: [Cursor normal show]
 ]
 
 { #category : #actions }

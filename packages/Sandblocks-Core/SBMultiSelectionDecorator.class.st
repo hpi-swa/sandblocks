@@ -14,8 +14,7 @@ SBMultiSelectionDecorator >> color [
 SBMultiSelectionDecorator >> postDrawOn: aCanvas [
 
 	aCanvas
-		frameRoundRect: (self morph bounds expandBy: 2)
+		fillRoundRect: (self morph bounds expandBy: 2)
 		radius: self morph colorPolicy cornerRadius
-		width: self morph frameSize
-		color: (self color alpha: 0.6)
+		fillStyle: (self color alpha: 0.6)
 ]

@@ -26,6 +26,7 @@ SBInsertCommand >> container: aMorph [
 SBInsertCommand >> do [
 
 	container addMorph: morph asElementNumber: index.
+	self applyPositionTo: morph in: container.
 	^ select ifNil: [morph]
 ]
 
@@ -51,6 +52,12 @@ SBInsertCommand >> morph: aMorph [
 SBInsertCommand >> select: aBlock [
 
 	select := aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBInsertCommand >> setArtefactFrom [
+
+	^ container
 ]
 
 { #category : #'as yet unclassified' }

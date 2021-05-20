@@ -84,7 +84,8 @@ SBStBinding >> printBlockOn: aStream [
 { #category : #'as yet unclassified' }
 SBStBinding >> resolveBinding [
 
-	self block binding: self contents for: self block class: self block containingArtefact relatedClass ifPresent: [:b | ^ b].
+	self block containingArtefact ifNotNil: [:artefact |
+		self block binding: self contents for: self block class: artefact relatedClass ifPresent: [:b | ^ b]].
 	^ nil
 ]
 
@@ -98,9 +99,11 @@ SBStBinding >> symbolsFor: aColorPolicy [
 SBStBinding >> useAsMessageSend [
 	<action>
 
-	^ self block sandblockEditor do: ((SBReplaceCommand newFor: self block containingArtefact)
+	^ self block sandblockEditor do: (SBReplaceCommand new
 		target: self block;
-		replacer: (SBStMessageSend new receiver: (SBStName contents: 'self') selector: self block contents asSymbol);
+		replacer: (SBStMessageSend new
+			receiver: (SBStName contents: 'self')
+			selector: self block contents asSymbol);
 		yourself)
 ]
 

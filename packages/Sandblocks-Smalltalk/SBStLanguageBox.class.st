@@ -20,8 +20,8 @@ SBStLanguageBox class >> newFor: aBlock [
 SBStLanguageBox class >> suggestion [
 
 	^ [:block | | box |
-		box := (SBStLanguageBox new source: '' lang: 'scheme').
-		block sandblockEditor do: ((SBReplaceCommand newFor: block containingArtefact)
+		box := SBStLanguageBox new source: '' lang: 'scheme'.
+		block sandblockEditor do: (SBReplaceCommand new
 			target: block;
 			replacer: box).
 		box inputNextUnknown]

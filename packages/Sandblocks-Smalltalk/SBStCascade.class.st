@@ -41,14 +41,11 @@ SBStCascade >> codeActions [
 
 	^ super codeActions, (SBStSubstitution allSubclasses
 		select: [:substition | substition matchesCascades and: [substition matches: self]]
-		thenCollect: [:substitution | 
-			SBCodeAction
-				labeled: 'Convert to ', substitution name
-				for: self
-				do: [:node | 
-					node sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-						target: node;
-						replacer: ((substitution newFrom: self) pc: self pc))]])
+		thenCollect: [:substitution |
+			SBCodeAction labeled: 'Convert to ', substitution name for: self do: [:node |
+				node sandblockEditor do: (SBReplaceCommand new
+					target: node;
+					replacer: ((substitution newFrom: self) pc: self pc))]])
 ]
 
 { #category : #'as yet unclassified' }

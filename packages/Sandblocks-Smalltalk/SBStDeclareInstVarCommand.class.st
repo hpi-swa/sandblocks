@@ -37,6 +37,12 @@ SBStDeclareInstVarCommand >> name: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBStDeclareInstVarCommand >> setArtefactFrom [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBStDeclareInstVarCommand >> source: aBlock [
 
 	source := aBlock

@@ -30,7 +30,7 @@ SBLabel >> canAppearInBlockBody [
 { #category : #'as yet unclassified' }
 SBLabel >> changeHeadingLevel: aNumber [
 
-	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBMutatePropertyCommand new
 		target: self;
 		selector: #headingLevel;
 		value: aNumber)
@@ -128,7 +128,7 @@ SBLabel >> initialize [
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		changeTableLayout;
-		layoutInset: 0 withScalingFactor;
+		layoutInset: 0;
 		addMorphBack: (text := SBMultilineOwnTextMorph new emphasis: TextEmphasis italic);
 		headingLevel: 0
 ]
@@ -187,7 +187,7 @@ SBLabel >> printOn: aStream [
 SBLabel >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (SBInputCommand newFor: self containingArtefact)
+	cmd := SBInputCommand new
 		oldMorph: self;
 		previousText: self contents;
 		yourself.
@@ -229,8 +229,8 @@ SBLabel >> textContents [
 { #category : #'as yet unclassified' }
 SBLabel >> useAsString [
 	<action>
-	
-	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+
+	self sandblockEditor do: (SBReplaceCommand new
 		target: self;
 		replacer: (SBStString new contents: self contents))
 ]

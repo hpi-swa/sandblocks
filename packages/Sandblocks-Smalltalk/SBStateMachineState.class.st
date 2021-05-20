@@ -27,7 +27,7 @@ SBStateMachineState >> addUponEnter: aBlock [
 	self addMorphBack: (SBRow new
 		softWrap: false;
 		useAlgebraLayout;
-		cellGap: 4 withScalingFactor;
+		cellGap: 4;
 		addMorphBack: (SBStringMorph new contents: 'Enter:');
 		addMorphBack: aBlock)
 ]
@@ -38,7 +38,7 @@ SBStateMachineState >> addUponLeave: aBlock [
 	self addMorphBack: (SBRow new
 		softWrap: false;
 		useAlgebraLayout;
-		cellGap: 4 withScalingFactor;
+		cellGap: 4;
 		addMorphBack: (SBStringMorph new contents: 'Leave:');
 		addMorphBack: aBlock)
 ]
@@ -57,7 +57,7 @@ SBStateMachineState >> connectTo [
 { #category : #'as yet unclassified' }
 SBStateMachineState >> deleteCommandFor: aBlock [
 
-	^ (SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock owner
+	^ SBDeleteCommand new target: aBlock owner
 ]
 
 { #category : #'as yet unclassified' }
@@ -81,7 +81,7 @@ SBStateMachineState >> initialize [
 		extent: 280 @ 10;
 		vResizing: #shrinkWrap;
 		hResizing: #rigid;
-		layoutInset: 6 withScalingFactor;
+		layoutInset: 6;
 		attachDecorator: SBMoveDecorator new;
 		attachDecorator: SBResizableDecorator new
 ]
@@ -116,7 +116,7 @@ SBStateMachineState >> name: aString [
 SBStateMachineState >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ SBRow new
-		cellGap: 4 withScalingFactor;
+		cellGap: 4;
 		addMorphBack: (SBStringMorph new contents: 'Enter:');
 		addMorphBack: SBStBlockBody new
 ]

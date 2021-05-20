@@ -50,6 +50,12 @@ SBMutatePropertyCommand >> selector: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBMutatePropertyCommand >> setArtefactFrom [
+
+	^ target
+]
+
+{ #category : #'as yet unclassified' }
 SBMutatePropertyCommand >> target: aMorph [
 
 	target := aMorph

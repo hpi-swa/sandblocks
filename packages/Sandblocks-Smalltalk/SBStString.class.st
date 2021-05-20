@@ -66,7 +66,7 @@ SBStString >> printOn: aStream [
 SBStString >> splitStringAtCursor [
 	<inputAction>
 
-	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBReplaceCommand new
 		target: self;
 		replacer: (SBStMessageSend new
 			receiver: (SBStString new contents: text contentsBeforeCursor)
@@ -98,7 +98,7 @@ SBStString >> useAsStCharacter [
 	<action>
 	<actionValidIf: #oneCharLong>
 
-	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBReplaceCommand new
 		target: self;
 		replacer: (SBStCharacter new contents: self contents))
 ]

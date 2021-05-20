@@ -34,6 +34,12 @@ SBReplaceCommand >> replacer: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBReplaceCommand >> setArtefactFrom [
+
+	^ target
+]
+
+{ #category : #'as yet unclassified' }
 SBReplaceCommand >> syncPositionFrom: aMorph to: anotherMorph [
 
 	anotherMorph owner layoutPolicy ifNil: [anotherMorph center: aMorph center]

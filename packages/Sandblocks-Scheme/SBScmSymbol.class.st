@@ -9,7 +9,7 @@ SBScmSymbol >> acceptInputEvent: anEvent [
 
 	(anEvent keyCharacter = $( and: [self contents isEmpty])
 		ifTrue: [
-			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+			self sandblockEditor do: (SBReplaceCommand new
 				target: self;
 				replacer: (SBScmExpression new quoted: true))]
 		ifFalse: [super acceptInputEvent: anEvent]

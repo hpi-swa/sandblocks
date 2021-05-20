@@ -5,7 +5,8 @@ Class {
 		'undo',
 		'doBlock',
 		'firstRemoved',
-		'firstAdded'
+		'firstAdded',
+		'container'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -15,7 +16,7 @@ SBRecordedCommand >> add: aMorph in: anOwnerMorph at: aNumber [
 
 	undo add: [aMorph delete].
 	anOwnerMorph addMorph: aMorph asElementNumber: aNumber.
-	self added: aMorph
+	self added: aMorph to: anOwnerMorph
 ]
 
 { #category : #action }
@@ -30,13 +31,14 @@ SBRecordedCommand >> addAll: aCollection in: anOwnerMorph at: aNumber [
 	undo add: [aCollection do: [:m | m delete]].
 	aCollection withIndexDo: [:m :index |
 		anOwnerMorph addMorph: m asElementNumber: aNumber + index.
-		self added: m]
+		self added: m to: anOwnerMorph]
 ]
 
 { #category : #action }
-SBRecordedCommand >> added: aMorph [
+SBRecordedCommand >> added: aMorph to: anOwnerMorph [
 
 	aMorph postDuplicate.
+	container ifNil: [container := anOwnerMorph].
 	firstAdded ifNil: [firstAdded := aMorph]
 ]
 
@@ -62,11 +64,15 @@ SBRecordedCommand >> moveAll: aCollection in: anOwnerMorph at: aNumber [
 	| previousIndices previousOwners |
 	previousOwners := aCollection collect: #owner.
 	previousIndices := aCollection collect: #submorphIndex.
-	undo add: [aCollection with: previousOwners and: previousIndices do: [:m :owner :index | owner addMorph: m asElementNumber: index]].
+	undo add: [
+		aCollection
+			with: previousOwners
+			and: previousIndices
+			do: [:m :owner :index | owner addMorph: m asElementNumber: index]].
 	
 	aCollection withIndexDo: [:m :index |
 		anOwnerMorph addMorph: m asElementNumber: aNumber + index.
-		self added: m]
+		self added: m to: anOwnerMorph]
 ]
 
 { #category : #record }
@@ -84,21 +90,24 @@ SBRecordedCommand >> remove: aMorph [
 	undo add: [owner addMorph: aMorph asElementNumber: index].
 	
 	aMorph delete.
-	self removed: aMorph
+	self removed: aMorph from: owner
 ]
 
 { #category : #action }
-SBRecordedCommand >> removed: aMorph [
+SBRecordedCommand >> removed: aMorph from: anOwnerMorph [
 
+	container ifNil: [container := anOwnerMorph].
 	firstRemoved ifNil: [firstRemoved := aMorph]
 ]
 
 { #category : #action }
 SBRecordedCommand >> replace: aMorph with: anotherMorph [
 
+	| oldOwner |
+	oldOwner := aMorph owner.
 	undo add: [anotherMorph replaceBy: aMorph].
 	aMorph replaceBy: anotherMorph.
-	self added: anotherMorph
+	self added: anotherMorph to: oldOwner
 ]
 
 { #category : #action }
@@ -122,6 +131,12 @@ SBRecordedCommand >> restore: aCollection after: aBlock [
 	undo add: [
 		oldOwners with: aCollection and: oldIndices do: [:owner :morph :index |
 			owner addMorph: morph asElementNumber: index]]
+]
+
+{ #category : #'as yet unclassified' }
+SBRecordedCommand >> setArtefactFrom [
+
+	^ container
 ]
 
 { #category : #apply }

@@ -50,6 +50,12 @@ SBBlockDecorator >> morph [
 	^ morph
 ]
 
+{ #category : #accessing }
+SBBlockDecorator >> mouseCursorAt: anEvent [
+
+	^ nil
+]
+
 { #category : #drawing }
 SBBlockDecorator >> postDrawOn: aCanvas [
 

@@ -115,22 +115,24 @@ SBStLiteral >> startInputAt: aNumber replacingContents: aBoolean [
 	(aBoolean and: [self castToUnknownWhenEmpty]) ifTrue: [ | unknown |
 		unknown := self newNullBlock.
 		self sandblockEditor
-			do: ((SBReplaceCommand newFor: self containingArtefact)
+			do: (SBReplaceCommand new
 				target: self;
 				shouldMergeWithNext: true;
 				replacer: unknown);
 			replaceInput: unknown.
 		^ unknown startInputAt: 0 replacingContents: false].
 	
-	cmd := (self inputCommandClass newOrEditFor: self containingArtefact)
+	cmd := self inputCommandClass new
 		oldMorph: self;
 		previousText: self contents;
 		yourself.
 	
-	aBoolean ifTrue: [
-		self
-			contents: '';
-			moveCursorTo: 0] ifFalse: [self moveCursorTo: aNumber].
+	aBoolean
+		ifTrue: [
+			self
+				contents: '';
+				moveCursorTo: 0]
+		ifFalse: [self moveCursorTo: aNumber].
 	
 	^ cmd
 ]
@@ -162,7 +164,7 @@ SBStLiteral >> textMorphClass [
 SBStLiteral >> useAsStString [
 	<action>
 
-	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBReplaceCommand new
 		target: self;
 		replacer: (SBStString new contents: self contents))
 ]
@@ -171,7 +173,7 @@ SBStLiteral >> useAsStString [
 SBStLiteral >> useAsStSymbol [
 	<action>
 
-	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBReplaceCommand new
 		target: self;
 		replacer: (SBStSymbol new contents: self contents))
 ]

@@ -3,17 +3,24 @@ Class {
 	#superclass : #SBTextBubble,
 	#instVars : [
 		'currentFocus',
-		'currentFocusIndicator'
+		'currentFocusIndicator',
+		'currentHighlights'
 	],
 	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
+SBSearchPanel >> clearHighlights [
+
+	^ currentHighlights ifNotNil: [currentHighlights do: #detach]
+]
+
+{ #category : #'as yet unclassified' }
 SBSearchPanel >> currentFocus: m [
 
 	currentFocus := m.
-	self isSelected ifFalse: [^ m ifNotNil: #select].
 	currentFocusIndicator detach.
+	self isSelected ifFalse: [^ m ifNotNil: #select].
 	currentFocus ifNotNil: [
 		currentFocus attachDecorator: currentFocusIndicator.
 		currentFocus ensureVisible]
@@ -24,7 +31,8 @@ SBSearchPanel >> initialize [
 
 	super initialize.
 	self when: #contentsChanged send: #updateSearch to: self.
-	currentFocusIndicator := SBMarkedDecorator new
+	currentFocusIndicator := SBMarkedDecorator new.
+	currentHighlights := {}
 ]
 
 { #category : #'as yet unclassified' }
@@ -56,9 +64,13 @@ SBSearchPanel >> nextSearchResult [
 ]
 
 { #category : #'as yet unclassified' }
-SBSearchPanel >> prefix [
+SBSearchPanel >> search: aString [
 
-	^ 'Search: /'
+	(self sandblockEditor isSingleArtefactView and: [self visible not]) ifTrue: [self toggleCollapsed].
+	self currentFocus: nil.
+	self contents: aString.
+	self nextSearchResult.
+	self updateResultHighlights
 ]
 
 { #category : #'as yet unclassified' }
@@ -71,8 +83,18 @@ SBSearchPanel >> searchFrom: aMorph ifNone: aBlock [
 SBSearchPanel >> startSearch [
 	<globalAction>
 
+	(self sandblockEditor isSingleArtefactView and: [self visible not]) ifTrue: [self toggleCollapsed].
+	
+	self isSelected ifTrue: [^ self nextSearchResult].
+	
 	currentFocus := self sandblockEditor selection.
-	self sandblockEditor startInput: self at: 900000000 replacingContents: true
+	self sandblockEditor startInput: self at: 900000000 replacingContents: false
+]
+
+{ #category : #'as yet unclassified' }
+SBSearchPanel >> symbols [
+
+	^ #('Find: ' nil)
 ]
 
 { #category : #'as yet unclassified' }
@@ -82,8 +104,46 @@ SBSearchPanel >> textContents [
 ]
 
 { #category : #'as yet unclassified' }
+SBSearchPanel >> toggleCollapsed [
+
+	self visible
+		ifTrue: [
+			self
+				visible: false;
+				disableLayout: true]
+		ifFalse: [
+			self
+				visible: true;
+				disableLayout: false]
+]
+
+{ #category : #'as yet unclassified' }
+SBSearchPanel >> updateResultHighlights [
+
+	self clearHighlights.
+	
+	currentHighlights := Array streamContents: [:stream |
+		self sandblockEditor allBlocksDo: [:b |
+			(self ~= b and: [self matchesQuery: b]) ifTrue: [ | decorator |
+				decorator := SBHighlightDecorator new.
+				b attachDecorator: decorator.
+				stream nextPut: decorator]]]
+]
+
+{ #category : #'as yet unclassified' }
 SBSearchPanel >> updateSearch [
 
-	self contents ifEmpty: [^ self].
-	(currentFocus isNil or: [(self matchesQuery: currentFocus) not]) ifTrue: [self nextSearchResult]
+	self contents ifEmpty: [
+		self clearHighlights.
+		^ self].
+	(currentFocus isNil or: [(self matchesQuery: currentFocus) not]) ifTrue: [self nextSearchResult].
+	self updateResultHighlights
+]
+
+{ #category : #'as yet unclassified' }
+SBSearchPanel >> wasDeselected [
+
+	self currentFocus: nil.
+	currentHighlights do: #detach.
+	self sandblockEditor isSingleArtefactView ifTrue: [self toggleCollapsed]
 ]

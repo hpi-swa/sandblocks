@@ -37,7 +37,7 @@ SBGrammarHandler >> characterCanStartInput: aCharacter [
 SBGrammarHandler >> copyString [
 	<action>
 
-	Clipboard clipboardText: self block prettySourceString
+	Clipboard clipboardText: ((self block respondsTo: #prettySourceString) ifTrue: [self block prettySourceString] ifFalse: [self block sourceString])
 ]
 
 { #category : #actions }
@@ -90,10 +90,10 @@ SBGrammarHandler >> insertStatementAbove [
 
 { #category : #'action helpers' }
 SBGrammarHandler >> insertStatementAboveOrBelow: anAboveBoolean [
-	" try to find a suitable place to insert a statement, either above or below the current statement,
-	  or at the start of the containing block body, or at the start of first block body in the artefact "
 
 	| newStatement topMost offset body |
+	" try to find a suitable place to insert a statement, either above or below the current statement,
+	  or at the start of the containing block body, or at the start of first block body in the artefact "
 	newStatement := self block newNullBlock.
 	topMost := self block.
 	[topMost parentSandblock notNil and: [topMost parentSandblock isBlockBody not]] whileTrue: [topMost := topMost parentSandblock].
@@ -102,8 +102,10 @@ SBGrammarHandler >> insertStatementAboveOrBelow: anAboveBoolean [
 	offset := (body statements indexOf: topMost ifAbsent: [0]) + (anAboveBoolean ifTrue: [-1] ifFalse: [0]) max: 0.
 	
 	self block sandblockEditor
-		do: ((SBInsertCommand newFor: self block containingArtefact)
-			index: (body statements ifNotEmpty: [:s | s first submorphIndex + offset] ifEmpty: [body submorphCount + 1]);
+		do: (SBInsertCommand new
+			index: (body statements
+				ifNotEmpty: [:s | s first submorphIndex + offset]
+				ifEmpty: [body submorphCount + 1]);
 			container: body;
 			morph: newStatement;
 			shouldMergeWithNext: true;
@@ -148,12 +150,12 @@ SBGrammarHandler >> replace: aBlock with: aMorph mergeInput: aBoolean [
 	| wasInput |
 	wasInput := aBlock sandblockEditor mode = #input.
 	aBlock sandblockEditor cancelInput.
-	aBlock sandblockEditor do: ((SBReplaceCommand newFor: aBlock containingArtefact)
+	aBlock sandblockEditor do: (SBReplaceCommand new
 		shouldMergeWithNext: aBoolean;
 		target: aBlock;
 		replacer: aMorph).
 	
-	self focusNextFrom: aMorph at: 9e8 wasInput: wasInput
+	self focusNextFrom: aMorph at: 900000000 wasInput: wasInput
 ]
 
 { #category : #actions }
@@ -192,21 +194,23 @@ SBGrammarHandler >> unwrapList [
 	<action>
 	<actionValidIf: #parentHasDynamicNumberOfChildren>
 
-	self block sandblockEditor do: ((SBUnwrapConsecutiveCommand newFor: self block containingArtefact) target: self block)
+	self block sandblockEditor do: (SBUnwrapConsecutiveCommand new target: self block)
 ]
 
 { #category : #'action helpers' }
 SBGrammarHandler >> watchWith: aWatchClass [
 
-	self block isWatch
-		ifTrue: [^ self block sandblockEditor do: ((SBReplaceCommand newFor: self block containingArtefact) target: self block; replacer: self block childSandblocks first)].
+	self block isWatch ifTrue: [
+		^ self block sandblockEditor do: (SBReplaceCommand new
+			target: self block;
+			replacer: self block childSandblocks first)].
 	
 	self block parentSandblock isWatch ifTrue: [^ self block deleteAround].
 	
-	self block sandblockEditor do: ((SBWrapCommand newFor: self block containingArtefact)
-			outer: aWatchClass new newIdentifier;
-			inner: self block;
-			wrap: [:outer :inner | outer expression: inner])
+	self block sandblockEditor do: (SBWrapCommand new
+		outer: aWatchClass new newIdentifier;
+		inner: self block;
+		wrap: [:outer :inner | outer expression: inner])
 ]
 
 { #category : #'callback helpers' }
@@ -223,14 +227,14 @@ SBGrammarHandler >> wrap: aBlock do: aWrapBlock with: aNode focusOuter: aBoolean
 	
 	aBlock sandblockEditor
 		endInput;
-		do: ((SBWrapCommand newFor: aBlock containingArtefact)
+		do: (SBWrapCommand new
 			inner: aBlock;
 			outer: aNode;
 			shouldMergeWithNext: false;
 			wrap: aWrapBlock).
 	
 	aBoolean
-		ifTrue: [aNode sandblockEditor startInput: aNode at: 9e8 replacingContents: false]
+		ifTrue: [aNode sandblockEditor startInput: aNode at: 900000000 replacingContents: false]
 		ifFalse: [self focusNextFrom: aNode at: cursorIndex]
 ]
 

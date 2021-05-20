@@ -283,7 +283,7 @@ SBBlock >> centerAlignSymbols [
 SBBlock >> changeLocalColorPolicy [
 	<action>
 
-	^ (UIManager default chooseFrom: SBColorPolicy withAllSubclasses values: SBColorPolicy withAllSubclasses) ifNotNil: [:policy |
+	^ (UIManager default chooseFrom: (SBColorPolicy withAllSubclasses collect: #asString) values: SBColorPolicy withAllSubclasses) ifNotNil: [:policy |
 		self localColorPolicy: policy]
 ]
 
@@ -291,18 +291,16 @@ SBBlock >> changeLocalColorPolicy [
 SBBlock >> changeToUnknown [
 	<action>
 
-	self newNullBlock
-		convertedFor: self objectInterface
-		do: [:new |
-			new ifNotNil: [
-				self sandblockEditor
-					copyBuffer: self;
-					do: ((SBReplaceCommand newFor: self containingArtefact)
-						target: self;
-						replacer: new;
-						shouldMergeWithNext: true;
-						yourself);
-					startInput: new at: 0 replacingContents: false]]
+	self newNullBlock convertedFor: self objectInterface do: [:new |
+		new ifNotNil: [
+			self sandblockEditor
+				copyBuffer: self;
+				do: (SBReplaceCommand new
+					target: self;
+					replacer: new;
+					shouldMergeWithNext: true;
+					yourself);
+				startInput: new at: 0 replacingContents: false]]
 ]
 
 { #category : #hierarchy }
@@ -515,7 +513,7 @@ SBBlock >> convertTo [
 	
 	index := UIManager default chooseFrom: (options collect: #first).
 	index > 0 ifTrue: [
-		self sandblockEditor do: ((SBReplaceCommand newOrEditFor: (self containingArtefact = self ifTrue: [nil] ifFalse: [self containingArtefact]))
+		self sandblockEditor do: (SBReplaceCommand new
 			target: self;
 			replacer: (options at: index) second)]
 ]
@@ -533,6 +531,20 @@ SBBlock >> copyAround [
 	self setProperty: #copyPlaceholder toValue: true.
 	editor copyBuffer: target.
 	self removeProperty: #copyPlaceholder
+]
+
+{ #category : #testing }
+SBBlock >> copyOnDrag [
+	" return true if you always want to copy when drags are started "
+
+	^ false
+]
+
+{ #category : #'insert/delete' }
+SBBlock >> copyPlaceholder [
+
+	self allMorphsDo: [:m | (m valueOfProperty: #copyPlaceholder ifAbsent: [false]) ifTrue: [^ m]].
+	^ nil
 ]
 
 { #category : #actions }
@@ -572,17 +584,13 @@ SBBlock >> deleteAdjacent [
 	startIndex := self childIndex.
 	endIndex := count = 0
 		ifTrue: [self parentSandblock childSandblocks size]
-		ifFalse: [
-			startIndex + (count - 1) min: self parentSandblock childSandblocks size].
+		ifFalse: [startIndex + (count - 1) min: self parentSandblock childSandblocks size].
 	
 	targets := (startIndex to: endIndex) collect: [:index | self parentSandblock childSandblocks at: index].
 	
 	self sandblockEditor
 		copyBuffer: targets;
-		do: (SBCombinedCommand newWith: (targets
-			collect: [:target |
-				(SBDeleteCommand newFor: self containingArtefact)
-					target: target]))
+		do: (SBCombinedCommand newWith: (targets collect: [:target | SBDeleteCommand new target: target]))
 ]
 
 { #category : #actions }
@@ -612,7 +620,7 @@ SBBlock >> deleteAround [
 			do: {[editor copyBuffer: target]}.
 		self removeProperty: #copyPlaceholder.
 		
-		editor do: ((SBRecordedCommand newFor: self containingArtefact) record: [:recorder |
+		editor do: (SBRecordedCommand new record: [:recorder |
 			recorder
 				moveAll: self parentSandblock childSandblocks
 				in: target owner
@@ -625,7 +633,7 @@ SBBlock >> deleteAround [
 			self setProperty: #copyPlaceholder toValue: true.
 			editor copyBuffer: target.
 			self removeProperty: #copyPlaceholder.
-			editor do: ((SBReplaceCommand newFor: self containingArtefact)
+			editor do: (SBReplaceCommand new
 				target: target;
 				replacer: replacer).
 			replacer postDuplicate.
@@ -684,10 +692,12 @@ SBBlock >> deleteBlock [
 SBBlock >> deleteCommandFor: aBlock [
 
 	^ (self canDeleteChild: aBlock)
-		ifTrue: [(SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock]
+		ifTrue: [SBDeleteCommand new target: aBlock]
 		ifFalse: [
 			aBlock newNullBlock ifNotNil: [:nullBlock |
-				(SBReplaceCommand newFor: aBlock containingArtefact) target: aBlock; replacer: nullBlock]]
+				SBReplaceCommand new
+					target: aBlock;
+					replacer: nullBlock]]
 ]
 
 { #category : #decorators }
@@ -744,6 +754,16 @@ SBBlock >> drawChangedMarker: aCanvas [
 ]
 
 { #category : #drawing }
+SBBlock >> drawDecoratorsOn: aCanvas during: aBlock [
+
+	self decorators do: [:d | d preDrawOn: aCanvas].
+	
+	aBlock value.
+	
+	self decorators do: [:d | d postDrawSelfOn: aCanvas]
+]
+
+{ #category : #drawing }
 SBBlock >> drawDropHighlightOn: aCanvas [
 
 	
@@ -766,12 +786,7 @@ SBBlock >> drawInvalidBorderOn: aCanvas [
 { #category : #drawing }
 SBBlock >> drawOn: aCanvas [
 
-	self decorators do: [:d | d preDrawOn: aCanvas].
-	
-	self drawBackgroundOn: aCanvas.
-	
-	self drawSymbolsOn: aCanvas.
-	self decorators do: [:d | d postDrawSelfOn: aCanvas]
+	self drawDecoratorsOn: (self drawBackgroundOn: aCanvas) during: [self drawSymbolsOn: aCanvas]
 ]
 
 { #category : #drawing }
@@ -909,10 +924,17 @@ SBBlock >> fixedNumberOfChildren [
 	^ true
 ]
 
+{ #category : #hierarchy }
+SBBlock >> flattenChildren [
+
+	self childSandblocks reverseDo: [:b | self parentSandblock addMorph: b after: self].
+	self delete
+]
+
 { #category : #testing }
 SBBlock >> floating [
 
-	^ self owner isNil or: [self owner layoutPolicy isNil]
+	^ self owner isNil or: [self owner layoutPolicy isNil or: [self disableLayout]]
 ]
 
 { #category : #accessing }
@@ -991,45 +1013,6 @@ SBBlock >> grammarHandler [
 ]
 
 { #category : #'event handling' }
-SBBlock >> handleDropMorph: anEvent [
-
-	self highlightForDrop: false.
-	^ super handleDropMorph: anEvent
-]
-
-{ #category : #'dropping/grabbing' }
-SBBlock >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
-
-	"aBlock unpackSelection
-		convertedFor: self objectInterfaceForDrop
-		doWithChooser: [:block | | reference |
-			aBoolean
-				ifTrue: [ | insert |
-					insert := self insertCommandRequest: false near: aMorph.
-					reference := insert container.
-					self sandblockEditor do: (SBCombinedCommand newWith: {
-						insert.
-						(SBReplaceCommand newOrEditFor: self containingArtefact)
-							target: insert morph;
-							replacer: block
-					})]
-				ifFalse: [
-					reference := self.
-					aBlock wrapsAround
-						ifTrue: [self select; wrapSelectionWith: block]
-						ifFalse: [
-							self sandblockEditor do: ((SBReplaceCommand newOrEditFor: self containingArtefact)
-								target: self;
-								replacer: block)]].
-			block
-				position: (reference containingSandblock = self sandblockEditor
-					ifTrue: [((reference transformFrom: nil) globalPointToLocal: anEvent position) asIntegerPoint]
-					ifFalse: [anEvent position]);
-				inputContainedUnknown.
-			block]"
-]
-
-{ #category : #'event handling' }
 SBBlock >> handlesMouseDown: anEvent [
 
 	^ anEvent redButtonPressed or: [
@@ -1064,7 +1047,7 @@ SBBlock >> hasCurrentTextMorph [
 { #category : #decorators }
 SBBlock >> hasDecorator: aClass [
 
-	^ decorators anySatisfy: [:d | d class = aClass or: [aClass subclasses includes: d class]]
+	^ decorators anySatisfy: [:d | d isKindOf: aClass]
 ]
 
 { #category : #testing }
@@ -1104,11 +1087,11 @@ SBBlock >> initialize [
 	
 	decorators := OrderedCollection new.
 	
+	color := Color transparent.
 	self
-		color: Color transparent;
 		cellPositioning: #topLeft;
 		layoutInset: 0;
-		cellGap: 1 withScalingFactor;
+		cellGap: 1;
 		extent: 0 @ 0
 ]
 
@@ -1151,16 +1134,18 @@ SBBlock >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
 	self fixedNumberOfChildren ifTrue: [^ nil].
 	
-	^ (SBRelInsertCommand newFor: self containingArtefact)
+	^ SBRelInsertCommand new
 		near: aBlock before: aBoolean in: self morph: aMorph;
 		yourself
 ]
 
 { #category : #'action helpers' }
-SBBlock >> insertElement: aBoolean [
+SBBlock >> insertElement: aBeforeBoolean [
 
 	| cmd |
-	cmd := (self parentSandblock insertEmptyCommandRequestNear: self before: aBoolean) ifNil: [^ self].
+	cmd := (self parentSandblock
+		insertEmptyCommandRequestNear: self
+		before: aBeforeBoolean) ifNil: [^ self].
 	
 	self sandblockEditor do: cmd.
 	
@@ -1188,13 +1173,62 @@ SBBlock >> insertElementBefore [
 { #category : #'as yet unclassified' }
 SBBlock >> insertEmptyCommandRequestNear: aBlock before: aBoolean [
 
+	| child |
+	child := self newEmptyChildNear: aBlock before: aBoolean.
+	child ifNil: [^ nil].
+	
 	^ (self
-		insertCommandRequest: (self newEmptyChildNear: aBlock before: aBoolean)
+		insertCommandRequest: child
 		near: aBlock
 		before: aBoolean) ifNotNil: [:cmd |
 		cmd
 			shouldMergeWithNext: true;
 			yourself]
+]
+
+{ #category : #actions }
+SBBlock >> insertStatementAbove [
+	<action>
+	<actionValidIf: #insertStatementHasCandidate>
+
+	self insertStatementAboveOrBelow: true
+]
+
+{ #category : #'action helpers' }
+SBBlock >> insertStatementAboveOrBelow: anAboveBoolean [
+
+	| candidate |
+	" default behavior is to find the first parent that can take multiple children "
+	candidate := self.
+	[candidate parentSandblock fixedNumberOfChildren and: [candidate isArtefact not]] whileTrue: [candidate := candidate parentSandblock].
+	candidate isArtefact ifFalse: [candidate insertElement: anAboveBoolean]
+]
+
+{ #category : #actions }
+SBBlock >> insertStatementBelow [
+	<action>
+	<actionValidIf: #insertStatementHasCandidate>
+
+	self insertStatementAboveOrBelow: false
+]
+
+{ #category : #'action helpers' }
+SBBlock >> insertStatementFindCandidate [
+
+	| candidate |
+	" default behavior is to find the first parent that can take multiple children "
+	candidate := self.
+	[candidate parentSandblock fixedNumberOfChildren and: [candidate isArtefact not]] whileTrue: [candidate := candidate parentSandblock].
+	candidate isArtefact ifFalse: [^ candidate].
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> insertStatementHasCandidate [
+
+	^ self insertStatementFindCandidate
+		ifNotNil: [:c | (c parentSandblock insertEmptyCommandRequestNear: c before: false) notNil]
+		ifNil: [false]
 ]
 
 { #category : #initialization }
@@ -1413,7 +1447,7 @@ SBBlock >> leftRotate [
 	(self hasChildSandblocks not or: [self parentSandblock isNil]) ifTrue: [^ self].
 	(self isFirstChild or: [self isLastChild]) ifFalse: [^ self].
 	
-	self sandblockEditor do: ((SBSubtreeRotateCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBSubtreeRotateCommand new
 		target: self;
 		yourself)
 ]
@@ -1478,6 +1512,21 @@ SBBlock >> minExtent [
 			minExtent := minExtent x @ (minExtent y + extra)].
 
 	^ minExtent max: self minWidth @ self minHeight
+]
+
+{ #category : #accessing }
+SBBlock >> mouseCursorAt: anEvent [
+
+	| cursor priority |
+	" return your preferred cursor here "
+	cursor := nil.
+	priority := -1.
+	self decorators do: [:decorator |
+		(decorator mouseCursorAt: anEvent) ifNotNil: [:pair |
+			pair second > priority ifTrue: [
+				cursor := pair first.
+				priority := pair second]]].
+	^ cursor
 ]
 
 { #category : #'event handling' }
@@ -1603,6 +1652,32 @@ SBBlock >> multiSelectChildren [
 	self sandblockEditor multiSelection: self childSandblocks
 ]
 
+{ #category : #actions }
+SBBlock >> multiSelectLeft [
+	<action>
+
+	| adjacent |
+	adjacent := self previousBlock.
+	self sandblockEditor mode ~= #selection ifTrue: [self sandblockEditor mode: #selection].
+	self sandblockEditor addToMultiSelection: adjacent.
+	SBToggledCode comment: '' active: 1 do: {[adjacent select]}
+]
+
+{ #category : #actions }
+SBBlock >> multiSelectRight [
+	<action>
+
+	| adjacent |
+	adjacent := self isLastChild
+		ifTrue: [self parentSandblock]
+		ifFalse: self nextBlock firstDeepChild.
+	
+	self sandblockEditor mode ~= #selection ifTrue: [self sandblockEditor mode: #selection].
+	self sandblockEditor addToMultiSelection: self.
+	self sandblockEditor addToMultiSelection: adjacent.
+	SBToggledCode comment: '' active: 1 do: {[adjacent select]}
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> newEmptyChildNear: aBlock before: aBoolean [
 
@@ -1612,7 +1687,7 @@ SBBlock >> newEmptyChildNear: aBlock before: aBoolean [
 { #category : #'ast helpers' }
 SBBlock >> newNullBlock [
 
-	^ SBUnknown new grammarHandler: self grammarHandler
+	^ self grammarHandler ifNotNil: [:g | g newNullBlock] ifNil: [nil]
 ]
 
 { #category : #hierarchy }
@@ -1713,13 +1788,22 @@ SBBlock >> outerArtefact [
 
 	| a |
 	a := self containingArtefact.
-	^ a = self ifTrue: [self parentSandblock ifNotNil: #containingSandblock] ifFalse: [a]
+	^ a = self ifTrue: [self parentSandblock ifNotNil: #containingArtefact] ifFalse: [a]
 ]
 
 { #category : #layout }
 SBBlock >> outerBounds [
 
 	^ super outerBounds expandBy: self frameSize
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> outerMostArtefact [
+
+	| a |
+	a := self containingArtefact.
+	a ownerChain do: [:morph | (morph isSandblock and: [morph isArtefact]) ifTrue: [a := morph]].
+	^ a
 ]
 
 { #category : #hierarchy }
@@ -1761,9 +1845,7 @@ SBBlock >> pasteBeforeOrAfter: aBeforeBoolean [
 				objectInterfaceNear: self
 				at: (aBeforeBoolean ifTrue: [#before] ifFalse: [#after]))
 			do: [:repr |
-				self sandblockEditor do: ((self containingArtefact = self
-					ifFalse: [SBInsertCommand newFor: self containingArtefact]
-					ifTrue: [SBInsertCommand newNonEdit])
+				self sandblockEditor do: (SBInsertCommand new
 					morph: (repr center: self center);
 					container: self owner;
 					index: (aBeforeBoolean ifTrue: [self submorphIndex] ifFalse: [self submorphIndex + index]);
@@ -1784,7 +1866,7 @@ SBBlock >> pasteReplace [
 		
 		new := copyBuffer unpackSelection veryDeepCopy.
 		new convertedFor: self objectInterface do: [:repr |
-			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+			self sandblockEditor do: (SBReplaceCommand new
 				target: self;
 				replacer: repr).
 			repr postDuplicate]]
@@ -1818,16 +1900,17 @@ SBBlock >> pickUp: anEvent [
 		onAbortUndoIn: editor;
 		yourself.
 	
-	self containingBlock ifNotNil: [:b |
-		(b sandblockBlockColorIfAbsent: [nil]) ifNotNil: [:c |
-			s color: c]].
+	self containingBlock ifNotNil: [:b | (b sandblockBlockColorIfAbsent: [nil]) ifNotNil: [:c | s color: c]].
 	
 	s addMorphBack: self veryDeepCopy.
 	anEvent hand grabMorph: s.
 	
-	anEvent shiftPressed ifFalse: [
+	(anEvent shiftPressed not and: [self copyOnDrag not]) ifTrue: [
 		(self parentSandblock deleteCommandFor: self) ifNotNil: [:cmd |
-			editor do: (cmd shouldMergeWithNext: true)]]
+			editor do: (cmd
+				shouldMergeWithNext: true;
+				selectAfter: #none;
+				yourself)]]
 ]
 
 { #category : #actions }
@@ -1839,13 +1922,6 @@ SBBlock >> placeMark [
 		ifFalse: [
 			self sandblockEditor waitForLetterDo: [:letter |
 				self attachDecorator: (SBMarkedDecorator new letter: letter)]]
-]
-
-{ #category : #'insert/delete' }
-SBBlock >> placeholder [
-
-	self allMorphsDo: [:m | (m valueOfProperty: #copyPlaceholder ifAbsent: [false]) ifTrue: [^ m]].
-	^ nil
 ]
 
 { #category : #caching }
@@ -2040,6 +2116,13 @@ SBBlock >> saveString [
 			]
 	]
 
+]
+
+{ #category : #'artefact protocol' }
+SBBlock >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
+	" only needed if this block is an artefact "
+
+	^ self subclassResponsibility
 ]
 
 { #category : #actions }
@@ -2285,6 +2368,12 @@ SBBlock >> spaceForSymbols [
 	}
 ]
 
+{ #category : #'dropping/grabbing' }
+SBBlock >> specialDropCommand: aBlock [
+
+	^ nil
+]
+
 { #category : #actions }
 SBBlock >> startContinuousMultiSelection [
 	<action>
@@ -2319,7 +2408,7 @@ SBBlock >> startDrag: anEvent [
 SBBlock >> startInputAt: aNumber replacingContents: aBoolean [
 
 	self currentTextMorph ifNotNil: [ | cmd |
-		cmd := (SBInputCommand newOrEditFor: self containingArtefact)
+		cmd := SBInputCommand new
 			oldMorph: self;
 			previousText: self contents;
 			yourself.
@@ -2361,12 +2450,6 @@ SBBlock >> startOrAddToMultiSelection [
 
 	self sandblockEditor startOrAddToMultiSelection: self.
 	self select
-]
-
-{ #category : #decorators }
-SBBlock >> stepDecorator: aDecorator [
-
-	aDecorator step
 ]
 
 { #category : #input }
@@ -2418,7 +2501,7 @@ SBBlock >> swap: aNumber [
 	[offset abs <= children size and: [(canSwap value: self value: (next := children atWrap: (children indexOf: self) + offset)) not]] whileTrue: [offset := offset + aNumber].
 	offset = children size ifTrue: [^ self].
 	
-	self sandblockEditor do: ((SBSwapCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBSwapCommand new
 		a: self;
 		b: next)
 ]
@@ -2448,7 +2531,7 @@ SBBlock >> symbols [
 { #category : #accessing }
 SBBlock >> textContents [
 
-	^ ''
+	^ self currentTextMorph ifNotNil: [:t | t contents] ifNil: ['']
 ]
 
 { #category : #actions }
@@ -2477,6 +2560,12 @@ SBBlock >> tryFixIfFail: aBlock [
 	^ self valid ifTrue: [true] ifFalse: aBlock
 ]
 
+{ #category : #'artefact protocol' }
+SBBlock >> typeFor: aBlock [
+
+	^ nil
+]
+
 { #category : #'event handling' }
 SBBlock >> update [
 ]
@@ -2484,12 +2573,7 @@ SBBlock >> update [
 { #category : #decorators }
 SBBlock >> updateSteppingDecorators [
 
-	| anyStepping |
-	anyStepping := false.
-	self decorators do: [:d |
-		d stepTime >= 0 ifTrue: [
-			anyStepping := true.
-			self world ifNotNil: [:w | w startStepping: d at: Time millisecondClockValue selector: #step arguments: {} stepTime: d stepTime]]]
+	self decorators do: [:d | d stepTime >= 0 ifTrue: [self world ifNotNil: [:w | w startStepping: d at: Time millisecondClockValue selector: #step arguments: {} stepTime: d stepTime]]]
 ]
 
 { #category : #suggestions }
@@ -2629,9 +2713,9 @@ SBBlock >> wrapSelectionWith: aSelection [
 		do: {[(aSelection unpackSelection satisfies: self objectInterface) ifFalse: [^ self]]}.
 	
 	self sandblockEditor doMultiSelection: [:selected |
-		(SBRecordedCommand newFor: self containingArtefact) record: [:recorder | | new placeholder |
+		SBRecordedCommand new record: [:recorder | | new placeholder |
 			new := aSelection.
-			placeholder := new placeholder.
+			placeholder := new copyPlaceholder.
 			recorder replace: selected first with: new.
 			recorder replace: placeholder with: selected first.
 			recorder moveAll: selected allButFirst after: selected first]].
@@ -2642,5 +2726,5 @@ SBBlock >> wrapSelectionWith: aSelection [
 { #category : #'insert/delete' }
 SBBlock >> wrapsAround [
 
-	^ self placeholder notNil
+	^ self copyPlaceholder notNil
 ]

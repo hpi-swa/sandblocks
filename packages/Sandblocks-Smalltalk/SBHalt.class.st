@@ -31,9 +31,10 @@ SBHalt class >> newFor: aBlock [
 { #category : #'as yet unclassified' }
 SBHalt class >> suggestion [
 
-	^ [:block | block sandblockEditor do: ((SBReplaceCommand newFor: block containingArtefact)
-		target: block;
-		replacer: SBHalt new)]
+	^ [:block |
+		block sandblockEditor do: (SBReplaceCommand new
+			target: block;
+			replacer: SBHalt new)]
 ]
 
 { #category : #'as yet unclassified' }
@@ -71,7 +72,7 @@ SBHalt >> initialize [
 		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		layoutInset: (10 @ 4) withScalingFactor;
+		layoutInset: 10 @ 4;
 		addMorphBack: (activeIcon := SBIcon iconBug);
 		active: true
 ]
@@ -79,7 +80,7 @@ SBHalt >> initialize [
 { #category : #'as yet unclassified' }
 SBHalt >> toggleActive [
 
-	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBMutatePropertyCommand new
 		target: self;
 		selector: #active;
 		value: active not)

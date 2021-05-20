@@ -30,12 +30,12 @@ SBDragHelper class >> for: anEvent in: anEditor [
 ]
 
 { #category : #'as yet unclassified' }
-SBDragHelper >> applyHint [
+SBDragHelper >> applyHintAt: anEvent [
 
 	onLeave ifNotNil: [onLeave value].
 	^ onApply
 		ifNotNil: [
-			onApply value.
+			onApply cull: anEvent.
 			true]
 		ifNil: [false]
 ]
@@ -79,6 +79,13 @@ SBDragHelper >> delete [
 ]
 
 { #category : #'as yet unclassified' }
+SBDragHelper >> dragCancelled [
+
+	onLeave value.
+	self delete
+]
+
+{ #category : #'as yet unclassified' }
 SBDragHelper >> dropLocation: dropLocation [
 
 	currentDropLocation ifNotNil: [
@@ -90,7 +97,8 @@ SBDragHelper >> dropLocation: dropLocation [
 	
 	dropLocation ifNotNil: [
 		dropLocation first = #insert ifTrue: [self dropLocationForInsert: dropLocation].
-		dropLocation first = #replace ifTrue: [self dropLocationForReplace: dropLocation]].
+		dropLocation first = #replace ifTrue: [self dropLocationForReplace: dropLocation].
+		dropLocation first = #special ifTrue: [self dropLocationForSpecial: dropLocation]].
 	
 	self ensurePositionOfFloats
 ]
@@ -114,7 +122,7 @@ SBDragHelper >> dropLocationForInsert: aDropLocation [
 SBDragHelper >> dropLocationForReplace: dropLocation [
 
 	(morph wrapsAround and: [morph satisfies: dropLocation second objectInterface]) ifTrue: [
-		dropLocation second convertedFor: morph placeholder objectInterface do: [:res |
+		dropLocation second convertedFor: morph copyPlaceholder objectInterface do: [:res |
 			self hintWrap: morph around: dropLocation second as: res.
 			^ true]].
 	
@@ -124,6 +132,13 @@ SBDragHelper >> dropLocationForReplace: dropLocation [
 		^ true].
 	
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBDragHelper >> dropLocationForSpecial: dropLocation [
+
+	self hintReplaceOf: dropLocation second with: morph.
+	onApply := [editor do: (dropLocation second specialDropCommand: morph)]
 ]
 
 { #category : #'as yet unclassified' }
@@ -164,6 +179,7 @@ SBDragHelper >> hintInsertOf: aBlock in: aParentBlock near: aChildBlock before: 
 	
 	SBPreferences previewDropInsert ifTrue: [command do] ifFalse: [
 		insertPreviewMarker := SBDropInsertMarker new
+			color: (aBlock colorPolicy dropMarkerColorFor: aBlock);
 			bounds: (aChildBlock
 				ifNil: [10 @ 10 center: aParentBlock boundsInWorld center]
 				ifNotNil: [self insertMarkerFor: aChildBlock before: aBoolean]);
@@ -173,7 +189,9 @@ SBDragHelper >> hintInsertOf: aBlock in: aParentBlock near: aChildBlock before: 
 		SBPreferences previewDropInsert
 			ifTrue: [command undo]
 			ifFalse: [insertPreviewMarker delete]].
-	onApply := [
+	onApply := [:event | | localPoint |
+		localPoint := ((editor canvas transformFrom: nil) globalPointToLocal: event position) asIntegerPoint.
+		command position: localPoint.
 		editor do: command.
 		aBlock inputContainedUnknown]
 ]
@@ -184,7 +202,7 @@ SBDragHelper >> hintReplaceOf: aMorph with: newBlock [
 	aMorph attachDecorator: (SBDropPreviewDecorator new outline: true).
 	onLeave := [aMorph detachDecorators: SBDropPreviewDecorator].
 	onApply := [
-		editor do: ((SBReplaceCommand newOrEditFor: aMorph containingArtefact)
+		editor do: (SBReplaceCommand new
 			target: aMorph;
 			replacer: newBlock).
 		newBlock inputContainedUnknown]
@@ -196,9 +214,9 @@ SBDragHelper >> hintWrap: draggedBlock around: anOldMorph as: aNewMorph [
 	anOldMorph attachDecorator: (SBDropPreviewDecorator new outline: true).
 	onLeave := [anOldMorph detachDecorators: SBDropPreviewDecorator].
 	onApply := [
-		editor do: ((SBRecordedCommand newOrEditFor: anOldMorph containingArtefact) record: [:recorder |
+		editor do: (SBRecordedCommand new record: [:recorder |
 			recorder replace: anOldMorph with: draggedBlock.
-			recorder replace: draggedBlock placeholder with: aNewMorph]).
+			recorder replace: draggedBlock copyPlaceholder with: aNewMorph]).
 		draggedBlock inputContainedUnknown]
 ]
 
@@ -244,13 +262,16 @@ SBDragHelper >> mouseMove: anEvent [
 	
 	dropLocation := blockAtCursor
 		ifNotNil: [
-			blockAtCursor fixedNumberOfChildren
-				ifTrue: [{#replace. blockAtCursor}]
-				ifFalse: [
-					self
-						closestAdjacentTo: anEvent position
-						in: blockAtCursor
-						do: [:adjacent :before | {#insert. blockAtCursor. adjacent. before}]]]
+			(blockAtCursor specialDropCommand: morph)
+				ifNotNil: [{#special. blockAtCursor}]
+				ifNil: [
+					blockAtCursor fixedNumberOfChildren
+						ifTrue: [{#replace. blockAtCursor}]
+						ifFalse: [
+							self
+								closestAdjacentTo: anEvent position
+								in: blockAtCursor
+								do: [:adjacent :before | {#insert. blockAtCursor. adjacent. before}]]]]
 		ifNil: [#(#none nil)].
 	
 	(currentDropLocation hasEqualElements: dropLocation) ifFalse: [self dropLocation: dropLocation]

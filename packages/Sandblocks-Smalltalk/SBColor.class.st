@@ -40,7 +40,7 @@ SBColor class >> newFor: aMessage [
 SBColor class >> suggestion [
 
 	^ [:block |
-		block sandblockEditor do: ((SBReplaceCommand newFor: block containingArtefact)
+		block sandblockEditor do: (SBReplaceCommand new
 			target: block;
 			replacer: (self new colorContents: Color red);
 			yourself)]
@@ -97,7 +97,7 @@ SBColor >> initialize [
 		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		layoutInset: 2 withScalingFactor;
+		layoutInset: 1;
 		addMorphBack: (indicator := Morph new
 			extent: 16 asPoint * self scalingFactor;
 			color: Color red)
@@ -112,7 +112,7 @@ SBColor >> printOn: aStream [
 { #category : #'as yet unclassified' }
 SBColor >> saveColor [
 
-	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBMutatePropertyCommand new
 		target: self;
 		selector: #colorContents;
 		value: self colorContents;

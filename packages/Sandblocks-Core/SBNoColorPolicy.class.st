@@ -105,6 +105,12 @@ SBNoColorPolicy >> defaultLight [
 	^ Color black
 ]
 
+{ #category : #'as yet unclassified' }
+SBNoColorPolicy >> dropMarkerColorFor: aMorph [
+
+	^ self important
+]
+
 { #category : #colors }
 SBNoColorPolicy >> editor [
 

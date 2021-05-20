@@ -19,14 +19,12 @@ SBJsInfixOpInputCommand >> do [
 	morph contents: operator.
 	
 	rhs := morph allRhs.
-	rhs size > morph arity ifTrue: [
-		rhs from: morph arity + 1 to: rhs size do: [:arg | arg delete]].
-	rhs size < morph arity ifTrue: [
-		rhs size + 1 to: morph arity do: [:i | morph addMorphBack: morph newNullBlock]].
+	rhs size > morph arity ifTrue: [rhs from: morph arity + 1 to: rhs size do: [:arg | arg delete]].
+	rhs size < morph arity ifTrue: [rhs size + 1 to: morph arity do: [:i | morph addMorphBack: morph newNullBlock]].
 	
 	doRotate ifTrue: [
 		undoRotate := morph parentSandblock.
-		(SBSubtreeRotateCommand newNonEdit target: morph) do].
+		(SBSubtreeRotateCommand new target: morph) do].
 	
 	^ morph rhs ifNil: [morph]
 ]
@@ -74,9 +72,15 @@ SBJsInfixOpInputCommand >> previousRhs: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsInfixOpInputCommand >> setArtefactFrom [
+
+	^ morph
+]
+
+{ #category : #'as yet unclassified' }
 SBJsInfixOpInputCommand >> undo [
 
-	doRotate ifTrue: [(SBSubtreeRotateCommand newNonEdit target: undoRotate) do].
+	doRotate ifTrue: [(SBSubtreeRotateCommand new target: undoRotate) do].
 	
 	morph contents: previousOperator.
 	

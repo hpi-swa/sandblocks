@@ -25,7 +25,7 @@ SBStArray >> canDeleteChild: aBlock [
 { #category : #'as yet unclassified' }
 SBStArray >> changeTypeTo: aSymbol [
 
-	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBMutatePropertyCommand new
 		target: self;
 		selector: #type;
 		value: aSymbol)
@@ -80,7 +80,7 @@ SBStArray >> initialize [
 	type := #dynamic.
 	
 	self
-		cellGap: 4 withScalingFactor;
+		cellGap: 4;
 		extent: self minExtent
 ]
 

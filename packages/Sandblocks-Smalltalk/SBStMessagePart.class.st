@@ -131,18 +131,25 @@ SBStMessagePart >> insertUnknownAfterAndInput: aBoolean [
 	| new |
 	self owner arguments size > 0 ifTrue: [
 		^ aBoolean
-			ifTrue: [self sandblockEditor startInput: self nextBlock firstDeepChild at: 1 replacingContents: false] ifFalse: [self]].
+			ifTrue: [
+				self sandblockEditor
+					startInput: self nextBlock firstDeepChild
+					at: 1
+					replacingContents: false]
+			ifFalse: [self]].
 	
 	new := self newNullBlock label: 'arg'.
 	self sandblockEditor currentInputCommand shouldMergeWithNext: true.
 	
+	self sandblockEditor do: (SBInsertCommand new
+		morph: new;
+		container: self owner;
+		shouldMergeWithNext: aBoolean;
+		index: self childIndex + 1).
 	self sandblockEditor
-		do: ((SBInsertCommand newFor: self containingArtefact)
-			morph: new;
-			container: self owner;
-			shouldMergeWithNext: aBoolean;
-			index: self childIndex + 1).
-	self sandblockEditor startInput: (aBoolean ifTrue: [new] ifFalse: [self]) at: 9e8 replacingContents: false.
+		startInput: (aBoolean ifTrue: [new] ifFalse: [self])
+		at: 900000000
+		replacingContents: false.
 	
 	" inform our symbols that we now #hasColon "
 	self layoutChanged
@@ -250,14 +257,14 @@ SBStMessagePart >> selectorContentsBeforeMe [
 { #category : #'as yet unclassified' }
 SBStMessagePart >> startDrag: anEvent [
 
-	^ self parentSandblock startDrag: anEvent
+	self parentSandblock isMessageSend ifTrue: [self parentSandblock startDrag: anEvent]
 ]
 
 { #category : #'as yet unclassified' }
 SBStMessagePart >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (SBInputCommand newFor: self containingArtefact)
+	cmd := SBInputCommand new
 		oldMorph: self;
 		previousText: self contents;
 		yourself.
@@ -370,7 +377,7 @@ SBStMessagePart >> wrapInCascade [
 		(self sandblockEditor submorphsAreConsecutive: targets)
 			ifFalse: [nil]
 			ifTrue: [
-				(SBWrapConsecutiveCommand newFor: self containingArtefact)
+				SBWrapConsecutiveCommand new
 					targets: (selected collect: #messageSend);
 					outer: SBStCascade new;
 					wrap: [:outer :inner |

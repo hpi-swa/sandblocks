@@ -83,10 +83,9 @@ SBUnknown >> drawnColor [
 { #category : #accessing }
 SBUnknown >> endInput [
 	<inputAction>
-	
+
 	self sandblockEditor endInput.
-	self deleteIfDismissed ifTrue: [
-		self sandblockEditor do: ((SBDeleteCommand newFor: self containingArtefact) target: self)]
+	self deleteIfDismissed ifTrue: [self sandblockEditor do: (SBDeleteCommand new target: self)]
 ]
 
 { #category : #accessing }
@@ -148,6 +147,20 @@ SBUnknown >> layoutCommands [
 		data: {self currentTextMorph layoutCommands}
 ]
 
+{ #category : #'as yet unclassified' }
+SBUnknown >> lookupAction: aSymbol [
+	" first try our leaf class, then the grammar handler, then our base classes "
+
+	self class
+		lookupSelector: aSymbol
+		upTo: SBUnknown
+		ifPresent: [:m | (self isValidAction: m) ifTrue: [^ self]]
+		ifAbsent: [].
+	(self grammarHandler class lookupSelector: aSymbol) ifNotNil: [:m | (self isValidAction: m) ifTrue: [^ self grammarHandler]].
+	(SBStASTNode superclass lookupSelector: aSymbol) ifNotNil: [:m | (self isValidAction: m) ifTrue: [^ self]].
+	^ nil
+]
+
 { #category : #accessing }
 SBUnknown >> moveCursorTo: aNumber [
 
@@ -184,13 +197,16 @@ SBUnknown >> printOn: aStream [
 SBUnknown >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (SBInputCommand newOrEditFor: self containingArtefact)
+	cmd := SBInputCommand new
 		oldMorph: self;
 		previousText: self currentTextMorph contents;
 		yourself.
 	
 	aBoolean
-		ifTrue: [self contents: ''; moveCursorTo: 0]
+		ifTrue: [
+			self
+				contents: '';
+				moveCursorTo: 0]
 		ifFalse: [self moveCursorTo: aNumber].
 	
 	^ cmd
@@ -240,7 +256,7 @@ SBUnknown >> wasDeselected [
 	(self deleteIfDismissed and: [editor notNil]) ifTrue: [ | wasInput previousSelection |
 		previousSelection := editor selection.
 		wasInput := editor mode = #input.
-		self sandblockEditor do: ((SBDeleteCommand newFor: self containingArtefact) target: self).
+		self sandblockEditor do: (SBDeleteCommand new target: self).
 		
 		(previousSelection notNil and: [previousSelection sandblockEditor notNil]) ifTrue: [
 			previousSelection select.

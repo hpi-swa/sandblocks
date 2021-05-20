@@ -163,7 +163,7 @@ SBTextBubble >> printOn: aStream [
 SBTextBubble >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (self containingArtefact ifNil: [SBInputCommand newNonEdit] ifNotNil: [:a | SBInputCommand newFor: a])
+	cmd := SBInputCommand new
 		oldMorph: self;
 		previousText: self contents;
 		yourself.

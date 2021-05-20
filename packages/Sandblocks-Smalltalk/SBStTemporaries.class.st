@@ -37,7 +37,7 @@ SBStTemporaries >> isTemporaries [
 { #category : #'as yet unclassified' }
 SBStTemporaries >> layoutInset [
 
-	^ self hasSubmorphs ifTrue: [(4 @ 2) withScalingFactor] ifFalse: [0]
+	^ self hasSubmorphs ifTrue: [4 @ 2] ifFalse: [0]
 ]
 
 { #category : #'as yet unclassified' }

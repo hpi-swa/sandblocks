@@ -41,6 +41,12 @@ SBStChangeMethodCategoryCommand >> method: aMethod [
 ]
 
 { #category : #'as yet unclassified' }
+SBStChangeMethodCategoryCommand >> setArtefactFrom [
+
+	^ category
+]
+
+{ #category : #'as yet unclassified' }
 SBStChangeMethodCategoryCommand >> undo [
 
 	previousClass ~= class ifTrue: [

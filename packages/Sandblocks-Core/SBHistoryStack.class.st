@@ -20,6 +20,7 @@ SBHistoryStack >> clearUndoStack [
 { #category : #actions }
 SBHistoryStack >> do: aCommand previousSelection: aMorph selectDo: aBlock [
 
+	| nextSelection |
 	(undoStack notEmpty and: [undoStack last shouldMergeWithNext])
 		ifTrue: [undoStack addLast: (SBCombinedCommand newWith: {undoStack removeLast. aCommand})]
 		ifFalse: [undoStack addLast: aCommand].
@@ -28,7 +29,11 @@ SBHistoryStack >> do: aCommand previousSelection: aMorph selectDo: aBlock [
 	self markChanged: aCommand affectedArtefacts.
 	
 	aCommand previousSelection: aMorph.
-	aBlock value: aCommand do value: aCommand affectedArtefacts.
+	
+	aCommand preDo.
+	nextSelection := aCommand do.
+	aCommand selectAfter ifNotNil: [:b | nextSelection := b = #none ifTrue: [nil] ifFalse: [b]].
+	aBlock value: nextSelection value: aCommand affectedArtefacts.
 	aCommand postDo
 ]
 

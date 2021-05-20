@@ -22,6 +22,12 @@ SBMoveDecorator >> attached: aMorph [
 		when: #mouseUp send: #mouseUp: to: self
 ]
 
+{ #category : #'as yet unclassified' }
+SBMoveDecorator >> canMove [
+
+	^ self morph floating
+]
+
 { #category : #callbacks }
 SBMoveDecorator >> detached: aMorph [
 
@@ -62,9 +68,20 @@ SBMoveDecorator >> isDragging [
 	^ lastDragPosition notNil
 ]
 
+{ #category : #'as yet unclassified' }
+SBMoveDecorator >> mouseCursorAt: anEvent [
+
+	(self canMove and: [
+		(self morph morphsAt: anEvent position)
+			ifNotEmpty: [:l | l first = self morph]
+			ifEmpty: [false]]) ifTrue: [^ {Cursor crossHair. 0}].
+	^ nil
+]
+
 { #category : #'event handling' }
 SBMoveDecorator >> mouseMove: anEvent [
 
+	
 	lastDragPosition ifNotNil: [
 		self morph position: self morph position + (anEvent position - lastDragPosition).
 		lastDragPosition := anEvent position]

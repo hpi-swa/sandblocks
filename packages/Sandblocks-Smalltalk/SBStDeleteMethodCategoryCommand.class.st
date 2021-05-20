@@ -24,10 +24,15 @@ SBStDeleteMethodCategoryCommand >> class: aClass [
 { #category : #'as yet unclassified' }
 SBStDeleteMethodCategoryCommand >> do [
 
-	methodCommands := (class organization listAtCategoryNamed: category) collect: [:selector |
-		(SBStDeleteMethodCommand newFor: artefact) target: class >> selector].
+	methodCommands := (class organization listAtCategoryNamed: category) collect: [:selector | SBStDeleteMethodCommand new target: class >> selector].
 	methodCommands do: #do.
 	class organization removeCategory: category
+]
+
+{ #category : #'as yet unclassified' }
+SBStDeleteMethodCategoryCommand >> setArtefactFrom [
+
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }

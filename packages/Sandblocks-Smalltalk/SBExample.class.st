@@ -215,7 +215,7 @@ SBExample >> initialize [
 	processRunning := false.
 	
 	self
-		layoutInset: 8 withScalingFactor;
+		layoutInset: 8;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		cellGap: 4 * self scalingFactor

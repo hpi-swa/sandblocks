@@ -30,9 +30,10 @@ SBExampleReplace class >> replace: aBlock with: anotherBlock [
 { #category : #'as yet unclassified' }
 SBExampleReplace class >> suggestion [
 
-	^ [:block | block sandblockEditor do: ((SBReplaceCommand newFor: block containingArtefact)
-		target: block;
-		replacer: (SBExampleReplace new replace: SBStBlockBody empty with: SBStBlockBody empty))]
+	^ [:block |
+		block sandblockEditor do: (SBReplaceCommand new
+			target: block;
+			replacer: (SBExampleReplace new replace: SBStBlockBody empty with: SBStBlockBody empty))]
 ]
 
 { #category : #'as yet unclassified' }
@@ -46,13 +47,17 @@ SBExampleReplace >> initialize [
 
 	super initialize.
 	self
-		 layoutPolicy: SBVerticalLayout new;
-		 layoutInset: 6 withScalingFactor;
-		 cellGap: 8 withScalingFactor;
-		 hResizing: #shrinkWrap;
-		 vResizing: #shrinkWrap;
-		 addMorphBack: (SBRow new cellGap: 8 withScalingFactor; addMorphBack: (SBStringMorph new contents: 'Original:'));
-		 addMorphBack: (SBRow new cellGap: 8 withScalingFactor; addMorphBack: (SBStringMorph new contents: 'Replace:'))
+		layoutPolicy: SBVerticalLayout new;
+		layoutInset: 6;
+		cellGap: 8;
+		hResizing: #shrinkWrap;
+		vResizing: #shrinkWrap;
+		addMorphBack: (SBRow new
+			cellGap: 8;
+			addMorphBack: (SBStringMorph new contents: 'Original:'));
+		addMorphBack: (SBRow new
+			cellGap: 8;
+			addMorphBack: (SBStringMorph new contents: 'Replace:'))
 ]
 
 { #category : #'as yet unclassified' }

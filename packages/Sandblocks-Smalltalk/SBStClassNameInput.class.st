@@ -55,7 +55,7 @@ SBStClassNameInput >> selectedClass [
 { #category : #'as yet unclassified' }
 SBStClassNameInput >> selectedClass: aClass [
 
-	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBMutatePropertyCommand new
 		target: self;
 		selector: #contents;
 		value: aClass name)

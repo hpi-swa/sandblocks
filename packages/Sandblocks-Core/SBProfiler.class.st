@@ -22,7 +22,7 @@ SBProfiler >> initialize [
 		hResizing: #rigid;
 		vResizing: #shrinkWrap;
 		changeTableLayout;
-		layoutInset: 4 withScalingFactor;
+		layoutInset: 4;
 		attachDecorator: SBMoveDecorator new;
 		extent: 300 @ self fontToUse height
 ]
