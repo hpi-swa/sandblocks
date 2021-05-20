@@ -185,7 +185,7 @@ SBStMessageSend >> fixActions [
 								class: (class ifNil: [UIManager default chooseClassOrTrait ifNil: [^ self]]);
 							body: SBStBlockBody new.
 						
-						self sandblockEditor do: (SBEditorOpenMorphCommand newNonEdit
+						self sandblockEditor do: (SBEditorOpenMorphCommand new
 							morph: method;
 							editor: self sandblockEditor;
 							isUnsaved: true;

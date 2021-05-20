@@ -71,7 +71,7 @@ SBPlainTextBlock >> object [
 SBPlainTextBlock >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (SBInputCommand newNonEdit)
+	cmd := SBInputCommand new
 		oldMorph: self;
 		previousText: self contents;
 		yourself.

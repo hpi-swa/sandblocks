@@ -66,7 +66,7 @@ SBStNumber >> mouseDown: anEvent [
 	anEvent hand newMouseFocus: self.
 	isDown := true.
 	lastMousePosition := anEvent position.
-	scrubbingCommand := (SBMutatePropertyCommand newOrEditFor: self containingArtefact)
+	scrubbingCommand := SBMutatePropertyCommand new
 		oldValue: self contents;
 		selector: #contents;
 		target: self.

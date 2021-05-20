@@ -492,7 +492,7 @@ SBBlock >> convertTo [
 	
 	index := UIManager default chooseFrom: (options collect: #first).
 	index > 0 ifTrue: [
-		self sandblockEditor do: ((SBReplaceCommand newOrEditFor: (self containingArtefact = self ifTrue: [nil] ifFalse: [self containingArtefact]))
+		self sandblockEditor do: (SBReplaceCommand new
 			target: self;
 			replacer: (options at: index) second)]
 ]
@@ -1792,9 +1792,7 @@ SBBlock >> pasteBeforeOrAfter: aBeforeBoolean [
 				objectInterfaceNear: self
 				at: (aBeforeBoolean ifTrue: [#before] ifFalse: [#after]))
 			do: [:repr |
-				self sandblockEditor do: ((self containingArtefact = self
-					ifFalse: [SBInsertCommand new]
-					ifTrue: [SBInsertCommand newNonEdit])
+				self sandblockEditor do: (SBInsertCommand new
 					morph: (repr center: self center);
 					container: self owner;
 					index: (aBeforeBoolean ifTrue: [self submorphIndex] ifFalse: [self submorphIndex + index]);
@@ -2326,7 +2324,7 @@ SBBlock >> startDrag: anEvent [
 SBBlock >> startInputAt: aNumber replacingContents: aBoolean [
 
 	self currentTextMorph ifNotNil: [ | cmd |
-		cmd := (SBInputCommand newOrEditFor: self containingArtefact)
+		cmd := SBInputCommand new
 			oldMorph: self;
 			previousText: self contents;
 			yourself.

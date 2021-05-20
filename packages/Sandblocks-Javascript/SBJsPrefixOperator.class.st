@@ -122,13 +122,16 @@ SBJsPrefixOperator >> rhs [
 SBJsPrefixOperator >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (SBInputCommand newOrEditFor: self containingArtefact)
+	cmd := SBInputCommand new
 		oldMorph: self;
 		previousText: self currentTextMorph contents;
 		yourself.
 	
 	aBoolean
-		ifTrue: [self currentTextMorph contents: ''; moveCursorTo: 0]
+		ifTrue: [
+			self currentTextMorph
+				contents: '';
+				moveCursorTo: 0]
 		ifFalse: [self currentTextMorph moveCursorTo: aNumber].
 	
 	^ cmd

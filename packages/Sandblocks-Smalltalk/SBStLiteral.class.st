@@ -122,7 +122,7 @@ SBStLiteral >> startInputAt: aNumber replacingContents: aBoolean [
 			replaceInput: unknown.
 		^ unknown startInputAt: 0 replacingContents: false].
 	
-	cmd := (self inputCommandClass newOrEditFor: self containingArtefact)
+	cmd := self inputCommandClass new
 		oldMorph: self;
 		previousText: self contents;
 		yourself.

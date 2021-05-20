@@ -149,7 +149,7 @@ SBJsKeywordBlock >> printOn: aStream [
 SBJsKeywordBlock >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (SBJsKeywordBlockInputCommand newOrEditFor: self containingArtefact)
+	cmd := SBJsKeywordBlockInputCommand new
 		morph: self;
 		previousContents: self currentTextMorph contents;
 		previousOperands: self header;

@@ -12,15 +12,16 @@ Class {
 { #category : #accessing }
 SBWrapCommand >> do [
 
-	| currentOwner index |
+	| currentOwner index originalPosition |
+	originalPosition := inner position.
 	currentOwner := inner owner.
 	index := currentOwner submorphIndexOf: inner.
 	inner delete.
 	wrap value: outer value: inner.
 	
 	currentOwner addMorph: outer asElementNumber: index.
-	outer position: inner position.
-		
+	outer position: originalPosition.
+	
 	^ inner
 ]
 

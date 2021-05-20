@@ -124,16 +124,17 @@ SBScmLiteral >> replaceWithUnknown [
 SBScmLiteral >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (SBInputCommand newOrEditFor: self containingArtefact)
+	cmd := SBInputCommand new
 		oldMorph: self;
 		previousText: self currentTextMorph contents;
 		yourself.
 	
 	aBoolean
 		ifTrue: [
-			self castToUnknownWhenEmpty
-				ifTrue: [self replaceWithUnknown]
-				ifFalse: [self contents: ''; moveCursorTo: 0]]
+			self castToUnknownWhenEmpty ifTrue: [self replaceWithUnknown] ifFalse: [
+				self
+					contents: '';
+					moveCursorTo: 0]]
 		ifFalse: [self moveCursorTo: aNumber].
 	
 	^ cmd

@@ -36,7 +36,7 @@ SBMoveAssociatedDecorator >> mouseUp: event [
 	self
 		newArtefactAt: event position
 		do: [:newArtefact |
-			self morph sandblockEditor do: (SBMoveCommand newNonEdit
+			self morph sandblockEditor do: (SBMoveCommand new
 				morph: self morph;
 				container: newArtefact;
 				index: 1)]

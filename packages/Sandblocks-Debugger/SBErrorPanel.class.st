@@ -50,7 +50,7 @@ SBErrorPanel >> buildDebugCommandBar [
 { #category : #'as yet unclassified' }
 SBErrorPanel >> deleteCommandFor: aMorph [
 
-	^ SBDeleteCommand newNonEdit target: aMorph
+	^ SBDeleteCommand new target: aMorph
 ]
 
 { #category : #colors }

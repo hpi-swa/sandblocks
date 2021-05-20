@@ -182,7 +182,7 @@ SBStNewMessagePart >> selectorContentsBeforeMe [
 SBStNewMessagePart >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (SBInputStructureCommand newOrEditFor: self containingArtefact)
+	cmd := SBInputStructureCommand new
 		oldMorph: self;
 		previousText: self contents;
 		oldMorphs: (self argument ifNotNil: [:a | {a}] ifNil: [{}]);

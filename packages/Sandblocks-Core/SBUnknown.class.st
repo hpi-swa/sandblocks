@@ -197,13 +197,16 @@ SBUnknown >> printOn: aStream [
 SBUnknown >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
-	cmd := (SBInputCommand newOrEditFor: self containingArtefact)
+	cmd := SBInputCommand new
 		oldMorph: self;
 		previousText: self currentTextMorph contents;
 		yourself.
 	
 	aBoolean
-		ifTrue: [self contents: ''; moveCursorTo: 0]
+		ifTrue: [
+			self
+				contents: '';
+				moveCursorTo: 0]
 		ifFalse: [self moveCursorTo: aNumber].
 	
 	^ cmd

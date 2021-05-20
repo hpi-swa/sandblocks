@@ -202,7 +202,7 @@ SBDragHelper >> hintReplaceOf: aMorph with: newBlock [
 	aMorph attachDecorator: (SBDropPreviewDecorator new outline: true).
 	onLeave := [aMorph detachDecorators: SBDropPreviewDecorator].
 	onApply := [
-		editor do: ((SBReplaceCommand newOrEditFor: aMorph containingArtefact)
+		editor do: (SBReplaceCommand new
 			target: aMorph;
 			replacer: newBlock).
 		newBlock inputContainedUnknown]
@@ -214,7 +214,7 @@ SBDragHelper >> hintWrap: draggedBlock around: anOldMorph as: aNewMorph [
 	anOldMorph attachDecorator: (SBDropPreviewDecorator new outline: true).
 	onLeave := [anOldMorph detachDecorators: SBDropPreviewDecorator].
 	onApply := [
-		editor do: ((SBRecordedCommand newOrEditFor: anOldMorph containingArtefact) record: [:recorder |
+		editor do: (SBRecordedCommand new record: [:recorder |
 			recorder replace: anOldMorph with: draggedBlock.
 			recorder replace: draggedBlock copyPlaceholder with: aNewMorph]).
 		draggedBlock inputContainedUnknown]

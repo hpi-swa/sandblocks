@@ -139,11 +139,12 @@ SBEditor >> artefacts [
 
 { #category : #'do/undo/redo' }
 SBEditor >> batchedChangeStep: aBlock [
-	" send this message when you are updating the tree rapidly for each update, but don't want to submit a command for each update, only at the end "
 
-	self compileTime = #compileOnChange ifTrue: [ | artefact |
-		self save: aBlock containingArtefact tryFixing: false quick: true.
-		artefact := self selectedArtefact.
+	| artefact |
+	" send this message when you are updating the tree rapidly for each update, but don't want to submit a command for each update, only at the end "
+	artefact := aBlock containingArtefact.
+	(self compileTime = #compileOnChange and: [artefact notNil]) ifTrue: [
+		self save: artefact tryFixing: false quick: true.
 		artefact triggerEvent: #changed.
 		self allBlocksDo: [:block | block artefactChanged: artefact]]
 ]
@@ -420,7 +421,7 @@ SBEditor >> createArtefactInView: aMorph [
 
 	self assert: aMorph isArtefact.
 	
-	self do: (SBEditorOpenMorphCommand newNonEdit
+	self do: (SBEditorOpenMorphCommand new
 		morph: aMorph;
 		editor: self sandblockEditor;
 		isUnsaved: true;
@@ -505,7 +506,7 @@ SBEditor >> deleteBlock [
 { #category : #'submorphs-add/remove' }
 SBEditor >> deleteCommandFor: aBlock [
 
-	^ SBDeleteCommand newNonEdit target: aBlock
+	^ SBDeleteCommand new target: aBlock
 ]
 
 { #category : #'action helpers' }
@@ -776,7 +777,7 @@ SBEditor >> inputIsDefault [
 { #category : #'as yet unclassified' }
 SBEditor >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
-	^ SBEditorOpenMorphCommand newNonEdit
+	^ SBEditorOpenMorphCommand new
 		morph: aMorph;
 		editor: self;
 		isUnsaved: false;
@@ -1107,7 +1108,7 @@ SBEditor >> openMorphInViewCommand: aMorph [
 
 	| position |
 	position := scroll scroller offset + (self extent // 2).
-	^ SBInsertCommand newNonEdit
+	^ SBInsertCommand new
 		index: 1;
 		container: scroll scroller;
 		morph: (aMorph
@@ -1353,7 +1354,7 @@ SBEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean [
 		ifTrue: [
 			history markSaved: anArtefact.
 			self triggerEvent: #artefactSaved with: anArtefact.
-			self allBlocksDo: [:block | block artefactSaved: self selectedArtefact].
+			self allBlocksDo: [:block | block artefactSaved: anArtefact].
 			true]
 		ifFalse: [false]
 ]

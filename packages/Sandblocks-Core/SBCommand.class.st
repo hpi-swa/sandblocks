@@ -15,6 +15,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBCommand class >> newFor: anArtefactOrNil [
 
+	self deprecated: 'please use #new directly. You can set artefacts explicitly via artefact: if needed'.
 	^ self basicNew initialize
 		artefact: anArtefactOrNil;
 		yourself
@@ -23,12 +24,14 @@ SBCommand class >> newFor: anArtefactOrNil [
 { #category : #'as yet unclassified' }
 SBCommand class >> newNonEdit [
 
+	self deprecated: 'please use #new directly. You can set artefacts explicitly via artefact: if needed'.
 	^ self basicNew initialize yourself
 ]
 
 { #category : #'as yet unclassified' }
 SBCommand class >> newOrEditFor: anArtefactOrNil [
 
+	self deprecated: 'please use #new directly. You can set artefacts explicitly via artefact: if needed'.
 	^ self basicNew initialize
 		artefact: anArtefactOrNil;
 		yourself
