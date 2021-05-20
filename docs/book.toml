@@ -1,0 +1,6 @@
+[book]
+authors = ["Tom Beckmann"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Sandblocks"
