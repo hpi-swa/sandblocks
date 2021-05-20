@@ -38,20 +38,20 @@ SBBlock >> absorbsInput: anEvent [
 { #category : #'action helpers' }
 SBBlock >> actionProviders [
 
-	^ {self}
+	^ {self}, self decorators
 ]
 
 { #category : #'action helpers' }
 SBBlock >> actions [
-
-	^ Array streamContents: [:stream |
+	
+	^ (Array streamContents: [:stream |
 		self actionProviders do: [:obj |
 			obj class withAllSuperclassesDo: [:class |
 				Pragma
 					withPragmasIn: class
 					do: [:pragma |
-						(#(#action #multiSelectAction #inputAction) includes: pragma keyword) ifTrue: [stream nextPut: pragma]].
-				SBBlock = class ifTrue: [^ stream contents]]]]
+						(#(#action #multiSelectAction #inputAction) includes: pragma keyword) ifTrue: [stream nextPut: pragma]]]]]) 
+		asIdentitySet asArray.
 ]
 
 { #category : #'as yet unclassified' }

@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'idealPosition',
 		'forceSteps',
-		'additionalForces'
+		'additionalForces',
+		'pinnedPosition'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -51,6 +52,12 @@ SBForceMoveDecorator >> applyForces [
 SBForceMoveDecorator >> attractionTo: otherMorph [
 	
 	^ self morph attractionTo: otherMorph
+]
+
+{ #category : #nil }
+SBForceMoveDecorator >> block: aBlock [
+
+	"ignore this for performAction in Block"
 ]
 
 { #category : #'as yet unclassified' }
@@ -122,14 +129,23 @@ SBForceMoveDecorator >> immediatelyResolveCollisionWith: otherMorph [
 SBForceMoveDecorator >> initialize [
 	
 	super initialize.
-	self activateForces.
-	self additionalForces: OrderedCollection new.
+	self 
+		unpin;
+		activateForces;
+		additionalForces: OrderedCollection new.
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> isPinned [
+
+	^ self pinnedPosition notNil
 ]
 
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> mouseUp: anEvent [
 	
 	self isDragging ifTrue: [ | otherBlock |
+		self pinnedPosition ifNotNil: [self pinHere].
 		otherBlock := self blockAtPoint: anEvent position.
 		otherBlock ifNotNil: 
 			[self morph sandblockEditor 
@@ -137,6 +153,42 @@ SBForceMoveDecorator >> mouseUp: anEvent [
 				activateForces]].
 	super mouseUp: anEvent.
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> pinHere [
+
+	<action>
+	
+	self pinnedPosition: self morph position.
+]
+
+{ #category : #accessing }
+SBForceMoveDecorator >> pinnedPosition [
+
+	^ pinnedPosition
+]
+
+{ #category : #accessing }
+SBForceMoveDecorator >> pinnedPosition: aPoint [
+
+	pinnedPosition := aPoint.
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> postDrawOn: aCanvas [
+
+	| b color |
+	
+	self isPinned ifTrue: [
+		color :=  self morph colorPolicy selectionColorForBlock: (self morph parentSandblock ifNil: [self morph]).
+		b := self morph bounds expandBy: 5.
+		self morph invalidRect: (self morph outerBounds expandBy: 12).
+		aCanvas
+			frameRoundRect: b
+				radius: self morph colorPolicy cornerRadius
+				width: 5
+				color: color]
 ]
 
 { #category : #'as yet unclassified' }
@@ -148,9 +200,14 @@ SBForceMoveDecorator >> registerAdditionalForce: aForce [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> step [
 	
+	
 	idealPosition ifNil: [idealPosition := self morph position].
 	
 	self isDragging ifTrue: [^ self].
+	
+	self isPinned ifTrue: [
+		
+		^ self morph position: self pinnedPosition].
 	
 	forceSteps > 0
 		ifTrue:
@@ -167,6 +224,14 @@ SBForceMoveDecorator >> step [
 SBForceMoveDecorator >> stepTime [
 	
 	^ 25
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> unpin [
+
+	<action>
+	
+	self pinnedPosition: nil
 ]
 
 { #category : #'as yet unclassified' }

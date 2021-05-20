@@ -162,7 +162,7 @@ SBStASTNode >> lookupAction: aSymbol [
 	
 	(SBStASTNode superclass lookupSelector: aSymbol) ifNotNil: [:m | (self isValidAction: m) ifTrue: [^ self]].
 	
-	^ nil
+	^ super lookupAction: aSymbol.
 ]
 
 { #category : #accessing }
