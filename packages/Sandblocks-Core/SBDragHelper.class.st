@@ -79,6 +79,13 @@ SBDragHelper >> delete [
 ]
 
 { #category : #'as yet unclassified' }
+SBDragHelper >> dragCancelled [
+
+	onLeave value.
+	self delete
+]
+
+{ #category : #'as yet unclassified' }
 SBDragHelper >> dropLocation: dropLocation [
 
 	currentDropLocation ifNotNil: [

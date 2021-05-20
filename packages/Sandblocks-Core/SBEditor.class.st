@@ -661,6 +661,14 @@ SBEditor >> goToMark [
 ]
 
 { #category : #'event handling' }
+SBEditor >> handleDropCancelMorph: aMorph [
+
+	dragHelper ifNotNil: [
+		dragHelper dragCancelled.
+		dragHelper := nil]
+]
+
+{ #category : #'event handling' }
 SBEditor >> handleDropMorph: anEvent [
 
 	dragHelper ifNotNil: [

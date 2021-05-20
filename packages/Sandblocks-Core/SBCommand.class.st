@@ -6,7 +6,8 @@ Class {
 		'wasEdit',
 		'artefact',
 		'previousSelection',
-		'position'
+		'position',
+		'selectAfter'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -121,6 +122,20 @@ SBCommand >> previousSelection [
 SBCommand >> previousSelection: aBlock [
 
 	previousSelection := aBlock
+]
+
+{ #category : #apply }
+SBCommand >> selectAfter [
+
+	^ selectAfter
+]
+
+{ #category : #apply }
+SBCommand >> selectAfter: aBlock [
+	" you may set this to #none to mark that no other block should be selected after this command.
+ Leave nil to use the default behavior of selecting the return value of do/undo"
+
+	selectAfter := aBlock
 ]
 
 { #category : #'as yet unclassified' }

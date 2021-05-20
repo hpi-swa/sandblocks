@@ -1854,7 +1854,12 @@ SBBlock >> pickUp: anEvent [
 	s addMorphBack: self veryDeepCopy.
 	anEvent hand grabMorph: s.
 	
-	(anEvent shiftPressed not and: [self copyOnDrag not]) ifTrue: [(self parentSandblock deleteCommandFor: self) ifNotNil: [:cmd | editor do: (cmd shouldMergeWithNext: true)]]
+	(anEvent shiftPressed not and: [self copyOnDrag not]) ifTrue: [
+		(self parentSandblock deleteCommandFor: self) ifNotNil: [:cmd |
+			editor do: (cmd
+				shouldMergeWithNext: true;
+				selectAfter: #none;
+				yourself)]]
 ]
 
 { #category : #actions }
