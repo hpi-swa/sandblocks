@@ -25,7 +25,8 @@ Class {
 		'ignoreNext',
 		'paletteContainer',
 		'history',
-		'dragHelper'
+		'dragHelper',
+		'activateForcesButton'
 	],
 	#classVars : [
 		'DefaultColorPolicy',
@@ -244,6 +245,11 @@ SBEditor >> buildCommandBar [
 				shortcut: (self class anyShortcutForAction: #promptAddArtifact)
 				do: [self promptAddArtifact];
 			balloonText: 'Add artifact');
+		addMorphBack: (activateForcesButton := SBButton new
+			icon: SBIcon iconMagnet
+				shortcut: (self class anyShortcutForAction: #activateForces)
+				do: [];
+			balloonText: 'Activate Layouting');
 		addMorphBack: (Morph new
 			height: 0;
 			color: Color transparent;
@@ -846,6 +852,12 @@ SBEditor >> interruptInputDuring: aBlock [
 SBEditor >> isSingleArtefactView [
 
 	^ false
+]
+
+{ #category : #accessing }
+SBEditor >> keepForcesActivated [
+
+	^ activateForcesButton pressed
 ]
 
 { #category : #'as yet unclassified' }

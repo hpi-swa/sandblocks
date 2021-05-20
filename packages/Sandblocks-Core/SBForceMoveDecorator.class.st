@@ -206,10 +206,9 @@ SBForceMoveDecorator >> step [
 	self isDragging ifTrue: [^ self].
 	
 	self isPinned ifTrue: [
-		
 		^ self morph position: self pinnedPosition].
 	
-	forceSteps > 0
+	(forceSteps > 0 or: self morph sandblockEditor keepForcesActivated)
 		ifTrue:
 			[self applyForces.
 			forceSteps := forceSteps - 1.
