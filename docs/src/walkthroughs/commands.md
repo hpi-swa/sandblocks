@@ -1,9 +1,9 @@
 # Custom Commands
 
 To allow for undo and change tracking, all mutations to state in Sandblocks must be performed through commands.
-When a command is instantiated, it always requires the artefact that will be marked as having unsaved changes after this command has been performed, which will usually be the current block's `containingArtefact`:
+Commands are subclasses of `SBCommand` that describe the change in the system:
 ```
-(SBReplaceCommand newFor: self containingArtefact)
+SBReplaceCommand new
     target: ...;
     replacer: ...;
     yourself
@@ -11,19 +11,13 @@ When a command is instantiated, it always requires the artefact that will be mar
 
 To perform a command, call `do:` on the SBEditor:
 ```
-self sandblockEditor do: ((SBReplaceCommand newFor: aBlock containingArtefact)
+self sandblockEditor do: (SBReplaceCommand new
     target: ...;
     replacer: ...;
     yourself)
 ```
 
-If you have an edit that will not mark any artefact as having unsaved changes but will instead be immediately applied, use `newNonEdit` instead:
-```
-self sandblockEditor do: (SBStDeclareInstVarCommand newNonEdit
-    class: self containingArtefact relatedClass;
-    name: self contents;
-    yourself)
-```
+Commands will ensure that the next artefact in the block tree will be marked as having unsaved changes after a command is applied.
 
 ## Combining Commands
 
@@ -32,7 +26,7 @@ For this purpose, you may use the `SBCombinedCommand`:
 
 ```
 SBCombinedCommand newWith: (targets collect: [:target |
-    (SBDeleteCommand newFor: self containingArtefact) target: target])
+    SBDeleteCommand new target: target])
 ```
 
 ## Some Built-in Commands
@@ -54,11 +48,11 @@ You can consider subclassing from a more specific command, such as the `SBDelete
 For a more lightweight alternative, you can also use the general purpose `SBDoItCommand` and combine it with another command, e.g.:
 ```
 SBCombinedCommand newWith: {
-    (SBDoItCommand newFor: self containingArtefact)
+    SBDoItCommand new
         do: [Transcript showln: 'deleted block'];
         undo: [Transcript showln: 'restored block'. self];
         yourself.
-    (SBDeleteCommand newFor: self containingArtefact)
+    SBDeleteCommand new
         target: self;
         yourself
 }
