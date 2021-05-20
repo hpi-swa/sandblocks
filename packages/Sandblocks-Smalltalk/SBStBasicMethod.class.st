@@ -538,8 +538,8 @@ SBStBasicMethod >> postDuplicateSelf [
 	self sandblockEditor do: (SBDoItCommand new artefact: self).
 	
 	self
-		detachDecorators: SBMoveDecorator;
-		attachDecorator: SBMoveDecorator new
+		detachDecorators: SBForceMoveDecorator;
+		attachDecorator: SBForceMoveDecorator new
 ]
 
 { #category : #'as yet unclassified' }

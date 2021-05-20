@@ -92,10 +92,9 @@ SBEditor class >> openFor: aMethodOrClass [
 
 { #category : #generated }
 SBEditor class >> savedBlocks [
-^ {SBStClassMethodEditor2733596 := SBStClassMethodEditor new position: 527@357;
-addMorph: (SBStClass567517 := SBStClass newFor: SBTextBubble at:533@363);
-addMorph: (SBStMethodCategory207812 := SBStMethodCategory new class: SBTextBubble category: 'as yet unclassified' collapsed: false).
-SBStPlayground531504 := SBStPlayground newFromSource: '' at: 1152@427.
+^ {SBStMethod3264525 := SBStMethod newFor: (AssertionFailure compiledMethodAt: #isResumable) at:551@20.
+SBStMethod1032892 := SBStMethod newFor: (Class compiledMethodAt: #asHelpTopic) at:462@192.
+SBForceConnector connect: SBStMethod3264525 to: SBStMethod1032892.
 }
 ]
 
@@ -782,11 +781,7 @@ SBEditor >> initialize [
 		changeTableLayout;
 		hResizing: #spaceFill;
 		vResizing: #spaceFill;
-		addMorphBack: (scroll := self scrollerClass new
-			color: Color transparent;
-			hResizing: #spaceFill;
-			vResizing: #spaceFill;
-			yourself)).
+		addMorphBack: (scroll := SBEditorCanvasWithOverlay new)).
 	self wantsMinimalLayout ifFalse: [self addMorphBack: (bottomPanel := self buildBottomPanel)].
 	
 	self

@@ -2110,7 +2110,7 @@ SBBlock >> saveString [
 			stream 
 				nextPutAll: ';';
 				cr;
-				nextPutAll: 'addMorph: (';
+				nextPutAll: 'addMorphBack: (';
 				nextPutAll: each saveString;
 				nextPutAll: ')'
 			]
