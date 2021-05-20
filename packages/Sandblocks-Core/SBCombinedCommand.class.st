@@ -18,11 +18,9 @@ SBCombinedCommand class >> newWith: aCollection [
 
 { #category : #'as yet unclassified' }
 SBCombinedCommand >> affectedArtefacts [
-
 	" if we non-edit commands within our list we also may get nil artifacts "
-	^ self wasEdit
-		ifTrue: [((self commands gather: #affectedArtefacts) select: #notNil) asSet]
-		ifFalse: [#()]
+
+	^ ((self commands gather: #affectedArtefacts) select: #notNil) asSet
 ]
 
 { #category : #'as yet unclassified' }
@@ -79,10 +77,4 @@ SBCombinedCommand >> undo [
 SBCombinedCommand >> valid [
 
 	^ commands notEmpty
-]
-
-{ #category : #'as yet unclassified' }
-SBCombinedCommand >> wasEdit [
-
-	^ self commands anySatisfy: #wasEdit
 ]

@@ -20,7 +20,7 @@ SBEditorOpenMorphCommand >> applyLayoutProperties: aMorph [
 				hResizing: #spaceFill;
 				vResizing: #shrinkWrap;
 				position: 0 @ 0]
-		ifFalse: [self applyPositionTo: aMorph]
+		ifFalse: [self applyPositionTo: aMorph in: nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -42,7 +42,7 @@ SBEditorOpenMorphCommand >> do [
 				priorChildren := editor childSandblocks.
 				priorChildren do: #delete].
 			(self editor openMorphInViewCommand: morph) do.
-			self applyPositionTo: morph].
+			self applyPositionTo: morph in: nil].
 	^ nil
 ]
 

@@ -23,9 +23,7 @@ SBCommand class >> newFor: anArtefactOrNil [
 { #category : #'as yet unclassified' }
 SBCommand class >> newNonEdit [
 
-	^ self basicNew initialize
-		wasEdit: false;
-		yourself
+	^ self basicNew initialize yourself
 ]
 
 { #category : #'as yet unclassified' }
@@ -33,7 +31,6 @@ SBCommand class >> newOrEditFor: anArtefactOrNil [
 
 	^ self basicNew initialize
 		artefact: anArtefactOrNil;
-		wasEdit: anArtefactOrNil notNil;
 		yourself
 ]
 
@@ -44,12 +41,12 @@ SBCommand >> affectedArtefacts [
 ]
 
 { #category : #'as yet unclassified' }
-SBCommand >> applyPositionTo: aMorphOrCollection [
+SBCommand >> applyPositionTo: aMorphOrCollection in: anOwner [
 
 	self position ifNil: [^ self].
 	
 	aMorphOrCollection isCollection
-		ifTrue: [aMorphOrCollection do: [:morph | self applyPositionTo: morph]]
+		ifTrue: [aMorphOrCollection do: [:morph | self applyPositionTo: morph in: anOwner]]
 		ifFalse: [aMorphOrCollection position: self position]
 ]
 
@@ -166,16 +163,4 @@ SBCommand >> undo [
 SBCommand >> valid [
 
 	^ true
-]
-
-{ #category : #'as yet unclassified' }
-SBCommand >> wasEdit [
-
-	^ wasEdit
-]
-
-{ #category : #'as yet unclassified' }
-SBCommand >> wasEdit: aBoolean [
-
-	wasEdit := aBoolean
 ]

@@ -26,6 +26,7 @@ SBInsertCommand >> container: aMorph [
 SBInsertCommand >> do [
 
 	container addMorph: morph asElementNumber: index.
+	self applyPositionTo: morph in: container.
 	^ select ifNil: [morph]
 ]
 

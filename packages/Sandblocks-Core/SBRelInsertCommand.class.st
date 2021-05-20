@@ -49,6 +49,7 @@ SBRelInsertCommand >> do [
 				ifTrue: [container addMorph: morph inFrontOf: adjacent]
 				ifFalse: [container addMorph: morph behind: adjacent]]
 		ifNil: [container addMorphBack: morph].
+	self applyPositionTo: morph in: container.
 	
 	^ select ifNil: [morph containingSandblock]
 ]

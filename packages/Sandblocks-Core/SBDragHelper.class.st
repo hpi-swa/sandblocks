@@ -189,8 +189,9 @@ SBDragHelper >> hintInsertOf: aBlock in: aParentBlock near: aChildBlock before: 
 		SBPreferences previewDropInsert
 			ifTrue: [command undo]
 			ifFalse: [insertPreviewMarker delete]].
-	onApply := [:event |
-		command position: ((editor canvas transformFrom: nil) globalPointToLocal: event position) asIntegerPoint.
+	onApply := [:event | | localPoint |
+		localPoint := ((editor canvas transformFrom: nil) globalPointToLocal: event position) asIntegerPoint.
+		command position: localPoint.
 		editor do: command.
 		aBlock inputContainedUnknown]
 ]
