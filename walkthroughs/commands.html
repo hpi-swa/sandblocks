@@ -165,29 +165,24 @@
                     <main>
                         <h1 id="custom-commands"><a class="header" href="#custom-commands">Custom Commands</a></h1>
 <p>To allow for undo and change tracking, all mutations to state in Sandblocks must be performed through commands.
-When a command is instantiated, it always requires the artefact that will be marked as having unsaved changes after this command has been performed, which will usually be the current block's <code>containingArtefact</code>:</p>
-<pre><code>(SBReplaceCommand newFor: self containingArtefact)
+Commands are subclasses of <code>SBCommand</code> that describe the change in the system:</p>
+<pre><code>SBReplaceCommand new
     target: ...;
     replacer: ...;
     yourself
 </code></pre>
 <p>To perform a command, call <code>do:</code> on the SBEditor:</p>
-<pre><code>self sandblockEditor do: ((SBReplaceCommand newFor: aBlock containingArtefact)
+<pre><code>self sandblockEditor do: (SBReplaceCommand new
     target: ...;
     replacer: ...;
     yourself)
 </code></pre>
-<p>If you have an edit that will not mark any artefact as having unsaved changes but will instead be immediately applied, use <code>newNonEdit</code> instead:</p>
-<pre><code>self sandblockEditor do: (SBStDeclareInstVarCommand newNonEdit
-    class: self containingArtefact relatedClass;
-    name: self contents;
-    yourself)
-</code></pre>
+<p>Commands will ensure that the next artefact in the block tree will be marked as having unsaved changes after a command is applied.</p>
 <h2 id="combining-commands"><a class="header" href="#combining-commands">Combining Commands</a></h2>
 <p>Often, you will want to perform multiple things at once but they should be undo-able with a single click.
 For this purpose, you may use the <code>SBCombinedCommand</code>:</p>
 <pre><code>SBCombinedCommand newWith: (targets collect: [:target |
-    (SBDeleteCommand newFor: self containingArtefact) target: target])
+    SBDeleteCommand new target: target])
 </code></pre>
 <h2 id="some-built-in-commands"><a class="header" href="#some-built-in-commands">Some Built-in Commands</a></h2>
 <p>Here is a quick overview of some built-in commands. Use Ctrl+Shift+N in the Squeak image to see how each is used.</p>
@@ -203,11 +198,11 @@ Custom commands are simple to implement: subclass <code>SBCommand</code> and imp
 You can consider subclassing from a more specific command, such as the <code>SBDeleteCommand</code> if both a block should disappear and something else should happen in the system.</p>
 <p>For a more lightweight alternative, you can also use the general purpose <code>SBDoItCommand</code> and combine it with another command, e.g.:</p>
 <pre><code>SBCombinedCommand newWith: {
-    (SBDoItCommand newFor: self containingArtefact)
+    SBDoItCommand new
         do: [Transcript showln: 'deleted block'];
         undo: [Transcript showln: 'restored block'. self];
         yourself.
-    (SBDeleteCommand newFor: self containingArtefact)
+    SBDeleteCommand new
         target: self;
         yourself
 }
