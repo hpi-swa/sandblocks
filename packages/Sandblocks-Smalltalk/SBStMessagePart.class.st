@@ -422,6 +422,14 @@ SBStMessagePart >> wrapInReturn [
 ]
 
 { #category : #actions }
+SBStMessagePart >> wrapWithExampleWatch [
+	<action>
+	<actionValidIf: #parentIsExpression>
+
+	self messageSend performAction: #wrapWithExampleWatch
+]
+
+{ #category : #actions }
 SBStMessagePart >> wrapWithWatch [
 	<action>
 	<actionValidIf: #parentIsExpression>
