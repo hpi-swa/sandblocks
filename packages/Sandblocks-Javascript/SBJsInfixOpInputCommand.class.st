@@ -74,6 +74,12 @@ SBJsInfixOpInputCommand >> previousRhs: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsInfixOpInputCommand >> setArtefactFrom [
+
+	^ morph
+]
+
+{ #category : #'as yet unclassified' }
 SBJsInfixOpInputCommand >> undo [
 
 	doRotate ifTrue: [(SBSubtreeRotateCommand newNonEdit target: undoRotate) do].

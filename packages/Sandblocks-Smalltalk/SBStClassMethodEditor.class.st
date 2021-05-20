@@ -46,11 +46,10 @@ SBStClassMethodEditor >> deleteCommandFor: aBlock [
 
 	aBlock childIndex < 2 ifTrue: [^ nil].
 	self sandblockEditor do: (SBCombinedCommand newWith: {
-		((SBStDeleteMethodCategoryCommand newFor: self)
+		SBStDeleteMethodCategoryCommand new
 			category: aBlock category;
-			class: self firstSubmorph relatedClass).
-		((SBDeleteCommand newFor: self) target: aBlock)
-	})
+			class: self firstSubmorph relatedClass.
+		SBDeleteCommand new target: aBlock})
 ]
 
 { #category : #'as yet unclassified' }

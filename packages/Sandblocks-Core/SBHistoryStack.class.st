@@ -28,6 +28,7 @@ SBHistoryStack >> do: aCommand previousSelection: aMorph selectDo: aBlock [
 	self markChanged: aCommand affectedArtefacts.
 	
 	aCommand previousSelection: aMorph.
+	aCommand preDo.
 	aBlock value: aCommand do value: aCommand affectedArtefacts.
 	aCommand postDo
 ]

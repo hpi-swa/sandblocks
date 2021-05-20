@@ -54,6 +54,12 @@ SBInsertCommand >> select: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBInsertCommand >> setArtefactFrom [
+
+	^ container
+]
+
+{ #category : #'as yet unclassified' }
 SBInsertCommand >> undo [
 
 	| parentBlock |

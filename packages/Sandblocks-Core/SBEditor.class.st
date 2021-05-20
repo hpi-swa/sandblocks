@@ -420,7 +420,7 @@ SBEditor >> createArtefactInView: aMorph [
 
 	self assert: aMorph isArtefact.
 	
-	self do: (SBStOpenMorphCommand newNonEdit
+	self do: (SBEditorOpenMorphCommand newNonEdit
 		morph: aMorph;
 		editor: self sandblockEditor;
 		isUnsaved: true;
@@ -664,13 +664,14 @@ SBEditor >> goToMark [
 SBEditor >> handleDropMorph: anEvent [
 
 	dragHelper ifNotNil: [
-		dragHelper applyHint ifTrue: [anEvent wasHandled: true].
+		(dragHelper applyHintAt: anEvent) ifTrue: [anEvent wasHandled: true].
 		dragHelper := nil]
 ]
 
 { #category : #'event handling' }
 SBEditor >> handleDroppedFile: name event: anEvent [
 
+	self flag: #todo. "not adapted to new drag-and-drop system "
 	^ FileStream readOnlyFileNamed: name do: [:file |
 		file
 			convertedFor: (self objectInterfaceNear: nil at: #after)
@@ -680,6 +681,7 @@ SBEditor >> handleDroppedFile: name event: anEvent [
 { #category : #'event handling' }
 SBEditor >> handleDroppedFolder: aFileDirectory event: anEvent [
 
+	self flag: #todo. "not adapted to new drag-and-drop system "
 	aFileDirectory
 		convertedFor: (self objectInterfaceNear: nil at: #after)
 		do: [:converted | self handleDroppedBlock: converted event: anEvent adding: true near: nil]
@@ -766,7 +768,7 @@ SBEditor >> inputIsDefault [
 { #category : #'as yet unclassified' }
 SBEditor >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
-	^ SBStOpenMorphCommand newNonEdit
+	^ SBEditorOpenMorphCommand newNonEdit
 		morph: aMorph;
 		editor: self;
 		isUnsaved: false;
@@ -1014,7 +1016,7 @@ SBEditor >> objectInterface [
 { #category : #'as yet unclassified' }
 SBEditor >> objectInterfaceNear: aBlock at: aSymbol [
 
-	^ SBInterfaces block, SBInterfaces topLevel
+	^ SBInterfaces block, (SBToggledCode comment: '' active: 1 do: {[SBInterfaces always]. [SBInterfaces topLevel]})
 ]
 
 { #category : #testing }
@@ -1088,11 +1090,7 @@ SBEditor >> openMorph: aMorph [
 { #category : #'submorphs-add/remove' }
 SBEditor >> openMorphInView: aMorph [
 
-	self do: (SBStOpenMorphCommand newNonEdit
-		morph: aMorph;
-		editor: self sandblockEditor;
-		isUnsaved: false;
-		yourself).
+	self do: (self insertCommandRequest: aMorph near: nil before: false).
 	^ aMorph
 ]
 

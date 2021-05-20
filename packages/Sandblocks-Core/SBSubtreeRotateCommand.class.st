@@ -34,6 +34,12 @@ SBSubtreeRotateCommand >> rotateAround: aTargetNode isLeftOrNil: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBSubtreeRotateCommand >> setArtefactFrom [
+
+	^ target
+]
+
+{ #category : #'as yet unclassified' }
 SBSubtreeRotateCommand >> target: aBlock [
 
 	target := aBlock

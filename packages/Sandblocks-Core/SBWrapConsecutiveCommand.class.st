@@ -30,6 +30,12 @@ SBWrapConsecutiveCommand >> outer: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBWrapConsecutiveCommand >> setArtefactFrom [
+
+	^ targets first
+]
+
+{ #category : #'as yet unclassified' }
 SBWrapConsecutiveCommand >> targets: aCollection [
 
 	targets := aCollection

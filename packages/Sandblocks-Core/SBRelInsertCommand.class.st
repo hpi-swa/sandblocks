@@ -81,6 +81,12 @@ SBRelInsertCommand >> select: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBRelInsertCommand >> setArtefactFrom [
+
+	^ container
+]
+
+{ #category : #'as yet unclassified' }
 SBRelInsertCommand >> undo [
 
 	container removeMorph: morph.

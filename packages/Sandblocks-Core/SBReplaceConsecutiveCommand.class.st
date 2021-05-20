@@ -36,6 +36,12 @@ SBReplaceConsecutiveCommand >> replacer: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBReplaceConsecutiveCommand >> setArtefactFrom [
+
+	^ targets first
+]
+
+{ #category : #'as yet unclassified' }
 SBReplaceConsecutiveCommand >> targets: aCollectionOfMorph [
 
 	targets := aCollectionOfMorph

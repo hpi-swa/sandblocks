@@ -86,6 +86,12 @@ SBInputMessageCommand >> select: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBInputMessageCommand >> setArtefactFrom [
+
+	^ messageSend
+]
+
+{ #category : #'as yet unclassified' }
 SBInputMessageCommand >> target [
 
 	^ messageSend

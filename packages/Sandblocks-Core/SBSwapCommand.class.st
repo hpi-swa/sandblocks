@@ -15,12 +15,6 @@ SBSwapCommand >> a: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBSwapCommand >> affectedMorphs [
-
-	^ {a. b}
-]
-
-{ #category : #'as yet unclassified' }
 SBSwapCommand >> b: aMorph [
 
 	b := aMorph
@@ -40,6 +34,12 @@ SBSwapCommand >> do [
 	bOwner removeMorph: b."
 	aOwner addMorph: b asElementNumber: aIndex.
 	bOwner addMorph: a asElementNumber: bIndex.
+	^ a
+]
+
+{ #category : #'as yet unclassified' }
+SBSwapCommand >> setArtefactFrom [
+
 	^ a
 ]
 

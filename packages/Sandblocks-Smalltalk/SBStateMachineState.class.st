@@ -57,7 +57,7 @@ SBStateMachineState >> connectTo [
 { #category : #'as yet unclassified' }
 SBStateMachineState >> deleteCommandFor: aBlock [
 
-	^ (SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock owner
+	^ SBDeleteCommand new target: aBlock owner
 ]
 
 { #category : #'as yet unclassified' }

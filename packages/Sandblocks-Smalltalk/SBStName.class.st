@@ -249,7 +249,7 @@ SBStName >> keyStroke: anEvent [
 		new := self newNullBlock.
 		^ self sandblockEditor
 			endInput;
-			do: ((SBWrapCommand newFor: self containingArtefact)
+			do: (SBWrapCommand new
 				inner: self;
 				outer: SBStMessageSend new;
 				wrap: [:outer :inner | outer binding: self value: new]);

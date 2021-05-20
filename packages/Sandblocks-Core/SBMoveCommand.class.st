@@ -39,6 +39,12 @@ SBMoveCommand >> morph: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBMoveCommand >> setArtefactFrom [
+
+	^ morph
+]
+
+{ #category : #'as yet unclassified' }
 SBMoveCommand >> undo [
 
 	container removeMorph: morph.

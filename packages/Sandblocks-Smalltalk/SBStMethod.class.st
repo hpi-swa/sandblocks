@@ -154,9 +154,10 @@ SBStMethod >> pasteString [
 
 	| method |
 	method := (Clipboard clipboardText string parseAsMethodFor: self relatedClass) asSandblock.
-	self sandblockEditor do: ((SBReplaceCommand newFor: method)
+	self sandblockEditor do: (SBReplaceCommand new
 		target: self;
-		replacer: method)
+		replacer: method;
+		artefact: method)
 ]
 
 { #category : #'as yet unclassified' }

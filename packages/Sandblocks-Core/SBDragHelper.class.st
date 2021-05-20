@@ -30,12 +30,12 @@ SBDragHelper class >> for: anEvent in: anEditor [
 ]
 
 { #category : #'as yet unclassified' }
-SBDragHelper >> applyHint [
+SBDragHelper >> applyHintAt: anEvent [
 
 	onLeave ifNotNil: [onLeave value].
 	^ onApply
 		ifNotNil: [
-			onApply value.
+			onApply cull: anEvent.
 			true]
 		ifNil: [false]
 ]
@@ -182,7 +182,8 @@ SBDragHelper >> hintInsertOf: aBlock in: aParentBlock near: aChildBlock before: 
 		SBPreferences previewDropInsert
 			ifTrue: [command undo]
 			ifFalse: [insertPreviewMarker delete]].
-	onApply := [
+	onApply := [:event |
+		command position: ((editor canvas transformFrom: nil) globalPointToLocal: event position) asIntegerPoint.
 		editor do: command.
 		aBlock inputContainedUnknown]
 ]

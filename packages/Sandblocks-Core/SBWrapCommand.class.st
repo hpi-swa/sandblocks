@@ -48,6 +48,12 @@ SBWrapCommand >> outer: anObject [
 	outer := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+SBWrapCommand >> setArtefactFrom [
+
+	^ inner
+]
+
 { #category : #accessing }
 SBWrapCommand >> undo [
 

@@ -21,6 +21,12 @@ SBUnwrapConsecutiveCommand >> do [
 ]
 
 { #category : #'as yet unclassified' }
+SBUnwrapConsecutiveCommand >> setArtefactFrom [
+
+	^ target
+]
+
+{ #category : #'as yet unclassified' }
 SBUnwrapConsecutiveCommand >> target: aBlock [
 
 	target := aBlock

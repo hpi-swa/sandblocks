@@ -23,16 +23,14 @@ SBStGrammarHandler >> addExample [
 	method := self block containingArtefact.
 	class := method methodClass.
 	
-	self block sandblockEditor do: ((SBInsertCommand newFor: method)
+	self block sandblockEditor do: (SBInsertCommand new
 		container: method body;
 		index: 2;
 		morph: (SBExample new
-			self: (method isClassSide
-				ifTrue: [SBStName contents: class theNonMetaClassName]
-				ifFalse: [
-					(SBStMessageSend new
-						receiver: (SBStName contents: class name)
-						selector: (method selector = #initialize ifTrue: [#basicNew] ifFalse: [#new]))])
+			self: (method isClassSide ifTrue: [SBStName contents: class theNonMetaClassName] ifFalse: [
+				SBStMessageSend new
+					receiver: (SBStName contents: class name)
+					selector: (method selector = #initialize ifTrue: [#basicNew] ifFalse: [#new])])
 			args: (SBStArray new
 				type: #dynamic
 				contents: (Array streamContents: [:str | method arguments size timesRepeat: [str nextPut: self block newNullBlock]]))
@@ -123,8 +121,8 @@ SBStGrammarHandler >> doExpression [
 SBStGrammarHandler >> emptyLine: aBlock [
 	<action>
 	<actionValidIf: #isStatement>
-	
-	aBlock sandblockEditor do: ((SBReplaceCommand newFor: aBlock containingArtefact)
+
+	aBlock sandblockEditor do: (SBReplaceCommand new
 		target: aBlock;
 		replacer: self newNullBlock)
 ]
@@ -165,22 +163,22 @@ SBStGrammarHandler >> extractMethod [
 			body: SBStBlockBody new.
 		
 		SBCombinedCommand newWith: {
-			(SBReplaceConsecutiveCommand newFor: self block containingArtefact)
+			SBReplaceConsecutiveCommand new
 				targets: extracting;
 				replacer: (SBStMessageSend new
 					receiver: (SBStName contents: 'self')
 					selector: method selector
 					arguments: arguments veryDeepCopy)}, (extracting withIndexCollect: [:stmt :index |
-			(SBInsertCommand newFor: method)
+			SBInsertCommand new
 				container: method body;
 				index: index + 1;
 				morph: stmt;
 				yourself]), {
-			(SBWrapCommand newFor: self block containingArtefact)
+			SBWrapCommand new
 				inner: extracting last;
 				outer: SBStReturn new;
 				wrap: [:outer :inner | outer expression: inner].
-			(SBStOpenMorphCommand newFor: self block containingArtefact)
+			SBEditorOpenMorphCommand new
 				editor: self block sandblockEditor;
 				morph: method;
 				isUnsaved: true;
@@ -198,14 +196,14 @@ SBStGrammarHandler >> extractVariable [
 	
 	self block sandblockEditor do: (SBCombinedCommand newWith: {
 		block declareTemporaryVariableCommand: name.
-		(SBReplaceCommand newFor: self block containingArtefact)
+		SBReplaceCommand new
 			target: self block;
 			replacer: var.
-		(SBInsertCommand newFor: self block containingArtefact)
+		SBInsertCommand new
 			container: block;
 			index: 2;
 			morph: self block.
-		(SBWrapCommand newFor: self block containingArtefact)
+		SBWrapCommand new
 			inner: self block;
 			outer: SBStMessageSend new;
 			wrap: [:outer :inner | outer binding: var veryDeepCopy value: inner]})
@@ -218,9 +216,8 @@ SBStGrammarHandler >> insert: aBlock aboveOrBelow: anAboveBoolean [
 	currentStatement := self block containingStatement.
 	index := currentStatement owner submorphIndexOf: currentStatement.
 	
-	self block sandblockEditor do: ((SBInsertCommand newFor: self block containingArtefact)
-		index: (anAboveBoolean
-			ifTrue: [index] ifFalse: [index + 1]);
+	self block sandblockEditor do: (SBInsertCommand new
+		index: (anAboveBoolean ifTrue: [index] ifFalse: [index + 1]);
 		container: currentStatement owner;
 		morph: aBlock;
 		shouldMergeWithNext: true;
@@ -271,18 +268,23 @@ SBStGrammarHandler >> pasteString [
 	<action>
 
 	| doIt block baseIndex |
-	doIt := PPParser new parse: Clipboard clipboardText class: nil class noPattern: true notifying: nil ifFail: [^ nil].
+	doIt := PPParser new
+		parse: Clipboard clipboardText
+		class: nil class
+		noPattern: true
+		notifying: nil
+		ifFail: [^ nil].
 	block := doIt block statements last asSandblock.
 	baseIndex := self block containingStatement owner submorphIndexOf: self block containingStatement.
 	
-	self block sandblockEditor do: ((SBCombinedCommand newFor: self block containingArtefact)
-		commands:
-			{(SBReplaceCommand newFor: self block containingArtefact) target: self block; replacer: block},
-			(doIt block statements allButLast withIndexCollect: [:statement :index |
-				(SBInsertCommand newFor: self block containingArtefact)
-					index: baseIndex + index - 1;
-					container: self block containingStatement owner;
-					morph: statement asSandblock])).
+	self block sandblockEditor do: (SBCombinedCommand new commands: {
+		SBReplaceCommand new
+			target: self block;
+			replacer: block}, (doIt block statements allButLast withIndexCollect: [:statement :index |
+		SBInsertCommand new
+			index: baseIndex + index - 1;
+			container: self block containingStatement owner;
+			morph: statement asSandblock])).
 	block postDuplicate
 ]
 
@@ -300,7 +302,7 @@ SBStGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 		(char = $: and: [aBlock parentSandblock isBlockBody and: [aBlock parentSandblock isMethodBody not]]) ifTrue: [ | block |
 			block := aBlock parentSandblock.
 			aBlock parentSandblock statements size > 1 ifTrue: [
-				aBlock sandblockEditor do: ((SBDeleteCommand newFor: aBlock containingArtefact)
+				aBlock sandblockEditor do: (SBDeleteCommand new
 					target: aBlock;
 					shouldMergeWithNext: true)].
 			^ block addBlockArgument].
@@ -321,7 +323,7 @@ SBStGrammarHandler >> replaceWithPragma: aBlock [
 	| pragma |
 	pragma := SBStPragma new.
 	aBlock stopEditing.
-	aBlock sandblockEditor do: ((SBReplaceCommand newFor: aBlock containingArtefact)
+	aBlock sandblockEditor do: (SBReplaceCommand new
 		target: aBlock;
 		replacer: pragma;
 		shouldMergeWithNext: true).
@@ -349,7 +351,7 @@ SBStGrammarHandler >> useArgument: aNumber [
 		editor mode = #input
 			ifTrue: [self block sandblockEditor endInputWith: content]
 			ifFalse: [
-				self block sandblockEditor do: ((SBReplaceCommand newFor: artefact)
+				self block sandblockEditor do: (SBReplaceCommand new
 					replacer: (SBStName contents: content);
 					target: self block)].
 		editor maybeStartInputFromEnd]
@@ -403,12 +405,11 @@ SBStGrammarHandler >> wrapAsArgument [
 	| msg |
 	msg := SBStMessageSend new.
 	self block sandblockEditor
-		do: ((SBWrapCommand newFor: self block containingArtefact)
+		do: (SBWrapCommand new
 			outer: msg;
 			inner: self block;
 			shouldMergeWithNext: true;
-			wrap: [:outer :inner |
-				outer receiver: (self block newNullBlock label: 'rcvr') selector: '' arguments: {inner}];
+			wrap: [:outer :inner | outer receiver: (self block newNullBlock label: 'rcvr') selector: '' arguments: {inner}];
 			yourself);
 		startInput: msg receiver at: 0 replacingContents: false
 ]
@@ -419,7 +420,7 @@ SBStGrammarHandler >> wrapInArrayType: aSymbol [
 	self assert: self block isSelected.
 	self block sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
 	self block sandblockEditor doMultiSelection: [:selected |
-		(SBWrapConsecutiveCommand newFor: self block containingArtefact)
+		SBWrapConsecutiveCommand new
 			outer: SBStArray new;
 			targets: selected;
 			wrap: [:outer :inner | outer type: aSymbol contents: inner];
@@ -434,7 +435,7 @@ SBStGrammarHandler >> wrapInAssignment [
 
 	| binding |
 	binding := SBStName new.
-	self block sandblockEditor do: ((SBWrapCommand newFor: self block containingArtefact)
+	self block sandblockEditor do: (SBWrapCommand new
 		outer: SBStMessageSend new;
 		inner: self block;
 		wrap: [:outer :inner | outer binding: binding value: inner];
@@ -452,7 +453,7 @@ SBStGrammarHandler >> wrapInBlock [
 	self assert: self block isSelected.
 	self block sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
 	self block sandblockEditor doMultiSelection: [:selected |
-		(SBWrapConsecutiveCommand newFor: self block containingArtefact)
+		SBWrapConsecutiveCommand new
 			outer: SBStBlockBody new;
 			targets: selected;
 			wrap: [:outer :inner | outer statements: inner];
@@ -495,7 +496,7 @@ SBStGrammarHandler >> wrapInMessageSend: aString [
 		arguments: (aString numArgs > 0
 			ifTrue: [(1 to: aString numArgs) collect: [:i | self block newNullBlock label: 'arg']]
 			ifFalse: [#()]).
-	self block sandblockEditor do: ((SBWrapCommand newFor: self block containingArtefact)
+	self block sandblockEditor do: (SBWrapCommand new
 		outer: msg;
 		inner: self block;
 		shouldMergeWithNext: true;
@@ -515,7 +516,7 @@ SBStGrammarHandler >> wrapInReturn [
 
 	self block parentSandblock isReturn ifTrue: [^ self].
 	
-	self block sandblockEditor do: ((SBWrapCommand newFor: self block containingArtefact)
+	self block sandblockEditor do: (SBWrapCommand new
 		outer: SBStReturn new;
 		inner: self block;
 		wrap: [:outer :inner | outer expression: inner];
@@ -533,7 +534,7 @@ SBStGrammarHandler >> wrapInToggledCode [
 	comment := SBToggledCode new.
 	self block sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
 	self block sandblockEditor doMultiSelection: [:selected |
-		(SBWrapConsecutiveCommand newFor: self block containingArtefact)
+		SBWrapConsecutiveCommand new
 			outer: comment;
 			targets: selected;
 			wrap: [:outer :inner | outer comment: '' active: 0 do: {SBStBlockBody new statements: inner}];

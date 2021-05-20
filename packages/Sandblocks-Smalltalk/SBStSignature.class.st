@@ -55,19 +55,19 @@ SBStSignature >> deleteCommandFor: aBlock [
 
 	| index |
 	(self isUnary or: [self isBinary or: [self isAssignment]]) ifTrue: [
-		^ (SBReplaceCommand newFor: aBlock containingArtefact)
+		^ SBReplaceCommand new
 			target: aBlock;
 			replacer: self containingSandblock newNullBlock].
 	
 	(self isKeyword and: self submorphCount = 2) ifTrue: [
 		^ aBlock submorphIndex = 1
 			ifTrue: [nil]
-			ifFalse: [(SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock]].
+			ifFalse: [SBDeleteCommand new target: aBlock]].
 	
 	index := ((self submorphs indexOf: aBlock) - 1 / 2) floor * 2 + 1.
 	^ SBCombinedCommand newWith: {
-		(SBDeleteCommand newFor: aBlock containingArtefact) target: (self submorphs at: index).
-		(SBDeleteCommand newFor: aBlock containingArtefact) target: (self submorphs at: index + 1)}
+		SBDeleteCommand new target: (self submorphs at: index).
+		SBDeleteCommand new target: (self submorphs at: index + 1)}
 ]
 
 { #category : #'as yet unclassified' }
@@ -98,7 +98,7 @@ SBStSignature >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 	| part index insertArg insertPart |
 	(self isBinary or: [self isAssignment]) ifTrue: [^ nil].
 	self isUnary ifTrue: [
-		^ (SBInsertCommand newFor: self containingSandblock containingArtefact)
+		^ SBInsertCommand new
 			container: self;
 			index: self submorphCount + 1;
 			morph: aMorph;
@@ -109,13 +109,13 @@ SBStSignature >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 		ifFalse: [1].
 	part := SBStMessagePart new contents: ':'.
 	
-	insertPart := (SBInsertCommand newFor: self containingSandblock containingArtefact)
+	insertPart := SBInsertCommand new
 		container: self;
 		index: index;
 		morph: part;
 		shouldMergeWithNext: true;
 		yourself.
-	insertArg := (SBInsertCommand newFor: self containingSandblock containingArtefact)
+	insertArg := SBInsertCommand new
 		container: self;
 		index: index;
 		morph: aMorph;
@@ -307,7 +307,7 @@ SBStSignature >> selectorAndEdit: aString [
 	
 	possibleArgumentNames := self possibleArgumentNamesFor: aString.
 	
-	self sandblockEditor do: ((SBInputMessageCommand newFor: self containingSandblock containingArtefact)
+	self sandblockEditor do: (SBInputMessageCommand new
 		messageSend: self containingSandblock;
 		previousArguments: self arguments;
 		previousSelector: self selector;
@@ -315,8 +315,7 @@ SBStSignature >> selectorAndEdit: aString [
 		newArguments: ((1 to: (self numArguments: aString)) collect: [:index |
 			self arguments
 				at: index
-				ifAbsent: [
-					self containingSandblock newNullBlock label: (possibleArgumentNames at: index ifAbsent: [''])]]);
+				ifAbsent: [self containingSandblock newNullBlock label: (possibleArgumentNames at: index ifAbsent: [''])]]);
 		shouldMergeWithNext: true;
 		yourself).
 	
@@ -324,7 +323,9 @@ SBStSignature >> selectorAndEdit: aString [
 		detect: #isUnknown
 		ifFound: [:u | self sandblockEditor startInput: u at: 0 replacingContents: false]
 		ifNone: [
-			self sandblockEditor do: ((SBDoItCommand newFor: self containingSandblock containingArtefact) do: [self messageParts last select])]
+			self sandblockEditor do: (SBDoItCommand new
+				artefactFrom: self;
+				do: [self messageParts last select])]
 ]
 
 { #category : #'as yet unclassified' }
@@ -337,16 +338,20 @@ SBStSignature >> selectorAndEdit: aString withFilledArgs: aBoolean [
 	
 	possibleArgumentNames := self possibleArgumentNamesFor: aString.
 	
-	self sandblockEditor do: ((SBInputMessageCommand newFor: self containingSandblock containingArtefact)
+	self sandblockEditor do: (SBInputMessageCommand new
 		messageSend: self containingSandblock;
 		previousArguments: self arguments;
 		previousSelector: self selector;
 		newSelector: aString;
 		newArguments: ((1 to: (self numArguments: aString)) collect: [:index |
-			self arguments
-				at: index
-				ifAbsent: [
-					aBoolean ifTrue: [possibleArgumentNames at: index ifPresent: [:n | SBStName new contents: n] ifAbsent: [self containingSandblock newNullBlock]] ifFalse: [self containingSandblock newNullBlock label: (possibleArgumentNames at: index ifAbsent: [''])]]]);
+			self arguments at: index ifAbsent: [
+				aBoolean
+					ifTrue: [
+						possibleArgumentNames
+							at: index
+							ifPresent: [:n | SBStName new contents: n]
+							ifAbsent: [self containingSandblock newNullBlock]]
+					ifFalse: [self containingSandblock newNullBlock label: (possibleArgumentNames at: index ifAbsent: [''])]]]);
 		shouldMergeWithNext: true;
 		yourself).
 	
@@ -354,7 +359,9 @@ SBStSignature >> selectorAndEdit: aString withFilledArgs: aBoolean [
 		detect: #isUnknown
 		ifFound: [:u | self sandblockEditor startInput: u at: 0 replacingContents: false]
 		ifNone: [
-			self sandblockEditor do: ((SBDoItCommand newFor: self containingSandblock containingArtefact) do: [self messageParts last select])]
+			self sandblockEditor do: (SBDoItCommand new
+				artefactFrom: self;
+				do: [self messageParts last select])]
 ]
 
 { #category : #'as yet unclassified' }

@@ -58,7 +58,7 @@ SBStBoolean >> symbolsFor: aColorPolicy [
 SBStBoolean >> toggle [
 	<action>
 
-	self block sandblockEditor do: ((SBMutatePropertyCommand newFor: self block containingArtefact)
+	self block sandblockEditor do: (SBMutatePropertyCommand new
 		target: self block;
 		selector: #contents;
 		value: self parsedContents not asString;

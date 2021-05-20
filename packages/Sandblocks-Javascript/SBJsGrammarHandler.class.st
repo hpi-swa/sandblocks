@@ -86,7 +86,7 @@ SBJsGrammarHandler >> wrapInInfixOp [
 	| operator |
 	operator := SBJsInfixOperator new.
 	self block sandblockEditor
-		do: ((SBWrapCommand newFor: self block containingArtefact)
+		do: (SBWrapCommand new
 			inner: self block;
 			outer: operator;
 			wrap: [:outer :inner | outer lhs: inner operator: '' rhs: (operator newNullBlock label: 'expr')]);
@@ -101,7 +101,7 @@ SBJsGrammarHandler >> wrapInObjectLiteral [
 	| key |
 	key := self block newNullBlock label: 'key'.
 	self block sandblockEditor
-		do: ((SBWrapCommand newFor: self block containingArtefact)
+		do: (SBWrapCommand new
 			inner: self block;
 			outer: SBJsObjectLiteral new;
 			wrap: [:outer :inner | outer pairs: {key -> inner}]);
@@ -116,7 +116,7 @@ SBJsGrammarHandler >> wrapInPrefixOp [
 	| operator |
 	operator := SBJsPrefixOperator new.
 	self block sandblockEditor
-		do: ((SBWrapCommand newFor: self block containingArtefact)
+		do: (SBWrapCommand new
 			inner: self block;
 			outer: operator;
 			wrap: [:outer :inner | outer operator: '' rhs: inner]);
@@ -127,8 +127,8 @@ SBJsGrammarHandler >> wrapInPrefixOp [
 SBJsGrammarHandler >> wrapInReturn [
 	<action>
 	<actionValidIf: #isStatement>
-	
-	self block sandblockEditor do: ((SBWrapCommand newFor: self block containingArtefact)
+
+	self block sandblockEditor do: (SBWrapCommand new
 		outer: (SBJsPrefixOperator new contents: 'return');
 		inner: self block;
 		wrap: [:outer :inner | outer expression: inner])

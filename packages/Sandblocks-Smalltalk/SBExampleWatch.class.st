@@ -71,7 +71,9 @@ SBExampleWatch >> color [
 { #category : #'as yet unclassified' }
 SBExampleWatch >> doubleClick: anEvent [
 
-	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact) replacer: self expression; target: self)
+	self sandblockEditor do: (SBReplaceCommand new
+		replacer: self expression;
+		target: self)
 ]
 
 { #category : #'as yet unclassified' }

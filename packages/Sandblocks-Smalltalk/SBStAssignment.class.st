@@ -90,10 +90,13 @@ SBStAssignment >> symbols [
 { #category : #'as yet unclassified' }
 SBStAssignment >> useAsMessageSend [
 	<action>
-	
-	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+
+	self sandblockEditor do: (SBReplaceCommand new
 		target: self;
-		replacer: (SBStMessageSend new receiver: (SBStName contents: 'self') selector: self binding contents asSymbol asSimpleSetter arguments: {self expression}))
+		replacer: (SBStMessageSend new
+			receiver: (SBStName contents: 'self')
+			selector: self binding contents asSymbol asSimpleSetter
+			arguments: {self expression}))
 ]
 
 { #category : #testing }

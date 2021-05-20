@@ -71,9 +71,11 @@ SBStSymbol >> updateSuggestions [
 SBStSymbol >> useAsMessageSend [
 	<action>
 
-	^ self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+	^ self sandblockEditor do: (SBReplaceCommand new
 		target: self;
-		replacer: (SBStMessageSend new receiver: (SBStName contents: 'self') selector: self contents asSymbol);
+		replacer: (SBStMessageSend new
+			receiver: (SBStName contents: 'self')
+			selector: self contents asSymbol);
 		yourself)
 ]
 

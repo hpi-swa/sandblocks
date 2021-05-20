@@ -120,13 +120,11 @@ SBToggledCode >> deleteCommandFor: aBlock [
 
 	^ (aBlock = self firstSubmorph and: [comment owner notNil])
 		ifTrue: [
-			(SBMutatePropertyCommand newFor: self containingArtefact)
+			SBMutatePropertyCommand new
 				target: self firstSubmorph;
 				selector: #contents;
 				value: '']
-		ifFalse: [
-			(SBDeleteCommand newFor: self containingArtefact)
-				target: aBlock owner]
+		ifFalse: [SBDeleteCommand new target: aBlock owner]
 ]
 
 { #category : #'as yet unclassified' }

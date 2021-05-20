@@ -13,7 +13,7 @@ SBOhmGrammarHandler >> extractVariable [
 	name := (UIManager default request: 'Name for rule?') ifEmpty: [^ self].
 	
 	self block sandblockEditor do: (SBCombinedCommand newWith: {
-		(SBReplaceCommand newFor: self block containingArtefact)
+		SBReplaceCommand new
 			target: self block;
 			replacer: (SBOhmIdentifier new contents: name).
 		self block containingArtefact

@@ -298,8 +298,8 @@ SBScmExpression >> symbols [
 { #category : #'as yet unclassified' }
 SBScmExpression >> toggleQuoted [
 	<action>
-	
-	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
+
+	self sandblockEditor do: (SBMutatePropertyCommand new
 		target: self;
 		selector: #quoted;
 		value: self quoted not;

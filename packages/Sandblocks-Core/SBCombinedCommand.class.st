@@ -51,6 +51,12 @@ SBCombinedCommand >> previousSelection [
 ]
 
 { #category : #'as yet unclassified' }
+SBCombinedCommand >> setArtefactFrom [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBCombinedCommand >> shouldMergeWithNext [
 
 	^ self commands last shouldMergeWithNext

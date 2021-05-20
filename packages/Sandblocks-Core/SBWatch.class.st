@@ -82,7 +82,9 @@ SBWatch >> color [
 { #category : #'event handling' }
 SBWatch >> doubleClick: anEvent [
 
-	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact) replacer: self expression; target: self)
+	self sandblockEditor do: (SBReplaceCommand new
+		replacer: self expression;
+		target: self)
 ]
 
 { #category : #'colors and color policies' }

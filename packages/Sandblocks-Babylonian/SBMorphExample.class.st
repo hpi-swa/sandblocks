@@ -55,7 +55,7 @@ SBMorphExample class >> setUp: aBlock cases: aCollectionOfBlocks extent: aPoint 
 SBMorphExample class >> suggestion [
 
 	^ [:block |
-		block sandblockEditor do: ((SBReplaceCommand newFor: block containingArtefact)
+		block sandblockEditor do: (SBReplaceCommand new
 			target: block;
 			replacer: (self buildTemplateFor: block extent: 300 asPoint);
 			yourself)]

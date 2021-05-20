@@ -270,18 +270,16 @@ SBBlock >> changeLocalColorPolicy [
 SBBlock >> changeToUnknown [
 	<action>
 
-	self newNullBlock
-		convertedFor: self objectInterface
-		do: [:new |
-			new ifNotNil: [
-				self sandblockEditor
-					copyBuffer: self;
-					do: ((SBReplaceCommand newFor: self containingArtefact)
-						target: self;
-						replacer: new;
-						shouldMergeWithNext: true;
-						yourself);
-					startInput: new at: 0 replacingContents: false]]
+	self newNullBlock convertedFor: self objectInterface do: [:new |
+		new ifNotNil: [
+			self sandblockEditor
+				copyBuffer: self;
+				do: (SBReplaceCommand new
+					target: self;
+					replacer: new;
+					shouldMergeWithNext: true;
+					yourself);
+				startInput: new at: 0 replacingContents: false]]
 ]
 
 { #category : #hierarchy }
@@ -565,17 +563,13 @@ SBBlock >> deleteAdjacent [
 	startIndex := self childIndex.
 	endIndex := count = 0
 		ifTrue: [self parentSandblock childSandblocks size]
-		ifFalse: [
-			startIndex + (count - 1) min: self parentSandblock childSandblocks size].
+		ifFalse: [startIndex + (count - 1) min: self parentSandblock childSandblocks size].
 	
 	targets := (startIndex to: endIndex) collect: [:index | self parentSandblock childSandblocks at: index].
 	
 	self sandblockEditor
 		copyBuffer: targets;
-		do: (SBCombinedCommand newWith: (targets
-			collect: [:target |
-				(SBDeleteCommand newFor: self containingArtefact)
-					target: target]))
+		do: (SBCombinedCommand newWith: (targets collect: [:target | SBDeleteCommand new target: target]))
 ]
 
 { #category : #actions }
@@ -605,7 +599,7 @@ SBBlock >> deleteAround [
 			do: {[editor copyBuffer: target]}.
 		self removeProperty: #copyPlaceholder.
 		
-		editor do: ((SBRecordedCommand newFor: self containingArtefact) record: [:recorder |
+		editor do: (SBRecordedCommand new record: [:recorder |
 			recorder
 				moveAll: self parentSandblock childSandblocks
 				in: target owner
@@ -618,7 +612,7 @@ SBBlock >> deleteAround [
 			self setProperty: #copyPlaceholder toValue: true.
 			editor copyBuffer: target.
 			self removeProperty: #copyPlaceholder.
-			editor do: ((SBReplaceCommand newFor: self containingArtefact)
+			editor do: (SBReplaceCommand new
 				target: target;
 				replacer: replacer).
 			replacer postDuplicate.
@@ -677,10 +671,12 @@ SBBlock >> deleteBlock [
 SBBlock >> deleteCommandFor: aBlock [
 
 	^ (self canDeleteChild: aBlock)
-		ifTrue: [(SBDeleteCommand newFor: aBlock containingArtefact) target: aBlock]
+		ifTrue: [SBDeleteCommand new target: aBlock]
 		ifFalse: [
 			aBlock newNullBlock ifNotNil: [:nullBlock |
-				(SBReplaceCommand newFor: aBlock containingArtefact) target: aBlock; replacer: nullBlock]]
+				SBReplaceCommand new
+					target: aBlock;
+					replacer: nullBlock]]
 ]
 
 { #category : #decorators }
@@ -976,45 +972,6 @@ SBBlock >> grammarHandler [
 ]
 
 { #category : #'event handling' }
-SBBlock >> handleDropMorph: anEvent [
-
-	self highlightForDrop: false.
-	^ super handleDropMorph: anEvent
-]
-
-{ #category : #'dropping/grabbing' }
-SBBlock >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
-
-	"aBlock unpackSelection
-		convertedFor: self objectInterfaceForDrop
-		doWithChooser: [:block | | reference |
-			aBoolean
-				ifTrue: [ | insert |
-					insert := self insertCommandRequest: false near: aMorph.
-					reference := insert container.
-					self sandblockEditor do: (SBCombinedCommand newWith: {
-						insert.
-						(SBReplaceCommand newOrEditFor: self containingArtefact)
-							target: insert morph;
-							replacer: block
-					})]
-				ifFalse: [
-					reference := self.
-					aBlock wrapsAround
-						ifTrue: [self select; wrapSelectionWith: block]
-						ifFalse: [
-							self sandblockEditor do: ((SBReplaceCommand newOrEditFor: self containingArtefact)
-								target: self;
-								replacer: block)]].
-			block
-				position: (reference containingSandblock = self sandblockEditor
-					ifTrue: [((reference transformFrom: nil) globalPointToLocal: anEvent position) asIntegerPoint]
-					ifFalse: [anEvent position]);
-				inputContainedUnknown.
-			block]"
-]
-
-{ #category : #'event handling' }
 SBBlock >> handlesMouseDown: anEvent [
 
 	^ anEvent redButtonPressed or: [
@@ -1136,7 +1093,7 @@ SBBlock >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
 	self fixedNumberOfChildren ifTrue: [^ nil].
 	
-	^ (SBRelInsertCommand newFor: self containingArtefact)
+	^ SBRelInsertCommand new
 		near: aBlock before: aBoolean in: self morph: aMorph;
 		yourself
 ]
@@ -1437,7 +1394,7 @@ SBBlock >> leftRotate [
 	(self hasChildSandblocks not or: [self parentSandblock isNil]) ifTrue: [^ self].
 	(self isFirstChild or: [self isLastChild]) ifFalse: [^ self].
 	
-	self sandblockEditor do: ((SBSubtreeRotateCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBSubtreeRotateCommand new
 		target: self;
 		yourself)
 ]
@@ -1836,7 +1793,7 @@ SBBlock >> pasteBeforeOrAfter: aBeforeBoolean [
 				at: (aBeforeBoolean ifTrue: [#before] ifFalse: [#after]))
 			do: [:repr |
 				self sandblockEditor do: ((self containingArtefact = self
-					ifFalse: [SBInsertCommand newFor: self containingArtefact]
+					ifFalse: [SBInsertCommand new]
 					ifTrue: [SBInsertCommand newNonEdit])
 					morph: (repr center: self center);
 					container: self owner;
@@ -1858,7 +1815,7 @@ SBBlock >> pasteReplace [
 		
 		new := copyBuffer unpackSelection veryDeepCopy.
 		new convertedFor: self objectInterface do: [:repr |
-			self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+			self sandblockEditor do: (SBReplaceCommand new
 				target: self;
 				replacer: repr).
 			repr postDuplicate]]
@@ -2457,7 +2414,7 @@ SBBlock >> swap: aNumber [
 	[offset abs <= children size and: [(canSwap value: self value: (next := children atWrap: (children indexOf: self) + offset)) not]] whileTrue: [offset := offset + aNumber].
 	offset = children size ifTrue: [^ self].
 	
-	self sandblockEditor do: ((SBSwapCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBSwapCommand new
 		a: self;
 		b: next)
 ]
@@ -2669,7 +2626,7 @@ SBBlock >> wrapSelectionWith: aSelection [
 		do: {[(aSelection unpackSelection satisfies: self objectInterface) ifFalse: [^ self]]}.
 	
 	self sandblockEditor doMultiSelection: [:selected |
-		(SBRecordedCommand newFor: self containingArtefact) record: [:recorder | | new placeholder |
+		SBRecordedCommand new record: [:recorder | | new placeholder |
 			new := aSelection.
 			placeholder := new copyPlaceholder.
 			recorder replace: selected first with: new.

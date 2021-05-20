@@ -1,5 +1,5 @@
 Class {
-	#name : #SBStOpenMorphCommand,
+	#name : #SBEditorOpenMorphCommand,
 	#superclass : #SBCommand,
 	#instVars : [
 		'editor',
@@ -8,21 +8,23 @@ Class {
 		'isUnsaved',
 		'priorChildren'
 	],
-	#category : #'Sandblocks-Smalltalk'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
-SBStOpenMorphCommand >> applyLayoutProperties: aMorph [
+SBEditorOpenMorphCommand >> applyLayoutProperties: aMorph [
 
-	editor isSingleArtefactView ifTrue: [
-		aMorph
-			hResizing: #spaceFill;
-			vResizing: #shrinkWrap;
-			position: 0 @ 0]
+	editor isSingleArtefactView
+		ifTrue: [
+			aMorph
+				hResizing: #spaceFill;
+				vResizing: #shrinkWrap;
+				position: 0 @ 0]
+		ifFalse: [self applyPositionTo: aMorph]
 ]
 
 { #category : #'as yet unclassified' }
-SBStOpenMorphCommand >> do [
+SBEditorOpenMorphCommand >> do [
 
 	self applyLayoutProperties: morph.
 	
@@ -33,54 +35,61 @@ SBStOpenMorphCommand >> do [
 			window := browser containingWindow.
 			Project current addDeferredUIMessage: [
 				browser blockEditor openMorphInView: morph.
-				isUnsaved ifTrue: [browser blockEditor do: (SBDoItCommand newFor: morph)].
+				isUnsaved ifTrue: [browser blockEditor do: (SBDoItCommand new artefact: morph)].
 				browser blockEditor startInput: morph at: 1 replacingContents: false]]
 		ifFalse: [
 			editor isSingleArtefactView ifTrue: [
 				priorChildren := editor childSandblocks.
 				priorChildren do: #delete].
-			(self editor openMorphInViewCommand: morph) do].
+			(self editor openMorphInViewCommand: morph) do.
+			self applyPositionTo: morph].
 	^ nil
 ]
 
 { #category : #'as yet unclassified' }
-SBStOpenMorphCommand >> editor [
+SBEditorOpenMorphCommand >> editor [
 
 	^ editor
 ]
 
 { #category : #'as yet unclassified' }
-SBStOpenMorphCommand >> editor: anEditor [
+SBEditorOpenMorphCommand >> editor: anEditor [
 
 	editor := anEditor
 ]
 
 { #category : #'as yet unclassified' }
-SBStOpenMorphCommand >> isUnsaved: aBoolean [
+SBEditorOpenMorphCommand >> isUnsaved: aBoolean [
 
 	isUnsaved := aBoolean
 ]
 
 { #category : #'as yet unclassified' }
-SBStOpenMorphCommand >> morph: aMorph [
+SBEditorOpenMorphCommand >> morph: aMorph [
 
 	morph := aMorph
 ]
 
 { #category : #'as yet unclassified' }
-SBStOpenMorphCommand >> postDo [
+SBEditorOpenMorphCommand >> postDo [
 
 	(morph hasOwner: self editor) ifTrue: [self editor startInput: morph at: 1 replacingContents: false]
 ]
 
 { #category : #'as yet unclassified' }
-SBStOpenMorphCommand >> shouldOpenNewWindow [
+SBEditorOpenMorphCommand >> setArtefactFrom [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBEditorOpenMorphCommand >> shouldOpenNewWindow [
 
 	^ editor isSingleArtefactView and: [(editor artefacts ifNotEmpty: [:a | a first hasUnsavedChanges] ifEmpty: [false]) and: [morph isSmalltalk and: [morph isMethod]]]
 ]
 
 { #category : #'as yet unclassified' }
-SBStOpenMorphCommand >> undo [
+SBEditorOpenMorphCommand >> undo [
 
 	window ifNotNil: #delete.
 	priorChildren ifNotNil: [priorChildren do: [:c | editor openMorph: c]].

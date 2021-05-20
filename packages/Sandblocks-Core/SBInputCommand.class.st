@@ -11,12 +11,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> affectedMorphs [
-
-	^ {oldMorph owner ifNil: [newMorph] ifNotNil: [oldMorph]}
-]
-
-{ #category : #'as yet unclassified' }
 SBInputCommand >> do [
 
 	(oldMorph ~= newMorph and: [newMorph owner isNil]) ifTrue: [oldMorph replaceBy: newMorph].
@@ -76,6 +70,12 @@ SBInputCommand >> previousText [
 SBInputCommand >> previousText: aString [
 
 	previousText := aString
+]
+
+{ #category : #'as yet unclassified' }
+SBInputCommand >> setArtefactFrom [
+
+	^ oldMorph
 ]
 
 { #category : #'as yet unclassified' }

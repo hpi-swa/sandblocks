@@ -26,6 +26,12 @@ SBStMoveMethodCommand >> method: aMethod [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMoveMethodCommand >> setArtefactFrom [
+
+	^ method
+]
+
+{ #category : #'as yet unclassified' }
 SBStMoveMethodCommand >> toClass: aClass [
 
 	toClass := aClass

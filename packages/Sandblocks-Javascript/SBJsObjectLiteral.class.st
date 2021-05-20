@@ -18,8 +18,7 @@ SBJsObjectLiteral >> buildEmptyRow [
 { #category : #'as yet unclassified' }
 SBJsObjectLiteral >> deleteCommandFor: aBlock [
 
-	^ (SBDeleteCommand newFor: self containingArtefact)
-		target: aBlock owner
+	^ SBDeleteCommand new target: aBlock owner
 ]
 
 { #category : #'as yet unclassified' }

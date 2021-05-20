@@ -60,11 +60,11 @@ SBScmGrammarHandler >> splitSExpr [
 		to: self block parentSandblock childSandblocks size.
 	
 	self block sandblockEditor do: (SBCombinedCommand newWith: {
-		(SBInsertCommand newFor: self block containingArtefact)
+		SBInsertCommand new
 			container: self block parentSandblock parentSandblock;
 			index: self block parentSandblock childIndex + 1;
 			morph: newExpr}, (newChildren collectWithIndex: [:child :index |
-		(SBMoveCommand newFor: self block containingArtefact)
+		SBMoveCommand new
 			morph: child;
 			index: index;
 			container: newExpr])).
@@ -92,12 +92,11 @@ SBScmGrammarHandler >> wrapInSExpr [
 	<action>
 	<inputAction>
 	<actionValidIf: #isExpression>
-	
-	self block sandblockEditor
-		do: ((SBWrapCommand newFor: self block containingArtefact)
-			outer: SBScmExpression new;
-			inner: self block;
-			wrap: [:outer :inner | outer addMorphBack: inner]).
+
+	self block sandblockEditor do: (SBWrapCommand new
+		outer: SBScmExpression new;
+		inner: self block;
+		wrap: [:outer :inner | outer addMorphBack: inner]).
 	
 	self block sandblockEditor maybeStartInputFromStart
 ]

@@ -5,24 +5,17 @@ Class {
 		'shouldMergeWithNext',
 		'wasEdit',
 		'artefact',
-		'previousSelection'
+		'previousSelection',
+		'position'
 	],
 	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
-SBCommand class >> new [
+SBCommand class >> newFor: anArtefactOrNil [
 
-	^ self error: 'use newFor:'
-]
-
-{ #category : #'as yet unclassified' }
-SBCommand class >> newFor: anArtefact [
-
-	self assert: anArtefact notNil.
-	
 	^ self basicNew initialize
-		artefact: anArtefact;
+		artefact: anArtefactOrNil;
 		yourself
 ]
 
@@ -46,7 +39,17 @@ SBCommand class >> newOrEditFor: anArtefactOrNil [
 { #category : #'as yet unclassified' }
 SBCommand >> affectedArtefacts [
 
-	^ self wasEdit ifTrue: [{self artefact}] ifFalse: [#()]
+	^ self artefact ifNotNil: [{self artefact}] ifNil: [#()]
+]
+
+{ #category : #'as yet unclassified' }
+SBCommand >> applyPositionTo: aMorphOrCollection [
+
+	self position ifNil: [^ self].
+	
+	aMorphOrCollection isCollection
+		ifTrue: [aMorphOrCollection do: [:morph | self applyPositionTo: morph]]
+		ifFalse: [aMorphOrCollection position: self position]
 ]
 
 { #category : #'as yet unclassified' }
@@ -59,6 +62,13 @@ SBCommand >> artefact [
 SBCommand >> artefact: anObject [
 
 	artefact := anObject
+]
+
+{ #category : #apply }
+SBCommand >> artefactFrom: aMorph [
+
+	aMorph ifNotNil: [
+		self artefact: aMorph containingSandblock containingArtefact]
 ]
 
 { #category : #apply }
@@ -77,9 +87,28 @@ SBCommand >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBCommand >> position [
+	" if set, the position where new morphs should be placed "
+
+	^ position
+]
+
+{ #category : #'as yet unclassified' }
+SBCommand >> position: aPoint [
+
+	position := aPoint
+]
+
+{ #category : #'as yet unclassified' }
 SBCommand >> postDo [
 
 	" you may do any action here after the 'do' has completed that does not affect any state that should be undo-able, e.g. you may move focus to a specific part here "
+]
+
+{ #category : #'as yet unclassified' }
+SBCommand >> preDo [
+
+	artefact ifNil: [self artefactFrom: self setArtefactFrom]
 ]
 
 { #category : #'as yet unclassified' }
@@ -92,6 +121,12 @@ SBCommand >> previousSelection [
 SBCommand >> previousSelection: aBlock [
 
 	previousSelection := aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBCommand >> setArtefactFrom [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }

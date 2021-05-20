@@ -110,13 +110,10 @@ SBStMessageSend >> codeActions [
 	^ super codeActions, (SBStSubstitution allSubclasses
 		select: [:substition | substition matches: self]
 		thenCollect: [:substitution |
-			SBCodeAction
-				labeled: 'Convert to ', substitution name
-				for: self
-				do: [:node |
-					node sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
-						target: node;
-						replacer: ((substitution newFrom: self) pc: self pc))]])
+			SBCodeAction labeled: 'Convert to ', substitution name for: self do: [:node |
+				node sandblockEditor do: (SBReplaceCommand new
+					target: node;
+					replacer: ((substitution newFrom: self) pc: self pc))]])
 ]
 
 { #category : #'as yet unclassified' }
@@ -145,12 +142,12 @@ SBStMessageSend >> converterOptionsDo: aBlock [
 SBStMessageSend >> deleteCommandFor: aBlock [
 
 	aBlock = self receiver ifTrue: [
-		^ (SBReplaceCommand newFor: aBlock containingArtefact)
+		^ SBReplaceCommand new
 			target: (self isUnary ifTrue: [self] ifFalse: [aBlock]);
 			replacer: (self isUnary ifTrue: [SBStName contents: self selector] ifFalse: [self newNullBlock])].
 	
 	(self isUnary and: [self isInCascade not]) ifTrue: [
-		^ (SBReplaceCommand newFor: self containingArtefact)
+		^ SBReplaceCommand new
 			target: self;
 			replacer: self receiver].
 	
@@ -188,7 +185,7 @@ SBStMessageSend >> fixActions [
 								class: (class ifNil: [UIManager default chooseClassOrTrait ifNil: [^ self]]);
 							body: SBStBlockBody new.
 						
-						self sandblockEditor do: (SBStOpenMorphCommand newNonEdit
+						self sandblockEditor do: (SBEditorOpenMorphCommand newNonEdit
 							morph: method;
 							editor: self sandblockEditor;
 							isUnsaved: true;
@@ -286,19 +283,20 @@ SBStMessageSend >> isUnary [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> keyStroke: anEvent [
 
-	(anEvent keyCharacter = Character space or: [
-		(self selector notEmpty and: [self isBinary not]) and: [anEvent keyCharacter isSpecial]]) ifTrue: [
-			self sandblockEditor endInput.
-			^ self grammarHandler wrapInMessageSend: (anEvent keyCharacter isSpecial ifTrue: [anEvent keyCharacter asString] ifFalse: [''])].
+	(anEvent keyCharacter = Character space or: [(self selector notEmpty and: [self isBinary not]) and: [anEvent keyCharacter isSpecial]]) ifTrue: [
+		self sandblockEditor endInput.
+		^ self grammarHandler wrapInMessageSend: (anEvent keyCharacter isSpecial
+			ifTrue: [anEvent keyCharacter asString]
+			ifFalse: [''])].
 	
 	(anEvent keyCharacter = Character backspace and: [self selector isEmpty]) ifTrue: [ | receiver |
 		receiver := self receiver.
 		^ self sandblockEditor
 			endInput;
-			do: ((SBReplaceCommand newFor: self containingArtefact)
+			do: (SBReplaceCommand new
 				target: self;
 				replacer: receiver);
-			startInput: receiver at: 9e8 replacingContents: false].
+			startInput: receiver at: 900000000 replacingContents: false].
 	
 	signature keyStroke: anEvent.
 	self updateSuggestions
@@ -340,25 +338,20 @@ SBStMessageSend >> mergeWithParentSend [
 	<actionValidIf: #parentIsKeywordSend>
 
 	| signature |
-	
 	signature := self parentSandblock signature.
-	self sandblockEditor do: (SBCombinedCommand newWith: (self messageParts
-		with: self arguments
-		collect: [:part :arg |
-			{
-				((SBMoveCommand newFor: self containingArtefact)
-					container: signature;
-					index: signature submorphCount + 900000000;
-					morph: part).
-				((SBMoveCommand newFor: self containingArtefact)
-					container: signature;
-					index: signature submorphCount + 900000000;
-					morph: arg)
-			}]) flatten, {
-		((SBReplaceCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBCombinedCommand newWith: (self messageParts with: self arguments collect: [:part :arg |
+		{
+			SBMoveCommand new
+				container: signature;
+				index: signature submorphCount + 900000000;
+				morph: part.
+			SBMoveCommand new
+				container: signature;
+				index: signature submorphCount + 900000000;
+				morph: arg}]) flatten, {
+		SBReplaceCommand new
 			target: self;
-			replacer: self receiver)
-	})
+			replacer: self receiver})
 ]
 
 { #category : #'as yet unclassified' }
@@ -548,10 +541,10 @@ SBStMessageSend >> tryDelete [
 	receiver := self receiver.
 	^ self sandblockEditor
 		endInput;
-		do: ((SBReplaceCommand newFor: self containingArtefact)
+		do: (SBReplaceCommand new
 			target: self;
 			replacer: receiver);
-		startInput: receiver at: 9e8 replacingContents: false
+		startInput: receiver at: 900000000 replacingContents: false
 ]
 
 { #category : #'as yet unclassified' }
@@ -568,7 +561,7 @@ SBStMessageSend >> useAsVariable [
 	<action>
 	<actionValidIf: #isUnary>
 
-	self sandblockEditor do: ((SBReplaceCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBReplaceCommand new
 		target: self;
 		replacer: (SBStName contents: self selector))
 ]
@@ -631,7 +624,7 @@ SBStMessageSend >> wrapInCascade [
 		(self sandblockEditor submorphsAreConsecutive: targets)
 			ifFalse: [nil]
 			ifTrue: [
-				(SBWrapConsecutiveCommand newFor: self containingArtefact)
+				SBWrapConsecutiveCommand new
 					targets: (selected collect: #messageSend);
 					outer: SBStCascade new;
 					wrap: [:outer :inner |

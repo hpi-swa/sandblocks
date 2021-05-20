@@ -30,9 +30,10 @@ SBExampleReplace class >> replace: aBlock with: anotherBlock [
 { #category : #'as yet unclassified' }
 SBExampleReplace class >> suggestion [
 
-	^ [:block | block sandblockEditor do: ((SBReplaceCommand newFor: block containingArtefact)
-		target: block;
-		replacer: (SBExampleReplace new replace: SBStBlockBody empty with: SBStBlockBody empty))]
+	^ [:block |
+		block sandblockEditor do: (SBReplaceCommand new
+			target: block;
+			replacer: (SBExampleReplace new replace: SBStBlockBody empty with: SBStBlockBody empty))]
 ]
 
 { #category : #'as yet unclassified' }

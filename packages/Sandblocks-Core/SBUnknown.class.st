@@ -83,10 +83,9 @@ SBUnknown >> drawnColor [
 { #category : #accessing }
 SBUnknown >> endInput [
 	<inputAction>
-	
+
 	self sandblockEditor endInput.
-	self deleteIfDismissed ifTrue: [
-		self sandblockEditor do: ((SBDeleteCommand newFor: self containingArtefact) target: self)]
+	self deleteIfDismissed ifTrue: [self sandblockEditor do: (SBDeleteCommand new target: self)]
 ]
 
 { #category : #accessing }
@@ -254,7 +253,7 @@ SBUnknown >> wasDeselected [
 	(self deleteIfDismissed and: [editor notNil]) ifTrue: [ | wasInput previousSelection |
 		previousSelection := editor selection.
 		wasInput := editor mode = #input.
-		self sandblockEditor do: ((SBDeleteCommand newFor: self containingArtefact) target: self).
+		self sandblockEditor do: (SBDeleteCommand new target: self).
 		
 		(previousSelection notNil and: [previousSelection sandblockEditor notNil]) ifTrue: [
 			previousSelection select.

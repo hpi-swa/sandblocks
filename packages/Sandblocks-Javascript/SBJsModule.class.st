@@ -74,7 +74,7 @@ SBJsModule >> insertStatementAboveOrBelow: anAboveBoolean [
 	| statement |
 	statement := self newNullBlock.
 	self sandblockEditor
-		do: ((SBInsertCommand newFor: self)
+		do: (SBInsertCommand new
 			index: (anAboveBoolean ifTrue: [2] ifFalse: [self body submorphCount + 1]);
 			container: self body;
 			morph: statement;

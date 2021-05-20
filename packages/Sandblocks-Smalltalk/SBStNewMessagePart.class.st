@@ -206,7 +206,7 @@ SBStNewMessagePart >> stopEditing: aCommand [
 { #category : #'as yet unclassified' }
 SBStNewMessagePart >> unaryToKeywordCommand [
 
-	^ (SBInsertCommand newFor: self containingArtefact)
+	^ SBInsertCommand new
 		morph: self newNullBlock;
 		container: self;
 		index: 3

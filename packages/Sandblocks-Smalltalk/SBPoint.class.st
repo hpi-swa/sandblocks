@@ -94,7 +94,7 @@ SBPoint >> mouseDown: anEvent [
 	anEvent hand newMouseFocus: self.
 	isDown := true.
 	lastMousePosition := anEvent position.
-	scrubbingCommand := (SBMutatePropertyCommand newFor: self containingArtefact)
+	scrubbingCommand := SBMutatePropertyCommand new
 		oldValue: self contents;
 		selector: #contents;
 		target: self.
@@ -139,7 +139,7 @@ SBPoint >> pickCoordinate [
 
 	| p |
 	p := Cursor crossHair showWhile: [Sensor waitButton].
-	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBMutatePropertyCommand new
 		oldValue: self contents;
 		selector: #contents;
 		value: p;
@@ -154,7 +154,7 @@ SBPoint >> pickExtent [
 	Cursor crossHair showWhile: [
 		origin := Sensor waitButton.
 		corner := Sensor waitNoButton].
-	self sandblockEditor do: ((SBMutatePropertyCommand newFor: self containingArtefact)
+	self sandblockEditor do: (SBMutatePropertyCommand new
 		oldValue: self contents;
 		selector: #contents;
 		value: (Rectangle encompassing: {origin. corner}) extent;

@@ -12,7 +12,6 @@ SBStateMachineTransitionCondition >> changeType [
 	<action>
 
 	| index newType block |
-	
 	index := UIManager default chooseFrom: {'Time'. 'Condition'. 'Signal'}.
 	
 	index < 1 ifTrue: [^ self].
@@ -20,17 +19,15 @@ SBStateMachineTransitionCondition >> changeType [
 	block := newType caseOf: {
 		[#time] -> ['1 second' parseAsSandblock].
 		[#condition] -> [SBStBlockBody empty].
-		[#signal] -> [SBStSymbol new contents: 'signal']
-	}.
+		[#signal] -> [SBStSymbol new contents: 'signal']}.
 	self sandblockEditor do: (SBCombinedCommand newWith: {
-		(SBMutatePropertyCommand newFor: self containingArtefact)
+		SBMutatePropertyCommand new
 			selector: #type;
 			target: self;
 			value: newType.
-		(SBReplaceCommand newFor: self containingArtefact)
+		SBReplaceCommand new
 			replacer: block;
-			target: self lastSubmorph
-	})
+			target: self lastSubmorph})
 ]
 
 { #category : #'as yet unclassified' }

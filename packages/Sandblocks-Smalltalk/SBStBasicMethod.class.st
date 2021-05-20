@@ -251,7 +251,7 @@ SBStBasicMethod >> declarations [
 SBStBasicMethod >> deleteMethod [
 	<action>
 
-	^ self sandblockEditor do: ((SBStDeleteMethodCommand newFor: self) target: self)
+	^ self sandblockEditor do: (SBStDeleteMethodCommand new target: self)
 ]
 
 { #category : #'as yet unclassified' }
@@ -333,7 +333,7 @@ SBStBasicMethod >> insertStatementAboveOrBelow: anAboveBoolean [
 	| statement |
 	statement := self newNullBlock.
 	self sandblockEditor
-		do: ((SBInsertCommand newFor: self)
+		do: (SBInsertCommand new
 			index: (anAboveBoolean ifTrue: [2] ifFalse: [self body submorphCount + 1]);
 			container: self body;
 			morph: statement;
@@ -448,7 +448,7 @@ SBStBasicMethod >> moveToClass [
 
 	^ UIManager default chooseClassOrTrait ifNotNil: [:class | | classOrInstanceSide |
 		(classOrInstanceSide := UIManager default chooseFrom: {'Instance Side'. 'Class Side'}) ~= 0 ifTrue: [
-			self sandblockEditor do: ((SBStMoveMethodCommand newFor: self)
+			self sandblockEditor do: (SBStMoveMethodCommand new
 				method: self;
 				toClass: (classOrInstanceSide = 2 ifTrue: [class class] ifFalse: [class])).
 			self clearCache]]
@@ -459,7 +459,7 @@ SBStBasicMethod >> moveToClassSide [
 	<action>
 	<actionValidIf: #isInstanceSideMethod>
 
-	self sandblockEditor do: ((SBStMoveMethodCommand newFor: self)
+	self sandblockEditor do: (SBStMoveMethodCommand new
 		method: self;
 		toClass: self relatedClass class)
 ]
@@ -469,7 +469,7 @@ SBStBasicMethod >> moveToInstanceSide [
 	<action>
 	<actionValidIf: #isClassSideMethod>
 
-	self sandblockEditor do: ((SBStMoveMethodCommand newFor: self)
+	self sandblockEditor do: (SBStMoveMethodCommand new
 		method: self;
 		toClass: self relatedClass theNonMetaClass)
 ]
@@ -535,7 +535,7 @@ SBStBasicMethod >> postDuplicateSelf [
 	super postDuplicateSelf.
 	
 	" mark a change as we're unsaved "
-	self sandblockEditor do: (SBDoItCommand newFor: self).
+	self sandblockEditor do: (SBDoItCommand new artefact: self).
 	
 	self
 		detachDecorators: SBMoveDecorator;
@@ -694,18 +694,16 @@ SBStBasicMethod >> toggleCollapsed [
 { #category : #'as yet unclassified' }
 SBStBasicMethod >> tryUseAsSelf: anObject [
 
-	(anObject class = self relatedClass or: [anObject class inheritsFrom: self relatedClass])
-		ifTrue: [
-			self setProperty: #evaluationReceiver toValue: anObject.
-			
-			(Array streamContents: [:str |
-				self allBlocksDo: [:block |
-					(SBSelfThumbnailRepresentation matches: block) ifTrue: [str nextPut: block]]])
-						ifNotEmpty: [:selfs |
-							self sandblockEditor do: (SBCombinedCommand newWith: (selfs
-										collect: [:block | (SBReplaceCommand newFor: self) replacer: (SBSelfThumbnailRepresentation newFor: block); target: block])).
-							" why do we need this? "
-							Project current addDeferredUIMessage: [self layoutChanged]]]
+	(anObject class = self relatedClass or: [anObject class inheritsFrom: self relatedClass]) ifTrue: [
+		self setProperty: #evaluationReceiver toValue: anObject.
+		
+		(Array streamContents: [:str | self allBlocksDo: [:block | (SBSelfThumbnailRepresentation matches: block) ifTrue: [str nextPut: block]]]) ifNotEmpty: [:selfs |
+			self sandblockEditor do: (SBCombinedCommand newWith: (selfs collect: [:block |
+				SBReplaceCommand new
+					replacer: (SBSelfThumbnailRepresentation newFor: block);
+					target: block])).
+			" why do we need this? "
+			Project current addDeferredUIMessage: [self layoutChanged]]]
 ]
 
 { #category : #'as yet unclassified' }
