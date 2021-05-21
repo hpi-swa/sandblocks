@@ -125,7 +125,7 @@ SBShortcut >> matchesEvent: anEvent [
 	SBToggledCode
 		comment: 'needs to be adapted per keyboard layout'
 		active: 1
-		do: {[shiftedKeys := #($: $" $! $$ $% $/ $( $) $= $; $_ $* $')]}.
+		do: {[shiftedKeys := #($: $" $! $$ $% $/ $( $) $= $; $_ $* $' ${)]}.
 	^ anEvent keyCharacter = character and: [(anEvent optionKeyPressed = self option and: [anEvent commandKeyPressed = (self command or: [self option])]) and: [(shift or: [character isUppercase]) = anEvent shiftPressed or: [(anEvent keyCharacter <= 32 and: [shift = anEvent shiftPressed]) or: [shiftedKeys includes: anEvent keyCharacter]]]]
 ]
 
