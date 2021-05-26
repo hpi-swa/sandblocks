@@ -90,14 +90,6 @@ SBEditor class >> openFor: aMethodOrClass [
 	^ (self newFor: aMethodOrClass) openInWindow; yourself
 ]
 
-{ #category : #generated }
-SBEditor class >> savedBlocks [
-^ {SBStMethod3264525 := SBStMethod newFor: (AssertionFailure compiledMethodAt: #isResumable) at:551@20.
-SBStMethod1032892 := SBStMethod newFor: (Class compiledMethodAt: #asHelpTopic) at:462@192.
-SBForceConnector connect: SBStMethod3264525 to: SBStMethod1032892.
-}
-]
-
 { #category : #shortcuts }
 SBEditor class >> shortcutStringForAction: anAction [
 
