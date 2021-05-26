@@ -548,15 +548,13 @@ SBEditor >> dropFiles: anEvent [
 
 	| numFiles |
 	numFiles := anEvent contents.
-	1
-		to: numFiles
-		do: [:i |
-			(FileStream primDropRequestFileName: i) ifNotNil: [:name | | folderRef isFolder |
-				folderRef := FileDirectory on: '/', name.
-				isFolder := folderRef / '..' directoryExists: folderRef localName.
-				isFolder
-					ifTrue: [self handleDroppedFolder: folderRef event: anEvent]
-					ifFalse: [self handleDroppedFile: folderRef name event: anEvent]]]
+	1 to: numFiles do: [:i |
+		(FileStream primDropRequestFileName: i) ifNotNil: [:name | | folderRef isFolder |
+			folderRef := FileDirectory on: '/', name.
+			isFolder := folderRef / '..' directoryExists: folderRef localName.
+			isFolder
+				ifTrue: [self handleDroppedFolder: folderRef event: anEvent]
+				ifFalse: [self handleDroppedFile: folderRef name event: anEvent]]]
 ]
 
 { #category : #'action helpers' }
@@ -680,11 +678,12 @@ SBEditor >> handleDropMorph: anEvent [
 { #category : #'event handling' }
 SBEditor >> handleDroppedFile: name event: anEvent [
 
-	self flag: #todo. "not adapted to new drag-and-drop system "
+	self flag: #todo.
+	"not adapted to new drag-and-drop system "
 	^ FileStream readOnlyFileNamed: name do: [:file |
 		file
 			convertedFor: (self objectInterfaceNear: nil at: #after)
-			do: [:converted | self handleDroppedBlock: converted event: anEvent adding: true near: nil]]
+			do: [:converted | self openMorphInView: converted]]
 ]
 
 { #category : #'event handling' }

@@ -45,8 +45,11 @@ SBScmBrowser >> initialize [
 			changeTableLayout;
 			hResizing: #spaceFill;
 			vResizing: #spaceFill;
-			addMorphBack: (defScroll := ScrollPane new vResizing: #spaceFill);
+			addMorphBack: (defScroll := ScrollPane new
+				color: Color transparent;
+				vResizing: #spaceFill);
 			addMorphBack: (modScroll := ScrollPane new
+				color: Color transparent;
 				hResizing: #spaceFill;
 				vResizing: #spaceFill));
 		attachDecorator: SBResizableDecorator new;

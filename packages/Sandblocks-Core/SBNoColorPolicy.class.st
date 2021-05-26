@@ -40,11 +40,13 @@ SBNoColorPolicy >> builtIn [
 { #category : #'as yet unclassified' }
 SBNoColorPolicy >> colorForBlock: aBlock [
 
+	(aBlock isBlockBody and: [aBlock parentSandblock isArtefact not and: [aBlock isArtefact not]]) ifTrue: [^ (self colorForBlock: aBlock parentSandblock) adjustBrightness: (self dark ifTrue: [0.03] ifFalse: [-0.03])].
+	
 	^ aBlock isArtefact ifTrue: [self background] ifFalse: [
 		aBlock parentSandblock
 			ifNotNil: [:p |
 				(self shouldDarken: aBlock parent: p)
-					ifTrue: [(self colorForBlock: p) adjustBrightness: (self dark ifTrue: 0.07 ifFalse: [0.07])]
+					ifTrue: [(self colorForBlock: p) adjustBrightness: (self dark ifTrue: [0.05] ifFalse: [-0.05])]
 					ifFalse: [self colorForBlock: p]]
 			ifNil: [self background]]
 ]
