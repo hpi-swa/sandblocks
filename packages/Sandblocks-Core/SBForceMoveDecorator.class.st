@@ -38,7 +38,7 @@ SBForceMoveDecorator >> applyForces [
 			otherMorph preventOcclusion and: [
 				otherMorph ~= self morph and: [
 					otherMorph isDragging not]]]) ifTrue: [
-			velocity := velocity + (self forceAgainst: otherMorph) + (self attractionTo: otherMorph)]].
+			velocity := velocity + (self forceAgainst: otherMorph)]].
 	
 	self additionalForces do: [:forceConnection | velocity := velocity + (forceConnection forceFor: self morph)].
 	
@@ -68,11 +68,24 @@ SBForceMoveDecorator >> blockAtPoint: aPoint [
 	bestArea := 0.
 	
 	self morph owner submorphsDo: [:block |
-		((block bounds containsPoint: aPoint) and: [block bounds area > bestArea] and: [block ~= self morph]) ifTrue: [
+		((block bounds containsPoint: aPoint) and: [block bounds area > bestArea] and: [block ~= self morph] and: [block isSandblock]) ifTrue: [
 			best := block.
 			bestArea := block bounds area]].
 	
 	^ best
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> createImplicitForces [
+	
+	self morph owner submorphsDo: [:otherMorph |
+		(otherMorph isSandblock and: [
+			otherMorph preventOcclusion and: [
+				otherMorph ~= self morph and: [
+					otherMorph isDragging not]]]) ifTrue: [ | attraction |
+						attraction := self attractionTo: otherMorph.
+						attraction > 0 ifTrue: [
+							self morph sandblockEditor openMorphBack: (SBForceConnector connect: self morph to: otherMorph forceScale: attraction)]]].
 ]
 
 { #category : #'as yet unclassified' }
@@ -129,7 +142,7 @@ SBForceMoveDecorator >> immediatelyResolveCollisionWith: otherMorph [
 SBForceMoveDecorator >> initialize [
 	
 	super initialize.
-	self 
+	self
 		unpin;
 		activateForces;
 		additionalForces: OrderedCollection new.

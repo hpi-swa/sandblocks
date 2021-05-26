@@ -154,7 +154,7 @@ SBBlock >> attachDecorator: aDecorator [
 SBBlock >> attractionStrengthTo: aMorph [
 	
 	^ (self isAttractedTo: aMorph)
-		ifTrue: [0.01 * (aMorph center - self center) r]
+		ifTrue: [0.25]
 		ifFalse: [0.0]
 	
 ]
@@ -162,11 +162,7 @@ SBBlock >> attractionStrengthTo: aMorph [
 { #category : #'as yet unclassified' }
 SBBlock >> attractionTo: aMorph [
 
-	| direction |
-	direction := aMorph center - self center.
-	^ (direction closeTo: 0@0)
-		ifTrue: [0@0]
-		ifFalse: [direction normalized * ((self attractionStrengthTo: aMorph) + (aMorph attractionStrengthTo: self))]
+	^ (self attractionStrengthTo: aMorph) + (aMorph attractionStrengthTo: self)
 	
 	
 ]

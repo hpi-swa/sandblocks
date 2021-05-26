@@ -130,6 +130,12 @@ SBConnectorLine >> curvePointsForSelfConnection [
 ]
 
 { #category : #'as yet unclassified' }
+SBConnectorLine >> curveWidth [
+
+	^ 2
+]
+
+{ #category : #'as yet unclassified' }
 SBConnectorLine >> drawArrowOn: aCanvas origin: aPoint delta: anotherPoint [
 
 	aCanvas asBalloonCanvas
@@ -155,7 +161,7 @@ SBConnectorLine >> drawOn: aCanvas [
 		self endPointsDo: [:a :b |
 			aCanvas asBalloonCanvas
 				aaLevel: 4;
-				line: a to: b width: 3 color: self color.
+				line: a to: b width: self lineWidth color: self color.
 			self drawConnectorsOn: aCanvas alignBetween: a and: b]].
 	self lineType = #curve ifTrue: [ | points |
 		points := self curvePoints.
@@ -163,7 +169,7 @@ SBConnectorLine >> drawOn: aCanvas [
 			aaLevel: 4;
 			drawBezier3Shape: points
 				color: Color transparent
-				borderWidth: 2
+				borderWidth: self curveWidth
 				borderColor: self color.
 		self drawConnectorsOn: aCanvas alignBetween: points third and: points last]
 ]
@@ -344,6 +350,12 @@ SBConnectorLine >> lineType [
 SBConnectorLine >> lineType: aSymbol [
 
 	lineType := aSymbol
+]
+
+{ #category : #'as yet unclassified' }
+SBConnectorLine >> lineWidth [
+	
+	^ 3
 ]
 
 { #category : #'as yet unclassified' }
