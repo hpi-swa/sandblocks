@@ -56,7 +56,10 @@ SBStClass >> category: aString [
 { #category : #'as yet unclassified' }
 SBStClass >> class: aClass [
 
-	className contents: aClass name.
+	className
+		contents: aClass name;
+		object: aClass.
+	
 	superClassName contents: (aClass superclass ifNil: ['ProtoObject'] ifNotNil: #name).
 	instanceVariables contents: (aClass instVarNames collect: [:name | SBStName contents: name]).
 	classVariables contents: (aClass classVarNames collect: [:name | SBStName contents: name]).

@@ -28,7 +28,9 @@ SBScmDefinitionButton >> sexpr: anSexpr [
 { #category : #'as yet unclassified' }
 SBScmDefinitionButton >> valid [
 
-	^ self sexpr isCollection ifTrue: [self sexpr allSatisfy: #valid] ifFalse: [self sexpr valid]
+	^ self sexpr isCollection
+		ifTrue: [self sexpr allSatisfy: #valid]
+		ifFalse: [self sexpr valid]
 ]
 
 { #category : #'as yet unclassified' }

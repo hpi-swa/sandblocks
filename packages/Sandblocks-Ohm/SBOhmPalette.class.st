@@ -24,11 +24,11 @@ SBOhmPalette class >> buildOn: aBuilder [
 		addBlock: 'Negative Lookahead'
 			as: (SBOhmPredicate new expression: (self newNullBlock: 'negation') predicate: $~);
 		addSectionHeader: 'Quantifier';
-		addBlock: 'Plus'
+		addBlock: 'At least once'
 			as: (SBOhmQuantifier new expression: (self newNullBlock: 'expr') quantifier: $+);
-		addBlock: 'Star'
+		addBlock: 'As many times as possible'
 			as: (SBOhmQuantifier new expression: (self newNullBlock: 'expr') quantifier: $*);
-		addBlock: 'Option'
+		addBlock: 'Once or never'
 			as: (SBOhmQuantifier new expression: (self newNullBlock: 'expr') quantifier: $?);
 		addSectionHeader: 'Symbols';
 		addBlock: 'Terminal' as: SBOhmTerminal new;

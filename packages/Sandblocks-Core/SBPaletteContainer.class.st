@@ -23,10 +23,9 @@ SBPaletteContainer class >> matchesBlock: aBlock [
 
 { #category : #'as yet unclassified' }
 SBPaletteContainer >> addBlock: aString as: aBlock [
+	"addMorphBack: (SBStringMorph new contents: aString);"
 
-	content
-		"addMorphBack: (SBStringMorph new contents: aString);"
-		addMorphBack: (self container: aBlock)
+	content addMorphBack: (self container: aBlock label: aString)
 ]
 
 { #category : #'as yet unclassified' }
@@ -62,10 +61,11 @@ SBPaletteContainer >> addSectionHeader: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBPaletteContainer >> container: aBlock [
+SBPaletteContainer >> container: aBlock label: aString [
 
 	^ SBPalettePreviewContainer new
 		methodClass: nil;
+		label: aString;
 		addMorphBack: (self markCopyPlaceholder: aBlock)
 ]
 
@@ -89,6 +89,7 @@ SBPaletteContainer >> initialize [
 	self
 		addMorphBack: (categories := SBColumn new layoutInset: 4);
 		addMorphBack: (ScrollPane new
+			color: Color transparent;
 			hResizing: #spaceFill;
 			vResizing: #spaceFill);
 		layoutInset: 0;

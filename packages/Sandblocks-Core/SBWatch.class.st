@@ -198,6 +198,13 @@ SBWatch >> object [
 	^ self
 ]
 
+{ #category : #caching }
+SBWatch >> postDuplicateSelf [
+
+	super postDuplicateSelf.
+	self newIdentifier
+]
+
 { #category : #printing }
 SBWatch >> printOn: aStream [
 
@@ -228,7 +235,6 @@ SBWatch >> veryDeepCopyWith: deepCopier [
 	oldDisplay replaceBy: display.
 	
 	new := super veryDeepCopyWith: deepCopier.
-	new newIdentifier.
 	
 	display replaceBy: oldDisplay.
 	display := oldDisplay.
@@ -240,4 +246,10 @@ SBWatch >> veryDeepCopyWith: deepCopier [
 SBWatch >> writeSourceOn: aStream [
 
 	self grammarHandler writeSourceOn: aStream for: self
+]
+
+{ #category : #'as yet unclassified' }
+SBWatch >> writeSourceOn: aStream indent: aNumber [
+
+	self writeSourceOn: aStream
 ]

@@ -91,14 +91,6 @@ SBEditor class >> openFor: aMethodOrClass [
 	^ (self newFor: aMethodOrClass) openInWindow; yourself
 ]
 
-{ #category : #generated }
-SBEditor class >> savedBlocks [
-^ {SBStMethod3264525 := SBStMethod newFor: (AssertionFailure compiledMethodAt: #isResumable) at:551@20.
-SBStMethod1032892 := SBStMethod newFor: (Class compiledMethodAt: #asHelpTopic) at:462@192.
-SBForceConnector connect: SBStMethod3264525 to: SBStMethod1032892.
-}
-]
-
 { #category : #shortcuts }
 SBEditor class >> shortcutStringForAction: anAction [
 
@@ -152,7 +144,7 @@ SBEditor >> addToMultiSelection: aBlock [
 { #category : #accessing }
 SBEditor >> artefacts [
 
-	^ scroll scroller submorphs select: [:s | (s isSandblock or: s isConnector) and: [s isArtefact]]
+	^ scroll scroller submorphs select: [:s | s isSandblock and: [s isArtefact]]
 ]
 
 { #category : #'do/undo/redo' }
@@ -580,15 +572,13 @@ SBEditor >> dropFiles: anEvent [
 
 	| numFiles |
 	numFiles := anEvent contents.
-	1
-		to: numFiles
-		do: [:i |
-			(FileStream primDropRequestFileName: i) ifNotNil: [:name | | folderRef isFolder |
-				folderRef := FileDirectory on: '/', name.
-				isFolder := folderRef / '..' directoryExists: folderRef localName.
-				isFolder
-					ifTrue: [self handleDroppedFolder: folderRef event: anEvent]
-					ifFalse: [self handleDroppedFile: folderRef name event: anEvent]]]
+	1 to: numFiles do: [:i |
+		(FileStream primDropRequestFileName: i) ifNotNil: [:name | | folderRef isFolder |
+			folderRef := FileDirectory on: '/', name.
+			isFolder := folderRef / '..' directoryExists: folderRef localName.
+			isFolder
+				ifTrue: [self handleDroppedFolder: folderRef event: anEvent]
+				ifFalse: [self handleDroppedFile: folderRef name event: anEvent]]]
 ]
 
 { #category : #'action helpers' }
@@ -712,11 +702,12 @@ SBEditor >> handleDropMorph: anEvent [
 { #category : #'event handling' }
 SBEditor >> handleDroppedFile: name event: anEvent [
 
-	self flag: #todo. "not adapted to new drag-and-drop system "
+	self flag: #todo.
+	"not adapted to new drag-and-drop system "
 	^ FileStream readOnlyFileNamed: name do: [:file |
 		file
 			convertedFor: (self objectInterfaceNear: nil at: #after)
-			do: [:converted | self handleDroppedBlock: converted event: anEvent adding: true near: nil]]
+			do: [:converted | self openMorphInView: converted]]
 ]
 
 { #category : #'event handling' }
@@ -890,7 +881,7 @@ SBEditor >> labelString [
 SBEditor >> loadBlocks [
 	<globalAction>
 	
-	self artefacts do: [:each | each deleteBlock].
+	self objectsToSave do: [:each | each deleteBlock].
 	self class savedBlocks do: [:each | self openMorph: each].
 ]
 
@@ -1068,6 +1059,12 @@ SBEditor >> objectInterface [
 SBEditor >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ SBInterfaces block, (SBToggledCode comment: '' active: 1 do: {[SBInterfaces always]. [SBInterfaces topLevel]})
+]
+
+{ #category : #accessing }
+SBEditor >> objectsToSave [
+
+	^ scroll scroller submorphs select: [:s | (s isSandblock or: [s isConnector]) and: [s isArtefact]]
 ]
 
 { #category : #testing }
@@ -1334,12 +1331,6 @@ SBEditor >> removeHelperTimer [
 	self removeAlarm: #showHelper
 ]
 
-{ #category : #'as yet unclassified' }
-SBEditor >> removeIndicatorFor: aMorph [
-	
-	scroll removeIndicatorFor: aMorph
-]
-
 { #category : #'action helpers' }
 SBEditor >> removeMultiSelected: aMorph [
 
@@ -1432,9 +1423,9 @@ SBEditor >> saveCurrentBlocks [
 	
 	| saveString |
 	
-	saveString := (self artefacts inject: '' into: [:string :artefact | string , artefact saveString, '.', Character cr]).
+	saveString := (self objectsToSave inject: '' into: [:string :artefact | string , artefact saveString, '.', Character cr]).
 	saveString := 'savedBlocks', Character cr, '^ {', saveString, '}'.
-	self class class compile: saveString classified: 'generated'
+	self class class compile: saveString classified: '*generated'
 
 
 ]

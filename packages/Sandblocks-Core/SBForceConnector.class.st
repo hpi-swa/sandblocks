@@ -40,7 +40,7 @@ SBForceConnector >> deleteBlock [
 { #category : #'as yet unclassified' }
 SBForceConnector >> forceFor: aMorph [
 	
-	^ (aMorph == self from) 
+	^ aMorph = self from
 		ifTrue: [self baseForce] 
 		ifFalse: [self baseForce negated]
 ]
