@@ -151,7 +151,7 @@ SBEditor >> addToMultiSelection: aBlock [
 { #category : #accessing }
 SBEditor >> artefacts [
 
-	^ scroll scroller submorphs select: [:s | (s isSandblock or: s isConnector) and: [s isArtefact]]
+	^ scroll scroller submorphs select: [:s | s isSandblock and: [s isArtefact]]
 ]
 
 { #category : #'do/undo/redo' }
@@ -878,7 +878,7 @@ SBEditor >> labelString [
 SBEditor >> loadBlocks [
 	<globalAction>
 	
-	self artefacts do: [:each | each deleteBlock].
+	self objectsToSave do: [:each | each deleteBlock].
 	self class savedBlocks do: [:each | self openMorph: each].
 ]
 
@@ -1056,6 +1056,12 @@ SBEditor >> objectInterface [
 SBEditor >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ SBInterfaces block, (SBToggledCode comment: '' active: 1 do: {[SBInterfaces always]. [SBInterfaces topLevel]})
+]
+
+{ #category : #accessing }
+SBEditor >> objectsToSave [
+
+	^ scroll scroller submorphs select: [:s | (s isSandblock or: [s isConnector]) and: [s isArtefact]]
 ]
 
 { #category : #testing }
@@ -1322,12 +1328,6 @@ SBEditor >> removeHelperTimer [
 	self removeAlarm: #showHelper
 ]
 
-{ #category : #'as yet unclassified' }
-SBEditor >> removeIndicatorFor: aMorph [
-	
-	scroll removeIndicatorFor: aMorph
-]
-
 { #category : #'action helpers' }
 SBEditor >> removeMultiSelected: aMorph [
 
@@ -1420,9 +1420,9 @@ SBEditor >> saveCurrentBlocks [
 	
 	| saveString |
 	
-	saveString := (self artefacts inject: '' into: [:string :artefact | string , artefact saveString, '.', Character cr]).
+	saveString := (self objectsToSave inject: '' into: [:string :artefact | string , artefact saveString, '.', Character cr]).
 	saveString := 'savedBlocks', Character cr, '^ {', saveString, '}'.
-	self class class compile: saveString classified: 'generated'
+	self class class compile: saveString classified: '*generated'
 
 
 ]

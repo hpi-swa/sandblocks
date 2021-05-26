@@ -153,9 +153,9 @@ SBBlock >> attachDecorator: aDecorator [
 { #category : #'as yet unclassified' }
 SBBlock >> attractionStrengthTo: aMorph [
 	
-	(self isAttractedTo: aMorph)
-		ifTrue: [^  0.01 * (aMorph center - self center) r]
-		ifFalse: [^ 0.0]
+	^ (self isAttractedTo: aMorph)
+		ifTrue: [0.01 * (aMorph center - self center) r]
+		ifFalse: [0.0]
 	
 ]
 
@@ -164,9 +164,9 @@ SBBlock >> attractionTo: aMorph [
 
 	| direction |
 	direction := aMorph center - self center.
-	(direction closeTo: 0@0)
-		ifTrue: [^ 0@0]
-		ifFalse: [^ direction normalized * ((self attractionStrengthTo: aMorph) + (aMorph attractionStrengthTo: self))]
+	^ (direction closeTo: 0@0)
+		ifTrue: [0@0]
+		ifFalse: [direction normalized * ((self attractionStrengthTo: aMorph) + (aMorph attractionStrengthTo: self))]
 	
 	
 ]
@@ -973,9 +973,9 @@ SBBlock >> forceAgainst: aMorph [
 	
 	| direction |
 	direction := self center - aMorph center.
-	(direction closeTo: 0@0)
-		ifTrue: [^ ThreadSafeRandom next @ ThreadSafeRandom next]
-		ifFalse: [^ direction normalized * ((self forceStrengthAgainst: aMorph) + (aMorph forceStrengthAgainst: self))]
+	^ (direction closeTo: 0@0)
+		ifTrue: [ThreadSafeRandom next @ ThreadSafeRandom next]
+		ifFalse: [direction normalized * ((self forceStrengthAgainst: aMorph) + (aMorph forceStrengthAgainst: self))]
 	
 ]
 
@@ -984,7 +984,9 @@ SBBlock >> forceStrengthAgainst: aMorph [
 	
 	| distance |
 	distance := (self center - aMorph center) r.
-	distance = 0 ifTrue: [^ 1.0] ifFalse: [^ (100000000.0 / distance / distance / distance) min: 10.0]
+	^ distance = 0
+		ifTrue: [1.0]
+		ifFalse: [(100000000.0 / distance / distance / distance) min: 10.0]
 	
 ]
 
@@ -1289,7 +1291,7 @@ SBBlock >> isDeclaration [
 { #category : #'as yet unclassified' }
 SBBlock >> isDragging [ 
 	
-	self withDecorator: SBMoveDecorator do: [:decorator | ^ decorator isDragging] ifAbsent: [^ false]
+	^ self withDecorator: SBMoveDecorator do: [:decorator | decorator isDragging] ifAbsent: [false]
 ]
 
 { #category : #testing }
@@ -2693,7 +2695,7 @@ SBBlock >> withDecorator: aClass do: aBlock [
 { #category : #decorators }
 SBBlock >> withDecorator: aClass do: aBlock ifAbsent: anotherBlock [
 
-	^ decorators detect: [:d | d class = aClass or: [aClass subclasses includes: d class]] ifFound: aBlock ifNone: anotherBlock
+	^ decorators detect: [:d | d isKindOf: aClass] ifFound: aBlock ifNone: anotherBlock
 ]
 
 { #category : #utilities }

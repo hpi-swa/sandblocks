@@ -165,7 +165,7 @@ SBEditorCanvas >> removeIndicatorFor: aMorph [
 { #category : #'as yet unclassified' }
 SBEditorCanvas >> removedMorph: aMorph [
 	
-	self sandblockEditor removeIndicatorFor: aMorph
+	self sandblockEditor canvas removeIndicatorFor: aMorph
 ]
 
 { #category : #constants }
