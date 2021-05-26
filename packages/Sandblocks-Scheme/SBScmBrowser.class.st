@@ -77,8 +77,7 @@ SBScmBrowser >> isTopLevel [
 SBScmBrowser >> module: aModule [
 
 	| defs topLevel |
-	aModule filename ifNotNil: [
-		self fileReference contents: aModule filename].
+	aModule filename ifNotNil: [self fileReference contents: aModule filename].
 	
 	defs := aModule definitions.
 	
@@ -94,7 +93,7 @@ SBScmBrowser >> module: aModule [
 			otherwise: [self assert: false]]).
 	self open: self definitions submorphs first sexpr.
 	
-	topLevel := aModule statements reject: [:s | (defs includes: s) or: [s isKindOf: SBUnknown]].
+	topLevel := aModule statements reject: [:s | (defs includes: s) or: [s isUnknown]].
 	
 	self definitions addMorphBack: (SBScmDefinitionButton new
 		contents: '<toplevel>';
@@ -114,7 +113,8 @@ SBScmBrowser >> open: anSExprOrCollection [
 
 	self currentDefinition statements: (anSExprOrCollection isCollection
 		ifTrue: [anSExprOrCollection]
-		ifFalse: [{anSExprOrCollection}])
+		ifFalse: [{anSExprOrCollection}]).
+	self sandblockEditor ifNotNil: [:editor | self currentDefinition statements ifNotEmpty: [:s | editor startInput: s first firstDeepChild at: 1 replacingContents: false]]
 ]
 
 { #category : #'as yet unclassified' }

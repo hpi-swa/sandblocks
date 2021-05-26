@@ -759,7 +759,7 @@ SBBlock >> drawFrame: aColor on: aCanvas [
 { #category : #drawing }
 SBBlock >> drawInvalidBorderOn: aCanvas [
 
-	aCanvas frameRectangle: self bounds width: 2 * self scalingFactor color: Color red
+	aCanvas frameRoundRect: self bounds radius: self colorPolicy cornerRadius width: 2 color: Color red
 ]
 
 { #category : #drawing }
