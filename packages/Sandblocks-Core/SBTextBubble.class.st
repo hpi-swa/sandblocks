@@ -7,7 +7,8 @@ Class {
 		'prefix',
 		'bordered',
 		'suffix',
-		'emphasis'
+		'emphasis',
+		'object'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -126,7 +127,13 @@ SBTextBubble >> keyStroke: anEvent [
 { #category : #'as yet unclassified' }
 SBTextBubble >> object [
 
-	^ self
+	^ object ifNil: [super object]
+]
+
+{ #category : #'as yet unclassified' }
+SBTextBubble >> object: anObject [
+
+	object := anObject
 ]
 
 { #category : #'as yet unclassified' }

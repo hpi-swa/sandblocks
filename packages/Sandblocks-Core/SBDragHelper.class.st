@@ -121,7 +121,7 @@ SBDragHelper >> dropLocationForInsert: aDropLocation [
 { #category : #'as yet unclassified' }
 SBDragHelper >> dropLocationForReplace: dropLocation [
 
-	(morph wrapsAround and: [morph satisfies: dropLocation second objectInterface]) ifTrue: [
+	(morph isMorph and: [morph wrapsAround and: [morph satisfies: dropLocation second objectInterface]]) ifTrue: [
 		dropLocation second convertedFor: morph copyPlaceholder objectInterface do: [:res |
 			self hintWrap: morph around: dropLocation second as: res.
 			^ true]].

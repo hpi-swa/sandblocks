@@ -26,11 +26,12 @@ SBHistoryStack >> do: aCommand previousSelection: aMorph selectDo: aBlock [
 		ifFalse: [undoStack addLast: aCommand].
 	
 	redoStack removeAll.
-	self markChanged: aCommand affectedArtefacts.
-	
 	aCommand previousSelection: aMorph.
 	
 	aCommand preDo.
+	self markChanged: aCommand affectedArtefacts.
+	
+	
 	nextSelection := aCommand do.
 	aCommand selectAfter ifNotNil: [:b | nextSelection := b = #none ifTrue: [nil] ifFalse: [b]].
 	aBlock value: nextSelection value: aCommand affectedArtefacts.

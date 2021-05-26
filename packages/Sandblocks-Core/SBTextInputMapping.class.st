@@ -121,9 +121,6 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $v command do: #pasteReplace;
 		registerShortcut: $e command do: #pasteAfter;
 		registerShortcut: $E shift withCommand do: #pasteBefore;
-		cmdShortcut: $( do: #leftRotate;
-		"registerShortcut: $k command do: #swapRight;
-		registerShortcut: $K command withShift do: #swapLeft;"
 		registerShortcut: Character arrowLeft command withShift do: #swapLeft;
 		registerShortcut: Character arrowRight command withShift do: #swapRight;
 		registerShortcut: $c asSandblockShortcut withOption do: #copyString;
@@ -134,6 +131,8 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character backspace shift do: #deleteAround;
 		registerShortcut: Character cr shift do: #insertStatementAbove;
 		registerShortcut: Character cr do: #insertStatementBelow.
+	"registerShortcut: $k command do: #swapRight;
+		registerShortcut: $K command withShift do: #swapLeft;"
 	"registerShortcut: $c do: #changeToUnknown;"
 	"registerShortcut: $d do: #deleteAdjacent;"
 	"registerShortcut: $. do: #addElement;"
@@ -174,10 +173,11 @@ SBTextInputMapping >> registerDefaultShortcuts [
 	" multi selection "
 	self
 		shortcut: Character space modes: #(#selection) do: #startOrAddToMultiSelection;
-		registerShortcut: Character escape do: #endMultiSelection";
+		registerShortcut: Character escape do: #endMultiSelection.
+	";
 		registerShortcut: Character arrowLeft command withShift do: #multiSelectLeft;
-		registerShortcut: Character arrowRight command withShift do: #multiSelectRight".
-		
+		registerShortcut: Character arrowRight command withShift do: #multiSelectRight"
+	
 	" special overrides "
 	self
 		registerShortcut: Character escape do: #dismiss;

@@ -17,5 +17,6 @@ OrderedDictionary {
 	'packages/Sandblocks-Javascript' : #SquotTonelSerializer,
 	'packages/Sandblocks-Scheme' : #SquotTonelSerializer,
 	'packages/Sandblocks-Smalltalk' : #SquotTonelSerializer,
-	'packages/Sandblocks-Ohm' : #SquotTonelSerializer
+	'packages/Sandblocks-Ohm' : #SquotTonelSerializer,
+	'packages/Sandblocks-Python' : #SquotTonelSerializer
 }

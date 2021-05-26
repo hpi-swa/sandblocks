@@ -50,6 +50,12 @@ SBPalettePreviewContainer >> isBlockBody [
 ]
 
 { #category : #'as yet unclassified' }
+SBPalettePreviewContainer >> label: aString [
+
+	self balloonText: aString
+]
+
+{ #category : #'as yet unclassified' }
 SBPalettePreviewContainer >> parentSandblock [
 
 	^ self owner ifNotNil: #containingSandblock
