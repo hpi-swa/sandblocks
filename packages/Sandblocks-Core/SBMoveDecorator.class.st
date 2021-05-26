@@ -80,11 +80,11 @@ SBMoveDecorator >> mouseCursorAt: anEvent [
 
 { #category : #'event handling' }
 SBMoveDecorator >> mouseMove: anEvent [
-
 	
 	lastDragPosition ifNotNil: [
 		self morph position: self morph position + (anEvent position - lastDragPosition).
-		lastDragPosition := anEvent position]
+		lastDragPosition := anEvent position.
+		self morph sandblockEditor instantlyScrollToShow: self morph.]
 ]
 
 { #category : #'event handling' }
@@ -141,6 +141,7 @@ SBMoveDecorator >> step [
 							otherMorph isDragging not]]]]]) ifTrue: [
 			velocity := self resolveCollisionCenteredWith: otherMorph.
 			hadIntersect := true]].
+	
 	(velocity closeTo: 0 @ 0)
 		ifTrue: [velocity := 0 @ 0]
 		ifFalse: [

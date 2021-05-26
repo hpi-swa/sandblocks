@@ -804,6 +804,13 @@ SBEditor >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 ]
 
 { #category : #selection }
+SBEditor >> instantlyScrollToShow: aBlock [
+
+	(aBlock isMorph not or: [aBlock hasOwner: scroll scroller]) ifTrue: [
+		scroll instantlyScrollToShow: aBlock]
+]
+
+{ #category : #selection }
 SBEditor >> internalSelect: aBlock [
 
 	aBlock ~= selection ifTrue: [ | previousSelection |

@@ -69,6 +69,12 @@ SBEditorCanvasWithOverlay >> initialize [
 		
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditorCanvasWithOverlay >> instantlyScrollToShow: aBlock [
+	
+	^ self canvas instantlyScrollToShow: aBlock
+]
+
 { #category : #accessing }
 SBEditorCanvasWithOverlay >> overlay [
 

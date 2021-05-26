@@ -158,6 +158,7 @@ SBForceMoveDecorator >> isPinned [
 SBForceMoveDecorator >> mouseUp: anEvent [
 	
 	self isDragging ifTrue: [ | otherBlock |
+		self idealPosition: self morph position.
 		self pinnedPosition ifNotNil: [self pinHere].
 		otherBlock := self blockAtPoint: anEvent position.
 		otherBlock ifNotNil: 
