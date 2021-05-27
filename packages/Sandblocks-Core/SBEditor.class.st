@@ -772,7 +772,7 @@ SBEditor >> initialize [
 		changeTableLayout;
 		hResizing: #spaceFill;
 		vResizing: #spaceFill;
-		addMorphBack: (scroll := SBEditorCanvasWithOverlay new)).
+		addMorphBack: (scroll := self scrollerClass new)).
 	self wantsMinimalLayout ifFalse: [self addMorphBack: (bottomPanel := self buildBottomPanel)].
 	
 	self
@@ -1428,7 +1428,7 @@ SBEditor >> scrollToShow: aBlock [
 { #category : #'as yet unclassified' }
 SBEditor >> scrollerClass [
 
-	^ SBEditorCanvas
+	^ SBEditorCanvasWithOverlay
 ]
 
 { #category : #accessing }

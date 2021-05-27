@@ -60,8 +60,10 @@ SBForceMoveDecorator >> blockAtPoint: aPoint [
 	best := nil.
 	bestArea := 0.
 	
-	self morph owner submorphsDo: [:block |
-		((block bounds containsPoint: aPoint) and: [block bounds area > bestArea] and: [block ~= self morph]) ifTrue: [
+	self morph owner childSandblocksDo: [:block |
+		((block bounds containsPoint: aPoint)
+			and: [block bounds area > bestArea]
+			and: [block ~= self morph]) ifTrue: [
 			best := block.
 			bestArea := block bounds area]].
 	
@@ -147,20 +149,19 @@ SBForceMoveDecorator >> registerAdditionalForce: aForce [
 
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> step [
-	
+
 	idealPosition ifNil: [idealPosition := self morph position].
 	
 	self isDragging ifTrue: [^ self].
 	
 	forceSteps > 0
-		ifTrue:
-			[self applyForces.
+		ifTrue: [
+			self applyForces.
 			forceSteps := forceSteps - 1.
 			self morph position: idealPosition]
-		ifFalse:
-			[super step.
-			idealPosition := self morph position].
-	
+		ifFalse: [
+			super step.
+			idealPosition := self morph position]
 ]
 
 { #category : #'as yet unclassified' }
