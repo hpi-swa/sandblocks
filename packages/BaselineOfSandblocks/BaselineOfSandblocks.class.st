@@ -42,19 +42,23 @@ BaselineOfSandblocks class >> projectVersion [
 { #category : #baseline }
 BaselineOfSandblocks >> baseline: spec [
 	<baseline>
+
 	spec for: #common do: [
 		spec
-			baseline: 'ActiveExpressions' with: [spec repository: 'github://active-expressions/active-expressions-squeak:master/src'];
-			"baseline: 'StatisticsWorkbench' with: [spec repository: 'github://hpi-swa-teaching/StatisticsWorkbench:dev/packages'];"
-			baseline: 'RatPack' with: [spec repository: 'github://hpi-swa-teaching/RatPack:develop/packages'];
+			baseline: 'ActiveExpressions'
+				with: [spec repository: 'github://active-expressions/active-expressions-squeak:master/src'];
+			baseline: 'RatPack' with: ["baseline: 'StatisticsWorkbench' with: [spec repository: 'github://hpi-swa-teaching/StatisticsWorkbench:dev/packages'];"
+			spec repository: 'github://hpi-swa-teaching/RatPack:develop/packages'];
 			baseline: 'QoppaS' with: [spec repository: 'github://hpi-swa-lab/QoppaS/packages'];
 			baseline: 'Ohm' with: [spec repository: 'github://hpi-swa/ohm-s/packages'];
 			package: 'SVG-Morphic' with: [spec repository: 'http://www.squeaksource.com/SVGMorph'];
 			package: 'PoppyPrint-Core' with: [spec repository: 'github://tom95/poppy-print/packages'];
-			
-			package: 'Sandblocks-Core' with: [spec requires: #('SVG-Morphic' 'Sandblocks-Morphs' 'Sandblocks-Layout')];
+			package: 'Sandblocks-Core'
+				with: [spec requires: #('SVG-Morphic' 'Sandblocks-Morphs' 'Sandblocks-Layout' 'compatibility')];
 			package: 'Sandblocks-Smalltalk' with: [spec requires: #('Sandblocks-Core' 'PoppyPrint-Core')];
-			package: 'Sandblocks-Explorer' with: [spec requires: #('Sandblocks-Core') "'StatisticsWorkbench'"];
+			package: 'Sandblocks-Explorer' with: [
+				spec requires: #('Sandblocks-Core')
+				"'StatisticsWorkbench'"];
 			package: 'Sandblocks-Watch' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-Debugger' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-Utils';
@@ -62,18 +66,24 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Morphs';
 			package: 'Sandblocks-Drawing';
 			package: 'Sandblocks-Ohm' with: [spec requires: #('Sandblocks-Core' 'Ohm')];
-			package: 'Sandblocks-Javascript' with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Representation' 'Ohm')];
-			package: 'Sandblocks-Scheme' with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Representation' 'QoppaS')];
+			package: 'Sandblocks-Javascript'
+				with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Representation' 'Ohm')];
+			package: 'Sandblocks-Scheme'
+				with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Representation' 'QoppaS')];
 			package: 'Sandblocks-Compiler';
 			package: 'Sandblocks-Babylonian' with: [spec requires: #('Sandblocks-Core')];
 			package: 'Sandblocks-Tutorial' with: [spec requires: 'default'];
 			package: 'Sandblocks-Representation';
-			
 			package: 'Sandblocks-RatPack' with: [spec requires: #('default' 'RatPack')];
 			package: 'Sandblocks-ActiveExpression' with: [spec requires: #('default' 'ActiveExpressions')];
 			package: 'JumpingCubes' with: [spec requires: #('Sandblocks-ActiveExpression')].
+		
+		spec group: 'compatibility' with: #().
+		spec for: #'squeak6.x' do: [spec group: 'compatibility' with: #('Sandblocks-Squeak6Fixes')].
+		
 		spec
-			group: 'default' with: #('Sandblocks-Core' 'Sandblocks-Smalltalk' 'Sandblocks-Layout' 'Sandblocks-Utils' 'Sandblocks-Debugger' 'Sandblocks-Morphs' 'Sandblocks-Explorer' 'Sandblocks-Watch' 'Sandblocks-Drawing' 'Sandblocks-Representation' 'Sandblocks-Compiler' 'Sandblocks-Babylonian' 'Sandblocks-Javascript' 'Sandblocks-Scheme' 'Sandblocks-Ohm');
+			group: 'default'
+				with: #('Sandblocks-Core' 'Sandblocks-Smalltalk' 'Sandblocks-Layout' 'Sandblocks-Utils' 'Sandblocks-Debugger' 'Sandblocks-Morphs' 'Sandblocks-Explorer' 'Sandblocks-Watch' 'Sandblocks-Drawing' 'Sandblocks-Representation' 'Sandblocks-Compiler' 'Sandblocks-Babylonian' 'Sandblocks-Javascript' 'Sandblocks-Scheme' 'Sandblocks-Ohm');
 			group: 'tutorial' with: #('Sandblocks-Tutorial');
 			group: 'withActiveExpressions' with: #('Sandblocks-ActiveExpression' 'JumpingCubes');
 			group: 'withRatPack' with: #('Sandblocks-RatPack')]

@@ -1,6 +1,6 @@
 Extension { #name : #MorphicHaloDispatcher }
 
-{ #category : #'*Sandblocks-Core-override' }
+{ #category : #'*Sandblocks-Squeak6Fixes-override' }
 MorphicHaloDispatcher >> dispatchHalo: event transferInwardsFrom: currentTarget [
 
 	| localEvent world |
