@@ -70,7 +70,7 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Scheme'
 				with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Representation' 'QoppaS')];
 			package: 'Sandblocks-Compiler' with: [spec requires: 'Sandblocks-Core'];
-			package: 'Sandblocks-Babylonian' with: [spec requires: #('Sandblocks-Core')];
+			package: 'Sandblocks-Babylonian' with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Smalltalk')];
 			package: 'Sandblocks-Tutorial' with: [spec requires: 'default'];
 			package: 'Sandblocks-Representation' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-RatPack' with: [spec requires: #('default' 'RatPack')];
