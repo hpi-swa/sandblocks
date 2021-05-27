@@ -79,7 +79,10 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'JumpingCubes' with: [spec requires: #('Sandblocks-ActiveExpression')].
 		
 		spec group: 'compatibility' with: #().
-		spec for: #'squeak6.x' do: [spec group: 'compatibility' with: #('Sandblocks-Squeak6Fixes')].
+		spec for: #'squeak6.x' do: [
+			spec
+				package: 'Sandblocks-Squeak6Fixes';
+				group: 'compatibility' with: #('Sandblocks-Squeak6Fixes')].
 		
 		spec
 			group: 'default'
