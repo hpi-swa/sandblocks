@@ -15,8 +15,8 @@ SBForceConnector class >> connect: anObject to: anotherObject forceScale: aNumbe
 
 { #category : #'as yet unclassified' }
 SBForceConnector >> baseForce [
-	
-	^ 0.1 * (self to center - self from center) * self forceScale
+
+	^ 0.05 * (self to center - self from center) * self forceScale
 ]
 
 { #category : #'as yet unclassified' }
@@ -106,6 +106,8 @@ SBForceConnector >> saveString [
 			print:	self from identityHash;
 			nextPutAll: ' to: ';
 			nextPutAll:	self to className;
-			print:	self to identityHash
+			print:	self to identityHash;
+			nextPutAll: ' forceScale: ';
+			nextPutAll: self forceScale asString.
 		]
 ]

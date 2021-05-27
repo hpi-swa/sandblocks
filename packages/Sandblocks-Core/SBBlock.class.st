@@ -966,24 +966,27 @@ SBBlock >> focusPreviousSuggestion [
 
 { #category : #'as yet unclassified' }
 SBBlock >> forceAgainst: aMorph [
-	
+
 	| direction |
 	direction := self center - aMorph center.
-	^ (direction closeTo: 0@0)
+	^ (direction closeTo: 0 @ 0)
 		ifTrue: [ThreadSafeRandom next @ ThreadSafeRandom next]
-		ifFalse: [direction normalized * ((self forceStrengthAgainst: aMorph) + (aMorph forceStrengthAgainst: self))]
-	
+		ifFalse: [ | test |
+			test := (self forceStrengthAgainst: aMorph) + (aMorph forceStrengthAgainst: self).
+			self assert: test >= 0.
+			direction normalized * test]
 ]
 
 { #category : #'as yet unclassified' }
 SBBlock >> forceStrengthAgainst: aMorph [
-	
-	| distance |
-	distance := (self center - aMorph center) r.
-	^ distance = 0
-		ifTrue: [1.0]
-		ifFalse: [(100000000.0 / distance / distance / distance) min: 10.0]
-	
+
+	| distance maximumNonOverlappingForce |
+	maximumNonOverlappingForce := 10.
+	distance := self bounds distanceTo: aMorph bounds.
+	^ distance > 150 ifTrue: [0] ifFalse: [
+		(distance closeTo: 0)
+			ifTrue: [maximumNonOverlappingForce + ((self bounds intersect: aMorph bounds) area sqrt / 10)]
+			ifFalse: [100000.0 / distance / distance min: maximumNonOverlappingForce]]
 ]
 
 { #category : #'colors and color policies' }

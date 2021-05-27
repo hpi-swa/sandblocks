@@ -105,7 +105,7 @@ SBMoveDecorator >> resolveCollisionCenteredWith: otherMorph [
 		ifTrue: [ThreadSafeRandom next @ ThreadSafeRandom next]
 		ifFalse: [self morph center - otherMorph center]) normalized.
 	speedFactor := 0.005.
-	^ direction * (speedFactor * intersection area)
+	^ direction * (speed * speedFactor)
 ]
 
 { #category : #'as yet unclassified' }
@@ -129,8 +129,6 @@ SBMoveDecorator >> startDrag: anEvent [
 { #category : #stepping }
 SBMoveDecorator >> step [
 
-	| hadIntersect |
-	hadIntersect := false.
 	self isDragging ifTrue: [^ self].
 	self morph owner submorphsDo: [:otherMorph |
 		(otherMorph isSandblock and: [
@@ -139,8 +137,7 @@ SBMoveDecorator >> step [
 					(self morph bounds intersects: otherMorph bounds) and: [
 						(self morph bounds containsRect: otherMorph bounds) not and: [
 							otherMorph isDragging not]]]]]) ifTrue: [
-			velocity := self resolveCollisionCenteredWith: otherMorph.
-			hadIntersect := true]].
+			velocity := self resolveCollisionCenteredWith: otherMorph]].
 	
 	(velocity closeTo: 0 @ 0)
 		ifTrue: [velocity := 0 @ 0]

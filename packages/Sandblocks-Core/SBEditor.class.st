@@ -889,7 +889,7 @@ SBEditor >> loadBlocks [
 	<globalAction>
 	
 	self objectsToSave do: [:each | each deleteBlock].
-	self class savedBlocks do: [:each | self openMorph: each].
+	self class savedBlocks do: [:each | self openMorphBack: each].
 ]
 
 { #category : #'do/undo/redo' }

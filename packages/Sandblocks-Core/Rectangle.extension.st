@@ -11,6 +11,17 @@ Rectangle >> asEdgeInsets [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Rectangle >> distanceTo: aRectangle [
+
+	| x y |
+
+	x := ((self left - aRectangle right) max: (aRectangle left - self right)) max: 0.
+	y := ((self top - aRectangle bottom) max: (aRectangle top - self bottom)) max: 0.
+	^ (x @ y) r
+	
+]
+
+{ #category : #'*Sandblocks-Core' }
 Rectangle >> horizontal [
 
 	^ self left + self right

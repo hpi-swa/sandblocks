@@ -5,7 +5,9 @@ Class {
 		'idealPosition',
 		'forceSteps',
 		'additionalForces',
-		'pinnedPosition'
+		'pinnedPosition',
+		'previousVelocity',
+		'speedMultiplier'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -30,22 +32,28 @@ SBForceMoveDecorator >> additionalForces: anObject [
 
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> applyForces [
-	
+
+	| maxAttractionForce |
 	velocity := 0 @ 0.
-	
-	self morph owner submorphsDo: [:otherMorph |
-		(otherMorph isSandblock and: [
-			otherMorph preventOcclusion and: [
-				otherMorph ~= self morph and: [
-					otherMorph isDragging not]]]) ifTrue: [
-			velocity := velocity + (self forceAgainst: otherMorph)]].
-	
+	maxAttractionForce := 0.
 	self additionalForces do: [:forceConnection | velocity := velocity + (forceConnection forceFor: self morph)].
+	velocity r > maxAttractionForce ifTrue: [velocity := velocity normalized * ((velocity r - maxAttractionForce) sqrt + maxAttractionForce)].
 	
-	(velocity r < 0.5)
+	self morph owner submorphsDo: [:otherMorph | (otherMorph isSandblock and: [otherMorph preventOcclusion and: [otherMorph ~= self morph and: [otherMorph isDragging not]]]) ifTrue: [velocity := velocity + (self forceAgainst: otherMorph)]].
+	
+	Transcript showln: (velocity angleWith: self previousVelocity).
+	Transcript showln: self speedMultiplier.
+	
+	((velocity angleWith: self previousVelocity)
+		between: Float pi * 0.5
+		and: Float pi * 1.5)
+		ifTrue: [self speedMultiplier: self speedMultiplier / 2.0]
+		ifFalse: [self speedMultiplier: (self speedMultiplier * 1.1 min: 2.0 max: 0.05)].
+	
+	velocity r < 0.5
 		ifTrue: [velocity := 0 @ 0]
-		ifFalse: [
-			idealPosition := self morph position + velocity]
+		ifFalse: [idealPosition := self morph position + (velocity * self speedMultiplier)].
+	self previousVelocity: velocity
 ]
 
 { #category : #'as yet unclassified' }
@@ -145,6 +153,8 @@ SBForceMoveDecorator >> initialize [
 	self
 		unpin;
 		activateForces;
+		previousVelocity: 0@0;
+		speedMultiplier: 1.0;
 		additionalForces: OrderedCollection new.
 ]
 
@@ -205,10 +215,34 @@ SBForceMoveDecorator >> postDrawOn: aCanvas [
 				color: color]
 ]
 
+{ #category : #accessing }
+SBForceMoveDecorator >> previousVelocity [
+
+	^ previousVelocity
+]
+
+{ #category : #accessing }
+SBForceMoveDecorator >> previousVelocity: anObject [
+
+	previousVelocity := anObject.
+]
+
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> registerAdditionalForce: aForce [
 
 	self additionalForces add: aForce.
+]
+
+{ #category : #accessing }
+SBForceMoveDecorator >> speedMultiplier [
+
+	^ speedMultiplier
+]
+
+{ #category : #accessing }
+SBForceMoveDecorator >> speedMultiplier: anObject [
+
+	speedMultiplier := anObject.
 ]
 
 { #category : #'as yet unclassified' }
@@ -226,7 +260,10 @@ SBForceMoveDecorator >> step [
 		ifTrue:
 			[self applyForces.
 			forceSteps := forceSteps - 1.
-			self morph position: idealPosition]
+			self morph position: idealPosition.
+			
+			"set SBMoveDecorator velocity to 0, else it'll carry over previous movements"
+			velocity := 0@0]
 		ifFalse:
 			[super step.
 			idealPosition := self morph position].
@@ -235,7 +272,7 @@ SBForceMoveDecorator >> step [
 
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> stepTime [
-	
+
 	^ 25
 ]
 
