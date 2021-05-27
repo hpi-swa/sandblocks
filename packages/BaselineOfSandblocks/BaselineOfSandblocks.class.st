@@ -61,8 +61,8 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Watch' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-Debugger' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-Utils' with: [spec requires: 'Sandblocks-Core'];
-			package: 'Sandblocks-Layout' with: [spec requires: 'Sandblocks-Core'];
-			package: 'Sandblocks-Morphs' with: [spec requires: 'Sandblocks-Core'];
+			package: 'Sandblocks-Layout';
+			package: 'Sandblocks-Morphs';
 			package: 'Sandblocks-Drawing' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-Ohm' with: [spec requires: #('Sandblocks-Core' 'Ohm')];
 			package: 'Sandblocks-Javascript'
