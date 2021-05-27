@@ -145,7 +145,7 @@ SBStPlayground >> initialize [
 			addMorphBack: (bindings := SBRow new cellGap: 4));
 		vResizing: #shrinkWrap;
 		hResizing: #rigid;
-		attachDecorator: SBForceMoveDecorator new;
+		attachDecorator: SBForceMoveDecorator newConfigured;
 		attachDecorator: SBResizableDecorator new
 ]
 

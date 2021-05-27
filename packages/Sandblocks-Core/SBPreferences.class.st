@@ -3,6 +3,7 @@ Class {
 	#superclass : #Object,
 	#classVars : [
 		'DrawOnCanvas',
+		'EnableForceLayout',
 		'PreviewDropInsert',
 		'RightClickContextMenu'
 	],
@@ -22,6 +23,19 @@ SBPreferences class >> drawOnCanvas [
 SBPreferences class >> drawOnCanvas: aBoolean [
 
 	DrawOnCanvas := aBoolean
+]
+
+{ #category : #accessing }
+SBPreferences class >> enableForceLayout [
+	<preference: 'Enable force-driven layout for blocks' category: 'sandblocks' description: '' type: #Boolean>
+
+	^ EnableForceLayout ifNil: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBPreferences class >> enableForceLayout: aBoolean [
+
+	EnableForceLayout := aBoolean
 ]
 
 { #category : #'as yet unclassified' }

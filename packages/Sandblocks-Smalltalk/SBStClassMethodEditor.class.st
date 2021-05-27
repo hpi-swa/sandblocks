@@ -69,7 +69,7 @@ SBStClassMethodEditor >> initialize [
 		vResizing: #shrinkWrap;
 		cellGap: 4;
 		layoutInset: 4;
-		attachDecorator: SBForceMoveDecorator new;
+		attachDecorator: SBForceMoveDecorator newConfigured;
 		attachDecorator: SBResizableDecorator new
 ]
 

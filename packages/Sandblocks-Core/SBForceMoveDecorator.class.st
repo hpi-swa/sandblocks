@@ -10,6 +10,20 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBForceMoveDecorator class >> configured [
+
+	^ SBPreferences enableForceLayout
+		ifTrue: [self]
+		ifFalse: [SBMoveDecorator]
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator class >> newConfigured [
+
+	^ self configured new
+]
+
+{ #category : #'as yet unclassified' }
 SBForceMoveDecorator >> activateForces [
 	
 	forceSteps := 100.
