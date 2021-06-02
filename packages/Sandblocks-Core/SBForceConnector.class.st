@@ -83,7 +83,7 @@ SBForceConnector >> initialize [
 { #category : #'as yet unclassified' }
 SBForceConnector >> lineWidth [
 	
-	^ (3 * forceScale) asInteger
+	^ ((3 * forceScale) max: 1) asInteger
 ]
 
 { #category : #'as yet unclassified' }

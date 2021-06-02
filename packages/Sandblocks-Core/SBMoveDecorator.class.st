@@ -83,8 +83,7 @@ SBMoveDecorator >> mouseMove: anEvent [
 	
 	lastDragPosition ifNotNil: [
 		self morph position: self morph position + (anEvent position - lastDragPosition).
-		lastDragPosition := anEvent position.
-		self morph sandblockEditor instantlyScrollToShow: self morph.]
+		lastDragPosition := anEvent position]
 ]
 
 { #category : #'event handling' }
@@ -93,6 +92,19 @@ SBMoveDecorator >> mouseUp: anEvent [
 	lastDragPosition ifNotNil: [
 		anEvent hand releaseMouseFocus: self.
 		lastDragPosition := nil]
+]
+
+{ #category : #stepping }
+SBMoveDecorator >> panWhenNearEdge [
+	
+	| noScrollRectangle movement canvasExtent |
+	canvasExtent := self morph sandblockEditor canvas extent.
+	noScrollRectangle := (Rectangle origin: self morph sandblockEditor canvas targetPosition extent: canvasExtent) insetBy: canvasExtent / 8.
+	
+	movement := ((noScrollRectangle distanceToPoint: lastDragPosition) * 100 / canvasExtent) asIntegerPoint.
+	self morph sandblockEditor moveViewport: movement negated.
+	self morph position: self morph position + movement.
+	lastDragPosition := lastDragPosition + movement
 ]
 
 { #category : #'as yet unclassified' }
@@ -128,8 +140,9 @@ SBMoveDecorator >> startDrag: anEvent [
 
 { #category : #stepping }
 SBMoveDecorator >> step [
-
-	self isDragging ifTrue: [^ self].
+	
+	self isDragging ifTrue: [^ self panWhenNearEdge].
+	
 	self morph owner submorphsDo: [:otherMorph |
 		(otherMorph isSandblock and: [
 			otherMorph preventOcclusion and: [

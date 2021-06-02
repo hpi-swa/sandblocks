@@ -41,16 +41,13 @@ SBForceMoveDecorator >> applyForces [
 	
 	self morph owner submorphsDo: [:otherMorph | (otherMorph isSandblock and: [otherMorph preventOcclusion and: [otherMorph ~= self morph and: [otherMorph isDragging not]]]) ifTrue: [velocity := velocity + (self forceAgainst: otherMorph)]].
 	
-	Transcript showln: (velocity angleWith: self previousVelocity).
-	Transcript showln: self speedMultiplier.
-	
 	((velocity angleWith: self previousVelocity)
 		between: Float pi * 0.5
 		and: Float pi * 1.5)
-		ifTrue: [self speedMultiplier: self speedMultiplier / 2.0]
-		ifFalse: [self speedMultiplier: (self speedMultiplier * 1.1 min: 2.0 max: 0.05)].
+		ifTrue: [self speedMultiplier: self speedMultiplier / 4.0]
+		ifFalse: [self speedMultiplier: (self speedMultiplier * 1.1 min: 2.0 max: 0.01)].
 	
-	velocity r < 0.5
+	(velocity r < 0.5 or: [self speedMultiplier <= 0.01])
 		ifTrue: [velocity := 0 @ 0]
 		ifFalse: [idealPosition := self morph position + (velocity * self speedMultiplier)].
 	self previousVelocity: velocity
@@ -86,7 +83,7 @@ SBForceMoveDecorator >> blockAtPoint: aPoint [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> createImplicitForces [
 	
-	self morph owner submorphsDo: [:otherMorph |
+	self morph owner submorphsReverseDo: [:otherMorph |
 		(otherMorph isSandblock and: [
 			otherMorph preventOcclusion and: [
 				otherMorph ~= self morph and: [
@@ -248,10 +245,9 @@ SBForceMoveDecorator >> speedMultiplier: anObject [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> step [
 	
-	
 	idealPosition ifNil: [idealPosition := self morph position].
 	
-	self isDragging ifTrue: [^ self].
+	self isDragging ifTrue: [^ self panWhenNearEdge].
 	
 	self isPinned ifTrue: [
 		^ self morph position: self pinnedPosition].

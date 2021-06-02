@@ -804,13 +804,6 @@ SBEditor >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 ]
 
 { #category : #selection }
-SBEditor >> instantlyScrollToShow: aBlock [
-
-	(aBlock isMorph not or: [aBlock hasOwner: scroll scroller]) ifTrue: [
-		scroll instantlyScrollToShow: aBlock]
-]
-
-{ #category : #selection }
 SBEditor >> internalSelect: aBlock [
 
 	aBlock ~= selection ifTrue: [ | previousSelection |
@@ -1015,6 +1008,12 @@ SBEditor >> mouseLeaveDragging: anEvent [
 
 	dragHelper ifNotNil: #delete.
 	dragHelper := nil
+]
+
+{ #category : #selection }
+SBEditor >> moveViewport: aPoint [
+
+	scroll moveViewport: aPoint
 ]
 
 { #category : #selection }

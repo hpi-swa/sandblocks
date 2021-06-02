@@ -118,13 +118,6 @@ SBEditorCanvas >> initialize [
 	self smoothing: 2
 ]
 
-{ #category : #viewport }
-SBEditorCanvas >> instantlyScrollToShow: aMorph [
-
-	self scrollToShow: aMorph.	
-	self viewportPosition: self targetPosition
-]
-
 { #category : #'event handling' }
 SBEditorCanvas >> mouseDown: anEvent [ 
 	anEvent hand waitForClicksOrDrag: self event: anEvent.

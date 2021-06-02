@@ -101,7 +101,7 @@ SBStMethod >> initialize [
 { #category : #'as yet unclassified' }
 SBStMethod >> isAttractedTo: aMorph [
 	
-	^ aMorph relatedClass theNonMetaClass = self relatedClass theNonMetaClass
+	^ (aMorph relatedClass theNonMetaClass = self relatedClass theNonMetaClass) "and: [aMorph class == SBStClass"
 ]
 
 { #category : #'as yet unclassified' }

@@ -982,11 +982,11 @@ SBBlock >> forceStrengthAgainst: aMorph [
 
 	| distance maximumNonOverlappingForce |
 	maximumNonOverlappingForce := 10.
-	distance := self bounds distanceTo: aMorph bounds.
-	^ distance > 150 ifTrue: [0] ifFalse: [
+	distance := (self bounds distanceTo: aMorph bounds) r.
+	^ distance > 200 ifTrue: [0] ifFalse: [
 		(distance closeTo: 0)
 			ifTrue: [maximumNonOverlappingForce + ((self bounds intersect: aMorph bounds) area sqrt / 10)]
-			ifFalse: [100000.0 / distance / distance min: maximumNonOverlappingForce]]
+			ifFalse: [10000.0 / distance / distance min: maximumNonOverlappingForce]]
 ]
 
 { #category : #'colors and color policies' }
@@ -1266,7 +1266,7 @@ SBBlock >> isArtefact [
 { #category : #'as yet unclassified' }
 SBBlock >> isAttractedTo: aMorph [
 	
-	^ aMorph class == self class
+	^ aMorph object class = self object class
 ]
 
 { #category : #testing }
