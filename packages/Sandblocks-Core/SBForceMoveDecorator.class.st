@@ -33,19 +33,15 @@ SBForceMoveDecorator >> additionalForces: anObject [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> applyForces [
 
-	| maxAttractionForce |
+	| newSpeedMultiplier |
 	velocity := 0 @ 0.
-	maxAttractionForce := 0.
 	self additionalForces do: [:forceConnection | velocity := velocity + (forceConnection forceFor: self morph)].
-	velocity r > maxAttractionForce ifTrue: [velocity := velocity normalized * ((velocity r - maxAttractionForce) sqrt + maxAttractionForce)].
+	velocity isZero ifFalse: [velocity := velocity normalized * velocity r sqrt].
 	
 	self morph owner submorphsDo: [:otherMorph | (otherMorph isSandblock and: [otherMorph preventOcclusion and: [otherMorph ~= self morph and: [otherMorph isDragging not]]]) ifTrue: [velocity := velocity + (self forceAgainst: otherMorph)]].
 	
-	((velocity angleWith: self previousVelocity)
-		between: Float pi * 0.5
-		and: Float pi * 1.5)
-		ifTrue: [self speedMultiplier: self speedMultiplier / 4.0]
-		ifFalse: [self speedMultiplier: (self speedMultiplier * 1.1 min: 2.0 max: 0.01)].
+	newSpeedMultiplier := self speedMultiplier * (self changedDirection ifTrue: [0.25] ifFalse: [1.1]).
+	self speedMultiplier: (newSpeedMultiplier clampLow: 0.01 high: 2.0).
 	
 	(velocity r < 0.5 or: [self speedMultiplier <= 0.01])
 		ifTrue: [velocity := 0 @ 0]
@@ -78,6 +74,14 @@ SBForceMoveDecorator >> blockAtPoint: aPoint [
 			bestArea := block bounds area]].
 	
 	^ best
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> changedDirection [
+	
+	^ velocity isZero not and:
+		[self previousVelocity isZero not] and:
+		[(velocity angleWith: self previousVelocity) between: Float pi * 0.5 and: Float pi * 1.5]
 ]
 
 { #category : #'as yet unclassified' }
@@ -148,7 +152,7 @@ SBForceMoveDecorator >> initialize [
 	
 	super initialize.
 	self
-		unpin;
+		pinnedPosition: nil;
 		activateForces;
 		previousVelocity: 0@0;
 		speedMultiplier: 1.0;
@@ -166,7 +170,7 @@ SBForceMoveDecorator >> mouseUp: anEvent [
 	
 	self isDragging ifTrue: [ | otherBlock |
 		self idealPosition: self morph position.
-		self pinnedPosition ifNotNil: [self pinHere].
+		self pinnedPosition ifNotNil: [self pinnedPosition: self position].
 		otherBlock := self blockAtPoint: anEvent position.
 		otherBlock ifNotNil: 
 			[self morph sandblockEditor 
@@ -174,14 +178,6 @@ SBForceMoveDecorator >> mouseUp: anEvent [
 				activateForces]].
 	super mouseUp: anEvent.
 	
-]
-
-{ #category : #'as yet unclassified' }
-SBForceMoveDecorator >> pinHere [
-
-	<action>
-	
-	self pinnedPosition: self morph position.
 ]
 
 { #category : #accessing }
@@ -273,11 +269,11 @@ SBForceMoveDecorator >> stepTime [
 ]
 
 { #category : #'as yet unclassified' }
-SBForceMoveDecorator >> unpin [
+SBForceMoveDecorator >> togglePinned [
 
 	<action>
 	
-	self pinnedPosition: nil
+	self pinnedPosition: (self pinnedPosition ifNil: [self morph position] ifNotNil: [nil])
 ]
 
 { #category : #'as yet unclassified' }
