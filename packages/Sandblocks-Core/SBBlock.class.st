@@ -970,11 +970,9 @@ SBBlock >> forceAgainst: aMorph [
 	| direction |
 	direction := self center - aMorph center.
 	^ (direction closeTo: 0 @ 0)
-		ifTrue: [ThreadSafeRandom next @ ThreadSafeRandom next]
-		ifFalse: [ | test |
-			test := (self forceStrengthAgainst: aMorph) + (aMorph forceStrengthAgainst: self).
-			self assert: test >= 0.
-			direction normalized * test]
+		ifTrue: [(ThreadSafeRandom next @ ThreadSafeRandom next) * 10]
+		ifFalse: [ 
+			direction normalized * ((self forceStrengthAgainst: aMorph) + (aMorph forceStrengthAgainst: self))]
 ]
 
 { #category : #'as yet unclassified' }

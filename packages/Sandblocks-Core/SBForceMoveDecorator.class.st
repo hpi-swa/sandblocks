@@ -38,13 +38,17 @@ SBForceMoveDecorator >> applyForces [
 	self additionalForces do: [:forceConnection | velocity := velocity + (forceConnection forceFor: self morph)].
 	velocity isZero ifFalse: [velocity := velocity normalized * velocity r sqrt].
 	
-	self morph owner submorphsDo: [:otherMorph | (otherMorph isSandblock and: [otherMorph preventOcclusion and: [otherMorph ~= self morph and: [otherMorph isDragging not]]]) ifTrue: [velocity := velocity + (self forceAgainst: otherMorph)]].
+	self morph owner submorphsDo: [:otherMorph |
+		(otherMorph isSandblock and: [
+			otherMorph preventOcclusion and: [
+				otherMorph ~= self morph and: [
+					otherMorph isDragging not]]]) ifTrue: [
+			velocity := velocity + (self forceAgainst: otherMorph)]].
 	
 	newSpeedMultiplier := self speedMultiplier * (self changedDirection ifTrue: [0.25] ifFalse: [1.1]).
 	self speedMultiplier: (newSpeedMultiplier clampLow: 0.01 high: 2.0).
 	
 	(velocity r < 0.5 or: [self speedMultiplier <= 0.01])
-		ifTrue: [velocity := 0 @ 0]
 		ifFalse: [idealPosition := self morph position + (velocity * self speedMultiplier)].
 	self previousVelocity: velocity
 ]
@@ -79,8 +83,8 @@ SBForceMoveDecorator >> blockAtPoint: aPoint [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> changedDirection [
 	
-	^ velocity isZero not and:
-		[self previousVelocity isZero not] and:
+	^ velocity isZero or:
+		[self previousVelocity isZero] or:
 		[(velocity angleWith: self previousVelocity) between: Float pi * 0.5 and: Float pi * 1.5]
 ]
 
