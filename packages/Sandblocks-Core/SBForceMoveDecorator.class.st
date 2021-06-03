@@ -13,6 +13,20 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBForceMoveDecorator class >> configured [
+
+	^ SBPreferences enableForceLayout
+		ifTrue: [self]
+		ifFalse: [SBMoveDecorator]
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator class >> newConfigured [
+
+	^ self configured new
+]
+
+{ #category : #'as yet unclassified' }
 SBForceMoveDecorator >> activateForces [
 	
 	forceSteps := 100.
@@ -72,8 +86,10 @@ SBForceMoveDecorator >> blockAtPoint: aPoint [
 	best := nil.
 	bestArea := 0.
 	
-	self morph owner submorphsDo: [:block |
-		((block bounds containsPoint: aPoint) and: [block bounds area > bestArea] and: [block ~= self morph] and: [block isSandblock]) ifTrue: [
+	self morph owner childSandblocksDo: [:block |
+		((block bounds containsPoint: aPoint)
+			and: [block bounds area > bestArea]
+			and: [block ~= self morph]) ifTrue: [
 			best := block.
 			bestArea := block bounds area]].
 	

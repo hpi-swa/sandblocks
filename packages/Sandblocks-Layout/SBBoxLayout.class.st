@@ -23,33 +23,6 @@ Class {
 	#category : #'Sandblocks-Layout'
 }
 
-{ #category : #examples }
-SBBoxLayout class >> exampleCenteredBox [
-
-	| window loginPage loginBox |
-	loginBox := (PHPage new vertical: true; align: #(center center)) color: Color green; minSize: 100 asPoint.
-	loginPage := PHPage new color: Color red; add: loginBox.
-	window := PHTopLevel new size: 600 asPoint; padding: 0; add: loginPage.
-	window openInWorld
-]
-
-{ #category : #examples }
-SBBoxLayout class >> exampleHeightForWidth [
-
-	PHTopLevel new add: (PHLabel text: 'lorem ipsum dolor sit amet consetetur arum darum dolore imit census clericus lapradus'); openInWorld
-]
-
-{ #category : #examples }
-SBBoxLayout class >> exampleSimpleChat [
-
-	| window picture text |
-	picture := PHWidget new color: Color green; minSize: 64 asPoint.
-	text := PHLabel text: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'.
-	
-	window := PHTopLevel new vertical: false; size: 600 asPoint; padding: 15; add: picture; add: text.
-	window openInWorld
-]
-
 { #category : #private }
 SBBoxLayout >> distributeLeftOver: aNumber among: aCollection [
 

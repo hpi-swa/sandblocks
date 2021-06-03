@@ -22,9 +22,15 @@ SBSelectionDecorator >> color [
 ]
 
 { #category : #'as yet unclassified' }
+SBSelectionDecorator >> cursorAlwaysVisible [
+
+	^ self morph sandblockEditor hasKeyboardFocus not or: [blinkCount >= self maxBlickCount]
+]
+
+{ #category : #'as yet unclassified' }
 SBSelectionDecorator >> cursorVisible [
 
-	^ cursorShown or: [self morph sandblockEditor hasKeyboardFocus not or: [blinkCount >= self maxBlickCount]]
+	^ cursorShown or: [self cursorAlwaysVisible]
 ]
 
 { #category : #'as yet unclassified' }
@@ -95,7 +101,7 @@ SBSelectionDecorator >> resetBlink [
 SBSelectionDecorator >> step [
 
 	cursorShown := cursorShown not.
-	self morph invalidRect: (self morph outerBounds expandBy: 4).
+	self cursorAlwaysVisible ifFalse: [self morph invalidRect: (self morph outerBounds expandBy: 4)].
 	blinkCount := blinkCount + 1.
 	blinkCount > self maxBlickCount ifTrue: [self morph updateSteppingDecorators]
 ]

@@ -15,7 +15,7 @@ SBWelcome >> initialize [
 		layoutInset: 8;
 		changeTableLayout;
 		cellGap: 4;
-		attachDecorator: SBForceMoveDecorator new;
+		attachDecorator: SBForceMoveDecorator newConfigured;
 		addMorphBack: (SBStringMorph new
 			contents: 'Welcome to Sandblocks!';
 			bold);

@@ -203,7 +203,7 @@ SBStClass >> initialize [
 		addRow: 'Class Variables:' with: (classVariables := SBStNameList new);
 		addRow: 'Pool Dictionaries:' with: (poolDictionaries := SBStArray new);
 		addRow: 'Category:' with: (category := SBTextBubble new);
-		attachDecorator: SBForceMoveDecorator new
+		attachDecorator: SBForceMoveDecorator newConfigured
 ]
 
 { #category : #'as yet unclassified' }

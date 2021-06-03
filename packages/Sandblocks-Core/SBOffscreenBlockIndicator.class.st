@@ -5,7 +5,8 @@ Class {
 		'target',
 		'scroller',
 		'iconMorph',
-		'labelMorph'
+		'labelMorph',
+		'lastPosition'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -93,29 +94,28 @@ SBOffscreenBlockIndicator >> scroller: aScroller [
 SBOffscreenBlockIndicator >> step [
 
 	| viewCenter direction intersections viewRectangle position |
-
 	self target ifNil: [^ self abandon].
-
-	self targetOffscreen 
-		ifTrue: [self show]
-		ifFalse: [self hide].
+	
+	self targetOffscreen ifTrue: [self show] ifFalse: [^ self hide].
+	
 	viewCenter := self scroller innerBounds center.
 	direction := (self target boundsInWorld center - viewCenter) normalized.
 	viewRectangle := self scroller innerBounds.
 	
-	intersections := {LineSegment intersectFrom: viewCenter with: direction to: viewRectangle topLeft with: 0@1.
-		LineSegment intersectFrom: viewCenter with: direction to: viewRectangle topLeft with: 1@0.
-		LineSegment intersectFrom: viewCenter with: direction to: viewRectangle bottomRight with: -1@0.
-		LineSegment intersectFrom: viewCenter with: direction to: viewRectangle bottomRight with: 0@ -1}.
+	intersections := {
+		LineSegment intersectFrom: viewCenter with: direction to: viewRectangle topLeft with: 0 @ 1.
+		LineSegment intersectFrom: viewCenter with: direction to: viewRectangle topLeft with: 1 @ 0.
+		LineSegment intersectFrom: viewCenter with: direction to: viewRectangle bottomRight with: -1 @ 0.
+		LineSegment intersectFrom: viewCenter with: direction to: viewRectangle bottomRight with: 0 @ -1}.
 	
-	position := (intersections detect: [:aPoint | aPoint notNil and: [viewRectangle containsPoint: aPoint - direction]]).
+	position := intersections detect: [:aPoint | aPoint notNil and: [viewRectangle containsPoint: aPoint - direction]].
+	lastPosition = position ifTrue: [^ self].
+	lastPosition := position.
 	
 	self center: position - (direction * self iconMorph extent / 2).
 	self labelMorph center: self center - (direction * (self labelMorph extent / 2 + self iconMorph extent)).
 	
-	self iconMorph rotationDegrees: direction degrees.
-	
-
+	self iconMorph rotationDegrees: direction degrees
 ]
 
 { #category : #'as yet unclassified' }
