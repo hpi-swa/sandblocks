@@ -164,6 +164,8 @@ SBForceMoveDecorator >> registerAdditionalForce: aForce [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> step [
 
+	SBPreferences enableForceLayout ifFalse: [^ super step].
+	
 	idealPosition ifNil: [idealPosition := self morph position].
 	
 	self isDragging ifTrue: [^ self].

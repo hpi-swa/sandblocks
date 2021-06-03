@@ -107,8 +107,9 @@ SBBlock >> appendElement [
 
 { #category : #callbacks }
 SBBlock >> artefactChanged: aMethodBlock [
-
 	" callback fired after each change to a method "
+
+	
 ]
 
 { #category : #accessing }

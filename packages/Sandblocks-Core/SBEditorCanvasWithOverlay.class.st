@@ -104,3 +104,9 @@ SBEditorCanvasWithOverlay >> transform [
 	
 	^ self canvas transform
 ]
+
+{ #category : #'as yet unclassified' }
+SBEditorCanvasWithOverlay >> wantsMetaMenu [
+
+	^ false
+]

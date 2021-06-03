@@ -60,6 +60,16 @@ SBOhmPredicate >> predicate: aCharacter [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmPredicate >> printOn: aStream [
+
+	aStream
+		nextPut: self predicate;
+		nextPutAll: '(';
+		print: self expression;
+		nextPutAll: ')'
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmPredicate >> writeSourceOn: aStream [
 
 	aStream nextPut: self predicate.

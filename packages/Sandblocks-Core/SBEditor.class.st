@@ -635,7 +635,7 @@ SBEditor >> filterEvent: anEvent for: aMorph [
 		anEvent isMouseDown ifTrue: [anEvent hand newKeyboardFocus: self].
 		^ anEvent].
 	
-	anEvent isKeystroke ifFalse: [^ anEvent ignore].
+	anEvent isKeystroke ifFalse: [^ anEvent].
 	
 	anEvent keyValue = 251
 		ifTrue: [self toggleHelperTimer: anEvent type = #keyDown]
@@ -877,10 +877,11 @@ SBEditor >> loadBlocks [
 SBEditor >> markChangesAfterCommand: artefacts [
 
 	artefacts do: [:candidate | | artefact |
-		artefact := candidate canPersist ifTrue: [candidate] ifFalse: [candidate artefactForPersisting ifNil: [candidate]].
+		artefact := candidate canPersist
+			ifTrue: [candidate]
+			ifFalse: [candidate artefactForPersisting ifNil: [candidate]].
 		
-		(self compileTime = #compileOnChange and: [self save: artefact tryFixing: false quick: false])
-			ifTrue: [history markSaved: true].
+		(self compileTime = #compileOnChange and: [self save: artefact tryFixing: false quick: false]) ifTrue: [history markSaved: true].
 		
 		artefact triggerEvent: #changed.
 		self allBlocksDo: [:block | block artefactChanged: artefact]]

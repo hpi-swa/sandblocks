@@ -46,6 +46,12 @@ SBOhmASTNode >> isOhm [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmASTNode >> isQuantifier [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmASTNode >> isRule [
 
 	^ false

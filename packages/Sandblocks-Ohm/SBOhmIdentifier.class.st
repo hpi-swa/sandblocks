@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBOhmIdentifier >> allUsagesDo: aBlock [
+
+	self associatedRule ifNotNil: [:rule | rule allUsagesDo: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmIdentifier >> associatedRule [
 
 	^ self containingArtefact rules detect: [:rule | rule key = self contents]
@@ -23,6 +29,19 @@ SBOhmIdentifier >> isIdentifier [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmIdentifier >> isNonPrimitive [
+
+	^ self isPrimitive not
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmIdentifier >> isPrimitive [
+	" special marker for things that are likely pointing to primitive constructs such as digit+ "
+
+	^ #('integerValue' 'digit') includes: self contents
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmIdentifier >> isTerminal [
 
 	^ false
@@ -35,6 +54,14 @@ SBOhmIdentifier >> keyStroke: anEvent [
 	self validContents ifFalse: [
 		self currentTextMorph deleteBeforeCursor.
 		self grammarHandler perform: anEvent keyCharacter for: self empty: false]
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmIdentifier >> printOn: aStream [
+
+	aStream
+		nextPutAll: 'ohm identifier ';
+		nextPutAll: self contents
 ]
 
 { #category : #'as yet unclassified' }
@@ -55,6 +82,18 @@ SBOhmIdentifier >> validContents [
 
 	self contents ifEmpty: [^ false].
 	^ self contents first isLetter and: [self contents viewAllButFirst allSatisfy: [:c | c isAlphaNumeric]]
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmIdentifier >> wasDeselected [
+
+	self allUsagesDo: [:b | b detachDecorators: SBHighlightDecorator]
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmIdentifier >> wasSelected [
+
+	self allUsagesDo: [:b | b attachDecorator: SBHighlightDecorator new]
 ]
 
 { #category : #'as yet unclassified' }

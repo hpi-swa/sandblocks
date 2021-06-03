@@ -11,6 +11,12 @@ SBOhmRule >> allUsages [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmRule >> allUsagesDo: aBlock [
+
+	^ self parentSandblock allBlocksDo: [:b | (b isIdentifier and: [b valid and: [b associatedRule = self]]) ifTrue: [aBlock value: b]]
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmRule >> currentTextMorph [
 
 	^ self firstSubmorph
@@ -27,6 +33,13 @@ SBOhmRule >> initialize [
 
 	super initialize.
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmRule >> isPrimitive [
+
+	self allBlocksDo: [:b | (b isIdentifier and: [b isPrimitive not]) ifTrue: [^ false]].
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -61,6 +74,14 @@ SBOhmRule >> name: aString alternatives: aBlock [
 	self addMorphBack: ((SBOwnTextMorph new placeholderText: 'name') contents: aString).
 	self addMorphBack: (SBStringMorph new contents: ' = ').
 	self addMorphBack: aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmRule >> printOn: aStream [
+
+	aStream
+		nextPutAll: 'rule ';
+		nextPutAll: self name
 ]
 
 { #category : #'as yet unclassified' }

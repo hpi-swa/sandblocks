@@ -12,9 +12,9 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBStTestCase class >> matches: aMethodBlock [
+SBStTestCase class >> matchSpecific: aMethodBlock [
 
-	^ (super matches: aMethodBlock) and: [aMethodBlock methodClass isTestClass and: [aMethodBlock selector asSymbol isTestSelector and: [aMethodBlock numArgs = 0]]]
+	^ aMethodBlock methodClass isTestClass and: [aMethodBlock selector asSymbol isTestSelector and: [aMethodBlock numArgs = 0]]
 ]
 
 { #category : #'as yet unclassified' }

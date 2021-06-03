@@ -47,32 +47,33 @@ BaselineOfSandblocks >> baseline: spec [
 		spec
 			baseline: 'ActiveExpressions'
 				with: [spec repository: 'github://active-expressions/active-expressions-squeak:master/src'];
-			baseline: 'RatPack' with: [spec repository: 'github://hpi-swa-teaching/RatPack:develop/packages'];
+			baseline: 'RatPack' with: ["baseline: 'StatisticsWorkbench' with: [spec repository: 'github://hpi-swa-teaching/StatisticsWorkbench:dev/packages'];"
+			spec repository: 'github://hpi-swa-teaching/RatPack:develop/packages'];
 			baseline: 'QoppaS' with: [spec repository: 'github://hpi-swa-lab/QoppaS/packages'];
 			baseline: 'Ohm' with: [spec repository: 'github://hpi-swa/ohm-s/packages'];
 			package: 'SVG-Morphic' with: [spec repository: 'http://www.squeaksource.com/SVGMorph'];
-			package: 'PoppyPrint-Core' with: [spec repository: 'github://tom95/poppy-print/packages'].
-
-		spec
+			package: 'PoppyPrint-Core' with: [spec repository: 'github://tom95/poppy-print/packages'];
 			package: 'Sandblocks-Core'
 				with: [spec requires: #('SVG-Morphic' 'Sandblocks-Morphs' 'Sandblocks-Layout' 'compatibility')];
 			package: 'Sandblocks-Smalltalk' with: [spec requires: #('Sandblocks-Core' 'PoppyPrint-Core')];
-			package: 'Sandblocks-Explorer' with: [spec requires: #('Sandblocks-Core')];
+			package: 'Sandblocks-Explorer' with: [
+				spec requires: #('Sandblocks-Core')
+				"'StatisticsWorkbench'"];
 			package: 'Sandblocks-Watch' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-Debugger' with: [spec requires: 'Sandblocks-Core'];
-			package: 'Sandblocks-Utils' with: [spec requires: 'Sandblocks-Core'];
+			package: 'Sandblocks-Utils';
 			package: 'Sandblocks-Layout';
 			package: 'Sandblocks-Morphs';
-			package: 'Sandblocks-Drawing' with: [spec requires: 'Sandblocks-Core'];
+			package: 'Sandblocks-Drawing';
 			package: 'Sandblocks-Ohm' with: [spec requires: #('Sandblocks-Core' 'Ohm')];
 			package: 'Sandblocks-Javascript'
 				with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Representation' 'Ohm')];
 			package: 'Sandblocks-Scheme'
 				with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Representation' 'QoppaS')];
-			package: 'Sandblocks-Compiler' with: [spec requires: 'Sandblocks-Core'];
-			package: 'Sandblocks-Babylonian' with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Smalltalk')];
+			package: 'Sandblocks-Compiler';
+			package: 'Sandblocks-Babylonian' with: [spec requires: #('Sandblocks-Core')];
 			package: 'Sandblocks-Tutorial' with: [spec requires: 'default'];
-			package: 'Sandblocks-Representation' with: [spec requires: 'Sandblocks-Core'];
+			package: 'Sandblocks-Representation';
 			package: 'Sandblocks-RatPack' with: [spec requires: #('default' 'RatPack')];
 			package: 'Sandblocks-ActiveExpression' with: [spec requires: #('default' 'ActiveExpressions')];
 			package: 'JumpingCubes' with: [spec requires: #('Sandblocks-ActiveExpression')].
