@@ -55,12 +55,20 @@ SBForceMoveDecorator >> applyForces [
 	self morph owner submorphsDo: [:otherMorph | (otherMorph isSandblock and: [otherMorph preventOcclusion and: [otherMorph ~= self morph and: [otherMorph isDragging not]]]) ifTrue: [velocity := velocity + (self forceAgainst: otherMorph)]].
 	
 	newSpeedMultiplier := self speedMultiplier * (self changedDirection ifTrue: [0.25] ifFalse: [1.1]).
-	self speedMultiplier: (newSpeedMultiplier clampLow: 0.01 high: 2.0).
+	self speedMultiplier: (newSpeedMultiplier clampLow: 0.01 high: 0.5).
 	
 	(velocity r < 0.5 or: [self speedMultiplier <= 0.01]) ifFalse: [idealPosition := self morph position + (velocity * self speedMultiplier)].
 	self previousVelocity: velocity.
 	self morph position: idealPosition.
-	forceSteps := forceSteps - 1.
+	velocity := 0 @ 0.
+	forceSteps := forceSteps - 1
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> attached: aMorph [
+
+	super attached: aMorph.
+	self idealPosition: aMorph position
 ]
 
 { #category : #'as yet unclassified' }
@@ -270,11 +278,7 @@ SBForceMoveDecorator >> step [
 	self isPinned ifTrue: [^ self morph position: self pinnedPosition].
 	
 	(forceSteps > 0 or: self morph sandblockEditor keepForcesActivated)
-		ifTrue: [
-			self isForceCoordinator ifTrue: [1 timesRepeat: [self morph owner submorphsDo: [:aMorph | aMorph isSandblock ifTrue: [aMorph withDecorator: SBForceMoveDecorator do: [:decorator | decorator applyForces]]]]].
-			
-			"set SBMoveDecorator velocity to 0, else it'll carry over previous movements"
-			velocity := 0 @ 0]
+		ifTrue: [self isForceCoordinator ifTrue: [50 timesRepeat: [self morph owner submorphsDo: [:aMorph | aMorph isSandblock ifTrue: [aMorph withDecorator: SBForceMoveDecorator do: [:decorator | decorator applyForces]]]]]]
 		ifFalse: [
 			super step.
 			idealPosition := self morph position]
