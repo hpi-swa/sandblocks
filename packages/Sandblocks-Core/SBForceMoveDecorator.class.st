@@ -52,19 +52,15 @@ SBForceMoveDecorator >> applyForces [
 	self additionalForces do: [:forceConnection | velocity := velocity + (forceConnection forceFor: self morph)].
 	velocity isZero ifFalse: [velocity := velocity normalized * velocity r sqrt].
 	
-	self morph owner submorphsDo: [:otherMorph |
-		(otherMorph isSandblock and: [
-			otherMorph preventOcclusion and: [
-				otherMorph ~= self morph and: [
-					otherMorph isDragging not]]]) ifTrue: [
-			velocity := velocity + (self forceAgainst: otherMorph)]].
+	self morph owner submorphsDo: [:otherMorph | (otherMorph isSandblock and: [otherMorph preventOcclusion and: [otherMorph ~= self morph and: [otherMorph isDragging not]]]) ifTrue: [velocity := velocity + (self forceAgainst: otherMorph)]].
 	
 	newSpeedMultiplier := self speedMultiplier * (self changedDirection ifTrue: [0.25] ifFalse: [1.1]).
 	self speedMultiplier: (newSpeedMultiplier clampLow: 0.01 high: 2.0).
 	
-	(velocity r < 0.5 or: [self speedMultiplier <= 0.01])
-		ifFalse: [idealPosition := self morph position + (velocity * self speedMultiplier)].
-	self previousVelocity: velocity
+	(velocity r < 0.5 or: [self speedMultiplier <= 0.01]) ifFalse: [idealPosition := self morph position + (velocity * self speedMultiplier)].
+	self previousVelocity: velocity.
+	self morph position: idealPosition.
+	forceSteps := forceSteps - 1.
 ]
 
 { #category : #'as yet unclassified' }
@@ -180,6 +176,12 @@ SBForceMoveDecorator >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBForceMoveDecorator >> isForceCoordinator [
+
+	^ self morph = (self morph owner submorphs detect: [:block | block isSandblock and: [block hasDecorator: SBForceMoveDecorator]])
+]
+
+{ #category : #'as yet unclassified' }
 SBForceMoveDecorator >> isPinned [
 
 	^ self pinnedPosition notNil
@@ -260,26 +262,22 @@ SBForceMoveDecorator >> speedMultiplier: anObject [
 
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> step [
-	
+
 	idealPosition ifNil: [idealPosition := self morph position].
 	
 	self isDragging ifTrue: [^ self panWhenNearEdge].
 	
-	self isPinned ifTrue: [
-		^ self morph position: self pinnedPosition].
+	self isPinned ifTrue: [^ self morph position: self pinnedPosition].
 	
 	(forceSteps > 0 or: self morph sandblockEditor keepForcesActivated)
 		ifTrue: [
-			self applyForces.
-			self morph position: idealPosition.
-			forceSteps := forceSteps - 1.
+			self isForceCoordinator ifTrue: [1 timesRepeat: [self morph owner submorphsDo: [:aMorph | aMorph isSandblock ifTrue: [aMorph withDecorator: SBForceMoveDecorator do: [:decorator | decorator applyForces]]]]].
 			
 			"set SBMoveDecorator velocity to 0, else it'll carry over previous movements"
-			velocity := 0@0]
+			velocity := 0 @ 0]
 		ifFalse: [
 			super step.
-			idealPosition := self morph position].
-	
+			idealPosition := self morph position]
 ]
 
 { #category : #'as yet unclassified' }
