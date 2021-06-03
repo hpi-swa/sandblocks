@@ -570,6 +570,13 @@ SBBlock >> decorators [
 	^ decorators
 ]
 
+{ #category : #initialization }
+SBBlock >> delete [
+
+	super delete.
+	self triggerEvent: #delete
+]
+
 { #category : #actions }
 SBBlock >> deleteAdjacent [
 	<action>
@@ -2005,6 +2012,13 @@ SBBlock >> printSaveStringPreambleOn: aStream [
 		print:	self identityHash;
 		nextPutAll:	' := '
 
+]
+
+{ #category : #initialization }
+SBBlock >> privateOwner: aMorph [
+
+	super privateOwner: aMorph.
+	aMorph ifNil: [self triggerEvent: #delete]
 ]
 
 { #category : #actions }
