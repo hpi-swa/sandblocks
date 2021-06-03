@@ -269,16 +269,15 @@ SBForceMoveDecorator >> step [
 		^ self morph position: self pinnedPosition].
 	
 	(forceSteps > 0 or: self morph sandblockEditor keepForcesActivated)
-		ifTrue:
-			[
+		ifTrue: [
 			self applyForces.
 			self morph position: idealPosition.
 			forceSteps := forceSteps - 1.
 			
 			"set SBMoveDecorator velocity to 0, else it'll carry over previous movements"
 			velocity := 0@0]
-		ifFalse:
-			[super step.
+		ifFalse: [
+			super step.
 			idealPosition := self morph position].
 	
 ]
