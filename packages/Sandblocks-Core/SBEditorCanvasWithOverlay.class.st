@@ -27,6 +27,12 @@ SBEditorCanvasWithOverlay >> canvas: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBEditorCanvasWithOverlay >> canvasTransform [
+
+	^ self scroller transformFrom: nil
+]
+
+{ #category : #'as yet unclassified' }
 SBEditorCanvasWithOverlay >> defersHaloOnClickTo: aMorph [
 	
 	^ aMorph ~= self scroller 

@@ -42,6 +42,12 @@ SBEditorCanvas >> basicViewportPosition: aPoint [
 		self changed]
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditorCanvas >> canvasTransform [
+
+	^ self transformFrom: nil
+]
+
 { #category : #'event handling' }
 SBEditorCanvas >> click: anEvent [
 
