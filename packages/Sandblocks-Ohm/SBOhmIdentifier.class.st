@@ -7,13 +7,13 @@ Class {
 { #category : #'as yet unclassified' }
 SBOhmIdentifier >> allUsagesDo: aBlock [
 
-	self associatedRule ifNotNil: [:rule | rule allUsagesDo: aBlock]
+	self associatedRule ifNotNil: [:rule | rule isSandblock ifTrue: [rule allUsagesDo: aBlock]]
 ]
 
 { #category : #'as yet unclassified' }
 SBOhmIdentifier >> associatedRule [
 
-	^ self containingArtefact rules detect: [:rule | rule key = self contents]
+	^ self containingArtefact rules detect: [:rule | rule key = self contents] ifNone: [nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -38,7 +38,7 @@ SBOhmIdentifier >> isNonPrimitive [
 SBOhmIdentifier >> isPrimitive [
 	" special marker for things that are likely pointing to primitive constructs such as digit+ "
 
-	^ #('integerValue' 'digit') includes: self contents
+	^ #('letter' 'digit') includes: self contents
 ]
 
 { #category : #'as yet unclassified' }

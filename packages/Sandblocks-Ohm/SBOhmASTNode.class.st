@@ -40,6 +40,12 @@ SBOhmASTNode >> isIdentifier [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmASTNode >> isLookahead [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmASTNode >> isOhm [
 
 	^ true
@@ -73,6 +79,17 @@ SBOhmASTNode >> isTerminal [
 SBOhmASTNode >> maybeUnwrapList [
 
 	^ self
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmASTNode >> mergeRedundantGroups [
+	" flatten AND and OR sequences that only contain one child "
+
+	self allBlocksDo: [:b |
+		((b isAlternative or: [b isSequence]) and: [b childSandblocks size = 1 or: [(b isAlternative and: [b parentSandblock isAlternative]) or: [b isSequence and: [b parentSandblock isSequence]]]]) ifTrue: [
+			b flattenChildren.
+			" to make sure we don't operate on an invalid tree, start over "
+			^ self mergeRedundantGroups]]
 ]
 
 { #category : #'as yet unclassified' }

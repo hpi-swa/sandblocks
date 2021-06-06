@@ -32,6 +32,12 @@ SBOhmPredicate >> isExpression [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmPredicate >> isLookahead [
+
+	^ #($& $~) includes: self predicate
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmPredicate >> keyStroke: anEvent [
 
 	(#($~ $&) includes: anEvent keyCharacter)
