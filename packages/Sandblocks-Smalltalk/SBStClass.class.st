@@ -193,7 +193,7 @@ SBStClass >> initialize [
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		layoutInset: 6;
-		addMorphBack: (className := SBTextBubble new
+		addMorphBack: (className := SBStClassNameFreeInput new
 			emphasis: TextEmphasis bold;
 			placeholderText: 'Class Name';
 			layoutInset: 6;
