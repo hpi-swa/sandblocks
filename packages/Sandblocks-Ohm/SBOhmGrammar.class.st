@@ -127,6 +127,12 @@ SBOhmGrammar >> objectInterfaceNear: aBlock at: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmGrammar >> ruleNamed: aString [
+
+	^ self childSandblocks detect: [:rule | rule name = aString]
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmGrammar >> rules [
 
 	^ self submorphs, (OhmBuiltInRules rules associations, OhmBaseGrammar rules associations)
@@ -169,6 +175,14 @@ SBOhmGrammar >> writeOhmSourceOn: aStream [
 SBOhmGrammar >> writeSourceOn: aStream [
 
 	self grammarHandler writeSourceOn: aStream for: self
+]
+
+{ #category : #smalltalk }
+SBOhmGrammar >> writeStBlockSourceOn: aStream [
+
+	aStream nextPutAll: '(SBOhmGrammar from: '.
+	aStream store: (String streamContents: [:s | self writeOhmSourceOn: s]).
+	aStream nextPut: $)
 ]
 
 { #category : #smalltalk }

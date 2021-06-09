@@ -322,12 +322,6 @@ SBStBasicMethod >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBStBasicMethod >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
-
-	^ self signature insertCommandRequest: aMorph near: aBlock before: aBoolean
-]
-
-{ #category : #'as yet unclassified' }
 SBStBasicMethod >> insertStatementAboveOrBelow: anAboveBoolean [
 
 	| statement |
@@ -728,15 +722,6 @@ SBStBasicMethod >> updatePCs [
 	old := Array streamContents: [:stream | self allBlocksDo: [:block | stream nextPut: block]].
 	
 	new size = old size ifTrue: [new with: old do: [:newBlock :oldBlock | (oldBlock isSmalltalk and: [newBlock isSmalltalk]) ifTrue: [oldBlock class == newBlock class ifTrue: [oldBlock updatePCFrom: newBlock]]]]
-]
-
-{ #category : #'as yet unclassified' }
-SBStBasicMethod >> updateSuggestions [
-
-	| selector |
-	selector := (signature selector splitBy: ':') first.
-	selector size > 2 ifTrue: [
-		self updateSuggestions: (Array streamContents: [:stream | Symbol allSymbols do: [:sym | (sym asString sandblockMatch: selector) ifTrue: [stream nextPut: (SBSuggestionItem selector: sym label: 'method')]]]) showNear: signature]
 ]
 
 { #category : #'as yet unclassified' }

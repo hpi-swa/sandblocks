@@ -13,7 +13,8 @@ Class {
 		'onLeave',
 		'blockBounds',
 		'onApply',
-		'floatingMorphs'
+		'floatingMorphs',
+		'onMove'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -33,6 +34,7 @@ SBDragHelper class >> for: anEvent in: anEditor [
 SBDragHelper >> applyHintAt: anEvent [
 
 	onLeave ifNotNil: [onLeave value].
+	onMove := nil.
 	^ onApply
 		ifNotNil: [
 			onApply cull: anEvent.
@@ -82,6 +84,9 @@ SBDragHelper >> delete [
 SBDragHelper >> dragCancelled [
 
 	onLeave value.
+	onLeave := nil.
+	onMove := nil.
+	onApply := nil.
 	self delete
 ]
 
@@ -176,7 +181,6 @@ SBDragHelper >> hintInsertOf: aBlock in: aParentBlock near: aChildBlock before: 
 
 	| command insertPreviewMarker |
 	command := aParentBlock insertCommandRequest: aBlock near: aChildBlock before: aBoolean.
-	
 	SBPreferences previewDropInsert ifTrue: [command do] ifFalse: [
 		insertPreviewMarker := SBDropInsertMarker new
 			color: (aBlock colorPolicy dropMarkerColorFor: aBlock);
@@ -185,12 +189,13 @@ SBDragHelper >> hintInsertOf: aBlock in: aParentBlock near: aChildBlock before: 
 				ifNotNil: [self insertMarkerFor: aChildBlock before: aBoolean]);
 			openInWorld].
 	
+	onMove := [:event | (aChildBlock notNil and: [insertPreviewMarker notNil and: [aChildBlock floating]]) ifTrue: [insertPreviewMarker center: event position]].
 	onLeave := [
 		SBPreferences previewDropInsert
 			ifTrue: [command undo]
 			ifFalse: [insertPreviewMarker delete]].
 	onApply := [:event | | localPoint |
-		localPoint := ((editor canvas transformFrom: nil) globalPointToLocal: event position) asIntegerPoint.
+		localPoint := (editor canvas canvasTransform globalPointToLocal: event position) asIntegerPoint.
 		command position: localPoint.
 		editor do: command.
 		aBlock inputContainedUnknown]
@@ -230,6 +235,8 @@ SBDragHelper >> initialize [
 SBDragHelper >> insertMarkerFor: aBlock before: aBoolean [
 
 	| horizontal b width |
+	aBlock floating ifTrue: [^ 10 @ 10 center: aBlock center].
+	
 	horizontal := self hasHorizontalLayout: aBlock parentSandblock.
 	b := aBlock boundsInWorld.
 	width := 6.
@@ -274,7 +281,8 @@ SBDragHelper >> mouseMove: anEvent [
 								do: [:adjacent :before | {#insert. blockAtCursor. adjacent. before}]]]]
 		ifNil: [#(#none nil)].
 	
-	(currentDropLocation hasEqualElements: dropLocation) ifFalse: [self dropLocation: dropLocation]
+	(currentDropLocation hasEqualElements: dropLocation) ifFalse: [self dropLocation: dropLocation].
+	onMove ifNotNil: [onMove value: anEvent]
 ]
 
 { #category : #'as yet unclassified' }

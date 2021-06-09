@@ -125,6 +125,12 @@ SBOhmSemantic >> RuleExtend: node with: name with: parameters with: x with: body
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmSemantic >> RuleOverride: aNode identifier: identifier formals: formals optionalDescription: ruleDescription operator: assignment body: alternative [
+
+	^ SBOhmRule new name: identifier interval contents alternatives: (self value: alternative)
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmSemantic >> Seq: aNode iter: iter [
 
 	^ SBOhmList new

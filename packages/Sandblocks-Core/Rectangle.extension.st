@@ -11,20 +11,6 @@ Rectangle >> asEdgeInsets [
 ]
 
 { #category : #'*Sandblocks-Core' }
-Rectangle >> distanceTo: aRectangle [
-
-	^ ((aRectangle topLeft - self bottomRight) max: 0@0) - ((self topLeft - aRectangle bottomRight) max: 0@0).
-	
-]
-
-{ #category : #'*Sandblocks-Core' }
-Rectangle >> distanceToPoint: aPoint [
-
-	^ ((aPoint - self bottomRight) max: 0@0) - ((self topLeft - aPoint) max: 0@0).
-	
-]
-
-{ #category : #'*Sandblocks-Core' }
 Rectangle >> horizontal [
 
 	^ self left + self right
@@ -38,6 +24,20 @@ Rectangle >> line: aSideSymbol do: aBlock [
 	aSideSymbol = #top ifTrue: [^ aBlock value: self topLeft value: self topRight].
 	aSideSymbol = #bottom ifTrue: [^ aBlock value: self bottomLeft value: self bottomRight].
 	self error: 'invalid edge'
+]
+
+{ #category : #'*Sandblocks-Core' }
+Rectangle >> vectorToPoint: aPoint [
+
+	^ ((aPoint - self bottomRight) max: 0@0) - ((self topLeft - aPoint) max: 0@0).
+	
+]
+
+{ #category : #'*Sandblocks-Core' }
+Rectangle >> vectorToRectangle: aRectangle [
+
+	^ ((aRectangle topLeft - self bottomRight) max: 0@0) - ((self topLeft - aRectangle bottomRight) max: 0@0).
+	
 ]
 
 { #category : #'*Sandblocks-Core' }

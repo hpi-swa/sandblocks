@@ -27,6 +27,12 @@ SBEditorCanvasWithOverlay >> canvas: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBEditorCanvasWithOverlay >> canvasTransform [
+
+	^ self scroller transformFrom: nil
+]
+
+{ #category : #'as yet unclassified' }
 SBEditorCanvasWithOverlay >> defersHaloOnClickTo: aMorph [
 	
 	^ aMorph ~= self scroller 
@@ -115,4 +121,10 @@ SBEditorCanvasWithOverlay >> targetPosition [
 SBEditorCanvasWithOverlay >> transform [  
 	
 	^ self canvas transform
+]
+
+{ #category : #'as yet unclassified' }
+SBEditorCanvasWithOverlay >> wantsMetaMenu [
+
+	^ false
 ]
