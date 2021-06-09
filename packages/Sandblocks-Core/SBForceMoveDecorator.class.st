@@ -48,6 +48,10 @@ SBForceMoveDecorator >> additionalForces: anObject [
 SBForceMoveDecorator >> applyForces [
 
 	| newSpeedMultiplier |
+	
+	self isPinned ifTrue: [^ self morph position: self pinnedPosition].
+	self isDragging ifTrue: [^ self].
+	
 	velocity := 0 @ 0.
 	self additionalForces do: [:forceConnection | velocity := velocity + (forceConnection forceFor: self morph)].
 	velocity isZero ifFalse: [velocity := velocity normalized * velocity r sqrt].
@@ -199,7 +203,7 @@ SBForceMoveDecorator >> mouseUp: anEvent [
 	
 	self isDragging ifTrue: [ | otherBlock |
 		self idealPosition: self morph position.
-		self pinnedPosition ifNotNil: [self pinnedPosition: self position].
+		self pinnedPosition ifNotNil: [self pinnedPosition: self morph position].
 		otherBlock := self blockAtPoint: anEvent position.
 		otherBlock ifNotNil: 
 			[self morph sandblockEditor 
@@ -270,11 +274,11 @@ SBForceMoveDecorator >> speedMultiplier: anObject [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> step [
 
+	SBPreferences enableForceLayout ifFalse: [^ super step].
+
 	idealPosition ifNil: [idealPosition := self morph position].
 	
-	self isDragging ifTrue: [^ self panWhenNearEdge].
-	
-	self isPinned ifTrue: [^ self morph position: self pinnedPosition].
+	self isDragging ifTrue: [self panWhenNearEdge].
 	
 	(forceSteps > 0 or: self morph sandblockEditor keepForcesActivated)
 		ifTrue: [self isForceCoordinator ifTrue: [50 timesRepeat: [self morph owner submorphsDo: [:aMorph | aMorph isSandblock ifTrue: [aMorph withDecorator: SBForceMoveDecorator do: [:decorator | decorator applyForces]]]]]]
