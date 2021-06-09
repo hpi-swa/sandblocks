@@ -32,6 +32,12 @@ SBOhmPredicate >> isExpression [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmPredicate >> isLookahead [
+
+	^ #($& $~) includes: self predicate
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmPredicate >> keyStroke: anEvent [
 
 	(#($~ $&) includes: anEvent keyCharacter)
@@ -57,6 +63,16 @@ SBOhmPredicate >> predicate [
 SBOhmPredicate >> predicate: aCharacter [
 
 	self currentTextMorph contents: aCharacter asString
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmPredicate >> printOn: aStream [
+
+	aStream
+		nextPut: self predicate;
+		nextPutAll: '(';
+		print: self expression;
+		nextPutAll: ')'
 ]
 
 { #category : #'as yet unclassified' }

@@ -99,6 +99,12 @@ SBStMethod >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMethod >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
+
+	^ self signature insertCommandRequest: aMorph near: aBlock before: aBoolean
+]
+
+{ #category : #'as yet unclassified' }
 SBStMethod >> isAttractedTo: aMorph [
 
 	^ aMorph relatedClass theNonMetaClass = self relatedClass theNonMetaClass

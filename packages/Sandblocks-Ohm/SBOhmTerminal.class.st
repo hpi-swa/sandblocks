@@ -33,6 +33,15 @@ SBOhmTerminal >> isTerminal [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmTerminal >> printOn: aStream [
+
+	aStream
+		nextPutAll: 'ohm terminal "';
+		nextPutAll: self contents;
+		nextPut: $"
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmTerminal >> symbols [
 
 	^ #('"' '"')

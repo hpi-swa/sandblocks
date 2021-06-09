@@ -64,7 +64,7 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Layout';
 			package: 'Sandblocks-Morphs';
 			package: 'Sandblocks-Drawing' with: [spec requires: 'Sandblocks-Core'];
-			package: 'Sandblocks-Ohm' with: [spec requires: #('Sandblocks-Core' 'Ohm')];
+			package: 'Sandblocks-Ohm' with: [spec requires: #('Sandblocks-Core' 'Ohm' 'Sandblocks-Smalltalk')];
 			package: 'Sandblocks-Javascript'
 				with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Representation' 'Ohm')];
 			package: 'Sandblocks-Scheme'

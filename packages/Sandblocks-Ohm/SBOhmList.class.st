@@ -92,6 +92,16 @@ SBOhmList >> newEmptyChildNear: aBlock before: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmList >> printOn: aStream [
+
+	aStream nextPutAll: (self isSequence ifTrue: ['ohm sequence ('] ifFalse: ['ohm alternatives (']).
+	self childSandblocks
+		do: [:c | aStream print: c]
+		separatedBy: [aStream nextPutAll: ', '].
+	aStream nextPut: $)
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmList >> writeSourceOn: aStream [
 
 	| needsParens |

@@ -21,3 +21,9 @@ SBEditorCanvasOverlay >> wantsHaloFromClick [
 	
 	^ false
 ]
+
+{ #category : #'as yet unclassified' }
+SBEditorCanvasOverlay >> wantsMetaMenu [
+
+	^ false
+]

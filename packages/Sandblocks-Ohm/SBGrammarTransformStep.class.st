@@ -8,11 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBGrammarTransformStep >> artefactChanged: aMethodBlock [
+SBGrammarTransformStep >> artefactSaved: aMethodBlock [
 
-	(aMethodBlock parentSandblock isKindOf: SBGrammarTransformStep) ifTrue: [ | step |
+	(aMethodBlock parentSandblock isKindOf: SBGrammarTransformStep) ifTrue: [ | step steps |
 		step := aMethodBlock parentSandblock.
-		step rerun]
+		steps := step parentSandblock childSandblocks.
+		steps from: (steps indexOf: step) to: steps size do: #rerun]
 ]
 
 { #category : #'as yet unclassified' }

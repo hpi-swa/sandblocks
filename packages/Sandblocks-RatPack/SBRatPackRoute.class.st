@@ -5,9 +5,9 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBRatPackRoute class >> matches: aMethod [
+SBRatPackRoute class >> matchSpecific: aBlock [
 
-	^ (super matches: aMethod) and: [(aMethod methodClass inheritsFrom: RPApplication) and: [aMethod pragmas anySatisfy: [:p | self validMethods includes: p keyword]]]
+	^ (aBlock methodClass inheritsFrom: RPApplication) and: [aBlock pragmas anySatisfy: [:p | self validMethods includes: p keyword]]
 ]
 
 { #category : #'as yet unclassified' }

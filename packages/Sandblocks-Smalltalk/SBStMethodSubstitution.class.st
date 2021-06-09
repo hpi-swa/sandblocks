@@ -43,13 +43,13 @@ SBStMethodSubstitution class >> isToplevelMorph [
 { #category : #'as yet unclassified' }
 SBStMethodSubstitution class >> matches: anObject [
 
-	^ anObject isCompiledMethod or: [anObject isSandblock and: [anObject isMethod]]
+	^ anObject isCompiledMethod or: [anObject isSandblock and: [anObject isMethod and: [self matchSpecific: anObject]]]
 ]
 
 { #category : #'as yet unclassified' }
-SBStMethodSubstitution class >> newFor: anObject [
+SBStMethodSubstitution class >> newFrom: aBlock [
 
-	^ self subclassResponsibility
+	^ self new selector: aBlock selector arguments: aBlock arguments class: aBlock methodClass
 ]
 
 { #category : #'as yet unclassified' }

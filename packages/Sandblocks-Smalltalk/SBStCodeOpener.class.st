@@ -124,34 +124,37 @@ SBStCodeOpener >> initialize [
 			selected: #selectedCategoryIndex
 			changeSelected: #selectedCategoryIndex:
 			menu: #menu:evaluate:)
-				vResizing: #spaceFill;
-				keystrokePreviewSelector: #keyStroke:;
-				width: 200;
-				yourself);
+			vResizing: #spaceFill;
+			autoDeselect: false;
+			keystrokePreviewSelector: #keyStroke:;
+			width: 200;
+			yourself);
 		addMorphBack: (classes := (PluggableListMorphPlus
 			on: self
 			list: #classes
 			selected: #selectedClassIndex
 			changeSelected: #selectedClassIndex:
 			menu: #menu:evaluate:)
-				getIconSelector: #classIconAt:;
-				doubleClickSelector: #openSelectedMethod;
-				keystrokePreviewSelector: #keyStroke:;
-				vResizing: #spaceFill;
-				width: 200;
-				yourself);
+			getIconSelector: #classIconAt:;
+			doubleClickSelector: #openSelectedMethod;
+			autoDeselect: false;
+			keystrokePreviewSelector: #keyStroke:;
+			vResizing: #spaceFill;
+			width: 200;
+			yourself);
 		addMorphBack: (messages := (PluggableListMorphPlus
 			on: self
 			list: #methods
 			selected: #selectedMethodIndex
 			changeSelected: #selectedMethodIndex:
 			menu: #menu:evaluate:)
-				getIconSelector: #messageIconAt:;
-				doubleClickSelector: #openSelectedMethod;
-				vResizing: #spaceFill;
-				keystrokePreviewSelector: #keyStroke:;
-				width: 200;
-				yourself).
+			getIconSelector: #messageIconAt:;
+			doubleClickSelector: #openSelectedMethod;
+			autoDeselect: false;
+			vResizing: #spaceFill;
+			keystrokePreviewSelector: #keyStroke:;
+			width: 200;
+			yourself)
 ]
 
 { #category : #'as yet unclassified' }
@@ -272,12 +275,10 @@ SBStCodeOpener >> selectedCategoryIndex [
 { #category : #'as yet unclassified' }
 SBStCodeOpener >> selectedCategoryIndex: aNumber [
 
-	aNumber < 1
-		ifTrue: [selectedCategoryIndex := self categories size]
-		ifFalse: [
-			aNumber > self categories size
-				ifTrue: [selectedCategoryIndex := 1]
-				ifFalse: [selectedCategoryIndex := aNumber]].
+	aNumber < 1 ifTrue: [selectedCategoryIndex := self categories size] ifFalse: [
+		aNumber > self categories size
+			ifTrue: [selectedCategoryIndex := 1]
+			ifFalse: [selectedCategoryIndex := aNumber]].
 	
 	selectedMethodIndex := 0.
 	selectedClassIndex := 0.
@@ -314,7 +315,7 @@ SBStCodeOpener >> selectedClassIndex: aNumber moved: aBoolean [
 			aNumber > self classes size
 				ifTrue: [selectedClassIndex := 1]
 				ifFalse: [selectedClassIndex := aNumber]].
-
+	
 	self changed: #selectedClassIndex.
 	self changed: #methods.
 	self selectedMethodIndex: 0 moved: false

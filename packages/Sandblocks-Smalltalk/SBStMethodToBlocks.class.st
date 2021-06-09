@@ -90,7 +90,7 @@ SBStMethodToBlocks >> visitFutureNode: aNode [
 { #category : #'as yet unclassified' }
 SBStMethodToBlocks >> visitInstanceVariableNode: aNode [
 
-	^ self visitInstanceVariableNode: aNode
+	^ self visitVariableNode: aNode
 ]
 
 { #category : #nil }

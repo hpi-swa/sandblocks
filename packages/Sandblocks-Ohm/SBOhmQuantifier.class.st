@@ -32,6 +32,12 @@ SBOhmQuantifier >> isExpression [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmQuantifier >> isQuantifier [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmQuantifier >> keyStroke: anEvent [
 
 	(#($+ $* $?) includes: anEvent keyCharacter)
@@ -45,6 +51,16 @@ SBOhmQuantifier >> layoutCommands [
 	^ SBAlgebraCommand container
 		data: {self expression layoutCommands. self currentTextMorph layoutCommands};
 		morph: self
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmQuantifier >> printOn: aStream [
+
+	aStream
+		nextPutAll: '(';
+		print: self expression;
+		nextPutAll: ')';
+		nextPut: self quantifier
 ]
 
 { #category : #'as yet unclassified' }
