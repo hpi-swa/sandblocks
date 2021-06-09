@@ -1018,8 +1018,7 @@ SBBlock >> grammarHandler [
 { #category : #'event handling' }
 SBBlock >> handlesMouseDown: anEvent [
 
-	^ anEvent redButtonPressed or: [
-		SBPreferences rightClickContextMenu and: [anEvent yellowButtonPressed]]
+	^ anEvent redButtonPressed or: [SBPreferences rightClickContextMenu and: [anEvent yellowButtonPressed]]
 ]
 
 { #category : #'event handling' }
@@ -2396,7 +2395,7 @@ SBBlock >> startDrag: anEvent [
 		comment: 'if the preference is on, we absorb the startDrag events'
 		active: 1
 		do: {[anEvent yellowButtonPressed and: [SBPreferences rightClickContextMenu]]}) ifTrue: [ | canvas |
-		canvas := self sandblockEditor canvas.
+		canvas := self sandblockEditor canvas scroller.
 		anEvent hand newMouseFocus: canvas.
 		^ canvas startDrag: (anEvent transformBy: self transformFromWorld asMatrixTransform2x3 inverseTransformation)].
 	
