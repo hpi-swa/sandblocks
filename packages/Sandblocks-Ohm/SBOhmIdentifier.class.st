@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBOhmIdentifier >> allUsages [
+
+	^ Array streamContents: [:stream | self allUsagesDo: [:u | stream nextPut: u]]
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmIdentifier >> allUsagesDo: aBlock [
 
 	self associatedRule ifNotNil: [:rule | rule isSandblock ifTrue: [rule allUsagesDo: aBlock]]
@@ -36,6 +42,14 @@ SBOhmIdentifier >> isNonPrimitive [
 
 { #category : #'as yet unclassified' }
 SBOhmIdentifier >> isPrimitive [
+
+	(#('letter' 'digit') includes: self contents) ifTrue: [^ true]
+	.
+	^ self associatedRule ifNotNil: [:rule | rule isSandblock not or: [rule isPrimitive]] ifNil: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmIdentifier >> isSimple [
 	" special marker for things that are likely pointing to primitive constructs such as digit+ "
 
 	^ #('letter' 'digit') includes: self contents

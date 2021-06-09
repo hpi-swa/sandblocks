@@ -10,7 +10,7 @@ SBGrammarTransformer class >> connectorsOf: rule on: aStream original: anOrigina
 	| usages |
 	usages := (anOriginalGrammar ruleNamed: rule name) allUsages.
 	usages ifNotEmpty: [
-		(usages anySatisfy: [:identifier | identifier parentSandblock isQuantifier])
+		(usages anySatisfy: [:identifier | identifier parentSandblock isQuantifier and: [identifier isPrimitive not]])
 			ifTrue: [
 				aStream
 					nextPutAll: 'this.setPreviousStatement(true, null);';
@@ -33,7 +33,7 @@ SBGrammarTransformer class >> fieldFor: aPart on: aStream [
 			nextPutAll: aPart textContents;
 			nextPutAll: '")'].
 	
-	(aPart isIdentifier and: [aPart contents = 'primitive']) ifTrue: [^ aStream nextPutAll: '.appendField(new Blockly.FieldTextInput(''''), "NAME")'].
+	(aPart isIdentifier and: [aPart isPrimitive]) ifTrue: [^ aStream nextPutAll: '.appendField(new Blockly.FieldTextInput(''''), "NAME")'].
 	
 	aPart isSequence ifTrue: [^ aPart childSandblocksDo: [:part | self fieldFor: part on: aStream]].
 	
@@ -46,7 +46,7 @@ SBGrammarTransformer class >> fieldFor: aPart on: aStream [
 	^ self error: 'not supported'
 ]
 
-{ #category : #'generate blocks' }
+{ #category : #'generate helper' }
 SBGrammarTransformer class >> grammar: anOhmGrammar steps: aCollection [
 
 	| grammar |
@@ -63,7 +63,7 @@ SBGrammarTransformer class >> inputTypeFor: aPart on: aStream [
 		ifFound: [:part | ^ aStream nextPutAll: 'this.appendStatementInput("NAME")']
 		ifNone: [].
 	aPart
-		allBlocksDetect: [:part | part isIdentifier and: [part contents ~= 'primitive']]
+		allBlocksDetect: [:part | part isIdentifier and: [part isPrimitive not]]
 		ifFound: [:part | ^ aStream nextPutAll: 'this.appendValueInput("NAME")']
 		ifNone: [].
 	
@@ -84,7 +84,7 @@ SBGrammarTransformer class >> newFrom: aBlock [
 	^ (super newFrom: aBlock) grammar: msg arguments first steps: msg arguments second
 ]
 
-{ #category : #'generate blocks' }
+{ #category : #'generate helper' }
 SBGrammarTransformer class >> openFor: aGrammar original: anOriginalGrammar [
 
 	ExternalWebBrowser openOnUrl: 'file://', (self writeFor: aGrammar original: anOriginalGrammar)
@@ -94,7 +94,11 @@ SBGrammarTransformer class >> openFor: aGrammar original: anOriginalGrammar [
 SBGrammarTransformer class >> outputStringFor: aGrammar original: anOriginalGrammar [
 
 	| rules |
-	rules := aGrammar childSandblocks select: [:rule | rule name ~= 'primitive'].
+	rules := aGrammar childSandblocks select: [:r | r name ~= 'primitive'].
+	SBToggledCode
+		comment: 'only keep one primitive'
+		active: 1
+		do: {[rules := rules copyWithoutAll: (rules select: #isPrimitive) allButFirst]}.
 	
 	^ '<meta charset="utf-8">
 <script src="https://unpkg.com/blockly/blockly.min.js"></script>
@@ -128,13 +132,18 @@ var workspace = Blockly.inject(''blocklyDiv'', \{
 		(rules collect: [:rule | | props |
 			props := String streamContents: [:stream |
 				self connectorsOf: rule on: stream original: anOriginalGrammar.
-				rule expression childSandblocks do: [:part |
-					self propsForExpression: part on: stream.
-					stream
-						nextPut: $;;
-						cr]].
+				stream nextPutAll: 'this.setColour(', (360 atRandom asString, ');').
+				rule isPrimitive
+					ifTrue: [self propsForExpression: (SBOhmIdentifier new contents: 'letter') on: stream]
+					ifFalse: [
+						rule expression childSandblocks do: [:part |
+							self propsForExpression: part on: stream.
+							stream
+								nextPut: $;;
+								cr]]].
 			'Blockly.Blocks[''{1}''] = \{
   init: function() \{
+	this.setInputsInline(true);
     {2}
   \}
 \}' format: {rule name. props}]) joinSeparatedBy: String cr}
@@ -146,12 +155,12 @@ SBGrammarTransformer class >> propsForExpression: aPart on: aStream [
 	self inputTypeFor: aPart on: aStream.
 	
 	(aPart isQuantifier and: [aPart expression isIdentifier]) ifTrue: [^ self].
-	(aPart isIdentifier and: [aPart contents ~= 'primitive']) ifTrue: [^ self].
+	(aPart isIdentifier and: [aPart isPrimitive not]) ifTrue: [^ self].
 	
 	self fieldFor: aPart on: aStream
 ]
 
-{ #category : #'generate blocks' }
+{ #category : #'generate helper' }
 SBGrammarTransformer class >> writeFor: aGrammar original: anOriginalGrammar [
 
 	| file |

@@ -38,7 +38,7 @@ SBOhmRule >> initialize [
 { #category : #'as yet unclassified' }
 SBOhmRule >> isPrimitive [
 
-	self allBlocksDo: [:b | (b isIdentifier and: [b isPrimitive not]) ifTrue: [^ false]].
+	self allBlocksDo: [:b | (b isIdentifier and: [b isSimple not]) ifTrue: [^ false]].
 	^ true
 ]
 
