@@ -570,13 +570,6 @@ SBBlock >> decorators [
 	^ decorators
 ]
 
-{ #category : #initialization }
-SBBlock >> delete [
-
-	super delete.
-	self triggerEvent: #delete
-]
-
 { #category : #actions }
 SBBlock >> deleteAdjacent [
 	<action>
@@ -987,7 +980,7 @@ SBBlock >> forceStrengthAgainst: aMorph [
 
 	| distance maximumNonOverlappingForce |
 	maximumNonOverlappingForce := 10.
-	distance := (self bounds distanceTo: aMorph bounds) r.
+	distance := (self bounds vectorToRectangle: aMorph bounds) r.
 	^ distance > 200 ifTrue: [0] ifFalse: [
 		(distance closeTo: 0)
 			ifTrue: [maximumNonOverlappingForce + ((self bounds intersect: aMorph bounds) area sqrt / 10)]
