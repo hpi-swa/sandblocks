@@ -84,7 +84,7 @@ SBStMessagePart >> dismiss [
 { #category : #'as yet unclassified' }
 SBStMessagePart >> drawnColor [
 
-	^ self messageSend drawnColor alpha: 0
+	^ self messageSend ifNotNil: [:m | m drawnColor alpha: 0] ifNil: [super drawnColor]
 ]
 
 { #category : #'as yet unclassified' }

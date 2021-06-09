@@ -1518,6 +1518,12 @@ SBBlock >> minExtent [
 ]
 
 { #category : #accessing }
+SBBlock >> morphicLayerNumber [
+
+	^ 5
+]
+
+{ #category : #accessing }
 SBBlock >> mouseCursorAt: anEvent [
 
 	| cursor priority |
@@ -1553,7 +1559,23 @@ SBBlock >> mouseMove: anEvent [
 ]
 
 { #category : #actions }
-SBBlock >> moveCursorDown [
+SBBlock >> moveCursorToEnd [
+	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
+
+	self currentTextMorph moveCursorTo: 9e8
+]
+
+{ #category : #actions }
+SBBlock >> moveCursorToStart [
+	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
+
+	self currentTextMorph moveCursorTo: 1
+]
+
+{ #category : #actions }
+SBBlock >> moveTextCursorDown [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
@@ -1570,12 +1592,11 @@ SBBlock >> moveCursorDown [
 ]
 
 { #category : #actions }
-SBBlock >> moveCursorLeft [
+SBBlock >> moveTextCursorLeft [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
 	| editor wordWise |
-	
 	wordWise := ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed].
 	editor := self sandblockEditor.
 	self currentTextMorph
@@ -1594,12 +1615,11 @@ SBBlock >> moveCursorLeft [
 ]
 
 { #category : #actions }
-SBBlock >> moveCursorRight [
+SBBlock >> moveTextCursorRight [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
 	| editor wordWise |
-	
 	wordWise := ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed].
 	editor := self sandblockEditor.
 	self currentTextMorph
@@ -1608,30 +1628,13 @@ SBBlock >> moveCursorRight [
 			next := (self currentTextMorph nextMorphThat: [:b | b isTextMorph]) ifNotNil: #containingSandblock.
 			(next notNil and: [next containingFloat = self containingFloat]) ifTrue: [
 				editor select: next.
-				next currentTextMorph ifNotNil: [
-					editor startInput: next at: (wordWise ifTrue: [900000000] ifFalse: [0]) replacingContents: false]]]
+				next currentTextMorph ifNotNil: [editor startInput: next at: (wordWise ifTrue: [900000000] ifFalse: [0]) replacingContents: false]]]
 		wordWise: wordWise.
 	editor updateVerticalSelectionPosition
 ]
 
 { #category : #actions }
-SBBlock >> moveCursorToEnd [
-	<inputAction>
-	<actionValidIf: #hasCurrentTextMorph>
-
-	self currentTextMorph moveCursorTo: 9e8
-]
-
-{ #category : #actions }
-SBBlock >> moveCursorToStart [
-	<inputAction>
-	<actionValidIf: #hasCurrentTextMorph>
-
-	self currentTextMorph moveCursorTo: 1
-]
-
-{ #category : #actions }
-SBBlock >> moveCursorUp [
+SBBlock >> moveTextCursorUp [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 

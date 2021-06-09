@@ -65,6 +65,8 @@ SBSelectionDecorator >> maxBlickCount [
 SBSelectionDecorator >> postDrawOn: aCanvas [
 
 	| b color |
+	SBPreferences useNewCursor ifTrue: [^ self].
+	
 	self cursorVisible ifFalse: [^ self].
 	b := self morph bounds expandBy: 2.
 	color := self color.

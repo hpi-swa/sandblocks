@@ -290,7 +290,7 @@ SBStBlockBody >> multiSelectChildren [
 { #category : #'as yet unclassified' }
 SBStBlockBody >> newEmptyChildNear: aBlock before: aBoolean [
 
-	(aBlock isName and: [aBlock isBlockBinding]) ifTrue: [^ SBStName new].
+	(aBlock isSandblock and: [aBlock isName and: [aBlock isBlockBinding]]) ifTrue: [^ SBStName new].
 	^ super newEmptyChildNear: aBlock before: aBoolean
 ]
 

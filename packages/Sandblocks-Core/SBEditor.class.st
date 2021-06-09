@@ -25,7 +25,8 @@ Class {
 		'ignoreNext',
 		'paletteContainer',
 		'history',
-		'dragHelper'
+		'dragHelper',
+		'cursor'
 	],
 	#classVars : [
 		'DefaultColorPolicy',
@@ -505,6 +506,12 @@ SBEditor >> currentInputCommand [
 	^ currentInputCommand
 ]
 
+{ #category : #accessing }
+SBEditor >> cursor [
+
+	^ cursor
+]
+
 { #category : #'as yet unclassified' }
 SBEditor >> deactivateForces [
 	
@@ -744,7 +751,7 @@ SBEditor >> initialize [
 	globalShortcutListeners := OrderedCollection new.
 	inputMapping := self class newInputMapping.
 	searchInput := SBSearchPanel new.
-	self registerGlobalShortcutListener: searchInput.
+	cursor := SBBlockCursor new editor: self.
 	
 	paletteContainer := SBUpdatingPaletteContainer new
 		vResizing: #spaceFill;
@@ -776,9 +783,13 @@ SBEditor >> initialize [
 	self wantsMinimalLayout ifFalse: [self addMorphBack: (bottomPanel := self buildBottomPanel)].
 	
 	self
-		registerGlobalShortcutListener: errors;
 		registerGlobalShortcutListener: self;
-		resetState
+		registerGlobalShortcutListener: errors;
+		registerGlobalShortcutListener: searchInput;
+		registerGlobalShortcutListener: cursor;
+		resetState.
+	
+	SBPreferences useNewCursor ifTrue: [self openMorph: cursor]
 ]
 
 { #category : #testing }
@@ -1121,7 +1132,7 @@ SBEditor >> openInWindow [
 { #category : #'submorphs-add/remove' }
 SBEditor >> openMorph: aMorph [
 
-	scroll scroller addMorphFront: aMorph
+	scroll scroller addMorphFrontInLayer: aMorph
 ]
 
 { #category : #'submorphs-add/remove' }
@@ -1443,6 +1454,7 @@ SBEditor >> select: aBlock [
 
 	self assert: (aBlock isNil or: [aBlock isSandblock]).
 	
+	SBPreferences useNewCursor ifTrue: [self cursor select: aBlock].
 	(currentInput ~= nil and: [currentInput ~= aBlock]) ifTrue: [self endInput].
 	
 	self internalSelect: aBlock
@@ -1451,6 +1463,7 @@ SBEditor >> select: aBlock [
 { #category : #selection }
 SBEditor >> selectClick: aBlock at: aPoint [
 
+	SBPreferences useNewCursor ifTrue: [self cursor moveCursorClick: aBlock at: aPoint].
 	aBlock select.
 	self maybeStartInputNear: aPoint.
 	self updateVerticalSelectionPosition
@@ -1465,7 +1478,9 @@ SBEditor >> selectedArtefact [
 { #category : #selection }
 SBEditor >> selection [
 
-	^ selection ifNotNil: [selection owner ifNil: [nil] ifNotNil: [selection]]
+	^ SBPreferences useNewCursor
+		ifTrue: [self cursor selectedBlock]
+		ifFalse: [selection]
 ]
 
 { #category : #accessing }

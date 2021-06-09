@@ -108,9 +108,3 @@ SBTextInputTest >> testSpaceForEmptyLine [
 	
 	self assert: (block statements last isKindOf: SBUnknown)
 ]
-
-{ #category : #'as yet unclassified' }
-SBTextInputTest >> tick [
-
-	World doOneCycle
-]

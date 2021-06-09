@@ -65,3 +65,9 @@ SBPreferences class >> rightClickContextMenu: aBoolean [
 	
 	RightClickContextMenu := aBoolean
 ]
+
+{ #category : #'as yet unclassified' }
+SBPreferences class >> useNewCursor [
+
+	^ false
+]
