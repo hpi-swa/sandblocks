@@ -8,7 +8,7 @@ Class {
 SBGrammarTransformer class >> connectorsOf: rule on: aStream original: anOriginalGrammar [
 
 	| usages |
-	usages := (anOriginalGrammar ruleNamed: rule name) allUsages.
+	usages := ((rule name beginsWith: 'GEN') ifTrue: [rule] ifFalse: [(rule name beginsWith: 'EXP') ifTrue: [anOriginalGrammar ruleNamed: (rule name allButFirst: 4)] ifFalse: [anOriginalGrammar ruleNamed: rule name]]) allUsages.
 	usages ifNotEmpty: [
 		(usages anySatisfy: [:identifier | identifier parentSandblock isQuantifier and: [identifier isPrimitive not]])
 			ifTrue: [
@@ -98,7 +98,7 @@ SBGrammarTransformer class >> outputStringFor: aGrammar original: anOriginalGram
 	SBToggledCode
 		comment: 'only keep one primitive'
 		active: 1
-		do: {[rules := rules copyWithoutAll: (rules select: #isPrimitive) allButFirst]}.
+		do: {[rules := rules copyWithoutAll: (rules select: #isPrimitive) viewAllButFirst]}.
 	
 	^ '<meta charset="utf-8">
 <script src="https://unpkg.com/blockly/blockly.min.js"></script>

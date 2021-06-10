@@ -11,6 +11,12 @@ SBOhmASTNode >> actionProviders [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmASTNode >> containingRule [
+
+	^ self parentSandblock containingRule
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmASTNode >> grammarHandler [
 
 	^ SBOhmGrammarHandler new
@@ -86,7 +92,7 @@ SBOhmASTNode >> mergeRedundantGroups [
 	" flatten AND and OR sequences that only contain one child "
 
 	self allBlocksDo: [:b |
-		((b isAlternative or: [b isSequence]) and: [b childSandblocks size = 1 or: [(b isAlternative and: [b parentSandblock isAlternative]) or: [b isSequence and: [b parentSandblock isSequence]]]]) ifTrue: [
+		((b isAlternative or: [b isSequence]) and: [b childSandblocks size <= 1 or: [(b isAlternative and: [b parentSandblock isAlternative]) or: [b isSequence and: [b parentSandblock isSequence]]]]) ifTrue: [
 			b flattenChildren.
 			" to make sure we don't operate on an invalid tree, start over "
 			^ self mergeRedundantGroups]]
