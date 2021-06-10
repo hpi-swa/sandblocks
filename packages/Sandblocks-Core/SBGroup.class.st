@@ -21,6 +21,7 @@ SBGroup >> add: aForceMoveDecorator [
 	aForceMoveDecorator group: self.
 	aForceMoveDecorator morph when: #positionChanged send: #computeVertices to: self.
 	self computeVertices.
+	aForceMoveDecorator morph when: #delete send: #remove: to: self with: aForceMoveDecorator morph.
 	self indicator ifNil: [
 		self indicator: (SBOffscreenBlockIndicator newFor: self).
 		aForceMoveDecorator morph sandblockEditor openMorphInOverlay: self indicator]
@@ -261,8 +262,37 @@ SBGroup >> morphicLayerNumber [
 	^ 10
 ]
 
+{ #category : #accessing }
+SBGroup >> privateOwner: aMorph [
+
+	super privateOwner: aMorph.
+	aMorph ifNil: [self triggerEvent: #delete]
+]
+
+{ #category : #'as yet unclassified' }
+SBGroup >> remove: aMorph [
+
+	self blocks remove: aMorph.
+	self blocks size = 1
+		ifTrue: [
+			self blocks do: [:block | 
+				block removeActionsWithReceiver: self.
+				block withDecorator: SBForceMoveDecorator do: [:decorator | 
+					decorator group: nil]].
+			self abandon]
+		ifFalse: [self computeVertices].
+]
+
 { #category : #nil }
 SBGroup >> textContents [
 
 	^  'Group'
+]
+
+{ #category : #nil }
+SBGroup >> withDecorator: aDecorator do: aBlock ifAbsent: anotherBlock [
+
+	"dont even try"
+
+	^ anotherBlock value
 ]

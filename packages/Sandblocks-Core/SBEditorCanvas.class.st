@@ -23,10 +23,9 @@ SBEditorCanvas >> addMorphToOverlay: aMorph [
 SBEditorCanvas >> addedMorph: aMorph [
 	
 	aMorph isSandblock ifTrue: [
-		aMorph attachDecorator: SBIndicatorDecorator new.
 		self sandblockEditor
-			activateForces.
-			"openMorphInOverlay: (SBOffscreenBlockIndicator newFor: aMorph withScroller: self)"].
+			activateForces;
+			openMorphInOverlay: (SBOffscreenBlockIndicator newFor: aMorph)].
 
 ]
 

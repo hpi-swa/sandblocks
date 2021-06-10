@@ -5,8 +5,7 @@ Class {
 		'target',
 		'iconMorph',
 		'labelMorph',
-		'lastPosition',
-		'shouldHide'
+		'lastPosition'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -45,7 +44,6 @@ SBOffscreenBlockIndicator >> initialize [
 	
 	self iconMorph: SBIcon iconCaretSquareORight veryLarge.
 	self addMorph: self iconMorph.
-	self shouldHide: false.
 	
 	self color: Color transparent.
 	
@@ -100,13 +98,9 @@ SBOffscreenBlockIndicator >> scroller [
 { #category : #accessing }
 SBOffscreenBlockIndicator >> shouldHide [
 
-	^ shouldHide
-]
-
-{ #category : #accessing }
-SBOffscreenBlockIndicator >> shouldHide: aBoolean [
-
-	shouldHide := aBoolean.
+	^ self target withDecorator: SBForceMoveDecorator 
+		do: [:decorator | decorator group notNil]
+		ifAbsent: [false]
 ]
 
 { #category : #'as yet unclassified' }
@@ -156,6 +150,7 @@ SBOffscreenBlockIndicator >> target: aMorph [
 	
 	self labelMorph: (SBStringMorph new contents: self target textContents).
 	self addMorph: self labelMorph.
+	aMorph when: #delete send: #abandon to: self.
 ]
 
 { #category : #'as yet unclassified' }
