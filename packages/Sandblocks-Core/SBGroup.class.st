@@ -46,7 +46,7 @@ SBGroup >> blocks: anObject [
 { #category : #nil }
 SBGroup >> computeVertices [
 	
-	| verticalEdges newVertices comingBlockTops seenBlockTops comingBlockBottoms seenBlockBottoms expandBy newVertex |
+	| verticalEdges newVertices comingBlockTops seenBlockTops comingBlockBottoms seenBlockBottoms expandBy newVertex activeBlockTops activeBlockBottoms |
 	verticalEdges := OrderedCollection new.
 	
 	expandBy := 10@10.
@@ -60,6 +60,7 @@ SBGroup >> computeVertices [
 	newVertices := OrderedCollection new.
 	comingBlockTops := self blocks collect: [:aBlock | (aBlock bounds expandBy: expandBy) top] as: SortedCollection.
 	seenBlockTops := SortedCollection new.
+	activeBlockTops := 0.
 	
 	verticalEdges do: [:edge |
 		| aBlock |
@@ -74,21 +75,24 @@ SBGroup >> computeVertices [
 					ifEmpty: [edge first @ comingBlockTops first]
 					ifNotEmpty: [edge first @ (comingBlockTops first max: seenBlockTops first)]].
 		
-		newVertices ifNotEmpty: [ | x |
+		seenBlockTops size > 1 ifTrue: [ | x |
 			newVertex y < newVertices last y
-				ifTrue: [x := (2 * newVertices last x + newVertex x) / 3.0.
+				ifTrue: [x := activeBlockTops == 0 ifTrue: [(2 * newVertices last x + newVertex x) / 3.0] ifFalse: [newVertex x].
 					newVertices add: x @ newVertices last y.
 					newVertices add: x @ newVertex y]
-				ifFalse:[x := (2 * newVertex x + newVertices last x) / 3.0.
+				ifFalse:[x := activeBlockTops == 0 ifTrue: [(2 * newVertex x + newVertices last x) / 3.0] ifFalse: [newVertices last x].
 					newVertices add: x @ newVertices last y.
 					newVertices add: x @ newVertex y]].
 		newVertices add: newVertex.
 				
 		edge second == #left
-			ifFalse: [comingBlockTops remove: (aBlock bounds expandBy: expandBy) top]].
+			ifFalse: [comingBlockTops remove: (aBlock bounds expandBy: expandBy) top].
+			
+		activeBlockTops := activeBlockTops + (edge second == #left ifTrue: [1] ifFalse: [-1])].
 		
 	comingBlockBottoms := self blocks collect: [:aBlock | (aBlock bounds expandBy: expandBy) bottom] as: SortedCollection.
 	seenBlockBottoms := SortedCollection new.
+	activeBlockBottoms := 0.
 	
 	verticalEdges reverseDo: [:edge |
 		| aBlock |
@@ -104,18 +108,20 @@ SBGroup >> computeVertices [
 					ifEmpty: [edge first @ comingBlockBottoms last]
 					ifNotEmpty: [edge first @ (comingBlockBottoms last min: seenBlockBottoms last)]].
 		
-		newVertices ifNotEmpty: [ | x |
+		seenBlockBottoms size > 1 ifTrue: [ | x |
 			newVertex y < newVertices last y
-				ifTrue: [x  := (2 * newVertex x + newVertices last x) / 3.0.
+				ifTrue: [x  := activeBlockBottoms == 0 ifTrue: [(2 * newVertex x + newVertices last x) / 3.0] ifFalse: [newVertices last x].
 					newVertices add: x @ newVertices last y.
 					newVertices add: x @ newVertex y]
-				ifFalse:[x := (2 * newVertices last x + newVertex x) / 3.0.
+				ifFalse:[x := activeBlockBottoms == 0 ifTrue: [(2 * newVertices last x + newVertex x) / 3.0] ifFalse: [newVertex x].
 					newVertices add: x @ newVertices last y.
 					newVertices add: x @ newVertex y]].
 		newVertices add: newVertex.
 				
 		edge second == #right
-			ifFalse: [comingBlockBottoms remove: (aBlock bounds expandBy: expandBy) bottom]].
+			ifFalse: [comingBlockBottoms remove: (aBlock bounds expandBy: expandBy) bottom].
+			
+		activeBlockBottoms := activeBlockBottoms + (edge second == #right ifTrue: [1] ifFalse: [-1])].
 	
 	self setVertices: newVertices.
 ]
