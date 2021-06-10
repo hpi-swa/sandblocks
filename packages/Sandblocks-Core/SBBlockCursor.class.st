@@ -258,9 +258,10 @@ SBBlockCursor >> resetBlink [
 
 	blinkCount := 0.
 	cursorShown := false.
-	self editor world ifNotNil: [:w |
-		w stopStepping: self.
-		w startStepping: self at: Time millisecondClockValue selector: #step arguments: {} stepTime: self stepTime]
+	self editor ifNotNil: [:e |
+		e world ifNotNil: [:w |
+			w stopStepping: self.
+			w startStepping: self at: Time millisecondClockValue selector: #step arguments: {} stepTime: self stepTime]]
 ]
 
 { #category : #api }

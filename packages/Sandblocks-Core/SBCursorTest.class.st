@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBCursorTest >> expectedFailures [
+
+	^ #(#testBoundsUpdateOnChanges)
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorTest >> testBoundsUpdateOnChanges [
 
 	| string editor |

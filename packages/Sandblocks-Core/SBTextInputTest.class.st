@@ -35,7 +35,9 @@ SBTextInputTest >> testCursorKeepsHorizontalPosition [
 
 	| editor block |
 	block := '[''abcdefg''. ''abcdefg''. ''abcdefg'']' parseAsSandblock.
-	editor := self methodFor: block.
+	editor := self editorFor: block.
+	block width: 10.
+	block fullBounds.
 	
 	editor startInput: block statements second at: 2 replacingContents: false.
 	self send: (self keyboardEvent: Character arrowRight) to: editor.
