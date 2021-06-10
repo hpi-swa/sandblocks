@@ -23,9 +23,11 @@ SBEditorCanvas >> addMorphToOverlay: aMorph [
 SBEditorCanvas >> addedMorph: aMorph [
 	
 	aMorph isSandblock ifTrue: [
+		aMorph attachDecorator: SBIndicatorDecorator new.
 		self sandblockEditor
-			activateForces;
-			openMorphInOverlay: (SBOffscreenBlockIndicator newFor: aMorph withScroller: self)]
+			activateForces.
+			"openMorphInOverlay: (SBOffscreenBlockIndicator newFor: aMorph withScroller: self)"].
+
 ]
 
 { #category : #viewport }
@@ -161,17 +163,6 @@ SBEditorCanvas >> mouseWheel: anEvent [
 SBEditorCanvas >> moveViewport: aPoint [
 
 	self viewportPosition: targetPosition + aPoint negated
-]
-
-{ #category : #'as yet unclassified' }
-SBEditorCanvas >> removeIndicatorFor: aMorph [
-	"Do nothing"
-]
-
-{ #category : #'as yet unclassified' }
-SBEditorCanvas >> removedMorph: aMorph [
-	
-	self sandblockEditor canvas removeIndicatorFor: aMorph
 ]
 
 { #category : #constants }

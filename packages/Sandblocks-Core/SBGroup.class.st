@@ -2,7 +2,8 @@ Class {
 	#name : #SBGroup,
 	#superclass : #PolygonMorph,
 	#instVars : [
-		'blocks'
+		'blocks',
+		'indicator'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -19,7 +20,10 @@ SBGroup >> add: aForceMoveDecorator [
 	self blocks add: aForceMoveDecorator morph.
 	aForceMoveDecorator group: self.
 	aForceMoveDecorator morph when: #positionChanged send: #computeVertices to: self.
-	self computeVertices
+	self computeVertices.
+	self indicator ifNil: [
+		self indicator: (SBOffscreenBlockIndicator newFor: self).
+		aForceMoveDecorator morph sandblockEditor openMorphInOverlay: self indicator]
 ]
 
 { #category : #'as yet unclassified' }
@@ -147,9 +151,28 @@ SBGroup >> computeVerticesRectangle [
 	self bounds: newBounds
 ]
 
+{ #category : #accessing }
+SBGroup >> indicator [
+
+	^ indicator
+]
+
+{ #category : #accessing }
+SBGroup >> indicator: aMorph [
+
+	indicator := aMorph.
+]
+
 { #category : #nil }
 SBGroup >> initialize [
 
 	super initialize.
-	self blocks: Set new
+	self blocks: Set new.
+	self indicator: nil.
+]
+
+{ #category : #nil }
+SBGroup >> textContents [
+
+	^  'Group'
 ]

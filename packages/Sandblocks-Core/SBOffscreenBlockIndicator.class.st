@@ -3,20 +3,20 @@ Class {
 	#superclass : #Morph,
 	#instVars : [
 		'target',
-		'scroller',
 		'iconMorph',
 		'labelMorph',
-		'lastPosition'
+		'lastPosition',
+		'shouldHide'
 	],
 	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
-SBOffscreenBlockIndicator class >> newFor: aMorph withScroller: aScroller [
+SBOffscreenBlockIndicator class >> newFor: aMorph [
 
 	^ self new 
 		target: aMorph; 
-		scroller: aScroller.
+		yourself.
 	 
 ]
 
@@ -45,6 +45,7 @@ SBOffscreenBlockIndicator >> initialize [
 	
 	self iconMorph: SBIcon iconCaretSquareORight veryLarge.
 	self addMorph: self iconMorph.
+	self shouldHide: false.
 	
 	self color: Color transparent.
 	
@@ -61,6 +62,18 @@ SBOffscreenBlockIndicator >> labelMorph [
 SBOffscreenBlockIndicator >> labelMorph: anObject [
 
 	labelMorph := anObject.
+]
+
+{ #category : #accessing }
+SBOffscreenBlockIndicator >> lastPosition [
+
+	^ lastPosition
+]
+
+{ #category : #accessing }
+SBOffscreenBlockIndicator >> lastPosition: anObject [
+
+	lastPosition := anObject.
 ]
 
 { #category : #'as yet unclassified' }
@@ -81,13 +94,19 @@ SBOffscreenBlockIndicator >> rejectsEvent: anEvent [
 { #category : #accessing }
 SBOffscreenBlockIndicator >> scroller [
 
-	^ scroller
+	^ self sandblockEditor canvas.
 ]
 
 { #category : #accessing }
-SBOffscreenBlockIndicator >> scroller: aScroller [
+SBOffscreenBlockIndicator >> shouldHide [
 
-	scroller := aScroller.
+	^ shouldHide
+]
+
+{ #category : #accessing }
+SBOffscreenBlockIndicator >> shouldHide: aBoolean [
+
+	shouldHide := aBoolean.
 ]
 
 { #category : #'as yet unclassified' }
@@ -96,7 +115,7 @@ SBOffscreenBlockIndicator >> step [
 	| viewCenter direction intersections viewRectangle position |
 	self target ifNil: [^ self abandon].
 	
-	self targetOffscreen ifTrue: [self show] ifFalse: [^ self hide].
+	(self targetOffscreen and: [self shouldHide not]) ifTrue: [self show] ifFalse: [^ self hide].
 	
 	viewCenter := self scroller innerBounds center.
 	direction := (self target boundsInWorld center - viewCenter) normalized.

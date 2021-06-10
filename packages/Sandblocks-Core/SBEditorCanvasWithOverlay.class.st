@@ -94,12 +94,6 @@ SBEditorCanvasWithOverlay >> overlay: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBEditorCanvasWithOverlay >> removeIndicatorFor: aMorph [
-	
-	self overlay submorphsDo: [:anIndicator | anIndicator target == aMorph ifTrue: [anIndicator abandon]]
-]
-
-{ #category : #'as yet unclassified' }
 SBEditorCanvasWithOverlay >> scrollToShow: aBlock [
 	
 	^ self canvas scrollToShow: aBlock

@@ -169,9 +169,10 @@ SBForceMoveDecorator >> group [
 ]
 
 { #category : #accessing }
-SBForceMoveDecorator >> group: anObject [
+SBForceMoveDecorator >> group: aGroup [
 
-	group := anObject.
+	group := aGroup.
+	self morph changed: #gotGroup.
 ]
 
 { #category : #accessing }
