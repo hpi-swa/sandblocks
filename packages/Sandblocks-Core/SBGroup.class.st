@@ -251,7 +251,8 @@ SBGroup >> initialize [
 
 	super initialize.
 	self blocks: Set new.
-	self color: (Color seaFoam alpha: 0.5)
+	self color: (Color seaFoam alpha: 0.5).
+	self indicator: nil.
 ]
 
 { #category : #nil }
