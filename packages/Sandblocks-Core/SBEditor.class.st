@@ -1150,7 +1150,7 @@ SBEditor >> openInWindow [
 { #category : #'submorphs-add/remove' }
 SBEditor >> openMorph: aMorph [
 
-	scroll scroller addMorphFrontInLayer: aMorph
+	scroll scroller addMorphInLayer: aMorph
 ]
 
 { #category : #'submorphs-add/remove' }
