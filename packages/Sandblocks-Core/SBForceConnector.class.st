@@ -117,3 +117,16 @@ SBForceConnector >> saveString [
 			nextPutAll: self forceScale asString.
 		]
 ]
+
+{ #category : #'as yet unclassified' }
+SBForceConnector >> step [
+
+	| decorator1 decorator2 |
+	super step.
+	decorator1 := self from withDecorator: SBForceMoveDecorator do: [:decorator | decorator group].
+	decorator2 := self to withDecorator: SBForceMoveDecorator do: [:decorator | decorator group].
+	
+	(decorator1 = decorator2 and: [decorator1 notNil])
+		ifTrue: [self hide]
+		ifFalse: [self show]
+]
