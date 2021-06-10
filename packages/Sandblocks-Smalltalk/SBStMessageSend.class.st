@@ -241,7 +241,7 @@ SBStMessageSend >> isConstructor: aString for: aClass [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> isDefined [
 
-	^ Symbol hasInterned: self selector ifTrue: [:sym | true]
+	^ (Symbol hasInterned: self selector ifTrue: [:sym | true]) or: [self containingArtefact isMethod and: [self containingArtefact selector = self selector]]
 ]
 
 { #category : #'as yet unclassified' }

@@ -104,6 +104,8 @@ SBStSignature >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 			morph: aMorph;
 			yourself].
 	
+	aBlock ifNil: [^ nil].
+	
 	index := aBlock owner = self
 		ifTrue: [(aBlock submorphIndex / 2) ceiling * 2 + (aBoolean ifTrue: [-1] ifFalse: [1])]
 		ifFalse: [1].

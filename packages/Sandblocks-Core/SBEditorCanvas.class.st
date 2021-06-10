@@ -127,7 +127,8 @@ SBEditorCanvas >> initialize [
 ]
 
 { #category : #'event handling' }
-SBEditorCanvas >> mouseDown: anEvent [ 
+SBEditorCanvas >> mouseDown: anEvent [
+
 	anEvent hand waitForClicksOrDrag: self event: anEvent.
 	self stopSteppingSelector: #finishDragVelocity.
 	

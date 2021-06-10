@@ -27,6 +27,12 @@ SBOhmGrammar class >> from: aString [
 	^ reader value: result
 ]
 
+{ #category : #'as yet unclassified' }
+SBOhmGrammar class >> fromGrammar: aGrammar [
+
+	^ self from: aGrammar grammarDefinitionString
+]
+
 { #category : #smalltalk }
 SBOhmGrammar >> canAppearInBlockBody [
 

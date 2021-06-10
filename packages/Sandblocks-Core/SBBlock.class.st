@@ -1015,8 +1015,7 @@ SBBlock >> grammarHandler [
 { #category : #'event handling' }
 SBBlock >> handlesMouseDown: anEvent [
 
-	^ anEvent redButtonPressed or: [
-		SBPreferences rightClickContextMenu and: [anEvent yellowButtonPressed]]
+	^ anEvent redButtonPressed or: [SBPreferences rightClickContextMenu and: [anEvent yellowButtonPressed]]
 ]
 
 { #category : #'event handling' }
@@ -1515,6 +1514,12 @@ SBBlock >> minExtent [
 ]
 
 { #category : #accessing }
+SBBlock >> morphicLayerNumber [
+
+	^ 5
+]
+
+{ #category : #accessing }
 SBBlock >> mouseCursorAt: anEvent [
 
 	| cursor priority |
@@ -1550,7 +1555,23 @@ SBBlock >> mouseMove: anEvent [
 ]
 
 { #category : #actions }
-SBBlock >> moveCursorDown [
+SBBlock >> moveCursorToEnd [
+	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
+
+	self currentTextMorph moveCursorTo: 9e8
+]
+
+{ #category : #actions }
+SBBlock >> moveCursorToStart [
+	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
+
+	self currentTextMorph moveCursorTo: 1
+]
+
+{ #category : #actions }
+SBBlock >> moveTextCursorDown [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
@@ -1567,12 +1588,11 @@ SBBlock >> moveCursorDown [
 ]
 
 { #category : #actions }
-SBBlock >> moveCursorLeft [
+SBBlock >> moveTextCursorLeft [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
 	| editor wordWise |
-	
 	wordWise := ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed].
 	editor := self sandblockEditor.
 	self currentTextMorph
@@ -1591,12 +1611,11 @@ SBBlock >> moveCursorLeft [
 ]
 
 { #category : #actions }
-SBBlock >> moveCursorRight [
+SBBlock >> moveTextCursorRight [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
 	| editor wordWise |
-	
 	wordWise := ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed].
 	editor := self sandblockEditor.
 	self currentTextMorph
@@ -1605,30 +1624,13 @@ SBBlock >> moveCursorRight [
 			next := (self currentTextMorph nextMorphThat: [:b | b isTextMorph]) ifNotNil: #containingSandblock.
 			(next notNil and: [next containingFloat = self containingFloat]) ifTrue: [
 				editor select: next.
-				next currentTextMorph ifNotNil: [
-					editor startInput: next at: (wordWise ifTrue: [900000000] ifFalse: [0]) replacingContents: false]]]
+				next currentTextMorph ifNotNil: [editor startInput: next at: (wordWise ifTrue: [900000000] ifFalse: [0]) replacingContents: false]]]
 		wordWise: wordWise.
 	editor updateVerticalSelectionPosition
 ]
 
 { #category : #actions }
-SBBlock >> moveCursorToEnd [
-	<inputAction>
-	<actionValidIf: #hasCurrentTextMorph>
-
-	self currentTextMorph moveCursorTo: 9e8
-]
-
-{ #category : #actions }
-SBBlock >> moveCursorToStart [
-	<inputAction>
-	<actionValidIf: #hasCurrentTextMorph>
-
-	self currentTextMorph moveCursorTo: 1
-]
-
-{ #category : #actions }
-SBBlock >> moveCursorUp [
+SBBlock >> moveTextCursorUp [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
@@ -2397,7 +2399,7 @@ SBBlock >> startDrag: anEvent [
 		comment: 'if the preference is on, we absorb the startDrag events'
 		active: 1
 		do: {[anEvent yellowButtonPressed and: [SBPreferences rightClickContextMenu]]}) ifTrue: [ | canvas |
-		canvas := self sandblockEditor canvas.
+		canvas := self sandblockEditor canvas scroller.
 		anEvent hand newMouseFocus: canvas.
 		^ canvas startDrag: (anEvent transformBy: self transformFromWorld asMatrixTransform2x3 inverseTransformation)].
 	

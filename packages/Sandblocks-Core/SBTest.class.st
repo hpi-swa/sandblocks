@@ -67,6 +67,12 @@ SBTest class >> mouseEventAt: aPoint [
 ]
 
 { #category : #'as yet unclassified' }
+SBTest >> assert: anObject structure: aCollection [
+
+	aCollection do: [:assoc | self assert: assoc value equals: (anObject perform: assoc key)]
+]
+
+{ #category : #'as yet unclassified' }
 SBTest >> editorFor: aBlock [
 
 	^ self class editorFor: aBlock
@@ -100,4 +106,10 @@ SBTest >> methodFor: aBlock [
 SBTest >> send: anEvent to: anEditor [
 
 	anEvent becomeActiveDuring: [anEditor filterEvent: anEvent for: nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBTest >> tick [
+
+	World doOneCycle
 ]

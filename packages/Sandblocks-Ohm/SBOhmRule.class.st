@@ -17,6 +17,12 @@ SBOhmRule >> allUsagesDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmRule >> containingRule [
+
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmRule >> currentTextMorph [
 
 	^ self firstSubmorph
@@ -25,7 +31,7 @@ SBOhmRule >> currentTextMorph [
 { #category : #'as yet unclassified' }
 SBOhmRule >> expression [
 
-	^ self lastSubmorph
+	^ self lastSubmorph isSandblock ifTrue: [self lastSubmorph] ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -38,7 +44,7 @@ SBOhmRule >> initialize [
 { #category : #'as yet unclassified' }
 SBOhmRule >> isPrimitive [
 
-	self allBlocksDo: [:b | (b isIdentifier and: [b isPrimitive not]) ifTrue: [^ false]].
+	self allBlocksDo: [:b | ((b isIdentifier and: [b isSimple not]) or: [b isTerminal and: [b contents size > 1]]) ifTrue: [^ false]].
 	^ true
 ]
 
@@ -66,6 +72,12 @@ SBOhmRule >> layoutCommands [
 SBOhmRule >> name [
 
 	^ self currentTextMorph contents
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmRule >> name: aString [
+
+	self currentTextMorph contents: aString
 ]
 
 { #category : #'as yet unclassified' }

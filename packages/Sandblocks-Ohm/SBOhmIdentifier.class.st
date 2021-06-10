@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBOhmIdentifier >> allUsages [
+
+	^ Array streamContents: [:stream | self allUsagesDo: [:u | stream nextPut: u]]
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmIdentifier >> allUsagesDo: aBlock [
 
 	self associatedRule ifNotNil: [:rule | rule isSandblock ifTrue: [rule allUsagesDo: aBlock]]
@@ -36,9 +42,18 @@ SBOhmIdentifier >> isNonPrimitive [
 
 { #category : #'as yet unclassified' }
 SBOhmIdentifier >> isPrimitive [
+
+	self isSimple ifTrue: [^ true].
+	^ self associatedRule
+		ifNotNil: [:rule | rule isSandblock not or: [rule isPrimitive]]
+		ifNil: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmIdentifier >> isSimple [
 	" special marker for things that are likely pointing to primitive constructs such as digit+ "
 
-	^ #('letter' 'digit') includes: self contents
+	^ #('letter' 'digit' 'alnum' 'any' 'lower' 'upper' 'hexDigit') includes: self contents
 ]
 
 { #category : #'as yet unclassified' }
@@ -73,6 +88,7 @@ SBOhmIdentifier >> symbols [
 { #category : #'as yet unclassified' }
 SBOhmIdentifier >> valid [
 
+	true ifTrue: [^ true].
 	self containingArtefact isOhm ifFalse: [^ false].
 	^ self containingArtefact rules anySatisfy: [:rule | rule key = self contents]
 ]

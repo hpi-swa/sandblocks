@@ -14,9 +14,21 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBRelInsertCommand >> adjacent [
+
+	^ adjacent
+]
+
+{ #category : #'as yet unclassified' }
 SBRelInsertCommand >> adjacent: aMorph [
 
 	adjacent := aMorph
+]
+
+{ #category : #'as yet unclassified' }
+SBRelInsertCommand >> before [
+
+	^ before
 ]
 
 { #category : #'as yet unclassified' }
@@ -52,6 +64,19 @@ SBRelInsertCommand >> do [
 	self applyPositionTo: morph in: container.
 	
 	^ select ifNil: [morph containingSandblock]
+]
+
+{ #category : #'as yet unclassified' }
+SBRelInsertCommand >> hasSamePositionAs: aCommand [
+
+	^ self class = aCommand class and: [self container = aCommand container and: [self insertIndex = aCommand insertIndex]]
+]
+
+{ #category : #'as yet unclassified' }
+SBRelInsertCommand >> insertIndex [
+
+	self adjacent ifNil: [^ self before ifTrue: [1] ifFalse: [self container submorphCount]].
+	^ (self container submorphs indexOf: self adjacent) + (self before ifTrue: [0] ifFalse: [1])
 ]
 
 { #category : #'as yet unclassified' }
