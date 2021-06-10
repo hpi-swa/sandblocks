@@ -382,6 +382,16 @@ SBEditor >> compileTime [
 	^ self errors hasSubmorphs ifTrue: [#compileOnSave] ifFalse: [compileTime]
 ]
 
+{ #category : #actions }
+SBEditor >> configurationString [
+
+	^ 'restoreSavedConfigurationFor: anEditor
+	
+	anEditor scrollToPosition:', scroll targetPosition
+
+
+]
+
 { #category : #'as yet unclassified' }
 SBEditor >> connectFrom: aMorph to: anotherMorph [
 
@@ -894,6 +904,7 @@ SBEditor >> loadBlocks [
 	
 	self objectsToSave do: [:each | each deleteBlock].
 	self class savedBlocks do: [:each | self openMorph: each].
+	self class restoreSavedConfigurationFor: self.
 ]
 
 { #category : #'do/undo/redo' }
@@ -1437,9 +1448,16 @@ SBEditor >> saveCurrentBlocks [
 	
 	saveString := (self objectsToSave inject: '' into: [:string :artefact | string , artefact saveString, '.', Character cr]).
 	saveString := 'savedBlocks', Character cr, '^ {', saveString, '}'.
-	self class class compile: saveString classified: '*generated'
+	self class class compile: saveString classified: '*generated'.
+	self class class compile: self configurationString classified: '*generated'.
 
 
+]
+
+{ #category : #selection }
+SBEditor >> scrollToPosition: aPoint [
+
+	scroll viewportPosition: aPoint.
 ]
 
 { #category : #selection }

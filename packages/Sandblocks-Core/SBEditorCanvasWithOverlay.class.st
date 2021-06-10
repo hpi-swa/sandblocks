@@ -118,6 +118,12 @@ SBEditorCanvasWithOverlay >> transform [
 ]
 
 { #category : #'as yet unclassified' }
+SBEditorCanvasWithOverlay >> viewportPosition: aPoint [
+	
+	^ self canvas viewportPosition: aPoint
+]
+
+{ #category : #'as yet unclassified' }
 SBEditorCanvasWithOverlay >> wantsMetaMenu [
 
 	^ false
