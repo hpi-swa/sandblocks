@@ -893,7 +893,7 @@ SBEditor >> loadBlocks [
 	<globalAction>
 	
 	self objectsToSave do: [:each | each deleteBlock].
-	self class savedBlocks do: [:each | self openMorphBack: each].
+	self class savedBlocks do: [:each | self openMorph: each].
 ]
 
 { #category : #'do/undo/redo' }
@@ -1151,12 +1151,6 @@ SBEditor >> openInWindow [
 SBEditor >> openMorph: aMorph [
 
 	scroll scroller addMorphInLayer: aMorph
-]
-
-{ #category : #'submorphs-add/remove' }
-SBEditor >> openMorphBack: aMorph [
-
-	scroll scroller addMorphBack: aMorph
 ]
 
 { #category : #'submorphs-add/remove' }

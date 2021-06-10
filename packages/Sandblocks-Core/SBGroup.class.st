@@ -255,6 +255,12 @@ SBGroup >> initialize [
 	self indicator: nil.
 ]
 
+{ #category : #accessing }
+SBGroup >> morphicLayerNumber [
+
+	^ 10
+]
+
 { #category : #nil }
 SBGroup >> textContents [
 

@@ -87,6 +87,12 @@ SBForceConnector >> lineWidth [
 ]
 
 { #category : #'as yet unclassified' }
+SBForceConnector >> morphicLayerNumber [
+
+	^ 8
+]
+
+{ #category : #'as yet unclassified' }
 SBForceConnector >> mouseDown: anEvent [
 
 	self to withDecorator: SBForceMoveDecorator do: [:decorator | decorator unregisterAdditionalForce: self].

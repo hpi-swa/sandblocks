@@ -119,12 +119,12 @@ SBForceMoveDecorator >> createImplicitForceWith: otherMorph [
 	| attraction |
 	attraction := self attractionTo: otherMorph.
 	attraction > 0 ifTrue: [
-		self morph sandblockEditor openMorphBack: (SBForceConnector connect: self morph to: otherMorph forceScale: attraction).
+		self morph sandblockEditor openMorph: (SBForceConnector connect: self morph to: otherMorph forceScale: attraction).
 		otherMorph withDecorator: SBForceMoveDecorator do: [:decorator |
 			self group
 				ifNil: [
 					decorator group
-						ifNil: [self morph owner addMorphBack: (SBGroup newFor: self)]
+						ifNil: [self morph sandblockEditor openMorph: (SBGroup newFor: self)]
 						ifNotNil: [decorator group add: self]]
 				ifNotNil: [self group add: decorator]]].
 ]
@@ -234,7 +234,7 @@ SBForceMoveDecorator >> mouseUp: anEvent [
 		otherBlock := self blockAtPoint: anEvent position.
 		otherBlock ifNotNil: 
 			[self morph sandblockEditor 
-				openMorphBack: (SBForceConnector connect: self morph to: otherBlock);
+				openMorph: (SBForceConnector connect: self morph to: otherBlock);
 				activateForces]].
 	super mouseUp: anEvent.
 	
