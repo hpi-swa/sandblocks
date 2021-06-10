@@ -96,7 +96,8 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $; command do: #promptGlobalAction;
 		registerShortcut: $f command do: #startSearch;
 		registerShortcut: $g command do: #nextSearchResult;
-		registerShortcut: $t command do: #promptAddArtifact.
+		registerShortcut: $t command do: #promptAddArtifact;
+		registerShortcut: $J command do: #activateForces.
 	"registerShortcut: $r command do: #openRepl;"
 	" navigation "
 	self

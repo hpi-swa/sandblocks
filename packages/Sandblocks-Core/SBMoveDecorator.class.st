@@ -80,7 +80,6 @@ SBMoveDecorator >> mouseCursorAt: anEvent [
 
 { #category : #'event handling' }
 SBMoveDecorator >> mouseMove: anEvent [
-
 	
 	lastDragPosition ifNotNil: [
 		self morph position: self morph position + (anEvent position - lastDragPosition).
@@ -95,6 +94,19 @@ SBMoveDecorator >> mouseUp: anEvent [
 		lastDragPosition := nil]
 ]
 
+{ #category : #stepping }
+SBMoveDecorator >> panWhenNearEdge [
+	
+	| noScrollRectangle movement canvasExtent |
+	canvasExtent := self morph sandblockEditor canvas extent.
+	noScrollRectangle := (Rectangle origin: self morph sandblockEditor canvas targetPosition extent: canvasExtent) insetBy: canvasExtent / 8.
+	
+	movement := ((noScrollRectangle vectorToPoint: lastDragPosition) * 500 / canvasExtent) asIntegerPoint.
+	self morph sandblockEditor moveViewport: movement negated.
+	self morph position: self morph position + movement.
+	lastDragPosition := lastDragPosition + movement
+]
+
 { #category : #'as yet unclassified' }
 SBMoveDecorator >> resolveCollisionCenteredWith: otherMorph [
 
@@ -105,7 +117,7 @@ SBMoveDecorator >> resolveCollisionCenteredWith: otherMorph [
 		ifTrue: [ThreadSafeRandom next @ ThreadSafeRandom next]
 		ifFalse: [self morph center - otherMorph center]) normalized.
 	speedFactor := 0.005.
-	^ direction * (speedFactor * intersection area)
+	^ direction * (speed * speedFactor)
 ]
 
 { #category : #'as yet unclassified' }
@@ -128,17 +140,23 @@ SBMoveDecorator >> startDrag: anEvent [
 
 { #category : #stepping }
 SBMoveDecorator >> step [
-
-	| hadIntersect |
-	hadIntersect := false.
-	self isDragging ifTrue: [^ self].
+	
+	self isDragging ifTrue: [^ self panWhenNearEdge].
+	
 	self morph owner submorphsDo: [:otherMorph |
-		(otherMorph isSandblock and: [otherMorph preventOcclusion and: [otherMorph ~= self morph and: [(self morph bounds intersects: otherMorph bounds) and: [(self morph bounds containsRect: otherMorph bounds) not and: [SBPreferences enableForceLayout not or: [otherMorph isDragging not]]]]]]) ifTrue: [
-			velocity := self resolveCollisionCenteredWith: otherMorph.
-			hadIntersect := true]].
-	(velocity closeTo: 0 @ 0) ifTrue: [velocity := 0 @ 0] ifFalse: [
-		velocity := velocity * 0.5.
-		self morph position: self morph position + (velocity max: velocity sign)]
+		(otherMorph isSandblock and: [
+			otherMorph preventOcclusion and: [
+				otherMorph ~= self morph and: [
+					(self morph bounds intersects: otherMorph bounds) and: [
+						(self morph bounds containsRect: otherMorph bounds) not and: [
+							otherMorph isDragging not]]]]]) ifTrue: [
+			velocity := self resolveCollisionCenteredWith: otherMorph]].
+	
+	(velocity closeTo: 0 @ 0)
+		ifTrue: [velocity := 0 @ 0]
+		ifFalse: [
+			velocity := velocity * 0.5.
+			self morph position: self morph position + (velocity max: velocity sign)]
 ]
 
 { #category : #stepping }

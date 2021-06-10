@@ -149,7 +149,7 @@ SBButton >> label: aString shortcut: aShortcut do: aBlock [
 
 { #category : #'as yet unclassified' }
 SBButton >> mouseDown [
-
+	
 	self pressed: true
 ]
 

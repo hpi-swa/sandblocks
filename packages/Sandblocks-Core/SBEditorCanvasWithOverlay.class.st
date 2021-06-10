@@ -75,6 +75,12 @@ SBEditorCanvasWithOverlay >> initialize [
 		
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditorCanvasWithOverlay >> moveViewport: aPoint [
+	
+	^ self canvas moveViewport: aPoint
+]
+
 { #category : #accessing }
 SBEditorCanvasWithOverlay >> overlay [
 
@@ -103,6 +109,12 @@ SBEditorCanvasWithOverlay >> scrollToShow: aBlock [
 SBEditorCanvasWithOverlay >> scroller [ 
 	
 	^ self canvas
+]
+
+{ #category : #'as yet unclassified' }
+SBEditorCanvasWithOverlay >> targetPosition [
+	
+	^ self canvas targetPosition
 ]
 
 { #category : #'as yet unclassified' }

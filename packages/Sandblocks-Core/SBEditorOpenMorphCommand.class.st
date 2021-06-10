@@ -43,6 +43,9 @@ SBEditorOpenMorphCommand >> do [
 				priorChildren do: #delete].
 			self editor openMorph: morph.
 			self applyPositionTo: morph in: nil].
+	
+	morph withDecorator: SBForceMoveDecorator do: [:d | d createImplicitForces].
+	
 	^ nil
 ]
 

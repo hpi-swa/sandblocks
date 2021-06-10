@@ -27,6 +27,20 @@ Rectangle >> line: aSideSymbol do: aBlock [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Rectangle >> vectorToPoint: aPoint [
+
+	^ ((aPoint - self bottomRight) max: 0@0) - ((self topLeft - aPoint) max: 0@0).
+	
+]
+
+{ #category : #'*Sandblocks-Core' }
+Rectangle >> vectorToRectangle: aRectangle [
+
+	^ ((aRectangle topLeft - self bottomRight) max: 0@0) - ((self topLeft - aRectangle bottomRight) max: 0@0).
+	
+]
+
+{ #category : #'*Sandblocks-Core' }
 Rectangle >> vertical [
 
 	^ self top + self bottom

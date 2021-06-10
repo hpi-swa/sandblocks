@@ -38,20 +38,20 @@ SBBlock >> absorbsInput: anEvent [
 { #category : #'action helpers' }
 SBBlock >> actionProviders [
 
-	^ {self}
+	^ {self}, self decorators
 ]
 
 { #category : #'action helpers' }
 SBBlock >> actions [
-
-	^ Array streamContents: [:stream |
+	
+	^ (Array streamContents: [:stream |
 		self actionProviders do: [:obj |
 			obj class withAllSuperclassesDo: [:class |
 				Pragma
 					withPragmasIn: class
 					do: [:pragma |
-						(#(#action #multiSelectAction #inputAction) includes: pragma keyword) ifTrue: [stream nextPut: pragma]].
-				SBBlock = class ifTrue: [^ stream contents]]]]
+						(#(#action #multiSelectAction #inputAction) includes: pragma keyword) ifTrue: [stream nextPut: pragma]]]]]) 
+		asIdentitySet asArray.
 ]
 
 { #category : #'as yet unclassified' }
@@ -155,7 +155,7 @@ SBBlock >> attachDecorator: aDecorator [
 SBBlock >> attractionStrengthTo: aMorph [
 	
 	^ (self isAttractedTo: aMorph)
-		ifTrue: [0.01 * (aMorph center - self center) r]
+		ifTrue: [0.25]
 		ifFalse: [0.0]
 	
 ]
@@ -163,11 +163,7 @@ SBBlock >> attractionStrengthTo: aMorph [
 { #category : #'as yet unclassified' }
 SBBlock >> attractionTo: aMorph [
 
-	| direction |
-	direction := aMorph center - self center.
-	^ (direction closeTo: 0@0)
-		ifTrue: [0@0]
-		ifFalse: [direction normalized * ((self attractionStrengthTo: aMorph) + (aMorph attractionStrengthTo: self))]
+	^ (self attractionStrengthTo: aMorph) + (aMorph attractionStrengthTo: self)
 	
 	
 ]
@@ -971,24 +967,25 @@ SBBlock >> focusPreviousSuggestion [
 
 { #category : #'as yet unclassified' }
 SBBlock >> forceAgainst: aMorph [
-	
+
 	| direction |
 	direction := self center - aMorph center.
-	^ (direction closeTo: 0@0)
-		ifTrue: [ThreadSafeRandom next @ ThreadSafeRandom next]
-		ifFalse: [direction normalized * ((self forceStrengthAgainst: aMorph) + (aMorph forceStrengthAgainst: self))]
-	
+	^ (direction closeTo: 0 @ 0)
+		ifTrue: [(ThreadSafeRandom next @ ThreadSafeRandom next) * 10]
+		ifFalse: [ 
+			direction normalized * ((self forceStrengthAgainst: aMorph) + (aMorph forceStrengthAgainst: self))]
 ]
 
 { #category : #'as yet unclassified' }
 SBBlock >> forceStrengthAgainst: aMorph [
-	
-	| distance |
-	distance := (self center - aMorph center) r.
-	^ distance = 0
-		ifTrue: [1.0]
-		ifFalse: [(100000000.0 / distance / distance / distance) min: 10.0]
-	
+
+	| distance maximumNonOverlappingForce |
+	maximumNonOverlappingForce := 10.
+	distance := (self bounds vectorToRectangle: aMorph bounds) r.
+	^ distance > 200 ifTrue: [0] ifFalse: [
+		(distance closeTo: 0)
+			ifTrue: [maximumNonOverlappingForce + ((self bounds intersect: aMorph bounds) area sqrt / 10)]
+			ifFalse: [10000.0 / distance / distance min: maximumNonOverlappingForce]]
 ]
 
 { #category : #'colors and color policies' }
@@ -1267,7 +1264,7 @@ SBBlock >> isArtefact [
 { #category : #'as yet unclassified' }
 SBBlock >> isAttractedTo: aMorph [
 	
-	^ aMorph class == self class
+	^ aMorph object class = self object class
 ]
 
 { #category : #testing }
@@ -2011,6 +2008,13 @@ SBBlock >> printSaveStringPreambleOn: aStream [
 		print:	self identityHash;
 		nextPutAll:	' := '
 
+]
+
+{ #category : #initialization }
+SBBlock >> privateOwner: aMorph [
+
+	super privateOwner: aMorph.
+	aMorph ifNil: [self triggerEvent: #delete]
 ]
 
 { #category : #actions }

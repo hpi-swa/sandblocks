@@ -26,7 +26,8 @@ Class {
 		'paletteContainer',
 		'history',
 		'dragHelper',
-		'cursor'
+		'cursor',
+		'activateForcesButton'
 	],
 	#classVars : [
 		'DefaultColorPolicy',
@@ -237,6 +238,11 @@ SBEditor >> buildCommandBar [
 				shortcut: (self class anyShortcutForAction: #promptAddArtifact)
 				do: [self promptAddArtifact];
 			balloonText: 'Add artifact');
+		addMorphBack: (activateForcesButton := SBButton new
+			icon: SBIcon iconMagnet
+				shortcut: (self class anyShortcutForAction: #activateForces)
+				do: [];
+			balloonText: 'Activate Layouting');
 		addMorphBack: (Morph new
 			height: 0;
 			color: Color transparent;
@@ -850,6 +856,12 @@ SBEditor >> isSingleArtefactView [
 	^ false
 ]
 
+{ #category : #accessing }
+SBEditor >> keepForcesActivated [
+
+	^ activateForcesButton pressed
+]
+
 { #category : #'as yet unclassified' }
 SBEditor >> keepVerticalSelectionPositionDuring: aBlock [
 
@@ -881,7 +893,7 @@ SBEditor >> loadBlocks [
 	<globalAction>
 	
 	self objectsToSave do: [:each | each deleteBlock].
-	self class savedBlocks do: [:each | self openMorph: each].
+	self class savedBlocks do: [:each | self openMorphBack: each].
 ]
 
 { #category : #'do/undo/redo' }
@@ -1008,6 +1020,12 @@ SBEditor >> mouseLeaveDragging: anEvent [
 
 	dragHelper ifNotNil: #delete.
 	dragHelper := nil
+]
+
+{ #category : #selection }
+SBEditor >> moveViewport: aPoint [
+
+	scroll moveViewport: aPoint
 ]
 
 { #category : #selection }
