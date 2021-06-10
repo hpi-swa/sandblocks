@@ -859,7 +859,7 @@ SBEditor >> isSingleArtefactView [
 { #category : #accessing }
 SBEditor >> keepForcesActivated [
 
-	^ activateForcesButton pressed
+	^ activateForcesButton ifNotNil: #pressed ifNil: [false]
 ]
 
 { #category : #'as yet unclassified' }
