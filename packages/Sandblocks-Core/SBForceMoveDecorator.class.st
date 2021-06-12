@@ -115,13 +115,13 @@ SBForceMoveDecorator >> changedDirection [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> createImplicitForces [
 	
-	self morph sandblockEditor childSandblocks reverseDo: [:otherMorph |
+	self morph sandblockEditor ifNotNil: [:e | e childSandblocks reverseDo: [:otherMorph |
 		(otherMorph preventOcclusion and: [
 			otherMorph ~= self morph and: [
 				otherMorph isDragging not]]) ifTrue: [ | attraction |
 					attraction := self attractionTo: otherMorph.
 					attraction > 0 ifTrue: [
-						self morph sandblockEditor openMorphBack: (SBForceConnector connect: self morph to: otherMorph forceScale: attraction)]]].
+						self morph sandblockEditor openMorphBack: (SBForceConnector connect: self morph to: otherMorph forceScale: attraction)]]].]
 ]
 
 { #category : #'as yet unclassified' }

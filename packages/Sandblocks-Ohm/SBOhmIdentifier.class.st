@@ -53,7 +53,7 @@ SBOhmIdentifier >> isPrimitive [
 SBOhmIdentifier >> isSimple [
 	" special marker for things that are likely pointing to primitive constructs such as digit+ "
 
-	^ #('letter' 'digit' 'alnum' 'any' 'lower' 'upper' 'hexDigit') includes: self contents
+	^ #('letter' 'digit' 'alnum' 'any' 'lower' 'upper' 'hexDigit' 'hexdigit') includes: self contents
 ]
 
 { #category : #'as yet unclassified' }
@@ -88,7 +88,7 @@ SBOhmIdentifier >> symbols [
 { #category : #'as yet unclassified' }
 SBOhmIdentifier >> valid [
 
-	true ifTrue: [^ true].
+	false ifTrue: [^ true].
 	self containingArtefact isOhm ifFalse: [^ false].
 	^ self containingArtefact rules anySatisfy: [:rule | rule key = self contents]
 ]
@@ -110,6 +110,12 @@ SBOhmIdentifier >> wasDeselected [
 SBOhmIdentifier >> wasSelected [
 
 	self allUsagesDo: [:b | b attachDecorator: SBHighlightDecorator new]
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmIdentifier >> writeRascalSourceOn: aStream [
+
+	aStream nextPutAll: self contents
 ]
 
 { #category : #'as yet unclassified' }

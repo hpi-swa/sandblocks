@@ -25,7 +25,9 @@ SBGrammarTransformStep >> block [
 { #category : #'as yet unclassified' }
 SBGrammarTransformStep >> block: aBlock [
 
-	self block replaceBy: (SBStContainer new statements: {aBlock})
+	self block replaceBy: (SBStContainer new
+		statements: {aBlock};
+		minimumWidth: 450)
 ]
 
 { #category : #'as yet unclassified' }
@@ -43,7 +45,9 @@ SBGrammarTransformStep >> initialize [
 		vResizing: #shrinkWrap;
 		changeTableLayout;
 		listDirection: #leftToRight;
-		addMorphBack: (SBStContainer new statements: {SBStBlockBody emptyWithDeclarations: {'g'}})
+		addMorphBack: (SBStContainer new
+			statements: {SBStBlockBody emptyWithDeclarations: {'g'}};
+			minimumWidth: 450)
 ]
 
 { #category : #'as yet unclassified' }

@@ -13,7 +13,7 @@ SBOhmQuantifier >> currentTextMorph [
 { #category : #'as yet unclassified' }
 SBOhmQuantifier >> expression [
 
-	^ self firstSubmorph
+	^ self submorphCount = 2 ifTrue: [self firstSubmorph] ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -32,9 +32,21 @@ SBOhmQuantifier >> isExpression [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmQuantifier >> isOptional [
+
+	^ self contents = '?'
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmQuantifier >> isQuantifier [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmQuantifier >> isRepeatQuantifier [
+
+	^ self contents ~= '?'
 ]
 
 { #category : #'as yet unclassified' }
@@ -49,7 +61,9 @@ SBOhmQuantifier >> keyStroke: anEvent [
 SBOhmQuantifier >> layoutCommands [
 
 	^ SBAlgebraCommand container
-		data: {self expression layoutCommands. self currentTextMorph layoutCommands};
+		data: {
+			self expression ifNotNil: #layoutCommands ifNil: [SBAlgebraCommand noop].
+			self currentTextMorph layoutCommands};
 		morph: self
 ]
 
@@ -73,6 +87,19 @@ SBOhmQuantifier >> quantifier [
 SBOhmQuantifier >> quantifier: aCharacter [
 
 	self currentTextMorph contents: aCharacter asString
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmQuantifier >> valid [
+
+	^ self expression notNil
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmQuantifier >> writeRascalSourceOn: aStream [
+
+	self expression writeSourceOn: aStream.
+	aStream nextPut: self quantifier
 ]
 
 { #category : #'as yet unclassified' }

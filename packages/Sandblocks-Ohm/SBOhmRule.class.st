@@ -42,6 +42,12 @@ SBOhmRule >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmRule >> isLexical [
+
+	^ self name first isLowercase
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmRule >> isPrimitive [
 
 	self allBlocksDo: [:b | ((b isIdentifier and: [b isSimple not]) or: [b isTerminal and: [b contents size > 1]]) ifTrue: [^ false]].
@@ -103,9 +109,22 @@ SBOhmRule >> wantsInput [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmRule >> writeRascalSourceOn: aStream [
+
+	aStream nextPutAll: 'syntax '.
+	aStream nextPutAll: self name.
+	aStream nextPutAll: ' = '.
+	self expression writeRascalSourceOn: aStream.
+	aStream nextPutAll: ';'
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmRule >> writeSourceOn: aStream [
 
 	aStream nextPutAll: self name.
+	self expression isAlternative ifTrue: [aStream crtab].
 	aStream nextPutAll: ' = '.
-	self expression writeSourceOn: aStream
+	self expression isAlternative
+		ifTrue: [self expression writeOnMultipleLinesOn: aStream]
+		ifFalse: [self expression writeSourceOn: aStream]
 ]

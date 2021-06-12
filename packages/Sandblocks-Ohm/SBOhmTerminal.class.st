@@ -48,6 +48,14 @@ SBOhmTerminal >> symbols [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmTerminal >> writeRascalSourceOn: aStream [
+
+	aStream nextPut: $".
+	aStream nextPutAll: self contents.
+	aStream nextPut: $"
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmTerminal >> writeSourceOn: aStream [
 
 	aStream nextPut: $".

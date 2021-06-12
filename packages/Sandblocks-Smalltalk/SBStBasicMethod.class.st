@@ -344,10 +344,12 @@ SBStBasicMethod >> instanceVariables [
 	^ Array streamContents: [:stream |
 		self methodClass withAllSuperclassesDo: [:class | | open |
 			open := [class instVarNames collect: [:name | SBStName instanceVariable: name class: class]].
-			stream nextPutAll: (editor ifNil: open ifNotNil: [editor
-				blockFor: class withInterfaces: #(isEditor)
-				ifOpen: [:c | c instanceVariables]
-				ifClosed: open])]]
+			stream nextPutAll: (SBToggledCode comment: '' active: 1 do: {
+				[open value].
+				[
+					editor
+						ifNil: open
+						ifNotNil: [editor blockFor: class withInterfaces: #(#isEditor) ifOpen: [:c | c instanceVariables] ifClosed: open]]})]]
 ]
 
 { #category : #'as yet unclassified' }
