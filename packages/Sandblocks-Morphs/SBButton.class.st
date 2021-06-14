@@ -136,6 +136,18 @@ SBButton >> invokeMetaMenu: evt [
 ]
 
 { #category : #'as yet unclassified' }
+SBButton >> label [
+
+	^ (self submorphs detect: [:m | m isKindOf: SBStringMorph]) contents
+]
+
+{ #category : #'as yet unclassified' }
+SBButton >> label: aString [
+
+	(self submorphs detect: [:m | m isKindOf: SBStringMorph]) contents: aString
+]
+
+{ #category : #'as yet unclassified' }
 SBButton >> label: aString shortcut: aShortcut do: aBlock [
 
 	SBExample self: [SBButton new] args: [{'hello'. $p command. [nil]}] label: 'label'.
