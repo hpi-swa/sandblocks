@@ -32,10 +32,18 @@ SBGrammarTransformer class >> disassemblePrecedenceLists: g [
 					q := b childSandblocks second.
 					q isQuantifier and: [ | seq |
 						seq := q expression.
-						seq isSequence and: [seq childSandblocks size = 2 and: [(seq childSandblocks first isTerminal or: [seq childSandblocks first isAlternative and: [seq childSandblocks first childSandblocks allSatisfy: #isTerminal]]) and: [seq childSandblocks second isIdentifier and: [seq childSandblocks second contents = b childSandblocks first contents]]]]]]]]) ifTrue: [ops add: b]].
+						seq isSequence and: [seq childSandblocks size = 2 and: [(self isTerminal: seq childSandblocks first in: g) and: [seq childSandblocks second isIdentifier and: [seq childSandblocks second contents = b childSandblocks first contents]]]]]]]]) ifTrue: [ops add: b]].
 	ops do: [:b |
 		b childSandblocks second replaceBy: b childSandblocks second expression.
-		b mergeRedundantGroups]
+		b mergeRedundantGroups.
+		SBWrapCommand new
+			inner: b;
+			outer: SBOhmList new;
+			wrap: [:outer :inner |
+				outer
+					connect: 'OR'
+					expressions: {inner. SBOhmIdentifier new contents: inner childSandblocks first contents}];
+			do]
 ]
 
 { #category : #'transform steps' }
@@ -112,6 +120,14 @@ SBGrammarTransformer class >> inputTypeFor: aPart on: aStream [
 	aStream nextPutAll: 'this.appendDummyInput("NAME")'
 ]
 
+{ #category : #'transform helper' }
+SBGrammarTransformer class >> isTerminal: aBlock in: aGrammar [
+
+	| isTerminal |
+	isTerminal := [:b | b isTerminal or: [b isAlternative and: [b childSandblocks allSatisfy: #isTerminal]]].
+	^ (isTerminal value: aBlock) or: [(aBlock isIdentifier and: [aBlock isSimple not]) and: [isTerminal value: (aGrammar ruleNamed: aBlock contents) expression]]
+]
+
 { #category : #'as yet unclassified' }
 SBGrammarTransformer class >> matchSpecific: aBlock [
 
@@ -155,6 +171,50 @@ SBGrammarTransformer class >> mergeConsecutiveLabels: g [
 					ifFalse: ['']), next contents).
 				toDelete add: next]]].
 	toDelete do: #delete.
+	g mergeRedundantGroups
+]
+
+{ #category : #'transform steps' }
+SBGrammarTransformer class >> mergePrecedenceChains: g [
+
+	| operators remaining target exprRuleNames isBinaryOp isPrefixOp targetRuleName |
+	operators := OrderedCollection new.
+	exprRuleNames := OrderedCollection new.
+	
+	isBinaryOp := [:b | b childSandblocks size = 3 and: [(b childSandblocks first isIdentifier and: [b childSandblocks first isPrimitive not]) and: [b childSandblocks last isIdentifier and: [self isTerminal: b childSandblocks second in: g]]]].
+	isPrefixOp := [:b | b childSandblocks size = 2 and: [(self isTerminal: b childSandblocks first in: g) and: [b childSandblocks second isIdentifier]]].
+	
+	g allBlocksDo: [:b | (b isSequence and: [(isBinaryOp value: b) or: [isPrefixOp value: b]]) ifTrue: [operators add: b]].
+	SBToggledCode comment: '' active: 1 do: {
+		[
+			operators do: [:op |
+				op parentSandblock isAlternative ifTrue: [
+					op parentSandblock childSandblocks do: [:c |
+						(c isIdentifier and: [c isPrimitive not]) ifTrue: [ | nested |
+							nested := g ruleNamed: c contents.
+							c replaceBy: nested expression.
+							exprRuleNames add: c contents.
+							nested delete]]]]]}.
+	remaining := (operators collect: #containingRule) asSet anyOne.
+	exprRuleNames add: remaining name.
+	target := remaining allUsages reject: [:usage | usage containingRule = remaining].
+	targetRuleName := ''.
+	SBToggledCode
+		comment: 'is there a single identity rule pointing to us? inline'
+		active: 1
+		do: {
+			[
+				(target size = 1 and: [target first containingRule expression = target first])
+					ifTrue: [
+						target := target first.
+						targetRuleName := target containingRule name.
+						target replaceBy: remaining expression.
+						remaining delete]
+					ifFalse: [targetRuleName := remaining name]]}.
+	
+	SBToggledCode comment: '' active: 1 do: {
+		[g allBlocksDo: [:block | (block isIdentifier and: [exprRuleNames includes: block contents]) ifTrue: [block contents: targetRuleName]]]}.
+	
 	g mergeRedundantGroups
 ]
 

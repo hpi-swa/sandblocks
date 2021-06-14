@@ -10,7 +10,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBGrammarTransformStep >> artefactSaved: aMethodBlock [
 
-	(aMethodBlock parentSandblock isKindOf: SBGrammarTransformStep) ifTrue: [ | step steps |
+	aMethodBlock parentSandblock = self ifTrue: [ | step steps |
 		step := aMethodBlock parentSandblock.
 		steps := step parentSandblock childSandblocks.
 		steps from: (steps indexOf: step) to: steps size do: #rerun]
@@ -61,9 +61,12 @@ SBGrammarTransformStep >> rerun [
 	
 	block := self firstSubmorph statements first.
 	block validSubtree ifTrue: [
-		[block evaluate value: inputGrammar] on: Error do: [:err |
-			lastError ifNotNil: #delete.
-			lastError := self sandblockEditor reportErrorWithProcessCopy: err].
+		SBToggledCode comment: '' active: 1 do: {
+			[block evaluate value: inputGrammar].
+			[
+				[block evaluate value: inputGrammar] on: Error do: [:err |
+					lastError ifNotNil: #delete.
+					lastError := self sandblockEditor reportErrorWithProcessCopy: err]]}.
 		self submorphCount = 2 ifTrue: [self lastSubmorph delete].
 		self addMorphBack: (inputGrammar hResizing: #spaceFill)]
 ]

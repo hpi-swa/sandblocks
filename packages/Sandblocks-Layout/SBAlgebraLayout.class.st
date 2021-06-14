@@ -113,6 +113,17 @@ SBAlgebraLayout >> layoutDocument: command at: aState limit: maxRight wrap: aWra
 				limit: maxRight
 				wrap: aWrapBoolean.
 			state startX: state startX - self indent].
+		[#looseContainer] -> [
+			state := aState looseInset: command morph layoutInset asEdgeInsets do: [:shiftedState |
+				self
+					layoutDocument: (SBAlgebraCommand group data: command data)
+					at: shiftedState
+					limit: maxRight
+					wrap: aWrapBoolean].
+			
+			measure ifFalse: [command morph layoutInBounds: (aState offset extent: ((state containerExtentFrom: aState) max: 0 @ command morph minimumHeight))].
+			
+			aState placeSized: ((state containerExtentFrom: aState) max: 0 @ command morph minimumHeight)].
 		[#container] -> [
 			state := aState nestedInset: command morph layoutInset asEdgeInsets do: [:shiftedState |
 				self
@@ -167,25 +178,42 @@ SBAlgebraLayout >> lineFitsDocument: command at: aState limit: maxRight [
 SBAlgebraLayout >> lineFitsDocument: command at: aState limit: maxRight ifNot: aBlock [
 
 	| state |
-	^ cache
-		at: {aState. command}
-		ifAbsentPut: [
-			state := command type caseOf: {
-				[#group] -> [command data inject: aState into: [:s :el | self lineFitsDocument: el at: s limit: maxRight ifNot: [^ aBlock value]]].
-				[#indent] -> [self lineFitsDocument: (SBAlgebraCommand group data: command data) at: aState limit: maxRight ifNot: [^ aBlock value]].
-				[#container] -> [
-					state := aState nestedInset: command morph layoutInset asEdgeInsets do: [:shiftedState |
-						(self lineFitsDocument: (SBAlgebraCommand group data: command data) at: shiftedState limit: maxRight ifNot: [^ aBlock value])].
-					aState placeSized: (state containerExtentFrom: aState)].
-				[#hardLine] -> [aState newLineWithGap: command withGap].
-				[#softLine] -> [aState].
-				[#softLineOrGap] -> [aState offset: aState offset + (self gap @ 0)].
-				[#gap] -> [aState offset: aState offset + (self gap @ 0)].
-				[#morph] -> [aState placeSized: command data minExtent].
-				[#noop] -> [aState]
-			}.
-			state offset x > maxRight ifTrue: [^ aBlock value].
-			state]
+	^ cache at: {aState. command} ifAbsentPut: [
+		state := command type caseOf: {
+			[#group] -> [
+				command data
+					inject: aState
+					into: [:s :el | self lineFitsDocument: el at: s limit: maxRight ifNot: [^ aBlock value]]].
+			[#indent] -> [
+				self
+					lineFitsDocument: (SBAlgebraCommand group data: command data)
+					at: aState
+					limit: maxRight
+					ifNot: [^ aBlock value]].
+			[#container] -> [
+				state := aState nestedInset: command morph layoutInset asEdgeInsets do: [:shiftedState |
+					self
+						lineFitsDocument: (SBAlgebraCommand group data: command data)
+						at: shiftedState
+						limit: maxRight
+						ifNot: [^ aBlock value]].
+				aState placeSized: (state containerExtentFrom: aState)].
+			[#looseContainer] -> [
+				state := aState looseInset: command morph layoutInset asEdgeInsets do: [:shiftedState |
+					self
+						lineFitsDocument: (SBAlgebraCommand group data: command data)
+						at: shiftedState
+						limit: maxRight
+						ifNot: [^ aBlock value]].
+				aState placeSized: (state containerExtentFrom: aState)].
+			[#hardLine] -> [aState newLineWithGap: command withGap].
+			[#softLine] -> [aState].
+			[#softLineOrGap] -> [aState offset: aState offset + (self gap @ 0)].
+			[#gap] -> [aState offset: aState offset + (self gap @ 0)].
+			[#morph] -> [aState placeSized: command data minExtent].
+			[#noop] -> [aState]}.
+		state offset x > maxRight ifTrue: [^ aBlock value].
+		state]
 ]
 
 { #category : #'as yet unclassified' }

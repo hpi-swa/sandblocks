@@ -103,12 +103,14 @@ SBPaletteContainer >> initialize [
 		attachDecorator: SBMoveDecorator new;
 		attachDecorator: SBResizableDecorator new.
 	
-	self lastSubmorph scroller addMorphBack: (content := SBColumn new
-		useAlgebraLayout;
-		minimumWidth: 300;
-		width: 300;
-		cellGap: 4;
-		layoutInset: 8)
+	self lastSubmorph scroller
+		addMorphBack: (content := SBColumn new
+			useAlgebraLayout;
+			minimumWidth: 300;
+			width: 300;
+			cellGap: 4;
+			layoutInset: 8);
+		changeTableLayout
 ]
 
 { #category : #'as yet unclassified' }

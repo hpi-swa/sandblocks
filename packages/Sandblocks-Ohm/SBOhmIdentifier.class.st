@@ -88,7 +88,7 @@ SBOhmIdentifier >> symbols [
 { #category : #'as yet unclassified' }
 SBOhmIdentifier >> valid [
 
-	false ifTrue: [^ true].
+	true ifTrue: [^ true].
 	self containingArtefact isOhm ifFalse: [^ false].
 	^ self containingArtefact rules anySatisfy: [:rule | rule key = self contents]
 ]
