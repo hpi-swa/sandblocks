@@ -148,8 +148,11 @@ SBOffscreenBlockIndicator >> target: aMorph [
 
 	target := aMorph.
 	
-	self labelMorph: (SBStringMorph new contents: self target textContents).
-	self addMorph: self labelMorph.
+	self
+		labelMorph: SBStringMorph new;
+		updateLabel;
+		addMorph: self labelMorph.
+		
 	aMorph when: #delete send: #abandon to: self.
 ]
 
@@ -157,4 +160,10 @@ SBOffscreenBlockIndicator >> target: aMorph [
 SBOffscreenBlockIndicator >> targetOffscreen [
 
 	^ (self scroller innerBounds intersects: self target boundsInWorld) not.
+]
+
+{ #category : #accessing }
+SBOffscreenBlockIndicator >> updateLabel [
+
+	self labelMorph contents: self target textContents
 ]

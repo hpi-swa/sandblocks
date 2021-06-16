@@ -3,7 +3,8 @@ Class {
 	#superclass : #PolygonMorph,
 	#instVars : [
 		'blocks',
-		'indicator'
+		'indicator',
+		'lastDragPosition'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -22,9 +23,11 @@ SBGroup >> add: aForceMoveDecorator [
 	aForceMoveDecorator morph when: #positionChanged send: #computeVertices to: self.
 	self computeVertices.
 	aForceMoveDecorator morph when: #delete send: #remove: to: self with: aForceMoveDecorator morph.
-	self indicator ifNil: [
-		self indicator: (SBOffscreenBlockIndicator newFor: self).
-		aForceMoveDecorator morph sandblockEditor openMorphInOverlay: self indicator]
+	self indicator
+		ifNil: [
+			self indicator: (SBOffscreenBlockIndicator newFor: self).
+			aForceMoveDecorator morph sandblockEditor openMorphInOverlay: self indicator]
+		ifNotNil: [self indicator updateLabel]
 ]
 
 { #category : #'as yet unclassified' }
@@ -235,6 +238,25 @@ SBGroup >> computeVerticesRectangle [
 	self bounds: newBounds
 ]
 
+{ #category : #'as yet unclassified' }
+SBGroup >> handlesMouseDown: evt [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBGroup >> handlesMouseMove: anEvent [
+
+	^ true
+]
+
+{ #category : #nil }
+SBGroup >> handlesMouseOverDragging: evt [
+
+	^ true
+
+]
+
 { #category : #accessing }
 SBGroup >> indicator [
 
@@ -252,7 +274,7 @@ SBGroup >> initialize [
 
 	super initialize.
 	self blocks: Set new.
-	self color: (Color seaFoam alpha: 0.5).
+	self color: (Color random alpha: 0.5).
 	self indicator: nil.
 ]
 
@@ -260,6 +282,30 @@ SBGroup >> initialize [
 SBGroup >> morphicLayerNumber [
 
 	^ 10
+]
+
+{ #category : #'as yet unclassified' }
+SBGroup >> mouseDown: anEvent [
+
+	lastDragPosition := anEvent position
+]
+
+{ #category : #'as yet unclassified' }
+SBGroup >> mouseMove: anEvent [
+	
+	lastDragPosition ifNotNil: [
+		self position: self position + (anEvent position - lastDragPosition).
+		self blocks do: [:aBlock |
+			aBlock position: aBlock position + (anEvent position - lastDragPosition)].
+		lastDragPosition := anEvent position]
+]
+
+{ #category : #'as yet unclassified' }
+SBGroup >> mouseUp: anEvent [
+
+	lastDragPosition ifNotNil: [
+		anEvent hand releaseMouseFocus: self.
+		lastDragPosition := nil]
 ]
 
 { #category : #accessing }
@@ -273,6 +319,7 @@ SBGroup >> privateOwner: aMorph [
 SBGroup >> remove: aMorph [
 
 	self blocks remove: aMorph.
+	aMorph withDecorator: SBForceMoveDecorator do: [:decorator | decorator group: nil].
 	self blocks size = 1
 		ifTrue: [
 			self blocks do: [:block | 
@@ -281,12 +328,13 @@ SBGroup >> remove: aMorph [
 					decorator group: nil]].
 			self abandon]
 		ifFalse: [self computeVertices].
+	self indicator updateLabel
 ]
 
 { #category : #nil }
 SBGroup >> textContents [
-
-	^  'Group'
+	
+	^ 'Group of ', self blocks anyOne textContents , ' and ', (self blocks size - 1), ((self blocks size  > 2) ifTrue: [' others'] ifFalse: [' other'])
 ]
 
 { #category : #nil }

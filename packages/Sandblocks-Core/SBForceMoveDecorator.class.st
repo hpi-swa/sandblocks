@@ -90,19 +90,8 @@ SBForceMoveDecorator >> block: aBlock [
 
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> blockAtPoint: aPoint [
-
-	| best bestArea |
-	best := nil.
-	bestArea := 0.
 	
-	self morph owner childSandblocksDo: [:block |
-		((block bounds containsPoint: aPoint)
-			and: [block bounds area > bestArea]
-			and: [block ~= self morph]) ifTrue: [
-			best := block.
-			bestArea := block bounds area]].
-	
-	^ best
+	^ self morphAtPoint: aPoint satisfying: [:aMorph | aMorph isSandblock]
 ]
 
 { #category : #'as yet unclassified' }
@@ -175,6 +164,12 @@ SBForceMoveDecorator >> group: aGroup [
 	self morph changed: #gotGroup.
 ]
 
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> hasGroup [
+	
+	^ self group notNil 
+]
+
 { #category : #accessing }
 SBForceMoveDecorator >> idealPosition [
 
@@ -226,16 +221,38 @@ SBForceMoveDecorator >> isPinned [
 ]
 
 { #category : #'as yet unclassified' }
+SBForceMoveDecorator >> morphAtPoint: aPoint satisfying: aBlock [
+
+	| best bestArea |
+	best := nil.
+	bestArea := 0.
+	
+	self morph owner submorphsDo: [:aMorph |
+		((aMorph bounds containsPoint: aPoint)
+			and: [aMorph bounds area > bestArea]
+			and: [aMorph ~= self morph]
+			and: [aBlock value: aMorph]) ifTrue: [
+			best := aMorph.
+			bestArea := aMorph bounds area]].
+	
+	^ best
+]
+
+{ #category : #'as yet unclassified' }
 SBForceMoveDecorator >> mouseUp: anEvent [
 	
-	self isDragging ifTrue: [ | otherBlock |
+	self isDragging ifTrue: [ | otherBlock otherMorph |
 		self idealPosition: self morph position.
 		self pinnedPosition ifNotNil: [self pinnedPosition: self morph position].
 		otherBlock := self blockAtPoint: anEvent position.
 		otherBlock ifNotNil: 
 			[self morph sandblockEditor 
 				openMorph: (SBForceConnector connect: self morph to: otherBlock);
-				activateForces]].
+				activateForces].
+		
+		self group ifNil: [
+			otherMorph := self morphAtPoint: anEvent position satisfying: [:aMorph | aMorph isKindOf: SBGroup].
+			otherMorph ifNotNil: [otherMorph add: self]]].
 	super mouseUp: anEvent.
 	
 ]
@@ -284,6 +301,16 @@ SBForceMoveDecorator >> previousVelocity: anObject [
 SBForceMoveDecorator >> registerAdditionalForce: aForce [
 
 	self additionalForces add: aForce.
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> removeFromGroup [
+
+	<action>
+	<actionValidIf: #hasGroup>
+	
+	(self additionalForces select: [:aForce | aForce to group = aForce from group]) do: [:aForce | aForce abandon].
+	self group remove: self morph
 ]
 
 { #category : #accessing }

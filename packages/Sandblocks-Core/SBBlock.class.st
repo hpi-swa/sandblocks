@@ -1012,6 +1012,12 @@ SBBlock >> grammarHandler [
 	^ nil
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> group [ 
+	
+	^ self withDecorator: SBForceMoveDecorator do: [:decorator | decorator group] ifAbsent: [nil]
+]
+
 { #category : #'event handling' }
 SBBlock >> handlesMouseDown: anEvent [
 
@@ -1047,6 +1053,12 @@ SBBlock >> hasCurrentTextMorph [
 SBBlock >> hasDecorator: aClass [
 
 	^ decorators anySatisfy: [:d | d isKindOf: aClass]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> hasGroup [ 
+	
+	^ self group notNil
 ]
 
 { #category : #testing }

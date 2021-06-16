@@ -14,6 +14,15 @@ SBForceConnector class >> connect: anObject to: anotherObject forceScale: aNumbe
 ]
 
 { #category : #'as yet unclassified' }
+SBForceConnector >> abandon [
+
+	self to withDecorator: SBForceMoveDecorator do: [:decorator | decorator unregisterAdditionalForce: self].
+	self from withDecorator: SBForceMoveDecorator do: [:decorator | decorator unregisterAdditionalForce: self].
+	
+	super abandon.
+]
+
+{ #category : #'as yet unclassified' }
 SBForceConnector >> baseForce [
 
 	^ 0.05 * (self to center - self from center) * self forceScale
@@ -74,6 +83,12 @@ SBForceConnector >> forceScale: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBForceConnector >> handlesMouseDown: anEvent [
+	
+	^  self visible and: [super handlesMouseDown: anEvent]
+]
+
+{ #category : #'as yet unclassified' }
 SBForceConnector >> initialize [ 
 	
 	super initialize.
@@ -95,10 +110,7 @@ SBForceConnector >> morphicLayerNumber [
 { #category : #'as yet unclassified' }
 SBForceConnector >> mouseDown: anEvent [
 
-	self to withDecorator: SBForceMoveDecorator do: [:decorator | decorator unregisterAdditionalForce: self].
-	self from withDecorator: SBForceMoveDecorator do: [:decorator | decorator unregisterAdditionalForce: self].
-	
-	self abandon.
+	self abandon
 ]
 
 { #category : #'as yet unclassified' }
@@ -121,12 +133,12 @@ SBForceConnector >> saveString [
 { #category : #'as yet unclassified' }
 SBForceConnector >> step [
 
-	| decorator1 decorator2 |
+	| group1 |
 	super step.
-	decorator1 := self from withDecorator: SBForceMoveDecorator do: [:decorator | decorator group].
-	decorator2 := self to withDecorator: SBForceMoveDecorator do: [:decorator | decorator group].
 	
-	(decorator1 = decorator2 and: [decorator1 notNil])
+	group1 := self from group.
+	
+	(group1 = self to group and: [group1 notNil])
 		ifTrue: [self hide]
 		ifFalse: [self show]
 ]
