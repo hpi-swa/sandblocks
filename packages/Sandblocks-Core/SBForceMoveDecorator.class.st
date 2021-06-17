@@ -228,7 +228,7 @@ SBForceMoveDecorator >> morphAtPoint: aPoint satisfying: aBlock [
 	bestArea := 0.
 	
 	self morph owner submorphsDo: [:aMorph |
-		((aMorph bounds containsPoint: aPoint)
+		((aMorph containsPoint: aPoint)
 			and: [aMorph bounds area > bestArea]
 			and: [aMorph ~= self morph]
 			and: [aBlock value: aMorph]) ifTrue: [
