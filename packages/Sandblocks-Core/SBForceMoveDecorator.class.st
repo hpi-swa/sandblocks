@@ -121,10 +121,10 @@ SBForceMoveDecorator >> createImplicitForceWith: otherMorph [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> createImplicitForces [
 	
-	self morph sandblockEditor childSandblocks reverseDo: [:otherMorph |
+	self morph sandblockEditor childSandblocks ifNotNil: [:e | e reverseDo: [:otherMorph |
 		(otherMorph preventOcclusion and: [
 			otherMorph ~= self morph]) ifTrue: [
-				self createImplicitForceWith: otherMorph]].
+				self createImplicitForceWith: otherMorph]]].
 ]
 
 { #category : #'as yet unclassified' }
