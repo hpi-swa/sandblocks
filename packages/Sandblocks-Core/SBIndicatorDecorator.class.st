@@ -35,6 +35,17 @@ SBIndicatorDecorator >> indicator: anSBOffscreenBlockIndicator [
 ]
 
 { #category : #'as yet unclassified' }
+SBIndicatorDecorator >> postDrawOn: aCanvas [
+
+	| color b |
+	self indicator isHighlighted ifTrue: [
+		color := self indicator iconMorph color.
+		b := self morph bounds expandBy: 5.
+		self morph invalidRect: (self morph outerBounds expandBy: 5).
+		aCanvas frameRoundRect: b radius: self morph colorPolicy cornerRadius width: 5 color: color]
+]
+
+{ #category : #'as yet unclassified' }
 SBIndicatorDecorator >> toggleHighlight [
 	<action>
 

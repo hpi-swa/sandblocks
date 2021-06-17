@@ -28,6 +28,14 @@ SBStringMorph >> color [
 	^ (color ifNil: [self containingSandblock foregroundColor]) alpha: self opacity
 ]
 
+{ #category : #'as yet unclassified' }
+SBStringMorph >> color: aColor [
+
+	aColor ifNotNil: [super color: aColor] ifNil: [
+		color := aColor.
+		super color: self color]
+]
+
 { #category : #drawing }
 SBStringMorph >> drawOn: aCanvas [
 	" overriden so we can override color "

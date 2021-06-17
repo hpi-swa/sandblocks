@@ -241,21 +241,25 @@ SBForceMoveDecorator >> morphAtPoint: aPoint satisfying: aBlock [
 
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> mouseUp: anEvent [
-	
+
 	self isDragging ifTrue: [ | otherBlock otherMorph |
 		self idealPosition: self morph position.
 		self pinnedPosition ifNotNil: [self pinnedPosition: self morph position].
 		otherBlock := self blockAtPoint: anEvent position.
-		otherBlock ifNotNil: 
-			[self morph sandblockEditor 
-				openMorph: (SBForceConnector connect: self morph to: otherBlock);
-				activateForces].
+		otherBlock
+			ifNotNil: [
+				self morph sandblockEditor
+					openMorph: (SBForceConnector connect: self morph to: otherBlock);
+					activateForces]
+			ifNil: [
+				self group ifNil: [
+					otherMorph := self
+						morphAtPoint: anEvent position
+						satisfying: [:aMorph | aMorph isKindOf: SBGroup].
+					otherMorph ifNotNil: [otherMorph add: self]]].
 		
-		self group ifNil: [
-			otherMorph := self morphAtPoint: anEvent position satisfying: [:aMorph | aMorph isKindOf: SBGroup].
-			otherMorph ifNotNil: [otherMorph add: self]]].
-	super mouseUp: anEvent.
-	
+		].
+	super mouseUp: anEvent
 ]
 
 { #category : #accessing }
@@ -274,16 +278,11 @@ SBForceMoveDecorator >> pinnedPosition: aPoint [
 SBForceMoveDecorator >> postDrawOn: aCanvas [
 
 	| b color |
-	
 	self isPinned ifTrue: [
-		color :=  self morph colorPolicy selectionColorForBlock: (self morph parentSandblock ifNil: [self morph]).
+		color := self morph colorPolicy selectionColorForBlock: (self morph parentSandblock ifNil: [self morph]).
 		b := self morph bounds expandBy: 5.
-		self morph invalidRect: (self morph outerBounds expandBy: 12).
-		aCanvas
-			frameRoundRect: b
-				radius: self morph colorPolicy cornerRadius
-				width: 5
-				color: color]
+		self morph invalidRect: (self morph outerBounds expandBy: 5).
+		aCanvas frameRoundRect: b radius: self morph colorPolicy cornerRadius width: 5 color: color]
 ]
 
 { #category : #accessing }

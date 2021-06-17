@@ -113,9 +113,10 @@ SBOffscreenBlockIndicator >> scroller [
 { #category : #accessing }
 SBOffscreenBlockIndicator >> shouldHide [
 
-	^ self target withDecorator: SBForceMoveDecorator 
+	^ (self target
+		withDecorator: SBForceMoveDecorator
 		do: [:decorator | decorator group notNil]
-		ifAbsent: [false]
+		ifAbsent: [false]) and: [self isHighlighted not]
 ]
 
 { #category : #'as yet unclassified' }
@@ -181,7 +182,12 @@ SBOffscreenBlockIndicator >> toggleHighlight [
 
 	| newColor |
 	self isHighlighted: self isHighlighted not.
-	self isHighlighted ifTrue: [newColor := Color red] ifFalse: [newColor := nil].
+	self isHighlighted
+		ifTrue: [
+			newColor := self target group
+				ifNotNil: [:group | (group color alpha: 1) thriceLighter]
+				ifNil: [Color random]]
+		ifFalse: [newColor := nil].
 	self iconMorph color: newColor.
 	self labelMorph color: newColor
 ]
