@@ -53,7 +53,7 @@ SBOhmIdentifier >> isPrimitive [
 SBOhmIdentifier >> isSimple [
 	" special marker for things that are likely pointing to primitive constructs such as digit+ "
 
-	^ #('letter' 'digit' 'alnum' 'any' 'lower' 'upper' 'hexDigit') includes: self contents
+	^ #('letter' 'digit' 'alnum' 'any' 'lower' 'upper' 'hexDigit' 'hexdigit') includes: self contents
 ]
 
 { #category : #'as yet unclassified' }
@@ -110,6 +110,12 @@ SBOhmIdentifier >> wasDeselected [
 SBOhmIdentifier >> wasSelected [
 
 	self allUsagesDo: [:b | b attachDecorator: SBHighlightDecorator new]
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmIdentifier >> writeRascalSourceOn: aStream [
+
+	aStream nextPutAll: self contents
 ]
 
 { #category : #'as yet unclassified' }

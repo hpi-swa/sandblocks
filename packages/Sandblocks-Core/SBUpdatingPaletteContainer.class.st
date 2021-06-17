@@ -67,7 +67,7 @@ SBUpdatingPaletteContainer >> selectedBlock [
 SBUpdatingPaletteContainer >> selectionChanged: aBlock [
 
 	| newPalettes |
-	(aBlock isNil or: [aBlock hasOwner: self]) ifTrue: [^ self].
+	(aBlock isNil or: [(aBlock hasOwner: self) or: [aBlock = self]]) ifTrue: [^ self].
 	
 	selectedBlock := aBlock.
 	currentPalettes ifEmpty: [self removeNoPalettesNotice].

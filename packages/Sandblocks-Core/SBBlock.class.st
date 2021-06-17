@@ -1088,7 +1088,7 @@ SBBlock >> hasSuggestions [
 { #category : #testing }
 SBBlock >> hasUnsavedChanges [
 
-	^ self sandblockEditor hasUnsavedChanges: self
+	^ self sandblockEditor ifNotNil: [:e | e hasUnsavedChanges: self] ifNil: [false]
 ]
 
 { #category : #initialization }

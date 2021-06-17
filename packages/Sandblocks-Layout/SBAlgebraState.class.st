@@ -83,6 +83,23 @@ SBAlgebraState >> lineHeight: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
+SBAlgebraState >> looseInset: anEdgeInsets do: aBlock [
+
+	| topLeftState bottomRightState |
+	topLeftState := self
+		offset: self offset + anEdgeInsets topLeft
+		lineHeight: 0
+		startX: startX
+		containerBottomRight: self offset + anEdgeInsets topLeft.
+	
+	bottomRightState := aBlock value: topLeftState.
+	
+	^ topLeftState
+		offset: bottomRightState offset + anEdgeInsets bottomRight
+		containerBottomRight: bottomRightState containerBottomRight + anEdgeInsets bottomRight
+]
+
+{ #category : #'as yet unclassified' }
 SBAlgebraState >> nestedInset: anEdgeInsets do: aBlock [
 
 	| topLeftState bottomRightState |

@@ -178,6 +178,18 @@ SBOhmGrammar >> writeOhmSourceOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmGrammar >> writeRascalSourceOn: aStream [
+
+	aStream
+		nextPutAll: 'module lang::g::Syntax';
+		cr.
+	self statements do: [:s | s writeRascalSourceOn: aStream] separatedBy: [
+		aStream
+			cr;
+			cr]
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmGrammar >> writeSourceOn: aStream [
 
 	self grammarHandler writeSourceOn: aStream for: self

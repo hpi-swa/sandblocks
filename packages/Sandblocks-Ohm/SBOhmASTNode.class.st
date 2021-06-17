@@ -58,7 +58,19 @@ SBOhmASTNode >> isOhm [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmASTNode >> isOptional [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmASTNode >> isQuantifier [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmASTNode >> isRepeatQuantifier [
 
 	^ false
 ]
@@ -120,6 +132,12 @@ SBOhmASTNode >> preferredColor [
 SBOhmASTNode >> sourceString [
 
 	^ String streamContents: [:s | self writeSourceOn: s]
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmASTNode >> writeRascalSourceOn: aStream [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }

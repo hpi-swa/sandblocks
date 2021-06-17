@@ -82,7 +82,7 @@ SBOhmList >> layoutCommands [
 { #category : #'as yet unclassified' }
 SBOhmList >> maybeUnwrapList [
 
-	^ self expressions size < 2 ifTrue: [self expressions first] ifFalse: [self]
+	^ self expressions size = 1 ifTrue: [self expressions first] ifFalse: [self]
 ]
 
 { #category : #'as yet unclassified' }
@@ -99,6 +99,28 @@ SBOhmList >> printOn: aStream [
 		do: [:c | aStream print: c]
 		separatedBy: [aStream nextPutAll: ', '].
 	aStream nextPut: $)
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmList >> writeOnMultipleLinesOn: aStream [
+
+	self expressions do: [:s | s writeSourceOn: aStream] separatedBy: [
+		aStream
+			crtab;
+			nextPutAll: (self connect = 'OR' ifTrue: ['| '] ifFalse: [''])]
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmList >> writeRascalSourceOn: aStream [
+
+	| needsParens |
+	needsParens := self parentSandblock isAlternative not and: [self parentSandblock isRule not].
+	
+	needsParens ifTrue: [aStream nextPut: $(].
+	self expressions
+		do: [:s | s writeRascalSourceOn: aStream]
+		separatedBy: [aStream nextPutAll: (self connect = 'OR' ifTrue: [' | '] ifFalse: [' '])].
+	needsParens ifTrue: [aStream nextPut: $)]
 ]
 
 { #category : #'as yet unclassified' }
