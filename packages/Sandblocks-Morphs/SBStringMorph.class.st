@@ -25,9 +25,7 @@ SBStringMorph >> clearEmphasis [
 { #category : #accessing }
 SBStringMorph >> color [
 
-	^ (self containingSandblock
-		ifNotNil: [:b | b foregroundColor]
-		ifNil: [super color]) alpha: self opacity
+	^ (color ifNil: [self containingSandblock foregroundColor]) alpha: self opacity
 ]
 
 { #category : #drawing }
@@ -41,6 +39,13 @@ SBStringMorph >> drawOn: aCanvas [
 SBStringMorph >> fontToUse [
 
 	^ super fontToUse
+]
+
+{ #category : #'as yet unclassified' }
+SBStringMorph >> initialize [
+
+	super initialize.
+	color := nil
 ]
 
 { #category : #accessing }

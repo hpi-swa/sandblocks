@@ -82,10 +82,11 @@ SBForceMoveDecorator >> attractionTo: otherMorph [
 	^ self morph attractionTo: otherMorph
 ]
 
-{ #category : #nil }
+{ #category : #'as yet unclassified' }
 SBForceMoveDecorator >> block: aBlock [
+	"ignore this for performAction in block"
 
-	"ignore this for performAction in Block"
+	
 ]
 
 { #category : #'as yet unclassified' }

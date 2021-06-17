@@ -21,12 +21,10 @@ SBEditorCanvas >> addMorphToOverlay: aMorph [
 
 { #category : #'as yet unclassified' }
 SBEditorCanvas >> addedMorph: aMorph [
-	
-	aMorph isSandblock ifTrue: [
-		self sandblockEditor
-			activateForces;
-			openMorphInOverlay: (SBOffscreenBlockIndicator newFor: aMorph)].
 
+	aMorph isSandblock ifTrue: [
+		self sandblockEditor activateForces.
+		aMorph attachDecorator: SBIndicatorDecorator new]
 ]
 
 { #category : #viewport }

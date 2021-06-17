@@ -18,7 +18,7 @@ SBGroup class >> newFor: aForceMoveDecorator [
 { #category : #'as yet unclassified' }
 SBGroup >> add: aForceMoveDecorator [
 
-	self createMissingForcesFor: aForceMoveDecorator.
+	[self createMissingForcesFor: aForceMoveDecorator].
 	self blocks add: aForceMoveDecorator morph.
 	aForceMoveDecorator group: self.
 	aForceMoveDecorator morph when: #positionChanged send: #computeVertices to: self.
@@ -247,7 +247,8 @@ SBGroup >> computeVerticesRectangle [
 SBGroup >> createMissingForcesFor: aForceMoveDecorator [
 
 	| missingConnectionsTo |
-	missingConnectionsTo := self blocks.
+	missingConnectionsTo := self blocks copy.
+	self halt.
 	aForceMoveDecorator additionalForces do: [:aForce |
 		missingConnectionsTo remove: aForce to ifAbsent: [].
 		missingConnectionsTo remove: aForce from ifAbsent: [].

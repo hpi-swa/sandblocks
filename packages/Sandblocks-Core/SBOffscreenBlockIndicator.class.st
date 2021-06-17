@@ -5,7 +5,8 @@ Class {
 		'target',
 		'iconMorph',
 		'labelMorph',
-		'lastPosition'
+		'lastPosition',
+		'isHighlighted'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -45,9 +46,23 @@ SBOffscreenBlockIndicator >> initialize [
 	self iconMorph: SBIcon iconCaretSquareORight veryLarge.
 	self addMorph: self iconMorph.
 	
-	self color: Color transparent.
+	self labelMorph: SBStringMorph new.
+	self addMorph: self labelMorph.
 	
-	
+	self isHighlighted: false.
+	self color: Color transparent
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> isHighlighted [
+
+	^ isHighlighted
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> isHighlighted: aBoolean [
+
+	isHighlighted := aBoolean
 ]
 
 { #category : #accessing }
@@ -149,17 +164,26 @@ SBOffscreenBlockIndicator >> target: aMorph [
 	target := aMorph.
 	
 	self
-		labelMorph: SBStringMorph new;
 		updateLabel;
 		addMorph: self labelMorph.
-		
-	aMorph when: #delete send: #abandon to: self.
+	
+	aMorph when: #delete send: #abandon to: self
 ]
 
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> targetOffscreen [
 
 	^ (self scroller innerBounds intersects: self target boundsInWorld) not.
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> toggleHighlight [
+
+	| newColor |
+	self isHighlighted: self isHighlighted not.
+	self isHighlighted ifTrue: [newColor := Color red] ifFalse: [newColor := nil].
+	self iconMorph color: newColor.
+	self labelMorph color: newColor
 ]
 
 { #category : #accessing }
