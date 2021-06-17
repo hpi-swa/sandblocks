@@ -156,7 +156,7 @@ SBEditorCanvas >> mouseUp: anEvent [
 { #category : #'event handling' }
 SBEditorCanvas >> mouseWheel: anEvent [
 
-	self viewportPosition: targetPosition - anEvent wheelDelta
+	self viewportPosition: targetPosition + (anEvent wheelDelta * (1 @ -1))
 ]
 
 { #category : #viewport }
