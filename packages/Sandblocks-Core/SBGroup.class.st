@@ -36,6 +36,14 @@ SBGroup >> add: aForceMoveDecorator [
 ]
 
 { #category : #'as yet unclassified' }
+SBGroup >> addBlock: aMorph [
+
+	aMorph withDecorator: SBForceMoveDecorator do: [:decorator | self add: decorator].
+	
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBGroup >> addBlocksConnectedTo: aForceMoveDecorator [
 
 	self add: aForceMoveDecorator.
@@ -297,6 +305,12 @@ SBGroup >> initialize [
 	self indicator: nil.
 ]
 
+{ #category : #'as yet unclassified' }
+SBGroup >> isArtefact [
+
+	^ true
+]
+
 { #category : #accessing }
 SBGroup >> morphicLayerNumber [
 
@@ -348,6 +362,23 @@ SBGroup >> remove: aMorph [
 			self abandon]
 		ifFalse: [self computeVertices].
 	self indicator updateLabel
+]
+
+{ #category : #'as yet unclassified' }
+SBGroup >> saveString [
+
+	^ String streamContents: [:stream |
+		stream
+			nextPutAll: self className;
+			nextPutAll: ' new '.
+		self blocks do: [:aBlock |
+			stream
+				nextPutAll: ' addBlock: ';
+				nextPutAll: aBlock className;
+				print: aBlock identityHash;
+				nextPutAll: ';'].
+		stream nextPutAll: ' color: '.
+		self color storeOn: stream]
 ]
 
 { #category : #nil }

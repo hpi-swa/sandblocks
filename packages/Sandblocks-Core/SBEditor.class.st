@@ -901,10 +901,10 @@ SBEditor >> labelString [
 { #category : #actions }
 SBEditor >> loadBlocks [
 	<globalAction>
-	
-	self objectsToSave do: [:each | each deleteBlock].
-	self class savedBlocks do: [:each | self openMorph: each].
-	self class restoreSavedConfigurationFor: self.
+
+	scroll scroller submorphs copy do: [:each | each abandon].
+	self class loadSaveInto: self.
+	self class restoreSavedConfigurationFor: self
 ]
 
 { #category : #'do/undo/redo' }
@@ -1093,7 +1093,7 @@ SBEditor >> objectInterfaceNear: aBlock at: aSymbol [
 { #category : #accessing }
 SBEditor >> objectsToSave [
 
-	^ scroll scroller submorphs select: [:s | (s isSandblock or: [s isConnector]) and: [s isArtefact]]
+	^ scroll scroller submorphs select: [:s | s isArtefact]
 ]
 
 { #category : #testing }
@@ -1443,15 +1443,21 @@ SBEditor >> saveCopy [
 { #category : #actions }
 SBEditor >> saveCurrentBlocks [
 	<globalAction>
+
+	| saveString methodVariables |
+	methodVariables := '| '.
+	self childSandblocksDo: [:aBlock |
+		methodVariables := methodVariables, aBlock className, aBlock identityHash, ' '.
+		
+		].
+	methodVariables := methodVariables, '|'.
 	
-	| saveString |
-	
-	saveString := (self objectsToSave inject: '' into: [:string :artefact | string , artefact saveString, '.', Character cr]).
-	saveString := 'savedBlocks', Character cr, '^ {', saveString, '}'.
+	saveString := self objectsToSave
+		inject: ''
+		into: [:string :artefact | string, 'anEditor openMorph: (', artefact saveString, ').', Character cr].
+	saveString := 'loadSaveInto: anEditor', Character cr, methodVariables, Character cr,  '^ {', saveString, '}'.
 	self class class compile: saveString classified: '*generated'.
-	self class class compile: self configurationString classified: '*generated'.
-
-
+	self class class compile: self configurationString classified: '*generated'
 ]
 
 { #category : #selection }
