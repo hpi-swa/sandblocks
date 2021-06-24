@@ -91,8 +91,8 @@ SBOffscreenBlockIndicator >> lastPosition: anObject [
 
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> mouseDown: anEvent [
-	
-	self scroller scrollToShow: self target.
+
+	self scroller scrollToCenter: self target
 ]
 
 { #category : #nil }

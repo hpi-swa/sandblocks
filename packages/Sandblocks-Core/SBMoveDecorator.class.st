@@ -98,6 +98,8 @@ SBMoveDecorator >> mouseUp: anEvent [
 SBMoveDecorator >> panWhenNearEdge [
 	
 	| noScrollRectangle movement canvasExtent |
+	self morph sandblockEditor isSingleArtefactView ifTrue: [^ self].
+	
 	canvasExtent := self morph sandblockEditor canvas extent.
 	noScrollRectangle := (Rectangle origin: self morph sandblockEditor canvas targetPosition extent: canvasExtent) insetBy: canvasExtent / 8.
 	

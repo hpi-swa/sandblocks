@@ -22,6 +22,7 @@ SBGroup >> add: aForceMoveDecorator [
 	self blocks add: aForceMoveDecorator morph.
 	aForceMoveDecorator group: self.
 	aForceMoveDecorator morph when: #positionChanged send: #computeVertices to: self.
+	aForceMoveDecorator morph when: #extentChanged send: #computeVertices to: self.
 	self computeVertices.
 	aForceMoveDecorator morph
 		when: #delete

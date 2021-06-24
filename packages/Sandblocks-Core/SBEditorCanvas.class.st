@@ -169,6 +169,12 @@ SBEditorCanvas >> scrollShowMargin [
 	^ 10 * self scalingFactor
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditorCanvas >> scrollToCenter: aMorph [
+
+	self animateToPosition: aMorph center - (self center - self topLeft)
+]
+
 { #category : #viewport }
 SBEditorCanvas >> scrollToShow: aMorph [
 

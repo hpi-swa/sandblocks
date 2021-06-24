@@ -14,8 +14,9 @@ SBClippingTransformMorph >> drawSubmorphsOn: aCanvas [
 	clipRect := self innerBounds.
 	aCanvas transformBy: transform
 		clippingTo: clipRect
-		during: [:myCanvas | | drawBlock |
-			drawBlock := [submorphs reverseDo:[:m | (m boundsInWorld intersects: clipRect) ifTrue: [myCanvas fullDrawMorph: m]]].
+		during: [:myCanvas | | drawBlock clipRectInWorld |
+			clipRectInWorld := self bounds: clipRect in: self world.
+			drawBlock := [submorphs reverseDo:[:m | (m boundsInWorld intersects: clipRectInWorld) ifTrue: [myCanvas fullDrawMorph: m]]].
 			(self angle ~= 0.0 or: [self scale ~= 1.0])
 				ifTrue: [AbstractFont forceNonSubPixelDuring: drawBlock]
 				ifFalse: drawBlock ] 

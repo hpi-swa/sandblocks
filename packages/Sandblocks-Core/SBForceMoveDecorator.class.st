@@ -135,6 +135,18 @@ SBForceMoveDecorator >> deactivateForces [
 ]
 
 { #category : #'as yet unclassified' }
+SBForceMoveDecorator >> example [
+
+	SBMorphExample
+		setUp: [
+			SBEditor new
+				openMorph: (SBStMethod newFor: (SBBlock compiledMethodAt: #attractionStrengthTo:) at: 0 @ 0);
+				openMorph: (SBStMethod newFor: (SBBlock compiledMethodAt: #forceStrengthAgainst:) at: 0 @ 0)]
+		cases: {SBMorphExampleCase name: 'example 1' caseBlock: [:m | m]}
+		extent: 1000 @ 600
+]
+
+{ #category : #'as yet unclassified' }
 SBForceMoveDecorator >> forceAgainst: otherMorph [
 	
 	^ self morph forceAgainst: otherMorph
@@ -328,7 +340,7 @@ SBForceMoveDecorator >> speedMultiplier: anObject [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> step [
 
-	SBPreferences enableForceLayout ifFalse: [^ super step].
+	(SBPreferences enableForceLayout not or: [self morph sandblockEditor isSingleArtefactView]) ifTrue: [^ super step].
 
 	idealPosition ifNil: [idealPosition := self morph position].
 	

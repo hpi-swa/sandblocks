@@ -94,6 +94,12 @@ SBEditorCanvasWithOverlay >> overlay: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBEditorCanvasWithOverlay >> scrollToCenter: aMorph [
+
+	self canvas scrollToCenter: aMorph
+]
+
+{ #category : #'as yet unclassified' }
 SBEditorCanvasWithOverlay >> scrollToShow: aBlock [
 	
 	^ self canvas scrollToShow: aBlock
