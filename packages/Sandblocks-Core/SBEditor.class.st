@@ -1026,6 +1026,12 @@ SBEditor >> modelWakeUp [
 		self valueOfProperty: #previousWindow ifPresentDo: [:window | self owner addMorphFront: self]]
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> morphicLayerNumber [
+
+	^ 69
+]
+
 { #category : #'event handling' }
 SBEditor >> mouseLeaveDragging: anEvent [
 

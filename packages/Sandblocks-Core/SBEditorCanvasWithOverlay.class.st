@@ -93,7 +93,7 @@ SBEditorCanvasWithOverlay >> overlay: anObject [
 	overlay := anObject.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #nil }
 SBEditorCanvasWithOverlay >> scrollToCenter: aMorph [
 
 	self canvas scrollToCenter: aMorph

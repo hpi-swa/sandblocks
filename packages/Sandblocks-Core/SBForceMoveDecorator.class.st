@@ -49,7 +49,6 @@ SBForceMoveDecorator >> additionalForces: anObject [
 SBForceMoveDecorator >> applyForces [
 
 	| newSpeedMultiplier |
-	
 	self isPinned ifTrue: [^ self morph position: self pinnedPosition].
 	self isDragging ifTrue: [^ self].
 	
@@ -105,18 +104,17 @@ SBForceMoveDecorator >> changedDirection [
 
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> createImplicitForceWith: otherMorph [
-	
+
 	| attraction |
 	attraction := self attractionTo: otherMorph.
 	attraction > 0 ifTrue: [
 		self morph sandblockEditor openMorph: (SBForceConnector connect: self morph to: otherMorph forceScale: attraction).
-		otherMorph withDecorator: SBForceMoveDecorator do: [:decorator |
-			self group
-				ifNil: [
-					decorator group
-						ifNil: [self morph sandblockEditor openMorph: (SBGroup newFor: self)]
-						ifNotNil: [decorator group add: self]]
-				ifNotNil: [self group add: decorator]]].
+		self group
+			ifNil: [
+				otherMorph group
+					ifNil: [self morph sandblockEditor openMorph: (SBGroup newFor: self)]
+					ifNotNil: [otherMorph group add: self]]
+			ifNotNil: [otherMorph group ifNil: [self group addBlock: otherMorph]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -140,8 +138,14 @@ SBForceMoveDecorator >> example [
 	SBMorphExample
 		setUp: [
 			SBEditor new
-				openMorph: (SBStMethod newFor: (SBBlock compiledMethodAt: #attractionStrengthTo:) at: 0 @ 0);
-				openMorph: (SBStMethod newFor: (SBBlock compiledMethodAt: #forceStrengthAgainst:) at: 0 @ 0)]
+				extent: 1000 @ 600;
+				position: 0 @ 0;
+				openMorphInView: (SBStMethod newFor: (SBBlock class compiledMethodAt: #defaultRepelStrength) at: 0 @ 0);
+				openMorphInView: (SBStMethod newFor: (SBBlock class compiledMethodAt: #maxRepelDistance) at: 0 @ 0);
+				openMorphInView: (SBStMethod
+					newFor: (SBForceConnector class compiledMethodAt: #attractionStrengthMultiplier)
+					at: 0 @ 0);
+					yourself]
 		cases: {SBMorphExampleCase name: 'example 1' caseBlock: [:m | m]}
 		extent: 1000 @ 600
 ]

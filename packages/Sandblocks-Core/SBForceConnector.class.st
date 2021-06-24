@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBForceConnector class >> attractionStrengthMultiplier [
+
+	^ 0.3
+]
+
+{ #category : #'as yet unclassified' }
 SBForceConnector class >> connect: anObject to: anotherObject forceScale: aNumber [
 
 	^ self new connect: anObject to: anotherObject forceScale: aNumber
@@ -25,7 +31,7 @@ SBForceConnector >> abandon [
 { #category : #'as yet unclassified' }
 SBForceConnector >> baseForce [
 
-	^ 0.05 * (self to center - self from center) * self forceScale
+	^ self class attractionStrengthMultiplier * (self to center - self from center) * self forceScale
 ]
 
 { #category : #'as yet unclassified' }

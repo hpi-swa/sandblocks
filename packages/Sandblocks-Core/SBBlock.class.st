@@ -17,6 +17,24 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBBlock class >> defaultRepelStrength [
+
+	^ 5000.0
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock class >> implicitAttractionStrength [
+
+	^ 0.25
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock class >> maxRepelDistance [
+
+	^ 200
+]
+
+{ #category : #'as yet unclassified' }
 SBBlock class >> navigation [
 
 	^ Navigation ifNil: [Navigation := SBSmalltalkNavigation new]
@@ -153,11 +171,10 @@ SBBlock >> attachDecorator: aDecorator [
 
 { #category : #'as yet unclassified' }
 SBBlock >> attractionStrengthTo: aMorph [
-	
+
 	^ (self isAttractedTo: aMorph)
-		ifTrue: [0.25]
+		ifTrue: [self class implicitAttractionStrength]
 		ifFalse: [0.0]
-	
 ]
 
 { #category : #'as yet unclassified' }
@@ -973,19 +990,7 @@ SBBlock >> forceAgainst: aMorph [
 	^ (direction closeTo: 0 @ 0)
 		ifTrue: [(ThreadSafeRandom next @ ThreadSafeRandom next) * 10]
 		ifFalse: [ 
-			direction normalized * ((self forceStrengthAgainst: aMorph) + (aMorph forceStrengthAgainst: self))]
-]
-
-{ #category : #'as yet unclassified' }
-SBBlock >> forceStrengthAgainst: aMorph [
-
-	| distance maximumNonOverlappingForce |
-	maximumNonOverlappingForce := 10.
-	distance := (self bounds vectorToRectangle: aMorph bounds) r.
-	^ distance > 200 ifTrue: [0] ifFalse: [
-		(distance closeTo: 0)
-			ifTrue: [maximumNonOverlappingForce + ((self bounds intersect: aMorph bounds) area sqrt / 10)]
-			ifFalse: [10000.0 / distance / distance min: maximumNonOverlappingForce]]
+			direction normalized * ((self repelStrengthTo: aMorph) + (aMorph repelStrengthTo: self))]
 ]
 
 { #category : #'colors and color policies' }
@@ -2084,6 +2089,18 @@ SBBlock >> removeSuggestionMenu [
 
 	self valueOfProperty: #sandblockSuggestionMenu ifPresentDo: #delete.
 	self removeProperty: #sandblockSuggestionMenu
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> repelStrengthTo: aMorph [
+
+	| distance maximumNonOverlappingForce |
+	maximumNonOverlappingForce := 10.
+	distance := (self bounds vectorToRectangle: aMorph bounds) r.
+	^ distance > self class maxRepelDistance ifTrue: [0] ifFalse: [
+		(distance closeTo: 0)
+			ifTrue: [maximumNonOverlappingForce + ((self bounds intersect: aMorph bounds) area sqrt / 10)]
+			ifFalse: [self class defaultRepelStrength / distance / distance min: maximumNonOverlappingForce]]
 ]
 
 { #category : #hierarchy }

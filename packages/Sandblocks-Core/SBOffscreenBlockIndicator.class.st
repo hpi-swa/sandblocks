@@ -125,11 +125,13 @@ SBOffscreenBlockIndicator >> step [
 	| viewCenter direction intersections viewRectangle position |
 	self target ifNil: [^ self abandon].
 	
-	(self targetOffscreen and: [self shouldHide not]) ifTrue: [self show] ifFalse: [^ self hide].
+	(self targetOffscreen and: [self shouldHide not])
+		ifTrue: [self show]
+		ifFalse: [^ self hide].
 	
-	viewCenter := self scroller innerBounds center.
-	direction := (self target boundsInWorld center - viewCenter) normalized.
 	viewRectangle := self scroller innerBounds.
+	viewCenter := viewRectangle center.
+	direction := (self target boundsInWorld center - self scroller innerBoundsInWorld center) normalized.
 	
 	intersections := {
 		LineSegment intersectFrom: viewCenter with: direction to: viewRectangle topLeft with: 0 @ 1.
@@ -174,7 +176,7 @@ SBOffscreenBlockIndicator >> target: aMorph [
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> targetOffscreen [
 
-	^ (self scroller innerBounds intersects: self target boundsInWorld) not.
+	^ (self scroller innerBoundsInWorld intersects: self target boundsInWorld) not
 ]
 
 { #category : #'as yet unclassified' }
