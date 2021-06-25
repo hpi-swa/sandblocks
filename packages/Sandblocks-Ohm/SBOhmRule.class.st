@@ -17,6 +17,18 @@ SBOhmRule >> allUsagesDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmRule >> canBePrimitive [
+
+	^ self isPrimitive or: [
+		self expression isAlternative and: [
+			self expression childSandblocks anySatisfy: [:expr |
+				expr
+					allBlocksDetect: [:b | (b isIdentifier and: [b isPrimitive not]) or: [b isTerminal and: [b contents size > 1]]]
+					ifFound: [:b | false]
+					ifNone: [true]]]]
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmRule >> containingRule [
 
 	^ self
@@ -114,7 +126,9 @@ SBOhmRule >> writeRascalSourceOn: aStream [
 	aStream nextPutAll: 'syntax '.
 	aStream nextPutAll: self name.
 	aStream nextPutAll: ' = '.
-	self expression writeRascalSourceOn: aStream.
+	self expression isAlternative
+		ifTrue: [self expression writeOnMultipleLinesOn: aStream]
+		ifFalse: [self expression writeSourceOn: aStream].
 	aStream nextPutAll: ';'
 ]
 

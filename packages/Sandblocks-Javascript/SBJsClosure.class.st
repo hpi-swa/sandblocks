@@ -77,7 +77,7 @@ SBJsClosure >> layoutCommands [
 SBJsClosure >> objectInterfaceNear: aBlock at: aSymbol [
 
 	((#(#replace #before) includes: aSymbol) and: [aBlock ifNotNil: #isFirstChild]) ifTrue: [^ SBInterfaces never].
-	^ SBInterfaces jsExpression
+	^ SBInterfaces jsStatement
 ]
 
 { #category : #'as yet unclassified' }

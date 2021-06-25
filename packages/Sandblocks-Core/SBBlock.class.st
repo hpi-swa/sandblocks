@@ -609,21 +609,23 @@ SBBlock >> deleteAround [
 	
 	editor countModifier - 1 timesRepeat: [target := target parentSandblock ifNil: [^ self]].
 	
-	(self parentSandblock childSandblocks size > 1 and: [target parentHasDynamicNumberOfChildren and: [self isStatement]]) ifTrue: [
-		self setProperty: #copyPlaceholder toValue: true.
-		SBToggledCode
-			comment: 'TODO: we still need to delete adjacent elements before copying'
-			active: 1
-			do: {[editor copyBuffer: target]}.
-		self removeProperty: #copyPlaceholder.
-		
-		editor do: (SBRecordedCommand new record: [:recorder |
-			recorder
-				moveAll: self parentSandblock childSandblocks
-				in: target owner
-				at: target submorphIndex + 1.
-			recorder remove: target]).
-		^ self].
+	SBToggledCode comment: 'Special type of unwrap for dynamically sized parents' active: 0 do: {
+		[
+			(self parentSandblock childSandblocks size > 1 and: [target parentHasDynamicNumberOfChildren and: [self isStatement]]) ifTrue: [
+				self setProperty: #copyPlaceholder toValue: true.
+				SBToggledCode
+					comment: 'TODO: we still need to delete adjacent elements before copying'
+					active: 1
+					do: {[editor copyBuffer: target]}.
+				self removeProperty: #copyPlaceholder.
+				
+				editor do: (SBRecordedCommand new record: [:recorder |
+					recorder
+						moveAll: self parentSandblock childSandblocks
+						in: target owner
+						at: target submorphIndex + 1.
+					recorder remove: target]).
+				^ self]]}.
 	
 	[
 		self convertedFor: target objectInterface do: [:replacer |
@@ -1516,7 +1518,7 @@ SBBlock >> minExtent [
 { #category : #accessing }
 SBBlock >> morphicLayerNumber [
 
-	^ 5
+	^ self class defaultLayer
 ]
 
 { #category : #accessing }

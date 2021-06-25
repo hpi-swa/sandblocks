@@ -222,6 +222,12 @@ SBStClass >> initializeBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBStClass >> instVarNames [
+
+	^ self instanceVariables childSandblocks collect: #contents
+]
+
+{ #category : #'as yet unclassified' }
 SBStClass >> instanceVariables [
 
 	^ instanceVariables

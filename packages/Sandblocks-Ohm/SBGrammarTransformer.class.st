@@ -8,7 +8,7 @@ Class {
 SBGrammarTransformer class >> connectorsOf: rule on: aStream original: anOriginalGrammar [
 
 	| usages |
-	usages := (self originalRuleFor: rule from: anOriginalGrammar) allUsages.
+	usages := (self originalRuleFor: rule in: rule parentSandblock from: anOriginalGrammar) allUsages.
 	usages ifNotEmpty: [
 		(usages anySatisfy: [:identifier | identifier parentSandblock isRepeatQuantifier not or: [identifier isPrimitive]])
 			ifTrue: [aStream nextPutAll: 'this.setOutput(true, null);']
@@ -96,6 +96,13 @@ SBGrammarTransformer class >> fieldFor: aPart on: aStream [
 	^ self error: 'not supported'
 ]
 
+{ #category : #'transform steps' }
+SBGrammarTransformer class >> flattenOptionals: g [
+
+	g allBlocksDo: [:b | (b isQuantifier and: [b quantifier = $?]) ifTrue: [b replaceBy: b expression]].
+	g mergeRedundantGroups
+]
+
 { #category : #'generate helper' }
 SBGrammarTransformer class >> grammar: anOhmGrammar steps: aCollection [
 
@@ -128,7 +135,7 @@ SBGrammarTransformer class >> isTerminal: aBlock in: aGrammar [
 	^ (isTerminal value: aBlock) or: [(aBlock isIdentifier and: [aBlock isSimple not]) and: [isTerminal value: (aGrammar ruleNamed: aBlock contents) expression]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBGrammarTransformer class >> matchSpecific: aBlock [
 
 	^ aBlock pragmas anySatisfy: [:p | p selector = 'grammarTransformer']
@@ -137,19 +144,23 @@ SBGrammarTransformer class >> matchSpecific: aBlock [
 { #category : #'transform steps' }
 SBGrammarTransformer class >> mergeBinaryOperators: g [
 
-	| operators ruleName |
+	| operators isBinaryOp |
 	" replace binary ops"
-	ruleName := 'GENbinaryOpGEN'.
-	operators := OrderedCollection new.
-	g allBlocksDo: [:b |
-		(b isSequence and: [b childSandblocks size = 3 and: [b childSandblocks first isIdentifier and: [b childSandblocks last isIdentifier and: [b childSandblocks second isTerminal or: [b childSandblocks second isAlternative and: [b childSandblocks second childSandblocks allSatisfy: #isTerminal]]]]]]) ifTrue: [
-			b replaceBy: (SBOhmIdentifier new contents: ruleName).
-			operators add: b]].
-	operators ifNotEmpty: [
-		g addMorphBack: (SBOhmRule new name: ruleName alternatives: (SBOhmList new connect: 'AND' expressions: {
-			SBOhmIdentifier new contents: ruleName.
-			SBOhmList new connect: 'OR' expressions: (operators collect: [:o | o childSandblocks second]).
-			SBOhmIdentifier new contents: ruleName}))].
+	isBinaryOp := [:b | b childSandblocks size = 3 and: [b childSandblocks first isIdentifier and: [b childSandblocks last isIdentifier and: [b childSandblocks second isTerminal or: [b childSandblocks second isAlternative and: [b childSandblocks second childSandblocks allSatisfy: #isTerminal]]]]]].
+	g childSandblocksDo: [:b |
+		operators := OrderedCollection new.
+		b expression isAlternative ifTrue: [b expression childSandblocksDo: [:expr | (isBinaryOp value: expr) ifTrue: [operators add: expr]]].
+		" TODO: ensure lhs and rhs require same identifier "
+		operators size > 1 ifTrue: [ | opList |
+			opList := operators first childSandblocks second in: [:alt |
+				alt isAlternative ifTrue: [alt] ifFalse: [ | repr |
+					repr := SBOhmList new.
+					alt replaceBy: repr.
+					repr connect: 'OR' expressions: {alt}.
+					repr]].
+			operators allButFirstDo: [:op |
+				operators first childSandblocks second addMorphBack: op childSandblocks second.
+				op delete]]].
 	g mergeRedundantGroups
 ]
 
@@ -171,6 +182,25 @@ SBGrammarTransformer class >> mergeConsecutiveLabels: g [
 					ifFalse: ['']), next contents).
 				toDelete add: next]]].
 	toDelete do: #delete.
+	g mergeRedundantGroups
+]
+
+{ #category : #'transform steps' }
+SBGrammarTransformer class >> mergeGlobalBinaryOperators: g [
+
+	| operators ruleName |
+	" replace binary ops"
+	ruleName := 'GENbinaryOpGEN'.
+	operators := OrderedCollection new.
+	g allBlocksDo: [:b |
+		(b isSequence and: [b childSandblocks size = 3 and: [b childSandblocks first isIdentifier and: [b childSandblocks last isIdentifier and: [b childSandblocks second isTerminal or: [b childSandblocks second isAlternative and: [b childSandblocks second childSandblocks allSatisfy: #isTerminal]]]]]]) ifTrue: [
+			b replaceBy: (SBOhmIdentifier new contents: ruleName).
+			operators add: b]].
+	operators ifNotEmpty: [
+		g addMorphBack: (SBOhmRule new name: ruleName alternatives: (SBOhmList new connect: 'AND' expressions: {
+			SBOhmIdentifier new contents: ruleName.
+			SBOhmList new connect: 'OR' expressions: (operators collect: [:o | o childSandblocks second]).
+			SBOhmIdentifier new contents: ruleName}))].
 	g mergeRedundantGroups
 ]
 
@@ -199,6 +229,7 @@ SBGrammarTransformer class >> mergePrecedenceChains: g [
 	exprRuleNames add: remaining name.
 	target := remaining allUsages reject: [:usage | usage containingRule = remaining].
 	targetRuleName := ''.
+	
 	SBToggledCode
 		comment: 'is there a single identity rule pointing to us? inline'
 		active: 1
@@ -212,10 +243,22 @@ SBGrammarTransformer class >> mergePrecedenceChains: g [
 						remaining delete]
 					ifFalse: [targetRuleName := remaining name]]}.
 	
-	SBToggledCode comment: '' active: 1 do: {
-		[g allBlocksDo: [:block | (block isIdentifier and: [exprRuleNames includes: block contents]) ifTrue: [block contents: targetRuleName]]]}.
+	g mergeRedundantGroups.
+	SBToggledCode
+		comment: 'do our alternatives contain a single identifier? merge, it''s probably literals'
+		active: 1
+		do: {
+			[
+				(g ruleNamed: targetRuleName) expression childSandblocks
+					detect: #isIdentifier
+					ifFound: [:identifier | | trailingRule |
+						trailingRule := g ruleNamed: identifier contents.
+						identifier replaceBy: trailingRule expression.
+						exprRuleNames add: identifier contents.
+						trailingRule delete]]}.
 	
-	g mergeRedundantGroups
+	SBToggledCode comment: 'now replace all occurences with the merged one' active: 1 do: {
+		[g allBlocksDo: [:block | (block isIdentifier and: [exprRuleNames includes: block contents]) ifTrue: [block contents: targetRuleName]]]}
 ]
 
 { #category : #'transform steps' }
@@ -248,12 +291,39 @@ SBGrammarTransformer class >> mergeUpSimpleRules: g [
 	simpleRules do: [:r | r allUsages size < 1 ifTrue: [r delete]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBGrammarTransformer class >> newFrom: aBlock [
 
 	| msg |
 	msg := aBlock statements second expression.
 	^ (super newFrom: aBlock) grammar: msg arguments first steps: msg arguments second
+]
+
+{ #category : #'transform pipelines' }
+SBGrammarTransformer class >> ohmToRascal [
+
+	^ {
+		[:g | SBGrammarTransformer removeBuiltInRules: g].
+		[:g | SBGrammarTransformer removeLookAheads: g].
+		[:g | SBGrammarTransformer removeSpaces: g].
+		[:g | SBGrammarTransformer disassemblePrecedenceLists: g].
+		[:g | g mergeRedundantGroups].
+		[:g | SBGrammarTransformer mergePrecedenceChains: g]}
+]
+
+{ #category : #'transform helper' }
+SBGrammarTransformer class >> open: aCollection for: aGrammar [
+
+	| original g |
+	g := SBOhmGrammar fromGrammar: aGrammar.
+	original := g veryDeepCopy.
+	aCollection do: [:steps |
+		steps do: [:step | step value: g].
+		SBToggledCode
+			comment: 'get a preview of each step'
+			active: 0
+			do: {[g veryDeepCopy openInWorld]}].
+	^ self openFor: g original: original
 ]
 
 { #category : #'generate helper' }
@@ -262,13 +332,20 @@ SBGrammarTransformer class >> openFor: aGrammar original: anOriginalGrammar [
 	ExternalWebBrowser openOnUrl: 'file://', (self writeFor: aGrammar original: anOriginalGrammar)
 ]
 
-{ #category : #'as yet unclassified' }
-SBGrammarTransformer class >> originalRuleFor: rule from: anOriginalGrammar [
+{ #category : #'generate helper' }
+SBGrammarTransformer class >> originalRuleFor: rule in: aGrammar from: anOriginalGrammar [
 
-	^ (rule name beginsWith: 'GEN') ifTrue: [rule] ifFalse: [
-		(rule name beginsWith: 'EXP')
-			ifTrue: [anOriginalGrammar ruleNamed: (rule name copyWithRegex: '^EXP\d+' matchesReplacedWith: '')]
-			ifFalse: [anOriginalGrammar ruleNamed: rule name]]
+	| n |
+	n := rule isString ifTrue: [rule] ifFalse: [rule name].
+	
+	^ (n includesSubstring: 'GEN') ifTrue: [aGrammar ruleNamed: n] ifFalse: [
+		(n beginsWith: 'EXP')
+			ifTrue: [
+				self
+					originalRuleFor: (n copyWithRegex: '^EXP\d+' matchesReplacedWith: '')
+					in: aGrammar
+					from: anOriginalGrammar]
+			ifFalse: [anOriginalGrammar ruleNamed: n]]
 ]
 
 { #category : #'generate blocks' }
@@ -345,6 +422,51 @@ SBGrammarTransformer class >> propsForExpression: aPart on: aStream [
 	self fieldFor: aPart on: aStream
 ]
 
+{ #category : #'transform pipelines' }
+SBGrammarTransformer class >> rascalSimplified [
+
+	^ {
+		[:g | SBGrammarTransformer mergeUpSimpleRules: g].
+		[:g | SBGrammarTransformer removeUnitProductions: g].
+		[:g | SBGrammarTransformer mergeConsecutiveLabels: g].
+		[:g | SBToggledCode comment: '' active: 1 do: {[SBGrammarTransformer mergeBinaryOperators: g]}].
+		[:g | SBGrammarTransformer removeDuplicateAlternatives: g].
+		[:g | SBGrammarTransformer mergeUpLiteralAlternatives: g].
+		[:g | SBGrammarTransformer removeUnitProductions: g].
+		[:g | SBToggledCode comment: '' active: 1 do: {[SBGrammarTransformer splitAlternatives: g]}].
+		[:g | SBGrammarTransformer extractSequencesInQuantifiers: g].
+		[:g | SBGrammarTransformer removeIdentityAndEmptyRules: g].
+		[:g | SBGrammarTransformer mergeUpSimpleRules: g].
+		[:g | SBGrammarTransformer mergeConsecutiveLabels: g]}
+]
+
+{ #category : #'transform pipelines' }
+SBGrammarTransformer class >> rascalSimplifiedMin [
+
+	^ {
+		[:g | SBGrammarTransformer mergeUpSimpleRules: g].
+		[:g | SBGrammarTransformer mergeBinaryOperators: g].
+		[:g | SBGrammarTransformer extractSequencesInQuantifiers: g].
+		[:g | SBGrammarTransformer mergeUpSimpleRules: g].
+		[:g | g mergeRedundantGroups].
+		[:g |
+			SBToggledCode
+				comment: ''
+				active: 0
+				do: {[SBGrammarTransformer mergeUpLiteralAlternatives: g]}].
+		[:g | SBToggledCode comment: '' active: 0 do: {[SBGrammarTransformer removeUnitProductions: g]}].
+		[:g |
+			SBToggledCode
+				comment: ''
+				active: 0
+				do: {[SBGrammarTransformer removeIdentityAndEmptyRules: g]}].
+		[:g | SBToggledCode comment: '' active: 0 do: {[SBGrammarTransformer mergeUpSimpleRules: g]}].
+		[:g | SBGrammarTransformer mergeConsecutiveLabels: g].
+		[:g | SBGrammarTransformer removeDuplicateAlternatives: g].
+		[:g | SBGrammarTransformer flattenOptionals: g].
+		[:g | SBToggledCode comment: '' active: 0 do: {[SBGrammarTransformer splitAlternatives: g]}]}
+]
+
 { #category : #'transform steps' }
 SBGrammarTransformer class >> removeBuiltInRules: g [
 	" remove extensions of built-in rules"
@@ -388,10 +510,15 @@ SBGrammarTransformer class >> removeListSeparatorsWithRecursion: g [
 	g childSandblocksDo: [:r |
 		(r expression isSequence and: [ | c |
 			c := r expression childSandblocks.
-			c size = 2 and: [
-				c second isOptional and: [ | rec |
-					rec := c second expression childSandblocks last.
-					rec isIdentifier and: [rec contents = r name]]]]) ifTrue: [r expression replaceBy: (SBOhmQuantifier new expression: r expression childSandblocks first quantifier: '+')]]
+			c last isOptional and: [ | rec |
+				rec := c last expression childSandblocks last.
+				rec isIdentifier and: [rec contents = r name]]]) ifTrue: [
+			r expression childSandblocks last delete.
+			SBWrapCommand new
+				outer: SBOhmQuantifier new;
+				inner: r expression;
+				wrap: [:outer :inner | outer expression: inner quantifier: '+'];
+				do]]
 ]
 
 { #category : #'transform steps' }
@@ -460,6 +587,24 @@ SBGrammarTransformer class >> removeUnitProductions: g [
 i.e. that are reacheable from at least one other place"
 	candidates do: [:c | (c allUsages difference: candidates) ifNotEmpty: [c delete]].
 	g mergeRedundantGroups
+]
+
+{ #category : #'transform pipelines' }
+SBGrammarTransformer class >> removeUnnecessarySyntax [
+
+	^ {
+		[:g | SBGrammarTransformer removeListSeperators0toN: g].
+		[:g | SBGrammarTransformer removeListSeperators1toN: g].
+		[:g | SBGrammarTransformer removeListSeparatorsWithRecursion: g]}
+]
+
+{ #category : #'transform helper' }
+SBGrammarTransformer class >> run: aCollection for: aGrammar [
+
+	| g |
+	g := aGrammar.
+	aCollection do: [:step | step value: g].
+	^ g
 ]
 
 { #category : #'transform steps' }

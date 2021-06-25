@@ -46,7 +46,11 @@ SBStMorphPalette class >> buildOn: aContainer [
 		addBlock: 'Submorphs'
 			as: (SBStMessageSend new receiver: (SBStName contents: 'self') selector: #submorphs);
 		addBlock: 'World'
-			as: (SBStMessageSend new receiver: (SBStName contents: 'self') selector: #world)
+			as: (SBStMessageSend new receiver: (SBStName contents: 'self') selector: #world);
+		addBlock: 'Color' as: (SBStMessageSend new
+			receiver: (SBStName contents: 'self')
+			selector: #color:
+			arguments: {SBColor new})
 ]
 
 { #category : #'as yet unclassified' }

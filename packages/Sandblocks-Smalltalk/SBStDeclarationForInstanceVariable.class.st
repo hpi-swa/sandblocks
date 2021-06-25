@@ -35,7 +35,7 @@ SBStDeclarationForInstanceVariable >> class: aClass [
 ]
 
 { #category : #'as yet unclassified' }
-SBStDeclarationForInstanceVariable >> defineGetterSetter [
+SBStDeclarationForInstanceVariable >> createGetterSetter [
 	<action>
 
 	self block sandblockEditor

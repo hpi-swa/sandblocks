@@ -43,7 +43,8 @@ SBBrowserEditor >> initialize [
 	scroll
 		vResizing: #spaceFill;
 		hResizing: #spaceFill;
-		hScrollBarPolicy: #never.
+		hScrollBarPolicy: #never;
+		color: Color transparent.
 	scroll scroller layoutPolicy: SBSimpleLayout new
 ]
 
