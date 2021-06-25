@@ -5,6 +5,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStDeclarationForLocalVariable class >> checkCastFor: aBlock parent: aMorph [
+
+	| artefact |
+	artefact := aMorph containingSandblock containingArtefact.
+	^ (artefact ifNotNil: #isRepl ifNil: [false]) and: [aMorph = artefact localVariables]
+]
+
+{ #category : #'as yet unclassified' }
 SBStDeclarationForLocalVariable >> asSuggestionItem [
 
 	^ SBSuggestionItem selector: self contents label: 'local variable'

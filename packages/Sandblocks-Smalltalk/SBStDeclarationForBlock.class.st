@@ -4,6 +4,12 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
+{ #category : #'as yet unclassified' }
+SBStDeclarationForBlock class >> checkCastFor: aBlock parent: aMorph [
+
+	^ aMorph isBlockBindings
+]
+
 { #category : #accessing }
 SBStDeclarationForBlock >> asSuggestionItem [
 

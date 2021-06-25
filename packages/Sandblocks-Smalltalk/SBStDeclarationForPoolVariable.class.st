@@ -5,6 +5,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStDeclarationForPoolVariable class >> checkCastFor: aBlock parent: aMorph [
+
+	| artefact |
+	artefact := aMorph containingSandblock containingArtefact.
+	^ (artefact satisfies: {#notNil. #isEditor. #isClassContainer}) and: [aMorph = artefact classVariables]
+]
+
+{ #category : #'as yet unclassified' }
 SBStDeclarationForPoolVariable >> browse [
 	<action>
 
