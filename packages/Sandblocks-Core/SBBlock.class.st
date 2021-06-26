@@ -399,12 +399,6 @@ SBBlock >> colorPolicy [
 		self parentSandblock ifNotNil: [:p | colorPolicyCache := p colorPolicy] ifNil: [SBDefaultColorPolicy new]]
 ]
 
-{ #category : #'ast helpers' }
-SBBlock >> commandPaletteClass [
-
-	^ self parentSandblock ifNotNil: #commandPaletteClass
-]
-
 { #category : #testing }
 SBBlock >> completeSubtree [
 
@@ -1036,7 +1030,7 @@ SBBlock >> hasChildSandblocks [
 { #category : #'actions tests' }
 SBBlock >> hasCommandPalette [
 
-	^ self commandPaletteClass notNil
+	^ SBPalette allSubclasses anySatisfy: [:palette | (self satisfies: palette context) and: [palette matchesBlock: self]]
 ]
 
 { #category : #'actions tests' }
@@ -1765,13 +1759,12 @@ SBBlock >> objectInterfaceNear: aBlock at: aSymbol [
 ]
 
 { #category : #actions }
-SBBlock >> openPalette [
+SBBlock >> openLocalPalette [
 	<action>
 	<actionValidIf: #hasCommandPalette>
 
 	| palettes |
-	palettes := SBPalette allSubclasses select: [:palette |
-		(self satisfies: palette context) and: [palette matchesBlock: self]].
+	palettes := SBPalette allSubclasses select: [:palette | (self satisfies: palette context) and: [palette matchesBlock: self]].
 	palettes ifNotEmpty: [ | container |
 		container := SBPaletteContainer new.
 		palettes do: [:class | class buildOn: container].
