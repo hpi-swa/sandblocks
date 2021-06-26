@@ -135,19 +135,38 @@ SBForceMoveDecorator >> deactivateForces [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> example [
 
+	| maxRepelDistance |
+	"| maxRepelDistance |"
 	SBMorphExample
 		setUp: [
 			SBEditor new
-				extent: 1000 @ 600;
+				extent: 1000 @ 500;
 				position: 0 @ 0;
-				openMorphInView: (SBStMethod newFor: (SBBlock class compiledMethodAt: #defaultRepelStrength) at: 0 @ 0);
-				openMorphInView: (SBStMethod newFor: (SBBlock class compiledMethodAt: #maxRepelDistance) at: 0 @ 0);
-				openMorphInView: (SBStMethod
-					newFor: (SBForceConnector class compiledMethodAt: #attractionStrengthMultiplier)
-					at: 0 @ 0);
-					yourself]
+				openMorphInView: (maxRepelDistance := self exampleMorphForRepelDistance);
+				yourself;
+				yourself]
 		cases: {SBMorphExampleCase name: 'example 1' caseBlock: [:m | m]}
 		extent: 1000 @ 600
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> exampleMorphForRepelDistance [
+
+	| playground |
+	^ SBBlock new
+		addMorph: (playground := (SBStPlayground
+			newFromSource: '''This shows the area in which repelling forces are applied'''
+			named: 'maxRepelDistance'
+			at: 0 @ 0)
+			layoutChanged;
+			fullBounds;
+			yourself);
+		addMorph: (RectangleMorph new
+			extent: playground extent + SBBlock maxRepelDistance asPoint;
+			center: playground extent / 2;
+			color: Color transparent;
+			borderColor: Color seaFoam;
+			borderWidth: 2)
 ]
 
 { #category : #'as yet unclassified' }

@@ -20,3 +20,9 @@ SBSandboxPasteUpMorph >> initialize [
 	
 	self enableDrop: false
 ]
+
+{ #category : #'as yet unclassified' }
+SBSandboxPasteUpMorph >> model [
+
+	^ model
+]
