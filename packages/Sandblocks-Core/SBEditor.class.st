@@ -1015,6 +1015,13 @@ SBEditor >> modelWakeUp [
 		self valueOfProperty: #previousWindow ifPresentDo: [:window | self owner addMorphFront: self]]
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> morphicLayerNumber [
+	" make sure we're at least over the docking bar "
+
+	^ DockingBarMorph navigatorLayer - 1
+]
+
 { #category : #'event handling' }
 SBEditor >> mouseLeaveDragging: anEvent [
 
