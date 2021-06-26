@@ -199,9 +199,9 @@ SBStCodeOpener >> methods [
 ]
 
 { #category : #'as yet unclassified' }
-SBStCodeOpener >> morphicLayerNumber [ 
-	
-	^ 4
+SBStCodeOpener >> morphicLayerNumber [
+
+	^ 60
 ]
 
 { #category : #'as yet unclassified' }

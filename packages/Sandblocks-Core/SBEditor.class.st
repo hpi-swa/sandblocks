@@ -1495,6 +1495,7 @@ SBEditor >> search [
 SBEditor >> select: aBlock [
 
 	self assert: (aBlock isNil or: [aBlock isSandblock]).
+	self owner ifNotNil: [:o | o sandblockEditor ifNotNil: [:e | e select: aBlock]].
 	
 	SBPreferences useNewCursor ifTrue: [self cursor select: aBlock].
 	(currentInput ~= nil and: [currentInput ~= aBlock]) ifTrue: [self endInput].

@@ -262,7 +262,7 @@ SBGroup >> createMissingForcesFor: aForceMoveDecorator [
 		missingConnectionsTo remove: aForce from ifAbsent: [].
 		
 		].
-	missingConnectionsTo do: [:aBlock | self sandblockEditor openMorph: (SBForceConnector connect: aForceMoveDecorator morph to: aBlock forceScale: 0.5)]
+	missingConnectionsTo do: [:aBlock | aForceMoveDecorator morph sandblockEditor openMorph: (SBForceConnector connect: aForceMoveDecorator morph to: aBlock forceScale: 0.5)]
 ]
 
 { #category : #'as yet unclassified' }
