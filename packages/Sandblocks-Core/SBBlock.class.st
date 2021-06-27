@@ -1330,6 +1330,12 @@ SBBlock >> isMethod [
 ]
 
 { #category : #testing }
+SBBlock >> isMethodBody [
+
+	^ false
+]
+
+{ #category : #testing }
 SBBlock >> isMultiSelected [
 
 	^ self sandblockEditor ifNil: [false] ifNotNil: [:editor | editor multiSelection includes: self]
