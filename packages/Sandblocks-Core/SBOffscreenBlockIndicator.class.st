@@ -113,10 +113,17 @@ SBOffscreenBlockIndicator >> scroller [
 { #category : #accessing }
 SBOffscreenBlockIndicator >> shouldHide [
 
-	^ (self target
-		withDecorator: SBForceMoveDecorator
-		do: [:decorator | decorator group notNil]
-		ifAbsent: [false]) and: [self isHighlighted not]
+	^ (self sandblockEditor selection
+			ifNotNil: [:selection |
+				selection
+					withDecorator: SBWaypointMoveDecorator
+					do: [:decorator | (decorator morph targets includes: self target) not]
+					ifAbsent: [false]]
+			ifNil: [false]) or:
+		[(self target
+			withDecorator: SBForceMoveDecorator
+			do: [:decorator | decorator group notNil]
+			ifAbsent: [false]) and: [self isHighlighted not]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -128,6 +135,8 @@ SBOffscreenBlockIndicator >> step [
 	(self targetOffscreen and: [self shouldHide not])
 		ifTrue: [self show]
 		ifFalse: [^ self hide].
+	
+	self updateLabel. "this is only here because of Waypoints. TODO: remove"
 	
 	viewRectangle := self scroller innerBounds.
 	viewCenter := viewRectangle center.

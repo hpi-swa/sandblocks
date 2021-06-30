@@ -103,6 +103,14 @@ SBForceMoveDecorator >> changedDirection [
 ]
 
 { #category : #'as yet unclassified' }
+SBForceMoveDecorator >> createForceWith: otherBlock [
+
+	self morph sandblockEditor
+		openMorph: (SBForceConnector connect: self morph to: otherBlock);
+		activateForces
+]
+
+{ #category : #'as yet unclassified' }
 SBForceMoveDecorator >> createImplicitForceWith: otherMorph [
 
 	| attraction |
@@ -309,10 +317,7 @@ SBForceMoveDecorator >> mouseUp: anEvent [
 		self pinnedPosition ifNotNil: [self pinnedPosition: self morph position].
 		otherBlock := self blockAtPoint: anEvent position.
 		otherBlock
-			ifNotNil: [
-				self morph sandblockEditor
-					openMorph: (SBForceConnector connect: self morph to: otherBlock);
-					activateForces]
+			ifNotNil: [self createForceWith: otherBlock]
 			ifNil: [
 				self group ifNil: [
 					otherMorph := self
