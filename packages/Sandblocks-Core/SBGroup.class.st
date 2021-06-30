@@ -53,75 +53,20 @@ SBGroup >> addBlocksConnectedTo: aForceMoveDecorator [
 		force from group ifNil: [self addBlock: force from]]
 ]
 
-{ #category : #accessing }
-SBGroup >> blocks [
-
-	^ blocks
-]
-
-{ #category : #accessing }
-SBGroup >> blocks: anObject [
-
-	blocks := anObject.
-]
-
-{ #category : #nil }
-SBGroup >> computeVertices [
+{ #category : #'as yet unclassified' }
+SBGroup >> addBottomVerticesTo: newVertices from: verticalEdges [
 	
-	| verticalEdges newVertices comingBlockTops seenBlockTops comingBlockBottoms seenBlockBottoms expandBy newVertex activeBlockTops activeBlockBottoms |
-	verticalEdges := OrderedCollection new.
-	
-	expandBy := 10@10.
-	
-	self blocks do: [:aBlock |
-		verticalEdges add: {(aBlock bounds expandBy: expandBy) left. #left . aBlock}.
-		verticalEdges add: {(aBlock bounds expandBy: expandBy) right. #right . aBlock}].
-	
-	verticalEdges sort: [:a :b | a first < b first].
-	
-	newVertices := OrderedCollection new.
-	comingBlockTops := self blocks collect: [:aBlock | (aBlock bounds expandBy: expandBy) top] as: SortedCollection.
-	seenBlockTops := SortedCollection new.
-	activeBlockTops := 0.
-	
-	verticalEdges do: [:edge |
-		| aBlock |
-		aBlock := edge third.				
-		edge second == #left
-			ifTrue: [seenBlockTops add: (aBlock bounds expandBy: expandBy) top].
-		
-		newVertex := comingBlockTops
-			ifEmpty: [edge first @ seenBlockTops first]
-			ifNotEmpty: [
-				seenBlockTops
-					ifEmpty: [edge first @ comingBlockTops first]
-					ifNotEmpty: [edge first @ (comingBlockTops first max: seenBlockTops first)]].
-		
-		seenBlockTops size > 1 ifTrue: [ | x |
-			newVertex y < newVertices last y
-				ifTrue: [x := activeBlockTops == 0 ifTrue: [(2 * newVertices last x + newVertex x) / 3.0] ifFalse: [newVertex x].
-					newVertices add: x @ newVertices last y.
-					newVertices add: x @ newVertex y]
-				ifFalse:[x := activeBlockTops == 0 ifTrue: [(2 * newVertex x + newVertices last x) / 3.0] ifFalse: [newVertices last x].
-					newVertices add: x @ newVertices last y.
-					newVertices add: x @ newVertex y]].
-		newVertices add: newVertex.
-				
-		edge second == #left
-			ifFalse: [comingBlockTops remove: (aBlock bounds expandBy: expandBy) top].
-			
-		activeBlockTops := activeBlockTops + (edge second == #left ifTrue: [1] ifFalse: [-1])].
-		
-	comingBlockBottoms := self blocks collect: [:aBlock | (aBlock bounds expandBy: expandBy) bottom] as: SortedCollection.
+	| activeBlockBottoms comingBlockBottoms seenBlockBottoms |
+	comingBlockBottoms := self blocks collect: [:aBlock | (aBlock bounds expandBy: self expandBy) bottom] as: SortedCollection.
 	seenBlockBottoms := SortedCollection new.
 	activeBlockBottoms := 0.
 	
 	verticalEdges reverseDo: [:edge |
-		| aBlock |
+		| aBlock newVertex |
 		aBlock := edge third.
 				
 		edge second == #right
-			ifTrue: [seenBlockBottoms add: (aBlock bounds expandBy: expandBy) bottom].
+			ifTrue: [seenBlockBottoms add: (aBlock bounds expandBy: self expandBy) bottom].
 			
 		newVertex := comingBlockBottoms
 			ifEmpty: [edge first @ seenBlockBottoms last]
@@ -141,14 +86,90 @@ SBGroup >> computeVertices [
 		newVertices add: newVertex.
 				
 		edge second == #right
-			ifFalse: [comingBlockBottoms remove: (aBlock bounds expandBy: expandBy) bottom].
+			ifFalse: [comingBlockBottoms remove: (aBlock bounds expandBy: self expandBy) bottom].
 			
 		activeBlockBottoms := activeBlockBottoms + (edge second == #right ifTrue: [1] ifFalse: [-1])].
-	
-	self setVertices: newVertices.
 ]
 
-{ #category : #nil }
+{ #category : #'as yet unclassified' }
+SBGroup >> addTopVerticesTo: newVertices from: verticalEdges [
+	
+	| activeBlockTops comingBlockTops seenBlockTops |
+	comingBlockTops := self blocks collect: [:aBlock | (aBlock bounds expandBy: self expandBy) top] as: SortedCollection.
+	seenBlockTops := SortedCollection new.
+	activeBlockTops := 0.
+	
+	verticalEdges do: [:edge |
+		| aBlock newVertex |
+		aBlock := edge third.
+		
+		edge second == #left
+			ifTrue: [seenBlockTops add: (aBlock bounds expandBy: self expandBy) top].
+		
+		newVertex := comingBlockTops
+			ifEmpty: [edge first @ seenBlockTops first]
+			ifNotEmpty: [
+				seenBlockTops
+					ifEmpty: [edge first @ comingBlockTops first]
+					ifNotEmpty: [edge first @ (comingBlockTops first max: seenBlockTops first)]].
+		
+		seenBlockTops size > 1 ifTrue: [ | x |
+			newVertex y < newVertices last y
+				ifTrue: [x := activeBlockTops == 0 ifTrue: [(2 * newVertices last x + newVertex x) / 3.0] ifFalse: [newVertex x].
+					newVertices add: x @ newVertices last y.
+					newVertices add: x @ newVertex y]
+				ifFalse:[x := activeBlockTops == 0 ifTrue: [(2 * newVertex x + newVertices last x) / 3.0] ifFalse: [newVertices last x].
+					newVertices add: x @ newVertices last y.
+					newVertices add: x @ newVertex y]].
+		newVertices add: newVertex.
+				
+		edge second == #left
+			ifFalse: [comingBlockTops remove: (aBlock bounds expandBy: self expandBy) top].
+			
+		activeBlockTops := activeBlockTops + (edge second == #left ifTrue: [1] ifFalse: [-1])].
+]
+
+{ #category : #accessing }
+SBGroup >> blocks [
+
+	^ blocks
+]
+
+{ #category : #accessing }
+SBGroup >> blocks: anObject [
+
+	blocks := anObject.
+]
+
+{ #category : #'as yet unclassified' }
+SBGroup >> computeVerticalEdges [
+	
+	| verticalEdges |
+	verticalEdges := OrderedCollection new.
+	
+	self blocks do: [:aBlock |
+		verticalEdges add: {(aBlock bounds expandBy: self expandBy) left. #left . aBlock}.
+		verticalEdges add: {(aBlock bounds expandBy: self expandBy) right. #right . aBlock}].
+	
+	verticalEdges sort: [:a :b | a first < b first].
+	
+	^ verticalEdges
+]
+
+{ #category : #'as yet unclassified' }
+SBGroup >> computeVertices [
+	
+	| verticalEdges newVertices |
+	verticalEdges := self computeVerticalEdges.	
+	newVertices := OrderedCollection new.
+	
+	self
+		addTopVerticesTo: newVertices from: verticalEdges;
+		addBottomVerticesTo: newVertices from: verticalEdges;
+		setVertices: newVertices.
+]
+
+{ #category : #'as yet unclassified' }
 SBGroup >> computeVerticesKindaOld [
 	
 	| verticalEdges newVertices comingBlockTops seenBlockTops comingBlockBottoms seenBlockBottoms expandBy |
@@ -205,7 +226,7 @@ SBGroup >> computeVerticesKindaOld [
 	self setVertices: newVertices.
 ]
 
-{ #category : #nil }
+{ #category : #'as yet unclassified' }
 SBGroup >> computeVerticesOld [
 	
 	| verticalEdges newVertices activeBlockBottoms activeBlockTops |
@@ -240,7 +261,7 @@ SBGroup >> computeVerticesOld [
 	self setVertices: newVertices.
 ]
 
-{ #category : #nil }
+{ #category : #'as yet unclassified' }
 SBGroup >> computeVerticesRectangle [
 	
 	| newBounds |
@@ -266,6 +287,12 @@ SBGroup >> createMissingForcesFor: aForceMoveDecorator [
 ]
 
 { #category : #'as yet unclassified' }
+SBGroup >> expandBy [ 
+	
+	^ 10@10
+]
+
+{ #category : #'as yet unclassified' }
 SBGroup >> handlesMouseDown: evt [
 
 	^ true
@@ -277,7 +304,7 @@ SBGroup >> handlesMouseMove: anEvent [
 	^ true
 ]
 
-{ #category : #nil }
+{ #category : #'as yet unclassified' }
 SBGroup >> handlesMouseOverDragging: evt [
 
 	^ true
@@ -296,7 +323,7 @@ SBGroup >> indicator: aMorph [
 	indicator := aMorph.
 ]
 
-{ #category : #nil }
+{ #category : #'as yet unclassified' }
 SBGroup >> initialize [
 
 	super initialize.
@@ -381,13 +408,13 @@ SBGroup >> saveString [
 		self color storeOn: stream]
 ]
 
-{ #category : #nil }
+{ #category : #'as yet unclassified' }
 SBGroup >> textContents [
 	
 	^ 'Group of ', self blocks anyOne textContents , ' and ', (self blocks size - 1), ((self blocks size  > 2) ifTrue: [' others'] ifFalse: [' other'])
 ]
 
-{ #category : #nil }
+{ #category : #'as yet unclassified' }
 SBGroup >> withDecorator: aDecorator do: aBlock ifAbsent: anotherBlock [
 
 	"dont even try"
