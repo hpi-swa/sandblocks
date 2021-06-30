@@ -135,38 +135,65 @@ SBForceMoveDecorator >> deactivateForces [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> example [
 
-	| maxRepelDistance |
-	"| maxRepelDistance |"
 	SBMorphExample
 		setUp: [
 			SBEditor new
-				extent: 1000 @ 500;
+				extent: 1000 @ 600;
 				position: 0 @ 0;
-				openMorphInView: (maxRepelDistance := self exampleMorphForRepelDistance);
-				yourself;
+				openMorphInView: self exampleMorphForRepelDistance;
+				openMorphInView: self exampleMorphForAttraction;
 				yourself]
 		cases: {SBMorphExampleCase name: 'example 1' caseBlock: [:m | m]}
 		extent: 1000 @ 600
 ]
 
 { #category : #'as yet unclassified' }
-SBForceMoveDecorator >> exampleMorphForRepelDistance [
+SBForceMoveDecorator >> exampleMorphForAttraction [
 
 	| playground |
+	playground := (SBStPlayground
+		newFromSource: '''attraction Stuff'''
+		named: 'attraction'
+		at: 5 @ 5)
+		layoutChanged;
+		fullBounds;
+		detachDecorators: SBForceMoveDecorator;
+		yourself.
 	^ SBBlock new
-		addMorph: (playground := (SBStPlayground
-			newFromSource: '''This shows the area in which repelling forces are applied'''
-			named: 'maxRepelDistance'
-			at: 0 @ 0)
-			layoutChanged;
-			fullBounds;
-			yourself);
-		addMorph: (RectangleMorph new
-			extent: playground extent + SBBlock maxRepelDistance asPoint;
-			center: playground extent / 2;
-			color: Color transparent;
-			borderColor: Color seaFoam;
-			borderWidth: 2)
+		attachDecorator: SBForceMoveDecorator new;
+		addMorph: playground;
+		extent: playground extent + (10 @ 10);
+		position: 0 @ 0;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> exampleMorphForRepelDistance [
+
+	| playground rectangleMorph block |
+	playground := (SBStPlayground
+		newFromSource: '''This shows the area in which repelling forces are applied'''
+		named: 'maxRepelDistance'
+		at: 5 @ 5)
+		layoutChanged;
+		fullBounds;
+		detachDecorators: SBForceMoveDecorator;
+		yourself.
+	rectangleMorph := RectangleMorph new
+		extent: playground extent + SBBlock maxRepelDistance asPoint;
+		center: playground extent / 2;
+		color: Color transparent;
+		borderColor: Color seaFoam;
+		borderWidth: 2;
+		cornerRadius: SBBlock maxRepelDistance / 2;
+		cornerStyle: #rounded.
+	block := SBBlock new
+		attachDecorator: SBForceMoveDecorator new;
+		addMorphBack: playground;
+		addMorphBack: rectangleMorph;
+		extent: playground extent + (10 @ 10);
+		yourself.
+	^ block
 ]
 
 { #category : #'as yet unclassified' }

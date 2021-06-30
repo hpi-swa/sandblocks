@@ -341,7 +341,7 @@ SBGroup >> isArtefact [
 { #category : #accessing }
 SBGroup >> morphicLayerNumber [
 
-	^ 10
+	^ SBForceConnector defaultLayer + 1
 ]
 
 { #category : #'as yet unclassified' }
