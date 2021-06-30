@@ -101,13 +101,16 @@ SBOhmASTNode >> maybeUnwrapList [
 
 { #category : #'as yet unclassified' }
 SBOhmASTNode >> mergeRedundantGroups [
-	" flatten AND and OR sequences that only contain one child "
+	" flatten AND and OR sequences that only contain one child and nested quantifiers "
 
 	self allBlocksDo: [:b |
 		((b isAlternative or: [b isSequence]) and: [b childSandblocks size <= 1 or: [(b isAlternative and: [b parentSandblock isAlternative]) or: [b isSequence and: [b parentSandblock isSequence]]]]) ifTrue: [
 			b flattenChildren.
 			" to make sure we don't operate on an invalid tree, start over "
-			^ self mergeRedundantGroups]]
+			^ self mergeRedundantGroups].
+		(b isQuantifier and: [b quantifier = $? and: [b expression isQuantifier and: [b expression quantifier = $+]]]) ifTrue: [
+			b expression quantifier: $*.
+			b replaceBy: b expression]]
 ]
 
 { #category : #'as yet unclassified' }

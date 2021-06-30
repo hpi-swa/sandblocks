@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStAssignmentLabel class >> checkCastFor: aBlock parent: aMorph [
+
+	^ aMorph isAssignment and: [aBlock isFirstChild]
+]
+
+{ #category : #'as yet unclassified' }
 SBStAssignmentLabel >> browseSenders [
 	<action>
 

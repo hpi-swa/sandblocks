@@ -416,12 +416,6 @@ SBBlock >> colorPolicy [
 		self parentSandblock ifNotNil: [:p | colorPolicyCache := p colorPolicy] ifNil: [SBDefaultColorPolicy new]]
 ]
 
-{ #category : #'ast helpers' }
-SBBlock >> commandPaletteClass [
-
-	^ self parentSandblock ifNotNil: #commandPaletteClass
-]
-
 { #category : #testing }
 SBBlock >> completeSubtree [
 
@@ -626,21 +620,23 @@ SBBlock >> deleteAround [
 	
 	editor countModifier - 1 timesRepeat: [target := target parentSandblock ifNil: [^ self]].
 	
-	(self parentSandblock childSandblocks size > 1 and: [target parentHasDynamicNumberOfChildren and: [self isStatement]]) ifTrue: [
-		self setProperty: #copyPlaceholder toValue: true.
-		SBToggledCode
-			comment: 'TODO: we still need to delete adjacent elements before copying'
-			active: 1
-			do: {[editor copyBuffer: target]}.
-		self removeProperty: #copyPlaceholder.
-		
-		editor do: (SBRecordedCommand new record: [:recorder |
-			recorder
-				moveAll: self parentSandblock childSandblocks
-				in: target owner
-				at: target submorphIndex + 1.
-			recorder remove: target]).
-		^ self].
+	SBToggledCode comment: 'Special type of unwrap for dynamically sized parents' active: 0 do: {
+		[
+			(self parentSandblock childSandblocks size > 1 and: [target parentHasDynamicNumberOfChildren and: [self isStatement]]) ifTrue: [
+				self setProperty: #copyPlaceholder toValue: true.
+				SBToggledCode
+					comment: 'TODO: we still need to delete adjacent elements before copying'
+					active: 1
+					do: {[editor copyBuffer: target]}.
+				self removeProperty: #copyPlaceholder.
+				
+				editor do: (SBRecordedCommand new record: [:recorder |
+					recorder
+						moveAll: self parentSandblock childSandblocks
+						in: target owner
+						at: target submorphIndex + 1.
+					recorder remove: target]).
+				^ self]]}.
 	
 	[
 		self convertedFor: target objectInterface do: [:replacer |
@@ -1045,7 +1041,7 @@ SBBlock >> hasChildSandblocks [
 { #category : #'actions tests' }
 SBBlock >> hasCommandPalette [
 
-	^ self commandPaletteClass notNil
+	^ SBPalette allSubclasses anySatisfy: [:palette | (self satisfies: palette context) and: [palette matchesBlock: self]]
 ]
 
 { #category : #'actions tests' }
@@ -1351,6 +1347,12 @@ SBBlock >> isMethod [
 ]
 
 { #category : #testing }
+SBBlock >> isMethodBody [
+
+	^ false
+]
+
+{ #category : #testing }
 SBBlock >> isMultiSelected [
 
 	^ self sandblockEditor ifNil: [false] ifNotNil: [:editor | editor multiSelection includes: self]
@@ -1533,7 +1535,7 @@ SBBlock >> minExtent [
 { #category : #accessing }
 SBBlock >> morphicLayerNumber [
 
-	^ 5
+	^ self class defaultLayer
 ]
 
 { #category : #accessing }
@@ -1780,13 +1782,12 @@ SBBlock >> objectInterfaceNear: aBlock at: aSymbol [
 ]
 
 { #category : #actions }
-SBBlock >> openPalette [
+SBBlock >> openLocalPalette [
 	<action>
 	<actionValidIf: #hasCommandPalette>
 
 	| palettes |
-	palettes := SBPalette allSubclasses select: [:palette |
-		(self satisfies: palette context) and: [palette matchesBlock: self]].
+	palettes := SBPalette allSubclasses select: [:palette | (self satisfies: palette context) and: [palette matchesBlock: self]].
 	palettes ifNotEmpty: [ | container |
 		container := SBPaletteContainer new.
 		palettes do: [:class | class buildOn: container].

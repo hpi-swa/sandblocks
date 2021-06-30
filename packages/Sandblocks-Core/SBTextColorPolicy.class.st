@@ -37,12 +37,12 @@ SBTextColorPolicy >> foregroundColorForBlock: aBlock [
 	(aBlock isName and: [aBlock contents = 'self']) ifTrue: [^ Color red muchDarker].
 	(aBlock isName and: [aBlock isTemporaryVariable]) ifTrue: [^ Color gray muchDarker].
 	(aBlock isName and: [aBlock isBinding and: [aBlock resolveBinding ifNotNil: #isTemporaryVariable ifNil: [false]]]) ifTrue: [^ Color gray muchDarker].
+	(aBlock isKindOf: SBLabel) ifTrue: [^ Color green muchDarker].
 	^ super foregroundColorForBlock: aBlock
 ]
 
 { #category : #'as yet unclassified' }
 SBTextColorPolicy >> layoutInsetFor: aBlock [
-
 
 	(aBlock isBlockBody and: [aBlock isSmalltalk and: [aBlock isMethodBody]]) ifTrue: [^ SBEdgeInsets left: 16 right: 0 top: 12 bottom: 0].
 	^ 1 @ 0
@@ -69,12 +69,14 @@ SBTextColorPolicy >> statementSeparator [
 { #category : #'as yet unclassified' }
 SBTextColorPolicy >> symbolsCheckStatement: aBlock for: aCollection [
 
-	^ (aBlock isStatement and: [aBlock isLastChild not])
+	^ ((aBlock isStatement and: [aBlock isLastChild not]) or: [
+		aBlock parentSandblock
+			ifNotNil: [:p | p isArrayBlock and: [p type = #dynamic]]
+			ifNil: [false]])
 		ifTrue: [
 			aCollection last
 				ifNil: [{aCollection first. self statementSeparator}]
-				ifNotNil: [
-					{aCollection first. (aCollection last, self statementSeparator)}]]
+				ifNotNil: [{aCollection first. aCollection last, self statementSeparator}]]
 		ifFalse: [aCollection]
 ]
 

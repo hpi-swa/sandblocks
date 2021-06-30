@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStBoolean class >> checkCastFor: aBlock parent: aMorph [
+
+	^ aBlock contents = 'true' or: [aBlock contents = 'false']
+]
+
+{ #category : #'as yet unclassified' }
 SBStBoolean >> contentsChanged [
 
 	(self contents = 'true' or: [self contents = 'false'])

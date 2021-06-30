@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStDeclarationForTemporaryVariable class >> checkCastFor: aBlock parent: aMorph [
+
+	^ aMorph isTemporaries
+]
+
+{ #category : #'as yet unclassified' }
 SBStDeclarationForTemporaryVariable >> asSuggestionItem [
 
 	^ SBSuggestionItem selector: self contents label: 'temporary'

@@ -133,6 +133,18 @@ SBOhmGrammar >> objectInterfaceNear: aBlock at: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmGrammar >> openAsBlocksFrom: anOhmGrammar [
+
+	SBGrammarTransformer openFor: self original: anOhmGrammar
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmGrammar >> rascalSource [
+
+	^ String streamContents: [:stream | self writeRascalSourceOn: stream]
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmGrammar >> ruleNamed: aString [
 
 	^ self childSandblocks detect: [:rule | rule name = aString]

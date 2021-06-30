@@ -5,6 +5,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStBinding class >> checkCastFor: aBlock parent: aMorph [
+	" binding is the fallback: always return false to let the more specific classes try and match first "
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBStBinding >> browse [
 	<action>
 

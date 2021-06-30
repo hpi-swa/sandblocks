@@ -43,8 +43,11 @@ SBBrowserEditor >> initialize [
 	scroll
 		vResizing: #spaceFill;
 		hResizing: #spaceFill;
-		hScrollBarPolicy: #never.
-	scroll scroller layoutPolicy: SBSimpleLayout new
+		hScrollBarPolicy: #never;
+		color: Color transparent.
+	scroll scroller
+		layoutPolicy: SBSimpleLayout new;
+		on: #click send: #click: to: self
 ]
 
 { #category : #testing }
@@ -104,7 +107,7 @@ SBBrowserEditor >> scrollToShow: aRectangle [
 { #category : #'as yet unclassified' }
 SBBrowserEditor >> scrollerClass [
 
-	^ ScrollPane
+	^ SBEditorScrollPane
 ]
 
 { #category : #'as yet unclassified' }

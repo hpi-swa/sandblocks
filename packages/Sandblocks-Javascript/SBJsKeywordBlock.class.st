@@ -182,9 +182,11 @@ SBJsKeywordBlock >> stopEditing: aCommand [
 
 	aCommand contents: self currentTextMorph contents.
 	
-	(self class validBlockKeywords includes: self contents)
+	((self class validBlockKeywords includes: self contents) or: [self statements notEmpty])
 		ifFalse: [ | variable |
-			variable := self contents ifEmpty: [self newNullBlock] ifNotEmpty: [SBJsVariable new contents: self currentTextMorph contents].
+			variable := self contents
+				ifEmpty: [self newNullBlock]
+				ifNotEmpty: [SBJsVariable new contents: self currentTextMorph contents].
 			self replaceBy: variable.
 			aCommand newMorph: variable]
 		ifTrue: [aCommand newMorph: self].
@@ -196,6 +198,13 @@ SBJsKeywordBlock >> stopEditing: aCommand [
 SBJsKeywordBlock >> symbols [
 
 	^ #(nil '}')
+]
+
+{ #category : #'as yet unclassified' }
+SBJsKeywordBlock >> valid [
+
+	self contents = 'else' ifTrue: [^ (self adjacentBlock: -1) ifNotNil: [:adj | adj contents = 'if'] ifNil: [false]].
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

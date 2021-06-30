@@ -12,7 +12,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBButton >> borderStyle [
 
-	^ BorderStyle width: 1 color: (self colorPolicy borderColorForButton: self)
+	^ BorderStyle width: 1 color: (self colorPolicy ifNotNil: [:c | c borderColorForButton: self] ifNil: [Color gray alpha: 0.3])
 ]
 
 { #category : #'as yet unclassified' }
@@ -29,7 +29,7 @@ SBButton >> color [
 	SBToggledCode
 		comment: ''
 		active: 1
-		do: {[base := self containingSandblock drawnColor]. [base := self colorPolicy colorForButton: self]}.
+		do: {[base := self containingSandblock ifNotNil: #drawnColor ifNil: [Color white]]. [base := self colorPolicy colorForButton: self]}.
 	self pressed ifTrue: [^ base darker darker].
 	self hovered ifTrue: [^ base darker].
 	^ base
@@ -38,7 +38,7 @@ SBButton >> color [
 { #category : #'as yet unclassified' }
 SBButton >> colorPolicy [
 
-	^ self containingSandblock colorPolicy
+	^ self containingSandblock ifNotNil: [:b | b colorPolicy]
 ]
 
 { #category : #'as yet unclassified' }
@@ -144,7 +144,10 @@ SBButton >> label [
 { #category : #'as yet unclassified' }
 SBButton >> label: aString [
 
-	(self submorphs detect: [:m | m isKindOf: SBStringMorph]) contents: aString
+	(self submorphs detect: [:m | m isKindOf: SBStringMorph] ifNone: [
+		^ self addMorphFront: (SBStringMorph new
+			contents: aString;
+			emphasis: TextEmphasis bold emphasisCode)]) contents: aString
 ]
 
 { #category : #'as yet unclassified' }
@@ -182,6 +185,12 @@ SBButton >> mouseLeft [
 SBButton >> mouseUp [
 
 	self pressed: false
+]
+
+{ #category : #'as yet unclassified' }
+SBButton >> onClick: aBlock [
+
+	action := aBlock
 ]
 
 { #category : #'as yet unclassified' }

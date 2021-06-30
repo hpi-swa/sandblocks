@@ -79,6 +79,17 @@ SBJsGrammarHandler >> wrap: aBlock do: aWrapBlock with: anOuterBlock [
 ]
 
 { #category : #actions }
+SBJsGrammarHandler >> wrapInClosure [
+	<action>
+	<actionValidIf: #isStatement>
+
+	self block sandblockEditor do: (SBWrapCommand new
+		inner: self block;
+		outer: SBJsClosure new;
+		wrap: [:outer :inner | outer arguments: {} statements: {inner}])
+]
+
+{ #category : #actions }
 SBJsGrammarHandler >> wrapInInfixOp [
 	<action>
 	<actionValidIf: #isExpression>
@@ -91,6 +102,21 @@ SBJsGrammarHandler >> wrapInInfixOp [
 			outer: operator;
 			wrap: [:outer :inner | outer lhs: inner operator: '' rhs: (operator newNullBlock label: 'expr')]);
 		startInput: operator at: 0 replacingContents: false
+]
+
+{ #category : #actions }
+SBJsGrammarHandler >> wrapInKeywordBlock [
+	<action>
+	<actionValidIf: #isStatement>
+
+	| keyword |
+	keyword := SBJsKeywordBlock new keyword: ''.
+	self block sandblockEditor
+		do: (SBWrapCommand new
+			inner: self block;
+			outer: keyword;
+			wrap: [:outer :inner | outer statements: {inner}]);
+		startInput: keyword at: 1 replacingContents: false
 ]
 
 { #category : #actions }

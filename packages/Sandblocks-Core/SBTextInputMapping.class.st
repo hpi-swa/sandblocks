@@ -172,7 +172,9 @@ SBTextInputMapping >> registerDefaultShortcuts [
 	
 	" javascript "
 	self
-		cmdShortcut: ${ do: #wrapInObjectLiteral;
+		cmdShortcut: $} do: #wrapInObjectLiteral;
+		cmdShortcut: ${ do: #wrapInKeywordBlock;
+		cmdShortcut: $( do: #wrapInClosure;
 		cmdShortcut: Character space do: #wrapInInfixOp;
 		cmdShortcut: Character space shift do: #wrapInPrefixOp.
 	
