@@ -141,6 +141,13 @@ SBForceMoveDecorator >> deactivateForces [
 ]
 
 { #category : #'as yet unclassified' }
+SBForceMoveDecorator >> detached: aMorph [
+
+	super detached: aMorph.
+	SBWatch report: (idealPosition := nil) for: 643717380
+]
+
+{ #category : #'as yet unclassified' }
 SBForceMoveDecorator >> example [
 
 	SBMorphExample
@@ -397,7 +404,7 @@ SBForceMoveDecorator >> step [
 
 	(SBPreferences enableForceLayout not or: [self morph sandblockEditor isSingleArtefactView]) ifTrue: [^ super step].
 
-	idealPosition ifNil: [idealPosition := self morph position].
+	idealPosition ifNil: [^ Project current addDeferredUIMessage:  [idealPosition := self morph position]].
 	
 	self isDragging ifTrue: [self panWhenNearEdge].
 	

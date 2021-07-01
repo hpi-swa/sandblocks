@@ -113,17 +113,17 @@ SBOffscreenBlockIndicator >> scroller [
 { #category : #accessing }
 SBOffscreenBlockIndicator >> shouldHide [
 
-	^ (self sandblockEditor selection
-			ifNotNil: [:selection |
-				selection
-					withDecorator: SBWaypointMoveDecorator
-					do: [:decorator | (decorator morph targets includes: self target) not]
-					ifAbsent: [false]]
-			ifNil: [false]) or:
-		[(self target
+	^ ((self sandblockEditor selection
+		ifNotNil: [:selection |
+			selection
+				withDecorator: SBWaypointMoveDecorator
+				do: [:decorator | (decorator morph targets includes: self target) not]
+				ifAbsent: [false]]
+		ifNil: [false]) or: [
+		(self target
 			withDecorator: SBForceMoveDecorator
 			do: [:decorator | decorator group notNil]
-			ifAbsent: [false]) and: [self isHighlighted not]]
+			ifAbsent: [false]) and: [self isHighlighted not]]) or: [self sandblockEditor search isSelected and: [(self sandblockEditor search matchedArtefacts includes: self target) not]]
 ]
 
 { #category : #'as yet unclassified' }

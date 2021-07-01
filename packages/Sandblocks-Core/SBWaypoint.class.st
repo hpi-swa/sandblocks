@@ -9,8 +9,8 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBWaypoint >> initialize [ 
-	
+SBWaypoint >> initialize [
+
 	super initialize.
 	self
 		targets: Set new;
@@ -19,10 +19,15 @@ SBWaypoint >> initialize [
 		addMorph: SBIcon iconFlag veryLarge;
 		attachDecorator: SBWaypointMoveDecorator new;
 		changeTableLayout;
+		listCentering: #centering;
+		wrapCentering: #centering;
+		cellPositioning: #center;
+		cellGap: 8;
+		layoutInset: 4;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap.
 	
-	self labelBlock contents: 'Waypoint'.
+	self labelBlock contents: 'Waypoint'
 ]
 
 { #category : #'as yet unclassified' }
