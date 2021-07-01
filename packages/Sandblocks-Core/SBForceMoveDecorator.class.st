@@ -52,6 +52,8 @@ SBForceMoveDecorator >> applyForces [
 	self isPinned ifTrue: [^ self morph position: self pinnedPosition].
 	self isDragging ifTrue: [^ self].
 	
+	idealPosition ifNil: [idealPosition := self morph position].
+	
 	velocity := 0 @ 0.
 	self additionalForces do: [:forceConnection | velocity := velocity + (forceConnection forceFor: self morph)].
 	velocity isZero ifFalse: [velocity := velocity normalized * velocity r sqrt].
@@ -323,17 +325,31 @@ SBForceMoveDecorator >> mouseUp: anEvent [
 		self idealPosition: self morph position.
 		self pinnedPosition ifNotNil: [self pinnedPosition: self morph position].
 		otherBlock := self blockAtPoint: anEvent position.
-		otherBlock
-			ifNotNil: [self createForceWith: otherBlock]
-			ifNil: [
-				self group ifNil: [
-					otherMorph := self
-						morphAtPoint: anEvent position
-						satisfying: [:aMorph | aMorph isKindOf: SBGroup].
-					otherMorph ifNotNil: [otherMorph add: self]]].
+		otherBlock ifNotNil: [self createForceWith: otherBlock] ifNil: [
+			self group ifNil: [
+				otherMorph := self
+					morphAtPoint: anEvent position
+					satisfying: [:aMorph | aMorph isKindOf: SBGroup].
+				otherMorph ifNotNil: [otherMorph add: self]]].
 		
 		].
 	super mouseUp: anEvent
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> noteNewOwner: aMorph [
+
+	super noteNewOwner: aMorph.
+	SBToggledCode comment: '' active: 0 do: {
+		[
+			potentialMorph := self
+				morphAtPoint: self morph position
+				satisfying: [:checkedMorph | checkedMorph isKindOf: SBGroup]]}.
+	SBToggledCode
+		comment: ''
+		active: 0
+		do: {[potentialMorph ifNotNil: [potentialMorph add: self]]}.
+	idealPosition := nil
 ]
 
 { #category : #accessing }
@@ -403,8 +419,6 @@ SBForceMoveDecorator >> speedMultiplier: anObject [
 SBForceMoveDecorator >> step [
 
 	(SBPreferences enableForceLayout not or: [self morph sandblockEditor isSingleArtefactView]) ifTrue: [^ super step].
-
-	idealPosition ifNil: [^ Project current addDeferredUIMessage:  [idealPosition := self morph position]].
 	
 	self isDragging ifTrue: [self panWhenNearEdge].
 	

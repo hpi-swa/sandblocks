@@ -56,6 +56,12 @@ SBBlockDecorator >> mouseCursorAt: anEvent [
 	^ nil
 ]
 
+{ #category : #'change reporting' }
+SBBlockDecorator >> noteNewOwner: aMorph [
+
+	"do nothing"
+]
+
 { #category : #drawing }
 SBBlockDecorator >> postDrawOn: aCanvas [
 

@@ -1756,7 +1756,10 @@ SBBlock >> nextVerticalNear: aNumber calcDistance: aDistBlock validBlock: aValid
 SBBlock >> noteNewOwner: aMorph [
 
 	super noteNewOwner: aMorph.
-	
+	self decorators do: [:decorator |
+		decorator noteNewOwner: aMorph.
+		
+		].
 	self clearCache.
 	" recheck name blocks "
 	self allBlocksDo: [:block | block isName ifTrue: [block noteNewOwner: block owner]]
