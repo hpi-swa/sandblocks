@@ -94,6 +94,12 @@ SBOhmASTNode >> isTerminal [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmASTNode >> isTerminalish [
+
+	^ self isTerminal
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmASTNode >> maybeUnwrapList [
 
 	^ self

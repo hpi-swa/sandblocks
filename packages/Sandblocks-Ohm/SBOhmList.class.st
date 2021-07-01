@@ -62,6 +62,12 @@ SBOhmList >> isSequence [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmList >> isTerminalish [
+
+	^ self connect = 'OR' and: [self childSandblocks allSatisfy: #isTerminal]
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmList >> layoutCommands [
 
 	^ SBToggledCode comment: '' active: 2 do: {

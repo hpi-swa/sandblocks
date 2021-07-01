@@ -1019,7 +1019,7 @@ SBEditor >> modelWakeUp [
 SBEditor >> morphicLayerNumber [
 	" make sure we're at least over the docking bar "
 
-	^ DockingBarMorph navigatorLayer - 1
+	^ 77 - 1
 ]
 
 { #category : #'event handling' }

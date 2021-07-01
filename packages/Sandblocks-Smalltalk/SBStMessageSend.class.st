@@ -146,7 +146,7 @@ SBStMessageSend >> deleteCommandFor: aBlock [
 			target: (self isUnary ifTrue: [self] ifFalse: [aBlock]);
 			replacer: (self isUnary ifTrue: [SBStName contents: self selector] ifFalse: [self newNullBlock])].
 	
-	(self isUnary and: [self isInCascade not]) ifTrue: [
+	(self arguments size < 2 and: [self isInCascade not and: [aBlock isMessagePart]]) ifTrue: [
 		^ SBReplaceCommand new
 			target: self;
 			replacer: self receiver].

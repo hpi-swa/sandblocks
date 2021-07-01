@@ -35,6 +35,12 @@ SBOhmIdentifier >> isIdentifier [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmIdentifier >> isLexical [
+
+	^ self contents first isLowercase
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmIdentifier >> isNonPrimitive [
 
 	^ self isPrimitive not
