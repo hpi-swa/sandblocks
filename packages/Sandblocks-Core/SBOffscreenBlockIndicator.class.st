@@ -21,6 +21,20 @@ SBOffscreenBlockIndicator class >> newFor: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> containingSandblock [
+
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> foregroundColor [
+
+	^ self sandblockEditor search isSelected
+		ifTrue: [Color yellow]
+		ifFalse: [self owner containingSandblock foregroundColor]
+]
+
+{ #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> handlesMouseDown: anEvent [
 
 	^ true
@@ -36,6 +50,13 @@ SBOffscreenBlockIndicator >> iconMorph [
 SBOffscreenBlockIndicator >> iconMorph: anObject [
 
 	iconMorph := anObject.
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> indicatorColor: aColor [
+
+	self iconMorph color: aColor.
+	self labelMorph color: aColor
 ]
 
 { #category : #'as yet unclassified' }
@@ -135,7 +156,8 @@ SBOffscreenBlockIndicator >> step [
 		ifTrue: [self show]
 		ifFalse: [^ self hide].
 	
-	self updateLabel. "this is only here because of Waypoints. TODO: remove"
+	self updateLabel.
+	"this is only here because of Waypoints. TODO: remove"
 	
 	viewRectangle := self scroller innerBounds.
 	viewCenter := viewRectangle center.
@@ -190,16 +212,13 @@ SBOffscreenBlockIndicator >> targetOffscreen [
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> toggleHighlight [
 
-	| newColor |
 	self isHighlighted: self isHighlighted not.
-	self isHighlighted
+	self indicatorColor: (self isHighlighted
 		ifTrue: [
-			newColor := self target group
+			self target group
 				ifNotNil: [:group | (group color alpha: 1) thriceLighter]
 				ifNil: [Color random]]
-		ifFalse: [newColor := nil].
-	self iconMorph color: newColor.
-	self labelMorph color: newColor
+		ifFalse: [nil])
 ]
 
 { #category : #accessing }
