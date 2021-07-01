@@ -2021,14 +2021,19 @@ SBBlock >> previousVerticalNear: aNumber [
 		validBlock: [:candidate | self top >= candidate bottom]
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> printIdentityStringOn: aStream [
+
+	aStream
+		nextPutAll: self className;
+		print: self identityHash
+]
+
 { #category : #saving }
 SBBlock >> printSaveStringPreambleOn: aStream [
-	
-	aStream
-		nextPutAll:	self className;
-		print:	self identityHash;
-		nextPutAll:	' := '
 
+	self printIdentityStringOn: aStream.
+	aStream nextPutAll: ' := '
 ]
 
 { #category : #initialization }
@@ -2141,23 +2146,20 @@ SBBlock >> save [
 
 { #category : #saving }
 SBBlock >> saveString [
-	
+
 	^ String streamContents: [:stream |
 		self printSaveStringPreambleOn: stream.
 		stream
-			nextPutAll:	self className;
+			nextPutAll: self className;
 			nextPutAll: ' new position: ';
-			nextPutAll:  self position asString.
+			nextPutAll: self position asString.
 		self childSandblocks do: [:each |
-			stream 
+			stream
 				nextPutAll: ';';
 				cr;
 				nextPutAll: 'addMorphBack: (';
 				nextPutAll: each saveString;
-				nextPutAll: ')'
-			]
-	]
-
+				nextPutAll: ')']]
 ]
 
 { #category : #'artefact protocol' }

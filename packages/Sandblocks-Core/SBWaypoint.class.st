@@ -52,14 +52,32 @@ SBWaypoint >> initialize [
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap.
 	
-	self labelBlock contents: 'Waypoint'.
+	self label: 'Waypoint'.
 	self counterMorph contents: '0'
+]
+
+{ #category : #'as yet unclassified' }
+SBWaypoint >> isArtefact [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
 SBWaypoint >> isAttractedTo: aBlock [
 	
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBWaypoint >> label [
+
+	^ self labelBlock contents
+]
+
+{ #category : #'as yet unclassified' }
+SBWaypoint >> label: aString [
+
+	self labelBlock contents: aString
 ]
 
 { #category : #accessing }
@@ -72,6 +90,27 @@ SBWaypoint >> labelBlock [
 SBWaypoint >> labelBlock: anObject [
 
 	labelBlock := anObject.
+]
+
+{ #category : #'as yet unclassified' }
+SBWaypoint >> saveString [
+
+	^ String streamContents: [:stream |
+		self printSaveStringPreambleOn: stream.
+		stream
+			nextPutAll: self className;
+			nextPutAll: ' new position: ';
+			nextPutAll: self position asString;
+			nextPutAll: '; label: ';
+			nextPut: $';
+			nextPutAll: self label;
+			nextPut: $'.
+		self targets do: [:each |
+			stream
+				nextPutAll: ';';
+				cr;
+				nextPutAll: ' toggleConnectionTo: '.
+			each printIdentityStringOn: stream]]
 ]
 
 { #category : #accessing }
@@ -90,6 +129,14 @@ SBWaypoint >> targets: anObject [
 SBWaypoint >> textContents [ 
 	
 	^ self labelBlock contents 
+]
+
+{ #category : #'as yet unclassified' }
+SBWaypoint >> toggleConnectionTo: aWaypoint [
+
+	aWaypoint ifNotNil: [
+		aWaypoint toggleTarget: self.
+		self toggleTarget: aWaypoint]
 ]
 
 { #category : #'as yet unclassified' }

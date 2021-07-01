@@ -1453,7 +1453,7 @@ SBEditor >> saveCurrentBlocks [
 
 	| saveString methodVariables |
 	methodVariables := '| '.
-	self childSandblocksDo: [:aBlock |
+	(self objectsToSave select: [:object | object isSandblock]) do: [:aBlock |
 		methodVariables := methodVariables, aBlock className, aBlock identityHash, ' '.
 		
 		].
@@ -1462,7 +1462,7 @@ SBEditor >> saveCurrentBlocks [
 	saveString := self objectsToSave
 		inject: ''
 		into: [:string :artefact | string, 'anEditor openMorph: (', artefact saveString, ').', Character cr].
-	saveString := 'loadSaveInto: anEditor', Character cr, methodVariables, Character cr,  '^ {', saveString, '}'.
+	saveString := 'loadSaveInto: anEditor', Character cr, methodVariables, Character cr, '^ {', saveString, '}'.
 	self class class compile: saveString classified: '*generated'.
 	self class class compile: self configurationString classified: '*generated'
 ]

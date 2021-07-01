@@ -399,11 +399,9 @@ SBGroup >> saveString [
 			nextPutAll: self className;
 			nextPutAll: ' new '.
 		self blocks do: [:aBlock |
-			stream
-				nextPutAll: ' addBlock: ';
-				nextPutAll: aBlock className;
-				print: aBlock identityHash;
-				nextPutAll: ';'].
+			stream nextPutAll: ' addBlock: '.
+			aBlock printIdentityStringOn: stream.
+			stream nextPutAll: ';'].
 		stream nextPutAll: ' color: '.
 		self color storeOn: stream]
 ]

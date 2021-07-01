@@ -125,12 +125,11 @@ SBForceConnector >> saveString [
 	^ String streamContents: [:stream |
 		stream
 			nextPutAll: self className;
-			nextPutAll: ' connect: ';
-			nextPutAll:	self from className;
-			print:	self from identityHash;
-			nextPutAll: ' to: ';
-			nextPutAll:	self to className;
-			print:	self to identityHash;
+			nextPutAll: ' connect: '.
+		self from printIdentityStringOn: stream.
+		stream	nextPutAll: ' to: '.
+		self to printIdentityStringOn: stream.
+		stream
 			nextPutAll: ' forceScale: ';
 			nextPutAll: self forceScale asString.
 		]
