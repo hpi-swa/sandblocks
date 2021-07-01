@@ -54,7 +54,6 @@ SBRelInsertCommand >> do [
 
 	previousOwner := morph owner.
 	previousIndex := previousOwner ifNotNil: [:o | o submorphs indexOf: morph].
-	
 	adjacent
 		ifNotNil: [
 			before
@@ -62,7 +61,6 @@ SBRelInsertCommand >> do [
 				ifFalse: [container addMorph: morph behind: adjacent]]
 		ifNil: [container addMorphBack: morph].
 	self applyPositionTo: morph in: container.
-	
 	^ select ifNil: [morph containingSandblock]
 ]
 

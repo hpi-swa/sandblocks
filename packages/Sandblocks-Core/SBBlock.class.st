@@ -2039,6 +2039,7 @@ SBBlock >> printSaveStringPreambleOn: aStream [
 { #category : #initialization }
 SBBlock >> privateOwner: aMorph [
 
+	self owner ifNil: [self triggerEvent: #spawn].
 	super privateOwner: aMorph.
 	aMorph ifNil: [self triggerEvent: #delete]
 ]

@@ -29,6 +29,11 @@ SBGroup >> add: aForceMoveDecorator [
 		send: #remove:
 		to: self
 		with: aForceMoveDecorator morph.
+	aForceMoveDecorator morph
+		when: #spawn
+		send: #add:
+		to: self
+		with: aForceMoveDecorator.
 	self indicator
 		ifNil: [
 			self indicator: (SBOffscreenBlockIndicator newFor: self).

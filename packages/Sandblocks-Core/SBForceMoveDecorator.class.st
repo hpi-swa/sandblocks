@@ -74,6 +74,7 @@ SBForceMoveDecorator >> applyForces [
 SBForceMoveDecorator >> attached: aMorph [
 
 	super attached: aMorph.
+	self group: nil.
 	self idealPosition: aMorph position
 ]
 
@@ -146,7 +147,7 @@ SBForceMoveDecorator >> deactivateForces [
 SBForceMoveDecorator >> detached: aMorph [
 
 	super detached: aMorph.
-	SBWatch report: (idealPosition := nil) for: 643717380
+	idealPosition := nil
 ]
 
 { #category : #'as yet unclassified' }

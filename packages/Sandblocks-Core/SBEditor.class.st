@@ -1180,7 +1180,7 @@ SBEditor >> openMorphInOverlay: aMorph [
 { #category : #'submorphs-add/remove' }
 SBEditor >> openMorphInView: aMorph [
 
-	self do: (self insertCommandRequest: aMorph near: nil before: false).
+	self do: (self openMorphInViewCommand: aMorph).
 	^ aMorph
 ]
 
