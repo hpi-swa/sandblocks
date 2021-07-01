@@ -9,6 +9,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBEditorCanvasWithOverlay >> acceptDroppingMorph: aMorph event: anEvent [ 
+	
+	^ self canvas acceptDroppingMorph: aMorph event: anEvent 
+]
+
+{ #category : #'as yet unclassified' }
 SBEditorCanvasWithOverlay >> addMorphToOverlay: aMorph [
 	
 	self overlay addMorphBack: aMorph
@@ -127,6 +133,12 @@ SBEditorCanvasWithOverlay >> transform [
 SBEditorCanvasWithOverlay >> viewportPosition: aPoint [
 	
 	^ self canvas viewportPosition: aPoint
+]
+
+{ #category : #'as yet unclassified' }
+SBEditorCanvasWithOverlay >> wantsDroppedMorph: aMorph event: anEvent [
+
+	 ^ self canvas wantsDroppedMorph: aMorph event: anEvent
 ]
 
 { #category : #'as yet unclassified' }

@@ -14,6 +14,12 @@ Class {
 	#category : #'Sandblocks-Core'
 }
 
+{ #category : #'event handling' }
+SBEditorCanvas >> acceptDroppingMorph: aMorph event: anEvent [ 
+
+	self sandblockEditor openMorph: (SBMorphWrapperBlock new addMorphLater: aMorph)
+]
+
 { #category : #'as yet unclassified' }
 SBEditorCanvas >> addMorphToOverlay: aMorph [
 	"Do nothing"
@@ -251,6 +257,12 @@ SBEditorCanvas >> viewportPosition: aPoint [
 
 	targetPosition := aPoint.
 	self basicViewportPosition: aPoint
+]
+
+{ #category : #'as yet unclassified' }
+SBEditorCanvas >> wantsDroppedMorph: aMorph event: anEvent [
+
+	 ^ true
 ]
 
 { #category : #viewport }
