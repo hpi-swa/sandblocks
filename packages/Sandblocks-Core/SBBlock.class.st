@@ -1518,7 +1518,7 @@ SBBlock >> minExtent [
 { #category : #accessing }
 SBBlock >> morphicLayerNumber [
 
-	^ self class defaultLayer
+	^ 100
 ]
 
 { #category : #accessing }
