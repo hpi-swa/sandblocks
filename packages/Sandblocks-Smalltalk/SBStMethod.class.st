@@ -107,7 +107,7 @@ SBStMethod >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 { #category : #'as yet unclassified' }
 SBStMethod >> isAttractedTo: aMorph [
 
-	^ aMorph relatedClass theNonMetaClass = self relatedClass theNonMetaClass
+	^ aMorph relatedClass theNonMetaClass = self relatedClass theNonMetaClass and: [(aMorph isKindOf: SBStMethod) or: [aMorph isKindOf: SBStClass]]
 ]
 
 { #category : #'as yet unclassified' }
