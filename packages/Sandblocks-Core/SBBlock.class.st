@@ -1782,6 +1782,9 @@ SBBlock >> openLocalPalette [
 	<actionValidIf: #hasCommandPalette>
 
 	| palettes |
+	self sandblockEditor isSingleArtefactView ifTrue: [
+		^ self sandblockEditor togglePalette].
+
 	palettes := SBPalette allSubclasses select: [:palette | (self satisfies: palette context) and: [palette matchesBlock: self]].
 	palettes ifNotEmpty: [ | container |
 		container := SBPaletteContainer new.
