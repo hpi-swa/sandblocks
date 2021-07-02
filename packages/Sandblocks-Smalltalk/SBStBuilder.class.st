@@ -27,6 +27,14 @@ SBStBuilder >> assign: aString to: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBStBuilder >> blockWith: anArgsCollection do: aStatementCollection [
+
+	^ (SBStBlockBody emptyWithDeclarations: anArgsCollection)
+		statements: aStatementCollection;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
 SBStBuilder >> class: aString super: aClass instVars: aCollectionOfStrings [
 
 	^ self class: aString super: aClass instVars: aCollectionOfStrings current: nil

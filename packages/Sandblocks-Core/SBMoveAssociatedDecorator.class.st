@@ -68,7 +68,9 @@ SBMoveAssociatedDecorator >> showLeaveHint: aBoolean for: anArtefact [
 	aBoolean
 		ifTrue: [
 			leaveHint ifNil: [
-				leaveHint := SBStringMorph new contents: (hintBlock ifNil: ['Move to this block'] ifNotNil: [hintBlock value: anArtefact]).
+				leaveHint := SBStringMorph new
+					contents: (hintBlock ifNil: ['Move to this block'] ifNotNil: [hintBlock value: anArtefact]);
+					setProperty: #morphicLayerNumber toValue: 0.
 				self morph sandblockEditor openMorph: leaveHint].
 			leaveHint bottomLeft: self morph topLeft]
 		ifFalse: [
