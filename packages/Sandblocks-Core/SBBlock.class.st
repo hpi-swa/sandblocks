@@ -239,6 +239,18 @@ SBBlock >> canDeleteChild: aBlock [
 	^ self fixedNumberOfChildren not
 ]
 
+{ #category : #accessing }
+SBBlock >> canDrag [
+
+	^ self valueOfProperty: #canDrag ifAbsent: [true]
+]
+
+{ #category : #accessing }
+SBBlock >> canDrag: aBoolean [
+
+	self setProperty: #canDrag toValue: aBoolean
+]
+
 { #category : #'actions tests' }
 SBBlock >> canInput [
 
@@ -1894,6 +1906,8 @@ SBBlock >> performAction: aSymbol [
 SBBlock >> pickUp: anEvent [
 
 	| editor s |
+	self canDrag ifFalse: [^ self].
+
 	editor := self sandblockEditor.
 	s := SBSelection new
 		homeArtefact: self containingArtefact;
