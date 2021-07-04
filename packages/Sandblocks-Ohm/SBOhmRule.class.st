@@ -29,6 +29,12 @@ SBOhmRule >> currentTextMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmRule >> ensureExpressionIsAlternative [
+
+	self expression isAlternative ifFalse: [self addMorphBack: (SBOhmList new connect: 'OR' expressions: {self expression})]
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmRule >> expression [
 
 	^ self lastSubmorph isSandblock ifTrue: [self lastSubmorph] ifFalse: [nil]

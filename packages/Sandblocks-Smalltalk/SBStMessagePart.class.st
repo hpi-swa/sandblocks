@@ -201,10 +201,11 @@ SBStMessagePart >> keyStroke: anEvent [
 		(anEvent keyCharacter isSpecial and: [self actualContents size = 1 and: [self isFirstPart]]) ifTrue: [^ self insertUnknownAfterAndInput: false].
 		^ self updateSuggestions].
 	
-	SBStGrammarHandler new
-		perform: anEvent keyCharacter
-		for: self parentSandblock
-		empty: false
+	self parentIsExpression ifTrue: [
+		SBStGrammarHandler new
+			perform: anEvent keyCharacter
+			for: self parentSandblock
+			empty: false]
 ]
 
 { #category : #'as yet unclassified' }
