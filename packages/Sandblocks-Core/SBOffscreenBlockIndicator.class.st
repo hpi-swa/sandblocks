@@ -113,6 +113,7 @@ SBOffscreenBlockIndicator >> lastPosition: anObject [
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> mouseDown: anEvent [
 	
+	self sandblockEditor select: self target.
 	self scroller scrollToCenter: self target
 ]
 

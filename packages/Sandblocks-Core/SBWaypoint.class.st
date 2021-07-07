@@ -31,6 +31,12 @@ SBWaypoint >> example [
 ]
 
 { #category : #'as yet unclassified' }
+SBWaypoint >> hasUnsavedChanges [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBWaypoint >> initialize [
 
 	super initialize.
@@ -111,6 +117,12 @@ SBWaypoint >> saveString [
 				cr;
 				nextPutAll: ' toggleConnectionTo: '.
 			each printIdentityStringOn: stream]]
+]
+
+{ #category : #'as yet unclassified' }
+SBWaypoint >> saveTryFixing: aFixBoolean quick: aQuickBoolean [ 
+
+	"dont save"
 ]
 
 { #category : #accessing }
