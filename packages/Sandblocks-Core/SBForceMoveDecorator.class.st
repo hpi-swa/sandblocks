@@ -158,8 +158,8 @@ SBForceMoveDecorator >> example [
 			SBEditor new
 				extent: 1000 @ 600;
 				position: 0 @ 0;
-				openMorphInView: self exampleMorphForRepelDistance;
-				openMorphInView: self exampleMorphForAttraction;
+				openMorph: self exampleMorphForRepelDistance;
+				openMorph: self exampleMorphForAttraction;
 				yourself]
 		cases: {SBMorphExampleCase name: 'example 1' caseBlock: [:m | m]}
 		extent: 1000 @ 600
@@ -170,8 +170,8 @@ SBForceMoveDecorator >> exampleMorphForAttraction [
 
 	| playground |
 	playground := (SBStPlayground
-		newFromSource: '''attraction Stuff'''
-		named: 'attraction'
+		newFromSource: '''Weee! Forces sure are fun.'''
+		named: 'Other Block'
 		at: 5 @ 5)
 		layoutChanged;
 		fullBounds;

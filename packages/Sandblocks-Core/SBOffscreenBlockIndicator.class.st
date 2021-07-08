@@ -114,7 +114,7 @@ SBOffscreenBlockIndicator >> lastPosition: anObject [
 SBOffscreenBlockIndicator >> mouseDown: anEvent [
 	
 	self sandblockEditor select: self target.
-	self scroller scrollToCenter: self target
+	Project current addDeferredUIMessage: [self scroller scrollToCenter: self target]
 ]
 
 { #category : #nil }
@@ -217,7 +217,11 @@ SBOffscreenBlockIndicator >> toggleHighlight [
 	self indicatorColor: (self isHighlighted
 		ifTrue: [
 			self target group
-				ifNotNil: [:group | (group color alpha: 1) thriceLighter]
+				ifNotNil: [:group | | newColor |
+					newColor := group color alpha: 1.
+					self target colorPolicy dark
+						ifTrue: [newColor thriceLighter]
+						ifFalse: [newColor thriceDarker]]
 				ifNil: [Color random]]
 		ifFalse: [nil])
 ]
