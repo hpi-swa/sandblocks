@@ -76,12 +76,6 @@ SBPaletteContainer >> grammarHandler [
 ]
 
 { #category : #'as yet unclassified' }
-SBPaletteContainer >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
-
-	aBlock delete
-]
-
-{ #category : #'as yet unclassified' }
 SBPaletteContainer >> initialize [
 
 	super initialize.
@@ -166,4 +160,10 @@ SBPaletteContainer >> scrollToSection: aBlock event: anEvent morph: aMorph [
 SBPaletteContainer >> selectedBlock [
 
 	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBPaletteContainer >> specialDropCommand: aBlock [
+
+	^ SBDeleteCommand new target: aBlock
 ]

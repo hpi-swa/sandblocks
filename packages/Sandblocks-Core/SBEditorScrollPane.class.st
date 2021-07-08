@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBEditorScrollPane >> canvasTransform [
+
+	^ IdentityTransform new
+]
+
+{ #category : #'as yet unclassified' }
 SBEditorScrollPane >> click: evt [
 
 	self sandblockEditor click: evt

@@ -1329,6 +1329,12 @@ SBEditor >> promptGlobalAction [
 	index > 0 ifTrue: [(options at: index) key perform: (options at: index) value selector]
 ]
 
+{ #category : #'action helpers' }
+SBEditor >> rebuildPalette [
+
+	paletteContainer rebuild
+]
+
 { #category : #'do/undo/redo' }
 SBEditor >> redo [
 	<action>

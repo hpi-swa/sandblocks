@@ -1057,6 +1057,14 @@ SBBlock >> hasDecorator: aClass [
 	^ decorators anySatisfy: [:d | d isKindOf: aClass]
 ]
 
+{ #category : #layout }
+SBBlock >> hasHorizontalLayout [
+
+	^ self submorphs size < 2 or: [ | delta |
+		delta := self submorphs first topLeft - self submorphs second topLeft.
+		delta x < delta y]
+]
+
 { #category : #testing }
 SBBlock >> hasInput [
 
@@ -1315,6 +1323,14 @@ SBBlock >> isExpression [
 SBBlock >> isFirstChild [
 
 	^ self parentSandblock childSandblocks first = self
+]
+
+{ #category : #'testing hierarchy' }
+SBBlock >> isInEditor [
+
+	| editor |
+	editor := self sandblockEditor.
+	^ editor notNil and: [editor isSelection not or: [editor parentSandblock ifNotNil: #isInEditor ifNil: [false]]]
 ]
 
 { #category : #'testing hierarchy' }

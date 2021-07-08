@@ -60,7 +60,7 @@ SBBrowserEditor >> ensureOpened: aMethod [
 { #category : #accessing }
 SBBrowserEditor >> fillHorizontal [
 
-	^ fillHorizontal ifNil: [false]
+	^ fillHorizontal ifNil: [true]
 ]
 
 { #category : #accessing }
