@@ -262,7 +262,7 @@ SBEditorCanvas >> viewportPosition: aPoint [
 { #category : #'as yet unclassified' }
 SBEditorCanvas >> wantsDroppedMorph: aMorph event: anEvent [
 
-	 ^ true
+	 ^ false
 ]
 
 { #category : #viewport }

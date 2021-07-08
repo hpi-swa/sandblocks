@@ -907,6 +907,17 @@ SBEditor >> loadBlocks [
 	self class restoreSavedConfigurationFor: self
 ]
 
+{ #category : #'actions creating' }
+SBEditor >> loadSlide [
+	<addAction>
+	<label: 'Load Slide'>
+	<globalAction>
+
+	| slide |
+	slide := SBSlideBlock new pickSlide.
+	self createArtefactInView: slide
+]
+
 { #category : #'do/undo/redo' }
 SBEditor >> markChangesAfterCommand: artefacts [
 
