@@ -19,26 +19,9 @@ SBGroup class >> newFor: aForceMoveDecorator [
 SBGroup >> add: aForceMoveDecorator [
 
 	self createMissingForcesFor: aForceMoveDecorator.
-	self blocks add: aForceMoveDecorator morph.
-	aForceMoveDecorator group: self.
-	aForceMoveDecorator morph when: #positionChanged send: #computeVertices to: self.
-	aForceMoveDecorator morph when: #extentChanged send: #computeVertices to: self.
-	self computeVertices.
-	aForceMoveDecorator morph
-		when: #delete
-		send: #remove:
-		to: self
-		with: aForceMoveDecorator morph.
-	aForceMoveDecorator morph
-		when: #spawn
-		send: #add:
-		to: self
-		with: aForceMoveDecorator.
-	self indicator
-		ifNil: [
-			self indicator: (SBOffscreenBlockIndicator newFor: self).
-			aForceMoveDecorator morph sandblockEditor openMorphInOverlay: self indicator]
-		ifNotNil: [self indicator updateLabel]
+	self addWithoutForce: aForceMoveDecorator
+
+	
 ]
 
 { #category : #'as yet unclassified' }
@@ -47,6 +30,12 @@ SBGroup >> addBlock: aMorph [
 	aMorph withDecorator: SBForceMoveDecorator do: [:decorator | self add: decorator].
 	
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBGroup >> addBlockWithoutForce: aBlock [
+
+	aBlock withDecorator: SBForceMoveDecorator do: [:aDecorator | self addWithoutForce: aDecorator]
 ]
 
 { #category : #'as yet unclassified' }
@@ -132,6 +121,32 @@ SBGroup >> addTopVerticesTo: newVertices from: verticalEdges [
 			ifFalse: [comingBlockTops remove: (aBlock bounds expandBy: self expandBy) top].
 			
 		activeBlockTops := activeBlockTops + (edge second == #left ifTrue: [1] ifFalse: [-1])].
+]
+
+{ #category : #'as yet unclassified' }
+SBGroup >> addWithoutForce: aForceMoveDecorator [
+
+	self createMissingForcesFor: aForceMoveDecorator.
+	self blocks add: aForceMoveDecorator morph.
+	aForceMoveDecorator group: self.
+	aForceMoveDecorator morph when: #positionChanged send: #computeVertices to: self.
+	aForceMoveDecorator morph when: #extentChanged send: #computeVertices to: self.
+	self computeVertices.
+	aForceMoveDecorator morph
+		when: #delete
+		send: #remove:
+		to: self
+		with: aForceMoveDecorator morph.
+	aForceMoveDecorator morph
+		when: #spawn
+		send: #add:
+		to: self
+		with: aForceMoveDecorator.
+	self indicator
+		ifNil: [
+			self indicator: (SBOffscreenBlockIndicator newFor: self).
+			aForceMoveDecorator morph sandblockEditor openMorphInOverlay: self indicator]
+		ifNotNil: [self indicator updateLabel]
 ]
 
 { #category : #accessing }
@@ -288,7 +303,7 @@ SBGroup >> createMissingForcesFor: aForceMoveDecorator [
 		missingConnectionsTo remove: aForce from ifAbsent: [].
 		
 		].
-	missingConnectionsTo do: [:aBlock | aForceMoveDecorator morph sandblockEditor openMorph: (SBForceConnector connect: aForceMoveDecorator morph to: aBlock forceScale: 0.5)]
+	missingConnectionsTo do: [:aBlock | aForceMoveDecorator morph sandblockEditor ifNotNil: [:editor | editor openMorph: (SBForceConnector connect: aForceMoveDecorator morph to: aBlock forceScale: 0.5)]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -404,7 +419,7 @@ SBGroup >> saveString [
 			nextPutAll: self className;
 			nextPutAll: ' new '.
 		self blocks do: [:aBlock |
-			stream nextPutAll: ' addBlock: '.
+			stream nextPutAll: ' addBlockWithoutForce: '.
 			aBlock printIdentityStringOn: stream.
 			stream nextPutAll: ';'].
 		stream nextPutAll: ' color: '.

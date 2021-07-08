@@ -353,6 +353,19 @@ SBForceMoveDecorator >> noteNewOwner: aMorph [
 	idealPosition := nil
 ]
 
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> pinGroup [
+	<action>
+
+	self group blocks do: [:aBlock |
+		aBlock withDecorator: SBForceMoveDecorator do: [:aDecorator |
+			aDecorator pinnedPosition: aBlock morph position.
+			
+			].
+		
+		]
+]
+
 { #category : #accessing }
 SBForceMoveDecorator >> pinnedPosition [
 
@@ -447,5 +460,5 @@ SBForceMoveDecorator >> togglePinned [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> unregisterAdditionalForce: aForce [
 
-	self additionalForces remove: aForce.
+	self additionalForces remove: aForce ifAbsent: []
 ]

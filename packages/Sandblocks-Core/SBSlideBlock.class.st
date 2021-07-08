@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBSlideBlock class >> newForSlideNumber: aNumber [
+
+	^ self new setSlide: aNumber
+]
+
+{ #category : #'as yet unclassified' }
 SBSlideBlock >> initialize [ 
 	
 	super initialize.
@@ -36,8 +42,38 @@ SBSlideBlock >> isInteractive [
 { #category : #'as yet unclassified' }
 SBSlideBlock >> pickSlide [
 	<action>
-	slideNumber := (UIManager default request: 'Slide Number' initialAnswer: '1') asNumber.
-	self addMorphBack: (PSPresentation mainSlideAt: slideNumber) veryDeepCopy 
+
+	self setSlide: (UIManager default request: 'Slide Number' initialAnswer: '1') asNumber
+]
+
+{ #category : #'as yet unclassified' }
+SBSlideBlock >> removeSelection [
+	"do nothing"
+
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBSlideBlock >> saveString [
+
+	^ String streamContents: [:stream |
+		self printSaveStringPreambleOn: stream.
+		stream
+			nextPutAll: '(';
+			nextPutAll: self className;
+			nextPutAll: ' newForSlideNumber: ';
+			nextPutAll: slideNumber asString;
+			nextPutAll: ') position: ';
+			nextPutAll: self position asString;
+			nextPutAll: '; extent: ';
+			nextPutAll: self extent asString]
+]
+
+{ #category : #'as yet unclassified' }
+SBSlideBlock >> setSlide: aNumber [
+
+	slideNumber := aNumber.
+	self addMorphBack: (PSPresentation mainSlideAt: slideNumber) veryDeepCopy
 ]
 
 { #category : #'as yet unclassified' }

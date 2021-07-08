@@ -122,7 +122,7 @@ SBWaypoint >> saveString [
 { #category : #'as yet unclassified' }
 SBWaypoint >> saveTryFixing: aFixBoolean quick: aQuickBoolean [ 
 
-	"dont save"
+	^ false
 ]
 
 { #category : #accessing }

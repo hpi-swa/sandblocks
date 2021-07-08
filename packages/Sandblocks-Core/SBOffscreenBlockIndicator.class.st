@@ -12,6 +12,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator class >> defaultOpacity [
+
+	^ 0.6
+]
+
+{ #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator class >> newFor: aMorph [
 
 	^ self new 
@@ -29,9 +35,9 @@ SBOffscreenBlockIndicator >> containingSandblock [
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> foregroundColor [
 
-	^ self sandblockEditor search isSelected
-		ifTrue: [Color yellow]
-		ifFalse: [self owner containingSandblock foregroundColor]
+	^ (self sandblockEditor search isSelected
+		ifTrue: self owner containingSandblock colorPolicy highlightColor
+		ifFalse: [self owner containingSandblock foregroundColor]) alpha: self class defaultOpacity
 ]
 
 { #category : #'as yet unclassified' }
@@ -69,7 +75,7 @@ SBOffscreenBlockIndicator >> initialize [
 	
 	self labelMorph: SBStringMorph new.
 	self addMorph: self labelMorph.
-	
+	self labelMorph opacity: self class defaultOpacity.
 	self isHighlighted: false.
 	self color: Color transparent
 ]
@@ -113,7 +119,7 @@ SBOffscreenBlockIndicator >> lastPosition: anObject [
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> mouseDown: anEvent [
 	
-	self sandblockEditor select: self target.
+	self target isSandblock ifTrue: [self sandblockEditor select: self target].
 	Project current addDeferredUIMessage: [self scroller scrollToCenter: self target]
 ]
 
@@ -141,10 +147,19 @@ SBOffscreenBlockIndicator >> shouldHide [
 			do: [:decorator | ^ (decorator morph targets includes: self target) not]
 			ifAbsent: []].
 	self sandblockEditor search isSelected ifTrue: [^ (self sandblockEditor search matchedArtefacts includes: self target) not].
-	^ (self target
-		withDecorator: SBForceMoveDecorator
-		do: [:decorator | decorator group notNil]
-		ifAbsent: [false]) and: [self isHighlighted not]
+	^ self shouldHideDefault
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> shouldHideDefault [
+
+	^ SBToggledCode comment: '' active: 1 do: {
+		[
+			(self target
+				withDecorator: SBForceMoveDecorator
+				do: [:decorator | decorator group notNil]
+				ifAbsent: [false]) and: [self isHighlighted not]].
+		[true]}
 ]
 
 { #category : #'as yet unclassified' }
@@ -218,7 +233,7 @@ SBOffscreenBlockIndicator >> toggleHighlight [
 		ifTrue: [
 			self target group
 				ifNotNil: [:group | | newColor |
-					newColor := group color alpha: 1.
+					newColor := group color alpha: self class defaultOpacity.
 					self target colorPolicy dark
 						ifTrue: [newColor thriceLighter]
 						ifFalse: [newColor thriceDarker]]
