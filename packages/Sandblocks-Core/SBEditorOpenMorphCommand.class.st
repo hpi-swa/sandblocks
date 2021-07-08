@@ -15,11 +15,7 @@ Class {
 SBEditorOpenMorphCommand >> applyLayoutProperties: aMorph [
 
 	editor isSingleArtefactView
-		ifTrue: [
-			aMorph
-				hResizing: #spaceFill;
-				vResizing: #shrinkWrap;
-				position: 0 @ 0]
+		ifTrue: [editor applyLayoutProperties: aMorph]
 		ifFalse: [self applyPositionTo: aMorph in: nil]
 ]
 

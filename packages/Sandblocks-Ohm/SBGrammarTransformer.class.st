@@ -189,7 +189,7 @@ piece =
 { #category : #'example grammars' }
 SBGrammarTransformer class >> grammarCloudLang [
 
-	^ OhmGrammar new: 'G <: BuiltInRules {
+	^ SBGrammarSimplify new grammar: 'G <: BuiltInRules {
 Resources = "resources" "{" Instance* "}"
 
 Instance = "Instance" Image CPU Memory Storage IPV6
@@ -214,7 +214,9 @@ booleanValue = "true" | "false"}'
 { #category : #'example grammars' }
 SBGrammarTransformer class >> grammarComplexSmalltalk [
 
-	^ OhmGrammar new: 'OhmExplicitSendsSmalltalk <: BuiltInRules {
+	^ SBGrammarSimplify new
+		isOhm: true;
+		grammar: 'OhmExplicitSendsSmalltalk <: BuiltInRules {
 
 ArrayLiteral =
 	ByteArrayLiteral
@@ -499,7 +501,9 @@ unaryPragma =
 SBGrammarTransformer class >> grammarIki [
 	" https://cs.lmu.edu/~ray/notes/ohmexamples/ "
 
-	^ OhmGrammar new: 'Iki {
+	^ SBGrammarSimplify new
+		isOhm: true;
+		grammar: 'Iki {
   Program     =  Block
   Block       =  (Stmt ";")+
   Stmt        =  var id ":" Type             -- declaration
@@ -554,23 +558,107 @@ SBGrammarTransformer class >> grammarIki [
 
   space      +=  comment
   comment     =  "--" (~"\n" any)* "\n"
+}';
+		yourself
+]
+
+{ #category : #'example grammars' }
+SBGrammarTransformer class >> grammarMath [
+
+	^ SBGrammarSimplify new
+		isOhm: true;
+		grammar: 'OhmMath {
+
+Exp
+    = AddExp
+
+AddExp
+    = AddExp "+" MulExp  -- plus
+    | AddExp "-" MulExp  -- minus
+    | MulExp
+
+  MulExp
+    = MulExp "*" ExpExp  -- times
+    | MulExp "/" ExpExp  -- divide
+    | ExpExp
+
+  ExpExp
+    = PriExp "^" ExpExp  -- power
+    | PriExp
+
+  PriExp
+    = "(" Exp ")"  -- paren
+    | "+" PriExp   -- pos
+    | "-" PriExp   -- neg
+    | ident
+    | number
+
+  ident 
+    = letter alnum*
+
+  number 
+    = digit* "." digit+  -- fract
+    | digit+             -- whole
 }'
 ]
 
 { #category : #'example grammars' }
-SBGrammarTransformer class >> grammarJavascript [
-	"https://github.com/harc/ohm/blob/master/examples/ecmascript/src/es5.ohm
-/*
-  This grammar was originally based on Tom Van Cutsem's ES5 parser from the
-  es-lab project (https://github.com/tvcutsem/es-lab/blob/master/src/parser/es5parser.ojs),
-  and was adapted to Ohm by Tony Garnock-Jones <tonygarnockjones@gmail.com> in 2014.
+SBGrammarTransformer class >> grammarMiniJava [
+	" adapted from https://github.com/cwi-swat/rascal-minijava/blob/master/src/lang/minijava/Syntax.rsc "
 
-  The original copyright and license follows:
-*/
+	^ SBGrammarSimplify new grammar: 'G <: BuiltInRules {
+integer = digit+
 
-// Copyright (C) 2009 Google Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "
+identifier = letter (letter | digit | "_")*
+
+Expression
+	 = Expression "." "length" -- b
+	| integer -- a
+	| "true" -- c
+	| "false" -- d
+	| identifier -- e
+	| "this" -- f
+	| "new" "int" "[" Expression "]" -- g
+	| "new" identifier "(" ")" -- h
+	| "(" Expression ")" -- i
+	| Expression "[" Expression "]" -- j
+	| Expression "." identifier "(" ExpressionList? ")" -- k
+	| "!" Expression -- l
+	| Expression "*" Expression -- m
+	| Expression "+" Expression -- n
+	| Expression "-" Expression -- o
+	| Expression "<" Expression -- p
+	| Expression "&&" Expression -- q
+
+ExpressionList = Expression ("," ExpressionList)?
+
+Statement
+	 = "{" Statement* "}" -- a
+	| "if" "(" Expression ")" Statement "else" Statement -- b
+	| "while" "(" Expression ")" Statement -- c
+	| "System" "." "out" "." "println" "(" Expression ")" ";" -- d
+	| identifier "=" Expression ";" -- e
+	| identifier "[" Expression "]" "=" Expression ";" -- f
+
+FormalList = Type identifier ("," FormalList)?
+
+Type
+	 = "int" "[" "]" -- a
+	| "boolean" -- b
+	| "int" -- c
+	| identifier -- d
+
+MethodDecl = "public" Type identifier "(" FormalList? ")" "{" VarDecl* Statement* "return" Expression ";" "}"
+
+VarDecl = Type identifier ";"
+
+ClassDecl = "class" identifier ("extends" identifier)? "{" VarDecl* MethodDecl* "}"
+
+MainClass = "class" identifier "{" "public" "static" "void" "main" "(" "String" "[" "]" identifier ")" "{" Statement* "}" "}"}'
+]
+
+{ #category : #'example grammars' }
+SBGrammarTransformer class >> grammarOhmJavascript [
 	");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -586,8 +674,22 @@ SBGrammarTransformer class >> grammarJavascript [
 /* (end of original copyright and license) */
 
 NOTE: Heavily shortened to the point of incorrectness to be able to load with an SBOhmGrammar "
+	"https://github.com/harc/ohm/blob/master/examples/ecmascript/src/es5.ohm
+/*
+  This grammar was originally based on Tom Van Cutsem's ES5 parser from the
+  es-lab project (https://github.com/tvcutsem/es-lab/blob/master/src/parser/es5parser.ojs),
+  and was adapted to Ohm by Tony Garnock-Jones <tonygarnockjones@gmail.com> in 2014.
 
-	^ OhmGrammar new: 'ES5 {
+  The original copyright and license follows:
+*/
+
+// Copyright (C) 2009 Google Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "
+
+	^ SBGrammarSimplify new
+		isOhm: true;
+		grammar: 'ES5 {
 
   Program = &(Directive*) SourceElement*
 
@@ -981,100 +1083,60 @@ NOTE: Heavily shortened to the point of incorrectness to be able to load with an
   Declaration = FunctionDeclaration
 
   Directive = stringLiteral sc
-}'
+}';
+		yourself
 ]
 
 { #category : #'example grammars' }
-SBGrammarTransformer class >> grammarMath [
+SBGrammarTransformer class >> grammarQL [
+	" https://github.com/cwi-swat/kogi/blob/master/src/kogi/demo/ql/Syntax.rsc "
 
-	^ OhmGrammar new: 'OhmMath {
+	^ SBGrammarSimplify new
+		grammar: 'G <: BuiltInRules {
+Form = "form" id "{" Question* "}"
 
-Exp
-    = AddExp
+qType
+  = "boolean" 
+  | "string" 
+  | "integer"
+  | "money"
 
-AddExp
-    = AddExp "+" MulExp  -- plus
-    | AddExp "-" MulExp  -- minus
-    | MulExp
 
-  MulExp
-    = MulExp "*" ExpExp  -- times
-    | MulExp "/" ExpExp  -- divide
-    | ExpExp
+Question
+  = Label id ":" qType
+  | Label id ":" qType "=" Expr
+  | "if" "(" Expr ")" Question ()
+  | "if" "(" Expr ")" Question "else" Question
+  | "{" Question* "}"
 
-  ExpExp
-    = PriExp "^" ExpExp  -- power
-    | PriExp
+Expr
+  = id
+  | integerValue
+  | stringValue
+  | floatValue
+  | "true"
+  | "false"
+  | "(" Expr ")"
+  | "!" Expr
+  | Expr "*" Expr
+  | Expr "/" Expr
+  | Expr "+" Expr
+  | Expr "-" Expr
+  | Expr "<" Expr
+  | Expr "<=" Expr
+  | Expr ">" Expr
+  | Expr ">=" Expr
+  | Expr "==" Expr
+  | Expr "!=" Expr
+  | Expr "&&" Expr
+  | Expr "||" Expr
 
-  PriExp
-    = "(" Exp ")"  -- paren
-    | "+" PriExp   -- pos
-    | "-" PriExp   -- neg
-    | ident
-    | number
-
-  ident 
-    = letter alnum*
-
-  number 
-    = digit* "." digit+  -- fract
-    | digit+             -- whole
+Label = stringValue
+id = letter+
+floatValue = digit+ ("." digit+)?
+integerValue = digit+
+stringValue = letter+
 }'
-]
-
-{ #category : #'example grammars' }
-SBGrammarTransformer class >> grammarMiniJava [
-	" adapted from https://github.com/cwi-swat/rascal-minijava/blob/master/src/lang/minijava/Syntax.rsc "
-
-	^ 'G <: BuiltInRules {
-integer = digit+
-
-identifier = letter (letter | digit | "_")*
-
-Expression
-	 = Expression "." "length" -- b
-	| integer -- a
-	| "true" -- c
-	| "false" -- d
-	| identifier -- e
-	| "this" -- f
-	| "new" "int" "[" Expression "]" -- g
-	| "new" identifier "(" ")" -- h
-	| "(" Expression ")" -- i
-	| Expression "[" Expression "]" -- j
-	| Expression "." identifier "(" ExpressionList? ")" -- k
-	| "!" Expression -- l
-	| Expression "*" Expression -- m
-	| Expression "+" Expression -- n
-	| Expression "-" Expression -- o
-	| Expression "<" Expression -- p
-	| Expression "&&" Expression -- q
-
-ExpressionList = Expression ("," ExpressionList)?
-
-Statement
-	 = "{" Statement* "}" -- a
-	| "if" "(" Expression ")" Statement "else" Statement -- b
-	| "while" "(" Expression ")" Statement -- c
-	| "System" "." "out" "." "println" "(" Expression ")" ";" -- d
-	| identifier "=" Expression ";" -- e
-	| identifier "[" Expression "]" "=" Expression ";" -- f
-
-FormalList = Type identifier ("," FormalList)?
-
-Type
-	 = "int" "[" "]" -- a
-	| "boolean" -- b
-	| "int" -- c
-	| identifier -- d
-
-MethodDecl = "public" Type identifier "(" FormalList? ")" "{" VarDecl* Statement* "return" Expression ";" "}"
-
-VarDecl = Type identifier ";"
-
-ClassDecl = "class" identifier ("extends" identifier)? "{" VarDecl* MethodDecl* "}"
-
-MainClass = "class" identifier "{" "public" "static" "void" "main" "(" "String" "[" "]" identifier ")" "{" Statement* "}" "}"}'
 ]
 
 { #category : #'example grammars' }
@@ -1791,7 +1853,15 @@ nullLiteral = "null"
 SBGrammarTransformer class >> grammarRascalJavascript [
 	" heavily modified and broken to suit our limited needs "
 
-	^ 'G <: BuiltInRules {
+	^ SBGrammarSimplify new
+		preDo: [:grammar |
+			grammar allBlocksDo: [:b | (b isIdentifier and: [b contents = 'VariableDeclarationNoIn']) ifTrue: [b contents: 'VariableDeclaration']].
+			(grammar ruleNamed: 'VariableDeclarationNoIn') delete];
+		postDo: [:grammar |
+			(grammar ruleNamed: 'Statement')
+				setProperty: #kogiOutput
+				toValue: 'input_statement'];
+		grammar: 'G <: BuiltInRules {
 	/*
 @CachedParser{javascript.cached.SweeterJSCachedParser}
 @contributor{
@@ -2048,7 +2118,9 @@ reserved =
 { #category : #'example grammars' }
 SBGrammarTransformer class >> grammarSimpleSmalltalk [
 
-	^ OhmGrammar new: 'G <: BuiltInRules {
+	^ SBGrammarSimplify new
+		isOhm: true;
+		grammar: 'G <: BuiltInRules {
 Statements = Temporaries? (Expr ".")* Expr?
 
 Expr = Assignment
@@ -2081,10 +2153,89 @@ symbol = "#" identifier}'
 ]
 
 { #category : #'example grammars' }
+SBGrammarTransformer class >> grammarSonificationBlocks [
+	" https://github.com/cwi-swat/kogi/blob/simplification/src/kogi/demo/sonification/Syntax.rsc "
+
+	^ SBGrammarSimplify new
+		grammar: 'G <: BuiltInRules {
+
+Program
+  = "run program" Connection*
+
+Connection
+  = SoundConnection
+  | ControllingParameters
+  | PassingTime
+
+ControllingParameters
+  = "set parameters" id "of sound" SoundSource "to be" ToBe
+
+ToBe
+  = SoundSource
+  | DataProcessing
+  | integerValue
+
+DataProcessing
+  = "data source" DataSource "processed with" DataProcessing* "then scaled to" DataProcessing
+  | DataProcessor "image"
+  | "range" integerValue "to" integerValue
+
+DataProcessor
+  = "reverse"
+  | "do_nothing"
+  | "slow_ramp"
+  | "medium_ramp"
+  | "fast_ramp"
+  | "hard_cutoff"
+  | "hump"
+  | "rotate"
+
+PassingTime
+  = "wait" integerValue "seconds"
+
+SoundConnection
+  = "connect" SoundSource "to" DataSource
+
+SoundSource
+  = Wave "wave" imageValue "(spectrum:" imageValue ")" "named" id
+  | Filter "filter" " (spectrum:" imageValue ")" "named" id
+
+Filter
+  = "lowpass"
+  | "highpass"
+  | "bandpass"
+
+Wave
+  = "sine"
+  | "triangle"
+  | "square"
+  | "sawtooth"
+
+DataSource
+  = "speaker"
+  | "slider_with_label" id
+  | "device position along" id "axis"
+  | "device movement along" id "axis"
+  | "device rotation along" id "axis"
+  
+integerValue
+ = digit+
+
+id = letter+
+
+imageValue 
+  = "\"" letter+ "\""
+}';
+		yourself
+]
+
+{ #category : #'example grammars' }
 SBGrammarTransformer class >> grammarTinyJava [
 	" https://cs.lmu.edu/~ray/notes/ohmexamples/ "
 
-	^ OhmGrammar new: 'G <: BuiltInRules {
+	^ SBGrammarSimplify new
+		isOhm: true;
+		grammar: 'G <: BuiltInRules {
 Program = Stmt+
 
 Stmt
@@ -2113,8 +2264,9 @@ Dec
 
 TypeDec = struct id "{" (Type id ";")* "}"
 
+TypeArray = Type "[" "]"
 Type
-	 = Type "[" "]"
+	 = TypeArray
 	| primtype
 	| id
 
@@ -2172,7 +2324,7 @@ Var
 
 NewObject = new id "{" Args "}"
 
-NewArray = new Type_array "{" Args "}"
+NewArray = new TypeArray "{" Args "}"
 
 EmptyArray = new Type "[" Exp "]"
 
@@ -2787,6 +2939,22 @@ SBGrammarTransformer class >> mergePrecedenceChains: g [
 ]
 
 { #category : #'transform steps' }
+SBGrammarTransformer class >> mergeUpCardinalityOnlyBlocks: g [
+
+	| candidates |
+	candidates := OrderedCollection new.
+	g childSandblocksDo: [:rule |
+		(rule isFieldInput not and: [
+			((rule expression isAlternative
+				ifTrue: [rule expression childSandblocks]
+				ifFalse: [{rule expression}]) allSatisfy: [:alt | alt isRepeatQuantifier or: [alt isIdentifier]]) and: [rule allUsages notEmpty]]) ifTrue: [candidates add: rule]].
+	
+	candidates do: [:rule | rule allUsagesDo: [:usage | usage replaceBy: rule expression veryDeepCopy]].
+	candidates do: [:r | r allUsages size < 1 ifTrue: [r delete]].
+	g mergeRedundantGroups
+]
+
+{ #category : #'transform steps' }
 SBGrammarTransformer class >> mergeUpLexicalRules: g [
 
 	| lexicalRules |
@@ -2816,7 +2984,7 @@ SBGrammarTransformer class >> mergeUpSimpleRules: g [
 
 	| simpleRules |
 	" merge up rules with only one non-terminal in sequences "
-	simpleRules := g childSandblocks select: [:rule | (SBToggledCode comment: '' active: 1 do: {[false]. [rule isLexical]}) or: [(rule allBlocksSelect: [:b | b isIdentifier]) size <= 1 and: [rule allUsages notEmpty and: [rule isPrimitive not or: [rule expression isAlternative]]]]].
+	simpleRules := g childSandblocks select: [:rule | (SBToggledCode comment: '' active: 2 do: {[false]. [rule isFieldInput not]}) and: [(rule allBlocksSelect: [:b | b isIdentifier]) size <= 1 and: [rule allUsages notEmpty and: [rule isPrimitive not or: [rule expression isAlternative]]]]].
 	simpleRules do: [:r |
 		r allUsages do: [:id | | copy |
 			id parentSandblock isRepeatQuantifier not ifTrue: [
@@ -2830,7 +2998,7 @@ SBGrammarTransformer class >> mergeUpUnitUses: g [
 
 	| candidates rules |
 	candidates := OrderedCollection new.
-	g allBlocksDo: [:b | (b isIdentifier and: [b parentSandblock isRule or: [b parentSandblock isAlternative and: [b parentSandblock parentSandblock isRule]]]) ifTrue: [candidates add: b]].
+	g allBlocksDo: [:b | ((b isIdentifier and: [b isSimple not]) and: [b parentSandblock isRule or: [b parentSandblock isAlternative and: [b parentSandblock parentSandblock isRule]]]) ifTrue: [candidates add: b]].
 	rules := (candidates collect: #associatedRule) asSet.
 	candidates do: [:id | id replaceBy: id associatedRule expression veryDeepCopy].
 	rules do: [:r | r allUsages size < 1 ifTrue: [r delete]].
@@ -2994,7 +3162,7 @@ SBGrammarTransformer class >> rascalSimplifiedMin [
 	^ {
 		[:g | SBToggledCode comment: '' active: 1 do: {[SBGrammarTransformer mergeUpSimpleRules: g]}].
 		[:g | SBGrammarTransformer mergeIdenticalAroundLiteral: g].
-		[:g | SBGrammarTransformer extractSequencesInQuantifiers: g].
+		[:g | self supportsCardinality ifFalse: [SBGrammarTransformer extractSequencesInQuantifiers: g]].
 		[:g | SBToggledCode comment: '' active: 1 do: {[SBGrammarTransformer mergeUpSimpleRules: g]}].
 		[:g | g mergeRedundantGroups].
 		[:g |
@@ -3002,25 +3170,25 @@ SBGrammarTransformer class >> rascalSimplifiedMin [
 				comment: ''
 				active: 0
 				do: {[SBGrammarTransformer mergeUpLiteralAlternatives: g]}].
-		[:g | SBToggledCode comment: '' active: 0 do: {[SBGrammarTransformer removeUnitProductions: g]}].
-		[:g |
-			SBToggledCode
-				comment: ''
-				active: 0
-				do: {[SBGrammarTransformer removeIdentityAndEmptyRules: g]}].
-		[:g | SBToggledCode comment: '' active: 0 do: {[SBGrammarTransformer mergeUpSimpleRules: g]}].
 		[:g | SBGrammarTransformer mergeConsecutiveLabels: g].
 		[:g | SBGrammarTransformer removeDuplicateAlternatives: g].
 		[:g |
 			SBToggledCode
 				comment: ''
 				active: 1
+				do: {[SBGrammarTransformer mergeUpCardinalityOnlyBlocks: g]}].
+		[:g |
+			SBToggledCode
+				comment: ''
+				active: 1
 				do: {[SBGrammarTransformer splitNonToplevelAlternatives: g]}].
-		[:g | self supportsCardinality ifFalse: [SBGrammarTransformer flattenOptionals: g]].
-		[:g | SBToggledCode comment: '' active: 0 do: {[SBGrammarTransformer mergeUpUnitUses: g]}].
-		[:g | SBToggledCode comment: '' active: 0 do: {[SBGrammarTransformer mergeUpUnitUses: g]}].
-		[:g | SBToggledCode comment: '' active: 0 do: {[SBGrammarTransformer mergeUpLexicalRules: g]}].
-		[:g | SBToggledCode comment: '' active: 0 do: {[SBGrammarTransformer removeUnusedRules: g]}]}
+		[:g |
+			SBToggledCode
+				comment: ''
+				active: 1
+				do: {[self supportsCardinality ifFalse: [SBGrammarTransformer flattenOptionals: g]]}].
+		[:g | SBToggledCode comment: '' active: 1 do: {[SBGrammarTransformer mergeUpUnitUses: g]}].
+		[:g | SBToggledCode comment: '' active: 1 do: {[SBGrammarTransformer mergeUpUnitUses: g]}]}
 ]
 
 { #category : #'transform steps' }

@@ -2,10 +2,31 @@ Class {
 	#name : #SBBrowserEditor,
 	#superclass : #SBEditor,
 	#instVars : [
-		'model'
+		'model',
+		'fillHorizontal',
+		'fillVertical'
 	],
 	#category : #'Sandblocks-Core'
 }
+
+{ #category : #'as yet unclassified' }
+SBBrowserEditor class >> openInWindow: aBlock [
+
+	^ SBBrowserEditor new
+		fillVertical: true;
+		fillHorizontal: true;
+		openMorphInView: aBlock;
+		openInWindow
+]
+
+{ #category : #'as yet unclassified' }
+SBBrowserEditor >> applyLayoutProperties: aMorph [
+
+	aMorph
+		hResizing: (self fillHorizontal ifTrue: [#spaceFill] ifFalse: [#shrinkWrap]);
+		vResizing: (self fillVertical ifTrue: [#spaceFill] ifFalse: [#shrinkWrap]);
+		position: 0 @ 0
+]
 
 { #category : #'dependents access' }
 SBBrowserEditor >> canDiscardEdits [
@@ -36,10 +57,38 @@ SBBrowserEditor >> ensureOpened: aMethod [
 	((model respondsTo: #autoSelectString) and: [model autoSelectString notNil]) ifTrue: [self search search: model autoSelectString]
 ]
 
+{ #category : #accessing }
+SBBrowserEditor >> fillHorizontal [
+
+	^ fillHorizontal ifNil: [false]
+]
+
+{ #category : #accessing }
+SBBrowserEditor >> fillHorizontal: aBoolean [
+
+	fillHorizontal := aBoolean
+]
+
+{ #category : #accessing }
+SBBrowserEditor >> fillVertical [
+
+	^ fillVertical ifNil: [false]
+]
+
+{ #category : #accessing }
+SBBrowserEditor >> fillVertical: aBoolean [
+
+	fillVertical := aBoolean
+]
+
 { #category : #initialization }
 SBBrowserEditor >> initialize [
 
 	super initialize.
+	
+	fillHorizontal := true.
+	fillVertical := false.
+	
 	scroll
 		vResizing: #spaceFill;
 		hResizing: #spaceFill;
