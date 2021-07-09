@@ -153,6 +153,12 @@ SBStBuilder >> setter: aString in: aClass [
 ]
 
 { #category : #'as yet unclassified' }
+SBStBuilder >> string: aString [
+
+	^ SBStString new contents: aString
+]
+
+{ #category : #'as yet unclassified' }
 SBStBuilder >> symbol: aString [
 
 	^ SBStSymbol new contents: aString
