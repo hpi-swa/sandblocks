@@ -147,7 +147,7 @@ SBStBuilder >> symbol: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBStBuilder >> to: aSymbol send: aBlock [
+SBStBuilder >> to: aBlock send: aSymbol [
 
 	^ SBStMessageSend new receiver: aBlock selector: aSymbol arguments: {}
 ]
