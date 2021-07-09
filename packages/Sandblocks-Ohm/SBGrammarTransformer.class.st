@@ -606,7 +606,12 @@ AddExp
 SBGrammarTransformer class >> grammarMiniJava [
 	" adapted from https://github.com/cwi-swat/rascal-minijava/blob/master/src/lang/minijava/Syntax.rsc "
 
-	^ SBGrammarSimplify new grammar: 'G <: BuiltInRules {
+	^ SBGrammarSimplify new
+		postDo: [:grammar |
+			(grammar ruleNamed: 'Statement')
+				setProperty: #kogiOutput
+				toValue: 'input_statement'];
+		grammar: 'G <: BuiltInRules {
 integer = digit+
 
 identifier = letter (letter | digit | "_")*
@@ -1995,15 +2000,15 @@ VarDecl
   | "let" (VariableDeclaration ",")+ ";"
   | "const" (VariableDeclaration ",")+ ";"
   
-PropertyName
+propertyName
  = id
  | string
  | numeric
 
 PropertyAssignment
-  = PropertyName ":" Expression
-  | "get" PropertyName "(" ")" "{" Statement* "}"
-  | "set" PropertyName "(" id ")" "{" Statement* "}"
+  = propertyName ":" Expression
+  | "get" propertyName "(" ")" "{" Statement* "}"
+  | "set" propertyName "(" id ")" "{" Statement* "}"
 
 
 literal
@@ -2050,68 +2055,7 @@ regularExpressionFlags
   = letter*
 
 id
-  = ~reserved (letter | "_" | "$") (letter | digit | "_" | "$")
-
-reserved =
-    "break" |
-    "case" |
-    "catch" |
-    "continue" |
-    "debugger" |
-    "default" |
-    "delete" |
-    "do" |
-    "else" |
-    "finally" |
-    "for" |
-    "function" |
-    "if" |
-    "instanceof" |
-    "in" |
-    "new" |
-    "return" |
-    "switch" |
-    "this" |
-    "throw" |
-    "try" |
-    "typeof" |
-    "var" |
-    "void" |
-    "while" |
-    "with"
-    "abstract" |
-    "boolean" |
-    "byte" |
-    "char" |
-    "class" |
-    "const" |
-    "double" |
-    "enum" |
-    "export" |
-    "extends" |
-    "final" |
-    "float" |
-    "goto" |
-    "implements" |
-    "import" |
-    "interface" |
-    "int" |
-    "long" |
-    "native" |
-    "package" |
-    "private" |
-    "protected" |
-    "public" |
-    "short" |
-    "static" |
-    "super" |
-    "synchronized" |
-    "throws" |
-    "transient" |
-    "volatile" |
-    "null" |
-    "true" |
-    "false"
+  = (letter | "_" | "$") (letter | digit | "_" | "$")
 }'
 ]
 
@@ -2227,6 +2171,23 @@ imageValue
   = "\"" letter+ "\""
 }';
 		yourself
+]
+
+{ #category : #'example grammars' }
+SBGrammarTransformer class >> grammarStatemachine [
+	" heavily modified and broken to suit our limited needs "
+
+	^ SBGrammarSimplify new
+		grammar: 'G <: BuiltInRules {
+Machine = "machine" id State*
+
+State 	= "state" id "{" Trans* "}"
+
+Trans = "on" id "to" id
+
+id = letter+
+
+}'
 ]
 
 { #category : #'example grammars' }
