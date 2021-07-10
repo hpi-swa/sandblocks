@@ -2616,7 +2616,7 @@ SBBlock >> update [
 { #category : #decorators }
 SBBlock >> updateSteppingDecorators [
 
-	self decorators do: [:d | d stepTime >= 0 ifTrue: [self world ifNotNil: [:w | w startStepping: d at: Time millisecondClockValue selector: #step arguments: {} stepTime: d stepTime]]]
+	self decorators do: [:d | d stepTime >= 0 ifTrue: [self world ifNotNil: [:w | (w isStepping: d) ifFalse: [w startStepping: d at: Time millisecondClockValue selector: #step arguments: {} stepTime: d stepTime]]]]
 ]
 
 { #category : #suggestions }

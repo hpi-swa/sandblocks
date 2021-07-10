@@ -27,7 +27,8 @@ Class {
 		'history',
 		'dragHelper',
 		'cursor',
-		'activateForcesButton'
+		'activateForcesButton',
+		'hoverHighlight'
 	],
 	#classVars : [
 		'DefaultColorPolicy',
@@ -732,6 +733,12 @@ SBEditor >> handlesMouseDown: anEvent [
 	^ true
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> handlesMouseOver: anEvent [
+
+	^ true
+]
+
 { #category : #'event handling' }
 SBEditor >> handlesMouseOverDragging: evt [
 
@@ -1020,6 +1027,12 @@ SBEditor >> morphicLayerNumber [
 	" make sure we're at least over the docking bar "
 
 	^ 77 - 1
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> mouseLeave: anEvent [
+
+	hoverHighlight ifNotNil: #detach
 ]
 
 { #category : #'event handling' }
@@ -1667,6 +1680,14 @@ SBEditor >> updateMouseCursorFor: anEvent [
 	self hasChildSandblocks ifFalse: [^ self].
 	
 	event := anEvent transformedBy: (self childSandblocks first transformedFrom: self).
+	
+	(self morphsAt: anEvent position)
+		detect: [:morph | morph isSandblock]
+		ifFound: [:block |
+			hoverHighlight ifNil: [hoverHighlight := SBHoverDecorator new].
+			hoverHighlight detach.
+			block attachDecorator: hoverHighlight].
+	
 	(self morphsAt: anEvent position) do: [:morph | morph isSandblock ifTrue: [(morph mouseCursorAt: event) ifNotNil: [:cursor | ^ cursor show]]].
 	Cursor currentCursor ~= Cursor normal ifTrue: [Cursor normal show]
 ]
