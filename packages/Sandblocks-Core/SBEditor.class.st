@@ -383,6 +383,12 @@ SBEditor >> compileTime [
 	^ self errors hasSubmorphs ifTrue: [#compileOnSave] ifFalse: [compileTime]
 ]
 
+{ #category : #accessing }
+SBEditor >> compileTime: aSymbol [
+
+	compileTime := aSymbol
+]
+
 { #category : #'as yet unclassified' }
 SBEditor >> connectFrom: aMorph to: anotherMorph [
 
@@ -1319,6 +1325,7 @@ SBEditor >> promptChangeColorPolicy [
 
 { #category : #'action helpers' }
 SBEditor >> promptChangeCompile [
+	 
 	<globalAction>
 
 	| index labels |
@@ -1326,7 +1333,7 @@ SBEditor >> promptChangeCompile [
 	index := UIManager default chooseFrom: labels.
 	index < 1 ifTrue: [^ self].
 	
-	compileTime := index = 1 ifTrue: [#compileOnSave] ifFalse: [#compileOnChange]
+	self compileTime: (index = 1 ifTrue: [#compileOnSave] ifFalse: [#compileOnChange])
 ]
 
 { #category : #'action helpers' }
