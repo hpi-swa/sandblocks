@@ -247,7 +247,7 @@ SBStASTNode >> sourceString [
 	^ String streamContents: [:s | self writeSourceOn: s]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #input }
 SBStASTNode >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| result |
