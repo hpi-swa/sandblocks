@@ -43,6 +43,12 @@ SBStSignature >> cellGap [
 ]
 
 { #category : #'as yet unclassified' }
+SBStSignature >> click: anEvent [
+
+	anEvent redButtonPressed ifTrue: [self updateSuggestions].
+]
+
+{ #category : #'as yet unclassified' }
 SBStSignature >> color [
 
 	^ self owner color
