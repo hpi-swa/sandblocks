@@ -1,17 +1,32 @@
 Class {
 	#name : #SBSuggestionMenu,
-	#superclass : #Morph,
+	#superclass : #ScrollPane,
 	#instVars : [
 		'activeIndex',
-		'editor'
+		'editor',
+		'container'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
+
+{ #category : #'as yet unclassified' }
+SBSuggestionMenu >> accept [
+
+	editor selection useSuggestion.
+]
 
 { #category : #'as yet unclassified' }
 SBSuggestionMenu >> activeIndex [
 
 	^ activeIndex
+]
+
+{ #category : #'as yet unclassified' }
+SBSuggestionMenu >> activeItem: anItem [
+
+	(self items at: activeIndex) active: false.
+	activeIndex := self items indexOf: anItem.
+	anItem active: true.
 ]
 
 { #category : #'as yet unclassified' }
@@ -23,7 +38,13 @@ SBSuggestionMenu >> activeSelector [
 { #category : #'as yet unclassified' }
 SBSuggestionMenu >> activeSuggestion [
 
-	^ self hasSubmorphs ifFalse: [nil] ifTrue: [self submorphs at: activeIndex]
+	^ self hasItems ifFalse: [nil] ifTrue: [self items at: activeIndex]
+]
+
+{ #category : #'as yet unclassified' }
+SBSuggestionMenu >> addItem: anItem [
+
+	container addMorphBack: anItem.
 ]
 
 { #category : #'as yet unclassified' }
@@ -40,19 +61,46 @@ SBSuggestionMenu >> handleMouseEnter: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBSuggestionMenu >> hasItems [
+
+	^ self items notEmpty
+]
+
+{ #category : #'as yet unclassified' }
 SBSuggestionMenu >> initialize [
 
 	super initialize.
 	
 	activeIndex := 1.
 	
-	self
+	self hResizing: #shrinkWrap.
+	self scroller
 		changeTableLayout;
-		vResizing: #shrinkWrap;
+		color: Color white.
+	
+	container := Morph new
+		beTransparent;
+		changeTableLayout;
 		hResizing: #shrinkWrap;
+		vResizing: #shrinkWrap;
 		cellGap: 0;
 		layoutInset: 0;
-		color: Color white
+		yourself.
+	self scroller addMorph: container.
+	
+	self height: 300.
+]
+
+{ #category : #'as yet unclassified' }
+SBSuggestionMenu >> itemCount [
+
+	^ self items size
+]
+
+{ #category : #'as yet unclassified' }
+SBSuggestionMenu >> items [
+
+	^ container submorphs
 ]
 
 { #category : #'as yet unclassified' }
@@ -65,7 +113,7 @@ SBSuggestionMenu >> minExtent [
 	vFit := self vResizing.
 
 	"An exception -- a receiver with #shrinkWrap constraints but no children is being treated #rigid (the equivalent to a #spaceFill receiver in a non-layouting owner)"
-	self hasSubmorphs 
+	self hasItems
 		ifFalse: 
 			[hFit == #shrinkWrap ifTrue: [hFit := #rigid].
 			vFit == #shrinkWrap ifTrue: [vFit := #rigid]].
@@ -91,11 +139,11 @@ SBSuggestionMenu >> minExtent [
 { #category : #'as yet unclassified' }
 SBSuggestionMenu >> moveActive: aNumber [
 
-	self hasSubmorphs ifFalse: [^ self].
+	self hasItems ifFalse: [^ self].
 	
-	(self submorphs at: activeIndex) active: false.
-	activeIndex := activeIndex + aNumber clampLow: 1 high: self submorphCount.
-	(self submorphs at: activeIndex) active: true
+	(self items at: activeIndex) active: false.
+	activeIndex := activeIndex + aNumber clampLow: 1 high: self itemCount.
+	(self items at: activeIndex) active: true
 ]
 
 { #category : #'as yet unclassified' }
@@ -113,18 +161,18 @@ SBSuggestionMenu >> previous [
 { #category : #'as yet unclassified' }
 SBSuggestionMenu >> resize [
 
-	self extent: (self hasSubmorphs ifFalse: [0 @ 0] ifTrue: [self minExtent])
+	self extent: (self hasItems ifFalse: [0 @ 0] ifTrue: [self minExtent])
 ]
 
 { #category : #'as yet unclassified' }
 SBSuggestionMenu >> suggestions: aCollectionOfSymbol [
 
-	self removeAllMorphs.
+	container removeAllMorphs.
 	
 	aCollectionOfSymbol do: [:item |
-		self addMorphBack: item].
+		self addItem: item].
 	
-	self hasSubmorphs ifTrue: [
-		activeIndex := activeIndex min: self submorphCount.
-		(self submorphs at: activeIndex) active: true]
+	self hasItems ifTrue: [
+		activeIndex := activeIndex min: self itemCount.
+		(self items at: activeIndex) active: true]
 ]

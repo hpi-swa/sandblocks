@@ -73,6 +73,18 @@ SBSuggestionItem >> drawOn: aCanvas [
 ]
 
 { #category : #'as yet unclassified' }
+SBSuggestionItem >> handlesMouseDown: anEvent [
+
+	^ anEvent redButtonPressed
+]
+
+{ #category : #'as yet unclassified' }
+SBSuggestionItem >> handlesMouseOver: anEvent [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBSuggestionItem >> initialize [
 
 	super initialize.
@@ -100,12 +112,30 @@ SBSuggestionItem >> label: aString [
 	label := aString
 ]
 
+{ #category : #accessing }
+SBSuggestionItem >> menu [
+
+	^ self ownerThatIsA: SBSuggestionMenu
+]
+
 { #category : #'as yet unclassified' }
 SBSuggestionItem >> minExtent [
 
 	| font |
 	font := self fontToUse.
 	^ (font widthOfString: selector) @ font height + (self layoutInset * 2) + (self cellGap @ 0) + ((font widthOfString: label) @ 0)
+]
+
+{ #category : #'as yet unclassified' }
+SBSuggestionItem >> mouseDown: anEvent [
+
+	self menu activeItem: self; accept.
+]
+
+{ #category : #'as yet unclassified' }
+SBSuggestionItem >> mouseEnter: anEvent [
+
+	self menu activeItem: self.
 ]
 
 { #category : #'as yet unclassified' }
