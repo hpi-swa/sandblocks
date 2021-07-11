@@ -28,6 +28,7 @@ Class {
 		'dragHelper',
 		'cursor',
 		'activateForcesButton',
+		'hoverHighlights',
 		'suggestAlways'
 	],
 	#classVars : [
