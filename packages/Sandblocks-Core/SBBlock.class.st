@@ -31,7 +31,7 @@ SBBlock class >> implicitAttractionStrength [
 { #category : #'as yet unclassified' }
 SBBlock class >> maxRepelDistance [
 
-	^ 200
+	^ 100
 ]
 
 { #category : #'as yet unclassified' }

@@ -150,6 +150,12 @@ SBStPlayground >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBStPlayground >> isAttractedTo: aBlock [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBStPlayground >> isEditor [
 
 	^ true

@@ -119,13 +119,17 @@ SBForceMoveDecorator >> createImplicitForceWith: otherMorph [
 	| attraction |
 	attraction := self attractionTo: otherMorph.
 	attraction > 0 ifTrue: [
-		self morph sandblockEditor openMorph: (SBForceConnector connect: self morph to: otherMorph forceScale: attraction).
 		self group
 			ifNil: [
 				otherMorph group
-					ifNil: [self morph sandblockEditor openMorph: (SBGroup newFor: self)]
+					ifNil: [
+						self morph sandblockEditor openMorph: (SBForceConnector connect: self morph to: otherMorph forceScale: attraction).
+						self morph sandblockEditor openMorph: (SBGroup newFor: self)]
 					ifNotNil: [otherMorph group add: self]]
-			ifNotNil: [otherMorph group ifNil: [self group addBlock: otherMorph]]]
+			ifNotNil: [
+				otherMorph group
+					ifNotNil: [self group = otherMorph group ifFalse: [self morph sandblockEditor openMorph: (SBForceConnector connect: self morph to: otherMorph forceScale: attraction)]]
+					ifNil: [self group addBlock: otherMorph]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -198,12 +202,12 @@ SBForceMoveDecorator >> exampleMorphForRepelDistance [
 		detachDecorators: SBForceMoveDecorator;
 		yourself.
 	rectangleMorph := RectangleMorph new
-		extent: playground extent + SBBlock maxRepelDistance asPoint;
+		extent: playground extent + (SBBlock maxRepelDistance asPoint * 2);
 		center: playground extent / 2;
 		color: Color transparent;
 		borderColor: Color seaFoam;
 		borderWidth: 2;
-		cornerRadius: SBBlock maxRepelDistance / 2;
+		cornerRadius: SBBlock maxRepelDistance;
 		cornerStyle: #rounded.
 	block := SBBlock new
 		attachDecorator: SBForceMoveDecorator new;
@@ -359,7 +363,7 @@ SBForceMoveDecorator >> pinGroup [
 
 	self group blocks do: [:aBlock |
 		aBlock withDecorator: SBForceMoveDecorator do: [:aDecorator |
-			aDecorator pinnedPosition: aBlock morph position.
+			aDecorator pinnedPosition: aBlock position.
 			
 			].
 		

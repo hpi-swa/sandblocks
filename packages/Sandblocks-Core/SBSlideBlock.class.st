@@ -34,6 +34,12 @@ SBSlideBlock >> isArtefact [
 ]
 
 { #category : #'as yet unclassified' }
+SBSlideBlock >> isAttractedTo: aBlock [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBSlideBlock >> isInteractive [ 
 	
 	^ false
@@ -74,6 +80,12 @@ SBSlideBlock >> setSlide: aNumber [
 
 	slideNumber := aNumber.
 	self addMorphBack: (PSPresentation mainSlideAt: slideNumber) veryDeepCopy
+]
+
+{ #category : #'as yet unclassified' }
+SBSlideBlock >> textContents [ 
+
+	^ 'Slide ', slideNumber asString 
 ]
 
 { #category : #'as yet unclassified' }
