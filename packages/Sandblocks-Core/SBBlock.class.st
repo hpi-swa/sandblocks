@@ -82,11 +82,25 @@ SBBlock >> allBlocksFor: anObject withInterfaces: aCollection [
 			(morph isSandblock and: [morph object = anObject and: [morph satisfies: aCollection]]) ifTrue: [stream nextPut: morph]]]
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> allBlocksSatisfy: aBlock [
+
+	self allBlocksDo: [:b | (aBlock value: b) ifFalse: [^ false]].
+	^ true
+]
+
 { #category : #hierarchy }
 SBBlock >> allBlocksSelect: aBlock [
 
 	^ Array streamContents: [:stream |
 		self allBlocksDo: [:b | (aBlock value: b) ifTrue: [stream nextPut: b]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> allChildBlocksSatisfy: aBlock [
+
+	self allBlocksDo: [:b | (b ~= self and: [(aBlock value: b) not]) ifTrue: [^ false]].
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

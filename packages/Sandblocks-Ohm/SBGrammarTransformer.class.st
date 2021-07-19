@@ -610,7 +610,12 @@ SBGrammarTransformer class >> grammarMiniJava [
 		postDo: [:grammar |
 			(grammar ruleNamed: 'Statement')
 				setProperty: #kogiOutput
-				toValue: 'input_statement'];
+				toValue: 'input_statement'.
+			SBToggledCode comment: '' active: 0 do: {
+				[
+					(grammar ruleNamed: 'Type') expression childSandblocks last
+						setProperty: #preferredChoice
+						toValue: true]}];
 		grammar: 'G <: BuiltInRules {
 integer = digit+
 
@@ -1097,6 +1102,11 @@ SBGrammarTransformer class >> grammarQL [
 	" https://github.com/cwi-swat/kogi/blob/master/src/kogi/demo/ql/Syntax.rsc "
 
 	^ SBGrammarSimplify new
+		postDo: [:g |
+			SBToggledCode
+				comment: ''
+				active: 1
+				do: {[(g ruleNamed: 'Question') setProperty: #kogiOutput toValue: 'input_statement']}];
 		grammar: 'G <: BuiltInRules {
 Form = "form" id "{" Question* "}"
 
@@ -1148,7 +1158,9 @@ stringValue = letter+
 SBGrammarTransformer class >> grammarRascalJava18 [
 	" heavily modified and broken to suit our limited needs "
 
-	^ 'G <: BuiltInRules {
+	^ SBGrammarSimplify new
+		isOhm: true;
+		grammar: 'G <: BuiltInRules {
 /*
 @license{
   Copyright (c) 2009-2015 CWI
@@ -1851,7 +1863,8 @@ stringLiteral = "\"" letter* "\""
 
 nullLiteral = "null"
 
-}'
+}';
+		yourself
 ]
 
 { #category : #'example grammars' }
@@ -1865,7 +1878,14 @@ SBGrammarTransformer class >> grammarRascalJavascript [
 		postDo: [:grammar |
 			(grammar ruleNamed: 'Statement')
 				setProperty: #kogiOutput
-				toValue: 'input_statement'];
+				toValue: 'input_statement'.
+			SBToggledCode comment: '' active: 1 do: {
+				[
+					(grammar ruleNamed: 'VariableDeclaration') expression childSandblocks first
+						setProperty: #preferredChoice
+							toValue: true;
+						setProperty: #inline
+							toValue: false]}];
 		grammar: 'G <: BuiltInRules {
 	/*
 @CachedParser{javascript.cached.SweeterJSCachedParser}
@@ -2839,6 +2859,20 @@ SBGrammarTransformer class >> mergeIdenticalAroundLiteral: g [
 							op ~= lit2 ifTrue: [op delete]]
 						noMatch: [self assert: false].
 					b mergeRedundantGroups]]]].
+	
+	" FIXME: special case for top-level terminals that are in an alternative, because I'm too lazy to read the code above "
+	SBToggledCode comment: '' active: 1 do: {
+		[
+			g childSandblocksDo: [:rule |
+				(rule expression isAlternative and: [rule isLexical not]) ifTrue: [ | candidates |
+					candidates := rule expression childSandblocks select: [:b | b allBlocksSatisfy: [:child | child isSequence or: [child isTerminal]]].
+					candidates size > 1 ifTrue: [
+						candidates do: #delete.
+						rule expression addMorphBack: (SBOhmList new
+							connect: 'OR' expressions: candidates;
+							setProperty: #pinned toValue: true;
+							yourself)]]]]}.
+	
 	g mergeRedundantGroups
 ]
 
@@ -2945,7 +2979,13 @@ SBGrammarTransformer class >> mergeUpSimpleRules: g [
 
 	| simpleRules |
 	" merge up rules with only one non-terminal in sequences "
-	simpleRules := g childSandblocks select: [:rule | (SBToggledCode comment: '' active: 2 do: {[false]. [rule isFieldInput not]}) and: [(rule allBlocksSelect: [:b | b isIdentifier]) size <= 1 and: [rule allUsages notEmpty and: [rule isPrimitive not or: [rule expression isAlternative]]]]].
+	simpleRules := g childSandblocks select: [:rule |
+		(SBToggledCode comment: '' active: 2 do: {[false]. [rule isFieldInput not]}) and: [
+			(rule allBlocksSelect: [:b | b isIdentifier]) size <= 1 and: [
+				rule allUsages notEmpty and: [
+					SBToggledCode comment: '' active: 1 do: {
+						[(rule expression allBlocksSelect: [:b | b isAlternative not or: [rule expression childSandblocks allSatisfy: #isTerminal]]) isEmpty].
+						[(rule isPrimitive not or: [rule expression isAlternative]) and: [rule expression isAlternative not or: [rule expression childSandblocks allSatisfy: #isTerminal]]]}]]]].
 	simpleRules do: [:r |
 		r allUsages do: [:id | | copy |
 			id parentSandblock isRepeatQuantifier not ifTrue: [
@@ -2961,7 +3001,8 @@ SBGrammarTransformer class >> mergeUpUnitUses: g [
 	candidates := OrderedCollection new.
 	g allBlocksDo: [:b | ((b isIdentifier and: [b isSimple not]) and: [b parentSandblock isRule or: [b parentSandblock isAlternative and: [b parentSandblock parentSandblock isRule]]]) ifTrue: [candidates add: b]].
 	rules := (candidates collect: #associatedRule) asSet.
-	candidates do: [:id | id replaceBy: id associatedRule expression veryDeepCopy].
+	candidates do: [:id |
+		id replaceBy: id associatedRule expression veryDeepCopy].
 	rules do: [:r | r allUsages size < 1 ifTrue: [r delete]].
 	g mergeRedundantGroups
 ]
@@ -3136,7 +3177,7 @@ SBGrammarTransformer class >> rascalSimplifiedMin [
 		[:g |
 			SBToggledCode
 				comment: ''
-				active: 1
+				active: 0
 				do: {[SBGrammarTransformer mergeUpCardinalityOnlyBlocks: g]}].
 		[:g |
 			SBToggledCode
@@ -3282,7 +3323,17 @@ SBGrammarTransformer class >> removeUnnecessarySyntax [
 		[:g | SBGrammarTransformer removeLookAheads: g].
 		[:g | SBGrammarTransformer removeListSeperators0toN: g].
 		[:g | SBGrammarTransformer removeListSeperators1toN: g].
-		[:g | SBGrammarTransformer removeListSeparatorsWithRecursion: g]}
+		[:g | SBGrammarTransformer removeListSeparatorsWithRecursion: g].
+		[:g |
+			" change A A* to A+ "
+			g allBlocksDo: [:b |
+				(b isRepeatQuantifier and: [
+					b quantifier = '*' and: [
+						(b adjacentBlock: -1)
+							ifNotNil: [:adj | adj isIdentifier and: [adj contents = b contents]]
+							ifNil: [false]]]) ifTrue: [
+					(b adjacentBlock: -1) delete.
+					b quantifier: '+']]]}
 ]
 
 { #category : #'transform steps' }
