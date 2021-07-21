@@ -53,7 +53,7 @@ SBMoveAssociatedDecorator >> newArtefactAt: aPoint do: aBlock ifNone: anotherBlo
 	" find the first artefact under the cursor and see if it's different to our current "
 	container ~= self ifTrue: [
 		(container morphsAt: aPoint)
-			detect: [:m | m isArtefact and: [m ~= self morph]]
+			detect: [:m | m isSandblock and: [m isArtefact and: [m ~= self morph]]]
 			ifFound: [:m |
 				m ~= self morph outerArtefact
 					ifTrue: [^ aBlock value: m]
@@ -68,7 +68,9 @@ SBMoveAssociatedDecorator >> showLeaveHint: aBoolean for: anArtefact [
 	aBoolean
 		ifTrue: [
 			leaveHint ifNil: [
-				leaveHint := SBStringMorph new contents: (hintBlock ifNil: ['Move to this block'] ifNotNil: [hintBlock value: anArtefact]).
+				leaveHint := SBStringMorph new
+					contents: (hintBlock ifNil: ['Move to this block'] ifNotNil: [hintBlock value: anArtefact]);
+					setProperty: #morphicLayerNumber toValue: 0.
 				self morph sandblockEditor openMorph: leaveHint].
 			leaveHint bottomLeft: self morph topLeft]
 		ifFalse: [

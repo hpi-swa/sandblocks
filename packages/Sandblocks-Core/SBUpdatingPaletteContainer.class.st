@@ -45,6 +45,13 @@ SBUpdatingPaletteContainer >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBUpdatingPaletteContainer >> rebuild [
+
+	currentPalettes do: [:palette | self removePalette: palette].
+	currentPalettes do: [:palette | self addPalette: palette]
+]
+
+{ #category : #'as yet unclassified' }
 SBUpdatingPaletteContainer >> removeNoPalettesNotice [
 
 	"self assert: categories submorphCount <= 1."
@@ -64,10 +71,16 @@ SBUpdatingPaletteContainer >> selectedBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBUpdatingPaletteContainer >> selection [
+
+	^ self sandblockEditor selection
+]
+
+{ #category : #'as yet unclassified' }
 SBUpdatingPaletteContainer >> selectionChanged: aBlock [
 
 	| newPalettes |
-	(aBlock isNil or: [(aBlock hasOwner: self) or: [aBlock = self]]) ifTrue: [^ self].
+	((aBlock isNil or: [aBlock isInEditor not]) or: [(aBlock hasOwner: self) or: [aBlock = self]]) ifTrue: [^ self].
 	
 	selectedBlock := aBlock.
 	currentPalettes ifEmpty: [self removeNoPalettesNotice].

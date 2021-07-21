@@ -151,6 +151,12 @@ SBOhmGrammar >> ruleNamed: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmGrammar >> ruleNamed: aString ifNone: aBlock [
+
+	^ self childSandblocks detect: [:rule | rule name = aString] ifNone: aBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmGrammar >> rules [
 
 	^ self submorphs, (OhmBuiltInRules rules associations, OhmBaseGrammar rules associations)

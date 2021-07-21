@@ -100,11 +100,25 @@ SBBlock >> allBlocksFor: anObject withInterfaces: aCollection [
 			(morph isSandblock and: [morph object = anObject and: [morph satisfies: aCollection]]) ifTrue: [stream nextPut: morph]]]
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> allBlocksSatisfy: aBlock [
+
+	self allBlocksDo: [:b | (aBlock value: b) ifFalse: [^ false]].
+	^ true
+]
+
 { #category : #hierarchy }
 SBBlock >> allBlocksSelect: aBlock [
 
 	^ Array streamContents: [:stream |
 		self allBlocksDo: [:b | (aBlock value: b) ifTrue: [stream nextPut: b]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> allChildBlocksSatisfy: aBlock [
+
+	self allBlocksDo: [:b | (b ~= self and: [(aBlock value: b) not]) ifTrue: [^ false]].
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -254,6 +268,18 @@ SBBlock >> canCopy [
 SBBlock >> canDeleteChild: aBlock [
 
 	^ self fixedNumberOfChildren not
+]
+
+{ #category : #accessing }
+SBBlock >> canDrag [
+
+	^ self valueOfProperty: #canDrag ifAbsent: [true]
+]
+
+{ #category : #accessing }
+SBBlock >> canDrag: aBoolean [
+
+	self setProperty: #canDrag toValue: aBoolean
 ]
 
 { #category : #'actions tests' }
@@ -1060,6 +1086,14 @@ SBBlock >> hasGroup [
 	^ self group notNil
 ]
 
+{ #category : #layout }
+SBBlock >> hasHorizontalLayout [
+
+	^ self submorphs size < 2 or: [ | delta |
+		delta := self submorphs first topLeft - self submorphs second topLeft.
+		delta x < delta y]
+]
+
 { #category : #testing }
 SBBlock >> hasInput [
 
@@ -1321,6 +1355,14 @@ SBBlock >> isFirstChild [
 ]
 
 { #category : #'testing hierarchy' }
+SBBlock >> isInEditor [
+
+	| editor |
+	editor := self sandblockEditor.
+	^ editor notNil and: [editor isSelection not or: [editor parentSandblock ifNotNil: #isInEditor ifNil: [false]]]
+]
+
+{ #category : #'testing hierarchy' }
 SBBlock >> isLastChild [
 
 	^ self parentSandblock childSandblocks last = self
@@ -1533,7 +1575,7 @@ SBBlock >> minExtent [
 { #category : #accessing }
 SBBlock >> morphicLayerNumber [
 
-	^ self class defaultLayer
+	^ 100
 ]
 
 { #category : #accessing }
@@ -1788,6 +1830,9 @@ SBBlock >> openLocalPalette [
 	<actionValidIf: #hasCommandPalette>
 
 	| palettes |
+	self sandblockEditor isSingleArtefactView ifTrue: [
+		^ self sandblockEditor togglePalette].
+
 	palettes := SBPalette allSubclasses select: [:palette | (self satisfies: palette context) and: [palette matchesBlock: self]].
 	palettes ifNotEmpty: [ | container |
 		container := SBPaletteContainer new.
@@ -1912,6 +1957,8 @@ SBBlock >> performAction: aSymbol [
 SBBlock >> pickUp: anEvent [
 
 	| editor s |
+	self canDrag ifFalse: [^ self].
+
 	editor := self sandblockEditor.
 	s := SBSelection new
 		homeArtefact: self containingArtefact;
@@ -2616,7 +2663,7 @@ SBBlock >> update [
 { #category : #decorators }
 SBBlock >> updateSteppingDecorators [
 
-	self decorators do: [:d | d stepTime >= 0 ifTrue: [self world ifNotNil: [:w | w startStepping: d at: Time millisecondClockValue selector: #step arguments: {} stepTime: d stepTime]]]
+	self decorators do: [:d | d stepTime >= 0 ifTrue: [self world ifNotNil: [:w | (w isStepping: d) ifFalse: [w startStepping: d at: Time millisecondClockValue selector: #step arguments: {} stepTime: d stepTime]]]]
 ]
 
 { #category : #suggestions }

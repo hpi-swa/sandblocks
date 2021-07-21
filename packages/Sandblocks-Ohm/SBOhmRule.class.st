@@ -17,18 +17,6 @@ SBOhmRule >> allUsagesDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmRule >> canBePrimitive [
-
-	^ self isPrimitive or: [
-		self expression isAlternative and: [
-			self expression childSandblocks anySatisfy: [:expr |
-				expr
-					allBlocksDetect: [:b | (b isIdentifier and: [b isPrimitive not]) or: [b isTerminal and: [b contents size > 1]]]
-					ifFound: [:b | false]
-					ifNone: [true]]]]
-]
-
-{ #category : #'as yet unclassified' }
 SBOhmRule >> containingRule [
 
 	^ self
@@ -38,6 +26,12 @@ SBOhmRule >> containingRule [
 SBOhmRule >> currentTextMorph [
 
 	^ self firstSubmorph
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmRule >> ensureExpressionIsAlternative [
+
+	self expression isAlternative ifFalse: [self addMorphBack: (SBOhmList new connect: 'OR' expressions: {self expression})]
 ]
 
 { #category : #'as yet unclassified' }

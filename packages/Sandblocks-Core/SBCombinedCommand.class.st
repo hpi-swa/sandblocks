@@ -54,6 +54,18 @@ SBCombinedCommand >> hasSamePositionAs: aCommand [
 ]
 
 { #category : #'as yet unclassified' }
+SBCombinedCommand >> postDo [
+
+	commands do: #postDo
+]
+
+{ #category : #'as yet unclassified' }
+SBCombinedCommand >> preDo [
+
+	^ commands do: #preDo
+]
+
+{ #category : #'as yet unclassified' }
 SBCombinedCommand >> previousSelection [
 
 	^ previousSelection ifNil: [self commands first previousSelection]

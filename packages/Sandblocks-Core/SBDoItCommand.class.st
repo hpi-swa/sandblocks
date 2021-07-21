@@ -21,6 +21,12 @@ SBDoItCommand >> do: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBDoItCommand >> setArtefactFrom [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBDoItCommand >> undo [
 
 	^ undo ifNotNil: #value

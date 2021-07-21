@@ -359,6 +359,12 @@ SBConnectorLine >> lineWidth [
 ]
 
 { #category : #'as yet unclassified' }
+SBConnectorLine >> morphicLayerNumber [
+
+	^ 101
+]
+
+{ #category : #'as yet unclassified' }
 SBConnectorLine >> mouseDown: anEvent [
 
 	self sandblockEditor do: (SBDeleteCommand new target: self)

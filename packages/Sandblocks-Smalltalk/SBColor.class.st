@@ -123,6 +123,6 @@ SBColor >> saveColor [
 SBColor >> writeSourceOn: aStream [
 
 	aStream nextPut: $(.
-	indicator color printOn: aStream.
+	indicator color storeOn: aStream.
 	aStream nextPut: $)
 ]

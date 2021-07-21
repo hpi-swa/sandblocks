@@ -27,7 +27,8 @@ Class {
 		'history',
 		'dragHelper',
 		'cursor',
-		'activateForcesButton'
+		'activateForcesButton',
+		'hoverHighlight'
 	],
 	#classVars : [
 		'DefaultColorPolicy',
@@ -742,6 +743,12 @@ SBEditor >> handlesMouseDown: anEvent [
 	^ true
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> handlesMouseOver: anEvent [
+
+	^ true
+]
+
 { #category : #'event handling' }
 SBEditor >> handlesMouseOverDragging: evt [
 
@@ -1041,7 +1048,13 @@ SBEditor >> modelWakeUp [
 SBEditor >> morphicLayerNumber [
 	" make sure we're at least over the docking bar "
 
-	^ DockingBarMorph navigatorLayer - 1
+	^ 77 - 1
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> mouseLeave: anEvent [
+
+	hoverHighlight ifNotNil: #detach
 ]
 
 { #category : #'event handling' }
@@ -1343,6 +1356,12 @@ SBEditor >> promptGlobalAction [
 	index := UIManager default chooseFrom: (options collect: [:option | option value selector, (' ', (SBEditor shortcutStringForAction: option value selector))]).
 	
 	index > 0 ifTrue: [(options at: index) key perform: (options at: index) value selector]
+]
+
+{ #category : #'action helpers' }
+SBEditor >> rebuildPalette [
+
+	paletteContainer rebuild
 ]
 
 { #category : #'do/undo/redo' }
@@ -1691,6 +1710,14 @@ SBEditor >> updateMouseCursorFor: anEvent [
 	self hasChildSandblocks ifFalse: [^ self].
 	
 	event := anEvent transformedBy: (self childSandblocks first transformedFrom: self).
+	
+	(self morphsAt: anEvent position)
+		detect: [:morph | morph isSandblock]
+		ifFound: [:block |
+			hoverHighlight ifNil: [hoverHighlight := SBHoverDecorator new].
+			hoverHighlight detach.
+			block attachDecorator: hoverHighlight].
+	
 	(self morphsAt: anEvent position) do: [:morph | morph isSandblock ifTrue: [(morph mouseCursorAt: event) ifNotNil: [:cursor | ^ cursor show]]].
 	Cursor currentCursor ~= Cursor normal ifTrue: [Cursor normal show]
 ]

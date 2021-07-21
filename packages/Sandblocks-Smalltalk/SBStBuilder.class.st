@@ -27,6 +27,26 @@ SBStBuilder >> assign: aString to: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBStBuilder >> blockWith: anArgsCollection do: aStatementCollection [
+
+	^ (SBStBlockBody emptyWithDeclarations: anArgsCollection)
+		statements: aStatementCollection;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
+SBStBuilder >> cascadedSend: aSymbol [
+
+	^ self to: nil send: aSymbol
+]
+
+{ #category : #'as yet unclassified' }
+SBStBuilder >> cascadedSend: aMessage with: aBlockOrCollection [
+
+	^ self to: nil send: aMessage with: aBlockOrCollection
+]
+
+{ #category : #'as yet unclassified' }
 SBStBuilder >> class: aString super: aClass instVars: aCollectionOfStrings [
 
 	^ self class: aString super: aClass instVars: aCollectionOfStrings current: nil
@@ -133,19 +153,31 @@ SBStBuilder >> setter: aString in: aClass [
 ]
 
 { #category : #'as yet unclassified' }
+SBStBuilder >> string: aString [
+
+	^ SBStString new contents: aString
+]
+
+{ #category : #'as yet unclassified' }
 SBStBuilder >> symbol: aString [
 
 	^ SBStSymbol new contents: aString
 ]
 
 { #category : #'as yet unclassified' }
-SBStBuilder >> to: aSymbol send: aBlock [
+SBStBuilder >> to: aBlock cascade: aCollection [
+
+	^ SBStCascade new receiver: aBlock messages: aCollection
+]
+
+{ #category : #'as yet unclassified' }
+SBStBuilder >> to: aBlock send: aSymbol [
 
 	^ SBStMessageSend new receiver: aBlock selector: aSymbol arguments: {}
 ]
 
 { #category : #'as yet unclassified' }
-SBStBuilder >> to: aSymbol send: aBlock with: aBlockOrCollection [
+SBStBuilder >> to: aBlock send: aSymbol with: aBlockOrCollection [
 
 	^ SBStMessageSend new receiver: aBlock selector: aSymbol arguments: (aBlockOrCollection isCollection
 		ifTrue: [aBlockOrCollection]

@@ -193,7 +193,7 @@ SBStMessagePart >> keyStroke: anEvent [
 
 	((anEvent keyCharacter isAlphaNumeric or: [#($' $#) includes: anEvent keyCharacter]) and: [self isBinary]) ifTrue: [^ self continueInputInArgument: anEvent].
 	anEvent keyCharacter = $: ifTrue: [
-		(self isFirstPart and: [self contents = ':']) ifTrue: [self contents: ':='].
+		(self isFirstPart and: [self contents = ':' or: [self contents isEmpty]]) ifTrue: [self contents: ':='].
 		^ self insertUnknownAfterAndInput: true].
 	
 	(({Character backspace. Character delete. $_} includes: anEvent keyCharacter) or: [(anEvent keyCharacter isSpecial and: [self actualContents isEmpty or: [self isBinary]]) or: [anEvent keyCharacter isAlphaNumeric and: [self actualContents isEmpty or: [self isBinary not]]]]) ifTrue: [
@@ -201,10 +201,11 @@ SBStMessagePart >> keyStroke: anEvent [
 		(anEvent keyCharacter isSpecial and: [self actualContents size = 1 and: [self isFirstPart]]) ifTrue: [^ self insertUnknownAfterAndInput: false].
 		^ self updateSuggestions].
 	
-	SBStGrammarHandler new
-		perform: anEvent keyCharacter
-		for: self parentSandblock
-		empty: false
+	self parentIsExpression ifTrue: [
+		SBStGrammarHandler new
+			perform: anEvent keyCharacter
+			for: self parentSandblock
+			empty: false]
 ]
 
 { #category : #'as yet unclassified' }

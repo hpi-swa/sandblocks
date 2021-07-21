@@ -169,14 +169,6 @@ SBDragHelper >> ensurePositionOfFloats [
 ]
 
 { #category : #'as yet unclassified' }
-SBDragHelper >> hasHorizontalLayout: aMorph [
-
-	^ aMorph submorphs size < 2 or: [ | delta |
-		delta := aMorph submorphs first topLeft - aMorph submorphs second topLeft.
-		delta x < delta y]
-]
-
-{ #category : #'as yet unclassified' }
 SBDragHelper >> hintInsertOf: aBlock in: aParentBlock near: aChildBlock before: aBoolean [
 
 	| command insertPreviewMarker |
@@ -237,7 +229,7 @@ SBDragHelper >> insertMarkerFor: aBlock before: aBoolean [
 	| horizontal b width |
 	aBlock floating ifTrue: [^ 10 @ 10 center: aBlock center].
 	
-	horizontal := self hasHorizontalLayout: aBlock parentSandblock.
+	horizontal := aBlock parentSandblock hasHorizontalLayout.
 	b := aBlock boundsInWorld.
 	width := 6.
 	
@@ -293,7 +285,7 @@ SBDragHelper >> submorphOf: aMorph closestTo: aPoint do: aBlock [
 	best := nil.
 	bestDistance := 900000000.
 	
-	(self hasHorizontalLayout: aMorph)
+	aMorph hasHorizontalLayout
 		ifTrue: [
 			calcDistanceBefore := [:m | (m left - aPoint x) abs].
 			calcDistanceAfter := [:m | (m right - aPoint x) abs]]
