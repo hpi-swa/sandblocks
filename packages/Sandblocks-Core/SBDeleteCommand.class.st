@@ -13,7 +13,7 @@ Class {
 SBDeleteCommand >> do [
 
 	| nextSelection |
-	nextSelection := target containingSandblock focusAfterDeleteIfNone: [self nextBlockFrom: target].
+	nextSelection := target containingSandblock focusAfterDeleteIfNone: [target sandblockEditor].
 	oldOwner := target owner.
 	oldIndex := oldOwner submorphIndexOf: target.
 	oldOwner removeMorph: target.

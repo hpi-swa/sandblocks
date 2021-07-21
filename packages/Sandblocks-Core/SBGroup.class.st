@@ -308,7 +308,7 @@ SBGroup >> createMissingForcesFor: aForceMoveDecorator [
 			editor openMorph: (SBForceConnector
 				connect: aForceMoveDecorator morph
 				to: aBlock
-				forceScale: (aForceMoveDecorator morph attractionStrengthTo: aBlock))]]
+				forceScale: 0.5)]]
 ]
 
 { #category : #'as yet unclassified' }

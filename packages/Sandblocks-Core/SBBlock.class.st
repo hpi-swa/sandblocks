@@ -688,13 +688,11 @@ SBBlock >> deleteBeforeCursor [
 SBBlock >> deleteBlock [
 	<multiSelectAction>
 
-	self isSelected ifFalse: [
-		^ self sandblockEditor do: (self parentSandblock deleteCommandFor: self)].
+	self isSelected ifFalse: [^ self sandblockEditor do: (self parentSandblock deleteCommandFor: self)].
 	
 	self sandblockEditor
 		copyBuffer: self sandblockEditor multiSelection;
-		doMultiSelectionEach: [:selected |
-			selected parentSandblock deleteCommandFor: selected];
+		doMultiSelectionEach: [:selected | selected parentSandblock deleteCommandFor: selected];
 		maybeStartInputFromEnd
 ]
 

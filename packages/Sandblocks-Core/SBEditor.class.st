@@ -447,11 +447,11 @@ SBEditor >> createArtefactInView: aMorph [
 
 	self assert: aMorph isArtefact.
 	
-	self do: (SBEditorOpenMorphCommand new
+	self do: (self openMorphInViewCommand: aMorph)." new
 		morph: aMorph;
 		editor: self sandblockEditor;
 		isUnsaved: true;
-		yourself).
+		yourself)."
 	
 	^ aMorph
 ]

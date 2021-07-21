@@ -33,6 +33,12 @@ SBOffscreenBlockIndicator >> containingSandblock [
 ]
 
 { #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> fixedNumberOfChildren [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> foregroundColor [
 
 	^ (self sandblockEditor search isSelected
@@ -43,7 +49,7 @@ SBOffscreenBlockIndicator >> foregroundColor [
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> handlesMouseDown: anEvent [
 
-	^ true
+	^ self visible
 ]
 
 { #category : #accessing }
@@ -123,6 +129,12 @@ SBOffscreenBlockIndicator >> mouseDown: anEvent [
 	Project current addDeferredUIMessage: [self scroller scrollToCenter: self target]
 ]
 
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> objectInterface [
+
+	^ SBInterfaces never
+]
+
 { #category : #nil }
 SBOffscreenBlockIndicator >> rejectsEvent: anEvent [
 	
@@ -153,13 +165,19 @@ SBOffscreenBlockIndicator >> shouldHide [
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> shouldHideDefault [
 
-	^ SBToggledCode comment: '' active: 1 do: {
+	^ SBToggledCode comment: '' active: 2 do: {
 		[
 			(self target
 				withDecorator: SBForceMoveDecorator
 				do: [:decorator | decorator group notNil]
 				ifAbsent: [false]) and: [self isHighlighted not]].
 		[true]}
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> specialDropCommand: aBlock [
+
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -170,7 +188,10 @@ SBOffscreenBlockIndicator >> step [
 	
 	(self targetOffscreen and: [self shouldHide not])
 		ifTrue: [self show]
-		ifFalse: [^ self hide].
+		ifFalse: [
+			"Workaround for invisible indicators snacking our events."
+			self position: 0@0.
+			^ self hide].
 	
 	self updateLabel.
 	"this is only here because of Waypoints. TODO: remove"

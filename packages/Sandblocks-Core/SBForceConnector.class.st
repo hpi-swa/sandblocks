@@ -20,15 +20,6 @@ SBForceConnector class >> connect: anObject to: anotherObject forceScale: aNumbe
 ]
 
 { #category : #'as yet unclassified' }
-SBForceConnector >> abandon [
-
-	self to withDecorator: SBForceMoveDecorator do: [:decorator | decorator unregisterAdditionalForce: self].
-	self from withDecorator: SBForceMoveDecorator do: [:decorator | decorator unregisterAdditionalForce: self].
-	
-	super abandon.
-]
-
-{ #category : #'as yet unclassified' }
 SBForceConnector >> baseForce [
 
 	^ self class attractionStrengthMultiplier * (self to center - self from center) * self forceScale
@@ -60,6 +51,19 @@ SBForceConnector >> connect: anObject to: anotherObject forceScale: aNumber [
 SBForceConnector >> connectorType [
 
 	 ^ #none
+]
+
+{ #category : #'as yet unclassified' }
+SBForceConnector >> delete [
+
+	self to
+		withDecorator: SBForceMoveDecorator
+		do: [:decorator | decorator unregisterAdditionalForce: self].
+	self from
+		withDecorator: SBForceMoveDecorator
+		do: [:decorator | decorator unregisterAdditionalForce: self].
+	
+	super delete
 ]
 
 { #category : #'as yet unclassified' }
