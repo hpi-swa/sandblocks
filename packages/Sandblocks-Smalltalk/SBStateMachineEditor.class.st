@@ -122,12 +122,6 @@ SBStateMachineEditor >> checkNearbyEnemies [
 ]
 
 { #category : #'as yet unclassified' }
-SBStateMachineEditor >> commandPaletteClass [
-
-	^ SBStateMachinePalette
-]
-
-{ #category : #'as yet unclassified' }
 SBStateMachineEditor >> connect: aStateName to: anotherStateName type: aSymbol data: aBlock [
 
 	| line connectors |

@@ -31,27 +31,21 @@ SBScmPalette class >> buildOn: aContainer [
 		addBlock: 'And'
 			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: 'and'. self newNullBlock: 'bool1'. self newNullBlock: 'bool2'});
 		addSectionHeader: 'Definitions';
-		addBlock: 'Define Function'
-			as: (SBScmExpression new addAllMorphs: {
-				SBScmIdentifier new contents: 'define'.
-				SBScmExpression new addAllMorphs: {self newNullBlock: 'procedure'. self newNullBlock: 'arg1'}.
-				self newNullBlock: 'expr'
-			});
+		addBlock: 'Define Function' as: (SBScmExpression new addAllMorphs: {
+			SBScmIdentifier new contents: 'define'.
+			SBScmExpression new addAllMorphs: {self newNullBlock: 'procedure'. self newNullBlock: 'arg1'}.
+			self newNullBlock: 'expr'});
 		addBlock: 'Define Binding'
 			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: 'define'. self newNullBlock: 'name'. self newNullBlock: 'value'});
-		addBlock: 'let'
-			as: (SBScmExpression new addAllMorphs: {
-				SBScmIdentifier new contents: 'let'.
-				SBScmExpression new addMorphBack: (SBScmExpression new addAllMorphs: {self newNullBlock: 'var'. self newNullBlock: 'value'}).
-				self newNullBlock: 'expr'
-			});
+		addBlock: 'let' as: (SBScmExpression new addAllMorphs: {
+			SBScmIdentifier new contents: 'let'.
+			SBScmExpression new addMorphBack: (SBScmExpression new addAllMorphs: {self newNullBlock: 'var'. self newNullBlock: 'value'}).
+			self newNullBlock: 'expr'});
 		addSectionHeader: 'Values / Data';
-		addBlock: 'lambda'
-			as: (SBScmExpression new addAllMorphs: {
-				SBScmIdentifier new contents: 'lambda'.
-				SBScmExpression new addMorphBack: (self newNullBlock: 'arg1').
-				self newNullBlock: 'expr'
-			});
+		addBlock: 'lambda' as: (SBScmExpression new addAllMorphs: {
+			SBScmIdentifier new contents: 'lambda'.
+			SBScmExpression new addMorphBack: (self newNullBlock: 'arg1').
+			self newNullBlock: 'expr'});
 		addBlock: 'cons Pair'
 			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: 'cons'. self newNullBlock: 'first'. self newNullBlock: 'second'});
 		addBlock: 'Get 1st element of pair'
@@ -64,28 +58,22 @@ SBScmPalette class >> buildOn: aContainer [
 		addBlock: 'True' as: (SBScmBoolean new contents: 't');
 		addBlock: 'False' as: (SBScmBoolean new contents: 'f');
 		addSectionHeader: 'Control Flow';
-		addBlock: 'if Condition'
-			as: (SBScmExpression new addAllMorphs: {
-				SBScmIdentifier new contents: 'if'.
-				self newNullBlock: 'condition'.
-				self newNullBlock: 'true'.
-				self newNullBlock: 'false'
-			});
-		addBlock: 'cond Condition'
-			as: (SBScmExpression new addAllMorphs: {
-				SBScmIdentifier new contents: 'cond'.
-				SBScmExpression new addAllMorphs: {self newNullBlock: 'condition1'. self newNullBlock: 'expr1'}
-			});
+		addBlock: 'if Condition' as: (SBScmExpression new addAllMorphs: {
+			SBScmIdentifier new contents: 'if'.
+			self newNullBlock: 'condition'.
+			self newNullBlock: 'true'.
+			self newNullBlock: 'false'});
+		addBlock: 'cond Condition' as: (SBScmExpression new addAllMorphs: {
+			SBScmIdentifier new contents: 'cond'.
+			SBScmExpression new addAllMorphs: {self newNullBlock: 'condition1'. self newNullBlock: 'expr1'}});
 		addSectionHeader: 'Higher-Order';
 		addBlock: 'map'
 			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: 'map'. self newNullBlock: 'proc'. self newNullBlock: 'list'});
-		addBlock: 'reduce'
-			as: (SBScmExpression new addAllMorphs: {
-				SBScmIdentifier new contents: 'reduce'.
-				self newNullBlock: 'proc'.
-				self newNullBlock: 'list'.
-				self newNullBlock: 'initial'
-			});
+		addBlock: 'reduce' as: (SBScmExpression new addAllMorphs: {
+			SBScmIdentifier new contents: 'reduce'.
+			self newNullBlock: 'proc'.
+			self newNullBlock: 'list'.
+			self newNullBlock: 'initial'});
 		addBlock: 'filter'
 			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: 'filter'. self newNullBlock: 'proc'. self newNullBlock: 'list'});
 		addSectionHeader: 'Side Effects';
@@ -104,7 +92,16 @@ SBScmPalette class >> buildOn: aContainer [
 		addSectionHeader: 'Smalltalk';
 		addBlock: 'Perform'
 			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: 'perform'. self newNullBlock: 'object'. self newNullBlock: 'symbol'});
-		addBlock: 'Language Box' as: (SBScmLanguageBox lang: 'smalltalk' source: '')
+		addBlock: 'Language Box' as: (SBScmLanguageBox lang: 'smalltalk' source: '').
+	
+	aContainer addSectionHeader: 'Your Definitions'.
+	aContainer selection containingArtefact definitions do: [:def |
+		def
+			ifDefinition: [:name |
+				aContainer
+					addBlock: name
+					as: (SBScmExpression new addMorphBack: (SBScmIdentifier new contents: name))]
+			otherwise: []]
 ]
 
 { #category : #'as yet unclassified' }

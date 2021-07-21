@@ -102,6 +102,12 @@ SBJsModule >> isMethod [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsModule >> isStatement [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBJsModule >> isTopLevel [
 
 	^ true

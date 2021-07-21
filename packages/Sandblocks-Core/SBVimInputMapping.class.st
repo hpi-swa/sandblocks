@@ -92,10 +92,10 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		inputShortcut: Character tab do: #useSuggestion;
 		inputShortcut: $j command do: #focusNextSuggestion;
 		inputShortcut: $k command do: #focusPreviousSuggestion;
-		inputShortcut: Character arrowLeft do: #moveCursorLeft;
-		inputShortcut: $h command do: #moveCursorLeft;
-		inputShortcut: Character arrowRight do: #moveCursorRight;
-		inputShortcut: $l command do: #moveCursorRight;
+		inputShortcut: Character arrowLeft do: #moveTextCursorLeft;
+		inputShortcut: $h command do: #moveTextCursorLeft;
+		inputShortcut: Character arrowRight do: #moveTextCursorRight;
+		inputShortcut: $l command do: #moveTextCursorRight;
 		inputShortcut: $a command do: #moveCursorToStart;
 		inputShortcut: $e command do: #moveCursorToEnd;
 		inputShortcut: $x command do: #clearInput;

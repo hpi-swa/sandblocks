@@ -27,6 +27,12 @@ SBOhmTerminal >> isExpression [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmTerminal >> isSimple [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmTerminal >> isTerminal [
 
 	^ true
@@ -45,6 +51,14 @@ SBOhmTerminal >> printOn: aStream [
 SBOhmTerminal >> symbols [
 
 	^ #('"' '"')
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmTerminal >> writeRascalSourceOn: aStream [
+
+	aStream nextPut: $".
+	aStream nextPutAll: self contents.
+	aStream nextPut: $"
 ]
 
 { #category : #'as yet unclassified' }

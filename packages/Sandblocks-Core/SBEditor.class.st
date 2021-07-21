@@ -26,7 +26,9 @@ Class {
 		'paletteContainer',
 		'history',
 		'dragHelper',
-		'activateForcesButton'
+		'cursor',
+		'activateForcesButton',
+		'hoverHighlight'
 	],
 	#classVars : [
 		'DefaultColorPolicy',
@@ -511,6 +513,12 @@ SBEditor >> currentInputCommand [
 	^ currentInputCommand
 ]
 
+{ #category : #accessing }
+SBEditor >> cursor [
+
+	^ cursor
+]
+
 { #category : #'as yet unclassified' }
 SBEditor >> deactivateForces [
 	
@@ -725,6 +733,12 @@ SBEditor >> handlesMouseDown: anEvent [
 	^ true
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> handlesMouseOver: anEvent [
+
+	^ true
+]
+
 { #category : #'event handling' }
 SBEditor >> handlesMouseOverDragging: evt [
 
@@ -750,7 +764,7 @@ SBEditor >> initialize [
 	globalShortcutListeners := OrderedCollection new.
 	inputMapping := self class newInputMapping.
 	searchInput := SBSearchPanel new.
-	self registerGlobalShortcutListener: searchInput.
+	cursor := SBBlockCursor new editor: self.
 	
 	paletteContainer := SBUpdatingPaletteContainer new
 		vResizing: #spaceFill;
@@ -782,9 +796,13 @@ SBEditor >> initialize [
 	self wantsMinimalLayout ifFalse: [self addMorphBack: (bottomPanel := self buildBottomPanel)].
 	
 	self
-		registerGlobalShortcutListener: errors;
 		registerGlobalShortcutListener: self;
-		resetState
+		registerGlobalShortcutListener: errors;
+		registerGlobalShortcutListener: searchInput;
+		registerGlobalShortcutListener: cursor;
+		resetState.
+	
+	SBPreferences useNewCursor ifTrue: [self openMorph: cursor]
 ]
 
 { #category : #testing }
@@ -848,7 +866,7 @@ SBEditor >> isSingleArtefactView [
 { #category : #accessing }
 SBEditor >> keepForcesActivated [
 
-	^ activateForcesButton pressed
+	^ activateForcesButton ifNotNil: #pressed ifNil: [false]
 ]
 
 { #category : #'as yet unclassified' }
@@ -1004,6 +1022,19 @@ SBEditor >> modelWakeUp [
 		self valueOfProperty: #previousWindow ifPresentDo: [:window | self owner addMorphFront: self]]
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> morphicLayerNumber [
+	" make sure we're at least over the docking bar "
+
+	^ 77 - 1
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> mouseLeave: anEvent [
+
+	hoverHighlight ifNotNil: #detach
+]
+
 { #category : #'event handling' }
 SBEditor >> mouseLeaveDragging: anEvent [
 
@@ -1139,7 +1170,7 @@ SBEditor >> openInWindow [
 { #category : #'submorphs-add/remove' }
 SBEditor >> openMorph: aMorph [
 
-	scroll scroller addMorphFront: aMorph
+	scroll scroller addMorphInLayer: aMorph
 ]
 
 { #category : #'submorphs-add/remove' }
@@ -1311,6 +1342,12 @@ SBEditor >> promptGlobalAction [
 	index > 0 ifTrue: [(options at: index) key perform: (options at: index) value selector]
 ]
 
+{ #category : #'action helpers' }
+SBEditor >> rebuildPalette [
+
+	paletteContainer rebuild
+]
+
 { #category : #'do/undo/redo' }
 SBEditor >> redo [
 	<action>
@@ -1461,6 +1498,7 @@ SBEditor >> select: aBlock [
 
 	self assert: (aBlock isNil or: [aBlock isSandblock]).
 	
+	SBPreferences useNewCursor ifTrue: [self cursor select: aBlock].
 	(currentInput ~= nil and: [currentInput ~= aBlock]) ifTrue: [self endInput].
 	
 	self internalSelect: aBlock
@@ -1469,6 +1507,7 @@ SBEditor >> select: aBlock [
 { #category : #selection }
 SBEditor >> selectClick: aBlock at: aPoint [
 
+	SBPreferences useNewCursor ifTrue: [self cursor moveCursorClick: aBlock at: aPoint].
 	aBlock select.
 	self maybeStartInputNear: aPoint.
 	self updateVerticalSelectionPosition
@@ -1483,7 +1522,9 @@ SBEditor >> selectedArtefact [
 { #category : #selection }
 SBEditor >> selection [
 
-	^ selection ifNotNil: [selection owner ifNil: [nil] ifNotNil: [selection]]
+	^ SBPreferences useNewCursor
+		ifTrue: [self cursor selectedBlock]
+		ifFalse: [selection]
 ]
 
 { #category : #accessing }
@@ -1639,6 +1680,14 @@ SBEditor >> updateMouseCursorFor: anEvent [
 	self hasChildSandblocks ifFalse: [^ self].
 	
 	event := anEvent transformedBy: (self childSandblocks first transformedFrom: self).
+	
+	(self morphsAt: anEvent position)
+		detect: [:morph | morph isSandblock]
+		ifFound: [:block |
+			hoverHighlight ifNil: [hoverHighlight := SBHoverDecorator new].
+			hoverHighlight detach.
+			block attachDecorator: hoverHighlight].
+	
 	(self morphsAt: anEvent position) do: [:morph | morph isSandblock ifTrue: [(morph mouseCursorAt: event) ifNotNil: [:cursor | ^ cursor show]]].
 	Cursor currentCursor ~= Cursor normal ifTrue: [Cursor normal show]
 ]

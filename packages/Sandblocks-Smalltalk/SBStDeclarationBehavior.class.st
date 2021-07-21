@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStDeclarationBehavior class >> checkCastFor: aBlock parent: aMorph [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBStDeclarationBehavior >> allUsages [
 
 	^ Array streamContents: [:stream |
@@ -24,6 +30,13 @@ SBStDeclarationBehavior >> allUsagesDo: aBlock [
 SBStDeclarationBehavior >> browseReferences [
 
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBStDeclarationBehavior >> browseSenders [
+	<action>
+
+	self browseReferences
 ]
 
 { #category : #'as yet unclassified' }

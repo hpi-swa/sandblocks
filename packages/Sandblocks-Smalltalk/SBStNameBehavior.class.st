@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStNameBehavior class >> checkCastFor: aBlock parent: aMorph [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
 SBStNameBehavior >> actions [
 
 	^ Array streamContents: [:stream |

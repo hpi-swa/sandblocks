@@ -22,6 +22,12 @@ SBJsObjectLiteral >> deleteCommandFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsObjectLiteral >> fixedNumberOfChildren [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBJsObjectLiteral >> initialize [
 
 	super initialize.
@@ -29,6 +35,12 @@ SBJsObjectLiteral >> initialize [
 	self addMorphBack: (SBStringMorph new contents: '{').
 	self addMorphBack: self buildEmptyRow.
 	self addMorphBack: (SBStringMorph new contents: '}')
+]
+
+{ #category : #'as yet unclassified' }
+SBJsObjectLiteral >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
+
+	^ SBRelInsertCommand new near: aBlock owner before: aBoolean in: self morph: aMorph
 ]
 
 { #category : #'as yet unclassified' }

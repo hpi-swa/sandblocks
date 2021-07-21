@@ -166,15 +166,6 @@ SBStBasicMethod >> collapsed: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBStBasicMethod >> commandPaletteClass [
-
-	(self selector = 'drawOn:' and: [self arguments size = 1 and: [self arguments first contents = 'aCanvas']])
-		ifTrue: [^ SBStCanvasPalette].
-	
-	^ SBStPalette
-]
-
-{ #category : #'as yet unclassified' }
 SBStBasicMethod >> compiledMethod [
 
 	^ (self methodClass ifNil: [^ self])
@@ -344,10 +335,12 @@ SBStBasicMethod >> instanceVariables [
 	^ Array streamContents: [:stream |
 		self methodClass withAllSuperclassesDo: [:class | | open |
 			open := [class instVarNames collect: [:name | SBStName instanceVariable: name class: class]].
-			stream nextPutAll: (editor ifNil: open ifNotNil: [editor
-				blockFor: class withInterfaces: #(isEditor)
-				ifOpen: [:c | c instanceVariables]
-				ifClosed: open])]]
+			stream nextPutAll: (SBToggledCode comment: '' active: 1 do: {
+				[open value].
+				[
+					editor
+						ifNil: open
+						ifNotNil: [editor blockFor: class withInterfaces: #(#isEditor) ifOpen: [:c | c instanceVariables] ifClosed: open]]})]]
 ]
 
 { #category : #'as yet unclassified' }

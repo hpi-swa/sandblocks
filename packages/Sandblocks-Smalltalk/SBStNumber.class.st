@@ -15,7 +15,7 @@ SBStNumber >> acceptInputEvent: anEvent [
 
 	| char |
 	char := anEvent keyCharacter.
-	(char isAlphaNumeric or: [char = $- or: [char = $.]])
+	(char isAlphaNumeric or: [(char = $- and: [text isCursorAtStart]) or: [char = $.]])
 		ifTrue: [super acceptInputEvent: anEvent]
 		ifFalse: [SBStGrammarHandler new perform: char for: self empty: false]
 ]

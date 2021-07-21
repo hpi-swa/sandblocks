@@ -85,6 +85,12 @@ SBJsASTNode >> isJavascript [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsASTNode >> isStatement [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBJsASTNode >> isVariable [
 
 	^ false

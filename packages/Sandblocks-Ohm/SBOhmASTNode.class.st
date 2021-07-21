@@ -11,6 +11,12 @@ SBOhmASTNode >> actionProviders [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmASTNode >> containingRule [
+
+	^ self parentSandblock containingRule
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmASTNode >> grammarHandler [
 
 	^ SBOhmGrammarHandler new
@@ -52,7 +58,19 @@ SBOhmASTNode >> isOhm [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmASTNode >> isOptional [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmASTNode >> isQuantifier [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmASTNode >> isRepeatQuantifier [
 
 	^ false
 ]
@@ -76,6 +94,12 @@ SBOhmASTNode >> isTerminal [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmASTNode >> isTerminalish [
+
+	^ self isTerminal
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmASTNode >> maybeUnwrapList [
 
 	^ self
@@ -83,13 +107,16 @@ SBOhmASTNode >> maybeUnwrapList [
 
 { #category : #'as yet unclassified' }
 SBOhmASTNode >> mergeRedundantGroups [
-	" flatten AND and OR sequences that only contain one child "
+	" flatten AND and OR sequences that only contain one child and nested quantifiers "
 
 	self allBlocksDo: [:b |
-		((b isAlternative or: [b isSequence]) and: [b childSandblocks size = 1 or: [(b isAlternative and: [b parentSandblock isAlternative]) or: [b isSequence and: [b parentSandblock isSequence]]]]) ifTrue: [
+		(((b isAlternative or: [b isSequence]) and: [b childSandblocks size <= 1 or: [(b isAlternative and: [b parentSandblock isAlternative]) or: [b isSequence and: [b parentSandblock isSequence]]]]) and: [(b valueOfProperty: #pinned ifAbsent: [false]) not]) ifTrue: [
 			b flattenChildren.
 			" to make sure we don't operate on an invalid tree, start over "
-			^ self mergeRedundantGroups]]
+			^ self mergeRedundantGroups].
+		(b isQuantifier and: [b quantifier = $? and: [b expression isQuantifier and: [b expression quantifier = $+]]]) ifTrue: [
+			b expression quantifier: $*.
+			b replaceBy: b expression]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -114,6 +141,12 @@ SBOhmASTNode >> preferredColor [
 SBOhmASTNode >> sourceString [
 
 	^ String streamContents: [:s | self writeSourceOn: s]
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmASTNode >> writeRascalSourceOn: aStream [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }

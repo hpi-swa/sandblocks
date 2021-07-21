@@ -5,6 +5,21 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStBinding class >> checkCastFor: aBlock parent: aMorph [
+	" binding is the fallback: always return false to let the more specific classes try and match first "
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBStBinding >> argNameToType: aString [
+
+	^ ((aString size > 3 and: [aString first = $a])
+		ifTrue: [(aString second = $n ifTrue: [aString allButFirst: 2] ifFalse: [aString allButFirst]) asSymbol]
+		ifFalse: [aString]) withFirstCharacterDownshifted
+]
+
+{ #category : #'as yet unclassified' }
 SBStBinding >> browse [
 	<action>
 
@@ -31,23 +46,30 @@ SBStBinding >> contentsChanged [
 { #category : #'as yet unclassified' }
 SBStBinding >> fixActions [
 
-	^ self validBinding
-		ifTrue: [#()]
-		ifFalse: [{
+	^ self validBinding ifTrue: [#()] ifFalse: [
+		{
 			(self block containingBlock ifNotNil: [:b | b isMethodBody not] ifNil: [false])
-					ifTrue: [
-						SBCodeAction
-							labeled: 'Declare block-local'
-							for: self block
-							do: [:node | node containingBlock declareTemporaryVariable: node contents]]
-					ifFalse: [nil].
+				ifTrue: [
+					SBCodeAction
+						labeled: 'Declare block-local'
+						for: self block
+						do: [:node | node containingBlock declareTemporaryVariable: node contents]]
+				ifFalse: [nil].
 			SBCodeAction
-				labeled: 'Declare method temporary' for: self block
+				labeled: 'Declare method temporary'
+				for: self block
 				do: [:node | node containingArtefact body declareTemporaryVariable: node contents].
 			SBCodeAction
-				labeled: 'Declare instance variable' for: self block
+				labeled: 'Declare instance variable'
+				for: self block
 				do: [:node | self declareInstanceVariable].
-		} select: #notNil]
+			self block containingArtefact isMethod
+				ifTrue: [
+					SBCodeAction labeled: 'Add method argument' for: self block do: [:node |
+						node containingArtefact signature
+							addArgument: (self argNameToType: node contents)
+							block: node veryDeepCopy]]
+				ifFalse: [nil]} select: #notNil]
 ]
 
 { #category : #'as yet unclassified' }

@@ -117,10 +117,13 @@ SBStClass >> createNewEmptyModule [
 SBStClass >> createSubclass [
 	<action>
 
-	self sandblockEditor createArtefactInView: (SBStClass new
+	| class |
+	class := SBStClass new
 		category: self category;
 		superClassName: className contents;
-		yourself)
+		yourself.
+	self sandblockEditor createArtefactInView: class.
+	class inputContainedUnknown
 ]
 
 { #category : #'as yet unclassified' }
@@ -216,6 +219,12 @@ SBStClass >> initializeBlock [
 				receiver: (SBStName contents: 'super')
 				selector: 'initialize'
 				arguments: #()})
+]
+
+{ #category : #'as yet unclassified' }
+SBStClass >> instVarNames [
+
+	^ self instanceVariables childSandblocks collect: #contents
 ]
 
 { #category : #'as yet unclassified' }

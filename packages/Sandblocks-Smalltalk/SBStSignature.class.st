@@ -5,19 +5,17 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBStSignature >> addArgumentAndEditAfter: aMorph focusKeyword: aTextMorph [
+SBStSignature >> addArgument: aString block: aBlock [
 
-	| new |
-	new := self containingSandblock newNullBlock.
-	self addMorph: new after: aMorph.
-	
-	aTextMorph
-		ifNil: [
-			self containingSandblock sandblockEditor
-				endInput;
-				startInput: new at: 0 replacingContents: false]
-		ifNotNil: [
-			self moveFocusToPart: aTextMorph]
+	self sandblockEditor do: (SBCombinedCommand newWith: {
+		SBInsertCommand new
+			container: self;
+			morph: (SBStMessagePart new contents: aString);
+			index: self submorphCount + 1.
+		SBInsertCommand new
+			container: self;
+			morph: aBlock;
+			index: self submorphCount + 2})
 ]
 
 { #category : #'as yet unclassified' }
@@ -35,7 +33,7 @@ SBStSignature >> arguments [
 { #category : #'as yet unclassified' }
 SBStSignature >> argumentsDo: aBlock [
 
-	2 to: self submorphCount by: 2 do: [:i | aBlock value: (self submorphs at: i)]
+	self submorphsDo: [:morph | morph isMessagePart ifFalse: [aBlock value: morph]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -95,7 +93,7 @@ SBStSignature >> initialize [
 { #category : #'as yet unclassified' }
 SBStSignature >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
-	| part index insertArg insertPart |
+	| part index insertArg insertPart reference |
 	(self isBinary or: [self isAssignment]) ifTrue: [^ nil].
 	self isUnary ifTrue: [
 		^ SBInsertCommand new
@@ -104,8 +102,10 @@ SBStSignature >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 			morph: aMorph;
 			yourself].
 	
-	index := aBlock owner = self
-		ifTrue: [(aBlock submorphIndex / 2) ceiling * 2 + (aBoolean ifTrue: [-1] ifFalse: [1])]
+	reference := aBlock ifNil: [aBoolean ifTrue: [self firstSubmorph] ifFalse: [self lastSubmorph]].
+	
+	index := reference owner = self
+		ifTrue: [(reference submorphIndex / 2) ceiling * 2 + (aBoolean ifTrue: [-1] ifFalse: [1])]
 		ifFalse: [1].
 	part := SBStMessagePart new contents: ':'.
 	

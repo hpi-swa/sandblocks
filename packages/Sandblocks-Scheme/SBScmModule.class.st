@@ -87,12 +87,6 @@ SBScmModule >> canPersist [
 ]
 
 { #category : #'as yet unclassified' }
-SBScmModule >> commandPaletteClass [
-
-	^ SBScmPalette
-]
-
-{ #category : #'as yet unclassified' }
 SBScmModule >> definitions [
 
 	^ Array streamContents: [:stream |

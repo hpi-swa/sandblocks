@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStKeywordBinding class >> checkCastFor: aBlock parent: aMorph [
+
+	^ aBlock isReserved and: [(SBStBoolean checkCastFor: aBlock parent: aMorph) not]
+]
+
+{ #category : #'as yet unclassified' }
 SBStKeywordBinding >> attached: aName [
 
 	super attached: aName.

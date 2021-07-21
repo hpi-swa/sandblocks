@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStDeclarationForMethodArgument class >> checkCastFor: aBlock parent: aMorph [
+
+	^ (aMorph parentSandblock ifNotNil: [:b | b isMethod] ifNil: [false]) and: [aMorph parentSandblock isMyArgument: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
 SBStDeclarationForMethodArgument >> asSuggestionItem [
 
 	^ SBSuggestionItem selector: self contents label: 'argument'

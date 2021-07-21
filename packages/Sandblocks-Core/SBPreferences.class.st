@@ -5,7 +5,8 @@ Class {
 		'DrawOnCanvas',
 		'EnableForceLayout',
 		'PreviewDropInsert',
-		'RightClickContextMenu'
+		'RightClickContextMenu',
+		'ShowHoverDecorator'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -64,4 +65,23 @@ SBPreferences class >> rightClickContextMenu [
 SBPreferences class >> rightClickContextMenu: aBoolean [
 	
 	RightClickContextMenu := aBoolean
+]
+
+{ #category : #accessing }
+SBPreferences class >> showHoverDecorator [
+	<preference: 'Show an outline around hovered blocks' category: 'sandblocks' description: 'Show an outline around the currently hovered block to help drag-and-drop' type: #Boolean>
+
+	^ ShowHoverDecorator ifNil: [false]
+]
+
+{ #category : #accessing }
+SBPreferences class >> showHoverDecorator: aBoolean [
+
+	ShowHoverDecorator := aBoolean
+]
+
+{ #category : #'as yet unclassified' }
+SBPreferences class >> useNewCursor [
+
+	^ false
 ]

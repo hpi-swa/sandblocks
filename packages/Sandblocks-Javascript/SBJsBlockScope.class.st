@@ -33,7 +33,7 @@ SBJsBlockScope >> isBlockBody [
 { #category : #'as yet unclassified' }
 SBJsBlockScope >> isMethodBody [
 
-	^ self owner isMethod
+	^ self owner ifNotNil: #isMethod ifNil: [false]
 ]
 
 { #category : #'as yet unclassified' }
@@ -48,6 +48,13 @@ SBJsBlockScope >> layoutCommands [
 SBJsBlockScope >> layoutCommandsForStatements [
 
 	^ self statements collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine withGap: true]
+]
+
+{ #category : #'as yet unclassified' }
+SBJsBlockScope >> objectInterfaceNear: aBlock at: aSymbol [
+
+	(aSymbol = #replace or: [self dynamicNumberOfChildren]) ifTrue: [^ SBInterfaces jsStatement].
+	^ SBInterfaces never
 ]
 
 { #category : #'as yet unclassified' }

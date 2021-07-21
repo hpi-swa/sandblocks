@@ -184,10 +184,10 @@ SBStContainer >> relatedClass [
 	^ self methodClass
 ]
 
-{ #category : #'compilation cue protocol' }
+{ #category : #'as yet unclassified' }
 SBStContainer >> sandblockBlockColorIfAbsent: aBlock [
 
-	^ SBStASTNode preferredColor
+	^ self preferredColor
 ]
 
 { #category : #'artefact protocol' }

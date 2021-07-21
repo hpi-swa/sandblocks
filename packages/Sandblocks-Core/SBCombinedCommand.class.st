@@ -43,6 +43,29 @@ SBCombinedCommand >> do [
 ]
 
 { #category : #'as yet unclassified' }
+SBCombinedCommand >> hasSamePositionAs: aCommand [
+
+	aCommand class = self class ifFalse: [^ false].
+	
+	self commands
+		with: aCommand commands
+		do: [:a :b | (a hasSamePositionAs: b) ifFalse: [^ false]].
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBCombinedCommand >> postDo [
+
+	commands do: #postDo
+]
+
+{ #category : #'as yet unclassified' }
+SBCombinedCommand >> preDo [
+
+	^ commands do: #preDo
+]
+
+{ #category : #'as yet unclassified' }
 SBCombinedCommand >> previousSelection [
 
 	^ previousSelection ifNil: [self commands first previousSelection]

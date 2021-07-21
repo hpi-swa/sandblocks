@@ -76,12 +76,6 @@ SBPaletteContainer >> grammarHandler [
 ]
 
 { #category : #'as yet unclassified' }
-SBPaletteContainer >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
-
-	aBlock delete
-]
-
-{ #category : #'as yet unclassified' }
 SBPaletteContainer >> initialize [
 
 	super initialize.
@@ -103,12 +97,14 @@ SBPaletteContainer >> initialize [
 		attachDecorator: SBMoveDecorator new;
 		attachDecorator: SBResizableDecorator new.
 	
-	self lastSubmorph scroller addMorphBack: (content := SBColumn new
-		useAlgebraLayout;
-		minimumWidth: 300;
-		width: 300;
-		cellGap: 4;
-		layoutInset: 8)
+	self lastSubmorph scroller
+		addMorphBack: (content := SBColumn new
+			useAlgebraLayout;
+			minimumWidth: 300;
+			width: 300;
+			cellGap: 4;
+			layoutInset: 8);
+		changeTableLayout
 ]
 
 { #category : #'as yet unclassified' }
@@ -164,4 +160,10 @@ SBPaletteContainer >> scrollToSection: aBlock event: anEvent morph: aMorph [
 SBPaletteContainer >> selectedBlock [
 
 	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBPaletteContainer >> specialDropCommand: aBlock [
+
+	^ SBDeleteCommand new target: aBlock
 ]

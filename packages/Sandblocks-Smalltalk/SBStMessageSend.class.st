@@ -146,7 +146,7 @@ SBStMessageSend >> deleteCommandFor: aBlock [
 			target: (self isUnary ifTrue: [self] ifFalse: [aBlock]);
 			replacer: (self isUnary ifTrue: [SBStName contents: self selector] ifFalse: [self newNullBlock])].
 	
-	(self isUnary and: [self isInCascade not]) ifTrue: [
+	(self arguments size < 2 and: [self isInCascade not and: [aBlock isMessagePart]]) ifTrue: [
 		^ SBReplaceCommand new
 			target: self;
 			replacer: self receiver].
@@ -241,7 +241,7 @@ SBStMessageSend >> isConstructor: aString for: aClass [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> isDefined [
 
-	^ Symbol hasInterned: self selector ifTrue: [:sym | true]
+	^ (Symbol hasInterned: self selector ifTrue: [:sym | true]) or: [self containingArtefact isMethod and: [self containingArtefact selector = self selector]]
 ]
 
 { #category : #'as yet unclassified' }

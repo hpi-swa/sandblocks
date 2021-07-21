@@ -7,6 +7,12 @@ SBUnknown >> isJavascript [
 ]
 
 { #category : #'*Sandblocks-Javascript' }
+SBUnknown >> isVariable [
+
+	^ true
+]
+
+{ #category : #'*Sandblocks-Javascript' }
 SBUnknown >> writeJsSourceOn: aStream [
 
 	

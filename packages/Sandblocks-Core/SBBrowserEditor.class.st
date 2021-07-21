@@ -2,10 +2,31 @@ Class {
 	#name : #SBBrowserEditor,
 	#superclass : #SBEditor,
 	#instVars : [
-		'model'
+		'model',
+		'fillHorizontal',
+		'fillVertical'
 	],
 	#category : #'Sandblocks-Core'
 }
+
+{ #category : #'as yet unclassified' }
+SBBrowserEditor class >> openInWindow: aBlock [
+
+	^ SBBrowserEditor new
+		fillVertical: true;
+		fillHorizontal: true;
+		openMorphInView: aBlock;
+		openInWindow
+]
+
+{ #category : #'as yet unclassified' }
+SBBrowserEditor >> applyLayoutProperties: aMorph [
+
+	aMorph
+		hResizing: (self fillHorizontal ifTrue: [#spaceFill] ifFalse: [#shrinkWrap]);
+		vResizing: (self fillVertical ifTrue: [#spaceFill] ifFalse: [#shrinkWrap]);
+		position: 0 @ 0
+]
 
 { #category : #'dependents access' }
 SBBrowserEditor >> canDiscardEdits [
@@ -36,15 +57,46 @@ SBBrowserEditor >> ensureOpened: aMethod [
 	((model respondsTo: #autoSelectString) and: [model autoSelectString notNil]) ifTrue: [self search search: model autoSelectString]
 ]
 
+{ #category : #accessing }
+SBBrowserEditor >> fillHorizontal [
+
+	^ fillHorizontal ifNil: [true]
+]
+
+{ #category : #accessing }
+SBBrowserEditor >> fillHorizontal: aBoolean [
+
+	fillHorizontal := aBoolean
+]
+
+{ #category : #accessing }
+SBBrowserEditor >> fillVertical [
+
+	^ fillVertical ifNil: [false]
+]
+
+{ #category : #accessing }
+SBBrowserEditor >> fillVertical: aBoolean [
+
+	fillVertical := aBoolean
+]
+
 { #category : #initialization }
 SBBrowserEditor >> initialize [
 
 	super initialize.
+	
+	fillHorizontal := true.
+	fillVertical := false.
+	
 	scroll
 		vResizing: #spaceFill;
 		hResizing: #spaceFill;
-		hScrollBarPolicy: #never.
-	scroll scroller layoutPolicy: SBSimpleLayout new
+		hScrollBarPolicy: #never;
+		color: Color transparent.
+	scroll scroller
+		layoutPolicy: SBSimpleLayout new;
+		on: #click send: #click: to: self
 ]
 
 { #category : #testing }
@@ -89,7 +141,9 @@ SBBrowserEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean 
 
 	| ret |
 	ret := super save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean.
-	((anArtefact object isBehavior or: [anArtefact object isCompiledMethod]) and: [self modelSelection ~~ anArtefact object]) ifTrue: [self modelSelection: anArtefact object].
+	
+	model ifNotNil: [
+		((anArtefact object isBehavior or: [anArtefact object isCompiledMethod]) and: [self modelSelection ~~ anArtefact object]) ifTrue: [self modelSelection: anArtefact object]].
 	^ ret
 ]
 
@@ -104,7 +158,7 @@ SBBrowserEditor >> scrollToShow: aRectangle [
 { #category : #'as yet unclassified' }
 SBBrowserEditor >> scrollerClass [
 
-	^ ScrollPane
+	^ SBEditorScrollPane
 ]
 
 { #category : #'as yet unclassified' }

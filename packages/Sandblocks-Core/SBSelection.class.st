@@ -214,6 +214,8 @@ SBSelection >> multiSelection [
 { #category : #'as yet unclassified' }
 SBSelection >> object [
 
+	self hasSubmorphs ifFalse: [^ nil].
+	
 	^ self submorphCount > 1
 		ifTrue: [
 			SBStBlockBody new statements: (self submorphs collect: [:morph | morph object])]

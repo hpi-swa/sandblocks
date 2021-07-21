@@ -15,11 +15,7 @@ Class {
 SBEditorOpenMorphCommand >> applyLayoutProperties: aMorph [
 
 	editor isSingleArtefactView
-		ifTrue: [
-			aMorph
-				hResizing: #spaceFill;
-				vResizing: #shrinkWrap;
-				position: 0 @ 0]
+		ifTrue: [editor applyLayoutProperties: aMorph]
 		ifFalse: [self applyPositionTo: aMorph in: nil]
 ]
 
@@ -34,14 +30,14 @@ SBEditorOpenMorphCommand >> do [
 			browser contentsSymbol ~= #blockEditor ifTrue: [browser model toggleBlockEditor].
 			window := browser containingWindow.
 			Project current addDeferredUIMessage: [
-				browser blockEditor openMorphInView: morph.
+				browser blockEditor openMorph: morph.
 				isUnsaved ifTrue: [browser blockEditor do: (SBDoItCommand new artefact: morph)].
 				browser blockEditor startInput: morph at: 1 replacingContents: false]]
 		ifFalse: [
 			editor isSingleArtefactView ifTrue: [
 				priorChildren := editor childSandblocks.
 				priorChildren do: #delete].
-			(self editor openMorphInViewCommand: morph) do.
+			self editor openMorph: morph.
 			self applyPositionTo: morph in: nil].
 	
 	morph withDecorator: SBForceMoveDecorator do: [:d | d createImplicitForces].

@@ -19,6 +19,17 @@ SBTextInputMapping >> registerDefaultShortcuts [
 
 	super registerDefaultShortcuts.
 	
+	SBPreferences useNewCursor ifTrue: [
+		self
+			shortcut: Character arrowDown do: #moveCursorDown;
+			shortcut: Character arrowUp do: #moveCursorUp;
+			shortcut: Character arrowLeft do: #moveCursorLeft;
+			shortcut: Character arrowRight do: #moveCursorRight;
+			shortcut: Character arrowUp shift do: #moveCursorLarger;
+			shortcut: Character arrowDown shift do: #moveCursorSmaller;
+			shortcut: Character arrowLeft command do: #moveCursorLeftWordwise;
+			shortcut: Character arrowRight command do: #moveCursorRightWordwise].
+	
 	" input "
 	self
 		inputShortcut: Character arrowDown do: #focusNextSuggestion;
@@ -26,12 +37,13 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		inputShortcut: $j command do: #focusNextSuggestion;
 		inputShortcut: $k command do: #focusPreviousSuggestion;
 		inputShortcut: Character arrowLeft asSandblockShortcut, Character arrowLeft shift, Character arrowLeft command
-			do: #moveCursorLeft;
+			do: #moveTextCursorLeft;
 		inputShortcut: Character arrowRight asSandblockShortcut, Character arrowRight shift, Character arrowRight command
-			do: #moveCursorRight;
-		inputShortcut: Character arrowUp asSandblockShortcut, Character arrowUp command do: #moveCursorUp;
+			do: #moveTextCursorRight;
+		inputShortcut: Character arrowUp asSandblockShortcut, Character arrowUp command
+			do: #moveTextCursorUp;
 		inputShortcut: Character arrowDown asSandblockShortcut, Character arrowDown command
-			do: #moveCursorDown;
+			do: #moveTextCursorDown;
 		inputShortcut: Character arrowUp do: #moveCursorUp;
 		inputShortcut: Character backspace do: #deleteBeforeCursor;
 		inputShortcut: Character delete do: #deleteAfterCursor;
@@ -160,7 +172,9 @@ SBTextInputMapping >> registerDefaultShortcuts [
 	
 	" javascript "
 	self
-		cmdShortcut: ${ do: #wrapInObjectLiteral;
+		cmdShortcut: $} do: #wrapInObjectLiteral;
+		cmdShortcut: ${ do: #wrapInKeywordBlock;
+		cmdShortcut: $( do: #wrapInClosure;
 		cmdShortcut: Character space do: #wrapInInfixOp;
 		cmdShortcut: Character space shift do: #wrapInPrefixOp.
 	
@@ -178,7 +192,6 @@ SBTextInputMapping >> registerDefaultShortcuts [
 	";
 		registerShortcut: Character arrowLeft command withShift do: #multiSelectLeft;
 		registerShortcut: Character arrowRight command withShift do: #multiSelectRight"
-	
 	" special overrides "
 	self
 		registerShortcut: Character escape do: #dismiss;

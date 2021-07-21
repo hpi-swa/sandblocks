@@ -82,11 +82,25 @@ SBBlock >> allBlocksFor: anObject withInterfaces: aCollection [
 			(morph isSandblock and: [morph object = anObject and: [morph satisfies: aCollection]]) ifTrue: [stream nextPut: morph]]]
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> allBlocksSatisfy: aBlock [
+
+	self allBlocksDo: [:b | (aBlock value: b) ifFalse: [^ false]].
+	^ true
+]
+
 { #category : #hierarchy }
 SBBlock >> allBlocksSelect: aBlock [
 
 	^ Array streamContents: [:stream |
 		self allBlocksDo: [:b | (aBlock value: b) ifTrue: [stream nextPut: b]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> allChildBlocksSatisfy: aBlock [
+
+	self allBlocksDo: [:b | (b ~= self and: [(aBlock value: b) not]) ifTrue: [^ false]].
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -237,6 +251,18 @@ SBBlock >> canCopy [
 SBBlock >> canDeleteChild: aBlock [
 
 	^ self fixedNumberOfChildren not
+]
+
+{ #category : #accessing }
+SBBlock >> canDrag [
+
+	^ self valueOfProperty: #canDrag ifAbsent: [true]
+]
+
+{ #category : #accessing }
+SBBlock >> canDrag: aBoolean [
+
+	self setProperty: #canDrag toValue: aBoolean
 ]
 
 { #category : #'actions tests' }
@@ -397,12 +423,6 @@ SBBlock >> colorPolicy [
 	^ colorPolicyCache ifNil: [
 		self valueOfProperty: #localColorPolicy ifPresentDo: [:c | ^ colorPolicyCache := c].
 		self parentSandblock ifNotNil: [:p | colorPolicyCache := p colorPolicy] ifNil: [SBDefaultColorPolicy new]]
-]
-
-{ #category : #'ast helpers' }
-SBBlock >> commandPaletteClass [
-
-	^ self parentSandblock ifNotNil: #commandPaletteClass
 ]
 
 { #category : #testing }
@@ -609,21 +629,23 @@ SBBlock >> deleteAround [
 	
 	editor countModifier - 1 timesRepeat: [target := target parentSandblock ifNil: [^ self]].
 	
-	(self parentSandblock childSandblocks size > 1 and: [target parentHasDynamicNumberOfChildren and: [self isStatement]]) ifTrue: [
-		self setProperty: #copyPlaceholder toValue: true.
-		SBToggledCode
-			comment: 'TODO: we still need to delete adjacent elements before copying'
-			active: 1
-			do: {[editor copyBuffer: target]}.
-		self removeProperty: #copyPlaceholder.
-		
-		editor do: (SBRecordedCommand new record: [:recorder |
-			recorder
-				moveAll: self parentSandblock childSandblocks
-				in: target owner
-				at: target submorphIndex + 1.
-			recorder remove: target]).
-		^ self].
+	SBToggledCode comment: 'Special type of unwrap for dynamically sized parents' active: 0 do: {
+		[
+			(self parentSandblock childSandblocks size > 1 and: [target parentHasDynamicNumberOfChildren and: [self isStatement]]) ifTrue: [
+				self setProperty: #copyPlaceholder toValue: true.
+				SBToggledCode
+					comment: 'TODO: we still need to delete adjacent elements before copying'
+					active: 1
+					do: {[editor copyBuffer: target]}.
+				self removeProperty: #copyPlaceholder.
+				
+				editor do: (SBRecordedCommand new record: [:recorder |
+					recorder
+						moveAll: self parentSandblock childSandblocks
+						in: target owner
+						at: target submorphIndex + 1.
+					recorder remove: target]).
+				^ self]]}.
 	
 	[
 		self convertedFor: target objectInterface do: [:replacer |
@@ -1015,8 +1037,7 @@ SBBlock >> grammarHandler [
 { #category : #'event handling' }
 SBBlock >> handlesMouseDown: anEvent [
 
-	^ anEvent redButtonPressed or: [
-		SBPreferences rightClickContextMenu and: [anEvent yellowButtonPressed]]
+	^ anEvent redButtonPressed or: [SBPreferences rightClickContextMenu and: [anEvent yellowButtonPressed]]
 ]
 
 { #category : #'event handling' }
@@ -1035,7 +1056,7 @@ SBBlock >> hasChildSandblocks [
 { #category : #'actions tests' }
 SBBlock >> hasCommandPalette [
 
-	^ self commandPaletteClass notNil
+	^ SBPalette allSubclasses anySatisfy: [:palette | (self satisfies: palette context) and: [palette matchesBlock: self]]
 ]
 
 { #category : #'actions tests' }
@@ -1048,6 +1069,14 @@ SBBlock >> hasCurrentTextMorph [
 SBBlock >> hasDecorator: aClass [
 
 	^ decorators anySatisfy: [:d | d isKindOf: aClass]
+]
+
+{ #category : #layout }
+SBBlock >> hasHorizontalLayout [
+
+	^ self submorphs size < 2 or: [ | delta |
+		delta := self submorphs first topLeft - self submorphs second topLeft.
+		delta x < delta y]
 ]
 
 { #category : #testing }
@@ -1077,7 +1106,7 @@ SBBlock >> hasSuggestions [
 { #category : #testing }
 SBBlock >> hasUnsavedChanges [
 
-	^ self sandblockEditor hasUnsavedChanges: self
+	^ self sandblockEditor ifNotNil: [:e | e hasUnsavedChanges: self] ifNil: [false]
 ]
 
 { #category : #initialization }
@@ -1311,6 +1340,14 @@ SBBlock >> isFirstChild [
 ]
 
 { #category : #'testing hierarchy' }
+SBBlock >> isInEditor [
+
+	| editor |
+	editor := self sandblockEditor.
+	^ editor notNil and: [editor isSelection not or: [editor parentSandblock ifNotNil: #isInEditor ifNil: [false]]]
+]
+
+{ #category : #'testing hierarchy' }
 SBBlock >> isLastChild [
 
 	^ self parentSandblock childSandblocks last = self
@@ -1330,6 +1367,12 @@ SBBlock >> isLiteralBlock [
 
 { #category : #testing }
 SBBlock >> isMethod [
+
+	^ false
+]
+
+{ #category : #testing }
+SBBlock >> isMethodBody [
 
 	^ false
 ]
@@ -1515,6 +1558,12 @@ SBBlock >> minExtent [
 ]
 
 { #category : #accessing }
+SBBlock >> morphicLayerNumber [
+
+	^ 100
+]
+
+{ #category : #accessing }
 SBBlock >> mouseCursorAt: anEvent [
 
 	| cursor priority |
@@ -1550,7 +1599,23 @@ SBBlock >> mouseMove: anEvent [
 ]
 
 { #category : #actions }
-SBBlock >> moveCursorDown [
+SBBlock >> moveCursorToEnd [
+	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
+
+	self currentTextMorph moveCursorTo: 9e8
+]
+
+{ #category : #actions }
+SBBlock >> moveCursorToStart [
+	<inputAction>
+	<actionValidIf: #hasCurrentTextMorph>
+
+	self currentTextMorph moveCursorTo: 1
+]
+
+{ #category : #actions }
+SBBlock >> moveTextCursorDown [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
@@ -1567,12 +1632,11 @@ SBBlock >> moveCursorDown [
 ]
 
 { #category : #actions }
-SBBlock >> moveCursorLeft [
+SBBlock >> moveTextCursorLeft [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
 	| editor wordWise |
-	
 	wordWise := ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed].
 	editor := self sandblockEditor.
 	self currentTextMorph
@@ -1591,12 +1655,11 @@ SBBlock >> moveCursorLeft [
 ]
 
 { #category : #actions }
-SBBlock >> moveCursorRight [
+SBBlock >> moveTextCursorRight [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
 	| editor wordWise |
-	
 	wordWise := ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed].
 	editor := self sandblockEditor.
 	self currentTextMorph
@@ -1605,30 +1668,13 @@ SBBlock >> moveCursorRight [
 			next := (self currentTextMorph nextMorphThat: [:b | b isTextMorph]) ifNotNil: #containingSandblock.
 			(next notNil and: [next containingFloat = self containingFloat]) ifTrue: [
 				editor select: next.
-				next currentTextMorph ifNotNil: [
-					editor startInput: next at: (wordWise ifTrue: [900000000] ifFalse: [0]) replacingContents: false]]]
+				next currentTextMorph ifNotNil: [editor startInput: next at: (wordWise ifTrue: [900000000] ifFalse: [0]) replacingContents: false]]]
 		wordWise: wordWise.
 	editor updateVerticalSelectionPosition
 ]
 
 { #category : #actions }
-SBBlock >> moveCursorToEnd [
-	<inputAction>
-	<actionValidIf: #hasCurrentTextMorph>
-
-	self currentTextMorph moveCursorTo: 9e8
-]
-
-{ #category : #actions }
-SBBlock >> moveCursorToStart [
-	<inputAction>
-	<actionValidIf: #hasCurrentTextMorph>
-
-	self currentTextMorph moveCursorTo: 1
-]
-
-{ #category : #actions }
-SBBlock >> moveCursorUp [
+SBBlock >> moveTextCursorUp [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
@@ -1761,13 +1807,15 @@ SBBlock >> objectInterfaceNear: aBlock at: aSymbol [
 ]
 
 { #category : #actions }
-SBBlock >> openPalette [
+SBBlock >> openLocalPalette [
 	<action>
 	<actionValidIf: #hasCommandPalette>
 
 	| palettes |
-	palettes := SBPalette allSubclasses select: [:palette |
-		(self satisfies: palette context) and: [palette matchesBlock: self]].
+	self sandblockEditor isSingleArtefactView ifTrue: [
+		^ self sandblockEditor togglePalette].
+
+	palettes := SBPalette allSubclasses select: [:palette | (self satisfies: palette context) and: [palette matchesBlock: self]].
 	palettes ifNotEmpty: [ | container |
 		container := SBPaletteContainer new.
 		palettes do: [:class | class buildOn: container].
@@ -1891,6 +1939,8 @@ SBBlock >> performAction: aSymbol [
 SBBlock >> pickUp: anEvent [
 
 	| editor s |
+	self canDrag ifFalse: [^ self].
+
 	editor := self sandblockEditor.
 	s := SBSelection new
 		homeArtefact: self containingArtefact;
@@ -2397,7 +2447,7 @@ SBBlock >> startDrag: anEvent [
 		comment: 'if the preference is on, we absorb the startDrag events'
 		active: 1
 		do: {[anEvent yellowButtonPressed and: [SBPreferences rightClickContextMenu]]}) ifTrue: [ | canvas |
-		canvas := self sandblockEditor canvas.
+		canvas := self sandblockEditor canvas scroller.
 		anEvent hand newMouseFocus: canvas.
 		^ canvas startDrag: (anEvent transformBy: self transformFromWorld asMatrixTransform2x3 inverseTransformation)].
 	
@@ -2580,7 +2630,7 @@ SBBlock >> update [
 { #category : #decorators }
 SBBlock >> updateSteppingDecorators [
 
-	self decorators do: [:d | d stepTime >= 0 ifTrue: [self world ifNotNil: [:w | w startStepping: d at: Time millisecondClockValue selector: #step arguments: {} stepTime: d stepTime]]]
+	self decorators do: [:d | d stepTime >= 0 ifTrue: [self world ifNotNil: [:w | (w isStepping: d) ifFalse: [w startStepping: d at: Time millisecondClockValue selector: #step arguments: {} stepTime: d stepTime]]]]
 ]
 
 { #category : #suggestions }

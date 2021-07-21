@@ -353,7 +353,7 @@ SBOwnTextMorph >> keyStroke: anEvent [
 	| char |
 	char := anEvent keyCharacter.
 	
-	({Character arrowUp. Character arrowDown} includes: char) ifTrue: [^ self].
+	({Character arrowUp. Character arrowDown. Character insert} includes: char) ifTrue: [^ self].
 	(self multiLine not and: [char = Character cr]) ifTrue: [^ self].
 	
 	char = Character arrowLeft ifTrue: [^ self moveCursorTo: self cursor - 1].

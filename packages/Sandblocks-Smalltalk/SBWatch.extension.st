@@ -10,6 +10,12 @@ SBWatch >> asStExpression: converter [
 ]
 
 { #category : #'*Sandblocks-Smalltalk' }
+SBWatch >> guessClassExpensive [
+
+	^ self expression guessClassExpensive
+]
+
+{ #category : #'*Sandblocks-Smalltalk' }
 SBWatch >> guessedClass [
 
 	^ self expression guessedClass

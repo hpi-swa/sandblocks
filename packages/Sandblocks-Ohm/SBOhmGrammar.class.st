@@ -27,6 +27,12 @@ SBOhmGrammar class >> from: aString [
 	^ reader value: result
 ]
 
+{ #category : #'as yet unclassified' }
+SBOhmGrammar class >> fromGrammar: aGrammar [
+
+	^ self from: aGrammar grammarDefinitionString
+]
+
 { #category : #smalltalk }
 SBOhmGrammar >> canAppearInBlockBody [
 
@@ -127,9 +133,27 @@ SBOhmGrammar >> objectInterfaceNear: aBlock at: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmGrammar >> openAsBlocksFrom: anOhmGrammar [
+
+	SBGrammarTransformer openFor: self original: anOhmGrammar
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmGrammar >> rascalSource [
+
+	^ String streamContents: [:stream | self writeRascalSourceOn: stream]
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmGrammar >> ruleNamed: aString [
 
 	^ self childSandblocks detect: [:rule | rule name = aString]
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmGrammar >> ruleNamed: aString ifNone: aBlock [
+
+	^ self childSandblocks detect: [:rule | rule name = aString] ifNone: aBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -169,6 +193,18 @@ SBOhmGrammar >> writeOhmSourceOn: aStream [
 			cr;
 			cr].
 	aStream nextPut: $}
+]
+
+{ #category : #'as yet unclassified' }
+SBOhmGrammar >> writeRascalSourceOn: aStream [
+
+	aStream
+		nextPutAll: 'module lang::g::Syntax';
+		cr.
+	self statements do: [:s | s writeRascalSourceOn: aStream] separatedBy: [
+		aStream
+			cr;
+			cr]
 ]
 
 { #category : #'as yet unclassified' }

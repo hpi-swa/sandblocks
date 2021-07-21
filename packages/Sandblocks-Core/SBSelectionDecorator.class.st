@@ -44,7 +44,8 @@ SBSelectionDecorator >> detached: aMorph [
 SBSelectionDecorator >> focusChanged: aBoolean [
 
 	blinkCount := aBoolean ifTrue: [0] ifFalse: [self maxBlickCount].
-	self morph ifNotNil: #updateSteppingDecorators
+	self morph ifNotNil: #updateSteppingDecorators.
+	self changed
 ]
 
 { #category : #'as yet unclassified' }
@@ -65,6 +66,8 @@ SBSelectionDecorator >> maxBlickCount [
 SBSelectionDecorator >> postDrawOn: aCanvas [
 
 	| b color |
+	SBPreferences useNewCursor ifTrue: [^ self].
+	
 	self cursorVisible ifFalse: [^ self].
 	b := self morph bounds expandBy: 2.
 	color := self color.

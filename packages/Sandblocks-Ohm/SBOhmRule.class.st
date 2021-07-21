@@ -17,15 +17,27 @@ SBOhmRule >> allUsagesDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmRule >> containingRule [
+
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmRule >> currentTextMorph [
 
 	^ self firstSubmorph
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmRule >> ensureExpressionIsAlternative [
+
+	self expression isAlternative ifFalse: [self addMorphBack: (SBOhmList new connect: 'OR' expressions: {self expression})]
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmRule >> expression [
 
-	^ self lastSubmorph
+	^ self lastSubmorph isSandblock ifTrue: [self lastSubmorph] ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -36,9 +48,15 @@ SBOhmRule >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmRule >> isLexical [
+
+	^ self name first isLowercase
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmRule >> isPrimitive [
 
-	self allBlocksDo: [:b | (b isIdentifier and: [b isPrimitive not]) ifTrue: [^ false]].
+	self allBlocksDo: [:b | ((b isIdentifier and: [b isSimple not]) or: [b isTerminal and: [b contents size > 1]]) ifTrue: [^ false]].
 	^ true
 ]
 
@@ -69,6 +87,12 @@ SBOhmRule >> name [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmRule >> name: aString [
+
+	self currentTextMorph contents: aString
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmRule >> name: aString alternatives: aBlock [
 
 	self addMorphBack: ((SBOwnTextMorph new placeholderText: 'name') contents: aString).
@@ -91,9 +115,24 @@ SBOhmRule >> wantsInput [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmRule >> writeRascalSourceOn: aStream [
+
+	aStream nextPutAll: 'syntax '.
+	aStream nextPutAll: self name.
+	aStream nextPutAll: ' = '.
+	self expression isAlternative
+		ifTrue: [self expression writeOnMultipleLinesOn: aStream]
+		ifFalse: [self expression writeSourceOn: aStream].
+	aStream nextPutAll: ';'
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmRule >> writeSourceOn: aStream [
 
 	aStream nextPutAll: self name.
+	self expression isAlternative ifTrue: [aStream crtab].
 	aStream nextPutAll: ' = '.
-	self expression writeSourceOn: aStream
+	self expression isAlternative
+		ifTrue: [self expression writeOnMultipleLinesOn: aStream]
+		ifFalse: [self expression writeSourceOn: aStream]
 ]

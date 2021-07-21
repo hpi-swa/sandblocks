@@ -8,6 +8,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStDeclarationForInstanceVariable class >> checkCastFor: aBlock parent: aMorph [
+
+	| artefact |
+	artefact := aMorph containingSandblock containingArtefact.
+	^ (artefact satisfies: {#notNil. #isEditor. #isClassContainer}) and: [aMorph = artefact instanceVariables]
+]
+
+{ #category : #'as yet unclassified' }
 SBStDeclarationForInstanceVariable >> asSuggestionItem [
 
 	^ SBSuggestionItem selector: self contents label: 'instance variable'
@@ -25,7 +33,7 @@ SBStDeclarationForInstanceVariable >> browseReferences [
 
 	self systemNavigation
 		browseAllAccessesTo: self contents
-		from: class
+		from: class object
 ]
 
 { #category : #'as yet unclassified' }
@@ -35,7 +43,7 @@ SBStDeclarationForInstanceVariable >> class: aClass [
 ]
 
 { #category : #'as yet unclassified' }
-SBStDeclarationForInstanceVariable >> defineGetterSetter [
+SBStDeclarationForInstanceVariable >> createGetterSetter [
 	<action>
 
 	self block sandblockEditor

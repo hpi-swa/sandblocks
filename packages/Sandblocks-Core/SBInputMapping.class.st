@@ -71,6 +71,12 @@ SBInputMapping >> registerDefaultShortcuts [
 { #category : #'shortcut execute' }
 SBInputMapping >> registerShortcut: aShortcut do: aSymbol [
 
+	self shortcut: aShortcut do: aSymbol
+]
+
+{ #category : #'shortcut execute' }
+SBInputMapping >> shortcut: aShortcut do: aSymbol [
+
 	registerBlock value: aShortcut value: aSymbol
 ]
 
