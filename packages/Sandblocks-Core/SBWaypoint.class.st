@@ -157,15 +157,3 @@ SBWaypoint >> toggleTarget: aWaypoint [
 	self targets remove: aWaypoint ifAbsent: [self targets add: aWaypoint].
 	self counterMorph contents: self targets size asString
 ]
-
-{ #category : #'as yet unclassified' }
-SBWaypoint >> wasDeselected [ 
-	
-	super wasDeselected 
-]
-
-{ #category : #'as yet unclassified' }
-SBWaypoint >> wasSelected [ 
-	
-	super wasSelected 
-]

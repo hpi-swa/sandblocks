@@ -25,15 +25,16 @@ SBStringMorph >> clearEmphasis [
 { #category : #accessing }
 SBStringMorph >> color [
 
-	^ (color ifNil: [self containingSandblock foregroundColor]) alpha: self opacity
+	^ (color ifNil: [self containingSandblock
+		ifNil: [super color]
+		ifNotNil: [:b | b foregroundColor]]) alpha: self opacity
 ]
 
 { #category : #'as yet unclassified' }
 SBStringMorph >> color: aColor [
 
 	aColor ifNotNil: [super color: aColor] ifNil: [
-		color := aColor.
-		super color: self color]
+		color := aColor]
 ]
 
 { #category : #drawing }

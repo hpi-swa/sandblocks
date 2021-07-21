@@ -6031,7 +6031,7 @@ SBIcon >> cleanCache [
 { #category : #drawing }
 SBIcon >> color [
 
-	^ color ifNil: [self containingSandblock foregroundColor]
+	^ color ifNil: [self containingSandblock ifNil: [super color] ifNotNil: [:b | b foregroundColor]]
 ]
 
 { #category : #colors }
@@ -6039,8 +6039,7 @@ SBIcon >> color: aColor [
 
 	cachedForm := nil.
 	aColor ifNotNil: [super color: aColor] ifNil: [
-		color := aColor.
-		super color: self color]
+		color := aColor]
 ]
 
 { #category : #drawing }

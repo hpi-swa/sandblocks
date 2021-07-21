@@ -138,3 +138,13 @@ SBForceConnector >> saveString [
 			nextPutAll: self forceScale asString.
 		]
 ]
+
+{ #category : #'as yet unclassified' }
+SBForceConnector >> step [ 
+    | aGroup |
+    aGroup := self from group.
+
+    (aGroup = self to group and: [aGroup notNil])
+        ifTrue: [self hide]
+        ifFalse: [self show]
+]

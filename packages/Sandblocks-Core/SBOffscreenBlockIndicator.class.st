@@ -165,13 +165,10 @@ SBOffscreenBlockIndicator >> shouldHide [
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> shouldHideDefault [
 
-	^ SBToggledCode comment: '' active: 2 do: {
-		[
-			(self target
+	^(self target
 				withDecorator: SBForceMoveDecorator
 				do: [:decorator | decorator group notNil]
-				ifAbsent: [false]) and: [self isHighlighted not]].
-		[true]}
+				ifAbsent: [false]) and: [self isHighlighted not].
 ]
 
 { #category : #'as yet unclassified' }
@@ -194,7 +191,6 @@ SBOffscreenBlockIndicator >> step [
 			^ self hide].
 	
 	self updateLabel.
-	"this is only here because of Waypoints. TODO: remove"
 	
 	viewRectangle := self scroller innerBounds.
 	viewCenter := viewRectangle center.
@@ -232,11 +228,7 @@ SBOffscreenBlockIndicator >> target [
 SBOffscreenBlockIndicator >> target: aMorph [
 
 	target := aMorph.
-	
-	self
-		updateLabel;
-		addMorph: self labelMorph.
-	
+	self	updateLabel.
 	aMorph when: #delete send: #abandon to: self
 ]
 
