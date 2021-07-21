@@ -47,6 +47,12 @@ SBLightPlusTheme >> editor [
 ]
 
 { #category : #colors }
+SBLightPlusTheme >> highlightColor [
+
+	^ Color r: 0.0 g: 0.2 b: 0.681
+]
+
+{ #category : #colors }
 SBLightPlusTheme >> identifier [
 
 	^ Color blue

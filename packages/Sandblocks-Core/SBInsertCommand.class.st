@@ -27,6 +27,7 @@ SBInsertCommand >> do [
 
 	container addMorph: morph asElementNumber: index.
 	self applyPositionTo: morph in: container.
+	morph isSandblock ifTrue: [morph withDecorator: SBForceMoveDecorator do: [:d | d createImplicitForces]].
 	^ select ifNil: [morph]
 ]
 

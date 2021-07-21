@@ -199,6 +199,12 @@ SBStCodeOpener >> methods [
 ]
 
 { #category : #'as yet unclassified' }
+SBStCodeOpener >> morphicLayerNumber [
+
+	^ 60
+]
+
+{ #category : #'as yet unclassified' }
 SBStCodeOpener >> open [
 
 	| hand world |

@@ -7,7 +7,8 @@ Class {
 		'additionalForces',
 		'pinnedPosition',
 		'previousVelocity',
-		'speedMultiplier'
+		'speedMultiplier',
+		'group'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -48,9 +49,10 @@ SBForceMoveDecorator >> additionalForces: anObject [
 SBForceMoveDecorator >> applyForces [
 
 	| newSpeedMultiplier |
-	
 	self isPinned ifTrue: [^ self morph position: self pinnedPosition].
 	self isDragging ifTrue: [^ self].
+	
+	idealPosition ifNil: [idealPosition := self morph position].
 	
 	velocity := 0 @ 0.
 	self additionalForces do: [:forceConnection | velocity := velocity + (forceConnection forceFor: self morph)].
@@ -72,6 +74,7 @@ SBForceMoveDecorator >> applyForces [
 SBForceMoveDecorator >> attached: aMorph [
 
 	super attached: aMorph.
+	self group: nil.
 	self idealPosition: aMorph position
 ]
 
@@ -81,27 +84,17 @@ SBForceMoveDecorator >> attractionTo: otherMorph [
 	^ self morph attractionTo: otherMorph
 ]
 
-{ #category : #nil }
+{ #category : #'as yet unclassified' }
 SBForceMoveDecorator >> block: aBlock [
+	"ignore this for performAction in block"
 
-	"ignore this for performAction in Block"
+	
 ]
 
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> blockAtPoint: aPoint [
-
-	| best bestArea |
-	best := nil.
-	bestArea := 0.
 	
-	self morph owner childSandblocksDo: [:block |
-		((block bounds containsPoint: aPoint)
-			and: [block bounds area > bestArea]
-			and: [block ~= self morph]) ifTrue: [
-			best := block.
-			bestArea := block bounds area]].
-	
-	^ best
+	^ self morphAtPoint: aPoint satisfying: [:aMorph | aMorph isSandblock]
 ]
 
 { #category : #'as yet unclassified' }
@@ -113,21 +106,52 @@ SBForceMoveDecorator >> changedDirection [
 ]
 
 { #category : #'as yet unclassified' }
+SBForceMoveDecorator >> createForceWith: otherBlock [
+
+	self morph sandblockEditor
+		openMorph: (SBForceConnector connect: self morph to: otherBlock);
+		activateForces
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> createImplicitForceWith: otherMorph [
+
+	| attraction |
+	attraction := self attractionTo: otherMorph.
+	attraction > 0 ifTrue: [
+		self group
+			ifNil: [
+				otherMorph group
+					ifNil: [
+						self morph sandblockEditor openMorph: (SBForceConnector connect: self morph to: otherMorph forceScale: attraction).
+						self morph sandblockEditor openMorph: (SBGroup newFor: self)]
+					ifNotNil: [otherMorph group add: self]]
+			ifNotNil: [
+				otherMorph group
+					ifNotNil: [self group = otherMorph group ifFalse: [self morph sandblockEditor openMorph: (SBForceConnector connect: self morph to: otherMorph forceScale: attraction)]]
+					ifNil: [self group addBlock: otherMorph]]]
+]
+
+{ #category : #'as yet unclassified' }
 SBForceMoveDecorator >> createImplicitForces [
 	
-	self morph sandblockEditor ifNotNil: [:e | e childSandblocks reverseDo: [:otherMorph |
+	self morph sandblockEditor childSandblocks ifNotNil: [:e | e reverseDo: [:otherMorph |
 		(otherMorph preventOcclusion and: [
-			otherMorph ~= self morph and: [
-				otherMorph isDragging not]]) ifTrue: [ | attraction |
-					attraction := self attractionTo: otherMorph.
-					attraction > 0 ifTrue: [
-						self morph sandblockEditor openMorphBack: (SBForceConnector connect: self morph to: otherMorph forceScale: attraction)]]].]
+			otherMorph ~= self morph]) ifTrue: [
+				self createImplicitForceWith: otherMorph]]].
 ]
 
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> deactivateForces [
 	
 	forceSteps := 0.
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> detached: aMorph [
+
+	super detached: aMorph.
+	idealPosition := nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -146,6 +170,25 @@ SBForceMoveDecorator >> forceSteps [
 SBForceMoveDecorator >> forceSteps: anObject [
 
 	forceSteps := anObject.
+]
+
+{ #category : #accessing }
+SBForceMoveDecorator >> group [
+
+	^ group
+]
+
+{ #category : #accessing }
+SBForceMoveDecorator >> group: aGroup [
+
+	group := aGroup.
+	self morph changed: #gotGroup.
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> hasGroup [
+	
+	^ self group notNil 
 ]
 
 { #category : #accessing }
@@ -199,18 +242,52 @@ SBForceMoveDecorator >> isPinned [
 ]
 
 { #category : #'as yet unclassified' }
-SBForceMoveDecorator >> mouseUp: anEvent [
+SBForceMoveDecorator >> morphAtPoint: aPoint satisfying: aBlock [
+
+	| best bestArea |
+	best := nil.
+	bestArea := 0.
 	
-	self isDragging ifTrue: [ | otherBlock |
+	self morph owner submorphsDo: [:aMorph |
+		((aMorph containsPoint: aPoint)
+			and: [aMorph bounds area > bestArea]
+			and: [aMorph ~= self morph]
+			and: [aBlock value: aMorph]) ifTrue: [
+			best := aMorph.
+			bestArea := aMorph bounds area]].
+	
+	^ best
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> mouseUp: anEvent [
+
+	self isDragging ifTrue: [ | otherBlock otherMorph |
 		self idealPosition: self morph position.
 		self pinnedPosition ifNotNil: [self pinnedPosition: self morph position].
 		otherBlock := self blockAtPoint: anEvent position.
-		otherBlock ifNotNil: 
-			[self morph sandblockEditor 
-				openMorphBack: (SBForceConnector connect: self morph to: otherBlock);
-				activateForces]].
-	super mouseUp: anEvent.
-	
+		otherBlock ifNotNil: [self createForceWith: otherBlock] ifNil: [
+			self group ifNil: [
+				otherMorph := self
+					morphAtPoint: anEvent position
+					satisfying: [:aMorph | aMorph isKindOf: SBGroup].
+				otherMorph ifNotNil: [otherMorph add: self]]].
+		
+		].
+	super mouseUp: anEvent
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> pinGroup [
+	<action>
+
+	self group blocks do: [:aBlock |
+		aBlock withDecorator: SBForceMoveDecorator do: [:aDecorator |
+			aDecorator pinnedPosition: aBlock position.
+			
+			].
+		
+		]
 ]
 
 { #category : #accessing }
@@ -229,16 +306,11 @@ SBForceMoveDecorator >> pinnedPosition: aPoint [
 SBForceMoveDecorator >> postDrawOn: aCanvas [
 
 	| b color |
-	
 	self isPinned ifTrue: [
-		color :=  self morph colorPolicy selectionColorForBlock: (self morph parentSandblock ifNil: [self morph]).
+		color := self morph colorPolicy selectionColorForBlock: (self morph parentSandblock ifNil: [self morph]).
 		b := self morph bounds expandBy: 5.
-		self morph invalidRect: (self morph outerBounds expandBy: 12).
-		aCanvas
-			frameRoundRect: b
-				radius: self morph colorPolicy cornerRadius
-				width: 5
-				color: color]
+		self morph invalidRect: (self morph outerBounds expandBy: 5).
+		aCanvas frameRoundRect: b radius: self morph colorPolicy cornerRadius width: 5 color: color]
 ]
 
 { #category : #accessing }
@@ -259,6 +331,16 @@ SBForceMoveDecorator >> registerAdditionalForce: aForce [
 	self additionalForces add: aForce.
 ]
 
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> removeFromGroup [
+
+	<action>
+	<actionValidIf: #hasGroup>
+	
+	(self additionalForces select: [:aForce | aForce to group = aForce from group]) do: [:aForce | aForce abandon].
+	self group remove: self morph
+]
+
 { #category : #accessing }
 SBForceMoveDecorator >> speedMultiplier [
 
@@ -274,9 +356,7 @@ SBForceMoveDecorator >> speedMultiplier: anObject [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> step [
 
-	SBPreferences enableForceLayout ifFalse: [^ super step].
-
-	idealPosition ifNil: [idealPosition := self morph position].
+	(SBPreferences enableForceLayout not or: [self morph sandblockEditor isSingleArtefactView]) ifTrue: [^ super step].
 	
 	self isDragging ifTrue: [self panWhenNearEdge].
 	
@@ -304,5 +384,5 @@ SBForceMoveDecorator >> togglePinned [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> unregisterAdditionalForce: aForce [
 
-	self additionalForces remove: aForce.
+	self additionalForces remove: aForce ifAbsent: []
 ]

@@ -93,10 +93,10 @@ SBEditorCanvasWithOverlay >> overlay: anObject [
 	overlay := anObject.
 ]
 
-{ #category : #'as yet unclassified' }
-SBEditorCanvasWithOverlay >> removeIndicatorFor: aMorph [
-	
-	self overlay submorphsDo: [:anIndicator | anIndicator target == aMorph ifTrue: [anIndicator abandon]]
+{ #category : #nil }
+SBEditorCanvasWithOverlay >> scrollToCenter: aMorph [
+
+	self canvas scrollToCenter: aMorph
 ]
 
 { #category : #'as yet unclassified' }
@@ -121,6 +121,12 @@ SBEditorCanvasWithOverlay >> targetPosition [
 SBEditorCanvasWithOverlay >> transform [  
 	
 	^ self canvas transform
+]
+
+{ #category : #'as yet unclassified' }
+SBEditorCanvasWithOverlay >> viewportPosition: aPoint [
+	
+	^ self canvas viewportPosition: aPoint
 ]
 
 { #category : #'as yet unclassified' }

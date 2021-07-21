@@ -3,27 +3,53 @@ Class {
 	#superclass : #Morph,
 	#instVars : [
 		'target',
-		'scroller',
 		'iconMorph',
 		'labelMorph',
-		'lastPosition'
+		'lastPosition',
+		'isHighlighted'
 	],
 	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
-SBOffscreenBlockIndicator class >> newFor: aMorph withScroller: aScroller [
+SBOffscreenBlockIndicator class >> defaultOpacity [
+
+	^ 0.6
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator class >> newFor: aMorph [
 
 	^ self new 
 		target: aMorph; 
-		scroller: aScroller.
+		yourself.
 	 
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> containingSandblock [
+
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> fixedNumberOfChildren [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> foregroundColor [
+
+	^ (self sandblockEditor search isSelected
+		ifTrue: self owner containingSandblock colorPolicy highlightColor
+		ifFalse: [self owner containingSandblock foregroundColor]) alpha: self class defaultOpacity
 ]
 
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> handlesMouseDown: anEvent [
 
-	^ true
+	^ self visible
 ]
 
 { #category : #accessing }
@@ -39,6 +65,13 @@ SBOffscreenBlockIndicator >> iconMorph: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> indicatorColor: aColor [
+
+	self iconMorph color: aColor.
+	self labelMorph color: aColor
+]
+
+{ #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> initialize [
 
 	super initialize.
@@ -46,9 +79,23 @@ SBOffscreenBlockIndicator >> initialize [
 	self iconMorph: SBIcon iconCaretSquareORight veryLarge.
 	self addMorph: self iconMorph.
 	
-	self color: Color transparent.
-	
-	
+	self labelMorph: SBStringMorph new.
+	self addMorph: self labelMorph.
+	self labelMorph opacity: self class defaultOpacity.
+	self isHighlighted: false.
+	self color: Color transparent
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> isHighlighted [
+
+	^ isHighlighted
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> isHighlighted: aBoolean [
+
+	isHighlighted := aBoolean
 ]
 
 { #category : #accessing }
@@ -63,10 +110,29 @@ SBOffscreenBlockIndicator >> labelMorph: anObject [
 	labelMorph := anObject.
 ]
 
+{ #category : #accessing }
+SBOffscreenBlockIndicator >> lastPosition [
+
+	^ lastPosition
+]
+
+{ #category : #accessing }
+SBOffscreenBlockIndicator >> lastPosition: anObject [
+
+	lastPosition := anObject.
+]
+
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> mouseDown: anEvent [
 	
-	self scroller scrollToShow: self target.
+	self target isSandblock ifTrue: [self sandblockEditor select: self target].
+	Project current addDeferredUIMessage: [self scroller scrollToCenter: self target]
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> objectInterface [
+
+	^ SBInterfaces never
 ]
 
 { #category : #nil }
@@ -81,13 +147,37 @@ SBOffscreenBlockIndicator >> rejectsEvent: anEvent [
 { #category : #accessing }
 SBOffscreenBlockIndicator >> scroller [
 
-	^ scroller
+	^ self sandblockEditor canvas.
 ]
 
 { #category : #accessing }
-SBOffscreenBlockIndicator >> scroller: aScroller [
+SBOffscreenBlockIndicator >> shouldHide [
 
-	scroller := aScroller.
+	self sandblockEditor selection ifNotNil: [:selection |
+		selection
+			withDecorator: SBWaypointMoveDecorator
+			do: [:decorator | ^ (decorator morph targets includes: self target) not]
+			ifAbsent: []].
+	self sandblockEditor search isSelected ifTrue: [^ (self sandblockEditor search matchedArtefacts includes: self target) not].
+	^ self shouldHideDefault
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> shouldHideDefault [
+
+	^ SBToggledCode comment: '' active: 2 do: {
+		[
+			(self target
+				withDecorator: SBForceMoveDecorator
+				do: [:decorator | decorator group notNil]
+				ifAbsent: [false]) and: [self isHighlighted not]].
+		[true]}
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> specialDropCommand: aBlock [
+
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -96,11 +186,19 @@ SBOffscreenBlockIndicator >> step [
 	| viewCenter direction intersections viewRectangle position |
 	self target ifNil: [^ self abandon].
 	
-	self targetOffscreen ifTrue: [self show] ifFalse: [^ self hide].
+	(self targetOffscreen and: [self shouldHide not])
+		ifTrue: [self show]
+		ifFalse: [
+			"Workaround for invisible indicators snacking our events."
+			self position: 0@0.
+			^ self hide].
 	
-	viewCenter := self scroller innerBounds center.
-	direction := (self target boundsInWorld center - viewCenter) normalized.
+	self updateLabel.
+	"this is only here because of Waypoints. TODO: remove"
+	
 	viewRectangle := self scroller innerBounds.
+	viewCenter := viewRectangle center.
+	direction := (self target boundsInWorld center - self scroller innerBoundsInWorld center) normalized.
 	
 	intersections := {
 		LineSegment intersectFrom: viewCenter with: direction to: viewRectangle topLeft with: 0 @ 1.
@@ -135,12 +233,37 @@ SBOffscreenBlockIndicator >> target: aMorph [
 
 	target := aMorph.
 	
-	self labelMorph: (SBStringMorph new contents: self target textContents).
-	self addMorph: self labelMorph.
+	self
+		updateLabel;
+		addMorph: self labelMorph.
+	
+	aMorph when: #delete send: #abandon to: self
 ]
 
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> targetOffscreen [
 
-	^ (self scroller innerBounds intersects: self target boundsInWorld) not.
+	^ (self scroller innerBoundsInWorld intersects: self target boundsInWorld) not
+]
+
+{ #category : #'as yet unclassified' }
+SBOffscreenBlockIndicator >> toggleHighlight [
+
+	self isHighlighted: self isHighlighted not.
+	self indicatorColor: (self isHighlighted
+		ifTrue: [
+			self target group
+				ifNotNil: [:group | | newColor |
+					newColor := group color alpha: self class defaultOpacity.
+					self target colorPolicy dark
+						ifTrue: [newColor thriceLighter]
+						ifFalse: [newColor thriceDarker]]
+				ifNil: [Color random]]
+		ifFalse: [nil])
+]
+
+{ #category : #accessing }
+SBOffscreenBlockIndicator >> updateLabel [
+
+	self labelMorph contents: self target textContents
 ]

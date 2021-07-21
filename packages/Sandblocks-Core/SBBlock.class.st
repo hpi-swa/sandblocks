@@ -17,6 +17,24 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBBlock class >> defaultRepelStrength [
+
+	^ 5000.0
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock class >> implicitAttractionStrength [
+
+	^ 0.25
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock class >> maxRepelDistance [
+
+	^ 100
+]
+
+{ #category : #'as yet unclassified' }
 SBBlock class >> navigation [
 
 	^ Navigation ifNil: [Navigation := SBSmalltalkNavigation new]
@@ -167,11 +185,10 @@ SBBlock >> attachDecorator: aDecorator [
 
 { #category : #'as yet unclassified' }
 SBBlock >> attractionStrengthTo: aMorph [
-	
+
 	^ (self isAttractedTo: aMorph)
-		ifTrue: [0.25]
+		ifTrue: [self class implicitAttractionStrength]
 		ifFalse: [0.0]
-	
 ]
 
 { #category : #'as yet unclassified' }
@@ -697,13 +714,11 @@ SBBlock >> deleteBeforeCursor [
 SBBlock >> deleteBlock [
 	<multiSelectAction>
 
-	self isSelected ifFalse: [
-		^ self sandblockEditor do: (self parentSandblock deleteCommandFor: self)].
+	self isSelected ifFalse: [^ self sandblockEditor do: (self parentSandblock deleteCommandFor: self)].
 	
 	self sandblockEditor
 		copyBuffer: self sandblockEditor multiSelection;
-		doMultiSelectionEach: [:selected |
-			selected parentSandblock deleteCommandFor: selected];
+		doMultiSelectionEach: [:selected | selected parentSandblock deleteCommandFor: selected];
 		maybeStartInputFromEnd
 ]
 
@@ -995,19 +1010,7 @@ SBBlock >> forceAgainst: aMorph [
 	^ (direction closeTo: 0 @ 0)
 		ifTrue: [(ThreadSafeRandom next @ ThreadSafeRandom next) * 10]
 		ifFalse: [ 
-			direction normalized * ((self forceStrengthAgainst: aMorph) + (aMorph forceStrengthAgainst: self))]
-]
-
-{ #category : #'as yet unclassified' }
-SBBlock >> forceStrengthAgainst: aMorph [
-
-	| distance maximumNonOverlappingForce |
-	maximumNonOverlappingForce := 10.
-	distance := (self bounds vectorToRectangle: aMorph bounds) r.
-	^ distance > 200 ifTrue: [0] ifFalse: [
-		(distance closeTo: 0)
-			ifTrue: [maximumNonOverlappingForce + ((self bounds intersect: aMorph bounds) area sqrt / 10)]
-			ifFalse: [10000.0 / distance / distance min: maximumNonOverlappingForce]]
+			direction normalized * ((self repelStrengthTo: aMorph) + (aMorph repelStrengthTo: self))]
 ]
 
 { #category : #'colors and color policies' }
@@ -1032,6 +1035,12 @@ SBBlock >> frameSize [
 SBBlock >> grammarHandler [
 
 	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> group [ 
+	
+	^ self withDecorator: SBForceMoveDecorator do: [:decorator | decorator group] ifAbsent: [nil]
 ]
 
 { #category : #'event handling' }
@@ -1069,6 +1078,12 @@ SBBlock >> hasCurrentTextMorph [
 SBBlock >> hasDecorator: aClass [
 
 	^ decorators anySatisfy: [:d | d isKindOf: aClass]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> hasGroup [ 
+	
+	^ self group notNil
 ]
 
 { #category : #layout }
@@ -1781,7 +1796,10 @@ SBBlock >> nextVerticalNear: aNumber calcDistance: aDistBlock validBlock: aValid
 SBBlock >> noteNewOwner: aMorph [
 
 	super noteNewOwner: aMorph.
-	
+	self decorators do: [:decorator |
+		decorator noteNewOwner: aMorph.
+		
+		].
 	self clearCache.
 	" recheck name blocks "
 	self allBlocksDo: [:block | block isName ifTrue: [block noteNewOwner: block owner]]
@@ -2048,19 +2066,25 @@ SBBlock >> previousVerticalNear: aNumber [
 		validBlock: [:candidate | self top >= candidate bottom]
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> printIdentityStringOn: aStream [
+
+	aStream
+		nextPutAll: self className;
+		print: self identityHash
+]
+
 { #category : #saving }
 SBBlock >> printSaveStringPreambleOn: aStream [
-	
-	aStream
-		nextPutAll:	self className;
-		print:	self identityHash;
-		nextPutAll:	' := '
 
+	self printIdentityStringOn: aStream.
+	aStream nextPutAll: ' := '
 ]
 
 { #category : #initialization }
 SBBlock >> privateOwner: aMorph [
 
+	self owner ifNil: [self triggerEvent: #spawn].
 	super privateOwner: aMorph.
 	aMorph ifNil: [self triggerEvent: #delete]
 ]
@@ -2122,6 +2146,18 @@ SBBlock >> removeSuggestionMenu [
 	self removeProperty: #sandblockSuggestionMenu
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> repelStrengthTo: aMorph [
+
+	| distance maximumNonOverlappingForce |
+	maximumNonOverlappingForce := 10.
+	distance := (self bounds vectorToRectangle: aMorph bounds) r.
+	^ distance > self class maxRepelDistance ifTrue: [0] ifFalse: [
+		(distance closeTo: 0)
+			ifTrue: [maximumNonOverlappingForce + ((self bounds intersect: aMorph bounds) area sqrt / 10)]
+			ifFalse: [self class defaultRepelStrength / distance / distance min: maximumNonOverlappingForce]]
+]
+
 { #category : #hierarchy }
 SBBlock >> rightMostBlock [
 
@@ -2156,23 +2192,20 @@ SBBlock >> save [
 
 { #category : #saving }
 SBBlock >> saveString [
-	
+
 	^ String streamContents: [:stream |
 		self printSaveStringPreambleOn: stream.
 		stream
-			nextPutAll:	self className;
+			nextPutAll: self className;
 			nextPutAll: ' new position: ';
-			nextPutAll:  self position asString.
+			nextPutAll: self position asString.
 		self childSandblocks do: [:each |
-			stream 
+			stream
 				nextPutAll: ';';
 				cr;
 				nextPutAll: 'addMorphBack: (';
 				nextPutAll: each saveString;
-				nextPutAll: ')'
-			]
-	]
-
+				nextPutAll: ')']]
 ]
 
 { #category : #'artefact protocol' }
