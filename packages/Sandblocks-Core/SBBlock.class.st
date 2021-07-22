@@ -1457,6 +1457,12 @@ SBBlock >> isValidAction: aPragmaOrMethod [
 	^ validMode and: [validInvocation]
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> isWaypoint [
+
+	^ false
+]
+
 { #category : #'event handling' }
 SBBlock >> keyStroke: anEvent [
 

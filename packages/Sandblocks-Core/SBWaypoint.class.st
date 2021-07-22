@@ -10,6 +10,16 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBWaypoint >> connectViaSearch [
+	<action>
+
+	| options index |
+	options := self sandblockEditor allBlocksSelect: [:block | block isWaypoint and: [self ~= block]].
+	index := UIManager default chooseFrom: (options collect: [:option | option textContents]).
+	index > 0 ifTrue: [self toggleConnectionTo: (options at: index)]
+]
+
+{ #category : #'as yet unclassified' }
 SBWaypoint >> counterMorph [
 
 	^ counterMorph
@@ -72,6 +82,12 @@ SBWaypoint >> isArtefact [
 SBWaypoint >> isAttractedTo: aBlock [
 	
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBWaypoint >> isWaypoint [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
