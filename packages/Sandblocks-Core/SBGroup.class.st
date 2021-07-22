@@ -70,13 +70,11 @@ SBGroup >> addBottomVerticesTo: newVertices from: verticalEdges [
 					ifNotEmpty: [edge first @ (comingBlockBottoms last min: seenBlockBottoms last)]].
 		
 		seenBlockBottoms size > 1 ifTrue: [ | x |
-			newVertex y < newVertices last y
-				ifTrue: [x  := activeBlockBottoms == 0 ifTrue: [(2 * newVertex x + newVertices last x) / 3.0] ifFalse: [newVertices last x].
-					newVertices add: x @ newVertices last y.
-					newVertices add: x @ newVertex y]
-				ifFalse:[x := activeBlockBottoms == 0 ifTrue: [(2 * newVertices last x + newVertex x) / 3.0] ifFalse: [newVertex x].
-					newVertices add: x @ newVertices last y.
-					newVertices add: x @ newVertex y]].
+			x  := newVertex y < newVertices last y
+				ifTrue: [activeBlockBottoms == 0 ifTrue: [(2 * newVertex x + newVertices last x) / 3.0] ifFalse: [newVertices last x]]
+				ifFalse:[activeBlockBottoms == 0 ifTrue: [(2 * newVertices last x + newVertex x) / 3.0] ifFalse: [newVertex x]].
+			newVertices add: x @ newVertices last y.
+			newVertices add: x @ newVertex y].
 		newVertices add: newVertex.
 				
 		edge second == #right
@@ -108,13 +106,11 @@ SBGroup >> addTopVerticesTo: newVertices from: verticalEdges [
 					ifNotEmpty: [edge first @ (comingBlockTops first max: seenBlockTops first)]].
 		
 		seenBlockTops size > 1 ifTrue: [ | x |
-			newVertex y < newVertices last y
-				ifTrue: [x := activeBlockTops == 0 ifTrue: [(2 * newVertices last x + newVertex x) / 3.0] ifFalse: [newVertex x].
-					newVertices add: x @ newVertices last y.
-					newVertices add: x @ newVertex y]
-				ifFalse:[x := activeBlockTops == 0 ifTrue: [(2 * newVertex x + newVertices last x) / 3.0] ifFalse: [newVertices last x].
-					newVertices add: x @ newVertices last y.
-					newVertices add: x @ newVertex y]].
+			x := newVertex y < newVertices last y
+				ifTrue: [activeBlockTops == 0 ifTrue: [(2 * newVertices last x + newVertex x) / 3.0] ifFalse: [newVertex x]]
+				ifFalse:[activeBlockTops == 0 ifTrue: [(2 * newVertex x + newVertices last x) / 3.0] ifFalse: [newVertices last x]].
+			newVertices add: x @ newVertices last y.
+			newVertices add: x @ newVertex y].
 		newVertices add: newVertex.
 				
 		edge second == #left
