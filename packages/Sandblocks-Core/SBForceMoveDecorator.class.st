@@ -286,14 +286,8 @@ SBForceMoveDecorator >> mouseUp: anEvent [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> noteNewOwner: aMorph [
 
-	| potentialGroup |
-	
 	super noteNewOwner: aMorph.
-	potentialGroup := self
-		morphAtPoint: self morph position
-		satisfying: [:checkedMorph | checkedMorph isKindOf: SBGroup].
-	potentialGroup ifNotNil: [potentialGroup add: self].
-	idealPosition := nil
+	self idealPosition: nil
 ]
 
 { #category : #accessing }
