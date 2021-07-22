@@ -17,7 +17,7 @@ SBIndicatorDecorator >> block: aBlock [
 { #category : #'as yet unclassified' }
 SBIndicatorDecorator >> detached: aMorph [
 
-	self indicator abandon.
+	self indicator ifNotNil: #abandon.
 	super detached: aMorph
 ]
 
