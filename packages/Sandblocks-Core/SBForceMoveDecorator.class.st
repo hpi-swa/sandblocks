@@ -242,6 +242,12 @@ SBForceMoveDecorator >> isPinned [
 ]
 
 { #category : #'as yet unclassified' }
+SBForceMoveDecorator >> isPinned: aBoolean [
+
+	self pinnedPosition: (aBoolean ifTrue: [self morph position] ifFalse: [nil])
+]
+
+{ #category : #'as yet unclassified' }
 SBForceMoveDecorator >> morphAtPoint: aPoint satisfying: aBlock [
 
 	| best bestArea |
@@ -288,19 +294,6 @@ SBForceMoveDecorator >> noteNewOwner: aMorph [
 		satisfying: [:checkedMorph | checkedMorph isKindOf: SBGroup].
 	potentialGroup ifNotNil: [potentialGroup add: self].
 	idealPosition := nil
-]
-
-{ #category : #'as yet unclassified' }
-SBForceMoveDecorator >> pinGroup [
-	<action>
-
-	self group blocks do: [:aBlock |
-		aBlock withDecorator: SBForceMoveDecorator do: [:aDecorator |
-			aDecorator pinnedPosition: aBlock position.
-			
-			].
-		
-		]
 ]
 
 { #category : #accessing }
@@ -387,11 +380,19 @@ SBForceMoveDecorator >> stepTime [
 ]
 
 { #category : #'as yet unclassified' }
-SBForceMoveDecorator >> togglePinned [
-
+SBForceMoveDecorator >> togglePinForGroup [
 	<action>
-	
-	self pinnedPosition: (self pinnedPosition ifNil: [self morph position] ifNotNil: [nil])
+
+	| pinAll |
+	pinAll := self isPinned not.
+	self group blocks do: [:aBlock | aBlock withDecorator: SBForceMoveDecorator do: [:aDecorator | aDecorator isPinned: pinAll]]
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> togglePinned [
+	<action>
+
+	self isPinned: self isPinned not
 ]
 
 { #category : #'as yet unclassified' }
