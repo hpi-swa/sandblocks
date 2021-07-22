@@ -165,10 +165,9 @@ SBOffscreenBlockIndicator >> shouldHide [
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> shouldHideDefault [
 
-	^(self target
-				withDecorator: SBForceMoveDecorator
-				do: [:decorator | decorator group notNil]
-				ifAbsent: [false]) and: [self isHighlighted not].
+	^ SBPreferences hideIndicators or: [(self target withDecorator: SBForceMoveDecorator do: [:decorator | 
+			decorator group notNil]
+			ifAbsent: [false]) and: [self isHighlighted not]]
 ]
 
 { #category : #'as yet unclassified' }

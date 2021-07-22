@@ -4,6 +4,7 @@ Class {
 	#classVars : [
 		'DrawOnCanvas',
 		'EnableForceLayout',
+		'HideIndicators',
 		'PreviewDropInsert',
 		'RightClickContextMenu',
 		'ShowHoverDecorator'
@@ -37,6 +38,18 @@ SBPreferences class >> enableForceLayout [
 SBPreferences class >> enableForceLayout: aBoolean [
 
 	EnableForceLayout := aBoolean
+]
+
+{ #category : #accessing }
+SBPreferences class >> hideIndicators [
+	<preference: 'Hide always-visible offscreen indicators' category: 'sandblocks' description: '' type: #Boolean>
+
+	^ HideIndicators ifNil: [false]
+]
+
+{ #category : #accessing }
+SBPreferences class >> hideIndicators: aBoolean [
+	HideIndicators := aBoolean
 ]
 
 { #category : #'as yet unclassified' }
