@@ -59,7 +59,7 @@ SBGroup >> addBottomVerticesTo: newVertices from: verticalEdges [
 		| aBlock newVertex |
 		aBlock := edge third.
 				
-		edge second == #right
+		edge second = #right
 			ifTrue: [seenBlockBottoms add: (aBlock bounds expandBy: self expandBy) bottom].
 			
 		newVertex := comingBlockBottoms
@@ -71,16 +71,16 @@ SBGroup >> addBottomVerticesTo: newVertices from: verticalEdges [
 		
 		seenBlockBottoms size > 1 ifTrue: [ | x |
 			x  := newVertex y < newVertices last y
-				ifTrue: [activeBlockBottoms == 0 ifTrue: [(2 * newVertex x + newVertices last x) / 3.0] ifFalse: [newVertices last x]]
-				ifFalse:[activeBlockBottoms == 0 ifTrue: [(2 * newVertices last x + newVertex x) / 3.0] ifFalse: [newVertex x]].
+				ifTrue: [activeBlockBottoms = 0 ifTrue: [(2 * newVertex x + newVertices last x) / 3.0] ifFalse: [newVertices last x]]
+				ifFalse:[activeBlockBottoms = 0 ifTrue: [(2 * newVertices last x + newVertex x) / 3.0] ifFalse: [newVertex x]].
 			newVertices add: x @ newVertices last y.
 			newVertices add: x @ newVertex y].
 		newVertices add: newVertex.
 				
-		edge second == #right
+		edge second = #right
 			ifFalse: [comingBlockBottoms remove: (aBlock bounds expandBy: self expandBy) bottom].
 			
-		activeBlockBottoms := activeBlockBottoms + (edge second == #right ifTrue: [1] ifFalse: [-1])].
+		activeBlockBottoms := activeBlockBottoms + (edge second = #right ifTrue: [1] ifFalse: [-1])].
 ]
 
 { #category : #'as yet unclassified' }
@@ -95,7 +95,7 @@ SBGroup >> addTopVerticesTo: newVertices from: verticalEdges [
 		| aBlock newVertex |
 		aBlock := edge third.
 		
-		edge second == #left
+		edge second = #left
 			ifTrue: [seenBlockTops add: (aBlock bounds expandBy: self expandBy) top].
 		
 		newVertex := comingBlockTops
@@ -107,16 +107,16 @@ SBGroup >> addTopVerticesTo: newVertices from: verticalEdges [
 		
 		seenBlockTops size > 1 ifTrue: [ | x |
 			x := newVertex y < newVertices last y
-				ifTrue: [activeBlockTops == 0 ifTrue: [(2 * newVertices last x + newVertex x) / 3.0] ifFalse: [newVertex x]]
-				ifFalse:[activeBlockTops == 0 ifTrue: [(2 * newVertex x + newVertices last x) / 3.0] ifFalse: [newVertices last x]].
+				ifTrue: [activeBlockTops = 0 ifTrue: [(2 * newVertices last x + newVertex x) / 3.0] ifFalse: [newVertex x]]
+				ifFalse:[activeBlockTops = 0 ifTrue: [(2 * newVertex x + newVertices last x) / 3.0] ifFalse: [newVertices last x]].
 			newVertices add: x @ newVertices last y.
 			newVertices add: x @ newVertex y].
 		newVertices add: newVertex.
 				
-		edge second == #left
+		edge second = #left
 			ifFalse: [comingBlockTops remove: (aBlock bounds expandBy: self expandBy) top].
 			
-		activeBlockTops := activeBlockTops + (edge second == #left ifTrue: [1] ifFalse: [-1])].
+		activeBlockTops := activeBlockTops + (edge second = #left ifTrue: [1] ifFalse: [-1])].
 ]
 
 { #category : #'as yet unclassified' }
