@@ -38,7 +38,12 @@ SBExampleWatch class >> registerWatch: aWatch [
 { #category : #'as yet unclassified' }
 SBExampleWatch class >> registry [
 
-	^ Registry ifNil: [Registry := WeakValueDictionary new]
+	SBToggledCode
+		comment: 'temporary migration fix'
+		active: 1
+		do: {[(Registry isKindOf: WeakValueDictionary) ifTrue: [Registry := nil]]}.
+	
+	^ Registry ifNil: [Registry := Dictionary new]
 ]
 
 { #category : #'as yet unclassified' }
