@@ -373,6 +373,14 @@ SBStMessageSend >> moveCursorTo: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMessageSend >> newNullBlock [
+
+	^ self isInCascade
+		ifTrue: [SBStMessageSend new receiver: nil selector: #'']
+		ifFalse: [super newNullBlock]
+]
+
+{ #category : #'as yet unclassified' }
 SBStMessageSend >> notInCascade [
 
 	^ self isInCascade not
@@ -458,7 +466,7 @@ SBStMessageSend >> receiver: aBlock [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> receiver: aBlock selector: aSymbol [
 
-	self assert: aSymbol isUnary.
+	self assert: (aSymbol isUnary or: [aSymbol = #'']).
 	self receiver: aBlock selector: aSymbol arguments: #()
 ]
 
