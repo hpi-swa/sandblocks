@@ -18,7 +18,7 @@ SBDefaultColorPolicy >> colorForBlock: aBlock [
 			ifTrue: [
 				aBlock sandblockBlockColorIfAbsentPut: [
 					(aBlock containingBlock isNil or: [aBlock isMethodBody])
-						ifTrue: [aBlock parentSandblock preferredColor ifNil: [Color r: 0.216 g: 0.249 b: 0.436]]
+						ifTrue: [(aBlock parentSandblock ifNotNil: #preferredColor) ifNil: [Color r: 0.216 g: 0.249 b: 0.436]]
 						ifFalse: [self mutateColor: (self colorForBlock: aBlock containingBlock)]]]
 			ifFalse: [
 				aBlock parentSandblock
