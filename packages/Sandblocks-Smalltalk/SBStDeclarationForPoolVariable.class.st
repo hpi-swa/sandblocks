@@ -13,6 +13,12 @@ SBStDeclarationForPoolVariable class >> checkCastFor: aBlock parent: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBStDeclarationForPoolVariable >> asSuggestionItem [
+
+	^ SBSuggestionItem selector: self contents label: 'pool'
+]
+
+{ #category : #'as yet unclassified' }
 SBStDeclarationForPoolVariable >> browse [
 	<action>
 
