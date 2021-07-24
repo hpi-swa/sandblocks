@@ -442,6 +442,7 @@ SBEditor >> createArtefactInView: aMorph [
 		morph: aMorph;
 		editor: self sandblockEditor;
 		isUnsaved: true;
+		position: scroll scroller offset + (self extent // 2) - (aMorph fullBounds extent // 2);
 		yourself).
 	
 	^ aMorph
@@ -817,6 +818,7 @@ SBEditor >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 	^ SBEditorOpenMorphCommand new
 		morph: aMorph;
 		editor: self;
+		position: (scroll scroller offset + (self extent // 2) - (aMorph fullBounds extent // 2));
 		isUnsaved: false;
 		yourself
 ]

@@ -162,6 +162,12 @@ SBDrawCanvas >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBDrawCanvas >> morphicLayerNumber [
+
+	^ 101
+]
+
+{ #category : #'as yet unclassified' }
 SBDrawCanvas >> mouseDown: anEvent [
 
 	drawing := true.
