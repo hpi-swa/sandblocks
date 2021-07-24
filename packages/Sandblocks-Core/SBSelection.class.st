@@ -74,12 +74,6 @@ SBSelection >> colorPolicy: aPolicy [
 ]
 
 { #category : #'as yet unclassified' }
-SBSelection >> containingArtefact [
-
-	^ self
-]
-
-{ #category : #'as yet unclassified' }
 SBSelection >> drawnColor [
 
 	^ self sandblockBlockColorIfAbsent: [Color white]
@@ -140,6 +134,12 @@ SBSelection >> initialize [
 		hResizing: #shrinkWrap.
 	
 	self on: #keyStroke send: #keyStroke: to: self
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> isArtefact [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

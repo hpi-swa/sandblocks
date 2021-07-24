@@ -174,12 +174,6 @@ SBStBasicMethod >> compiledMethod [
 ]
 
 { #category : #'as yet unclassified' }
-SBStBasicMethod >> containingArtefact [
-
-	^ self
-]
-
-{ #category : #'as yet unclassified' }
 SBStBasicMethod >> createTestMethod [
 	<action>
 

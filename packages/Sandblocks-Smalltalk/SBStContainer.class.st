@@ -56,12 +56,6 @@ SBStContainer >> classVariables [
 	^ #()
 ]
 
-{ #category : #'artefact protocol' }
-SBStContainer >> containingArtefact [
-
-	^ self
-]
-
 { #category : #'as yet unclassified' }
 SBStContainer >> declarations [
 

@@ -94,12 +94,6 @@ SBStClass >> compiledMethodAt: aSymbol ifAbsent: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBStClass >> containingArtefact [
-
-	^ self
-]
-
-{ #category : #'as yet unclassified' }
 SBStClass >> createInitialize [
 	<action>
 
