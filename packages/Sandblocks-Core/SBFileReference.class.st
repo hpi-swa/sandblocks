@@ -43,6 +43,5 @@ SBFileReference >> openInOS [
 	<action>
 	<actionValidIf: #hasOSProcess>
 
-	
-	self openFileInOS: 'xdg-open ', self contents
+	self openFileInOS: self contents
 ]
