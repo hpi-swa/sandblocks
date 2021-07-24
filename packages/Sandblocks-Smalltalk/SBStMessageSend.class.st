@@ -546,6 +546,11 @@ SBStMessageSend >> symbols [
 SBStMessageSend >> tryDelete [
 
 	| receiver |
+	self isInCascade ifTrue: [
+		^ self sandblockEditor
+			do: (SBDeleteCommand new target: self);
+			maybeStartInputFromEnd].
+	
 	receiver := self receiver.
 	^ self sandblockEditor
 		endInput;

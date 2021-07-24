@@ -474,6 +474,14 @@ SBStBasicMethod >> objectInterface [
 ]
 
 { #category : #'as yet unclassified' }
+SBStBasicMethod >> objectInterfaceNear: aBlock at: aSymbol [
+
+	^ aBlock isBlockBody
+		ifTrue: [aSymbol = #replace ifTrue: [SBInterfaces stBlock] ifFalse: [SBInterfaces never]]
+		ifFalse: [super objectInterfaceNear: aBlock at: aSymbol]
+]
+
+{ #category : #'as yet unclassified' }
 SBStBasicMethod >> openClassDefinition [
 	<action>
 	
