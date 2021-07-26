@@ -83,5 +83,5 @@ SBPreferences class >> showHoverDecorator: aBoolean [
 { #category : #'as yet unclassified' }
 SBPreferences class >> useNewCursor [
 
-	^ false
+	^ true
 ]

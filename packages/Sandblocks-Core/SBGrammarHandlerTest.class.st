@@ -92,11 +92,11 @@ SBGrammarHandlerTest >> testWrapWithBinaryMessageSend [
 		SBStNumber new contents: '123'.
 		SBStName new contents: 'abc'.
 		SBStMessageSend new receiver: SBUnknown new selector: #abc arguments: #()
-	} do: [:leaf |
+	} with: {#yourself. #yourself. [:b | b messageParts first]} do: [:leaf :inputSelector |
 		block := '[]' parseAsSandblock.
 		editor := self methodFor: block.
 		block addMorphBack: leaf.
-		editor startInput: leaf at: 0 replacingContents: false.
+		editor startInput: (inputSelector value: leaf) at: 0 replacingContents: false.
 		editor selection keyStroke: (self keyboardEvent: $+).
 		self assert: (block statements first isMessageSend and: [block statements first ~= leaf])]
 ]
@@ -116,5 +116,5 @@ SBGrammarHandlerTest >> testWrapWithMessageSend [
 		editor startInput: leaf at: 0 replacingContents: false.
 		self send: (self keyboardEvent: $ ) to: editor.
 		self assert: (block statements first isMessageSend and: [block statements first ~= leaf]).
-		self assert: block statements first messageParts first equals: editor currentInput]
+		self assert: block statements first messageParts first equals: editor selection]
 ]

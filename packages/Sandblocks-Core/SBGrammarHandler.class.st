@@ -147,13 +147,16 @@ SBGrammarHandler >> replace: aBlock with: aMorph [
 { #category : #'callback helpers' }
 SBGrammarHandler >> replace: aBlock with: aMorph mergeInput: aBoolean [
 
-	| wasInput |
-	wasInput := aBlock sandblockEditor mode = #input.
-	aBlock sandblockEditor cancelInput.
+	| wasInput editor |
+	editor := aBlock sandblockEditor.
+	wasInput := editor mode = #input.
+	"aBlock sandblockEditor cancelInput.
 	aBlock sandblockEditor do: (SBReplaceCommand new
 		shouldMergeWithNext: aBoolean;
 		target: aBlock;
-		replacer: aMorph).
+		replacer: aMorph)."
+	aBlock replaceBy: aMorph.
+	editor replaceInput: aMorph.
 	
 	self focusNextFrom: aMorph at: 900000000 wasInput: wasInput
 ]
@@ -162,12 +165,12 @@ SBGrammarHandler >> replace: aBlock with: aMorph mergeInput: aBoolean [
 SBGrammarHandler >> selectStartOfStatement [
 	<multiSelectAction>
 	<inputAction>
-	
+
 	(self block containingStatement ifNil: [self block containingArtefact]) firstDeepChild select.
 	
-	self block sandblockEditor
-		maybeStartInputFromStart;
-		updateVerticalSelectionPosition
+	self block sandblockEditor maybeStartInputFromStart.
+	
+	self cursor updateHorizontalOffset
 ]
 
 { #category : #callbacks }

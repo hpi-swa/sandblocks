@@ -125,6 +125,15 @@ SBJsLiteral >> startInputAt: aNumber replacingContents: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsLiteral >> startInputCommand [
+
+	^ SBInputCommand new
+		oldMorph: self;
+		previousText: self contents;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
 SBJsLiteral >> stopEditing [
 
 	self currentTextMorph stopEditing.

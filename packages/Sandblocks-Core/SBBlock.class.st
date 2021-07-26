@@ -92,8 +92,7 @@ SBBlock >> allBlocksSatisfy: aBlock [
 { #category : #hierarchy }
 SBBlock >> allBlocksSelect: aBlock [
 
-	^ Array streamContents: [:stream |
-		self allBlocksDo: [:b | (aBlock value: b) ifTrue: [stream nextPut: b]]]
+	^ Array streamContents: [:stream | self allBlocksDo: [:b | (aBlock value: b) ifTrue: [stream nextPut: b]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -377,7 +376,7 @@ SBBlock >> clearInput [
 	self hasCurrentTextMorph
 		ifTrue: [
 			self hasInput
-				ifTrue: [self currentTextMorph clear]
+				ifTrue: [self contents: '']
 				ifFalse: [self sandblockEditor startInput: self at: 1 replacingContents: true]]
 		ifFalse: [self changeToUnknown]
 ]
@@ -811,9 +810,9 @@ SBBlock >> drawOn: aCanvas [
 { #category : #drawing }
 SBBlock >> drawSubmorphsOn: aCanvas [
 
+	self valid ifFalse: [self drawInvalidBorderOn: aCanvas].
 	super drawSubmorphsOn: aCanvas.
 	
-	self valid ifFalse: [self drawInvalidBorderOn: aCanvas].
 	
 	self drawChangedMarker: aCanvas.
 	
@@ -879,14 +878,6 @@ SBBlock >> endInput [
 	<inputAction>
 
 	self sandblockEditor endInput
-]
-
-{ #category : #actions }
-SBBlock >> endMultiSelection [
-	<multiSelectAction>
-
-	self sandblockEditor clearMultiSelection.
-	self sandblockEditor mode: #command
 ]
 
 { #category : #decorators }
@@ -1082,7 +1073,7 @@ SBBlock >> hasHorizontalLayout [
 { #category : #testing }
 SBBlock >> hasInput [
 
-	^ self sandblockEditor currentInput = self
+	^ self isSelected and: [self sandblockEditor mode = #input]
 ]
 
 { #category : #'actions tests' }
@@ -1615,113 +1606,10 @@ SBBlock >> moveCursorToStart [
 ]
 
 { #category : #actions }
-SBBlock >> moveTextCursorDown [
-	<inputAction>
-	<actionValidIf: #hasCurrentTextMorph>
-
-	self currentTextMorph moveCursorVertically: 1 ifAtBound: [ | next pos |
-		pos := self sandblockEditor verticalSelectionPosition.
-		next := self nextVerticalNear: pos.
-		next ifNotNil: [
-			next select.
-			next currentTextMorph ifNotNil: [:textMorph |
-				next sandblockEditor
-					startInput: next
-					at: (textMorph cursorIndexForPosition: pos + (next containingFloat ifNotNil: [:a | a left] ifNil: [0]) @ (next top + 4))
-					replacingContents: false]]]
-]
-
-{ #category : #actions }
-SBBlock >> moveTextCursorLeft [
-	<inputAction>
-	<actionValidIf: #hasCurrentTextMorph>
-
-	| editor wordWise |
-	wordWise := ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed].
-	editor := self sandblockEditor.
-	self currentTextMorph
-		moveCursor: -1
-		ifAtBound: [ | next |
-			next := (self currentTextMorph previousMorphThat: [:b | b isTextMorph]) ifNotNil: #containingSandblock.
-			(next notNil and: [next containingFloat = self containingFloat]) ifTrue: [
-				editor select: next.
-				next currentTextMorph ifNotNil: [
-					next sandblockEditor
-						startInput: next
-						at: (wordWise ifTrue: [0] ifFalse: [900000000])
-						replacingContents: false]]]
-		wordWise: wordWise.
-	editor updateVerticalSelectionPosition
-]
-
-{ #category : #actions }
-SBBlock >> moveTextCursorRight [
-	<inputAction>
-	<actionValidIf: #hasCurrentTextMorph>
-
-	| editor wordWise |
-	wordWise := ActiveEvent commandKeyPressed or: [ActiveEvent controlKeyPressed].
-	editor := self sandblockEditor.
-	self currentTextMorph
-		moveCursor: 1
-		ifAtBound: [ | next |
-			next := (self currentTextMorph nextMorphThat: [:b | b isTextMorph]) ifNotNil: #containingSandblock.
-			(next notNil and: [next containingFloat = self containingFloat]) ifTrue: [
-				editor select: next.
-				next currentTextMorph ifNotNil: [editor startInput: next at: (wordWise ifTrue: [900000000] ifFalse: [0]) replacingContents: false]]]
-		wordWise: wordWise.
-	editor updateVerticalSelectionPosition
-]
-
-{ #category : #actions }
-SBBlock >> moveTextCursorUp [
-	<inputAction>
-	<actionValidIf: #hasCurrentTextMorph>
-
-	self currentTextMorph moveCursorVertically: -1 ifAtBound: [ | next pos |
-		pos := self sandblockEditor verticalSelectionPosition.
-		next := self previousVerticalNear: pos.
-		next ifNotNil: [
-			next select.
-			next currentTextMorph ifNotNil: [:textMorph |
-				next sandblockEditor
-					startInput: next
-					at: (textMorph cursorIndexForPosition: pos + (next containingFloat ifNotNil: [:a | a left] ifNil: [0]) @ (next bottom - 4))
-					replacingContents: false]]]
-]
-
-{ #category : #actions }
 SBBlock >> multiSelectChildren [
 	<action>
 
-	
 	self sandblockEditor multiSelection: self childSandblocks
-]
-
-{ #category : #actions }
-SBBlock >> multiSelectLeft [
-	<action>
-
-	| adjacent |
-	adjacent := self previousBlock.
-	self sandblockEditor mode ~= #selection ifTrue: [self sandblockEditor mode: #selection].
-	self sandblockEditor addToMultiSelection: adjacent.
-	SBToggledCode comment: '' active: 1 do: {[adjacent select]}
-]
-
-{ #category : #actions }
-SBBlock >> multiSelectRight [
-	<action>
-
-	| adjacent |
-	adjacent := self isLastChild
-		ifTrue: [self parentSandblock]
-		ifFalse: self nextBlock firstDeepChild.
-	
-	self sandblockEditor mode ~= #selection ifTrue: [self sandblockEditor mode: #selection].
-	self sandblockEditor addToMultiSelection: self.
-	self sandblockEditor addToMultiSelection: adjacent.
-	SBToggledCode comment: '' active: 1 do: {[adjacent select]}
 ]
 
 { #category : #'as yet unclassified' }
@@ -1906,13 +1794,24 @@ SBBlock >> pasteBeforeOrAfter: aBeforeBoolean [
 SBBlock >> pasteReplace [
 	<action>
 
-	| copyBuffer |
+	| copyBuffer position |
 	copyBuffer := self sandblockEditor copyBuffer.
 	
 	^ copyBuffer ifNotNil: [ | new |
 		copyBuffer wrapsAround ifTrue: [^ self wrapSelectionWith: copyBuffer unpackSelection veryDeepCopy].
 		
 		new := copyBuffer unpackSelection veryDeepCopy.
+		
+		position := self sandblockEditor cursor cursorPosition.
+		(position isKindOf: SBCursorInsert) ifTrue: [
+			new
+				convertedFor: (position container objectInterfaceNear: position adjacent at: (position before ifTrue: [#before] ifFalse: [#after]))
+				do: [:repr |
+					self sandblockEditor
+						do: (position container insertCommandRequest: repr near: position adjacent before: position before).
+					new startInputAtEnd.
+					^ self]].
+		
 		new convertedFor: self objectInterface do: [:repr |
 			self sandblockEditor do: (SBReplaceCommand new
 				target: self;
@@ -1987,7 +1886,6 @@ SBBlock >> postDuplicateSelf [
 
 	" this block has been duplicated, adjust any identifiers if need be "
 	
-	self isSelected ifFalse: [self detachDecorators: SBSelectionDecorator]
 ]
 
 { #category : #accessing }
@@ -2245,35 +2143,13 @@ SBBlock >> selectBottomToplevel [
 ]
 
 { #category : #actions }
-SBBlock >> selectDown [
-	<multiSelectAction>
-
-	| next selectionDownHistory |
-	selectionDownHistory := self sandblockEditor selectionDownHistory.
-	
-	" try to follow our steps back down "
-	next := selectionDownHistory ifEmpty: [] ifNotEmpty: #removeLast.
-	
-	(self childSandblocks includes: next) ifFalse: [
-		selectionDownHistory removeAll.
-		next := self hasChildSandblocks ifTrue: [self childSandblocks first] ifFalse: [nil]].
-	
-	next
-		ifNotNil: #select
-		ifNil: [
-			self sandblockEditor startInput: self at: 0 replacingContents: false]
-]
-
-{ #category : #actions }
 SBBlock >> selectLast [
 	<multiSelectAction>
 	<inputAction>
 
 	self containingFloat lastDeepChild select.
 	
-	self sandblockEditor
-		maybeStartInputFromEnd;
-		updateVerticalSelectionPosition
+	self sandblockEditor maybeStartInputFromEnd
 ]
 
 { #category : #actions }
@@ -2284,66 +2160,14 @@ SBBlock >> selectLeftToplevel [
 ]
 
 { #category : #actions }
-SBBlock >> selectNext [
-	<multiSelectAction>
-	<inputAction>
-
-	self sandblockEditor selectionDownHistory removeAll.
-	self class navigation nextFrom: self do: [:b | (self canJumpTo: b) ifTrue: [b select]].
-	
-	self isSelected
-		ifTrue: [self sandblockEditor maybeStartInputFromEnd]
-		ifFalse: [	self sandblockEditor maybeStartInputFromStart].
-	
-	self sandblockEditor updateVerticalSelectionPosition
-]
-
-{ #category : #actions }
-SBBlock >> selectNextGroup [
-	<multiSelectAction>
-
-	self sandblockEditor keepVerticalSelectionPositionDuring: [
-		(self nextVerticalNear: self sandblockEditor verticalSelectionPosition)
-			ifNotNil: #select
-			ifNil: [(self hasChildSandblocks or: [self containingArtefact notNil and: [self containingArtefact floating not]]) ifTrue: [self selectNext]]].
-	self sandblockEditor maybeStartInput: #top
-]
-
-{ #category : #actions }
-SBBlock >> selectPrevious [
-	<multiSelectAction>
-	<inputAction>
-
-	self sandblockEditor selectionDownHistory removeAll.
-	self class navigation previousFrom: self do: [:b | (self canJumpTo: b) ifTrue: [b select]].
-	
-	self sandblockEditor
-		maybeStartInputFromEnd;
-		updateVerticalSelectionPosition
-]
-
-{ #category : #actions }
-SBBlock >> selectPreviousGroup [
-	<multiSelectAction>
-
-	self sandblockEditor keepVerticalSelectionPositionDuring: [
-		((self previousVerticalNear: self sandblockEditor verticalSelectionPosition)
-			ifNil: [self parentSandblock ~= self sandblockEditor ifTrue: [self parentSandblock] ifFalse: [nil]])
-				ifNotNil: #select].
-	
-	self sandblockEditor maybeStartInput: #bottom
-]
-
-{ #category : #actions }
 SBBlock >> selectRightMostBlock [
 	<multiSelectAction>
 	<inputAction>
 
 	self containingStatement ifNil: [self rightMostBlock select] ifNotNil: [:statement | statement rightMostBlock select].
 	
-	self sandblockEditor
-		maybeStartInputFromEnd;
-		updateVerticalSelectionPosition
+	self sandblockEditor maybeStartInputFromEnd.
+	self cursor updateHorizontalOffset
 ]
 
 { #category : #actions }
@@ -2366,20 +2190,6 @@ SBBlock >> selectToplevelTowards: aSideSymbol [
 	| opposite |
 	opposite := aSideSymbol caseOf: {([#left] -> [#right]). ([#right] -> [#left]). ([#top] -> [#bottom]). ([#bottom] -> [#top])}.
 	(self containingToplevel closestAdjacentFrom: (aSideSymbol, 'Center') asSymbol to: (opposite, 'Center') asSymbol) select
-]
-
-{ #category : #actions }
-SBBlock >> selectUp [
-	<multiSelectAction>
-	<inputAction>
-
-	self sandblockEditor mode = #input ifTrue: [^ self sandblockEditor endInput; updateVerticalSelectionPosition].
-	
-	self parentSandblock ifNotNil: [:b |
-		self sandblockEditor selectionDownHistory addLast: self.
-		b select].
-	
-	self sandblockEditor updateVerticalSelectionPosition
 ]
 
 { #category : #printing }
@@ -2446,15 +2256,6 @@ SBBlock >> specialDropCommand: aBlock [
 	^ nil
 ]
 
-{ #category : #actions }
-SBBlock >> startContinuousMultiSelection [
-	<action>
-
-	self sandblockEditor
-		mode: #continuousSelection;
-		addToMultiSelection: self
-]
-
 { #category : #'event handling' }
 SBBlock >> startDrag: anEvent [
 
@@ -2509,6 +2310,17 @@ SBBlock >> startInputAtStart [
 	self sandblockEditor startInput: self at: 1 replacingContents: false
 ]
 
+{ #category : #input }
+SBBlock >> startInputCommand [
+
+	^ self currentTextMorph
+		ifNotNil: [
+			SBInputCommand new
+				oldMorph: self;
+				previousText: self contents;
+				yourself]
+]
+
 { #category : #actions }
 SBBlock >> startInputSubstituting [
 	<action>
@@ -2520,8 +2332,7 @@ SBBlock >> startInputSubstituting [
 SBBlock >> startOrAddToMultiSelection [
 	<multiSelectAction>
 
-	self sandblockEditor startOrAddToMultiSelection: self.
-	self select
+	self sandblockEditor cursor startOrAddToMultiSelection: self
 ]
 
 { #category : #input }

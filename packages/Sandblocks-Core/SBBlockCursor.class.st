@@ -7,7 +7,8 @@ Class {
 		'editor',
 		'cursorPosition',
 		'selectLargerHistory',
-		'horizontalOffsetInFloat'
+		'horizontalOffsetInFloat',
+		'multiSelection'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -33,6 +34,18 @@ SBBlockCursor >> adjacentVerticalCalcDistance: aDistBlock validBlock: aValidBloc
 	^ (candidates detectMin: [:candidate | (candidate left - float left to: candidate right - float left) distanceTo: horizontalOffsetInFloat]) ifNotNil: #containingSandblock
 ]
 
+{ #category : #api }
+SBBlockCursor >> color [
+
+	^ cursorPosition color
+]
+
+{ #category : #api }
+SBBlockCursor >> currentCommand [
+
+	^ cursorPosition currentCommand
+]
+
 { #category : #testing }
 SBBlockCursor >> cursorAlwaysVisible [
 
@@ -42,8 +55,8 @@ SBBlockCursor >> cursorAlwaysVisible [
 { #category : #private }
 SBBlockCursor >> cursorForBlock: aBlock at: aPoint [
 
-	^ aBlock currentTextMorph
-		ifNotNil: [SBCursorText new block: aBlock; pixelPosition: aPoint]
+	^ aBlock startInputCommand
+		ifNotNil: [:command | SBCursorText new block: aBlock; pixelPosition: aPoint; currentCommand: command]
 		ifNil: [SBCursorSelect new block: aBlock]
 ]
 
@@ -56,16 +69,33 @@ SBBlockCursor >> cursorPosition [
 { #category : #private }
 SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol [
 
-	aPosition = cursorPosition ifFalse: [
-		cursorPosition ifNotNil: #leave.
-		cursorPosition := aPosition.
-		cursorPosition ifNotNil: [:position | position enter].
-		self resetBlink].
+	| previousBlock previousCursor |
+	previousBlock := self selectedBlock.
+	previousCursor := cursorPosition.
 	
+	aPosition = previousCursor
+		ifTrue: [previousCursor maybeUpdateFor: aPosition]
+		ifFalse: [
+			cursorPosition := SBCursorNone new.
+			previousCursor ifNotNil: [:c | c leaveIn: self editor].
+			cursorPosition := aPosition.
+			cursorPosition ifNotNil: [:position | position enter]].
+	
+	self resetBlink.
 	blinkCount := 0.
-	cursorPosition ifNotNil: [:position | self bounds: position bounds].
+	self bounds: cursorPosition bounds.
 	aSymbol ~= #z ifTrue: [selectLargerHistory removeAll].
-	((#(#z #y) includes: aSymbol) not and: [aBoolean]) ifTrue: [self updateHorizontalOffset]
+	self editor
+		triggerEvent: #selectionChanged with: self selectedBlock;
+		updateSelectionLabel.
+	((#(#z #y) includes: aSymbol) not and: [aBoolean]) ifTrue: [self updateHorizontalOffset].
+	
+	self selectedBlock ~= previousBlock ifTrue: [
+		previousBlock ifNotNil: #wasDeselected.
+		self selectedBlock ifNotNil: [:b |
+			b
+				wasSelected;
+				ensureVisible]]
 ]
 
 { #category : #testing }
@@ -90,6 +120,12 @@ SBBlockCursor >> editor [
 SBBlockCursor >> editor: anEditor [
 
 	editor := anEditor
+]
+
+{ #category : #'vertical movement' }
+SBBlockCursor >> globalHorizontalOffset [
+
+	^ horizontalOffsetInFloat + self selectedBlock containingFloat left
 ]
 
 { #category : #'vertical movement' }
@@ -158,8 +194,13 @@ SBBlockCursor >> moveCursorDown [
 SBBlockCursor >> moveCursorLarger [
 	<globalAction>
 
-	selectLargerHistory addLast: self cursorPosition.
-	self cursorPosition: self cursorPosition selectLarger explicitMove: true axis: #z
+	| newPosition previousPosition |
+	previousPosition := self cursorPosition.
+	newPosition := self cursorPosition selectLarger.
+	
+	self cursorPosition: newPosition explicitMove: true axis: #z.
+	
+	previousPosition ~= newPosition ifTrue: [selectLargerHistory addLast: previousPosition]
 ]
 
 { #category : #api }
@@ -224,11 +265,24 @@ SBBlockCursor >> moveHorizontal: aNumber wordWise: aBoolean [
 
 	| newPos |
 	newPos := self cursorPosition.
-	[newPos := newPos moveHorizontal: aNumber wordWise: aBoolean] doWhileTrue: [aBoolean and: [newPos class ~= SBCursorText]].
+	[newPos := newPos moveHorizontal: aNumber wordWise: aBoolean] doWhileTrue: [aBoolean and: [newPos class ~= SBCursorText and: [newPos notNil]]].
+	newPos ifNil: [^ self].
 	
 	newPos ~= self cursorPosition ifTrue: [newPos placeAtEnd: (aBoolean ifTrue: [aNumber > 0] ifFalse: [aNumber < 0])].
 	
 	self cursorPosition: newPos explicitMove: true axis: #x
+]
+
+{ #category : #multiselection }
+SBBlockCursor >> multiSelection [
+
+	^ cursorPosition multiSelection
+]
+
+{ #category : #multiselection }
+SBBlockCursor >> multiSelection: aCollection [
+
+	self cursorPosition: (SBCursorMultiSelect new selected: aCollection) explicitMove: true axis: #none
 ]
 
 { #category : #'vertical movement' }
@@ -237,6 +291,13 @@ SBBlockCursor >> nextVertical [
 	^ self
 		adjacentVerticalCalcDistance: [:candidate | candidate top - self selectedBlock bottom]
 		validBlock: [:candidate | candidate top >= self selectedBlock bottom]
+]
+
+{ #category : #api }
+SBBlockCursor >> prepareForNextCommand [
+	" if we have a pending input command, make sure it is finished "
+	
+	cursorPosition mode = #input ifTrue: [self selectNoInput: self selectedBlock]
 ]
 
 { #category : #'vertical movement' }
@@ -253,15 +314,30 @@ SBBlockCursor >> rejectsEvent: anEvent [
 	^ true
 ]
 
+{ #category : #api }
+SBBlockCursor >> replaceSelected: aBlock [
+
+	cursorPosition replaceSelected: aBlock
+]
+
 { #category : #blinking }
 SBBlockCursor >> resetBlink [
 
 	blinkCount := 0.
-	cursorShown := false.
+	cursorShown := true.
 	self editor ifNotNil: [:e |
 		e world ifNotNil: [:w |
 			w stopStepping: self.
-			w startStepping: self at: Time millisecondClockValue selector: #step arguments: {} stepTime: self stepTime]]
+			w startStepping: self at: Time millisecondClockValue + self stepTime selector: #step arguments: {} stepTime: self stepTime]]
+]
+
+{ #category : #drawing }
+SBBlockCursor >> resetState [
+
+	selectLargerHistory := OrderedCollection new.
+	cursorShown := false.
+	blinkCount := 0.
+	horizontalOffsetInFloat := 0.
 ]
 
 { #category : #api }
@@ -272,10 +348,28 @@ SBBlockCursor >> select: aBlock [
 		ifNotNil: [self cursorPosition: (self cursorForBlock: aBlock at: aBlock topLeft) explicitMove: false axis: #none]
 ]
 
+{ #category : #api }
+SBBlockCursor >> selectNoInput: aBlock [
+
+	self cursorPosition: (SBCursorSelect new block: aBlock) explicitMove: false axis: #none
+]
+
 { #category : #accessing }
 SBBlockCursor >> selectedBlock [
 
 	^ self cursorPosition block
+]
+
+{ #category : #api }
+SBBlockCursor >> startInput: aBlock at: aNumber replacingContents: aBoolean [
+
+	self cursorPosition: (aBlock startInputCommand ifNotNil: [:command | SBCursorText new block: aBlock; cursorIndex: aNumber; currentCommand: aBlock startInputCommand; replacingContents: aBoolean] ifNil: [SBCursorSelect new block: aBlock]) explicitMove: aBoolean axis: #none
+]
+
+{ #category : #multiselection }
+SBBlockCursor >> startOrAddToMultiSelection: aBlock [
+
+	self cursorPosition: (cursorPosition startOrAddToMultiSelection: aBlock) explicitMove: true axis: #none
 ]
 
 { #category : #blinking }
@@ -283,13 +377,22 @@ SBBlockCursor >> step [
 
 	cursorShown := cursorShown not.
 	blinkCount := blinkCount + 1.
-	self changed
+	self bounds: cursorPosition bounds.
+	self changed.
+	self selectedBlock ifNotNil: #changed
 ]
 
 { #category : #blinking }
 SBBlockCursor >> stepTime [
 
 	^ 500
+]
+
+{ #category : #api }
+SBBlockCursor >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
+
+	(anEvent commandKeyPressed not and: [anEvent optionKeyPressed not and: [anEvent controlKeyPressed not]]) ifTrue: [
+		cursorPosition unhandledEvent: anEvent in: anEditor didHandle: aBlock]
 ]
 
 { #category : #'vertical movement' }

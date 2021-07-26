@@ -3,7 +3,9 @@ Class {
 	#superclass : #SBCursorPosition,
 	#instVars : [
 		'block',
-		'cursorIndex'
+		'cursorIndex',
+		'currentCommand',
+		'replacingContents'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -11,7 +13,17 @@ Class {
 { #category : #'as yet unclassified' }
 SBCursorText >> = aPosition [
 
-	^ self class = aPosition class and: [self block = aPosition block]
+	^ self class = aPosition class and: [self block = aPosition block and: [self replacingContents = aPosition replacingContents]]
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorText >> applyCommandIn: anEditor [
+
+	self block stopEditing: currentCommand.
+	
+	currentCommand hasChange
+		ifTrue: [anEditor do: currentCommand]
+		ifFalse: [anEditor history noMoreMerge]
 ]
 
 { #category : #'as yet unclassified' }
@@ -39,9 +51,27 @@ SBCursorText >> color [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorText >> currentCommand [
+
+	^ currentCommand
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorText >> currentCommand: aCommand [
+
+	currentCommand := aCommand
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorText >> cursorIndex [
 
 	^ cursorIndex ifNil: [1]
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorText >> cursorIndex: aNumber [
+
+	cursorIndex := aNumber clampLow: 1 high: self block currentTextMorph contents size + 1
 ]
 
 { #category : #'as yet unclassified' }
@@ -62,10 +92,8 @@ SBCursorText >> drawOn: aCanvas [
 { #category : #'as yet unclassified' }
 SBCursorText >> enter [
 
-	self block sandblockEditor
-		startInput: self block
-		at: self cursorIndex
-		replacingContents: false
+	replacingContents ifTrue: [self block currentTextMorph contents: ''].
+	self block currentTextMorph moveCursorTo: self cursorIndex
 ]
 
 { #category : #'as yet unclassified' }
@@ -85,9 +113,26 @@ SBCursorText >> horizontalOffsetInFloat [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorText >> leave [
+SBCursorText >> initialize [
 
+	super initialize.
+	
+	replacingContents := false.
+	cursorIndex := 1
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorText >> leaveIn: anEditor [
+
+	self applyCommandIn: anEditor.
 	self block currentTextMorph stopEditing
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorText >> maybeUpdateFor: aPosition [
+
+	self cursorIndex: aPosition cursorIndex.
+	self block currentTextMorph moveCursorTo: self cursorIndex
 ]
 
 { #category : #'as yet unclassified' }
@@ -117,6 +162,25 @@ SBCursorText >> pixelPosition: aPoint [
 SBCursorText >> placeAtEnd: aBoolean [
 
 	cursorIndex := aBoolean ifTrue: [self block currentTextMorph contents size + 1] ifFalse: [1]
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorText >> replaceSelected: aBlock [
+
+	aBlock startInputCommand ifNotNil: [
+		self block: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorText >> replacingContents [
+
+	^ replacingContents
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorText >> replacingContents: aBoolean [
+
+	replacingContents := aBoolean
 ]
 
 { #category : #'as yet unclassified' }

@@ -83,7 +83,6 @@ SBVimInputMapping >> registerDefaultShortcuts [
 		cmdShortcut: $p do: #pasteAfter;
 		cmdShortcut: $P do: #pasteBefore;
 		shortcut: $v modes: #(command selection) do: #startOrAddToMultiSelection;
-		cmdShortcut: $V command do: #startContinuousMultiSelection;
 		cmdShortcut: $V do: #multiSelectChildren;
 		cmdShortcut: $r do: #pasteReplace;
 

@@ -98,10 +98,7 @@ SBOwnTextMorph >> cursor: aNumber [
 
 	cursor := aNumber.
 	
-	self containingSandblock
-		withDecorator: SBSelectionDecorator
-		do: [:d | d resetBlink]
-		ifAbsent: [].
+	self sandblockEditor ifNil: [true] ifNotNil: [:e | e cursor resetBlink].
 	
 	self changed
 ]
@@ -109,10 +106,7 @@ SBOwnTextMorph >> cursor: aNumber [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> cursorColor [
 
-	^ self containingSandblock
-		withDecorator: SBSelectionDecorator
-		do: [:d | d color]
-		ifAbsent: [nil]
+	^ self sandblockEditor ifNotNil: [:e | e cursor color]
 ]
 
 { #category : #'as yet unclassified' }
@@ -139,11 +133,7 @@ SBOwnTextMorph >> cursorPosition [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> cursorVisible [
 
-	^ cursor > 0 and: [
-		self containingSandblock
-			withDecorator: SBSelectionDecorator
-			do: [:d | d cursorVisible]
-			ifAbsent: [true]]
+	^ cursor > 0 and: [self sandblockEditor ifNil: [true] ifNotNil: [:e | e cursor cursorVisible]]
 ]
 
 { #category : #'as yet unclassified' }

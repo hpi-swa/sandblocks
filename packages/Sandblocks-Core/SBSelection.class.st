@@ -38,7 +38,6 @@ SBSelection >> addedMorph: aMorph [
 	aMorph isSandblock ifTrue: [
 		aMorph allBlocksDo: [:block |
 			block
-				detachDecorators: SBSelectionDecorator;
 				detachDecorators: SBMultiSelectionDecorator;
 				stopEditing]]
 ]
@@ -71,6 +70,12 @@ SBSelection >> colorPolicy [
 SBSelection >> colorPolicy: aPolicy [
 
 	colorPolicy := aPolicy
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> cursor [
+
+	^ SBBlockCursor new editor: self
 ]
 
 { #category : #'as yet unclassified' }

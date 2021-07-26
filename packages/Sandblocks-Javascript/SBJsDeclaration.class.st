@@ -91,6 +91,16 @@ SBJsDeclaration >> startInputAt: aNumber replacingContents: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsDeclaration >> startInputCommand [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBJsDeclaration >> stopEditing: aCommand [
+]
+
+{ #category : #'as yet unclassified' }
 SBJsDeclaration >> symbols [
 
 	^ {declarationType, ' '. nil}

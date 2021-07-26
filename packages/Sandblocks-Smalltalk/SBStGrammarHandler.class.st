@@ -503,7 +503,7 @@ SBStGrammarHandler >> wrapInMessageSend: aString [
 		wrap: [:outer :inner | outer receiver: inner];
 		yourself).
 	self block sandblockEditor
-		startInput: msg
+		startInput: msg messageParts first
 		at: 900000000
 		replacingContents: false.
 	^ msg

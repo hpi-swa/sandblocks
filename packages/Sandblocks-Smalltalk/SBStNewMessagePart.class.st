@@ -197,6 +197,16 @@ SBStNewMessagePart >> startInputAt: aNumber replacingContents: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBStNewMessagePart >> startInputCommand [
+
+	^ SBInputStructureCommand new
+		oldMorph: self;
+		previousText: self contents;
+		oldMorphs: (self argument ifNotNil: [:a | {a}] ifNil: [{}]);
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
 SBStNewMessagePart >> stopEditing: aCommand [
 
 	super stopEditing: aCommand.

@@ -199,6 +199,7 @@ SBJsInfixOperator >> operator [
 SBJsInfixOperator >> precedence [
 
 	^ {
+		#('') -> 21.
 		#('.' '?.' '[' '(') -> 20.
 		" missing: postfix incr/decr -> 18 "
 		#('**') -> 16.
@@ -267,12 +268,20 @@ SBJsInfixOperator >> startInputAt: aNumber replacingContents: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsInfixOperator >> startInputCommand [
+
+	^ SBJsInfixOpInputCommand new
+		previousOperator: self currentTextMorph contents;
+		previousRhs: self allRhs;
+		morph: self;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
 SBJsInfixOperator >> stopEditing: aCommand [
 
-	aCommand operator: self currentTextMorph contents.
-	aCommand doRotate: (aCommand previousOperator = '' and: [self shouldRotateWhenJustAdded]).
-	
-	self currentTextMorph stopEditing
+	aCommand operator: self contents.
+	aCommand doRotate: (aCommand previousOperator = '' and: [self shouldRotateWhenJustAdded])
 ]
 
 { #category : #'as yet unclassified' }

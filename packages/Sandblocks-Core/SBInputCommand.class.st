@@ -11,6 +11,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInputCommand >> block [
+
+	^ self oldMorph
+]
+
+{ #category : #'as yet unclassified' }
+SBInputCommand >> contents: aString [
+
+	self newText: aString
+]
+
+{ #category : #'as yet unclassified' }
 SBInputCommand >> do [
 
 	(oldMorph ~= newMorph and: [newMorph owner isNil]) ifTrue: [oldMorph replaceBy: newMorph].

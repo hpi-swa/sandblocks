@@ -217,6 +217,7 @@ SBStMessageSend >> initialize [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> insertCommandRequest: aBlock near: aMorph before: aBoolean [
 
+	((aMorph = self receiver) or: [aBoolean and: [aMorph isNil]]) ifTrue: [^ nil].
 	^ self signature insertCommandRequest: aBlock near: aMorph before: aBoolean
 ]
 

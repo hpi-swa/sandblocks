@@ -95,6 +95,12 @@ SBCursorInsert >> drawOn: aCanvas [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorInsert >> enter [
+
+	super enter
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorInsert >> hash [
 
 	^ self adjacent hash bitXor: (self before hash bitXor: self container hash)
@@ -142,4 +148,12 @@ SBCursorInsert >> selectLarger [
 SBCursorInsert >> selectSmaller [
 
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorInsert >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
+
+	anEditor do: (self block insertEmptyCommandRequestNear: self adjacent before: self before).
+	anEditor selection keyStroke: anEvent.
+	aBlock value
 ]

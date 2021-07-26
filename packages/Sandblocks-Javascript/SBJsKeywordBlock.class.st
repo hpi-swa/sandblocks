@@ -166,6 +166,16 @@ SBJsKeywordBlock >> startInputAt: aNumber replacingContents: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsKeywordBlock >> startInputCommand [
+
+	^ SBJsKeywordBlockInputCommand new
+		morph: self;
+		previousContents: self currentTextMorph contents;
+		previousOperands: self header;
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
 SBJsKeywordBlock >> statements [
 
 	^ self submorphs viewAllButFirst: 3 + self header size

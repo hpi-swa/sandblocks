@@ -341,13 +341,13 @@ SBTutorialStep class >> stepMovement: anEditor [
 
 	SBTutorialStep new
 		title: 'Movement';
-		addIntroText: 'Hey, welcome to the tutorial! First we''ll look at moving your cursor. You can click on things, but try to get used to using your keyboard. <#selectPrevious>/<#selectNextGroup>/<#selectPreviousGroup>/<#selectNext> moves your cursor around.
+		addIntroText: 'Hey, welcome to the tutorial! First we''ll look at moving your cursor. You can click on things, but try to get used to using your keyboard. <#moveCursorLeft>/<#moveCursorUp>/<#moveCursorDown>/<#moveCursorUp> moves your cursor around.
 
 Note that you always undo accidental changes with <#undo> (and redo with <#redo>) and you can reset the code sample with the refresh button on the center left. Once done, you can swap to the next chapter with the arrow button on the right.';
-		addAction: #selectPrevious;
-		addAction: #selectNextGroup;
-		addAction: #selectPreviousGroup;
-		addAction: #selectNext;
+		addAction: #moveCursorLeft;
+		addAction: #moveCursorRight;
+		addAction: #moveCursorUp;
+		addAction: #moveCursorDown;
 		setup: anEditor do: [:step | | method |
 			method := step
 				createStepMethod: [ | y |
@@ -452,8 +452,8 @@ SBTutorialStep class >> stepSelection: anEditor [
 	SBTutorialStep new
 		title: 'Selection';
 		addIntroText: 'So far, we''ve only selected leaf nodes (i.e. nodes without children). Let''s try selecting larger groups.';
-		addAction: #selectUp;
-		addAction: #selectDown;
+		addAction: #moveCursorLarger;
+		addAction: #moveCursorSmaller;
 		addAction: #deleteBlock;
 		setup: anEditor do: [:step | | method |
 			method := step
@@ -670,10 +670,10 @@ SBTutorialStep >> example [
 			SBTutorialStep new
 				title: '01 Movement';
 				addIntroText: 'Here we get to know the basics to move around the system. The text is gonna be rather long so make sure we can wrap properly.';
-				addAction: #selectNext;
-				addAction: #selectPrevious;
-				addAction: #selectUp;
-				addAction: #selectDown;
+				addAction: #moveCursorLeft;
+				addAction: #moveCursorRight;
+				addAction: #moveCursorLarger;
+				addAction: #moveCursorSmaller;
 				addStep: 'Select the last block of this method' checkCondition: [:editor | editor selected = self];
 				fullBounds;
 				yourself]

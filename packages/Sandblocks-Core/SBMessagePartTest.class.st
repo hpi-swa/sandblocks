@@ -17,7 +17,7 @@ SBMessagePartTest >> testBinaryMessageEdit [
 	| message editor |
 	message := '5 + 2' parseAsSandblock.
 	editor := self methodFor: message.
-	editor startInput: message at: 0 replacingContents: false.
+	editor startInput: message messageParts first at: 0 replacingContents: false.
 	message messageParts first keyStroke: (self keyboardEvent: $-).
 	self assert: message selector = '-+'.
 	message messageParts first keyStroke: (self keyboardEvent: Character backspace).
@@ -77,11 +77,15 @@ SBMessagePartTest >> testInsertMessagePartAtEnd [
 SBMessagePartTest >> testInsertMessagePartAtStart [
 
 	| message |
-	{[message receiver insertElementAfter]. [message messageParts first insertElementBefore]} do: [:cmd |
-		message := 'a do: b' parseAsSandblock.
-		self methodFor: message.
-		cmd value.
-		self assert: message selector = ':do:']
+	message := 'a do: b' parseAsSandblock.
+	self methodFor: message.
+	
+	" noop "
+	message receiver insertElementAfter.
+	self assert: 'do:' equals: message selector.
+	
+	message messageParts first insertElementBefore.
+	self assert: ':do:' equals: message selector
 ]
 
 { #category : #'as yet unclassified' }
@@ -90,8 +94,8 @@ SBMessagePartTest >> testInsertMessagePartBeforeEnd [
 	| message |
 	message := 'a do: b' parseAsSandblock.
 	self methodFor: message.
-	message messageParts last insertElementAfter.
-	self assert: message selector = 'do::'.
+	message arguments last insertElementAfter.
+	self assert:  'do::' equals: message selector.
 	self assert: message arguments last isUnknown
 ]
 
@@ -118,15 +122,15 @@ SBMessagePartTest >> testTypeBinary [
 	message := receiver parentSandblock.
 	
 	self assert: message selector isEmpty.
-	self assert: editor currentInput = message messageParts first.
+	self assert: editor selection = message messageParts first.
 	message messageParts first keyStroke: (self keyboardEvent: $+).
 	self assert: message selector = '+'.
 	self assert: message arguments size = 1.
-	self assert: editor currentInput = message messageParts first.
+	self assert: editor selection = message messageParts first.
 	message messageParts first keyStroke: (self keyboardEvent: $-).
 	self assert: message selector = '+-'.
 	message messageParts first keyStroke: (self keyboardEvent: $').
-	self assert: editor currentInput = message arguments first.
+	self assert: editor selection = message arguments first.
 	self assert: message selector = '+-'
 ]
 

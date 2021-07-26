@@ -78,16 +78,24 @@ SBCursorSelect >> moveHorizontal: aNumber wordWise: aBoolean [
 { #category : #'as yet unclassified' }
 SBCursorSelect >> selectLarger [
 
-	^ SBCursorSelect new block: self block parentSandblock
+	^ self block parentSandblock ifNotNil: [:parent | SBCursorSelect new block: parent] ifNil: [self]
 ]
 
 { #category : #'as yet unclassified' }
 SBCursorSelect >> selectSmaller [
 
 	self block childSandblocks ifEmpty: [
-		self block currentTextMorph ifNotNil: [^ self textCursorFor: self block].
+		self block startInputCommand ifNotNil: [:command | ^ SBCursorText new block: self block; currentCommand: command].
 		self insertCursorIn: self block near: nil before: false do: [:cursor | ^ cursor].
 		^ self].
 	
 	^ self selectCursorFor: self block childSandblocks first
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorSelect >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
+
+	(self block grammarHandler ifNotNil: [:h | h characterCanStartInput: anEvent keyCharacter] ifNil: [false]) ifTrue: [
+			self block grammarHandler startOverrideInput: anEvent in: anEditor.
+			aBlock value]
 ]

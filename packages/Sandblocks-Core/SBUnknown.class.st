@@ -44,7 +44,7 @@ SBUnknown >> contents: aString [
 	aString ifNotEmpty: [ | editor |
 		editor := self sandblockEditor.
 		self acceptCharacter: aString first.
-		editor currentInput contents: editor currentInput contents, aString allButFirst]
+		editor selection contents: editor selection contents, aString allButFirst]
 ]
 
 { #category : #accessing }

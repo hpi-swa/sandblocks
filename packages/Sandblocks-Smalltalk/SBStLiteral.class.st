@@ -104,8 +104,7 @@ SBStLiteral >> replaceWithUnknown [
 	
 	new := self newNullBlock label: 'expr'.
 	self replaceBy: new.
-	new moveCursorTo: 0.
-	new sandblockEditor replaceInput: new
+	new select
 ]
 
 { #category : #'as yet unclassified' }
@@ -135,6 +134,15 @@ SBStLiteral >> startInputAt: aNumber replacingContents: aBoolean [
 		ifFalse: [self moveCursorTo: aNumber].
 	
 	^ cmd
+]
+
+{ #category : #'as yet unclassified' }
+SBStLiteral >> startInputCommand [
+
+	^ self inputCommandClass new
+		oldMorph: self;
+		previousText: self contents;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }

@@ -96,11 +96,11 @@ SBStSignature >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 	| part index insertArg insertPart reference |
 	(self isBinary or: [self isAssignment]) ifTrue: [^ nil].
 	self isUnary ifTrue: [
-		^ SBInsertCommand new
-			container: self;
-			index: self submorphCount + 1;
-			morph: aMorph;
-			yourself].
+		aBoolean ifTrue: [^ nil].
+		^ SBRelInsertCommand new near: self messageParts first before: false in: self morph: aMorph].
+	
+	" only allow inserting before message parts and after arguments "
+	(aBlock notNil and: [(aBlock isMessagePart and: [aBoolean not]) or: [aBlock isMessagePart not and: [aBoolean]]]) ifTrue: [^ nil].
 	
 	reference := aBlock ifNil: [aBoolean ifTrue: [self firstSubmorph] ifFalse: [self lastSubmorph]].
 	
@@ -331,10 +331,10 @@ SBStSignature >> selectorAndEdit: aString [
 { #category : #'as yet unclassified' }
 SBStSignature >> selectorAndEdit: aString withFilledArgs: aBoolean [
 
-	| current possibleArgumentNames |
-	current := self containingSandblock sandblockEditor currentInputCommand.
-	current oldMorph contents: current previousText.
-	self containingSandblock sandblockEditor endInput.
+	| possibleArgumentNames |
+	"current := self containingSandblock sandblockEditor currentInputCommand.
+	current oldMorph contents: previousText.
+	self containingSandblock sandblockEditor endInput."
 	
 	possibleArgumentNames := self possibleArgumentNamesFor: aString.
 	

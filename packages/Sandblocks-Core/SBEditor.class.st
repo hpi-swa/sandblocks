@@ -2,16 +2,10 @@ Class {
 	#name : #SBEditor,
 	#superclass : #SBBlock,
 	#instVars : [
-		'selection',
-		'currentInput',
-		'currentInputCommand',
 		'copyBuffer',
 		'copyBufferPreview',
 		'modeLabel',
 		'selectionLabel',
-		'selectionDownHistory',
-		'multiSelection',
-		'mode',
 		'scroll',
 		'colorPolicy',
 		'bottomPanel',
@@ -19,7 +13,6 @@ Class {
 		'errors',
 		'searchInput',
 		'helpOverlay',
-		'verticalSelectionPosition',
 		'globalShortcutListeners',
 		'inputMapping',
 		'ignoreNext',
@@ -128,19 +121,6 @@ SBEditor >> activateForces [
 SBEditor >> addShortcuts: aCollection [
 
 	inputMapping addShortcuts: aCollection
-]
-
-{ #category : #'action helpers' }
-SBEditor >> addToMultiSelection: aBlock [
-
-	multiSelection add: aBlock.
-	multiSelection copy do: [:morph | (morph hasOwner: aBlock) ifTrue: [self removeMultiSelected: morph]].
-	
-	aBlock allOwnersDo: [:morph | (multiSelection includes: morph) ifTrue: [self removeMultiSelected: morph]].
-	
-	aBlock attachDecorator: SBMultiSelectionDecorator new.
-	self triggerEvent: #selectionChanged with: selection.
-	self updateSelectionLabel
 ]
 
 { #category : #accessing }
@@ -301,21 +281,6 @@ SBEditor >> canDeleteChild: aBlock [
 	^ true
 ]
 
-{ #category : #'action helpers' }
-SBEditor >> cancelInput [
-	" disregard the current input command and directly return to command mode (preserves shouldMergeWithNext of previous command) "
-
-	| command input |
-	(currentInput isNil or: [currentInputCommand isNil]) ifTrue: [^ self].
-	command := currentInputCommand.
-	input := currentInput.
-	currentInput := nil.
-	currentInputCommand := nil.
-	
-	input stopEditing: command.
-	self mode: #command
-]
-
 { #category : #accessing }
 SBEditor >> canvas [
 
@@ -326,13 +291,6 @@ SBEditor >> canvas [
 SBEditor >> childSandblocksDo: aBlock [
 
 	scroll scroller submorphsDo: [:b | b isSandblock ifTrue: [aBlock value: b]]
-]
-
-{ #category : #selection }
-SBEditor >> clearMultiSelection [
-
-	multiSelection do: [:b | b detachDecorators: SBMultiSelectionDecorator].
-	multiSelection := OrderedCollection new
 ]
 
 { #category : #'event handling' }
@@ -503,15 +461,9 @@ SBEditor >> createEmptySmalltalkMethod [
 ]
 
 { #category : #accessing }
-SBEditor >> currentInput [
-
-	^ currentInput
-]
-
-{ #category : #accessing }
 SBEditor >> currentInputCommand [
 
-	^ currentInputCommand
+	^ self cursor currentCommand
 ]
 
 { #category : #accessing }
@@ -545,13 +497,11 @@ SBEditor >> deleteCommandFor: aBlock [
 { #category : #'action helpers' }
 SBEditor >> do: aCommand [
 
-	" the command may interrupt/replace an input "
-	currentInputCommand notNil ifTrue: [self endInput].
-	
+	cursor prepareForNextCommand.
+
 	history do: aCommand previousSelection: self selection selectDo: [:block :artefacts |
 		self select: block.
-		self markChangesAfterCommand: artefacts.
-		self updateVerticalSelectionPosition]
+		self markChangesAfterCommand: artefacts]
 ]
 
 { #category : #'action helpers' }
@@ -561,7 +511,7 @@ SBEditor >> doMultiSelection: aBlock [
 	command := aBlock value: self sortedMultiSelection.
 	(command notNil and: [command valid]) ifTrue: [
 		self do: command.
-		(mode = #selection or: [mode = #continuousSelection]) ifTrue: [self endMultiSelection]]
+		self mode = #selection ifTrue: [self endMultiSelection]]
 ]
 
 { #category : #'action helpers' }
@@ -593,29 +543,23 @@ SBEditor >> dropFiles: anEvent [
 { #category : #'action helpers' }
 SBEditor >> endInput [
 
-	| command |
+	self selection ifNotNil: [
+		cursor selectNoInput: self selection]
+	"| command |
 	(currentInput isNil or: [currentInputCommand isNil]) ifTrue: [^ self].
 	command := currentInputCommand.
 	self cancelInput.
 	
 	command hasChange
 		ifTrue: [self do: command]
-		ifFalse: [history noMoreMerge]
+		ifFalse: [history noMoreMerge]"
 ]
 
 { #category : #'action helpers' }
 SBEditor >> endInputWith: aString [
 
-	self currentInput contents: aString.
+	self selection contents: aString.
 	self endInput
-]
-
-{ #category : #actions }
-SBEditor >> endMultiSelection [
-	<globalAction>
-
-	self clearMultiSelection.
-	self mode: #command
 ]
 
 { #category : #accessing }
@@ -660,7 +604,7 @@ SBEditor >> filterEvent: anEvent for: aMorph [
 		ifTrue: [
 			inputMapping handledEvent: anEvent in: self.
 			^ anEvent ignore]
-		ifFalse: [inputMapping unhandledEvent: anEvent in: self didHandle: [^ anEvent ignore]].
+		ifFalse: [self cursor unhandledEvent: anEvent in: self didHandle: [^ anEvent ignore]].
 	
 	anEvent wasHandled: false.
 	^ anEvent ignore
@@ -676,12 +620,6 @@ SBEditor >> fixedNumberOfChildren [
 SBEditor >> floating [
 
 	^ true
-]
-
-{ #category : #accessing }
-SBEditor >> globalVerticalSelectionPosition [
-
-	^ verticalSelectionPosition + self selection containingFloat left
 ]
 
 { #category : #actions }
@@ -752,16 +690,20 @@ SBEditor >> hasUnsavedChanges: anArtefact [
 	^ history hasUnsavedChanges: anArtefact
 ]
 
+{ #category : #accessing }
+SBEditor >> history [
+
+	^ history
+]
+
 { #category : #initialization }
 SBEditor >> initialize [
 
 	super initialize.
 	
 	history := SBHistoryStack new.
-	multiSelection := OrderedCollection new.
 	colorPolicy := self class defaultColorPolicy new.
 	compileTime := #compileOnSave.
-	verticalSelectionPosition := 0.
 	globalShortcutListeners := OrderedCollection new.
 	inputMapping := self class newInputMapping.
 	searchInput := SBSearchPanel new.
@@ -801,9 +743,8 @@ SBEditor >> initialize [
 		registerGlobalShortcutListener: errors;
 		registerGlobalShortcutListener: searchInput;
 		registerGlobalShortcutListener: cursor;
-		resetState.
-	
-	SBPreferences useNewCursor ifTrue: [self openMorph: cursor]
+		resetState;
+		openMorph: cursor
 ]
 
 { #category : #testing }
@@ -821,30 +762,6 @@ SBEditor >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 		position: (scroll scroller offset + (self extent // 2) - (aMorph fullBounds extent // 2));
 		isUnsaved: false;
 		yourself
-]
-
-{ #category : #selection }
-SBEditor >> internalSelect: aBlock [
-
-	aBlock ~= selection ifTrue: [ | previousSelection |
-		previousSelection := selection.
-		selection := aBlock.
-		
-		previousSelection ifNotNil: [
-			previousSelection
-				detachDecorators: SBSelectionDecorator;
-				wasDeselected].
-		
-		selection ifNotNil: [
-			selection
-				attachDecorator: SBSelectionDecorator new;
-				wasSelected;
-				ensureVisible].
-		
-		self mode = #continuousSelection ifTrue: [self addToMultiSelection: selection].
-		
-		self triggerEvent: #selectionChanged with: selection.
-		self updateSelectionLabel]
 ]
 
 { #category : #input }
@@ -871,14 +788,6 @@ SBEditor >> keepForcesActivated [
 	^ activateForcesButton ifNotNil: #pressed ifNil: [false]
 ]
 
-{ #category : #'as yet unclassified' }
-SBEditor >> keepVerticalSelectionPositionDuring: aBlock [
-
-	| restore |
-	restore := verticalSelectionPosition.
-	aBlock ensure: [verticalSelectionPosition := restore]
-]
-
 { #category : #events }
 SBEditor >> keyboardFocusChange: aBoolean [
 
@@ -894,7 +803,7 @@ SBEditor >> keyboardFocusColor [
 { #category : #accessing }
 SBEditor >> labelString [
 
-	^ 'Editor', (workspace ifNotNil: [:w | ' - ', w name] ifNil: [''])
+	^ 'Editor'
 ]
 
 { #category : #actions }
@@ -920,36 +829,15 @@ SBEditor >> markChangesAfterCommand: artefacts [
 ]
 
 { #category : #input }
-SBEditor >> maybeStartInput: aSymbol [
-	" provide #top or #bottom for the entry point "
-
-	self maybeStartInputDo: [:textMorph |
-		self
-			startInput: self selection
-			at: (textMorph cursorIndexForPosition: self verticalSelectionPosition + (self selection containingFloat ifNotNil: [:a | a left] ifNil: [0]) @ ((textMorph perform: aSymbol) + (aSymbol = #top ifTrue: [4] ifFalse: [-4])))
-			replacingContents: false]
-]
-
-{ #category : #input }
 SBEditor >> maybeStartInputAt: aNumber [
 
 	self maybeStartInputDo: [:textMorph | self startInput: self selection at: aNumber replacingContents: false]
 ]
 
-{ #category : #input }
-SBEditor >> maybeStartInputBottom: aBoolean [
-
-	self maybeStartInputDo: [:textMorph |
-		self
-			startInput: self selection
-			at: (textMorph cursorIndexForPosition: self verticalSelectionPosition + (self selection containingFloat ifNotNil: [:a | a left] ifNil: [0]) @ (textMorph top + 4))
-			replacingContents: false]
-]
-
 { #category : #'as yet unclassified' }
 SBEditor >> maybeStartInputDo: aBlock [
 
-	^ (inputMapping defaultState = #input and: [(self selection ifNotNil: #currentTextMorph) notNil and: [#(command input) includes: mode]])
+	^ (inputMapping defaultState = #input and: [(self selection ifNotNil: #currentTextMorph) notNil and: [#(command input) includes: self mode]])
 		ifTrue: [aBlock value: self selection currentTextMorph]
 ]
 
@@ -980,40 +868,7 @@ SBEditor >> methods [
 { #category : #accessing }
 SBEditor >> mode [
 
-	^ mode
-]
-
-{ #category : #accessing }
-SBEditor >> mode: aSymbol [
-
-	| defaultModeColor specialModeColor |
-	self clearMultiSelection.
-	
-	aSymbol = #input ifTrue: [self assert: currentInput notNil] ifFalse: [self endInput].
-	(aSymbol = #selection or: [aSymbol = #continuousSelection]) ifFalse: [self assert: multiSelection isEmpty].
-	
-	mode := aSymbol.
-	modeLabel ifNotNil: [
-		modeLabel contents: (mode caseOf: {
-			[#input] -> ['INPUT'].
-			[#selection] -> ['SELECTION'].
-			[#continuousSelection] -> ['CONT. SELECTION'].
-			[#command] -> ['COMMAND']})].
-	
-	defaultModeColor := Color transparent.
-	specialModeColor := Color red alpha: 0.2.
-	
-	bottomPanel ifNotNil: [
-		bottomPanel color: (mode caseOf: {
-			[#input] -> [
-				inputMapping defaultState = #input
-					ifTrue: [defaultModeColor]
-					ifFalse: [specialModeColor]].
-			[#selection] -> [Color blue alpha: 0.2].
-			[#continuousSelection] -> [Color blue alpha: 0.2].
-			[#command] -> [defaultModeColor]})].
-	self selection ifNotNil: [:s | s invalidRect: (s outerBounds expandBy: 4)].
-	self updateSelectionLabel
+	^ cursor mode
 ]
 
 { #category : #initialization }
@@ -1053,18 +908,13 @@ SBEditor >> moveViewport: aPoint [
 { #category : #selection }
 SBEditor >> multiSelection [
 
-	^ (mode = #selection or: [mode = #continuousSelection])
-		ifTrue: [multiSelection select: [:bubble | bubble owner notNil]]
-		ifFalse: [self selection ifNotNil: [{self selection}] ifNil: [#()]]
-	"^ multiSelection ifEmpty: [self selection ifNotNil: [{self selection}] ifNil: [#()]]"
+	^ self cursor multiSelection
 ]
 
 { #category : #'action helpers' }
 SBEditor >> multiSelection: aCollectionOfBlocks [
 
-	self sandblockEditor mode = #select ifFalse: [self sandblockEditor mode: #selection].
-	
-	aCollectionOfBlocks do: [:block | self addToMultiSelection: block]
+	self cursor multiSelection: aCollectionOfBlocks
 ]
 
 { #category : #selection }
@@ -1274,9 +1124,9 @@ SBEditor >> performForSelection: anActionSymbol [
 { #category : #shortcuts }
 SBEditor >> performShortcutFor: anEvent [
 
-	(mode = #input and: [self currentInput absorbsInput: anEvent]) ifTrue: [
-		currentInput keyStroke: anEvent.
-		self updateVerticalSelectionPosition.
+	(self mode = #input and: [self selection absorbsInput: anEvent]) ifTrue: [
+		self selection keyStroke: anEvent.
+		self cursor updateHorizontalOffset.
 		^ true].
 	
 	^ inputMapping
@@ -1284,10 +1134,10 @@ SBEditor >> performShortcutFor: anEvent [
 		mode: self mode
 		do: [:action | self performForSelection: action]
 		ifNone: [
-			mode = #input
+			self mode = #input
 				ifTrue: [
-					currentInput keyStroke: anEvent.
-					self updateVerticalSelectionPosition.
+					self selection keyStroke: anEvent.
+					self cursor updateHorizontalOffset.
 					true]
 				ifFalse: [false]]
 ]
@@ -1356,8 +1206,6 @@ SBEditor >> redo [
 	<inputAction>
 	<globalAction>
 
-	self endInput.
-	
 	history redoDo: [:block :artefacts |
 		self select: block.
 		self markChangesAfterCommand: artefacts]
@@ -1377,23 +1225,14 @@ SBEditor >> removeHelperTimer [
 	self removeAlarm: #showHelper
 ]
 
-{ #category : #'action helpers' }
-SBEditor >> removeMultiSelected: aMorph [
-
-	aMorph detachDecorators: SBMultiSelectionDecorator.
-	multiSelection remove: aMorph.
-	multiSelection ifEmpty: [self mode: #command].
-	self triggerEvent: #selectionChanged with: selection.
-	self updateSelectionLabel
-]
-
 { #category : #input }
 SBEditor >> replaceInput: aMorph [
 	" inform the editor that the current input morph has been replaced by another where input should continue "
 
-	self assert: currentInput notNil.
+	"self assert: currentInput notNil.
 	currentInput := aMorph.
-	self select: aMorph containingSandblock
+	self select: aMorph containingSandblock"
+	self cursor replaceSelected: aMorph
 ]
 
 { #category : #'as yet unclassified' }
@@ -1417,12 +1256,7 @@ SBEditor >> reportErrorWithProcessCopy: anError [
 SBEditor >> resetState [
 
 	history clearUndoStack.
-	
-	"self inputMapping resetState."
-	selectionDownHistory := OrderedCollection new.
-	selection := nil.
-	self mode: #command.
-	
+	cursor resetState.
 	colorPolicy := colorPolicy class new
 ]
 
@@ -1500,19 +1334,13 @@ SBEditor >> select: aBlock [
 
 	self assert: (aBlock isNil or: [aBlock isSandblock]).
 	
-	SBPreferences useNewCursor ifTrue: [self cursor select: aBlock].
-	(currentInput ~= nil and: [currentInput ~= aBlock]) ifTrue: [self endInput].
-	
-	self internalSelect: aBlock
+	aBlock ~= self selection ifTrue: [self cursor select: aBlock]
 ]
 
 { #category : #selection }
 SBEditor >> selectClick: aBlock at: aPoint [
 
-	SBPreferences useNewCursor ifTrue: [self cursor moveCursorClick: aBlock at: aPoint].
-	aBlock select.
-	self maybeStartInputNear: aPoint.
-	self updateVerticalSelectionPosition
+	self cursor moveCursorClick: aBlock at: aPoint
 ]
 
 { #category : #artefacts }
@@ -1524,15 +1352,7 @@ SBEditor >> selectedArtefact [
 { #category : #selection }
 SBEditor >> selection [
 
-	^ SBPreferences useNewCursor
-		ifTrue: [self cursor selectedBlock]
-		ifFalse: [selection]
-]
-
-{ #category : #accessing }
-SBEditor >> selectionDownHistory [
-
-	^ selectionDownHistory
+	^ self cursor selectedBlock
 ]
 
 { #category : #helper }
@@ -1561,31 +1381,23 @@ SBEditor >> startDrag: anEvent [
 { #category : #input }
 SBEditor >> startInput: aMorph at: aNumber replacingContents: aBoolean [
 
-	aMorph ifNil: [^ nil].
+	self cursor startInput: aMorph at: aNumber replacingContents: aBoolean
+	"aMorph ifNil: [^ nil].
 	
-	aMorph = self currentInput ifTrue: [^ aMorph currentTextMorph moveCursorTo: aNumber].
-	
-	" needs to be set first, as startInputAt: may choose to immediately replace this "
-	self select: aMorph.
+	aMorph = self selection ifTrue: [^ aMorph currentTextMorph moveCursorTo: aNumber].
 	
 	currentInput := aMorph.
 	(aMorph startInputAt: aNumber replacingContents: aBoolean)
 		ifNotNil: [:cmd |
 			currentInputCommand := cmd.
 			self mode: #input]
-		ifNil: [currentInput := nil]
+		ifNil: [currentInput := nil]"
 ]
 
 { #category : #'action helpers' }
 SBEditor >> startOrAddToMultiSelection: aBlock [
 
-	mode = #selection ifTrue: [
-		^ (multiSelection includes: aBlock)
-			ifTrue: [self removeMultiSelected: aBlock]
-			ifFalse: [self addToMultiSelection: aBlock]].
-	
-	self mode: #selection.
-	self addToMultiSelection: aBlock
+	self cursor startOrAddToMultiSelection: aBlock
 ]
 
 { #category : #printing }
@@ -1661,8 +1473,6 @@ SBEditor >> undo [
 	<inputAction>
 	<globalAction>
 
-	self endInput.
-	
 	history undoDo: [:block :artefacts |
 		self select: block.
 		self markChangesAfterCommand: artefacts]
@@ -1708,35 +1518,40 @@ SBEditor >> updateSandblocks [
 { #category : #selection }
 SBEditor >> updateSelectionLabel [
 
-	| text maxLength |
+	| text maxLength defaultModeColor specialModeColor |
 	selectionLabel ifNil: [^ self].
 	
 	maxLength := 30.
-	text := mode = #selection
-		ifTrue: [multiSelection size asString, (' element' asPluralBasedOn: multiSelection)]
+	text := self mode = #selection
+		ifTrue: [self multiSelection size asString, (' element' asPluralBasedOn: self multiSelection)]
 		ifFalse: [
 			(self selection notNil and: [self selection isInWorld])
 				ifTrue: [self selection selectionLabel]
 				ifFalse: ['']].
 	text size > maxLength ifTrue: [text := (text first: maxLength - 3), '...'].
-	selectionLabel contents: text
-]
-
-{ #category : #selection }
-SBEditor >> updateVerticalSelectionPosition [
-
-	" we need to defer one step because we will frequently have morphs that are not fully layed-out just yet "
-	Project current addDeferredUIMessage: [
-		(selection notNil and: [selection containingFloat notNil]) ifTrue: [ | reference |
-			reference := self mode = #input
-				ifTrue: [self currentInput currentTextMorph cursorPosition x]
-				ifFalse: [selection center x].
-			verticalSelectionPosition := reference - selection containingFloat left].
-		
-		" debug visualization "
-		false ifTrue: [
-			Display getCanvas fillRectangle: (selection containingFloat positionInWorld + (0 @ -10) extent: 10 @ 10) color: Color random.
-			Display getCanvas fillRectangle: (selection containingFloat positionInWorld + (verticalSelectionPosition @ -10) extent: 10 @ 10) color: Color random]]
+	selectionLabel contents: text.
+	
+	modeLabel ifNotNil: [
+		modeLabel contents: (self mode caseOf: {
+			[#input] -> ['INPUT'].
+			[#selection] -> ['SELECTION'].
+			[#continuousSelection] -> ['CONT. SELECTION'].
+			[#insert] -> ['INSERT'].	
+			[#command] -> ['COMMAND']})].
+	
+	defaultModeColor := Color transparent.
+	specialModeColor := Color red alpha: 0.2.
+	
+	bottomPanel ifNotNil: [
+		bottomPanel color: (self mode caseOf: {
+			[#insert] -> [defaultModeColor].
+			[#input] -> [
+				inputMapping defaultState = #input
+					ifTrue: [defaultModeColor]
+					ifFalse: [specialModeColor]].
+			[#selection] -> [Color blue alpha: 0.2].
+			[#continuousSelection] -> [Color blue alpha: 0.2].
+			[#command] -> [defaultModeColor]})].
 ]
 
 { #category : #input }
@@ -1749,12 +1564,6 @@ SBEditor >> useTextInput [
 SBEditor >> useVimInput [
 
 	inputMapping := SBVimInputMapping new
-]
-
-{ #category : #accessing }
-SBEditor >> verticalSelectionPosition [
-
-	^ verticalSelectionPosition
 ]
 
 { #category : #'action helpers' }

@@ -44,7 +44,7 @@ SBJsInputTest >> testAddMemberAccessViaSpace [
 	self send: (self keyboardEvent: $.) to: editor.
 	self send: (self keyboardEvent: Character escape) to: editor.
 	
-	self assert: closure statements first contents = '.'.
+	self assert: '.' equals: closure statements first contents.
 	self assert: closure statements first ~= access.
 	
 	editor undo.
