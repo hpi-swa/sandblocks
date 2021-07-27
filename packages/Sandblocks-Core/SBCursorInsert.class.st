@@ -49,13 +49,27 @@ SBCursorInsert >> block [
 { #category : #'as yet unclassified' }
 SBCursorInsert >> bounds [
 
-	self adjacent ifNil: [
-		^ self before
-			ifTrue: [self container topLeft extent: self lineWidth @ self container height]
-			ifFalse: [self container topRight - (self lineWidth @ 0) extent: self lineWidth @ self container height]].
-	^ self before
-		ifTrue: [self adjacent topLeft - (self lineWidth @ 0) extent: self lineWidth @ self adjacent height]
-		ifFalse: [self adjacent topRight extent: self lineWidth @ self adjacent height]
+	^ self container hasHorizontalLayout
+		ifTrue: [
+			self adjacent
+				ifNil: [
+					self before
+						ifTrue: [self container topLeft extent: self lineWidth @ self container height]
+						ifFalse: [self container topRight - (self lineWidth @ 0) extent: self lineWidth @ self container height]]
+				ifNotNil: [
+					self before
+						ifTrue: [self adjacent topLeft - (self lineWidth @ 0) extent: self lineWidth @ self adjacent height]
+						ifFalse: [self adjacent topRight extent: self lineWidth @ self adjacent height]]]
+		ifFalse: [
+			self adjacent
+				ifNil: [
+					self before
+						ifTrue: [self container topLeft extent: self container width @ self lineWidth]
+						ifFalse: [self container bottomLeft - (self lineWidth @ 0) extent: self container width @ self lineWidth]]
+				ifNotNil: [
+					self before
+						ifTrue: [self adjacent topLeft - (self lineWidth @ 0) extent: self adjacent width @ self lineWidth]
+						ifFalse: [self adjacent bottomLeft extent: self adjacent width @ self lineWidth]]]
 ]
 
 { #category : #'as yet unclassified' }

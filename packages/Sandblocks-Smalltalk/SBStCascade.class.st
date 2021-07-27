@@ -71,6 +71,13 @@ SBStCascade >> guessedClass [
 ]
 
 { #category : #'as yet unclassified' }
+SBStCascade >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
+
+	((aBlock = self receiver or: [aBlock isNil]) and: [aBoolean]) ifTrue: [^ nil].
+	^ super insertCommandRequest: aMorph near: aBlock before: aBoolean
+]
+
+{ #category : #'as yet unclassified' }
 SBStCascade >> isCascade [
 
 	^ true

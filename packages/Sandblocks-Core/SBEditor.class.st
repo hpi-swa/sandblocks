@@ -561,6 +561,13 @@ SBEditor >> endInputWith: aString [
 	self endInput
 ]
 
+{ #category : #actions }
+SBEditor >> endMultiSelection [
+	<action>
+
+	self selection select
+]
+
 { #category : #accessing }
 SBEditor >> errors [
 

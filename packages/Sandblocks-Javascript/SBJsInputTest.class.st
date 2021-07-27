@@ -163,7 +163,7 @@ SBJsInputTest >> testMoveCursorInInfixOp [
 		lhs: (SBJsNumber new contents: '2')
 		operator: '+'
 		rhs: (SBJsNumber new contents: '2').
-	editor := self methodFor: op.
+	editor := (self methodFor: op) useTextInput.
 	closure := op parentSandblock.
 	
 	editor startInput: op rhs at: 1 replacingContents: false.

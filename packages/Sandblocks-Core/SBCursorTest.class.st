@@ -242,14 +242,14 @@ SBCursorTest >> testSelectLarger [
 { #category : #'as yet unclassified' }
 SBCursorTest >> testSelectSmaller [
 
-	| body cursor raised add num2 |
+	| body cursor raised add num2 editor |
 	body := '[2 + 5 raisedTo: 3]' parseAsSandblock.
 	raised := body statements first.
 	add := raised receiver.
 	num2 := add receiver.
-	self editorFor: body.
+	editor := self editorFor: body.
 	
-	cursor := SBBlockCursor new select: add.
+	cursor := SBBlockCursor new editor: editor; select: add.
 	self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> add}.
 	cursor moveCursorSmaller.
 	self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> num2}.
