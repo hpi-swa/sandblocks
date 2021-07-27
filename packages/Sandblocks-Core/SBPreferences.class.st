@@ -3,6 +3,8 @@ Class {
 	#superclass : #Object,
 	#classVars : [
 		'DrawOnCanvas',
+		'EdgePanSpeed',
+		'EdgePanZone',
 		'EnableForceLayout',
 		'HideIndicators',
 		'PreviewDropInsert',
@@ -25,6 +27,30 @@ SBPreferences class >> drawOnCanvas [
 SBPreferences class >> drawOnCanvas: aBoolean [
 
 	DrawOnCanvas := aBoolean
+]
+
+{ #category : #accessing }
+SBPreferences class >> edgePanSpeed [
+	<preference: 'Edge Pan Speed' category: 'sandblocks' description: 'Speed at which the view will move when dragging a block near the edge of the screen.' type: #Number>
+	
+	^ EdgePanSpeed ifNil: [500]
+]
+
+{ #category : #accessing }
+SBPreferences class >> edgePanSpeed: aNumber [
+	EdgePanSpeed := aNumber
+]
+
+{ #category : #accessing }
+SBPreferences class >> edgePanZone [
+	<preference: 'Edge Pan Zone Size' category: 'sandblocks' description: 'From the edge of the editor, the length at which panning starts, as a divisor of the editors size' type: #Number>
+	
+	^ EdgePanZone ifNil: [16]
+]
+
+{ #category : #accessing }
+SBPreferences class >> edgePanZone: aNumber [
+	EdgePanZone := aNumber
 ]
 
 { #category : #accessing }

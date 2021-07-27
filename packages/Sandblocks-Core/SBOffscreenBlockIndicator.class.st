@@ -42,7 +42,7 @@ SBOffscreenBlockIndicator >> fixedNumberOfChildren [
 SBOffscreenBlockIndicator >> foregroundColor [
 
 	^ (self sandblockEditor search isSelected
-		ifTrue: self owner containingSandblock colorPolicy highlightColor
+		ifTrue: [self owner containingSandblock colorPolicy highlightColor]
 		ifFalse: [self owner containingSandblock foregroundColor]) alpha: self class defaultOpacity
 ]
 
@@ -76,14 +76,11 @@ SBOffscreenBlockIndicator >> initialize [
 
 	super initialize.
 	
-	self iconMorph: SBIcon iconCaretSquareORight veryLarge.
-	self addMorph: self iconMorph.
-	
-	self labelMorph: SBStringMorph new.
-	self addMorph: self labelMorph.
-	self labelMorph opacity: self class defaultOpacity.
-	self isHighlighted: false.
-	self color: Color transparent
+	isHighlighted := false.
+	self
+		addMorph: (iconMorph := SBIcon iconCaretSquareORight veryLarge);
+		addMorph: (labelMorph := SBStringMorph new opacity: self class defaultOpacity);
+		color: Color transparent
 ]
 
 { #category : #'as yet unclassified' }
@@ -95,7 +92,16 @@ SBOffscreenBlockIndicator >> isHighlighted [
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> isHighlighted: aBoolean [
 
-	isHighlighted := aBoolean
+	isHighlighted := aBoolean.
+	self indicatorColor: (self isHighlighted
+		ifTrue: [ | newColor |
+			newColor := self target group
+				ifNotNil: [:group | group color alpha: self class defaultOpacity]
+				ifNil: [Color random].
+			self target colorPolicy dark
+				ifTrue: [newColor thriceLighter]
+				ifFalse: [newColor muchDarker]]
+		ifFalse: [nil])
 ]
 
 { #category : #accessing }
@@ -135,13 +141,15 @@ SBOffscreenBlockIndicator >> objectInterface [
 	^ SBInterfaces never
 ]
 
-{ #category : #nil }
+{ #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> rejectsEvent: anEvent [
+
+	self visible ifFalse: [^ true].
 	
 	(anEvent isMouse and: [anEvent isMouseDown] and: [anEvent redButtonChanged])
-		ifTrue: 
-			[^ (self iconMorph boundsInWorld containsPoint: anEvent position) not]
-		ifFalse: [^ true].
+        ifFalse: [^ true].
+
+	^ (self iconMorph boundsInWorld containsPoint: anEvent position) not
 ]
 
 { #category : #accessing }
@@ -184,10 +192,7 @@ SBOffscreenBlockIndicator >> step [
 	
 	(self targetOffscreen and: [self shouldHide not])
 		ifTrue: [self show]
-		ifFalse: [
-			"Workaround for invisible indicators snacking our events."
-			self position: 0@0.
-			^ self hide].
+		ifFalse: [^ self hide].
 	
 	self updateLabel.
 	
@@ -240,16 +245,7 @@ SBOffscreenBlockIndicator >> targetOffscreen [
 { #category : #'as yet unclassified' }
 SBOffscreenBlockIndicator >> toggleHighlight [
 
-	self isHighlighted: self isHighlighted not.
-	self indicatorColor: (self isHighlighted
-		ifTrue: [ | newColor |
-			newColor := self target group
-				ifNotNil: [:group | group color alpha: self class defaultOpacity]
-				ifNil: [Color random].
-			self target colorPolicy dark
-				ifTrue: [newColor thriceLighter]
-				ifFalse: [newColor muchDarker]]
-		ifFalse: [nil])
+	self isHighlighted: self isHighlighted not
 ]
 
 { #category : #accessing }

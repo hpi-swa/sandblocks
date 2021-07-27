@@ -102,9 +102,9 @@ SBMoveDecorator >> panWhenNearEdge [
 	
 	canvas := self morph sandblockEditor canvas.
 	canvasExtent := canvas extent.
-	noScrollRectangle := (Rectangle origin: canvas targetPosition extent: canvasExtent) insetBy: canvasExtent / 16.
+	noScrollRectangle := (canvas targetPosition extent: canvasExtent) insetBy: canvasExtent / SBPreferences edgePanZone.
 	
-	movement := ((noScrollRectangle vectorToPoint: lastDragPosition) * 500 / canvasExtent) asIntegerPoint.
+	movement := ((noScrollRectangle vectorToPoint: lastDragPosition) * SBPreferences edgePanSpeed  / canvasExtent) asIntegerPoint.
 	self morph sandblockEditor moveViewport: movement negated.
 	self morph position: self morph position + movement.
 	lastDragPosition := lastDragPosition + movement

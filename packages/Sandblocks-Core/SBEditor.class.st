@@ -383,12 +383,10 @@ SBEditor >> compileTime [
 	^ self errors hasSubmorphs ifTrue: [#compileOnSave] ifFalse: [compileTime]
 ]
 
-{ #category : #actions }
+{ #category : #'as yet unclassified' }
 SBEditor >> configurationString [
 
-	^ 'restoreSavedConfigurationFor: anEditor
-	
-	anEditor scrollToPosition:', scroll targetPosition
+	^ 'anEditor scrollToPosition:', scroll targetPosition
 
 
 ]
@@ -910,10 +908,9 @@ SBEditor >> labelString [
 { #category : #actions }
 SBEditor >> loadBlocks [
 	<globalAction>
-	
+
 	scroll scroller submorphs copy do: [:each | each abandon].
-	self class loadSaveInto: self.
-	self class restoreSavedConfigurationFor: self
+	self class loadSaveInto: self
 ]
 
 { #category : #'do/undo/redo' }
@@ -1195,23 +1192,8 @@ SBEditor >> openMorphInOverlay: aMorph [
 { #category : #'submorphs-add/remove' }
 SBEditor >> openMorphInView: aMorph [
 
-	self do: (self openMorphInViewCommand: aMorph).
+	self do: (self insertCommandRequest: aMorph near: nil before: false).
 	^ aMorph
-]
-
-{ #category : #'submorphs-add/remove' }
-SBEditor >> openMorphInViewCommand: aMorph [
-
-	| position |
-	position := scroll scroller offset + (self extent // 2).
-	^ SBInsertCommand new
-		index: 1;
-		container: scroll scroller;
-		morph: (aMorph
-			fullBounds;
-			center: position;
-			yourself);
-		yourself
 ]
 
 { #category : #'actions creating' }
@@ -1480,12 +1462,29 @@ SBEditor >> saveCurrentBlocks [
 		].
 	methodVariables := methodVariables, '|'.
 	
-	saveString := self objectsToSave
+"	saveString := self objectsToSave
 		inject: ''
-		into: [:string :artefact | string, 'anEditor openMorph: (', artefact saveString, ').', Character cr].
-	saveString := 'loadSaveInto: anEditor', Character cr, methodVariables, Character cr, '^ {', saveString, '}'.
+		into: [:string :artefact | string, 'anEditor openMorph: (', artefact saveString, ').', Character cr]."
+		
+	saveString := String streamContents: [:stream |
+		stream nextPutAll: 'loadSaveInto: anEditor';
+			cr;
+			nextPutAll: methodVariables;
+			cr.
+		self objectsToSave do: [:artefact |
+			stream 
+				nextPutAll: 'anEditor openMorph: (';
+				nextPutAll: artefact saveString;
+				nextPutAll: ').';
+				cr
+			].
+		stream
+			nextPutAll: self configurationString
+		].
+	
+	"saveString := 'loadSaveInto: anEditor', Character cr, methodVariables, Character cr, '^ {', saveString, '}'."
 	self class class compile: saveString classified: '*generated'.
-	self class class compile: self configurationString classified: '*generated'
+	"self class class compile: self configurationString classified: '*generated'"
 ]
 
 { #category : #selection }

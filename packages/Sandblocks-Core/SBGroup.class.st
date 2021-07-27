@@ -10,24 +10,9 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBGroup class >> newFor: aForceMoveDecorator [
-
-	^ self new addBlocksConnectedTo: aForceMoveDecorator; yourself
-]
-
-{ #category : #'as yet unclassified' }
-SBGroup >> add: aForceMoveDecorator [
-
-	self createMissingForcesFor: aForceMoveDecorator.
-	self addWithoutForce: aForceMoveDecorator
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBGroup >> addBlock: aMorph [
 
-	aMorph withDecorator: SBForceMoveDecorator do: [:decorator | self add: decorator].
+	aMorph withDecorator: SBForceMoveDecorator do: [:decorator | self addViaDecorator: decorator].
 	
 	
 ]
@@ -35,13 +20,13 @@ SBGroup >> addBlock: aMorph [
 { #category : #'as yet unclassified' }
 SBGroup >> addBlockWithoutForce: aBlock [
 
-	aBlock withDecorator: SBForceMoveDecorator do: [:aDecorator | self addWithoutForce: aDecorator]
+	aBlock withDecorator: SBForceMoveDecorator do: [:aDecorator | self addViaDecoratorWithoutForce: aDecorator]
 ]
 
 { #category : #'as yet unclassified' }
 SBGroup >> addBlocksConnectedTo: aForceMoveDecorator [
 
-	self add: aForceMoveDecorator.
+	self addViaDecorator: aForceMoveDecorator.
 	aForceMoveDecorator additionalForces do: [:force |
 		force to group ifNil: [self addBlock: force to].
 		force from group ifNil: [self addBlock: force from]]
@@ -79,11 +64,12 @@ SBGroup >> addVerticesTo: newVertices from: verticalEdges side: aSide [
 		
 		newVertex := newVertex * (1 @ sideMultiplier).
 		
-		seenBlockSides size > 1 ifTrue: [ | x |
-			x  := (newVertex y * sideMultiplier) < (newVertices last y * sideMultiplier)
-				ifTrue: [numberOfActiveBlocks = 0 ifTrue: [(2 * newVertices last x + newVertex x) / 3.0] ifFalse: [newVertex x]]
-				ifFalse:[numberOfActiveBlocks = 0 ifTrue: [(2 * newVertex x + newVertices last x) / 3.0] ifFalse: [newVertices last x]].
-			newVertices add: x @ newVertices last y.
+		seenBlockSides size > 1 ifTrue: [ | x lastVertex |
+			lastVertex := newVertices last.
+			x  := (newVertex y * sideMultiplier) < (lastVertex y * sideMultiplier)
+				ifTrue: [numberOfActiveBlocks = 0 ifTrue: [(2 * lastVertex x + newVertex x) / 3.0] ifFalse: [newVertex x]]
+				ifFalse:[numberOfActiveBlocks = 0 ifTrue: [(2 * newVertex x + lastVertex x) / 3.0] ifFalse: [lastVertex x]].
+			newVertices add: x @ lastVertex y.
 			newVertices add: x @ newVertex y].
 		newVertices add: newVertex.
 				
@@ -98,7 +84,14 @@ SBGroup >> addVerticesTo: newVertices from: verticalEdges side: aSide [
 ]
 
 { #category : #'as yet unclassified' }
-SBGroup >> addWithoutForce: aForceMoveDecorator [
+SBGroup >> addViaDecorator: aForceMoveDecorator [
+
+	self addViaDecoratorWithoutForce: aForceMoveDecorator.
+	self createMissingForcesFor: aForceMoveDecorator
+]
+
+{ #category : #'as yet unclassified' }
+SBGroup >> addViaDecoratorWithoutForce: aForceMoveDecorator [
 
 	self createMissingForcesFor: aForceMoveDecorator.
 	self blocks add: aForceMoveDecorator morph.
@@ -112,15 +105,11 @@ SBGroup >> addWithoutForce: aForceMoveDecorator [
 		to: self
 		with: aForceMoveDecorator morph.
 	aForceMoveDecorator morph
-		when: #spawn
-		send: #add:
+		when: #insert
+		send: #addViaDecorator:
 		to: self
 		with: aForceMoveDecorator.
-	self indicator
-		ifNil: [
-			self indicator: (SBOffscreenBlockIndicator newFor: self).
-			aForceMoveDecorator morph sandblockEditor openMorphInOverlay: self indicator]
-		ifNotNil: [self indicator updateLabel]
+	self indicator updateLabel
 ]
 
 { #category : #accessing }
@@ -139,11 +128,12 @@ SBGroup >> blocks: aCollection [
 SBGroup >> computeVerticalEdges [
 	
 	| verticalEdges |
-	verticalEdges := OrderedCollection new.
-	
-	self blocks do: [:aBlock |
-		verticalEdges add: (SBGroupBlockEdge leftEdgeOf: aBlock).
-		verticalEdges add: (SBGroupBlockEdge rightEdgeOf: aBlock)].
+	verticalEdges := Array streamContents: [:stream |
+		self blocks do: [:aBlock |
+			stream 
+				nextPut: (SBGroupBlockEdge leftEdgeOf: aBlock);
+				nextPut: (SBGroupBlockEdge rightEdgeOf: aBlock)
+		]].
 	
 	verticalEdges sort: [:a :b | a position < b position].
 	
@@ -173,12 +163,7 @@ SBGroup >> createMissingForcesFor: aForceMoveDecorator [
 		missingConnectionsTo remove: aForce from ifAbsent: [].
 		
 		].
-	missingConnectionsTo do: [:aBlock |
-		aForceMoveDecorator morph sandblockEditor ifNotNil: [:editor |
-			editor openMorph: (SBForceConnector
-				connect: aForceMoveDecorator morph
-				to: aBlock
-				forceScale: 0.5)]]
+	missingConnectionsTo do: [:aBlock | self sandblockEditor ifNotNil: [:editor | editor openMorph: (SBForceConnector connect: aForceMoveDecorator morph to: aBlock forceScale: 0.5)]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -218,7 +203,7 @@ SBGroup >> initialize [
 	super initialize.
 	self blocks: Set new.
 	self color: (Color random alpha: 0.5).
-	self indicator: nil.
+	self indicator: (SBOffscreenBlockIndicator newFor: self)
 ]
 
 { #category : #'as yet unclassified' }
@@ -257,11 +242,18 @@ SBGroup >> mouseUp: anEvent [
 		lastDragPosition := nil]
 ]
 
-{ #category : #accessing }
-SBGroup >> privateOwner: aMorph [
+{ #category : #'as yet unclassified' }
+SBGroup >> noteNewOwner: aMorph [
 
-	super privateOwner: aMorph.
-	aMorph ifNil: [self triggerEvent: #delete]
+	super noteNewOwner: aMorph.
+	self sandblockEditor openMorphInOverlay: self indicator
+]
+
+{ #category : #'as yet unclassified' }
+SBGroup >> outOfWorld: aWorld [
+
+	self triggerEvent: #delete.
+	super outOfWorld: aWorld
 ]
 
 { #category : #'as yet unclassified' }
@@ -269,12 +261,11 @@ SBGroup >> remove: aMorph [
 
 	self blocks remove: aMorph.
 	aMorph withDecorator: SBForceMoveDecorator do: [:decorator | decorator group: nil].
-	self blocks size = 1
+	self blocks size < 2
 		ifTrue: [
-			self blocks do: [:block | 
+			self blocks do: [:block |
 				block removeActionsWithReceiver: self.
-				block withDecorator: SBForceMoveDecorator do: [:decorator | 
-					decorator group: nil]].
+				block withDecorator: SBForceMoveDecorator do: [:decorator | decorator group: nil]].
 			self abandon]
 		ifFalse: [self computeVertices].
 	self indicator updateLabel
@@ -297,14 +288,14 @@ SBGroup >> saveString [
 
 { #category : #'as yet unclassified' }
 SBGroup >> textContents [
-	
-	^ 'Group of ', self blocks anyOne textContents , ' and ', (self blocks size - 1), ((self blocks size  > 2) ifTrue: [' others'] ifFalse: [' other'])
+
+	self blocks ifEmpty: [^ 'Empty Group'].
+	^ 'Group of ', self blocks anyOne textContents, ' and ', (self blocks size - 1), (' other' asPluralBasedOn: self blocks)
 ]
 
 { #category : #'as yet unclassified' }
 SBGroup >> withDecorator: aDecorator do: aBlock ifAbsent: anotherBlock [
-
-	"dont even try"
+	"Indicators may ask us whether we have a group"
 
 	^ anotherBlock value
 ]

@@ -8,12 +8,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBForceConnector class >> attractionStrengthMultiplier [
-
-	^ 0.3
-]
-
-{ #category : #'as yet unclassified' }
 SBForceConnector class >> connect: anObject to: anotherObject forceScale: aNumber [
 
 	^ self new connect: anObject to: anotherObject forceScale: aNumber
@@ -22,7 +16,7 @@ SBForceConnector class >> connect: anObject to: anotherObject forceScale: aNumbe
 { #category : #'as yet unclassified' }
 SBForceConnector >> baseForce [
 
-	^ self class attractionStrengthMultiplier * (self to center - self from center) * self forceScale
+	^ self to class attractionStrengthMultiplier * self from class attractionStrengthMultiplier * (self to center - self from center) * self forceScale
 ]
 
 { #category : #'as yet unclassified' }
@@ -36,8 +30,17 @@ SBForceConnector >> connect: aMorph to: anotherMorph [
 
 	super connect: aMorph to: anotherMorph.
 	
-	aMorph withDecorator: SBForceMoveDecorator do: [:decorator | decorator registerAdditionalForce: self].
-	anotherMorph withDecorator: SBForceMoveDecorator do: [:decorator | decorator registerAdditionalForce: self]
+	aMorph
+		withDecorator: SBForceMoveDecorator
+		do: [:decorator | decorator registerAdditionalForce: self].
+	anotherMorph
+		withDecorator: SBForceMoveDecorator
+		do: [:decorator | decorator registerAdditionalForce: self].
+	
+	self updateVisibility.
+	
+	aMorph when: #gotGroup send: #updateVisibility to: self.
+	anotherMorph when: #gotGroup send: #updateVisibility to: self
 ]
 
 { #category : #'as yet unclassified' }
@@ -62,7 +65,7 @@ SBForceConnector >> delete [
 	self from
 		withDecorator: SBForceMoveDecorator
 		do: [:decorator | decorator unregisterAdditionalForce: self].
-	
+
 	super delete
 ]
 
@@ -99,8 +102,8 @@ SBForceConnector >> handlesMouseDown: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBForceConnector >> initialize [ 
-	
+SBForceConnector >> initialize [
+
 	super initialize.
 	self forceScale: 1
 ]
@@ -140,11 +143,12 @@ SBForceConnector >> saveString [
 ]
 
 { #category : #'as yet unclassified' }
-SBForceConnector >> step [ 
-    | aGroup |
-    aGroup := self from group.
+SBForceConnector >> updateVisibility [
 
-    (aGroup = self to group and: [aGroup notNil])
-        ifTrue: [self hide]
-        ifFalse: [self show]
+	| aGroup |
+	aGroup := self from group.
+
+	(aGroup = self to group and: [aGroup notNil])
+		ifTrue: [self hide]
+		ifFalse: [self show]
 ]

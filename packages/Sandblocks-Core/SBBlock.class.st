@@ -17,6 +17,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBBlock class >> attractionStrengthMultiplier [
+
+	^ 0.6
+]
+
+{ #category : #'as yet unclassified' }
 SBBlock class >> defaultRepelStrength [
 
 	^ 5000.0
@@ -32,6 +38,12 @@ SBBlock class >> implicitAttractionStrength [
 SBBlock class >> maxRepelDistance [
 
 	^ 100
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock class >> maximumNonOverlappingForce [
+
+	^ 10
 ]
 
 { #category : #'as yet unclassified' }
@@ -1279,7 +1291,7 @@ SBBlock >> insertStatementHasCandidate [
 SBBlock >> intoWorld: aWorld [
 
 	super intoWorld: aWorld.
-	
+	self triggerEvent: #insert.	
 	self updateSteppingDecorators
 ]
 
@@ -1543,6 +1555,12 @@ SBBlock >> lookupAction: aSymbol [
 SBBlock >> lookupGlobalAction: aSymbol [
 
 	^ (self class lookupSelector: aSymbol) ifNotNil: [:m | ((m pragmaAt: #globalAction) notNil and: [(m pragmaAt: #actionValidIf:) ifNotNil: [:p | self perform: p arguments first] ifNil: [true]]) ifTrue: [m] ifFalse: [nil]]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> maximumNonOverlappingForce [
+
+	^ 10
 ]
 
 { #category : #layout }
@@ -2090,7 +2108,6 @@ SBBlock >> printSaveStringPreambleOn: aStream [
 { #category : #initialization }
 SBBlock >> privateOwner: aMorph [
 
-	self owner ifNil: [self triggerEvent: #spawn].
 	super privateOwner: aMorph.
 	aMorph ifNil: [self triggerEvent: #delete]
 ]
@@ -2155,13 +2172,12 @@ SBBlock >> removeSuggestionMenu [
 { #category : #'as yet unclassified' }
 SBBlock >> repelStrengthTo: aMorph [
 
-	| distance maximumNonOverlappingForce |
-	maximumNonOverlappingForce := 10.
+	| distance |
 	distance := (self bounds vectorToRectangle: aMorph bounds) r.
 	^ distance > self class maxRepelDistance ifTrue: [0] ifFalse: [
 		(distance closeTo: 0)
-			ifTrue: [maximumNonOverlappingForce + ((self bounds intersect: aMorph bounds) area sqrt / 10)]
-			ifFalse: [self class defaultRepelStrength / distance / distance min: maximumNonOverlappingForce]]
+			ifTrue: [self class maximumNonOverlappingForce + ((self bounds intersect: aMorph bounds) area sqrt / 10)]
+			ifFalse: [self class defaultRepelStrength / distance / distance min: self class maximumNonOverlappingForce]]
 ]
 
 { #category : #hierarchy }

@@ -22,6 +22,6 @@ SBWaypointMoveDecorator >> noteNewOwner: aMorph [
 	potentialGroup := self
 		morphAtPoint: self morph position
 		satisfying: [:checkedMorph | checkedMorph isKindOf: SBGroup].
-	potentialGroup ifNotNil: [potentialGroup add: self].
+	potentialGroup ifNotNil: [potentialGroup addViaDecorator: self].
 	idealPosition := nil
 ]

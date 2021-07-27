@@ -36,10 +36,10 @@ SBIndicatorDecorator >> indicator: anSBOffscreenBlockIndicator [
 { #category : #'as yet unclassified' }
 SBIndicatorDecorator >> noteNewOwner: aMorph [
 
-	self indicator ifNotNil: [: indicator | indicator  abandon].
-	(aMorph isKindOf: SBEditorCanvas) ifTrue: [
+	self indicator ifNotNil: [:indicator | indicator abandon].
+	(aMorph parentSandblock  = self morph sandblockEditor and: [aMorph containingSandblock isSingleArtefactView not]) ifTrue: [
 		self indicator: (SBOffscreenBlockIndicator newFor: self morph).
-		aMorph sandblockEditor ifNotNil: [:editor | editor openMorphInOverlay: self indicator]]
+		self morph sandblockEditor ifNotNil: [:editor | editor openMorphInOverlay: self indicator]]
 ]
 
 { #category : #'as yet unclassified' }
