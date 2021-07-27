@@ -49,6 +49,12 @@ SBInsertCommand >> index: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
+SBInsertCommand >> insertIndex [
+
+	^ index
+]
+
+{ #category : #'as yet unclassified' }
 SBInsertCommand >> morph [
 
 	^ morph

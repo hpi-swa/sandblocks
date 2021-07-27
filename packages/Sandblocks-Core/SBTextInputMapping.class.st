@@ -136,7 +136,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $[ do: #wrapInBlock;
 		registerShortcut: ${ do: #wrapInDynamicArray;
 		cmdShortcut: $: do: #wrapInAssignment;
-		cmdShortcut: $; do: #wrapInCascade;
+		registerShortcut: $; do: #wrapInCascade;
 		registerShortcut: $^ do: #wrapInReturn;
 		cmdShortcut: $' do: #useAsStString;
 		cmdShortcut: $# do: #useAsStSymbol;

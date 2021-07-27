@@ -33,7 +33,7 @@ SBStDeclarationForInstanceVariable >> browseReferences [
 
 	self systemNavigation
 		browseAllAccessesTo: self contents
-		from: class object
+		from: self relatedClass object
 ]
 
 { #category : #'as yet unclassified' }
@@ -71,6 +71,12 @@ SBStDeclarationForInstanceVariable >> guessedClass [
 SBStDeclarationForInstanceVariable >> printBlockOn: aStream [
 
 	aStream nextPutAll: 'instance variable '; nextPutAll: self contents
+]
+
+{ #category : #'as yet unclassified' }
+SBStDeclarationForInstanceVariable >> relatedClass [
+
+	^ class ifNil: [self block containingArtefact relatedClass]
 ]
 
 { #category : #'as yet unclassified' }

@@ -2167,7 +2167,7 @@ SBBlock >> selectRightMostBlock [
 	self containingStatement ifNil: [self rightMostBlock select] ifNotNil: [:statement | statement rightMostBlock select].
 	
 	self sandblockEditor maybeStartInputFromEnd.
-	self cursor updateHorizontalOffset
+	self sandblockEditor cursor updateHorizontalOffset
 ]
 
 { #category : #actions }

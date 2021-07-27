@@ -97,7 +97,8 @@ SBCursorInsert >> drawOn: aCanvas [
 { #category : #'as yet unclassified' }
 SBCursorInsert >> enter [
 
-	super enter
+	super enter.
+	self triggerEvent: #showLabel with: 'insert in ', self block printString
 ]
 
 { #category : #'as yet unclassified' }
@@ -114,6 +115,12 @@ SBCursorInsert >> horizontalOffsetInFloat [
 			reference := self bounds center x.
 			reference - float left]
 		ifNil: [self bounds center x]
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorInsert >> leaveIn: anEditor [
+
+	self triggerEvent: #showLabel with: nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -154,6 +161,7 @@ SBCursorInsert >> selectSmaller [
 SBCursorInsert >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 
 	anEditor do: (self block insertEmptyCommandRequestNear: self adjacent before: self before).
+	anEditor selection inputContainedUnknown.
 	anEditor selection keyStroke: anEvent.
 	aBlock value
 ]

@@ -351,7 +351,7 @@ SBStSignature >> selectorAndEdit: aString withFilledArgs: aBoolean [
 							at: index
 							ifPresent: [:n | SBStName new contents: n]
 							ifAbsent: [self containingSandblock newNullBlock]]
-					ifFalse: [self containingSandblock newNullBlock label: (possibleArgumentNames at: index ifAbsent: [''])]]]);
+					ifFalse: [self containingSandblock grammarHandler newNullBlock label: (possibleArgumentNames at: index ifAbsent: [''])]]]);
 		shouldMergeWithNext: true;
 		yourself).
 	

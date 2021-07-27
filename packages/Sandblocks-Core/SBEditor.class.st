@@ -447,7 +447,6 @@ SBEditor >> createEmptySmalltalkMethod [
 	<globalAction>
 
 	| method |
-	
 	method := SBStMethod new
 		selector: ''
 			arguments: #()
@@ -455,7 +454,7 @@ SBEditor >> createEmptySmalltalkMethod [
 		body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}]).
 	
 	self createArtefactInView: method.
-	self startInput: method at: 1 replacingContents: true.
+	method inputContainedUnknown.
 	
 	^ method
 ]

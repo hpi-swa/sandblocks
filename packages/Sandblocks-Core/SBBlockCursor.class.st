@@ -77,8 +77,11 @@ SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol 
 		ifTrue: [previousCursor maybeUpdateFor: aPosition]
 		ifFalse: [
 			cursorPosition := SBCursorNone new.
-			previousCursor ifNotNil: [:c | c leaveIn: self editor].
+			previousCursor ifNotNil: [:c |
+				c leaveIn: self editor.
+				c removeActionsWithReceiver: self].
 			cursorPosition := aPosition.
+			cursorPosition when: #showLabel send: #showLabel: to: self.
 			cursorPosition ifNotNil: [:position | position enter]].
 	
 	self resetBlink.
@@ -122,6 +125,12 @@ SBBlockCursor >> editor: anEditor [
 	editor := anEditor
 ]
 
+{ #category : #layout }
+SBBlockCursor >> flushLayoutCache [
+
+	
+]
+
 { #category : #'vertical movement' }
 SBBlockCursor >> globalHorizontalOffset [
 
@@ -141,12 +150,27 @@ SBBlockCursor >> initialize [
 
 	super initialize.
 	
+	self
+		changeTableLayout;
+		disableLayout: true;
+		layoutPolicy: self.
+	
 	selectLargerHistory := OrderedCollection new.
 	cursorShown := false.
 	blinkCount := 0.
 	horizontalOffsetInFloat := 0.
-	self disableLayout: true.
 	cursorPosition := SBCursorNone new
+]
+
+{ #category : #layout }
+SBBlockCursor >> layout: aMorph in: aRectangle [
+
+	| extent label |
+	aMorph hasSubmorphs ifFalse: [^ self].
+	
+	label := aMorph firstSubmorph.
+	extent := label minExtent.
+	label layoutInBounds: (self topRight - (0 @ extent y) extent: extent) positioning: #center
 ]
 
 { #category : #actions }
@@ -159,6 +183,12 @@ SBBlockCursor >> lookupGlobalAction: aSymbol [
 SBBlockCursor >> maxBlickCount [
 
 	^ 20
+]
+
+{ #category : #layout }
+SBBlockCursor >> minExtentOf: aMorph in: aRectangle [
+
+	^ aRectangle
 ]
 
 { #category : #accessing }
@@ -360,6 +390,25 @@ SBBlockCursor >> selectedBlock [
 	^ self cursorPosition block
 ]
 
+{ #category : #'events-processing' }
+SBBlockCursor >> showLabel: aString [
+
+	self removeAllMorphs.
+	aString ifNotNil: [
+		self addMorphBack: (Morph new
+			hResizing: #shrinkWrap;
+			vResizing: #shrinkWrap;
+			changeTableLayout;
+			addDropShadow;
+			cornerStyle: #rounded;
+			cornerRadius: 4;
+			color: (Color r: 1 g: 1 b: 1);
+			layoutInset: 4;
+			addMorphBack: (SBStringMorph new
+				contents: aString;
+				opacity: 0.8))]
+]
+
 { #category : #api }
 SBBlockCursor >> startInput: aBlock at: aNumber replacingContents: aBoolean [
 
@@ -409,4 +458,10 @@ SBBlockCursor >> updateHorizontalOffset [
 				Display getCanvas
 					fillRectangle: (self selectedBlock containingFloat positionInWorld + (horizontalOffsetInFloat @ -10) extent: 10 @ 10)
 					color: Color random]}]
+]
+
+{ #category : #'halos and balloon help' }
+SBBlockCursor >> wantsHaloFromClick [
+
+	^ false
 ]

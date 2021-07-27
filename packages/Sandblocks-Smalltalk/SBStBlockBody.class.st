@@ -203,6 +203,13 @@ SBStBlockBody >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 			near: aBlock before: aBoolean in: temporaries morph: aMorph;
 			yourself].
 	
+	(aBlock isNil and: [aBoolean]) ifTrue: [
+		" make sure we don't insert before our bindings/temps "
+		^ SBInsertCommand new
+			container: self;
+			index: 2;
+			morph: aMorph].
+	
 	^ super insertCommandRequest: aMorph near: aBlock before: aBoolean
 ]
 

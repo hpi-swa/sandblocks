@@ -365,7 +365,7 @@ SBStMessagePart >> wrapInBlock [
 
 { #category : #actions }
 SBStMessagePart >> wrapInCascade [
-	<multiSelectAction>
+	<action>
 	<actionValidIf: #parentIsExpression>
 
 	| cascade |
