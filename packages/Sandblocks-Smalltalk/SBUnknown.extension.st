@@ -15,6 +15,13 @@ SBUnknown >> asMessagePart: converter [
 ]
 
 { #category : #'*Sandblocks-Smalltalk' }
+SBUnknown >> asStName: converter [
+	<convert>
+
+	converter do: [SBStName new contents: '']
+]
+
+{ #category : #'*Sandblocks-Smalltalk' }
 SBUnknown >> canAppearInBlockBody [
 
 	^ true

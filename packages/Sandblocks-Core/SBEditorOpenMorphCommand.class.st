@@ -38,9 +38,10 @@ SBEditorOpenMorphCommand >> do [
 				priorChildren := editor childSandblocks.
 				priorChildren do: #delete].
 			self editor openMorph: morph.
-			self applyPositionTo: morph in: nil].
+			self applyPositionTo: morph in: nil.
+			isUnsaved ifTrue: [self editor do: (SBDoItCommand new artefact: morph)]].
 	
-	morph isSandblock ifTrue: [morph withDecorator: SBForceMoveDecorator do: [:d | d createImplicitForces]].
+	morph withDecorator: SBForceMoveDecorator do: [:d | d createImplicitForces].
 	
 	^ nil
 ]

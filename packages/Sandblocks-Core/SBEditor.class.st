@@ -444,13 +444,18 @@ SBEditor >> countModifier [
 
 { #category : #'submorphs-add/remove' }
 SBEditor >> createArtefactInView: aMorph [
-	 " open this morph and mark it has currently being unsaved "
+	" open this morph and mark it has currently being unsaved "
 
-    self assert: aMorph isArtefact.
-
-    self do: (self openMorphInViewCommand: aMorph).
-
-    ^ aMorph
+	self assert: aMorph isArtefact.
+	
+	self do: (SBEditorOpenMorphCommand new
+		morph: aMorph;
+		editor: self sandblockEditor;
+		isUnsaved: true;
+		position: scroll scroller offset + (self extent // 2) - (aMorph fullBounds extent // 2);
+		yourself).
+	
+	^ aMorph
 ]
 
 { #category : #'actions creating' }
@@ -823,6 +828,7 @@ SBEditor >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 	^ SBEditorOpenMorphCommand new
 		morph: aMorph;
 		editor: self;
+		position: (scroll scroller offset + (self extent // 2) - (aMorph fullBounds extent // 2));
 		isUnsaved: false;
 		yourself
 ]

@@ -242,14 +242,13 @@ SBOffscreenBlockIndicator >> toggleHighlight [
 
 	self isHighlighted: self isHighlighted not.
 	self indicatorColor: (self isHighlighted
-		ifTrue: [
-			self target group
-				ifNotNil: [:group | | newColor |
-					newColor := group color alpha: self class defaultOpacity.
-					self target colorPolicy dark
-						ifTrue: [newColor thriceLighter]
-						ifFalse: [newColor thriceDarker]]
-				ifNil: [Color random]]
+		ifTrue: [ | newColor |
+			newColor := self target group
+				ifNotNil: [:group | group color alpha: self class defaultOpacity]
+				ifNil: [Color random].
+			self target colorPolicy dark
+				ifTrue: [newColor thriceLighter]
+				ifFalse: [newColor muchDarker]]
 		ifFalse: [nil])
 ]
 

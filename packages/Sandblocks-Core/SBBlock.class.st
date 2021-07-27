@@ -2222,6 +2222,21 @@ SBBlock >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 ]
 
 { #category : #actions }
+SBBlock >> screenshot [
+	<action>
+
+	| name path |
+	
+	name := self name, '.png'.
+	path := FileDirectory default fullName, '/', name.
+	self imageForm writePNGfileNamed: name.
+	Smalltalk
+		at: #ExternalWebBrowser
+		ifPresent: [:e | e openOnUrl: 'file://', path]
+		ifAbsent: [self inform: 'Saved under ', path]
+]
+
+{ #category : #actions }
 SBBlock >> select [
 	<action>
 

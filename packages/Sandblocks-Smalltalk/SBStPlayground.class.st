@@ -103,7 +103,10 @@ SBStPlayground >> createBinding: aString [
 { #category : #'as yet unclassified' }
 SBStPlayground >> declarations [
 
-	^ bindings submorphs
+	^ bindings submorphs, {
+		(SBStName poolDeclaration: 'sbEditor')
+			binding: #sbEditor -> self sandblockEditor;
+			yourself}
 ]
 
 { #category : #'as yet unclassified' }

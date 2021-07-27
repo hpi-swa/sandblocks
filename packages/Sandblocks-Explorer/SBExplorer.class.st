@@ -51,12 +51,6 @@ SBExplorer >> color [
 	Color r: 0.95 g: 0.95 b: 0.95
 ]
 
-{ #category : #'as yet unclassified' }
-SBExplorer >> containingArtefact [
-
-	^ self
-]
-
 { #category : #actions }
 SBExplorer >> copyString [
 	<action>
