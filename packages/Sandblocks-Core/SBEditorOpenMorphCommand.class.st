@@ -30,9 +30,10 @@ SBEditorOpenMorphCommand >> do [
 			browser contentsSymbol ~= #blockEditor ifTrue: [browser model toggleBlockEditor].
 			window := browser containingWindow.
 			Project current addDeferredUIMessage: [
-				browser blockEditor openMorph: morph.
+				browser blockEditor openOnlyMorph: morph.
 				isUnsaved ifTrue: [browser blockEditor do: (SBDoItCommand new artefact: morph)].
-				browser blockEditor startInput: morph at: 1 replacingContents: false]]
+				morph startInput.
+				(morph isSmalltalk and: [morph isMethod and: [morph exists]]) ifTrue: [browser selectMessageNamed: morph selector]]]
 		ifFalse: [
 			editor isSingleArtefactView ifTrue: [
 				priorChildren := editor childSandblocks.

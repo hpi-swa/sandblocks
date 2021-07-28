@@ -83,6 +83,12 @@ SBBrowserEditor >> fillVertical: aBoolean [
 	fillVertical := aBoolean
 ]
 
+{ #category : #'dependents access' }
+SBBrowserEditor >> hasUnacceptedEdits [
+
+	^ self artefacts ifEmpty: [false] ifNotEmpty: [:m | m first hasUnsavedChanges]
+]
+
 { #category : #initialization }
 SBBrowserEditor >> initialize [
 
@@ -136,6 +142,13 @@ SBBrowserEditor >> modelSelection: anObject [
 	anObject isCompiledMethod ifTrue: [
 		model selectedClass ~= anObject methodClass ifTrue: [model selectClass: anObject methodClass theNonMetaClass].
 		(model respondsTo: #selectMessageNamed:) ifTrue: [^ model selectMessageNamed: anObject selector]]
+]
+
+{ #category : #'as yet unclassified' }
+SBBrowserEditor >> openOnlyMorph: aBlock [
+
+	self childSandblocks do: [:block | block delete].
+	self openMorph: aBlock
 ]
 
 { #category : #artefacts }
