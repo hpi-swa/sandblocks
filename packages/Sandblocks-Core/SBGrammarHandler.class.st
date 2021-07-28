@@ -124,13 +124,21 @@ SBGrammarHandler >> replace: aBlock with: aMorph [
 { #category : #'callback helpers' }
 SBGrammarHandler >> replace: aBlock with: aMorph mergeInput: aBoolean [
 
-	| wasInput editor |
+	| editor |
 	editor := aBlock sandblockEditor.
-	wasInput := editor mode = #input.
-	aBlock replaceBy: aMorph.
 	aMorph startInputCommand
-		ifNotNil: [editor replaceInput: aMorph]
-		ifNil: [aMorph startNextInput]
+		ifNil: [
+			editor
+				do: (SBReplaceCommand new
+					target: aBlock;
+					replacer: aMorph);
+				endInput.
+			aMorph startNextInput]
+		ifNotNil: [
+			aBlock replaceBy: aMorph.
+			aMorph startInputCommand
+				ifNotNil: [editor replaceInput: aMorph]
+				ifNil: [aMorph startNextInput]]
 ]
 
 { #category : #actions }
