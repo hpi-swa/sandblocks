@@ -16,7 +16,7 @@ SBForceConnector class >> connect: anObject to: anotherObject forceScale: aNumbe
 { #category : #'as yet unclassified' }
 SBForceConnector >> baseForce [
 
-	^ 0.05 * (self to center - self from center) * self forceScale
+	^ self to class attractionStrengthMultiplier * self from class attractionStrengthMultiplier * (self to center - self from center) * self forceScale
 ]
 
 { #category : #'as yet unclassified' }
@@ -30,8 +30,17 @@ SBForceConnector >> connect: aMorph to: anotherMorph [
 
 	super connect: aMorph to: anotherMorph.
 	
-	aMorph withDecorator: SBForceMoveDecorator do: [:decorator | decorator registerAdditionalForce: self].
-	anotherMorph withDecorator: SBForceMoveDecorator do: [:decorator | decorator registerAdditionalForce: self]
+	aMorph
+		withDecorator: SBForceMoveDecorator
+		do: [:decorator | decorator registerAdditionalForce: self].
+	anotherMorph
+		withDecorator: SBForceMoveDecorator
+		do: [:decorator | decorator registerAdditionalForce: self].
+	
+	self updateVisibility.
+	
+	aMorph when: #gotGroup send: #updateVisibility to: self.
+	anotherMorph when: #gotGroup send: #updateVisibility to: self
 ]
 
 { #category : #'as yet unclassified' }
@@ -45,6 +54,19 @@ SBForceConnector >> connect: anObject to: anotherObject forceScale: aNumber [
 SBForceConnector >> connectorType [
 
 	 ^ #none
+]
+
+{ #category : #'as yet unclassified' }
+SBForceConnector >> delete [
+
+	self to
+		withDecorator: SBForceMoveDecorator
+		do: [:decorator | decorator unregisterAdditionalForce: self].
+	self from
+		withDecorator: SBForceMoveDecorator
+		do: [:decorator | decorator unregisterAdditionalForce: self].
+
+	super delete
 ]
 
 { #category : #'as yet unclassified' }
@@ -74,8 +96,14 @@ SBForceConnector >> forceScale: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBForceConnector >> initialize [ 
+SBForceConnector >> handlesMouseDown: anEvent [
 	
+	^  self visible and: [super handlesMouseDown: anEvent]
+]
+
+{ #category : #'as yet unclassified' }
+SBForceConnector >> initialize [
+
 	super initialize.
 	self forceScale: 1
 ]
@@ -87,12 +115,15 @@ SBForceConnector >> lineWidth [
 ]
 
 { #category : #'as yet unclassified' }
+SBForceConnector >> morphicLayerNumber [
+
+	^ SBBlock defaultLayer + 1
+]
+
+{ #category : #'as yet unclassified' }
 SBForceConnector >> mouseDown: anEvent [
 
-	self to withDecorator: SBForceMoveDecorator do: [:decorator | decorator unregisterAdditionalForce: self].
-	self from withDecorator: SBForceMoveDecorator do: [:decorator | decorator unregisterAdditionalForce: self].
-	
-	self abandon.
+	self abandon
 ]
 
 { #category : #'as yet unclassified' }
@@ -101,13 +132,23 @@ SBForceConnector >> saveString [
 	^ String streamContents: [:stream |
 		stream
 			nextPutAll: self className;
-			nextPutAll: ' connect: ';
-			nextPutAll:	self from className;
-			print:	self from identityHash;
-			nextPutAll: ' to: ';
-			nextPutAll:	self to className;
-			print:	self to identityHash;
+			nextPutAll: ' connect: '.
+		self from printIdentityStringOn: stream.
+		stream	nextPutAll: ' to: '.
+		self to printIdentityStringOn: stream.
+		stream
 			nextPutAll: ' forceScale: ';
 			nextPutAll: self forceScale asString.
 		]
+]
+
+{ #category : #'as yet unclassified' }
+SBForceConnector >> updateVisibility [
+
+	| aGroup |
+	aGroup := self from group.
+
+	(aGroup = self to group and: [aGroup notNil])
+		ifTrue: [self hide]
+		ifFalse: [self show]
 ]

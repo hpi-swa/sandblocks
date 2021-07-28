@@ -148,6 +148,12 @@ SBColorPolicy >> foregroundColorForColor: aColor [
 ]
 
 { #category : #'as yet unclassified' }
+SBColorPolicy >> highlightColor [ 
+
+	^ Color yellow
+]
+
+{ #category : #'as yet unclassified' }
 SBColorPolicy >> labToColor: aCollection [
 
 	| y x z adjustVal r g b adjustRGB |

@@ -109,6 +109,12 @@ Morph >> fontToUse [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Morph >> innerBoundsInWorld [
+	
+	^ self bounds: self innerBounds in: self world
+]
+
+{ #category : #'*Sandblocks-Core' }
 Morph >> isArrayBlock [
 
 	^ false

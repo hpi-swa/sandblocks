@@ -162,6 +162,12 @@ SBDrawCanvas >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBDrawCanvas >> isArtefact [ 
+	
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBDrawCanvas >> morphicLayerNumber [
 
 	^ 101

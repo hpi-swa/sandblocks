@@ -47,6 +47,15 @@ SBSearchPanel >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBSearchPanel >> matchedArtefacts [
+
+	^ (currentHighlights collect: [:aHighlight |
+		aHighlight morph ifNotNil: [:morph | morph containingArtefact].
+		
+		]) asSet
+]
+
+{ #category : #'as yet unclassified' }
 SBSearchPanel >> matchesQuery: aMorph [
 
 	^ aMorph textContents asLowercase includesSubstring: self contents asLowercase

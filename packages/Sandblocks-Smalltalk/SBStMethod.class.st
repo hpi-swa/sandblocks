@@ -107,7 +107,7 @@ SBStMethod >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 { #category : #'as yet unclassified' }
 SBStMethod >> isAttractedTo: aMorph [
 
-	^ aMorph relatedClass theNonMetaClass = self relatedClass theNonMetaClass
+	^ aMorph relatedClass theNonMetaClass = self relatedClass theNonMetaClass and: [(aMorph isKindOf: SBStMethod) or: [aMorph isKindOf: SBStClass]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -174,6 +174,34 @@ SBStMethod >> pasteString [
 
 { #category : #'as yet unclassified' }
 SBStMethod >> saveString [
+
+	^ self currentSelector
+		ifEmpty: [self saveStringWhenEmpty]
+		ifNotEmpty: [self saveStringWhenNotEmpty]
+]
+
+{ #category : #'as yet unclassified' }
+SBStMethod >> saveStringWhenEmpty [
+
+	^ String streamContents: [:stream |
+		self printSaveStringPreambleOn: stream.
+		stream
+			nextPutAll: self className;
+			nextPutAll: ' new';
+			nextPutAll:  ' selector:  ';
+			nextPut: $';
+			nextPut: $';
+			nextPutAll: ' arguments: #()';
+			nextPutAll: ' class: ';
+			nextPutAll: self currentClass name asString;
+			nextPutAll: '; body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}]);';
+			nextPutAll: ' position: ';
+			nextPutAll:  self position asString 
+		]
+]
+
+{ #category : #'as yet unclassified' }
+SBStMethod >> saveStringWhenNotEmpty [
 
 	^ String streamContents: [:stream |
 		self printSaveStringPreambleOn: stream.
