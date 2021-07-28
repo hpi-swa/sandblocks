@@ -121,6 +121,16 @@ SBJsInfixOperator >> fixedNumberOfChildren [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsInfixOperator >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
+
+	self fixedNumberOfChildren ifTrue: [^ nil].
+	
+	((aBlock isNil and: [aBoolean]) or: [aBlock = self lhs]) ifTrue: [^ nil].
+	
+	^ SBRelInsertCommand new near: aBlock before: aBoolean in: self morph: aMorph
+]
+
+{ #category : #'as yet unclassified' }
 SBJsInfixOperator >> isBinaryOperator [
 
 	^ true

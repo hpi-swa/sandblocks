@@ -53,7 +53,7 @@ SBBrowserEditor >> ensureOpened: aMethod [
 		aMethod
 			convertedFor: (self objectInterfaceNear: nil at: #after)
 			do: [:repr | self openMorphInView: repr]].
-	self selection startNextInput.
+	self selection startInput.
 	
 	((model respondsTo: #autoSelectString) and: [model autoSelectString notNil]) ifTrue: [self search search: model autoSelectString]
 ]

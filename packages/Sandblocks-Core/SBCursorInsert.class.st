@@ -52,15 +52,14 @@ SBCursorInsert >> bounds [
 	^ self container hasHorizontalLayout
 		ifTrue: [
 			self adjacent
-				ifNil: [ | extra inset |
-					extra := self container spaceForSymbols.
+				ifNil: [ | inset |
 					inset := self container layoutInset asEdgeInsets.
 					self before
-						ifTrue: [self container topLeft + inset left + (extra first @ 0) extent: self lineWidth @ (self container height - inset vertical)]
-						ifFalse: [self container topRight - (self lineWidth + extra second + inset right @ inset top negated) extent: self lineWidth @ (self container height - inset vertical)]]
+						ifTrue: [self container topLeft + inset left extent: self lineWidth @ (self container height - inset vertical)]
+						ifFalse: [self container topRight - (self lineWidth // 2 + inset right @ inset top negated) extent: self lineWidth @ (self container height - inset vertical)]]
 				ifNotNil: [
 					self before
-						ifTrue: [self adjacent topLeft - (self lineWidth @ 0) extent: self lineWidth @ self adjacent height]
+						ifTrue: [self adjacent topLeft - (self lineWidth // 2 @ 0) extent: self lineWidth @ self adjacent height]
 						ifFalse: [self adjacent topRight extent: self lineWidth @ self adjacent height]]]
 		ifFalse: [
 			self adjacent
@@ -71,7 +70,7 @@ SBCursorInsert >> bounds [
 						ifFalse: [self container bottomLeft - (inset left negated @ (self lineWidth + inset bottom)) extent: self container width - inset horizontal @ self lineWidth]]
 				ifNotNil: [
 					self before
-						ifTrue: [self adjacent topLeft - (0 @ self lineWidth) extent: self adjacent width @ self lineWidth]
+						ifTrue: [self adjacent topLeft - (0 @ (self lineWidth // 2)) extent: self adjacent width @ self lineWidth]
 						ifFalse: [self adjacent bottomLeft extent: self adjacent width @ self lineWidth]]]
 ]
 
