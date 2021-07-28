@@ -45,6 +45,12 @@ SBGroupBlockEdge >> block: anObject [
 	block := anObject.
 ]
 
+{ #category : #'as yet unclassified' }
+SBGroupBlockEdge >> expandedBounds [
+	
+	^ self block bounds expandBy: self class expandBy
+]
+
 { #category : #accessing }
 SBGroupBlockEdge >> position [
 

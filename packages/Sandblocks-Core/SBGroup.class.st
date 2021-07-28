@@ -44,16 +44,15 @@ SBGroup >> addVerticesTo: newVertices from: verticalEdges side: aSide [
 			sideMultiplier := 1.
 			firstEdgeSide := #left].
 	
-	comingBlockSides := self blocks collect: [:aBlock | ((aBlock bounds expandBy: SBGroupBlockEdge expandBy) perform: aSide) * sideMultiplier] as: SortedCollection.
+	comingBlockSides := verticalEdges collect: [:anEdge | (anEdge expandedBounds perform: aSide) * sideMultiplier] as: SortedCollection.
 	seenBlockSides := SortedCollection new.
 	numberOfActiveBlocks := 0.
 	
 	edgeBlock := [:edge |
 		| newVertex y |
-		y := ((edge block bounds expandBy: SBGroupBlockEdge expandBy) perform: aSide) * sideMultiplier.
+		y := (edge expandedBounds perform: aSide) * sideMultiplier.
 				
-		edge side = firstEdgeSide
-			ifTrue: [seenBlockSides add: y].
+		seenBlockSides add: y.
 			
 		newVertex := comingBlockSides
 			ifEmpty: [edge position @ seenBlockSides last]
@@ -73,8 +72,7 @@ SBGroup >> addVerticesTo: newVertices from: verticalEdges side: aSide [
 			newVertices add: x @ newVertex y].
 		newVertices add: newVertex.
 				
-		edge side = firstEdgeSide
-			ifFalse: [comingBlockSides remove: y].
+		comingBlockSides remove: y.
 			
 		numberOfActiveBlocks := numberOfActiveBlocks + (edge side = firstEdgeSide ifTrue: [1] ifFalse: [-1])].
 	
