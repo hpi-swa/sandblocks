@@ -52,24 +52,26 @@ SBCursorInsert >> bounds [
 	^ self container hasHorizontalLayout
 		ifTrue: [
 			self adjacent
-				ifNil: [ | extra |
+				ifNil: [ | extra inset |
 					extra := self container spaceForSymbols.
+					inset := self container layoutInset asEdgeInsets.
 					self before
-						ifTrue: [self container topLeft + (extra first @ 0) extent: self lineWidth @ self container height]
-						ifFalse: [self container topRight - (self lineWidth + extra second @ 0) extent: self lineWidth @ self container height]]
+						ifTrue: [self container topLeft + inset left + (extra first @ 0) extent: self lineWidth @ (self container height - inset vertical)]
+						ifFalse: [self container topRight - (self lineWidth + extra second + inset right @ inset top negated) extent: self lineWidth @ (self container height - inset vertical)]]
 				ifNotNil: [
 					self before
 						ifTrue: [self adjacent topLeft - (self lineWidth @ 0) extent: self lineWidth @ self adjacent height]
 						ifFalse: [self adjacent topRight extent: self lineWidth @ self adjacent height]]]
 		ifFalse: [
 			self adjacent
-				ifNil: [
+				ifNil: [ | inset |
+					inset := self container layoutInset asEdgeInsets.
 					self before
-						ifTrue: [self container topLeft extent: self container width @ self lineWidth]
-						ifFalse: [self container bottomLeft - (self lineWidth @ 0) extent: self container width @ self lineWidth]]
+						ifTrue: [self container topLeft + inset topLeft extent: self container width - inset horizontal @ self lineWidth]
+						ifFalse: [self container bottomLeft - (inset left negated @ (self lineWidth + inset bottom)) extent: self container width - inset horizontal @ self lineWidth]]
 				ifNotNil: [
 					self before
-						ifTrue: [self adjacent topLeft - (self lineWidth @ 0) extent: self adjacent width @ self lineWidth]
+						ifTrue: [self adjacent topLeft - (0 @ self lineWidth) extent: self adjacent width @ self lineWidth]
 						ifFalse: [self adjacent bottomLeft extent: self adjacent width @ self lineWidth]]]
 ]
 
@@ -158,6 +160,14 @@ SBCursorInsert >> moveHorizontal: aNumber wordWise: aBoolean [
 	^ (next class = self class and: [next command hasSamePositionAs: self command])
 		ifTrue: [next adjacentPosition: aNumber in: self container sandblockEditor]
 		ifFalse: [next]
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorInsert >> objectInterface [
+
+	^ self container
+		objectInterfaceNear: self adjacent
+		at: (self before ifTrue: [#before] ifFalse: [#after])
 ]
 
 { #category : #'as yet unclassified' }

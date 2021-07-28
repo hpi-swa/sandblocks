@@ -313,7 +313,7 @@ SBStGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 			wrap: aBlock
 			do: [:outer :inner | outer receiver: inner selector: char asString arguments: {outer newNullBlock label: 'arg'}]
 			with: self class messageSendClass new
-			focusOuter: false].
+			focusOuter: [:msg | msg messageParts first]].
 	char = $( ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer type: #literal contents: {inner}] with: SBStArray new]
 ]
 
@@ -327,7 +327,10 @@ SBStGrammarHandler >> replaceWithPragma: aBlock [
 		target: aBlock;
 		replacer: pragma;
 		shouldMergeWithNext: true).
-	^ pragma sandblockEditor startInput: pragma at: 1 replacingContents: true
+	^ pragma sandblockEditor
+		startInput: pragma messageParts first
+		at: 1
+		replacingContents: true
 ]
 
 { #category : #callbacks }

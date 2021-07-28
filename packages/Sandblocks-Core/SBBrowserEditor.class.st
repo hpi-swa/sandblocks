@@ -53,6 +53,7 @@ SBBrowserEditor >> ensureOpened: aMethod [
 		aMethod
 			convertedFor: (self objectInterfaceNear: nil at: #after)
 			do: [:repr | self openMorphInView: repr]].
+	self selection startNextInput.
 	
 	((model respondsTo: #autoSelectString) and: [model autoSelectString notNil]) ifTrue: [self search search: model autoSelectString]
 ]
@@ -195,7 +196,10 @@ SBBrowserEditor >> updateArtefact [
 	
 	({#editClass. #editMessage} includes: model editSelection) ifTrue: [
 		^ self ensureOpened: (model selectedMessageName
-			ifNotNil: [:msg | model selectedClassOrMetaClass compiledMethodAt: msg ifAbsent: [model selectedClassOrMetaClass]]
+			ifNotNil: [:msg |
+				model selectedClassOrMetaClass
+					compiledMethodAt: msg
+					ifAbsent: [model selectedClassOrMetaClass]]
 			ifNil: [model selectedClassOrMetaClass])].
 	
 	#newClass = model editSelection ifTrue: [ | class |
@@ -207,7 +211,7 @@ SBBrowserEditor >> updateArtefact [
 			selector: '' arguments: #() class: model selectedClassOrMetaClass;
 			body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}]);
 			category: model selectedMessageCategoryName).
-		^ self startInput: method at: 1 replacingContents: true]
+		method inputContainedUnknown]
 ]
 
 { #category : #initialization }

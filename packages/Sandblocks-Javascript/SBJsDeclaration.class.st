@@ -85,12 +85,6 @@ SBJsDeclaration >> preferredColorIn: aColorPolicy [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsDeclaration >> startInputAt: aNumber replacingContents: aBoolean [
-
-	^ nil
-]
-
-{ #category : #'as yet unclassified' }
 SBJsDeclaration >> startInputCommand [
 
 	^ nil

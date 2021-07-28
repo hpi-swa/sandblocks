@@ -316,7 +316,6 @@ SBBlock >> changeToUnknown [
 	self newNullBlock convertedFor: self objectInterface do: [:new |
 		new ifNotNil: [
 			self sandblockEditor
-				copyBuffer: self;
 				do: (SBReplaceCommand new
 					target: self;
 					replacer: new;
@@ -567,7 +566,12 @@ SBBlock >> copyPlaceholder [
 SBBlock >> copyString [
 	<action>
 
-	Clipboard clipboardText: self textContents
+	Clipboard clipboardText: (self grammarHandler
+		ifNotNil: [:g |
+			g
+				block: self;
+				textContentsForCopy]
+		ifNil: [self textContentsForCopy])
 ]
 
 { #category : #actions }
@@ -604,9 +608,7 @@ SBBlock >> deleteAdjacent [
 	
 	targets := (startIndex to: endIndex) collect: [:index | self parentSandblock childSandblocks at: index].
 	
-	self sandblockEditor
-		copyBuffer: targets;
-		do: (SBCombinedCommand newWith: (targets collect: [:target | SBDeleteCommand new target: target]))
+	self sandblockEditor do: (SBCombinedCommand newWith: (targets collect: [:target | SBDeleteCommand new target: target]))
 ]
 
 { #category : #actions }
@@ -696,14 +698,19 @@ SBBlock >> deleteBeforeCursor [
 SBBlock >> deleteBlock [
 	<multiSelectAction>
 
-	self isSelected ifFalse: [
-		^ self sandblockEditor do: (self parentSandblock deleteCommandFor: self)].
+	self isSelected ifFalse: [^ self sandblockEditor do: (self parentSandblock deleteCommandFor: self)].
 	
 	self sandblockEditor
-		copyBuffer: self sandblockEditor multiSelection;
-		doMultiSelectionEach: [:selected |
-			selected parentSandblock deleteCommandFor: selected];
+		doMultiSelectionEach: [:selected | selected parentSandblock deleteCommandFor: selected];
 		maybeStartInputFromEnd
+]
+
+{ #category : #actions }
+SBBlock >> deleteBlockWithCopy [
+	<multiSelectAction>
+
+	self sandblockEditor copyBuffer: self sandblockEditor multiSelection.
+	self deleteBlock
 ]
 
 { #category : #'insert/delete' }
@@ -1772,51 +1779,41 @@ SBBlock >> pasteBefore [
 { #category : #'action helpers' }
 SBBlock >> pasteBeforeOrAfter: aBeforeBoolean [
 
-	| copyBuffer |
-	copyBuffer := self sandblockEditor copyBuffer ifNil: [^ self].
-	copyBuffer wrapsAround ifTrue: [^ self wrapSelectionWith: copyBuffer unpackSelection veryDeepCopy].
-	copyBuffer submorphs veryDeepCopy withIndexDo: [:target :index |
-		target object
-			convertedFor: (self parentSandblock
-				objectInterfaceNear: self
-				at: (aBeforeBoolean ifTrue: [#before] ifFalse: [#after]))
-			do: [:repr |
-				self sandblockEditor do: (SBInsertCommand new
-					morph: (repr center: self center);
-					container: self owner;
-					index: (aBeforeBoolean ifTrue: [self submorphIndex] ifFalse: [self submorphIndex + index]);
-					shouldMergeWithNext: index < copyBuffer submorphCount).
-				repr postDuplicateSelf.
-				repr select]]
+	self sandblockEditor
+		copyBufferForContext: (self parentSandblock
+			objectInterfaceNear: self
+			at: (aBeforeBoolean ifTrue: [#before] ifFalse: [#after]))
+		do: [:repr :index :isLast |
+			self sandblockEditor do: (SBInsertCommand new
+				morph: (repr center: self center);
+				container: self owner;
+				index: (aBeforeBoolean ifTrue: [self submorphIndex] ifFalse: [self submorphIndex + index]);
+				shouldMergeWithNext: isLast)]
+		ifWrappingDo: [:block | self wrapSelectionWith: block unpackSelection veryDeepCopy]
 ]
 
 { #category : #actions }
 SBBlock >> pasteReplace [
 	<action>
 
-	| copyBuffer position |
-	copyBuffer := self sandblockEditor copyBuffer.
-	
-	^ copyBuffer ifNotNil: [ | new |
-		copyBuffer wrapsAround ifTrue: [^ self wrapSelectionWith: copyBuffer unpackSelection veryDeepCopy].
-		
-		new := copyBuffer unpackSelection veryDeepCopy.
-		
-		position := self sandblockEditor cursor cursorPosition.
-		(position isKindOf: SBCursorInsert) ifTrue: [
-			new
-				convertedFor: (position container objectInterfaceNear: position adjacent at: (position before ifTrue: [#before] ifFalse: [#after]))
-				do: [:repr |
-					self sandblockEditor
-						do: (position container insertCommandRequest: repr near: position adjacent before: position before).
-					new startInputAtEnd.
-					^ self]].
-		
-		new convertedFor: self objectInterface do: [:repr |
-			self sandblockEditor do: (SBReplaceCommand new
-				target: self;
-				replacer: repr).
-			repr postDuplicate]]
+	| position |
+	position := self sandblockEditor cursor cursorPosition.
+	self sandblockEditor
+		copyBufferForContext: ((position isKindOf: SBCursorInsert)
+			ifTrue: [position objectInterface]
+			ifFalse: [self objectInterface])
+		do: [:block |
+			self sandblockEditor do: ((position isKindOf: SBCursorInsert)
+				ifTrue: [
+					position container
+						insertCommandRequest: block
+						near: position adjacent
+						before: position before]
+				ifFalse: [
+					SBReplaceCommand new
+						target: self;
+						replacer: block])]
+		ifWrappingDo: [:block | self wrapSelectionWith: block]
 ]
 
 { #category : #'action helpers' }
@@ -2277,6 +2274,14 @@ SBBlock >> startDrag: anEvent [
 	self sandblockEditor select: self
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> startInput [
+
+	(self startInputCommand
+		ifNotNil: [self]
+		ifNil: [self nextBlockThat: [:m | m startInputCommand notNil]]) ifNotNil: [:m | ((m hasOwner: self) or: [m = self]) ifTrue: [self sandblockEditor startInput: m at: 900000000 replacingContents: false]]
+]
+
 { #category : #input }
 SBBlock >> startInputAt: aNumber replacingContents: aBoolean [
 
@@ -2326,6 +2331,15 @@ SBBlock >> startInputSubstituting [
 	<action>
 
 	self sandblockEditor startInput: self at: 1 replacingContents: true
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> startNextInput [
+
+	((self wantsInput ifTrue: [self] ifFalse: [self nextBlockThat: [:m | m wantsInput]]) ifNil: [
+		self startInputCommand
+			ifNotNil: [self]
+			ifNil: [self nextBlockThat: [:m | m startInputCommand notNil]]]) ifNotNil: [:m | ((m hasOwner: self) or: [m = self]) ifTrue: [self sandblockEditor startInput: m at: 900000000 replacingContents: false]]
 ]
 
 { #category : #actions }
@@ -2417,6 +2431,12 @@ SBBlock >> textContents [
 	^ self currentTextMorph ifNotNil: [:t | t contents] ifNil: ['']
 ]
 
+{ #category : #accessing }
+SBBlock >> textContentsForCopy [
+
+	^ self textContents
+]
+
 { #category : #actions }
 SBBlock >> toggleCollapsed [
 	<action>
@@ -2467,9 +2487,11 @@ SBBlock >> updateSuggestions: aCollection showNear: aMorph [
 	self suggestionsMenu
 		editor: self sandblockEditor;
 		suggestions: ((aCollection sort: [:a :b | a selector size < b selector size]) first: (20 min: aCollection size));
-		topLeft: aMorph positionInWorld + (0 @ aMorph height);
-		openInWorld;
-		resize
+		topLeft: aMorph positionInWorld + (0 @ aMorph height).
+	
+	self world ifNotNil: [
+		self suggestionsMenu openInWorld.
+		self suggestionsMenu resize]
 ]
 
 { #category : #layout }

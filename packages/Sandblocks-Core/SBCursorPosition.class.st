@@ -100,6 +100,12 @@ SBCursorPosition >> enter [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorPosition >> hasDifferentEffect: aCursor [
+
+	^ aCursor ~= self
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorPosition >> hash [
 
 	^ self subclassResponsibility

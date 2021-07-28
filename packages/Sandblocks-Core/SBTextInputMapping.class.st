@@ -119,7 +119,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character arrowRight command withShift do: #swapRight;
 		registerShortcut: $c asSandblockShortcut withOption do: #copyString;
 		registerShortcut: $V command do: #pasteString;
-		registerShortcut: $x command do: #deleteBlock;
+		registerShortcut: $x command do: #deleteBlockWithCopy;
 		registerShortcut: $X command do: #deleteAround;
 		cmdShortcut: Character backspace asSandblockShortcut, Character delete do: #deleteBlock;
 		registerShortcut: Character backspace shift do: #deleteAround;
@@ -176,7 +176,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 	" special overrides "
 	self
 		registerShortcut: Character escape do: #dismiss;
-		shortcut: Character space modes: #(#command) do: #startInputAtStart
+		cmdShortcut: Character space do: #activate
 ]
 
 { #category : #'event handling' }

@@ -357,16 +357,12 @@ SBEditor >> containingArtefact [
 ]
 
 { #category : #accessing }
-SBEditor >> copyBuffer [
-
-	^ copyBuffer
-]
-
-{ #category : #accessing }
 SBEditor >> copyBuffer: aMorphOrCollection [
 
 	| form list |
-	list := (aMorphOrCollection isCollection ifTrue: [aMorphOrCollection] ifFalse: [{aMorphOrCollection}]) select: #canCopy.
+	list := (aMorphOrCollection isCollection
+		ifTrue: [aMorphOrCollection]
+		ifFalse: [{aMorphOrCollection}]) select: #canCopy.
 	list ifEmpty: [^ self].
 	
 	copyBuffer := SBSelection new
@@ -374,8 +370,24 @@ SBEditor >> copyBuffer: aMorphOrCollection [
 		colorPolicy: self colorPolicy.
 	
 	list do: [:m | copyBuffer addMorphBack: m veryDeepCopy].
+	Clipboard clipboardText: copyBuffer firstSubmorph textContentsForCopy.
 	form := copyBuffer imageForm.
 	copyBufferPreview ifNotNil: [copyBufferPreview image: (form scaledToFit: self copyBufferPreviewSize)]
+]
+
+{ #category : #accessing }
+SBEditor >> copyBufferForContext: anInterface do: aBlock ifWrappingDo: aWrapBlock [
+
+	^ (copyBuffer notNil and: [copyBuffer unpackSelection textContentsForCopy = Clipboard clipboardText string])
+		ifTrue: [
+			copyBuffer wrapsAround
+				ifTrue: [aWrapBlock value: copyBuffer unpackSelection veryDeepCopy]
+				ifFalse: [
+					copyBuffer submorphs veryDeepCopy withIndexDo: [:morph :index |
+						morph
+							convertedFor: anInterface
+							do: [:repr | aBlock cull: repr cull: index cull: index = copyBuffer submorphCount]]]]
+		ifFalse: [Clipboard clipboardText string convertedFor: anInterface do: [:repr | aBlock cull: repr cull: 1 cull: true]]
 ]
 
 { #category : #accessing }
@@ -750,7 +762,8 @@ SBEditor >> initialize [
 		registerGlobalShortcutListener: searchInput;
 		registerGlobalShortcutListener: cursor;
 		resetState;
-		openMorph: cursor
+		openMorph: cursor;
+		updateSelectionLabel
 ]
 
 { #category : #testing }
@@ -1479,6 +1492,7 @@ SBEditor >> undo [
 	<inputAction>
 	<globalAction>
 
+	self endInput.
 	history undoDo: [:block :artefacts |
 		self select: block.
 		self markChangesAfterCommand: artefacts]
@@ -1542,11 +1556,12 @@ SBEditor >> updateSelectionLabel [
 			[#input] -> ['INPUT'].
 			[#selection] -> ['SELECTION'].
 			[#continuousSelection] -> ['CONT. SELECTION'].
-			[#insert] -> ['INSERT'].	
-			[#command] -> ['COMMAND']})].
+			[#insert] -> ['INSERT'].
+			[#command] -> ['COMMAND'].
+			[#none] -> ['']})].
 	
 	defaultModeColor := Color transparent.
-	specialModeColor := Color red alpha: 0.2.
+	specialModeColor := (Color r: 1 g: 0.0 b: 0.0) alpha: 0.2.
 	
 	bottomPanel ifNotNil: [
 		bottomPanel color: (self mode caseOf: {
@@ -1555,9 +1570,10 @@ SBEditor >> updateSelectionLabel [
 				inputMapping defaultState = #input
 					ifTrue: [defaultModeColor]
 					ifFalse: [specialModeColor]].
-			[#selection] -> [Color blue alpha: 0.2].
-			[#continuousSelection] -> [Color blue alpha: 0.2].
-			[#command] -> [defaultModeColor]})].
+			[#selection] -> [(Color r: 0.0 g: 0.0 b: 1) alpha: 0.2].
+			[#continuousSelection] -> [(Color r: 0.0 g: 0.0 b: 1) alpha: 0.2].
+			[#command] -> [defaultModeColor].
+			[#none] -> [defaultModeColor]})]
 ]
 
 { #category : #input }

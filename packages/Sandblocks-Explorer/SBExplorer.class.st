@@ -51,13 +51,6 @@ SBExplorer >> color [
 	Color r: 0.95 g: 0.95 b: 0.95
 ]
 
-{ #category : #actions }
-SBExplorer >> copyString [
-	<action>
-	
-	Clipboard clipboardText: self object printString
-]
-
 { #category : #'as yet unclassified' }
 SBExplorer >> declarations [
 
@@ -265,6 +258,12 @@ SBExplorer >> startInputAt: aNumber replacingContents: aBoolean [
 	self sandblockEditor replaceInput: new.
 	^ new startInputAt: aNumber replacingContents: false"
 	^ nil
+]
+
+{ #category : #actions }
+SBExplorer >> textContentsForCopy [
+
+	^ self object printString
 ]
 
 { #category : #'as yet unclassified' }

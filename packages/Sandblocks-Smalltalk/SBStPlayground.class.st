@@ -82,13 +82,6 @@ SBStPlayground >> canDeleteChild: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBStPlayground >> copyString [
-	<action>
-
-	self body performAction: #copyString
-]
-
-{ #category : #'as yet unclassified' }
 SBStPlayground >> createBinding: aString [
 
 	| decl |
@@ -253,4 +246,10 @@ SBStPlayground >> storeOn: aStream [
 SBStPlayground >> textContents [
 
 	^ self name
+]
+
+{ #category : #'as yet unclassified' }
+SBStPlayground >> textContentsForCopy [
+
+	^ self body textContentsForCopy
 ]

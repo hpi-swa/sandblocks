@@ -5,6 +5,21 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBASTNodeTest >> testBindingRename [
+
+	| block editor |
+	block := '[|from to| from squared. from squared]' parseAsSandblock.
+	editor := self methodFor: block.
+	
+	editor startInput: block statements last receiver at: 1 replacingContents: true.
+	block statements last receiver keyStroke: (self keyboardEvent: $t).
+	block statements last receiver keyStroke: (self keyboardEvent: $o).
+	editor performAction: #moveCursorUp.
+	self assert: 'from' equals: block statements first receiver contents.
+	self assert: 'to' equals: block statements last receiver contents
+]
+
+{ #category : #'as yet unclassified' }
 SBASTNodeTest >> testCanClearMessagePart [
 
 	| block selection editor |

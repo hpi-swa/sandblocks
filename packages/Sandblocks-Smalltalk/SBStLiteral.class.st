@@ -104,7 +104,7 @@ SBStLiteral >> replaceWithUnknown [
 	
 	new := self newNullBlock label: 'expr'.
 	self replaceBy: new.
-	new select
+	new sandblockEditor replaceInput: new
 ]
 
 { #category : #'as yet unclassified' }

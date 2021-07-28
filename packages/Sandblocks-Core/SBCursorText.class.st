@@ -13,7 +13,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBCursorText >> = aPosition [
 
-	^ self class = aPosition class and: [self block = aPosition block and: [self replacingContents = aPosition replacingContents]]
+	^ self class = aPosition class and: [self block = aPosition block]
 ]
 
 { #category : #'as yet unclassified' }
@@ -97,6 +97,12 @@ SBCursorText >> enter [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorText >> hasDifferentEffect: aCursor [
+
+	^ (super hasDifferentEffect: aCursor) or: [self replacingContents ~= aCursor replacingContents]
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorText >> hash [
 
 	^ self block hash
@@ -168,7 +174,8 @@ SBCursorText >> placeAtEnd: aBoolean [
 SBCursorText >> replaceSelected: aBlock [
 
 	aBlock startInputCommand ifNotNil: [
-		self block: aBlock]
+		self block: aBlock.
+		aBlock currentTextMorph moveCursorTo: 900000000]
 ]
 
 { #category : #'as yet unclassified' }
