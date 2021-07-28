@@ -313,7 +313,7 @@ SBStGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 			wrap: aBlock
 			do: [:outer :inner | outer receiver: inner selector: char asString arguments: {outer newNullBlock label: 'arg'}]
 			with: self class messageSendClass new
-			focusOuter: true].
+			focusOuter: false].
 	char = $( ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer type: #literal contents: {inner}] with: SBStArray new]
 ]
 

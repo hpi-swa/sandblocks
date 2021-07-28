@@ -52,10 +52,11 @@ SBCursorInsert >> bounds [
 	^ self container hasHorizontalLayout
 		ifTrue: [
 			self adjacent
-				ifNil: [
+				ifNil: [ | extra |
+					extra := self container spaceForSymbols.
 					self before
-						ifTrue: [self container topLeft extent: self lineWidth @ self container height]
-						ifFalse: [self container topRight - (self lineWidth @ 0) extent: self lineWidth @ self container height]]
+						ifTrue: [self container topLeft + (extra first @ 0) extent: self lineWidth @ self container height]
+						ifFalse: [self container topRight - (self lineWidth + extra second @ 0) extent: self lineWidth @ self container height]]
 				ifNotNil: [
 					self before
 						ifTrue: [self adjacent topLeft - (self lineWidth @ 0) extent: self lineWidth @ self adjacent height]
