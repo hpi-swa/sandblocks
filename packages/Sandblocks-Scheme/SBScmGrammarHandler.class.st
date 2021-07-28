@@ -69,7 +69,7 @@ SBScmGrammarHandler >> splitSExpr [
 			index: index;
 			container: newExpr])).
 	
-	self block sandblockEditor maybeStartInputFromStart
+	self block sandblockEditor startInput
 ]
 
 { #category : #actions }
@@ -98,7 +98,7 @@ SBScmGrammarHandler >> wrapInSExpr [
 		inner: self block;
 		wrap: [:outer :inner | outer addMorphBack: inner]).
 	
-	self block sandblockEditor maybeStartInputFromStart
+	self block sandblockEditor startInput
 ]
 
 { #category : #printing }

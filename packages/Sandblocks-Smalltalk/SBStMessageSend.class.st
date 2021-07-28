@@ -550,15 +550,15 @@ SBStMessageSend >> tryDelete [
 	self isInCascade ifTrue: [
 		^ self sandblockEditor
 			do: (SBDeleteCommand new target: self);
-			maybeStartInputFromEnd].
+			startInputFromEnd].
 	
 	receiver := self receiver.
-	^ self sandblockEditor
+	self sandblockEditor
 		endInput;
 		do: (SBReplaceCommand new
 			target: self;
 			replacer: receiver);
-		startInput: receiver at: 900000000 replacingContents: false
+		startInputFromEnd
 ]
 
 { #category : #'as yet unclassified' }

@@ -702,7 +702,7 @@ SBBlock >> deleteBlock [
 	
 	self sandblockEditor
 		doMultiSelectionEach: [:selected | selected parentSandblock deleteCommandFor: selected];
-		maybeStartInputFromEnd
+		startInputFromEnd
 ]
 
 { #category : #actions }
@@ -2128,8 +2128,8 @@ SBBlock >> selectArtefact [
 	(self containingArtefact = self
 		ifTrue: [self parentSandblock containingArtefact]
 		ifFalse: [self containingArtefact]) ifNotNil: #select.
-		
-	self sandblockEditor maybeStartInputFromStart
+	
+	self sandblockEditor startInput
 ]
 
 { #category : #actions }
@@ -2146,7 +2146,7 @@ SBBlock >> selectLast [
 
 	self containingFloat lastDeepChild select.
 	
-	self sandblockEditor maybeStartInputFromEnd
+	self sandblockEditor startInputFromEnd
 ]
 
 { #category : #actions }
@@ -2161,9 +2161,11 @@ SBBlock >> selectRightMostBlock [
 	<multiSelectAction>
 	<inputAction>
 
-	self containingStatement ifNil: [self rightMostBlock select] ifNotNil: [:statement | statement rightMostBlock select].
+	self containingStatement
+		ifNil: [self rightMostBlock select]
+		ifNotNil: [:statement | statement rightMostBlock select].
 	
-	self sandblockEditor maybeStartInputFromEnd.
+	self sandblockEditor startInputFromEnd.
 	self sandblockEditor cursor updateHorizontalOffset
 ]
 
@@ -2515,7 +2517,7 @@ SBBlock >> useSuggestion [
 			(s wouldChange: self)
 				ifTrue: [
 					s useSuggestionOn: self.
-					editor maybeStartInputFromEnd]
+					editor startInputFromEnd]
 				ifFalse: [self inputNextUnknown]].
 		self removeSuggestionMenu.
 		^ true].

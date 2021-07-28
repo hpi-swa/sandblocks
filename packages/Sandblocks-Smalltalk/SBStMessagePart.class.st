@@ -68,7 +68,7 @@ SBStMessagePart >> currentTextMorph [
 { #category : #'as yet unclassified' }
 SBStMessagePart >> deleteBeforeCursor [
 	<inputAction>
-	
+
 	(self actualContents isEmpty and: [self isFirstPart]) ifTrue: [^ self messageSend tryDelete].
 	super deleteBeforeCursor
 ]

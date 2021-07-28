@@ -792,7 +792,7 @@ SBEditor >> interruptInputDuring: aBlock [
 	cursor := self selection currentTextMorph ifNotNil: #cursor.
 	self endInput.
 	aBlock value.
-	cursor ifNotNil: [self maybeStartInputAt: cursor]
+	cursor ifNotNil: [self startInput: self selection at: cursor replacingContents: false]
 ]
 
 { #category : #testing }
@@ -845,37 +845,6 @@ SBEditor >> markChangesAfterCommand: artefacts [
 		
 		artefact triggerEvent: #changed.
 		self allBlocksDo: [:block | block artefactChanged: artefact]]
-]
-
-{ #category : #input }
-SBEditor >> maybeStartInputAt: aNumber [
-
-	self maybeStartInputDo: [:textMorph | self startInput: self selection at: aNumber replacingContents: false]
-]
-
-{ #category : #'as yet unclassified' }
-SBEditor >> maybeStartInputDo: aBlock [
-
-	^ (inputMapping defaultState = #input and: [(self selection ifNotNil: #currentTextMorph) notNil and: [#(command input) includes: self mode]])
-		ifTrue: [aBlock value: self selection currentTextMorph]
-]
-
-{ #category : #input }
-SBEditor >> maybeStartInputFromEnd [
-
-	self maybeStartInputDo: [:textMorph | self startInput: self selection at: 900000000 replacingContents: false]
-]
-
-{ #category : #input }
-SBEditor >> maybeStartInputFromStart [
-
-	self maybeStartInputDo: [:textMorph | self startInput: self selection at: 0 replacingContents: false]
-]
-
-{ #category : #input }
-SBEditor >> maybeStartInputNear: aPoint [
-
-	self maybeStartInputDo: [:textMorph | self startInput: self selection at: (textMorph cursorIndexForPosition: aPoint) replacingContents: false]
 ]
 
 { #category : #accessing }
@@ -1248,9 +1217,6 @@ SBEditor >> removeHelperTimer [
 SBEditor >> replaceInput: aMorph [
 	" inform the editor that the current input morph has been replaced by another where input should continue "
 
-	"self assert: currentInput notNil.
-	currentInput := aMorph.
-	self select: aMorph containingSandblock"
 	self cursor replaceSelected: aMorph
 ]
 
@@ -1401,16 +1367,14 @@ SBEditor >> startDrag: anEvent [
 SBEditor >> startInput: aMorph at: aNumber replacingContents: aBoolean [
 
 	self cursor startInput: aMorph at: aNumber replacingContents: aBoolean
-	"aMorph ifNil: [^ nil].
-	
-	aMorph = self selection ifTrue: [^ aMorph currentTextMorph moveCursorTo: aNumber].
-	
-	currentInput := aMorph.
-	(aMorph startInputAt: aNumber replacingContents: aBoolean)
-		ifNotNil: [:cmd |
-			currentInputCommand := cmd.
-			self mode: #input]
-		ifNil: [currentInput := nil]"
+]
+
+{ #category : #input }
+SBEditor >> startInputFromEnd [
+
+	(self selection lastMorphThat: [:b | b isSandblock and: [b startInputCommand notNil]])
+		ifNotNil: [:b | b startInput]
+		ifNil: [self selection lastDeepChild]
 ]
 
 { #category : #'action helpers' }

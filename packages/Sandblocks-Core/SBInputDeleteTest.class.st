@@ -93,3 +93,19 @@ SBInputDeleteTest >> testDeleteInNestedArray [
 	editor performForSelection: #deleteBeforeCursor.
 	self assert: '[(self square).\]' withCRs equals: block sourceString
 ]
+
+{ #category : #'as yet unclassified' }
+SBInputDeleteTest >> testNestedSends [
+
+	| block |
+	block := '[a squared s]' parseAsSandblock.
+	self editorFor: block.
+	
+	block statements first messageParts first
+		select;
+		startInput.
+	block statements first messageParts first performAction: #deleteBeforeCursor.
+	block statements first messageParts first performAction: #deleteBeforeCursor.
+	block statements first messageParts first performAction: #deleteBeforeCursor.
+	self assert: 'square' equals: block statements first messageParts first contents
+]

@@ -357,7 +357,7 @@ SBStGrammarHandler >> useArgument: aNumber [
 				self block sandblockEditor do: (SBReplaceCommand new
 					replacer: (SBStName contents: content);
 					target: self block)].
-		editor maybeStartInputFromEnd]
+		editor startInputFromEnd]
 ]
 
 { #category : #'actions input' }
@@ -428,7 +428,7 @@ SBStGrammarHandler >> wrapInArrayType: aSymbol [
 			targets: selected;
 			wrap: [:outer :inner | outer type: aSymbol contents: inner];
 			yourself].
-	self block sandblockEditor maybeStartInputFromStart
+	self block sandblockEditor startInput
 ]
 
 { #category : #actions }
@@ -461,7 +461,7 @@ SBStGrammarHandler >> wrapInBlock [
 			targets: selected;
 			wrap: [:outer :inner | outer statements: inner];
 			yourself].
-	self block sandblockEditor maybeStartInputFromStart
+	self block sandblockEditor startInput
 ]
 
 { #category : #actions }
@@ -524,7 +524,7 @@ SBStGrammarHandler >> wrapInReturn [
 		inner: self block;
 		wrap: [:outer :inner | outer expression: inner];
 		yourself).
-	self block sandblockEditor maybeStartInputFromEnd
+	self block sandblockEditor startInputFromEnd
 ]
 
 { #category : #actions }
