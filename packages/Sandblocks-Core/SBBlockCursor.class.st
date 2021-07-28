@@ -426,6 +426,9 @@ SBBlockCursor >> step [
 
 	cursorShown := cursorShown not.
 	blinkCount := blinkCount + 1.
+	
+	cursorPosition valid ifFalse: [^ self cursorPosition: SBCursorNone new explicitMove: false axis: #none].
+	
 	self bounds: cursorPosition bounds.
 	self changed.
 	self selectedBlock ifNotNil: #changed

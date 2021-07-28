@@ -189,3 +189,9 @@ SBCursorPosition >> startOrAddToMultiSelection: aBlock [
 { #category : #'as yet unclassified' }
 SBCursorPosition >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 ]
+
+{ #category : #'as yet unclassified' }
+SBCursorPosition >> valid [
+
+	^ self block notNil and: [self block isInWorld]
+]
