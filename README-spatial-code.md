@@ -20,7 +20,7 @@ Our approach to solving this is to arrange whole software systems spatially on a
 
 ## Installing
 
-You can either directly use the [latest release][https://github.com/tom95/sandblocks/releases/latest/download/sandblocks-all.zip] or install it in your Squeak 5.3 or trunk image as shown below.
+You can either directly use the [latest release](https://github.com/tom95/sandblocks/releases/latest/download/sandblocks-all.zip) or install it in your Squeak 5.3 or trunk image as shown below.
 
 To install it in an existing image, run:
 ```smalltalk
