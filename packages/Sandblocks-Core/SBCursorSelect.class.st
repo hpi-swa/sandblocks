@@ -72,6 +72,12 @@ SBCursorSelect >> mode [
 { #category : #'as yet unclassified' }
 SBCursorSelect >> moveHorizontal: aNumber wordWise: aBoolean [
 
+	aNumber > 0 ifTrue: [
+		^ self
+			adjacentPosition: aNumber
+			to: self
+			in: self block sandblockEditor
+			that: [:p | ((p block hasOwner: self block) or: [p block = self block]) not and: [(p isKindOf: SBCursorSelect) not or: [p block startInputCommand isNil]]]].
 	^ self adjacentPosition: aNumber in: self block sandblockEditor
 ]
 
