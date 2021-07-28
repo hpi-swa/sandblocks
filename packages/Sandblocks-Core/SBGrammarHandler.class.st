@@ -148,7 +148,7 @@ SBGrammarHandler >> selectStartOfStatement [
 
 	(self block containingStatement ifNil: [self block containingArtefact]) firstDeepChild select.
 	
-	self block sandblockEditor startInput.
+	self block startInput.
 	self block sandblockEditor cursor updateHorizontalOffset
 ]
 

@@ -34,6 +34,14 @@ Morph >> asThumbnail: converter [
 	converter do: [self thumbnail]
 ]
 
+{ #category : #'*Sandblocks-Core' }
+Morph >> blocksAt: aPoint do: aBlock [
+
+	(self fullBounds containsPoint: aPoint) ifFalse: [^ self].
+	self submorphsDo: [:m | m blocksAt: ((m transformedFrom: self) globalPointToLocal: aPoint) do: aBlock].
+	(self isSandblock and: [self bounds containsPoint: aPoint]) ifTrue: [aBlock value: self]
+]
+
 { #category : #'*Sandblocks-Core-layout' }
 Morph >> calculateSizeForWidth: aNumber [
 
@@ -87,6 +95,12 @@ Morph >> extent: aPoint [
 	self changed.
 
 	self triggerEvent: #extentChanged.
+]
+
+{ #category : #'*Sandblocks-Core' }
+Morph >> firstBlockAt: aPoint do: aBlock [
+
+	self blocksAt: aPoint do: [:b | ^ aBlock value: b]
 ]
 
 { #category : #'*Sandblocks-Core' }

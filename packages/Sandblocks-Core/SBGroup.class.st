@@ -140,15 +140,15 @@ SBGroup >> computeVerticalEdges [
 
 { #category : #'as yet unclassified' }
 SBGroup >> computeVertices [
-	
+
 	| verticalEdges newVertices |
-	verticalEdges := self computeVerticalEdges.	
+	verticalEdges := self computeVerticalEdges.
 	newVertices := OrderedCollection new.
 	
 	self
 		addVerticesTo: newVertices from: verticalEdges side: #top;
 		addVerticesTo: newVertices from: verticalEdges side: #bottom;
-		setVertices: newVertices.
+		setVertices: newVertices
 ]
 
 { #category : #'as yet unclassified' }

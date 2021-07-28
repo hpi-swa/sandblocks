@@ -57,7 +57,7 @@ SBPreferences class >> edgePanZone: aNumber [
 SBPreferences class >> enableForceLayout [
 	<preference: 'Enable force-driven layout for blocks' category: 'sandblocks' description: '' type: #Boolean>
 
-	^ EnableForceLayout ifNil: [false]
+	^ EnableForceLayout ifNil: [true]
 ]
 
 { #category : #'as yet unclassified' }

@@ -2192,9 +2192,7 @@ SBBlock >> selectArtefact [
 
 	(self containingArtefact = self
 		ifTrue: [self parentSandblock containingArtefact]
-		ifFalse: [self containingArtefact]) ifNotNil: #select.
-	
-	self sandblockEditor startInput
+		ifFalse: [self containingArtefact]) ifNotNil: #select
 ]
 
 { #category : #actions }
