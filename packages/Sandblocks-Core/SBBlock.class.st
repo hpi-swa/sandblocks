@@ -518,6 +518,14 @@ SBBlock >> contents: aString [
 	self currentTextMorph ifNotNil: [:t | t contents: aString]
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> continueInput [
+
+	(self startInputCommand
+		ifNotNil: [self]
+		ifNil: [self nextBlockThat: [:m | m startInputCommand notNil]]) ifNotNil: [:m | ((m hasOwner: self) or: [m = self]) ifTrue: [self sandblockEditor startInput: m at: 900000000 replacingContents: false]]
+]
+
 { #category : #actions }
 SBBlock >> convertTo [
 	<action>
@@ -2281,7 +2289,7 @@ SBBlock >> startInput [
 
 	(self startInputCommand
 		ifNotNil: [self]
-		ifNil: [self nextBlockThat: [:m | m startInputCommand notNil]]) ifNotNil: [:m | ((m hasOwner: self) or: [m = self]) ifTrue: [self sandblockEditor startInput: m at: 900000000 replacingContents: false]]
+		ifNil: [self nextBlockThat: [:m | m startInputCommand notNil]]) ifNotNil: [:m | ((m hasOwner: self) or: [m = self]) ifTrue: [self sandblockEditor startInput: m at: 1 replacingContents: false]]
 ]
 
 { #category : #input }

@@ -103,7 +103,7 @@ SBInputDeleteTest >> testNestedSends [
 	
 	block statements first messageParts first
 		select;
-		startInput.
+		startInputAtEnd.
 	block statements first messageParts first performAction: #deleteBeforeCursor.
 	block statements first messageParts first performAction: #deleteBeforeCursor.
 	block statements first messageParts first performAction: #deleteBeforeCursor.

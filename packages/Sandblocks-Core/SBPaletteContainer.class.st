@@ -126,7 +126,7 @@ SBPaletteContainer >> markCopyPlaceholder: aBlock [
 { #category : #'as yet unclassified' }
 SBPaletteContainer >> newNullBlock [
 
-	^ SBUnknown new grammarHandler: self grammarHandler
+	^ SBUnknown new
 ]
 
 { #category : #'as yet unclassified' }

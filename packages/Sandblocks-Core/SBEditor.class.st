@@ -1373,7 +1373,7 @@ SBEditor >> startInput: aMorph at: aNumber replacingContents: aBoolean [
 SBEditor >> startInputFromEnd [
 
 	(self selection lastMorphThat: [:b | b isSandblock and: [b startInputCommand notNil]])
-		ifNotNil: [:b | b startInput]
+		ifNotNil: [:b | self sandblockEditor startInput: b at: 900000000 replacingContents: false]
 		ifNil: [self selection lastDeepChild]
 ]
 

@@ -61,7 +61,7 @@ SBScmLiteral >> deleteBeforeCursor [
 					do: (SBReplaceCommand new
 						target: self;
 						replacer: name);
-					startInput]]].
+					startInputAtEnd]]].
 	
 	^ super deleteBeforeCursor
 ]

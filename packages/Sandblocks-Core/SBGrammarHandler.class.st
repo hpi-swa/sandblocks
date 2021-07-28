@@ -223,7 +223,7 @@ SBGrammarHandler >> wrap: aBlock do: aWrapBlock with: aNode focusOuter: aFocusBl
 			shouldMergeWithNext: false;
 			wrap: aWrapBlock).
 	
-	(aFocusBlock ifNotNil: [aFocusBlock value: aNode] ifNil: [aNode]) startInput
+	(aFocusBlock ifNotNil: [aFocusBlock value: aNode] ifNil: [aNode]) continueInput
 ]
 
 { #category : #actions }

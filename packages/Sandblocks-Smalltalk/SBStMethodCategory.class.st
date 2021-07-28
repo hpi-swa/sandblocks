@@ -11,6 +11,9 @@ Class {
 { #category : #'as yet unclassified' }
 SBStMethodCategory >> addMethods [
 
+	self flag: #fixme. " if we are as yet unsaved, don't try and read methods "
+	(self relatedClass isKindOf: SBStClass) ifTrue: [^ self].
+
 	(self relatedClass organization listAtCategoryNamed: savedCategoryName) sorted do: [:method |
 		self addMorphBack: ((class lookupSelector: method) asSandblock
 			toggleCollapsed;

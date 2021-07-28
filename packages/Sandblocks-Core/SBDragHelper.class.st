@@ -111,16 +111,11 @@ SBDragHelper >> dropLocation: dropLocation [
 { #category : #'as yet unclassified' }
 SBDragHelper >> dropLocationForInsert: aDropLocation [
 
-	morph
-		convertedFor: (aDropLocation second
-			objectInterfaceNear: aDropLocation third
-			at: (aDropLocation fourth ifTrue: [#before] ifFalse: [#after]))
-		do: [:res |
-			self
-				hintInsertOf: res
-				in: currentDropLocation second
-				near: aDropLocation third
-				before: aDropLocation fourth]
+	self
+		hintInsertOf: aDropLocation fifth
+		in: currentDropLocation second
+		near: aDropLocation third
+		before: aDropLocation fourth
 ]
 
 { #category : #'as yet unclassified' }
@@ -267,10 +262,10 @@ SBDragHelper >> mouseMove: anEvent [
 					blockAtCursor fixedNumberOfChildren
 						ifTrue: [{#replace. blockAtCursor}]
 						ifFalse: [
-							self
-								closestAdjacentTo: anEvent position
-								in: blockAtCursor
-								do: [:adjacent :before | {#insert. blockAtCursor. adjacent. before}]]]]
+							self closestAdjacentTo: anEvent position in: blockAtCursor do: [:adjacent :before |
+								(morph
+									convertedFor: (blockAtCursor objectInterfaceNear: adjacent at: (before ifTrue: [#before] ifFalse: [#after]))
+									do: [:res | {#insert. blockAtCursor. adjacent. before. res}]) ifNil: [{#replace. blockAtCursor}]]]]]
 		ifNil: [#(#none nil)].
 	
 	(currentDropLocation hasEqualElements: dropLocation) ifFalse: [self dropLocation: dropLocation].

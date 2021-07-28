@@ -13,13 +13,8 @@ SBCursorPosition >> = aPosition [
 { #category : #'as yet unclassified' }
 SBCursorPosition >> adjacentPosition: aNumber in: anEditor [
 
-	^ self
-		adjacentPosition: aNumber
-		to: self
-		in: anEditor
-		that: [:s |
-			" skip over selects unless that block would otherwise not get visited at all "
-			(s isKindOf: SBCursorSelect) not or: [s block currentTextMorph isNil and: [s block hasChildSandblocks not]]]
+	^ self adjacentPosition: aNumber to: self in: (self navigationRootIn: anEditor) that: [:s | " skip over selects unless that block would otherwise not get visited at all "
+	(s isKindOf: SBCursorSelect) not or: [s block currentTextMorph isNil and: [s block hasChildSandblocks not]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -28,7 +23,7 @@ SBCursorPosition >> adjacentPosition: aNumber to: aPosition in: anEditor that: a
 	| takeNext last |
 	takeNext := false.
 	last := nil.
-	self cursorPositionsIn: anEditor do: [:pos |
+	self cursorPositionsIn: (self navigationRootIn: anEditor) do: [:pos |
 		(takeNext and: [aBlock value: pos]) ifTrue: [^ pos].
 		pos = aPosition ifTrue: [aNumber > 0 ifTrue: [takeNext := true] ifFalse: [^ last]].
 		(aBlock value: pos) ifTrue: [last := pos]].
@@ -154,6 +149,12 @@ SBCursorPosition >> moveHorizontal: aNumber wordWise: aBoolean [
 SBCursorPosition >> multiSelection [
 
 	^ {self block}
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorPosition >> navigationRootIn: anEditor [
+
+	^ self block containingFloat
 ]
 
 { #category : #'as yet unclassified' }
