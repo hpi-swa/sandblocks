@@ -367,12 +367,6 @@ SBStMessageSend >> messageSend [
 	^ self
 ]
 
-{ #category : #accessing }
-SBStMessageSend >> moveCursorTo: aNumber [
-
-	signature moveCursorTo: aNumber
-]
-
 { #category : #'as yet unclassified' }
 SBStMessageSend >> newNullBlock [
 

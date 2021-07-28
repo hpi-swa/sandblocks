@@ -95,12 +95,6 @@ SBScmLiteral >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBScmLiteral >> moveCursorTo: aNumber [
-
-	self currentTextMorph moveCursorTo: aNumber
-]
-
-{ #category : #'as yet unclassified' }
 SBScmLiteral >> preferredColorIn: aColorPolicy [
 
 	^ aColorPolicy literal

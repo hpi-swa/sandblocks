@@ -162,12 +162,6 @@ SBUnknown >> lookupAction: aSymbol [
 ]
 
 { #category : #accessing }
-SBUnknown >> moveCursorTo: aNumber [
-
-	self currentTextMorph moveCursorTo: aNumber
-]
-
-{ #category : #accessing }
 SBUnknown >> newNullBlock [
 
 	^ self veryDeepCopy

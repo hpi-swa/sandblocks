@@ -82,12 +82,6 @@ SBStLiteral >> keyStroke: anEvent [
 	self acceptInputEvent: anEvent
 ]
 
-{ #category : #'as yet unclassified' }
-SBStLiteral >> moveCursorTo: aNumber [
-
-	text moveCursorTo: aNumber
-]
-
 { #category : #'colors and color policies' }
 SBStLiteral >> preferredColorIn: aColorPolicy [
 

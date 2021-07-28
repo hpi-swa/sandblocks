@@ -86,12 +86,6 @@ SBStPragma >> messageParts [
 ]
 
 { #category : #'as yet unclassified' }
-SBStPragma >> moveCursorTo: aNumber [
-
-	signature moveCursorTo: aNumber
-]
-
-{ #category : #'as yet unclassified' }
 SBStPragma >> prefix [
 
 	^ '<> '
