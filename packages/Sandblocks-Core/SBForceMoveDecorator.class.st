@@ -48,26 +48,31 @@ SBForceMoveDecorator >> additionalForces: anObject [
 { #category : #'as yet unclassified' }
 SBForceMoveDecorator >> applyForces [
 
-	| newSpeedMultiplier |
+	| newSpeedMultiplier forceVelocity |
 	self isPinned ifTrue: [^ self morph position: self pinnedPosition].
 	self isDragging ifTrue: [^ self].
 	
 	idealPosition ifNil: [idealPosition := self morph position].
 	
-	velocity := 0 @ 0.
-	self additionalForces do: [:forceConnection | velocity := velocity + (forceConnection forceFor: self morph)].
-	velocity isZero ifFalse: [velocity := velocity normalized * velocity r sqrt].
+	forceVelocity := 0 @ 0.
+	self additionalForces do: [:forceConnection | forceVelocity := forceVelocity + (forceConnection forceFor: self morph)].
+	forceVelocity isZero ifFalse: [forceVelocity := forceVelocity normalized * forceVelocity r sqrt].
 	
-	self morph owner submorphsDo: [:otherMorph | (otherMorph isSandblock and: [otherMorph preventOcclusion and: [otherMorph ~= self morph and: [otherMorph isDragging not]]]) ifTrue: [velocity := velocity + (self forceAgainst: otherMorph)]].
+	self morph owner submorphsDo: [:otherMorph | (otherMorph isSandblock and: [otherMorph preventOcclusion and: [otherMorph ~= self morph and: [otherMorph isDragging not]]]) ifTrue: [forceVelocity := forceVelocity + (self forceAgainst: otherMorph)]].
 	
-	newSpeedMultiplier := self speedMultiplier * (self changedDirection ifTrue: [0.25] ifFalse: [1.1]).
+	newSpeedMultiplier := self speedMultiplier * ((self changedDirection: forceVelocity) ifTrue: [0.25] ifFalse: [1.1]).
 	self speedMultiplier: (newSpeedMultiplier clampLow: 0.01 high: 0.5).
 	
-	(velocity r < 0.5 or: [self speedMultiplier <= 0.01]) ifFalse: [idealPosition := self morph position + (velocity * self speedMultiplier)].
-	self previousVelocity: velocity.
-	self morph position: idealPosition.
+	(forceVelocity r < 2.0 or: [self speedMultiplier <= 0.01]) ifFalse: [idealPosition := idealPosition + (forceVelocity * self speedMultiplier)].
+	self previousVelocity: forceVelocity.
 	velocity := 0 @ 0.
 	forceSteps := forceSteps - 1
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> applyIdealPosition [
+	
+	self morph position: self idealPosition 
 ]
 
 { #category : #'as yet unclassified' }
@@ -98,11 +103,25 @@ SBForceMoveDecorator >> blockAtPoint: aPoint [
 ]
 
 { #category : #'as yet unclassified' }
-SBForceMoveDecorator >> changedDirection [
+SBForceMoveDecorator >> changedDirection: aVelocity [
 	
-	^ velocity isZero or:
+	^ aVelocity isZero or:
 		[self previousVelocity isZero] or:
-		[(velocity angleWith: self previousVelocity) between: Float pi * 0.5 and: Float pi * 1.5]
+		[(aVelocity angleWith: self previousVelocity) between: Float pi * 0.5 and: Float pi * 1.5]
+]
+
+{ #category : #'as yet unclassified' }
+SBForceMoveDecorator >> coordinateForces [
+
+	| decorators |
+	decorators := Array streamContents: [:stream |
+		self morph owner submorphsDo: [:aMorph | aMorph isSandblock ifTrue: [aMorph withDecorator: SBForceMoveDecorator do: [:decorator | stream nextPut: decorator] ifAbsent: []]]
+		].
+
+	50 timesRepeat: [
+		decorators do: [:decorator | decorator applyForces].
+		decorators do: [:decorator | decorator applyIdealPosition]
+		]
 ]
 
 { #category : #'as yet unclassified' }
@@ -427,7 +446,7 @@ SBForceMoveDecorator >> step [
 	self isDragging ifTrue: [self panWhenNearEdge].
 	
 	(forceSteps > 0 or: self morph sandblockEditor keepForcesActivated)
-		ifTrue: [self isForceCoordinator ifTrue: [50 timesRepeat: [self morph owner submorphsDo: [:aMorph | aMorph isSandblock ifTrue: [aMorph withDecorator: SBForceMoveDecorator do: [:decorator | decorator applyForces]]]]]]
+		ifTrue: [self isForceCoordinator ifTrue: [self coordinateForces]]
 		ifFalse: [
 			super step.
 			idealPosition := self morph position]
