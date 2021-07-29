@@ -138,10 +138,20 @@ SBBrowserEditor >> modelSelection [
 { #category : #'model access' }
 SBBrowserEditor >> modelSelection: anObject [
 
-	anObject isBehavior ifTrue: [^ model selectClass: anObject].
+	anObject isBehavior ifTrue: [
+		model selectClass: anObject.
+		model
+			changed: #systemCategoryList;
+			changed: #classList.
+		^ self].
 	anObject isCompiledMethod ifTrue: [
 		model selectedClass ~= anObject methodClass ifTrue: [model selectClass: anObject methodClass theNonMetaClass].
-		(model respondsTo: #selectMessageNamed:) ifTrue: [^ model selectMessageNamed: anObject selector]]
+		(model respondsTo: #selectMessageCategoryNamed:) ifTrue: [model selectMessageCategoryNamed: anObject methodReference category].
+		(model respondsTo: #selectMessageNamed:) ifTrue: [model selectMessageNamed: anObject selector].
+		model
+			changed: #classList;
+			changed: #messageCategoryList;
+			changed: #messageList]
 ]
 
 { #category : #'as yet unclassified' }

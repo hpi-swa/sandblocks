@@ -370,9 +370,7 @@ SBStMessageSend >> messageSend [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> newNullBlock [
 
-	^ self isInCascade
-		ifTrue: [SBStMessageSend new receiver: nil selector: #'']
-		ifFalse: [super newNullBlock]
+	^ super newNullBlock
 ]
 
 { #category : #'as yet unclassified' }
