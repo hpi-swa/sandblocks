@@ -107,7 +107,7 @@ SBStContainer >> isArtefact [
 { #category : #testing }
 SBStContainer >> isMethod [
 
-	^ true
+	^ false
 ]
 
 { #category : #'artefact protocol' }

@@ -326,6 +326,19 @@ SBStMessagePart >> updateSuggestions [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMessagePart >> useAsStSymbol [
+	<action>
+	<actionValidIf: #isUnary>
+
+	self sandblockEditor do: (SBCombinedCommand newWith: {
+		SBMutatePropertyCommand new target: self selector: #contents value: ''.
+		SBInsertCommand new
+			container: self owner;
+			morph: (SBStSymbol new contents: self contents);
+			index: self submorphIndex + 1})
+]
+
+{ #category : #'as yet unclassified' }
 SBStMessagePart >> useSuggestion: aString [
 
 	self messageSend useSuggestion: aString

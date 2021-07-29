@@ -1174,6 +1174,7 @@ SBEditor >> redo [
 	<inputAction>
 	<globalAction>
 
+	self endInput.
 	history redoDo: [:block :artefacts |
 		self select: block.
 		self markChangesAfterCommand: artefacts]
@@ -1447,7 +1448,7 @@ SBEditor >> togglePalette [
 			paletteContainer delete.
 			self removeActionsWithReceiver: paletteContainer]
 		ifNil: [
-			self submorphs third addMorphFront: paletteContainer.
+			self submorphs second addMorphFront: paletteContainer.
 			self when: #selectionChanged send: #selectionChanged: to: paletteContainer.
 			paletteContainer selectionChanged: self selection]
 ]

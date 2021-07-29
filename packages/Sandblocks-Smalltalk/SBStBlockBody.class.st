@@ -228,7 +228,7 @@ SBStBlockBody >> isExpression [
 { #category : #testing }
 SBStBlockBody >> isMethodBody [
 
-	^ self owner notNil and: [self parentSandblock isMethod]
+	^ self owner notNil and: [self parentSandblock isArtefact]
 ]
 
 { #category : #'as yet unclassified' }

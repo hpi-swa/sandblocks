@@ -62,9 +62,17 @@ SBMutatePropertyCommand >> target: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBMutatePropertyCommand >> target: anObject selector: aSymbol value: aNewObject [
+
+	self target: anObject.
+	self selector: aSymbol.
+	self value: aNewObject
+]
+
+{ #category : #'as yet unclassified' }
 SBMutatePropertyCommand >> undo [
 
-	target perform: selector asSimpleSetter with: oldValue.
+	target perform: (mutateSelector ifNil: [selector asSimpleSetter]) with: oldValue.
 	^ target
 ]
 
