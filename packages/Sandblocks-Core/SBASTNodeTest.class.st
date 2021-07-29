@@ -112,10 +112,10 @@ SBASTNodeTest >> testUndoWrapInArray [
 	block := '[self squared. self changeTableLayout. self resize]' parseAsSandblock.
 	selection := block statements first.
 	editor := self methodFor: block.
+	editor select: selection.
 	editor startOrAddToMultiSelection: block statements first.
 	editor startOrAddToMultiSelection: block statements second.
 	editor startOrAddToMultiSelection: block statements third.
-	editor select: selection.
 	selection performAction: #wrapInDynamicArray.
 	self assert: block statements first isArrayBlock.
 	self assert: block statements first submorphs first = selection.
@@ -135,10 +135,10 @@ SBASTNodeTest >> testUndoWrapInBlock [
 	block := '[self squared. self changeTableLayout. self resize]' parseAsSandblock.
 	selection := block statements first.
 	editor := self methodFor: block.
+	editor select: selection.
 	editor startOrAddToMultiSelection: block statements first.
 	editor startOrAddToMultiSelection: block statements second.
 	editor startOrAddToMultiSelection: block statements third.
-	editor select: selection.
 	selection performAction: #wrapInBlock.
 	self assert: block statements first isBlockBody.
 	self assert: block statements first statements first = selection.
@@ -228,9 +228,9 @@ SBASTNodeTest >> testWrapInCascadeMessageParts [
 	block := '[5 yourself. 5 parse: 2]' parseAsSandblock.
 	selection := block statements first.
 	editor := self methodFor: block.
+	editor select: selection.
 	editor startOrAddToMultiSelection: block statements first.
 	editor startOrAddToMultiSelection: block statements second messageParts first.
-	editor select: selection.
 	selection wrapInCascade.
 	self assert: block statements first isCascade.
 	self assert: block statements first messages first = selection.
@@ -245,9 +245,9 @@ SBASTNodeTest >> testWrapInCascadeMultiSelection [
 	block := '[5 squared. 5 + 2]' parseAsSandblock.
 	selection := block statements first.
 	editor := self methodFor: block.
+	editor select: selection.
 	editor startOrAddToMultiSelection: block statements first.
 	editor startOrAddToMultiSelection: block statements second.
-	editor select: selection.
 	selection wrapInCascade.
 	self assert: block statements first isCascade.
 	self assert: block statements first messages first = selection.

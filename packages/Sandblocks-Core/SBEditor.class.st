@@ -384,18 +384,21 @@ SBEditor >> copyBuffer: aMorphOrCollection [
 ]
 
 { #category : #accessing }
-SBEditor >> copyBufferForContext: anInterface do: aBlock ifWrappingDo: aWrapBlock [
+SBEditor >> copyBufferForContext: anInterface reversedDo: aBlock ifWrappingDo: aWrapBlock [
 
 	^ (copyBuffer notNil and: [copyBuffer unpackSelection textContentsForCopy = Clipboard clipboardText string])
 		ifTrue: [
 			copyBuffer wrapsAround
 				ifTrue: [aWrapBlock value: copyBuffer unpackSelection veryDeepCopy]
 				ifFalse: [
-					copyBuffer submorphs veryDeepCopy withIndexDo: [:morph :index |
+					copyBuffer submorphs veryDeepCopy reversed withIndexDo: [:morph :index |
 						morph
 							convertedFor: anInterface
 							do: [:repr | aBlock cull: repr cull: index cull: index = copyBuffer submorphCount]]]]
-		ifFalse: [Clipboard clipboardText string convertedFor: anInterface do: [:repr | aBlock cull: repr cull: 1 cull: true]]
+		ifFalse: [
+			Clipboard clipboardText string
+				convertedFor: anInterface
+				do: [:repr | aBlock cull: repr cull: 1 cull: true]]
 ]
 
 { #category : #accessing }
@@ -1336,7 +1339,7 @@ SBEditor >> select: aBlock [
 
 	self assert: (aBlock isNil or: [aBlock isSandblock]).
 	
-	aBlock ~= self selection ifTrue: [self cursor select: aBlock]
+	self cursor select: aBlock
 ]
 
 { #category : #selection }

@@ -52,6 +52,40 @@ SBClipboardTest >> testCopyString [
 ]
 
 { #category : #'as yet unclassified' }
+SBClipboardTest >> testPasteAfter [
+
+	| block selection editor |
+	block := '[a. b. c. self selected: 5]' parseAsSandblock.
+	selection := block statements last.
+	editor := self methodFor: block.
+	block statements first select.
+	(block statements viewFrom: 1 to: 3) do: #startOrAddToMultiSelection.
+	block statements first copyToBuffer.
+	selection pasteAfter.
+	self assert: 'a' equals: block statements fifth contents.
+	self assert: 'b' equals: block statements sixth contents.
+	self assert: 'c' equals: block statements seventh contents
+]
+
+{ #category : #'as yet unclassified' }
+SBClipboardTest >> testPasteMultiple [
+
+	| block selection editor |
+	block := '[a. b. c. self selected: 5]' parseAsSandblock.
+	selection := block statements last.
+	editor := self methodFor: block.
+	block statements first select.
+	(block statements viewFrom: 1 to: 3) do: #startOrAddToMultiSelection.
+	block statements first copyToBuffer.
+	selection startInputAtEnd.
+	editor performForSelection: #moveCursorRight.
+	selection pasteReplace.
+	self assert: 'a' equals: block statements fifth contents.
+	self assert: 'b' equals: block statements sixth contents.
+	self assert: 'c' equals: block statements seventh contents
+]
+
+{ #category : #'as yet unclassified' }
 SBClipboardTest >> testPasteString [
 
 	| block from |

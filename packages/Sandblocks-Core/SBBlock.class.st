@@ -616,7 +616,8 @@ SBBlock >> copyToBuffer [
 	<multiSelectAction>
 
 	self sandblockEditor copyBuffer: self sandblockEditor multiSelection.
-	self performAction: #copyString
+	self performAction: #copyString.
+	self sandblockEditor endMultiSelection
 ]
 
 { #category : #accessing }
@@ -737,9 +738,7 @@ SBBlock >> deleteBlock [
 
 	self isSelected ifFalse: [^ self sandblockEditor do: (self parentSandblock deleteCommandFor: self)].
 	
-	self sandblockEditor
-		doMultiSelectionEach: [:selected | selected parentSandblock deleteCommandFor: selected];
-		startInputFromEnd
+	self sandblockEditor doMultiSelectionEach: [:selected | selected parentSandblock deleteCommandFor: selected]
 ]
 
 { #category : #actions }
@@ -1835,12 +1834,7 @@ SBBlock >> pasteBeforeOrAfter: aBeforeBoolean [
 		copyBufferForContext: (self parentSandblock
 			objectInterfaceNear: self
 			at: (aBeforeBoolean ifTrue: [#before] ifFalse: [#after]))
-		do: [:repr :index :isLast |
-			self sandblockEditor do: (SBInsertCommand new
-				morph: (repr center: self center);
-				container: self owner;
-				index: (aBeforeBoolean ifTrue: [self submorphIndex] ifFalse: [self submorphIndex + index]);
-				shouldMergeWithNext: isLast)]
+		reversedDo: [:repr :index :isLast | self sandblockEditor do: ((self parentSandblock insertCommandRequest: repr near: self before: aBeforeBoolean) shouldMergeWithNext: isLast not)]
 		ifWrappingDo: [:block | self wrapSelectionWith: block unpackSelection veryDeepCopy]
 ]
 
@@ -1848,23 +1842,25 @@ SBBlock >> pasteBeforeOrAfter: aBeforeBoolean [
 SBBlock >> pasteReplace [
 	<action>
 
-	| position |
-	position := self sandblockEditor cursor cursorPosition.
-	self sandblockEditor
+	| position editor |
+	editor := self sandblockEditor.
+	position := editor cursor cursorPosition.
+	editor
 		copyBufferForContext: ((position isKindOf: SBCursorInsert)
 			ifTrue: [position objectInterface]
 			ifFalse: [self objectInterface])
-		do: [:block |
-			self sandblockEditor do: ((position isKindOf: SBCursorInsert)
+		reversedDo: [:block :index :isLast |
+			(position isKindOf: SBCursorInsert)
 				ifTrue: [
-					position container
+					editor do: ((position container
 						insertCommandRequest: block
 						near: position adjacent
-						before: position before]
+						before: position before) shouldMergeWithNext: isLast not)]
 				ifFalse: [
-					SBReplaceCommand new
-						target: self;
-						replacer: block])]
+					index = 1 ifTrue: [
+						editor do: (SBReplaceCommand new
+							target: self;
+							replacer: block)]]]
 		ifWrappingDo: [:block | self wrapSelectionWith: block]
 ]
 
@@ -2207,9 +2203,9 @@ SBBlock >> selectLast [
 	<multiSelectAction>
 	<inputAction>
 
-	self containingFloat lastDeepChild select.
-	
-	self sandblockEditor startInputFromEnd
+	self containingFloat lastDeepChild
+		select;
+		startInputAtEnd
 ]
 
 { #category : #actions }
@@ -2224,12 +2220,10 @@ SBBlock >> selectRightMostBlock [
 	<multiSelectAction>
 	<inputAction>
 
-	self containingStatement
-		ifNil: [self rightMostBlock select]
-		ifNotNil: [:statement | statement rightMostBlock select].
-	
-	self sandblockEditor startInputFromEnd.
-	self sandblockEditor cursor updateHorizontalOffset
+	self containingStatement ifNil: [self rightMostBlock select] ifNotNil: [:statement |
+		statement rightMostBlock
+			select;
+			startInputAtEnd]
 ]
 
 { #category : #actions }
@@ -2499,7 +2493,9 @@ SBBlock >> textContents [
 { #category : #accessing }
 SBBlock >> textContentsForCopy [
 
-	^ self textContents
+	^ self grammarHandler
+		ifNotNil: [:g | g block: self; textContentsForCopy]
+		ifNil: [self textContents]
 ]
 
 { #category : #actions }
