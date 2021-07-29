@@ -4,6 +4,23 @@ Class {
 	#category : #'Sandblocks-Ohm'
 }
 
+{ #category : #'example grammars' }
+SBGrammarTransformer class >> all [
+	"broken"
+
+	SBGrammarTransformer grammarTinyJava simplifyAndOpen.
+	"working"
+	SBGrammarTransformer grammarStatemachine simplifyAndOpen.
+	SBGrammarTransformer grammarSonificationBlocks simplifyAndOpen.
+	SBGrammarTransformer grammarQL simplifyAndOpen.
+	SBGrammarTransformer grammarRascalJava18 simplifyAndOpen.
+	SBGrammarTransformer grammarMath simplifyAndOpen.
+	SBGrammarTransformer grammarIki simplifyAndOpen.
+	SBGrammarTransformer grammarRascalJavascript simplifyAndOpen.
+	SBGrammarTransformer grammarMiniJava simplifyAndOpen.
+	^ SBGrammarTransformer grammarCloudLang simplifyAndOpen
+]
+
 { #category : #'generate blocks' }
 SBGrammarTransformer class >> connectorsOf: rule on: aStream original: anOriginalGrammar [
 

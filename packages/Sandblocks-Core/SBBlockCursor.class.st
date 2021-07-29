@@ -19,7 +19,7 @@ SBBlockCursor >> adjacentVerticalCalcDistance: aDistBlock validBlock: aValidBloc
 	| allCandidates candidates candidatesBestDistance tolerance float |
 	float := self selectedBlock containingFloat.
 	tolerance := 10.
-	allCandidates := Array streamContents: [:stream | float allMorphsDo: [:candidate | ((candidate isTextMorph or: [candidate isSandblock and: [candidate hasChildSandblocks not]]) and: [aValidBlock value: candidate]) ifTrue: [stream nextPut: candidate]]].
+	allCandidates := Array streamContents: [:stream | float allVisibleMorphsDo: [:candidate | ((candidate isTextMorph or: [candidate isSandblock and: [candidate hasChildSandblocks not]]) and: [aValidBlock value: candidate]) ifTrue: [stream nextPut: candidate]]].
 	candidates := OrderedCollection new.
 	candidatesBestDistance := 900000000.
 	allCandidates do: [:candidate | | distance |

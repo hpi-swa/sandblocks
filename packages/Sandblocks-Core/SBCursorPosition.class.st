@@ -68,12 +68,16 @@ SBCursorPosition >> cursorPositionsIn: aContainer do: aBlock [
 
 	aContainer isSandblock ifTrue: [self insertCursorIn: aContainer near: nil before: true do: aBlock].
 	
-	aContainer submorphsDo: [:morph |
+	aContainer visibleSubmorphsDo: [:morph |
 		morph isSandblock ifTrue: [
 			self insertCursorIn: aContainer containingSandblock near: morph before: true do: aBlock.
 			aBlock value: (SBCursorSelect new block: morph)].
 		
-		morph isTextMorph ifTrue: [morph containingSandblock startInputCommand ifNotNil: [:command | aBlock value: (SBCursorText new block: morph containingSandblock; currentCommand: command)]].
+		morph isTextMorph ifTrue: [
+			morph containingSandblock startInputCommand ifNotNil: [:command |
+				aBlock value: (SBCursorText new
+					block: morph containingSandblock;
+					currentCommand: command)]].
 		
 		self cursorPositionsIn: morph do: aBlock.
 		

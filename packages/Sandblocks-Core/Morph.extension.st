@@ -16,6 +16,14 @@ Morph >> allMorphsDoBreadthFirst: aBlock [
 	self submorphsDo: [:m | m allMorphsDoBreadthFirst: aBlock]
 ]
 
+{ #category : #'*Sandblocks-Core-hierarchy' }
+Morph >> allVisibleMorphsDo: aBlock [
+
+	self visible ifFalse: [^ self].
+	submorphs do: [:m | m allVisibleMorphsDo: aBlock].
+	aBlock value: self
+]
+
 { #category : #'*Sandblocks-Core-converting' }
 Morph >> asMorphBlock: converter [
 	<convert>
@@ -539,4 +547,10 @@ Morph >> visibleInWorld [
 
 	^ (self firstOwnerSuchThat: [:o | o visible not])
 		ifNotNil: [false] ifNil: [true]
+]
+
+{ #category : #'*Sandblocks-Core-hierarchy' }
+Morph >> visibleSubmorphsDo: aBlock [
+
+	self submorphsDo: [:morph | morph visible ifTrue: [aBlock value: morph]]
 ]

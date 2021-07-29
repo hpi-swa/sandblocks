@@ -451,7 +451,7 @@ SBStGrammarHandler >> wrapInAssignment [
 { #category : #actions }
 SBStGrammarHandler >> wrapInBlock [
 	<multiSelectAction>
-	<actionValidIf: #isExpression>
+	<actionValidIf: #canAppearInBlockBody>
 
 	self assert: self block isSelected.
 	self block sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
