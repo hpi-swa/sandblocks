@@ -162,6 +162,7 @@ SBEditor >> buildBottomPanel [
 		addMorphBack: (modeLabel := SBStringMorph new emphasis: TextEmphasis bold emphasisCode);
 		addMorphBack: (selectionLabel := SBStringMorph new contents: '');
 		addMorphBack: searchInput;
+		addMorphBack: (errors := SBErrorPanel new);
 		addMorphBack: (Morph new
 			extent: 0 @ 0;
 			hResizing: #spaceFill;
@@ -170,22 +171,12 @@ SBEditor >> buildBottomPanel [
 			balloonText: 'Convert to ...';
 			icon: SBIcon iconEye
 				shortcut: (self class anyShortcutForAction: #wrapWithWatch)
-				do: [self selection performAction: #wrapWithWatch]);
+				do: [self performForSelection: #wrapWithWatch]);
 		addMorphBack: (SBButton new
 			balloonText: 'Convert to ...';
 			icon: SBIcon iconRetweet
 				shortcut: (self class anyShortcutForAction: #convertTo)
-				do: [self selection performAction: #convertTo]);
-		addMorphBack: (SBButton new
-			balloonText: 'Copy';
-			icon: SBIcon iconCopy
-				shortcut: (self class anyShortcutForAction: #copyToBuffer)
-				do: [self selection copyToBuffer]);
-		addMorphBack: (SBButton new
-			balloonText: 'Copy around';
-			icon: SBIcon iconClipboard
-				shortcut: (self class anyShortcutForAction: #copyAround)
-				do: [self selection copyAround]);
+				do: [self performForSelection: #convertTo]);
 		addMorphBack: (copyBufferPreview := ImageMorph new
 			image: (Form extent: 1 @ 1);
 			balloonText: 'Pickup clipboard contents';
@@ -751,14 +742,13 @@ SBEditor >> initialize [
 		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		listDirection: #topToBottom;
-		addMorphBack: (errors := SBErrorPanel new
-			disableLayout: true;
-			topLeft: self topLeft;
-			yourself).
+		listDirection: #topToBottom.
 	
 	self wantsMinimalLayout
-		ifTrue: [self addMorphBack: searchInput toggleCollapsed]
+		ifTrue: [
+			self addMorphBack: (SBRow new
+				addMorphBack: searchInput toggleCollapsed;
+				addMorphBack: (errors := SBErrorPanel new))]
 		ifFalse: [self addMorphBack: self buildCommandBar].
 	self addMorphBack: (SBRow new
 		changeTableLayout;

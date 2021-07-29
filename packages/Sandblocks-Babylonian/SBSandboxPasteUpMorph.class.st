@@ -26,3 +26,9 @@ SBSandboxPasteUpMorph >> model [
 
 	^ model
 ]
+
+{ #category : #'as yet unclassified' }
+SBSandboxPasteUpMorph >> wantsDroppedMorph: aMorph event: evt [
+
+	^ false
+]

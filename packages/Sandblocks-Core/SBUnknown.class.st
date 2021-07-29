@@ -187,6 +187,12 @@ SBUnknown >> printOn: aStream [
 	aStream nextPutAll: 'unknown'
 ]
 
+{ #category : #accessing }
+SBUnknown >> sourceString [
+
+	^ ''
+]
+
 { #category : #'text input' }
 SBUnknown >> startInputAt: aNumber replacingContents: aBoolean [
 

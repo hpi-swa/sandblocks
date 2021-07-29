@@ -3,7 +3,7 @@ A SBErrorPanel collects and displays errors that occured in the environment.
 "
 Class {
 	#name : #SBErrorPanel,
-	#superclass : #SBBlock,
+	#superclass : #Morph,
 	#instVars : [
 		'commandBar'
 	],
@@ -20,7 +20,9 @@ SBErrorPanel >> activeErrorDo: aBlock [
 SBErrorPanel >> addError: anError process: aProcess [
 
 	| error |
-	error := SBError new error: anError process: aProcess.
+	error := (SBToggledCode comment: '' active: 1 do: {[SBSmallError new]. [SBError new]})
+		error: anError
+		process: aProcess.
 	self addMorphFront: error.
 	^ error
 ]
@@ -103,7 +105,21 @@ SBErrorPanel >> initialize [
 	self
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		changeTableLayout
+		changeTableLayout;
+		extent: 0 @ 0;
+		color: Color transparent
+]
+
+{ #category : #'as yet unclassified' }
+SBErrorPanel >> lookupGlobalAction: aSymbol [
+
+	^ (self class lookupSelector: aSymbol) ifNotNil: [:m |
+		((m pragmaAt: #globalAction) notNil and: [
+			(m pragmaAt: #actionValidIf:)
+				ifNotNil: [:p | self perform: p arguments first]
+				ifNil: [true]])
+			ifTrue: [m]
+			ifFalse: [nil]]
 ]
 
 { #category : #hierarchy }

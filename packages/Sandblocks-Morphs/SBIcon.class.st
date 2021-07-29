@@ -6039,7 +6039,8 @@ SBIcon >> color: aColor [
 
 	cachedForm := nil.
 	aColor ifNotNil: [super color: aColor] ifNil: [
-		color := aColor]
+		color := aColor.
+		self changed]
 ]
 
 { #category : #drawing }
