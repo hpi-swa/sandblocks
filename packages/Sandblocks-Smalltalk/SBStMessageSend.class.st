@@ -540,19 +540,19 @@ SBStMessageSend >> symbols [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> tryDelete [
 
-	| receiver |
+	| receiver editor |
+	editor := self sandblockEditor.
 	self isInCascade ifTrue: [
-		^ self sandblockEditor
-			do: (SBDeleteCommand new target: self);
-			startInputFromEnd].
+		editor do: (SBDeleteCommand new target: self).
+		^ editor selection startInputAtEnd].
 	
 	receiver := self receiver.
-	self sandblockEditor
+	editor
 		endInput;
 		do: (SBReplaceCommand new
 			target: self;
-			replacer: receiver);
-		startInputFromEnd
+			replacer: receiver).
+	editor selection startInputAtEnd
 ]
 
 { #category : #'as yet unclassified' }

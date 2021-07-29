@@ -77,7 +77,7 @@ SBClipboardTest >> testPasteMultiple [
 	block statements first select.
 	(block statements viewFrom: 1 to: 3) do: #startOrAddToMultiSelection.
 	block statements first copyToBuffer.
-	selection startInputAtEnd.
+	selection select.
 	editor performForSelection: #moveCursorRight.
 	selection pasteReplace.
 	self assert: 'a' equals: block statements fifth contents.

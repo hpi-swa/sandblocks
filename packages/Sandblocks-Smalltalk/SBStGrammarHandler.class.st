@@ -352,12 +352,12 @@ SBStGrammarHandler >> useArgument: aNumber [
 		content := (artefact arguments at: aNumber) contents.
 		editor := self block sandblockEditor.
 		editor mode = #input
-			ifTrue: [self block sandblockEditor endInputWith: content]
+			ifTrue: [editor sandblockEditor endInputWith: content]
 			ifFalse: [
-				self block sandblockEditor do: (SBReplaceCommand new
+				editor do: (SBReplaceCommand new
 					replacer: (SBStName contents: content);
 					target: self block)].
-		editor startInputFromEnd]
+		editor selection startInputAtEnd]
 ]
 
 { #category : #'actions input' }
@@ -524,7 +524,7 @@ SBStGrammarHandler >> wrapInReturn [
 		inner: self block;
 		wrap: [:outer :inner | outer expression: inner];
 		yourself).
-	self block sandblockEditor startInputFromEnd
+	self block startInputAtEnd
 ]
 
 { #category : #actions }

@@ -2364,7 +2364,11 @@ SBBlock >> startInputAt: aNumber replacingContents: aBoolean [
 SBBlock >> startInputAtEnd [
 	<action>
 
-	self sandblockEditor startInput: self at: 9e8 replacingContents: false
+	(self startInputCommand
+		ifNotNil: [self]
+		ifNil: [self lastMorphThat: [:b | b isSandblock and: [b startInputCommand notNil]]])
+		ifNotNil: [:b | self sandblockEditor startInput: b at: 900000000 replacingContents: false]
+		ifNil: [self lastDeepChild select]
 ]
 
 { #category : #actions }
@@ -2576,7 +2580,7 @@ SBBlock >> useSuggestion [
 			(s wouldChange: self)
 				ifTrue: [
 					s useSuggestionOn: self.
-					editor startInputFromEnd]
+					editor selection startInputAtEnd]
 				ifFalse: [self inputNextUnknown]].
 		self removeSuggestionMenu.
 		^ true].

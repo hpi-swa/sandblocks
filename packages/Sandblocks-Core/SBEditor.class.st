@@ -1389,14 +1389,6 @@ SBEditor >> startInput: aMorph at: aNumber replacingContents: aBoolean [
 	self cursor startInput: aMorph at: aNumber replacingContents: aBoolean
 ]
 
-{ #category : #input }
-SBEditor >> startInputFromEnd [
-
-	(self selection lastMorphThat: [:b | b isSandblock and: [b startInputCommand notNil]])
-		ifNotNil: [:b | self sandblockEditor startInput: b at: 900000000 replacingContents: false]
-		ifNil: [self selection lastDeepChild]
-]
-
 { #category : #'action helpers' }
 SBEditor >> startOrAddToMultiSelection: aBlock [
 
