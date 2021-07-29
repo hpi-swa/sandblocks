@@ -201,7 +201,7 @@ SBStGrammarHandler >> extractVariable [
 			replacer: var.
 		SBInsertCommand new
 			container: block;
-			index: 2;
+			index: ((block statements findFirst: [:s | s isExpression]) + 1 max: 2);
 			morph: self block.
 		SBWrapCommand new
 			inner: self block;

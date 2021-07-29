@@ -55,7 +55,7 @@ SBCursorInsert >> bounds [
 				ifNil: [ | inset |
 					inset := self container layoutInset asEdgeInsets.
 					self before
-						ifTrue: [self container topLeft + inset left extent: self lineWidth @ (self container height - inset vertical)]
+						ifTrue: [self container topLeft + inset topLeft extent: self lineWidth @ (self container height - inset vertical)]
 						ifFalse: [self container topRight - (self lineWidth // 2 + inset right @ inset top negated) extent: self lineWidth @ (self container height - inset vertical)]]
 				ifNotNil: [
 					self before
