@@ -66,12 +66,12 @@ SBCursorPosition >> cursorPositionsIn: aContainer [
 SBCursorPosition >> cursorPositionsIn: aContainer do: aBlock [
 	" enumerate all possible cursor positions recursively "
 
-	aContainer isSandblock ifTrue: [self insertCursorIn: aContainer near: nil before: true do: aBlock].
+	aContainer isSandblock ifTrue: [
+		self insertCursorIn: aContainer near: nil before: true do: aBlock.
+		aBlock value: (SBCursorSelect new block: aContainer)].
 	
 	aContainer visibleSubmorphsDo: [:morph |
-		morph isSandblock ifTrue: [
-			self insertCursorIn: aContainer containingSandblock near: morph before: true do: aBlock.
-			aBlock value: (SBCursorSelect new block: morph)].
+		morph isSandblock ifTrue: [self insertCursorIn: aContainer containingSandblock near: morph before: true do: aBlock].
 		
 		morph isTextMorph ifTrue: [
 			morph containingSandblock startInputCommand ifNotNil: [:command |

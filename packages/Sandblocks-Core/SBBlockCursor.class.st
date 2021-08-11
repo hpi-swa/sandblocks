@@ -88,7 +88,8 @@ SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol 
 	
 	self resetBlink.
 	blinkCount := 0.
-	self bounds: cursorPosition bounds.
+	self updateBounds.
+	Project current addDeferredUIMessage: [self updateBounds].
 	aSymbol ~= #z ifTrue: [selectLargerHistory removeAll].
 	self editor
 		triggerEvent: #selectionChanged with: self selectedBlock;
@@ -96,7 +97,11 @@ SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol 
 	((#(#z #y) includes: aSymbol) not and: [aBoolean]) ifTrue: [self updateHorizontalOffset].
 	
 	self selectedBlock ~= previousBlock ifTrue: [
+		previousBlock removeActionsWithReceiver: self.
 		previousBlock ifNotNil: #wasDeselected.
+		self selectedBlock
+			when: #positionChanged send: #updateBounds to: self;
+			when: #extentChanged send: #updateBounds to: self.
 		self selectedBlock ifNotNil: [:b |
 			b
 				wasSelected;
@@ -112,7 +117,7 @@ SBBlockCursor >> cursorVisible [
 { #category : #drawing }
 SBBlockCursor >> drawOn: aCanvas [
 
-	self cursorVisible ifTrue: [self cursorPosition drawOn: aCanvas]
+	self cursorVisible ifTrue: [self cursorPosition drawOn: aCanvas in: self bounds]
 ]
 
 { #category : #accessing }
@@ -426,14 +431,19 @@ SBBlockCursor >> startOrAddToMultiSelection: aBlock [
 { #category : #blinking }
 SBBlockCursor >> step [
 
+	| oldVisible |
+	oldVisible := self cursorVisible.
+	
 	cursorShown := cursorShown not.
 	blinkCount := blinkCount + 1.
 	
 	cursorPosition valid ifFalse: [^ self cursorPosition: SBCursorNone new explicitMove: false axis: #none].
 	
-	self bounds: cursorPosition bounds.
-	self changed.
-	self selectedBlock ifNotNil: #changed
+	self updateBounds.
+	
+	oldVisible ~= self cursorVisible ifTrue: [
+		self changed.
+		self selectedBlock ifNotNil: #changed]
 ]
 
 { #category : #blinking }
@@ -447,6 +457,12 @@ SBBlockCursor >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 
 	(anEvent commandKeyPressed not and: [anEvent optionKeyPressed not and: [anEvent controlKeyPressed not]]) ifTrue: [
 		cursorPosition unhandledEvent: anEvent in: anEditor didHandle: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlockCursor >> updateBounds [
+
+	^ self bounds: cursorPosition bounds
 ]
 
 { #category : #'vertical movement' }

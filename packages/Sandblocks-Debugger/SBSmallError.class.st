@@ -97,3 +97,17 @@ SBSmallError >> preferredColorIn: aColorPolicy [
 
 	^ aColorPolicy important
 ]
+
+{ #category : #'as yet unclassified' }
+SBSmallError >> veryDeepCopyWith: deepCopier [
+
+	| copy oldProcess oldError |
+	oldProcess := process.
+	oldError := error.
+	process := nil.
+	error := nil.
+	copy := super veryDeepCopyWith: deepCopier.
+	process := oldProcess.
+	error := oldError.
+	^ copy
+]

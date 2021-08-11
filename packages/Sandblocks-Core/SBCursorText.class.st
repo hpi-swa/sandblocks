@@ -75,16 +75,16 @@ SBCursorText >> cursorIndex: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorText >> drawOn: aCanvas [
+SBCursorText >> drawOn: aCanvas in: aRectangle [
 
 	aCanvas
-		line: self bounds bottomLeft - (-1 @ 0)
-		to: self bounds bottomRight - (1 @ 0)
+		line: aRectangle bottomLeft - (-1 @ 0)
+		to: aRectangle bottomRight - (1 @ 0)
 		width: self block frameSize
 		color: self color negated.
 	aCanvas
-		line: self bounds bottomLeft - (-1 @ 1)
-		to: self bounds bottomRight - (1 @ 1)
+		line: aRectangle bottomLeft - (-1 @ 1)
+		to: aRectangle bottomRight - (1 @ 1)
 		width: self block frameSize
 		color: self color
 ]

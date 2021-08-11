@@ -167,20 +167,19 @@ SBGroup >> createMissingForcesFor: aForceMoveDecorator [
 { #category : #'as yet unclassified' }
 SBGroup >> handlesMouseDown: evt [
 
-	^ true
+	^ evt redButtonPressed
 ]
 
 { #category : #'as yet unclassified' }
 SBGroup >> handlesMouseMove: anEvent [
 
-	^ true
+	^ anEvent redButtonPressed
 ]
 
 { #category : #'as yet unclassified' }
 SBGroup >> handlesMouseOverDragging: evt [
 
-	^ true
-
+	^ evt redButtonPressed
 ]
 
 { #category : #accessing }
@@ -257,7 +256,7 @@ SBGroup >> outOfWorld: aWorld [
 { #category : #'as yet unclassified' }
 SBGroup >> remove: aMorph [
 
-	self blocks remove: aMorph.
+	self blocks remove: aMorph ifAbsent: [^ self].
 	aMorph withDecorator: SBForceMoveDecorator do: [:decorator | decorator group: nil].
 	self blocks size < 2
 		ifTrue: [

@@ -55,7 +55,7 @@ SBCursorInsert >> bounds [
 				ifNil: [ | inset |
 					inset := self container layoutInset asEdgeInsets.
 					self before
-						ifTrue: [self container topLeft + inset topLeft extent: self lineWidth @ (self container height - inset vertical)]
+						ifTrue: [self container topLeft + inset topLeft - (self lineWidth // 2 @ 0) extent: self lineWidth @ (self container height - inset vertical)]
 						ifFalse: [self container topRight - (self lineWidth // 2 + inset right @ inset top negated) extent: self lineWidth @ (self container height - inset vertical)]]
 				ifNotNil: [
 					self before
@@ -105,9 +105,9 @@ SBCursorInsert >> container: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorInsert >> drawOn: aCanvas [
+SBCursorInsert >> drawOn: aCanvas in: aRectangle [
 
-	aCanvas fillRectangle: self bounds color: self color
+	aCanvas fillRectangle: aRectangle color: self color
 ]
 
 { #category : #'as yet unclassified' }

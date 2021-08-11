@@ -1198,7 +1198,8 @@ SBEditor >> removeHelperTimer [
 SBEditor >> replaceInput: aMorph [
 	" inform the editor that the current input morph has been replaced by another where input should continue "
 
-	self cursor replaceSelected: aMorph
+	self cursor replaceSelected: aMorph.
+	self updateSelectionLabel
 ]
 
 { #category : #'as yet unclassified' }
@@ -1482,8 +1483,9 @@ SBEditor >> updateMouseCursorFor: anEvent [
 	
 	self firstBlockAt: anEvent position do: [:block |
 		hoverHighlight ifNil: [hoverHighlight := SBHoverDecorator new].
-		hoverHighlight detach.
-		block attachDecorator: hoverHighlight].
+		block ~= hoverHighlight morph ifTrue: [
+			hoverHighlight morph ifNotNil: [:p | p detachDecorators: SBHoverDecorator].
+			(block decorators noneSatisfy: [:d | d isKindOf: SBHoverDecorator]) ifTrue: [block attachDecorator: hoverHighlight]]].
 	
 	self
 		blocksAt: anEvent position

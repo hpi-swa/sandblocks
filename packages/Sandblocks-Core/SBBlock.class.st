@@ -137,7 +137,9 @@ SBBlock >> appendElement [
 	<action>
 
 	| cmd |
-	cmd := (self insertEmptyCommandRequestNear: (self childSandblocks ifNotEmpty: #last ifEmpty: [nil]) before: false) ifNil: [^ self].
+	cmd := (self
+		insertEmptyCommandRequestNear: (self childSandblocks ifNotEmpty: #last ifEmpty: [nil])
+		before: false) ifNil: [^ self].
 	
 	self sandblockEditor do: cmd.
 	
@@ -237,7 +239,7 @@ SBBlock >> barfFront [
 { #category : #'ast helpers' }
 SBBlock >> binding: aString for: block class: aClass ifPresent: aBlock [
 
-	^ self parentSandblock binding: aString for: block class: aClass ifPresent: aBlock
+	^ self parentSandblock ifNotNil: [:p | p binding: aString for: block class: aClass ifPresent: aBlock]
 ]
 
 { #category : #'ast helpers' }
@@ -354,16 +356,17 @@ SBBlock >> changeToUnknown [
 ]
 
 { #category : #hierarchy }
-SBBlock >> childClosestTo: aPoint [
+SBBlock >> childClosestTo: aPoint that: aBlock [
 
 	| closestDistance closestMorph |
 	closestDistance := 900000000.
 	closestMorph := nil.
 	self childSandblocksDo: [:block | | distance |
-		distance := block topLeft squaredDistanceTo: aPoint.
-		distance < closestDistance ifTrue: [
-			closestDistance := distance.
-			closestMorph := block]].
+		(aBlock value: block) ifTrue: [
+			distance := block topLeft squaredDistanceTo: aPoint.
+			distance < closestDistance ifTrue: [
+				closestDistance := distance.
+				closestMorph := block]]].
 	^ closestMorph
 ]
 
@@ -893,23 +896,6 @@ SBBlock >> drawnColor [
 	^ self color
 ]
 
-{ #category : #'dropping/grabbing' }
-SBBlock >> dropLocationDo: aBlock [
-
-	| mousePosition |
-	mousePosition := self valueOfProperty: #dropLocation ifAbsent: [
-		^ self childSandblocks
-			ifEmpty: [aBlock value: self center value: self value: false]
-			ifNotEmpty: [aBlock value: self center value: self childSandblocks first value: false]].
-	^ (self childClosestTo: mousePosition)
-		ifNil: [aBlock value: self center value: self value: false]
-		ifNotNil: [:closestMorph | | delta |
-			delta := (((closestMorph adjacentBlock: 1) ifNil: [closestMorph adjacentBlock: -1])
-				ifNotNil: [:next | next topLeft - closestMorph topLeft]
-				ifNil: [1 @ 0]) abs.
-			aBlock value: closestMorph topLeft - (0 @ 4) value: closestMorph value: delta x < delta y]
-]
-
 { #category : #'testing hierarchy' }
 SBBlock >> dynamicNumberOfChildren [
 
@@ -1066,12 +1052,6 @@ SBBlock >> group [
 SBBlock >> handlesMouseDown: anEvent [
 
 	^ anEvent redButtonPressed or: [SBPreferences rightClickContextMenu and: [anEvent yellowButtonPressed]]
-]
-
-{ #category : #'event handling' }
-SBBlock >> handlesMouseMove: anEvent [
-
-	^ (super handlesMouseMove: anEvent) or: [anEvent isDraggingEvent]
 ]
 
 { #category : #'testing hierarchy' }
@@ -1634,14 +1614,6 @@ SBBlock >> mouseDown: anEvent [
 		event: anEvent
 		selectors: #(#click: #doubleClick: #doubleClickTimeout: #startDrag:)
 		threshold: 30
-]
-
-{ #category : #'event handling' }
-SBBlock >> mouseMove: anEvent [
-
-	super mouseMove: anEvent.
-	self setProperty: #dropLocation toValue: anEvent position.
-	(anEvent isDraggingEvent and: [self handlesMouseOverDragging: anEvent]) ifTrue: [self highlightForDrop: true]
 ]
 
 { #category : #actions }
@@ -2295,6 +2267,12 @@ SBBlock >> slurpFront [
 		self select]
 ]
 
+{ #category : #'ast helpers' }
+SBBlock >> sourceString [
+
+	^ String streamContents: [:s | self writeSourceOn: s]
+]
+
 { #category : #layout }
 SBBlock >> spaceForSymbols [
 
@@ -2611,12 +2589,15 @@ SBBlock >> validSubtree [
 { #category : #copying }
 SBBlock >> veryDeepCopyWith: aCopier [
 
-	| new previousDecorators m |
+	| new previousDecorators m oldActions |
 	m := self valueOfProperty: #sandblockSuggestionMenu.
 	self removeProperty: #sandblockSuggestionMenu.
+	oldActions := self valueOfProperty: #actionMap.
+	self removeProperty: #actionMap.
 	new := super veryDeepCopyWith: aCopier.
 	m ifNotNil: [self setProperty: #sandblockSuggestionMenu toValue: m].
 	
+	self setProperty: #actionMap toValue: oldActions.
 	previousDecorators := new decorators copy.
 	previousDecorators do: #detach.
 	previousDecorators do: [:decorator | new attachDecorator: decorator].

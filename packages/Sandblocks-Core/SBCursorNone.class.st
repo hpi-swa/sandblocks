@@ -29,7 +29,7 @@ SBCursorNone >> color [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorNone >> drawOn: aCanvas [
+SBCursorNone >> drawOn: aCanvas in: aRectangle [
 
 	
 ]

@@ -38,10 +38,10 @@ SBCursorSelect >> color [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorSelect >> drawOn: aCanvas [
+SBCursorSelect >> drawOn: aCanvas in: aRectangle [
 
 	aCanvas
-		frameRoundRect: (self bounds insetBy: 2)
+		frameRoundRect: (aRectangle insetBy: 2)
 		radius: self block colorPolicy cornerRadius
 		width: self block frameSize
 		color: self color

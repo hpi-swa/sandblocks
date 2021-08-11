@@ -189,7 +189,8 @@ SBStMessageSend >> fixActions [
 							morph: method;
 							editor: self sandblockEditor;
 							isUnsaved: true;
-							yourself)]}]
+							yourself)].
+				SBCodeAction labeled: 'Confirm selector' for: self do: [:node | node selector asSymbol]}]
 		ifFalse: [#()]
 ]
 

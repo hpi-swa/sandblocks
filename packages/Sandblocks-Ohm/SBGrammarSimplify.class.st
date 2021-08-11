@@ -65,6 +65,6 @@ SBGrammarSimplify >> simplifyAndOpen [
 	
 	postDo value: grammar.
 	
-	SBToggledCode comment: '' active: 0 do: {[grammar openInHand]}.
+	SBToggledCode comment: '' active: 1 do: {[grammar openInHand]}.
 	grammar openBlocklyFrom: originalGrammar
 ]
