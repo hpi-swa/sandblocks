@@ -26,7 +26,7 @@ SBMetaUnknown >> keyStroke: anEvent [
 	self currentTextMorph keyStroke: anEvent.
 	
 	factory unambiguousRule: objectInterfaces for: self contents do: [:rule :keyWasTaken | | new editor |
-		new := factory buildRule: rule.
+		new := factory build: rule.
 		editor := self sandblockEditor.
 		keyWasTaken ifFalse: [
 			SBToggledCode
@@ -56,4 +56,14 @@ SBMetaUnknown >> objectInterfaces [
 SBMetaUnknown >> objectInterfaces: aCollection [
 
 	objectInterfaces := aCollection
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaUnknown >> printOn: aStream [
+
+	aStream
+		nextPutAll: 'unknown ';
+		nextPutAll: (self objectInterfaces isString
+			ifTrue: [self objectInterfaces]
+			ifFalse: [self objectInterfaces joinSeparatedBy: ', '])
 ]

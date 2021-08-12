@@ -92,6 +92,25 @@ Morph >> containingSandblock [
 	^ self owner ifNotNil: #containingSandblock
 ]
 
+{ #category : #'*Sandblocks-Core' }
+Morph >> cursorPositionsDo: aBlock [
+	" enumerate all possible cursor positions recursively "
+
+	self isSandblock ifTrue: [
+		aBlock value: (SBCursorSelect new block: self).
+		self insertCursorNear: nil before: true do: aBlock].
+	self visibleSubmorphsDo: [:morph |
+		morph isSandblock ifTrue: [self containingSandblock insertCursorNear: morph before: true do: aBlock].
+		morph isTextMorph ifTrue: [
+			morph containingSandblock startInputCommand ifNotNil: [:command |
+				aBlock value: (SBCursorText new
+					block: morph containingSandblock;
+					currentCommand: command)]].
+		morph cursorPositionsDo: aBlock.
+		morph isSandblock ifTrue: [self containingSandblock insertCursorNear: morph before: false do: aBlock]].
+	self isSandblock ifTrue: [self insertCursorNear: nil before: false do: aBlock]
+]
+
 { #category : #'*Sandblocks-Core-override' }
 Morph >> extent: aPoint [
 
@@ -134,6 +153,17 @@ Morph >> fontToUse [
 Morph >> innerBoundsInWorld [
 	
 	^ self bounds: self innerBounds in: self world
+]
+
+{ #category : #'*Sandblocks-Core' }
+Morph >> insertCursorNear: aBlock before: aBoolean do: aClosure [
+
+	^ (self insertEmptyCommandRequestNear: aBlock before: aBoolean) ifNotNil: [:cmd |
+		aClosure value: (SBCursorInsert new
+			command: cmd;
+			before: aBoolean;
+			adjacent: aBlock;
+			container: self)]
 ]
 
 { #category : #'*Sandblocks-Core' }

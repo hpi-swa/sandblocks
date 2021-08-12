@@ -9,12 +9,57 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBMetaBlockFactory >> addMorphsFor: anObject to: aBlock [
+
+	(self unpackTypes includes: anObject type) ifTrue: [^ self addMorphsFor: anObject content to: aBlock].
+	
+	anObject type caseOf: {
+		['STRING'] -> [aBlock addMorphBack: (SBStringMorph new contents: anObject value)].
+		['PATTERN'] -> [
+			aBlock textFieldPattern: (self buildRegex: anObject).
+			aBlock addMorphBack: SBOwnTextMorph new].
+		['SYMBOL'] -> [aBlock addMorphBack: (self unknownFor: anObject name)].
+		['REPEAT1'] -> [aBlock addMorphBack: (self unknownFor: anObject content name)].
+		['REPEAT'] -> [].
+		['CHOICE'] -> [
+			(anObject members size = 2 and: [anObject members contains: [:m | m type = 'BLANK']])
+				ifTrue: [" optional "
+				]
+				ifFalse: [self assert: false]].
+		['SEQ'] -> [anObject members do: [:m | self addMorphsFor: m to: aBlock]]}
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> build: aType [
+
+	^ self build: aType in: SBMetaBlock new withValues: Dictionary new
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> build: aType in: aBlock withValues: aDictionary [
+
+	| grammarRule |
+	aBlock
+		factory: self;
+		symbols: #(nil nil);
+		objectInterface: aType;
+		grammarRule: (grammarRule := grammar rules at: aType).
+	
+	
+	self addMorphsFor: grammarRule to: aBlock.
+	
+	^ aBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaBlockFactory >> buildRegex: rule [
 
 	| s |
 	s := '' writeStream.
 	self buildRegex: rule on: s.
-	^ s contents asRegex
+	^ ((s contents copyReplaceAll: '\p{XID_Start}' with: 'A-Za-z')
+		copyReplaceAll: '\p{XID_Continue}'
+		with: 'A-Za-z0-9') asRegex
 ]
 
 { #category : #'as yet unclassified' }
@@ -45,18 +90,6 @@ SBMetaBlockFactory >> buildRegex: anObject on: aStream [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaBlockFactory >> buildRule: aString [
-
-	^ SBToggledCode comment: '' active: 1 do: {
-		[self fromSTType: (nodeTypes detect: [:type | type type = aString])].
-		[ | rule |
-			rule := grammar rules at: aString.
-			rule := self cleanRule: rule.
-			rule explore.
-			^ SBMetaBlock new addMorphBack: (self fromTSRule: rule)]}
-]
-
-{ #category : #'as yet unclassified' }
 SBMetaBlockFactory >> cleanRule: aRule [
 
 	^ aRule type
@@ -82,7 +115,23 @@ SBMetaBlockFactory >> escapeStringForRegex: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaBlockFactory >> fromSTType: aType [
+SBMetaBlockFactory >> fromTSRule: aRule [
+
+	^ aRule type caseOf: {
+		['SEQ'] -> [SBRow new addAllMorphs: (aRule members collect: [:m | self fromTSRule: m])].
+		['STRING'] -> [SBStringMorph new contents: aRule value].
+		['CHOICE'] -> [SBUnknown new]}
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> grammar: aString nodeTypes: anotherString [
+
+	grammar := Json readFrom: aString readStream.
+	nodeTypes := Json readFrom: anotherString readStream
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> oldFromSTType: aType withValues: aDictionary [
 
 	| block |
 	block := SBMetaBlock new
@@ -116,30 +165,40 @@ SBMetaBlockFactory >> fromSTType: aType [
 					objectInterface: '')]
 			ifFalse: [
 				(field types allSatisfy: [:t | t named not])
-					ifTrue: [block textFieldPattern: ((field types collect: [:f | self escapeStringForRegex: (f at: #type)]) joinSeparatedBy: '|')]
+					ifTrue: [
+						block textFieldPattern: ((field types collect: [:f | self escapeStringForRegex: (f at: #type)]) joinSeparatedBy: '|').
+						aDictionary at: fieldName ifPresent: [:val | block contents: val]]
 					ifFalse: [
-						block addMorphBack: (SBMetaUnknown new
-							objectInterfaces: (field types collect: #type);
-							factory: self;
-							yourself)]]].
+						block addMorphBack: (aDictionary at: fieldName ifPresent: [:val | val] ifAbsent: [
+							SBMetaUnknown new
+								objectInterfaces: (field types collect: #type);
+								factory: self;
+								yourself])]]].
 	
 	^ block
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaBlockFactory >> fromTSRule: aRule [
+SBMetaBlockFactory >> oldrule: aStringOrCollection triggersFor: aPrefixString do: aBlock [
 
-	^ aRule type caseOf: {
-		['SEQ'] -> [SBRow new addAllMorphs: (aRule members collect: [:m | self fromTSRule: m])].
-		['STRING'] -> [SBStringMorph new contents: aRule value].
-		['CHOICE'] -> [SBUnknown new]}
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaBlockFactory >> grammar: aString nodeTypes: anotherString [
-
-	grammar := Json readFrom: aString readStream.
-	nodeTypes := Json readFrom: anotherString readStream
+	| rule type |
+	aStringOrCollection isString ifFalse: [^ aStringOrCollection do: [:name | self rule: name triggersFor: aPrefixString do: aBlock]].
+	
+	rule := grammar rules at: aStringOrCollection.
+	type := rule at: #type.
+	
+	(self unpackTypes includes: type) ifTrue: [
+		^ self
+			token: rule content
+			matches: aPrefixString
+			matchDo: [aBlock value: aStringOrCollection value: false]].
+	
+	type caseOf: {
+		['PATTERN'] -> [(aPrefixString matchesRegex: (rule at: #value)) ifTrue: [aBlock value: aStringOrCollection value: false]].
+		['CHOICE'] -> [rule members do: [:choice | (choice at: #type) = 'SYMBOL' ifTrue: [self rule: (choice at: #name) triggersFor: aPrefixString do: [:r :taken | aBlock value: r value: taken]]]].
+		['TOKEN'] -> [((self buildRegex: rule) matchesPrefix: aPrefixString) ifTrue: [aBlock value: aStringOrCollection value: false]].
+		['STRING'] -> [((rule at: #value) beginsWith: aPrefixString) ifTrue: [aBlock value: aStringOrCollection value: false]].
+		['SEQ'] -> [(self token: rule members first matches: aPrefixString) ifTrue: [aBlock value: aStringOrCollection value: false]]}
 ]
 
 { #category : #'as yet unclassified' }
@@ -155,20 +214,36 @@ SBMetaBlockFactory >> orderedFieldsOf: aNode do: aBlock [
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> rule: aStringOrCollection triggersFor: aPrefixString do: aBlock [
 
-	| rule type |
+	| rule |
 	aStringOrCollection isString ifFalse: [^ aStringOrCollection do: [:name | self rule: name triggersFor: aPrefixString do: aBlock]].
 	
 	rule := grammar rules at: aStringOrCollection.
-	type := rule at: #type.
 	
-	(self unpackTypes includes: type) ifTrue: [^ (self token: rule content matches: aPrefixString) ifTrue: [aBlock value: aStringOrCollection value: false]].
+	self
+		token: rule
+		matches: aPrefixString
+		visited: OrderedCollection new
+		parent: aStringOrCollection
+		matchDo: aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> rulesMatching: aStringOrCollection containing: aRuleName forPrefix: aPrefixString do: aBlock [
+
+	| rule |
+	aStringOrCollection isString ifFalse: [^ aStringOrCollection do: [:name | self rulesMatching: name containing: aRuleName forPrefix: aPrefixString do: aBlock]].
 	
-	type caseOf: {
-		['PATTERN'] -> [(aPrefixString matchesRegex: (rule at: #value)) ifTrue: [aBlock value: aStringOrCollection value: false]].
-		['CHOICE'] -> [rule members do: [:choice | (choice at: #type) = 'SYMBOL' ifTrue: [self rule: (choice at: #name) triggersFor: aPrefixString do: [:r :taken | aBlock value: r value: taken]]]].
-		['TOKEN'] -> [((self buildRegex: rule) matchesPrefix: aPrefixString) ifTrue: [aBlock value: aStringOrCollection value: false]].
-		['STRING'] -> [((rule at: #value) beginsWith: aPrefixString) ifTrue: [aBlock value: aStringOrCollection value: false]].
-		['SEQ'] -> [(self token: rule members first matches: aPrefixString) ifTrue: [aBlock value: aStringOrCollection value: false]]}
+	rule := nodeTypes detect: [:t | t type = aStringOrCollection].
+	rule
+		at: #subtypes
+		ifPresent: [:subtypes | ^ subtypes do: [:t | self rulesMatching: t type containing: aRuleName forPrefix: aPrefixString do: aBlock]].
+	
+	rule fields ifNotNil: [:fields |
+		fields keysAndValuesDo: [:name :f |
+			(f types anySatisfy: [:t | self type: aRuleName compatibleWith: t type]) ifTrue: [
+				fields associations
+					detect: [:operatorField | operatorField value ~= f and: [operatorField value types anySatisfy: [:op | op named not and: [op type beginsWith: aPrefixString]]]]
+					ifFound: [:operatorField | aBlock value: rule value: name value: operatorField key]]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -200,12 +275,6 @@ SBMetaBlockFactory >> symbolsForType: rule [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaBlockFactory >> token: anObject matches: aString [
-
-	^ self token: anObject matches: aString visited: OrderedCollection new
-]
-
-{ #category : #'as yet unclassified' }
 SBMetaBlockFactory >> token: anObject matches: aString visited: aCollection [
 
 	(self unpackTypes includes: (anObject at: #type)) ifTrue: [^ self token: (anObject at: #content) matches: aString visited: aCollection].
@@ -228,6 +297,43 @@ SBMetaBlockFactory >> token: anObject matches: aString visited: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaBlockFactory >> token: anObject matches: aString visited: aCollection parent: aRuleName matchDo: aBlock [
+
+	(self unpackTypes includes: (anObject at: #type)) ifTrue: [
+		^ self
+			token: (anObject at: #content)
+			matches: aString
+			visited: aCollection
+			parent: aRuleName
+			matchDo: aBlock].
+	
+	(anObject at: #type) caseOf: {
+		['STRING'] -> [((anObject at: #value) beginsWith: aString) ifTrue: [aBlock value: aRuleName value: true]].
+		['CHOICE'] -> [anObject members do: [:c | self token: c matches: aString visited: aCollection parent: aRuleName matchDo: aBlock]].
+		['SEQ'] -> [self token: anObject members first matches: aString visited: aCollection parent: aRuleName matchDo: aBlock].
+		['PATTERN'] -> [((self buildRegex: anObject) matches: aString) ifTrue: [aBlock value: aRuleName value: false]].
+		['BLANK'] -> [].
+		['SYMBOL'] -> [
+			(aCollection includes: (anObject at: #name)) ifFalse: [
+				aCollection add: (anObject at: #name).
+				grammar rules
+					at: (anObject at: #name)
+					ifPresent: [:rule | self token: rule matches: aString visited: aCollection parent: (anObject at: #name) matchDo: aBlock]]].
+		['REPEAT'] -> [" TODO: can be optional, so just omit? "
+		self token: anObject content matches: aString visited: aCollection parent: aRuleName matchDo: aBlock].
+		['REPEAT1'] -> [self token: anObject content matches: aString visited: aCollection parent: aRuleName matchDo: aBlock]}
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> type: aRuleName compatibleWith: anotherRuleName [
+
+	^ aRuleName = anotherRuleName or: [
+		(nodeTypes detect: [:t | t type = anotherRuleName]) subtypes
+			ifNotNil: [:types | types anySatisfy: [:t | t type = aRuleName]]
+			ifNil: [false]]
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaBlockFactory >> unambiguousRule: aString for: aPrefixString do: aBlock [
 
 	| candidates prefix matchFullToken |
@@ -242,6 +348,15 @@ SBMetaBlockFactory >> unambiguousRule: aString for: aPrefixString do: aBlock [
 			candidates
 				detect: [:c | self startsWithKeyword: (grammar rules at: c first)]
 				ifFound: [:c | aBlock valueWithArguments: c]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> unknownFor: aCollection [
+
+	^ SBMetaUnknown new
+		objectInterfaces: aCollection;
+		factory: self;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }

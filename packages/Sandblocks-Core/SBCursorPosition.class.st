@@ -59,13 +59,18 @@ SBCursorPosition >> currentCommand [
 { #category : #'as yet unclassified' }
 SBCursorPosition >> cursorPositionsIn: aContainer [
 
-	^ Array streamContents: [:stream | self cursorPositionsIn: aContainer do: [:pos | stream nextPut: pos]]
+	^ Array streamContents: [:stream |
+		SBToggledCode comment: '' active: 1 do: {
+			[aContainer cursorPositionsDo: [:pos | stream nextPut: pos]].
+			[self cursorPositionsIn: aContainer do: [:pos | stream nextPut: pos]]}]
 ]
 
 { #category : #'as yet unclassified' }
 SBCursorPosition >> cursorPositionsIn: aContainer do: aBlock [
 	" enumerate all possible cursor positions recursively "
 
+	true ifTrue: [^ aContainer cursorPositionsDo: aBlock].
+	
 	aContainer isSandblock ifTrue: [
 		self insertCursorIn: aContainer near: nil before: true do: aBlock.
 		aBlock value: (SBCursorSelect new block: aContainer)].

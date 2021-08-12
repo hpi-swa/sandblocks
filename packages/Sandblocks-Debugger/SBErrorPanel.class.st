@@ -106,6 +106,7 @@ SBErrorPanel >> initialize [
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		changeTableLayout;
+		listDirection: #leftToRight;
 		extent: 0 @ 0;
 		color: Color transparent
 ]

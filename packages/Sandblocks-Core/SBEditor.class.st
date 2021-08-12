@@ -793,7 +793,8 @@ SBEditor >> interruptInputDuring: aBlock [
 	cursor := self selection currentTextMorph ifNotNil: #cursor.
 	self endInput.
 	aBlock value.
-	cursor ifNotNil: [self startInput: self selection at: cursor replacingContents: false]
+	cursor ifNotNil: [
+		self selection ifNotNil: [self startInput: self selection at: cursor replacingContents: false]]
 ]
 
 { #category : #testing }

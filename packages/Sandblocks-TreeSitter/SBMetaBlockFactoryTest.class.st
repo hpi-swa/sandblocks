@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBMetaBlockFactoryTest >> factory [
+SBMetaBlockFactoryTest class >> factory [
 
 	^ SBMetaBlockFactory new
 		grammar: '{
@@ -232,14 +232,34 @@ SBMetaBlockFactoryTest >> factory [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaBlockFactoryTest >> factory [
+
+	^ self class factory
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactoryTest >> testConvertToBinaryOp [
+
+	| source editor |
+	source := self factory build: 'source_file'.
+	editor := self editorFor: source.
+	source appendElement.
+	editor selection keyStroke: (self keyboardEvent: '4').
+	editor selection keyStroke: (self keyboardEvent: '+').
+	
+	self assert: 'binary_op' equals: source childSandblocks first objectInterface.
+	self assert: '+' equals: (SBExampleWatch report: source childSandblocks first contents for: 68009758)
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaBlockFactoryTest >> testUnambiguousRuleBinaryOp [
 
 	| source editor |
-	source := self factory buildRule: 'source_file'.
+	source := self factory build: 'source_file'.
 	editor := self editorFor: source.
 	
 	source appendElement.
 	editor selection keyStroke: (self keyboardEvent: '4').
 	
-	self assert: #('number') equals: source childSandblocks first objectInterfaces
+	self assert: 'number' equals: source childSandblocks first objectInterface
 ]
