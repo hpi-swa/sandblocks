@@ -59,6 +59,12 @@ SBMetaBlockFactory >> build: aType in: aBlock withValues: aDictionary [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaBlockFactory >> build: aType withValues: aDictionary [
+
+	^ self build: aType in: SBMetaBlock new withValues: aDictionary
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaBlockFactory >> buildRegex: rule [
 
 	| s |
@@ -160,6 +166,12 @@ SBMetaBlockFactory >> cleanRule: aRule [
 SBMetaBlockFactory >> escapeStringForRegex: aString [
 
 	^ aString copyWithRegex: '[.*+?^${}()|\[\]\\]' matchesTranslatedUsing: [:m | '\', m]
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> fieldsOf: aRule [
+
+	^ nodeTypes detect: [:t | t type = aRule] ifFound: [:t | t fields collect: #type]
 ]
 
 { #category : #'as yet unclassified' }
