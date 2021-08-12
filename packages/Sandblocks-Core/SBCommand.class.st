@@ -162,6 +162,12 @@ SBCommand >> shouldMergeWithNext: aBoolean [
 	shouldMergeWithNext := aBoolean
 ]
 
+{ #category : #'as yet unclassified' }
+SBCommand >> title [
+
+	^ nil
+]
+
 { #category : #apply }
 SBCommand >> undo [
 

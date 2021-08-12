@@ -13,7 +13,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBCursorInsert >> = aPosition [
 
-	^ aPosition class = self class and: [aPosition adjacent = self adjacent and: [aPosition before = self before and: [aPosition container = self container]]]
+	^ aPosition class = self class and: [aPosition adjacent = self adjacent and: [aPosition before = self before and: [aPosition container = self container and: [self command hasSamePositionAs: aPosition command]]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -114,7 +114,7 @@ SBCursorInsert >> drawOn: aCanvas in: aRectangle [
 SBCursorInsert >> enter [
 
 	super enter.
-	self triggerEvent: #showLabel with: 'insert in ', self block printString
+	self triggerEvent: #showLabel with: (command title ifNil: ['insert in ', self block printString])
 ]
 
 { #category : #'as yet unclassified' }

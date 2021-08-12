@@ -40,3 +40,9 @@ SBMetaRelInsertCommand >> objectInterface [
 
 	^ objectInterface
 ]
+
+{ #category : #'as yet unclassified' }
+SBMetaRelInsertCommand >> title [
+
+	^ 'insert ', objectInterface
+]

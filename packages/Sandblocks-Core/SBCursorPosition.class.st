@@ -59,36 +59,14 @@ SBCursorPosition >> currentCommand [
 { #category : #'as yet unclassified' }
 SBCursorPosition >> cursorPositionsIn: aContainer [
 
-	^ Array streamContents: [:stream |
-		SBToggledCode comment: '' active: 1 do: {
-			[aContainer cursorPositionsDo: [:pos | stream nextPut: pos]].
-			[self cursorPositionsIn: aContainer do: [:pos | stream nextPut: pos]]}]
+	^ Array streamContents: [:stream | aContainer cursorPositionsDo: [:pos | stream nextPut: pos]]
 ]
 
 { #category : #'as yet unclassified' }
 SBCursorPosition >> cursorPositionsIn: aContainer do: aBlock [
 	" enumerate all possible cursor positions recursively "
 
-	true ifTrue: [^ aContainer cursorPositionsDo: aBlock].
-	
-	aContainer isSandblock ifTrue: [
-		self insertCursorIn: aContainer near: nil before: true do: aBlock.
-		aBlock value: (SBCursorSelect new block: aContainer)].
-	
-	aContainer visibleSubmorphsDo: [:morph |
-		morph isSandblock ifTrue: [self insertCursorIn: aContainer containingSandblock near: morph before: true do: aBlock].
-		
-		morph isTextMorph ifTrue: [
-			morph containingSandblock startInputCommand ifNotNil: [:command |
-				aBlock value: (SBCursorText new
-					block: morph containingSandblock;
-					currentCommand: command)]].
-		
-		self cursorPositionsIn: morph do: aBlock.
-		
-		morph isSandblock ifTrue: [self insertCursorIn: aContainer containingSandblock near: morph before: false do: aBlock]].
-	
-	aContainer isSandblock ifTrue: [self insertCursorIn: aContainer near: nil before: false do: aBlock]
+	aContainer cursorPositionsDo: aBlock
 ]
 
 { #category : #'as yet unclassified' }

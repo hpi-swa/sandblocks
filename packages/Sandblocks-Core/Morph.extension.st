@@ -335,6 +335,12 @@ Morph >> nextMorphThat: aBlock [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Morph >> objectInterface [
+
+	^ nil
+]
+
+{ #category : #'*Sandblocks-Core' }
 Morph >> onHoverHighlight: aMorph labeled: aString [
 
 	aMorph isMorph ifFalse: [^ self].

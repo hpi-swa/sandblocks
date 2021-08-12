@@ -9,26 +9,32 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBMetaBlockFactory >> addMorphsFor: anObject to: aBlock [
+SBMetaBlockFactory >> addMorphsFor: anObject to: aBlock parentField: aString withValues: aDictionary [
 
-	(self unpackTypes includes: anObject type) ifTrue: [^ self addMorphsFor: anObject content to: aBlock].
+	'FIELD' = anObject type ifTrue: [^ self addMorphsFor: anObject content to: aBlock parentField: anObject name withValues: aDictionary].
+	
+	(self unpackTypes includes: anObject type) ifTrue: [^ self addMorphsFor: anObject content to: aBlock parentField: aString withValues: aDictionary].
+	
+	(#('SYMBOL' 'REPEAT1') includes: anObject type) ifTrue: [^ aBlock addMorphBack: (aDictionary at: aString ifAbsent: [self unknownFor: anObject name])].
+	
+	(#('TOKEN' 'PATTERN') includes: anObject type) ifTrue: [
+		self assert: aBlock textFieldPattern isNil.
+		^ aBlock textFieldPattern: (self buildRegex: anObject)].
 	
 	anObject type caseOf: {
 		['STRING'] -> [aBlock addMorphBack: (SBStringMorph new contents: anObject value)].
-		['PATTERN'] -> [
-			self assert: aBlock textFieldPattern isNil.
-			aBlock textFieldPattern: (self buildRegex: anObject)].
-		['TOKEN'] -> [
-			self assert: aBlock textFieldPattern isNil.
-			aBlock textFieldPattern: (self buildRegex: anObject)].
-		['SYMBOL'] -> [aBlock addMorphBack: (self unknownFor: anObject name)].
-		['REPEAT1'] -> [aBlock addMorphBack: (self unknownFor: anObject content name)].
-		['REPEAT'] -> [].
+		['REPEAT'] -> [
+			aDictionary
+				at: aString
+				ifPresent: [:f | aBlock addMorphBack: f]
+				ifAbsent: [self unknownFor: anObject name]].
 		['CHOICE'] -> [
 			(anObject members size = 2 and: [anObject members contains: [:m | m type = 'BLANK']])
-				ifTrue: []
-				ifFalse: [self assert: false]].
-		['SEQ'] -> [anObject members do: [:m | self addMorphsFor: m to: aBlock]]}
+				ifTrue: [" optional, don't have to add anything "
+				]
+				ifFalse: [" FIXME: wrong assumption "
+				self addMorphsFor: anObject members first to: aBlock parentField: aString withValues: aDictionary]].
+		['SEQ'] -> [anObject members do: [:m | self addMorphsFor: m to: aBlock parentField: aString withValues: aDictionary]]}
 ]
 
 { #category : #'as yet unclassified' }
@@ -47,8 +53,7 @@ SBMetaBlockFactory >> build: aType in: aBlock withValues: aDictionary [
 		objectInterface: aType;
 		grammarRule: (grammarRule := grammar rules at: aType).
 	
-	
-	self addMorphsFor: grammarRule to: aBlock.
+	self addMorphsFor: grammarRule to: aBlock parentField: nil withValues: aDictionary.
 	
 	^ aBlock
 ]
@@ -110,27 +115,25 @@ SBMetaBlockFactory >> buildSlotsFor: anObject parentFieldName: aString on: aStre
 	
 	(self unpackTypes includes: anObject type) ifTrue: [^ self buildSlotsFor: anObject content parentFieldName: aString on: aStream].
 	
+	(#('STRING' 'PATTERN' 'TOKEN' 'SYMBOL') includes: anObject type) ifTrue: [^ aStream nextPut: ((SBMetaSlot one type: anObject) name: aString)].
+	
+	(#('REPEAT' 'REPEAT1') includes: anObject type) ifTrue: [
+		^ aStream nextPut: (self
+			unpackFieldForSlot: anObject content
+			fieldName: aString
+			do: [:symbol :field | ((SBMetaSlot perform: (anObject type = 'REPEAT' ifTrue: [#any] ifFalse: [#atLeastOne])) type: symbol) name: field])].
+	
 	anObject type caseOf: {
-		['STRING'] -> [aStream nextPut: ((SBMetaSlot one type: anObject) name: aString)].
-		['PATTERN'] -> [aStream nextPut: ((SBMetaSlot one type: anObject) name: aString)].
-		['TOKEN'] -> [aStream nextPut: ((SBMetaSlot one type: anObject) name: aString)].
-		['SYMBOL'] -> [aStream nextPut: ((SBMetaSlot one type: anObject) name: aString)].
-		['REPEAT1'] -> [
-			aStream nextPut: (self
-				unpackFieldForSlot: anObject content
-				fieldName: aString
-				do: [:symbol :field | (SBMetaSlot atLeastOne type: symbol) name: field])].
-		['REPEAT'] -> [
-			aStream nextPut: (self
-				unpackFieldForSlot: anObject content
-				fieldName: aString
-				do: [:symbol :field | (SBMetaSlot any type: symbol) name: field])].
 		['CHOICE'] -> [
-			self assert: (anObject members size = 2 and: [anObject members second type = 'BLANK']).
-			aStream nextPut: (self
-				unpackFieldForSlot: anObject members first
-				fieldName: aString
-				do: [:symbol :field | (SBMetaSlot optional type: symbol) name: field])].
+			" pattern for optional structure "
+			(anObject members size = 2 and: [anObject members second type = 'BLANK']) ifTrue: [
+				^ aStream nextPut: (self
+					unpackFieldForSlot: anObject members first
+					fieldName: aString
+					do: [:symbol :field | (SBMetaSlot optional type: symbol) name: field])].
+			
+			" FIXME: most-often incorrect guess that the structure of all members is the same "
+			self buildSlotsFor: anObject members first parentFieldName: aString on: aStream].
 		['SEQ'] -> [anObject members do: [:m | self buildSlotsFor: m parentFieldName: aString on: aStream]]}
 ]
 
@@ -294,6 +297,8 @@ SBMetaBlockFactory >> rulesMatching: aStringOrCollection containing: aRuleName f
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> startsWithKeyword: anObject [
 
+	(self unpackTypes includes: anObject type) ifTrue: [^ self startsWithKeyword: anObject content].
+	
 	^ anObject type
 		caseOf: {
 			['SEQ'] -> [self startsWithKeyword: anObject members first].
@@ -373,9 +378,11 @@ SBMetaBlockFactory >> token: anObject matches: aString visited: aCollection pare
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> type: aRuleName compatibleWith: anotherRuleName [
 
+	SBToggledCode comment: '' active: 0 do: {
+		[[(grammar supertypes includes: anotherRuleName) and: [((grammar rules at: anotherRuleName) members collect: #name) includes: aRuleName]]]}.
 	^ aRuleName = anotherRuleName or: [
-		(nodeTypes detect: [:t | t type = anotherRuleName]) subtypes
-			ifNotNil: [:types | types anySatisfy: [:t | t type = aRuleName]]
+		(nodeTypes detect: [:t | t type = anotherRuleName] ifNone: [^ false]) subtypes
+			ifNotNil: [:types | types anySatisfy: [:t | self type: aRuleName compatibleWith: t type]]
 			ifNil: [false]]
 ]
 

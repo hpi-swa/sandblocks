@@ -47,6 +47,12 @@ SBMetaUnknown >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaUnknown >> objectInterface [
+
+	^ objectInterfaces
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaUnknown >> objectInterfaces [
 
 	^ objectInterfaces

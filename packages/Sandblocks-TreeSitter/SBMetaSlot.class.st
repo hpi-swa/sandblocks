@@ -3,7 +3,6 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'type',
-		'count',
 		'required',
 		'multiple',
 		'name'
@@ -45,12 +44,6 @@ SBMetaSlot class >> optional [
 		multiple: false;
 		required: false;
 		yourself
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaSlot >> count [
-
-	^ count
 ]
 
 { #category : #'as yet unclassified' }
@@ -98,12 +91,6 @@ SBMetaSlot >> required [
 SBMetaSlot >> required: aBoolean [
 
 	required := aBoolean
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaSlot >> setInitialCount [
-
-	count := required ifTrue: [1] ifFalse: [0]
 ]
 
 { #category : #'as yet unclassified' }

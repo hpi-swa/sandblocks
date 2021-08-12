@@ -2,7 +2,6 @@ Class {
 	#name : #SBComboBox,
 	#superclass : #SBTextBubble,
 	#instVars : [
-		'object',
 		'values'
 	],
 	#category : #'Sandblocks-Core'

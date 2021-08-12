@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'factory',
 		'objectInterface',
-		'childObjectInterface',
 		'symbols',
 		'textFieldPattern',
 		'textField',
@@ -15,15 +14,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBMetaBlock >> childObjectInterface [
+SBMetaBlock >> canDeleteChild: aBlock [
 
-	^ childObjectInterface
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaBlock >> childObjectInterface: aSymbolOrCollection [
-
-	childObjectInterface := aSymbolOrCollection
+	slots slotOf: aBlock in: self do: [:slot :morphs |
+		slot := self slotOf: aBlock.
+		slot required ifFalse: [^ true].
+		^ slot multiple and: [morphs size > 1]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -36,9 +32,7 @@ SBMetaBlock >> currentTextMorph [
 SBMetaBlock >> cursorPositionsDo: aBlock [
 
 	aBlock value: (SBCursorSelect new block: self).
-	SBToggledCode comment: '' active: 1 do: {
-		[slots cursorPositionsWith: self submorphs in: self do: aBlock].
-		[self cursorPositionsForRule: grammarRule stream: self submorphs readStream do: aBlock]}
+	slots cursorPositionsWith: self submorphs in: self do: aBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -115,12 +109,6 @@ SBMetaBlock >> factory: aFactory [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaBlock >> fixedNumberOfChildren [
-
-	^ childObjectInterface isNil
-]
-
-{ #category : #'as yet unclassified' }
 SBMetaBlock >> grammarRule [
 
 	^ grammarRule
@@ -143,6 +131,7 @@ SBMetaBlock >> initialize [
 	self
 		changeTableLayout;
 		listDirection: #leftToRight;
+		cellGap: 4;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		symbols: #(nil nil)
@@ -155,41 +144,26 @@ SBMetaBlock >> keyStroke: evt [
 	
 	(evt keyCharacter isPrintable and: [self valid not]) ifTrue: [
 		self deleteBeforeCursor.
-		Array streamContents: [:s |
-			factory
-				rulesMatching: self parentSandblock childObjectInterface
-				containing: self objectInterface
-				forPrefix: evt keyCharacter asString
-				do: [:rule :myField :operatorField | | block |
-					s nextPut: rule.
-					block := SBMetaBlock new.
-					^ self sandblockEditor do: (SBWrapCommand new
-						inner: self;
-						outer: block;
-						wrap: [:outer :inner |
-							factory
-								build: rule type
-								in: block
-								withValues: ({myField -> self veryDeepCopy. operatorField -> evt keyCharacter asString} as: Dictionary)])]]]
+		factory
+			rulesMatching: (self parentSandblock slotOf: self) objectInterface
+			containing: self objectInterface
+			forPrefix: evt keyCharacter asString
+			do: [:rule :myField :operatorField | | block |
+				block := SBMetaBlock new.
+				^ self sandblockEditor do: (SBWrapCommand new
+					inner: self;
+					outer: block;
+					wrap: [:outer :inner |
+						factory
+							build: rule type
+							in: block
+							withValues: ({myField -> self. operatorField -> evt keyCharacter asString} as: Dictionary)])]]
 ]
 
 { #category : #'as yet unclassified' }
 SBMetaBlock >> minimumHeight [
 
 	^ TextStyle defaultFont height + 4
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaBlock >> newEmptyChildNear: aBlock before: aBoolean [
-
-	childObjectInterface ifNil: [^ nil].
-	^ childObjectInterface isCollection
-		ifTrue: [
-			SBMetaUnknown new
-				objectInterfaces: childObjectInterface;
-				factory: factory;
-				yourself]
-		ifFalse: [factory build: childObjectInterface]
 ]
 
 { #category : #'as yet unclassified' }
@@ -216,6 +190,12 @@ SBMetaBlock >> objectInterfaceOf: aSubmorph [
 SBMetaBlock >> printOn: aStream [
 
 	aStream nextPutAll: objectInterface
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlock >> slotOf: aMorph [
+
+	^ slots slotOf: aMorph in: self do: [:slot :morphs | slot]
 ]
 
 { #category : #'as yet unclassified' }
