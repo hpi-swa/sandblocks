@@ -184,7 +184,7 @@ SBCursorInsert >> selectSmaller [
 { #category : #'as yet unclassified' }
 SBCursorInsert >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 
-	anEditor do: (self block insertEmptyCommandRequestNear: self adjacent before: self before).
+	anEditor do: command.
 	anEditor selection inputContainedUnknown.
 	anEditor selection keyStroke: anEvent.
 	aBlock value

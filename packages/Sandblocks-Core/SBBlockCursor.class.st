@@ -8,7 +8,8 @@ Class {
 		'cursorPosition',
 		'selectLargerHistory',
 		'horizontalOffsetInFloat',
-		'multiSelection'
+		'multiSelection',
+		'lastBlinkTime'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -99,6 +100,7 @@ SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol 
 	self selectedBlock ~= previousBlock ifTrue: [
 		previousBlock removeActionsWithReceiver: self.
 		previousBlock ifNotNil: #wasDeselected.
+		lastBlinkTime := Time current.
 		self selectedBlock
 			when: #positionChanged send: #updateBounds to: self;
 			when: #extentChanged send: #updateBounds to: self.
@@ -431,11 +433,14 @@ SBBlockCursor >> startOrAddToMultiSelection: aBlock [
 { #category : #blinking }
 SBBlockCursor >> step [
 
-	| oldVisible |
+	| oldVisible now |
 	oldVisible := self cursorVisible.
 	
-	cursorShown := cursorShown not.
-	blinkCount := blinkCount + 1.
+	now := Time current.
+	(lastBlinkTime isNil or: [((lastBlinkTime addSeconds: 0.5) < now)]) ifTrue: [
+		lastBlinkTime := now.
+		cursorShown := cursorShown not.
+		blinkCount := blinkCount + 1].
 	
 	cursorPosition valid ifFalse: [^ self cursorPosition: SBCursorNone new explicitMove: false axis: #none].
 	
@@ -449,7 +454,7 @@ SBBlockCursor >> step [
 { #category : #blinking }
 SBBlockCursor >> stepTime [
 
-	^ 500
+	^ 0
 ]
 
 { #category : #api }

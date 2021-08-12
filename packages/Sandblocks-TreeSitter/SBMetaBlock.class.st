@@ -8,7 +8,8 @@ Class {
 		'symbols',
 		'textFieldPattern',
 		'textField',
-		'grammarRule'
+		'grammarRule',
+		'slots'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -35,7 +36,9 @@ SBMetaBlock >> currentTextMorph [
 SBMetaBlock >> cursorPositionsDo: aBlock [
 
 	aBlock value: (SBCursorSelect new block: self).
-	self cursorPositionsForRule: grammarRule stream: self submorphs readStream do: aBlock
+	SBToggledCode comment: '' active: 1 do: {
+		[slots cursorPositionsWith: self submorphs in: self do: aBlock].
+		[self cursorPositionsForRule: grammarRule stream: self submorphs readStream do: aBlock]}
 ]
 
 { #category : #'as yet unclassified' }
@@ -100,6 +103,12 @@ SBMetaBlock >> extent: aPoint [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaBlock >> factory [
+
+	^ factory
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaBlock >> factory: aFactory [
 
 	factory := aFactory
@@ -120,7 +129,8 @@ SBMetaBlock >> grammarRule [
 { #category : #'as yet unclassified' }
 SBMetaBlock >> grammarRule: aRule [
 
-	grammarRule := aRule
+	grammarRule := aRule.
+	slots := factory buildSlotsFor: aRule
 ]
 
 { #category : #'as yet unclassified' }
@@ -195,6 +205,14 @@ SBMetaBlock >> objectInterface: anInterface [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaBlock >> objectInterfaceOf: aSubmorph [
+
+	| index |
+	index := self submorphIndexOf: aSubmorph.
+	^ (slots at: index) objectInterface
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaBlock >> printOn: aStream [
 
 	aStream nextPutAll: objectInterface
@@ -211,6 +229,12 @@ SBMetaBlock >> symbols: aCollection [
 
 	symbols := aCollection.
 	self extent: 0 @ 0
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlock >> textFieldPattern [
+
+	^ textFieldPattern
 ]
 
 { #category : #'as yet unclassified' }

@@ -16,15 +16,17 @@ SBMetaBlockFactory >> addMorphsFor: anObject to: aBlock [
 	anObject type caseOf: {
 		['STRING'] -> [aBlock addMorphBack: (SBStringMorph new contents: anObject value)].
 		['PATTERN'] -> [
-			aBlock textFieldPattern: (self buildRegex: anObject).
-			aBlock addMorphBack: SBOwnTextMorph new].
+			self assert: aBlock textFieldPattern isNil.
+			aBlock textFieldPattern: (self buildRegex: anObject)].
+		['TOKEN'] -> [
+			self assert: aBlock textFieldPattern isNil.
+			aBlock textFieldPattern: (self buildRegex: anObject)].
 		['SYMBOL'] -> [aBlock addMorphBack: (self unknownFor: anObject name)].
 		['REPEAT1'] -> [aBlock addMorphBack: (self unknownFor: anObject content name)].
 		['REPEAT'] -> [].
 		['CHOICE'] -> [
 			(anObject members size = 2 and: [anObject members contains: [:m | m type = 'BLANK']])
-				ifTrue: [" optional "
-				]
+				ifTrue: []
 				ifFalse: [self assert: false]].
 		['SEQ'] -> [anObject members do: [:m | self addMorphsFor: m to: aBlock]]}
 ]
@@ -68,9 +70,13 @@ SBMetaBlockFactory >> buildRegex: anObject on: aStream [
 	(self unpackTypes includes: (anObject at: #type)) ifTrue: [^ self buildRegex: anObject content on: aStream].
 	
 	(anObject at: #type) caseOf: {
+		['TOKEN'] -> [self buildRegex: anObject content on: aStream].
 		['REPEAT'] -> [
 			self buildRegex: anObject content on: aStream.
 			aStream nextPut: $*].
+		['REPEAT1'] -> [
+			self buildRegex: anObject content on: aStream.
+			aStream nextPut: $+].
 		['PATTERN'] -> [
 			aStream nextPut: $(.
 			aStream nextPutAll: (anObject at: #value).
@@ -87,6 +93,45 @@ SBMetaBlockFactory >> buildRegex: anObject on: aStream [
 			aStream nextPutAll: (self escapeStringForRegex: (anObject at: #value)).
 			aStream nextPut: $)].
 		['BLANK'] -> []}
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> buildSlotsFor: anObject [
+
+	^ SBMetaSlotArray new
+		slots: (Array streamContents: [:stream | self buildSlotsFor: anObject parentFieldName: nil on: stream]);
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> buildSlotsFor: anObject parentFieldName: aString on: aStream [
+
+	anObject type = 'FIELD' ifTrue: [^ self buildSlotsFor: anObject content parentFieldName: anObject name on: aStream].
+	
+	(self unpackTypes includes: anObject type) ifTrue: [^ self buildSlotsFor: anObject content parentFieldName: aString on: aStream].
+	
+	anObject type caseOf: {
+		['STRING'] -> [aStream nextPut: ((SBMetaSlot one type: anObject) name: aString)].
+		['PATTERN'] -> [aStream nextPut: ((SBMetaSlot one type: anObject) name: aString)].
+		['TOKEN'] -> [aStream nextPut: ((SBMetaSlot one type: anObject) name: aString)].
+		['SYMBOL'] -> [aStream nextPut: ((SBMetaSlot one type: anObject) name: aString)].
+		['REPEAT1'] -> [
+			aStream nextPut: (self
+				unpackFieldForSlot: anObject content
+				fieldName: aString
+				do: [:symbol :field | (SBMetaSlot atLeastOne type: symbol) name: field])].
+		['REPEAT'] -> [
+			aStream nextPut: (self
+				unpackFieldForSlot: anObject content
+				fieldName: aString
+				do: [:symbol :field | (SBMetaSlot any type: symbol) name: field])].
+		['CHOICE'] -> [
+			self assert: (anObject members size = 2 and: [anObject members second type = 'BLANK']).
+			aStream nextPut: (self
+				unpackFieldForSlot: anObject members first
+				fieldName: aString
+				do: [:symbol :field | (SBMetaSlot optional type: symbol) name: field])].
+		['SEQ'] -> [anObject members do: [:m | self buildSlotsFor: m parentFieldName: aString on: aStream]]}
 ]
 
 { #category : #'as yet unclassified' }
@@ -313,6 +358,7 @@ SBMetaBlockFactory >> token: anObject matches: aString visited: aCollection pare
 		['SEQ'] -> [self token: anObject members first matches: aString visited: aCollection parent: aRuleName matchDo: aBlock].
 		['PATTERN'] -> [((self buildRegex: anObject) matches: aString) ifTrue: [aBlock value: aRuleName value: false]].
 		['BLANK'] -> [].
+		['TOKEN'] -> [((self buildRegex: anObject) matches: aString) ifTrue: [aBlock value: aRuleName value: false]].
 		['SYMBOL'] -> [
 			(aCollection includes: (anObject at: #name)) ifFalse: [
 				aCollection add: (anObject at: #name).
@@ -360,9 +406,21 @@ SBMetaBlockFactory >> unknownFor: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaBlockFactory >> unpackFieldForSlot: anObject fieldName: aString do: aBlock [
+
+	^ anObject type = 'FIELD'
+		ifTrue: [
+			self assert: anObject content type = 'SYMBOL'.
+			aBlock value: anObject content value: anObject name]
+		ifFalse: [
+			self assert: anObject type = 'SYMBOL'.
+			aBlock value: anObject value: aString]
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaBlockFactory >> unpackTypes [
 
-	^ #('PREC_RIGHT' 'PREC_LEFT' 'PREC_DYNAMIC' 'PREC' 'TOKEN' 'CONTENT' 'ALIAS' 'FIELD')
+	^ #('PREC_RIGHT' 'PREC_LEFT' 'PREC_DYNAMIC' 'PREC' 'CONTENT' 'ALIAS' 'FIELD')
 ]
 
 { #category : #'as yet unclassified' }
