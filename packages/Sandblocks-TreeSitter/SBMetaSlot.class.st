@@ -2,7 +2,6 @@ Class {
 	#name : #SBMetaSlot,
 	#superclass : #Object,
 	#instVars : [
-		'type',
 		'required',
 		'multiple',
 		'name'
@@ -47,6 +46,30 @@ SBMetaSlot class >> optional [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaSlot >> applyToMorph: block getText: aTextBlock buildChild: aBlock [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> isBlockSlot [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> matchesMorph: aMorph in: aFactory [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> matchesNode: aNode ts: aLibrary [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaSlot >> multiple [
 
 	^ multiple
@@ -65,20 +88,9 @@ SBMetaSlot >> name: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlot >> objectInterface [
-
-	^ type type = 'SYMBOL' ifTrue: [type name] ifFalse: [nil]
-]
-
-{ #category : #'as yet unclassified' }
 SBMetaSlot >> printOn: aStream [
 
-	aStream nextPutAll: self className.
-	aStream nextPut: $(.
-	aStream nextPutAll: (self objectInterface ifNotNil: [:o | o] ifNil: ['<none>']).
-	self multiple ifTrue: [aStream nextPutAll: ',multiple'].
-	self required ifTrue: [aStream nextPutAll: ',required'].
-	aStream nextPut: $)
+	self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }
@@ -94,13 +106,7 @@ SBMetaSlot >> required: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlot >> type [
+SBMetaSlot >> takeNode: aNode ts: aLibrary cursor: aCursor for: aMorph [
 
-	^ type
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaSlot >> type: aType [
-
-	type := aType
+	^ self subclassResponsibility
 ]

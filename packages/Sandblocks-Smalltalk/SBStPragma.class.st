@@ -122,6 +122,12 @@ SBStPragma >> symbols [
 ]
 
 { #category : #'as yet unclassified' }
+SBStPragma >> tryDelete [
+
+	self deleteBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBStPragma >> useSuggestion: aString [
 
 	signature selectorAndEdit: aString

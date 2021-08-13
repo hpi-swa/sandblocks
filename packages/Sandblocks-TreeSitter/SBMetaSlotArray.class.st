@@ -25,7 +25,7 @@ SBMetaSlotArray >> cursorPositionsWith: aSubmorphCollection in: aParent do: aBlo
 	
 	self slotsIn: aParent do: [:slot :morphs :previousMorph |
 		morphs do: [:morph |
-			slot objectInterface ifNotNil: [
+			slot isBlockSlot ifTrue: [
 				slot multiple ifTrue: [buildInsert value: morph value: true value: slot].
 				morph cursorPositionsDo: aBlock.
 				slot multiple ifTrue: [buildInsert value: morph value: false value: slot]].
@@ -49,12 +49,24 @@ SBMetaSlotArray >> named: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaSlotArray >> readStream [
+
+	^ slots readStream
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaSlotArray >> slotOf: aMorph in: aParent do: aBlock [
 
 	self
 		slotsIn: aParent
 		do: [:slot :morphs :p | (morphs includes: aMorph) ifTrue: [^ aBlock value: slot value: morphs]].
 	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotArray >> slots [
+
+	^ slots
 ]
 
 { #category : #'as yet unclassified' }
@@ -74,8 +86,8 @@ SBMetaSlotArray >> slotsIn: aMorph do: aBlock [
 		morphs := OrderedCollection new.
 		
 		slot multiple
-			ifTrue: [[stream atEnd not and: [factory type: stream peek objectInterface compatibleWith: slot objectInterface]] whileTrue: [morphs add: stream next]]
-			ifFalse: [(stream atEnd not and: [factory type: stream peek objectInterface compatibleWith: slot objectInterface]) ifTrue: [morphs add: stream next]].
+			ifTrue: [[stream atEnd not and: [slot matchesMorph: stream peek in: factory]] whileTrue: [morphs add: stream next]]
+			ifFalse: [(stream atEnd not and: [slot matchesMorph: stream peek in: factory]) ifTrue: [morphs add: stream next]].
 		
 		slot required ifTrue: [self assert: morphs notEmpty].
 		aBlock value: slot value: morphs value: previousMorph.

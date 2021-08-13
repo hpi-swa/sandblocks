@@ -26,9 +26,9 @@ SBDeleteCommand >> nextBlockFrom: aMorph [
 
 	| next |
 	aMorph floating ifTrue: [
-		^ aMorph parentSandblock
+		^ (aMorph parentSandblock
 			childClosestTo: (aMorph center ifNil: [aMorph sandblockEditor])
-			that: [:b | b ~= aMorph]].
+			that: [:b | b ~= aMorph]) ifNil: [aMorph sandblockEditor]].
 	next := (aMorph isSandblock
 		ifTrue: [(aMorph adjacentBlock: 1) ifNil: [aMorph adjacentBlock: -1]]
 		ifFalse: [

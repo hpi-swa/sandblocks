@@ -189,13 +189,21 @@ SBMetaBlock >> objectInterfaceOf: aSubmorph [
 { #category : #'as yet unclassified' }
 SBMetaBlock >> printOn: aStream [
 
-	aStream nextPutAll: objectInterface
+	aStream nextPutAll: (objectInterface isString
+		ifTrue: [objectInterface]
+		ifFalse: [objectInterface joinSeparatedBy: ','])
 ]
 
 { #category : #'as yet unclassified' }
 SBMetaBlock >> slotOf: aMorph [
 
 	^ slots slotOf: aMorph in: self do: [:slot :morphs | slot]
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlock >> slots [
+
+	^ slots
 ]
 
 { #category : #'as yet unclassified' }
@@ -221,7 +229,7 @@ SBMetaBlock >> textFieldPattern [
 SBMetaBlock >> textFieldPattern: aString [
 
 	textFieldPattern := aString.
-	self addMorphBack: (textField := SBOwnTextMorph new)
+	self addMorphBack: (textField := SBOwnTextMorph new vResizing: #shrinkWrap)
 ]
 
 { #category : #'as yet unclassified' }

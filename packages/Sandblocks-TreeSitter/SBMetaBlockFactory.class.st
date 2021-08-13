@@ -37,6 +37,48 @@ SBMetaBlockFactory >> addMorphsFor: anObject to: aBlock parentField: aString wit
 		['SEQ'] -> [anObject members do: [:m | self addMorphsFor: m to: aBlock parentField: aString withValues: aDictionary]]}
 ]
 
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> allSymbolsProducedBy: anObject on: aStream [
+
+	(#('PREC' 'REPEAT' 'FIELD' 'REPEAT1') includes: anObject type) ifTrue: [^ self allSymbolsProducedBy: anObject content on: aStream].
+	(#('STRING' 'PATTERN' 'BLANK') includes: anObject type) ifTrue: [^ self].
+	
+	anObject type caseOf: {
+		['CHOICE'] -> [anObject members do: [:m | self allSymbolsProducedBy: m on: aStream]].
+		['SYMBOL'] -> [aStream nextPut: anObject name].
+		['ALIAS'] -> [aStream nextPut: anObject value].
+		['SEQ'] -> [anObject members do: [:member | self allSymbolsProducedBy: member on: aStream]]}
+]
+
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> applyInlining: rule [
+
+	(rule type = 'SYMBOL' and: [
+		(grammar inline includes: rule name) and: [
+			SBToggledCode
+				comment: ''
+				active: 2
+				do: {[true]. [(grammar supertypes includes: rule name) not]}]]) ifTrue: [ | inline symbols |
+		inline := grammar rules at: rule name.
+		symbols := (Array streamContents: [:stream | self symbolsProducedBy: inline on: stream]) asSet.
+		symbols size = 1 ifTrue: [rule name: symbols anyOne] ifFalse: [
+			rule
+				type: 'CHOICE';
+				members: (symbols collect: [:m | JsonObject fromAssociations: {'name' -> m. 'type' -> 'SYMBOL'}] as: Array)].
+		^ self].
+	
+	(rule type = 'SYMBOL' and: [rule name first = $_ and: [(grammar externals noneSatisfy: [:e | e name = rule name]) and: [(grammar supertypes includes: rule name) not]]]) ifTrue: [ | inline symbols |
+		inline := grammar rules at: rule name.
+		(self includesNonHiddenParts: inline visited: Set new) ifTrue: [
+			symbols := (Array streamContents: [:stream | self allSymbolsProducedBy: inline on: stream]) asSet.
+			rule removeAll.
+			inline keysAndValuesDo: [:key :val | rule at: key put: val]].
+		^ self].
+	
+	rule content ifNotNil: [:c | self applyInlining: c].
+	rule members ifNotNil: [:c | c do: [:child | self applyInlining: child]]
+]
+
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> build: aType [
 
@@ -65,14 +107,46 @@ SBMetaBlockFactory >> build: aType withValues: aDictionary [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaBlockFactory >> buildFromTS: aTreeSitter current: anObject to: aMorph parentField: aString [
+
+	
+	'FIELD' = anObject type ifTrue: [^ self buildFromTS: anObject content current: aMorph to: anObject name parentField: aTreeSitter].
+	
+	(self unpackTypes includes: anObject type) ifTrue: [^ self buildFromTS: anObject content current: aMorph to: aString parentField: aTreeSitter].
+	
+	(#('SYMBOL' 'REPEAT1') includes: anObject type) ifTrue: [
+		
+		^ aMorph addMorphBack: (aTreeSitter at: aString ifAbsent: [self unknownFor: anObject name])].
+	
+	(#('TOKEN' 'PATTERN') includes: anObject type) ifTrue: [
+		self assert: aMorph textFieldPattern isNil.
+		^ aMorph textFieldPattern: (self buildRegex: anObject)].
+	
+	anObject type caseOf: {
+		['SYMBOL'] -> [
+			aMorph addMorphBack: (self
+				buildFromTS: aTreeSitter
+				current: (grammar rules at: anObject name)
+				to: SBMetaBlock new
+				parentField: nil)].
+		['STRING'] -> [aMorph addMorphBack: (SBStringMorph new contents: anObject value)].
+		['REPEAT'] -> [
+			aTreeSitter
+				at: aString
+				ifPresent: [:f | aMorph addMorphBack: f]
+				ifAbsent: [self unknownFor: anObject name]].
+		['CHOICE'] -> [
+			(anObject members size = 2 and: [anObject members contains: [:m | m type = 'BLANK']])
+				ifTrue: []
+				ifFalse: [" FIXME: wrong assumption "
+				self addMorphsFor: anObject members first to: aMorph parentField: aString withValues: aTreeSitter]].
+		['SEQ'] -> [anObject members do: [:m | self buildFromTS: m current: aMorph to: aString parentField: aTreeSitter]]}
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaBlockFactory >> buildRegex: rule [
 
-	| s |
-	s := '' writeStream.
-	self buildRegex: rule on: s.
-	^ ((s contents copyReplaceAll: '\p{XID_Start}' with: 'A-Za-z')
-		copyReplaceAll: '\p{XID_Continue}'
-		with: 'A-Za-z0-9') asRegex
+	^ (self buildRegexString: rule) asRegex
 ]
 
 { #category : #'as yet unclassified' }
@@ -107,6 +181,17 @@ SBMetaBlockFactory >> buildRegex: anObject on: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaBlockFactory >> buildRegexString: rule [
+
+	| s |
+	s := '' writeStream.
+	self buildRegex: rule on: s.
+	^ (s contents copyReplaceAll: '\p{XID_Start}' with: 'A-Za-z')
+		copyReplaceAll: '\p{XID_Continue}'
+		with: 'A-Za-z0-9'
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaBlockFactory >> buildSlotsFor: anObject [
 
 	^ SBMetaSlotArray new
@@ -121,13 +206,26 @@ SBMetaBlockFactory >> buildSlotsFor: anObject parentFieldName: aString on: aStre
 	
 	(self unpackTypes includes: anObject type) ifTrue: [^ self buildSlotsFor: anObject content parentFieldName: aString on: aStream].
 	
-	(#('STRING' 'PATTERN' 'TOKEN' 'SYMBOL') includes: anObject type) ifTrue: [^ aStream nextPut: ((SBMetaSlot one type: anObject) name: aString)].
+	(#('STRING') includes: anObject type) ifTrue: [
+		^ aStream nextPut: (SBMetaSlotLabel one
+			name: aString;
+			label: anObject value)].
+	
+	(#('PATTERN' 'TOKEN') includes: anObject type) ifTrue: [
+		^ aStream nextPut: (SBMetaSlotText one
+			name: aString;
+			regexString: (self buildRegexString: anObject))].
+	
+	(#('SYMBOL') includes: anObject type) ifTrue: [
+		^ aStream nextPut: (SBMetaSlotBlock one
+			name: aString;
+			structure: anObject)].
 	
 	(#('REPEAT' 'REPEAT1') includes: anObject type) ifTrue: [
 		^ aStream nextPut: (self
 			unpackFieldForSlot: anObject content
 			fieldName: aString
-			do: [:symbol :field | ((SBMetaSlot perform: (anObject type = 'REPEAT' ifTrue: [#any] ifFalse: [#atLeastOne])) type: symbol) name: field])].
+			do: [:structure :field | ((SBMetaSlotBlock perform: (anObject type = 'REPEAT' ifTrue: [#any] ifFalse: [#atLeastOne])) structure: structure) name: field])].
 	
 	anObject type caseOf: {
 		['CHOICE'] -> [
@@ -136,11 +234,14 @@ SBMetaBlockFactory >> buildSlotsFor: anObject parentFieldName: aString on: aStre
 				^ aStream nextPut: (self
 					unpackFieldForSlot: anObject members first
 					fieldName: aString
-					do: [:symbol :field | (SBMetaSlot optional type: symbol) name: field])].
+					do: [:structure :field | (SBMetaSlotBlock optional structure: structure) name: field])].
 			
-			" FIXME: most-often incorrect guess that the structure of all members is the same "
-			self buildSlotsFor: anObject members first parentFieldName: aString on: aStream].
-		['SEQ'] -> [anObject members do: [:m | self buildSlotsFor: m parentFieldName: aString on: aStream]]}
+			aStream nextPut: (SBMetaSlotBlock one
+				name: aString;
+				structure: anObject)].
+		['SEQ'] -> [
+			anObject members do: [:m | self buildSlotsFor: m parentFieldName: aString on: aStream].
+			^ nil]}
 ]
 
 { #category : #'as yet unclassified' }
@@ -162,6 +263,17 @@ SBMetaBlockFactory >> cleanRule: aRule [
 		otherwise: [aRule]
 ]
 
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> deepCompare: anObject to: anotherObject [
+
+	anObject associationsDo: [:assoc | | obj |
+		obj := anotherObject at: assoc key ifAbsent: [^ false].
+		((obj isDictionary and: [assoc value isDictionary])
+			ifTrue: [self deepCompare: assoc value to: obj]
+			ifFalse: [obj = assoc value]) ifFalse: [^ false]].
+	^ true
+]
+
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> escapeStringForRegex: aString [
 
@@ -174,6 +286,20 @@ SBMetaBlockFactory >> fieldsOf: aRule [
 	^ nodeTypes detect: [:t | t type = aRule] ifFound: [:t | t fields collect: #type]
 ]
 
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> flattenSeparatedList: anObject [
+	" seq(rule, repeat(seq(separator, rule))) "
+
+	(anObject type = 'SEQ' and: [anObject members size = 2 and: [anObject members second type = 'REPEAT' and: [anObject members second content type = 'SEQ' and: [self deepCompare: anObject members first to: anObject members second content members second]]]]) ifTrue: [
+		^ anObject
+			type: 'REPEAT';
+			content: anObject members first;
+			removeKey: #members].
+	
+	anObject content ifNotNil: [:c | self flattenSeparatedList: c].
+	anObject members ifNotNil: [:c | c do: [:m | self flattenSeparatedList: m]]
+]
+
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> fromTSRule: aRule [
 
@@ -184,10 +310,80 @@ SBMetaBlockFactory >> fromTSRule: aRule [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaBlockFactory >> grammar [
+
+	^ grammar
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaBlockFactory >> grammar: aString nodeTypes: anotherString [
 
 	grammar := Json readFrom: aString readStream.
-	nodeTypes := Json readFrom: anotherString readStream
+	nodeTypes := Json readFrom: anotherString readStream.
+	
+	grammar rules do: [:rule | self removeExternals: rule].
+	grammar rules do: [:rule | self removeHiddenTerminals: rule].
+	grammar rules do: [:rule | self unwrapSingleChoices: rule].
+	grammar rules do: [:rule | self removeHiddenTerminals: rule].
+	grammar rules do: [:rule | self simplifyList: rule].
+	grammar rules do: [:rule | self mergeRepeats: rule].
+	grammar rules do: [:rule | self flattenSeparatedList: rule].
+	grammar rules do: [:rule | self applyInlining: rule].
+	grammar rules do: [:rule | self mergeRedundantRepeats: rule].
+	grammar rules do: [:rule | self removeAliases: rule].
+	grammar rules do: [:rule | self unwrapSingleChoices: rule]
+]
+
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> includesNonHiddenParts: anObject visited: aCollection [
+
+	(#('PREC' 'PREC_DYNAMIC' 'PREC_LEFT' 'PREC_RIGHT' 'REPEAT' 'FIELD' 'REPEAT1') includes: anObject type) ifTrue: [^ self includesNonHiddenParts: anObject content visited: aCollection].
+	(#('STRING' 'PATTERN' 'BLANK' 'TOKEN') includes: anObject type) ifTrue: [^ false].
+	
+	^ anObject type caseOf: {
+		['CHOICE'] -> [anObject members anySatisfy: [:m | self includesNonHiddenParts: m visited: aCollection]].
+		['SYMBOL'] -> [
+			anObject name first ~= $_ ifTrue: [^ true].
+			(aCollection includes: anObject name) ifTrue: [false] ifFalse: [
+				aCollection add: anObject name.
+				self includesNonHiddenParts: (grammar rules at: anObject name) visited: aCollection]].
+		['ALIAS'] -> [
+			anObject value first ~= $_ ifTrue: [^ true].
+			(aCollection includes: anObject value) ifTrue: [false] ifFalse: [
+				aCollection add: anObject value.
+				grammar rules
+					at: anObject value
+					ifPresent: [:r | self includesNonHiddenParts: r visited: aCollection]
+					ifAbsent: [false]]].
+		['SEQ'] -> [anObject members anySatisfy: [:member | self includesNonHiddenParts: member visited: aCollection]]}
+]
+
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> mergeRedundantRepeats: anObject [
+
+	(anObject type = 'REPEAT' and: [anObject content type = 'CHOICE']) ifTrue: [
+		anObject content members do: [:m |
+			(m type = 'REPEAT' or: [m type = 'REPEAT1']) ifTrue: [ | copyFrom |
+				copyFrom := m content.
+				m removeAll.
+				copyFrom keysAndValuesDo: [:key :val | m at: key put: val]]]].
+	
+	anObject content ifNotNil: [:c | self mergeRedundantRepeats: c].
+	anObject members ifNotNil: [anObject members do: [:m | self mergeRedundantRepeats: m]]
+]
+
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> mergeRepeats: anObject [
+
+	(anObject type = 'SEQ' and: [anObject members size = 2 and: [anObject members first type = 'SYMBOL' and: [(anObject members last type = 'REPEAT' and: [anObject members last content type = 'SYMBOL']) and: [anObject members last content name = anObject members first name]]]]) ifTrue: [ | copyFrom |
+		copyFrom := anObject members last.
+		anObject removeAll.
+		copyFrom keysAndValuesDo: [:key :val | anObject at: key put: val].
+		anObject type: 'REPEAT1'].
+	
+	
+	anObject content ifNotNil: [:c | self mergeRepeats: c].
+	anObject members ifNotNil: [anObject members do: [:m | self mergeRepeats: m]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -271,6 +467,39 @@ SBMetaBlockFactory >> orderedFieldsOf: aNode do: aBlock [
 		do: [:member | member type = 'FIELD' ifTrue: [aBlock value: (member at: #name)]]
 ]
 
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> removeAliases: anObject [
+
+	anObject type = 'ALIAS' ifTrue: [
+		anObject type: 'SYMBOL'.
+		anObject name: anObject value.
+		anObject removeKey: 'value'.
+		anObject removeKey: 'named'.
+		anObject removeKey: 'content'.
+		^ self].
+	
+	anObject content ifNotNil: [:c | self removeAliases: c].
+	anObject members ifNotNil: [:c | c do: [:m | self removeAliases: m]]
+]
+
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> removeExternals: anObject [
+
+	anObject content ifNotNil: [:c | self removeExternals: c].
+	anObject members ifNotNil: [
+		anObject members: (anObject members copyWithoutAll: (Array streamContents: [:stream | anObject members do: [:member | (member type = 'SYMBOL' and: [grammar externals anySatisfy: [:external | external name = member name]]) ifTrue: [stream nextPut: member]]])).
+		anObject members do: [:m | self removeExternals: m]]
+]
+
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> removeHiddenTerminals: anObject [
+
+	anObject content ifNotNil: [:c | self removeHiddenTerminals: c].
+	anObject members ifNotNil: [
+		anObject members: (anObject members copyWithoutAll: (Array streamContents: [:stream | anObject members do: [:member | ((member type = 'SYMBOL' and: [(self includesNonHiddenParts: member visited: Set new) not]) or: [anObject type = 'SEQ' and: [member type = 'BLANK']]) ifTrue: [stream nextPut: member]]])).
+		anObject members do: [:m | self removeHiddenTerminals: m]]
+]
+
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> rule: aStringOrCollection triggersFor: aPrefixString do: aBlock [
 
@@ -306,6 +535,18 @@ SBMetaBlockFactory >> rulesMatching: aStringOrCollection containing: aRuleName f
 					ifFound: [:operatorField | aBlock value: rule value: name value: operatorField key]]]]
 ]
 
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> simplifyList: anObject [
+
+	(anObject type = 'CHOICE' and: [anObject members size = 2 and: [anObject members last type = 'BLANK' and: [anObject members first type = 'REPEAT']]]) ifTrue: [ | copyFrom |
+		copyFrom := anObject members first.
+		anObject removeAll.
+		copyFrom keysAndValuesDo: [:key :val | anObject at: key put: val]].
+	
+	anObject content ifNotNil: [:c | self simplifyList: c].
+	anObject members ifNotNil: [anObject members do: [:m | self simplifyList: m]]
+]
+
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> startsWithKeyword: anObject [
 
@@ -334,6 +575,22 @@ SBMetaBlockFactory >> symbolsForType: rule [
 					ifTrue: [rule members last at: #value]
 					ifFalse: [nil]}]
 		ifFalse: [#(nil nil)]
+]
+
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> symbolsProducedBy: anObject on: aStream [
+
+	(#('PREC') includes: anObject type) ifTrue: [^ self symbolsProducedBy: anObject content on: aStream].
+	
+	anObject type caseOf: {
+		['CHOICE'] -> [anObject members do: [:m | self symbolsProducedBy: m on: aStream]].
+		['SYMBOL'] -> [aStream nextPut: anObject name].
+		['ALIAS'] -> [aStream nextPut: anObject value].
+		['SEQ'] -> [ | nonHidden |
+			self assert: (anObject members allSatisfy: [:m | m type = 'SYMBOL']).
+			nonHidden := anObject members select: [:m | m name first ~= $_].
+			self assert: nonHidden size = 1.
+			aStream nextPut: nonHidden first name value]}
 ]
 
 { #category : #'as yet unclassified' }
@@ -390,6 +647,8 @@ SBMetaBlockFactory >> token: anObject matches: aString visited: aCollection pare
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> type: aRuleName compatibleWith: anotherRuleName [
 
+	anotherRuleName isString ifFalse: [^ anotherRuleName anySatisfy: [:r | self type: aRuleName compatibleWith: r]].
+	
 	SBToggledCode comment: '' active: 0 do: {
 		[[(grammar supertypes includes: anotherRuleName) and: [((grammar rules at: anotherRuleName) members collect: #name) includes: aRuleName]]]}.
 	^ aRuleName = anotherRuleName or: [
@@ -427,19 +686,27 @@ SBMetaBlockFactory >> unknownFor: aCollection [
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> unpackFieldForSlot: anObject fieldName: aString do: aBlock [
 
-	^ anObject type = 'FIELD'
-		ifTrue: [
-			self assert: anObject content type = 'SYMBOL'.
-			aBlock value: anObject content value: anObject name]
-		ifFalse: [
-			self assert: anObject type = 'SYMBOL'.
-			aBlock value: anObject value: aString]
+	anObject type = 'FIELD' ifTrue: [^ aBlock value: anObject content value: anObject name].
+	
+	^ aBlock value: anObject value: aString
 ]
 
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> unpackTypes [
 
-	^ #('PREC_RIGHT' 'PREC_LEFT' 'PREC_DYNAMIC' 'PREC' 'CONTENT' 'ALIAS' 'FIELD')
+	^ #('PREC_RIGHT' 'PREC_LEFT' 'PREC_DYNAMIC' 'PREC' 'ALIAS' 'FIELD')
+]
+
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> unwrapSingleChoices: anObject [
+
+	(((anObject type = 'CHOICE' or: [anObject type = 'SEQ']) and: [anObject members size = 1]) or: [anObject type = 'CHOICE' and: [anObject members size = 2 and: [anObject members first type = 'REPEAT' and: [anObject members second type = 'BLANK']]]]) ifTrue: [ | copyFrom |
+		copyFrom := anObject members first.
+		anObject removeAll.
+		copyFrom keysAndValuesDo: [:key :val | anObject at: key put: val]].
+	
+	anObject content ifNotNil: [:c | self unwrapSingleChoices: c].
+	anObject members ifNotNil: [anObject members do: [:m | self unwrapSingleChoices: m]]
 ]
 
 { #category : #'as yet unclassified' }

@@ -1,6 +1,10 @@
 Class {
 	#name : #SBTreeSitter,
 	#superclass : #ExternalLibrary,
+	#instVars : [
+		'currentString',
+		'currentFactory'
+	],
 	#category : #'Sandblocks-TreeSitter'
 }
 
@@ -11,21 +15,130 @@ SBTreeSitter class >> moduleName [
 ]
 
 { #category : #'as yet unclassified' }
-SBTreeSitter >> buildNode: aNode using: aFactory [
+SBTreeSitter >> buildTree: aCursor [
 
-	| type fields |
-	type := self nodeType: aNode.
-	fields := (aFactory fieldsOf: type)
-		collect: [:field | field -> self buildNode: (self node: aNode childByFieldName: field length: field size) using: aFactory]
-		as: Dictionary.
+	| block node type rule slots takeNode |
+	node := self cursorCurrentNode: aCursor.
+	type := self nodeType: node.
+	rule := currentFactory grammar rules
+		at: type
+		ifAbsent: [self assert: false].
 	
-	^ aFactory build: type withValues: fields
+	block := SBMetaBlock new
+		factory: currentFactory;
+		symbols: #(nil nil);
+		objectInterface: type;
+		grammarRule: rule.
+	
+	slots := block slots readStream.
+	
+	takeNode := [:slot | | hasNext |
+		slot applyToMorph: block getText: [self textForNode: node] buildChild: [self buildTree: aCursor].
+		hasNext := self cursorGotoNextSibling: aCursor.
+		hasNext ifTrue: [ | c |
+			c := self cursorCurrentNode: aCursor.
+			(self shouldSkipParsedNode: c) ifTrue: [hasNext := self cursorGotoNextSibling: aCursor]].
+		hasNext].
+	
+	(self cursorGotoFirstChild: aCursor)
+		ifTrue: [ | slot cursorHasNext |
+			cursorHasNext := true.
+			[slots atEnd] whileFalse: [ | count |
+				node := self cursorCurrentNode: aCursor.
+				slot := slots next.
+				count := 0.
+				[cursorHasNext and: [(slot multiple or: [count = 0]) and: [slot matchesNode: node ts: self]]] whileTrue: [
+					cursorHasNext := takeNode value: slot.
+					node := self cursorCurrentNode: aCursor.
+					count := count + 1].
+				
+				self assert: (slot required not or: [count > 0])].
+			self cursorGotoParent: aCursor]
+		ifFalse: [slots do: [:slot | slot applyToMorph: block getText: [self textForNode: node] buildChild: [self assert: false]]].
+	
+	^ block
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> currentFactory [
+
+	^ currentFactory
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> cursor: aCursor reset: aNode [
+
+	<apicall: void ts_tree_cursor_reset (SBTSTreeCursor* SBTSNode)>
+	^ self externalCallFailed
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> cursorCurrentNode: aCursor [
+
+	<apicall: SBTSNode ts_tree_cursor_current_node (SBTSTreeCursor*)>
+	^ self externalCallFailed
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> cursorDelete: aCursor [
+
+	<apicall: void ts_tree_cursor_delete (SBTSTreeCursor*)>
+	^ self externalCallFailed
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> cursorGotoFirstChild: aCursor [
+
+	<apicall: bool ts_tree_cursor_goto_first_child (SBTSTreeCursor*)>
+	^ self externalCallFailed
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> cursorGotoNextSibling: aCursor [
+
+	<apicall: bool ts_tree_cursor_goto_next_sibling (SBTSTreeCursor*)>
+	^ self externalCallFailed
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> cursorGotoParent: aCursor [
+
+	<apicall: bool ts_tree_cursor_goto_parent (SBTSTreeCursor*)>
+	^ self externalCallFailed
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> cursorNew: root [
+
+	<apicall: SBTSTreeCursor ts_tree_cursor_new (SBTSNode)>
+	^ self externalCallFailed
 ]
 
 { #category : #'as yet unclassified' }
 SBTreeSitter >> node: aNode childByFieldName: aString length: aNumber [
 
 	<apicall: SBTSNode ts_node_child_by_field_name (SBTSNode char* uint32_t)>
+	^ self externalCallFailed
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> nodeEndByte: aNode [
+
+	<apicall: uint32_t ts_node_end_byte (SBTSNode)>
+	^ self externalCallFailed
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> nodeParent: aNode [
+
+	<apicall: SBTSNode ts_node_parent (SBTSNode)>
+	^ self externalCallFailed
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> nodeStartByte: aNode [
+
+	<apicall: uint32_t ts_node_start_byte (SBTSNode)>
 	^ self externalCallFailed
 ]
 
@@ -46,16 +159,24 @@ SBTreeSitter >> nodeType: aNode [
 { #category : #'as yet unclassified' }
 SBTreeSitter >> parse: aString language: aSymbol [
 
-	| language parser root tree |
+	| language parser root tree block cursor |
+	currentString := aString withUnixLineEndings.
+	currentFactory := self perform: (aSymbol, 'Factory') asSymbol.
 	language := self perform: aSymbol.
 	
 	parser := self parserNew.
 	self parser: parser setLanguage: language.
 	
-	tree := self parser: parser old: nil parseString: aString length: aString size.
+	tree := self parser: parser old: nil parseString: currentString length: currentString size.
 	
 	root := self treeRootNode: tree.
-	^ self buildNode: root using: (self perform: (aSymbol, 'Factory') asSymbol)
+	cursor := self cursorNew: root.
+	block := self buildTree: cursor.
+	
+	self cursorDelete: cursor.
+	self parserDelete: parser.
+	
+	^ block
 ]
 
 { #category : #'as yet unclassified' }
@@ -73,10 +194,36 @@ SBTreeSitter >> parser: aParserPointer setLanguage: aLanguagePointer [
 ]
 
 { #category : #'as yet unclassified' }
+SBTreeSitter >> parserDelete: aCursor [
+
+	<apicall: void ts_parser_delete (void*)>
+	^ self externalCallFailed
+]
+
+{ #category : #'as yet unclassified' }
 SBTreeSitter >> parserNew [
 
 	<apicall: void* ts_parser_new ()> 
 	^ self externalCallFailed
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> printTree: aCursor factory: aFactory [
+
+	| block node type rule |
+	node := self cursorCurrentNode: aCursor.
+	type := self nodeType: node.
+	rule := aFactory grammar rules at: type.
+	
+	block := SBMetaBlock new.
+	Transcript showln: type.
+	
+	(self cursorGotoFirstChild: aCursor) ifTrue: [
+		self printTree: aCursor factory: aFactory.
+		[self cursorGotoNextSibling: aCursor] whileTrue: [self printTree: aCursor factory: aFactory].
+		self cursorGotoParent: aCursor].
+	
+	^ block
 ]
 
 { #category : #'as yet unclassified' }
@@ -88,10 +235,10 @@ SBTreeSitter >> python [
 
 { #category : #'as yet unclassified' }
 SBTreeSitter >> pythonFactory [
-
 	" https://github.com/tree-sitter/tree-sitter-python/blob/master/src/grammar.json
 	  https://github.com/tree-sitter/tree-sitter-python/blob/master/src/node-types.json "
-	^ SBMetaBlockFactory new
+
+	^ (SBMetaBlockFactory new
 		grammar: '{
   "name": "python",
   "word": "identifier",
@@ -7925,7 +8072,24 @@ SBTreeSitter >> pythonFactory [
     "type": "~",
     "named": false
   }
-]'
+]') in: [:f |
+		(f grammar rules at: #'expression_statement') members: ((f grammar rules at: #'expression_statement') members copyWithout: ((f grammar rules at: #'expression_statement') members at: 2)).
+		(f grammar rules at: #'argument_list') members: ((f grammar rules at: #'argument_list') members copyWithout: ((f grammar rules at: #'argument_list') members at: 3)).
+		f]
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> shouldSkipParsedNode: aNode [
+	" TODO: python specific "
+
+	^ (self nodeType: (self nodeParent: aNode)) = 'argument_list' and: [(self nodeType: aNode) = ',']
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> textForNode: aNode [
+	" TODO: will break with UTF-8 "
+
+	^ currentString copyFrom: (self nodeStartByte: aNode) + 1 to: (self nodeEndByte: aNode)
 ]
 
 { #category : #'as yet unclassified' }
