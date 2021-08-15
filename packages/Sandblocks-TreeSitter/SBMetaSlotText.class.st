@@ -9,22 +9,15 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBMetaSlotText >> applyToMorph: block getText: aTextBlock buildChild: aBlock [
+SBMetaSlotText >> buildFor: aMorph [
 
-	block textFieldPattern: self regex.
-	aTextBlock ifNotNil: [block contents: (aTextBlock cull: self)]
+	aMorph textFieldPattern: self regex
 ]
 
 { #category : #'as yet unclassified' }
 SBMetaSlotText >> matchesMorph: aMorph in: aFactory [
 
 	^ SBToggledCode comment: '' active: 1 do: {[true]. [self regex matches: aMorph contents]}
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaSlotText >> matchesNode: aNode ts: aLibrary [
-
-	^ self regex matches: (aLibrary textForNode: aNode)
 ]
 
 { #category : #'as yet unclassified' }
@@ -63,4 +56,15 @@ SBMetaSlotText >> regexString: aString [
 
 	self regex: aString asRegex.
 	regexString := aString
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotText >> takeFrom: aCursor for: aMorph [
+
+	^ true
+		ifTrue: [
+			aMorph textFieldPattern: self regex.
+			aMorph contents: aCursor text.
+			true]
+		ifFalse: [false]
 ]

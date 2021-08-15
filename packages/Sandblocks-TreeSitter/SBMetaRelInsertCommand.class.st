@@ -2,8 +2,8 @@ Class {
 	#name : #SBMetaRelInsertCommand,
 	#superclass : #SBRelInsertCommand,
 	#instVars : [
-		'objectInterface',
-		'factory'
+		'factory',
+		'slot'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -11,7 +11,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBMetaRelInsertCommand >> do [
 
-	morph := morph ifNil: [factory unknownFor: objectInterface].
+	morph := morph ifNil: [factory unknownFor: slot].
 	^ super do
 ]
 
@@ -24,25 +24,25 @@ SBMetaRelInsertCommand >> factory [
 { #category : #'as yet unclassified' }
 SBMetaRelInsertCommand >> hasSamePositionAs: aCommand [
 
-	^ (aCommand isKindOf: self class) and: [aCommand factory = self factory and: [aCommand objectInterface = self objectInterface and: [super hasSamePositionAs: aCommand]]]
+	^ (aCommand isKindOf: self class) and: [aCommand factory = self factory and: [(aCommand slot hasSameStructureAs: self slot) and: [super hasSamePositionAs: aCommand]]]
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaRelInsertCommand >> near: aBlock before: aBoolean in: aContainer factory: aFactory objectInterface: aSymbol [
+SBMetaRelInsertCommand >> near: aBlock before: aBoolean in: aContainer factory: aFactory slot: aSlot [
 
 	super near: aBlock before: aBoolean in: aContainer morph: nil.
 	factory := aFactory.
-	objectInterface := aSymbol
+	slot := aSlot
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaRelInsertCommand >> objectInterface [
+SBMetaRelInsertCommand >> slot [
 
-	^ objectInterface
+	^ slot
 ]
 
 { #category : #'as yet unclassified' }
 SBMetaRelInsertCommand >> title [
 
-	^ 'insert ', objectInterface
+	^ 'insert ', slot objectInterface
 ]

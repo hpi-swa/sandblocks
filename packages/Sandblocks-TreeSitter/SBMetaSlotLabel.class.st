@@ -8,9 +8,9 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBMetaSlotLabel >> applyToMorph: block getText: aTextBlock buildChild: aBlock [
+SBMetaSlotLabel >> buildFor: aMorph [
 
-	block addMorphBack: (SBStringMorph new contents: self label)
+	^ aMorph addMorphBack: (SBStringMorph new contents: self label)
 ]
 
 { #category : #'as yet unclassified' }
@@ -32,12 +32,6 @@ SBMetaSlotLabel >> matchesMorph: aMorph in: aFactory [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlotLabel >> matchesNode: aNode ts: aLibrary [
-
-	^ (aLibrary textForNode: aNode) withBlanksTrimmed = self label
-]
-
-{ #category : #'as yet unclassified' }
 SBMetaSlotLabel >> printOn: aStream [
 
 	aStream nextPutAll: self className.
@@ -48,4 +42,14 @@ SBMetaSlotLabel >> printOn: aStream [
 	self multiple ifTrue: [aStream nextPutAll: ',multiple'].
 	self required ifTrue: [aStream nextPutAll: ',required'].
 	aStream nextPut: $)
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotLabel >> takeFrom: aCursor for: aMorph [
+
+	^ aCursor text withBlanksTrimmed = self label
+		ifTrue: [
+			aMorph addMorphBack: (SBStringMorph new contents: self label).
+			true]
+		ifFalse: [false]
 ]

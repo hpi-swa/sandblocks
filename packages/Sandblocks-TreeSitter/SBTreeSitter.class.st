@@ -15,51 +15,6 @@ SBTreeSitter class >> moduleName [
 ]
 
 { #category : #'as yet unclassified' }
-SBTreeSitter >> buildTree: aCursor [
-
-	| block node type rule slots takeNode |
-	node := self cursorCurrentNode: aCursor.
-	type := self nodeType: node.
-	rule := currentFactory grammar rules
-		at: type
-		ifAbsent: [self assert: false].
-	
-	block := SBMetaBlock new
-		factory: currentFactory;
-		symbols: #(nil nil);
-		objectInterface: type;
-		grammarRule: rule.
-	
-	slots := block slots readStream.
-	
-	takeNode := [:slot | | hasNext |
-		slot applyToMorph: block getText: [self textForNode: node] buildChild: [self buildTree: aCursor].
-		hasNext := self cursorGotoNextSibling: aCursor.
-		hasNext ifTrue: [ | c |
-			c := self cursorCurrentNode: aCursor.
-			(self shouldSkipParsedNode: c) ifTrue: [hasNext := self cursorGotoNextSibling: aCursor]].
-		hasNext].
-	
-	(self cursorGotoFirstChild: aCursor)
-		ifTrue: [ | slot cursorHasNext |
-			cursorHasNext := true.
-			[slots atEnd] whileFalse: [ | count |
-				node := self cursorCurrentNode: aCursor.
-				slot := slots next.
-				count := 0.
-				[cursorHasNext and: [(slot multiple or: [count = 0]) and: [slot matchesNode: node ts: self]]] whileTrue: [
-					cursorHasNext := takeNode value: slot.
-					node := self cursorCurrentNode: aCursor.
-					count := count + 1].
-				
-				self assert: (slot required not or: [count > 0])].
-			self cursorGotoParent: aCursor]
-		ifFalse: [slots do: [:slot | slot applyToMorph: block getText: [self textForNode: node] buildChild: [self assert: false]]].
-	
-	^ block
-]
-
-{ #category : #'as yet unclassified' }
 SBTreeSitter >> currentFactory [
 
 	^ currentFactory
@@ -69,6 +24,13 @@ SBTreeSitter >> currentFactory [
 SBTreeSitter >> cursor: aCursor reset: aNode [
 
 	<apicall: void ts_tree_cursor_reset (SBTSTreeCursor* SBTSNode)>
+	^ self externalCallFailed
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> cursorCopy: aCursor [
+
+	<apicall: SBTSTreeCursor ts_tree_cursor_copy (SBTSTreeCursor*)>
 	^ self externalCallFailed
 ]
 
@@ -171,7 +133,7 @@ SBTreeSitter >> parse: aString language: aSymbol [
 	
 	root := self treeRootNode: tree.
 	cursor := self cursorNew: root.
-	block := self buildTree: cursor.
+	block := (SBTSCursor new library: self cursor: cursor) buildMorphFor: (SBMetaSlotBlock topLevel: (self nodeType: root)).
 	
 	self cursorDelete: cursor.
 	self parserDelete: parser.
@@ -210,20 +172,17 @@ SBTreeSitter >> parserNew [
 { #category : #'as yet unclassified' }
 SBTreeSitter >> printTree: aCursor factory: aFactory [
 
-	| block node type rule |
+	| node type rule |
 	node := self cursorCurrentNode: aCursor.
 	type := self nodeType: node.
 	rule := aFactory grammar rules at: type.
 	
-	block := SBMetaBlock new.
 	Transcript showln: type.
 	
 	(self cursorGotoFirstChild: aCursor) ifTrue: [
 		self printTree: aCursor factory: aFactory.
 		[self cursorGotoNextSibling: aCursor] whileTrue: [self printTree: aCursor factory: aFactory].
-		self cursorGotoParent: aCursor].
-	
-	^ block
+		self cursorGotoParent: aCursor]
 ]
 
 { #category : #'as yet unclassified' }
@@ -8073,16 +8032,16 @@ SBTreeSitter >> pythonFactory [
     "named": false
   }
 ]') in: [:f |
-		(f grammar rules at: #'expression_statement') members: ((f grammar rules at: #'expression_statement') members copyWithout: ((f grammar rules at: #'expression_statement') members at: 2)).
-		(f grammar rules at: #'argument_list') members: ((f grammar rules at: #'argument_list') members copyWithout: ((f grammar rules at: #'argument_list') members at: 3)).
+		f cleanGrammar.
+		SBToggledCode comment: '' active: 0 do: {
+			[(f grammar rules at: #'expression_statement') members: ((f grammar rules at: #'expression_statement') members copyWithout: ((f grammar rules at: #'expression_statement') members at: 2))]}.
+		SBToggledCode comment: '' active: 0 do: {
+			[(f grammar rules at: #'argument_list') members: ((f grammar rules at: #'argument_list') members copyWithout: ((f grammar rules at: #'argument_list') members at: 3))]}.
+		f grammar rules keysAndValuesDo: [:name :r | f removeOptionalString: ',' in: r].
+		f grammar rules
+			at: '"'
+			put: (JsonObject fromAssociations: {#type -> 'STRING'. #value -> '"'}).
 		f]
-]
-
-{ #category : #'as yet unclassified' }
-SBTreeSitter >> shouldSkipParsedNode: aNode [
-	" TODO: python specific "
-
-	^ (self nodeType: (self nodeParent: aNode)) = 'argument_list' and: [(self nodeType: aNode) = ',']
 ]
 
 { #category : #'as yet unclassified' }

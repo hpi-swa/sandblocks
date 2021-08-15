@@ -3,12 +3,12 @@ Class {
 	#superclass : #SBBlock,
 	#instVars : [
 		'factory',
-		'objectInterface',
 		'symbols',
 		'textFieldPattern',
 		'textField',
 		'grammarRule',
-		'slots'
+		'slots',
+		'slot'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -19,7 +19,14 @@ SBMetaBlock >> canDeleteChild: aBlock [
 	slots slotOf: aBlock in: self do: [:slot :morphs |
 		slot := self slotOf: aBlock.
 		slot required ifFalse: [^ true].
-		^ slot multiple and: [morphs size > 1]]
+		^ slot multiple and: [morphs size > 1]].
+	self assert: false
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlock >> contents [
+
+	^ super contents ifNil: [self firstSubmorph contents]
 ]
 
 { #category : #'as yet unclassified' }
@@ -33,61 +40,6 @@ SBMetaBlock >> cursorPositionsDo: aBlock [
 
 	aBlock value: (SBCursorSelect new block: self).
 	slots cursorPositionsWith: self submorphs in: self do: aBlock
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaBlock >> cursorPositionsForRule: anObject stream: aStream do: aBlock [
-
-	| repeat |
-	(factory unpackTypes includes: anObject type) ifTrue: [^ self cursorPositionsForRule: anObject content stream: aStream do: aBlock].
-	
-	repeat := [
-		self insertCursorNear: aStream peek before: true do: aBlock.
-		[aStream atEnd not and: [aStream peek objectInterface = anObject content name]] whileTrue: [ | next |
-			next := aStream next.
-			aBlock value: (SBCursorSelect new block: next).
-			aBlock value: (SBCursorInsert new
-				command: (SBRelInsertCommand new
-					near: next
-					before: false
-					in: self
-					morph: (factory unknownFor: anObject content name));
-				before: false;
-				adjacent: next;
-				container: self)]].
-	
-	anObject type caseOf: {
-		['STRING'] -> [aStream next].
-		['PATTERN'] -> [
-			aBlock value: (SBCursorText new
-				block: self;
-				currentCommand: self startInputCommand)].
-		['SYMBOL'] -> [aStream next cursorPositionsDo: aBlock].
-		['REPEAT1'] -> [repeat value].
-		['REPEAT'] -> [repeat value].
-		['CHOICE'] -> [
-			(anObject members size = 2 and: [anObject members contains: [:m | m type = 'BLANK']])
-				ifTrue: [
-					(aStream atEnd not and: [aStream peek isSandblock and: [aStream peek objectInterface = anObject members first name]])
-						ifTrue: [aStream next cursorPositionsDo: aBlock]
-						ifFalse: [
-							aBlock value: (SBCursorInsert new
-								command: (SBRelInsertCommand new
-									near: aStream last
-									before: false
-									in: self
-									morph: (factory unknownFor: anObject members first name));
-								before: false;
-								adjacent: aStream last;
-								container: self)]]
-				ifFalse: [self assert: false]].
-		['SEQ'] -> [anObject members do: [:m | self cursorPositionsForRule: m stream: aStream do: aBlock]]}
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaBlock >> defaultRepeatableChildInterface: aSymbol [
-
-	defaultRepeatableChildInterface := aSymbol
 ]
 
 { #category : #'as yet unclassified' }
@@ -106,6 +58,15 @@ SBMetaBlock >> factory [
 SBMetaBlock >> factory: aFactory [
 
 	factory := aFactory
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlock >> factory: aFactory grammarRule: anObject slot: aSlot [
+
+	factory := aFactory.
+	grammarRule := anObject.
+	slots := factory buildSlotsFor: anObject.
+	slot := aSlot
 ]
 
 { #category : #'as yet unclassified' }
@@ -169,26 +130,16 @@ SBMetaBlock >> minimumHeight [
 { #category : #'as yet unclassified' }
 SBMetaBlock >> objectInterface [
 
-	^ objectInterface
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaBlock >> objectInterface: anInterface [
-
-	objectInterface := anInterface
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaBlock >> objectInterfaceOf: aSubmorph [
-
-	| index |
-	index := self submorphIndexOf: aSubmorph.
-	^ (slots at: index) objectInterface
+	^ self shouldNotImplement
 ]
 
 { #category : #'as yet unclassified' }
 SBMetaBlock >> printOn: aStream [
 
+	| objectInterface |
+	objectInterface := slot objectInterface.
+	objectInterface ifNil: [^ aStream nextPutAll: (self contents ifNil: ['<>'])].
+	
 	aStream nextPutAll: (objectInterface isString
 		ifTrue: [objectInterface]
 		ifFalse: [objectInterface joinSeparatedBy: ','])

@@ -46,9 +46,20 @@ SBMetaSlot class >> optional [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlot >> applyToMorph: block getText: aTextBlock buildChild: aBlock [
+SBMetaSlot >> buildFor: aMorph [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> deepCompare: anObject to: anotherObject [
+
+	anObject associationsDo: [:assoc | | obj |
+		obj := anotherObject at: assoc key ifAbsent: [^ false].
+		((obj isDictionary and: [assoc value isDictionary])
+			ifTrue: [self deepCompare: assoc value to: obj]
+			ifFalse: [obj = assoc value]) ifFalse: [^ false]].
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -59,12 +70,6 @@ SBMetaSlot >> isBlockSlot [
 
 { #category : #'as yet unclassified' }
 SBMetaSlot >> matchesMorph: aMorph in: aFactory [
-
-	^ self subclassResponsibility
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaSlot >> matchesNode: aNode ts: aLibrary [
 
 	^ self subclassResponsibility
 ]
@@ -106,7 +111,7 @@ SBMetaSlot >> required: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlot >> takeNode: aNode ts: aLibrary cursor: aCursor for: aMorph [
+SBMetaSlot >> takeFrom: aCursor for: aMorph [
 
 	^ self subclassResponsibility
 ]

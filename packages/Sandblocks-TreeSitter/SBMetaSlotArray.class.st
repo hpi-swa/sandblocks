@@ -18,7 +18,7 @@ SBMetaSlotArray >> cursorPositionsWith: aSubmorphCollection in: aParent do: aBlo
 				before: before
 				in: aParent
 				factory: aParent factory
-				objectInterface: slot objectInterface);
+				slot: slot);
 			before: before;
 			adjacent: adjacent;
 			container: aParent)].
@@ -40,6 +40,12 @@ SBMetaSlotArray >> cursorPositionsWith: aSubmorphCollection in: aParent do: aBlo
 			previousMorph
 				ifNotNil: [:m | buildInsert value: m value: false value: slot]
 				ifNil: [buildInsert value: nil value: true value: slot]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotArray >> do: aBlock [
+
+	slots do: aBlock
 ]
 
 { #category : #'as yet unclassified' }

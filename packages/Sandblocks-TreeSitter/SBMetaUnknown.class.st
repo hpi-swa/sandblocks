@@ -2,8 +2,8 @@ Class {
 	#name : #SBMetaUnknown,
 	#superclass : #SBUnknown,
 	#instVars : [
-		'objectInterfaces',
-		'factory'
+		'factory',
+		'slot'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -25,8 +25,8 @@ SBMetaUnknown >> keyStroke: anEvent [
 
 	self currentTextMorph keyStroke: anEvent.
 	
-	factory unambiguousRule: objectInterfaces for: self contents do: [:rule :keyWasTaken | | new editor |
-		new := factory build: rule.
+	factory unambiguousRule: slot for: self contents do: [:rule :keyWasTaken | | new editor |
+		new := factory build: rule slot: slot.
 		editor := self sandblockEditor.
 		keyWasTaken ifFalse: [
 			SBToggledCode
@@ -49,19 +49,7 @@ SBMetaUnknown >> keyStroke: anEvent [
 { #category : #'as yet unclassified' }
 SBMetaUnknown >> objectInterface [
 
-	^ objectInterfaces
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaUnknown >> objectInterfaces [
-
-	^ objectInterfaces
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaUnknown >> objectInterfaces: aCollection [
-
-	objectInterfaces := aCollection
+	^ self shouldNotImplement
 ]
 
 { #category : #'as yet unclassified' }
@@ -69,7 +57,17 @@ SBMetaUnknown >> printOn: aStream [
 
 	aStream
 		nextPutAll: 'unknown ';
-		nextPutAll: (self objectInterfaces isString
-			ifTrue: [self objectInterfaces]
-			ifFalse: [self objectInterfaces joinSeparatedBy: ', '])
+		nextPutAll: (self slot name ifNil: ['<>'])
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaUnknown >> slot [
+
+	^ slot
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaUnknown >> slot: aSlot [
+
+	slot := aSlot
 ]

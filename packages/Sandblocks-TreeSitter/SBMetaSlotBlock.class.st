@@ -2,16 +2,41 @@ Class {
 	#name : #SBMetaSlotBlock,
 	#superclass : #SBMetaSlot,
 	#instVars : [
-		'objectInterface',
 		'structure'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
 
 { #category : #'as yet unclassified' }
-SBMetaSlotBlock >> applyToMorph: block getText: aTextBlock buildChild: aBlock [
+SBMetaSlotBlock class >> topLevel: aTypeString [
 
-	block addMorphBack: (aBlock cull: structure)
+	^ self one structure: (JsonObject fromAssociations: {'type' -> 'SYMBOL'. 'name' -> aTypeString})
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotBlock >> buildFor: aMorph [
+
+	| block |
+	self objectInterface ifNotNil: [^ aMorph addMorphBack: (aMorph factory unknownFor: self)].
+	
+	block := SBMetaBlock new factory: aMorph factory grammarRule: structure slot: self.
+	aMorph addMorphBack: (self buildFor: aMorph structure: structure)
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotBlock >> buildFor: aMorph structure: anObject [
+
+	^ anObject type caseOf: {
+		['STRING'] -> [aMorph addMorphBack: (SBStringMorph new contents: anObject value)].
+		['SYMBOL'] -> [aMorph addMorphBack: (aMorph factory buildRule: anObject name)].
+		['SEQ'] -> [anObject members withIndexDo: [:member | self buildFor: aMorph structure: member]].
+		['FIELD'] -> [self buildFor: aMorph structure: anObject content]}
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotBlock >> hasSameStructureAs: aSlot [
+
+	^ aSlot isBlockSlot and: [self deepCompare: self structure to: aSlot structure]
 ]
 
 { #category : #'as yet unclassified' }
@@ -23,15 +48,24 @@ SBMetaSlotBlock >> isBlockSlot [
 { #category : #'as yet unclassified' }
 SBMetaSlotBlock >> matchesMorph: aMorph in: aFactory [
 
-	^ aFactory type: aMorph objectInterface compatibleWith: self objectInterface
+	self objectInterface ifNotNil: [^ aFactory type: aMorph objectInterface compatibleWith: self objectInterface].
+	
+	^ self matchesMorph: aMorph in: aFactory structure: structure
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlotBlock >> matchesNode: aNode ts: aLibrary [
+SBMetaSlotBlock >> matchesMorph: aMorph in: aFactory structure: anObject [
 
-	^ aLibrary currentFactory
-		type: (aLibrary nodeType: aNode)
-		compatibleWith: self objectInterface
+	^ anObject type caseOf: {
+		['STRING'] -> [aMorph contents = anObject value].
+		['SYMBOL'] -> [aFactory type: aMorph objectInterface compatibleWith: anObject name].
+		['SEQ'] -> [
+			anObject members size = aMorph submorphs size ifFalse: [^ false].
+			anObject members
+				with: aMorph submorphs
+				do: [:member :morph | (self matchesMorph: morph in: aFactory structure: member) ifFalse: [^ false]].
+			true].
+		['FIELD'] -> [self matchesMorph: aMorph in: aFactory structure: anObject content]}
 ]
 
 { #category : #'as yet unclassified' }
@@ -56,46 +90,75 @@ SBMetaSlotBlock >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaSlotBlock >> structure [
+
+	^ structure
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaSlotBlock >> structure: anObject [
 
 	structure := anObject
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlotBlock >> takeFrom: aCursor ts: aLibrary for: aMorph [
+SBMetaSlotBlock >> takeFrom: aCursor for: aMorph [
 
-	^ self takeFrom: aCursor ts: aLibrary for: aMorph structure: structure
+	| block |
+	self objectInterface ifNotNil: [
+		^ (aCursor factory type: aCursor type compatibleWith: self objectInterface)
+			ifTrue: [
+				aMorph addMorphBack: (aCursor buildMorphFor: self).
+				true]
+			ifFalse: [false]].
+	
+	block := SBMetaBlock new factory: aCursor factory grammarRule: structure slot: self.
+	^ (self takeFrom: aCursor for: block structure: structure)
+		ifTrue: [
+			aMorph addMorphBack: block.
+			true]
+		ifFalse: [false]
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlotBlock >> takeFrom: aCursor ts: aLibrary for: aMorph structure: anObject [
+SBMetaSlotBlock >> takeFrom: aCursor for: aMorph structure: anObject [
 
-	| node |
-	node := aLibrary cursorCurrentNode: aLibrary.
 	^ anObject type caseOf: {
-		['SYMBOL'] -> [
-			(aLibrary currentFactory
-				type: (aLibrary nodeType: node)
-				compatibleWith: self objectInterface)
-				ifTrue: [
-					aMorph addMorphBack: (aLibrary buildTree: aCursor).
-					aLibrary cursorGotoNextSibling: aCursor.
-					true]
-				ifFalse: [false]].
 		['STRING'] -> [
-			(aLibrary textForNode: node) = anObject value
+			aCursor text = anObject value
 				ifTrue: [
-					" TODO: probably want this addressable "
 					aMorph addMorphBack: (SBStringMorph new contents: anObject value).
-					aLibrary cursorGotoNextSibling: aCursor.
 					true]
 				ifFalse: [false]].
-		['SEQ'] -> [
-			anObject members do: [:member |
-				(self takeFrom: aCursor ts: aLibrary for: aMorph structure: member)
-					ifTrue: [aLibrary cursorGotoNextSibling: aCursor]
+		['SYMBOL'] -> [
+			(aCursor factory type: aCursor type compatibleWith: anObject name)
+				ifTrue: [
+					aMorph addMorphBack: (aCursor buildMorphFor: (SBMetaSlotBlock topLevel: aCursor type)).
+					true]
+				ifFalse: [false]].
+		['SEQ'] -> [ | restore |
+			restore := aCursor createRestorePoint.
+			anObject members withIndexDo: [:member :index |
+				(self takeFrom: aCursor for: aMorph structure: member)
+					ifTrue: [index < anObject members size ifTrue: [aCursor gotoNextSibling]]
 					ifFalse: [
-						aLibrary cursor: aCursor reset: node.
+						aCursor restoreTo: restore.
 						^ false]].
-			true]}
+			true].
+		['CHOICE'] -> [
+			anObject members do: [:choice | | restore |
+				restore := aCursor createRestorePoint.
+				(self takeFrom: aCursor for: aMorph structure: choice)
+					ifTrue: [^ true]
+					ifFalse: [aCursor restoreTo: restore]].
+			false].
+		['REPEAT'] -> [ | cursorHasNext restore |
+			cursorHasNext := true.
+			[cursorHasNext and: [self takeFrom: aCursor for: aMorph structure: anObject content]] whileTrue: [
+				restore := aCursor createRestorePoint.
+				cursorHasNext := aCursor gotoNextSibling].
+			restore ifNotNil: [" contract is to end before our last confumed item "
+			aCursor restoreTo: restore].
+			true].
+		['FIELD'] -> [self takeFrom: aCursor for: aMorph structure: anObject content]}
 ]
