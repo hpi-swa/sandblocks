@@ -7,8 +7,8 @@ Class {
 		'textFieldPattern',
 		'textField',
 		'grammarRule',
-		'slots',
-		'slot'
+		'slot',
+		'parentSlot'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -16,8 +16,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBMetaBlock >> canDeleteChild: aBlock [
 
-	slots slotOf: aBlock in: self do: [:slot :morphs |
-		slot := self slotOf: aBlock.
+	self slotOf: aBlock do: [:slot :morphs |
 		slot required ifFalse: [^ true].
 		^ slot multiple and: [morphs size > 1]].
 	self assert: false
@@ -26,7 +25,7 @@ SBMetaBlock >> canDeleteChild: aBlock [
 { #category : #'as yet unclassified' }
 SBMetaBlock >> contents [
 
-	^ super contents ifNil: [self firstSubmorph contents]
+	^ super contents ifNil: [self firstSubmorph isTextMorph ifTrue: [self firstSubmorph contents] ifFalse: [nil]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -38,8 +37,39 @@ SBMetaBlock >> currentTextMorph [
 { #category : #'as yet unclassified' }
 SBMetaBlock >> cursorPositionsDo: aBlock [
 
+	| buildInsert stream previousMorph |
 	aBlock value: (SBCursorSelect new block: self).
-	slots cursorPositionsWith: self submorphs in: self do: aBlock
+	
+	buildInsert := [:adjacent :before :slot |
+		aBlock value: (SBCursorInsert new
+			command: (SBMetaRelInsertCommand new
+				near: adjacent
+				before: before
+				in: self
+				factory: self factory
+				slot: slot);
+			before: before;
+			adjacent: adjacent;
+			container: self)].
+	
+	stream := self submorphs readStream.
+	previousMorph := nil.
+	self slot morphsRepeatedIn: stream factory: self factory do: [:slot :morphs |
+		slot printString = '((''->''),(type),optional)' ifTrue: [SBToggledCode comment: '' active: 0 do: {[self halt]}].
+		morphs do: [:morph |
+			slot multiple ifTrue: [buildInsert value: morph value: true value: slot].
+			SBToggledCode comment: '' active: 1 do: {[morph cursorPositionsDo: aBlock]}.
+			slot multiple ifTrue: [buildInsert value: morph value: false value: slot].
+			morph isTextMorph ifTrue: [
+				morph containingSandblock startInputCommand ifNotNil: [:command |
+					aBlock value: (SBCursorText new
+						block: morph containingSandblock;
+						currentCommand: command)]]].
+		Transcript showln: {slot. morphs}.
+		morphs ifNotEmpty: [previousMorph := morphs last] ifEmpty: [
+			previousMorph
+				ifNotNil: [:m | buildInsert value: m value: false value: slot]
+				ifNil: [buildInsert value: nil value: true value: slot]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -61,25 +91,17 @@ SBMetaBlock >> factory: aFactory [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaBlock >> factory: aFactory grammarRule: anObject slot: aSlot [
+SBMetaBlock >> factory: aFactory parentSlot: aSlot [
 
 	factory := aFactory.
-	grammarRule := anObject.
-	slots := factory buildSlotsFor: anObject.
-	slot := aSlot
+	parentSlot := aSlot.
+	slot := aSlot isBlockSlot  ifTrue: [factory slotsFor: aSlot type] ifFalse: [aSlot]
 ]
 
 { #category : #'as yet unclassified' }
 SBMetaBlock >> grammarRule [
 
 	^ grammarRule
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaBlock >> grammarRule: aRule [
-
-	grammarRule := aRule.
-	slots := factory buildSlotsFor: aRule
 ]
 
 { #category : #'as yet unclassified' }
@@ -97,6 +119,12 @@ SBMetaBlock >> initialize [
 		vResizing: #shrinkWrap;
 		symbols: #(nil nil);
 		cellPositioning: #center
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlock >> isMetaBlock [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -135,15 +163,15 @@ SBMetaBlock >> objectInterface [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaBlock >> parentSlot [
+
+	^ parentSlot
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaBlock >> printOn: aStream [
 
-	| objectInterface |
-	objectInterface := slot objectInterface.
-	objectInterface ifNil: [^ aStream nextPutAll: (self contents ifNil: ['<>'])].
-	
-	aStream nextPutAll: (objectInterface isString
-		ifTrue: [objectInterface]
-		ifFalse: [objectInterface joinSeparatedBy: ','])
+	parentSlot printOn: aStream
 ]
 
 { #category : #'as yet unclassified' }
@@ -153,15 +181,14 @@ SBMetaBlock >> slot [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaBlock >> slotOf: aMorph [
+SBMetaBlock >> slotOf: aMorph do: aBlock [
 
-	^ slots slotOf: aMorph in: self do: [:slot :morphs | slot]
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaBlock >> slots [
-
-	^ slots
+	^ slot
+		morphsRepeatedIn: self submorphs readStream
+		factory: self factory
+		do: [:slot :morphs |
+			Transcript showln: {slot. morphs}.
+			(morphs includes: aMorph) ifTrue: [^ aBlock value: slot value: morphs]]
 ]
 
 { #category : #'as yet unclassified' }

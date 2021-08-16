@@ -24,7 +24,7 @@ SBMetaRelInsertCommand >> factory [
 { #category : #'as yet unclassified' }
 SBMetaRelInsertCommand >> hasSamePositionAs: aCommand [
 
-	^ (aCommand isKindOf: self class) and: [aCommand factory = self factory and: [(aCommand slot hasSameStructureAs: self slot) and: [super hasSamePositionAs: aCommand]]]
+	^ (aCommand isKindOf: self class) and: [aCommand factory = self factory and: [(aCommand slot = self slot) and: [super hasSamePositionAs: aCommand]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -44,5 +44,5 @@ SBMetaRelInsertCommand >> slot [
 { #category : #'as yet unclassified' }
 SBMetaRelInsertCommand >> title [
 
-	^ 'insert ', slot objectInterface
+	^ 'insert ', (String streamContents: [:stream | slot printTitleOn: stream])
 ]

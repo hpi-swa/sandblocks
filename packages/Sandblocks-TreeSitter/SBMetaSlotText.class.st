@@ -9,28 +9,55 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBMetaSlotText >> = aSlot [
+
+	^ super = aSlot and: [aSlot regexString = self regexString]
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaSlotText >> buildFor: aMorph [
 
 	aMorph textFieldPattern: self regex
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlotText >> matchesMorph: aMorph in: aFactory [
+SBMetaSlotText >> buildPartialFor: aMorph option: anOption with: aString [
 
-	^ SBToggledCode comment: '' active: 1 do: {[true]. [self regex matches: aMorph contents]}
+	aMorph
+		textFieldPattern: self regex;
+		contents: aString
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlotText >> printOn: aStream [
+SBMetaSlotText >> cursorPositionsDo: aBlock in: aStream [
 
-	aStream nextPutAll: self className.
-	aStream nextPut: $(.
-	aStream nextPut: $'.
-	aStream nextPutAll: regexString.
-	self multiple ifTrue: [aStream nextPutAll: ',multiple'].
-	self required ifTrue: [aStream nextPutAll: ',required'].
-	aStream nextPut: $'.
-	aStream nextPut: $)
+	aStream peek containingSandblock startInputCommand ifNotNil: [:command |
+		aBlock value: (SBCursorText new
+			block: aStream peek containingSandblock;
+			currentCommand: command)]
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotText >> hash [
+
+	^ super hash bitXor: regexString hash
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotText >> morphsIn: aStream factory: aFactory do: aBlock [
+
+	^ aStream peek isTextMorph
+		ifNotNil: [
+			aBlock value: self value: {aStream peek}.
+			true]
+		ifNil: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotText >> printTitleOn: aStream [
+
+	aStream nextPutAll: 'r'''.
+	aStream nextPutAll: regexString
 ]
 
 { #category : #'as yet unclassified' }
@@ -67,4 +94,10 @@ SBMetaSlotText >> takeFrom: aCursor for: aMorph [
 			aMorph contents: aCursor text.
 			true]
 		ifFalse: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotText >> triggersFor: aString matchFullToken: aBoolean do: aBlock [
+
+	^ aBlock addLeafIf: [:option | aBoolean ifTrue: [self regex matches: aString] ifFalse: [self regex matchesPrefix: aString]]
 ]

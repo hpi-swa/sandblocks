@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'grammar',
-		'nodeTypes'
+		'nodeTypes',
+		'slotMapping'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -53,8 +54,8 @@ SBMetaBlockFactory >> applyInlining: rule [
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> build: anObject in: aBlock slot: aSlot [
 
-	aBlock factory: self grammarRule: anObject slot: aSlot.
-	aBlock slots do: [:slot | slot required ifTrue: [slot buildFor: aBlock]].
+	aBlock factory: self parentSlot: aSlot.
+	aBlock slot buildRepeatedFor: aBlock.
 	^ aBlock
 ]
 
@@ -117,60 +118,60 @@ SBMetaBlockFactory >> buildRule: aType [
 
 	^ self
 		build: (grammar rules at: aType ifAbsent: [self assert: false])
-		slot: (SBMetaSlotBlock topLevel: aType)
+		slot: (SBMetaSlotBlock topLevel: aType factory: self)
 ]
 
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> buildSlotsFor: anObject [
 
-	^ SBMetaSlotArray new
-		slots: (Array streamContents: [:stream | self buildSlotsFor: anObject parentFieldName: nil on: stream]);
-		yourself
+	^ self buildSlotsFor: anObject parentFieldName: nil
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaBlockFactory >> buildSlotsFor: anObject parentFieldName: aString on: aStream [
+SBMetaBlockFactory >> buildSlotsFor: anObject parentFieldName: aString [
 
-	anObject type = 'FIELD' ifTrue: [^ self buildSlotsFor: anObject content parentFieldName: anObject name on: aStream].
+	anObject type = 'FIELD' ifTrue: [^ self buildSlotsFor: anObject content parentFieldName: anObject name].
 	
-	(self unpackTypes includes: anObject type) ifTrue: [^ self buildSlotsFor: anObject content parentFieldName: aString on: aStream].
+	(self unpackTypes includes: anObject type) ifTrue: [^ self buildSlotsFor: anObject content parentFieldName: aString].
 	
 	(#('STRING') includes: anObject type) ifTrue: [
-		^ aStream nextPut: (SBMetaSlotLabel one
+		^ SBMetaSlotLabel one
 			name: aString;
-			label: anObject value)].
+			label: anObject value].
 	
 	(#('PATTERN' 'TOKEN') includes: anObject type) ifTrue: [
-		^ aStream nextPut: (SBMetaSlotText one
+		^ SBMetaSlotText one
 			name: aString;
-			regexString: (self buildRegexString: anObject))].
+			regexString: (self buildRegexString: anObject)].
 	
 	(#('SYMBOL') includes: anObject type) ifTrue: [
-		^ aStream nextPut: (SBMetaSlotBlock one
+		^ SBMetaSlotBlock one
 			name: aString;
-			structure: anObject)].
+			type: anObject name factory: self].
 	
-	(#('REPEAT' 'REPEAT1') includes: anObject type) ifTrue: [
-		^ aStream nextPut: (self
-			unpackFieldForSlot: anObject content
-			fieldName: aString
-			do: [:structure :field | ((SBMetaSlotBlock perform: (anObject type = 'REPEAT' ifTrue: [#any] ifFalse: [#atLeastOne])) structure: structure) name: field])].
+	'REPEAT' = anObject type ifTrue: [
+		^ (self buildSlotsFor: anObject content parentFieldName: aString)
+			multiple: true;
+			required: false].
 	
-	anObject type caseOf: {
-		['CHOICE'] -> [
-			" pattern for optional structure "
-			(anObject members size = 2 and: [anObject members second type = 'BLANK']) ifTrue: [
-				^ aStream nextPut: (self
-					unpackFieldForSlot: anObject members first
-					fieldName: aString
-					do: [:structure :field | (SBMetaSlotBlock optional structure: structure) name: field])].
-			
-			aStream nextPut: (SBMetaSlotBlock one
-				name: aString;
-				structure: anObject)].
-		['SEQ'] -> [
-			anObject members do: [:m | self buildSlotsFor: m parentFieldName: aString on: aStream].
-			^ nil]}
+	'REPEAT1' = anObject type ifTrue: [
+		^ (self buildSlotsFor: anObject content parentFieldName: aString)
+			multiple: true;
+			required: true].
+	
+	'CHOICE' = anObject type ifTrue: [
+		(anObject members size = 2 and: [anObject members second type = 'BLANK']) ifTrue: [^ (self buildSlotsFor: anObject members first parentFieldName: aString) required: false].
+		
+		^ SBMetaSlotChoice one
+			name: aString;
+			alternatives: (anObject members collect: [:member | self buildSlotsFor: member parentFieldName: nil])].
+	
+	'SEQ' = anObject type ifTrue: [
+		^ SBMetaSlotGroup one
+			name: aString;
+			elements: (anObject members collect: [:member | self buildSlotsFor: member parentFieldName: nil])].
+	
+	self assert: false
 ]
 
 { #category : #'grammar clean' }
@@ -318,6 +319,14 @@ SBMetaBlockFactory >> includesNonHiddenParts: anObject visited: aCollection [
 					ifPresent: [:r | self includesNonHiddenParts: r visited: aCollection]
 					ifAbsent: [false]]].
 		['SEQ'] -> [anObject members anySatisfy: [:member | self includesNonHiddenParts: member visited: aCollection]]}
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> initialize [
+
+	super initialize.
+	
+	slotMapping := Dictionary new
 ]
 
 { #category : #'grammar clean' }
@@ -541,6 +550,15 @@ SBMetaBlockFactory >> simplifyList: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaBlockFactory >> slotsFor: aString [
+
+	^ slotMapping at: aString ifAbsentPut: [
+		(self buildSlotsFor: (grammar rules at: aString ifAbsent: [self assert: false]))
+			isRoot: true;
+			yourself]
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaBlockFactory >> startsWithKeyword: anObject [
 
 	(self unpackTypes includes: anObject type) ifTrue: [^ self startsWithKeyword: anObject content].
@@ -677,18 +695,20 @@ SBMetaBlockFactory >> type: aRuleName compatibleWith: anotherRuleName [
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> unambiguousRule: aSlot for: aPrefixString do: aBlock [
 
-	| candidates prefix matchFullToken |
+	| prefix matchFullToken options |
 	(matchFullToken := aPrefixString last = Character space)
 		ifTrue: [prefix := aPrefixString allButLast]
 		ifFalse: [prefix := aPrefixString].
 	
-	candidates := Array streamContents: [:stream | self rule: aSlot triggersFor: prefix do: [:b :keyWasTaken | stream nextPut: {b. keyWasTaken}]].
+	options := SBTSPartialNode new.
 	
-	candidates size = 1 ifTrue: [aBlock valueWithArguments: candidates first] ifFalse: [
-		matchFullToken ifTrue: [
-			candidates
-				detect: [:c | self startsWithKeyword: (grammar rules at: c first)]
-				ifFound: [:c | aBlock valueWithArguments: c]]]
+	aSlot triggersFor: prefix matchFullToken: matchFullToken do: options.
+	
+	options size = 1 ifTrue: [ | morph |
+		morph := SBMetaBlock new factory: self parentSlot: aSlot.
+		aSlot buildPartialFor: morph option: options children first with: aPrefixString.
+		" FIXME: is this correct? "
+		aBlock value: (morph submorphCount = 1 ifTrue: [morph firstSubmorph] ifFalse: [morph])]
 ]
 
 { #category : #'as yet unclassified' }

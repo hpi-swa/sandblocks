@@ -1168,7 +1168,7 @@ SBBlock >> inputPreviousUnknown [
 	(self previousMorphThat: [:m | m isSandblock and: [m wantsInput]])
 		ifNotNil: [:m |
 			self containingFloat = m containingFloat ifTrue: [
-				self sandblockEditor startInput: m at: 1 replacingContents: true]]
+				self sandblockEditor startInput: m at: 1 replacingContents: false]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -1375,6 +1375,12 @@ SBBlock >> isLastDeepChild [
 
 { #category : #testing }
 SBBlock >> isLiteralBlock [
+
+	^ false
+]
+
+{ #category : #'Sandblocks-TreeSitter' }
+SBBlock >> isMetaBlock [
 
 	^ false
 ]

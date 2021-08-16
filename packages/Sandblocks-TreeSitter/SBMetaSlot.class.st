@@ -46,20 +46,33 @@ SBMetaSlot class >> optional [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaSlot >> = aSlot [
+
+	^ self class = aSlot class and: [self required = aSlot required and: [self multiple = aSlot multiple]]
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaSlot >> buildFor: aMorph [
 
 	^ self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlot >> deepCompare: anObject to: anotherObject [
+SBMetaSlot >> buildPartialFor: aMorph option: anOption with: aString [
 
-	anObject associationsDo: [:assoc | | obj |
-		obj := anotherObject at: assoc key ifAbsent: [^ false].
-		((obj isDictionary and: [assoc value isDictionary])
-			ifTrue: [self deepCompare: assoc value to: obj]
-			ifFalse: [obj = assoc value]) ifFalse: [^ false]].
-	^ true
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> buildRepeatedFor: aMorph [
+
+	self required ifTrue: [self buildFor: aMorph]
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> hash [
+
+	^ multiple hash bitXor: required hash
 ]
 
 { #category : #'as yet unclassified' }
@@ -69,9 +82,34 @@ SBMetaSlot >> isBlockSlot [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlot >> matchesMorph: aMorph in: aFactory [
+SBMetaSlot >> isRoot: aBoolean [
+	" can choose to save this state somewhere "
+
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> morphsIn: aStream factory: aFactory do: aBlock [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> morphsRepeatedIn: aStream factory: aFactory do: aBlock [
+
+	| count restore morphs |
+	count := 0.
+	restore := aStream position.
+	morphs := OrderedCollection new.
+	[aStream atEnd not and: [(self multiple or: [count = 0]) and: [self morphsIn: aStream factory: aFactory do: aBlock]]] whileTrue: [
+		count := count + 1.
+		restore := aStream position.
+		aStream next].
+	aStream position: restore.
+	
+	(self required not and: [count = 0]) ifTrue: [aBlock value: self value: #()].
+	
+	^ self required not or: [count > 0]
 ]
 
 { #category : #'as yet unclassified' }
@@ -95,7 +133,30 @@ SBMetaSlot >> name: aString [
 { #category : #'as yet unclassified' }
 SBMetaSlot >> printOn: aStream [
 
-	self subclassResponsibility
+	self printPrefixOn: aStream.
+	aStream nextPut: $(.
+	self printTitleOn: aStream.
+	self printQualifiersOn: aStream.
+	aStream nextPut: $)
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> printPrefixOn: aStream [
+
+	SBToggledCode comment: '' active: 0 do: {[aStream nextPutAll: self className]}
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> printQualifiersOn: aStream [
+
+	self multiple ifTrue: [aStream nextPutAll: ',multiple'].
+	self required not ifTrue: [aStream nextPutAll: ',optional']
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> printTitleOn: aStream [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }
@@ -112,6 +173,28 @@ SBMetaSlot >> required: aBoolean [
 
 { #category : #'as yet unclassified' }
 SBMetaSlot >> takeFrom: aCursor for: aMorph [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> takeRepeatedFrom: aCursor for: aMorph [
+
+	| count cursorHasNext restore |
+	count := 0.
+	cursorHasNext := true.
+	restore := aCursor createRestorePoint.
+	[cursorHasNext and: [(self multiple or: [count = 0]) and: [self takeFrom: aCursor for: aMorph]]] whileTrue: [
+		count := count + 1.
+		restore := aCursor createRestorePoint.
+		cursorHasNext := aCursor gotoNextSibling].
+	aCursor restoreTo: restore.
+	
+	^ self required not or: [count > 0]
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> triggersFor: aString matchFullToken: aBoolean do: aBlock [
 
 	^ self subclassResponsibility
 ]

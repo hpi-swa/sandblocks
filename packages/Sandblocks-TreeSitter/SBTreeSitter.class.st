@@ -133,7 +133,7 @@ SBTreeSitter >> parse: aString language: aSymbol [
 	
 	root := self treeRootNode: tree.
 	cursor := self cursorNew: root.
-	block := (SBTSCursor new library: self cursor: cursor) buildMorphFor: (SBMetaSlotBlock topLevel: (self nodeType: root)).
+	block := (SBTSCursor new library: self cursor: cursor) buildMorphFor: (SBMetaSlotBlock topLevel: (self nodeType: root) factory: currentFactory).
 	
 	self cursorDelete: cursor.
 	self parserDelete: parser.

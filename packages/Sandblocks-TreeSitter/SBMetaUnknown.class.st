@@ -21,18 +21,18 @@ SBMetaUnknown >> factory: aFactory [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaUnknown >> isMetaBlock [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaUnknown >> keyStroke: anEvent [
 
 	self currentTextMorph keyStroke: anEvent.
 	
-	factory unambiguousRule: slot for: self contents do: [:rule :keyWasTaken | | new editor |
-		new := factory build: rule slot: slot.
+	factory unambiguousRule: slot for: self contents do: [:new | | editor |
 		editor := self sandblockEditor.
-		keyWasTaken ifFalse: [
-			SBToggledCode
-				comment: ''
-				active: 1
-				do: {[new contents: self contents]. [editor selection keyStroke: anEvent]}].
 		new startInputCommand
 			ifNil: [
 				editor
@@ -50,6 +50,12 @@ SBMetaUnknown >> keyStroke: anEvent [
 SBMetaUnknown >> objectInterface [
 
 	^ self shouldNotImplement
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaUnknown >> parentSlot [
+
+	^ slot
 ]
 
 { #category : #'as yet unclassified' }

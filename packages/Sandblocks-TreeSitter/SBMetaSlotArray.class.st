@@ -80,22 +80,3 @@ SBMetaSlotArray >> slots: aCollection [
 
 	slots := aCollection
 ]
-
-{ #category : #'as yet unclassified' }
-SBMetaSlotArray >> slotsIn: aMorph do: aBlock [
-
-	| stream previousMorph factory |
-	stream := aMorph submorphs readStream.
-	factory := aMorph factory.
-	previousMorph := nil.
-	slots do: [:slot | | morphs |
-		morphs := OrderedCollection new.
-		
-		slot multiple
-			ifTrue: [[stream atEnd not and: [slot matchesMorph: stream peek in: factory]] whileTrue: [morphs add: stream next]]
-			ifFalse: [(stream atEnd not and: [slot matchesMorph: stream peek in: factory]) ifTrue: [morphs add: stream next]].
-		
-		slot required ifTrue: [self assert: morphs notEmpty].
-		aBlock value: slot value: morphs value: previousMorph.
-		morphs ifNotEmpty: [previousMorph := morphs last]]
-]

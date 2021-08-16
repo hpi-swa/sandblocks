@@ -8,9 +8,27 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBMetaSlotLabel >> = aSlot [
+
+	^ super = aSlot and: [aSlot label = self label]
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaSlotLabel >> buildFor: aMorph [
 
 	^ aMorph addMorphBack: (SBStringMorph new contents: self label)
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotLabel >> buildPartialFor: aMorph option: anOption with: aString [
+
+	^ aMorph addMorphBack: (SBStringMorph new contents: self label)
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotLabel >> hash [
+
+	^ super hash bitXor: label hash
 ]
 
 { #category : #'as yet unclassified' }
@@ -26,22 +44,21 @@ SBMetaSlotLabel >> label: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlotLabel >> matchesMorph: aMorph in: aFactory [
+SBMetaSlotLabel >> morphsIn: aStream factory: aFactory do: aBlock [
 
-	^ aMorph contents = self label
+	^ aStream peek contents = self label
+		ifTrue: [
+			aBlock value: self value: {aStream peek}.
+			true]
+		ifFalse: [false]
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlotLabel >> printOn: aStream [
+SBMetaSlotLabel >> printTitleOn: aStream [
 
-	aStream nextPutAll: self className.
-	aStream nextPut: $(.
 	aStream nextPut: $'.
 	aStream nextPutAll: label.
-	aStream nextPut: $'.
-	self multiple ifTrue: [aStream nextPutAll: ',multiple'].
-	self required ifTrue: [aStream nextPutAll: ',required'].
-	aStream nextPut: $)
+	aStream nextPut: $'
 ]
 
 { #category : #'as yet unclassified' }
@@ -52,4 +69,10 @@ SBMetaSlotLabel >> takeFrom: aCursor for: aMorph [
 			aMorph addMorphBack: (SBStringMorph new contents: self label).
 			true]
 		ifFalse: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotLabel >> triggersFor: aString matchFullToken: aBoolean do: aBlock [
+
+	^ aBlock addLeafIf: [:option | aBoolean ifTrue: [self label = aString] ifFalse: [self label beginsWith: aString]]
 ]

@@ -11,28 +11,18 @@ Class {
 { #category : #'as yet unclassified' }
 SBTSCursor >> buildMorphFor: aSlot [
 
-	| block rule slots |
+	| block rule |
 	rule := self factory grammar rules
 		at: self type
 		ifAbsent: [self assert: false].
 	
-	block := SBMetaBlock new factory: self factory grammarRule: rule slot: aSlot.
-	
-	slots := block slots readStream.
+	block := SBMetaBlock new factory: self factory parentSlot: aSlot.
 	
 	self gotoFirstChild
-		ifTrue: [ | cursorHasNext |
-			cursorHasNext := true.
-			[slots atEnd] whileFalse: [ | slot count |
-				slot := slots next.
-				count := 0.
-				[cursorHasNext and: [(slot multiple or: [count = 0]) and: [slot takeFrom: self for: block]]] whileTrue: [
-					count := count + 1.
-					cursorHasNext := self gotoNextSibling.
-					[cursorHasNext and: [self shouldSkipParsedNode: self node]] whileTrue: [cursorHasNext := self gotoNextSibling]].
-				self assert: (slot required not or: [count > 0])].
+		ifTrue: [
+			self assert: (block slot takeRepeatedFrom: self for: block).
 			self gotoParent]
-		ifFalse: [slots do: [:slot | slot takeFrom: self for: block]].
+		ifFalse: [block slot takeFrom: self for: block].
 	
 	^ block
 ]
@@ -58,7 +48,10 @@ SBTSCursor >> gotoFirstChild [
 { #category : #'as yet unclassified' }
 SBTSCursor >> gotoNextSibling [
 
-	^ library cursorGotoNextSibling: cursor
+	| ret |
+	ret := library cursorGotoNextSibling: cursor.
+	[ret and: [self shouldSkipParsedNode: self node]] whileTrue: [ret := library cursorGotoNextSibling: cursor].
+	^ ret
 ]
 
 { #category : #'as yet unclassified' }

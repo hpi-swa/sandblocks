@@ -169,8 +169,8 @@ SBUnknown >> newNullBlock [
 
 { #category : #'as yet unclassified' }
 SBUnknown >> noteNewOwner: aMorph [
-
 	" we're guessing that, if we changed owners, our label is no longer relevant "
+
 	hadOwner == true ifTrue: [self label: ''].
 	hadOwner := true
 ]
