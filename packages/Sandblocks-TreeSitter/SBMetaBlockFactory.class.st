@@ -122,12 +122,6 @@ SBMetaBlockFactory >> buildRule: aType [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaBlockFactory >> buildSlotsFor: anObject [
-
-	^ self buildSlotsFor: anObject parentFieldName: nil
-]
-
-{ #category : #'as yet unclassified' }
 SBMetaBlockFactory >> buildSlotsFor: anObject parentFieldName: aString [
 
 	anObject type = 'FIELD' ifTrue: [^ self buildSlotsFor: anObject content parentFieldName: anObject name].
@@ -135,39 +129,42 @@ SBMetaBlockFactory >> buildSlotsFor: anObject parentFieldName: aString [
 	(self unpackTypes includes: anObject type) ifTrue: [^ self buildSlotsFor: anObject content parentFieldName: aString].
 	
 	(#('STRING') includes: anObject type) ifTrue: [
-		^ SBMetaSlotLabel one
+		^ SBMetaSlotLabel new
 			name: aString;
 			label: anObject value].
 	
 	(#('PATTERN' 'TOKEN') includes: anObject type) ifTrue: [
-		^ SBMetaSlotText one
+		^ SBMetaSlotText new
 			name: aString;
 			regexString: (self buildRegexString: anObject)].
 	
 	(#('SYMBOL') includes: anObject type) ifTrue: [
-		^ SBMetaSlotBlock one
+		^ SBMetaSlotBlock new
 			name: aString;
 			type: anObject name factory: self].
 	
 	'REPEAT' = anObject type ifTrue: [
-		^ (self buildSlotsFor: anObject content parentFieldName: aString)
+		^ (SBMetaSlotRepeat new element: (self buildSlotsFor: anObject content parentFieldName: aString))
 			multiple: true;
 			required: false].
 	
 	'REPEAT1' = anObject type ifTrue: [
-		^ (self buildSlotsFor: anObject content parentFieldName: aString)
+		^ (SBMetaSlotRepeat new element: (self buildSlotsFor: anObject content parentFieldName: aString))
 			multiple: true;
 			required: true].
 	
 	'CHOICE' = anObject type ifTrue: [
-		(anObject members size = 2 and: [anObject members second type = 'BLANK']) ifTrue: [^ (self buildSlotsFor: anObject members first parentFieldName: aString) required: false].
+		(anObject members size = 2 and: [anObject members second type = 'BLANK']) ifTrue: [
+			^ (SBMetaSlotRepeat new element: (self buildSlotsFor: anObject members first parentFieldName: aString))
+				multiple: false;
+				required: false].
 		
-		^ SBMetaSlotChoice one
+		^ SBMetaSlotChoice new
 			name: aString;
 			alternatives: (anObject members collect: [:member | self buildSlotsFor: member parentFieldName: nil])].
 	
 	'SEQ' = anObject type ifTrue: [
-		^ SBMetaSlotGroup one
+		^ SBMetaSlotGroup new
 			name: aString;
 			elements: (anObject members collect: [:member | self buildSlotsFor: member parentFieldName: nil])].
 	
@@ -553,7 +550,7 @@ SBMetaBlockFactory >> simplifyList: anObject [
 SBMetaBlockFactory >> slotsFor: aString [
 
 	^ slotMapping at: aString ifAbsentPut: [
-		(self buildSlotsFor: (grammar rules at: aString ifAbsent: [self assert: false]))
+		(self buildSlotsFor: (grammar rules at: aString ifAbsent: [self assert: false]) parentFieldName: nil)
 			isRoot: true;
 			yourself]
 ]

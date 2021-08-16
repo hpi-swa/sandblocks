@@ -43,16 +43,16 @@ SBMetaSlotChoice >> buildPartialFor: aMorph option: anOption with: aString [
 { #category : #'as yet unclassified' }
 SBMetaSlotChoice >> hash [
 
-	^ alternatives hash bitXor: super hash
+	^ alternatives hash
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlotChoice >> morphsIn: aStream factory: aFactory do: aBlock [
+SBMetaSlotChoice >> morphsIn: aStream do: aBlock [
 
 	self alternatives do: [:alternative | | restore |
 		restore := aStream position.
-		(alternative morphsIn: aStream factory: aFactory do: [:slot :block | ])
-			ifTrue: [^ alternative morphsRepeatedIn: aStream factory: aFactory do: aBlock]
+		(alternative morphsIn: aStream do: [:slot :block | ])
+			ifTrue: [^ alternative morphsIn: aStream do: aBlock]
 			ifFalse: [aStream position: restore]].
 	^ false
 ]
@@ -69,7 +69,7 @@ SBMetaSlotChoice >> takeFrom: aCursor for: aMorph [
 
 	self alternatives do: [:choice | | restore |
 		restore := aCursor createRestorePoint.
-		(choice takeRepeatedFrom: aCursor for: aMorph)
+		(choice takeFrom: aCursor for: aMorph)
 			ifTrue: [^ true]
 			ifFalse: [aCursor restoreTo: restore]].
 	^ false

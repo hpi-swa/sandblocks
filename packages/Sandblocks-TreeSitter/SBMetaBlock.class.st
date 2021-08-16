@@ -54,7 +54,7 @@ SBMetaBlock >> cursorPositionsDo: aBlock [
 	
 	stream := self submorphs readStream.
 	previousMorph := nil.
-	self slot morphsRepeatedIn: stream factory: self factory do: [:slot :morphs |
+	self slot morphsIn: stream do: [:slot :morphs |
 		slot printString = '((''->''),(type),optional)' ifTrue: [SBToggledCode comment: '' active: 0 do: {[self halt]}].
 		morphs do: [:morph |
 			slot multiple ifTrue: [buildInsert value: morph value: true value: slot].
@@ -183,12 +183,9 @@ SBMetaBlock >> slot [
 { #category : #'as yet unclassified' }
 SBMetaBlock >> slotOf: aMorph do: aBlock [
 
-	^ slot
-		morphsRepeatedIn: self submorphs readStream
-		factory: self factory
-		do: [:slot :morphs |
-			Transcript showln: {slot. morphs}.
-			(morphs includes: aMorph) ifTrue: [^ aBlock value: slot value: morphs]]
+	^ slot morphsIn: self submorphs readStream do: [:slot :morphs |
+		Transcript showln: {slot. morphs}.
+		(morphs includes: aMorph) ifTrue: [^ aBlock value: slot value: morphs]]
 ]
 
 { #category : #'as yet unclassified' }

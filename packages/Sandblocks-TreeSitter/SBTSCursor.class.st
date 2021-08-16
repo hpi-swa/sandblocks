@@ -3,25 +3,29 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'library',
-		'cursor'
+		'cursor',
+		'atEnd'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
 
 { #category : #'as yet unclassified' }
+SBTSCursor >> atEnd [
+
+	^ atEnd
+]
+
+{ #category : #'as yet unclassified' }
 SBTSCursor >> buildMorphFor: aSlot [
 
-	| block rule |
-	rule := self factory grammar rules
-		at: self type
-		ifAbsent: [self assert: false].
-	
+	| block |
 	block := SBMetaBlock new factory: self factory parentSlot: aSlot.
 	
 	self gotoFirstChild
 		ifTrue: [
-			self assert: (block slot takeRepeatedFrom: self for: block).
-			self gotoParent]
+			self assert: (block slot takeFrom: self for: block).
+			self gotoParent.
+			self gotoNextSibling]
 		ifFalse: [block slot takeFrom: self for: block].
 	
 	^ block
@@ -42,7 +46,11 @@ SBTSCursor >> factory [
 { #category : #'as yet unclassified' }
 SBTSCursor >> gotoFirstChild [
 
-	^ library cursorGotoFirstChild: cursor
+	^ (library cursorGotoFirstChild: cursor)
+		ifTrue: [
+			atEnd := false.
+			true]
+		ifFalse: [false]
 ]
 
 { #category : #'as yet unclassified' }
@@ -51,12 +59,13 @@ SBTSCursor >> gotoNextSibling [
 	| ret |
 	ret := library cursorGotoNextSibling: cursor.
 	[ret and: [self shouldSkipParsedNode: self node]] whileTrue: [ret := library cursorGotoNextSibling: cursor].
-	^ ret
+	^ atEnd := ret not
 ]
 
 { #category : #'as yet unclassified' }
 SBTSCursor >> gotoParent [
 
+	atEnd := false.
 	^ library cursorGotoParent: cursor
 ]
 
@@ -71,6 +80,18 @@ SBTSCursor >> library: aLibrary cursor: aCursor [
 SBTSCursor >> node [
 
 	^ library cursorCurrentNode: cursor
+]
+
+{ #category : #'as yet unclassified' }
+SBTSCursor >> position [
+
+	^ self createRestorePoint
+]
+
+{ #category : #'as yet unclassified' }
+SBTSCursor >> position: aPosition [
+
+	self restoreTo: aPosition
 ]
 
 { #category : #'as yet unclassified' }
@@ -96,4 +117,12 @@ SBTSCursor >> text [
 SBTSCursor >> type [
 
 	^ library nodeType: self node
+]
+
+{ #category : #'as yet unclassified' }
+SBTSCursor >> visitTextSlot: aSlot morph: aMorph [
+
+	aMorph textFieldPattern: aSlot regex.
+	aMorph contents: self text.
+	true
 ]

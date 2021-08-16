@@ -11,7 +11,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBMetaSlotBlock class >> topLevel: aTypeString factory: aFactory [
 
-	^ self one type: aTypeString factory: aFactory
+	^ self new type: aTypeString factory: aFactory
 ]
 
 { #category : #'as yet unclassified' }
@@ -50,7 +50,7 @@ SBMetaSlotBlock >> hasSameStructureAs: aSlot [
 { #category : #'as yet unclassified' }
 SBMetaSlotBlock >> hash [
 
-	^ super hash bitXor: type hash
+	^ type hash
 ]
 
 { #category : #'as yet unclassified' }
@@ -60,9 +60,9 @@ SBMetaSlotBlock >> isBlockSlot [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlotBlock >> morphsIn: aStream factory: aFactory do: aBlock [
+SBMetaSlotBlock >> morphsIn: aStream do: aBlock [
 
-	^ (aStream peek isMetaBlock and: [aStream peek parentSlot isBlockSlot and: [aFactory type: aStream peek parentSlot type compatibleWith: type]])
+	^ (aStream peek isMetaBlock and: [aStream peek parentSlot isBlockSlot and: [factory type: aStream peek parentSlot type compatibleWith: type]])
 		ifTrue: [
 			aBlock value: self value: {aStream peek}.
 			true]
@@ -80,7 +80,7 @@ SBMetaSlotBlock >> takeFrom: aCursor for: aMorph [
 
 	^ (aCursor factory type: aCursor type compatibleWith: type)
 		ifTrue: [
-			aMorph addMorphBack: (aCursor buildMorphFor: self).
+			aMorph addMorphBack: (aCursor buildMorphFor: (SBMetaSlotBlock new type: aCursor type factory: factory)).
 			true]
 		ifFalse: [false]
 ]

@@ -28,7 +28,7 @@ SBMetaSlotLabel >> buildPartialFor: aMorph option: anOption with: aString [
 { #category : #'as yet unclassified' }
 SBMetaSlotLabel >> hash [
 
-	^ super hash bitXor: label hash
+	^ label hash
 ]
 
 { #category : #'as yet unclassified' }
@@ -44,7 +44,7 @@ SBMetaSlotLabel >> label: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlotLabel >> morphsIn: aStream factory: aFactory do: aBlock [
+SBMetaSlotLabel >> morphsIn: aStream do: aBlock [
 
 	^ aStream peek contents = self label
 		ifTrue: [
@@ -56,9 +56,9 @@ SBMetaSlotLabel >> morphsIn: aStream factory: aFactory do: aBlock [
 { #category : #'as yet unclassified' }
 SBMetaSlotLabel >> printTitleOn: aStream [
 
-	aStream nextPut: $'.
+	aStream nextPut: $".
 	aStream nextPutAll: label.
-	aStream nextPut: $'
+	aStream nextPut: $"
 ]
 
 { #category : #'as yet unclassified' }
@@ -67,6 +67,7 @@ SBMetaSlotLabel >> takeFrom: aCursor for: aMorph [
 	^ aCursor text withBlanksTrimmed = self label
 		ifTrue: [
 			aMorph addMorphBack: (SBStringMorph new contents: self label).
+			aCursor gotoNextSibling.
 			true]
 		ifFalse: [false]
 ]

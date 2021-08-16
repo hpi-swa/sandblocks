@@ -40,11 +40,11 @@ SBMetaSlotText >> cursorPositionsDo: aBlock in: aStream [
 { #category : #'as yet unclassified' }
 SBMetaSlotText >> hash [
 
-	^ super hash bitXor: regexString hash
+	^ regexString hash
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlotText >> morphsIn: aStream factory: aFactory do: aBlock [
+SBMetaSlotText >> morphsIn: aStream do: aBlock [
 
 	^ aStream peek isTextMorph
 		ifNotNil: [
@@ -56,8 +56,9 @@ SBMetaSlotText >> morphsIn: aStream factory: aFactory do: aBlock [
 { #category : #'as yet unclassified' }
 SBMetaSlotText >> printTitleOn: aStream [
 
-	aStream nextPutAll: 'r'''.
-	aStream nextPutAll: regexString
+	aStream nextPutAll: 'r"'.
+	aStream nextPutAll: regexString.
+	aStream nextPutAll: '"'
 ]
 
 { #category : #'as yet unclassified' }
@@ -92,6 +93,7 @@ SBMetaSlotText >> takeFrom: aCursor for: aMorph [
 		ifTrue: [
 			aMorph textFieldPattern: self regex.
 			aMorph contents: aCursor text.
+			aCursor gotoNextSibling.
 			true]
 		ifFalse: [false]
 ]
