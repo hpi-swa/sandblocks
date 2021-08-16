@@ -48,7 +48,7 @@ SBMetaSlotBlock >> isBlockSlot [
 { #category : #'as yet unclassified' }
 SBMetaSlotBlock >> matchesMorph: aMorph in: aFactory [
 
-	self objectInterface ifNotNil: [^ aFactory type: aMorph objectInterface compatibleWith: self objectInterface].
+	self objectInterface ifNotNil: [^ aFactory deepCompare: aMorph slot structure  to: self structure].
 	
 	^ self matchesMorph: aMorph in: aFactory structure: structure
 ]
@@ -58,14 +58,15 @@ SBMetaSlotBlock >> matchesMorph: aMorph in: aFactory structure: anObject [
 
 	^ anObject type caseOf: {
 		['STRING'] -> [aMorph contents = anObject value].
-		['SYMBOL'] -> [aFactory type: aMorph objectInterface compatibleWith: anObject name].
+		['SYMBOL'] -> [aFactory deepCompare: aMorph slot structure to: (aFactory grammar rules at: anObject name)].
 		['SEQ'] -> [
 			anObject members size = aMorph submorphs size ifFalse: [^ false].
 			anObject members
 				with: aMorph submorphs
 				do: [:member :morph | (self matchesMorph: morph in: aFactory structure: member) ifFalse: [^ false]].
 			true].
-		['FIELD'] -> [self matchesMorph: aMorph in: aFactory structure: anObject content]}
+		['FIELD'] -> [self matchesMorph: aMorph in: aFactory structure: anObject content].
+		['CHOICE'] -> [anObject members anySatisfy: [:m | self matchesMorph: aMorph in: aFactory structure: m]]}
 ]
 
 { #category : #'as yet unclassified' }

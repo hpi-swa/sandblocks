@@ -609,32 +609,54 @@ SBMetaBlockFactory >> token: anObject matches: aString visited: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaBlockFactory >> token: anObject matches: aString visited: aCollection parent: aRuleName matchDo: aBlock [
+SBMetaBlockFactory >> token: anObject matches: aString visited: aCollection parents: aRuleCollection matchDo: aBlock [
 
 	(self unpackTypes includes: (anObject at: #type)) ifTrue: [
 		^ self
 			token: (anObject at: #content)
 			matches: aString
 			visited: aCollection
-			parent: aRuleName
+			parents: aRuleCollection
 			matchDo: aBlock].
 	
 	(anObject at: #type) caseOf: {
-		['STRING'] -> [((anObject at: #value) beginsWith: aString) ifTrue: [aBlock value: aRuleName value: true]].
-		['CHOICE'] -> [anObject members do: [:c | self token: c matches: aString visited: aCollection parent: aRuleName matchDo: aBlock]].
-		['SEQ'] -> [self token: anObject members first matches: aString visited: aCollection parent: aRuleName matchDo: aBlock].
-		['PATTERN'] -> [((self buildRegex: anObject) matches: aString) ifTrue: [aBlock value: aRuleName value: false]].
+		['STRING'] -> [((anObject at: #value) beginsWith: aString) ifTrue: [aBlock value: aRuleCollection value: true]].
+		['CHOICE'] -> [anObject members do: [:c | self token: c matches: aString visited: aCollection parents: aRuleCollection matchDo: aBlock]].
+		['SEQ'] -> [
+			self
+				token: anObject members first
+				matches: aString
+				visited: aCollection
+				parents: aRuleCollection
+				matchDo: aBlock].
+		['PATTERN'] -> [((self buildRegex: anObject) matches: aString) ifTrue: [aBlock value: aRuleCollection value: false]].
 		['BLANK'] -> [].
-		['TOKEN'] -> [((self buildRegex: anObject) matches: aString) ifTrue: [aBlock value: aRuleName value: false]].
+		['TOKEN'] -> [((self buildRegex: anObject) matches: aString) ifTrue: [aBlock value: aRuleCollection value: false]].
 		['SYMBOL'] -> [
 			(aCollection includes: (anObject at: #name)) ifFalse: [
 				aCollection add: (anObject at: #name).
-				grammar rules
-					at: (anObject at: #name)
-					ifPresent: [:rule | self token: rule matches: aString visited: aCollection parent: (anObject at: #name) matchDo: aBlock]]].
-		['REPEAT'] -> [" TODO: can be optional, so just omit? "
-		self token: anObject content matches: aString visited: aCollection parent: aRuleName matchDo: aBlock].
-		['REPEAT1'] -> [self token: anObject content matches: aString visited: aCollection parent: aRuleName matchDo: aBlock]}
+				grammar rules at: (anObject at: #name) ifPresent: [:rule |
+					self
+						token: rule
+						matches: aString
+						visited: aCollection
+						parents: aRuleCollection, {anObject at: #name}
+						matchDo: aBlock]]].
+		['REPEAT'] -> [
+			" TODO: can be optional, so just omit? "
+			self
+				token: anObject content
+				matches: aString
+				visited: aCollection
+				parents: aRuleCollection
+				matchDo: aBlock].
+		['REPEAT1'] -> [
+			self
+				token: anObject content
+				matches: aString
+				visited: aCollection
+				parents: aRuleCollection
+				matchDo: aBlock]}
 ]
 
 { #category : #'as yet unclassified' }

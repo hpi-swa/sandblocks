@@ -95,7 +95,8 @@ SBMetaBlock >> initialize [
 		cellGap: 4;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
-		symbols: #(nil nil)
+		symbols: #(nil nil);
+		cellPositioning: #center
 ]
 
 { #category : #'as yet unclassified' }
@@ -143,6 +144,12 @@ SBMetaBlock >> printOn: aStream [
 	aStream nextPutAll: (objectInterface isString
 		ifTrue: [objectInterface]
 		ifFalse: [objectInterface joinSeparatedBy: ','])
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlock >> slot [
+
+	^ slot
 ]
 
 { #category : #'as yet unclassified' }
