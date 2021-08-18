@@ -29,12 +29,13 @@ SBMetaSlotText >> buildPartialFor: aMorph option: anOption with: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlotText >> cursorPositionsDo: aBlock in: aStream [
+SBMetaSlotText >> cursorPositionsIn: aStream factory: aFactory do: aBlock [
 
 	aStream peek containingSandblock startInputCommand ifNotNil: [:command |
 		aBlock value: (SBCursorText new
-			block: aStream peek containingSandblock;
-			currentCommand: command)]
+			block: aStream next containingSandblock;
+			currentCommand: command)].
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -48,7 +49,7 @@ SBMetaSlotText >> morphsIn: aStream do: aBlock [
 
 	^ aStream peek isTextMorph
 		ifNotNil: [
-			aBlock value: self value: {aStream peek}.
+			aBlock value: self value: {aStream next}.
 			true]
 		ifNil: [false]
 ]
@@ -102,4 +103,14 @@ SBMetaSlotText >> takeFrom: aCursor for: aMorph [
 SBMetaSlotText >> triggersFor: aString matchFullToken: aBoolean do: aBlock [
 
 	^ aBlock addLeafIf: [:option | aBoolean ifTrue: [self regex matches: aString] ifFalse: [self regex matchesPrefix: aString]]
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotText >> validIn: aStream [
+
+	^ aStream peek isTextMorph
+		ifTrue: [
+			aStream next.
+			true]
+		ifFalse: [false]
 ]

@@ -26,6 +26,16 @@ SBMetaSlotLabel >> buildPartialFor: aMorph option: anOption with: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaSlotLabel >> cursorPositionsIn: aStream factory: aFactory do: aBlock [
+
+	^ (self checkValidIn: aStream)
+		ifTrue: [
+			aStream next.
+			true]
+		ifFalse: [false]
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaSlotLabel >> hash [
 
 	^ label hash
@@ -46,9 +56,9 @@ SBMetaSlotLabel >> label: anObject [
 { #category : #'as yet unclassified' }
 SBMetaSlotLabel >> morphsIn: aStream do: aBlock [
 
-	^ aStream peek contents = self label
+	^ (self checkValidIn: aStream)
 		ifTrue: [
-			aBlock value: self value: {aStream peek}.
+			aBlock value: self value: {aStream next}.
 			true]
 		ifFalse: [false]
 ]
@@ -76,4 +86,14 @@ SBMetaSlotLabel >> takeFrom: aCursor for: aMorph [
 SBMetaSlotLabel >> triggersFor: aString matchFullToken: aBoolean do: aBlock [
 
 	^ aBlock addLeafIf: [:option | aBoolean ifTrue: [self label = aString] ifFalse: [self label beginsWith: aString]]
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotLabel >> validIn: aStream [
+
+	^ aStream peek contents = self label
+		ifTrue: [
+			aStream next.
+			true]
+		ifFalse: [false]
 ]

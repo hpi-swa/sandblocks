@@ -22,7 +22,8 @@ SBMetaSlotChoice >> alternatives [
 { #category : #'as yet unclassified' }
 SBMetaSlotChoice >> alternatives: aCollection [
 
-	alternatives := aCollection
+	alternatives := aCollection.
+	alternatives do: [:alternative | alternative parent: self]
 ]
 
 { #category : #'as yet unclassified' }
@@ -41,6 +42,13 @@ SBMetaSlotChoice >> buildPartialFor: aMorph option: anOption with: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaSlotChoice >> cursorPositionsIn: aStream factory: aFactory do: aBlock [
+
+	self alternatives do: [:alternative | (alternative checkValidIn: aStream) ifTrue: [^ alternative cursorPositionsIn: aStream factory: aFactory do: aBlock]].
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaSlotChoice >> hash [
 
 	^ alternatives hash
@@ -49,11 +57,7 @@ SBMetaSlotChoice >> hash [
 { #category : #'as yet unclassified' }
 SBMetaSlotChoice >> morphsIn: aStream do: aBlock [
 
-	self alternatives do: [:alternative | | restore |
-		restore := aStream position.
-		(alternative morphsIn: aStream do: [:slot :block | ])
-			ifTrue: [^ alternative morphsIn: aStream do: aBlock]
-			ifFalse: [aStream position: restore]].
+	self alternatives do: [:alternative | (alternative checkValidIn: aStream) ifTrue: [^ alternative morphsIn: aStream do: aBlock]].
 	^ false
 ]
 
@@ -85,4 +89,16 @@ SBMetaSlotChoice >> triggersFor: aString matchFullToken: aBoolean do: anOption [
 			add: index
 			if: [:option | alternative triggersFor: aString matchFullToken: aBoolean do: option]) ifTrue: [anyMatch := true]].
 	^ anyMatch
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotChoice >> validIn: aStream [
+
+	| restore |
+	restore := aStream position.
+	self alternatives do: [:alternative |
+		(alternative validIn: aStream)
+			ifTrue: [^ true]
+			ifFalse: [aStream position: restore]].
+	^ false
 ]

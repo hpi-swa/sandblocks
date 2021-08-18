@@ -55,14 +55,8 @@ SBMetaBlockFactory >> applyInlining: rule [
 SBMetaBlockFactory >> build: anObject in: aBlock slot: aSlot [
 
 	aBlock factory: self parentSlot: aSlot.
-	aBlock slot buildRepeatedFor: aBlock.
+	aBlock slot buildFor: aBlock.
 	^ aBlock
-]
-
-{ #category : #'as yet unclassified' }
-SBMetaBlockFactory >> build: aType  slot: aSlot [
-
-	^ self build: aType in: SBMetaBlock new slot: aSlot
 ]
 
 { #category : #'as yet unclassified' }
@@ -118,6 +112,7 @@ SBMetaBlockFactory >> buildRule: aType [
 
 	^ self
 		build: (grammar rules at: aType ifAbsent: [self assert: false])
+		in: SBMetaBlock new
 		slot: (SBMetaSlotBlock topLevel: aType factory: self)
 ]
 

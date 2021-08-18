@@ -91,8 +91,11 @@ SBCursorSelect >> selectLarger [
 SBCursorSelect >> selectSmaller [
 
 	self block childSandblocks ifEmpty: [
-		self block startInputCommand ifNotNil: [:command | ^ SBCursorText new block: self block; currentCommand: command].
-		self insertCursorIn: self block near: nil before: false do: [:cursor | ^ cursor].
+		self block startInputCommand ifNotNil: [:command |
+			^ SBCursorText new
+				block: self block;
+				currentCommand: command].
+		self cursorPositionsIn: self block do: [:position | position ~= self ifTrue: [^ position]].
 		^ self].
 	
 	^ self selectCursorFor: self block childSandblocks first

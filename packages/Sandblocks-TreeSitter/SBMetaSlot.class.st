@@ -2,7 +2,8 @@ Class {
 	#name : #SBMetaSlot,
 	#superclass : #Object,
 	#instVars : [
-		'name'
+		'name',
+		'parent'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -68,6 +69,28 @@ SBMetaSlot >> buildRepeatedFor: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaSlot >> canDeleteChild: aBlock in: aStream [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> checkValidIn: aStream [
+
+	| restore ret |
+	restore := aStream position.
+	ret := self validIn: aStream.
+	aStream position: restore.
+	^ ret
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> cursorPositionsIn: aStream factory: aFactory do: aBlock [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaSlot >> hash [
 
 	^ self subclassResponsibility
@@ -90,6 +113,12 @@ SBMetaSlot >> isRoot: aBoolean [
 SBMetaSlot >> name: aString [
 
 	name := aString
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> parent: aSlot [
+
+	parent := aSlot
 ]
 
 { #category : #'as yet unclassified' }
@@ -128,6 +157,12 @@ SBMetaSlot >> takeFrom: aCursor for: aMorph [
 
 { #category : #'as yet unclassified' }
 SBMetaSlot >> triggersFor: aString matchFullToken: aBoolean do: aBlock [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlot >> validIn: aStream [
 
 	^ self subclassResponsibility
 ]

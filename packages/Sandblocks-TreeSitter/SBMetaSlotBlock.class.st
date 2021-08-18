@@ -36,15 +36,21 @@ SBMetaSlotBlock >> buildPartialFor: aMorph option: anOption with: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlotBlock >> factory [
+SBMetaSlotBlock >> cursorPositionsIn: aStream factory: aFactory do: aBlock [
 
-	^ factory
+	^ (self checkValidIn: aStream)
+		ifTrue: [ | block |
+			block := aStream next.
+			aBlock value: (SBCursorSelect new block: block).
+			block cursorPositionsDo: aBlock.
+			true]
+		ifFalse: [false]
 ]
 
 { #category : #'as yet unclassified' }
-SBMetaSlotBlock >> hasSameStructureAs: aSlot [
+SBMetaSlotBlock >> factory [
 
-	^ aSlot isBlockSlot and: [self deepCompare: self structure to: aSlot structure]
+	^ factory
 ]
 
 { #category : #'as yet unclassified' }
@@ -62,9 +68,9 @@ SBMetaSlotBlock >> isBlockSlot [
 { #category : #'as yet unclassified' }
 SBMetaSlotBlock >> morphsIn: aStream do: aBlock [
 
-	^ (aStream peek isMetaBlock and: [aStream peek parentSlot isBlockSlot and: [factory type: aStream peek parentSlot type compatibleWith: type]])
+	^ (self checkValidIn: aStream)
 		ifTrue: [
-			aBlock value: self value: {aStream peek}.
+			aBlock value: self value: {aStream next}.
 			true]
 		ifFalse: [false]
 ]
@@ -107,4 +113,14 @@ SBMetaSlotBlock >> type: aString factory: aFactory [
 
 	type := aString.
 	factory := aFactory
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotBlock >> validIn: aStream [
+
+	^ (aStream peek isMetaBlock and: [aStream peek parentSlot isBlockSlot and: [factory type: aStream peek parentSlot type compatibleWith: type]])
+		ifTrue: [
+			aStream next.
+			true]
+		ifFalse: [false]
 ]

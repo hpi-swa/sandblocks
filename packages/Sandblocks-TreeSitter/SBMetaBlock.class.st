@@ -37,39 +37,7 @@ SBMetaBlock >> currentTextMorph [
 { #category : #'as yet unclassified' }
 SBMetaBlock >> cursorPositionsDo: aBlock [
 
-	| buildInsert stream previousMorph |
-	aBlock value: (SBCursorSelect new block: self).
-	
-	buildInsert := [:adjacent :before :slot |
-		aBlock value: (SBCursorInsert new
-			command: (SBMetaRelInsertCommand new
-				near: adjacent
-				before: before
-				in: self
-				factory: self factory
-				slot: slot);
-			before: before;
-			adjacent: adjacent;
-			container: self)].
-	
-	stream := self submorphs readStream.
-	previousMorph := nil.
-	self slot morphsIn: stream do: [:slot :morphs |
-		slot printString = '((''->''),(type),optional)' ifTrue: [SBToggledCode comment: '' active: 0 do: {[self halt]}].
-		morphs do: [:morph |
-			slot multiple ifTrue: [buildInsert value: morph value: true value: slot].
-			SBToggledCode comment: '' active: 1 do: {[morph cursorPositionsDo: aBlock]}.
-			slot multiple ifTrue: [buildInsert value: morph value: false value: slot].
-			morph isTextMorph ifTrue: [
-				morph containingSandblock startInputCommand ifNotNil: [:command |
-					aBlock value: (SBCursorText new
-						block: morph containingSandblock;
-						currentCommand: command)]]].
-		Transcript showln: {slot. morphs}.
-		morphs ifNotEmpty: [previousMorph := morphs last] ifEmpty: [
-			previousMorph
-				ifNotNil: [:m | buildInsert value: m value: false value: slot]
-				ifNil: [buildInsert value: nil value: true value: slot]]]
+	self assert: (self slot cursorPositionsIn: self submorphs readStream factory: factory do: aBlock)
 ]
 
 { #category : #'as yet unclassified' }
@@ -160,6 +128,44 @@ SBMetaBlock >> minimumHeight [
 SBMetaBlock >> objectInterface [
 
 	^ self shouldNotImplement
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlock >> oldCursorPositionsDo: aBlock [
+
+	| buildInsert stream previousMorph |
+	aBlock value: (SBCursorSelect new block: self).
+	
+	buildInsert := [:adjacent :before :slot |
+		aBlock value: (SBCursorInsert new
+			command: (SBMetaRelInsertCommand new
+				near: adjacent
+				before: before
+				in: self
+				factory: self factory
+				slot: slot);
+			before: before;
+			adjacent: adjacent;
+			container: self)].
+	
+	stream := self submorphs readStream.
+	previousMorph := nil.
+	self slot morphsIn: stream do: [:slot :morphs |
+		slot printString = '((''->''),(type),optional)' ifTrue: [SBToggledCode comment: '' active: 0 do: {[self halt]}].
+		morphs do: [:morph |
+			slot multiple ifTrue: [buildInsert value: morph value: true value: slot].
+			SBToggledCode comment: '' active: 1 do: {[morph cursorPositionsDo: aBlock]}.
+			slot multiple ifTrue: [buildInsert value: morph value: false value: slot].
+			morph isTextMorph ifTrue: [
+				morph containingSandblock startInputCommand ifNotNil: [:command |
+					aBlock value: (SBCursorText new
+						block: morph containingSandblock;
+						currentCommand: command)]]].
+		Transcript showln: {slot. morphs}.
+		morphs ifNotEmpty: [previousMorph := morphs last] ifEmpty: [
+			previousMorph
+				ifNotNil: [:m | buildInsert value: m value: false value: slot]
+				ifNil: [buildInsert value: nil value: true value: slot]]]
 ]
 
 { #category : #'as yet unclassified' }

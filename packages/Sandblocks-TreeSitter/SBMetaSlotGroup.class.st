@@ -17,14 +17,33 @@ SBMetaSlotGroup >> = aSlot [
 { #category : #'as yet unclassified' }
 SBMetaSlotGroup >> buildFor: aMorph [
 
-	self elements do: [:element | element buildRepeatedFor: aMorph]
+	self elements do: [:element | element buildFor: aMorph]
 ]
 
 { #category : #'as yet unclassified' }
 SBMetaSlotGroup >> buildPartialFor: aMorph option: anOption with: aString [
 
 	self elements first buildPartialFor: aMorph option: anOption with: aString.
-	self elements allButFirstDo: [:element | element buildRepeatedFor: aMorph]
+	self elements allButFirstDo: [:element | element buildFor: aMorph]
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotGroup >> cursorPositionsIn: aStream factory: aFactory do: aBlock [
+
+	| stream morph |
+	(self checkValidIn: aStream) ifFalse: [^ false].
+	
+	morph := aStream peek.
+	stream := self hasOwnBlock ifTrue: [morph submorphs readStream] ifFalse: [aStream].
+	
+	self hasOwnBlock ifTrue: [ | block |
+		block := aStream last.
+		aBlock value: (SBCursorSelect new block: block).
+		^ block cursorPositionsDo: aBlock].
+	
+	self elements withIndexDo: [:element :index | (element cursorPositionsIn: stream factory: aFactory do: aBlock) ifFalse: [^ false]].
+	
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -36,7 +55,8 @@ SBMetaSlotGroup >> elements [
 { #category : #'as yet unclassified' }
 SBMetaSlotGroup >> elements: aCollection [
 
-	elements := aCollection
+	elements := aCollection.
+	elements do: [:element | element parent: self]
 ]
 
 { #category : #'as yet unclassified' }
@@ -68,24 +88,16 @@ SBMetaSlotGroup >> isRoot: aBoolean [
 { #category : #'as yet unclassified' }
 SBMetaSlotGroup >> morphsIn: aStream do: aBlock [
 
-	| stream morph restore |
+	| stream morph |
+	(self checkValidIn: aStream) ifFalse: [^ false].
+	
 	morph := aStream peek.
 	stream := self hasOwnBlock ifTrue: [morph submorphs readStream] ifFalse: [aStream].
-	restore := stream position.
-	self elements withIndexDo: [:element :index | | count |
-		stream atEnd ifTrue: [
-			stream position: restore.
-			^ false].
-		count := 0.
-		(element morphsIn: stream do: [:slot :morphs |
-			count := morphs size.
-			aBlock value: slot value: morphs])
-			ifTrue: [count > 0 ifTrue: [stream next]]
-			ifFalse: [
-				stream position: restore.
-				^ false]].
+	self elements withIndexDo: [:element :index | element morphsIn: stream do: aBlock].
 	
-	self hasOwnBlock ifTrue: [aBlock value: self value: {morph}].
+	self hasOwnBlock ifTrue: [
+		aBlock value: self value: {morph}.
+		aStream next].
 	
 	^ true
 ]
@@ -110,4 +122,21 @@ SBMetaSlotGroup >> takeFrom: aCursor for: aMorph [
 SBMetaSlotGroup >> triggersFor: aString matchFullToken: aBoolean do: aBlock [
 
 	^ self elements first triggersFor: aString matchFullToken: aBoolean do: aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaSlotGroup >> validIn: aStream [
+
+	| restore stream |
+	restore := aStream position.
+	stream := self hasOwnBlock
+		ifTrue: [aStream peek submorphs readStream]
+		ifFalse: [aStream].
+	self elements do: [:element |
+		stream atEnd ifTrue: [^ false].
+		(element validIn: stream) ifFalse: [
+			stream position: restore.
+			^ false]].
+	self hasOwnBlock ifTrue: [aStream next].
+	^ true
 ]
