@@ -72,12 +72,18 @@ SBCursorSelect >> mode [
 { #category : #'as yet unclassified' }
 SBCursorSelect >> moveHorizontal: aNumber wordWise: aBoolean [
 
-	aNumber > 0 ifTrue: [
-		^ self
+	aNumber > 0 ifTrue: [ | next |
+		" to make addressing inserts in empty blocks easier, go in if possible "
+		self block hasChildSandblocks ifFalse: [self cursorPositionsIn: self block do: [:position | position = self ifFalse: [^ position]]].
+		
+		next := self
 			adjacentPosition: aNumber
 			to: self
 			in: self block sandblockEditor
-			that: [:p | ((p block hasOwner: self block) or: [p block = self block]) not and: [(p isKindOf: SBCursorSelect) not or: [p block startInputCommand isNil]]]].
+			that: [:p | ((p block hasOwner: self block) or: [p block = self block]) not and: [(p isKindOf: SBCursorSelect) not or: [p block startInputCommand isNil]]].
+		
+		^ next ifNil: [" if we are past all positions, see if we want to enter this block instead "
+		self cursorPositionsIn: self block do: [:position | position = self ifFalse: [^ position]]]].
 	^ self adjacentPosition: aNumber in: self block sandblockEditor
 ]
 

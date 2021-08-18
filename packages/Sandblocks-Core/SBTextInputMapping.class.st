@@ -71,6 +71,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $w command do: #wrapWithExampleWatch;
 		registerShortcut: $p command do: #evaluateExpression;
 		registerShortcut: $d command do: #doExpression;
+		registerShortcut: $D command do: #debugExpression;
 		registerShortcut: $P command do: #debugExpression;
 		registerShortcut: $m command do: #browseImplementors;
 		registerShortcut: $n command do: #browseSenders;

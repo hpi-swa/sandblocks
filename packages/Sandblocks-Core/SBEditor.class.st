@@ -787,14 +787,16 @@ SBEditor >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 { #category : #input }
 SBEditor >> interruptInputDuring: aBlock [
 
-	| cursor |
+	| cursor selected |
 	self selection ifNil: [^ aBlock value].
 	
-	cursor := self selection currentTextMorph ifNotNil: #cursor.
+	selected := self selection.
+	cursor := selected currentTextMorph ifNotNil: #cursor.
+	
 	self endInput.
 	aBlock value.
-	cursor ifNotNil: [
-		self selection ifNotNil: [self startInput: self selection at: cursor replacingContents: false]]
+	
+	(cursor notNil and: [self selection = selected]) ifTrue: [self startInput: selected at: cursor replacingContents: false]
 ]
 
 { #category : #testing }

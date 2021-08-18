@@ -94,17 +94,20 @@ SBStGrammarHandler >> createNewEmptyModule [
 { #category : #actions }
 SBStGrammarHandler >> debugExpression [
 	<action>
+	<actionValidIf: #isExpression>
+
+	| artefact context |
+	artefact := SBExecutionEnvironment value ifNil: [self block containingArtefact].
 	
-	| artefact cue context process |
-	artefact := self block containingArtefact.
-	context := self block sandblockEditor errors focusedArtefact = artefact ifTrue: [self block sandblockEditor errors focusedContext] ifFalse: [nil].
-	cue := self block compilationCueWith: artefact for: context.
-	
-	process := Process
-		forMethod: (Compiler new compileCue: cue noPattern: true ifFail: nil) generateWithTempNames
-		receiver: (context ifNotNil: #receiver).
-	
-	self block sandblockEditor reportError: nil process: process
+	context := artefact ifNotNil: #evaluationContext.
+	(Process
+		forMethod: (Compiler new
+			compileNoPattern: self block sourceString
+			in: (artefact ifNotNil: #relatedClass ifNil: [nil class])
+			context: (context ifNotNil: #receiver)
+			notifying: artefact
+			ifFail: nil) generateWithTempNames
+		receiver: (context ifNil: [artefact ifNotNil: #evaluationReceiver] ifNotNil: #receiver)) debugWithTitle: 'Debug it'
 ]
 
 { #category : #actions }
@@ -351,12 +354,10 @@ SBStGrammarHandler >> useArgument: aNumber [
 	artefact arguments size >= aNumber ifTrue: [ | content editor |
 		content := (artefact arguments at: aNumber) contents.
 		editor := self block sandblockEditor.
-		editor mode = #input
-			ifTrue: [editor sandblockEditor endInputWith: content]
-			ifFalse: [
-				editor do: (SBReplaceCommand new
-					replacer: (SBStName contents: content);
-					target: self block)].
+		(SBStName contents: content) convertedFor: self block objectInterface do: [:replace |
+			editor do: (SBReplaceCommand new
+				replacer: replace;
+				target: self block)].
 		editor selection startInputAtEnd]
 ]
 
