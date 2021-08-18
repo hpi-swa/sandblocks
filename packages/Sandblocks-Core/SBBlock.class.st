@@ -112,6 +112,34 @@ SBBlock >> artefactChanged: aMethodBlock [
 	
 ]
 
+{ #category : #suggestions }
+SBBlock >> artefactCompletionSelectorsFor: aBlock class: aClass [
+	"May be overridden by subclasses."
+	
+	aClass ifNil: [^ Symbol allSymbols].
+	
+	^ aClass sandblocksSuggestionsFor: self
+]
+
+{ #category : #suggestions }
+SBBlock >> artefactCompletionSuggestionsFor: aBlock matching: aString [
+	 
+	| allMatches exactMatches fuzzyMatches selectors |
+	selectors := self artefactCompletionSelectorsFor: aBlock class: aBlock guessClassExpensive.
+	
+	exactMatches := Array streamContents: [:stream |
+		selectors do: [:sel |
+			(sel asString sandblockBeginsWith: aString) ifTrue: [stream nextPut: sel asString]]].
+	fuzzyMatches := Array streamContents: [:stream |
+		selectors do: [:sel |
+			(sel asString sandblockMatch: aString) ifTrue: [stream nextPut: sel asString]]].
+	allMatches := Array streamContents: [:stream |
+		selectors do: [:sel |
+			stream nextPut: sel asString]].
+	
+	^ (exactMatches, fuzzyMatches, allMatches) withoutDuplicates
+]
+
 { #category : #accessing }
 SBBlock >> artefactForPersisting [
 
@@ -422,26 +450,12 @@ SBBlock >> completeSubtree [
 { #category : #suggestions }
 SBBlock >> completionSuggestionsFor: aString [
 
-	^ (self suggestAlways or: [aString size > 2])
-		ifTrue: [ | baseClass |
-			baseClass := self guessClassExpensive.
-			baseClass isNil
-				ifFalse: [ | allMatches fuzzyMatches exactMatches |
-					exactMatches := Array streamContents: [:stream |
-						baseClass withAllSuperclassesDo: [:class |
-							class selectors sorted do: [:sel |
-								(sel asString sandblockBeginsWith: aString) ifTrue: [stream nextPut: sel asString]]]].
-					fuzzyMatches := Array streamContents: [:stream |
-						baseClass withAllSuperclassesDo: [:class |
-							class selectors sorted do: [:sel |
-								(sel asString sandblockMatch: aString) ifTrue: [stream nextPut: sel asString]]]].
-					allMatches := Array streamContents: [:stream |
-						baseClass withAllSuperclassesDo: [:class |
-							class selectors sorted do: [:sel |
-								stream nextPut: sel asString]]].
-					(exactMatches, fuzzyMatches, allMatches) withoutDuplicates]
-				ifTrue: [Symbol allSymbols select: [:sym | sym asString sandblockMatch: aString]]]
-		ifFalse: [#()]
+	(self suggestAlways or: [aString size > 2])
+		ifFalse: [^ #()].
+	
+	^ self containingArtefact
+		artefactCompletionSuggestionsFor: self
+		matching: aString
 ]
 
 { #category : #accessing }
