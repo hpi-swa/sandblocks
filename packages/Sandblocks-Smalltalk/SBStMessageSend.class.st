@@ -652,7 +652,7 @@ SBStMessageSend >> writeSendSourceOn: aStream [
 SBStMessageSend >> writeSourceOn: aStream [
 
 	aStream nextPut: $(.
-	self firstSubmorph writeSourceOn: aStream.
+	self actualReceiver writeSourceOn: aStream.
 	aStream space.
 	signature writeSourceOn: aStream.
 	aStream nextPut: $)

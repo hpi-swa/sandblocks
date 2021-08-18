@@ -250,3 +250,15 @@ SBStNameBehavior >> validBinding [
 
 	^ true
 ]
+
+{ #category : #'as yet unclassified' }
+SBStNameBehavior >> wasDeselected [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBStNameBehavior >> wasSelected [
+
+	
+]

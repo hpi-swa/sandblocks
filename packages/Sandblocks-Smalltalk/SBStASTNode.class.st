@@ -66,7 +66,6 @@ SBStASTNode >> evaluate [
 	^ artefact
 		ifNotNil: [ | context |
 			context := artefact evaluationContext.
-			[].
 			Compiler new
 				evaluate: self sourceString
 				in: context

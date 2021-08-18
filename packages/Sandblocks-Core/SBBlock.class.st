@@ -471,6 +471,7 @@ SBBlock >> completionSuggestionsFor: aString [
 			baseClass isNil
 				ifFalse: [
 					Array streamContents: [:stream |
+						(self containingArtefact selector sandblockMatch: aString) ifTrue: [stream nextPut: self containingArtefact selector].
 						baseClass withAllSuperclassesDo: [:class |
 							class methodsDo: [:m | | sel |
 								sel := m selector asString.

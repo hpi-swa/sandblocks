@@ -377,7 +377,9 @@ SBStName >> wantsInput [
 { #category : #'as yet unclassified' }
 SBStName >> wasDeselected [
 
-	self flag: #todo. " will not clean up on changed usages "
+	self flag: #todo.
+	" will not clean up on changed usages "
+	self behavior wasDeselected.
 	self isInWorld ifTrue: [
 		self allUsagesDo: [:b | b detachDecorators: SBHighlightDecorator].
 		self resolveBinding ifNotNil: [:b | b detachDecorators: SBHighlightDecorator]]
@@ -387,6 +389,7 @@ SBStName >> wasDeselected [
 SBStName >> wasSelected [
 
 	self allUsagesDo: [:b | b attachDecorator: SBHighlightDecorator new].
+	self behavior wasSelected.
 	self resolveBinding ifNotNil: [:b | b attachDecorator: SBHighlightDecorator new]
 ]
 

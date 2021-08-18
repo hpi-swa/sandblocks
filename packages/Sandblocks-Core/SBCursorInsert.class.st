@@ -43,7 +43,7 @@ SBCursorInsert >> before: aBoolean [
 { #category : #'as yet unclassified' }
 SBCursorInsert >> block [
 
-	^ self container
+	^ self adjacent ifNil: [self container]
 ]
 
 { #category : #'as yet unclassified' }
@@ -114,7 +114,7 @@ SBCursorInsert >> drawOn: aCanvas in: aRectangle [
 SBCursorInsert >> enter [
 
 	super enter.
-	self triggerEvent: #showLabel with: (command title ifNil: ['insert in ', self block printString])
+	self triggerEvent: #showLabel with: (command title ifNil: ['insert in ', self container printString])
 ]
 
 { #category : #'as yet unclassified' }
