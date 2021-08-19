@@ -38,10 +38,10 @@ SBCursorSelect >> color [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorSelect >> drawOn: aCanvas [
+SBCursorSelect >> drawOn: aCanvas in: aRectangle [
 
 	aCanvas
-		frameRoundRect: (self bounds insetBy: 2)
+		frameRoundRect: (aRectangle insetBy: 2)
 		radius: self block colorPolicy cornerRadius
 		width: self block frameSize
 		color: self color
@@ -72,22 +72,36 @@ SBCursorSelect >> mode [
 { #category : #'as yet unclassified' }
 SBCursorSelect >> moveHorizontal: aNumber wordWise: aBoolean [
 
+	aNumber > 0 ifTrue: [
+		^ self
+			adjacentPosition: aNumber
+			to: self
+			in: self block sandblockEditor
+			that: [:p | ((p block hasOwner: self block) or: [p block = self block]) not and: [(p isKindOf: SBCursorSelect) not or: [p block startInputCommand isNil]]]].
 	^ self adjacentPosition: aNumber in: self block sandblockEditor
 ]
 
 { #category : #'as yet unclassified' }
 SBCursorSelect >> selectLarger [
 
-	^ SBCursorSelect new block: self block parentSandblock
+	^ self block parentSandblock ifNotNil: [:parent | SBCursorSelect new block: parent] ifNil: [self]
 ]
 
 { #category : #'as yet unclassified' }
 SBCursorSelect >> selectSmaller [
 
 	self block childSandblocks ifEmpty: [
-		self block currentTextMorph ifNotNil: [^ self textCursorFor: self block].
+		self block startInputCommand ifNotNil: [:command | ^ SBCursorText new block: self block; currentCommand: command].
 		self insertCursorIn: self block near: nil before: false do: [:cursor | ^ cursor].
 		^ self].
 	
 	^ self selectCursorFor: self block childSandblocks first
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorSelect >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
+
+	(self block grammarHandler ifNotNil: [:h | h characterCanStartInput: anEvent keyCharacter] ifNil: [false]) ifTrue: [
+			self block grammarHandler startOverrideInput: anEvent in: anEditor.
+			aBlock value]
 ]

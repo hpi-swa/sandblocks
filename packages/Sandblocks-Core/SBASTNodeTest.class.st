@@ -5,6 +5,21 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBASTNodeTest >> testBindingRename [
+
+	| block editor |
+	block := '[|from to| from squared. from squared]' parseAsSandblock.
+	editor := self methodFor: block.
+	
+	editor startInput: block statements last receiver at: 1 replacingContents: true.
+	block statements last receiver keyStroke: (self keyboardEvent: $t).
+	block statements last receiver keyStroke: (self keyboardEvent: $o).
+	editor performAction: #moveCursorUp.
+	self assert: 'from' equals: block statements first receiver contents.
+	self assert: 'to' equals: block statements last receiver contents
+]
+
+{ #category : #'as yet unclassified' }
 SBASTNodeTest >> testCanClearMessagePart [
 
 	| block selection editor |
@@ -28,7 +43,7 @@ SBASTNodeTest >> testCanUndoAppendLine [
 	
 	block statements last keyStroke: (self keyboardEvent: $s).
 	editor endInput.
-	self assert: 2 equals: ((editor instVarNamed: #history) instVarNamed: #undoStack) size.
+	self assert: 2 equals: (editor history instVarNamed: #undoStack) size.
 	
 	editor undo.
 	
@@ -97,10 +112,10 @@ SBASTNodeTest >> testUndoWrapInArray [
 	block := '[self squared. self changeTableLayout. self resize]' parseAsSandblock.
 	selection := block statements first.
 	editor := self methodFor: block.
+	editor select: selection.
 	editor startOrAddToMultiSelection: block statements first.
 	editor startOrAddToMultiSelection: block statements second.
 	editor startOrAddToMultiSelection: block statements third.
-	editor select: selection.
 	selection performAction: #wrapInDynamicArray.
 	self assert: block statements first isArrayBlock.
 	self assert: block statements first submorphs first = selection.
@@ -120,10 +135,10 @@ SBASTNodeTest >> testUndoWrapInBlock [
 	block := '[self squared. self changeTableLayout. self resize]' parseAsSandblock.
 	selection := block statements first.
 	editor := self methodFor: block.
+	editor select: selection.
 	editor startOrAddToMultiSelection: block statements first.
 	editor startOrAddToMultiSelection: block statements second.
 	editor startOrAddToMultiSelection: block statements third.
-	editor select: selection.
 	selection performAction: #wrapInBlock.
 	self assert: block statements first isBlockBody.
 	self assert: block statements first statements first = selection.
@@ -213,9 +228,9 @@ SBASTNodeTest >> testWrapInCascadeMessageParts [
 	block := '[5 yourself. 5 parse: 2]' parseAsSandblock.
 	selection := block statements first.
 	editor := self methodFor: block.
+	editor select: selection.
 	editor startOrAddToMultiSelection: block statements first.
 	editor startOrAddToMultiSelection: block statements second messageParts first.
-	editor select: selection.
 	selection wrapInCascade.
 	self assert: block statements first isCascade.
 	self assert: block statements first messages first = selection.
@@ -230,9 +245,9 @@ SBASTNodeTest >> testWrapInCascadeMultiSelection [
 	block := '[5 squared. 5 + 2]' parseAsSandblock.
 	selection := block statements first.
 	editor := self methodFor: block.
+	editor select: selection.
 	editor startOrAddToMultiSelection: block statements first.
 	editor startOrAddToMultiSelection: block statements second.
-	editor select: selection.
 	selection wrapInCascade.
 	self assert: block statements first isCascade.
 	self assert: block statements first messages first = selection.

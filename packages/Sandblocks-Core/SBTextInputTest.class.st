@@ -23,11 +23,12 @@ SBTextInputTest >> testAcceptAutoCompletion [
 	block := '[3 squa]' parseAsSandblock.
 	editor := self methodFor: block.
 	
-	editor startInput: block statements first at: 9e8 replacingContents: false.
+	[editor openInWorld.
+	editor startInput: block statements first messageParts first at: 9e8 replacingContents: false.
 	self send: (self keyboardEvent: $r) to: editor.
 	self send: (self keyboardEvent: Character tab) to: editor.
 	
-	self assert: block statements first selector size > 5
+	self assert: block statements first selector size > 5] ensure: [editor delete]
 ]
 
 { #category : #'as yet unclassified' }
@@ -60,7 +61,7 @@ SBTextInputTest >> testMultiSelectionThroughShiftClick [
 	editor := self editorFor: block.
 	
 	block statements first startOrAddToMultiSelection.
-	block statements second click: (self class mouseEventAt: block statements second center).
+	block statements second click: (self class mouseEventAt: block statements second center shift: true command: false control: false).
 	
 	self assert: #selection equals: editor mode
 ]
@@ -73,9 +74,9 @@ SBTextInputTest >> testMultiSelectionThroughSpace [
 	editor := self methodFor: block.
 	
 	block statements first startOrAddToMultiSelection.
-	block statements second select.
-	self assert: #selection equals: editor mode.
 	
+	self send: (self keyboardEvent: Character arrowRight) to: editor.
+	self assert: #selection equals: editor mode.
 	self send: (self keyboardEvent: $ ) to: editor.
 	
 	self assert: #selection equals: editor mode.

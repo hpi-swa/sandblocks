@@ -3,7 +3,10 @@ Class {
 	#superclass : #Object,
 	#classVars : [
 		'DrawOnCanvas',
+		'EdgePanSpeed',
+		'EdgePanZone',
 		'EnableForceLayout',
+		'HideIndicators',
 		'PreviewDropInsert',
 		'RightClickContextMenu',
 		'ShowHoverDecorator'
@@ -27,16 +30,52 @@ SBPreferences class >> drawOnCanvas: aBoolean [
 ]
 
 { #category : #accessing }
+SBPreferences class >> edgePanSpeed [
+	<preference: 'Edge Pan Speed' category: 'sandblocks' description: 'Speed at which the view will move when dragging a block near the edge of the screen.' type: #Number>
+	
+	^ EdgePanSpeed ifNil: [500]
+]
+
+{ #category : #accessing }
+SBPreferences class >> edgePanSpeed: aNumber [
+	EdgePanSpeed := aNumber
+]
+
+{ #category : #accessing }
+SBPreferences class >> edgePanZone [
+	<preference: 'Edge Pan Zone Size' category: 'sandblocks' description: 'From the edge of the editor, the length at which panning starts, as a divisor of the editors size' type: #Number>
+	
+	^ EdgePanZone ifNil: [16]
+]
+
+{ #category : #accessing }
+SBPreferences class >> edgePanZone: aNumber [
+	EdgePanZone := aNumber
+]
+
+{ #category : #accessing }
 SBPreferences class >> enableForceLayout [
 	<preference: 'Enable force-driven layout for blocks' category: 'sandblocks' description: '' type: #Boolean>
 
-	^ EnableForceLayout ifNil: [false]
+	^ EnableForceLayout ifNil: [true]
 ]
 
 { #category : #'as yet unclassified' }
 SBPreferences class >> enableForceLayout: aBoolean [
 
 	EnableForceLayout := aBoolean
+]
+
+{ #category : #accessing }
+SBPreferences class >> hideIndicators [
+	<preference: 'Hide always-visible offscreen indicators' category: 'sandblocks' description: '' type: #Boolean>
+
+	^ HideIndicators ifNil: [false]
+]
+
+{ #category : #accessing }
+SBPreferences class >> hideIndicators: aBoolean [
+	HideIndicators := aBoolean
 ]
 
 { #category : #'as yet unclassified' }
@@ -83,5 +122,5 @@ SBPreferences class >> showHoverDecorator: aBoolean [
 { #category : #'as yet unclassified' }
 SBPreferences class >> useNewCursor [
 
-	^ false
+	^ true
 ]

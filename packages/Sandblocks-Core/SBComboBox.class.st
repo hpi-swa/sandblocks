@@ -2,11 +2,18 @@ Class {
 	#name : #SBComboBox,
 	#superclass : #SBTextBubble,
 	#instVars : [
-		'object',
 		'values'
 	],
 	#category : #'Sandblocks-Core'
 }
+
+{ #category : #'as yet unclassified' }
+SBComboBox >> activate [
+	<action>
+
+	
+	self promptChangeValue
+]
 
 { #category : #'as yet unclassified' }
 SBComboBox >> currentTextMorph [
@@ -53,14 +60,6 @@ SBComboBox >> promptChangeValue [
 			target: self;
 			selector: #object;
 			value: (self values at: index))]
-]
-
-{ #category : #'as yet unclassified' }
-SBComboBox >> startInputAt: aNumber replacingContents: aBoolean [
-
-	self promptChangeValue.
-	
-	^ nil
 ]
 
 { #category : #'as yet unclassified' }

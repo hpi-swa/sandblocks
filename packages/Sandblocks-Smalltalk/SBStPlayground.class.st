@@ -82,13 +82,6 @@ SBStPlayground >> canDeleteChild: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBStPlayground >> copyString [
-	<action>
-
-	self body performAction: #copyString
-]
-
-{ #category : #'as yet unclassified' }
 SBStPlayground >> createBinding: aString [
 
 	| decl |
@@ -103,7 +96,10 @@ SBStPlayground >> createBinding: aString [
 { #category : #'as yet unclassified' }
 SBStPlayground >> declarations [
 
-	^ bindings submorphs
+	^ bindings submorphs, {
+		(SBStName poolDeclaration: 'sbEditor')
+			binding: #sbEditor -> self sandblockEditor;
+			yourself}
 ]
 
 { #category : #'as yet unclassified' }
@@ -147,6 +143,12 @@ SBStPlayground >> initialize [
 		hResizing: #rigid;
 		attachDecorator: SBForceMoveDecorator newConfigured;
 		attachDecorator: SBResizableDecorator new
+]
+
+{ #category : #'as yet unclassified' }
+SBStPlayground >> isAttractedTo: aBlock [
+
+	^ false
 ]
 
 { #category : #'as yet unclassified' }
@@ -250,4 +252,10 @@ SBStPlayground >> storeOn: aStream [
 SBStPlayground >> textContents [
 
 	^ self name
+]
+
+{ #category : #'as yet unclassified' }
+SBStPlayground >> textContentsForCopy [
+
+	^ self body textContentsForCopy
 ]

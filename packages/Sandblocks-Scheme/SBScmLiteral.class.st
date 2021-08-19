@@ -61,7 +61,7 @@ SBScmLiteral >> deleteBeforeCursor [
 					do: (SBReplaceCommand new
 						target: self;
 						replacer: name);
-					maybeStartInputFromStart]]].
+					startInputAtEnd]]].
 	
 	^ super deleteBeforeCursor
 ]
@@ -92,12 +92,6 @@ SBScmLiteral >> isExpression [
 SBScmLiteral >> keyStroke: anEvent [
 
 	self acceptInputEvent: anEvent
-]
-
-{ #category : #'as yet unclassified' }
-SBScmLiteral >> moveCursorTo: aNumber [
-
-	self currentTextMorph moveCursorTo: aNumber
 ]
 
 { #category : #'as yet unclassified' }

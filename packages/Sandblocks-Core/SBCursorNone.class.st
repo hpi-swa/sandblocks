@@ -23,7 +23,13 @@ SBCursorNone >> bounds [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorNone >> drawOn: aCanvas [
+SBCursorNone >> color [
+
+	^ Color black
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorNone >> drawOn: aCanvas in: aRectangle [
 
 	
 ]
@@ -32,4 +38,16 @@ SBCursorNone >> drawOn: aCanvas [
 SBCursorNone >> hash [
 
 	^ self scaledIdentityHash
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorNone >> horizontalOffsetInFloat [
+
+	^ 0
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorNone >> mode [
+
+	^ #none
 ]

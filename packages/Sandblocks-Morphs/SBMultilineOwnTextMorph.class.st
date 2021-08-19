@@ -64,7 +64,8 @@ SBMultilineOwnTextMorph >> drawOn: aCanvas [
 	aCanvas
 		paragraph: (self paragraph
 			positionWhenComposed: self position;
-			showCaret: self cursorVisible)
+			showCaret: self cursorVisible;
+			caretColor: self color)
 		bounds: (self position extent: self paragraph extent)
 		color: self color
 ]
@@ -154,7 +155,7 @@ SBMultilineOwnTextMorph >> mouseDown: anEvent [
 	self paragraph selectionStart: block selectionStop: block.
 	self moveCursorTo: block stringIndex.
 	
-	self sandblockEditor ifNotNil: #updateVerticalSelectionPosition
+	self sandblockEditor ifNotNil: [:e | e cursor updateHorizontalOffset]
 ]
 
 { #category : #'as yet unclassified' }
@@ -204,7 +205,7 @@ SBMultilineOwnTextMorph >> moveCursorVertically: aNumber selecting: aBoolean ifA
 					aBlock value]
 				ifFalse: [
 					line := data first + aNumber.
-					data := self indexAtLine: line x: (self sandblockEditor ifNotNil: [:e | e globalVerticalSelectionPosition] ifNil: [data second]).
+					data := self indexAtLine: line x: (self sandblockEditor ifNotNil: [:e | e cursor globalHorizontalOffset] ifNil: [data second]).
 					
 					self cursor: data first + data second]].
 	
@@ -228,8 +229,7 @@ SBMultilineOwnTextMorph >> paragraph [
 				in: (self position extent: (maxWidth ifNil: [9999]) @ 9999);
 			adjustRightX;
 			focused: true;
-			showCaret: self cursor > 0;
-			caretColor: self color.
+			showCaret: self cursor > 0.
 		
 		cursors := self selectionBounds.
 		paragraph

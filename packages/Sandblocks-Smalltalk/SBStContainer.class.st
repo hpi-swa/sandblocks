@@ -56,12 +56,6 @@ SBStContainer >> classVariables [
 	^ #()
 ]
 
-{ #category : #'artefact protocol' }
-SBStContainer >> containingArtefact [
-
-	^ self
-]
-
 { #category : #'as yet unclassified' }
 SBStContainer >> declarations [
 
@@ -113,7 +107,7 @@ SBStContainer >> isArtefact [
 { #category : #testing }
 SBStContainer >> isMethod [
 
-	^ true
+	^ false
 ]
 
 { #category : #'artefact protocol' }
@@ -184,10 +178,10 @@ SBStContainer >> relatedClass [
 	^ self methodClass
 ]
 
-{ #category : #'compilation cue protocol' }
+{ #category : #'as yet unclassified' }
 SBStContainer >> sandblockBlockColorIfAbsent: aBlock [
 
-	^ SBStASTNode preferredColor
+	^ self preferredColor
 ]
 
 { #category : #'artefact protocol' }

@@ -16,6 +16,14 @@ Morph >> allMorphsDoBreadthFirst: aBlock [
 	self submorphsDo: [:m | m allMorphsDoBreadthFirst: aBlock]
 ]
 
+{ #category : #'*Sandblocks-Core-hierarchy' }
+Morph >> allVisibleMorphsDo: aBlock [
+
+	self visible ifFalse: [^ self].
+	submorphs do: [:m | m allVisibleMorphsDo: aBlock].
+	aBlock value: self
+]
+
 { #category : #'*Sandblocks-Core-converting' }
 Morph >> asMorphBlock: converter [
 	<convert>
@@ -32,6 +40,14 @@ Morph >> asThumbnail: converter [
 	<convert>
 	
 	converter do: [self thumbnail]
+]
+
+{ #category : #'*Sandblocks-Core' }
+Morph >> blocksAt: aPoint do: aBlock [
+
+	(self fullBounds containsPoint: aPoint) ifFalse: [^ self].
+	self submorphsDo: [:m | m blocksAt: ((m transformedFrom: self) globalPointToLocal: aPoint) do: aBlock].
+	(self isSandblock and: [self bounds containsPoint: aPoint]) ifTrue: [aBlock value: self]
 ]
 
 { #category : #'*Sandblocks-Core-layout' }
@@ -76,6 +92,25 @@ Morph >> containingSandblock [
 	^ self owner ifNotNil: #containingSandblock
 ]
 
+{ #category : #'*Sandblocks-Core' }
+Morph >> cursorPositionsDo: aBlock [
+	" enumerate all possible cursor positions recursively "
+
+	self isSandblock ifTrue: [
+		aBlock value: (SBCursorSelect new block: self).
+		self insertCursorNear: nil before: true do: aBlock].
+	self visibleSubmorphsDo: [:morph |
+		morph isSandblock ifTrue: [self containingSandblock insertCursorNear: morph before: true do: aBlock].
+		morph isTextMorph ifTrue: [
+			morph containingSandblock startInputCommand ifNotNil: [:command |
+				aBlock value: (SBCursorText new
+					block: morph containingSandblock;
+					currentCommand: command)]].
+		morph cursorPositionsDo: aBlock.
+		morph isSandblock ifTrue: [self containingSandblock insertCursorNear: morph before: false do: aBlock]].
+	self isSandblock ifTrue: [self insertCursorNear: nil before: false do: aBlock]
+]
+
 { #category : #'*Sandblocks-Core-override' }
 Morph >> extent: aPoint [
 
@@ -87,6 +122,12 @@ Morph >> extent: aPoint [
 	self changed.
 
 	self triggerEvent: #extentChanged.
+]
+
+{ #category : #'*Sandblocks-Core' }
+Morph >> firstBlockAt: aPoint do: aBlock [
+
+	self blocksAt: aPoint do: [:b | ^ aBlock value: b]
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -106,6 +147,23 @@ Morph >> focusPreviousMorph: anEvent [
 Morph >> fontToUse [
 
 	^ TextStyle defaultFont
+]
+
+{ #category : #'*Sandblocks-Core' }
+Morph >> innerBoundsInWorld [
+	
+	^ self bounds: self innerBounds in: self world
+]
+
+{ #category : #'*Sandblocks-Core' }
+Morph >> insertCursorNear: aBlock before: aBoolean do: aClosure [
+
+	^ (self insertEmptyCommandRequestNear: aBlock before: aBoolean) ifNotNil: [:cmd |
+		aClosure value: (SBCursorInsert new
+			command: cmd;
+			before: aBoolean;
+			adjacent: aBlock;
+			container: self)]
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -274,6 +332,12 @@ Morph >> nextMorphThat: aBlock [
 	n ifNil: [^ nil].
 	(aBlock value: n) ifTrue: [^ n].
 	^ n nextMorphThat: aBlock
+]
+
+{ #category : #'*Sandblocks-Core' }
+Morph >> objectInterface [
+
+	^ nil
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -519,4 +583,10 @@ Morph >> visibleInWorld [
 
 	^ (self firstOwnerSuchThat: [:o | o visible not])
 		ifNotNil: [false] ifNil: [true]
+]
+
+{ #category : #'*Sandblocks-Core-hierarchy' }
+Morph >> visibleSubmorphsDo: aBlock [
+
+	self submorphsDo: [:morph | morph visible ifTrue: [aBlock value: morph]]
 ]

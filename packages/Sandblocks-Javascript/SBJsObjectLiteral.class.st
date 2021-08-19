@@ -10,6 +10,7 @@ SBJsObjectLiteral >> buildEmptyRow [
 	^ SBRow new
 		useAlgebraLayout;
 		softWrap: false;
+		layoutInset: 4 @ 0;
 		addMorphBack: (self newNullBlock label: 'key');
 		addMorphBack: (SBStringMorph new contents: ':');
 		addMorphBack: (self newNullBlock label: 'value')
@@ -32,15 +33,17 @@ SBJsObjectLiteral >> initialize [
 
 	super initialize.
 	
-	self addMorphBack: (SBStringMorph new contents: '{').
-	self addMorphBack: self buildEmptyRow.
-	self addMorphBack: (SBStringMorph new contents: '}')
+	self addMorphBack: self buildEmptyRow
 ]
 
 { #category : #'as yet unclassified' }
 SBJsObjectLiteral >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
-	^ SBRelInsertCommand new near: aBlock owner before: aBoolean in: self morph: aMorph
+	(aBlock notNil and: [aBlock = aBlock owner firstSubmorph and: [aBoolean not]]) ifTrue: [^ nil].
+	(aBlock notNil and: [aBlock = aBlock owner lastSubmorph and: [aBoolean]]) ifTrue: [^ nil].
+	^ SBRelInsertCommand new
+		near: (aBlock ifNotNil: #owner) before: aBoolean in: self morph: aMorph;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }
@@ -66,14 +69,7 @@ SBJsObjectLiteral >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
-		data: (Array streamContents: [:stream |
-			stream nextPut: (SBAlgebraCommand morph data: self firstSubmorph).
-			self submorphCount > 2 ifTrue: [
-				stream nextPut: (SBAlgebraCommand indent
-					data: {SBAlgebraCommand softLineOrGap}, ((self submorphs viewFrom: 2 to: self submorphCount - 1) collect: #layoutCommands separatedBy: [SBAlgebraCommand softLineOrGap]))].
-			stream nextPut: SBAlgebraCommand softLineOrGap.
-			stream nextPut: (SBAlgebraCommand morph data: self lastSubmorph).
-		])
+		data: (Array streamContents: [:stream | stream nextPut: (SBAlgebraCommand indent data: {SBAlgebraCommand softLineOrGap}, (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand softLineOrGap]))])
 ]
 
 { #category : #'as yet unclassified' }
@@ -108,6 +104,12 @@ SBJsObjectLiteral >> printOn: aStream [
 	self keys
 		do: [:key | aStream nextPutAll: key contents]
 		separatedBy: [aStream nextPutAll: ', ']
+]
+
+{ #category : #'as yet unclassified' }
+SBJsObjectLiteral >> symbols [
+
+	^ #('{' '}')
 ]
 
 { #category : #'as yet unclassified' }

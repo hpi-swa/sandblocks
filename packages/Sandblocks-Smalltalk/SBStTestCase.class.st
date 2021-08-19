@@ -232,7 +232,7 @@ SBStTestCase >> runTest [
 { #category : #'as yet unclassified' }
 SBStTestCase >> selector [
 
-	^ self currentSelector
+	^ selectorInput contents
 ]
 
 { #category : #'as yet unclassified' }

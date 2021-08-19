@@ -27,6 +27,12 @@ SBOhmTerminal >> isExpression [
 ]
 
 { #category : #'as yet unclassified' }
+SBOhmTerminal >> isSimple [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmTerminal >> isTerminal [
 
 	^ true

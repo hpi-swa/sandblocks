@@ -174,12 +174,6 @@ SBStBasicMethod >> compiledMethod [
 ]
 
 { #category : #'as yet unclassified' }
-SBStBasicMethod >> containingArtefact [
-
-	^ self
-]
-
-{ #category : #'as yet unclassified' }
 SBStBasicMethod >> createTestMethod [
 	<action>
 
@@ -480,6 +474,14 @@ SBStBasicMethod >> objectInterface [
 ]
 
 { #category : #'as yet unclassified' }
+SBStBasicMethod >> objectInterfaceNear: aBlock at: aSymbol [
+
+	^ aBlock isBlockBody
+		ifTrue: [aSymbol = #replace ifTrue: [SBInterfaces stBlock] ifFalse: [SBInterfaces never]]
+		ifFalse: [super objectInterfaceNear: aBlock at: aSymbol]
+]
+
+{ #category : #'as yet unclassified' }
 SBStBasicMethod >> openClassDefinition [
 	<action>
 	
@@ -497,10 +499,20 @@ SBStBasicMethod >> outOfWorld: aWorld [
 SBStBasicMethod >> pasteReplace [
 	<action>
 
+	| cat cls editor new |
+	editor := self sandblockEditor.
+	cat := self category.
+	cls := self currentClass.
+	super pasteReplace.
 	
-	super pasteReplace ifNotNil: [:new |
-		new currentClass: self currentClass.
-		new category: self category]
+	new := editor selection.
+	new ~= self ifTrue: [
+		new currentClass: cls.
+		new category: cat.
+		new hResizing: self hResizing.
+		new vResizing: self vResizing.
+		editor do: (SBDoItCommand new artefact: new).
+		new select]
 ]
 
 { #category : #'as yet unclassified' }

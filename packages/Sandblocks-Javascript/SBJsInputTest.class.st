@@ -44,7 +44,7 @@ SBJsInputTest >> testAddMemberAccessViaSpace [
 	self send: (self keyboardEvent: $.) to: editor.
 	self send: (self keyboardEvent: Character escape) to: editor.
 	
-	self assert: closure statements first contents = '.'.
+	self assert: '.' equals: closure statements first contents.
 	self assert: closure statements first ~= access.
 	
 	editor undo.
@@ -163,7 +163,7 @@ SBJsInputTest >> testMoveCursorInInfixOp [
 		lhs: (SBJsNumber new contents: '2')
 		operator: '+'
 		rhs: (SBJsNumber new contents: '2').
-	editor := self methodFor: op.
+	editor := (self methodFor: op) useTextInput.
 	closure := op parentSandblock.
 	
 	editor startInput: op rhs at: 1 replacingContents: false.

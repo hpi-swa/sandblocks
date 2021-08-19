@@ -201,7 +201,7 @@ SBStGrammarHandler >> extractVariable [
 			replacer: var.
 		SBInsertCommand new
 			container: block;
-			index: 2;
+			index: ((block statements findFirst: [:s | s isExpression]) + 1 max: 2);
 			morph: self block.
 		SBWrapCommand new
 			inner: self block;
@@ -313,7 +313,7 @@ SBStGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 			wrap: aBlock
 			do: [:outer :inner | outer receiver: inner selector: char asString arguments: {outer newNullBlock label: 'arg'}]
 			with: self class messageSendClass new
-			focusOuter: true].
+			focusOuter: [:msg | msg messageParts first]].
 	char = $( ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer type: #literal contents: {inner}] with: SBStArray new]
 ]
 
@@ -327,7 +327,10 @@ SBStGrammarHandler >> replaceWithPragma: aBlock [
 		target: aBlock;
 		replacer: pragma;
 		shouldMergeWithNext: true).
-	^ pragma sandblockEditor startInput: pragma at: 1 replacingContents: true
+	^ pragma sandblockEditor
+		startInput: pragma messageParts first
+		at: 1
+		replacingContents: true
 ]
 
 { #category : #callbacks }
@@ -349,12 +352,12 @@ SBStGrammarHandler >> useArgument: aNumber [
 		content := (artefact arguments at: aNumber) contents.
 		editor := self block sandblockEditor.
 		editor mode = #input
-			ifTrue: [self block sandblockEditor endInputWith: content]
+			ifTrue: [editor sandblockEditor endInputWith: content]
 			ifFalse: [
-				self block sandblockEditor do: (SBReplaceCommand new
+				editor do: (SBReplaceCommand new
 					replacer: (SBStName contents: content);
 					target: self block)].
-		editor maybeStartInputFromEnd]
+		editor selection startInputAtEnd]
 ]
 
 { #category : #'actions input' }
@@ -425,7 +428,7 @@ SBStGrammarHandler >> wrapInArrayType: aSymbol [
 			targets: selected;
 			wrap: [:outer :inner | outer type: aSymbol contents: inner];
 			yourself].
-	self block sandblockEditor maybeStartInputFromStart
+	self block startInput
 ]
 
 { #category : #actions }
@@ -448,7 +451,7 @@ SBStGrammarHandler >> wrapInAssignment [
 { #category : #actions }
 SBStGrammarHandler >> wrapInBlock [
 	<multiSelectAction>
-	<actionValidIf: #isExpression>
+	<actionValidIf: #canAppearInBlockBody>
 
 	self assert: self block isSelected.
 	self block sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
@@ -458,7 +461,7 @@ SBStGrammarHandler >> wrapInBlock [
 			targets: selected;
 			wrap: [:outer :inner | outer statements: inner];
 			yourself].
-	self block sandblockEditor maybeStartInputFromStart
+	self block startInput
 ]
 
 { #category : #actions }
@@ -503,7 +506,7 @@ SBStGrammarHandler >> wrapInMessageSend: aString [
 		wrap: [:outer :inner | outer receiver: inner];
 		yourself).
 	self block sandblockEditor
-		startInput: msg
+		startInput: msg messageParts first
 		at: 900000000
 		replacingContents: false.
 	^ msg
@@ -521,7 +524,7 @@ SBStGrammarHandler >> wrapInReturn [
 		inner: self block;
 		wrap: [:outer :inner | outer expression: inner];
 		yourself).
-	self block sandblockEditor maybeStartInputFromEnd
+	self block startInputAtEnd
 ]
 
 { #category : #actions }

@@ -34,13 +34,6 @@ SBGrammarHandler >> characterCanStartInput: aCharacter [
 ]
 
 { #category : #actions }
-SBGrammarHandler >> copyString [
-	<action>
-
-	Clipboard clipboardText: ((self block respondsTo: #prettySourceString) ifTrue: [self block prettySourceString] ifFalse: [self block sourceString])
-]
-
-{ #category : #actions }
 SBGrammarHandler >> doExpression [
 	<action>
 
@@ -63,22 +56,6 @@ SBGrammarHandler >> evaluateExpression [
 		self block sandblockEditor connectFrom: self block to: morph.
 		morph].
 	^ result
-]
-
-{ #category : #'callback helpers' }
-SBGrammarHandler >> focusNextFrom: aMorph at: aNumber [
-
-	self focusNextFrom: aMorph at: aNumber wasInput: aMorph sandblockEditor mode = #input
-]
-
-{ #category : #'callback helpers' }
-SBGrammarHandler >> focusNextFrom: aMorph at: aNumber wasInput: aBoolean [
-
-	aMorph sandblockEditor
-		endInput;
-		startInput: aMorph at: 900000000 replacingContents: false.
-	
-	aMorph sandblockEditor mode = #input ifFalse: [aMorph inputContainedUnknown]
 ]
 
 { #category : #actions }
@@ -147,27 +124,29 @@ SBGrammarHandler >> replace: aBlock with: aMorph [
 { #category : #'callback helpers' }
 SBGrammarHandler >> replace: aBlock with: aMorph mergeInput: aBoolean [
 
-	| wasInput |
-	wasInput := aBlock sandblockEditor mode = #input.
-	aBlock sandblockEditor cancelInput.
-	aBlock sandblockEditor do: (SBReplaceCommand new
-		shouldMergeWithNext: aBoolean;
-		target: aBlock;
-		replacer: aMorph).
-	
-	self focusNextFrom: aMorph at: 900000000 wasInput: wasInput
+	| editor |
+	editor := aBlock sandblockEditor.
+	aMorph startInputCommand
+		ifNil: [
+			editor
+				do: (SBReplaceCommand new
+					target: aBlock;
+					replacer: aMorph);
+				endInput.
+			aMorph startNextInput]
+		ifNotNil: [
+			aBlock replaceBy: aMorph.
+			aMorph startInputCommand
+				ifNotNil: [editor replaceInput: aMorph]
+				ifNil: [aMorph startNextInput]]
 ]
 
 { #category : #actions }
 SBGrammarHandler >> selectStartOfStatement [
 	<multiSelectAction>
 	<inputAction>
-	
-	(self block containingStatement ifNil: [self block containingArtefact]) firstDeepChild select.
-	
-	self block sandblockEditor
-		maybeStartInputFromStart;
-		updateVerticalSelectionPosition
+
+	(self block containingStatement ifNil: [self block containingArtefact]) firstDeepChild select
 ]
 
 { #category : #callbacks }
@@ -176,6 +155,14 @@ SBGrammarHandler >> startOverrideInput: anEvent in: anEditor [
 	anEditor selection changeToUnknown.
 	anEditor mode = #input ifTrue: [
 		anEditor selection keyStroke: anEvent]
+]
+
+{ #category : #actions }
+SBGrammarHandler >> textContentsForCopy [
+
+	^ (self block respondsTo: #prettySourceString)
+		ifTrue: [self block prettySourceString]
+		ifFalse: [self block sourceString]
 ]
 
 { #category : #'callback helpers' }
@@ -216,11 +203,11 @@ SBGrammarHandler >> watchWith: aWatchClass [
 { #category : #'callback helpers' }
 SBGrammarHandler >> wrap: aBlock do: aWrapBlock with: aNode [
 
-	^ self wrap: aBlock do: aWrapBlock with: aNode focusOuter: false
+	^ self wrap: aBlock do: aWrapBlock with: aNode focusOuter: nil
 ]
 
 { #category : #'callback helpers' }
-SBGrammarHandler >> wrap: aBlock do: aWrapBlock with: aNode focusOuter: aBoolean [
+SBGrammarHandler >> wrap: aBlock do: aWrapBlock with: aNode focusOuter: aFocusBlock [
 
 	| cursorIndex |
 	cursorIndex := aBlock currentTextMorph ifNotNil: #cursor ifNil: [900000000].
@@ -233,9 +220,7 @@ SBGrammarHandler >> wrap: aBlock do: aWrapBlock with: aNode focusOuter: aBoolean
 			shouldMergeWithNext: false;
 			wrap: aWrapBlock).
 	
-	aBoolean
-		ifTrue: [aNode sandblockEditor startInput: aNode at: 900000000 replacingContents: false]
-		ifFalse: [self focusNextFrom: aNode at: cursorIndex]
+	(aFocusBlock ifNotNil: [aFocusBlock value: aNode] ifNil: [aNode]) continueInput
 ]
 
 { #category : #actions }

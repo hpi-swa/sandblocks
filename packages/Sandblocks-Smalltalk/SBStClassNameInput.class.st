@@ -5,6 +5,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStClassNameInput >> activate [
+	<action>
+
+	
+	self promptChangeClass
+]
+
+{ #category : #'as yet unclassified' }
 SBStClassNameInput >> class: aClass [
 
 	self contents: aClass name
@@ -59,14 +67,6 @@ SBStClassNameInput >> selectedClass: aClass [
 		target: self;
 		selector: #contents;
 		value: aClass name)
-]
-
-{ #category : #'as yet unclassified' }
-SBStClassNameInput >> startInputAt: aNumber replacingContents: aBoolean [
-
-	self promptChangeClass.
-	
-	^ nil
 ]
 
 { #category : #'as yet unclassified' }

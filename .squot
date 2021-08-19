@@ -19,5 +19,6 @@ OrderedDictionary {
 	'packages/Sandblocks-Smalltalk' : #SquotTonelSerializer,
 	'packages/Sandblocks-Ohm' : #SquotTonelSerializer,
 	'packages/Sandblocks-Python' : #SquotTonelSerializer,
-	'packages/Sandblocks-Squeak6Fixes' : #SquotTonelSerializer
+	'packages/Sandblocks-Squeak6Fixes' : #SquotTonelSerializer,
+	'packages/Sandblocks-TreeSitter' : #SquotTonelSerializer
 }

@@ -189,7 +189,8 @@ SBStMessageSend >> fixActions [
 							morph: method;
 							editor: self sandblockEditor;
 							isUnsaved: true;
-							yourself)]}]
+							yourself)].
+				SBCodeAction labeled: 'Confirm selector' for: self do: [:node | node selector asSymbol]}]
 		ifFalse: [#()]
 ]
 
@@ -217,6 +218,7 @@ SBStMessageSend >> initialize [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> insertCommandRequest: aBlock near: aMorph before: aBoolean [
 
+	((aMorph = self receiver) or: [aBoolean and: [aMorph isNil]]) ifTrue: [^ nil].
 	^ self signature insertCommandRequest: aBlock near: aMorph before: aBoolean
 ]
 
@@ -366,10 +368,10 @@ SBStMessageSend >> messageSend [
 	^ self
 ]
 
-{ #category : #accessing }
-SBStMessageSend >> moveCursorTo: aNumber [
+{ #category : #'as yet unclassified' }
+SBStMessageSend >> newNullBlock [
 
-	signature moveCursorTo: aNumber
+	^ super newNullBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -458,7 +460,7 @@ SBStMessageSend >> receiver: aBlock [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> receiver: aBlock selector: aSymbol [
 
-	self assert: aSymbol isUnary.
+	self assert: (aSymbol isUnary or: [aSymbol = #'']).
 	self receiver: aBlock selector: aSymbol arguments: #()
 ]
 
@@ -537,14 +539,19 @@ SBStMessageSend >> symbols [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> tryDelete [
 
-	| receiver |
+	| receiver editor |
+	editor := self sandblockEditor.
+	self isInCascade ifTrue: [
+		editor do: (SBDeleteCommand new target: self).
+		^ editor selection startInputAtEnd].
+	
 	receiver := self receiver.
-	^ self sandblockEditor
+	editor
 		endInput;
 		do: (SBReplaceCommand new
 			target: self;
-			replacer: receiver);
-		startInput: receiver at: 900000000 replacingContents: false
+			replacer: receiver).
+	editor selection startInputAtEnd
 ]
 
 { #category : #'as yet unclassified' }

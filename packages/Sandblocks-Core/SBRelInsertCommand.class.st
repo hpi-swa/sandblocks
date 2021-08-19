@@ -60,7 +60,10 @@ SBRelInsertCommand >> do [
 			before
 				ifTrue: [container addMorph: morph inFrontOf: adjacent]
 				ifFalse: [container addMorph: morph behind: adjacent]]
-		ifNil: [container addMorphBack: morph].
+		ifNil: [
+			before
+				ifTrue: [container addMorphFront: morph]
+				ifFalse: [container addMorphBack: morph]].
 	self applyPositionTo: morph in: container.
 	
 	^ select ifNil: [morph containingSandblock]
@@ -69,13 +72,19 @@ SBRelInsertCommand >> do [
 { #category : #'as yet unclassified' }
 SBRelInsertCommand >> hasSamePositionAs: aCommand [
 
-	^ self class = aCommand class and: [self container = aCommand container and: [self insertIndex = aCommand insertIndex]]
+	^ aCommand class ~= SBCombinedCommand and: [self container = aCommand container and: [self insertIndex = aCommand insertIndex]]
+]
+
+{ #category : #'as yet unclassified' }
+SBRelInsertCommand >> index [
+
+	^ self insertIndex
 ]
 
 { #category : #'as yet unclassified' }
 SBRelInsertCommand >> insertIndex [
 
-	self adjacent ifNil: [^ self before ifTrue: [1] ifFalse: [self container submorphCount]].
+	self adjacent ifNil: [^ self before ifTrue: [1] ifFalse: [self container submorphCount + 1]].
 	^ (self container submorphs indexOf: self adjacent) + (self before ifTrue: [0] ifFalse: [1])
 ]
 

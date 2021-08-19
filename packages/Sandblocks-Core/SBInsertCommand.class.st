@@ -33,7 +33,7 @@ SBInsertCommand >> do [
 { #category : #'as yet unclassified' }
 SBInsertCommand >> hasSamePositionAs: aCommand [
 
-	^ aCommand class = self class and: [self container = aCommand container and: [self index = aCommand index]]
+	^ aCommand class ~= SBCombinedCommand and: [self container = aCommand container and: [self index = aCommand index]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -46,6 +46,12 @@ SBInsertCommand >> index [
 SBInsertCommand >> index: aNumber [
 
 	index := aNumber
+]
+
+{ #category : #'as yet unclassified' }
+SBInsertCommand >> insertIndex [
+
+	^ index
 ]
 
 { #category : #'as yet unclassified' }

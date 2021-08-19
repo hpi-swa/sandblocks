@@ -76,6 +76,20 @@ String >> parseAsSmalltalk: converter [
 		do: [self parseAsMethod asSandblock]
 ]
 
+{ #category : #'*Sandblocks-Core-converting' }
+String >> parseAsSmalltalkExpression: converter [
+	<convert>
+
+	converter
+		if: [
+			[
+				self parseAsSandblock.
+				true]
+				on: Error
+				do: [false]]
+		do: [self parseAsSandblock asSandblock]
+]
+
 { #category : #'*Sandblocks-Core' }
 String >> parseInMethod [
 	" convenience method making it easier to construct a valid environment for code blocks "

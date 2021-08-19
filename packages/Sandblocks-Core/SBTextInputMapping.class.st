@@ -19,32 +19,12 @@ SBTextInputMapping >> registerDefaultShortcuts [
 
 	super registerDefaultShortcuts.
 	
-	SBPreferences useNewCursor ifTrue: [
-		self
-			shortcut: Character arrowDown do: #moveCursorDown;
-			shortcut: Character arrowUp do: #moveCursorUp;
-			shortcut: Character arrowLeft do: #moveCursorLeft;
-			shortcut: Character arrowRight do: #moveCursorRight;
-			shortcut: Character arrowUp shift do: #moveCursorLarger;
-			shortcut: Character arrowDown shift do: #moveCursorSmaller;
-			shortcut: Character arrowLeft command do: #moveCursorLeftWordwise;
-			shortcut: Character arrowRight command do: #moveCursorRightWordwise].
-	
 	" input "
 	self
 		inputShortcut: Character arrowDown do: #focusNextSuggestion;
 		inputShortcut: Character arrowUp do: #focusPreviousSuggestion;
 		inputShortcut: $j command do: #focusNextSuggestion;
 		inputShortcut: $k command do: #focusPreviousSuggestion;
-		inputShortcut: Character arrowLeft asSandblockShortcut, Character arrowLeft shift, Character arrowLeft command
-			do: #moveTextCursorLeft;
-		inputShortcut: Character arrowRight asSandblockShortcut, Character arrowRight shift, Character arrowRight command
-			do: #moveTextCursorRight;
-		inputShortcut: Character arrowUp asSandblockShortcut, Character arrowUp command
-			do: #moveTextCursorUp;
-		inputShortcut: Character arrowDown asSandblockShortcut, Character arrowDown command
-			do: #moveTextCursorDown;
-		inputShortcut: Character arrowUp do: #moveCursorUp;
 		inputShortcut: Character backspace do: #deleteBeforeCursor;
 		inputShortcut: Character delete do: #deleteAfterCursor;
 		registerShortcut: $a command do: #clearInput;
@@ -59,6 +39,17 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $i command do: #appendElement;
 		registerShortcut: $I shift withCommand do: #prependElement;
 		inputShortcut: Character cr command do: #typeNewLine.
+	
+	" cursor "
+	self
+		shortcut: Character arrowDown do: #moveCursorDown;
+		shortcut: Character arrowUp do: #moveCursorUp;
+		shortcut: Character arrowLeft do: #moveCursorLeft;
+		shortcut: Character arrowRight do: #moveCursorRight;
+		shortcut: Character arrowUp shift do: #moveCursorLarger;
+		shortcut: Character arrowDown shift do: #moveCursorSmaller;
+		shortcut: Character arrowLeft command do: #moveCursorLeftWordwise;
+		shortcut: Character arrowRight command do: #moveCursorRightWordwise.
 	
 	" refactor "
 	self
@@ -101,12 +92,6 @@ SBTextInputMapping >> registerDefaultShortcuts [
 	"registerShortcut: $r command do: #openRepl;"
 	" navigation "
 	self
-		cmdShortcut: Character arrowLeft asSandblockShortcut withCommand, Character arrowLeft
-			do: #selectPrevious;
-		cmdShortcut: Character arrowRight asSandblockShortcut withCommand, Character arrowRight
-			do: #selectNext;
-		registerShortcut: Character arrowDown shift do: #selectDown;
-		registerShortcut: Character arrowUp shift do: #selectUp;
 		registerShortcut: Character pageDown do: #selectLast;
 		registerShortcut: Character pageUp do: #selectArtefact;
 		registerShortcut: Character home do: #selectStartOfStatement;
@@ -114,10 +99,6 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character tab do: #useSuggestion;
 		registerShortcut: Character tab shift do: #inputPreviousUnknown;
 		registerShortcut: Character tab do: #inputNextUnknown;
-		registerShortcut: Character arrowUp asSandblockShortcut, Character arrowUp command
-			do: #selectPreviousGroup;
-		registerShortcut: Character arrowDown asSandblockShortcut, Character arrowDown command
-			do: #selectNextGroup;
 		registerShortcut: Character arrowLeft option do: #selectLeftToplevel;
 		registerShortcut: Character arrowDown option do: #selectBottomToplevel;
 		registerShortcut: Character arrowUp option do: #selectTopToplevel;
@@ -138,7 +119,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character arrowRight command withShift do: #swapRight;
 		registerShortcut: $c asSandblockShortcut withOption do: #copyString;
 		registerShortcut: $V command do: #pasteString;
-		registerShortcut: $x command do: #deleteBlock;
+		registerShortcut: $x command do: #deleteBlockWithCopy;
 		registerShortcut: $X command do: #deleteAround;
 		cmdShortcut: Character backspace asSandblockShortcut, Character delete do: #deleteBlock;
 		registerShortcut: Character backspace shift do: #deleteAround;
@@ -155,7 +136,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $[ do: #wrapInBlock;
 		registerShortcut: ${ do: #wrapInDynamicArray;
 		cmdShortcut: $: do: #wrapInAssignment;
-		cmdShortcut: $; do: #wrapInCascade;
+		registerShortcut: $; do: #wrapInCascade;
 		registerShortcut: $^ do: #wrapInReturn;
 		cmdShortcut: $' do: #useAsStString;
 		cmdShortcut: $# do: #useAsStSymbol;
@@ -195,7 +176,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 	" special overrides "
 	self
 		registerShortcut: Character escape do: #dismiss;
-		shortcut: Character space modes: #(#command) do: #startInputAtStart
+		cmdShortcut: Character space do: #activate
 ]
 
 { #category : #'event handling' }

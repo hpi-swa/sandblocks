@@ -82,12 +82,6 @@ SBStLiteral >> keyStroke: anEvent [
 	self acceptInputEvent: anEvent
 ]
 
-{ #category : #'as yet unclassified' }
-SBStLiteral >> moveCursorTo: aNumber [
-
-	text moveCursorTo: aNumber
-]
-
 { #category : #'colors and color policies' }
 SBStLiteral >> preferredColorIn: aColorPolicy [
 
@@ -104,7 +98,6 @@ SBStLiteral >> replaceWithUnknown [
 	
 	new := self newNullBlock label: 'expr'.
 	self replaceBy: new.
-	new moveCursorTo: 0.
 	new sandblockEditor replaceInput: new
 ]
 
@@ -135,6 +128,15 @@ SBStLiteral >> startInputAt: aNumber replacingContents: aBoolean [
 		ifFalse: [self moveCursorTo: aNumber].
 	
 	^ cmd
+]
+
+{ #category : #'as yet unclassified' }
+SBStLiteral >> startInputCommand [
+
+	^ self inputCommandClass new
+		oldMorph: self;
+		previousText: self contents;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }

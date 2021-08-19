@@ -20,23 +20,6 @@ SBBlockTest >> testLeftRotateBinaryMessages [
 ]
 
 { #category : #'as yet unclassified' }
-SBBlockTest >> testPasteAfter [
-
-	| block selection editor |
-	block := '[a. b. c. self selected: 5]' parseAsSandblock.
-	selection := block statements last.
-	editor := self methodFor: block.
-	(block statements viewFrom: 1 to: 3) do: #startOrAddToMultiSelection.
-	block statements first
-		select;
-		copyToBuffer.
-	selection pasteAfter.
-	self assert: 'a' equals: block statements fifth contents.
-	self assert: 'b' equals: block statements sixth contents.
-	self assert: 'c' equals: block statements seventh contents
-]
-
-{ #category : #'as yet unclassified' }
 SBBlockTest >> testRotateBlock [
 
 	| block selection editor |

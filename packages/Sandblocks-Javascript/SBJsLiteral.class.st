@@ -79,12 +79,6 @@ SBJsLiteral >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsLiteral >> moveCursorTo: aNumber [
-
-	self currentTextMorph moveCursorTo: aNumber
-]
-
-{ #category : #'as yet unclassified' }
 SBJsLiteral >> preferredColorIn: aColorPolicy [
 
 	^ aColorPolicy literal
@@ -100,7 +94,7 @@ SBJsLiteral >> replaceWithUnknown [
 	
 	new := self newNullBlock.
 	self replaceBy: new.
-	new moveCursorTo: 0.
+	new currentTextMorph moveCursorTo: 0.
 	new sandblockEditor replaceInput: new
 ]
 
@@ -122,6 +116,15 @@ SBJsLiteral >> startInputAt: aNumber replacingContents: aBoolean [
 		ifFalse: [self moveCursorTo: aNumber].
 	
 	^ cmd
+]
+
+{ #category : #'as yet unclassified' }
+SBJsLiteral >> startInputCommand [
+
+	^ SBInputCommand new
+		oldMorph: self;
+		previousText: self contents;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }

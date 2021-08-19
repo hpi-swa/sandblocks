@@ -6,7 +6,10 @@ Class {
 
 { #category : #'as yet unclassified' }
 SBStString >> absorbsInput: anEvent [
+	" for the first cr, require cmd to be pressed "
 
+	(anEvent keyCharacter = Character cr and: [self contents lineCount = 1 and: [anEvent commandKeyPressed not]]) ifTrue: [^ false].
+	
 	^ SBGrammarHandler eventValidForString: anEvent
 ]
 

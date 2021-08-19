@@ -7,7 +7,9 @@ Class {
 		'editor',
 		'cursorPosition',
 		'selectLargerHistory',
-		'horizontalOffsetInFloat'
+		'horizontalOffsetInFloat',
+		'multiSelection',
+		'lastBlinkTime'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -16,9 +18,11 @@ Class {
 SBBlockCursor >> adjacentVerticalCalcDistance: aDistBlock validBlock: aValidBlock [
 
 	| allCandidates candidates candidatesBestDistance tolerance float |
+	self selectedBlock ifNil: [^ nil].
+	
 	float := self selectedBlock containingFloat.
 	tolerance := 10.
-	allCandidates := Array streamContents: [:stream | float allMorphsDo: [:candidate | ((candidate isTextMorph or: [candidate isSandblock and: [candidate hasChildSandblocks not]]) and: [aValidBlock value: candidate]) ifTrue: [stream nextPut: candidate]]].
+	allCandidates := Array streamContents: [:stream | float allVisibleMorphsDo: [:candidate | ((candidate isTextMorph or: [candidate isSandblock and: [candidate hasChildSandblocks not]]) and: [aValidBlock value: candidate]) ifTrue: [stream nextPut: candidate]]].
 	candidates := OrderedCollection new.
 	candidatesBestDistance := 900000000.
 	allCandidates do: [:candidate | | distance |
@@ -33,6 +37,18 @@ SBBlockCursor >> adjacentVerticalCalcDistance: aDistBlock validBlock: aValidBloc
 	^ (candidates detectMin: [:candidate | (candidate left - float left to: candidate right - float left) distanceTo: horizontalOffsetInFloat]) ifNotNil: #containingSandblock
 ]
 
+{ #category : #api }
+SBBlockCursor >> color [
+
+	^ cursorPosition color
+]
+
+{ #category : #api }
+SBBlockCursor >> currentCommand [
+
+	^ cursorPosition currentCommand
+]
+
 { #category : #testing }
 SBBlockCursor >> cursorAlwaysVisible [
 
@@ -42,8 +58,8 @@ SBBlockCursor >> cursorAlwaysVisible [
 { #category : #private }
 SBBlockCursor >> cursorForBlock: aBlock at: aPoint [
 
-	^ aBlock currentTextMorph
-		ifNotNil: [SBCursorText new block: aBlock; pixelPosition: aPoint]
+	^ aBlock startInputCommand
+		ifNotNil: [:command | SBCursorText new block: aBlock; pixelPosition: aPoint; currentCommand: command]
 		ifNil: [SBCursorSelect new block: aBlock]
 ]
 
@@ -56,16 +72,42 @@ SBBlockCursor >> cursorPosition [
 { #category : #private }
 SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol [
 
-	aPosition = cursorPosition ifFalse: [
-		cursorPosition ifNotNil: #leave.
-		cursorPosition := aPosition.
-		cursorPosition ifNotNil: [:position | position enter].
-		self resetBlink].
+	| previousBlock previousCursor |
+	previousBlock := self selectedBlock.
+	previousCursor := cursorPosition.
 	
+	(aPosition hasDifferentEffect: previousCursor)
+		ifTrue: [
+			cursorPosition := SBCursorNone new.
+			previousCursor ifNotNil: [:c |
+				c leaveIn: self editor.
+				c removeActionsWithReceiver: self].
+			cursorPosition := aPosition.
+			cursorPosition when: #showLabel send: #showLabel: to: self.
+			cursorPosition ifNotNil: [:position | position enter]]
+		ifFalse: [previousCursor maybeUpdateFor: aPosition].
+	
+	self resetBlink.
 	blinkCount := 0.
-	cursorPosition ifNotNil: [:position | self bounds: position bounds].
+	self updateBounds.
+	Project current addDeferredUIMessage: [self updateBounds].
 	aSymbol ~= #z ifTrue: [selectLargerHistory removeAll].
-	((#(#z #y) includes: aSymbol) not and: [aBoolean]) ifTrue: [self updateHorizontalOffset]
+	self editor
+		triggerEvent: #selectionChanged with: self selectedBlock;
+		updateSelectionLabel.
+	((#(#z #y) includes: aSymbol) not and: [aBoolean]) ifTrue: [self updateHorizontalOffset].
+	
+	self selectedBlock ~= previousBlock ifTrue: [
+		previousBlock removeActionsWithReceiver: self.
+		previousBlock ifNotNil: #wasDeselected.
+		lastBlinkTime := Time current.
+		self selectedBlock
+			when: #positionChanged send: #updateBounds to: self;
+			when: #extentChanged send: #updateBounds to: self.
+		self selectedBlock ifNotNil: [:b |
+			b
+				wasSelected;
+				ensureVisible]]
 ]
 
 { #category : #testing }
@@ -77,7 +119,7 @@ SBBlockCursor >> cursorVisible [
 { #category : #drawing }
 SBBlockCursor >> drawOn: aCanvas [
 
-	self cursorVisible ifTrue: [self cursorPosition drawOn: aCanvas]
+	self cursorVisible ifTrue: [self cursorPosition drawOn: aCanvas in: self bounds]
 ]
 
 { #category : #accessing }
@@ -90,6 +132,18 @@ SBBlockCursor >> editor [
 SBBlockCursor >> editor: anEditor [
 
 	editor := anEditor
+]
+
+{ #category : #layout }
+SBBlockCursor >> flushLayoutCache [
+
+	
+]
+
+{ #category : #'vertical movement' }
+SBBlockCursor >> globalHorizontalOffset [
+
+	^ horizontalOffsetInFloat + self selectedBlock containingFloat left
 ]
 
 { #category : #'vertical movement' }
@@ -105,12 +159,27 @@ SBBlockCursor >> initialize [
 
 	super initialize.
 	
+	self
+		changeTableLayout;
+		disableLayout: true;
+		layoutPolicy: self.
+	
 	selectLargerHistory := OrderedCollection new.
 	cursorShown := false.
 	blinkCount := 0.
 	horizontalOffsetInFloat := 0.
-	self disableLayout: true.
 	cursorPosition := SBCursorNone new
+]
+
+{ #category : #layout }
+SBBlockCursor >> layout: aMorph in: aRectangle [
+
+	| extent label |
+	aMorph hasSubmorphs ifFalse: [^ self].
+	
+	label := aMorph firstSubmorph.
+	extent := label minExtent.
+	label layoutInBounds: (self topRight - (0 @ extent y) extent: extent) positioning: #center
 ]
 
 { #category : #actions }
@@ -123,6 +192,12 @@ SBBlockCursor >> lookupGlobalAction: aSymbol [
 SBBlockCursor >> maxBlickCount [
 
 	^ 20
+]
+
+{ #category : #layout }
+SBBlockCursor >> minExtentOf: aMorph in: aRectangle [
+
+	^ aRectangle
 ]
 
 { #category : #accessing }
@@ -158,8 +233,13 @@ SBBlockCursor >> moveCursorDown [
 SBBlockCursor >> moveCursorLarger [
 	<globalAction>
 
-	selectLargerHistory addLast: self cursorPosition.
-	self cursorPosition: self cursorPosition selectLarger explicitMove: true axis: #z
+	| newPosition previousPosition |
+	previousPosition := self cursorPosition.
+	newPosition := self cursorPosition selectLarger.
+	
+	self cursorPosition: newPosition explicitMove: true axis: #z.
+	
+	previousPosition ~= newPosition ifTrue: [selectLargerHistory addLast: previousPosition]
 ]
 
 { #category : #api }
@@ -224,27 +304,47 @@ SBBlockCursor >> moveHorizontal: aNumber wordWise: aBoolean [
 
 	| newPos |
 	newPos := self cursorPosition.
-	[newPos := newPos moveHorizontal: aNumber wordWise: aBoolean] doWhileTrue: [aBoolean and: [newPos class ~= SBCursorText]].
+	[newPos := newPos moveHorizontal: aNumber wordWise: aBoolean] doWhileTrue: [aBoolean and: [newPos class ~= SBCursorText and: [newPos notNil]]].
+	newPos ifNil: [^ self].
 	
 	newPos ~= self cursorPosition ifTrue: [newPos placeAtEnd: (aBoolean ifTrue: [aNumber > 0] ifFalse: [aNumber < 0])].
 	
 	self cursorPosition: newPos explicitMove: true axis: #x
 ]
 
+{ #category : #multiselection }
+SBBlockCursor >> multiSelection [
+
+	^ cursorPosition multiSelection
+]
+
+{ #category : #multiselection }
+SBBlockCursor >> multiSelection: aCollection [
+
+	self cursorPosition: (SBCursorMultiSelect new selected: aCollection) explicitMove: true axis: #none
+]
+
 { #category : #'vertical movement' }
 SBBlockCursor >> nextVertical [
 
 	^ self
-		adjacentVerticalCalcDistance: [:candidate | candidate top - self selectedBlock bottom]
-		validBlock: [:candidate | candidate top >= self selectedBlock bottom]
+		adjacentVerticalCalcDistance: [:candidate | candidate top - cursorPosition bounds bottom]
+		validBlock: [:candidate | candidate top >= cursorPosition bounds bottom]
+]
+
+{ #category : #api }
+SBBlockCursor >> prepareForNextCommand [
+	" if we have a pending input command, make sure it is finished "
+	
+	cursorPosition mode = #input ifTrue: [self selectNoInput: self selectedBlock]
 ]
 
 { #category : #'vertical movement' }
 SBBlockCursor >> previousVertical [
 
 	^ self
-		adjacentVerticalCalcDistance: [:candidate | self selectedBlock top - candidate bottom]
-		validBlock: [:candidate | self selectedBlock top >= candidate bottom]
+		adjacentVerticalCalcDistance: [:candidate | cursorPosition bounds top - candidate bottom]
+		validBlock: [:candidate | cursorPosition bounds top >= candidate bottom]
 ]
 
 { #category : #'events-processing' }
@@ -253,15 +353,30 @@ SBBlockCursor >> rejectsEvent: anEvent [
 	^ true
 ]
 
+{ #category : #api }
+SBBlockCursor >> replaceSelected: aBlock [
+
+	cursorPosition replaceSelected: aBlock
+]
+
 { #category : #blinking }
 SBBlockCursor >> resetBlink [
 
 	blinkCount := 0.
-	cursorShown := false.
+	cursorShown := true.
 	self editor ifNotNil: [:e |
 		e world ifNotNil: [:w |
 			w stopStepping: self.
-			w startStepping: self at: Time millisecondClockValue selector: #step arguments: {} stepTime: self stepTime]]
+			w startStepping: self at: Time millisecondClockValue + self stepTime selector: #step arguments: {} stepTime: self stepTime]]
+]
+
+{ #category : #drawing }
+SBBlockCursor >> resetState [
+
+	selectLargerHistory := OrderedCollection new.
+	cursorShown := false.
+	blinkCount := 0.
+	horizontalOffsetInFloat := 0.
 ]
 
 { #category : #api }
@@ -272,24 +387,87 @@ SBBlockCursor >> select: aBlock [
 		ifNotNil: [self cursorPosition: (self cursorForBlock: aBlock at: aBlock topLeft) explicitMove: false axis: #none]
 ]
 
+{ #category : #api }
+SBBlockCursor >> selectNoInput: aBlock [
+
+	self cursorPosition: (SBCursorSelect new block: aBlock) explicitMove: false axis: #none
+]
+
 { #category : #accessing }
 SBBlockCursor >> selectedBlock [
 
 	^ self cursorPosition block
 ]
 
+{ #category : #'events-processing' }
+SBBlockCursor >> showLabel: aString [
+
+	self removeAllMorphs.
+	aString ifNotNil: [
+		self addMorphBack: (Morph new
+			hResizing: #shrinkWrap;
+			vResizing: #shrinkWrap;
+			changeTableLayout;
+			addDropShadow;
+			cornerStyle: #rounded;
+			cornerRadius: 4;
+			color: (Color r: 1 g: 1 b: 1);
+			layoutInset: 4;
+			addMorphBack: (SBStringMorph new
+				contents: aString;
+				opacity: 0.8))]
+]
+
+{ #category : #api }
+SBBlockCursor >> startInput: aBlock at: aNumber replacingContents: aBoolean [
+
+	self cursorPosition: (aBlock startInputCommand ifNotNil: [:command | SBCursorText new block: aBlock; cursorIndex: aNumber; currentCommand: aBlock startInputCommand; replacingContents: aBoolean] ifNil: [SBCursorSelect new block: aBlock]) explicitMove: aBoolean axis: #none
+]
+
+{ #category : #multiselection }
+SBBlockCursor >> startOrAddToMultiSelection: aBlock [
+
+	self cursorPosition: (cursorPosition startOrAddToMultiSelection: aBlock) explicitMove: true axis: #none
+]
+
 { #category : #blinking }
 SBBlockCursor >> step [
 
-	cursorShown := cursorShown not.
-	blinkCount := blinkCount + 1.
-	self changed
+	| oldVisible now |
+	oldVisible := self cursorVisible.
+	
+	now := Time current.
+	(lastBlinkTime isNil or: [((lastBlinkTime addSeconds: 0.5) < now)]) ifTrue: [
+		lastBlinkTime := now.
+		cursorShown := cursorShown not.
+		blinkCount := blinkCount + 1].
+	
+	cursorPosition valid ifFalse: [^ self cursorPosition: SBCursorNone new explicitMove: false axis: #none].
+	
+	self updateBounds.
+	
+	oldVisible ~= self cursorVisible ifTrue: [
+		self changed.
+		self selectedBlock ifNotNil: #changed]
 ]
 
 { #category : #blinking }
 SBBlockCursor >> stepTime [
 
-	^ 500
+	^ 0
+]
+
+{ #category : #api }
+SBBlockCursor >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
+
+	(anEvent commandKeyPressed not and: [anEvent optionKeyPressed not and: [anEvent controlKeyPressed not]]) ifTrue: [
+		cursorPosition unhandledEvent: anEvent in: anEditor didHandle: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlockCursor >> updateBounds [
+
+	^ self bounds: cursorPosition bounds
 ]
 
 { #category : #'vertical movement' }
@@ -306,4 +484,10 @@ SBBlockCursor >> updateHorizontalOffset [
 				Display getCanvas
 					fillRectangle: (self selectedBlock containingFloat positionInWorld + (horizontalOffsetInFloat @ -10) extent: 10 @ 10)
 					color: Color random]}]
+]
+
+{ #category : #'halos and balloon help' }
+SBBlockCursor >> wantsHaloFromClick [
+
+	^ false
 ]

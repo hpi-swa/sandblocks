@@ -81,16 +81,6 @@ SBJsClosure >> objectInterfaceNear: aBlock at: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsClosure >> startInputAt: aNumber replacingContents: aBoolean [
-
-	| new |
-	new := self newNullBlock deleteIfDismissed: true.
-	self arguments addMorphBack: new.
-	self sandblockEditor replaceInput: new.
-	^ new startInputAt: aNumber replacingContents: aBoolean
-]
-
-{ #category : #'as yet unclassified' }
 SBJsClosure >> statements [
 
 	^ self submorphs viewAllButFirst

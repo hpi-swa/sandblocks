@@ -13,7 +13,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBCursorInsert >> = aPosition [
 
-	^ aPosition class = self class and: [aPosition adjacent = self adjacent and: [aPosition before = self before and: [aPosition container = self container]]]
+	^ aPosition class = self class and: [aPosition adjacent = self adjacent and: [aPosition before = self before and: [aPosition container = self container and: [self command hasSamePositionAs: aPosition command]]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -49,13 +49,29 @@ SBCursorInsert >> block [
 { #category : #'as yet unclassified' }
 SBCursorInsert >> bounds [
 
-	self adjacent ifNil: [
-		^ self before
-			ifTrue: [self container topLeft extent: self lineWidth @ self container height]
-			ifFalse: [self container topRight - (self lineWidth @ 0) extent: self lineWidth @ self container height]].
-	^ self before
-		ifTrue: [self adjacent topLeft - (self lineWidth @ 0) extent: self lineWidth @ self adjacent height]
-		ifFalse: [self adjacent topRight extent: self lineWidth @ self adjacent height]
+	^ self container hasHorizontalLayout
+		ifTrue: [
+			self adjacent
+				ifNil: [ | inset |
+					inset := self container layoutInset asEdgeInsets.
+					self before
+						ifTrue: [self container topLeft + inset topLeft - (self lineWidth // 2 @ 0) extent: self lineWidth @ (self container height - inset vertical)]
+						ifFalse: [self container topRight - (self lineWidth // 2 + inset right @ inset top negated) extent: self lineWidth @ (self container height - inset vertical)]]
+				ifNotNil: [
+					self before
+						ifTrue: [self adjacent topLeft - (self lineWidth // 2 @ 0) extent: self lineWidth @ self adjacent height]
+						ifFalse: [self adjacent topRight extent: self lineWidth @ self adjacent height]]]
+		ifFalse: [
+			self adjacent
+				ifNil: [ | inset |
+					inset := self container layoutInset asEdgeInsets.
+					self before
+						ifTrue: [self container topLeft + inset topLeft extent: self container width - inset horizontal @ self lineWidth]
+						ifFalse: [self container bottomLeft - (inset left negated @ (self lineWidth + inset bottom)) extent: self container width - inset horizontal @ self lineWidth]]
+				ifNotNil: [
+					self before
+						ifTrue: [self adjacent topLeft - (0 @ (self lineWidth // 2)) extent: self adjacent width @ self lineWidth]
+						ifFalse: [self adjacent bottomLeft extent: self adjacent width @ self lineWidth]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -89,9 +105,16 @@ SBCursorInsert >> container: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorInsert >> drawOn: aCanvas [
+SBCursorInsert >> drawOn: aCanvas in: aRectangle [
 
-	aCanvas fillRectangle: self bounds color: self color
+	aCanvas fillRectangle: aRectangle color: self color
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorInsert >> enter [
+
+	super enter.
+	self triggerEvent: #showLabel with: (command title ifNil: ['insert in ', self block printString])
 ]
 
 { #category : #'as yet unclassified' }
@@ -108,6 +131,12 @@ SBCursorInsert >> horizontalOffsetInFloat [
 			reference := self bounds center x.
 			reference - float left]
 		ifNil: [self bounds center x]
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorInsert >> leaveIn: anEditor [
+
+	self triggerEvent: #showLabel with: nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -133,6 +162,14 @@ SBCursorInsert >> moveHorizontal: aNumber wordWise: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorInsert >> objectInterface [
+
+	^ self container
+		objectInterfaceNear: self adjacent
+		at: (self before ifTrue: [#before] ifFalse: [#after])
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorInsert >> selectLarger [
 
 	^ SBCursorSelect new block: self container
@@ -142,4 +179,13 @@ SBCursorInsert >> selectLarger [
 SBCursorInsert >> selectSmaller [
 
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorInsert >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
+
+	anEditor do: command.
+	anEditor selection inputContainedUnknown.
+	anEditor selection keyStroke: anEvent.
+	aBlock value
 ]

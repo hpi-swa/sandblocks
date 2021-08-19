@@ -18,10 +18,12 @@ SBDefaultColorPolicy >> colorForBlock: aBlock [
 			ifTrue: [
 				aBlock sandblockBlockColorIfAbsentPut: [
 					(aBlock containingBlock isNil or: [aBlock isMethodBody])
-						ifTrue: [aBlock preferredColor ifNil: [Color r: 0.216 g: 0.249 b: 0.436]]
+						ifTrue: [(aBlock parentSandblock ifNotNil: #preferredColor) ifNil: [Color r: 0.216 g: 0.249 b: 0.436]]
 						ifFalse: [self mutateColor: (self colorForBlock: aBlock containingBlock)]]]
 			ifFalse: [
-				aBlock parentSandblock ifNotNil: [:o | o color adjustSaturation: -0.1 brightness: 0.09] ifNil: [Color white]]]
+				aBlock parentSandblock
+					ifNotNil: [:o | o color adjustSaturation: -0.1 brightness: 0.09]
+					ifNil: [Color r: 1 g: 1 b: 1]]]
 ]
 
 { #category : #'as yet unclassified' }

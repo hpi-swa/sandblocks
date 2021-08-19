@@ -67,6 +67,16 @@ SBTest class >> mouseEventAt: aPoint [
 ]
 
 { #category : #'as yet unclassified' }
+SBTest class >> mouseEventAt: aPoint shift: aBoolean command: anotherBoolean control: aThirdBoolean [
+
+	^ MouseEvent new
+		setType: #mouseDown
+		position: 0 @ 0
+		buttons: (MouseEvent redButton bitOr: (((aBoolean ifTrue: [8] ifFalse: [0]) bitOr: (anotherBoolean ifTrue: [64] ifFalse: [0])) bitOr: (anotherBoolean ifTrue: [16] ifFalse: [0])))
+		hand: ActiveHand
+]
+
+{ #category : #'as yet unclassified' }
 SBTest >> assert: anObject structure: aCollection [
 
 	aCollection do: [:assoc | self assert: assoc value equals: (anObject perform: assoc key)]

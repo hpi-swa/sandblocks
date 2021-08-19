@@ -68,7 +68,7 @@ SBStMessagePart >> currentTextMorph [
 { #category : #'as yet unclassified' }
 SBStMessagePart >> deleteBeforeCursor [
 	<inputAction>
-	
+
 	(self actualContents isEmpty and: [self isFirstPart]) ifTrue: [^ self messageSend tryDelete].
 	super deleteBeforeCursor.
 	self updateSuggestions.
@@ -328,6 +328,19 @@ SBStMessagePart >> updateSuggestions [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMessagePart >> useAsStSymbol [
+	<action>
+	<actionValidIf: #isUnary>
+
+	self sandblockEditor do: (SBCombinedCommand newWith: {
+		SBMutatePropertyCommand new target: self selector: #contents value: ''.
+		SBInsertCommand new
+			container: self owner;
+			morph: (SBStSymbol new contents: self contents);
+			index: self submorphIndex + 1})
+]
+
+{ #category : #'as yet unclassified' }
 SBStMessagePart >> useSuggestion: aString [
 
 	self messageSend useSuggestion: aString
@@ -367,7 +380,7 @@ SBStMessagePart >> wrapInBlock [
 
 { #category : #actions }
 SBStMessagePart >> wrapInCascade [
-	<multiSelectAction>
+	<action>
 	<actionValidIf: #parentIsExpression>
 
 	| cascade |

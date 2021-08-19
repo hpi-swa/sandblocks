@@ -52,7 +52,9 @@ SBBrowserEditor >> ensureOpened: aMethod [
 	found ifFalse: [
 		aMethod
 			convertedFor: (self objectInterfaceNear: nil at: #after)
-			do: [:repr | self openMorphInView: repr]].
+			do: [:repr |
+				self openMorphInView: repr.
+				repr startInput]].
 	
 	((model respondsTo: #autoSelectString) and: [model autoSelectString notNil]) ifTrue: [self search search: model autoSelectString]
 ]
@@ -79,6 +81,12 @@ SBBrowserEditor >> fillVertical [
 SBBrowserEditor >> fillVertical: aBoolean [
 
 	fillVertical := aBoolean
+]
+
+{ #category : #'dependents access' }
+SBBrowserEditor >> hasUnacceptedEdits [
+
+	^ self artefacts ifEmpty: [false] ifNotEmpty: [:m | m first hasUnsavedChanges]
 ]
 
 { #category : #initialization }
@@ -130,10 +138,27 @@ SBBrowserEditor >> modelSelection [
 { #category : #'model access' }
 SBBrowserEditor >> modelSelection: anObject [
 
-	anObject isBehavior ifTrue: [^ model selectClass: anObject].
+	anObject isBehavior ifTrue: [
+		model selectClass: anObject.
+		model
+			changed: #systemCategoryList;
+			changed: #classList.
+		^ self].
 	anObject isCompiledMethod ifTrue: [
 		model selectedClass ~= anObject methodClass ifTrue: [model selectClass: anObject methodClass theNonMetaClass].
-		(model respondsTo: #selectMessageNamed:) ifTrue: [^ model selectMessageNamed: anObject selector]]
+		(model respondsTo: #selectMessageCategoryNamed:) ifTrue: [model selectMessageCategoryNamed: anObject methodReference category].
+		(model respondsTo: #selectMessageNamed:) ifTrue: [model selectMessageNamed: anObject selector].
+		model
+			changed: #classList;
+			changed: #messageCategoryList;
+			changed: #messageList]
+]
+
+{ #category : #'as yet unclassified' }
+SBBrowserEditor >> openOnlyMorph: aBlock [
+
+	self childSandblocks do: [:block | block delete].
+	self openMorph: aBlock
 ]
 
 { #category : #artefacts }
@@ -141,7 +166,9 @@ SBBrowserEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean 
 
 	| ret |
 	ret := super save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean.
-	((anArtefact object isBehavior or: [anArtefact object isCompiledMethod]) and: [self modelSelection ~~ anArtefact object]) ifTrue: [self modelSelection: anArtefact object].
+	
+	model ifNotNil: [
+		((anArtefact object isBehavior or: [anArtefact object isCompiledMethod]) and: [self modelSelection ~~ anArtefact object]) ifTrue: [self modelSelection: anArtefact object]].
 	^ ret
 ]
 
@@ -193,7 +220,10 @@ SBBrowserEditor >> updateArtefact [
 	
 	({#editClass. #editMessage} includes: model editSelection) ifTrue: [
 		^ self ensureOpened: (model selectedMessageName
-			ifNotNil: [:msg | model selectedClassOrMetaClass compiledMethodAt: msg ifAbsent: [model selectedClassOrMetaClass]]
+			ifNotNil: [:msg |
+				model selectedClassOrMetaClass
+					compiledMethodAt: msg
+					ifAbsent: [model selectedClassOrMetaClass]]
 			ifNil: [model selectedClassOrMetaClass])].
 	
 	#newClass = model editSelection ifTrue: [ | class |
@@ -205,7 +235,7 @@ SBBrowserEditor >> updateArtefact [
 			selector: '' arguments: #() class: model selectedClassOrMetaClass;
 			body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}]);
 			category: model selectedMessageCategoryName).
-		^ self startInput: method at: 1 replacingContents: true]
+		method inputContainedUnknown]
 ]
 
 { #category : #initialization }

@@ -28,10 +28,10 @@ SBCursorTest >> testBoundsUpdateOnChanges [
 { #category : #'as yet unclassified' }
 SBCursorTest >> testConsecutiveInsertPositions [
 
-	| body cursor |
+	| body cursor editor |
 	body := '[:a | 1]' parseAsSandblock.
-	self editorFor: body.
-	cursor := SBBlockCursor new select: body bindings first.
+	editor := self editorFor: body.
+	cursor := editor cursor select: body bindings first.
 	
 	cursor moveHorizontal: 1.
 	cursor moveHorizontal: 1.
@@ -54,7 +54,7 @@ SBCursorTest >> testCursorKeepsHorizontalOffset [
 		position: 100 @ 20;
 		fullBounds.
 	
-	cursor := SBBlockCursor new moveCursorClick: block statements second at: 0 @ 0.
+	cursor := editor cursor moveCursorClick: block statements second at: 0 @ 0.
 	self tick.
 	self assert: cursor cursorPosition structure: {#cursorIndex -> 1}.
 	
@@ -75,18 +75,18 @@ SBCursorTest >> testCursorKeepsHorizontalOffset [
 { #category : #'as yet unclassified' }
 SBCursorTest >> testMoveBackward [
 
-	| body cursor num1 array num2 num3 |
+	| body cursor num1 array num2 num3 editor |
 	body := '[1. {2. 3}]' parseAsSandblock.
-	self editorFor: body.
+	editor := self editorFor: body.
 	num1 := body statements first.
 	array := body statements second.
 	num2 := array childSandblocks first.
 	num3 := array childSandblocks second.
 	
-	cursor := SBBlockCursor new select: num3.
+	cursor := editor cursor select: num3.
 	cursor moveHorizontal: -1.
-	self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> num3}.
-	cursor moveHorizontal: -1.
+	"self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> num3}.
+	cursor moveHorizontal: -1."
 	self
 		assert: cursor cursorPosition
 		structure: {#class -> SBCursorInsert. #before -> true. #adjacent -> num3}.
@@ -95,14 +95,14 @@ SBCursorTest >> testMoveBackward [
 		assert: cursor cursorPosition
 		structure: {#class -> SBCursorText. #block -> num2. #cursorIndex -> 2}.
 	cursor moveHorizontal: -1.
-	cursor moveHorizontal: -1.
-	self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> num2}.
+	"cursor moveHorizontal: -1.
+	self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> num2}."
 	cursor moveHorizontal: -1.
 	self
 		assert: cursor cursorPosition
 		structure: {#class -> SBCursorInsert. #before -> true. #adjacent -> num2}.
-	cursor moveHorizontal: -1.
-	self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> array}.
+	"cursor moveHorizontal: -1.
+	self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> array}."
 	cursor moveHorizontal: -1.
 	self
 		assert: cursor cursorPosition
@@ -114,13 +114,13 @@ SBCursorTest >> testMoveBackward [
 { #category : #'as yet unclassified' }
 SBCursorTest >> testMoveBackwardWordWise [
 
-	| body cursor num1 num2 |
+	| body cursor num1 num2 editor |
 	body := '[1. 2]' parseAsSandblock.
-	self editorFor: body.
+	editor := self editorFor: body.
 	num1 := body statements first.
 	num2 := body statements second.
 	
-	cursor := SBBlockCursor new select: num2.
+	cursor := editor cursor select: num2.
 	self
 		assert: cursor cursorPosition
 		structure: {#class -> SBCursorText. #block -> num2. #cursorIndex -> 1}.
@@ -133,15 +133,15 @@ SBCursorTest >> testMoveBackwardWordWise [
 { #category : #'as yet unclassified' }
 SBCursorTest >> testMoveForward [
 
-	| body cursor num1 array num2 num3 |
+	| body cursor num1 array num2 num3 editor |
 	body := '[1. {2. 3}]' parseAsSandblock.
-	self editorFor: body.
+	editor := self editorFor: body.
 	num1 := body statements first.
 	array := body statements second.
 	num2 := array childSandblocks first.
 	num3 := array childSandblocks second.
 	
-	cursor := SBBlockCursor new select: num1.
+	cursor := editor cursor select: num1.
 	self
 		assert: cursor cursorPosition
 		structure: {#class -> SBCursorText. #block -> num1. #cursorIndex -> 1}.
@@ -150,14 +150,14 @@ SBCursorTest >> testMoveForward [
 	self
 		assert: cursor cursorPosition
 		structure: {#class -> SBCursorInsert. #before -> false. #adjacent -> num1}.
-	cursor moveHorizontal: 1.
-	self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> array}.
+	"cursor moveHorizontal: 1.
+	self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> array}."
 	cursor moveHorizontal: 1.
 	self
 		assert: cursor cursorPosition
 		structure: {#class -> SBCursorInsert. #container -> array. #adjacent -> nil. #before -> true}.
-	cursor moveHorizontal: 1.
-	self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> num2}.
+	"cursor moveHorizontal: 1.
+	self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> num2}."
 	cursor moveHorizontal: 1.
 	self assert: cursor cursorPosition structure: {#class -> SBCursorText. #block -> num2}.
 	cursor moveHorizontal: 1.
@@ -165,22 +165,22 @@ SBCursorTest >> testMoveForward [
 	self
 		assert: cursor cursorPosition
 		structure: {#class -> SBCursorInsert. #before -> false. #adjacent -> num2}.
-	cursor moveHorizontal: 1.
-	self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> num3}
+	"cursor moveHorizontal: 1.
+	self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> num3}"
 ]
 
 { #category : #'as yet unclassified' }
 SBCursorTest >> testMoveForwardWordWise [
 
-	| body cursor num1 array num2 num3 |
+	| body cursor num1 array num2 num3 editor |
 	body := '[1. {2. 3}]' parseAsSandblock.
-	self editorFor: body.
+	editor := self editorFor: body.
 	num1 := body statements first.
 	array := body statements second.
 	num2 := array childSandblocks first.
 	num3 := array childSandblocks second.
 	
-	cursor := SBBlockCursor new select: num1.
+	cursor := editor cursor select: num1.
 	self
 		assert: cursor cursorPosition
 		structure: {#class -> SBCursorText. #block -> num1. #cursorIndex -> 1}.
@@ -198,15 +198,15 @@ SBCursorTest >> testMoveForwardWordWise [
 { #category : #'as yet unclassified' }
 SBCursorTest >> testOtherSelectClearsFollowHistory [
 
-	| body cursor raised add num5 num2 |
+	| body cursor raised add num5 num2 editor |
 	body := '[2 + 5 raisedTo: 3]' parseAsSandblock.
 	raised := body statements first.
 	add := raised receiver.
 	num2 := add receiver.
 	num5 := add arguments first.
-	self editorFor: body.
+	editor := self editorFor: body.
 	
-	cursor := SBBlockCursor new select: num5.
+	cursor := editor cursor select: num5.
 	cursor moveCursorLarger.
 	cursor moveCursorLarger.
 	self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> add}.
@@ -220,14 +220,14 @@ SBCursorTest >> testOtherSelectClearsFollowHistory [
 { #category : #'as yet unclassified' }
 SBCursorTest >> testSelectLarger [
 
-	| body cursor raised add num2 |
+	| body cursor raised add num2 editor |
 	body := '[2 + 5 raisedTo: 3]' parseAsSandblock.
 	raised := body statements first.
 	add := raised receiver.
 	num2 := add receiver.
-	self editorFor: body.
+	editor := self editorFor: body.
 	
-	cursor := SBBlockCursor new select: body firstDeepChild.
+	cursor := editor cursor select: body firstDeepChild.
 	self
 		assert: cursor cursorPosition
 		structure: {#class -> SBCursorText. #block -> num2. #cursorIndex -> 1}.
@@ -242,14 +242,14 @@ SBCursorTest >> testSelectLarger [
 { #category : #'as yet unclassified' }
 SBCursorTest >> testSelectSmaller [
 
-	| body cursor raised add num2 |
+	| body cursor raised add num2 editor |
 	body := '[2 + 5 raisedTo: 3]' parseAsSandblock.
 	raised := body statements first.
 	add := raised receiver.
 	num2 := add receiver.
-	self editorFor: body.
+	editor := self editorFor: body.
 	
-	cursor := SBBlockCursor new select: add.
+	cursor := SBBlockCursor new editor: editor; select: add.
 	self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> add}.
 	cursor moveCursorSmaller.
 	self assert: cursor cursorPosition structure: {#class -> SBCursorSelect. #block -> num2}.
@@ -262,14 +262,14 @@ SBCursorTest >> testSelectSmaller [
 { #category : #'as yet unclassified' }
 SBCursorTest >> testSelectSmallerFollowsHistory [
 
-	| body cursor raised add num5 |
+	| body cursor raised add num5 editor |
 	body := '[2 + 5 raisedTo: 3]' parseAsSandblock.
 	raised := body statements first.
 	add := raised receiver.
 	num5 := add arguments first.
-	self editorFor: body.
+	editor := self editorFor: body.
 	
-	cursor := SBBlockCursor new select: num5.
+	cursor := editor cursor select: num5.
 	cursor moveCursorLarger.
 	cursor moveCursorLarger.
 	cursor moveCursorLarger.

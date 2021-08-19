@@ -44,7 +44,7 @@ SBUnknown >> contents: aString [
 	aString ifNotEmpty: [ | editor |
 		editor := self sandblockEditor.
 		self acceptCharacter: aString first.
-		editor currentInput contents: editor currentInput contents, aString allButFirst]
+		editor selection contents: editor selection contents, aString allButFirst]
 ]
 
 { #category : #accessing }
@@ -162,12 +162,6 @@ SBUnknown >> lookupAction: aSymbol [
 ]
 
 { #category : #accessing }
-SBUnknown >> moveCursorTo: aNumber [
-
-	self currentTextMorph moveCursorTo: aNumber
-]
-
-{ #category : #accessing }
 SBUnknown >> newNullBlock [
 
 	^ self veryDeepCopy
@@ -175,8 +169,8 @@ SBUnknown >> newNullBlock [
 
 { #category : #'as yet unclassified' }
 SBUnknown >> noteNewOwner: aMorph [
-
 	" we're guessing that, if we changed owners, our label is no longer relevant "
+
 	hadOwner == true ifTrue: [self label: ''].
 	hadOwner := true
 ]
@@ -191,6 +185,12 @@ SBUnknown >> prefersNoBorder [
 SBUnknown >> printOn: aStream [
 
 	aStream nextPutAll: 'unknown'
+]
+
+{ #category : #accessing }
+SBUnknown >> sourceString [
+
+	^ ''
 ]
 
 { #category : #'text input' }

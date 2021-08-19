@@ -203,6 +203,13 @@ SBStBlockBody >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 			near: aBlock before: aBoolean in: temporaries morph: aMorph;
 			yourself].
 	
+	(aBlock isNil and: [aBoolean]) ifTrue: [
+		" make sure we don't insert before our bindings/temps "
+		^ SBInsertCommand new
+			container: self;
+			index: 2;
+			morph: aMorph].
+	
 	^ super insertCommandRequest: aMorph near: aBlock before: aBoolean
 ]
 
@@ -221,7 +228,7 @@ SBStBlockBody >> isExpression [
 { #category : #testing }
 SBStBlockBody >> isMethodBody [
 
-	^ self owner notNil and: [self parentSandblock isMethod]
+	^ self owner notNil and: [self parentSandblock isArtefact]
 ]
 
 { #category : #'as yet unclassified' }
@@ -283,7 +290,6 @@ SBStBlockBody >> minimumHeight [
 SBStBlockBody >> multiSelectChildren [
 	<multiSelectAction>
 
-	self sandblockEditor mode = #select ifFalse: [self sandblockEditor mode: #selection].
 	self statements do: [:c | c isMultiSelected ifFalse: [c startOrAddToMultiSelection]]
 ]
 

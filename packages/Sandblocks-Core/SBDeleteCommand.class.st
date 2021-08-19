@@ -24,15 +24,20 @@ SBDeleteCommand >> do [
 { #category : #'as yet unclassified' }
 SBDeleteCommand >> nextBlockFrom: aMorph [
 
-	^ (aMorph isSandblock
-		ifTrue: [
-			(aMorph adjacentBlock: 1) ifNil: [aMorph adjacentBlock: -1]]
+	| next |
+	aMorph floating ifTrue: [
+		^ (aMorph parentSandblock
+			childClosestTo: (aMorph center ifNil: [aMorph sandblockEditor])
+			that: [:b | b ~= aMorph]) ifNil: [aMorph sandblockEditor]].
+	next := (aMorph isSandblock
+		ifTrue: [(aMorph adjacentBlock: 1) ifNil: [aMorph adjacentBlock: -1]]
 		ifFalse: [
 			aMorph childSandblocks
-				ifNotEmpty: [:blocks |
-					(blocks first adjacentBlock: -1) ifNil: [blocks last adjacentBlock: 1]]
-				ifEmpty: [
-					(aMorph containingSandblock adjacentBlock: -1) ifNil: [aMorph containingSandblock adjacentBlock: 1]]]) ifNil: [aMorph containingSandblock parentSandblock]
+				ifNotEmpty: [:blocks | (blocks first adjacentBlock: -1) ifNil: [blocks last adjacentBlock: 1]]
+				ifEmpty: [(aMorph containingSandblock adjacentBlock: -1) ifNil: [aMorph containingSandblock adjacentBlock: 1]]]) ifNil: [aMorph containingSandblock parentSandblock].
+	^ (next isNil or: [next containingFloat ~= aMorph containingFloat])
+		ifTrue: [aMorph sandblockEditor]
+		ifFalse: [next]
 ]
 
 { #category : #'as yet unclassified' }

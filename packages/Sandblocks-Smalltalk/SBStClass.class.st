@@ -94,12 +94,6 @@ SBStClass >> compiledMethodAt: aSymbol ifAbsent: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBStClass >> containingArtefact [
-
-	^ self
-]
-
-{ #category : #'as yet unclassified' }
 SBStClass >> createInitialize [
 	<action>
 
@@ -276,7 +270,7 @@ SBStClass >> name [
 { #category : #'as yet unclassified' }
 SBStClass >> object [
 
-	^ self relatedClass ifNil: [self]
+	^ self relatedClass ifNil: [ UndefinedObject ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -310,7 +304,7 @@ SBStClass >> references [
 { #category : #'as yet unclassified' }
 SBStClass >> relatedClass [
 
-	^ class ifNil: [self]
+	^ class ifNil: [UndefinedObject]
 ]
 
 { #category : #'class protocol' }

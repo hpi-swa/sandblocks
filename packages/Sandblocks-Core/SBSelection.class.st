@@ -38,7 +38,6 @@ SBSelection >> addedMorph: aMorph [
 	aMorph isSandblock ifTrue: [
 		aMorph allBlocksDo: [:block |
 			block
-				detachDecorators: SBSelectionDecorator;
 				detachDecorators: SBMultiSelectionDecorator;
 				stopEditing]]
 ]
@@ -74,9 +73,9 @@ SBSelection >> colorPolicy: aPolicy [
 ]
 
 { #category : #'as yet unclassified' }
-SBSelection >> containingArtefact [
+SBSelection >> cursor [
 
-	^ self
+	^ SBBlockCursor new editor: self
 ]
 
 { #category : #'as yet unclassified' }
@@ -140,6 +139,12 @@ SBSelection >> initialize [
 		hResizing: #shrinkWrap.
 	
 	self on: #keyStroke send: #keyStroke: to: self
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> isArtefact [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

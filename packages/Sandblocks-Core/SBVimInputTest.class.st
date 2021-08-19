@@ -22,7 +22,7 @@ SBVimInputTest >> testPrintableCharacterShortcut [
 	| message editor |
 	message := '5 + 2' parseAsSandblock.
 	editor := self methodFor: message.
-	editor startInput: message at: 2 replacingContents: false.
+	editor startInput: message messageParts first at: 2 replacingContents: false.
 	self send: (self keyboardEvent: $+) to: editor.
 	
 	self assert: message selector = '++'

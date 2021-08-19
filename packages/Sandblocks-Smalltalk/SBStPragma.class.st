@@ -86,12 +86,6 @@ SBStPragma >> messageParts [
 ]
 
 { #category : #'as yet unclassified' }
-SBStPragma >> moveCursorTo: aNumber [
-
-	signature moveCursorTo: aNumber
-]
-
-{ #category : #'as yet unclassified' }
 SBStPragma >> prefix [
 
 	^ '<> '
@@ -125,6 +119,12 @@ SBStPragma >> stopEditing: aCommand [
 SBStPragma >> symbols [
 
 	^ self colorPolicy symbolsForPragma: self
+]
+
+{ #category : #'as yet unclassified' }
+SBStPragma >> tryDelete [
+
+	self deleteBlock
 ]
 
 { #category : #'as yet unclassified' }

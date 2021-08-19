@@ -50,7 +50,13 @@ SBCommand >> applyPositionTo: aMorphOrCollection in: anOwner [
 	
 	aMorphOrCollection isCollection
 		ifTrue: [aMorphOrCollection do: [:morph | self applyPositionTo: morph in: anOwner]]
-		ifFalse: [aMorphOrCollection position: self position]
+		ifFalse: [
+			aMorphOrCollection position: self position.
+			aMorphOrCollection isSandblock ifTrue: [
+				aMorphOrCollection
+					withDecorator: SBForceMoveDecorator
+					do: [:d | d createImplicitForces]
+					ifAbsent: []]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -154,6 +160,12 @@ SBCommand >> shouldMergeWithNext [
 SBCommand >> shouldMergeWithNext: aBoolean [
 
 	shouldMergeWithNext := aBoolean
+]
+
+{ #category : #'as yet unclassified' }
+SBCommand >> title [
+
+	^ nil
 ]
 
 { #category : #apply }
