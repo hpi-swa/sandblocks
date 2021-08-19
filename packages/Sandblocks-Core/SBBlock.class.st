@@ -451,7 +451,7 @@ SBBlock >> click: anEvent [
 	
 	self sandblockEditor selectClick: self at: anEvent position.
 	(anEvent yellowButtonPressed and: [SBPreferences rightClickContextMenu]) ifTrue: [self promptAction].
-	(self suggestAlways and: [anEvent redButtonPressed]) ifTrue: [self toggleSuggestions].
+	(self suggestAlways and: [anEvent redButtonPressed]) ifTrue: [self toggleSuggestions]
 ]
 
 { #category : #hierarchy }
@@ -2576,7 +2576,7 @@ SBBlock >> updateSuggestions: aCollection showNear: aMorph [
 	
 	self suggestionsMenu
 		editor: self sandblockEditor;
-		suggestions: (aCollection take: 1000);
+		suggestions: (aCollection take: 30);
 		topLeft: aMorph positionInWorld + (0 @ aMorph height).
 	
 	self world ifNotNil: [

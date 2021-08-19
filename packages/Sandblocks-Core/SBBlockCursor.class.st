@@ -101,9 +101,6 @@ SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol 
 		previousBlock removeActionsWithReceiver: self.
 		previousBlock ifNotNil: #wasDeselected.
 		lastBlinkTime := Time current.
-		self selectedBlock
-			when: #positionChanged send: #updateBounds to: self;
-			when: #extentChanged send: #updateBounds to: self.
 		self selectedBlock ifNotNil: [:b |
 			b
 				wasSelected;

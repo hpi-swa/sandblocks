@@ -161,7 +161,9 @@ SBSuggestionMenu >> previous [
 { #category : #layout }
 SBSuggestionMenu >> resize [
 
-	self extent: (self hasItems ifFalse: [0 @ 0] ifTrue: [self minExtent])
+	self extent: (self hasItems
+		ifFalse: [0 @ 0]
+		ifTrue: [self minExtent x @ ((container height min: 300) + 2)])
 ]
 
 { #category : #accessing }

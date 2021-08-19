@@ -390,8 +390,7 @@ SBStName >> wasSelected [
 
 	self allUsagesDo: [:b | b attachDecorator: SBHighlightDecorator new].
 	self behavior wasSelected.
-	self resolveBinding ifNotNil: [:b | b attachDecorator: SBHighlightDecorator new].
-	self updateSuggestions.
+	self resolveBinding ifNotNil: [:b | b attachDecorator: SBHighlightDecorator new]
 ]
 
 { #category : #'as yet unclassified' }
