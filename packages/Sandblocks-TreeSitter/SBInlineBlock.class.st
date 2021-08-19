@@ -1,6 +1,6 @@
 Class {
 	#name : #SBInlineBlock,
-	#superclass : #Morph,
+	#superclass : #SBBlock,
 	#instVars : [
 		'name'
 	],
@@ -13,40 +13,48 @@ SBInlineBlock >> buildPartial: anOptions with: aString [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'block api' }
-SBInlineBlock >> colorPolicy [
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> click: anEvent [
 
-	^ self containingSandblock colorPolicy
+	self inline ifFalse: [super click: anEvent]
 ]
 
-{ #category : #'block api' }
-SBInlineBlock >> containingFloat [
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> containingSandblock [
 
-	^ self containingSandblock containingFloat
+	^ self inline ifTrue: [self owner containingSandblock] ifFalse: [self]
 ]
 
 { #category : #'as yet unclassified' }
 SBInlineBlock >> currentTextMorph [
 
+	self submorphsDo: [:m | (m isInlineBlock and: [m inline]) ifTrue: [m currentTextMorph ifNotNil: [:t | ^ t]]].
 	^ nil
 ]
 
 { #category : #'as yet unclassified' }
 SBInlineBlock >> cursorPositionsDo: aBlock [
 
+	self inline not ifTrue: [aBlock value: (SBCursorSelect new block: self)].
 	self submorphsDo: [:m | m cursorPositionsDo: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> deleteCommandFor: aBlock [
+
+	^ (aBlock owner deleteTargetFor: aBlock)
+		ifNotNil: [:target | SBDeleteCommand new target: target]
+		ifNil: [
+			aBlock newNullBlock ifNotNil: [:nullBlock |
+				SBReplaceCommand new
+					target: aBlock;
+					replacer: nullBlock]]
 ]
 
 { #category : #'as yet unclassified' }
 SBInlineBlock >> deleteTargetFor: aBlock [
 
 	^ nil
-]
-
-{ #category : #'block api' }
-SBInlineBlock >> ensureVisible [
-
-	self containingSandblock ensureVisible
 ]
 
 { #category : #geometry }
@@ -62,16 +70,16 @@ SBInlineBlock >> firstBlock [
 	^ nil
 ]
 
-{ #category : #'block api' }
-SBInlineBlock >> frameSize [
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> handlesMouseDown: anEvent [
 
-	^ self containingSandblock frameSize
+	^ self inline not
 ]
 
-{ #category : #'block api' }
-SBInlineBlock >> hasHorizontalLayout [
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> handlesMouseOver: anEvent [
 
-	^ self containingSandblock hasHorizontalLayout
+	^ self inline not
 ]
 
 { #category : #'initialize-release' }
@@ -92,15 +100,51 @@ SBInlineBlock >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> inline [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> inlineIfPossible [
+
+	^ self owner notNil and: [self owner isInlineBlock and: [self owner nonInlinedChildren not]]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> instantiate [
+
+	^ self veryDeepCopy
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> isInlineBlock [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> isSandblock [
+
+	^ self inline not
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> isUnambiguous [
 
 	^ self submorphs allSatisfy: [:m | m isUnambiguous]
 ]
 
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> layoutInset [
+
+	^ self inline ifTrue: [0] ifFalse: [super layoutInset]
+]
+
 { #category : #geometry }
 SBInlineBlock >> minimumHeight [
 
-	^ TextStyle defaultFont height + 4
+	^ TextStyle defaultFont height
 ]
 
 { #category : #'as yet unclassified' }
@@ -110,9 +154,15 @@ SBInlineBlock >> name: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlock >> performAction: aSymbol [
+SBInlineBlock >> nonInlinedChildren [
 
-	^ self containingSandblock performAction: aSymbol
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> prefersNoBorder [
+
+	^ self inline
 ]
 
 { #category : #'as yet unclassified' }
@@ -130,10 +180,11 @@ SBInlineBlock >> printTitleOn: aStream [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'block api' }
-SBInlineBlock >> selectionLabel [
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> removedMorph: aMorph [
 
-	^ self containingSandblock selectionLabel
+	super removedMorph: aMorph.
+	self extent: 0 @ 0
 ]
 
 { #category : #'as yet unclassified' }
@@ -149,24 +200,7 @@ SBInlineBlock >> triggersFor: aString matchFullToken: aBoolean options: anOption
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlock >> veryDeepCopyWith: aCopier [
+SBInlineBlock >> wantsExtraSpace [
 
-	| new oldActions |
-	oldActions := self valueOfProperty: #actionMap.
-	self removeProperty: #actionMap.
-	new := super veryDeepCopyWith: aCopier.
-	self setProperty: #actionMap toValue: oldActions.
-	^ new
-]
-
-{ #category : #'block api' }
-SBInlineBlock >> wasDeselected [
-
-	
-]
-
-{ #category : #'block api' }
-SBInlineBlock >> wasSelected [
-
-	
+	^ self inline not
 ]

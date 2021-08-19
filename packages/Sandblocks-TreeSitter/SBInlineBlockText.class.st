@@ -29,6 +29,8 @@ SBInlineBlockText >> currentTextMorph [
 { #category : #'as yet unclassified' }
 SBInlineBlockText >> cursorPositionsDo: aBlock [
 
+	self inline not ifTrue: [aBlock value: (SBCursorSelect new block: self)].
+	
 	self containingSandblock startInputCommand ifNotNil: [:command |
 		aBlock value: (SBCursorText new
 			block: self containingSandblock;
@@ -41,6 +43,12 @@ SBInlineBlockText >> initialize [
 	super initialize.
 	
 	self addMorphBack: (SBOwnTextMorph new contents: '')
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockText >> inline [
+
+	^ self inlineIfPossible
 ]
 
 { #category : #'as yet unclassified' }
@@ -71,7 +79,10 @@ SBInlineBlockText >> regexString: aString [
 { #category : #'as yet unclassified' }
 SBInlineBlockText >> triggersFor: aString matchFullToken: aBoolean options: anOptions [
 
-	^ anOptions
-		addLeaf: self
-		if: [:option | aBoolean ifTrue: [self regex matches: aString] ifFalse: [self regex matchesPrefix: aString]]
+	^ anOptions addLeaf: self if: [:option |
+		SBToggledCode
+			comment: ''
+			active: 0
+			do: {[aBoolean ifTrue: [self regex matches: aString] ifFalse: [self regex matchesPrefix: aString]]}.
+		self regex matches: aString, (aBoolean ifTrue: [' '] ifFalse: [''])]
 ]

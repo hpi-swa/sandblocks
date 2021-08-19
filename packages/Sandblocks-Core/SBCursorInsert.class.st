@@ -186,6 +186,6 @@ SBCursorInsert >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 
 	anEditor do: command.
 	anEditor selection inputContainedUnknown.
-	anEditor selection keyStroke: anEvent.
+	command continueAfterInsert ifTrue: [anEditor selection keyStroke: anEvent].
 	aBlock value
 ]

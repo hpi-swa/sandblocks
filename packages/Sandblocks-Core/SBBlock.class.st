@@ -1357,6 +1357,12 @@ SBBlock >> isInEditor [
 	^ editor notNil and: [editor isSelection not or: [editor parentSandblock ifNotNil: #isInEditor ifNil: [false]]]
 ]
 
+{ #category : #'Sandblocks-TreeSitter' }
+SBBlock >> isInlineBlock [
+
+	^ false
+]
+
 { #category : #'testing hierarchy' }
 SBBlock >> isLastChild [
 

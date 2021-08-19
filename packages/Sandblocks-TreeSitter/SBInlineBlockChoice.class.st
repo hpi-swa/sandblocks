@@ -29,6 +29,12 @@ SBInlineBlockChoice >> deleteTargetFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockChoice >> inline [
+
+	^ self inlineIfPossible
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockChoice >> isUnambiguous [
 
 	^ false
@@ -41,13 +47,14 @@ SBInlineBlockChoice >> printTitleOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockChoice >> triggersFor: aString matchFullToken: aBoolean options: anOptions [
+SBInlineBlockChoice >> triggersFor: aStream matchFullToken: aBoolean options: anOptions [
 
 	| anyMatch |
 	anyMatch := false.
 	alternatives withIndexDo: [:alternative :index |
-		(anOptions
-			add: index
-			if: [:option | alternative triggersFor: aString matchFullToken: aBoolean options: option]) ifTrue: [anyMatch := true]].
+		(anOptions add: index if: [:option | | restore ret |
+			restore := aStream position.
+			ret := alternative triggersFor: aStream matchFullToken: aBoolean options: option.
+			aStream position: restore]) ifTrue: [anyMatch := true]].
 	^ anyMatch
 ]

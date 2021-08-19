@@ -8,11 +8,21 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBTSRelInsertCommand >> continueAfterInsert [
+
+	element allMorphsDo: [:m |
+		" if we're likely to have matched against a label, don't input as that label will already be there "
+		(m isKindOf: SBInlineBlockLabel) ifTrue: [^ false].
+		(m isKindOf: SBInlineBlockText) ifTrue: [^ true]].
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBTSRelInsertCommand >> do [
 
-	morph := morph ifNil: [element veryDeepCopy].
+	morph := morph ifNil: [element instantiate].
 	super do.
-	^ morph firstBlock
+	^ SBToggledCode comment: '' active: 1 do: {[morph containingSandblock]. [morph firstBlock]}
 ]
 
 { #category : #'as yet unclassified' }

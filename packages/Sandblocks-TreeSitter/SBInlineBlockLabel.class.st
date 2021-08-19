@@ -19,6 +19,12 @@ SBInlineBlockLabel >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockLabel >> inline [
+
+	^ self inlineIfPossible
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockLabel >> isUnambiguous [
 
 	^ true

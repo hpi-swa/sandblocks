@@ -26,6 +26,7 @@ SBInlineBlockRepeat >> cursorPositionsDo: aBlock [
 			adjacent: adjacent;
 			container: self)].
 	
+	self inline not ifTrue: [aBlock value: (SBCursorSelect new block: self)].
 	(multiple or: [self hasSubmorphs not]) ifTrue: [buildInsert value: nil value: true].
 	
 	self submorphsDo: [:morph |
@@ -43,6 +44,12 @@ SBInlineBlockRepeat >> deleteTargetFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> inline [
+
+	^ self inlineIfPossible
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> multiple: aBoolean required: anotherBoolean element: aMorph [
 
 	multiple := aBoolean.
@@ -50,6 +57,12 @@ SBInlineBlockRepeat >> multiple: aBoolean required: anotherBoolean element: aMor
 	element := aMorph.
 	
 	required ifTrue: [self addMorphBack: aMorph veryDeepCopy]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> nonInlinedChildren [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

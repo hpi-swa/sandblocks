@@ -69,7 +69,7 @@ SBMetaBlockFactory >> buildBlocksFor: anObject parentFieldName: aString visitedS
 	
 	(#('STRING') includes: anObject type) ifTrue: [^ SBInlineBlockLabel new label: anObject value].
 	
-	(#('PATTERN' 'TOKEN') includes: anObject type) ifTrue: [^ SBInlineBlockText new regexString: (self buildRegexString: anObject)].
+	(#('PATTERN' 'TOKEN' 'IMMEDIATE_TOKEN') includes: anObject type) ifTrue: [^ SBInlineBlockText new regexString: (self buildRegexString: anObject)].
 	
 	(#('SYMBOL') includes: anObject type) ifTrue: [^ SBInlineBlockSymbol new type: anObject name factory: self visitedSymbols: aSet].
 	
@@ -112,6 +112,7 @@ SBMetaBlockFactory >> buildRegex: anObject on: aStream [
 	
 	(anObject at: #type) caseOf: {
 		['TOKEN'] -> [self buildRegex: anObject content on: aStream].
+		['IMMEDIATE_TOKEN'] -> [self buildRegex: anObject content on: aStream].
 		['REPEAT'] -> [
 			self buildRegex: anObject content on: aStream.
 			aStream nextPut: $*].
@@ -328,6 +329,8 @@ SBMetaBlockFactory >> getTemplate: aTypeString visitedSymbols: aSet [
 	^ templateCache at: aTypeString ifAbsent: [
 		true
 			ifTrue: [
+				" reserve spot in case of recursion "
+				templateCache at: aTypeString put: nil.
 				templateCache at: aTypeString put: (self
 					buildBlocksFor: (grammar rules at: aTypeString ifAbsent: [self assert: false])
 					parentFieldName: nil
@@ -392,6 +395,12 @@ SBMetaBlockFactory >> initialize [
 SBMetaBlockFactory >> instantiateTemplate: aString [
 
 	^ (self getTemplate: aString) veryDeepCopy
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> isSuperType: aTypeString [
+
+	^ grammar supertypes includes: aTypeString
 ]
 
 { #category : #'grammar clean' }

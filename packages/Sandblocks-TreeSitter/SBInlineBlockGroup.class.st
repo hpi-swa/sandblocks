@@ -27,13 +27,22 @@ SBInlineBlockGroup >> elements: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockGroup >> inline [
+
+	^ self inlineIfPossible
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockGroup >> printTitleOn: aStream [
 
 	self submorphs do: [:m | m printTitleOn: aStream] separatedBy: [aStream nextPutAll: ', ']
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockGroup >> triggersFor: aString matchFullToken: aBoolean options: anOptions [
+SBInlineBlockGroup >> triggersFor: aStream matchFullToken: aBoolean options: anOptions [
 
-	^ self firstSubmorph triggersFor: aString matchFullToken: aBoolean options: anOptions
+	elements do: [:element |
+		(element triggersFor: aStream matchFullToken: aBoolean options: anOptions) ifFalse: [^ false].
+		aStream atEnd ifTrue: [^ true]].
+	^ true
 ]

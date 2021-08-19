@@ -47,17 +47,19 @@ SBTSUnknown >> keyStroke: anEvent [
 		options: (options := SBTSPartialNode new).
 	
 	templates := options templates asSet.
-	templates size = 1 ifTrue: [
+	templates size = 1 ifTrue: [ | new |
+		new := instance buildPartial: options children first with: prefix.
 		self sandblockEditor do: (SBReplaceCommand new
 			target: self;
-			replacer: (instance buildPartial: options children first with: prefix))]
+			replacer: new).
+		new containingSandblock startInputAtEnd]
 ]
 
 { #category : #'as yet unclassified' }
 SBTSUnknown >> printOn: aStream [
 
 	aStream nextPutAll: 'unknown '.
-	template printTitleOn: aStream
+	template value printTitleOn: aStream
 ]
 
 { #category : #'as yet unclassified' }

@@ -78,6 +78,13 @@ SBCommand >> artefactFrom: aMorph [
 		self artefact: aMorph containingSandblock containingArtefact]
 ]
 
+{ #category : #'as yet unclassified' }
+SBCommand >> continueAfterInsert [
+	" mark that if this command has been used as an insertion point, the input should be forward to the new block "
+
+	^ true
+]
+
 { #category : #apply }
 SBCommand >> do [
 
