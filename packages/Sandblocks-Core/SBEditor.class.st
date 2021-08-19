@@ -56,6 +56,12 @@ SBEditor class >> defaultColorPolicy: aColorPolicyClass [
 ]
 
 { #category : #'initialize-release' }
+SBEditor class >> initialize [
+
+	self registerInWorldMenu
+]
+
+{ #category : #'initialize-release' }
 SBEditor class >> newFor: aMethodOrClass [
 
 	| editor |
@@ -86,6 +92,12 @@ SBEditor class >> openFor: aMethodOrClass [
 	^ (self newFor: aMethodOrClass) openInWindow; yourself
 ]
 
+{ #category : #'initialize-release' }
+SBEditor class >> registerInWorldMenu [
+
+	TheWorldMenu registerOpenCommand: {'Sandblocks'. {self. #open}}
+]
+
 { #category : #shortcuts }
 SBEditor class >> shortcutStringForAction: anAction [
 
@@ -99,6 +111,18 @@ SBEditor class >> shortcutStringForAction: anAction [
 SBEditor class >> shortcutsForAction: anAction [
 
 	^ self newInputMapping shortcuts select: [:assoc | assoc value = anAction] thenCollect: [:assoc | assoc key]
+]
+
+{ #category : #'initialize-release' }
+SBEditor class >> unload [
+
+	self unregisterFromWorldMenu
+]
+
+{ #category : #'initialize-release' }
+SBEditor class >> unregisterFromWorldMenu [
+
+	TheWorldMenu unregisterOpenCommand: 'Sandblocks'
 ]
 
 { #category : #configuration }
@@ -330,6 +354,12 @@ SBEditor >> colorPolicy: aPolicy [
 SBEditor >> compileTime [
 
 	^ self errors hasSubmorphs ifTrue: [#compileOnSave] ifFalse: [compileTime]
+]
+
+{ #category : #accessing }
+SBEditor >> compileTime: aSymbol [
+
+	compileTime := aSymbol
 ]
 
 { #category : #'as yet unclassified' }
@@ -1142,6 +1172,7 @@ SBEditor >> promptChangeColorPolicy [
 
 { #category : #'action helpers' }
 SBEditor >> promptChangeCompile [
+	 
 	<globalAction>
 
 	| index labels |
@@ -1149,7 +1180,7 @@ SBEditor >> promptChangeCompile [
 	index := UIManager default chooseFrom: labels.
 	index < 1 ifTrue: [^ self].
 	
-	compileTime := index = 1 ifTrue: [#compileOnSave] ifFalse: [#compileOnChange]
+	self compileTime: (index = 1 ifTrue: [#compileOnSave] ifFalse: [#compileOnChange])
 ]
 
 { #category : #'action helpers' }

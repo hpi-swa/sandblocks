@@ -696,7 +696,7 @@ SBStBasicMethod >> toggleCollapsed [
 { #category : #'as yet unclassified' }
 SBStBasicMethod >> tryUseAsSelf: anObject [
 
-	(anObject class = self relatedClass or: [anObject class inheritsFrom: self relatedClass]) ifTrue: [
+	(anObject class includesBehavior: self relatedClass) ifTrue: [
 		self setProperty: #evaluationReceiver toValue: anObject.
 		
 		(Array streamContents: [:str | self allBlocksDo: [:block | (SBSelfThumbnailRepresentation matches: block) ifTrue: [str nextPut: block]]]) ifNotEmpty: [:selfs |
