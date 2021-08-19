@@ -24,8 +24,10 @@ SBDeleteCommand >> do [
 { #category : #'as yet unclassified' }
 SBDeleteCommand >> nextBlockFrom: aMorph [
 
-	| next |
-	aMorph floating ifTrue: [
+	| next m |
+	m := aMorph containingSandblock.
+	
+	m floating ifTrue: [
 		^ (aMorph parentSandblock
 			childClosestTo: (aMorph center ifNil: [aMorph sandblockEditor])
 			that: [:b | b ~= aMorph]) ifNil: [aMorph sandblockEditor]].

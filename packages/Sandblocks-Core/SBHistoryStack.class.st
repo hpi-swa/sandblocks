@@ -21,6 +21,9 @@ SBHistoryStack >> clearUndoStack [
 SBHistoryStack >> do: aCommand previousSelection: aMorph selectDo: aBlock [
 
 	| nextSelection |
+	" make sure our history stack never gets accidentally broken "
+	self assert: (aCommand isKindOf: SBCommand).
+	
 	(undoStack notEmpty and: [undoStack last shouldMergeWithNext])
 		ifTrue: [undoStack addLast: (SBCombinedCommand newWith: {undoStack removeLast. aCommand})]
 		ifFalse: [undoStack addLast: aCommand].

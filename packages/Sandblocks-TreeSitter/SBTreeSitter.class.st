@@ -8032,11 +8032,11 @@ SBTreeSitter >> pythonFactory [
     "named": false
   }
 ]') in: [:f |
+		SBToggledCode
+			comment: ''
+			active: 0
+			do: {[f grammar rules do: [:rule | f rule: 'parameters' inlineIn: rule]]}.
 		f cleanGrammar.
-		SBToggledCode comment: '' active: 0 do: {
-			[(f grammar rules at: #'expression_statement') members: ((f grammar rules at: #'expression_statement') members copyWithout: ((f grammar rules at: #'expression_statement') members at: 2))]}.
-		SBToggledCode comment: '' active: 0 do: {
-			[(f grammar rules at: #'argument_list') members: ((f grammar rules at: #'argument_list') members copyWithout: ((f grammar rules at: #'argument_list') members at: 3))]}.
 		f grammar rules keysAndValuesDo: [:name :r | f removeOptionalString: ',' in: r].
 		f grammar rules
 			at: '"'

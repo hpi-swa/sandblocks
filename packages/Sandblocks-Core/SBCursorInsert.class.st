@@ -43,7 +43,7 @@ SBCursorInsert >> before: aBoolean [
 { #category : #'as yet unclassified' }
 SBCursorInsert >> block [
 
-	^ self adjacent ifNil: [self container]
+	^ (self adjacent ifNil: [self container]) containingSandblock
 ]
 
 { #category : #'as yet unclassified' }
@@ -172,7 +172,7 @@ SBCursorInsert >> objectInterface [
 { #category : #'as yet unclassified' }
 SBCursorInsert >> selectLarger [
 
-	^ SBCursorSelect new block: self container
+	^ SBCursorSelect new block: self container containingSandblock
 ]
 
 { #category : #'as yet unclassified' }

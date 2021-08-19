@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBUnknown,
 	#instVars : [
 		'factory',
-		'slot'
+		'slot',
+		'type'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }

@@ -466,17 +466,18 @@ SBBlock >> completeSubtree [
 SBBlock >> completionSuggestionsFor: aString [
 
 	^ aString size > 2
-		ifTrue: [ | baseClass |
+		ifTrue: [ | baseClass list |
 			baseClass := self guessClassExpensive.
-			baseClass isNil
+			list := baseClass isNil
 				ifFalse: [
 					Array streamContents: [:stream |
-						(self containingArtefact selector sandblockMatch: aString) ifTrue: [stream nextPut: self containingArtefact selector].
 						baseClass withAllSuperclassesDo: [:class |
 							class methodsDo: [:m | | sel |
 								sel := m selector asString.
 								(sel sandblockMatch: aString) ifTrue: [stream nextPut: sel]]]]]
-				ifTrue: [Symbol allSymbols select: [:sym | sym asString sandblockMatch: aString]]]
+				ifTrue: [Symbol allSymbols select: [:sym | sym asString sandblockMatch: aString]].
+			self outerArtefact ifNotNil: [:artefact | artefact selector ifNotNil: [:sel | (sel sandblockMatch: aString) ifTrue: [list := list copyWithFirst: sel]]].
+			list]
 		ifFalse: [#()]
 ]
 
@@ -1144,10 +1145,7 @@ SBBlock >> inputContainedUnknown [
 	<action>
 	<inputAction>
 
-	(self wantsInput ifTrue: [self] ifFalse: [self nextBlockThat: [:m | m wantsInput]])
-		ifNotNil: [:m |
-			((m hasOwner: self) or: [m = self]) ifTrue: [
-				self sandblockEditor startInput: m at: 1 replacingContents: true]]
+	(self wantsInput ifTrue: [self] ifFalse: [self nextBlockThat: [:m | m wantsInput]]) ifNotNil: [:m | ((m hasOwner: self) or: [m = self]) ifTrue: [self sandblockEditor startInput: m at: 1 replacingContents: false]]
 ]
 
 { #category : #actions }
@@ -1155,10 +1153,7 @@ SBBlock >> inputNextUnknown [
 	<action>
 	<inputAction>
 
-	(self nextBlockThat: [:m | m wantsInput])
-		ifNotNil: [:m |
-			self containingFloat = m containingFloat ifTrue: [
-				self sandblockEditor startInput: m at: 1 replacingContents: true]]
+	(self nextBlockThat: [:m | m wantsInput]) ifNotNil: [:m | self containingFloat = m containingFloat ifTrue: [self sandblockEditor startInput: m at: 1 replacingContents: false]]
 ]
 
 { #category : #actions }

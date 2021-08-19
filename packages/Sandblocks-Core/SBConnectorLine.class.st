@@ -298,6 +298,12 @@ SBConnectorLine >> exampleMorphToSelf [
 ]
 
 { #category : #'as yet unclassified' }
+SBConnectorLine >> floating [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBConnectorLine >> from [
 
 	^ from

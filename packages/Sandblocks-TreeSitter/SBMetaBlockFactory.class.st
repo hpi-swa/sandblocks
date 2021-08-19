@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'grammar',
 		'nodeTypes',
-		'slotMapping'
+		'slotMapping',
+		'templateCache'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -57,6 +58,45 @@ SBMetaBlockFactory >> build: anObject in: aBlock slot: aSlot [
 	aBlock factory: self parentSlot: aSlot.
 	aBlock slot buildFor: aBlock.
 	^ aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> buildBlocksFor: anObject parentFieldName: aString visitedSymbols: aSet [
+
+	anObject type = 'FIELD' ifTrue: [^ self buildBlocksFor: anObject content parentFieldName: anObject name visitedSymbols: aSet].
+	
+	(self unpackTypes includes: anObject type) ifTrue: [^ self buildBlocksFor: anObject content parentFieldName: aString visitedSymbols: aSet].
+	
+	(#('STRING') includes: anObject type) ifTrue: [^ SBInlineBlockLabel new label: anObject value].
+	
+	(#('PATTERN' 'TOKEN') includes: anObject type) ifTrue: [^ SBInlineBlockText new regexString: (self buildRegexString: anObject)].
+	
+	(#('SYMBOL') includes: anObject type) ifTrue: [^ SBInlineBlockSymbol new type: anObject name factory: self visitedSymbols: aSet].
+	
+	'REPEAT' = anObject type ifTrue: [
+		^ SBInlineBlockRepeat new
+			multiple: true
+			required: false
+			element: (self buildBlocksFor: anObject content parentFieldName: aString visitedSymbols: aSet)].
+	
+	'REPEAT1' = anObject type ifTrue: [
+		^ SBInlineBlockRepeat new
+			multiple: true
+			required: true
+			element: (self buildBlocksFor: anObject content parentFieldName: aString visitedSymbols: aSet)].
+	
+	'CHOICE' = anObject type ifTrue: [
+		(anObject members size = 2 and: [anObject members second type = 'BLANK']) ifTrue: [
+			^ SBInlineBlockRepeat new
+				multiple: false
+				required: false
+				element: (self buildBlocksFor: anObject members first parentFieldName: aString visitedSymbols: aSet)].
+		
+		^ SBInlineBlockChoice new alternatives: (anObject members collect: [:member | self buildBlocksFor: member parentFieldName: nil visitedSymbols: aSet])].
+	
+	'SEQ' = anObject type ifTrue: [^ SBInlineBlockGroup new elements: (anObject members collect: [:member | self buildBlocksFor: member parentFieldName: nil visitedSymbols: aSet])].
+	
+	self assert: false
 ]
 
 { #category : #'as yet unclassified' }
@@ -277,6 +317,25 @@ SBMetaBlockFactory >> fromTSRule: aRule [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaBlockFactory >> getTemplate: aString [
+
+	^ self getTemplate: aString visitedSymbols: Set new
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> getTemplate: aTypeString visitedSymbols: aSet [
+
+	^ templateCache at: aTypeString ifAbsent: [ | block |
+		block := SBTSBlock new.
+		" put the block in the cache before building it so we can hand out references when recursing "
+		templateCache at: aTypeString put: block.
+		block addMorphBack: (self
+			buildBlocksFor: (grammar rules at: aTypeString ifAbsent: [self assert: false])
+			parentFieldName: nil
+			visitedSymbols: aSet)]
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaBlockFactory >> grammar [
 
 	^ grammar
@@ -318,7 +377,14 @@ SBMetaBlockFactory >> initialize [
 
 	super initialize.
 	
-	slotMapping := Dictionary new
+	slotMapping := Dictionary new.
+	templateCache := Dictionary new
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> instantiateTemplate: aString [
+
+	^ (self getTemplate: aString) veryDeepCopy
 ]
 
 { #category : #'grammar clean' }
@@ -443,6 +509,19 @@ SBMetaBlockFactory >> removeOptionalString: aString in: anObject [
 				copyFrom keysAndValuesDo: [:key :value | anObject at: key put: value]]].
 	anObject content ifNotNil: [:c | self removeOptionalString: aString in: c].
 	anObject members ifNotNil: [:c | c do: [:m | self removeOptionalString: aString in: m]]
+]
+
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> rule: aRule inlineIn: anObject [
+
+	(anObject type = 'SYMBOL' and: [anObject name = aRule]) ifTrue: [ | copyFrom |
+		copyFrom := grammar rules at: aRule.
+		anObject removeAll.
+		copyFrom keysAndValuesDo: [:key :val | anObject at: key put: val veryDeepCopy].
+		^ self].
+	
+	anObject content ifNotNil: [:c | self rule: aRule inlineIn: c].
+	anObject members ifNotNil: [anObject members do: [:m | self rule: aRule inlineIn: m]]
 ]
 
 { #category : #'as yet unclassified' }
