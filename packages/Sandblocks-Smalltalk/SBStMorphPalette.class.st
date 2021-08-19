@@ -56,7 +56,7 @@ SBStMorphPalette class >> buildOn: aContainer [
 { #category : #'as yet unclassified' }
 SBStMorphPalette class >> context [
 
-	^ {#isSmalltalk. [:block | block containingArtefact satisfies: {#notNil. #isMethod. [:a | a relatedClass inheritsFrom: Morph]}]}
+	^ {#isSmalltalk. [:block | block containingArtefact satisfies: {#notNil. #isMethod. [:a | a relatedClass includesBehavior: Morph]}]}
 ]
 
 { #category : #'as yet unclassified' }

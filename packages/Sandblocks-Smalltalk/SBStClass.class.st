@@ -171,11 +171,15 @@ SBStClass >> example [
 ]
 
 { #category : #'class protocol' }
+SBStClass >> includesBehavior: aClass [
+
+	^ self relatedClass = aClass or: [self inheritsFrom: aClass]
+]
+
+{ #category : #'class protocol' }
 SBStClass >> inheritsFrom: aClass [
 
-	| superclass |
-	superclass := Smalltalk at: self superClassName asSymbol.
-	^ superclass = aClass or: [superclass inheritsFrom: aClass]
+	^ self superclass = aClass or: [self superclass inheritsFrom: aClass]
 ]
 
 { #category : #'as yet unclassified' }
