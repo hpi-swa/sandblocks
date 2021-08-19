@@ -9,6 +9,22 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockText >> ambiguitiesOn: aStream [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockText >> buildFor: aStream matchFullToken: aBoolean options: anOptions [
+
+	| start |
+	start := aStream position + 1.
+	^ (self regex matchesStreamPrefix: aStream)
+		ifTrue: [self veryDeepCopy contents: (aStream originalContents copyFrom: start to: aStream position)]
+		ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockText >> buildPartial: anOptions with: aString [
 
 	^ self veryDeepCopy contents: aString

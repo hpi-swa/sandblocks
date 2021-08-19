@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> ambiguitiesOn: aStream [
+
+	self submorphsDo: [:m | m ambiguitiesOn: aStream]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> buildPartial: anOptions with: aString [
 
 	^ self subclassResponsibility

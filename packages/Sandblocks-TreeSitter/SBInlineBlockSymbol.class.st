@@ -9,6 +9,17 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> buildFor: aString matchFullToken: aBoolean options: anOptions [
+
+	^ (anOptions hasVisitedSymbol: self type) ifTrue: [nil] ifFalse: [
+		anOptions addVisitedSymbol: self type.
+		(factory getTemplate: self type)
+			buildFor: aString
+			matchFullToken: aBoolean
+			options: anOptions]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> buildPartial: anOptions with: aString [
 
 	^ (factory getTemplate: type) buildPartial: anOptions with: aString

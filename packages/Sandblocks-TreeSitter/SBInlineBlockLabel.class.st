@@ -5,9 +5,31 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockLabel >> ambiguitiesOn: aStream [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockLabel >> buildFor: aStream matchFullToken: aBoolean options: anOptions [
+
+	^ (aBoolean
+		ifTrue: [aStream nextMatchAll: self label]
+		ifFalse: [aStream nextMatchAll: (self label first: (aStream size - aStream position min: self label size))])
+		ifTrue: [self veryDeepCopy]
+		ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockLabel >> buildPartial: anOptions with: aString [
 
 	^ self veryDeepCopy
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockLabel >> contents [
+
+	^ self label
 ]
 
 { #category : #'as yet unclassified' }
@@ -46,12 +68,4 @@ SBInlineBlockLabel >> label: aString [
 SBInlineBlockLabel >> printTitleOn: aStream [
 
 	aStream nextPutAll: self label
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockLabel >> triggersFor: aString matchFullToken: aBoolean options: anOptions [
-
-	^ anOptions
-		addLeaf: self
-		if: [:option | aBoolean ifTrue: [self label = aString] ifFalse: [self label beginsWith: aString]]
 ]

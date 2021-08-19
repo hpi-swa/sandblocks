@@ -10,6 +10,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> buildFor: aString matchFullToken: aBoolean options: anOptions [
+	" FIXME: consider actually repeating "
+
+	^ element buildFor: aString matchFullToken: aBoolean options: anOptions
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> buildPartial: anOptions with: aString [
 
 	^ element buildPartial: anOptions with: aString

@@ -10,6 +10,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBTSUnknown >> ambiguitiesOn: aStream [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBTSUnknown >> contents: aString [
 
 	self currentTextMorph contents: aString
@@ -34,25 +40,24 @@ SBTSUnknown >> factory: aFactory [
 { #category : #'as yet unclassified' }
 SBTSUnknown >> keyStroke: anEvent [
 
-	| matchFullToken prefix options templates instance |
+	| matchFullToken prefix options ambiguities instance |
 	self currentTextMorph keyStroke: anEvent.
 	
 	prefix := (matchFullToken := self contents last = Character space)
 		ifTrue: [self contents allButLast]
 		ifFalse: [self contents].
 	instance := template value.
-	instance
-		triggersFor: prefix
+	(instance
+		buildFor: prefix readStream
 		matchFullToken: matchFullToken
-		options: (options := SBTSPartialNode new).
-	
-	templates := options templates asSet.
-	templates size = 1 ifTrue: [ | new |
-		new := instance buildPartial: options children first with: prefix.
-		self sandblockEditor do: (SBReplaceCommand new
-			target: self;
-			replacer: new).
-		new containingSandblock startInputAtEnd]
+		options: (options := SBTSPartialNode new)) ifNotNil: [:result |
+		ambiguities := Array streamContents: [:stream | result ambiguitiesOn: stream].
+		
+		ambiguities ifEmpty: [
+			self sandblockEditor do: (SBReplaceCommand new
+				target: self;
+				replacer: result).
+			result containingSandblock startInputAtEnd]]
 ]
 
 { #category : #'as yet unclassified' }
