@@ -19,38 +19,38 @@ SBSuggestionItem class >> selector: aSymbol label: aString [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBSuggestionItem >> active [
 
 	^ active
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBSuggestionItem >> active: aBoolean [
 
 	active := aBoolean.
 	self changed
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 SBSuggestionItem >> activeColor [
 
 	^ Color blue
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBSuggestionItem >> completionAction [
 
 	^ completionAction
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBSuggestionItem >> completionAction: aBlock [
 
 	completionAction := aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 SBSuggestionItem >> drawOn: aCanvas [
 
 	| font foreground |
@@ -72,7 +72,19 @@ SBSuggestionItem >> drawOn: aCanvas [
 		color: (foreground alpha: 0.5)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
+SBSuggestionItem >> handlesMouseDown: anEvent [
+
+	^ anEvent redButtonPressed
+]
+
+{ #category : #'event handling' }
+SBSuggestionItem >> handlesMouseOver: anEvent [
+
+	^ true
+]
+
+{ #category : #initialization }
 SBSuggestionItem >> initialize [
 
 	super initialize.
@@ -88,19 +100,25 @@ SBSuggestionItem >> initialize [
 		cellGap: 4 * self scalingFactor
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBSuggestionItem >> label [
 
 	^ label
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBSuggestionItem >> label: aString [
 
 	label := aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
+SBSuggestionItem >> menu [
+
+	^ self ownerThatIsA: SBSuggestionMenu
+]
+
+{ #category : #layout }
 SBSuggestionItem >> minExtent [
 
 	| font |
@@ -108,32 +126,44 @@ SBSuggestionItem >> minExtent [
 	^ (font widthOfString: selector) @ font height + (self layoutInset * 2) + (self cellGap @ 0) + ((font widthOfString: label) @ 0)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
+SBSuggestionItem >> mouseDown: anEvent [
+
+	self menu activeItem: self; accept.
+]
+
+{ #category : #'event handling' }
+SBSuggestionItem >> mouseEnter: anEvent [
+
+	self menu activeItem: self.
+]
+
+{ #category : #accessing }
 SBSuggestionItem >> selector [
 
 	^ selector
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBSuggestionItem >> selector: aSymbol [
 
 	selector := aSymbol.
 	self extent: self minExtent
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 SBSuggestionItem >> selectorPercentage [
 
 	^ 0.8
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 SBSuggestionItem >> useSuggestionOn: aBlock [
 
 	self completionAction ifNotNil: [self completionAction value: aBlock] ifNil: [aBlock useSuggestion: self selector]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 SBSuggestionItem >> wouldChange: aBlock [
 	" indicate whether activating this item would cause any change in the current block"
 

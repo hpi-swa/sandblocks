@@ -247,6 +247,18 @@ SBStASTNode >> sourceString [
 	^ String streamContents: [:s | self writeSourceOn: s]
 ]
 
+{ #category : #input }
+SBStASTNode >> startInputAt: aNumber replacingContents: aBoolean [
+
+	| result |
+	result := super startInputAt: aNumber replacingContents: aBoolean.
+	
+	(self suggestAlways and: [aBoolean not] and: [self respondsTo: #updateSuggestions]) ifTrue: [
+		Project current addDeferredUIMessage: [self flag: #todo "appears at wrong position otherwise for first char" ;updateSuggestions]].
+	
+	^ result
+]
+
 { #category : #accessing }
 SBStASTNode >> updatePCFrom: aBlock [
 

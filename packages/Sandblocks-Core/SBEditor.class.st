@@ -21,7 +21,8 @@ Class {
 		'dragHelper',
 		'cursor',
 		'activateForcesButton',
-		'hoverHighlight'
+		'hoverHighlight',
+		'suggestAlways'
 	],
 	#classVars : [
 		'DefaultColorPolicy',
@@ -754,6 +755,7 @@ SBEditor >> initialize [
 	history := SBHistoryStack new.
 	colorPolicy := self class defaultColorPolicy new.
 	compileTime := #compileOnSave.
+	suggestAlways := false.
 	globalShortcutListeners := OrderedCollection new.
 	inputMapping := self class newInputMapping.
 	searchInput := SBSearchPanel new.
@@ -1447,6 +1449,18 @@ SBEditor >> submorphsAreConsecutive: aCollection [
 		a submorphAfter = b ifFalse: [^ false]].
 	
 	^ true
+]
+
+{ #category : #accessing }
+SBEditor >> suggestAlways [
+
+	^ suggestAlways
+]
+
+{ #category : #accessing }
+SBEditor >> suggestAlways: aBoolean [
+
+	suggestAlways := aBoolean
 ]
 
 { #category : #actions }

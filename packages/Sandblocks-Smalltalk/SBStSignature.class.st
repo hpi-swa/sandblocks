@@ -18,13 +18,13 @@ SBStSignature >> addArgument: aString block: aBlock [
 			index: self submorphCount + 2})
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'change reporting' }
 SBStSignature >> addedMorph: aMorph [
 
 	self messageParts do: #layoutChanged
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStSignature >> arguments [
 
 	^ Array streamContents: [:s | 2 to: self submorphCount by: 2 do: [:i | s nextPut: (self submorphs at: i)]]
@@ -36,13 +36,19 @@ SBStSignature >> argumentsDo: aBlock [
 	self submorphsDo: [:morph | morph isMessagePart ifFalse: [aBlock value: morph]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'layout properties - table' }
 SBStSignature >> cellGap [
 
 	^ self containingSandblock colorPolicy messageCellGap
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
+SBStSignature >> click: anEvent [
+
+	anEvent redButtonPressed ifTrue: [self updateSuggestions].
+]
+
+{ #category : #accessing }
 SBStSignature >> color [
 
 	^ self owner color
@@ -78,7 +84,7 @@ SBStSignature >> extractKeywords: aString [
 	^ parts allButLast collect: [:p | p, ':']
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBStSignature >> initialize [
 
 	super initialize.
@@ -129,25 +135,25 @@ SBStSignature >> isAssignment [
 	^ self messageParts size = 1 and: [self messageParts first isAssignment]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStSignature >> isBinary [
 
 	^ self selector ifNotEmpty: [:s | s allSatisfy: #isSpecial] ifEmpty: [false]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStSignature >> isCascade [
 
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStSignature >> isKeyword [
 
 	^ self selector includes: $:
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStSignature >> isUnary [
 
 	^ self selector isEmpty or: [self selector asSymbol isUnary]
@@ -170,13 +176,13 @@ SBStSignature >> layoutCommands [
 					argument ~= self lastSubmorph ifTrue: [stream nextPut: (SBAlgebraCommand softLineOrGap withGap: true)]]]])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStSignature >> messageParts [
 
 	^ Array streamContents: [:s | 1 to: self submorphCount  by: 2 do: [:i | s nextPut: (self submorphs at: i)]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBStSignature >> minExtent [
 	"Layout specific. Return the minimum size the receiver can be represented in.
 	Implementation note: When this message is sent from an owner trying to lay out its children it will traverse down the morph tree and recompute the minimal arrangement of the morphs based on which the minimal extent is returned. When a morph with some layout strategy is encountered, the morph will ask its strategy to compute the new arrangement. However, since the final size given to the receiver is unknown at the point of the query, the assumption is made that the current bounds of the receiver are the base on which the layout should be computed. This scheme prevents strange layout changes when for instance, a table is contained in another table. Unless the inner table has been resized manually (which means its bounds are already enlarged) the arrangement of the inner table will not change here. Thus the entire layout computation is basically an iterative process which may have different results depending on the incremental changes applied."
@@ -209,7 +215,7 @@ SBStSignature >> minExtent [
 	^ minExtent max: self minWidth @ self minHeight
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStSignature >> numArguments [
 
 	self selector ifEmpty: [^ self submorphCount // 2].
@@ -218,7 +224,7 @@ SBStSignature >> numArguments [
 	^ 0
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStSignature >> numArguments: aString [
 
 	aString ifEmpty: [^ 1].
@@ -245,13 +251,13 @@ SBStSignature >> possibleArgumentNamesFor: aString [
 	^ #()
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'submorphs - callbacks' }
 SBStSignature >> removedMorph: aMorph [
 
 	self messageParts do: #layoutChanged
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStSignature >> selector [
 
 	^ String streamContents: [:stream |
@@ -259,7 +265,7 @@ SBStSignature >> selector [
 			withIndexDo: [:m :i | i odd ifTrue: [stream nextPutAll: m contents]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStSignature >> selector: aString [
 
 	| currentNum newNum arguments |
@@ -271,7 +277,7 @@ SBStSignature >> selector: aString [
 	self selector: aString arguments: arguments
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStSignature >> selector: aString arguments: aCollection [
 
 	| messageParts |
@@ -380,19 +386,19 @@ SBStSignature >> textMorphFor: aString [
 	^ text
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStSignature >> valid [
 
 	^ self submorphCount // 2 = self numArguments
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #menu }
 SBStSignature >> wantsMetaMenu [
 
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBStSignature >> writeSourceOn: aStream [
 
 	| i |

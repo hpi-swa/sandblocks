@@ -70,7 +70,8 @@ SBStMessagePart >> deleteBeforeCursor [
 	<inputAction>
 
 	(self actualContents isEmpty and: [self isFirstPart]) ifTrue: [^ self messageSend tryDelete].
-	super deleteBeforeCursor
+	super deleteBeforeCursor.
+	self updateSuggestions.
 ]
 
 { #category : #'as yet unclassified' }
@@ -318,9 +319,10 @@ SBStMessagePart >> updateSuggestions [
 
 	| selector |
 	selector := self selectorContentsBeforeMe, self contents.
-	selector ifEmpty: [^ self].
 	
-	selector last = $: ifTrue: [selector := selector allButLast].
+	selector
+		ifEmpty: [self suggestAlways ifFalse: [^ self]]
+		ifNotEmpty: [selector last = $: ifTrue: [selector := selector allButLast]].
 	
 	self updateSuggestions: ((self messageSend actualReceiver completionSuggestionsFor: selector) collect: [:sel | SBSuggestionItem selector: sel label: 'send']) showNear: self
 ]
