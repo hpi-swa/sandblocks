@@ -8,12 +8,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBInlineBlockGroup >> ambiguitiesOn: aStream [
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBInlineBlockGroup >> buildFor: aStream matchFullToken: aBoolean options: anOptions [
 
 	| copy |
@@ -25,7 +19,7 @@ SBInlineBlockGroup >> buildFor: aStream matchFullToken: aBoolean options: anOpti
 		aStream atEnd ifTrue: [
 			index + 1
 				to: self submorphCount
-				do: [:next | copy addMorphBack: (elements at: index) veryDeepCopy].
+				do: [:next | copy addMorphBack: (elements at: next) veryDeepCopy].
 			^ copy]].
 	^ copy
 ]
@@ -34,13 +28,6 @@ SBInlineBlockGroup >> buildFor: aStream matchFullToken: aBoolean options: anOpti
 SBInlineBlockGroup >> buildPartial: anOptions with: aString [
 
 	^ SBInlineBlockGroup new elements: {elements first buildPartial: anOptions with: aString}, (elements viewAllButFirst collect: [:element | element veryDeepCopy])
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockGroup >> currentTextMorph [
-
-	elements do: [:element | element currentTextMorph ifNotNil: [:m | ^ m]].
-	^ nil
 ]
 
 { #category : #'as yet unclassified' }

@@ -9,12 +9,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBInlineBlockText >> ambiguitiesOn: aStream [
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBInlineBlockText >> buildFor: aStream matchFullToken: aBoolean options: anOptions [
 
 	| start |

@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockChoice >> alternatives [
+
+	^ alternatives
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockChoice >> alternatives: aCollection [
 
 	alternatives := aCollection.
@@ -15,24 +21,14 @@ SBInlineBlockChoice >> alternatives: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockChoice >> ambiguitiesOn: aStream [
-
-	self submorphCount > 1 ifTrue: [aStream nextPut: self].
-	super ambiguitiesOn: aStream
-]
-
-{ #category : #'as yet unclassified' }
 SBInlineBlockChoice >> buildFor: aStream matchFullToken: aBoolean options: anOptions [
 
-	| copy |
-	copy := nil.
-	alternatives do: [:alternative | | restore |
-		" FIXME: we have to continue with different streams here,
- as each option could take a different number of chars "
-		restore := aStream position.
-		(alternative buildFor: aStream matchFullToken: aBoolean options: anOptions) ifNotNil: [:result | ^ (copy ifNil: [copy := self veryDeepCopy removeAllMorphs]) addMorphBack: result].
-		SBToggledCode comment: '' active: 0 do: {[aStream position: restore]}].
-	^ copy
+	| index |
+	index := anOptions optionAt: self ifAbsentPut: [1].
+	^ ((alternatives at: index)
+		buildFor: aStream
+		matchFullToken: aBoolean
+		options: anOptions) ifNotNil: [:result | self veryDeepCopy removeAllMorphs addMorphBack: result]
 ]
 
 { #category : #'as yet unclassified' }

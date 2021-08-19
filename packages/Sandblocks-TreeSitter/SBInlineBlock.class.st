@@ -8,9 +8,20 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBInlineBlock >> ambiguitiesOn: aStream [
+SBInlineBlock >> buildFor: aString matchFullToken: aBoolean [
 
-	self submorphsDo: [:m | m ambiguitiesOn: aStream]
+	| options |
+	options := SBTSPartialNode new.
+	^ Array streamContents: [:stream |
+		[ | result |
+			result := self buildFor: aString readStream matchFullToken: aBoolean options: options.
+			result ifNotNil: [stream nextPut: result]] doWhileTrue: [options nextOption]]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> buildFor: aStream matchFullToken: aBoolean options: anOptions [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }

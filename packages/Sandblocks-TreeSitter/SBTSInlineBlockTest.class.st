@@ -7,13 +7,12 @@ Class {
 { #category : #'as yet unclassified' }
 SBTSInlineBlockTest >> testChoiceContinueMatching [
 
-	| block result |
+	| block |
 	block := SBInlineBlockGroup new elements: {
 		SBInlineBlockLabel new label: '"'.
 		SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: 'a'. SBInlineBlockLabel new label: 'ab'}.
 		SBInlineBlockLabel new label: '"'}.
-	result := block buildFor: '"ab"' readStream matchFullToken: false options: nil.
-	self assert: result notNil
+	self assert: (block buildFor: '"ab"' matchFullToken: false) notEmpty
 ]
 
 { #category : #'as yet unclassified' }
@@ -21,8 +20,8 @@ SBTSInlineBlockTest >> testMatchChoice [
 
 	| block result |
 	block := SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: 'a'. SBInlineBlockLabel new label: 'ab'. SBInlineBlockLabel new label: 'c'}.
-	result := block buildFor: 'a' readStream matchFullToken: false options: nil.
-	self assert: 2 equals: result submorphCount.
+	result := block buildFor: 'a' readStream matchFullToken: false.
+	self assert: 4 equals: result size.
 	self assert: 'a' equals: result firstSubmorph contents.
 	self assert: 'ab' equals: result submorphs second contents
 ]

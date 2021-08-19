@@ -6,7 +6,9 @@ Class {
 		'children',
 		'visitedSymbols',
 		'parent',
-		'template'
+		'template',
+		'optionIndices',
+		'sequences'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -76,7 +78,33 @@ SBTSPartialNode >> initialize [
 	super initialize.
 	
 	children := OrderedCollection new.
-	visitedSymbols := Set new
+	visitedSymbols := Set new.
+	optionIndices := Dictionary new
+]
+
+{ #category : #'as yet unclassified' }
+SBTSPartialNode >> nextOption [
+
+	| i sequence |
+	
+	visitedSymbols := Set new.
+	sequences ifNil: [sequences := (self sequencesOf: (optionIndices keys collect: [:block | block alternatives size])) readStream].
+	
+	sequences atEnd ifTrue: [^ false].
+	
+	i := 1.
+	sequence := sequences next.
+	optionIndices keysDo: [:block |
+		optionIndices at: block put: (sequence at: i ifAbsent: [1]).
+		i := i + 1].
+	
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBTSPartialNode >> optionAt: aChoiceBlock ifAbsentPut: aBlock [
+
+	^ optionIndices at: aChoiceBlock ifAbsentPut: aBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -98,6 +126,26 @@ SBTSPartialNode >> printOn: aStream [
 	aStream nextPut: $(.
 	template ifNotNil: [template printTitleOn: aStream].
 	aStream nextPut: $)
+]
+
+{ #category : #'as yet unclassified' }
+SBTSPartialNode >> sequencesOf: nums [
+
+	| arr |
+	nums ifEmpty: [^ nums].
+	
+	arr := (Array new: (nums reduce: [:a :b | a * b])) collect: [:x | Array new: nums size].
+	nums withIndexDo: [:max :index | | beforeMe i |
+		beforeMe := (nums viewFrom: 1 to: index - 1)
+			inject: 1
+			into: [:prod :cur | prod * cur].
+		i := 1.
+		arr size / (max * beforeMe) timesRepeat: [
+			1 to: max do: [:cur |
+				beforeMe timesRepeat: [
+					(arr at: i) at: index put: cur.
+					i := i + 1]]]].
+	^ arr
 ]
 
 { #category : #'as yet unclassified' }

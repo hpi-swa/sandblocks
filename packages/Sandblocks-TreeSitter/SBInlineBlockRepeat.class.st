@@ -39,7 +39,9 @@ SBInlineBlockRepeat >> cursorPositionsDo: aBlock [
 	self submorphsDo: [:morph |
 		multiple ifTrue: [buildInsert value: morph value: true].
 		morph cursorPositionsDo: aBlock.
-		multiple ifTrue: [buildInsert value: morph value: false]]
+		multiple ifTrue: [buildInsert value: morph value: false]].
+	
+	(multiple or: [self hasSubmorphs not]) ifTrue: [buildInsert value: nil value: false]
 ]
 
 { #category : #'as yet unclassified' }

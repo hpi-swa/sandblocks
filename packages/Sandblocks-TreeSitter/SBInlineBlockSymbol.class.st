@@ -26,13 +26,6 @@ SBInlineBlockSymbol >> buildPartial: anOptions with: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockSymbol >> currentTextMorph [
-
-	self submorphsDo: [:m | (m isKindOf: SBInlineBlockText) ifTrue: [^ m currentTextMorph]].
-	^ nil
-]
-
-{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> deleteTargetFor: aBlock [
 
 	^ self owner deleteTargetFor: self
@@ -47,7 +40,7 @@ SBInlineBlockSymbol >> factory: aFactory [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> inline [
 
-	^ SBToggledCode comment: '' active: 2 do: {[false]. [self inlineIfPossible]}
+	^ SBToggledCode comment: '' active: 1 do: {[false]. [self inlineIfPossible]}
 ]
 
 { #category : #'as yet unclassified' }
