@@ -34,20 +34,23 @@ SBTSUnknown >> factory: aFactory [
 { #category : #'as yet unclassified' }
 SBTSUnknown >> keyStroke: anEvent [
 
-	| matchFullToken prefix options |
+	| matchFullToken prefix options templates instance |
 	self currentTextMorph keyStroke: anEvent.
 	
 	prefix := (matchFullToken := self contents last = Character space)
 		ifTrue: [self contents allButLast]
 		ifFalse: [self contents].
-	template
+	instance := template value.
+	instance
 		triggersFor: prefix
 		matchFullToken: matchFullToken
 		options: (options := SBTSPartialNode new).
-	options size = 1 ifTrue: [
+	
+	templates := options templates asSet.
+	templates size = 1 ifTrue: [
 		self sandblockEditor do: (SBReplaceCommand new
 			target: self;
-			replacer: (template buildPartial: options children first with: prefix))]
+			replacer: (instance buildPartial: options children first with: prefix))]
 ]
 
 { #category : #'as yet unclassified' }

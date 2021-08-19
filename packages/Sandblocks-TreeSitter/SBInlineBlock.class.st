@@ -116,6 +116,15 @@ SBInlineBlock >> performAction: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> printOn: aStream [
+
+	aStream nextPutAll: self className.
+	aStream nextPut: $(.
+	self printTitleOn: aStream.
+	aStream nextPut: $)
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> printTitleOn: aStream [
 
 	^ self subclassResponsibility

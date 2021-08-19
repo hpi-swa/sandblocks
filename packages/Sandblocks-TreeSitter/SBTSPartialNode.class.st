@@ -5,7 +5,8 @@ Class {
 		'index',
 		'children',
 		'visitedSymbols',
-		'parent'
+		'parent',
+		'template'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -26,9 +27,9 @@ SBTSPartialNode >> add: aNumber if: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBTSPartialNode >> addLeafIf: aBlock [
+SBTSPartialNode >> addLeaf: aTemplate if: aBlock [
 
-	^ self add: nil if: aBlock
+	^ self add: nil if: [:option | aBlock value: (option template: aTemplate)]
 ]
 
 { #category : #'as yet unclassified' }
@@ -91,7 +92,35 @@ SBTSPartialNode >> parent: aNode [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSPartialNode >> printOn: aStream [
+
+	aStream nextPutAll: self className.
+	aStream nextPut: $(.
+	template ifNotNil: [template printTitleOn: aStream].
+	aStream nextPut: $)
+]
+
+{ #category : #'as yet unclassified' }
 SBTSPartialNode >> size [
 
 	^ children inject: 0 into: [:sum :c | sum + c childSize]
+]
+
+{ #category : #'as yet unclassified' }
+SBTSPartialNode >> template: aTemplate [
+
+	template := aTemplate
+]
+
+{ #category : #'as yet unclassified' }
+SBTSPartialNode >> templates [
+
+	^ Array streamContents: [:s | self templatesDo: [:t | s nextPut: t]]
+]
+
+{ #category : #'as yet unclassified' }
+SBTSPartialNode >> templatesDo: aBlock [
+
+	template ifNotNil: aBlock.
+	children do: [:c | c templatesDo: aBlock]
 ]

@@ -45,5 +45,7 @@ SBInlineBlockLabel >> printTitleOn: aStream [
 { #category : #'as yet unclassified' }
 SBInlineBlockLabel >> triggersFor: aString matchFullToken: aBoolean options: anOptions [
 
-	^ anOptions addLeafIf: [:option | aBoolean ifTrue: [self label = aString] ifFalse: [self label beginsWith: aString]]
+	^ anOptions
+		addLeaf: self
+		if: [:option | aBoolean ifTrue: [self label = aString] ifFalse: [self label beginsWith: aString]]
 ]

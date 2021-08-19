@@ -102,7 +102,9 @@ SBMetaSlotText >> takeFrom: aCursor for: aMorph [
 { #category : #'as yet unclassified' }
 SBMetaSlotText >> triggersFor: aString matchFullToken: aBoolean do: aBlock [
 
-	^ aBlock addLeafIf: [:option | aBoolean ifTrue: [self regex matches: aString] ifFalse: [self regex matchesPrefix: aString]]
+	^ aBlock
+		addLeaf: self
+		if: [:option | aBoolean ifTrue: [self regex matches: aString] ifFalse: [self regex matchesPrefix: aString]]
 ]
 
 { #category : #'as yet unclassified' }

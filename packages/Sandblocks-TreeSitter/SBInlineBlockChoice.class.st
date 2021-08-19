@@ -17,7 +17,7 @@ SBInlineBlockChoice >> alternatives: aCollection [
 { #category : #'as yet unclassified' }
 SBInlineBlockChoice >> buildPartial: anOptions with: aString [
 
-	(alternatives at: anOptions index)
+	^ (alternatives at: anOptions index)
 		buildPartial: anOptions children first
 		with: aString
 ]

@@ -325,14 +325,21 @@ SBMetaBlockFactory >> getTemplate: aString [
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> getTemplate: aTypeString visitedSymbols: aSet [
 
-	^ templateCache at: aTypeString ifAbsent: [ | block |
-		block := SBTSBlock new.
-		" put the block in the cache before building it so we can hand out references when recursing "
-		templateCache at: aTypeString put: block.
-		block addMorphBack: (self
-			buildBlocksFor: (grammar rules at: aTypeString ifAbsent: [self assert: false])
-			parentFieldName: nil
-			visitedSymbols: aSet)]
+	^ templateCache at: aTypeString ifAbsent: [
+		true
+			ifTrue: [
+				templateCache at: aTypeString put: (self
+					buildBlocksFor: (grammar rules at: aTypeString ifAbsent: [self assert: false])
+					parentFieldName: nil
+					visitedSymbols: aSet)]
+			ifFalse: [ | block |
+				block := SBTSBlock new.
+				" put the block in the cache before building it so we can hand out references when recursing "
+				templateCache at: aTypeString put: block.
+				block addMorphBack: (self
+					buildBlocksFor: (grammar rules at: aTypeString ifAbsent: [self assert: false])
+					parentFieldName: nil
+					visitedSymbols: aSet)]]
 ]
 
 { #category : #'as yet unclassified' }

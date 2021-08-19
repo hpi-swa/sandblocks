@@ -11,8 +11,6 @@ Class {
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> buildPartial: anOptions with: aString [
 
-	| morph |
-	morph := SBMetaBlock new factory: factory parentSlot: self.
 	^ (factory getTemplate: type) buildPartial: anOptions with: aString
 ]
 
@@ -62,17 +60,19 @@ SBInlineBlockSymbol >> type [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> type: aSymbol factory: aFactory visitedSymbols: aSet [
 
-	| template tryExpand |
+	| tryExpand |
 	tryExpand := (aSet includes: aSymbol) not.
 	aSet add: aSymbol.
 	
 	type := aSymbol.
 	factory := aFactory.
-	template := factory getTemplate: type visitedSymbols: aSet.
 	
-	self addMorphBack: ((tryExpand and: [template isUnambiguous])
-		ifTrue: [template]
-		ifFalse: [SBTSUnknown new template: template])
+	self addMorphBack: (SBToggledCode comment: '' active: 1 do: {
+		[SBTSUnknown new template: [factory getTemplate: type visitedSymbols: aSet]].
+		[
+			(tryExpand and: [template isUnambiguous])
+				ifTrue: [template veryDeepCopy]
+				ifFalse: [SBTSUnknown new template: template]]})
 ]
 
 { #category : #'as yet unclassified' }

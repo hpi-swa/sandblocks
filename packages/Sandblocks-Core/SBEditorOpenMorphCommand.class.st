@@ -42,7 +42,8 @@ SBEditorOpenMorphCommand >> do [
 			self applyPositionTo: morph in: nil.
 			isUnsaved ifTrue: [self editor do: (SBDoItCommand new artefact: morph)]].
 	
-	morph withDecorator: SBForceMoveDecorator do: [:d | d createImplicitForces].
+	morph isSandblock ifTrue: [
+		morph withDecorator: SBForceMoveDecorator do: [:d | d createImplicitForces]].
 	
 	^ nil
 ]
@@ -74,7 +75,7 @@ SBEditorOpenMorphCommand >> morph: aMorph [
 { #category : #'as yet unclassified' }
 SBEditorOpenMorphCommand >> postDo [
 
-	(morph hasOwner: self editor) ifTrue: [self editor startInput: morph at: 1 replacingContents: false]
+	((morph hasOwner: self editor) and: [morph isSandblock]) ifTrue: [self editor startInput: morph at: 1 replacingContents: false]
 ]
 
 { #category : #'as yet unclassified' }

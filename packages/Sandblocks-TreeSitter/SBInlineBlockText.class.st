@@ -71,5 +71,7 @@ SBInlineBlockText >> regexString: aString [
 { #category : #'as yet unclassified' }
 SBInlineBlockText >> triggersFor: aString matchFullToken: aBoolean options: anOptions [
 
-	^ anOptions addLeafIf: [:option | aBoolean ifTrue: [self regex matches: aString] ifFalse: [self regex matchesPrefix: aString]]
+	^ anOptions
+		addLeaf: self
+		if: [:option | aBoolean ifTrue: [self regex matches: aString] ifFalse: [self regex matchesPrefix: aString]]
 ]

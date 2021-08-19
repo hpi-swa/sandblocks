@@ -85,7 +85,9 @@ SBMetaSlotLabel >> takeFrom: aCursor for: aMorph [
 { #category : #'as yet unclassified' }
 SBMetaSlotLabel >> triggersFor: aString matchFullToken: aBoolean do: aBlock [
 
-	^ aBlock addLeafIf: [:option | aBoolean ifTrue: [self label = aString] ifFalse: [self label beginsWith: aString]]
+	^ aBlock
+		addLeaf: self
+		if: [:option | aBoolean ifTrue: [self label = aString] ifFalse: [self label beginsWith: aString]]
 ]
 
 { #category : #'as yet unclassified' }
