@@ -26,7 +26,7 @@ SBOffscreenBlockIndicator class >> newFor: aMorph [
 	 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'*Sandblocks-Core' }
 SBOffscreenBlockIndicator >> containingSandblock [
 
 	^ self
@@ -46,7 +46,7 @@ SBOffscreenBlockIndicator >> foregroundColor [
 		ifFalse: [self owner containingSandblock foregroundColor]) alpha: self class defaultOpacity
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBOffscreenBlockIndicator >> handlesMouseDown: anEvent [
 
 	^ self visible
@@ -71,7 +71,7 @@ SBOffscreenBlockIndicator >> indicatorColor: aColor [
 	self labelMorph color: aColor
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBOffscreenBlockIndicator >> initialize [
 
 	super initialize.
@@ -128,20 +128,20 @@ SBOffscreenBlockIndicator >> lastPosition: anObject [
 	lastPosition := anObject.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBOffscreenBlockIndicator >> mouseDown: anEvent [
 	
 	self target isSandblock ifTrue: [self sandblockEditor select: self target].
 	Project current addDeferredUIMessage: [self scroller scrollToCenter: self target]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'*Sandblocks-Core' }
 SBOffscreenBlockIndicator >> objectInterface [
 
 	^ SBInterfaces never
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'events-processing' }
 SBOffscreenBlockIndicator >> rejectsEvent: anEvent [
 
 	self visible ifFalse: [^ true].
@@ -184,7 +184,7 @@ SBOffscreenBlockIndicator >> specialDropCommand: aBlock [
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'stepping and presenter' }
 SBOffscreenBlockIndicator >> step [
 
 	| viewCenter direction intersections viewRectangle position |
@@ -216,7 +216,7 @@ SBOffscreenBlockIndicator >> step [
 	self iconMorph rotationDegrees: direction degrees
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'stepping and presenter' }
 SBOffscreenBlockIndicator >> stepTime [
 
 	 ^ 10

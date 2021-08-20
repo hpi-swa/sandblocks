@@ -111,7 +111,7 @@ Morph >> cursorPositionsDo: aBlock [
 	self isSandblock ifTrue: [self insertCursorNear: nil before: false do: aBlock]
 ]
 
-{ #category : #'*Sandblocks-Core-override' }
+{ #category : #'*Sandblocks-Core-geometry-override' }
 Morph >> extent: aPoint [
 
 	(bounds extent closeTo: aPoint) ifTrue: [^ self].
@@ -357,7 +357,7 @@ Morph >> parentSandblock [
 	^ self owner ifNotNil: #containingSandblock
 ]
 
-{ #category : #'*Sandblocks-Core-override' }
+{ #category : #'*Sandblocks-Core-geometry-override' }
 Morph >> position: aPoint [ 
 	"Change the position of this morph, which is the top left corner of its bounds."
 	
