@@ -491,12 +491,11 @@ SBBlock >> completeSubtree [
 { #category : #suggestions }
 SBBlock >> completionSuggestionsFor: aString [
 
-	(self suggestAlways or: [aString size > 2])
-		ifFalse: [^ #()].
+	(self suggestAlways or: [aString size > 2]) ifFalse: [^ #()].
 	
 	^ self containingArtefact
-		artefactCompletionSuggestionsFor: self
-		matching: aString
+		ifNotNil: [:a | a artefactCompletionSuggestionsFor: self matching: aString]
+		ifNil: [#()]
 ]
 
 { #category : #accessing }
@@ -1832,7 +1831,8 @@ SBBlock >> pasteBeforeOrAfter: aBeforeBoolean [
 		copyBufferForContext: (self parentSandblock
 			objectInterfaceNear: self
 			at: (aBeforeBoolean ifTrue: [#before] ifFalse: [#after]))
-		reversedDo: [:repr :index :isLast | self sandblockEditor do: ((self parentSandblock insertCommandRequest: repr near: self before: aBeforeBoolean) shouldMergeWithNext: isLast not)]
+		reversed: true
+		do: [:repr :index :isLast | self sandblockEditor do: ((self parentSandblock insertCommandRequest: repr near: self before: aBeforeBoolean) shouldMergeWithNext: isLast not)]
 		ifWrappingDo: [:block | self wrapSelectionWith: block unpackSelection veryDeepCopy]
 ]
 
@@ -1847,7 +1847,8 @@ SBBlock >> pasteReplace [
 		copyBufferForContext: ((position isKindOf: SBCursorInsert)
 			ifTrue: [position objectInterface]
 			ifFalse: [self objectInterface])
-		reversedDo: [:block :index :isLast |
+		reversed: ((position isKindOf: SBCursorInsert) and: [position adjacent notNil])
+		do: [:block :index :isLast |
 			(position isKindOf: SBCursorInsert)
 				ifTrue: [
 					editor do: ((position container
