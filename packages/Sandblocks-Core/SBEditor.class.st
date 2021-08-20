@@ -873,16 +873,22 @@ SBEditor >> loadBlocks [
 
 { #category : #'do/undo/redo' }
 SBEditor >> markChangesAfterCommand: artefacts [
-
+	 
 	artefacts do: [:candidate | | artefact |
 		artefact := candidate canPersist
 			ifTrue: [candidate]
 			ifFalse: [candidate artefactForPersisting ifNil: [candidate]].
 		
-		(self compileTime = #compileOnChange and: [self save: artefact tryFixing: false quick: false]) ifTrue: [history markSaved: true].
+		(self compileTime = #compileOnChange and: [self save: artefact tryFixing: false quick: false]) ifTrue: [self markSaved: true].
 		
 		artefact triggerEvent: #changed.
 		self allBlocksDo: [:block | block artefactChanged: artefact]]
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> markSaved: anArtefact [
+
+	^ history markSaved: anArtefact
 ]
 
 { #category : #accessing }
@@ -1285,10 +1291,10 @@ SBEditor >> save [
 
 { #category : #artefacts }
 SBEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean [
-
+	 
 	^ (anArtefact saveTryFixing: aFixBoolean quick: aQuickBoolean)
 		ifTrue: [
-			history markSaved: anArtefact.
+			self markSaved: anArtefact.
 			self triggerEvent: #artefactSaved with: anArtefact.
 			self allBlocksDo: [:block | block artefactSaved: anArtefact].
 			true]
