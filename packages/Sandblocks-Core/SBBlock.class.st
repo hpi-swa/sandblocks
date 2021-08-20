@@ -169,17 +169,24 @@ SBBlock >> artefactCompletionSelectorsFor: aBlock class: aClass [
 { #category : #suggestions }
 SBBlock >> artefactCompletionSuggestionsFor: aBlock matching: aString [
 
-	| allMatches exactMatches fuzzyMatches selectors list |
-	selectors := self artefactCompletionSelectorsFor: aBlock class: aBlock guessClassExpensive.
+	| exactMatches fuzzyMatches selectors list |
+	selectors := OrderedCollection withAll: (self artefactCompletionSelectorsFor: aBlock class: aBlock guessClassExpensive).
+	exactMatches := (Array streamContents: [:stream |
+		selectors removeAllSuchThat: [:sel |
+			(sel sandblockBeginsWith: aString)
+				ifTrue: [stream nextPut: sel];
+				yourself]]) sort: #size ascending.
+	fuzzyMatches := (Array streamContents: [:stream |
+		selectors removeAllSuchThat: [:sel |
+			(sel sandblockMatch: aString)
+				ifTrue: [stream nextPut: sel];
+				yourself]]) sort: #size ascending.
+	list := exactMatches, fuzzyMatches, selectors.
 	
-	exactMatches := (Array streamContents: [:stream | selectors do: [:sel | (sel asString sandblockBeginsWith: aString) ifTrue: [stream nextPut: sel asString]]]) sort: [:a :b | a size < b size].
-	fuzzyMatches := (Array streamContents: [:stream | selectors do: [:sel | (sel asString sandblockMatch: aString) ifTrue: [stream nextPut: sel asString]]]) sort: [:a :b | a size < b size].
-	allMatches := Array streamContents: [:stream | selectors do: [:sel | stream nextPut: sel asString]].
+	"add outer artefact's selector, if any, to support recursion of not-yet-saved methods"
+	self outerArtefact ifNotNil: [:artefact | artefact selector ifNotNil: [:sel | (sel sandblockMatch: aString) ifTrue: [list := (list copyWithout: sel) copyWithFirst: sel]]].
 	
-	list := exactMatches, fuzzyMatches, allMatches.
-	" add outer artefact's selector, if any, to support recursion of not-yet-saved methods "
-	self outerArtefact ifNotNil: [:artefact | artefact selector ifNotNil: [:sel | (sel sandblockMatch: aString) ifTrue: [list := list copyWithFirst: sel]]].
-	^ list withoutDuplicates
+	^ list
 ]
 
 { #category : #accessing }
