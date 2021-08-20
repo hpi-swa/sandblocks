@@ -168,24 +168,17 @@ SBBlock >> artefactCompletionSelectorsFor: aBlock class: aClass [
 
 { #category : #suggestions }
 SBBlock >> artefactCompletionSuggestionsFor: aBlock matching: aString [
-	 
-	| allMatches exactMatches fuzzyMatches selectors |
+
+	| allMatches exactMatches fuzzyMatches selectors list |
 	selectors := self artefactCompletionSelectorsFor: aBlock class: aBlock guessClassExpensive.
 	
-	exactMatches := Array streamContents: [:stream |
-		selectors do: [:sel |
-			(sel asString sandblockBeginsWith: aString) ifTrue: [stream nextPut: sel asString]]].
-	fuzzyMatches := Array streamContents: [:stream |
-		selectors do: [:sel |
-			(sel asString sandblockMatch: aString) ifTrue: [stream nextPut: sel asString]]].
-	allMatches := Array streamContents: [:stream |
-		selectors do: [:sel |
-			stream nextPut: sel asString]].
+	exactMatches := (Array streamContents: [:stream | selectors do: [:sel | (sel asString sandblockBeginsWith: aString) ifTrue: [stream nextPut: sel asString]]]) sort: [:a :b | a size < b size].
+	fuzzyMatches := (Array streamContents: [:stream | selectors do: [:sel | (sel asString sandblockMatch: aString) ifTrue: [stream nextPut: sel asString]]]) sort: [:a :b | a size < b size].
+	allMatches := Array streamContents: [:stream | selectors do: [:sel | stream nextPut: sel asString]].
 	
-	list := (exactMatches, fuzzyMatches, allMatches).
+	list := exactMatches, fuzzyMatches, allMatches.
 	" add outer artefact's selector, if any, to support recursion of not-yet-saved methods "
-	self outerArtefact ifNotNil: [:artefact |
-		artefact selector ifNotNil: [:sel | (sel sandblockMatch: aString) ifTrue: [list := list copyWithFirst: sel]]].
+	self outerArtefact ifNotNil: [:artefact | artefact selector ifNotNil: [:sel | (sel sandblockMatch: aString) ifTrue: [list := list copyWithFirst: sel]]].
 	^ list withoutDuplicates
 ]
 
@@ -1129,7 +1122,7 @@ SBBlock >> hasInput [
 { #category : #'actions tests' }
 SBBlock >> hasMultipleSuggestions [
 
-	^ self hasSuggestions and: [(self valueOfProperty: #sandblockSuggestionMenu) submorphCount > 1]
+	^ self hasSuggestions and: [(self valueOfProperty: #sandblockSuggestionMenu) itemCount > 1]
 ]
 
 { #category : #'actions tests' }
