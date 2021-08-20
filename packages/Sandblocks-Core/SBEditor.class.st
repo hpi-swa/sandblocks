@@ -1038,6 +1038,7 @@ SBEditor >> openInWindow [
 	window model: self.
 	
 	window := window openInWorldExtent: self extent.
+	window extent: self fullBounds extent + 50.
 	Project uiManager openToolsAttachedToMouseCursor ifTrue: [
 		window setProperty: #initialDrop toValue: true.
 		window hasDropShadow: false.
