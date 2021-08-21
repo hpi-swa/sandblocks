@@ -104,7 +104,7 @@ SBEditor class >> shortcutStringForAction: anAction [
 
 	^ String streamContents: [:stream |
 		stream nextPut: $(.
-		(self shortcutsForAction: anAction) do: [:shortcut | (shortcut isCollection ifTrue: [shortcut first] ifFalse: [shortcut]) printDisplayOn: stream automaticShift: true] separatedBy: [stream space].
+		(self shortcutsForAction: anAction) do: [:shortcut | (shortcut isCollection ifTrue: [shortcut first] ifFalse: [shortcut]) printDisplayOn: stream automaticShift: true] separatedBy: [stream nextPutAll: ' -or- '].
 		stream nextPut: $)]
 ]
 
