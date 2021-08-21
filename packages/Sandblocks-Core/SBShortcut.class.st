@@ -3,9 +3,9 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'character',
-		'ctrl',
-		'command',
 		'shift',
+		'command',
+		'ctrl',
 		'option',
 		'modes'
 	],
@@ -24,68 +24,61 @@ SBShortcut class >> fromEvent: anEvent [
 	^ s
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #converting }
 SBShortcut >> , aShortCut [
 
 	^ {self. aShortCut asSandblockShortcut}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
+SBShortcut >> anyModifierKeyPressed [
+
+	^ command == true or: [option == true] or: [ctrl == true]
+]
+
+{ #category : #converting }
 SBShortcut >> asCollection [
 
 	^ {self}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #converting }
 SBShortcut >> asSandblockShortcut [
 
 	^ self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBShortcut >> character [
 
 	^ character
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBShortcut >> character: aCharacter [
 
 	character := aCharacter
 ]
 
-{ #category : #'as yet unclassified' }
-SBShortcut >> cmdKeyString [
-
-	Smalltalk os platformName = 'Mac OS' ifTrue: [^ 'Cmd '].
-	(Smalltalk os platformName = 'Win32' and: [
-		character isAlphaNumeric not and: [
-			((SBToggledCode
-				comment: 'there are some, but surprisingly few, characters that work with ctrl rather than alt on windows'
-				active: 1
-				do: {[{Character arrowLeft. Character arrowRight. Character escape. Character delete}]}) includes: character) not]]) ifTrue: [^ 'Alt '].
-	^ 'Ctrl '
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBShortcut >> command [
 
 	^ command
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBShortcut >> commandKeyPressed [
 
 	^ command
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBShortcut >> controlKeyPressed [
 
 	^ ctrl
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBShortcut >> displayString [
 
 	SBExample self: [$p asSandblockShortcut] args: [{}] label: 'p'.
@@ -94,31 +87,28 @@ SBShortcut >> displayString [
 	^ String streamContents: [:stream | self printDisplayOn: stream automaticShift: true]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBShortcut >> displayStringWithoutShift [
 
 	^ String streamContents: [:stream | self printDisplayOn: stream automaticShift: false]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBShortcut >> initialize [
 
 	super initialize.
 	
-	ctrl := false.
-	command := false.
 	shift := false.
-	option := false.
 	modes := #()
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBShortcut >> keyCharacter [
 
 	^ character
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event matching' }
 SBShortcut >> matchesEvent: anEvent [
 
 	| shiftedKeys |
@@ -126,46 +116,73 @@ SBShortcut >> matchesEvent: anEvent [
 		comment: 'needs to be adapted per keyboard layout'
 		active: 1
 		do: {[shiftedKeys := #($: $" $! $$ $% $/ $( $) $= $; $_ $* $' ${)]}.
-	^ anEvent keyCharacter = character and: [(anEvent optionKeyPressed = self option and: [(anEvent commandKeyPressed or: [anEvent controlKeyPressed]) = (self command or: [self option])]) and: [(shift or: [character isUppercase]) = anEvent shiftPressed or: [(anEvent keyCharacter <= 32 and: [shift = anEvent shiftPressed]) or: [shiftedKeys includes: anEvent keyCharacter]]]]
+	
+	anEvent keyCharacter = self character
+		ifFalse: [^ false].
+	
+	self shiftPressed ifNotNil: [:expected |
+		((expected or: [self character isUppercase]) = anEvent shiftPressed
+			or: [anEvent keyCharacter <= 32 and: [expected = anEvent shiftPressed]]
+			or: [shiftedKeys includes: anEvent keyCharacter])
+				ifFalse: [^ false]].
+	
+	self anyModifierKeyPressed = anEvent anyModifierKeyPressed
+		ifFalse: [^ false].
+	self commandKeyPressed ifNotNil: [:expected |
+		expected = anEvent commandKeyPressed
+			ifFalse: [^ false]].
+	self optionKeyPressed ifNotNil: [:expected |
+		expected = anEvent optionKeyPressed
+			ifFalse: [^ false]].
+	self controlKeyPressed ifNotNil: [:expected |
+		expected = anEvent controlKeyPressed
+			ifFalse: [^ false]].
+	
+	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event matching' }
 SBShortcut >> matchesEvent: anEvent mode: aMode [
 
 	^ (self modes isEmpty or: [self modes includes: aMode]) and: [self matchesEvent: anEvent]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBShortcut >> modes [
 
 	^ modes
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBShortcut >> modes: aCollection [
 
 	modes := aCollection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBShortcut >> option [
 
 	^ option ifNil: [false]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBShortcut >> optionKeyPressed [
 
 	^ option
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBShortcut >> printDisplayOn: aStream automaticShift: aBoolean [
 
 	| p |
-	command ifTrue: [aStream nextPutAll: self cmdKeyString].
+	command == true ifTrue: [aStream nextPutAll: 'Cmd '].
 	(shift or: [aBoolean and: [character isLetter and: [character isUppercase]]]) ifTrue: [aStream nextPutAll: 'Shift '].
-	ctrl ifTrue: [aStream nextPutAll: 'Ctrl '].
+	ctrl ifNotNil: [
+		ctrl ifFalse: [aStream nextPutAll: 'no'].
+		aStream nextPutAll: 'Ctrl '].
+	option ifNotNil: [
+		option ifFalse: [aStream nextPutAll: 'no'].
+		aStream nextPutAll: 'Opt '].
 	
 	character = Character cr ifTrue: [^ aStream nextPutAll: 'enter'].
 	character = Character arrowUp ifTrue: [^ aStream nextPutAll: 'up'].
@@ -183,7 +200,7 @@ SBShortcut >> printDisplayOn: aStream automaticShift: aBoolean [
 			ifFalse: [p]])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBShortcut >> printOn: aStream [
 
 	aStream nextPutAll: 'SBShortcut('.
@@ -191,31 +208,31 @@ SBShortcut >> printOn: aStream [
 	aStream nextPut: $)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBShortcut >> shiftPressed [
 
 	^ shift
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBShortcut >> withCommand [
 
 	command := true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBShortcut >> withCtrl [
 
 	ctrl := true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBShortcut >> withOption [
 
 	option := true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBShortcut >> withShift [
 
 	shift := true
