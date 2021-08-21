@@ -227,7 +227,7 @@ SBStCodeOpener >> open [
 	
 	hand keyboardFocus in: [:priorKeyboardFocus |
 		hand mouseFocus in: [:priorMouseFocus |
-			"hand newMouseFocus: self currentPanel."
+			hand newMouseFocus: nil.
 			hand newKeyboardFocus: self currentPanel.
 			
 			[[self isInWorld] whileTrue: [world doOneSubCycle]] ifCurtailed: [self delete].
