@@ -48,6 +48,7 @@ SBTSUnknown >> keyStroke: anEvent [
 		ifFalse: [self contents].
 	
 	choices := template value buildFor: prefix matchFullToken: matchFullToken.
+	self halt.
 	
 	choices size = 1 ifTrue: [
 		self sandblockEditor do: (SBReplaceCommand new

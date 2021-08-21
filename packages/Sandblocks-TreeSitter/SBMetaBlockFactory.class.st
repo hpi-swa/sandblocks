@@ -94,7 +94,7 @@ SBMetaBlockFactory >> buildBlocksFor: anObject parentFieldName: aString visitedS
 		
 		^ SBInlineBlockChoice new alternatives: (anObject members collect: [:member | self buildBlocksFor: member parentFieldName: nil visitedSymbols: aSet])].
 	
-	'SEQ' = anObject type ifTrue: [^ SBInlineBlockGroup new elements: (anObject members collect: [:member | self buildBlocksFor: member parentFieldName: nil visitedSymbols: aSet])].
+	'SEQ' = anObject type ifTrue: [^ SBInlineBlockSequence new elements: (anObject members collect: [:member | self buildBlocksFor: member parentFieldName: nil visitedSymbols: aSet])].
 	
 	self assert: false
 ]

@@ -1,5 +1,5 @@
 Class {
-	#name : #SBInlineBlockGroup,
+	#name : #SBInlineBlockSequence,
 	#superclass : #SBInlineBlock,
 	#instVars : [
 		'elements'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBInlineBlockGroup >> buildFor: aStream matchFullToken: aBoolean options: anOptions [
+SBInlineBlockSequence >> buildFor: aStream matchFullToken: aBoolean options: anOptions [
 
 	| copy |
 	copy := self veryDeepCopy removeAllMorphs.
@@ -25,31 +25,31 @@ SBInlineBlockGroup >> buildFor: aStream matchFullToken: aBoolean options: anOpti
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockGroup >> buildPartial: anOptions with: aString [
+SBInlineBlockSequence >> buildPartial: anOptions with: aString [
 
-	^ SBInlineBlockGroup new elements: {elements first buildPartial: anOptions with: aString}, (elements viewAllButFirst collect: [:element | element veryDeepCopy])
+	^ SBInlineBlockSequence new elements: {elements first buildPartial: anOptions with: aString}, (elements viewAllButFirst collect: [:element | element veryDeepCopy])
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockGroup >> elements: aCollection [
+SBInlineBlockSequence >> elements: aCollection [
 
 	self addAllMorphsBack: (elements := aCollection)
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockGroup >> inline [
+SBInlineBlockSequence >> inline [
 
 	^ self inlineIfPossible
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockGroup >> printTitleOn: aStream [
+SBInlineBlockSequence >> printTitleOn: aStream [
 
 	self submorphs do: [:m | m printTitleOn: aStream] separatedBy: [aStream nextPutAll: ', ']
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockGroup >> triggersFor: aStream matchFullToken: aBoolean options: anOptions [
+SBInlineBlockSequence >> triggersFor: aStream matchFullToken: aBoolean options: anOptions [
 
 	elements do: [:element |
 		(element triggersFor: aStream matchFullToken: aBoolean options: anOptions) ifFalse: [^ false].

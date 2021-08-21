@@ -8,7 +8,7 @@ Class {
 SBTSInlineBlockTest >> testChoiceContinueMatching [
 
 	| block |
-	block := SBInlineBlockGroup new elements: {
+	block := SBInlineBlockSequence new elements: {
 		SBInlineBlockLabel new label: '"'.
 		SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: 'a'. SBInlineBlockLabel new label: 'ab'}.
 		SBInlineBlockLabel new label: '"'}.
@@ -30,7 +30,7 @@ SBTSInlineBlockTest >> testMatchChoice [
 SBTSInlineBlockTest >> testMatchGroup [
 
 	| block result |
-	block := SBInlineBlockGroup new elements: {
+	block := SBInlineBlockSequence new elements: {
 		SBInlineBlockLabel new label: '"'.
 		SBInlineBlockText new regexString: '[A-Z]*'.
 		SBInlineBlockLabel new label: '"'}.
