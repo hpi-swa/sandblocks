@@ -21,7 +21,7 @@ SBStContainer >> artefact [
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'ast helpers' }
 SBStContainer >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	| outer |
@@ -56,7 +56,7 @@ SBStContainer >> classVariables [
 	^ #()
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStContainer >> declarations [
 
 	^ #()
@@ -78,7 +78,7 @@ SBStContainer >> evaluationReceiver [
 	^ self receiver
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBStContainer >> initialize [
 
 	super initialize.
@@ -122,7 +122,7 @@ SBStContainer >> isTopLevel [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBStContainer >> layoutCommands [
 
 	^ SBAlgebraCommand container
@@ -130,7 +130,7 @@ SBStContainer >> layoutCommands [
 		data: {self body layoutCommands}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBStContainer >> layoutInset [
 
 	^ self floating ifTrue: [8] ifFalse: [0]
@@ -140,6 +140,12 @@ SBStContainer >> layoutInset [
 SBStContainer >> methodClass [
 
 	^ receiver ifNotNil: #class ifNil: [UndefinedObject]
+]
+
+{ #category : #'ast helpers' }
+SBStContainer >> newNullBlock [
+
+	^ nil
 ]
 
 { #category : #'method protocol' }
@@ -166,7 +172,7 @@ SBStContainer >> receiver [
 	^ receiver
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStContainer >> receiver: anObject [
 
 	receiver := anObject

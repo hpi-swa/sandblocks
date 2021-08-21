@@ -726,7 +726,8 @@ SBBlock >> deleteAround [
 			replacer postDuplicate.
 			^ self].
 		" if we did not find a valid conversion, try again with the parent "
-		target := target parentSandblock ifNil: [^ self]] repeat
+		target := target parentSandblock.
+		(target isNil or: [target floating and: [target isArtefact]]) ifTrue: [^ self]] repeat
 ]
 
 { #category : #actions }
@@ -784,7 +785,7 @@ SBBlock >> deleteCommandFor: aBlock [
 	^ (self canDeleteChild: aBlock)
 		ifTrue: [SBDeleteCommand new target: aBlock]
 		ifFalse: [
-			aBlock newNullBlock ifNotNil: [:nullBlock |
+			self newNullBlock ifNotNil: [:nullBlock |
 				SBReplaceCommand new
 					target: aBlock;
 					replacer: nullBlock]]
