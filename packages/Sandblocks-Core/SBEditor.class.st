@@ -1037,7 +1037,7 @@ SBEditor >> openInWindow [
 	window := self embeddedInMorphicWindowLabeled: self labelString.
 	window model: self.
 	
-	window := window openInWorldExtent: self extent.
+	window := window openInWorldExtent: self fullBounds extent + window layoutInset asEdgeInsets horizontal.
 	Project uiManager openToolsAttachedToMouseCursor ifTrue: [
 		window setProperty: #initialDrop toValue: true.
 		window hasDropShadow: false.
