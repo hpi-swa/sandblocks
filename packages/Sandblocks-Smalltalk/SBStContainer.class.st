@@ -178,7 +178,7 @@ SBStContainer >> relatedClass [
 	^ self methodClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'compilation cue protocol' }
 SBStContainer >> sandblockBlockColorIfAbsent: aBlock [
 
 	^ self preferredColor
