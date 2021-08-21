@@ -79,7 +79,7 @@ SBSuggestionItem >> handlesMouseDown: anEvent [
 ]
 
 { #category : #'event handling' }
-SBSuggestionItem >> handlesMouseOver: anEvent [
+SBSuggestionItem >> handlesMouseMove: anEvent [
 
 	^ true
 ]
@@ -133,9 +133,18 @@ SBSuggestionItem >> mouseDown: anEvent [
 ]
 
 { #category : #'event handling' }
-SBSuggestionItem >> mouseEnter: anEvent [
+SBSuggestionItem >> mouseMove: anEvent [
 
-	self menu activeItem: self.
+	self menu activeItem: self
+]
+
+{ #category : #printing }
+SBSuggestionItem >> printOn: aStream [
+
+	aStream nextPutAll: self className.
+	aStream nextPut: $(.
+	aStream nextPutAll: self selector.
+	aStream nextPut: $)
 ]
 
 { #category : #accessing }
@@ -155,6 +164,12 @@ SBSuggestionItem >> selector: aSymbol [
 SBSuggestionItem >> selectorPercentage [
 
 	^ 0.8
+]
+
+{ #category : #accessing }
+SBSuggestionItem >> selectorSize [
+
+	^ self selector size
 ]
 
 { #category : #private }

@@ -75,14 +75,6 @@ SBStMessagePart >> deleteBeforeCursor [
 ]
 
 { #category : #'as yet unclassified' }
-SBStMessagePart >> dismiss [
-	<action>
-	<inputAction>
-	
-	self removeSuggestionMenu
-]
-
-{ #category : #'as yet unclassified' }
 SBStMessagePart >> drawnColor [
 
 	^ self messageSend ifNotNil: [:m | m drawnColor alpha: 0] ifNil: [super drawnColor]

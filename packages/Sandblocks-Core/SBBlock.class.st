@@ -821,6 +821,8 @@ SBBlock >> detachDecoratorsThat: aBlock [
 { #category : #actions }
 SBBlock >> dismiss [
 	<action>
+
+	self removeSuggestionMenu
 ]
 
 { #category : #drawing }
@@ -934,6 +936,14 @@ SBBlock >> endInput [
 	<inputAction>
 
 	self sandblockEditor endInput
+]
+
+{ #category : #actions }
+SBBlock >> endMultiSelection [
+	<action>
+	<actionValidIf: #hasMultiSelection>
+
+	self select
 ]
 
 { #category : #decorators }
@@ -1124,6 +1134,12 @@ SBBlock >> hasHorizontalLayout [
 SBBlock >> hasInput [
 
 	^ self isSelected and: [self sandblockEditor mode = #input]
+]
+
+{ #category : #'actions tests' }
+SBBlock >> hasMultiSelection [
+
+	^ self sandblockEditor cursor cursorPosition isKindOf: SBCursorMultiSelect
 ]
 
 { #category : #'actions tests' }
