@@ -2058,7 +2058,7 @@ SBBlock >> reloadArtefact [
 	<action>
 
 	
-	self isArtefact ifFalse: [self containingArtefact reloadArtefact]
+	self isArtefact ifFalse: [self containingArtefact ifNotNil: #reloadArtefact]
 ]
 
 { #category : #'colors and color policies' }
