@@ -48,7 +48,7 @@ SBInlineBlockChoice >> deleteTargetFor: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlockChoice >> inline [
 
-	^ self inlineIfPossible
+	^ self inlineIfPossible and: [(self owner isKindOf: SBInlineBlockChoice) not]
 ]
 
 { #category : #'as yet unclassified' }

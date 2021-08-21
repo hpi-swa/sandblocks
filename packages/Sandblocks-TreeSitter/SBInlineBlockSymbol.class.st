@@ -86,6 +86,14 @@ SBInlineBlockSymbol >> type [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> type: aSymbol factory: aFactory block: aMorph [
+
+	type := aSymbol.
+	factory := aFactory.
+	self addMorphBack: aMorph
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> type: aSymbol factory: aFactory visitedSymbols: aSet [
 
 	| tryExpand template |

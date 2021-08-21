@@ -104,6 +104,8 @@ SBTSPartialNode >> nextOption [
 { #category : #'as yet unclassified' }
 SBTSPartialNode >> optionAt: aChoiceBlock ifAbsentPut: aBlock [
 
+	sequences ifNotNil: [" FIXME: need to still allow changes but without destroying our system "
+	^ optionIndices at: aChoiceBlock ifAbsent: [1]].
 	^ optionIndices at: aChoiceBlock ifAbsentPut: aBlock
 ]
 

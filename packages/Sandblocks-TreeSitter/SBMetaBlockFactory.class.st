@@ -327,22 +327,19 @@ SBMetaBlockFactory >> getTemplate: aString [
 SBMetaBlockFactory >> getTemplate: aTypeString visitedSymbols: aSet [
 
 	^ templateCache at: aTypeString ifAbsent: [
-		true
-			ifTrue: [
-				" reserve spot in case of recursion "
-				templateCache at: aTypeString put: nil.
-				templateCache at: aTypeString put: (self
+		" reserve spot in case of recursion "
+		templateCache at: aTypeString put: nil.
+		templateCache at: aTypeString put: (SBToggledCode comment: '' active: 2 do: {
+			[
+				SBInlineBlockSymbol new type: aTypeString factory: self block: (self
 					buildBlocksFor: (grammar rules at: aTypeString ifAbsent: [self assert: false])
 					parentFieldName: nil
-					visitedSymbols: aSet)]
-			ifFalse: [ | block |
-				block := SBTSBlock new.
-				" put the block in the cache before building it so we can hand out references when recursing "
-				templateCache at: aTypeString put: block.
-				block addMorphBack: (self
+					visitedSymbols: aSet)].
+			[
+				self
 					buildBlocksFor: (grammar rules at: aTypeString ifAbsent: [self assert: false])
 					parentFieldName: nil
-					visitedSymbols: aSet)]]
+					visitedSymbols: aSet]})]
 ]
 
 { #category : #'as yet unclassified' }
