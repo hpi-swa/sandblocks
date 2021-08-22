@@ -15,6 +15,16 @@ SBInlineBlockLabel >> buildFor: aStream matchFullToken: aBoolean options: anOpti
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockLabel >> buildIn: aMorph info: anObject [
+
+	(anObject matchFullToken
+		ifTrue: [anObject stream nextMatchAll: self label]
+		ifFalse: [anObject stream nextMatchAll: (self label first: (anObject stream size - anObject stream position min: self label size))])
+		ifTrue: [aMorph addMorphBack: self veryDeepCopy]
+		ifFalse: [anObject cancel]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockLabel >> buildPartial: anOptions with: aString [
 
 	^ self veryDeepCopy

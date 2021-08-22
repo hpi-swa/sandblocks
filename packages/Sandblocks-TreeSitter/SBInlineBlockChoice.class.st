@@ -32,6 +32,16 @@ SBInlineBlockChoice >> buildFor: aStream matchFullToken: aBoolean options: anOpt
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockChoice >> buildIn: aMorph info: anObject [
+
+	| option next |
+	option := self veryDeepCopy removeAllMorphs.
+	next := anObject at: self ifAbsentPut: [1].
+	aMorph addMorphBack: option.
+	(self alternatives at: next) buildIn: option info: anObject
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockChoice >> buildPartial: anOptions with: aString [
 
 	^ (alternatives at: anOptions index)

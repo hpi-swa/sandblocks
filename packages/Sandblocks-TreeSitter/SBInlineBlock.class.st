@@ -25,6 +25,12 @@ SBInlineBlock >> buildFor: aStream matchFullToken: aBoolean options: anOptions [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> buildIn: aMorph info: anObject [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> buildPartial: anOptions with: aString [
 
 	^ self subclassResponsibility

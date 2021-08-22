@@ -19,6 +19,19 @@ SBInlineBlockText >> buildFor: aStream matchFullToken: aBoolean options: anOptio
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockText >> buildIn: aMorph info: anObject [
+
+	| start |
+	start := anObject stream position + 1.
+	(self regex matchesStreamPrefix: anObject stream)
+		ifTrue: [
+			aMorph addMorphBack: (self veryDeepCopy contents: (anObject stream originalContents
+				copyFrom: start
+				to: anObject stream position))]
+		ifFalse: [anObject cancel]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockText >> buildPartial: anOptions with: aString [
 
 	^ self veryDeepCopy contents: aString

@@ -20,6 +20,18 @@ SBInlineBlockSymbol >> buildFor: aString matchFullToken: aBoolean options: anOpt
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> buildIn: aMorph info: anObject [
+
+	| copy |
+	aMorph addMorphBack: (copy := self veryDeepCopy removeAllMorphs).
+	(anObject hasVisitedSymbol: self type)
+		ifTrue: [anObject cancel]
+		ifFalse: [
+			anObject addVisitedSymbol: self type.
+			(factory getTemplate: self type) buildIn: copy info: anObject]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> buildPartial: anOptions with: aString [
 
 	^ (factory getTemplate: type) buildPartial: anOptions with: aString

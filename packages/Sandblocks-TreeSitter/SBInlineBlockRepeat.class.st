@@ -17,6 +17,16 @@ SBInlineBlockRepeat >> buildFor: aString matchFullToken: aBoolean options: anOpt
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> buildIn: aMorph info: anObject [
+
+	| copy |
+	self flag: #fixme.
+	" need to consider optionals and repeating "
+	aMorph addMorphBack: (copy := self veryDeepCopy).
+	self element buildIn: copy info: anObject
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> buildPartial: anOptions with: aString [
 
 	^ element buildPartial: anOptions with: aString
@@ -50,6 +60,12 @@ SBInlineBlockRepeat >> deleteTargetFor: aBlock [
 	^ (required not or: [self submorphCount > 1])
 		ifTrue: [aBlock]
 		ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> element [
+
+	^ element
 ]
 
 { #category : #'as yet unclassified' }
