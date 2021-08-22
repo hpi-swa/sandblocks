@@ -4,7 +4,12 @@ Class {
 	#instVars : [
 		'stream',
 		'root',
-		'matchFullToken'
+		'matchFullToken',
+		'visitedSymbols',
+		'choiceIndices',
+		'stack',
+		'lastOptions',
+		'results'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -12,34 +17,62 @@ Class {
 { #category : #'as yet unclassified' }
 SBTSRuleExplore >> addVisitedSymbol: aSymbol [
 
+	visitedSymbols add: aSymbol
+]
+
+{ #category : #'as yet unclassified' }
+SBTSRuleExplore >> explore: aBlock for: aString [
+
+	stack := OrderedCollection new.
+	lastOptions := OrderedCollection new.
+	choiceIndices := Dictionary new.
+	matchFullToken := aString last = Character space.
+	stream := (matchFullToken ifTrue: [aString allButLast] ifFalse: [aString]) readStream.
+	visitedSymbols := Set new.
+	results := OrderedCollection new.
 	
-]
-
-{ #category : #'as yet unclassified' }
-SBTSRuleExplore >> atEnd [
-
-	^ stream atEnd
-]
-
-{ #category : #'as yet unclassified' }
-SBTSRuleExplore >> cancel [
-	" find last choice that is not fully explored and try again "
-
+	root := self push: aBlock.
 	
+	[
+		[stack notEmpty] whileTrue: [ | index block pair |
+			pair := stack last.
+			index := pair first.
+			block := pair second.
+			(block childrenIn: self)
+				at: index
+				ifPresent: [:child |
+					pair at: 1 put: index + 1.
+					stream atEnd
+						ifTrue: [block addMorphBack: (child buildEmpty buildDefaultIn: self)]
+						ifFalse: [self push: child]]
+				ifAbsent: [ | newChild |
+					stack removeLast.
+					newChild := stream atEnd ifTrue: [block] ifFalse: [
+						(block buildIn: nil info: self) ifNotNil: [:b | b] ifNil: [
+							self restartFromLastChoiceIfDone: [^ results].
+							nil]].
+					(stack notEmpty and: [newChild notNil]) ifTrue: [stack last second addMorphBack: newChild].
+					stack ifEmpty: [
+						results add: root veryDeepCopy.
+						self restartFromLastChoiceIfDone: [^ results]]]]] repeat
 ]
 
 { #category : #'as yet unclassified' }
-SBTSRuleExplore >> explore: aBlock for: String [
+SBTSRuleExplore >> hasSeenChoice: aChoice [
 
-	self root: Morph new.
-	self stream: String readStream.
-	aBlock buildIn: self root info: self
+	^ choiceIndices includesKey: aChoice
 ]
 
 { #category : #'as yet unclassified' }
 SBTSRuleExplore >> hasVisitedSymbol: aSymbol [
 
-	^ false
+	^ visitedSymbols includes: aSymbol
+]
+
+{ #category : #'as yet unclassified' }
+SBTSRuleExplore >> indexFor: aChoice [
+
+	^ choiceIndices at: aChoice ifAbsentPut: [1]
 ]
 
 { #category : #'as yet unclassified' }
@@ -49,39 +82,44 @@ SBTSRuleExplore >> matchFullToken [
 ]
 
 { #category : #'as yet unclassified' }
-SBTSRuleExplore >> matchFullToken: aBoolean [
+SBTSRuleExplore >> push: aBlock [
 
-	matchFullToken := aBoolean
+	| template |
+	template := aBlock buildEmpty.
+	stack add: {1. template}.
+	(aBlock isKindOf: SBInlineBlockChoice) ifTrue: [
+		self indexFor: template.
+		lastOptions add: {template. stack collect: [:pair | pair copy]. stream position}].
+	^ template
 ]
 
 { #category : #'as yet unclassified' }
-SBTSRuleExplore >> root [
+SBTSRuleExplore >> removeAllMorphsAfter: aMorph in: aParentMorph [
 
-	^ root
+	| delete |
+	delete := false.
+	aParentMorph allMorphsDo: [:m | delete ifTrue: [m delete] ifFalse: [m = aMorph ifTrue: [delete := true]]]
 ]
 
 { #category : #'as yet unclassified' }
-SBTSRuleExplore >> root: aBlock [
+SBTSRuleExplore >> restartFromLastChoiceIfDone: aBlock [
 
-	root := aBlock
+	| option choice number |
+	lastOptions ifEmpty: [^ aBlock value].
+	
+	option := lastOptions last.
+	choice := option first.
+	stack := option second collect: [:pair | pair copy].
+	stream position: option third.
+	
+	number := choiceIndices at: option first put: (choiceIndices at: choice) + 1.
+	number = choice alternatives size ifTrue: [lastOptions removeLast].
+	
+	self removeAllMorphsAfter: choice in: root
 ]
 
 { #category : #'as yet unclassified' }
 SBTSRuleExplore >> stream [
 
 	^ stream
-]
-
-{ #category : #'as yet unclassified' }
-SBTSRuleExplore >> stream: aStream [
-
-	stream := aStream
-]
-
-{ #category : #'as yet unclassified' }
-SBTSRuleExplore >> success [
-
-	| options |
-	options add: root veryDeepCopy.
-	self cancel
 ]

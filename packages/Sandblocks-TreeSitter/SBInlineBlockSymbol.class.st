@@ -9,6 +9,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> buildDefaultIn: anExplore [
+
+	self addMorphBack: (SBTSUnknown new template: [factory getTemplate: type visitedSymbols: Set new])
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> buildEmpty [
+
+	^ self class new type: self type factory: factory visitedSymbols: Set new
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> buildFor: aString matchFullToken: aBoolean options: anOptions [
 
 	^ (anOptions hasVisitedSymbol: self type) ifTrue: [nil] ifFalse: [
@@ -22,13 +34,7 @@ SBInlineBlockSymbol >> buildFor: aString matchFullToken: aBoolean options: anOpt
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> buildIn: aMorph info: anObject [
 
-	| copy |
-	aMorph addMorphBack: (copy := self veryDeepCopy removeAllMorphs).
-	(anObject hasVisitedSymbol: self type)
-		ifTrue: [anObject cancel]
-		ifFalse: [
-			anObject addVisitedSymbol: self type.
-			(factory getTemplate: self type) buildIn: copy info: anObject]
+	^ self
 ]
 
 { #category : #'as yet unclassified' }
@@ -38,9 +44,23 @@ SBInlineBlockSymbol >> buildPartial: anOptions with: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> childrenIn: anExplore [
+
+	^ (anExplore hasVisitedSymbol: self type) ifTrue: [{}] ifFalse: [
+		anExplore addVisitedSymbol: self type.
+		{factory getTemplate: self type}]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> deleteTargetFor: aBlock [
 
 	^ self owner deleteTargetFor: self
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> duplicateCleanTree [
+
+	^ self veryDeepCopy removeAllMorphs
 ]
 
 { #category : #'as yet unclassified' }
@@ -60,10 +80,7 @@ SBInlineBlockSymbol >> instantiate [
 
 	^ (factory isSuperType: type)
 		ifTrue: [factory instantiateTemplate: type]
-		ifFalse: [
-			self veryDeepCopy
-				removeAllMorphs;
-				addMorphBack: (factory instantiateTemplate: type)]
+		ifFalse: [self buildEmpty addMorphBack: (factory instantiateTemplate: type)]
 ]
 
 { #category : #'as yet unclassified' }
@@ -108,21 +125,23 @@ SBInlineBlockSymbol >> type: aSymbol factory: aFactory block: aMorph [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> type: aSymbol factory: aFactory visitedSymbols: aSet [
 
-	| tryExpand template |
+	| tryExpand |
 	tryExpand := (aSet includes: aSymbol) not.
 	aSet add: aSymbol.
 	
 	type := aSymbol.
 	factory := aFactory.
 	
-	self addMorphBack: (SBToggledCode comment: '' active: 2 do: {
-		[SBTSUnknown new template: [factory getTemplate: type visitedSymbols: aSet]].
+	SBToggledCode comment: '' active: 0 do: {
 		[
-			(tryExpand and: [
-				template := factory getTemplate: type visitedSymbols: aSet.
-				template notNil and: [template isUnambiguous]])
-				ifTrue: [template veryDeepCopy]
-				ifFalse: [SBTSUnknown new template: [factory getTemplate: type visitedSymbols: aSet]]]})
+			self addMorphBack: (SBToggledCode comment: '' active: 2 do: {
+				[SBTSUnknown new template: [factory getTemplate: type visitedSymbols: aSet]].
+				[
+					(tryExpand and: [
+						template := factory getTemplate: type visitedSymbols: aSet.
+						template notNil and: [template isUnambiguous]])
+						ifTrue: [template veryDeepCopy]
+						ifFalse: [SBTSUnknown new template: [factory getTemplate: type visitedSymbols: aSet]]]})]}
 ]
 
 { #category : #'as yet unclassified' }

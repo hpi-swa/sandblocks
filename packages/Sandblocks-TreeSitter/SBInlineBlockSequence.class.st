@@ -8,6 +8,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSequence >> buildDefaultIn: anExplore [
+
+	self addAllMorphsBack: self elements veryDeepCopy
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSequence >> buildEmpty [
+
+	^ self class new elements: self elements
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSequence >> buildFor: aStream matchFullToken: aBoolean options: anOptions [
 
 	| copy |
@@ -27,21 +39,25 @@ SBInlineBlockSequence >> buildFor: aStream matchFullToken: aBoolean options: anO
 { #category : #'as yet unclassified' }
 SBInlineBlockSequence >> buildIn: aMorph info: anObject [
 
-	| copy |
-	aMorph addMorphBack: (copy := self veryDeepCopy removeAllMorphs).
-	self elements withIndexDo: [:element :index |
-		element buildIn: copy info: anObject.
-		anObject atEnd ifTrue: [
-			index + 1
-				to: self submorphCount
-				do: [:next | copy addMorphBack: (elements at: next) veryDeepCopy].
-			anObject success]]
+	^ self
 ]
 
 { #category : #'as yet unclassified' }
 SBInlineBlockSequence >> buildPartial: anOptions with: aString [
 
 	^ SBInlineBlockSequence new elements: {elements first buildPartial: anOptions with: aString}, (elements viewAllButFirst collect: [:element | element veryDeepCopy])
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSequence >> childrenIn: anExplore [
+
+	^ self elements
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSequence >> duplicateCleanTree [
+
+	^ self veryDeepCopy removeAllMorphs
 ]
 
 { #category : #'as yet unclassified' }
@@ -53,7 +69,7 @@ SBInlineBlockSequence >> elements [
 { #category : #'as yet unclassified' }
 SBInlineBlockSequence >> elements: aCollection [
 
-	self addAllMorphsBack: (elements := aCollection)
+	elements := aCollection
 ]
 
 { #category : #'as yet unclassified' }

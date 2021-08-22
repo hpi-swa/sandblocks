@@ -71,7 +71,8 @@ SBStMessagePart >> deleteBeforeCursor [
 
 	(self actualContents isEmpty and: [self isFirstPart]) ifTrue: [^ self messageSend tryDelete].
 	super deleteBeforeCursor.
-	self updateSuggestions.
+	
+	self isInWorld ifTrue: [self updateSuggestions]
 ]
 
 { #category : #'as yet unclassified' }

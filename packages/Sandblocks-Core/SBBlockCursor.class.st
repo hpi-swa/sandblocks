@@ -219,11 +219,13 @@ SBBlockCursor >> moveCursorClick: aBlock at: aPoint [
 SBBlockCursor >> moveCursorDown [
 	<globalAction>
 
-	self nextVertical ifNotNil: [:next |
-		self
-			cursorPosition: (self cursorForBlock: next at: (self idealPixelPositionEnterNear: #top for: next))
-			explicitMove: true
-			axis: #y]
+	self nextVertical
+		ifNotNil: [:next |
+			self
+				cursorPosition: (self cursorForBlock: next at: (self idealPixelPositionEnterNear: #top for: next))
+				explicitMove: true
+				axis: #y]
+		ifNil: [self moveCursorSmaller]
 ]
 
 { #category : #api }

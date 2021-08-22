@@ -2213,7 +2213,9 @@ SBBlock >> selectArtefact [
 
 	(self containingArtefact = self
 		ifTrue: [self parentSandblock containingArtefact]
-		ifFalse: [self containingArtefact]) ifNotNil: #select
+		ifFalse: [self containingArtefact])
+		ifNotNil: #select
+		ifNil: [self containingFloat ifNotNil: #select]
 ]
 
 { #category : #actions }

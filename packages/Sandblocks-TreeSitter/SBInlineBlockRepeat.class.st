@@ -10,6 +10,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> buildDefaultIn: anExplore [
+
+	required ifTrue: [self addMorphBack: self element veryDeepCopy]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> buildEmpty [
+
+	^ self class new multiple: multiple required: required element: element
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> buildFor: aString matchFullToken: aBoolean options: anOptions [
 	" FIXME: consider actually repeating "
 
@@ -19,17 +31,21 @@ SBInlineBlockRepeat >> buildFor: aString matchFullToken: aBoolean options: anOpt
 { #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> buildIn: aMorph info: anObject [
 
-	| copy |
 	self flag: #fixme.
 	" need to consider optionals and repeating "
-	aMorph addMorphBack: (copy := self veryDeepCopy).
-	self element buildIn: copy info: anObject
+	^ self
 ]
 
 { #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> buildPartial: anOptions with: aString [
 
 	^ element buildPartial: anOptions with: aString
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> childrenIn: anExplore [
+
+	^ {self element}
 ]
 
 { #category : #'as yet unclassified' }
@@ -63,6 +79,12 @@ SBInlineBlockRepeat >> deleteTargetFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> duplicateCleanTree [
+
+	^ self veryDeepCopy removeAllMorphs
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> element [
 
 	^ element
@@ -79,9 +101,7 @@ SBInlineBlockRepeat >> multiple: aBoolean required: anotherBoolean element: aMor
 
 	multiple := aBoolean.
 	required := anotherBoolean.
-	element := aMorph.
-	
-	required ifTrue: [self addMorphBack: aMorph veryDeepCopy]
+	element := aMorph
 ]
 
 { #category : #'as yet unclassified' }

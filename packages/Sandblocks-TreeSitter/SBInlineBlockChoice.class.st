@@ -16,8 +16,24 @@ SBInlineBlockChoice >> alternatives [
 { #category : #'as yet unclassified' }
 SBInlineBlockChoice >> alternatives: aCollection [
 
-	alternatives := aCollection.
-	self addMorphBack: (SBTSUnknown new template: self)
+	alternatives := aCollection
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockChoice >> buildDefaultIn: anExplore [
+
+	self addMorphBack: (anExplore
+		ifNotNil: [
+			(anExplore hasSeenChoice: self)
+				ifTrue: [(self alternatives at: (anExplore indexFor: self)) veryDeepCopy]
+				ifFalse: [SBTSUnknown new template: self]]
+		ifNil: [SBTSUnknown new template: self])
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockChoice >> buildEmpty [
+
+	^ self class new alternatives: self alternatives
 ]
 
 { #category : #'as yet unclassified' }
@@ -34,11 +50,7 @@ SBInlineBlockChoice >> buildFor: aStream matchFullToken: aBoolean options: anOpt
 { #category : #'as yet unclassified' }
 SBInlineBlockChoice >> buildIn: aMorph info: anObject [
 
-	| option next |
-	option := self veryDeepCopy removeAllMorphs.
-	next := anObject at: self ifAbsentPut: [1].
-	aMorph addMorphBack: option.
-	(self alternatives at: next) buildIn: option info: anObject
+	^ self
 ]
 
 { #category : #'as yet unclassified' }
@@ -50,9 +62,21 @@ SBInlineBlockChoice >> buildPartial: anOptions with: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockChoice >> childrenIn: anExplore [
+
+	^ {self alternatives at: (anExplore indexFor: self)}
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockChoice >> deleteTargetFor: aBlock [
 
 	^ self owner deleteTargetFor: self
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockChoice >> duplicateCleanTree [
+
+	^ self veryDeepCopy removeAllMorphs
 ]
 
 { #category : #'as yet unclassified' }

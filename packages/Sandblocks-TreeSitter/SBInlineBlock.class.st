@@ -8,6 +8,24 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> buildDefault [
+
+	^ self buildDefaultIn: nil
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> buildDefaultIn: anExplore [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> buildEmpty [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> buildFor: aString matchFullToken: aBoolean [
 
 	| options |
@@ -32,6 +50,12 @@ SBInlineBlock >> buildIn: aMorph info: anObject [
 
 { #category : #'as yet unclassified' }
 SBInlineBlock >> buildPartial: anOptions with: aString [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> childrenIn: anExplore [
 
 	^ self subclassResponsibility
 ]
@@ -78,6 +102,12 @@ SBInlineBlock >> deleteCommandFor: aBlock [
 SBInlineBlock >> deleteTargetFor: aBlock [
 
 	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> duplicateCleanTree [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #geometry }

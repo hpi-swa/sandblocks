@@ -53,6 +53,12 @@ SBMetaBlockFactory >> applyInlining: rule [
 ]
 
 { #category : #'as yet unclassified' }
+SBMetaBlockFactory >> at: aString putTemplate: aBlock [
+
+	templateCache at: aString put: aBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaBlockFactory >> build: anObject in: aBlock slot: aSlot [
 
 	aBlock factory: self parentSlot: aSlot.
@@ -67,32 +73,46 @@ SBMetaBlockFactory >> buildBlocksFor: anObject parentFieldName: aString visitedS
 	
 	(self unpackTypes includes: anObject type) ifTrue: [^ self buildBlocksFor: anObject content parentFieldName: aString visitedSymbols: aSet].
 	
-	(#('STRING') includes: anObject type) ifTrue: [^ SBInlineBlockLabel new label: anObject value].
+	(#('STRING') includes: anObject type) ifTrue: [
+		^ SBInlineBlockLabel new
+			label: anObject value;
+			buildDefault].
 	
-	(#('PATTERN' 'TOKEN' 'IMMEDIATE_TOKEN') includes: anObject type) ifTrue: [^ SBInlineBlockText new regexString: (self buildRegexString: anObject)].
+	(#('PATTERN' 'TOKEN' 'IMMEDIATE_TOKEN') includes: anObject type) ifTrue: [
+		^ SBInlineBlockText new
+			regexString: (self buildRegexString: anObject);
+			buildDefault].
 	
-	(#('SYMBOL') includes: anObject type) ifTrue: [^ SBInlineBlockSymbol new type: anObject name factory: self visitedSymbols: aSet].
+	(#('SYMBOL') includes: anObject type) ifTrue: [
+		^ SBInlineBlockSymbol new
+			type: anObject name factory: self visitedSymbols: aSet;
+			buildDefault].
 	
 	'REPEAT' = anObject type ifTrue: [
 		^ SBInlineBlockRepeat new
 			multiple: true
-			required: false
-			element: (self buildBlocksFor: anObject content parentFieldName: aString visitedSymbols: aSet)].
+				required: false
+				element: (self buildBlocksFor: anObject content parentFieldName: aString visitedSymbols: aSet);
+			buildDefault].
 	
 	'REPEAT1' = anObject type ifTrue: [
 		^ SBInlineBlockRepeat new
 			multiple: true
-			required: true
-			element: (self buildBlocksFor: anObject content parentFieldName: aString visitedSymbols: aSet)].
+				required: true
+				element: (self buildBlocksFor: anObject content parentFieldName: aString visitedSymbols: aSet);
+			buildDefault].
 	
 	'CHOICE' = anObject type ifTrue: [
 		(anObject members size = 2 and: [anObject members second type = 'BLANK']) ifTrue: [
 			^ SBInlineBlockRepeat new
 				multiple: false
-				required: false
-				element: (self buildBlocksFor: anObject members first parentFieldName: aString visitedSymbols: aSet)].
+					required: false
+					element: (self buildBlocksFor: anObject members first parentFieldName: aString visitedSymbols: aSet);
+				buildDefault].
 		
-		^ SBInlineBlockChoice new alternatives: (anObject members collect: [:member | self buildBlocksFor: member parentFieldName: nil visitedSymbols: aSet])].
+		^ SBInlineBlockChoice new
+			alternatives: (anObject members collect: [:member | self buildBlocksFor: member parentFieldName: nil visitedSymbols: aSet]);
+			buildDefault].
 	
 	'SEQ' = anObject type ifTrue: [^ SBInlineBlockSequence new elements: (anObject members collect: [:member | self buildBlocksFor: member parentFieldName: nil visitedSymbols: aSet])].
 	
@@ -391,7 +411,7 @@ SBMetaBlockFactory >> initialize [
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> instantiateTemplate: aString [
 
-	^ (self getTemplate: aString) veryDeepCopy
+	^ (self getTemplate: aString) buildEmpty buildDefault
 ]
 
 { #category : #'as yet unclassified' }

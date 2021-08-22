@@ -9,6 +9,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockText >> buildDefaultIn: anExplore [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockText >> buildEmpty [
+
+	^ self class new regexString: self regexString
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockText >> buildFor: aStream matchFullToken: aBoolean options: anOptions [
 
 	| start |
@@ -23,18 +35,24 @@ SBInlineBlockText >> buildIn: aMorph info: anObject [
 
 	| start |
 	start := anObject stream position + 1.
-	(self regex matchesStreamPrefix: anObject stream)
+	^ (self regex matchesStreamPrefix: anObject stream)
 		ifTrue: [
-			aMorph addMorphBack: (self veryDeepCopy contents: (anObject stream originalContents
+			self contents: (anObject stream originalContents
 				copyFrom: start
-				to: anObject stream position))]
-		ifFalse: [anObject cancel]
+				to: anObject stream position)]
+		ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
 SBInlineBlockText >> buildPartial: anOptions with: aString [
 
 	^ self veryDeepCopy contents: aString
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockText >> childrenIn: anExplore [
+
+	^ {}
 ]
 
 { #category : #'as yet unclassified' }
@@ -58,6 +76,12 @@ SBInlineBlockText >> cursorPositionsDo: aBlock [
 		aBlock value: (SBCursorText new
 			block: self containingSandblock;
 			currentCommand: command)]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockText >> duplicateCleanTree [
+
+	^ self veryDeepCopy contents: ''
 ]
 
 { #category : #'as yet unclassified' }
@@ -90,6 +114,12 @@ SBInlineBlockText >> printTitleOn: aStream [
 SBInlineBlockText >> regex [
 
 	^ regex
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockText >> regexString [
+
+	^ regexString
 ]
 
 { #category : #'as yet unclassified' }

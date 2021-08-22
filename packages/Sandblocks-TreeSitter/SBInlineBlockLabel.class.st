@@ -5,6 +5,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockLabel >> buildDefaultIn: anExplore [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockLabel >> buildEmpty [
+
+	^ self class new label: self label
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockLabel >> buildFor: aStream matchFullToken: aBoolean options: anOptions [
 
 	^ (aBoolean
@@ -15,13 +27,13 @@ SBInlineBlockLabel >> buildFor: aStream matchFullToken: aBoolean options: anOpti
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockLabel >> buildIn: aMorph info: anObject [
+SBInlineBlockLabel >> buildIn: aMorph info: option [
 
-	(anObject matchFullToken
-		ifTrue: [anObject stream nextMatchAll: self label]
-		ifFalse: [anObject stream nextMatchAll: (self label first: (anObject stream size - anObject stream position min: self label size))])
-		ifTrue: [aMorph addMorphBack: self veryDeepCopy]
-		ifFalse: [anObject cancel]
+	^ (option matchFullToken
+		ifTrue: [option stream nextMatchAll: self label]
+		ifFalse: [option stream nextMatchAll: (self label first: (option stream size - option stream position min: self label size))])
+		ifTrue: [self]
+		ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -31,9 +43,21 @@ SBInlineBlockLabel >> buildPartial: anOptions with: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockLabel >> childrenIn: anExplore [
+
+	^ {}
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockLabel >> contents [
 
 	^ self label
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockLabel >> duplicateCleanTree [
+
+	^ self veryDeepCopy
 ]
 
 { #category : #'as yet unclassified' }

@@ -40,19 +40,14 @@ SBTSUnknown >> inline [
 { #category : #'as yet unclassified' }
 SBTSUnknown >> keyStroke: anEvent [
 
-	| matchFullToken prefix choices |
+	| choices |
 	self currentTextMorph keyStroke: anEvent.
 	
-	prefix := (matchFullToken := self contents last = Character space)
-		ifTrue: [self contents allButLast]
-		ifFalse: [self contents].
-	
-	choices := template value buildFor: prefix matchFullToken: matchFullToken.
-	self halt.
+	choices := SBTSRuleExplore new explore: template value for: self contents.
 	
 	choices size = 1 ifTrue: [
 		self sandblockEditor do: (SBReplaceCommand new
-			target: self;
+			target: self parentSandblock;
 			replacer: choices first).
 		choices first containingSandblock startInputAtEnd]
 ]
