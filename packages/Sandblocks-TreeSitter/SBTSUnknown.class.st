@@ -10,6 +10,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBTSUnknown >> buildCopy [
+
+	^ self class new
+		type: self type;
+		template: self template
+]
+
+{ #category : #'as yet unclassified' }
 SBTSUnknown >> contents: aString [
 
 	self currentTextMorph contents: aString
@@ -75,6 +83,12 @@ SBTSUnknown >> printOn: aStream [
 
 	aStream nextPutAll: 'unknown '.
 	template value printTitleOn: aStream
+]
+
+{ #category : #'as yet unclassified' }
+SBTSUnknown >> template [
+
+	^ template
 ]
 
 { #category : #'as yet unclassified' }

@@ -9,6 +9,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> buildCopy [
+
+	^ self buildEmpty addMorphBack: self firstSubmorph buildCopy
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> buildDefaultIn: anExplore [
 
 	self addMorphBack: (SBTSUnknown new
@@ -62,12 +68,6 @@ SBInlineBlockSymbol >> childrenIn: anExplore [
 SBInlineBlockSymbol >> deleteTargetFor: aBlock [
 
 	^ self owner deleteTargetFor: self
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockSymbol >> duplicateCleanTree [
-
-	^ self veryDeepCopy removeAllMorphs
 ]
 
 { #category : #'as yet unclassified' }

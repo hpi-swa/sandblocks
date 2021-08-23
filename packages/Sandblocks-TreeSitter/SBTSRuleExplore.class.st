@@ -55,7 +55,7 @@ SBTSRuleExplore >> explore: aBlock for: aString startSymbol: aSymbolString [
 							nil]].
 					(stack notEmpty and: [newChild notNil]) ifTrue: [stack last second addMorphBack: newChild].
 					stack ifEmpty: [
-						results add: root veryDeepCopy.
+						results add: root buildCopy.
 						self restartFromLastChoiceIfDone: [^ results]]]]] repeat
 ]
 

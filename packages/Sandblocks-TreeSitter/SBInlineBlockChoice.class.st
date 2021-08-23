@@ -20,12 +20,18 @@ SBInlineBlockChoice >> alternatives: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockChoice >> buildCopy [
+
+	^ self buildEmpty addMorphBack: self firstSubmorph buildCopy
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockChoice >> buildDefaultIn: anExplore [
 
 	self addMorphBack: (anExplore
 		ifNotNil: [
 			(anExplore hasSeenChoice: self)
-				ifTrue: [(self alternatives at: (anExplore indexFor: self)) veryDeepCopy]
+				ifTrue: [(self alternatives at: (anExplore indexFor: self)) instantiate]
 				ifFalse: [SBTSUnknown new template: self]]
 		ifNil: [SBTSUnknown new template: self])
 ]
@@ -81,12 +87,6 @@ SBInlineBlockChoice >> childrenIn: anExplore [
 SBInlineBlockChoice >> deleteTargetFor: aBlock [
 
 	^ self owner deleteTargetFor: self
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockChoice >> duplicateCleanTree [
-
-	^ self veryDeepCopy removeAllMorphs
 ]
 
 { #category : #'as yet unclassified' }

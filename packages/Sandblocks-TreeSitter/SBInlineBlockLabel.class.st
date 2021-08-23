@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockLabel >> buildCopy [
+
+	^ self buildEmpty
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockLabel >> buildDefaultIn: anExplore [
 
 	
@@ -52,12 +58,6 @@ SBInlineBlockLabel >> childrenIn: anExplore [
 SBInlineBlockLabel >> contents [
 
 	^ self label
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockLabel >> duplicateCleanTree [
-
-	^ self veryDeepCopy
 ]
 
 { #category : #'as yet unclassified' }

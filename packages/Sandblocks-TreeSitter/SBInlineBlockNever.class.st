@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockNever >> buildCopy [
+
+	^ self shouldNotImplement
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockNever >> buildEmpty [
 
 	^ self class new

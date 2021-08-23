@@ -9,6 +9,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockText >> buildCopy [
+
+	^ self buildEmpty contents: self contents
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockText >> buildDefaultIn: anExplore [
 
 	
@@ -80,12 +86,6 @@ SBInlineBlockText >> cursorPositionsDo: aBlock [
 		aBlock value: (SBCursorText new
 			block: self containingSandblock;
 			currentCommand: command)]
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockText >> duplicateCleanTree [
-
-	^ self veryDeepCopy contents: ''
 ]
 
 { #category : #'as yet unclassified' }

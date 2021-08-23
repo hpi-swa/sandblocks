@@ -8,9 +8,19 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSequence >> buildCopy [
+
+	| copy |
+	copy := self buildEmpty.
+	self submorphsDo: [:m | copy addMorphBack: m buildCopy].
+	^ copy
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSequence >> buildDefaultIn: anExplore [
 
-	self addAllMorphsBack: self elements veryDeepCopy
+	self elements do: [:element |
+		self addMorphBack: element instantiate]
 ]
 
 { #category : #'as yet unclassified' }
@@ -52,12 +62,6 @@ SBInlineBlockSequence >> buildPartial: anOptions with: aString [
 SBInlineBlockSequence >> childrenIn: anExplore [
 
 	^ self elements
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockSequence >> duplicateCleanTree [
-
-	^ self veryDeepCopy removeAllMorphs
 ]
 
 { #category : #'as yet unclassified' }

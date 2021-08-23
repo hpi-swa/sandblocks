@@ -10,9 +10,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> buildCopy [
+
+	| copy |
+	copy := self buildEmpty.
+	self submorphsDo: [:m | copy addMorphBack: m buildCopy].
+	^ copy
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> buildDefaultIn: anExplore [
 
-	required ifTrue: [self addMorphBack: self element veryDeepCopy]
+	required ifTrue: [self addMorphBack: self element instantiate]
 ]
 
 { #category : #'as yet unclassified' }
@@ -76,12 +85,6 @@ SBInlineBlockRepeat >> deleteTargetFor: aBlock [
 	^ (required not or: [self submorphCount > 1])
 		ifTrue: [aBlock]
 		ifFalse: [nil]
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockRepeat >> duplicateCleanTree [
-
-	^ self veryDeepCopy removeAllMorphs
 ]
 
 { #category : #'as yet unclassified' }

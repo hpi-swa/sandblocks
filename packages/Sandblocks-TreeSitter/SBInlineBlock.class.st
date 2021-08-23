@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> buildCopy [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> buildDefault [
 
 	^ self buildDefaultIn: nil
@@ -111,12 +117,6 @@ SBInlineBlock >> deleteTargetFor: aBlock [
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
-SBInlineBlock >> duplicateCleanTree [
-
-	^ self subclassResponsibility
-]
-
 { #category : #geometry }
 SBInlineBlock >> extent: aPoint [
 
@@ -215,9 +215,8 @@ SBInlineBlock >> inlineIfPossible [
 SBInlineBlock >> instantiate [
 
 	| instance |
-	instance := self veryDeepCopy.
-	instance hasSubmorphs ifFalse: [instance buildDefault].
-	^instance
+	instance := self buildEmpty buildDefault.
+	^ instance
 ]
 
 { #category : #'as yet unclassified' }
