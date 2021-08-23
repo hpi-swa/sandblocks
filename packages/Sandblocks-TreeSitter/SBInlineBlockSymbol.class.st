@@ -91,7 +91,10 @@ SBInlineBlockSymbol >> hasSameStructureAs: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> inline [
 
-	^ SBToggledCode comment: '' active: 1 do: {[false]. [self inlineIfPossible]}
+	^ SBToggledCode
+		comment: ''
+		active: 1
+		do: {[factory shouldBlockInline: self type]. [self inlineIfPossible]}
 ]
 
 { #category : #'as yet unclassified' }

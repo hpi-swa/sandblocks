@@ -33,6 +33,7 @@ SBMetaBlockFactory >> applyInlining: rule [
 				active: 2
 				do: {[true]. [(grammar supertypes includes: rule name) not]}]]) ifTrue: [ | inline symbols |
 		inline := grammar rules at: rule name.
+		rule name = 'expression_statement' ifTrue: [self halt].
 		symbols := (Array streamContents: [:stream | self symbolsProducedBy: inline on: stream]) asSet.
 		symbols size = 1 ifTrue: [rule name: symbols anyOne] ifFalse: [
 			rule
@@ -585,6 +586,12 @@ SBMetaBlockFactory >> rulesMatching: aStringOrCollection containing: aRuleName f
 				fields associations
 					detect: [:operatorField | operatorField value ~= f and: [operatorField value types anySatisfy: [:op | op named not and: [op type beginsWith: aPrefixString]]]]
 					ifFound: [:operatorField | aBlock value: rule value: name value: operatorField key]]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> shouldBlockInline: aTypeString [
+
+	^ (self isSuperType: aTypeString) or: [self grammar blockInline ifNotNil: [:i | i includes: aTypeString]]
 ]
 
 { #category : #'grammar clean' }

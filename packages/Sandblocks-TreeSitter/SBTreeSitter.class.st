@@ -8708,6 +8708,11 @@ SBTreeSitter >> pythonFactory [
 			comment: ''
 			active: 0
 			do: {[f grammar rules do: [:rule | f rule: 'parameters' inlineIn: rule]]}.
+		SBToggledCode
+			comment: ''
+			active: 0
+			do: {[f grammar at: 'inline' put: (f grammar inline copyWith: 'expression_statement')]}.
+		f grammar blockInline: {'expression_statement'}.
 		f cleanGrammar.
 		f grammar rules keysAndValuesDo: [:name :r | f removeOptionalString: ',' in: r].
 		f grammar rules
