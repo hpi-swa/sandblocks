@@ -62,6 +62,16 @@ SBInlineBlockChoice >> buildPartial: anOptions with: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockChoice >> changeToUnknown [
+	<action>
+
+	self
+		removeAllMorphs;
+		buildDefault;
+		startInputAtEnd
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockChoice >> childrenIn: anExplore [
 
 	^ {self alternatives at: (anExplore indexFor: self)}
@@ -80,9 +90,43 @@ SBInlineBlockChoice >> duplicateCleanTree [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockChoice >> firstDifferingBlocksWith: aMorph do: aBlock [
+
+	self class ~= aMorph class ifTrue: [^ aBlock value: self value: aMorph].
+	(self alternatives hasEqualElements: aMorph alternatives) ifTrue: [^ aBlock value: self value: aMorph].
+	self submorphs
+		with: aMorph submorphs
+		do: [:mine :their | mine firstDifferingBlocksWith: their do: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockChoice >> hasSameContentsAs: aBlock [
+
+	^ (super hasSameContentsAs: aBlock) and: [self firstSubmorph hasSameContentsAs: aBlock firstSubmorph]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockChoice >> hasSameStructureAs: aBlock [
+
+	(super hasSameStructureAs: aBlock) ifFalse: [^ false].
+	self alternatives
+		with: aBlock alternatives
+		do: [:a :b | (a hasSameStructureAs: b) ifFalse: [^ false]].
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockChoice >> inline [
 
-	^ self inlineIfPossible and: [(self owner isKindOf: SBInlineBlockChoice) not]
+	^ SBToggledCode comment: '' active: 1 do: {
+		[self owner notNil and: [self owner isInlineBlock]].
+		[
+			self inlineIfPossible and: [
+				SBToggledCode
+					comment: ''
+					active: 1
+					do: {[true]. [(self owner isKindOf: SBInlineBlockChoice) not]}]].
+		[true]}
 ]
 
 { #category : #'as yet unclassified' }

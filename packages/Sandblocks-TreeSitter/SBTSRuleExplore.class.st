@@ -21,7 +21,7 @@ SBTSRuleExplore >> addVisitedSymbol: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
-SBTSRuleExplore >> explore: aBlock for: aString [
+SBTSRuleExplore >> explore: aBlock for: aString startSymbol: aSymbolString [
 
 	stack := OrderedCollection new.
 	lastOptions := OrderedCollection new.
@@ -30,6 +30,8 @@ SBTSRuleExplore >> explore: aBlock for: aString [
 	stream := (matchFullToken ifTrue: [aString allButLast] ifFalse: [aString]) readStream.
 	visitedSymbols := Set new.
 	results := OrderedCollection new.
+	
+	aSymbolString ifNotNil: [visitedSymbols add: aSymbolString].
 	
 	root := self push: aBlock.
 	
@@ -89,7 +91,7 @@ SBTSRuleExplore >> push: aBlock [
 	stack add: {1. template}.
 	(aBlock isKindOf: SBInlineBlockChoice) ifTrue: [
 		self indexFor: template.
-		lastOptions add: {template. stack collect: [:pair | pair copy]. stream position}].
+		lastOptions add: {template. stack collect: [:pair | pair copy]. stream position. visitedSymbols copy}].
 	^ template
 ]
 
@@ -111,6 +113,7 @@ SBTSRuleExplore >> restartFromLastChoiceIfDone: aBlock [
 	choice := option first.
 	stack := option second collect: [:pair | pair copy].
 	stream position: option third.
+	visitedSymbols := option fourth copy.
 	
 	number := choiceIndices at: option first put: (choiceIndices at: choice) + 1.
 	number = choice alternatives size ifTrue: [lastOptions removeLast].

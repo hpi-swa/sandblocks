@@ -11,7 +11,9 @@ Class {
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> buildDefaultIn: anExplore [
 
-	self addMorphBack: (SBTSUnknown new template: [factory getTemplate: type visitedSymbols: Set new])
+	self addMorphBack: (SBTSUnknown new
+		template: [factory getTemplate: type visitedSymbols: Set new];
+		type: type)
 ]
 
 { #category : #'as yet unclassified' }
@@ -46,9 +48,14 @@ SBInlineBlockSymbol >> buildPartial: anOptions with: aString [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> childrenIn: anExplore [
 
-	^ (anExplore hasVisitedSymbol: self type) ifTrue: [{}] ifFalse: [
-		anExplore addVisitedSymbol: self type.
-		{factory getTemplate: self type}]
+	^ (SBToggledCode
+		comment: ''
+		active: 2
+		do: {[false]. [anExplore hasVisitedSymbol: self type]})
+		ifTrue: [{SBInlineBlockNever new}]
+		ifFalse: [
+			anExplore addVisitedSymbol: self type.
+			{factory getTemplate: self type}]
 ]
 
 { #category : #'as yet unclassified' }
@@ -67,6 +74,18 @@ SBInlineBlockSymbol >> duplicateCleanTree [
 SBInlineBlockSymbol >> factory: aFactory [
 
 	factory := aFactory
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> hasSameContentsAs: aBlock [
+
+	^ (super hasSameStructureAs: aBlock) and: [self type = aBlock type and: [self firstSubmorph hasSameContentsAs: aBlock firstSubmorph]]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> hasSameStructureAs: aBlock [
+
+	^ (super hasSameStructureAs: aBlock) and: [self type = aBlock type and: [self firstSubmorph hasSameStructureAs: aBlock firstSubmorph]]
 ]
 
 { #category : #'as yet unclassified' }

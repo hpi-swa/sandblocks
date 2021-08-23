@@ -32,6 +32,12 @@ SBTSUnknown >> factory: aFactory [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSUnknown >> hasSameStructureAs: aBlock [
+
+	^ aBlock class = self class and: [self type = aBlock type]
+]
+
+{ #category : #'as yet unclassified' }
 SBTSUnknown >> inline [
 
 	^ false
@@ -43,11 +49,23 @@ SBTSUnknown >> keyStroke: anEvent [
 	| choices |
 	self currentTextMorph keyStroke: anEvent.
 	
-	choices := SBTSRuleExplore new explore: template value for: self contents.
+	choices := SBTSRuleExplore new
+		explore: template value
+		for: self contents
+		startSymbol: type.
+	
+	choices size > 1 ifTrue: [ | shortest |
+		shortest := choices detectMin: [:choice | choice lengthOfLeftMostPath].
+		choices removeAllSuchThat: [:choice |
+			choice ~= shortest and: [
+				choice leftMostRule
+					firstDifferingUpBlocksWith: shortest leftMostRule
+					do: [:a :b | a firstSubmorph isKindOf: SBInlineBlockSymbol]
+					ifNone: [false]]]].
 	
 	choices size = 1 ifTrue: [
 		self sandblockEditor do: (SBReplaceCommand new
-			target: self parentSandblock;
+			target: self owner;
 			replacer: choices first).
 		choices first containingSandblock startInputAtEnd]
 ]
@@ -66,10 +84,15 @@ SBTSUnknown >> template: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBTSUnknown >> type: aString factory: aFactory [
+SBTSUnknown >> type [
 
-	type := aString.
-	factory := aFactory
+	^ type
+]
+
+{ #category : #'as yet unclassified' }
+SBTSUnknown >> type: aString [
+
+	type := aString
 ]
 
 { #category : #'as yet unclassified' }

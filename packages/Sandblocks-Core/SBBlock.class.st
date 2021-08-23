@@ -453,7 +453,7 @@ SBBlock >> click: anEvent [
 	
 	self sandblockEditor selectClick: self at: anEvent position.
 	(anEvent yellowButtonPressed and: [SBPreferences rightClickContextMenu]) ifTrue: [self promptAction].
-	(self suggestAlways and: [anEvent redButtonPressed]) ifTrue: [self toggleSuggestions]
+	(self isInWorld and: [self suggestAlways and: [anEvent redButtonPressed]]) ifTrue: [self toggleSuggestions]
 ]
 
 { #category : #hierarchy }
@@ -2401,7 +2401,10 @@ SBBlock >> startInputAtEnd [
 		ifNotNil: [self]
 		ifNil: [self lastMorphThat: [:b | b isSandblock and: [b startInputCommand notNil]]])
 		ifNotNil: [:b | self sandblockEditor startInput: b at: 900000000 replacingContents: false]
-		ifNil: [self lastDeepChild select]
+		ifNil: [
+			self lastDeepChild select.
+			" try and move into an insert position "
+			self sandblockEditor performForSelection: #moveCursorSmaller]
 ]
 
 { #category : #actions }

@@ -73,6 +73,26 @@ SBInlineBlockSequence >> elements: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSequence >> hasSameContentsAs: aBlock [
+
+	(super hasSameContentsAs: aBlock) ifFalse: [^ false].
+	self submorphs
+		with: aBlock submorphs
+		do: [:a :b | (a hasSameContentsAs: b) ifFalse: [^ false]].
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSequence >> hasSameStructureAs: aBlock [
+
+	(super hasSameStructureAs: aBlock) ifFalse: [^ false].
+	self submorphs
+		with: aBlock submorphs
+		do: [:a :b | (a hasSameStructureAs: b) ifFalse: [^ false]].
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSequence >> inline [
 
 	^ self inlineIfPossible
@@ -81,7 +101,7 @@ SBInlineBlockSequence >> inline [
 { #category : #'as yet unclassified' }
 SBInlineBlockSequence >> printTitleOn: aStream [
 
-	self submorphs do: [:m | m printTitleOn: aStream] separatedBy: [aStream nextPutAll: ', ']
+	elements do: [:m | m printTitleOn: aStream] separatedBy: [aStream nextPutAll: ', ']
 ]
 
 { #category : #'as yet unclassified' }

@@ -61,6 +61,25 @@ SBInlineBlockLabel >> duplicateCleanTree [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockLabel >> firstDifferingBlocksWith: aMorph do: aBlock [
+
+	self class ~= aMorph class ifTrue: [^ aBlock value: self value: aMorph].
+	self label ~= aMorph label ifTrue: [^ aBlock value: self value: aMorph]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockLabel >> hasSameContentsAs: aBlock [
+
+	^ (super hasSameContentsAs: aBlock) and: [self label = aBlock label]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockLabel >> hasSameStructureAs: aBlock [
+
+	^ (super hasSameStructureAs: aBlock) and: [self label = aBlock label]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockLabel >> initialize [
 
 	super initialize.
@@ -90,6 +109,12 @@ SBInlineBlockLabel >> label [
 SBInlineBlockLabel >> label: aString [
 
 	self firstSubmorph contents: aString
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockLabel >> lengthOfLeftMostPath [
+
+	^ 1
 ]
 
 { #category : #'as yet unclassified' }

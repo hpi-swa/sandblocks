@@ -91,9 +91,44 @@ SBInlineBlockRepeat >> element [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> firstDifferingBlocksWith: aMorph do: aBlock [
+
+	self class ~= aMorph class ifTrue: [^ aBlock value: self value: aMorph].
+	self submorphCount ~= aMorph submorphCount ifTrue: [^ aBlock value: self value: aMorph].
+	self submorphs
+		with: aMorph submorphs
+		do: [:mine :their | mine firstDifferingBlocksWith: their do: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> hasSameContentsAs: aBlock [
+
+	(super hasSameContentsAs: aBlock) ifFalse: [^ false].
+	self submorphs
+		with: aBlock submorphs
+		do: [:a :b | (a hasSameContentsAs: b) ifFalse: [^ false]].
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> hasSameStructureAs: aBlock [
+
+	(super hasSameStructureAs: aBlock) ifFalse: [^ false].
+	(self element hasSameStructureAs: aBlock element) ifFalse: [^ false].
+	(self required ~= aBlock required or: [self multiple ~= aBlock multiple]) ifTrue: [^ false].
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> inline [
 
 	^ self inlineIfPossible
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> multiple [
+
+	^ multiple
 ]
 
 { #category : #'as yet unclassified' }
@@ -114,6 +149,12 @@ SBInlineBlockRepeat >> nonInlinedChildren [
 SBInlineBlockRepeat >> printTitleOn: aStream [
 
 	element printTitleOn: aStream
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> required [
+
+	^ required
 ]
 
 { #category : #'as yet unclassified' }

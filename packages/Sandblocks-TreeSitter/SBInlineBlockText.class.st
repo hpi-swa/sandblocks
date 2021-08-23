@@ -34,6 +34,10 @@ SBInlineBlockText >> buildFor: aStream matchFullToken: aBoolean options: anOptio
 SBInlineBlockText >> buildIn: aMorph info: anObject [
 
 	| start |
+	" does this make sense? "
+	self flag: #fixme.
+	anObject matchFullToken ifTrue: [^ nil].
+	
 	start := anObject stream position + 1.
 	^ (self regex matchesStreamPrefix: anObject stream)
 		ifTrue: [
@@ -85,11 +89,25 @@ SBInlineBlockText >> duplicateCleanTree [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockText >> hasSameContentsAs: aBlock [
+
+	^ (super hasSameStructureAs: aBlock) and: [self contents = aBlock contents]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockText >> hasSameStructureAs: aBlock [
+
+	^ (super hasSameStructureAs: aBlock) and: [self regexString = aBlock regexString]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockText >> initialize [
 
 	super initialize.
 	
-	self addMorphBack: (SBOwnTextMorph new contents: '')
+	self addMorphBack: (SBOwnTextMorph new
+		contents: '';
+		vResizing: #shrinkWrap)
 ]
 
 { #category : #'as yet unclassified' }
@@ -102,6 +120,12 @@ SBInlineBlockText >> inline [
 SBInlineBlockText >> isUnambiguous [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockText >> lengthOfLeftMostPath [
+
+	^ 1
 ]
 
 { #category : #'as yet unclassified' }

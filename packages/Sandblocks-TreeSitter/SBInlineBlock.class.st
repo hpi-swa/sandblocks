@@ -55,6 +55,13 @@ SBInlineBlock >> buildPartial: anOptions with: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> changeToUnknown [
+	<action>
+
+	self owner isInlineBlock ifTrue: [self owner changeToUnknown]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> childrenIn: anExplore [
 
 	^ self subclassResponsibility
@@ -124,6 +131,26 @@ SBInlineBlock >> firstBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> firstDifferingBlocksWith: aMorph do: aBlock ifNone: anotherBlock [
+
+	(self hasSameStructureAs: aMorph) ifFalse: [^ aBlock value: self value: aMorph].
+	(self hasSubmorphs and: [aMorph hasSubmorphs and: [self firstSubmorph isInlineBlock]]) ifTrue: [
+		^ self firstSubmorph
+			firstDifferingBlocksWith: aMorph firstSubmorph
+			do: aBlock
+			ifNone: anotherBlock].
+	^ anotherBlock value
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> firstDifferingUpBlocksWith: aMorph do: aBlock ifNone: anotherBlock [
+
+	(self hasSameStructureAs: aMorph) ifFalse: [^ aBlock value: self value: aMorph].
+	(self owner notNil and: [self owner isInlineBlock]) ifTrue: [^ self owner firstDifferingUpBlocksWith: aMorph owner do: aBlock ifNone: anotherBlock].
+	^ anotherBlock value
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> handlesMouseDown: anEvent [
 
 	^ self inline not
@@ -133,6 +160,26 @@ SBInlineBlock >> handlesMouseDown: anEvent [
 SBInlineBlock >> handlesMouseOver: anEvent [
 
 	^ self inline not
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> hasSameContentsAs: aBlock [
+
+	^ aBlock class = self class
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> hasSameStructureAs: aBlock [
+
+	^ aBlock class = self class
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> includesNestedSameStructure: aBlock [
+
+	(self hasSameStructureAs: aBlock) ifTrue: [^ true].
+	(self hasSubmorphs not or: [self firstSubmorph isInlineBlock not]) ifTrue: [^ false].
+	^ self firstSubmorph includesNestedSameStructure: aBlock
 ]
 
 { #category : #'initialize-release' }
@@ -167,7 +214,10 @@ SBInlineBlock >> inlineIfPossible [
 { #category : #'as yet unclassified' }
 SBInlineBlock >> instantiate [
 
-	^ self veryDeepCopy
+	| instance |
+	instance := self veryDeepCopy.
+	instance hasSubmorphs ifFalse: [instance buildDefault].
+	^instance
 ]
 
 { #category : #'as yet unclassified' }
@@ -192,6 +242,20 @@ SBInlineBlock >> isUnambiguous [
 SBInlineBlock >> layoutInset [
 
 	^ self inline ifTrue: [0] ifFalse: [super layoutInset]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> leftMostRule [
+
+	(self hasSubmorphs and: [self firstSubmorph isInlineBlock]) ifTrue: [^ self firstSubmorph leftMostRule]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> lengthOfLeftMostPath [
+
+	^ self submorphCount > 0
+		ifTrue: [1 + self firstSubmorph lengthOfLeftMostPath]
+		ifFalse: [1]
 ]
 
 { #category : #geometry }
@@ -221,7 +285,7 @@ SBInlineBlock >> prefersNoBorder [
 { #category : #'as yet unclassified' }
 SBInlineBlock >> printOn: aStream [
 
-	aStream nextPutAll: self className.
+	SBToggledCode comment: '' active: 0 do: {[aStream nextPutAll: self className]}.
 	aStream nextPut: $(.
 	self printTitleOn: aStream.
 	aStream nextPut: $)

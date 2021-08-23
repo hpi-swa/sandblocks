@@ -39,6 +39,25 @@ SBTSInlineBlockTest >> testFailSequence [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSInlineBlockTest >> testFailSymbol [
+
+	| block factory result |
+	factory := SBMetaBlockFactory new
+		at: 'exampleRule'
+		putTemplate: (SBInlineBlockLabel new label: 'ABC').
+	
+	block := SBInlineBlockSequence new elements: {
+		SBInlineBlockSymbol new
+			type: 'exampleRule'
+			factory: factory
+			visitedSymbols: Set new.
+		SBInlineBlockLabel new label: 'D'}.
+	
+	result := SBTSRuleExplore new explore: block value for: 'D'.
+	self assert: result isEmpty
+]
+
+{ #category : #'as yet unclassified' }
 SBTSInlineBlockTest >> testMatchChoice [
 
 	| block result |
@@ -82,25 +101,6 @@ SBTSInlineBlockTest >> testMatchLabel [
 	block := SBInlineBlockText new regexString: '\"[A-Z]*'.
 	result := (SBTSRuleExplore new explore: block value for: '"AB') first.
 	self assert: '"AB' equals: result contents
-]
-
-{ #category : #'as yet unclassified' }
-SBTSInlineBlockTest >> testMatchSymbol [
-
-	| block factory result |
-	factory := SBMetaBlockFactory new at: 'quotesRule' putTemplate: (SBInlineBlockSequence new elements: {
-		SBInlineBlockLabel new label: '"'.
-		SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: 'a'. SBInlineBlockLabel new label: 'ab'}.
-		SBInlineBlockLabel new label: '"'}).
-	
-	block := SBInlineBlockSymbol new
-		type: 'quotesRule'
-		factory: factory
-		visitedSymbols: Set new.
-	
-	result := (SBTSRuleExplore new explore: block value for: '"a"') first.
-	self assert: 1 equals: result submorphCount.
-	self assert: result notNil
 ]
 
 { #category : #'as yet unclassified' }
