@@ -49,13 +49,10 @@ SBInlineBlockSymbol >> buildPartial: anOptions with: aString [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> childrenIn: anExplore [
 
-	^ (SBToggledCode
-		comment: ''
-		active: 2
-		do: {[false]. [anExplore hasVisitedSymbol: self type]})
-		ifTrue: [SBToggledCode comment: '' active: 1 do: {[{}]. [{SBInlineBlockNever new}]}]
+	^ (anExplore notNil and: [anExplore hasVisitedSymbol: self type])
+		ifTrue: [{SBInlineBlockNever new}]
 		ifFalse: [
-			anExplore addVisitedSymbol: self type.
+			anExplore ifNotNil: [anExplore addVisitedSymbol: self type].
 			{factory getTemplate: self type}]
 ]
 
@@ -80,7 +77,24 @@ SBInlineBlockSymbol >> hasSameContentsAs: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> hasSameStructureAs: aBlock [
 
-	^ (super hasSameStructureAs: aBlock) and: [self type = aBlock type and: [self firstSubmorph hasSameStructureAs: aBlock firstSubmorph]]
+	^ (super hasSameStructureAs: aBlock) and: [
+		self type = aBlock type and: [
+			SBToggledCode
+				comment: ''
+				active: 1
+				do: {[true]. [self firstSubmorph hasSameStructureAs: aBlock firstSubmorph]}]]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> includesNestedSameStructure: aBlock [
+
+	(super includesNestedSameStructure: aBlock) ifTrue: [^ true].
+	
+	self type = 'binary_operator' ifTrue: [self halt].
+	((aBlock isKindOf: SBInlineBlockSymbol) and: [self type = aBlock type]) ifTrue: [^ true].
+	
+	Transcript showln: self type.
+	^ (factory getTemplate: self type) includesNestedSameStructure: aBlock
 ]
 
 { #category : #'as yet unclassified' }

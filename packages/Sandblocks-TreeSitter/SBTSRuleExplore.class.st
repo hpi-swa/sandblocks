@@ -9,7 +9,8 @@ Class {
 		'choiceIndices',
 		'stack',
 		'lastOptions',
-		'results'
+		'results',
+		'foundNested'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -71,6 +72,54 @@ SBTSRuleExplore >> explore: aBlock for: aString startSymbol: aSymbolString [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSRuleExplore >> explore: aBlock withNested: aSubBlock for: aString [
+
+	stack := OrderedCollection new.
+	lastOptions := OrderedCollection new.
+	choiceIndices := Dictionary new.
+	matchFullToken := aString last = Character space.
+	stream := (matchFullToken ifTrue: [aString allButLast] ifFalse: [aString]) readStream.
+	visitedSymbols := Set new.
+	results := OrderedCollection new.
+	foundNested := false.
+	
+	root := self push: aBlock.
+	
+	[
+		[stack notEmpty] whileTrue: [ | index block pair |
+			pair := stack last.
+			index := pair first.
+			block := pair second.
+			(block unbuiltChildrenIn: self)
+				at: index
+				ifPresent: [:template | | child |
+					pair at: 1 put: index + 1.
+					((template hasSameStructureAs: aSubBlock) and: [foundNested not])
+						ifTrue: [
+							child := aSubBlock buildCopy.
+							foundNested := true]
+						ifFalse: [
+							child := self push: template.
+							stream atEnd ifTrue: [child buildDefault]].
+					block addMorphBack: child]
+				ifAbsent: [
+					stack removeLast.
+					
+					stream atEnd
+						ifTrue: [
+							stack ifEmpty: [
+								results add: root buildCopy.
+								self restartFromLastChoiceIfDone: [^ results]]]
+						ifFalse: [
+							(block takeStreamFrom: self)
+								ifTrue: [
+									stack ifEmpty: [
+										(stream atEnd and: [foundNested]) ifTrue: [results add: root buildCopy].
+										self restartFromLastChoiceIfDone: [^ results]]]
+								ifFalse: [self restartFromLastChoiceIfDone: [^ results]]]]]] repeat
+]
+
+{ #category : #'as yet unclassified' }
 SBTSRuleExplore >> hasSeenChoice: aChoice [
 
 	^ choiceIndices includesKey: aChoice
@@ -102,7 +151,7 @@ SBTSRuleExplore >> push: aBlock [
 	stack add: {1. template}.
 	((aBlock isKindOf: SBInlineBlockChoice) and: [stream atEnd not]) ifTrue: [
 		self indexFor: template.
-		lastOptions add: {template. stack collect: [:pair | pair copy]. stream position. visitedSymbols copy}].
+		lastOptions add: {template. stack collect: [:pair | pair copy]. stream position. visitedSymbols copy. foundNested}].
 	^ template
 ]
 
@@ -130,6 +179,7 @@ SBTSRuleExplore >> restartFromLastChoiceIfDone: aBlock [
 	stack := option second collect: [:pair | pair copy].
 	stream position: option third.
 	visitedSymbols := option fourth copy.
+	foundNested := option fifth.
 	
 	number := choiceIndices at: option first put: (choiceIndices at: choice) + 1.
 	number = choice alternatives size ifTrue: [lastOptions removeLast].

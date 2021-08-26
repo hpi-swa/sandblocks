@@ -79,6 +79,7 @@ SBInlineBlockChoice >> changeToUnknown [
 { #category : #'as yet unclassified' }
 SBInlineBlockChoice >> childrenIn: anExplore [
 
+	anExplore ifNil: [^ self alternatives].
 	^ {self alternatives at: (anExplore indexFor: self)}
 ]
 
@@ -119,7 +120,7 @@ SBInlineBlockChoice >> hasSameStructureAs: aBlock [
 SBInlineBlockChoice >> inline [
 
 	^ SBToggledCode comment: '' active: 1 do: {
-		[self owner notNil and: [self owner isInlineBlock]].
+		[self owner notNil and: [self owner isInlineBlock and: [(self owner submorphs count: [:m | (m isKindOf: SBInlineBlockLabel) not]) = 1]]].
 		[
 			self inlineIfPossible and: [
 				SBToggledCode

@@ -164,3 +164,9 @@ SBInlineBlockText >> triggersFor: aString matchFullToken: aBoolean options: anOp
 			do: {[aBoolean ifTrue: [self regex matches: aString] ifFalse: [self regex matchesPrefix: aString]]}.
 		self regex matches: aString, (aBoolean ifTrue: [' '] ifFalse: [''])]
 ]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockText >> valid [
+
+	^ regex matches: self contents
+]

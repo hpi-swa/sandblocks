@@ -168,7 +168,7 @@ SBBlock >> artefactCompletionSelectorsFor: aBlock class: aClass [
 
 { #category : #suggestions }
 SBBlock >> artefactCompletionSuggestionsFor: aBlock matching: aString [
-	 
+
 	| exactMatches fuzzyMatches selectors list |
 	selectors := OrderedCollection withAll: (self artefactCompletionSelectorsFor: aBlock class: aBlock guessClassExpensive).
 	exactMatches := (Array streamContents: [:stream |
@@ -181,7 +181,7 @@ SBBlock >> artefactCompletionSuggestionsFor: aBlock matching: aString [
 			(sel sandblockMatch: aString)
 				ifTrue: [stream nextPut: sel];
 				yourself]]) sort: #size ascending.
-	list := exactMatches, fuzzyMatches, (self sandblockEditor suggestAlways
+	list := exactMatches, fuzzyMatches, ((self sandblockEditor suggestAlways and: [aString isEmpty])
 		ifTrue: [selectors]
 		ifFalse: [#()]).
 	

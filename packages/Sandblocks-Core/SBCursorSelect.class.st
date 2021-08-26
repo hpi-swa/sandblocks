@@ -80,7 +80,7 @@ SBCursorSelect >> moveHorizontal: aNumber wordWise: aBoolean [
 			adjacentPosition: aNumber
 			to: self
 			in: self block sandblockEditor
-			that: [:p | ((p block hasOwner: self block) or: [p block = self block]) not and: [(p isKindOf: SBCursorSelect) not or: [p block startInputCommand isNil]]].
+			that: [:p | ((p block hasOwner: self block) or: [p block = self block]) not and: [(p isKindOf: SBCursorSelect) not or: [p block currentTextMorph isNil and: [p block hasChildSandblocks not]]]].
 		
 		^ next ifNil: [" if we are past all positions, see if we want to enter this block instead "
 		self cursorPositionsIn: self block do: [:position | position = self ifFalse: [^ position]]]].

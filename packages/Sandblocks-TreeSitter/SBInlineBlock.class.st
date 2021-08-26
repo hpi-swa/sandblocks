@@ -173,8 +173,8 @@ SBInlineBlock >> hasSameStructureAs: aBlock [
 SBInlineBlock >> includesNestedSameStructure: aBlock [
 
 	(self hasSameStructureAs: aBlock) ifTrue: [^ true].
-	(self hasSubmorphs not or: [self firstSubmorph isInlineBlock not]) ifTrue: [^ false].
-	^ self firstSubmorph includesNestedSameStructure: aBlock
+	(self childrenIn: nil) do: [:morph | (morph includesNestedSameStructure: aBlock) ifTrue: [^ true]].
+	^ false
 ]
 
 { #category : #'initialize-release' }
@@ -232,6 +232,26 @@ SBInlineBlock >> isSandblock [
 SBInlineBlock >> isUnambiguous [
 
 	^ self submorphs allSatisfy: [:m | m isUnambiguous]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> keyStroke: anEvent [
+
+	super keyStroke: anEvent.
+	self currentTextMorph owner valid ifFalse: [ | nextChoice choices |
+		self deleteBeforeCursor.
+		nextChoice := (self isKindOf: SBInlineBlockChoice)
+			ifTrue: [self]
+			ifFalse: [self ownerSatisfying: [:m | m isKindOf: SBInlineBlockChoice]].
+		choices := SBTSRuleExplore new
+			explore: nextChoice
+			withNested: self
+			for: anEvent keyCharacter asString.
+		choices size = 1 ifTrue: [
+			self sandblockEditor do: (SBReplaceCommand new
+				target: self;
+				replacer: choices first).
+			choices first inputContainedUnknown]]
 ]
 
 { #category : #'as yet unclassified' }

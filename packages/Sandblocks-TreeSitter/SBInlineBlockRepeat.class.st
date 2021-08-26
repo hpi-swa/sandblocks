@@ -61,14 +61,13 @@ SBInlineBlockRepeat >> cursorPositionsDo: aBlock [
 			adjacent: adjacent;
 			container: self)].
 	
-	self inline not ifTrue: [aBlock value: (SBCursorSelect new block: self)].
-	(multiple or: [self hasSubmorphs not]) ifTrue: [buildInsert value: nil value: true].
+	self inline ifFalse: [aBlock value: (SBCursorSelect new block: self)].
 	
+	(multiple or: [self hasSubmorphs not]) ifTrue: [buildInsert value: nil value: true].
 	self submorphsDo: [:morph |
 		multiple ifTrue: [buildInsert value: morph value: true].
 		morph cursorPositionsDo: aBlock.
 		multiple ifTrue: [buildInsert value: morph value: false]].
-	
 	(multiple or: [self hasSubmorphs not]) ifTrue: [buildInsert value: nil value: false]
 ]
 

@@ -1,10 +1,10 @@
 Class {
 	#name : #SBTSInlineBlockTest,
-	#superclass : #TestCase,
+	#superclass : #SBTest,
 	#category : #'Sandblocks-TreeSitter-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'tests - match empty' }
 SBTSInlineBlockTest >> testChoiceContinueMatching [
 
 	| block |
@@ -15,7 +15,7 @@ SBTSInlineBlockTest >> testChoiceContinueMatching [
 	self assert: (SBTSRuleExplore new explore: block value for: '"ab"') size = 1
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'tests - match empty' }
 SBTSInlineBlockTest >> testChoiceNested [
 
 	| block |
@@ -26,7 +26,7 @@ SBTSInlineBlockTest >> testChoiceNested [
 	self assert: (SBTSRuleExplore new explore: block value for: '"a"') notNil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'tests - match empty' }
 SBTSInlineBlockTest >> testFailSequence [
 
 	| block result |
@@ -38,7 +38,7 @@ SBTSInlineBlockTest >> testFailSequence [
 	self assert: result isEmpty
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'tests - match empty' }
 SBTSInlineBlockTest >> testFailSequence2 [
 
 	| block result |
@@ -50,7 +50,7 @@ SBTSInlineBlockTest >> testFailSequence2 [
 	self assert: result isEmpty
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'tests - match empty' }
 SBTSInlineBlockTest >> testFailSymbol [
 
 	| block factory result |
@@ -69,7 +69,7 @@ SBTSInlineBlockTest >> testFailSymbol [
 	self assert: result isEmpty
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'tests - match empty' }
 SBTSInlineBlockTest >> testFailTooLongLabel [
 
 	| block result |
@@ -78,7 +78,30 @@ SBTSInlineBlockTest >> testFailTooLongLabel [
 	self assert: result isEmpty
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'tests - continue match' }
+SBTSInlineBlockTest >> testMatchBinaryOp [
+
+	| factory unknown editor num |
+	factory := SBMetaBlockFactory new.
+	factory
+		grammar: '{"supertypes":[]}' nodeTypes: '{}';
+		at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
+			SBInlineBlockSequence new elements: {
+				SBInlineBlockSymbol new type: 'expr' factory: factory.
+				SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: '-'. SBInlineBlockLabel new label: '+'}.
+				SBInlineBlockSymbol new type: 'expr' factory: factory}.
+			SBInlineBlockText new regexString: '[0-9]+'}).
+	
+	editor := self editorFor: (unknown := factory instantiateTemplate: 'expr').
+	unknown firstSubmorph keyStroke: (self keyboardEvent: $1).
+	num := editor childSandblocks first.
+	num keyStroke: (self keyboardEvent: $+).
+	self
+		assert: '+'
+		equals: editor childSandblocks first firstSubmorph submorphs second firstSubmorph contents
+]
+
+{ #category : #'tests - match empty' }
 SBTSInlineBlockTest >> testMatchChoice [
 
 	| block result |
@@ -88,7 +111,7 @@ SBTSInlineBlockTest >> testMatchChoice [
 	self assert: 'ab' equals: result second firstSubmorph contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'tests - match empty' }
 SBTSInlineBlockTest >> testMatchGroup [
 
 	| block result |
@@ -100,7 +123,7 @@ SBTSInlineBlockTest >> testMatchGroup [
 	self assert: 3 equals: result submorphCount
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'tests - match empty' }
 SBTSInlineBlockTest >> testMatchIncompleteSequence [
 
 	| block result |
@@ -115,7 +138,7 @@ SBTSInlineBlockTest >> testMatchIncompleteSequence [
 	self assert: result lastSubmorph firstSubmorph isUnknown
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'tests - match empty' }
 SBTSInlineBlockTest >> testMatchLabel [
 
 	| block result |
@@ -124,7 +147,7 @@ SBTSInlineBlockTest >> testMatchLabel [
 	self assert: '"AB' equals: result contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'tests - match empty' }
 SBTSInlineBlockTest >> testMultipleMatches [
 
 	| block result |
@@ -143,7 +166,7 @@ SBTSInlineBlockTest >> testMultipleMatches [
 	self assert: 3 equals: result third submorphCount
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'tests - match empty' }
 SBTSInlineBlockTest >> testRegressionAttribute [
 
 	| block result factory |

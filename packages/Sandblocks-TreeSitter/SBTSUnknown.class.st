@@ -54,28 +54,8 @@ SBTSUnknown >> inline [
 { #category : #'as yet unclassified' }
 SBTSUnknown >> keyStroke: anEvent [
 
-	| choices |
 	self currentTextMorph keyStroke: anEvent.
-	
-	choices := SBTSRuleExplore new
-		explore: template value
-		for: self contents
-		startSymbol: type.
-	
-	choices size > 1 ifTrue: [ | shortest |
-		shortest := choices detectMin: [:choice | choice lengthOfLeftMostPath].
-		choices removeAllSuchThat: [:choice |
-			choice ~= shortest and: [
-				choice leftMostRule
-					firstDifferingUpBlocksWith: shortest leftMostRule
-					do: [:a :b | (a firstSubmorph isKindOf: SBInlineBlockSymbol) or: [b isNil]]
-					ifNone: [false]]]].
-	
-	choices size = 1 ifTrue: [
-		self sandblockEditor do: (SBReplaceCommand new
-			target: self owner;
-			replacer: choices first).
-		choices first containingSandblock startInputAtEnd]
+	self tryInterpretContents
 ]
 
 { #category : #'as yet unclassified' }
@@ -101,6 +81,31 @@ SBTSUnknown >> template [
 SBTSUnknown >> template: aBlock [
 
 	template := aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBTSUnknown >> tryInterpretContents [
+
+	| choices |
+	choices := SBTSRuleExplore new
+		explore: template value
+		for: self contents
+		startSymbol: type.
+	
+	choices size > 1 ifTrue: [ | shortest |
+		shortest := choices detectMin: [:choice | choice lengthOfLeftMostPath].
+		choices removeAllSuchThat: [:choice |
+			choice ~= shortest and: [
+				choice leftMostRule
+					firstDifferingUpBlocksWith: shortest leftMostRule
+					do: [:a :b | (a firstSubmorph isKindOf: SBInlineBlockSymbol) or: [b isNil]]
+					ifNone: [false]]]].
+	
+	choices size = 1 ifTrue: [
+		self sandblockEditor do: (SBReplaceCommand new
+			target: self owner;
+			replacer: choices first).
+		(choices first firstBlock ifNil: [choices first containingSandblock]) startInputAtEnd]
 ]
 
 { #category : #'as yet unclassified' }
