@@ -591,7 +591,7 @@ SBMetaBlockFactory >> rulesMatching: aStringOrCollection containing: aRuleName f
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> shouldBlockInline: aTypeString [
 
-	^ (self isSuperType: aTypeString) or: [self grammar blockInline ifNotNil: [:i | i includes: aTypeString]]
+	^ (self isSuperType: aTypeString) or: [self grammar blockInline ifNotNil: [:i | i includes: aTypeString] ifNil: [false]]
 ]
 
 { #category : #'grammar clean' }

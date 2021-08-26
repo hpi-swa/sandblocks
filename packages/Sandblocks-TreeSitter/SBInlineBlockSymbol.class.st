@@ -17,6 +17,7 @@ SBInlineBlockSymbol >> buildCopy [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> buildDefaultIn: anExplore [
 
+	super buildDefaultIn: anExplore.
 	self addMorphBack: (SBTSUnknown new
 		template: [factory getTemplate: type visitedSymbols: Set new];
 		type: type)
@@ -40,12 +41,6 @@ SBInlineBlockSymbol >> buildFor: aString matchFullToken: aBoolean options: anOpt
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockSymbol >> buildIn: aMorph info: anObject [
-
-	^ self
-]
-
-{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> buildPartial: anOptions with: aString [
 
 	^ (factory getTemplate: type) buildPartial: anOptions with: aString
@@ -58,7 +53,7 @@ SBInlineBlockSymbol >> childrenIn: anExplore [
 		comment: ''
 		active: 2
 		do: {[false]. [anExplore hasVisitedSymbol: self type]})
-		ifTrue: [{SBInlineBlockNever new}]
+		ifTrue: [SBToggledCode comment: '' active: 1 do: {[{}]. [{SBInlineBlockNever new}]}]
 		ifFalse: [
 			anExplore addVisitedSymbol: self type.
 			{factory getTemplate: self type}]
@@ -118,6 +113,12 @@ SBInlineBlockSymbol >> printTitleOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> takeStreamFrom: anObject [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> triggersFor: aString matchFullToken: aBoolean options: anOptions [
 
 	^ (anOptions hasVisitedSymbol: self type)
@@ -134,6 +135,12 @@ SBInlineBlockSymbol >> triggersFor: aString matchFullToken: aBoolean options: an
 SBInlineBlockSymbol >> type [
 
 	^ type
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> type: aSymbol factory: aFactory [
+
+	self type: aSymbol factory: aFactory visitedSymbols: Set new
 ]
 
 { #category : #'as yet unclassified' }

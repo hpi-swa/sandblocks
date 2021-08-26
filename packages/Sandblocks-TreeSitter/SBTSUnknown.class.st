@@ -68,7 +68,7 @@ SBTSUnknown >> keyStroke: anEvent [
 			choice ~= shortest and: [
 				choice leftMostRule
 					firstDifferingUpBlocksWith: shortest leftMostRule
-					do: [:a :b | a firstSubmorph isKindOf: SBInlineBlockSymbol]
+					do: [:a :b | (a firstSubmorph isKindOf: SBInlineBlockSymbol) or: [b isNil]]
 					ifNone: [false]]]].
 	
 	choices size = 1 ifTrue: [
@@ -76,6 +76,12 @@ SBTSUnknown >> keyStroke: anEvent [
 			target: self owner;
 			replacer: choices first).
 		choices first containingSandblock startInputAtEnd]
+]
+
+{ #category : #'as yet unclassified' }
+SBTSUnknown >> lengthOfLeftMostPath [
+
+	^ 1
 ]
 
 { #category : #'as yet unclassified' }

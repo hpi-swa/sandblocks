@@ -2,7 +2,8 @@ Class {
 	#name : #SBInlineBlock,
 	#superclass : #SBBlock,
 	#instVars : [
-		'name'
+		'name',
+		'built'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -22,7 +23,7 @@ SBInlineBlock >> buildDefault [
 { #category : #'as yet unclassified' }
 SBInlineBlock >> buildDefaultIn: anExplore [
 
-	^ self subclassResponsibility
+	built := true
 ]
 
 { #category : #'as yet unclassified' }
@@ -44,12 +45,6 @@ SBInlineBlock >> buildFor: aString matchFullToken: aBoolean [
 
 { #category : #'as yet unclassified' }
 SBInlineBlock >> buildFor: aStream matchFullToken: aBoolean options: anOptions [
-
-	^ self subclassResponsibility
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlock >> buildIn: aMorph info: anObject [
 
 	^ self subclassResponsibility
 ]
@@ -187,6 +182,8 @@ SBInlineBlock >> initialize [
 
 	super initialize.
 	
+	built := false.
+	
 	self
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
@@ -304,6 +301,12 @@ SBInlineBlock >> removedMorph: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> takeStreamFrom: aMorph [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> title [
 
 	^ String streamContents: [:stream | self printTitleOn: stream]
@@ -313,6 +316,12 @@ SBInlineBlock >> title [
 SBInlineBlock >> triggersFor: aString matchFullToken: aBoolean options: anOptions [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> unbuiltChildrenIn: anExplore [
+
+	^ built ifTrue: [#()] ifFalse: [self childrenIn: anExplore]
 ]
 
 { #category : #'as yet unclassified' }

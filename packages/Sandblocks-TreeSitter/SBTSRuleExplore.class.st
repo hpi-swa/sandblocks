@@ -21,6 +21,12 @@ SBTSRuleExplore >> addVisitedSymbol: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSRuleExplore >> explore: aBlock for: aString [
+
+	^ self explore: aBlock for: aString startSymbol: nil
+]
+
+{ #category : #'as yet unclassified' }
 SBTSRuleExplore >> explore: aBlock for: aString startSymbol: aSymbolString [
 
 	stack := OrderedCollection new.
@@ -40,23 +46,28 @@ SBTSRuleExplore >> explore: aBlock for: aString startSymbol: aSymbolString [
 			pair := stack last.
 			index := pair first.
 			block := pair second.
-			(block childrenIn: self)
+			(block unbuiltChildrenIn: self)
 				at: index
-				ifPresent: [:child |
+				ifPresent: [:template | | child |
 					pair at: 1 put: index + 1.
-					stream atEnd
-						ifTrue: [block addMorphBack: (child buildEmpty buildDefaultIn: self)]
-						ifFalse: [self push: child]]
-				ifAbsent: [ | newChild |
+					child := self push: template.
+					block addMorphBack: child.
+					stream atEnd ifTrue: [child buildDefault]]
+				ifAbsent: [
 					stack removeLast.
-					newChild := stream atEnd ifTrue: [block] ifFalse: [
-						(block buildIn: nil info: self) ifNotNil: [:b | b] ifNil: [
-							self restartFromLastChoiceIfDone: [^ results].
-							nil]].
-					(stack notEmpty and: [newChild notNil]) ifTrue: [stack last second addMorphBack: newChild].
-					stack ifEmpty: [
-						results add: root buildCopy.
-						self restartFromLastChoiceIfDone: [^ results]]]]] repeat
+					
+					stream atEnd
+						ifTrue: [
+							stack ifEmpty: [
+								results add: root buildCopy.
+								self restartFromLastChoiceIfDone: [^ results]]]
+						ifFalse: [
+							(block takeStreamFrom: self)
+								ifTrue: [
+									stack ifEmpty: [
+										stream atEnd ifTrue: [results add: root buildCopy].
+										self restartFromLastChoiceIfDone: [^ results]]]
+								ifFalse: [self restartFromLastChoiceIfDone: [^ results]]]]]] repeat
 ]
 
 { #category : #'as yet unclassified' }
@@ -89,7 +100,7 @@ SBTSRuleExplore >> push: aBlock [
 	| template |
 	template := aBlock buildEmpty.
 	stack add: {1. template}.
-	(aBlock isKindOf: SBInlineBlockChoice) ifTrue: [
+	((aBlock isKindOf: SBInlineBlockChoice) and: [stream atEnd not]) ifTrue: [
 		self indexFor: template.
 		lastOptions add: {template. stack collect: [:pair | pair copy]. stream position. visitedSymbols copy}].
 	^ template
@@ -98,9 +109,14 @@ SBTSRuleExplore >> push: aBlock [
 { #category : #'as yet unclassified' }
 SBTSRuleExplore >> removeAllMorphsAfter: aMorph in: aParentMorph [
 
-	| delete |
+	| delete toDelete |
 	delete := false.
-	aParentMorph allMorphsDo: [:m | delete ifTrue: [m delete] ifFalse: [m = aMorph ifTrue: [delete := true]]]
+	toDelete := OrderedCollection new.
+	aParentMorph allMorphsMutableDo: [:m |
+		(delete and: [(aMorph hasOwner: m) not])
+			ifTrue: [SBToggledCode comment: '' active: 1 do: {[toDelete add: m]. [m delete]}]
+			ifFalse: [m = aMorph ifTrue: [delete := true]]].
+	toDelete do: #delete
 ]
 
 { #category : #'as yet unclassified' }
@@ -118,7 +134,15 @@ SBTSRuleExplore >> restartFromLastChoiceIfDone: aBlock [
 	number := choiceIndices at: option first put: (choiceIndices at: choice) + 1.
 	number = choice alternatives size ifTrue: [lastOptions removeLast].
 	
+	self assert: (choice ownerChain includes: root).
+	choice allMorphsMutableDo: [:m | m ~= choice ifTrue: [m delete]].
 	self removeAllMorphsAfter: choice in: root
+]
+
+{ #category : #'as yet unclassified' }
+SBTSRuleExplore >> sanityCheck [
+
+	lastOptions do: [:opt | self assert: (opt first ownerChain includes: root)]
 ]
 
 { #category : #'as yet unclassified' }

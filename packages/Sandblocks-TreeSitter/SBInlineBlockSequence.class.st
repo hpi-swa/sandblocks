@@ -8,6 +8,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSequence >> addedMorph: aMorph [
+
+	super addedMorph: aMorph
+	"(self hasSubmorphs and: [(self firstSubmorph isKindOf: SBInlineBlockLabel) and: [self firstSubmorph label = '.']]) ifTrue: [self halt].
+	((aMorph isKindOf: SBInlineBlockLabel) and: [aMorph label = '.' and: [aMorph submorphIndex = 1]]) ifTrue: [self halt]"
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSequence >> buildCopy [
 
 	| copy |
@@ -19,8 +27,8 @@ SBInlineBlockSequence >> buildCopy [
 { #category : #'as yet unclassified' }
 SBInlineBlockSequence >> buildDefaultIn: anExplore [
 
-	self elements do: [:element |
-		self addMorphBack: element instantiate]
+	super buildDefaultIn: anExplore.
+	self elements do: [:element | self addMorphBack: element instantiate]
 ]
 
 { #category : #'as yet unclassified' }
@@ -44,12 +52,6 @@ SBInlineBlockSequence >> buildFor: aStream matchFullToken: aBoolean options: anO
 				do: [:next | copy addMorphBack: (elements at: next) veryDeepCopy].
 			^ copy]].
 	^ copy
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockSequence >> buildIn: aMorph info: anObject [
-
-	^ self
 ]
 
 { #category : #'as yet unclassified' }
@@ -106,6 +108,12 @@ SBInlineBlockSequence >> inline [
 SBInlineBlockSequence >> printTitleOn: aStream [
 
 	elements do: [:m | m printTitleOn: aStream] separatedBy: [aStream nextPutAll: ', ']
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSequence >> takeStreamFrom: anObject [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

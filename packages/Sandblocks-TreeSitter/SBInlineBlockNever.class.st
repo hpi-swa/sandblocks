@@ -11,15 +11,16 @@ SBInlineBlockNever >> buildCopy [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockNever >> buildEmpty [
+SBInlineBlockNever >> buildDefaultIn: anExplore [
 
-	^ self class new
+	super buildDefaultIn: anExplore.
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockNever >> buildIn: aMorph info: anObject [
+SBInlineBlockNever >> buildEmpty [
 
-	^ nil
+	^ self class new
 ]
 
 { #category : #'as yet unclassified' }
@@ -42,6 +43,18 @@ SBInlineBlockNever >> hasSameContentsAs: aBlock [
 
 { #category : #'as yet unclassified' }
 SBInlineBlockNever >> hasSameStructureAs: aBlock [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockNever >> printTitleOn: aStream [
+
+	aStream nextPutAll: '<never>'
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockNever >> takeStreamFrom: anObject [
 
 	^ false
 ]

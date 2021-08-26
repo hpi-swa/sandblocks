@@ -21,6 +21,7 @@ SBInlineBlockRepeat >> buildCopy [
 { #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> buildDefaultIn: anExplore [
 
+	super buildDefaultIn: anExplore.
 	required ifTrue: [self addMorphBack: self element instantiate]
 ]
 
@@ -35,14 +36,6 @@ SBInlineBlockRepeat >> buildFor: aString matchFullToken: aBoolean options: anOpt
 	" FIXME: consider actually repeating "
 
 	^ element buildFor: aString matchFullToken: aBoolean options: anOptions
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockRepeat >> buildIn: aMorph info: anObject [
-
-	self flag: #fixme.
-	" need to consider optionals and repeating "
-	^ self
 ]
 
 { #category : #'as yet unclassified' }
@@ -158,6 +151,14 @@ SBInlineBlockRepeat >> printTitleOn: aStream [
 SBInlineBlockRepeat >> required [
 
 	^ required
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> takeStreamFrom: anObject [
+
+	self flag: #fixme.
+	" need to consider optionals and repeating "
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

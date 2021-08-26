@@ -17,7 +17,7 @@ SBInlineBlockText >> buildCopy [
 { #category : #'as yet unclassified' }
 SBInlineBlockText >> buildDefaultIn: anExplore [
 
-	
+	super buildDefaultIn: anExplore
 ]
 
 { #category : #'as yet unclassified' }
@@ -33,23 +33,6 @@ SBInlineBlockText >> buildFor: aStream matchFullToken: aBoolean options: anOptio
 	start := aStream position + 1.
 	^ (self regex matchesStreamPrefix: aStream)
 		ifTrue: [self veryDeepCopy contents: (aStream originalContents copyFrom: start to: aStream position)]
-		ifFalse: [nil]
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockText >> buildIn: aMorph info: anObject [
-
-	| start |
-	" does this make sense? "
-	self flag: #fixme.
-	anObject matchFullToken ifTrue: [^ nil].
-	
-	start := anObject stream position + 1.
-	^ (self regex matchesStreamPrefix: anObject stream)
-		ifTrue: [
-			self contents: (anObject stream originalContents
-				copyFrom: start
-				to: anObject stream position)]
 		ifFalse: [nil]
 ]
 
@@ -151,6 +134,24 @@ SBInlineBlockText >> regexString: aString [
 
 	regexString := aString.
 	regex := aString asRegex
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockText >> takeStreamFrom: anObject [
+
+	| start |
+	" does this make sense? "
+	self flag: #fixme.
+	anObject matchFullToken ifTrue: [^ nil].
+	
+	start := anObject stream position + 1.
+	^ (self regex matchesStreamPrefix: anObject stream)
+		ifTrue: [
+			self contents: (anObject stream originalContents
+				copyFrom: start
+				to: anObject stream position).
+			true]
+		ifFalse: [false]
 ]
 
 { #category : #'as yet unclassified' }

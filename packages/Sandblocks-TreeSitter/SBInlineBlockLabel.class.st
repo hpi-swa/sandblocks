@@ -13,7 +13,7 @@ SBInlineBlockLabel >> buildCopy [
 { #category : #'as yet unclassified' }
 SBInlineBlockLabel >> buildDefaultIn: anExplore [
 
-	
+	super buildDefaultIn: anExplore
 ]
 
 { #category : #'as yet unclassified' }
@@ -29,16 +29,6 @@ SBInlineBlockLabel >> buildFor: aStream matchFullToken: aBoolean options: anOpti
 		ifTrue: [aStream nextMatchAll: self label]
 		ifFalse: [aStream nextMatchAll: (self label first: (aStream size - aStream position min: self label size))])
 		ifTrue: [self veryDeepCopy]
-		ifFalse: [nil]
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockLabel >> buildIn: aMorph info: option [
-
-	^ (option matchFullToken
-		ifTrue: [option stream nextMatchAll: self label]
-		ifFalse: [option stream nextMatchAll: (self label first: (option stream size - option stream position min: self label size))])
-		ifTrue: [self]
 		ifFalse: [nil]
 ]
 
@@ -121,4 +111,12 @@ SBInlineBlockLabel >> lengthOfLeftMostPath [
 SBInlineBlockLabel >> printTitleOn: aStream [
 
 	aStream nextPutAll: self label
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockLabel >> takeStreamFrom: option [
+
+	^ option matchFullToken
+		ifTrue: [option stream nextMatchAll: self label]
+		ifFalse: [option stream nextMatchAll: (self label first: (option stream size - option stream position min: self label size))]
 ]

@@ -22,12 +22,17 @@ SBInlineBlockChoice >> alternatives: aCollection [
 { #category : #'as yet unclassified' }
 SBInlineBlockChoice >> buildCopy [
 
-	^ self buildEmpty addMorphBack: self firstSubmorph buildCopy
+	| copy |
+	copy := self buildEmpty.
+	self hasSubmorphs ifTrue: [
+		copy addMorphBack: self firstSubmorph buildCopy].
+	^ copy
 ]
 
 { #category : #'as yet unclassified' }
 SBInlineBlockChoice >> buildDefaultIn: anExplore [
 
+	super buildDefaultIn: anExplore.
 	self addMorphBack: (anExplore
 		ifNotNil: [
 			(anExplore hasSeenChoice: self)
@@ -51,12 +56,6 @@ SBInlineBlockChoice >> buildFor: aStream matchFullToken: aBoolean options: anOpt
 		buildFor: aStream
 		matchFullToken: aBoolean
 		options: anOptions) ifNotNil: [:result | self veryDeepCopy removeAllMorphs addMorphBack: result]
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockChoice >> buildIn: aMorph info: anObject [
-
-	^ self
 ]
 
 { #category : #'as yet unclassified' }
@@ -109,6 +108,7 @@ SBInlineBlockChoice >> hasSameContentsAs: aBlock [
 SBInlineBlockChoice >> hasSameStructureAs: aBlock [
 
 	(super hasSameStructureAs: aBlock) ifFalse: [^ false].
+	self alternatives size = aBlock alternatives size ifFalse: [^ false].
 	self alternatives
 		with: aBlock alternatives
 		do: [:a :b | (a hasSameStructureAs: b) ifFalse: [^ false]].
@@ -138,5 +138,15 @@ SBInlineBlockChoice >> isUnambiguous [
 { #category : #'as yet unclassified' }
 SBInlineBlockChoice >> printTitleOn: aStream [
 
+	SBToggledCode
+		comment: ''
+		active: 0
+		do: {[self hasSubmorphs ifTrue: [^ self firstSubmorph printTitleOn: aStream]]}.
 	alternatives do: [:m | m printTitleOn: aStream] separatedBy: [aStream nextPutAll: ' | ']
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockChoice >> takeStreamFrom: aMorph [
+
+	^ true
 ]
