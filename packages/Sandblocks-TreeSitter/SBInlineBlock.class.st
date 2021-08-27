@@ -56,6 +56,12 @@ SBInlineBlock >> buildPartial: anOptions with: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> candidatesForWrappingOn: aStream [
+
+	(self hasSubmorphs and: [self firstSubmorph isInlineBlock]) ifTrue: [self firstSubmorph candidatesForWrappingOn: aStream]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> changeToUnknown [
 	<action>
 
@@ -69,6 +75,23 @@ SBInlineBlock >> childrenIn: anExplore [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> choicesForInput: aString [
+
+	| explore |
+	explore := [:block | (SBTSRuleExplore new explore: block withNested: self for: aString startSymbol: nil) ifNotEmpty: [:choices | ^ choices]].
+	
+	SBToggledCode
+		comment: ''
+		active: 0
+		do: {[self candidatesForWrappingOn: (SBImmediateStream with: explore)]}.
+	
+	explore value: ((self isKindOf: SBInlineBlockChoice)
+		ifTrue: [self]
+		ifFalse: [self ownerSatisfying: [:m | m isKindOf: SBInlineBlockChoice]]).
+	^ #()
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> click: anEvent [
 
 	self inline ifFalse: [super click: anEvent]
@@ -77,7 +100,7 @@ SBInlineBlock >> click: anEvent [
 { #category : #'as yet unclassified' }
 SBInlineBlock >> containingSandblock [
 
-	^ self inline ifTrue: [self owner containingSandblock] ifFalse: [self]
+	^ self inline ifTrue: [self owner ifNotNil: #containingSandblock] ifFalse: [self]
 ]
 
 { #category : #'as yet unclassified' }
@@ -238,20 +261,13 @@ SBInlineBlock >> isUnambiguous [
 SBInlineBlock >> keyStroke: anEvent [
 
 	super keyStroke: anEvent.
-	self currentTextMorph owner valid ifFalse: [ | nextChoice choices |
+	
+	self currentTextMorph owner valid ifFalse: [
 		self deleteBeforeCursor.
-		nextChoice := (self isKindOf: SBInlineBlockChoice)
-			ifTrue: [self]
-			ifFalse: [self ownerSatisfying: [:m | m isKindOf: SBInlineBlockChoice]].
-		choices := SBTSRuleExplore new
-			explore: nextChoice
-			withNested: self
-			for: anEvent keyCharacter asString.
-		choices size = 1 ifTrue: [
-			self sandblockEditor do: (SBReplaceCommand new
-				target: self;
-				replacer: choices first).
-			choices first inputContainedUnknown]]
+		
+		self tryInterpretInput: (anEvent keyCharacter = Character space
+			ifTrue: [UIManager default request: 'type operator']
+			ifFalse: [anEvent keyCharacter asString])]
 ]
 
 { #category : #'as yet unclassified' }
@@ -290,6 +306,12 @@ SBInlineBlock >> name: aString [
 SBInlineBlock >> nonInlinedChildren [
 
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> numAlternatives [
+
+	^ 1
 ]
 
 { #category : #'as yet unclassified' }
@@ -339,6 +361,18 @@ SBInlineBlock >> triggersFor: aString matchFullToken: aBoolean options: anOption
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> tryInterpretInput: aString [
+
+	| choices |
+	choices := self choicesForInput: aString.
+	choices size = 1 ifTrue: [
+		self sandblockEditor do: (SBReplaceCommand new
+			target: self;
+			replacer: choices first).
+		choices first inputContainedUnknown]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> unbuiltChildrenIn: anExplore [
 
 	^ built ifTrue: [#()] ifFalse: [self childrenIn: anExplore]
@@ -348,4 +382,10 @@ SBInlineBlock >> unbuiltChildrenIn: anExplore [
 SBInlineBlock >> wantsExtraSpace [
 
 	^ self inline not
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> writeSourceOn: aStream [
+
+	self subclassResponsibility
 ]

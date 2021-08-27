@@ -745,6 +745,7 @@ SBTreeSitter >> jsonFactory [
 '
 		nodeTypes: '{}') in: [:f |
 		f cleanGrammar.
+		f grammar blockInline: {'string_content'}.
 		f]
 ]
 

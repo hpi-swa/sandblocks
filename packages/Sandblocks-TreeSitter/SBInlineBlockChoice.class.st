@@ -86,6 +86,8 @@ SBInlineBlockChoice >> childrenIn: anExplore [
 { #category : #'as yet unclassified' }
 SBInlineBlockChoice >> deleteTargetFor: aBlock [
 
+	self owner isInlineBlock not ifTrue: [^ self].
+	
 	^ self owner deleteTargetFor: self
 ]
 
@@ -119,7 +121,7 @@ SBInlineBlockChoice >> hasSameStructureAs: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlockChoice >> inline [
 
-	^ SBToggledCode comment: '' active: 1 do: {
+	^ SBToggledCode comment: '' active: 3 do: {
 		[self owner notNil and: [self owner isInlineBlock and: [(self owner submorphs count: [:m | (m isKindOf: SBInlineBlockLabel) not]) = 1]]].
 		[
 			self inlineIfPossible and: [
@@ -127,7 +129,7 @@ SBInlineBlockChoice >> inline [
 					comment: ''
 					active: 1
 					do: {[true]. [(self owner isKindOf: SBInlineBlockChoice) not]}]].
-		[true]}
+		[self owner notNil and: [self owner isInlineBlock]]}
 ]
 
 { #category : #'as yet unclassified' }
@@ -137,17 +139,33 @@ SBInlineBlockChoice >> isUnambiguous [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockChoice >> numAlternatives [
+
+	^ self alternatives size
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockChoice >> printTitleOn: aStream [
 
-	SBToggledCode
-		comment: ''
-		active: 0
-		do: {[self hasSubmorphs ifTrue: [^ self firstSubmorph printTitleOn: aStream]]}.
-	alternatives do: [:m | m printTitleOn: aStream] separatedBy: [aStream nextPutAll: ' | ']
+	SBToggledCode comment: '' active: 0 do: {
+		[(self hasSubmorphs and: [self firstSubmorph isUnknown not]) ifTrue: [^ self firstSubmorph printTitleOn: aStream]]}.
+	alternatives
+		do: [:m | | current |
+			current := self hasSubmorphs and: [m hasSameStructureAs: self firstSubmorph].
+			current ifTrue: [aStream nextPut: $[].
+			m printTitleOn: aStream.
+			current ifTrue: [aStream nextPut: $]]]
+		separatedBy: [aStream nextPutAll: ' | ']
 ]
 
 { #category : #'as yet unclassified' }
 SBInlineBlockChoice >> takeStreamFrom: aMorph [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockChoice >> writeSourceOn: aStream [
+
+	self firstSubmorph writeSourceOn: aStream
 ]

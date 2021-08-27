@@ -47,13 +47,20 @@ SBInlineBlockSymbol >> buildPartial: anOptions with: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> candidatesForWrappingOn: aStream [
+
+	(factory isSuperType: type) ifTrue: [aStream nextPut: self].
+	super candidatesForWrappingOn: aStream
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> childrenIn: anExplore [
 
 	^ (anExplore notNil and: [anExplore hasVisitedSymbol: self type])
 		ifTrue: [{SBInlineBlockNever new}]
 		ifFalse: [
 			anExplore ifNotNil: [anExplore addVisitedSymbol: self type].
-			{factory getTemplate: self type}]
+			{self template}]
 ]
 
 { #category : #'as yet unclassified' }
@@ -77,12 +84,7 @@ SBInlineBlockSymbol >> hasSameContentsAs: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> hasSameStructureAs: aBlock [
 
-	^ (super hasSameStructureAs: aBlock) and: [
-		self type = aBlock type and: [
-			SBToggledCode
-				comment: ''
-				active: 1
-				do: {[true]. [self firstSubmorph hasSameStructureAs: aBlock firstSubmorph]}]]
+	^ ((super hasSameStructureAs: aBlock) and: [self type = aBlock type]) or: [self template hasSameStructureAs: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
@@ -123,6 +125,8 @@ SBInlineBlockSymbol >> isUnambiguous [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> printTitleOn: aStream [
 
+	SBToggledCode comment: '' active: 0 do: {
+		[((factory shouldBlockInline: type) and: [self hasSubmorphs and: [self firstSubmorph isUnknown not]]) ifTrue: [^ self firstSubmorph printTitleOn: aStream]]}.
 	aStream nextPutAll: type
 ]
 
@@ -130,6 +134,12 @@ SBInlineBlockSymbol >> printTitleOn: aStream [
 SBInlineBlockSymbol >> takeStreamFrom: anObject [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> template [
+
+	^ factory getTemplate: self type
 ]
 
 { #category : #'as yet unclassified' }
@@ -197,4 +207,10 @@ SBInlineBlockSymbol >> veryDeepCopyWith: deepCopier [
 	factory := f.
 	copy factory: f.
 	^ copy
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> writeSourceOn: aStream [
+
+	self firstSubmorph writeSourceOn: aStream
 ]

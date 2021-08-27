@@ -10,7 +10,8 @@ Class {
 		'stack',
 		'lastOptions',
 		'results',
-		'foundNested'
+		'foundNested',
+		'nestedBlock'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -22,13 +23,19 @@ SBTSRuleExplore >> addVisitedSymbol: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
-SBTSRuleExplore >> explore: aBlock for: aString [
+SBTSRuleExplore >> done [
 
-	^ self explore: aBlock for: aString startSymbol: nil
+	^ stream atEnd and: [nestedBlock isNil or: [foundNested]]
 ]
 
 { #category : #'as yet unclassified' }
-SBTSRuleExplore >> explore: aBlock for: aString startSymbol: aSymbolString [
+SBTSRuleExplore >> explore: aBlock for: aString [
+
+	^ self explore: aBlock withNested: nil for: aString startSymbol: nil
+]
+
+{ #category : #'as yet unclassified' }
+SBTSRuleExplore >> explore: aBlock withNested: aSubBlock for: aString startSymbol: aSymbolString [
 
 	stack := OrderedCollection new.
 	lastOptions := OrderedCollection new.
@@ -37,6 +44,8 @@ SBTSRuleExplore >> explore: aBlock for: aString startSymbol: aSymbolString [
 	stream := (matchFullToken ifTrue: [aString allButLast] ifFalse: [aString]) readStream.
 	visitedSymbols := Set new.
 	results := OrderedCollection new.
+	foundNested := false.
+	nestedBlock := aSubBlock.
 	
 	aSymbolString ifNotNil: [visitedSymbols add: aSymbolString].
 	
@@ -51,61 +60,20 @@ SBTSRuleExplore >> explore: aBlock for: aString startSymbol: aSymbolString [
 				at: index
 				ifPresent: [:template | | child |
 					pair at: 1 put: index + 1.
-					child := self push: template.
-					block addMorphBack: child.
-					stream atEnd ifTrue: [child buildDefault]]
-				ifAbsent: [
-					stack removeLast.
-					
-					stream atEnd
+					(nestedBlock notNil and: [(template hasSameStructureAs: nestedBlock) and: [foundNested not]])
 						ifTrue: [
-							stack ifEmpty: [
-								results add: root buildCopy.
-								self restartFromLastChoiceIfDone: [^ results]]]
-						ifFalse: [
-							(block takeStreamFrom: self)
-								ifTrue: [
-									stack ifEmpty: [
-										stream atEnd ifTrue: [results add: root buildCopy].
-										self restartFromLastChoiceIfDone: [^ results]]]
-								ifFalse: [self restartFromLastChoiceIfDone: [^ results]]]]]] repeat
-]
-
-{ #category : #'as yet unclassified' }
-SBTSRuleExplore >> explore: aBlock withNested: aSubBlock for: aString [
-
-	stack := OrderedCollection new.
-	lastOptions := OrderedCollection new.
-	choiceIndices := Dictionary new.
-	matchFullToken := aString last = Character space.
-	stream := (matchFullToken ifTrue: [aString allButLast] ifFalse: [aString]) readStream.
-	visitedSymbols := Set new.
-	results := OrderedCollection new.
-	foundNested := false.
-	
-	root := self push: aBlock.
-	
-	[
-		[stack notEmpty] whileTrue: [ | index block pair |
-			pair := stack last.
-			index := pair first.
-			block := pair second.
-			(block unbuiltChildrenIn: self)
-				at: index
-				ifPresent: [:template | | child |
-					pair at: 1 put: index + 1.
-					((template hasSameStructureAs: aSubBlock) and: [foundNested not])
-						ifTrue: [
-							child := aSubBlock buildCopy.
+							child := nestedBlock buildCopy.
 							foundNested := true]
 						ifFalse: [
 							child := self push: template.
-							stream atEnd ifTrue: [child buildDefault]].
+							self done ifTrue: [child buildDefault]].
+					SBToggledCode comment: '' active: 0 do: {
+						[((child isKindOf: SBInlineBlockSymbol) and: [child type = 'binary_operator' and: [(stack count: [:p | (p second isKindOf: SBInlineBlockSymbol) and: [p second type = 'primary_expression']]) = 2]]) ifTrue: [self halt]]}.
 					block addMorphBack: child]
 				ifAbsent: [
 					stack removeLast.
 					
-					stream atEnd
+					self done
 						ifTrue: [
 							stack ifEmpty: [
 								results add: root buildCopy.
@@ -114,7 +82,7 @@ SBTSRuleExplore >> explore: aBlock withNested: aSubBlock for: aString [
 							(block takeStreamFrom: self)
 								ifTrue: [
 									stack ifEmpty: [
-										(stream atEnd and: [foundNested]) ifTrue: [results add: root buildCopy].
+										self done ifTrue: [results add: root buildCopy].
 										self restartFromLastChoiceIfDone: [^ results]]]
 								ifFalse: [self restartFromLastChoiceIfDone: [^ results]]]]]] repeat
 ]
@@ -128,7 +96,10 @@ SBTSRuleExplore >> hasSeenChoice: aChoice [
 { #category : #'as yet unclassified' }
 SBTSRuleExplore >> hasVisitedSymbol: aSymbol [
 
-	^ visitedSymbols includes: aSymbol
+	^ SBToggledCode comment: '' active: 1 do: {
+		[" if we have a nestedBlock, allow one level of recursion "
+		(stack viewAllButLast count: [:pair | (pair second isKindOf: SBInlineBlockSymbol) and: [pair second type = aSymbol]]) >= (nestedBlock ifNotNil: [1] ifNil: 1)].
+		[visitedSymbols includes: aSymbol]}
 ]
 
 { #category : #'as yet unclassified' }
@@ -149,7 +120,7 @@ SBTSRuleExplore >> push: aBlock [
 	| template |
 	template := aBlock buildEmpty.
 	stack add: {1. template}.
-	((aBlock isKindOf: SBInlineBlockChoice) and: [stream atEnd not]) ifTrue: [
+	(aBlock numAlternatives > 1 and: [self done not]) ifTrue: [
 		self indexFor: template.
 		lastOptions add: {template. stack collect: [:pair | pair copy]. stream position. visitedSymbols copy. foundNested}].
 	^ template
@@ -182,7 +153,7 @@ SBTSRuleExplore >> restartFromLastChoiceIfDone: aBlock [
 	foundNested := option fifth.
 	
 	number := choiceIndices at: option first put: (choiceIndices at: choice) + 1.
-	number = choice alternatives size ifTrue: [lastOptions removeLast].
+	number = choice numAlternatives ifTrue: [lastOptions removeLast].
 	
 	self assert: (choice ownerChain includes: root).
 	choice allMorphsMutableDo: [:m | m ~= choice ifTrue: [m delete]].

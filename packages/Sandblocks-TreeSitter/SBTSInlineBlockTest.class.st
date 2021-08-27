@@ -26,6 +26,33 @@ SBTSInlineBlockTest >> testChoiceNested [
 	self assert: (SBTSRuleExplore new explore: block value for: '"a"') notNil
 ]
 
+{ #category : #'tests - continue match' }
+SBTSInlineBlockTest >> testFailNestedPrefixOp [
+
+	| factory unknown editor num |
+	factory := SBMetaBlockFactory new.
+	factory
+		grammar: '{"supertypes":["primary"]}' nodeTypes: '{}';
+		at: 'expr'
+			putTemplate: (SBInlineBlockChoice new alternatives: {SBInlineBlockSymbol new type: 'primary' factory: factory. SBInlineBlockLabel new label: 'dummy'});
+		at: 'primary' putTemplate: (SBInlineBlockChoice new alternatives: {
+			SBInlineBlockSymbol new type: 'number' factory: factory.
+			SBInlineBlockSymbol new type: 'prefix_op' factory: factory});
+		at: 'number' putTemplate: (SBInlineBlockText new regexString: '[0-9]+');
+		at: 'prefix_op' putTemplate: (SBInlineBlockChoice new alternatives: {
+			SBInlineBlockSequence new elements: {
+				SBInlineBlockLabel new label: '+'.
+				SBInlineBlockLabel new label: 'abc'.
+				SBInlineBlockSymbol new type: 'primary' factory: factory}.
+			SBInlineBlockSequence new elements: {SBInlineBlockLabel new label: '-'. SBInlineBlockSymbol new type: 'primary' factory: factory}}).
+	
+	editor := self editorFor: (unknown := factory instantiateTemplate: 'expr').
+	unknown firstSubmorph keyStroke: (self keyboardEvent: $1).
+	num := editor childSandblocks first firstBlock.
+	
+	self assert: (num choicesForInput: '+') isEmpty
+]
+
 { #category : #'tests - match empty' }
 SBTSInlineBlockTest >> testFailSequence [
 
@@ -139,12 +166,40 @@ SBTSInlineBlockTest >> testMatchIncompleteSequence [
 ]
 
 { #category : #'tests - match empty' }
-SBTSInlineBlockTest >> testMatchLabel [
+SBTSInlineBlockTest >> testMatchOptional [
 
-	| block result |
-	block := SBInlineBlockText new regexString: '\"[A-Z]*'.
-	result := (SBTSRuleExplore new explore: block value for: '"AB') first.
-	self assert: '"AB' equals: result contents
+	| block |
+	block := SBInlineBlockSequence new elements: {
+		SBInlineBlockRepeat new
+			multiple: false
+			required: false
+			element: (SBInlineBlockLabel new label: 'abc').
+		SBInlineBlockText new regexString: 'def'}.
+	self assert: (SBTSRuleExplore new explore: block value for: 'def') notEmpty
+]
+
+{ #category : #'tests - continue match' }
+SBTSInlineBlockTest >> testMatchPrefixOp [
+
+	| factory unknown editor num |
+	factory := SBMetaBlockFactory new.
+	factory
+		grammar: '{"supertypes":[]}' nodeTypes: '{}';
+		at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
+			SBInlineBlockSequence new elements: {
+				SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: '-'. SBInlineBlockLabel new label: '+'}.
+				SBInlineBlockSymbol new type: 'expr' factory: factory}.
+			SBInlineBlockText new regexString: '[0-9]+'}).
+	
+	editor := self editorFor: (unknown := factory instantiateTemplate: 'expr').
+	unknown firstSubmorph keyStroke: (self keyboardEvent: $1).
+	num := editor childSandblocks first.
+	self assert: 1 equals: (num choicesForInput: '+') size.
+	
+	num keyStroke: (self keyboardEvent: $+).
+	self
+		assert: '+'
+		equals: editor childSandblocks first firstSubmorph firstSubmorph firstSubmorph contents
 ]
 
 { #category : #'tests - match empty' }

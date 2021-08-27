@@ -58,3 +58,9 @@ SBInlineBlockNever >> takeStreamFrom: anObject [
 
 	^ false
 ]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockNever >> writeSourceOn: aStream [
+
+	self shouldNotImplement
+]

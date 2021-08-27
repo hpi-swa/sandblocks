@@ -116,7 +116,13 @@ SBInlineBlockLabel >> printTitleOn: aStream [
 { #category : #'as yet unclassified' }
 SBInlineBlockLabel >> takeStreamFrom: option [
 
-	^ option matchFullToken
+	^ option stream atEnd not and: [option matchFullToken
 		ifTrue: [option stream nextMatchAll: self label]
-		ifFalse: [option stream nextMatchAll: (self label first: (option stream size - option stream position min: self label size))]
+		ifFalse: [option stream nextMatchAll: (self label first: (option stream size - option stream position min: self label size))]]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockLabel >> writeSourceOn: aStream [
+
+	aStream nextPutAll: self label
 ]

@@ -89,6 +89,7 @@ SBTSUnknown >> tryInterpretContents [
 	| choices |
 	choices := SBTSRuleExplore new
 		explore: template value
+		withNested: nil
 		for: self contents
 		startSymbol: type.
 	

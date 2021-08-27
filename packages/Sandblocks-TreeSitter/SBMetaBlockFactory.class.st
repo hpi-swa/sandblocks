@@ -278,7 +278,11 @@ SBMetaBlockFactory >> cleanGrammar [
 	SBToggledCode
 		comment: ''
 		active: 1
-		do: {[grammar rules do: [:rule | self mergeOptionalRepeat: rule]]}
+		do: {[grammar rules do: [:rule | self mergeOptionalRepeat: rule]]}.
+	SBToggledCode
+		comment: ''
+		active: 1
+		do: {[grammar rules do: [:rule | self removeDuplicateAlternatives: rule]]}
 ]
 
 { #category : #'grammar clean' }
@@ -508,6 +512,18 @@ SBMetaBlockFactory >> removeAliases: anObject [
 	
 	anObject content ifNotNil: [:c | self removeAliases: c].
 	anObject members ifNotNil: [:c | c do: [:m | self removeAliases: m]]
+]
+
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> removeDuplicateAlternatives: anObject [
+	" TODO: only removes SYMBOL duplicates "
+
+	(anObject type = 'CHOICE' and: [anObject members allSatisfy: [:m | m type = 'SYMBOL']]) ifTrue: [ | symbols |
+		symbols := anObject members collect: #name.
+		symbols size ~= symbols asSet size ifTrue: [
+			anObject members: anObject members withoutDuplicates]].
+	anObject content ifNotNil: [self removeDuplicateAlternatives: anObject content].
+	anObject members ifNotNil: [anObject members do: [:m | self removeDuplicateAlternatives: m]]
 ]
 
 { #category : #'grammar clean' }

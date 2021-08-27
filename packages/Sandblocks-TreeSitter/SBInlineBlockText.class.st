@@ -142,7 +142,7 @@ SBInlineBlockText >> takeStreamFrom: anObject [
 	| start |
 	" does this make sense? "
 	self flag: #fixme.
-	anObject matchFullToken ifTrue: [^ nil].
+	anObject matchFullToken ifTrue: [^ false].
 	
 	start := anObject stream position + 1.
 	^ (self regex matchesStreamPrefix: anObject stream)
@@ -169,4 +169,10 @@ SBInlineBlockText >> triggersFor: aString matchFullToken: aBoolean options: anOp
 SBInlineBlockText >> valid [
 
 	^ regex matches: self contents
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockText >> writeSourceOn: aStream [
+
+	aStream nextPutAll: self contents
 ]

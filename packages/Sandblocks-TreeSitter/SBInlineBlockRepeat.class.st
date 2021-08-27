@@ -47,7 +47,9 @@ SBInlineBlockRepeat >> buildPartial: anOptions with: aString [
 { #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> childrenIn: anExplore [
 
-	^ {self element}
+	(anExplore isNil or: [required]) ifTrue: [^ {self element}].
+	
+	^ (anExplore indexFor: self) = 1 ifTrue: [{self element}] ifFalse: [{}]
 ]
 
 { #category : #'as yet unclassified' }
@@ -141,9 +143,18 @@ SBInlineBlockRepeat >> nonInlinedChildren [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> numAlternatives [
+
+	^ required ifTrue: [1] ifFalse: [2]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> printTitleOn: aStream [
 
-	element printTitleOn: aStream
+	element printTitleOn: aStream.
+	(multiple and: [required]) ifTrue: [^ aStream nextPut: $+].
+	(multiple and: [required not]) ifTrue: [^ aStream nextPut: $*].
+	aStream nextPut: $?
 ]
 
 { #category : #'as yet unclassified' }
@@ -164,4 +175,12 @@ SBInlineBlockRepeat >> takeStreamFrom: anObject [
 SBInlineBlockRepeat >> triggersFor: aString matchFullToken: aBoolean options: anOptions [
 
 	^ element triggersFor: aString matchFullToken: aBoolean options: anOptions
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> writeSourceOn: aStream [
+
+	self submorphs
+		do: [:element | element writeSourceOn: aStream]
+		separatedBy: [aStream space]
 ]

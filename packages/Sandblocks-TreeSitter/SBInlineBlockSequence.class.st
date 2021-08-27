@@ -92,6 +92,7 @@ SBInlineBlockSequence >> hasSameContentsAs: aBlock [
 SBInlineBlockSequence >> hasSameStructureAs: aBlock [
 
 	(super hasSameStructureAs: aBlock) ifFalse: [^ false].
+	self submorphCount = aBlock submorphCount ifFalse: [^ false].
 	self submorphs
 		with: aBlock submorphs
 		do: [:a :b | (a hasSameStructureAs: b) ifFalse: [^ false]].
@@ -123,4 +124,12 @@ SBInlineBlockSequence >> triggersFor: aStream matchFullToken: aBoolean options: 
 		(element triggersFor: aStream matchFullToken: aBoolean options: anOptions) ifFalse: [^ false].
 		aStream atEnd ifTrue: [^ true]].
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSequence >> writeSourceOn: aStream [
+
+	self submorphs
+		do: [:element | element writeSourceOn: aStream]
+		separatedBy: [aStream space]
 ]

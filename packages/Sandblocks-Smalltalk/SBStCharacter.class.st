@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStCharacter >> absorbsInput: anEvent [
+
+	^ SBGrammarHandler eventValidForString: anEvent
+]
+
+{ #category : #'as yet unclassified' }
 SBStCharacter >> keyStroke: anEvent [
 
 	anEvent keyCharacter = Character backspace ifTrue: [

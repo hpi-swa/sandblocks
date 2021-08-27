@@ -186,7 +186,7 @@ SBBlock >> artefactCompletionSuggestionsFor: aBlock matching: aString [
 		ifFalse: [#()]).
 	
 	"add outer artefact's selector, if any, to support recursion of not-yet-saved methods"
-	self outerArtefact ifNotNil: [:artefact | artefact selector ifNotNil: [:sel | (sel sandblockMatch: aString) ifTrue: [list := (list copyWithout: sel) copyWithFirst: sel]]].
+	self ifNotNil: [:artefact | artefact selector ifNotNil: [:sel | (sel sandblockMatch: aString) ifTrue: [list := (list copyWithout: sel) copyWithFirst: sel]]].
 	
 	^ list
 ]
