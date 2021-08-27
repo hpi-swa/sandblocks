@@ -20,7 +20,7 @@ SBInlineBlockSymbol >> buildDefaultIn: anExplore [
 	super buildDefaultIn: anExplore.
 	self addMorphBack: (SBTSUnknown new
 		template: [factory getTemplate: type visitedSymbols: Set new];
-		type: type)
+		type: type factory: factory)
 ]
 
 { #category : #'as yet unclassified' }
@@ -183,18 +183,7 @@ SBInlineBlockSymbol >> type: aSymbol factory: aFactory visitedSymbols: aSet [
 	aSet add: aSymbol.
 	
 	type := aSymbol.
-	factory := aFactory.
-	
-	SBToggledCode comment: '' active: 0 do: {
-		[
-			self addMorphBack: (SBToggledCode comment: '' active: 2 do: {
-				[SBTSUnknown new template: [factory getTemplate: type visitedSymbols: aSet]].
-				[
-					(tryExpand and: [
-						template := factory getTemplate: type visitedSymbols: aSet.
-						template notNil and: [template isUnambiguous]])
-						ifTrue: [template veryDeepCopy]
-						ifFalse: [SBTSUnknown new template: [factory getTemplate: type visitedSymbols: aSet]]]})]}
+	factory := aFactory
 ]
 
 { #category : #'as yet unclassified' }

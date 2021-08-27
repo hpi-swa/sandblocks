@@ -13,7 +13,7 @@ Class {
 SBTSUnknown >> buildCopy [
 
 	^ self class new
-		type: self type;
+		type: self type factory: factory;
 		template: self template
 ]
 
@@ -99,13 +99,16 @@ SBTSUnknown >> tryInterpretContents [
 			choice ~= shortest and: [
 				choice leftMostRule
 					firstDifferingUpBlocksWith: shortest leftMostRule
-					do: [:a :b | (a firstSubmorph isKindOf: SBInlineBlockSymbol) or: [b isNil]]
+					do: [:a :b | (a hasSubmorphs and: [a firstSubmorph isKindOf: SBInlineBlockSymbol]) or: [b isNil]]
 					ifNone: [false]]]].
 	
-	choices size = 1 ifTrue: [
+	choices size = 1 ifTrue: [ | replacer |
+		replacer := type
+			ifNotNil: [SBInlineBlockSymbol new type: type factory: factory block: choices first]
+			ifNil: [choices first].
 		self sandblockEditor do: (SBReplaceCommand new
 			target: self owner;
-			replacer: choices first).
+			replacer: replacer).
 		(choices first firstBlock ifNil: [choices first containingSandblock]) startInputAtEnd]
 ]
 
@@ -116,9 +119,10 @@ SBTSUnknown >> type [
 ]
 
 { #category : #'as yet unclassified' }
-SBTSUnknown >> type: aString [
+SBTSUnknown >> type: aString factory: aFactory [
 
-	type := aString
+	type := aString.
+	factory := aFactory
 ]
 
 { #category : #'as yet unclassified' }
