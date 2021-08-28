@@ -106,6 +106,14 @@ SBInlineBlockSequence >> inline [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSequence >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (self submorphs collect: [:morph | morph layoutCommands])
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSequence >> printTitleOn: aStream [
 
 	elements do: [:m | m printTitleOn: aStream] separatedBy: [aStream nextPutAll: ', ']

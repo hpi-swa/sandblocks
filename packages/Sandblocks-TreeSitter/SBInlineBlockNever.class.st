@@ -48,6 +48,12 @@ SBInlineBlockNever >> hasSameStructureAs: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockNever >> layoutCommands [
+
+	^ self shouldNotImplement
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockNever >> printTitleOn: aStream [
 
 	aStream nextPutAll: '<never>'

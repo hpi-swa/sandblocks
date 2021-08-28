@@ -106,6 +106,14 @@ SBInlineBlockText >> isUnambiguous [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockText >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: {SBAlgebraCommand morph data: self firstSubmorph}
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockText >> lengthOfLeftMostPath [
 
 	^ 1

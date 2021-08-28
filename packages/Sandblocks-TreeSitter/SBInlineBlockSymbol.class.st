@@ -70,6 +70,12 @@ SBInlineBlockSymbol >> deleteTargetFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> factory [
+
+	^ factory
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> factory: aFactory [
 
 	factory := aFactory
@@ -140,6 +146,14 @@ SBInlineBlockSymbol >> isStatementContainer [
 SBInlineBlockSymbol >> isUnambiguous [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: {self firstSubmorph layoutCommands}
 ]
 
 { #category : #'as yet unclassified' }

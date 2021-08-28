@@ -13,7 +13,7 @@ Class {
 SBTSUnknown >> buildCopy [
 
 	^ self class new
-		type: self type factory: factory;
+		type: self type factory: self factory;
 		template: self template
 ]
 
@@ -34,9 +34,21 @@ SBTSUnknown >> cursorPositionsDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSUnknown >> factory [
+
+	^ factory ifNil: [self owner isInlineBlock ifTrue: [self owner factory] ifFalse: [nil]]
+]
+
+{ #category : #'as yet unclassified' }
 SBTSUnknown >> factory: aFactory [
 
 	factory := aFactory
+]
+
+{ #category : #'as yet unclassified' }
+SBTSUnknown >> grammarHandler [
+
+	^ self factory ifNotNil: #grammarHandler
 ]
 
 { #category : #'as yet unclassified' }
@@ -110,7 +122,7 @@ SBTSUnknown >> tryInterpretInput: aString [
 	
 	choices size = 1 ifTrue: [ | replacer |
 		replacer := type
-			ifNotNil: [SBInlineBlockSymbol new type: type factory: factory block: choices first]
+			ifNotNil: [SBInlineBlockSymbol new type: type factory: self factory block: choices first]
 			ifNil: [choices first].
 		self sandblockEditor do: (SBReplaceCommand new
 			target: self owner;
@@ -145,4 +157,10 @@ SBTSUnknown >> veryDeepCopyWith: deepCopier [
 	copy factory: f.
 	copy template: t.
 	^ copy
+]
+
+{ #category : #'as yet unclassified' }
+SBTSUnknown >> writeMetaSourceOn: aStream [
+
+	aStream nextPutAll: ' '
 ]

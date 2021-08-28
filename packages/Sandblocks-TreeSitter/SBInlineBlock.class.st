@@ -138,7 +138,16 @@ SBInlineBlock >> deleteTargetFor: aBlock [
 { #category : #geometry }
 SBInlineBlock >> extent: aPoint [
 
-	super extent: (aPoint max: 0 @ self minimumHeight)
+	SBToggledCode
+		comment: ''
+		active: 1
+		do: {[super extent: aPoint]. [super extent: (aPoint max: 0 @ self minimumHeight)]}
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> factory [
+
+	^ self owner ifNotNil: [:o | o factory]
 ]
 
 { #category : #'as yet unclassified' }
@@ -164,7 +173,7 @@ SBInlineBlock >> firstDifferingUpBlocksWith: aMorph do: aBlock ifNone: anotherBl
 { #category : #'as yet unclassified' }
 SBInlineBlock >> grammarHandler [
 
-	^ SBGrammarHandler new
+	^ SBMetaGrammarHandler new
 ]
 
 { #category : #'as yet unclassified' }
@@ -209,7 +218,7 @@ SBInlineBlock >> initialize [
 	self
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
-		changeTableLayout;
+		layoutPolicy: (SBToggledCode comment: '' active: 2 do: {[TableLayout new]. [SBAlgebraLayout new]});
 		listDirection: #leftToRight;
 		color: Color transparent;
 		cellGap: 2;
@@ -293,6 +302,12 @@ SBInlineBlock >> keyStroke: anEvent [
 		self tryInterpretInput: (anEvent keyCharacter = Character space
 			ifTrue: [(UIManager default request: 'type operator') ifEmpty: [^ self]]
 			ifFalse: [anEvent keyCharacter asString])]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> layoutCommands [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }

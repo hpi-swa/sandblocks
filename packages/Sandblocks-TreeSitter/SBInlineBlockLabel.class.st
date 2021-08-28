@@ -102,6 +102,14 @@ SBInlineBlockLabel >> label: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockLabel >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: {SBAlgebraCommand morph data: self firstSubmorph}
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockLabel >> lengthOfLeftMostPath [
 
 	^ 1

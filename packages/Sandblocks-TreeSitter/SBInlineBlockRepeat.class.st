@@ -135,6 +135,16 @@ SBInlineBlockRepeat >> insertCommandRequest: aMorph near: aBlock before: aBoolea
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (self submorphs
+			collect: [:morph | morph layoutCommands]
+			separatedBy: [SBAlgebraCommand softLine])
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> multiple [
 
 	^ multiple

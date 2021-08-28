@@ -87,6 +87,31 @@ SBAlgebraCommand class >> softLineOrGap [
 ]
 
 { #category : #'as yet unclassified' }
+SBAlgebraCommand >> checkCompleteHierarchy: aMorph [
+
+	| checkSequence |
+	checkSequence := [ | s |
+		s := aMorph submorphs readStream.
+		self data do: [:c | c containsMorph ifTrue: [c checkCompleteHierarchy: s next]].
+		self assert: s atEnd].
+	type
+		caseOf: {
+			[#container] -> [
+				self assert: self morph = aMorph.
+				checkSequence value].
+			[#morph] -> [self assert: self data = aMorph].
+			[#group] -> [checkSequence value].
+			[#indent] -> [checkSequence value]}
+		otherwise: []
+]
+
+{ #category : #'as yet unclassified' }
+SBAlgebraCommand >> containsMorph [
+
+	^ #('morph' 'container') includes: self type
+]
+
+{ #category : #'as yet unclassified' }
 SBAlgebraCommand >> data [
 
 	^ data

@@ -139,6 +139,14 @@ SBInlineBlockChoice >> isUnambiguous [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockChoice >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: {self firstSubmorph layoutCommands}
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockChoice >> numAlternatives [
 
 	^ self alternatives size

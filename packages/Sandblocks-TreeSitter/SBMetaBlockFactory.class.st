@@ -381,6 +381,12 @@ SBMetaBlockFactory >> grammar: aString nodeTypes: anotherString [
 	nodeTypes := Json readFrom: anotherString readStream
 ]
 
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> grammarHandler [
+
+	^ SBMetaGrammarHandler new
+]
+
 { #category : #'grammar clean' }
 SBMetaBlockFactory >> includesNonHiddenParts: anObject visited: aCollection [
 
@@ -425,9 +431,9 @@ SBMetaBlockFactory >> instantiateTemplate: aString [
 SBMetaBlockFactory >> instantiateToplevel: aString [
 
 	^ SBInlineBlockSymbol new
-		type: aString
-		factory: self
-		block: (self instantiateTemplate: aString)
+		type: aString factory: self block: (self instantiateTemplate: aString);
+		attachDecorator: SBResizableDecorator new;
+		hResizing: #rigid
 ]
 
 { #category : #'as yet unclassified' }
