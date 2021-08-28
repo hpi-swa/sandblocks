@@ -1,7 +1,7 @@
 Class {
 	#name : #SBTSTreeCursor,
 	#superclass : #ExternalStructure,
-	#category : #'Sandblocks-TreeSitter'
+	#category : #'Sandblocks-TreeSitter-FFI'
 }
 
 { #category : #'as yet unclassified' }

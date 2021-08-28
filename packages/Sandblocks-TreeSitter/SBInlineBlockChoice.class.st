@@ -48,25 +48,6 @@ SBInlineBlockChoice >> buildEmpty [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockChoice >> buildFor: aStream matchFullToken: aBoolean options: anOptions [
-
-	| index |
-	index := anOptions optionAt: self ifAbsentPut: [1].
-	^ ((alternatives at: index)
-		buildFor: aStream
-		matchFullToken: aBoolean
-		options: anOptions) ifNotNil: [:result | self veryDeepCopy removeAllMorphs addMorphBack: result]
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockChoice >> buildPartial: anOptions with: aString [
-
-	^ (alternatives at: anOptions index)
-		buildPartial: anOptions children first
-		with: aString
-]
-
-{ #category : #'as yet unclassified' }
 SBInlineBlockChoice >> changeToUnknown [
 	<action>
 
@@ -130,12 +111,6 @@ SBInlineBlockChoice >> inline [
 					active: 1
 					do: {[true]. [(self owner isKindOf: SBInlineBlockChoice) not]}]].
 		[self owner notNil and: [self owner isInlineBlock]]}
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockChoice >> isUnambiguous [
-
-	^ false
 ]
 
 { #category : #'as yet unclassified' }

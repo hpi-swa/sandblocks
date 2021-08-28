@@ -37,14 +37,8 @@ SBTSRuleExplore >> explore: aBlock for: aString [
 { #category : #'as yet unclassified' }
 SBTSRuleExplore >> explore: aBlock withNested: aSubBlock for: aString startSymbol: aSymbolString [
 
-	stack := OrderedCollection new.
-	lastOptions := OrderedCollection new.
-	choiceIndices := Dictionary new.
 	matchFullToken := aString last = Character space.
 	stream := (matchFullToken ifTrue: [aString allButLast] ifFalse: [aString]) readStream.
-	visitedSymbols := Set new.
-	results := OrderedCollection new.
-	foundNested := false.
 	nestedBlock := aSubBlock.
 	
 	aSymbolString ifNotNil: [visitedSymbols add: aSymbolString].
@@ -111,6 +105,19 @@ SBTSRuleExplore >> hasVisitedSymbol: aSymbol factory: aFactory [
 SBTSRuleExplore >> indexFor: aChoice [
 
 	^ choiceIndices at: aChoice ifAbsentPut: [1]
+]
+
+{ #category : #'as yet unclassified' }
+SBTSRuleExplore >> initialize [
+
+	super initialize.
+	
+	stack := OrderedCollection new.
+	lastOptions := OrderedCollection new.
+	choiceIndices := Dictionary new.
+	visitedSymbols := Set new.
+	results := OrderedCollection new.
+	foundNested := false
 ]
 
 { #category : #'as yet unclassified' }

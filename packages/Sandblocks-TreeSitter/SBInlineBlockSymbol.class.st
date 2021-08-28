@@ -19,31 +19,14 @@ SBInlineBlockSymbol >> buildDefaultIn: anExplore [
 
 	super buildDefaultIn: anExplore.
 	self addMorphBack: (SBTSUnknown new
-		template: [factory getTemplate: type visitedSymbols: Set new];
+		template: [factory getTemplate: type];
 		type: type factory: factory)
 ]
 
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> buildEmpty [
 
-	^ self class new type: self type factory: factory visitedSymbols: Set new
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockSymbol >> buildFor: aString matchFullToken: aBoolean options: anOptions [
-
-	^ (anOptions hasVisitedSymbol: self type) ifTrue: [nil] ifFalse: [
-		anOptions addVisitedSymbol: self type.
-		(factory getTemplate: self type)
-			buildFor: aString
-			matchFullToken: aBoolean
-			options: anOptions]
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockSymbol >> buildPartial: anOptions with: aString [
-
-	^ (factory getTemplate: type) buildPartial: anOptions with: aString
+	^ self class new type: self type factory: factory
 ]
 
 { #category : #'as yet unclassified' }
@@ -143,12 +126,6 @@ SBInlineBlockSymbol >> isStatementContainer [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockSymbol >> isUnambiguous [
-
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> layoutCommands [
 
 	^ SBAlgebraCommand container
@@ -225,7 +202,8 @@ SBInlineBlockSymbol >> type [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> type: aSymbol factory: aFactory [
 
-	self type: aSymbol factory: aFactory visitedSymbols: Set new
+	type := aSymbol.
+	factory := aFactory
 ]
 
 { #category : #'as yet unclassified' }
@@ -239,12 +217,8 @@ SBInlineBlockSymbol >> type: aSymbol factory: aFactory block: aMorph [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> type: aSymbol factory: aFactory visitedSymbols: aSet [
 
-	| tryExpand |
-	tryExpand := (aSet includes: aSymbol) not.
 	aSet add: aSymbol.
-	
-	type := aSymbol.
-	factory := aFactory
+	self type: aSymbol factory: aFactory
 ]
 
 { #category : #'as yet unclassified' }

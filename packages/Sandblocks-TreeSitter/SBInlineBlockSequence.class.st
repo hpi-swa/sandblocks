@@ -38,29 +38,6 @@ SBInlineBlockSequence >> buildEmpty [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockSequence >> buildFor: aStream matchFullToken: aBoolean options: anOptions [
-
-	| copy |
-	copy := self veryDeepCopy removeAllMorphs.
-	elements withIndexDo: [:element :index |
-		(element buildFor: aStream matchFullToken: aBoolean options: anOptions)
-			ifNotNil: [:morph | copy addMorphBack: morph]
-			ifNil: [^ nil].
-		aStream atEnd ifTrue: [
-			index + 1
-				to: self submorphCount
-				do: [:next | copy addMorphBack: (elements at: next) veryDeepCopy].
-			^ copy]].
-	^ copy
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockSequence >> buildPartial: anOptions with: aString [
-
-	^ SBInlineBlockSequence new elements: {elements first buildPartial: anOptions with: aString}, (elements viewAllButFirst collect: [:element | element veryDeepCopy])
-]
-
-{ #category : #'as yet unclassified' }
 SBInlineBlockSequence >> childrenIn: anExplore [
 
 	^ self elements

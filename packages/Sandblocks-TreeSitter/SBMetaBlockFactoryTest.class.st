@@ -7,8 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBMetaBlockFactoryTest class >> factory [
 
-	^ SBMetaBlockFactory new
-		grammar: '{
+	^ SBMetaBlockFactory new grammar: '{
   "name": "small",
   "rules": {
     "source_file": {
@@ -119,116 +118,6 @@ SBMetaBlockFactoryTest class >> factory [
 }
 
 '
-		nodeTypes: '[
-  {
-    "type": "expression",
-    "named": true,
-    "subtypes": [
-      {
-        "type": "binary_op",
-        "named": true
-      },
-      {
-        "type": "number",
-        "named": true
-      },
-      {
-        "type": "unary_op",
-        "named": true
-      }
-    ]
-  },
-  {
-    "type": "binary_op",
-    "named": true,
-    "fields": {
-      "lhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      },
-      "op": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "*",
-            "named": false
-          },
-          {
-            "type": "+",
-            "named": false
-          },
-          {
-            "type": "-",
-            "named": false
-          }
-        ]
-      },
-      "rhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "source_file",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "unary_op",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "*",
-    "named": false
-  },
-  {
-    "type": "+",
-    "named": false
-  },
-  {
-    "type": "-",
-    "named": false
-  },
-  {
-    "type": "number",
-    "named": true
-  }
-]'
 ]
 
 { #category : #'as yet unclassified' }

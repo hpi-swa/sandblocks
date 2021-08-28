@@ -32,7 +32,7 @@ SBTSInlineBlockTest >> testFailNestedPrefixOp [
 	| factory unknown editor num |
 	factory := SBMetaBlockFactory new.
 	factory
-		grammar: '{"supertypes":["primary"]}' nodeTypes: '{}';
+		supertypes: #('primary');
 		at: 'expr'
 			putTemplate: (SBInlineBlockChoice new alternatives: {SBInlineBlockSymbol new type: 'primary' factory: factory. SBInlineBlockLabel new label: 'dummy'});
 		at: 'primary' putTemplate: (SBInlineBlockChoice new alternatives: {
@@ -85,12 +85,7 @@ SBTSInlineBlockTest >> testFailSymbol [
 		at: 'exampleRule'
 		putTemplate: (SBInlineBlockLabel new label: 'ABC').
 	
-	block := SBInlineBlockSequence new elements: {
-		SBInlineBlockSymbol new
-			type: 'exampleRule'
-			factory: factory
-			visitedSymbols: Set new.
-		SBInlineBlockLabel new label: 'D'}.
+	block := SBInlineBlockSequence new elements: {SBInlineBlockSymbol new type: 'exampleRule' factory: factory. SBInlineBlockLabel new label: 'D'}.
 	
 	result := SBTSRuleExplore new explore: block value for: 'D'.
 	self assert: result isEmpty
@@ -111,7 +106,6 @@ SBTSInlineBlockTest >> testMatchBinaryOp [
 	| factory unknown editor num |
 	factory := SBMetaBlockFactory new.
 	factory
-		grammar: '{"supertypes":[]}' nodeTypes: '{}';
 		at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
 			SBInlineBlockSequence new elements: {
 				SBInlineBlockSymbol new type: 'expr' factory: factory.
@@ -156,7 +150,6 @@ SBTSInlineBlockTest >> testMatchIfStatement [
 	| factory unknown editor num |
 	factory := SBMetaBlockFactory new.
 	factory
-		grammar: '{"supertypes":[]}' nodeTypes: '{}';
 		at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
 			SBInlineBlockSequence new elements: {
 				SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: '-'. SBInlineBlockLabel new label: '+'}.
@@ -208,7 +201,6 @@ SBTSInlineBlockTest >> testMatchPrefixOp [
 	| factory unknown editor num |
 	factory := SBMetaBlockFactory new.
 	factory
-		grammar: '{"supertypes":[]}' nodeTypes: '{}';
 		at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
 			SBInlineBlockSequence new elements: {
 				SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: '-'. SBInlineBlockLabel new label: '+'}.
@@ -233,7 +225,6 @@ SBTSInlineBlockTest >> testMatchRecursive [
 	| factory unknown editor num |
 	factory := SBMetaBlockFactory new.
 	factory
-		grammar: '{"supertypes":[]}' nodeTypes: '{}';
 		at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
 			SBInlineBlockSequence new elements: {
 				SBInlineBlockSymbol new type: 'expr' factory: factory.
@@ -272,7 +263,6 @@ SBTSInlineBlockTest >> testRegressionAttribute [
 	| block result factory |
 	factory := SBMetaBlockFactory new.
 	factory
-		grammar: '{"supertypes":[]}' nodeTypes: '{}';
 		at: 'primary_expression' putTemplate: (SBInlineBlockChoice new alternatives: {
 			SBInlineBlockSequence new elements: {
 				SBInlineBlockSymbol new type: 'primary_expression' factory: factory.

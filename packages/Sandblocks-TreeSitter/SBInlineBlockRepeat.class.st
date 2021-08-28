@@ -32,19 +32,6 @@ SBInlineBlockRepeat >> buildEmpty [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockRepeat >> buildFor: aString matchFullToken: aBoolean options: anOptions [
-	" FIXME: consider actually repeating "
-
-	^ element buildFor: aString matchFullToken: aBoolean options: anOptions
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockRepeat >> buildPartial: anOptions with: aString [
-
-	^ element buildPartial: anOptions with: aString
-]
-
-{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> childrenIn: anExplore [
 
 	(anExplore isNil or: [required]) ifTrue: [^ {self element}].

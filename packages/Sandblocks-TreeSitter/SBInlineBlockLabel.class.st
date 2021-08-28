@@ -23,22 +23,6 @@ SBInlineBlockLabel >> buildEmpty [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockLabel >> buildFor: aStream matchFullToken: aBoolean options: anOptions [
-
-	^ (aBoolean
-		ifTrue: [aStream nextMatchAll: self label]
-		ifFalse: [aStream nextMatchAll: (self label first: (aStream size - aStream position min: self label size))])
-		ifTrue: [self veryDeepCopy]
-		ifFalse: [nil]
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockLabel >> buildPartial: anOptions with: aString [
-
-	^ self veryDeepCopy
-]
-
-{ #category : #'as yet unclassified' }
 SBInlineBlockLabel >> childrenIn: anExplore [
 
 	^ {}
@@ -81,12 +65,6 @@ SBInlineBlockLabel >> initialize [
 SBInlineBlockLabel >> inline [
 
 	^ self inlineIfPossible
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockLabel >> isUnambiguous [
-
-	^ true
 ]
 
 { #category : #'as yet unclassified' }
