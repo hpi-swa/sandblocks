@@ -108,6 +108,7 @@ SBTSUnknown >> tryInterpretInput: aString [
 	choices := SBTSRuleExplore new
 		explore: template value
 		withNested: nil
+		nestedBefore: false
 		for: aString
 		startSymbol: type.
 	

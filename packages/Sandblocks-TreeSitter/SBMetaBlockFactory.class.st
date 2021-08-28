@@ -694,7 +694,7 @@ SBMetaBlockFactory class >> python [
 		preprocess: [:f | ]
 		postprocess: [:f |
 			f statementContainerTypes: #('block').
-			f blockInline: {'expression_statement'}.
+			f blockInline: {'expression_statement'. 'parameters'}.
 			f rulesDo: [:r | f removeOptionalString: ',' in: r].
 			f grammar rules
 				at: '"'

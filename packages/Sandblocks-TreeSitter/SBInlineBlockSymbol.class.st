@@ -18,9 +18,12 @@ SBInlineBlockSymbol >> buildCopy [
 SBInlineBlockSymbol >> buildDefaultIn: anExplore [
 
 	super buildDefaultIn: anExplore.
-	self addMorphBack: (SBTSUnknown new
-		template: [factory getTemplate: type];
-		type: type factory: factory)
+	self addMorphBack: ((factory shouldBlockInline: type)
+		ifTrue: [factory instantiateTemplate: type]
+		ifFalse: [
+			SBTSUnknown new
+				template: [factory getTemplate: type];
+				type: type factory: factory])
 ]
 
 { #category : #'as yet unclassified' }

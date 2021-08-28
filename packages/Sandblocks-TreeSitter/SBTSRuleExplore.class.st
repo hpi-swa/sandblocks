@@ -11,35 +11,37 @@ Class {
 		'lastOptions',
 		'results',
 		'foundNested',
-		'nestedBlock'
+		'nestedBlock',
+		'nestedBefore'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTSRuleExplore >> addVisitedSymbol: aSymbol [
 
 	visitedSymbols add: aSymbol
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 SBTSRuleExplore >> done [
 
 	^ stream atEnd and: [nestedBlock isNil or: [foundNested]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #explore }
 SBTSRuleExplore >> explore: aBlock for: aString [
 
-	^ self explore: aBlock withNested: nil for: aString startSymbol: nil
+	^ self explore: aBlock withNested: nil nestedBefore: false for: aString startSymbol: nil
 ]
 
-{ #category : #'as yet unclassified' }
-SBTSRuleExplore >> explore: aBlock withNested: aSubBlock for: aString startSymbol: aSymbolString [
+{ #category : #explore }
+SBTSRuleExplore >> explore: aBlock withNested: aSubBlock nestedBefore: aBoolean for: aString startSymbol: aSymbolString [
 
 	matchFullToken := aString last = Character space.
 	stream := (matchFullToken ifTrue: [aString allButLast] ifFalse: [aString]) readStream.
 	nestedBlock := aSubBlock.
+	nestedBefore := aBoolean.
 	
 	aSymbolString ifNotNil: [visitedSymbols add: aSymbolString].
 	
@@ -54,7 +56,7 @@ SBTSRuleExplore >> explore: aBlock withNested: aSubBlock for: aString startSymbo
 				at: index
 				ifPresent: [:template | | child |
 					pair at: 1 put: index + 1.
-					(nestedBlock notNil and: [(template hasSameStructureAs: nestedBlock) and: [foundNested not]])
+					(nestedBlock notNil and: [foundNested not and: [((nestedBefore and: [stream position = 0]) or: [nestedBefore not and: [stream atEnd]]) and: [template hasSameStructureAs: nestedBlock]]])
 						ifTrue: [
 							child := nestedBlock buildCopy.
 							foundNested := true]
@@ -78,7 +80,7 @@ SBTSRuleExplore >> explore: aBlock withNested: aSubBlock for: aString startSymbo
 								results add: root buildCopy.
 								self restartFromLastChoiceIfDone: [^ results]]]
 						ifFalse: [
-							(block takeStreamFrom: self)
+							((nestedBefore not or: [foundNested]) and: [block takeStreamFrom: self])
 								ifTrue: [
 									stack ifEmpty: [
 										self done ifTrue: [results add: root buildCopy].
@@ -86,13 +88,13 @@ SBTSRuleExplore >> explore: aBlock withNested: aSubBlock for: aString startSymbo
 								ifFalse: [self restartFromLastChoiceIfDone: [^ results]]]]]] repeat
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTSRuleExplore >> hasSeenChoice: aChoice [
 
 	^ choiceIndices includesKey: aChoice
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTSRuleExplore >> hasVisitedSymbol: aSymbol factory: aFactory [
 
 	^ SBToggledCode comment: '' active: 2 do: {
@@ -101,13 +103,13 @@ SBTSRuleExplore >> hasVisitedSymbol: aSymbol factory: aFactory [
 		[visitedSymbols includes: aSymbol]}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTSRuleExplore >> indexFor: aChoice [
 
 	^ choiceIndices at: aChoice ifAbsentPut: [1]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBTSRuleExplore >> initialize [
 
 	super initialize.
@@ -120,13 +122,13 @@ SBTSRuleExplore >> initialize [
 	foundNested := false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTSRuleExplore >> matchFullToken [
 
 	^ matchFullToken
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 SBTSRuleExplore >> push: aBlock [
 
 	| template |
@@ -138,7 +140,7 @@ SBTSRuleExplore >> push: aBlock [
 	^ template
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 SBTSRuleExplore >> removeAllMorphsAfter: aMorph in: aParentMorph [
 
 	| delete toDelete |
@@ -151,7 +153,7 @@ SBTSRuleExplore >> removeAllMorphsAfter: aMorph in: aParentMorph [
 	toDelete do: #delete
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 SBTSRuleExplore >> restartFromLastChoiceIfDone: aBlock [
 
 	| option choice number |
@@ -172,13 +174,7 @@ SBTSRuleExplore >> restartFromLastChoiceIfDone: aBlock [
 	self removeAllMorphsAfter: choice in: root
 ]
 
-{ #category : #'as yet unclassified' }
-SBTSRuleExplore >> sanityCheck [
-
-	lastOptions do: [:opt | self assert: (opt first ownerChain includes: root)]
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTSRuleExplore >> stream [
 
 	^ stream

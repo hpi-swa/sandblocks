@@ -52,12 +52,18 @@ SBInlineBlock >> childrenIn: anExplore [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlock >> choicesForInput: aString [
+SBInlineBlock >> choicesForInput: aString before: aBoolean [
 
 	| current |
 	current := self.
 	[current notNil and: [current isInlineBlock]] whileTrue: [
-		(current isKindOf: SBInlineBlockChoice) ifTrue: [(SBTSRuleExplore new explore: current withNested: self for: aString startSymbol: nil) ifNotEmpty: [:choices | ^ choices]].
+		(current isKindOf: SBInlineBlockChoice) ifTrue: [
+			(SBTSRuleExplore new
+				explore: current
+				withNested: self
+				nestedBefore: aBoolean
+				for: aString
+				startSymbol: nil) ifNotEmpty: [:choices | ^ choices]].
 		current := current owner].
 	^ #()
 ]
@@ -264,9 +270,11 @@ SBInlineBlock >> keyStroke: anEvent [
 	self currentTextMorph owner valid ifFalse: [
 		self deleteBeforeCursor.
 		
-		self tryInterpretInput: (anEvent keyCharacter = Character space
-			ifTrue: [(UIManager default request: 'type operator') ifEmpty: [^ self]]
-			ifFalse: [anEvent keyCharacter asString])]
+		self
+			tryInterpretInput: (anEvent keyCharacter = Character space
+				ifTrue: [(UIManager default request: 'type operator') ifEmpty: [^ self]]
+				ifFalse: [anEvent keyCharacter asString])
+			before: (anEvent keyCharacter = Character space and: [anEvent shiftPressed]) not]
 ]
 
 { #category : #'as yet unclassified' }
@@ -372,10 +380,10 @@ SBInlineBlock >> triggersFor: aString matchFullToken: aBoolean options: anOption
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlock >> tryInterpretInput: aString [
+SBInlineBlock >> tryInterpretInput: aString before: aBoolean [
 
 	| choices |
-	choices := self choicesForInput: aString.
+	choices := self choicesForInput: aString before: aBoolean.
 	choices size = 1 ifTrue: [
 		self sandblockEditor do: (SBReplaceCommand new
 			target: self;

@@ -22,7 +22,7 @@ SBTSRelInsertCommand >> do [
 
 	morph := morph ifNil: [element instantiate].
 	super do.
-	^ SBToggledCode comment: '' active: 1 do: {[morph containingSandblock]. [morph firstBlock]}
+	^ morph firstBlock ifNil: #containingSandblock
 ]
 
 { #category : #'as yet unclassified' }

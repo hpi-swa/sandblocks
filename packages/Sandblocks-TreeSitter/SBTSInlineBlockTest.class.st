@@ -50,7 +50,7 @@ SBTSInlineBlockTest >> testFailNestedPrefixOp [
 	unknown firstSubmorph keyStroke: (self keyboardEvent: $1).
 	num := editor childSandblocks first firstBlock.
 	
-	self assert: (num choicesForInput: '+') isEmpty
+	self assert: (num choicesForInput: '+' before: false) isEmpty
 ]
 
 { #category : #'tests - match empty' }
@@ -145,26 +145,20 @@ SBTSInlineBlockTest >> testMatchGroup [
 ]
 
 { #category : #'tests - continue match' }
-SBTSInlineBlockTest >> testMatchIfStatement [
+SBTSInlineBlockTest >> testMatchIfBeforeAndAfter [
 
 	| factory unknown editor num |
 	factory := SBMetaBlockFactory new.
-	factory
-		at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
-			SBInlineBlockSequence new elements: {
-				SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: '-'. SBInlineBlockLabel new label: '+'}.
-				SBInlineBlockSymbol new type: 'expr' factory: factory}.
-			SBInlineBlockText new regexString: '[0-9]+'}).
+	factory at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
+		SBInlineBlockSequence new elements: {SBInlineBlockLabel new label: 'if'. SBInlineBlockSymbol new type: 'expr' factory: factory}.
+		SBInlineBlockSequence new elements: {SBInlineBlockSymbol new type: 'expr' factory: factory. SBInlineBlockLabel new label: 'if'}.
+		SBInlineBlockText new regexString: '[0-9]+'}).
 	
 	editor := self editorFor: (unknown := factory instantiateTemplate: 'expr').
 	unknown firstSubmorph keyStroke: (self keyboardEvent: $1).
 	num := editor childSandblocks first.
-	self assert: 1 equals: (num choicesForInput: '+') size.
-	
-	num keyStroke: (self keyboardEvent: $+).
-	self
-		assert: '+'
-		equals: editor childSandblocks first firstSubmorph firstSubmorph firstSubmorph contents
+	self assert: 1 equals: (num choicesForInput: 'if' before: true) size.
+	self assert: 1 equals: (num choicesForInput: 'if' before: false) size
 ]
 
 { #category : #'tests - match empty' }
@@ -200,22 +194,16 @@ SBTSInlineBlockTest >> testMatchPrefixOp [
 
 	| factory unknown editor num |
 	factory := SBMetaBlockFactory new.
-	factory
-		at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
-			SBInlineBlockSequence new elements: {
-				SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: '-'. SBInlineBlockLabel new label: '+'}.
-				SBInlineBlockSymbol new type: 'expr' factory: factory}.
-			SBInlineBlockText new regexString: '[0-9]+'}).
+	factory at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
+		SBInlineBlockSequence new elements: {
+			SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: '-'. SBInlineBlockLabel new label: '+'}.
+			SBInlineBlockSymbol new type: 'expr' factory: factory}.
+		SBInlineBlockText new regexString: '[0-9]+'}).
 	
 	editor := self editorFor: (unknown := factory instantiateTemplate: 'expr').
 	unknown firstSubmorph keyStroke: (self keyboardEvent: $1).
 	num := editor childSandblocks first.
-	self assert: 1 equals: (num choicesForInput: '+') size.
-	
-	num keyStroke: (self keyboardEvent: $+).
-	self
-		assert: '+'
-		equals: editor childSandblocks first firstSubmorph firstSubmorph firstSubmorph contents
+	self assert: 1 equals: (num choicesForInput: '+' before: false) size
 ]
 
 { #category : #'tests - match empty' }
@@ -224,13 +212,12 @@ SBTSInlineBlockTest >> testMatchRecursive [
 
 	| factory unknown editor num |
 	factory := SBMetaBlockFactory new.
-	factory
-		at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
-			SBInlineBlockSequence new elements: {
-				SBInlineBlockSymbol new type: 'expr' factory: factory.
-				SBInlineBlockLabel new label: '+'.
-				SBInlineBlockSymbol new type: 'expr' factory: factory}.
-			SBInlineBlockText new regexString: '[0-9]+'}).
+	factory at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
+		SBInlineBlockSequence new elements: {
+			SBInlineBlockSymbol new type: 'expr' factory: factory.
+			SBInlineBlockLabel new label: '+'.
+			SBInlineBlockSymbol new type: 'expr' factory: factory}.
+		SBInlineBlockText new regexString: '[0-9]+'}).
 	
 	editor := self editorFor: (unknown := factory instantiateTemplate: 'expr').
 	unknown firstSubmorph tryInterpretInput: '1+1+'.
