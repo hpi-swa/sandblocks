@@ -159,6 +159,25 @@ SBInlineBlockSymbol >> printTitleOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> takeParsedFrom: aCursor [
+
+	^ (factory type: aCursor type compatibleWith: type)
+		ifTrue: [ | descend didDescend |
+			descend := aCursor type = type.
+			didDescend := false.
+			
+			descend ifTrue: [didDescend := aCursor gotoFirstChild].
+			(self template takeParsedFrom: aCursor)
+				ifNotNil: [:m |
+					didDescend ifTrue: [
+						aCursor gotoParent.
+						aCursor gotoNextSibling].
+					self buildEmpty addMorphBack: m]
+				ifNil: [nil]]
+		ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> takeStreamFrom: anObject [
 
 	^ true

@@ -70,6 +70,13 @@ SBTSCursor >> gotoParent [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSCursor >> initialize [
+
+	super initialize.
+	atEnd := false
+]
+
+{ #category : #'as yet unclassified' }
 SBTSCursor >> library: aLibrary cursor: aCursor [
 
 	library := aLibrary.

@@ -114,6 +114,16 @@ SBInlineBlockLabel >> printTitleOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockLabel >> takeParsedFrom: aCursor [
+
+	^ aCursor text withBlanksTrimmed = self label
+		ifTrue: [
+			aCursor gotoNextSibling.
+			self buildEmpty]
+		ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockLabel >> takeStreamFrom: option [
 
 	^ option stream atEnd not and: [option matchFullToken

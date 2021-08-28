@@ -137,6 +137,16 @@ SBInlineBlockText >> regexString: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockText >> takeParsedFrom: aCursor [
+
+	| copy |
+	copy := self buildEmpty.
+	copy contents: aCursor text.
+	aCursor gotoNextSibling.
+	^ copy
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockText >> takeStreamFrom: anObject [
 
 	| start |

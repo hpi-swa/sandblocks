@@ -25,19 +25,19 @@ SBDeleteCommand >> do [
 SBDeleteCommand >> nextBlockFrom: aMorph [
 
 	| next m |
-	m := aMorph firstBlock ifNil: [aMorph containingSandblock].
+	m := aMorph isSandblock ifTrue: [aMorph] ifFalse: [aMorph firstBlock ifNil: [aMorph containingSandblock]].
 	
 	m floating ifTrue: [
 		^ (m parentSandblock
 			childClosestTo: (m center ifNil: [m sandblockEditor])
 			that: [:b | b ~= m]) ifNil: [m sandblockEditor]].
 	
-	next := (aMorph isSandblock
-		ifTrue: [(aMorph adjacentBlock: 1) ifNil: [aMorph adjacentBlock: -1]]
+	next := (m isSandblock
+		ifTrue: [(m adjacentBlock: 1) ifNil: [m adjacentBlock: -1]]
 		ifFalse: [
 			aMorph childSandblocks
 				ifNotEmpty: [:blocks | (blocks first adjacentBlock: -1) ifNil: [blocks last adjacentBlock: 1]]
-				ifEmpty: [(aMorph containingSandblock adjacentBlock: -1) ifNil: [aMorph containingSandblock adjacentBlock: 1]]]) ifNil: [aMorph containingSandblock parentSandblock].
+				ifEmpty: [(m adjacentBlock: -1) ifNil: [m adjacentBlock: 1]]]) ifNil: [m parentSandblock].
 	
 	^ (next isNil or: [next containingFloat ~= aMorph containingFloat])
 		ifTrue: [aMorph sandblockEditor]

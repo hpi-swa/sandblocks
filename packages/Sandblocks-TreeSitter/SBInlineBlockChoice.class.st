@@ -159,6 +159,21 @@ SBInlineBlockChoice >> printTitleOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockChoice >> takeParsedFrom: aCursor [
+
+	| copy |
+	copy := self buildEmpty.
+	self alternatives do: [:choice | | restore |
+		restore := aCursor position.
+		(choice takeParsedFrom: aCursor)
+			ifNotNil: [:m |
+				copy addMorphBack: m.
+				^ copy]
+			ifNil: [aCursor position: restore]].
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockChoice >> takeStreamFrom: aMorph [
 
 	^ true

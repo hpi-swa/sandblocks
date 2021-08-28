@@ -112,6 +112,18 @@ SBInlineBlockSequence >> printTitleOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSequence >> takeParsedFrom: aCursor [
+
+	| copy |
+	copy := self buildEmpty.
+	self elements do: [:element |
+		(element takeParsedFrom: aCursor)
+			ifNotNil: [:m | copy addMorphBack: m]
+			ifNil: [^ nil]].
+	^ copy
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSequence >> takeStreamFrom: anObject [
 
 	^ true

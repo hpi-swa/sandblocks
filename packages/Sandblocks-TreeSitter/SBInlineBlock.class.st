@@ -368,6 +368,12 @@ SBInlineBlock >> removedMorph: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> takeParsedFrom: aCursor [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> takeStreamFrom: aMorph [
 
 	^ self subclassResponsibility

@@ -182,6 +182,25 @@ SBInlineBlockRepeat >> required [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> takeParsedFrom: aCursor [
+
+	| count copy abort restore |
+	count := 0.
+	copy := self buildEmpty.
+	abort := false.
+	[abort not and: [aCursor atEnd not and: [count = 0 or: [self multiple]]]] whileTrue: [
+		restore := aCursor position.
+		(element takeParsedFrom: aCursor)
+			ifNotNil: [:m |
+				copy addMorphBack: m.
+				count := count + 1]
+			ifNil: [
+				aCursor position: restore.
+				abort := true]].
+	^ (count > 0 or: [required not]) ifTrue: [copy] ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> takeStreamFrom: anObject [
 
 	self flag: #fixme.

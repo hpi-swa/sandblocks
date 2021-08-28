@@ -54,6 +54,12 @@ SBInlineBlockNever >> printTitleOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockNever >> takeParsedFrom: aCursor [
+
+	^ self shouldNotImplement
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockNever >> takeStreamFrom: anObject [
 
 	^ false

@@ -127,7 +127,8 @@ Morph >> extent: aPoint [
 { #category : #'*Sandblocks-Core-hierarchy' }
 Morph >> firstBlock [
 
-	self allMorphsDo: [:m | m isSandblock ifTrue: [^ m]].
+	self isSandblock ifTrue: [^ self].
+	self submorphsDo: [:morph | ^ morph firstBlock].
 	^ nil
 ]
 
