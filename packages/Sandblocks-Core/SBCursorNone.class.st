@@ -51,3 +51,15 @@ SBCursorNone >> mode [
 
 	^ #none
 ]
+
+{ #category : #'as yet unclassified' }
+SBCursorNone >> moveHorizontal: anInteger wordWise: aBoolean [ 
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorNone >> selectLarger [
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorNone >> selectSmaller [
+]

@@ -86,11 +86,17 @@ SBTSUnknown >> template: aBlock [
 { #category : #'as yet unclassified' }
 SBTSUnknown >> tryInterpretContents [
 
+	self tryInterpretInput: self contents
+]
+
+{ #category : #'as yet unclassified' }
+SBTSUnknown >> tryInterpretInput: aString [
+
 	| choices |
 	choices := SBTSRuleExplore new
 		explore: template value
 		withNested: nil
-		for: self contents
+		for: aString
 		startSymbol: type.
 	
 	choices size > 1 ifTrue: [ | shortest |

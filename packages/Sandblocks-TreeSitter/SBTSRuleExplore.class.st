@@ -68,7 +68,12 @@ SBTSRuleExplore >> explore: aBlock withNested: aSubBlock for: aString startSymbo
 							child := self push: template.
 							self done ifTrue: [child buildDefault]].
 					SBToggledCode comment: '' active: 0 do: {
-						[((child isKindOf: SBInlineBlockSymbol) and: [child type = 'binary_operator' and: [(stack count: [:p | (p second isKindOf: SBInlineBlockSymbol) and: [p second type = 'primary_expression']]) = 2]]) ifTrue: [self halt]]}.
+						[
+							((child isKindOf: SBInlineBlockSymbol) and: [
+								child type = 'binary_operator' and: [
+									SBToggledCode comment: '' active: 1 do: {
+										[true].
+										[(stack count: [:p | (p second isKindOf: SBInlineBlockSymbol) and: [p second type = 'unary_operator']]) = 1]}]]) ifTrue: [self halt]]}.
 					block addMorphBack: child]
 				ifAbsent: [
 					stack removeLast.
@@ -94,11 +99,11 @@ SBTSRuleExplore >> hasSeenChoice: aChoice [
 ]
 
 { #category : #'as yet unclassified' }
-SBTSRuleExplore >> hasVisitedSymbol: aSymbol [
+SBTSRuleExplore >> hasVisitedSymbol: aSymbol factory: aFactory [
 
-	^ SBToggledCode comment: '' active: 1 do: {
-		[" if we have a nestedBlock, allow one level of recursion "
-		(stack viewAllButLast count: [:pair | (pair second isKindOf: SBInlineBlockSymbol) and: [pair second type = aSymbol]]) >= (nestedBlock ifNotNil: [1] ifNil: 1)].
+	^ SBToggledCode comment: '' active: 2 do: {
+		[false].
+		[(stack viewAllButLast count: [:pair | (pair second isKindOf: SBInlineBlockSymbol) and: [pair second type = aSymbol]]) >= (nestedBlock ifNotNil: [1] ifNil: [1])].
 		[visitedSymbols includes: aSymbol]}
 ]
 

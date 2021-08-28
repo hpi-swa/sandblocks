@@ -5,7 +5,8 @@ Class {
 		'grammar',
 		'nodeTypes',
 		'slotMapping',
-		'templateCache'
+		'templateCache',
+		'statementContainerTypes'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -410,13 +411,29 @@ SBMetaBlockFactory >> initialize [
 	super initialize.
 	
 	slotMapping := Dictionary new.
-	templateCache := Dictionary new
+	templateCache := Dictionary new.
+	statementContainerTypes := {}
 ]
 
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> instantiateTemplate: aString [
 
 	^ (self getTemplate: aString) buildEmpty buildDefault
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> instantiateToplevel: aString [
+
+	^ SBInlineBlockSymbol new
+		type: aString
+		factory: self
+		block: (self instantiateTemplate: aString)
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> isStatementContainer: aString [
+
+	^ statementContainerTypes includes: aString
 ]
 
 { #category : #'as yet unclassified' }
@@ -695,6 +712,12 @@ SBMetaBlockFactory >> startsWithKeyword: anObject [
 			['SEQ'] -> [self startsWithKeyword: anObject members first].
 			['STRING'] -> [true]}
 		otherwise: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> statementContainerTypes: aCollection [
+
+	statementContainerTypes := aCollection
 ]
 
 { #category : #'as yet unclassified' }

@@ -56,7 +56,7 @@ SBInlineBlockSymbol >> candidatesForWrappingOn: aStream [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> childrenIn: anExplore [
 
-	^ (anExplore notNil and: [anExplore hasVisitedSymbol: self type])
+	^ (anExplore notNil and: [anExplore hasVisitedSymbol: self type factory: factory])
 		ifTrue: [{SBInlineBlockNever new}]
 		ifFalse: [
 			anExplore ifNotNil: [anExplore addVisitedSymbol: self type].
@@ -73,6 +73,12 @@ SBInlineBlockSymbol >> deleteTargetFor: aBlock [
 SBInlineBlockSymbol >> factory: aFactory [
 
 	factory := aFactory
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> fixedNumberOfChildren [
+
+	^ (self firstSubmorph isKindOf: SBInlineBlockRepeat) not
 ]
 
 { #category : #'as yet unclassified' }
@@ -109,6 +115,14 @@ SBInlineBlockSymbol >> inline [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
+
+	^ (self firstSubmorph isKindOf: SBInlineBlockRepeat)
+		ifTrue: [self firstSubmorph insertCommandRequest: aMorph near: aBlock before: aBoolean]
+		ifFalse: [super insertCommandRequest: aMorph near: aBlock before: aBoolean]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> instantiate [
 
 	^ (factory isSuperType: type)
@@ -117,9 +131,23 @@ SBInlineBlockSymbol >> instantiate [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> isStatementContainer [
+
+	^ factory isStatementContainer: type
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> isUnambiguous [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> newEmptyChildNear: aBlock before: aBoolean [
+
+	^ (self firstSubmorph isKindOf: SBInlineBlockRepeat)
+		ifTrue: [self firstSubmorph newEmptyChildNear: aBlock before: aBoolean]
+		ifFalse: [super newEmptyChildNear: aBlock before: aBoolean]
 ]
 
 { #category : #'as yet unclassified' }

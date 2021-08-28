@@ -203,6 +203,27 @@ SBTSInlineBlockTest >> testMatchPrefixOp [
 ]
 
 { #category : #'tests - match empty' }
+SBTSInlineBlockTest >> testMatchRecursive [
+	<timeout: 0.2>
+
+	| factory unknown editor num |
+	factory := SBMetaBlockFactory new.
+	factory
+		grammar: '{"supertypes":[]}' nodeTypes: '{}';
+		at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
+			SBInlineBlockSequence new elements: {
+				SBInlineBlockSymbol new type: 'expr' factory: factory.
+				SBInlineBlockLabel new label: '+'.
+				SBInlineBlockSymbol new type: 'expr' factory: factory}.
+			SBInlineBlockText new regexString: '[0-9]+'}).
+	
+	editor := self editorFor: (unknown := factory instantiateTemplate: 'expr').
+	unknown firstSubmorph tryInterpretInput: '1+1+'.
+	num := editor childSandblocks first.
+	self assert: '1 + 1 +' equals: num sourceString
+]
+
+{ #category : #'tests - match empty' }
 SBTSInlineBlockTest >> testMultipleMatches [
 
 	| block result |

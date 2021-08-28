@@ -124,6 +124,13 @@ Morph >> extent: aPoint [
 	self triggerEvent: #extentChanged.
 ]
 
+{ #category : #'*Sandblocks-Core-hierarchy' }
+Morph >> firstBlock [
+
+	self allMorphsDo: [:m | m isSandblock ifTrue: [^ m]].
+	^ nil
+]
+
 { #category : #'*Sandblocks-Core' }
 Morph >> firstBlockAt: aPoint do: aBlock [
 

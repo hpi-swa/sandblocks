@@ -123,6 +123,18 @@ SBInlineBlockRepeat >> inline [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
+
+	^ SBTSRelInsertCommand new
+		near: (aBlock owner = self
+			ifTrue: [aMorph]
+			ifFalse: [aBlock ownerSatisfying: [:o | o owner = self]])
+		before: aBoolean
+		in: self
+		morph: aMorph
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> multiple [
 
 	^ multiple
@@ -134,6 +146,12 @@ SBInlineBlockRepeat >> multiple: aBoolean required: anotherBoolean element: aMor
 	multiple := aBoolean.
 	required := anotherBoolean.
 	element := aMorph
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> newEmptyChildNear: aBlock before: aBoolean [
+
+	^ element instantiate
 ]
 
 { #category : #'as yet unclassified' }

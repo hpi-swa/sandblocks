@@ -142,13 +142,6 @@ SBInlineBlock >> extent: aPoint [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlock >> firstBlock [
-
-	self allMorphsDo: [:m | m isSandblock ifTrue: [^ m]].
-	^ nil
-]
-
-{ #category : #'as yet unclassified' }
 SBInlineBlock >> firstDifferingBlocksWith: aMorph do: aBlock ifNone: anotherBlock [
 
 	(self hasSameStructureAs: aMorph) ifFalse: [^ aBlock value: self value: aMorph].
@@ -166,6 +159,12 @@ SBInlineBlock >> firstDifferingUpBlocksWith: aMorph do: aBlock ifNone: anotherBl
 	(self hasSameStructureAs: aMorph) ifFalse: [^ aBlock value: self value: aMorph].
 	(self owner notNil and: [self owner isInlineBlock]) ifTrue: [^ self owner firstDifferingUpBlocksWith: aMorph owner do: aBlock ifNone: anotherBlock].
 	^ anotherBlock value
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> grammarHandler [
+
+	^ SBGrammarHandler new
 ]
 
 { #category : #'as yet unclassified' }
@@ -232,11 +231,25 @@ SBInlineBlock >> inlineIfPossible [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
+
+	^ self owner inline
+		ifTrue: [self owner insertCommandRequest: aMorph near: aBlock before: aBoolean]
+		ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> instantiate [
 
 	| instance |
 	instance := self buildEmpty buildDefault.
 	^ instance
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> isBlockBody [
+
+	^ self isStatementContainer
 ]
 
 { #category : #'as yet unclassified' }
@@ -249,6 +262,18 @@ SBInlineBlock >> isInlineBlock [
 SBInlineBlock >> isSandblock [
 
 	^ self inline not
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> isStatement [
+
+	^ self parentSandblock isInlineBlock and: [self parentSandblock isStatementContainer]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> isStatementContainer [
+
+	^ false
 ]
 
 { #category : #'as yet unclassified' }
@@ -266,7 +291,7 @@ SBInlineBlock >> keyStroke: anEvent [
 		self deleteBeforeCursor.
 		
 		self tryInterpretInput: (anEvent keyCharacter = Character space
-			ifTrue: [UIManager default request: 'type operator']
+			ifTrue: [(UIManager default request: 'type operator') ifEmpty: [^ self]]
 			ifFalse: [anEvent keyCharacter asString])]
 ]
 

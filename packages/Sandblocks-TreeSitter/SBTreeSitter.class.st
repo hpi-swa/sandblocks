@@ -8719,6 +8719,7 @@ SBTreeSitter >> pythonFactory [
 		f grammar rules
 			at: '"'
 			put: (JsonObject fromAssociations: {#type -> 'STRING'. #value -> '"'}).
+		f statementContainerTypes: #('block').
 		f]
 ]
 
