@@ -127,7 +127,17 @@ SBTSUnknown >> tryInterpretInput: aString [
 		self sandblockEditor do: (SBReplaceCommand new
 			target: self owner;
 			replacer: replacer).
-		(choices first firstBlock ifNil: [choices first containingSandblock]) startInputAtEnd]
+		
+		SBToggledCode
+			comment: ''
+			active: 0
+			do: {[(replacer firstBlock ifNil: [replacer containingSandblock]) inputContainedUnknown]}.
+		
+		(replacer startInputCommand
+			ifNotNil: [replacer]
+			ifNil: [replacer nextBlockThat: [:m | m startInputCommand notNil]])
+			ifNotNil: [:m | ((m hasOwner: replacer) or: [m = replacer]) ifTrue: [replacer sandblockEditor startInput: m at: 900000000 replacingContents: false]]
+			ifNil: [replacer firstBlock ifNotNil: #select]]
 ]
 
 { #category : #'as yet unclassified' }

@@ -139,9 +139,13 @@ SBInlineBlockRepeat >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
-		data: (self submorphs
-			collect: [:morph | morph layoutCommands]
-			separatedBy: [SBAlgebraCommand softLine])
+		data: (Array streamContents: [:stream |
+			self submorphs withIndexDo: [:morph :index |
+				stream nextPut: morph layoutCommands.
+				index ~= self submorphCount ifTrue: [
+					stream nextPut: ((self factory hardLineBreakMatcher value: morph)
+						ifTrue: [SBAlgebraCommand hardLine]
+						ifFalse: [SBAlgebraCommand gap])]]])
 ]
 
 { #category : #'as yet unclassified' }

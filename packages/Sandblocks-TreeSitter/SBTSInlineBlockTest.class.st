@@ -150,6 +150,30 @@ SBTSInlineBlockTest >> testMatchGroup [
 	self assert: 3 equals: result submorphCount
 ]
 
+{ #category : #'tests - continue match' }
+SBTSInlineBlockTest >> testMatchIfStatement [
+
+	| factory unknown editor num |
+	factory := SBMetaBlockFactory new.
+	factory
+		grammar: '{"supertypes":[]}' nodeTypes: '{}';
+		at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
+			SBInlineBlockSequence new elements: {
+				SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: '-'. SBInlineBlockLabel new label: '+'}.
+				SBInlineBlockSymbol new type: 'expr' factory: factory}.
+			SBInlineBlockText new regexString: '[0-9]+'}).
+	
+	editor := self editorFor: (unknown := factory instantiateTemplate: 'expr').
+	unknown firstSubmorph keyStroke: (self keyboardEvent: $1).
+	num := editor childSandblocks first.
+	self assert: 1 equals: (num choicesForInput: '+') size.
+	
+	num keyStroke: (self keyboardEvent: $+).
+	self
+		assert: '+'
+		equals: editor childSandblocks first firstSubmorph firstSubmorph firstSubmorph contents
+]
+
 { #category : #'tests - match empty' }
 SBTSInlineBlockTest >> testMatchIncompleteSequence [
 

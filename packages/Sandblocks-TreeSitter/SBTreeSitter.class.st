@@ -745,7 +745,7 @@ SBTreeSitter >> jsonFactory [
 '
 		nodeTypes: '{}') in: [:f |
 		f cleanGrammar.
-		f grammar blockInline: {'string_content'}.
+		f blockInline: {'string_content'}.
 		f]
 ]
 
@@ -8718,13 +8718,14 @@ SBTreeSitter >> pythonFactory [
 			comment: ''
 			active: 0
 			do: {[f grammar at: 'inline' put: (f grammar inline copyWith: 'expression_statement')]}.
-		f grammar blockInline: {'expression_statement'}.
+		f blockInline: {'expression_statement'}.
 		f cleanGrammar.
 		f grammar rules keysAndValuesDo: [:name :r | f removeOptionalString: ',' in: r].
 		f grammar rules
 			at: '"'
 			put: (JsonObject fromAssociations: {#type -> 'STRING'. #value -> '"'}).
 		f statementContainerTypes: #('block').
+		f hardLineBreakMatcher: [:b | ((b isKindOf: SBInlineBlockLabel) and: [b label = ':']) or: [(b parentSandblock isKindOf: SBInlineBlockSymbol) and: [b parentSandblock type = 'block']]].
 		f]
 ]
 

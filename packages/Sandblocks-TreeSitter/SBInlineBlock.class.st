@@ -77,17 +77,11 @@ SBInlineBlock >> childrenIn: anExplore [
 { #category : #'as yet unclassified' }
 SBInlineBlock >> choicesForInput: aString [
 
-	| explore |
-	explore := [:block | (SBTSRuleExplore new explore: block withNested: self for: aString startSymbol: nil) ifNotEmpty: [:choices | ^ choices]].
-	
-	SBToggledCode
-		comment: ''
-		active: 0
-		do: {[self candidatesForWrappingOn: (SBImmediateStream with: explore)]}.
-	
-	explore value: ((self isKindOf: SBInlineBlockChoice)
-		ifTrue: [self]
-		ifFalse: [self ownerSatisfying: [:m | m isKindOf: SBInlineBlockChoice]]).
+	| current |
+	current := self.
+	[current notNil and: [current isInlineBlock]] whileTrue: [
+		(current isKindOf: SBInlineBlockChoice) ifTrue: [(SBTSRuleExplore new explore: current withNested: self for: aString startSymbol: nil) ifNotEmpty: [:choices | ^ choices]].
+		current := current owner].
 	^ #()
 ]
 

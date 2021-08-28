@@ -6,7 +6,9 @@ Class {
 		'nodeTypes',
 		'slotMapping',
 		'templateCache',
-		'statementContainerTypes'
+		'statementContainerTypes',
+		'blockInline',
+		'hardLineBreakMatcher'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -58,6 +60,12 @@ SBMetaBlockFactory >> applyInlining: rule [
 SBMetaBlockFactory >> at: aString putTemplate: aBlock [
 
 	templateCache at: aString put: aBlock
+]
+
+{ #category : #configuration }
+SBMetaBlockFactory >> blockInline: aCollection [
+
+	blockInline := aCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -387,6 +395,18 @@ SBMetaBlockFactory >> grammarHandler [
 	^ SBMetaGrammarHandler new
 ]
 
+{ #category : #configuration }
+SBMetaBlockFactory >> hardLineBreakMatcher [
+
+	^ hardLineBreakMatcher
+]
+
+{ #category : #configuration }
+SBMetaBlockFactory >> hardLineBreakMatcher: aBlock [
+
+	hardLineBreakMatcher := aBlock
+]
+
 { #category : #'grammar clean' }
 SBMetaBlockFactory >> includesNonHiddenParts: anObject visited: aCollection [
 
@@ -418,7 +438,9 @@ SBMetaBlockFactory >> initialize [
 	
 	slotMapping := Dictionary new.
 	templateCache := Dictionary new.
-	statementContainerTypes := {}
+	blockInline := {}.
+	statementContainerTypes := {}.
+	hardLineBreakMatcher := [:block | false]
 ]
 
 { #category : #'as yet unclassified' }
@@ -630,7 +652,7 @@ SBMetaBlockFactory >> rulesMatching: aStringOrCollection containing: aRuleName f
 { #category : #'as yet unclassified' }
 SBMetaBlockFactory >> shouldBlockInline: aTypeString [
 
-	^ (self isSuperType: aTypeString) or: [self grammar blockInline ifNotNil: [:i | i includes: aTypeString] ifNil: [false]]
+	^ (self isSuperType: aTypeString) or: [blockInline includes: aTypeString]
 ]
 
 { #category : #'grammar clean' }
@@ -720,7 +742,7 @@ SBMetaBlockFactory >> startsWithKeyword: anObject [
 		otherwise: [false]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #configuration }
 SBMetaBlockFactory >> statementContainerTypes: aCollection [
 
 	statementContainerTypes := aCollection
