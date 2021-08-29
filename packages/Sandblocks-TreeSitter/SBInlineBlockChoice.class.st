@@ -44,7 +44,9 @@ SBInlineBlockChoice >> buildDefaultIn: anExplore [
 { #category : #'as yet unclassified' }
 SBInlineBlockChoice >> buildEmpty [
 
-	^ self class new alternatives: self alternatives
+	^ self class new
+		alternatives: self alternatives;
+		factory: factory
 ]
 
 { #category : #'as yet unclassified' }

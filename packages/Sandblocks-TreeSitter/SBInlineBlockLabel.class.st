@@ -19,7 +19,9 @@ SBInlineBlockLabel >> buildDefaultIn: anExplore [
 { #category : #'as yet unclassified' }
 SBInlineBlockLabel >> buildEmpty [
 
-	^ self class new label: self label
+	^ self class new
+		label: self label;
+		factory: factory
 ]
 
 { #category : #'as yet unclassified' }

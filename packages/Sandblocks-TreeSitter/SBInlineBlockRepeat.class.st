@@ -28,7 +28,9 @@ SBInlineBlockRepeat >> buildDefaultIn: anExplore [
 { #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> buildEmpty [
 
-	^ self class new multiple: multiple required: required element: element
+	^ self class new
+		multiple: multiple required: required element: element;
+		factory: factory
 ]
 
 { #category : #'as yet unclassified' }

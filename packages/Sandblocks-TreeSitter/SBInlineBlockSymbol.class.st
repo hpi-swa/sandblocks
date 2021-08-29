@@ -3,7 +3,6 @@ Class {
 	#superclass : #SBInlineBlock,
 	#instVars : [
 		'type',
-		'factory',
 		'field'
 	],
 	#category : #'Sandblocks-TreeSitter'
@@ -62,12 +61,6 @@ SBInlineBlockSymbol >> childrenIn: anExplore [
 SBInlineBlockSymbol >> deleteTargetFor: aBlock [
 
 	^ self owner deleteTargetFor: self
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockSymbol >> factory [
-
-	^ factory
 ]
 
 { #category : #'as yet unclassified' }
@@ -249,18 +242,6 @@ SBInlineBlockSymbol >> type: aSymbol factory: aFactory visitedSymbols: aSet [
 
 	aSet add: aSymbol.
 	self type: aSymbol factory: aFactory
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockSymbol >> veryDeepCopyWith: deepCopier [
-
-	| f copy |
-	f := factory.
-	factory := nil.
-	copy := super veryDeepCopyWith: deepCopier.
-	factory := f.
-	copy factory: f.
-	^ copy
 ]
 
 { #category : #'as yet unclassified' }

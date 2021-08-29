@@ -20,7 +20,7 @@ SBInlineBlockNever >> buildDefaultIn: anExplore [
 { #category : #'as yet unclassified' }
 SBInlineBlockNever >> buildEmpty [
 
-	^ self class new
+	^ self class new factory: factory
 ]
 
 { #category : #'as yet unclassified' }

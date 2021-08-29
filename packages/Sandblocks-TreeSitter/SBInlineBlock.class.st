@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'name',
 		'built',
-		'highlight'
+		'highlight',
+		'factory'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -150,7 +151,13 @@ SBInlineBlock >> extent: aPoint [
 { #category : #'as yet unclassified' }
 SBInlineBlock >> factory [
 
-	^ self owner ifNotNil: [:o | o factory]
+	^ factory
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> factory: aFactory [
+
+	factory := aFactory
 ]
 
 { #category : #'as yet unclassified' }
@@ -475,6 +482,18 @@ SBInlineBlock >> updateHighlight [
 		executeAgainst: self
 		capturesDo: [:captures | captures keysAndValuesDo: [:id :block | block highlight ifNil: [block highlight: id]]].
 	self submorphsDo: [:m | m isInlineBlock ifTrue: [m updateHighlight]]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> veryDeepCopyWith: deepCopier [
+
+	| f copy |
+	f := factory.
+	factory := nil.
+	copy := super veryDeepCopyWith: deepCopier.
+	factory := f.
+	copy factory: f.
+	^ copy
 ]
 
 { #category : #'as yet unclassified' }

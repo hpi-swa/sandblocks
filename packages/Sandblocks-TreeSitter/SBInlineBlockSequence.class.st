@@ -34,7 +34,9 @@ SBInlineBlockSequence >> buildDefaultIn: anExplore [
 { #category : #'as yet unclassified' }
 SBInlineBlockSequence >> buildEmpty [
 
-	^ self class new elements: self elements
+	^ self class new
+		elements: self elements;
+		factory: factory
 ]
 
 { #category : #'as yet unclassified' }

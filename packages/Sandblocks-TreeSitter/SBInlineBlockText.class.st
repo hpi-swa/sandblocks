@@ -23,7 +23,9 @@ SBInlineBlockText >> buildDefaultIn: anExplore [
 { #category : #'as yet unclassified' }
 SBInlineBlockText >> buildEmpty [
 
-	^ self class new regexString: self regexString
+	^ self class new
+		regexString: self regexString;
+		factory: factory
 ]
 
 { #category : #'as yet unclassified' }

@@ -5857,32 +5857,31 @@ SBMetaBlockFactory >> buildBlocksFor: anObject parentFieldName: aString visitedS
 	(#('STRING') includes: anObject type) ifTrue: [
 		^ SBInlineBlockLabel new
 			label: anObject value;
-			buildDefault].
+			factory: self].
 	
 	(#('PATTERN' 'TOKEN' 'IMMEDIATE_TOKEN') includes: anObject type) ifTrue: [
 		^ SBInlineBlockText new
 			regexString: (self buildRegexString: anObject);
-			buildDefault].
+			factory: self].
 	
 	(#('SYMBOL') includes: anObject type) ifTrue: [
 		^ SBInlineBlockSymbol new
 			type: anObject name factory: self visitedSymbols: aSet;
 			field: aString;
-			buildDefault].
+			factory: self].
 	
 	'REPEAT' = anObject type ifTrue: [
 		^ SBInlineBlockRepeat new
 			multiple: true
 				required: false
 				element: (self buildBlocksFor: anObject content parentFieldName: aString visitedSymbols: aSet);
-			buildDefault].
+			factory: self].
 	
 	'REPEAT1' = anObject type ifTrue: [
 		^ SBInlineBlockRepeat new
 			multiple: true
 				required: true
-				element: (self buildBlocksFor: anObject content parentFieldName: aString visitedSymbols: aSet);
-			buildDefault].
+				element: (self buildBlocksFor: anObject content parentFieldName: aString visitedSymbols: aSet)].
 	
 	'CHOICE' = anObject type ifTrue: [
 		(anObject members size = 2 and: [anObject members second type = 'BLANK']) ifTrue: [
@@ -5890,13 +5889,16 @@ SBMetaBlockFactory >> buildBlocksFor: anObject parentFieldName: aString visitedS
 				multiple: false
 					required: false
 					element: (self buildBlocksFor: anObject members first parentFieldName: aString visitedSymbols: aSet);
-				buildDefault].
+				factory: self].
 		
 		^ SBInlineBlockChoice new
 			alternatives: (anObject members collect: [:member | self buildBlocksFor: member parentFieldName: aString visitedSymbols: aSet]);
-			buildDefault].
+			factory: self].
 	
-	'SEQ' = anObject type ifTrue: [^ SBInlineBlockSequence new elements: (anObject members collect: [:member | self buildBlocksFor: member parentFieldName: aString visitedSymbols: aSet])].
+	'SEQ' = anObject type ifTrue: [
+		^ SBInlineBlockSequence new
+			factory: self;
+			elements: (anObject members collect: [:member | self buildBlocksFor: member parentFieldName: aString visitedSymbols: aSet])].
 	
 	self assert: false
 ]
