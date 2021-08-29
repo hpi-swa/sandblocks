@@ -799,7 +799,8 @@ SBTreeSitter >> parse: aString language: aSymbol factory: aFactory [
 	
 	block := ((SBInlineBlockSymbol new type: (self nodeType: root) factory: aFactory) takeParsedFrom: (SBTSCursor new library: self cursor: cursor))
 		hResizing: #rigid;
-		attachDecorator: SBResizableDecorator new.
+		attachDecorator: SBResizableDecorator new;
+		updateAllHighlights.
 	
 	self cursorDelete: cursor.
 	self parserDelete: parser.

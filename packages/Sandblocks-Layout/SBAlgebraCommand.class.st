@@ -51,12 +51,6 @@ SBAlgebraCommand class >> indent [
 ]
 
 { #category : #'as yet unclassified' }
-SBAlgebraCommand class >> looseContainer [
-
-	^ self new type: #looseContainer
-]
-
-{ #category : #'as yet unclassified' }
 SBAlgebraCommand class >> morph [
 
 	^ self new type: #morph

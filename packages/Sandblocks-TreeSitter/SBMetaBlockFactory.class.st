@@ -6133,7 +6133,8 @@ SBMetaBlockFactory >> instantiateToplevel: aString [
 	^ SBInlineBlockSymbol new
 		type: aString factory: self block: (self instantiateTemplate: aString);
 		attachDecorator: SBResizableDecorator new;
-		hResizing: #rigid
+		hResizing: #rigid;
+		updateAllHighlights
 ]
 
 { #category : #'configuration helpers' }
