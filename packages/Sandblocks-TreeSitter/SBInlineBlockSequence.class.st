@@ -38,6 +38,12 @@ SBInlineBlockSequence >> buildEmpty [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSequence >> childrenForQueryDo: aBlock [
+
+	self submorphsDo: [:m | m childrenForQueryDo: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSequence >> childrenIn: anExplore [
 
 	^ self elements
@@ -94,6 +100,12 @@ SBInlineBlockSequence >> layoutCommands [
 					stream nextPut: ((self factory hardLineBreakMatcher value: morph)
 						ifTrue: [SBAlgebraCommand hardLine]
 						ifFalse: [SBAlgebraCommand gap])]]])
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSequence >> ownerWithColor [
+
+	^ self owner ifNotNil: [:o | o ownerWithColor]
 ]
 
 { #category : #'as yet unclassified' }

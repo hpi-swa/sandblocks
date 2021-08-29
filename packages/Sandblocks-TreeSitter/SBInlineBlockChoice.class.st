@@ -58,6 +58,12 @@ SBInlineBlockChoice >> changeToUnknown [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockChoice >> childrenForQueryDo: aBlock [
+
+	self firstSubmorph childrenForQueryDo: aBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockChoice >> childrenIn: anExplore [
 
 	anExplore ifNil: [^ self alternatives].
@@ -125,6 +131,12 @@ SBInlineBlockChoice >> layoutCommands [
 SBInlineBlockChoice >> numAlternatives [
 
 	^ self alternatives size
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockChoice >> ownerWithColor [
+
+	^ self owner ifNotNil: [:o | o ownerWithColor]
 ]
 
 { #category : #'as yet unclassified' }

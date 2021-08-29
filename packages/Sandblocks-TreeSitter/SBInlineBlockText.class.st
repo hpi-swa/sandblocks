@@ -27,6 +27,18 @@ SBInlineBlockText >> buildEmpty [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockText >> childrenForQuery [
+
+	^ #()
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockText >> childrenForQueryDo: aBlock [
+
+	aBlock value: self
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockText >> childrenIn: anExplore [
 
 	^ {}
@@ -95,6 +107,12 @@ SBInlineBlockText >> layoutCommands [
 SBInlineBlockText >> lengthOfLeftMostPath [
 
 	^ 1
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockText >> ownerWithColor [
+
+	^ highlight ifNil: [self owner ifNotNil: [:o | o ownerWithColor]] ifNotNil: [self]
 ]
 
 { #category : #'as yet unclassified' }

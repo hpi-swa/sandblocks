@@ -8,7 +8,8 @@ Class {
 		'blockInline',
 		'hardLineBreakMatcher',
 		'supertypes',
-		'name'
+		'name',
+		'highlightQuery'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -683,6 +684,19 @@ SBMetaBlockFactory class >> json [
 }
 
 '
+		highlight: '(pair
+  key: (_) @keyword)
+
+(string) @string
+
+(object
+  "{" @escape
+  (_)
+  "}" @escape)
+
+["true" "false"] @keyword
+
+(number) @number'
 ]
 
 { #category : #'as yet unclassified' }
@@ -5652,6 +5666,130 @@ SBMetaBlockFactory class >> python [
     "parameter"
   ]
 }'
+		highlight: '; Identifier naming conventions
+
+((identifier) @constructor
+ (#match? @constructor "^[A-Z]"))
+
+((identifier) @constant
+ (#match? @constant "^[A-Z][A-Z_]*$"))
+
+; Builtin functions
+
+((call
+  function: (identifier) @function.builtin)
+ (#match?
+   @function.builtin
+   "^(abs|all|any|ascii|bin|bool|breakpoint|bytearray|bytes|callable|chr|classmethod|compile|complex|delattr|dict|dir|divmod|enumerate|eval|exec|filter|float|format|frozenset|getattr|globals|hasattr|hash|help|hex|id|input|int|isinstance|issubclass|iter|len|list|locals|map|max|memoryview|min|next|object|oct|open|ord|pow|print|property|range|repr|reversed|round|set|setattr|slice|sorted|staticmethod|str|sum|super|tuple|type|vars|zip|__import__)$"))
+
+; Function calls
+
+(decorator) @function
+
+(call
+  function: (attribute attribute: (identifier) @function.method))
+(call
+  function: (identifier) @function)
+
+; Function definitions
+
+(function_definition
+  name: (identifier) @function)
+
+(identifier) @variable
+(attribute attribute: (identifier) @property)
+(type (identifier) @type)
+
+; Literals
+
+[
+  (none)
+  (true)
+  (false)
+] @constant.builtin
+
+[
+  (integer)
+  (float)
+] @number
+
+(comment) @comment
+(string) @string
+(escape_sequence) @escape
+
+(interpolation
+  "{" @punctuation.special
+  "}" @punctuation.special) @embedded
+
+[
+  "-"
+  "-="
+  "!="
+  "*"
+  "**"
+  "**="
+  "*="
+  "/"
+  "//"
+  "//="
+  "/="
+  "&"
+  "%"
+  "%="
+  "^"
+  "+"
+  "->"
+  "+="
+  "<"
+  "<<"
+  "<="
+  "<>"
+  "="
+  ":="
+  "=="
+  ">"
+  ">="
+  ">>"
+  "|"
+  "~"
+  "and"
+  "in"
+  "is"
+  "not"
+  "or"
+] @operator
+
+[
+  "as"
+  "assert"
+  "async"
+  "await"
+  "break"
+  "class"
+  "continue"
+  "def"
+  "del"
+  "elif"
+  "else"
+  "except"
+  "exec"
+  "finally"
+  "for"
+  "from"
+  "global"
+  "if"
+  "import"
+  "lambda"
+  "nonlocal"
+  "pass"
+  "print"
+  "raise"
+  "return"
+  "try"
+  "while"
+  "with"
+  "yield"
+] @keyword'
 ]
 
 { #category : #'grammar clean' }
@@ -5729,6 +5867,7 @@ SBMetaBlockFactory >> buildBlocksFor: anObject parentFieldName: aString visitedS
 	(#('SYMBOL') includes: anObject type) ifTrue: [
 		^ SBInlineBlockSymbol new
 			type: anObject name factory: self visitedSymbols: aSet;
+			field: aString;
 			buildDefault].
 	
 	'REPEAT' = anObject type ifTrue: [
@@ -5754,10 +5893,10 @@ SBMetaBlockFactory >> buildBlocksFor: anObject parentFieldName: aString visitedS
 				buildDefault].
 		
 		^ SBInlineBlockChoice new
-			alternatives: (anObject members collect: [:member | self buildBlocksFor: member parentFieldName: nil visitedSymbols: aSet]);
+			alternatives: (anObject members collect: [:member | self buildBlocksFor: member parentFieldName: aString visitedSymbols: aSet]);
 			buildDefault].
 	
-	'SEQ' = anObject type ifTrue: [^ SBInlineBlockSequence new elements: (anObject members collect: [:member | self buildBlocksFor: member parentFieldName: nil visitedSymbols: aSet])].
+	'SEQ' = anObject type ifTrue: [^ SBInlineBlockSequence new elements: (anObject members collect: [:member | self buildBlocksFor: member parentFieldName: aString visitedSymbols: aSet])].
 	
 	self assert: false
 ]
@@ -5940,6 +6079,12 @@ SBMetaBlockFactory >> hardLineBreakMatcher: aBlock [
 	hardLineBreakMatcher := aBlock
 ]
 
+{ #category : #accessing }
+SBMetaBlockFactory >> highlightQuery [
+
+	^ highlightQuery
+]
+
 { #category : #'grammar clean' }
 SBMetaBlockFactory >> includesNonHiddenParts: anObject visited: aCollection [
 
@@ -6045,11 +6190,12 @@ SBMetaBlockFactory >> mergeRepeats: anObject [
 ]
 
 { #category : #accessing }
-SBMetaBlockFactory >> name: aSymbol preprocess: aBlock postprocess: anotherBlock grammar: aString [
+SBMetaBlockFactory >> name: aSymbol preprocess: aBlock postprocess: anotherBlock grammar: aString highlight: anotherString [
 
 	grammar := Json readFrom: aString readStream.
 	supertypes := grammar supertypes.
 	name := aSymbol.
+	highlightQuery := SBTSQuery new prepare: anotherString.
 	
 	aBlock cull: self.
 	self cleanGrammar.

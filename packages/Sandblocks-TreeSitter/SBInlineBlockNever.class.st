@@ -24,6 +24,12 @@ SBInlineBlockNever >> buildEmpty [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockNever >> childrenForQueryDo: aBlock [
+
+	^ self shouldNotImplement
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockNever >> childrenIn: anExplore [
 
 	^ #()

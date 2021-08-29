@@ -18,6 +18,12 @@ SBTSUnknown >> buildCopy [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSUnknown >> childrenForQueryDo: aBlock [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBTSUnknown >> contents: aString [
 
 	self currentTextMorph contents: aString

@@ -89,7 +89,7 @@ Morph >> childSandblocksDo: aBlock [
 { #category : #'*Sandblocks-Core' }
 Morph >> containingSandblock [
 
-	^ self owner ifNotNil: #containingSandblock
+	^ self owner ifNotNil: [:o | o containingSandblock]
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -360,6 +360,12 @@ Morph >> onHoverHighlight: aMorph labeled: aString [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Morph >> ownerWithColor [
+
+	^ self owner ifNotNil: [:o | o ownerWithColor]
+]
+
+{ #category : #'*Sandblocks-Core' }
 Morph >> parentSandblock [
 
 	^ self owner ifNotNil: #containingSandblock
@@ -496,7 +502,7 @@ Morph >> sandblockEditor [
 { #category : #'*Sandblocks-Core' }
 Morph >> sandblockForegroundColor [
 
-	^ self containingSandblock ifNotNil: [:b | b foregroundColor] ifNil: [color]
+	^ (self ownerWithColor ifNotNil: [:b | b foregroundColor]) ifNil: [color]
 ]
 
 { #category : #'*Sandblocks-Core' }

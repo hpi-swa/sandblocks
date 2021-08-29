@@ -3,10 +3,17 @@ Class {
 	#superclass : #SBBlock,
 	#instVars : [
 		'name',
-		'built'
+		'built',
+		'highlight'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> artefactChanged: aMethodBlock [
+
+	aMethodBlock = self ifTrue: [self updateAllHighlights]
+]
 
 { #category : #'as yet unclassified' }
 SBInlineBlock >> buildCopy [
@@ -46,6 +53,18 @@ SBInlineBlock >> changeToUnknown [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> childrenForQuery [
+
+	^ Array streamContents: [:s | self submorphsDo: [:m | m childrenForQueryDo: [:child | s nextPut: child]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> childrenForQueryDo: aBlock [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> childrenIn: anExplore [
 
 	^ self subclassResponsibility
@@ -66,6 +85,13 @@ SBInlineBlock >> choicesForInput: aString before: aBoolean [
 				startSymbol: nil) ifNotEmpty: [:choices | ^ choices]].
 		current := current owner].
 	^ #()
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> clearCache [
+
+	self allMorphsDo: [:morph | morph layoutChanged].
+	self allMorphsDo: [:morph | (morph isSandblock or: [morph isInlineBlock]) ifTrue: [morph clearCacheSelf]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -128,6 +154,12 @@ SBInlineBlock >> factory [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> field [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> firstDifferingBlocksWith: aMorph do: aBlock ifNone: anotherBlock [
 
 	(self hasSameStructureAs: aMorph) ifFalse: [^ aBlock value: self value: aMorph].
@@ -175,6 +207,18 @@ SBInlineBlock >> hasSameContentsAs: aBlock [
 SBInlineBlock >> hasSameStructureAs: aBlock [
 
 	^ aBlock class = self class
+]
+
+{ #category : #accessing }
+SBInlineBlock >> highlight [
+
+	^ highlight
+]
+
+{ #category : #accessing }
+SBInlineBlock >> highlight: aString [
+
+	highlight := aString
 ]
 
 { #category : #'as yet unclassified' }
@@ -230,6 +274,12 @@ SBInlineBlock >> instantiate [
 	| instance |
 	instance := self buildEmpty buildDefault.
 	^ instance
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> isArtefact [
+
+	^ self owner isNil or: [self owner isInlineBlock not]
 ]
 
 { #category : #'as yet unclassified' }
@@ -328,6 +378,20 @@ SBInlineBlock >> numAlternatives [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> preferredColorIn: aColorPolicy [
+
+	^ highlight
+		caseOf: {
+			['keyword'] -> [aColorPolicy keyword].
+			['function'] -> [aColorPolicy identifier].
+			['variable'] -> [aColorPolicy identifier].
+			['type'] -> [aColorPolicy keyword].
+			['number'] -> [aColorPolicy literal].
+			['string'] -> [aColorPolicy literal]}
+		otherwise: [aColorPolicy default]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> prefersNoBorder [
 
 	^ self inline
@@ -395,6 +459,22 @@ SBInlineBlock >> tryInterpretInput: aString before: aBoolean [
 SBInlineBlock >> unbuiltChildrenIn: anExplore [
 
 	^ built ifTrue: [#()] ifFalse: [self childrenIn: anExplore]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> updateAllHighlights [
+
+	self allMorphsDo: [:m | m isInlineBlock ifTrue: [m highlight: nil]].
+	self updateHighlight
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> updateHighlight [
+
+	self factory highlightQuery
+		executeAgainst: self
+		capturesDo: [:captures | captures keysAndValuesDo: [:id :block | block highlight ifNil: [block highlight: id]]].
+	self submorphsDo: [:m | m isInlineBlock ifTrue: [m updateHighlight]]
 ]
 
 { #category : #'as yet unclassified' }

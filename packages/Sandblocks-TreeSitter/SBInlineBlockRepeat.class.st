@@ -32,6 +32,12 @@ SBInlineBlockRepeat >> buildEmpty [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> childrenForQueryDo: aBlock [
+
+	self submorphsDo: [:m | m childrenForQueryDo: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> childrenIn: anExplore [
 
 	(anExplore isNil or: [required]) ifTrue: [^ {self element}].
@@ -165,6 +171,12 @@ SBInlineBlockRepeat >> nonInlinedChildren [
 SBInlineBlockRepeat >> numAlternatives [
 
 	^ required ifTrue: [1] ifFalse: [2]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> ownerWithColor [
+
+	^ self owner ifNotNil: [:o | o ownerWithColor]
 ]
 
 { #category : #'as yet unclassified' }

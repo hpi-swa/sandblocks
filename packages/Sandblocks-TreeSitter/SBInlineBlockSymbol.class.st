@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBInlineBlock,
 	#instVars : [
 		'type',
-		'factory'
+		'factory',
+		'field'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -29,7 +30,9 @@ SBInlineBlockSymbol >> buildDefaultIn: anExplore [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> buildEmpty [
 
-	^ self class new type: self type factory: factory
+	^ self class new
+		type: self type factory: factory;
+		field: self field
 ]
 
 { #category : #'as yet unclassified' }
@@ -37,6 +40,12 @@ SBInlineBlockSymbol >> candidatesForWrappingOn: aStream [
 
 	(factory isSuperType: type) ifTrue: [aStream nextPut: self].
 	super candidatesForWrappingOn: aStream
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> childrenForQueryDo: aBlock [
+
+	aBlock value: self
 ]
 
 { #category : #'as yet unclassified' }
@@ -65,6 +74,18 @@ SBInlineBlockSymbol >> factory [
 SBInlineBlockSymbol >> factory: aFactory [
 
 	factory := aFactory
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> field [
+
+	^ field
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> field: aString [
+
+	field := aString
 ]
 
 { #category : #'as yet unclassified' }
@@ -142,6 +163,12 @@ SBInlineBlockSymbol >> newEmptyChildNear: aBlock before: aBoolean [
 	^ (self firstSubmorph isKindOf: SBInlineBlockRepeat)
 		ifTrue: [self firstSubmorph newEmptyChildNear: aBlock before: aBoolean]
 		ifFalse: [super newEmptyChildNear: aBlock before: aBoolean]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> ownerWithColor [
+
+	^ highlight ifNil: [self owner ifNotNil: [:o | o ownerWithColor]] ifNotNil: [self]
 ]
 
 { #category : #'as yet unclassified' }

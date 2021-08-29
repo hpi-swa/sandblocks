@@ -1824,6 +1824,12 @@ SBBlock >> outerMostArtefact [
 ]
 
 { #category : #hierarchy }
+SBBlock >> ownerWithColor [
+
+	^ self
+]
+
+{ #category : #hierarchy }
 SBBlock >> parentAdjacentBlock: aNumber [
 
 	^ (self adjacentBlock: aNumber)

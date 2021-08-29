@@ -105,13 +105,12 @@ SBTSInlineBlockTest >> testMatchBinaryOp [
 
 	| factory unknown editor num |
 	factory := SBMetaBlockFactory new.
-	factory
-		at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
-			SBInlineBlockSequence new elements: {
-				SBInlineBlockSymbol new type: 'expr' factory: factory.
-				SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: '-'. SBInlineBlockLabel new label: '+'}.
-				SBInlineBlockSymbol new type: 'expr' factory: factory}.
-			SBInlineBlockText new regexString: '[0-9]+'}).
+	factory at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
+		SBInlineBlockSequence new elements: {
+			SBInlineBlockSymbol new type: 'expr' factory: factory.
+			SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: '-'. SBInlineBlockLabel new label: '+'}.
+			SBInlineBlockSymbol new type: 'expr' factory: factory}.
+		SBInlineBlockText new regexString: '[0-9]+'}).
 	
 	editor := self editorFor: (unknown := factory instantiateTemplate: 'expr').
 	unknown firstSubmorph keyStroke: (self keyboardEvent: $1).
