@@ -12,7 +12,8 @@ Class {
 	#instVars : [
 		'measure',
 		'minExtentCache',
-		'cache'
+		'cache',
+		'placementStream'
 	],
 	#category : #'Sandblocks-Layout'
 }
@@ -76,23 +77,29 @@ SBAlgebraLayout >> isAlgebraLayoutRoot: aMorph [
 { #category : #'as yet unclassified' }
 SBAlgebraLayout >> layout: aMorph in: aRectangle [
 
-	| final initial |
+	| final initial placements |
 	(self isAlgebraLayoutRoot: aMorph) ifFalse: [^ self].
 	
 	cache := Dictionary new.
 	
-	initial := SBAlgebraState new offset: aRectangle topLeft lineHeight: 0 startX: aRectangle left containerBottomRight: aRectangle topLeft.
-	final := self
-		layoutDocument: (self commandsForRoot: aMorph)
-		at: initial
-		limit: aRectangle right
-		wrap: false.
+	initial := SBAlgebraState new
+		offset: aRectangle topLeft
+		lineHeight: 0
+		startX: aRectangle left
+		containerBottomRight: aRectangle topLeft.
+	placements := Array streamContents: [:stream |
+		placementStream := stream.
+		final := self
+			layoutDocument: (self commandsForRoot: aMorph)
+			at: initial
+			limit: aRectangle right
+			wrap: false].
 	
 	cache := nil.
+	placements do: [:pair | pair first layoutInBounds: pair second].
 	
 	" if we do not have an owner, enforce our minSize ourselves"
-	(aMorph owner isNil or: [aMorph owner layoutPolicy isNil]) ifTrue: [
-		aMorph extent: ((final containerExtentFrom: initial) max: aRectangle extent) + aMorph layoutInset asEdgeInsets]
+	(aMorph owner isNil or: [aMorph owner layoutPolicy isNil]) ifTrue: [aMorph extent: ((final containerExtentFrom: initial) max: aRectangle extent) + aMorph layoutInset asEdgeInsets]
 ]
 
 { #category : #'as yet unclassified' }
@@ -121,7 +128,14 @@ SBAlgebraLayout >> layoutDocument: command at: aState limit: maxRight wrap: aWra
 					limit: maxRight
 					wrap: aWrapBoolean].
 			
-			measure ifFalse: [command morph layoutInBounds: (aState offset extent: ((state containerExtentFrom: aState) max: 0 @ command morph minimumHeight))].
+			measure ifFalse: [
+				SBToggledCode comment: '' active: 2 do: {
+					[
+						placementStream nextPut: {
+							command morph.
+							aState offset extent: ((state containerExtentFrom: aState) max: 0 @ command morph minimumHeight).
+							false}].
+					[command morph layoutInBounds: (aState offset extent: ((state containerExtentFrom: aState) max: 0 @ command morph minimumHeight))]}].
 			
 			aState placeSized: ((state containerExtentFrom: aState) max: 0 @ command morph minimumHeight)].
 		[#container] -> [
@@ -157,7 +171,10 @@ SBAlgebraLayout >> layoutDocument: command at: aState limit: maxRight wrap: aWra
 		[#gap] -> [aState offset: aState offset + (self gap @ 0)].
 		[#morph] -> [ | extent |
 			extent := command data minExtent.
-			measure ifFalse: [command data bounds: (aState offset extent: extent)].
+			measure ifFalse: [
+				SBToggledCode comment: '' active: 2 do: {
+					[{command data. aState offset extent: extent. true}].
+					[command data bounds: (aState offset extent: extent)]}].
 			aState placeSized: extent].
 		[#noop] -> [aState]}
 ]
