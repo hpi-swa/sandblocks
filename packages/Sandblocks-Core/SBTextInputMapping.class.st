@@ -177,7 +177,10 @@ SBTextInputMapping >> registerDefaultShortcuts [
 	" special overrides "
 	self
 		registerShortcut: Character escape do: #dismiss;
-		cmdShortcut: Character space do: #activate
+		cmdShortcut: Character space do: #activate.
+	
+	" meta blocks "
+	self registerShortcut: Character space do: #promptMetaTransform
 ]
 
 { #category : #'event handling' }

@@ -5881,7 +5881,8 @@ SBMetaBlockFactory >> buildBlocksFor: anObject parentFieldName: aString visitedS
 		^ SBInlineBlockRepeat new
 			multiple: true
 				required: true
-				element: (self buildBlocksFor: anObject content parentFieldName: aString visitedSymbols: aSet)].
+				element: (self buildBlocksFor: anObject content parentFieldName: aString visitedSymbols: aSet);
+			factory: self].
 	
 	'CHOICE' = anObject type ifTrue: [
 		(anObject members size = 2 and: [anObject members second type = 'BLANK']) ifTrue: [

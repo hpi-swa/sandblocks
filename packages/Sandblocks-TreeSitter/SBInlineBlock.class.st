@@ -11,6 +11,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> actionProviders [
+
+	^ {self grammarHandler}, super actionProviders
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> artefactChanged: aMethodBlock [
 
 	aMethodBlock = self ifTrue: [self updateAllHighlights]
@@ -324,7 +330,7 @@ SBInlineBlock >> keyStroke: anEvent [
 
 	super keyStroke: anEvent.
 	
-	self currentTextMorph owner valid ifFalse: [
+	(self currentTextMorph notNil and: [self currentTextMorph owner valid not]) ifTrue: [
 		self deleteBeforeCursor.
 		
 		self
@@ -424,6 +430,12 @@ SBInlineBlock >> removedMorph: aMorph [
 
 	super removedMorph: aMorph.
 	self extent: 0 @ 0
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> statements [
+
+	^ self isStatementContainer ifTrue: [self childSandblocks] ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }

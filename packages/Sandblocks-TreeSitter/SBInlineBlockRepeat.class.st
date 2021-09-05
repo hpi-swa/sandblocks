@@ -140,7 +140,7 @@ SBInlineBlockRepeat >> layoutCommands [
 				index ~= self submorphCount ifTrue: [
 					stream nextPut: ((self factory hardLineBreakMatcher value: morph)
 						ifTrue: [SBAlgebraCommand hardLine]
-						ifFalse: [SBAlgebraCommand gap])]]])
+						ifFalse: [SBAlgebraCommand softLineOrGap])]]])
 ]
 
 { #category : #'as yet unclassified' }

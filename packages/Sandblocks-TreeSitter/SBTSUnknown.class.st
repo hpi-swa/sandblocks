@@ -140,11 +140,16 @@ SBTSUnknown >> tryInterpretInput: aString [
 			active: 0
 			do: {[(replacer firstBlock ifNil: [replacer containingSandblock]) inputContainedUnknown]}.
 		
-		(replacer startInputCommand
-			ifNotNil: [replacer]
-			ifNil: [replacer nextBlockThat: [:m | m startInputCommand notNil]])
-			ifNotNil: [:m | ((m hasOwner: replacer) or: [m = replacer]) ifTrue: [replacer sandblockEditor startInput: m at: 900000000 replacingContents: false]]
-			ifNil: [replacer firstBlock ifNotNil: #select]]
+		SBToggledCode comment: '' active: 1 do: {
+			[
+				(replacer firstBlock ifNil: [replacer containingSandblock]) select.
+				3 timesRepeat: [replacer sandblockEditor performForSelection: #moveCursorSmaller]].
+			[
+				(replacer startInputCommand
+					ifNotNil: [replacer]
+					ifNil: [replacer nextBlockThat: [:m | m startInputCommand notNil]])
+					ifNotNil: [:m | ((m hasOwner: replacer) or: [m = replacer]) ifTrue: [replacer sandblockEditor startInput: m at: 900000000 replacingContents: false]]
+					ifNil: [replacer firstBlock ifNotNil: #select]]}]
 ]
 
 { #category : #'as yet unclassified' }
@@ -158,6 +163,12 @@ SBTSUnknown >> type: aString factory: aFactory [
 
 	type := aString.
 	factory := aFactory
+]
+
+{ #category : #'as yet unclassified' }
+SBTSUnknown >> valid [
+
+	^ self isStatement and: [self contents isEmpty]
 ]
 
 { #category : #'as yet unclassified' }
