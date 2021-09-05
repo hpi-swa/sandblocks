@@ -256,7 +256,7 @@ SBCursorTest >> testSelectSmaller [
 	cursor moveCursorSmaller.
 	self
 		assert: cursor cursorPosition
-		structure: {#class -> SBCursorText. #block -> num2. #cursorIndex -> 1}
+		structure: {#class -> SBCursorText. #block -> num2. #cursorIndex -> 2}
 ]
 
 { #category : #'as yet unclassified' }
