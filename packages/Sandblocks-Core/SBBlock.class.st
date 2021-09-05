@@ -181,9 +181,7 @@ SBBlock >> artefactCompletionSuggestionsFor: aBlock matching: aString [
 			(sel sandblockMatch: aString)
 				ifTrue: [stream nextPut: sel];
 				yourself]]) sort: #size ascending.
-	list := exactMatches, fuzzyMatches, ((self sandblockEditor suggestAlways and: [aString isEmpty])
-		ifTrue: [selectors]
-		ifFalse: [#()]).
+	list := exactMatches, fuzzyMatches, (self sandblockEditor suggestAlways ifTrue: [selectors] ifFalse: [#()]).
 	
 	"add outer artefact's selector, if any, to support recursion of not-yet-saved methods"
 	self ifNotNil: [:artefact | artefact selector ifNotNil: [:sel | (sel sandblockMatch: aString) ifTrue: [list := (list copyWithout: sel) copyWithFirst: sel]]].
