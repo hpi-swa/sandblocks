@@ -100,11 +100,18 @@ SBCursorSelect >> selectSmaller [
 		self block startInputCommand ifNotNil: [:command |
 			^ SBCursorText new
 				block: self block;
-				currentCommand: command].
+				currentCommand: command;
+				placeAtEnd: true].
 		self cursorPositionsIn: self block do: [:position | position ~= self ifTrue: [^ position]].
 		^ self].
 	
 	^ self selectCursorFor: self block childSandblocks first
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorSelect >> selectionBounds [
+
+	^ self block bounds
 ]
 
 { #category : #'as yet unclassified' }

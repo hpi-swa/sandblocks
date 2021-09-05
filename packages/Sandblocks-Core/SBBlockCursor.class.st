@@ -327,8 +327,8 @@ SBBlockCursor >> multiSelection: aCollection [
 SBBlockCursor >> nextVertical [
 
 	^ self
-		adjacentVerticalCalcDistance: [:candidate | candidate top - cursorPosition bounds bottom]
-		validBlock: [:candidate | candidate top >= cursorPosition bounds bottom]
+		adjacentVerticalCalcDistance: [:candidate | candidate top - cursorPosition selectionBounds bottom]
+		validBlock: [:candidate | candidate top >= cursorPosition selectionBounds bottom]
 ]
 
 { #category : #api }
@@ -342,8 +342,8 @@ SBBlockCursor >> prepareForNextCommand [
 SBBlockCursor >> previousVertical [
 
 	^ self
-		adjacentVerticalCalcDistance: [:candidate | cursorPosition bounds top - candidate bottom]
-		validBlock: [:candidate | cursorPosition bounds top >= candidate bottom]
+		adjacentVerticalCalcDistance: [:candidate | cursorPosition selectionBounds top - candidate bottom]
+		validBlock: [:candidate | cursorPosition selectionBounds top >= candidate bottom]
 ]
 
 { #category : #'events-processing' }

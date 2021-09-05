@@ -199,5 +199,11 @@ SBCursorText >> selectLarger [
 { #category : #'as yet unclassified' }
 SBCursorText >> selectSmaller [
 
-	
+	^ self copy placeAtEnd: true
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorText >> selectionBounds [
+
+	^ self block bounds
 ]

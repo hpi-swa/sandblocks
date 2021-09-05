@@ -169,6 +169,12 @@ SBCursorPosition >> selectSmaller [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorPosition >> selectionBounds [
+
+	^ self bounds
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorPosition >> startOrAddToMultiSelection: aBlock [
 
 	^ SBCursorMultiSelect new start: aBlock

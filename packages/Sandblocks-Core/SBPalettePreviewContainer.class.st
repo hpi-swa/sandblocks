@@ -89,6 +89,12 @@ SBPalettePreviewContainer >> sandblockEditor [
 ]
 
 { #category : #'as yet unclassified' }
+SBPalettePreviewContainer >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBPalettePreviewContainer >> wantsDroppedMorph: aMorph event: evt [
 
 	^ false

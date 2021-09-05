@@ -121,6 +121,12 @@ SBCursorMultiSelect >> selected: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorMultiSelect >> selectionBounds [
+
+	^ self block bounds
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorMultiSelect >> start: aBlock [
 
 	focused := aBlock.
