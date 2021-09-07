@@ -1,7 +1,7 @@
 Class {
 	#name : #SBGrammarTransformer,
 	#superclass : #SBStMethodSubstitution,
-	#category : #'Sandblocks-Ohm'
+	#category : #'Sandblocks-Kogi'
 }
 
 { #category : #'example grammars' }

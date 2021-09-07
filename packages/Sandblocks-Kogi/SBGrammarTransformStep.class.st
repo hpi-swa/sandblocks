@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'lastError'
 	],
-	#category : #'Sandblocks-Ohm'
+	#category : #'Sandblocks-Kogi'
 }
 
 { #category : #'as yet unclassified' }

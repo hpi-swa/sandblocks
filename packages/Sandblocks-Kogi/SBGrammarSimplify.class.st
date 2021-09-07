@@ -7,7 +7,7 @@ Class {
 		'preDo',
 		'isOhm'
 	],
-	#category : #'Sandblocks-Ohm'
+	#category : #'Sandblocks-Kogi'
 }
 
 { #category : #accessing }
