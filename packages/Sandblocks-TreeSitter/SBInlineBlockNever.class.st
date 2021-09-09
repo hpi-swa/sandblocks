@@ -32,7 +32,9 @@ SBInlineBlockNever >> childrenForQueryDo: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlockNever >> childrenIn: anExplore [
 
-	^ #()
+	(anExplore isNil or: [(anExplore indexFor: self) = 1]) ifTrue: [^ #()].
+	self halt.
+	^ {anExplore results}
 ]
 
 { #category : #'as yet unclassified' }
@@ -56,7 +58,13 @@ SBInlineBlockNever >> hasSameStructureAs: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlockNever >> layoutCommands [
 
-	^ self shouldNotImplement
+	^ SBAlgebraCommand morph data: self
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockNever >> numAlternatives [
+
+	^ 1
 ]
 
 { #category : #'as yet unclassified' }

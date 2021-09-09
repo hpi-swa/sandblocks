@@ -63,13 +63,6 @@ SBTSRuleExplore >> explore: aBlock withNested: aSubBlock nestedBefore: aBoolean 
 						ifFalse: [
 							child := self push: template.
 							self done ifTrue: [child buildDefault]].
-					SBToggledCode comment: '' active: 0 do: {
-						[
-							((child isKindOf: SBInlineBlockSymbol) and: [
-								child type = 'binary_operator' and: [
-									SBToggledCode comment: '' active: 1 do: {
-										[true].
-										[(stack count: [:p | (p second isKindOf: SBInlineBlockSymbol) and: [p second type = 'unary_operator']]) = 1]}]]) ifTrue: [self halt]]}.
 					block addMorphBack: child]
 				ifAbsent: [
 					stack removeLast.
@@ -86,6 +79,14 @@ SBTSRuleExplore >> explore: aBlock withNested: aSubBlock nestedBefore: aBoolean 
 										self done ifTrue: [results add: root buildCopy].
 										self restartFromLastChoiceIfDone: [^ results]]]
 								ifFalse: [self restartFromLastChoiceIfDone: [^ results]]]]]] repeat
+]
+
+{ #category : #'as yet unclassified' }
+SBTSRuleExplore >> hasOptionOnStack: aBlock [
+
+	self flag: #fixme.
+	" is it =2? or is it =indexOf(recur)? "
+	^ stack anySatisfy: [:pair | (pair second hasSameStructureAs: aBlock) and: [pair first = 2]]
 ]
 
 { #category : #accessing }
@@ -129,15 +130,15 @@ SBTSRuleExplore >> matchFullToken [
 ]
 
 { #category : #helper }
-SBTSRuleExplore >> push: aBlock [
+SBTSRuleExplore >> push: aBlockTemplate [
 
-	| template |
-	template := aBlock buildEmpty.
-	stack add: {1. template}.
-	(aBlock numAlternatives > 1 and: [self done not]) ifTrue: [
-		self indexFor: template.
-		lastOptions add: {template. stack collect: [:pair | pair copy]. stream position. visitedSymbols copy. foundNested}].
-	^ template
+	| instance |
+	instance := aBlockTemplate buildEmpty.
+	stack add: {1. instance}.
+	(aBlockTemplate numAlternatives > 1 and: [self done not]) ifTrue: [
+		self indexFor: instance.
+		lastOptions add: {instance. stack collect: [:pair | pair copy]. stream position. visitedSymbols copy. foundNested}].
+	^ instance
 ]
 
 { #category : #helper }
@@ -159,7 +160,12 @@ SBTSRuleExplore >> restartFromLastChoiceIfDone: aBlock [
 	| option choice number |
 	lastOptions ifEmpty: [^ aBlock value].
 	
-	option := lastOptions last.
+	option := SBToggledCode comment: '' active: 1 do: {
+		[lastOptions last].
+		[
+			lastOptions reversed
+				detect: [:o | o first class ~= SBInlineBlockNever]
+				ifNone: [lastOptions last]]}.
 	choice := option first.
 	stack := option second collect: [:pair | pair copy].
 	stream position: option third.
@@ -167,11 +173,22 @@ SBTSRuleExplore >> restartFromLastChoiceIfDone: aBlock [
 	foundNested := option fifth.
 	
 	number := choiceIndices at: option first put: (choiceIndices at: choice) + 1.
-	number = choice numAlternatives ifTrue: [lastOptions removeLast].
+	self assert: number <= choice numAlternatives.
+	number = choice numAlternatives ifTrue: [lastOptions remove: option].
 	
 	self assert: (choice ownerChain includes: root).
 	choice allMorphsMutableDo: [:m | m ~= choice ifTrue: [m delete]].
 	self removeAllMorphsAfter: choice in: root
+]
+
+{ #category : #'as yet unclassified' }
+SBTSRuleExplore >> skipOptionIn: aBlock [
+
+	| number |
+	number := (choiceIndices at: aBlock) + 1.
+	choiceIndices at: aBlock put: number.
+	number >= aBlock numAlternatives ifTrue: [
+		lastOptions removeAllSuchThat: [:option | option first = aBlock]]
 ]
 
 { #category : #accessing }

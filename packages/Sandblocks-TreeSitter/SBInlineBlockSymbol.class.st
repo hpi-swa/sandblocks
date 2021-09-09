@@ -50,7 +50,11 @@ SBInlineBlockSymbol >> childrenForQueryDo: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> childrenIn: anExplore [
 
-	^ (anExplore notNil and: [anExplore hasVisitedSymbol: self type factory: factory])
+	^ (anExplore notNil and: [
+		SBToggledCode
+			comment: ''
+			active: 1
+			do: {[false]. [anExplore hasVisitedSymbol: self type factory: factory]}])
 		ifTrue: [{SBInlineBlockNever new}]
 		ifFalse: [
 			anExplore ifNotNil: [anExplore addVisitedSymbol: self type].

@@ -77,9 +77,9 @@ SBInlineBlockSequence >> hasSameContentsAs: aBlock [
 SBInlineBlockSequence >> hasSameStructureAs: aBlock [
 
 	(super hasSameStructureAs: aBlock) ifFalse: [^ false].
-	self submorphCount = aBlock submorphCount ifFalse: [^ false].
-	self submorphs
-		with: aBlock submorphs
+	self elements size = aBlock elements size ifFalse: [^ false].
+	self elements
+		with: aBlock elements
 		do: [:a :b | (a hasSameStructureAs: b) ifFalse: [^ false]].
 	^ true
 ]

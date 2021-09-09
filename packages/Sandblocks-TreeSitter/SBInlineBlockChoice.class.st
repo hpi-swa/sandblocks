@@ -68,8 +68,14 @@ SBInlineBlockChoice >> childrenForQueryDo: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlockChoice >> childrenIn: anExplore [
 
+	| index |
 	anExplore ifNil: [^ self alternatives].
-	^ {self alternatives at: (anExplore indexFor: self)}
+	
+	index := anExplore indexFor: self.
+	(anExplore hasOptionOnStack: (self alternatives at: index)) ifTrue: [
+		index := index + 1.
+		anExplore skipOptionIn: self].
+	^ {self alternatives at: index}
 ]
 
 { #category : #'as yet unclassified' }

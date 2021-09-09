@@ -26,6 +26,22 @@ SBTSInlineBlockTest >> testChoiceNested [
 	self assert: (SBTSRuleExplore new explore: block value for: '"a"') notNil
 ]
 
+{ #category : #'tests - match empty' }
+SBTSInlineBlockTest >> testConsecutiveIdenticalChoices [
+
+	| block factory result |
+	factory := SBMetaBlockFactory new
+		at: 'exampleRule'
+		putTemplate: (SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: 'A'. SBInlineBlockLabel new label: 'B'}).
+	
+	block := SBInlineBlockSequence new elements: {
+		SBInlineBlockSymbol new type: 'exampleRule' factory: factory.
+		SBInlineBlockSymbol new type: 'exampleRule' factory: factory}.
+	
+	result := SBTSRuleExplore new explore: block value for: 'BA'.
+	self assert: 1 equals: result size
+]
+
 { #category : #'tests - continue match' }
 SBTSInlineBlockTest >> testFailNestedPrefixOp [
 
@@ -157,6 +173,7 @@ SBTSInlineBlockTest >> testMatchIfBeforeAndAfter [
 	unknown firstSubmorph keyStroke: (self keyboardEvent: $1).
 	num := editor childSandblocks first.
 	self assert: 1 equals: (num choicesForInput: 'if' before: true) size.
+	" currently, the 'after' can be reached by simply recursing once and then taking the 'before'  option inside of the 'after' "
 	self assert: 1 equals: (num choicesForInput: 'if' before: false) size
 ]
 
@@ -209,7 +226,7 @@ SBTSInlineBlockTest >> testMatchPrefixOp [
 SBTSInlineBlockTest >> testMatchRecursive [
 	<timeout: 0.2>
 
-	| factory unknown editor num |
+	| factory unknown editor num result |
 	factory := SBMetaBlockFactory new.
 	factory at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
 		SBInlineBlockSequence new elements: {
@@ -218,10 +235,47 @@ SBTSInlineBlockTest >> testMatchRecursive [
 			SBInlineBlockSymbol new type: 'expr' factory: factory}.
 		SBInlineBlockText new regexString: '[0-9]+'}).
 	
+	result := SBTSRuleExplore new explore: (factory getTemplate: 'expr') for: '1+1+'.
+	self assert: result notEmpty.
+	
 	editor := self editorFor: (unknown := factory instantiateTemplate: 'expr').
 	unknown firstSubmorph tryInterpretInput: '1+1+'.
 	num := editor childSandblocks first.
-	self assert: '1 + 1 +' equals: num sourceString
+	self assert: '1 + 1 + ' equals: num sourceString
+]
+
+{ #category : #'tests - match empty' }
+SBTSInlineBlockTest >> testMatchRecursiveNested [
+	<timeout: 0.2>
+
+	| factory result |
+	factory := SBMetaBlockFactory new.
+	factory at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
+		SBInlineBlockSequence new elements: {
+			SBInlineBlockSymbol new type: 'expr' factory: factory.
+			SBInlineBlockLabel new label: '+'.
+			SBInlineBlockSymbol new type: 'expr' factory: factory}.
+		SBInlineBlockText new regexString: '[0-9]+'}).
+	
+	result := SBTSRuleExplore new explore: (factory getTemplate: 'expr') for: '1+1+'.
+	self assert: result notEmpty
+]
+
+{ #category : #'tests - match empty' }
+SBTSInlineBlockTest >> testMatchRecursiveSimple [
+	<timeout: 0.2>
+
+	| factory result |
+	factory := SBMetaBlockFactory new.
+	factory at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
+		SBInlineBlockSequence new elements: {
+			SBInlineBlockSymbol new type: 'expr' factory: factory.
+			SBInlineBlockLabel new label: '+'.
+			SBInlineBlockSymbol new type: 'expr' factory: factory}.
+		SBInlineBlockText new regexString: '[0-9]+'}).
+	
+	result := SBTSRuleExplore new explore: (factory getTemplate: 'expr') for: '1+1'.
+	self assert: result notEmpty
 ]
 
 { #category : #'tests - match empty' }
