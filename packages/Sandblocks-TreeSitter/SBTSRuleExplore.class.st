@@ -12,7 +12,9 @@ Class {
 		'results',
 		'foundNested',
 		'nestedBlock',
-		'nestedBefore'
+		'nestedBefore',
+		'recursionDepth',
+		'stringIsLabel'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -23,22 +25,19 @@ SBTSRuleExplore >> addVisitedSymbol: aSymbol [
 	visitedSymbols add: aSymbol
 ]
 
-{ #category : #helper }
-SBTSRuleExplore >> done [
+{ #category : #accessing }
+SBTSRuleExplore >> canVisitSymbol: aSymbol [
 
-	^ stream atEnd and: [nestedBlock isNil or: [foundNested]]
+	^ (stack allButLast count: [:pair | (pair second isKindOf: SBInlineBlockSymbol) and: [pair second type = aSymbol]]) <= recursionDepth
 ]
 
 { #category : #explore }
-SBTSRuleExplore >> explore: aBlock for: aString [
+SBTSRuleExplore >> doExplore: aBlock withNested: aSubBlock nestedBefore: aBoolean for: aString startSymbol: aSymbolString [
 
-	^ self explore: aBlock withNested: nil nestedBefore: false for: aString startSymbol: nil
-]
-
-{ #category : #explore }
-SBTSRuleExplore >> explore: aBlock withNested: aSubBlock nestedBefore: aBoolean for: aString startSymbol: aSymbolString [
-
-	matchFullToken := aString last = Character space.
+	self resetState.
+	
+	matchFullToken := aString notEmpty and: [aString last = Character space].
+	stringIsLabel := aString notEmpty and: [aBlock factory notNil and: [aBlock factory fullTokensInclude: aString withBlanksTrimmed]].
 	stream := (matchFullToken ifTrue: [aString allButLast] ifFalse: [aString]) readStream.
 	nestedBlock := aSubBlock.
 	nestedBefore := aBoolean.
@@ -62,7 +61,7 @@ SBTSRuleExplore >> explore: aBlock withNested: aSubBlock nestedBefore: aBoolean 
 							foundNested := true]
 						ifFalse: [
 							child := self push: template.
-							self done ifTrue: [child buildDefault]].
+							self done ifTrue: [child := child buildDefault]].
 					block addMorphBack: child]
 				ifAbsent: [
 					stack removeLast.
@@ -81,7 +80,36 @@ SBTSRuleExplore >> explore: aBlock withNested: aSubBlock nestedBefore: aBoolean 
 								ifFalse: [self restartFromLastChoiceIfDone: [^ results]]]]]] repeat
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
+SBTSRuleExplore >> done [
+
+	^ stream atEnd and: [nestedBlock isNil or: [foundNested]]
+]
+
+{ #category : #explore }
+SBTSRuleExplore >> explore: aBlock for: aString [
+
+	^ self explore: aBlock withNested: nil nestedBefore: false for: aString startSymbol: nil
+]
+
+{ #category : #explore }
+SBTSRuleExplore >> explore: aBlock withNested: aSubBlock nestedBefore: aBoolean for: aString startSymbol: aSymbolString [
+
+	recursionDepth := 0.
+	2 timesRepeat: [
+		self
+			doExplore: aBlock
+			withNested: aSubBlock
+			nestedBefore: aBoolean
+			for: aString
+			startSymbol: aSymbolString.
+		
+		results ifNotEmpty: [^ results].
+		recursionDepth := recursionDepth + 1].
+	^ results
+]
+
+{ #category : #helper }
 SBTSRuleExplore >> hasOptionOnStack: aBlock [
 
 	self flag: #fixme.
@@ -96,15 +124,6 @@ SBTSRuleExplore >> hasSeenChoice: aChoice [
 ]
 
 { #category : #accessing }
-SBTSRuleExplore >> hasVisitedSymbol: aSymbol factory: aFactory [
-
-	^ SBToggledCode comment: '' active: 2 do: {
-		[false].
-		[(stack viewAllButLast count: [:pair | (pair second isKindOf: SBInlineBlockSymbol) and: [pair second type = aSymbol]]) >= (nestedBlock ifNotNil: [1] ifNil: [1])].
-		[visitedSymbols includes: aSymbol]}
-]
-
-{ #category : #accessing }
 SBTSRuleExplore >> indexFor: aChoice [
 
 	^ choiceIndices at: aChoice ifAbsentPut: [1]
@@ -115,12 +134,7 @@ SBTSRuleExplore >> initialize [
 
 	super initialize.
 	
-	stack := OrderedCollection new.
-	lastOptions := OrderedCollection new.
-	choiceIndices := Dictionary new.
-	visitedSymbols := Set new.
-	results := OrderedCollection new.
-	foundNested := false
+	
 ]
 
 { #category : #accessing }
@@ -154,6 +168,17 @@ SBTSRuleExplore >> removeAllMorphsAfter: aMorph in: aParentMorph [
 	toDelete do: #delete
 ]
 
+{ #category : #'initialize-release' }
+SBTSRuleExplore >> resetState [
+
+	stack := OrderedCollection new.
+	lastOptions := OrderedCollection new.
+	choiceIndices := Dictionary new.
+	visitedSymbols := Set new.
+	results := OrderedCollection new.
+	foundNested := false
+]
+
 { #category : #helper }
 SBTSRuleExplore >> restartFromLastChoiceIfDone: aBlock [
 
@@ -181,7 +206,7 @@ SBTSRuleExplore >> restartFromLastChoiceIfDone: aBlock [
 	self removeAllMorphsAfter: choice in: root
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 SBTSRuleExplore >> skipOptionIn: aBlock [
 
 	| number |
@@ -195,4 +220,10 @@ SBTSRuleExplore >> skipOptionIn: aBlock [
 SBTSRuleExplore >> stream [
 
 	^ stream
+]
+
+{ #category : #accessing }
+SBTSRuleExplore >> stringIsLabel [
+
+	^ stringIsLabel
 ]

@@ -10,6 +10,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> allElementsDo: aBlock [
+
+	element allElementsDo: aBlock.
+	aBlock value: self
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> buildCopy [
 
 	| copy |
@@ -121,9 +128,10 @@ SBInlineBlockRepeat >> inline [
 SBInlineBlockRepeat >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
 	^ SBTSRelInsertCommand new
-		near: (aBlock owner = self
-			ifTrue: [aMorph]
-			ifFalse: [aBlock ownerSatisfying: [:o | o owner = self]])
+		near: (aBlock ifNotNil: [
+			aBlock owner = self
+				ifTrue: [aMorph]
+				ifFalse: [aBlock ownerSatisfying: [:o | o owner = self]]])
 		before: aBoolean
 		in: self
 		morph: aMorph
@@ -191,6 +199,12 @@ SBInlineBlockRepeat >> printTitleOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> repeaterChild [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> required [
 
 	^ required
@@ -221,12 +235,6 @@ SBInlineBlockRepeat >> takeStreamFrom: anObject [
 	self flag: #fixme.
 	" need to consider optionals and repeating "
 	^ true
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockRepeat >> triggersFor: aString matchFullToken: aBoolean options: anOptions [
-
-	^ element triggersFor: aString matchFullToken: aBoolean options: anOptions
 ]
 
 { #category : #'as yet unclassified' }

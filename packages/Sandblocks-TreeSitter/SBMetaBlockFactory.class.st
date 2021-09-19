@@ -9,7 +9,11 @@ Class {
 		'hardLineBreakMatcher',
 		'supertypes',
 		'name',
-		'highlightQuery'
+		'highlightQuery',
+		'rootRuleName',
+		'delimitedRules',
+		'fullTokens',
+		'wordRule'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -20,7 +24,9 @@ SBMetaBlockFactory class >> json [
 	^ SBMetaBlockFactory new
 		name: #json
 		preprocess: []
-		postprocess: [:f | f blockInline: {'string_content'}]
+		postprocess: [:f |
+			f blockInline: {'string_content'}.
+			f rootRuleName: 'document']
 		grammar: '{
   "name": "json",
   "rules": {
@@ -707,9 +713,11 @@ SBMetaBlockFactory class >> python [
 		name: #python
 		preprocess: [:f | ]
 		postprocess: [:f |
-			f statementContainerTypes: #('block').
+			f statementContainerTypes: #('block' 'module').
 			f blockInline: {'expression_statement'. 'parameters'}.
 			f rulesDo: [:r | f removeOptionalString: ',' in: r].
+			f rootRuleName: 'module'.
+			f delimitedRules: ({'argument_list' -> ','. 'parameters' -> ','. 'tuple_pattern' -> ','} as: Dictionary).
 			f grammar rules
 				at: '"'
 				put: (JsonObject fromAssociations: {#type -> 'STRING'. #value -> '"'}).
@@ -6015,6 +6023,19 @@ SBMetaBlockFactory >> deepCompare: anObject to: anotherObject [
 	^ true
 ]
 
+{ #category : #accessing }
+SBMetaBlockFactory >> delimitedRules [
+
+	^ delimitedRules
+]
+
+{ #category : #accessing }
+SBMetaBlockFactory >> delimitedRules: aDictionary [
+	" ruleName -> delimiterString, e.g. 'parameters'->',' "
+
+	delimitedRules := aDictionary
+]
+
 { #category : #helper }
 SBMetaBlockFactory >> escapeStringForRegex: aString [
 
@@ -6046,6 +6067,13 @@ SBMetaBlockFactory >> flattenSeparatedList: anObject [
 	anObject members ifNotNil: [:c | c do: [:m | self flattenSeparatedList: m]]
 ]
 
+{ #category : #helper }
+SBMetaBlockFactory >> fullTokensInclude: aString [
+
+	templateCache do: [:rule | rule allElementsDo: [:m | ((m isKindOf: SBInlineBlockLabel) and: [aString = m label]) ifTrue: [^ true]]].
+	^ false
+]
+
 { #category : #templates }
 SBMetaBlockFactory >> getTemplate: aTypeString [
 
@@ -6065,9 +6093,21 @@ SBMetaBlockFactory >> grammar [
 ]
 
 { #category : #accessing }
+SBMetaBlockFactory >> grammar: aJsonObject [
+
+	grammar := aJsonObject
+]
+
+{ #category : #accessing }
 SBMetaBlockFactory >> grammarHandler [
 
 	^ SBMetaGrammarHandler new
+]
+
+{ #category : #'configuration helpers' }
+SBMetaBlockFactory >> hardLineBreakMatch: aBlock [
+
+	^ hardLineBreakMatcher ifNotNil: [:b | b value: aBlock] ifNil: [false]
 ]
 
 { #category : #'configuration helpers' }
@@ -6080,6 +6120,12 @@ SBMetaBlockFactory >> hardLineBreakMatcher [
 SBMetaBlockFactory >> hardLineBreakMatcher: aBlock [
 
 	hardLineBreakMatcher := aBlock
+]
+
+{ #category : #testing }
+SBMetaBlockFactory >> hasHighlight [
+
+	^ highlightQuery notNil
 ]
 
 { #category : #accessing }
@@ -6121,7 +6167,8 @@ SBMetaBlockFactory >> initialize [
 	blockInline := {}.
 	statementContainerTypes := {}.
 	supertypes := {}.
-	hardLineBreakMatcher := [:block | false]
+	hardLineBreakMatcher := [:block | false].
+	delimitedRules := Dictionary new
 ]
 
 { #category : #templates }
@@ -6200,10 +6247,14 @@ SBMetaBlockFactory >> name: aSymbol preprocess: aBlock postprocess: anotherBlock
 	supertypes := grammar supertypes.
 	name := aSymbol.
 	highlightQuery := SBTSQuery new prepare: anotherString.
+	self wordRule: grammar word.
 	
 	aBlock cull: self.
 	self cleanGrammar.
-	anotherBlock cull: self
+	anotherBlock cull: self.
+	
+	" make sure all rules are in the cache "
+	grammar rules keysAndValuesDo: [:name :r | self getTemplate: name]
 ]
 
 { #category : #templates }
@@ -6272,6 +6323,18 @@ SBMetaBlockFactory >> removeOptionalString: aString in: anObject [
 				copyFrom keysAndValuesDo: [:key :value | anObject at: key put: value]]].
 	anObject content ifNotNil: [:c | self removeOptionalString: aString in: c].
 	anObject members ifNotNil: [:c | c do: [:m | self removeOptionalString: aString in: m]]
+]
+
+{ #category : #accessing }
+SBMetaBlockFactory >> rootRuleName [
+
+	^ rootRuleName
+]
+
+{ #category : #accessing }
+SBMetaBlockFactory >> rootRuleName: aString [
+
+	rootRuleName := aString
 ]
 
 { #category : #'grammar clean' }
@@ -6393,6 +6456,12 @@ SBMetaBlockFactory >> symbolsProducedBy: anObject on: aStream [
 			aStream nextPut: nonHidden first name value]}
 ]
 
+{ #category : #templates }
+SBMetaBlockFactory >> toplevel [
+
+	^ self instantiateToplevel: self rootRuleName
+]
+
 { #category : #'configuration helpers' }
 SBMetaBlockFactory >> type: aRuleName compatibleWith: anotherRuleName [
 
@@ -6421,4 +6490,16 @@ SBMetaBlockFactory >> unwrapSingleChoices: anObject [
 	
 	anObject content ifNotNil: [:c | self unwrapSingleChoices: c].
 	anObject members ifNotNil: [anObject members do: [:m | self unwrapSingleChoices: m]]
+]
+
+{ #category : #accessing }
+SBMetaBlockFactory >> wordRule [
+
+	^ wordRule
+]
+
+{ #category : #accessing }
+SBMetaBlockFactory >> wordRule: aString [
+
+	wordRule := (self buildRegexString: (grammar rules at: aString)) asRegex
 ]

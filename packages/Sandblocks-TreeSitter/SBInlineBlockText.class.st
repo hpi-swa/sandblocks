@@ -9,6 +9,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockText >> allElementsDo: aBlock [
+
+	aBlock value: self
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockText >> buildCopy [
 
 	^ self buildEmpty contents: self contents
@@ -158,7 +164,7 @@ SBInlineBlockText >> takeStreamFrom: anObject [
 	| start |
 	" does this make sense? "
 	self flag: #fixme.
-	anObject matchFullToken ifTrue: [^ false].
+	(anObject matchFullToken and: [anObject stringIsLabel]) ifTrue: [^ false].
 	
 	start := anObject stream position + 1.
 	^ (self regex matchesStreamPrefix: anObject stream)
@@ -168,17 +174,6 @@ SBInlineBlockText >> takeStreamFrom: anObject [
 				to: anObject stream position).
 			true]
 		ifFalse: [false]
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockText >> triggersFor: aString matchFullToken: aBoolean options: anOptions [
-
-	^ anOptions addLeaf: self if: [:option |
-		SBToggledCode
-			comment: ''
-			active: 0
-			do: {[aBoolean ifTrue: [self regex matches: aString] ifFalse: [self regex matchesPrefix: aString]]}.
-		self regex matches: aString, (aBoolean ifTrue: [' '] ifFalse: [''])]
 ]
 
 { #category : #'as yet unclassified' }

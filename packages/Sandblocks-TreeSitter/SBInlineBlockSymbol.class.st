@@ -9,6 +9,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> allElementsDo: aBlock [
+
+	aBlock value: self
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> buildCopy [
 
 	^ self buildEmpty addMorphBack: self firstSubmorph buildCopy
@@ -54,11 +60,9 @@ SBInlineBlockSymbol >> childrenIn: anExplore [
 		SBToggledCode
 			comment: ''
 			active: 1
-			do: {[false]. [anExplore hasVisitedSymbol: self type factory: factory]}])
-		ifTrue: [{SBInlineBlockNever new}]
-		ifFalse: [
-			anExplore ifNotNil: [anExplore addVisitedSymbol: self type].
-			{self template}]
+			do: {[anExplore canVisitSymbol: self type]. [anExplore hasVisitedSymbol: self type factory: factory]}])
+		ifTrue: [{self template}]
+		ifFalse: [{SBInlineBlockNever new}]
 ]
 
 { #category : #'as yet unclassified' }
@@ -86,12 +90,6 @@ SBInlineBlockSymbol >> field: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockSymbol >> fixedNumberOfChildren [
-
-	^ (self firstSubmorph isKindOf: SBInlineBlockRepeat) not
-]
-
-{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> hasSameContentsAs: aBlock [
 
 	^ (super hasSameStructureAs: aBlock) and: [self type = aBlock type and: [self firstSubmorph hasSameContentsAs: aBlock firstSubmorph]]
@@ -111,7 +109,6 @@ SBInlineBlockSymbol >> includesNestedSameStructure: aBlock [
 	self type = 'binary_operator' ifTrue: [self halt].
 	((aBlock isKindOf: SBInlineBlockSymbol) and: [self type = aBlock type]) ifTrue: [^ true].
 	
-	Transcript showln: self type.
 	^ (factory getTemplate: self type) includesNestedSameStructure: aBlock
 ]
 
@@ -127,9 +124,7 @@ SBInlineBlockSymbol >> inline [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
-	^ (self firstSubmorph isKindOf: SBInlineBlockRepeat)
-		ifTrue: [self firstSubmorph insertCommandRequest: aMorph near: aBlock before: aBoolean]
-		ifFalse: [super insertCommandRequest: aMorph near: aBlock before: aBoolean]
+	^ self repeaterChild ifNotNil: [:c | c insertCommandRequest: aMorph near: aBlock before: aBoolean]
 ]
 
 { #category : #'as yet unclassified' }
@@ -159,7 +154,17 @@ SBInlineBlockSymbol >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ (self firstSubmorph isKindOf: SBInlineBlockRepeat)
 		ifTrue: [self firstSubmorph newEmptyChildNear: aBlock before: aBoolean]
-		ifFalse: [super newEmptyChildNear: aBlock before: aBoolean]
+		ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> newNullBlock [
+
+	| parent unknown |
+	parent := self inlineRoot.
+	unknown := SBTSUnknown new template: [parent buildEmpty].
+	(parent isKindOf: self class) ifTrue: [unknown type: parent type factory: factory].
+	^ unknown
 ]
 
 { #category : #'as yet unclassified' }
@@ -205,19 +210,6 @@ SBInlineBlockSymbol >> takeStreamFrom: anObject [
 SBInlineBlockSymbol >> template [
 
 	^ factory getTemplate: self type
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockSymbol >> triggersFor: aString matchFullToken: aBoolean options: anOptions [
-
-	^ (anOptions hasVisitedSymbol: self type)
-		ifTrue: [false]
-		ifFalse: [
-			anOptions addVisitedSymbol: self type.
-			(factory getTemplate: self type)
-				triggersFor: aString
-				matchFullToken: aBoolean
-				options: anOptions]
 ]
 
 { #category : #'as yet unclassified' }

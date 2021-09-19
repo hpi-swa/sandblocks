@@ -178,6 +178,12 @@ SBLabel >> pasteString [
 ]
 
 { #category : #'as yet unclassified' }
+SBLabel >> preferredColorIn: aColorPolicy [
+
+	^ aColorPolicy defaultLight
+]
+
+{ #category : #'as yet unclassified' }
 SBLabel >> printOn: aStream [
 
 	aStream nextPutAll: 'label ', (self contents truncateWithElipsisTo: 20)

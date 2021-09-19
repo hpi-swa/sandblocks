@@ -68,25 +68,20 @@ SBGrammarHandler >> insertStatementAbove [
 { #category : #'action helpers' }
 SBGrammarHandler >> insertStatementAboveOrBelow: anAboveBoolean [
 
-	| newStatement topMost offset body |
+	| newStatement topMost body |
 	" try to find a suitable place to insert a statement, either above or below the current statement,
 	  or at the start of the containing block body, or at the start of first block body in the artefact "
-	newStatement := self block newNullBlock.
 	topMost := self block.
 	[topMost parentSandblock notNil and: [topMost parentSandblock isBlockBody not]] whileTrue: [topMost := topMost parentSandblock].
-	body := (topMost parentSandblock ifNil: [self block containingArtefact nextBlockThat: [:b | b isBlockBody]]) ifNil: [^ self].
-	
-	offset := (body statements indexOf: topMost ifAbsent: [0]) + (anAboveBoolean ifTrue: [-1] ifFalse: [0]) max: 0.
+	(topMost hasOwner: self block containingArtefact) ifFalse: [topMost := nil].
+	body := ((topMost isNil or: [topMost parentSandblock isNil])
+		ifFalse: [topMost parentSandblock]
+		ifTrue: [self block containingArtefact nextBlockThat: [:b | b isBlockBody]]) ifNil: [
+			self block isBlockBody ifTrue: [self block] ifFalse: [^ self]].
+	newStatement := body newEmptyChildNear: topMost before: anAboveBoolean.
 	
 	self block sandblockEditor
-		do: (SBInsertCommand new
-			index: (body statements
-				ifNotEmpty: [:s | s first submorphIndex + offset]
-				ifEmpty: [body submorphCount + 1]);
-			container: body;
-			morph: newStatement;
-			shouldMergeWithNext: true;
-			yourself);
+		do: (body insertCommandRequest: newStatement near: topMost before: anAboveBoolean);
 		startInput: newStatement at: 1 replacingContents: false
 ]
 

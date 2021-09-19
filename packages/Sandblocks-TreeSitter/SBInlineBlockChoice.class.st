@@ -8,6 +8,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockChoice >> allElementsDo: aBlock [
+
+	self alternatives do: [:alt | alt allElementsDo: aBlock].
+	aBlock value: self
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockChoice >> alternatives [
 
 	^ alternatives
@@ -37,8 +44,8 @@ SBInlineBlockChoice >> buildDefaultIn: anExplore [
 		ifNotNil: [
 			(anExplore hasSeenChoice: self)
 				ifTrue: [(self alternatives at: (anExplore indexFor: self)) instantiate]
-				ifFalse: [SBTSUnknown new template: self]]
-		ifNil: [SBTSUnknown new template: self])
+				ifFalse: [^ SBTSUnknown new template: self]]
+		ifNil: [^ SBTSUnknown new template: self])
 ]
 
 { #category : #'as yet unclassified' }
@@ -75,7 +82,10 @@ SBInlineBlockChoice >> childrenIn: anExplore [
 	(anExplore hasOptionOnStack: (self alternatives at: index)) ifTrue: [
 		index := index + 1.
 		anExplore skipOptionIn: self].
-	^ {self alternatives at: index}
+	^ {
+		index > self alternatives size
+			ifTrue: [SBInlineBlockNever new]
+			ifFalse: [self alternatives at: index]}
 ]
 
 { #category : #'as yet unclassified' }

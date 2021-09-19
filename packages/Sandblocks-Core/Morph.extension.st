@@ -511,6 +511,16 @@ Morph >> scalingFactor [
 	^ (self fontToUse height / 18) ceiling
 ]
 
+{ #category : #'*Sandblocks-Core-layout' }
+Morph >> setFinalBounds: aRectangle [
+
+	self
+		setPositionFromLayout: aRectangle origin;
+		noSideEffectExtent: aRectangle extent.
+	
+	fullBounds := self privateFullBounds
+]
+
 { #category : #'*Sandblocks-Core-Simulate' }
 Morph >> simulateClick [
 

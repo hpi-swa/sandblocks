@@ -17,6 +17,12 @@ SBInlineBlock >> actionProviders [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> allElementsDo: aBlock [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> artefactChanged: aMethodBlock [
 
 	aMethodBlock = self ifTrue: [self updateAllHighlights]
@@ -78,20 +84,25 @@ SBInlineBlock >> childrenIn: anExplore [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlock >> choicesForInput: aString before: aBoolean [
+SBInlineBlock >> choicesForInput: aString before: aBoolean do: aBlock ifNone: anotherBlock [
 
 	| current |
-	current := self.
+	current := SBToggledCode
+		comment: ''
+		active: 2
+		do: {[self]. [self currentTextMorph ifNil: [self] ifNotNil: [:t | t owner]]}.
+	
 	[current notNil and: [current isInlineBlock]] whileTrue: [
 		(current isKindOf: SBInlineBlockChoice) ifTrue: [
 			(SBTSRuleExplore new
 				explore: current
-				withNested: self
+				withNested: current firstSubmorph
 				nestedBefore: aBoolean
 				for: aString
-				startSymbol: nil) ifNotEmpty: [:choices | ^ choices]].
-		current := current owner].
-	^ #()
+				startSymbol: nil) ifNotEmpty: [:choices | ^ aBlock value: choices value: current]].
+		current := current owner.
+		(current notNil and: [current isInlineBlock and: [current inline not and: [current ~= self]]]) ifTrue: [current := nil]].
+	^ anotherBlock value
 ]
 
 { #category : #'as yet unclassified' }
@@ -111,6 +122,21 @@ SBInlineBlock >> click: anEvent [
 SBInlineBlock >> containingSandblock [
 
 	^ self inline ifTrue: [self owner ifNotNil: #containingSandblock] ifFalse: [self]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> convertedFor: anInterfaceCollection do: aBlock [
+
+	anInterfaceCollection first = #isInlineBlock ifTrue: [
+		^ (SBTSRuleExplore new
+			explore: anInterfaceCollection last
+			withNested: self
+			nestedBefore: false
+			for: ''
+			startSymbol: nil)
+			ifNotEmpty: [:choices | aBlock value: choices first]].
+	
+	^ super convertedFor: anInterfaceCollection do: aBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -193,6 +219,12 @@ SBInlineBlock >> firstDifferingUpBlocksWith: aMorph do: aBlock ifNone: anotherBl
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> fixedNumberOfChildren [
+
+	^ self repeaterChild isNil
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> grammarHandler [
 
 	^ SBMetaGrammarHandler new
@@ -256,7 +288,7 @@ SBInlineBlock >> initialize [
 		listDirection: #leftToRight;
 		color: Color transparent;
 		cellGap: 2;
-		layoutInset: 2;
+		layoutInset: 0;
 		cellPositioning: #center;
 		extent: 0 @ 0
 ]
@@ -271,6 +303,14 @@ SBInlineBlock >> inline [
 SBInlineBlock >> inlineIfPossible [
 
 	^ self owner notNil and: [self owner isInlineBlock and: [self owner nonInlinedChildren not]]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> inlineRoot [
+
+	^ (self owner isInlineBlock and: [self owner inline not])
+		ifTrue: [self]
+		ifFalse: [self owner inlineRoot]
 ]
 
 { #category : #'as yet unclassified' }
@@ -299,6 +339,12 @@ SBInlineBlock >> isArtefact [
 SBInlineBlock >> isBlockBody [
 
 	^ self isStatementContainer
+]
+
+{ #category : #testing }
+SBInlineBlock >> isBuilt [
+
+	^ built
 ]
 
 { #category : #'as yet unclassified' }
@@ -379,6 +425,14 @@ SBInlineBlock >> name: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> newEmptyChildNear: aBlock before: aBoolean [
+
+	self flag: #todo.
+	" if we have multiple repeating elements, get the one near aBlock "
+	^ self repeaterChild ifNotNil: [:c | c element instantiate]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> nonInlinedChildren [
 
 	^ false
@@ -391,12 +445,21 @@ SBInlineBlock >> numAlternatives [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> objectInterfaceNear: aBlock at: aSymbol [
+	" we are abusing the protocol here: our overwritten convertedFor:do: recognizes
+ this and does special handling. other handlers will get blocked by the false"
+
+	^ {#isInlineBlock. [:o | false]. aSymbol = #replace ifTrue: [self] ifFalse: [self repeaterChild element]}
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> preferredColorIn: aColorPolicy [
 
 	^ highlight
 		caseOf: {
 			['keyword'] -> [aColorPolicy keyword].
 			['function'] -> [aColorPolicy identifier].
+			['comment'] -> [aColorPolicy defaultLight].
 			['variable'] -> [aColorPolicy identifier].
 			['type'] -> [aColorPolicy keyword].
 			['number'] -> [aColorPolicy literal].
@@ -433,6 +496,13 @@ SBInlineBlock >> removedMorph: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> repeaterChild [
+
+	self submorphsDo: [:m | m isBlock ifFalse: [self firstSubmorph isInlineBlock ifTrue: [self firstSubmorph repeaterChild ifNotNil: [:t | ^ t]]]].
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> statements [
 
 	^ self isStatementContainer ifTrue: [self childSandblocks] ifFalse: [nil]
@@ -457,21 +527,18 @@ SBInlineBlock >> title [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlock >> triggersFor: aString matchFullToken: aBoolean options: anOptions [
-
-	^ self subclassResponsibility
-]
-
-{ #category : #'as yet unclassified' }
 SBInlineBlock >> tryInterpretInput: aString before: aBoolean [
 
-	| choices |
-	choices := self choicesForInput: aString before: aBoolean.
-	choices size = 1 ifTrue: [
-		self sandblockEditor do: (SBReplaceCommand new
-			target: self;
-			replacer: choices first).
-		choices first inputContainedUnknown]
+	self
+		choicesForInput: aString
+		before: aBoolean
+		do: [:choices :root |
+			choices size = 1 ifTrue: [
+				self sandblockEditor do: (SBReplaceCommand new
+					target: root;
+					replacer: choices first).
+				choices first inputContainedUnknown]]
+		ifNone: []
 ]
 
 { #category : #'as yet unclassified' }
@@ -483,6 +550,8 @@ SBInlineBlock >> unbuiltChildrenIn: anExplore [
 { #category : #'as yet unclassified' }
 SBInlineBlock >> updateAllHighlights [
 
+	factory hasHighlight ifFalse: [^ self].
+	
 	self allMorphsDo: [:m | m isInlineBlock ifTrue: [m highlight: nil]].
 	self updateHighlight
 ]

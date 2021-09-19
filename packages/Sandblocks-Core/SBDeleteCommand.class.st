@@ -39,8 +39,8 @@ SBDeleteCommand >> nextBlockFrom: aMorph [
 				ifNotEmpty: [:blocks | (blocks first adjacentBlock: -1) ifNil: [blocks last adjacentBlock: 1]]
 				ifEmpty: [(m adjacentBlock: -1) ifNil: [m adjacentBlock: 1]]]) ifNil: [m parentSandblock].
 	
-	^ (next isNil or: [next containingFloat ~= aMorph containingFloat])
-		ifTrue: [aMorph sandblockEditor]
+	^ (next isNil or: [next containingFloat ~= m containingFloat])
+		ifTrue: [m sandblockEditor]
 		ifFalse: [next]
 ]
 

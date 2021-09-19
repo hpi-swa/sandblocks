@@ -16,6 +16,13 @@ SBInlineBlockSequence >> addedMorph: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSequence >> allElementsDo: aBlock [
+
+	elements do: [:el | el allElementsDo: aBlock].
+	aBlock value: self
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSequence >> buildCopy [
 
 	| copy |
@@ -64,6 +71,12 @@ SBInlineBlockSequence >> elements: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSequence >> hardLineBreakMatch: aBlock [
+
+	^ self factory ifNotNil: [:f | f hardLineBreakMatch: aBlock] ifNil: [false]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSequence >> hasSameContentsAs: aBlock [
 
 	(super hasSameContentsAs: aBlock) ifFalse: [^ false].
@@ -99,7 +112,7 @@ SBInlineBlockSequence >> layoutCommands [
 			self submorphs withIndexDo: [:morph :index |
 				stream nextPut: morph layoutCommands.
 				index ~= self submorphCount ifTrue: [
-					stream nextPut: ((self factory hardLineBreakMatcher value: morph)
+					stream nextPut: ((self hardLineBreakMatch: morph)
 						ifTrue: [SBAlgebraCommand hardLine]
 						ifFalse: [SBAlgebraCommand gap])]]])
 ]
@@ -131,15 +144,6 @@ SBInlineBlockSequence >> takeParsedFrom: aCursor [
 { #category : #'as yet unclassified' }
 SBInlineBlockSequence >> takeStreamFrom: anObject [
 
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
-SBInlineBlockSequence >> triggersFor: aStream matchFullToken: aBoolean options: anOptions [
-
-	elements do: [:element |
-		(element triggersFor: aStream matchFullToken: aBoolean options: anOptions) ifFalse: [^ false].
-		aStream atEnd ifTrue: [^ true]].
 	^ true
 ]
 

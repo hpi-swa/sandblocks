@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBMetaGrammarHandler >> newNullBlock [
+
+	^ SBTSUnknown new grammarHandler: self
+]
+
+{ #category : #'as yet unclassified' }
 SBMetaGrammarHandler >> promptMetaTransform [
 	<action>
 

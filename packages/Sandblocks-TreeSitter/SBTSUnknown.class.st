@@ -70,6 +70,18 @@ SBTSUnknown >> inline [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSUnknown >> instantiate [
+
+	^ self
+]
+
+{ #category : #testing }
+SBTSUnknown >> isBuilt [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBTSUnknown >> keyStroke: anEvent [
 
 	self currentTextMorph keyStroke: anEvent.
@@ -132,7 +144,7 @@ SBTSUnknown >> tryInterpretInput: aString [
 			ifNotNil: [SBInlineBlockSymbol new type: type factory: self factory block: choices first]
 			ifNil: [choices first].
 		self sandblockEditor do: (SBReplaceCommand new
-			target: self owner;
+			target: self;
 			replacer: replacer).
 		
 		SBToggledCode

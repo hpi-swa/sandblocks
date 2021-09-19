@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'library',
 		'cursor',
-		'atEnd'
+		'atEnd',
+		'factory'
 	],
 	#category : #'Sandblocks-TreeSitter-FFI'
 }
@@ -61,10 +62,11 @@ SBTSCursor >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBTSCursor >> library: aLibrary cursor: aCursor [
+SBTSCursor >> library: aLibrary cursor: aCursor factory: aFactory [
 
 	library := aLibrary.
-	cursor := aCursor
+	cursor := aCursor.
+	factory := aFactory
 ]
 
 { #category : #'as yet unclassified' }
@@ -93,9 +95,10 @@ SBTSCursor >> restoreTo: aCursor [
 
 { #category : #'as yet unclassified' }
 SBTSCursor >> shouldSkipParsedNode: aNode [
-	" TODO: python specific "
 
-	^ (#('argument_list' 'parameters' 'tuple_pattern') includes: (library nodeType: (library nodeParent: aNode))) and: [self type = ',']
+	| type |
+	type := library nodeType: (library nodeParent: aNode).
+	^ (factory delimitedRules includesKey: type) and: [self type = (factory delimitedRules at: type)]
 ]
 
 { #category : #'as yet unclassified' }

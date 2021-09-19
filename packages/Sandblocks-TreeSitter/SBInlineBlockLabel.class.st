@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockLabel >> allElementsDo: aBlock [
+
+	aBlock value: self
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockLabel >> buildCopy [
 
 	^ self buildEmpty
@@ -120,6 +126,16 @@ SBInlineBlockLabel >> printTitleOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockLabel >> streamHasWord: aStream [
+
+	| start ret |
+	start := aStream position.
+	ret := self factory wordRule matchesStreamPrefix: aStream.
+	aStream position: start.
+	^ ret
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockLabel >> takeParsedFrom: aCursor [
 
 	^ aCursor text withBlanksTrimmed = self label
@@ -132,9 +148,26 @@ SBInlineBlockLabel >> takeParsedFrom: aCursor [
 { #category : #'as yet unclassified' }
 SBInlineBlockLabel >> takeStreamFrom: option [
 
-	^ option stream atEnd not and: [option matchFullToken
-		ifTrue: [option stream nextMatchAll: self label]
-		ifFalse: [option stream nextMatchAll: (self label first: (option stream size - option stream position min: self label size))]]
+	^ option stream atEnd not and: [
+		(self factory notNil and: [self factory wordRule notNil and: [self streamHasWord: option stream]])
+			ifTrue: [ | start nextWord |
+				start := option stream position + 1.
+				
+				self factory wordRule matchesStreamPrefix: option stream.
+				nextWord := option stream originalContents
+					copyFrom: start
+					to: option stream position.
+				^ (option matchFullToken
+					ifTrue: [self label = nextWord]
+					ifFalse: [nextWord = (self label first: (nextWord size min: self label size))])
+					ifTrue: [true]
+					ifFalse: [
+						option stream position: start - 1.
+						false]]
+			ifFalse: [
+				option matchFullToken
+					ifTrue: [option stream nextMatchAll: self label]
+					ifFalse: [option stream nextMatchAll: (self label first: (option stream size - option stream position min: self label size))]]]
 ]
 
 { #category : #'as yet unclassified' }

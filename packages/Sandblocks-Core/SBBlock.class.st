@@ -84,6 +84,12 @@ SBBlock >> actions [
 		asIdentitySet asArray.
 ]
 
+{ #category : #hierarchy }
+SBBlock >> addBlock: aBlock [
+
+	(self insertCommandRequest: aBlock near: nil before: false) do
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> allBlocksDetect: aBlock [
 
@@ -891,7 +897,9 @@ SBBlock >> drawSubmorphsOn: aCanvas [
 	
 	self drawChangedMarker: aCanvas.
 	
-	self decorators do: [:d | d postDrawOn: aCanvas]
+	self decorators do: [:d | d postDrawOn: aCanvas].
+	
+	self layoutPolicy  ifNotNil: [(self layoutPolicy respondsTo: #debugDrawOn:in:) ifTrue: [self layoutPolicy debugDrawOn: aCanvas in: self]]
 ]
 
 { #category : #drawing }
