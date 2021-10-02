@@ -50,17 +50,7 @@ SBInlineBlockRepeat >> buildEmpty [
 { #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> buildWithFields: aStream alternatives: aDictionary [
 
-	| continue |
-	continue := true.
-	
-	[continue and: [aStream atEnd not]] whileTrue: [
-		(self element buildWithFields: aStream alternatives: aDictionary)
-			ifNotNil: [:b | self addMorphBack: b]
-			ifNil: [continue := false]].
-	
-	^ ((required not or: [self submorphCount > 0]) and: [(aDictionary at: self ifAbsentPut: [0]) = 0])
-		ifTrue: [self]
-		ifFalse: [nil]
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -72,9 +62,11 @@ SBInlineBlockRepeat >> childrenForQueryDo: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> childrenIn: anExplore [
 
-	(anExplore isNil or: [required]) ifTrue: [^ {self element}].
+	| index |
+	anExplore isNil ifTrue: [^ {self element}].
 	
-	^ (anExplore indexFor: self) = 1 ifTrue: [{self element}] ifFalse: [{}]
+	index := anExplore indexFor: self.
+	^ Array streamContents: [:stream | (required ifTrue: [index] ifFalse: [index - 1]) timesRepeat: [stream nextPut: self element]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -201,8 +193,9 @@ SBInlineBlockRepeat >> nonInlinedChildren [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockRepeat >> numAlternatives [
+SBInlineBlockRepeat >> numAlternativesIn: anExplore [
 
+	anExplore streamContainsBlock ifTrue: [^ anExplore stream size + (required ifTrue: [0] ifFalse: [1])].
 	^ required ifTrue: [1] ifFalse: [2]
 ]
 

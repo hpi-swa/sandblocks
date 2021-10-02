@@ -13,7 +13,8 @@ Class {
 		'rootRuleName',
 		'delimitedRules',
 		'fullTokens',
-		'wordRule'
+		'wordRule',
+		'extras'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
@@ -717,10 +718,12 @@ SBMetaBlockFactory class >> python [
 			f blockInline: {'expression_statement'. 'parameters'}.
 			f rulesDo: [:r | f removeOptionalString: ',' in: r].
 			f rootRuleName: 'module'.
-			f delimitedRules: ({'argument_list' -> ','. 'parameters' -> ','. 'tuple_pattern' -> ','} as: Dictionary).
-			f grammar rules
-				at: '"'
-				put: (JsonObject fromAssociations: {#type -> 'STRING'. #value -> '"'}).
+			f delimitedRules: ({'argument_list' -> ','. 'pattern_list' -> ','. 'parameters' -> ','. 'tuple_pattern' -> ','. 'list' -> ','} as: Dictionary).
+			f grammar rules at: '"' put: (JsonObject fromAssociations: {
+				#type -> 'CHOICE'.
+				#members -> {
+					JsonObject fromAssociations: {#type -> 'STRING'. #value -> '"'}.
+					JsonObject fromAssociations: {#type -> 'STRING'. #value -> ''''}}}).
 			f hardLineBreakMatcher: [:b | ((b isKindOf: SBInlineBlockLabel) and: [b label = ':']) or: [(b parentSandblock isKindOf: SBInlineBlockSymbol) and: [{'block'. 'module'} includes: b parentSandblock type]]]]
 		grammar: '{
   "name": "python",
@@ -6042,6 +6045,19 @@ SBMetaBlockFactory >> escapeStringForRegex: aString [
 	^ aString copyWithRegex: '[.*+?^${}()|\[\]\\]' matchesTranslatedUsing: [:m | '\', m]
 ]
 
+{ #category : #accessing }
+SBMetaBlockFactory >> extras [
+
+	^ extras
+]
+
+{ #category : #accessing }
+SBMetaBlockFactory >> extras: aCollection [
+	" a list of rules that are considered extras in TS, meaning comments and whitespaces "
+
+	extras := aCollection
+]
+
 { #category : #'grammar clean' }
 SBMetaBlockFactory >> flattenSeparatedList: anObject [
 
@@ -6255,6 +6271,9 @@ SBMetaBlockFactory >> name: aSymbol preprocess: aBlock postprocess: anotherBlock
 	supertypes := grammar supertypes.
 	name := aSymbol.
 	highlightQuery := SBTSQuery new prepare: anotherString.
+	extras := grammar extras
+		select: [:rule | rule type = 'SYMBOL']
+		thenCollect: [:rule | rule name].
 	self wordRule: grammar word.
 	
 	aBlock cull: self.

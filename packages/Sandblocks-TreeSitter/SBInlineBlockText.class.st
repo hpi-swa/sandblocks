@@ -43,8 +43,9 @@ SBInlineBlockText >> buildEmpty [
 { #category : #'as yet unclassified' }
 SBInlineBlockText >> buildWithFields: aStream alternatives: aDictionary [
 
-	aStream peek second isString ifFalse: [^ nil].
-	self contents: aStream next second
+	aStream peek second isString ifFalse: [^ false].
+	self contents: aStream next second.
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

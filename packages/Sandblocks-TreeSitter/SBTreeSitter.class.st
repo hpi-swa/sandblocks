@@ -16,20 +16,22 @@ SBTreeSitter class >> moduleName [
 { #category : #'as yet unclassified' }
 SBTreeSitter >> buildTreeFrom: aCursor [
 
-	| block field fallback type fieldStream alternatives |
+	| field fallback type fieldStream block |
 	type := aCursor type.
 	field := aCursor currentFieldName.
 	fallback := {field. aCursor text}.
-	block := aCursor factory getTemplate: type ifAbsent: [^ aCursor text].
+	aCursor factory getTemplate: type ifAbsent: [^ aCursor text].
 	
 	fieldStream := ((Array streamContents: [:stream |
 		aCursor gotoFirstChild ifTrue: [
 			[stream nextPut: {aCursor currentFieldName. self buildTreeFrom: aCursor}] doWhileFalse: [aCursor gotoNextSibling].
 			aCursor gotoParent]]) ifEmpty: [{fallback}]) readStream.
 	
-	alternatives := Dictionary new.
-	block buildWithFields: fieldStream alternatives: alternatives.
-	
+	block := SBTSParseExplore new
+		explore: fieldStream
+		type: type
+		factory: aCursor factory.
+	self assert: block notNil.
 	^ SBInlineBlockSymbol new type: type factory: aCursor factory block: block
 ]
 
@@ -164,7 +166,8 @@ SBTreeSitter >> parse: aString language: aSymbol factory: aFactory [
 	
 	cursor := self cursorNew: root.
 	block := (SBToggledCode comment: '' active: 1 do: {
-		[self buildTreeFrom: (SBTSCursor new library: self cursor: cursor factory: aFactory)].
+		[
+		self buildTreeFrom: (SBTSCursor new library: self cursor: cursor factory: aFactory)].
 		[SBTSParseExplore new explore: (SBTSCursor new library: self cursor: cursor factory: aFactory)].
 		[(SBInlineBlockSymbol new type: (self nodeType: root) factory: aFactory) takeParsedFrom: (SBTSCursor new library: self cursor: cursor factory: aFactory)]})
 		hResizing: #rigid;

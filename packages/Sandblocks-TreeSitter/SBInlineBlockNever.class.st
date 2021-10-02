@@ -62,7 +62,7 @@ SBInlineBlockNever >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockNever >> numAlternatives [
+SBInlineBlockNever >> numAlternativesIn: anExplore [
 
 	^ 1
 ]

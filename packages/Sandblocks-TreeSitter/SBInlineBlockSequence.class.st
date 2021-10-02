@@ -56,10 +56,7 @@ SBInlineBlockSequence >> buildEmpty [
 { #category : #'as yet unclassified' }
 SBInlineBlockSequence >> buildWithFields: aStream alternatives: aDictionary [
 
-	self elements do: [:element |
-		aStream atEnd ifTrue: [^ nil].
-		
-		self addMorphBack: ((element buildWithFields: aStream alternatives: aDictionary) ifNil: [^ nil])]
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

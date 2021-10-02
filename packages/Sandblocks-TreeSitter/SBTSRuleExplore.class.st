@@ -86,6 +86,12 @@ SBTSRuleExplore >> done [
 	^ stream atEnd and: [nestedBlock isNil or: [foundNested]]
 ]
 
+{ #category : #'as yet unclassified' }
+SBTSRuleExplore >> expandSymbol: aSymbolBlock [
+
+	^ true
+]
+
 { #category : #explore }
 SBTSRuleExplore >> explore: aBlock for: aString [
 
@@ -149,7 +155,7 @@ SBTSRuleExplore >> push: aBlockTemplate [
 	| instance |
 	instance := aBlockTemplate buildEmpty.
 	stack add: {1. instance}.
-	(aBlockTemplate numAlternatives > 1 and: [self done not]) ifTrue: [
+	((aBlockTemplate numAlternativesIn: self) > 1 and: [self done not]) ifTrue: [
 		self indexFor: instance.
 		lastOptions add: {instance. stack collect: [:pair | pair copy]. stream position. visitedSymbols copy. foundNested}].
 	^ instance
@@ -193,8 +199,8 @@ SBTSRuleExplore >> restartFromLastChoiceIfDone: aBlock [
 	foundNested := option fifth.
 	
 	number := choiceIndices at: option first put: (choiceIndices at: choice) + 1.
-	self assert: number <= choice numAlternatives.
-	number = choice numAlternatives ifTrue: [lastOptions remove: option].
+	self assert: number <= (choice numAlternativesIn: self).
+	number = (choice numAlternativesIn: self) ifTrue: [lastOptions remove: option].
 	
 	self assert: (choice ownerChain includes: root).
 	choice allMorphsMutableDo: [:m | m ~= choice ifTrue: [m delete]].
@@ -207,14 +213,19 @@ SBTSRuleExplore >> skipOptionIn: aBlock [
 	| number |
 	number := (choiceIndices at: aBlock) + 1.
 	choiceIndices at: aBlock put: number.
-	number >= aBlock numAlternatives ifTrue: [
-		lastOptions removeAllSuchThat: [:option | option first = aBlock]]
+	number >= (aBlock numAlternativesIn: self) ifTrue: [lastOptions removeAllSuchThat: [:option | option first = aBlock]]
 ]
 
 { #category : #accessing }
 SBTSRuleExplore >> stream [
 
 	^ stream
+]
+
+{ #category : #'as yet unclassified' }
+SBTSRuleExplore >> streamContainsBlock [
+
+	^ false
 ]
 
 { #category : #accessing }

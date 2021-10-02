@@ -37,7 +37,11 @@ SBTSCursor >> factory [
 { #category : #'as yet unclassified' }
 SBTSCursor >> gotoFirstChild [
 
-	^ (library cursorGotoFirstChild: cursor)
+	| ret |
+	ret := library cursorGotoFirstChild: cursor.
+	(ret and: [self shouldSkipParsedNode: self node]) ifTrue: [^ self gotoNextSibling not].
+	
+	^ ret
 		ifTrue: [
 			atEnd := false.
 			true]
@@ -102,9 +106,11 @@ SBTSCursor >> restoreTo: aCursor [
 { #category : #'as yet unclassified' }
 SBTSCursor >> shouldSkipParsedNode: aNode [
 
-	| type |
-	type := library nodeType: (library nodeParent: aNode).
-	^ (factory delimitedRules includesKey: type) and: [self type = (factory delimitedRules at: type)]
+	| parentType type |
+	parentType := library nodeType: (library nodeParent: aNode).
+	type := library nodeType: aNode.
+	
+	^ ((factory delimitedRules includesKey: parentType) and: [self type = (factory delimitedRules at: parentType)]) or: [factory extras includes: type]
 ]
 
 { #category : #'as yet unclassified' }

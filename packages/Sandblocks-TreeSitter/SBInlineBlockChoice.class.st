@@ -65,12 +65,7 @@ SBInlineBlockChoice >> buildEmpty [
 { #category : #'as yet unclassified' }
 SBInlineBlockChoice >> buildWithFields: aStream alternatives: aDictionary [
 
-	| restore |
-	restore := aStream position.
-	self alternatives do: [:alternative |
-		(alternative buildWithFields: aStream alternatives: aDictionary) ifNotNil: [:alt | ^ self addMorphBack: alt].
-		aStream position: restore].
-	^ nil
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -163,7 +158,7 @@ SBInlineBlockChoice >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockChoice >> numAlternatives [
+SBInlineBlockChoice >> numAlternativesIn: anExplore [
 
 	^ self alternatives size
 ]

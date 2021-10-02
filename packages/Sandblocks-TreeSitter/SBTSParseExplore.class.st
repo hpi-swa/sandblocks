@@ -3,13 +3,19 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'stack',
-		'cursor',
 		'lastOptions',
 		'choiceIndices',
-		'root'
+		'root',
+		'stream'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
+
+{ #category : #'as yet unclassified' }
+SBTSParseExplore >> canDelete: m [
+
+	^ stream contents noneSatisfy: [:pair | pair second isMorph and: [m hasOwner: pair second]]
+]
 
 { #category : #'as yet unclassified' }
 SBTSParseExplore >> canVisitSymbol: aString [
@@ -18,16 +24,23 @@ SBTSParseExplore >> canVisitSymbol: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBTSParseExplore >> explore: aCursor [
+SBTSParseExplore >> expandSymbol: aSymbolBlock [
+
+	^ aSymbolBlock = root
+]
+
+{ #category : #'as yet unclassified' }
+SBTSParseExplore >> explore: aStream type: aString factory: aFactory [
 
 	lastOptions := OrderedCollection new.
 	choiceIndices := Dictionary new.
 	stack := OrderedCollection new.
-	cursor := aCursor.
+	stream := aStream.
 	
-	root := self push: (SBInlineBlockSymbol new type: aCursor type factory: aCursor factory).
-	self assert: (root advanceParseFrom: aCursor index: 1).
-	self halt.
+	root := self push: (SBToggledCode
+		comment: ''
+		active: 1
+		do: {[aFactory getTemplate: aString]. [SBInlineBlockSymbol new type: aString factory: aFactory]}).
 	
 	[stack notEmpty] whileTrue: [ | block pair index |
 		pair := stack last.
@@ -38,11 +51,14 @@ SBTSParseExplore >> explore: aCursor [
 			ifPresent: [:template | | child |
 				pair at: 1 put: index + 1.
 				child := self push: template.
-				block addMorphBack: child.
-				(child advanceParseFrom: aCursor index: index) ifFalse: [self restartFromLastChoiceIfDone: [^ nil]]]
+				self assert: block submorphCount < (block unbuiltChildrenIn: self) size.
+				block addMorphBack: child]
 			ifAbsent: [
 				stack removeLast.
-				(block takeParseFrom: aCursor) ifFalse: [self restartFromLastChoiceIfDone: [^ nil]]]].
+				(stream atEnd and: [stack isEmpty]) ifTrue: [^ root].
+				(block buildWithFields: stream alternatives: Dictionary new) not ifTrue: [self restartFromLastChoiceIfDone: [^ nil]].
+				(stack isEmpty and: [stream atEnd not]) ifTrue: [self restartFromLastChoiceIfDone: [^ nil]].]].
+	
 	^ root
 ]
 
@@ -66,9 +82,9 @@ SBTSParseExplore >> push: aBlockTemplate [
 	| instance |
 	instance := aBlockTemplate buildEmpty.
 	stack add: {1. instance}.
-	aBlockTemplate numAlternatives > 1 ifTrue: [
+	(aBlockTemplate numAlternativesIn: self) > 1 ifTrue: [
 		self indexFor: instance.
-		lastOptions add: {instance. stack collect: [:pair | pair copy]. cursor position}].
+		lastOptions add: {instance. stack collect: [:pair | pair copy]. stream position}].
 	^ instance
 ]
 
@@ -80,7 +96,11 @@ SBTSParseExplore >> removeAllMorphsAfter: aMorph in: aParentMorph [
 	toDelete := OrderedCollection new.
 	aParentMorph allMorphsMutableDo: [:m |
 		(delete and: [(aMorph hasOwner: m) not])
-			ifTrue: [SBToggledCode comment: '' active: 1 do: {[toDelete add: m]. [m delete]}]
+			ifTrue: [
+				SBToggledCode
+					comment: ''
+					active: 1
+					do: {[(self canDelete: m) ifTrue: [toDelete add: m]]. [m delete]}]
 			ifFalse: [m = aMorph ifTrue: [delete := true]]].
 	toDelete do: #delete
 ]
@@ -94,12 +114,33 @@ SBTSParseExplore >> restartFromLastChoiceIfDone: aBlock [
 	option := lastOptions last.
 	choice := option first.
 	stack := option second collect: [:pair | pair copy].
-	cursor position: option third.
+	stream position: option third.
 	
 	number := choiceIndices at: option first put: (choiceIndices at: choice) + 1.
-	self assert: number <= choice numAlternatives.
-	number = choice numAlternatives ifTrue: [lastOptions remove: option].
+	self assert: number <= (choice numAlternativesIn: self).
+	number = (choice numAlternativesIn: self) ifTrue: [lastOptions remove: option].
 	self assert: (choice ownerChain includes: root).
-	choice allMorphsMutableDo: [:m | m ~= choice ifTrue: [m delete]].
+	choice allMorphsMutableDo: [:m | m ~= choice ifTrue: [(self canDelete: m) ifTrue: [m delete]]].
 	self removeAllMorphsAfter: choice in: root
+]
+
+{ #category : #'as yet unclassified' }
+SBTSParseExplore >> skipOptionIn: aBlock [
+
+	| number |
+	number := (choiceIndices at: aBlock) + 1.
+	choiceIndices at: aBlock put: number.
+	number >= (aBlock numAlternativesIn: self) ifTrue: [lastOptions removeAllSuchThat: [:option | option first = aBlock]]
+]
+
+{ #category : #'as yet unclassified' }
+SBTSParseExplore >> stream [
+
+	^ stream
+]
+
+{ #category : #'as yet unclassified' }
+SBTSParseExplore >> streamContainsBlock [
+
+	^ true
 ]

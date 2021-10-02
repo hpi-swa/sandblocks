@@ -60,11 +60,15 @@ SBInlineBlockSymbol >> buildEmpty [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> buildWithFields: aStream alternatives: aDictionary [
 
-	aStream peek second isMorph ifFalse: [^ nil].
+	aStream peek second isMorph ifFalse: [^ false].
 	
-	(factory type: aStream peek second type compatibleWith: self type)
-		ifTrue: [self addMorphBack: aStream next second]
-		ifFalse: [^ nil]
+	^ ((aStream peek second isKindOf: SBInlineBlockSymbol) and: [factory type: aStream peek second type compatibleWith: self type])
+		ifTrue: [ | block |
+			self assert: self hasSubmorphs not.
+			block := aStream next second.
+			self addMorphBack: (block type = self type ifTrue: [block firstSubmorph buildCopy] ifFalse: [self template buildEmpty addMorphBack: block]).
+			true]
+		ifFalse: [false]
 ]
 
 { #category : #'as yet unclassified' }
@@ -83,6 +87,7 @@ SBInlineBlockSymbol >> childrenForQueryDo: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> childrenIn: anExplore [
 
+	(anExplore expandSymbol: self) ifFalse: [^ #()].
 	^ (anExplore notNil and: [
 		SBToggledCode
 			comment: ''

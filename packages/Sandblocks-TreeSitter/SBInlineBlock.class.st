@@ -451,7 +451,7 @@ SBInlineBlock >> nonInlinedChildren [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlock >> numAlternatives [
+SBInlineBlock >> numAlternativesIn: anExplore [
 
 	^ 1
 ]
