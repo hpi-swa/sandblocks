@@ -13,6 +13,26 @@ SBTreeSitter class >> moduleName [
 	^ 'tree-sitter'
 ]
 
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> buildTreeFrom: aCursor [
+
+	| block field fallback type fieldStream alternatives |
+	type := aCursor type.
+	field := aCursor currentFieldName.
+	fallback := {field. aCursor text}.
+	block := aCursor factory getTemplate: type ifAbsent: [^ aCursor text].
+	
+	fieldStream := ((Array streamContents: [:stream |
+		aCursor gotoFirstChild ifTrue: [
+			[stream nextPut: {aCursor currentFieldName. self buildTreeFrom: aCursor}] doWhileFalse: [aCursor gotoNextSibling].
+			aCursor gotoParent]]) ifEmpty: [{fallback}]) readStream.
+	
+	alternatives := Dictionary new.
+	block buildWithFields: fieldStream alternatives: alternatives.
+	
+	^ SBInlineBlockSymbol new type: type factory: aCursor factory block: block
+]
+
 { #category : #ffi }
 SBTreeSitter >> cursor: aCursor reset: aNode [
 
@@ -24,6 +44,13 @@ SBTreeSitter >> cursor: aCursor reset: aNode [
 SBTreeSitter >> cursorCopy: aCursor [
 
 	<apicall: SBTSTreeCursor ts_tree_cursor_copy (SBTSTreeCursor*)>
+	^ self externalCallFailed
+]
+
+{ #category : #ffi }
+SBTreeSitter >> cursorCurrentFieldName: aCursor [
+
+	<apicall: char* ts_tree_cursor_current_field_name (SBTSTreeCursor*)>
 	^ self externalCallFailed
 ]
 
@@ -131,9 +158,15 @@ SBTreeSitter >> parse: aString language: aSymbol factory: aFactory [
 	tree := self parser: parser old: nil parseString: currentString length: currentString size.
 	
 	root := self treeRootNode: tree.
-	cursor := self cursorNew: root.
 	
-	block := ((SBInlineBlockSymbol new type: (self nodeType: root) factory: aFactory) takeParsedFrom: (SBTSCursor new library: self cursor: cursor factory: aFactory))
+	cursor := self cursorNew: root.
+	self printTreeFrom: (SBTSCursor new library: self cursor: cursor factory: aFactory) depth: 0.
+	
+	cursor := self cursorNew: root.
+	block := (SBToggledCode comment: '' active: 1 do: {
+		[self buildTreeFrom: (SBTSCursor new library: self cursor: cursor factory: aFactory)].
+		[SBTSParseExplore new explore: (SBTSCursor new library: self cursor: cursor factory: aFactory)].
+		[(SBInlineBlockSymbol new type: (self nodeType: root) factory: aFactory) takeParsedFrom: (SBTSCursor new library: self cursor: cursor factory: aFactory)]})
 		hResizing: #rigid;
 		attachDecorator: SBResizableDecorator new;
 		updateAllHighlights.
@@ -187,6 +220,19 @@ SBTreeSitter >> printTree: aCursor factory: aFactory [
 		self printTree: aCursor factory: aFactory.
 		[self cursorGotoNextSibling: aCursor] whileTrue: [self printTree: aCursor factory: aFactory].
 		self cursorGotoParent: aCursor]
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeSitter >> printTreeFrom: aCursor depth: aNumber [
+
+	Transcript showln: {
+		String streamContents: [:s | aNumber timesRepeat: [s nextPut: Character tab]].
+		aCursor currentFieldName.
+		aCursor type.
+		aCursor text}.
+	aCursor gotoFirstChild ifTrue: [
+		[self printTreeFrom: aCursor depth: aNumber + 1] doWhileFalse: [aCursor gotoNextSibling].
+		aCursor gotoParent]
 ]
 
 { #category : #'ffi languages' }

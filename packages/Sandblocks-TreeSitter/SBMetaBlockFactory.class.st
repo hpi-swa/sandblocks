@@ -6077,13 +6077,21 @@ SBMetaBlockFactory >> fullTokensInclude: aString [
 { #category : #templates }
 SBMetaBlockFactory >> getTemplate: aTypeString [
 
-	^ templateCache at: aTypeString ifAbsent: [
+	^ self getTemplate: aTypeString ifAbsent: [self assert: false]
+]
+
+{ #category : #templates }
+SBMetaBlockFactory >> getTemplate: aTypeString ifAbsent: aBlock [
+
+	^ templateCache at: aTypeString ifAbsent: [ | rule |
+		rule := grammar rules at: aTypeString ifAbsent: [^ aBlock value].
+		
 		" reserve spot in case of recursion "
 		templateCache at: aTypeString put: nil.
-		templateCache at: aTypeString put: (self
-			buildBlocksFor: (grammar rules at: aTypeString ifAbsent: [self assert: false])
-			parentFieldName: nil
-			visitedSymbols: Set new)]
+		
+		templateCache
+			at: aTypeString
+			put: (self buildBlocksFor: rule parentFieldName: nil visitedSymbols: Set new)]
 ]
 
 { #category : #accessing }
@@ -6501,5 +6509,6 @@ SBMetaBlockFactory >> wordRule [
 { #category : #accessing }
 SBMetaBlockFactory >> wordRule: aString [
 
-	wordRule := (self buildRegexString: (grammar rules at: aString)) asRegex
+	aString ifNotNil: [
+		wordRule := (self buildRegexString: (grammar rules at: aString)) asRegex]
 ]

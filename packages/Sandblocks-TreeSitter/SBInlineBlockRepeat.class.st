@@ -10,6 +10,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> advanceParseFrom: aCursor index: aNumber [
+
+	aNumber > 1 ifTrue: [aCursor gotoNextSibling].
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> allElementsDo: aBlock [
 
 	element allElementsDo: aBlock.
@@ -38,6 +45,22 @@ SBInlineBlockRepeat >> buildEmpty [
 	^ self class new
 		multiple: multiple required: required element: element;
 		factory: factory
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> buildWithFields: aStream alternatives: aDictionary [
+
+	| continue |
+	continue := true.
+	
+	[continue and: [aStream atEnd not]] whileTrue: [
+		(self element buildWithFields: aStream alternatives: aDictionary)
+			ifNotNil: [:b | self addMorphBack: b]
+			ifNil: [continue := false]].
+	
+	^ ((required not or: [self submorphCount > 0]) and: [(aDictionary at: self ifAbsentPut: [0]) = 0])
+		ifTrue: [self]
+		ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -211,6 +234,12 @@ SBInlineBlockRepeat >> required [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> takeParseFrom: aCursor [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> takeParsedFrom: aCursor [
 
 	| count copy abort restore |
@@ -226,6 +255,7 @@ SBInlineBlockRepeat >> takeParsedFrom: aCursor [
 			ifNil: [
 				aCursor position: restore.
 				abort := true]].
+	
 	^ (count > 0 or: [required not]) ifTrue: [copy] ifFalse: [nil]
 ]
 

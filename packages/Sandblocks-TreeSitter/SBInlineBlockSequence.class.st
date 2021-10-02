@@ -16,6 +16,13 @@ SBInlineBlockSequence >> addedMorph: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSequence >> advanceParseFrom: aCursor index: aNumber [
+
+	aNumber > 1 ifTrue: [aCursor gotoNextSibling].
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSequence >> allElementsDo: aBlock [
 
 	elements do: [:el | el allElementsDo: aBlock].
@@ -44,6 +51,15 @@ SBInlineBlockSequence >> buildEmpty [
 	^ self class new
 		elements: self elements;
 		factory: factory
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSequence >> buildWithFields: aStream alternatives: aDictionary [
+
+	self elements do: [:element |
+		aStream atEnd ifTrue: [^ nil].
+		
+		self addMorphBack: ((element buildWithFields: aStream alternatives: aDictionary) ifNil: [^ nil])]
 ]
 
 { #category : #'as yet unclassified' }

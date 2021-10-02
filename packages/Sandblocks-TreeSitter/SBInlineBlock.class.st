@@ -17,6 +17,12 @@ SBInlineBlock >> actionProviders [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> advanceParseFrom: aCursor index: aNumber [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> allElementsDo: aBlock [
 
 	^ self subclassResponsibility
@@ -48,6 +54,12 @@ SBInlineBlock >> buildDefaultIn: anExplore [
 
 { #category : #'as yet unclassified' }
 SBInlineBlock >> buildEmpty [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> buildWithFields: aStream alternatives: aDictionary [
 
 	^ self subclassResponsibility
 ]
@@ -506,6 +518,12 @@ SBInlineBlock >> repeaterChild [
 SBInlineBlock >> statements [
 
 	^ self isStatementContainer ifTrue: [self childSandblocks] ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> takeParseFrom: aCursor [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }

@@ -9,6 +9,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockText >> advanceParseFrom: aCursor index: aNumber [
+
+	^ aCursor gotoFirstChild not
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockText >> allElementsDo: aBlock [
 
 	aBlock value: self
@@ -32,6 +38,13 @@ SBInlineBlockText >> buildEmpty [
 	^ self class new
 		regexString: self regexString;
 		factory: factory
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockText >> buildWithFields: aStream alternatives: aDictionary [
+
+	aStream peek second isString ifFalse: [^ nil].
+	self contents: aStream next second
 ]
 
 { #category : #'as yet unclassified' }
@@ -146,6 +159,13 @@ SBInlineBlockText >> regexString: aString [
 
 	regexString := aString.
 	regex := aString asRegex
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockText >> takeParseFrom: aCursor [
+
+	self contents: aCursor text.
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

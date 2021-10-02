@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockLabel >> advanceParseFrom: aCursor index: aNumber [
+
+	^ aCursor gotoFirstChild not
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockLabel >> allElementsDo: aBlock [
 
 	aBlock value: self
@@ -28,6 +34,14 @@ SBInlineBlockLabel >> buildEmpty [
 	^ self class new
 		label: self label;
 		factory: factory
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockLabel >> buildWithFields: aStream alternatives: aDictionary [
+
+	aStream peek second = self label
+		ifTrue: [aStream next]
+		ifFalse: [^ nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -133,6 +147,13 @@ SBInlineBlockLabel >> streamHasWord: aStream [
 	ret := self factory wordRule matchesStreamPrefix: aStream.
 	aStream position: start.
 	^ ret
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockLabel >> takeParseFrom: aCursor [
+
+	self contents: aCursor text.
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockChoice >> advanceParseFrom: aCursor index: aNumber [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockChoice >> allElementsDo: aBlock [
 
 	self alternatives do: [:alt | alt allElementsDo: aBlock].
@@ -54,6 +60,17 @@ SBInlineBlockChoice >> buildEmpty [
 	^ self class new
 		alternatives: self alternatives;
 		factory: factory
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockChoice >> buildWithFields: aStream alternatives: aDictionary [
+
+	| restore |
+	restore := aStream position.
+	self alternatives do: [:alternative |
+		(alternative buildWithFields: aStream alternatives: aDictionary) ifNotNil: [:alt | ^ self addMorphBack: alt].
+		aStream position: restore].
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -169,6 +186,12 @@ SBInlineBlockChoice >> printTitleOn: aStream [
 			m printTitleOn: aStream.
 			current ifTrue: [aStream nextPut: $]]]
 		separatedBy: [aStream nextPutAll: ' | ']
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockChoice >> takeParseFrom: aCursor [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

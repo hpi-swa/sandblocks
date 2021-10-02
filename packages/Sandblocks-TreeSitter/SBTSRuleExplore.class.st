@@ -185,12 +185,7 @@ SBTSRuleExplore >> restartFromLastChoiceIfDone: aBlock [
 	| option choice number |
 	lastOptions ifEmpty: [^ aBlock value].
 	
-	option := SBToggledCode comment: '' active: 1 do: {
-		[lastOptions last].
-		[
-			lastOptions reversed
-				detect: [:o | o first class ~= SBInlineBlockNever]
-				ifNone: [lastOptions last]]}.
+	option := lastOptions last.
 	choice := option first.
 	stack := option second collect: [:pair | pair copy].
 	stream position: option third.

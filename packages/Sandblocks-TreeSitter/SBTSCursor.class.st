@@ -23,9 +23,15 @@ SBTSCursor >> createRestorePoint [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSCursor >> currentFieldName [
+
+	^ library cursorCurrentFieldName: cursor
+]
+
+{ #category : #'as yet unclassified' }
 SBTSCursor >> factory [
 
-	^ library currentFactory
+	^ factory
 ]
 
 { #category : #'as yet unclassified' }

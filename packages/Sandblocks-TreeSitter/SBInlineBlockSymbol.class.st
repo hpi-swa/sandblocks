@@ -9,6 +9,23 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> advanceParseFrom: aCursor index: aNumber [
+
+	type = 'assignment' ifTrue: [self halt].
+	^ (factory type: aCursor type compatibleWith: type)
+		ifTrue: [ | descend |
+			" if types were only compatible but not matching this is a hidden symbol "
+			descend := aCursor type = type.
+			descend
+				ifTrue: [
+					self assert: self isHidden not.
+					self setProperty: #didDescend toValue: aCursor gotoFirstChild.
+					true]
+				ifFalse: [true]]
+		ifFalse: [false]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> allElementsDo: aBlock [
 
 	aBlock value: self
@@ -38,6 +55,16 @@ SBInlineBlockSymbol >> buildEmpty [
 	^ self class new
 		type: self type factory: factory;
 		field: self field
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> buildWithFields: aStream alternatives: aDictionary [
+
+	aStream peek second isMorph ifFalse: [^ nil].
+	
+	(factory type: aStream peek second type compatibleWith: self type)
+		ifTrue: [self addMorphBack: aStream next second]
+		ifFalse: [^ nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -136,6 +163,12 @@ SBInlineBlockSymbol >> instantiate [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> isHidden [
+
+	^ type first = $_ or: [factory isSuperType: type]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> isStatementContainer [
 
 	^ factory isStatementContainer: type
@@ -182,10 +215,21 @@ SBInlineBlockSymbol >> printTitleOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> takeParseFrom: aCursor [
+
+	aCursor type = type ifTrue: [
+		" if there was more on this level, fail "
+		aCursor gotoNextSibling ifTrue: [^ false].
+		(self valueOfProperty: #didDescend) ifTrue: [aCursor gotoParent]].
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> takeParsedFrom: aCursor [
 
 	^ (factory type: aCursor type compatibleWith: type)
 		ifTrue: [ | descend didDescend |
+			" if types were only compatible not matching this is a hidden symbol "
 			descend := aCursor type = type.
 			didDescend := false.
 			
@@ -193,6 +237,9 @@ SBInlineBlockSymbol >> takeParsedFrom: aCursor [
 			(self template takeParsedFrom: aCursor)
 				ifNotNil: [:m |
 					didDescend ifTrue: [
+						" if there was more we did a mistake and shouldn't go back up "
+						aCursor gotoNextSibling ifTrue: [^ nil].
+						
 						aCursor gotoParent.
 						aCursor gotoNextSibling].
 					self buildEmpty addMorphBack: m]
