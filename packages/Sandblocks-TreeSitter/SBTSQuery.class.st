@@ -36,22 +36,24 @@ SBTSQuery >> evalExpression: anExpression against: aBlock ifMatch: aMatchBlock i
 	anExpression isArray ifTrue: [ | exprs blocks |
 		exprs := anExpression readStream.
 		blocks := OrderedCollection withAll: aBlock childrenForQuery.
-		[exprs atEnd not] whileTrue: [ | expr nextBlock |
+		[exprs atEnd not] whileTrue: [ | expr nextBlocks |
 			expr := exprs next.
-			nextBlock := expr last = $:
+			nextBlocks := expr last = $:
 				ifTrue: [ | b |
 					b := blocks detect: [:child | child field = expr allButLast] ifNone: [^ aFailBlock value].
 					expr := exprs next.
-					b]
-				ifFalse: [blocks ifEmpty: [nil] ifNotEmpty: [blocks first]].
-			self
-				evalExpression: expr
-				against: nextBlock
-				ifMatch: [
-					self lastMatch: nextBlock.
-					blocks remove: nextBlock]
-				ifFail: [^ aFailBlock value]
-				ifSpecial: []].
+					{b}]
+				ifFalse: [blocks ifEmpty: [{nil}] ifNotEmpty: [blocks]].
+			(nextBlocks anySatisfy: [:nextBlock |
+				self
+					evalExpression: expr
+					against: nextBlock
+					ifMatch: [
+						self lastMatch: nextBlock.
+						blocks remove: nextBlock.
+						true]
+					ifFail: [false]
+					ifSpecial: [true]]) ifFalse: [^ aFailBlock value]].
 		exprs atEnd ifFalse: [^ aFailBlock value].
 		^ aMatchBlock value].
 	

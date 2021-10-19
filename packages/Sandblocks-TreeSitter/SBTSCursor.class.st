@@ -72,6 +72,12 @@ SBTSCursor >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSCursor >> library [
+
+	^ library
+]
+
+{ #category : #'as yet unclassified' }
 SBTSCursor >> library: aLibrary cursor: aCursor factory: aFactory [
 
 	library := aLibrary.
@@ -98,6 +104,25 @@ SBTSCursor >> position: aPosition [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSCursor >> resolveCurrentAlias [
+
+	| symbolIndex rule |
+	symbolIndex := self node context at: 4.
+	symbolIndex = 0 ifTrue: [symbolIndex := self node id symbol].
+	
+	rule := library language
+		resolveAlias: self type
+		symbolIndex: symbolIndex
+		factory: factory.
+	
+	self flag: #todo.
+	" support other types "
+	self assert: rule value type = 'SYMBOL'.
+	
+	^ rule value name
+]
+
+{ #category : #'as yet unclassified' }
 SBTSCursor >> restoreTo: aCursor [
 
 	cursor := aCursor
@@ -117,6 +142,12 @@ SBTSCursor >> shouldSkipParsedNode: aNode [
 SBTSCursor >> text [
 
 	^ library textForNode: self node
+]
+
+{ #category : #'as yet unclassified' }
+SBTSCursor >> textBetween: aNode and: anEndNode [
+
+	^ library textBetween: aNode and: anEndNode
 ]
 
 { #category : #'as yet unclassified' }

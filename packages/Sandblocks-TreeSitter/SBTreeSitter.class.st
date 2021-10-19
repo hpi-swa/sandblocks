@@ -2,7 +2,8 @@ Class {
 	#name : #SBTreeSitter,
 	#superclass : #ExternalLibrary,
 	#instVars : [
-		'currentString'
+		'currentString',
+		'language'
 	],
 	#category : #'Sandblocks-TreeSitter-FFI'
 }
@@ -16,15 +17,23 @@ SBTreeSitter class >> moduleName [
 { #category : #'as yet unclassified' }
 SBTreeSitter >> buildTreeFrom: aCursor [
 
-	| field fallback type fieldStream block |
+	| field fallback type fieldStream block template |
 	type := aCursor type.
 	field := aCursor currentFieldName.
 	fallback := {field. aCursor text}.
-	aCursor factory getTemplate: type ifAbsent: [^ aCursor text].
+	template := aCursor factory getTemplate: type ifAbsent: [^ aCursor text].
+	template = 'ALIAS' ifTrue: [type := aCursor resolveCurrentAlias].
 	
 	fieldStream := ((Array streamContents: [:stream |
-		aCursor gotoFirstChild ifTrue: [
-			[stream nextPut: {aCursor currentFieldName. self buildTreeFrom: aCursor}] doWhileFalse: [aCursor gotoNextSibling].
+		aCursor gotoFirstChild ifTrue: [ | first |
+			first := aCursor node.
+			[stream nextPut: {aCursor currentFieldName. self buildTreeFrom: aCursor}] doWhileFalse: [ | gap atEnd |
+				atEnd := aCursor gotoNextSibling.
+				(atEnd not and: [aCursor factory noteUncapturedText includes: type]) ifTrue: [
+					gap := aCursor textBetween: first and: aCursor node.
+					gap size > 0 ifTrue: [stream nextPut: {#sp. gap}].
+					first := aCursor node].
+				atEnd].
 			aCursor gotoParent]]) ifEmpty: [{fallback}]) readStream.
 	
 	block := SBTSParseExplore new
@@ -98,10 +107,53 @@ SBTreeSitter >> cursorNew: root [
 	^ self externalCallFailed
 ]
 
+{ #category : #helper }
+SBTreeSitter >> fetchLibrary: aGithubString language: language andRetry: aBlock [
+
+	SBToggledCode comment: '' active: 1 do: {
+		[ | path filename |
+			filename := 'tree-sitter-{1}.so' format: {language}.
+			path := (MCFetchGithubRepository new
+				projectPath: aGithubString
+				projectVersion: 'master'
+				repoPath: nil) directory.
+			OSProcess waitForCommand: ('cd {1}; npx -p tree-sitter-cli tree-sitter generate' format: {path fullName}).
+			OSProcess waitForCommand: ('cd {1}; gcc -shared -fPIC -o {2} src/parser.c -I./src/' format: {path fullName. filename}).
+			path / filename copyHere: FileDirectory default / filename.
+			aBlock value].
+		[ | zip |
+			zip := WebClient httpGet: 'https://api.github.com/repos/', aGithubString, '/zipball/master'.
+			ZipArchive new
+				readFrom: zip getContent readStream binary;
+				extractAllTo: (FileDirectory default / 'tree-sitter-languages') assureExistence
+					informing: nil
+					overwrite: false]}
+]
+
+{ #category : #'ffi languages' }
+SBTreeSitter >> javascript [
+
+	<apicall: SBTSLanguage* tree_sitter_javascript () module: 'tree-sitter-javascript'>
+	^ self externalCallFailed
+]
+
 { #category : #'ffi languages' }
 SBTreeSitter >> json [
 
-	<apicall: void* tree_sitter_json () module: 'tree-sitter-json'>
+	<apicall: SBTSLanguage* tree_sitter_json () module: 'tree-sitter-json'>
+	^ self externalCallFailed
+]
+
+{ #category : #accessing }
+SBTreeSitter >> language [
+
+	^ language
+]
+
+{ #category : #ffi }
+SBTreeSitter >> language: language symbolForName: aString length: aNumber isNamed: aBoolean [
+
+	<apicall: uint16_t ts_language_symbol_for_name (void* char* uint32_t bool)>
 	^ self externalCallFailed
 ]
 
@@ -127,6 +179,13 @@ SBTreeSitter >> nodeParent: aNode [
 ]
 
 { #category : #ffi }
+SBTreeSitter >> nodePrivAlias: aNode [
+
+	<apicall: uint16_t ts_node__alias (SBTSNode)>
+	^ self externalCallFailed
+]
+
+{ #category : #ffi }
 SBTreeSitter >> nodeStartByte: aNode [
 
 	<apicall: uint32_t ts_node_start_byte (SBTSNode)>
@@ -141,6 +200,13 @@ SBTreeSitter >> nodeString: aNode [
 ]
 
 { #category : #ffi }
+SBTreeSitter >> nodeSymbol: aNode [
+
+	<apicall: uint16_t ts_node_symbol (SBTSNode)>
+	^ self externalCallFailed
+]
+
+{ #category : #ffi }
 SBTreeSitter >> nodeType: aNode [
 
 	<apicall: char* ts_node_type (SBTSNode)>
@@ -150,9 +216,9 @@ SBTreeSitter >> nodeType: aNode [
 { #category : #'as yet unclassified' }
 SBTreeSitter >> parse: aString language: aSymbol factory: aFactory [
 
-	| language parser root tree block cursor |
+	| parser root tree block cursor |
 	currentString := aString withUnixLineEndings.
-	language := self perform: aSymbol.
+	language := self perform: aSymbol asSymbol.
 	
 	parser := self parserNew.
 	self parser: parser setLanguage: language.
@@ -192,7 +258,7 @@ SBTreeSitter >> parser: aParserPointer old: aTreePointer parseString: aString le
 { #category : #ffi }
 SBTreeSitter >> parser: aParserPointer setLanguage: aLanguagePointer [
 
-	<apicall: void ts_parser_set_language (void* void*)> 
+	<apicall: void ts_parser_set_language (void* SBTSLanguage*)> 
 	^ self externalCallFailed
 ]
 
@@ -241,8 +307,22 @@ SBTreeSitter >> printTreeFrom: aCursor depth: aNumber [
 { #category : #'ffi languages' }
 SBTreeSitter >> python [
 
-	<apicall: void* tree_sitter_python () module: 'tree-sitter-python'>
+	<apicall: SBTSLanguage* tree_sitter_python () module: 'tree-sitter-python'>
 	^ self externalCallFailed
+]
+
+{ #category : #'ffi languages' }
+SBTreeSitter >> ruby [
+
+	<apicall: void* tree_sitter_ruby () module: 'tree-sitter-ruby'>
+	^ self externalCallFailed
+]
+
+{ #category : #helper }
+SBTreeSitter >> textBetween: aNode and: anEndNode [
+	" TODO: will break with UTF-8 "
+
+	^ currentString copyFrom: (self nodeEndByte: aNode) + 1 to: (self nodeStartByte: anEndNode)
 ]
 
 { #category : #helper }

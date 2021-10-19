@@ -595,12 +595,10 @@ SBStMessageSend >> validSelector [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> veryDeepCopyWith: deepCopier [
 
-	" assure that copies of us have a unique id "
 	| new |
+	" assure that copies of us have a unique id "
 	new := super veryDeepCopyWith: deepCopier.
-	self receiver ifNil: [
-		self assert: self isInCascade.
-		new receiver: self owner receiver veryDeepCopy].
+	self receiver ifNil: [new receiver: self newNullBlock].
 	^ new
 ]
 

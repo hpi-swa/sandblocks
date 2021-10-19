@@ -183,6 +183,25 @@ SBInlineBlock >> deleteTargetFor: aBlock [
 	^ nil
 ]
 
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> differenceTo: aMorph labelsDo: aBlock [
+
+	| ret |
+	ret := nil.
+	self labelDifferenceOf: aMorph do: [:a :b |
+		ret ifNil: [
+			ret := aBlock
+				value: (String streamContents: [:stream |
+					(a ownerChain select: [:morph | morph isKindOf: SBInlineBlockSymbol]) reversed
+						do: [:morph | stream nextPutAll: morph type]
+						separatedBy: [stream nextPutAll: ' >> ']])
+				value: (String streamContents: [:stream |
+					(b ownerChain select: [:morph | morph isKindOf: SBInlineBlockSymbol]) reversed
+						do: [:morph | stream nextPutAll: morph type]
+						separatedBy: [stream nextPutAll: ' >> ']])]].
+	^ ret
+]
+
 { #category : #geometry }
 SBInlineBlock >> extent: aPoint [
 
@@ -214,11 +233,10 @@ SBInlineBlock >> field [
 SBInlineBlock >> firstDifferingBlocksWith: aMorph do: aBlock ifNone: anotherBlock [
 
 	(self hasSameStructureAs: aMorph) ifFalse: [^ aBlock value: self value: aMorph].
-	(self hasSubmorphs and: [aMorph hasSubmorphs and: [self firstSubmorph isInlineBlock]]) ifTrue: [
-		^ self firstSubmorph
-			firstDifferingBlocksWith: aMorph firstSubmorph
-			do: aBlock
-			ifNone: anotherBlock].
+	self submorphCount = aMorph submorphCount ifTrue: [
+		self submorphs with: aMorph submorphs do: [:a :b |
+			(a isKindOf: SBInlineBlock) ifTrue: [
+				a firstDifferingBlocksWith: b do: aBlock ifNone: anotherBlock]]].
 	^ anotherBlock value
 ]
 
@@ -399,6 +417,17 @@ SBInlineBlock >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> labelDifferenceOf: aMorph do: aBlock [
+
+	self submorphs size = aMorph submorphs size ifFalse: [^ false].
+	
+	self submorphs
+		with: aMorph submorphs
+		do: [:a :b | (a labelDifferenceOf: b do: aBlock) ifFalse: [^ false]].
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> layoutCommands [
 
 	^ self subclassResponsibility
@@ -422,6 +451,12 @@ SBInlineBlock >> lengthOfLeftMostPath [
 	^ self submorphCount > 0
 		ifTrue: [1 + self firstSubmorph lengthOfLeftMostPath]
 		ifFalse: [1]
+]
+
+{ #category : #accessing }
+SBInlineBlock >> matchesQuery: aString [
+
+	^ SBTSQuery new execute: aString against: self capturesDo: [:b | ]
 ]
 
 { #category : #geometry }
@@ -500,6 +535,12 @@ SBInlineBlock >> printTitleOn: aStream [
 	^ self subclassResponsibility
 ]
 
+{ #category : #accessing }
+SBInlineBlock >> query: aString capturesDo: aBlock [
+
+	^ SBTSQuery new execute: aString against: self capturesDo: aBlock
+]
+
 { #category : #'as yet unclassified' }
 SBInlineBlock >> removedMorph: aMorph [
 
@@ -510,7 +551,7 @@ SBInlineBlock >> removedMorph: aMorph [
 { #category : #'as yet unclassified' }
 SBInlineBlock >> repeaterChild [
 
-	self submorphsDo: [:m | m isBlock ifFalse: [self firstSubmorph isInlineBlock ifTrue: [self firstSubmorph repeaterChild ifNotNil: [:t | ^ t]]]].
+	self submorphsDo: [:m | (m isSandblock not and: [m isInlineBlock]) ifTrue: [m repeaterChild ifNotNil: [:c | ^ c]]].
 	^ nil
 ]
 
@@ -551,11 +592,26 @@ SBInlineBlock >> tryInterpretInput: aString before: aBoolean [
 		choicesForInput: aString
 		before: aBoolean
 		do: [:choices :root |
-			choices size = 1 ifTrue: [
-				self sandblockEditor do: (SBReplaceCommand new
-					target: root;
-					replacer: choices first).
-				choices first inputContainedUnknown]]
+			choices size = 1
+				ifTrue: [
+					self sandblockEditor do: (SBReplaceCommand new
+						target: root;
+						replacer: choices first).
+					choices first inputContainedUnknown]
+				ifFalse: [ | shortest shortestLabel labels selected |
+					shortest := choices detectMin: [:choice | choice lengthOfLeftMostPath].
+					shortestLabel := nil.
+					labels := (choices copyWithout: shortest) collect: [:choice |
+						shortest differenceTo: choice labelsDo: [:a :b |
+							shortestLabel ifNil: [shortestLabel := a].
+							b]].
+					selected := (UIManager default
+						chooseFrom: {shortestLabel}, labels
+						values: {shortest}, (choices copyWithout: shortest)) ifNil: [^ self].
+					self sandblockEditor do: (SBReplaceCommand new
+						target: root;
+						replacer: selected).
+					selected firstBlock select; inputContainedUnknown]]
 		ifNone: []
 ]
 

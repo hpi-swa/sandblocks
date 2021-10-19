@@ -54,6 +54,19 @@ SBTSQueryTests >> testMatchAnonymousNode [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSQueryTests >> testMatchAnyChild [
+
+	| factory |
+	factory := SBMetaBlockFactory new.
+	self assert: (SBTSQuery new
+		execute: '(array (identifier))'
+		against: ((SBInlineBlockSymbol new type: 'array' factory: factory)
+			addMorphBack: (SBInlineBlockSymbol new type: 'number' factory: factory);
+			addMorphBack: (SBInlineBlockSymbol new type: 'identifier' factory: factory))
+		capturesDo: [:c | ])
+]
+
+{ #category : #'as yet unclassified' }
 SBTSQueryTests >> testMatchFieldName [
 
 	| factory |

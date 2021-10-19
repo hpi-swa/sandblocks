@@ -1,15 +1,14 @@
 Class {
-	#name : #SBTSNode,
+	#name : #SBTSSubtree,
 	#superclass : #ExternalStructure,
 	#category : #'Sandblocks-TreeSitter-FFI'
 }
 
 { #category : #'as yet unclassified' }
-SBTSNode class >> fields [
+SBTSSubtree class >> fields [
 
 	^ #(
-		(context 'uint32_t[4]')
-		(id 'SBTSSubtree*')
-		(tree 'void*')
+		(ignore 'uint8_t')
+		(symbol 'uint8_t')
 	)
 ]

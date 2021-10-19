@@ -897,12 +897,9 @@ SBBlock >> drawSubmorphsOn: aCanvas [
 	self valid ifFalse: [self drawInvalidBorderOn: aCanvas].
 	super drawSubmorphsOn: aCanvas.
 	
-	
 	self drawChangedMarker: aCanvas.
 	
-	self decorators do: [:d | d postDrawOn: aCanvas].
-	
-	self layoutPolicy  ifNotNil: [(self layoutPolicy respondsTo: #debugDrawOn:in:) ifTrue: [self layoutPolicy debugDrawOn: aCanvas in: self]]
+	self decorators do: [:d | d postDrawOn: aCanvas]
 ]
 
 { #category : #drawing }

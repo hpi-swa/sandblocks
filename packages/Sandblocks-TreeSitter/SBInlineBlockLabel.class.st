@@ -116,6 +116,12 @@ SBInlineBlockLabel >> label: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockLabel >> labelDifferenceOf: aMorph do: aBlock [
+
+	^ self label = aMorph label
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockLabel >> layoutCommands [
 
 	^ SBAlgebraCommand container

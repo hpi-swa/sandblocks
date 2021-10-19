@@ -136,7 +136,10 @@ SBInlineBlockRepeat >> hasSameStructureAs: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> inline [
 
-	^ self inlineIfPossible
+	^ SBToggledCode
+		comment: ''
+		active: 1
+		do: {[self owner notNil and: [self owner isInlineBlock]]. [self inlineIfPossible]}
 ]
 
 { #category : #'as yet unclassified' }

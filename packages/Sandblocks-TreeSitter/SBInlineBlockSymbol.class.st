@@ -66,7 +66,9 @@ SBInlineBlockSymbol >> buildWithFields: aStream alternatives: aDictionary [
 		ifTrue: [ | block |
 			self assert: self hasSubmorphs not.
 			block := aStream next second.
-			self addMorphBack: (block type = self type ifTrue: [block firstSubmorph buildCopy] ifFalse: [self template buildEmpty addMorphBack: block]).
+			self addMorphBack: (block type = self type
+				ifTrue: [block firstSubmorph buildCopy]
+				ifFalse: [self template buildEmpty addMorphBack: block]).
 			true]
 		ifFalse: [false]
 ]
@@ -81,7 +83,9 @@ SBInlineBlockSymbol >> candidatesForWrappingOn: aStream [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> childrenForQueryDo: aBlock [
 
-	aBlock value: self
+	(factory isSuperType: type)
+		ifTrue: [self firstSubmorph childrenForQueryDo: aBlock]
+		ifFalse: [aBlock value: self]
 ]
 
 { #category : #'as yet unclassified' }
@@ -180,6 +184,18 @@ SBInlineBlockSymbol >> isStatementContainer [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> labelDifferenceOf: aMorph do: aBlock [
+
+	self type = aMorph type ifFalse: [
+		aBlock value: self value: aMorph.
+		^ false].
+	(self firstSubmorph labelDifferenceOf: aMorph firstSubmorph do: aBlock) ifFalse: [
+		aBlock value: self value: aMorph.
+		^ false].
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> layoutCommands [
 
 	^ SBAlgebraCommand container
@@ -190,9 +206,13 @@ SBInlineBlockSymbol >> layoutCommands [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> newEmptyChildNear: aBlock before: aBoolean [
 
-	^ (self firstSubmorph isKindOf: SBInlineBlockRepeat)
-		ifTrue: [self firstSubmorph newEmptyChildNear: aBlock before: aBoolean]
-		ifFalse: [nil]
+	SBToggledCode comment: '' active: 1 do: {
+		[self repeaterChild newEmptyChildNear: aBlock before: aBoolean].
+		[
+			aBlock ifNotNil: [(aBlock ownerThatIsA: SBInlineBlockRepeat) ifNotNil: [:container | ^ container newEmptyChildNear: aBlock before: aBoolean]].
+			^ (self firstSubmorph isKindOf: SBInlineBlockRepeat)
+				ifTrue: [self firstSubmorph newEmptyChildNear: aBlock before: aBoolean]
+				ifFalse: [nil]]}
 ]
 
 { #category : #'as yet unclassified' }

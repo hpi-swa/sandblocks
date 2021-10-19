@@ -43,7 +43,13 @@ SBInlineBlockText >> buildEmpty [
 { #category : #'as yet unclassified' }
 SBInlineBlockText >> buildWithFields: aStream alternatives: aDictionary [
 
-	aStream peek second isString ifFalse: [^ false].
+	aStream peek second isString ifFalse: [
+		(regex matches: '')
+			ifTrue: [
+				self contents: ''.
+				^ true]
+			ifFalse: [^ false]].
+	
 	self contents: aStream next second.
 	^ true
 ]
@@ -115,6 +121,12 @@ SBInlineBlockText >> initialize [
 SBInlineBlockText >> inline [
 
 	^ self inlineIfPossible
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockText >> labelDifferenceOf: aMorph do: aBlock [
+
+	^ self regexString = aMorph regexString
 ]
 
 { #category : #'as yet unclassified' }
