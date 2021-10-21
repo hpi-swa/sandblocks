@@ -19,6 +19,7 @@ SBSmallError >> click: anEvent [
 { #category : #'as yet unclassified' }
 SBSmallError >> currentBlock [
 
+	self flag: #todo. " breaks for processes that timed out and have a very deep stack "
 	process suspendedContext findContextSuchThat: [:context |
 		self sandblockEditor
 			blockFor: context method homeMethod

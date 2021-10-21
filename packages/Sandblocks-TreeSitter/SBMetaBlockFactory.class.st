@@ -83,6 +83,7 @@ SBMetaBlockFactory class >> javascript [
 			f grammar rules
 				at: '_ternary_qmark'
 				put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> '?'}).
+			f grammar at: 'inline' put: f grammar inline, {'_ternary_qmark'}.
 			f grammar rules statement members: (f grammar rules statement members reject: [:m | m name = 'labeled_statement'])]
 		postprocess: [:f |
 			f rootRuleName: 'program'.
@@ -7512,6 +7513,34 @@ SBMetaBlockFactory class >> loadLanguage: aGithubString name: aString [
 	self generateFFIMethodFor: aString
 ]
 
+{ #category : #'block deduplication' }
+SBMetaBlockFactory class >> maxRecursionCountOf: aBlock [
+
+	| max maxType |
+	" find the maximum number of repeated elements in this block"
+	max := 0.
+	maxType := nil.
+	aBlock allMorphsDo: [:morph |
+		morph hasSubmorphs ifFalse: [ | typeCount |
+			typeCount := Dictionary new.
+			morph allOwnersDo: [:owner | (owner isKindOf: SBInlineBlockSymbol) ifTrue: [typeCount at: owner type put: (typeCount at: owner type ifAbsentPut: [0]) + 1]].
+			max := typeCount values max max: max.
+			typeCount values max = max ifTrue: [maxType := typeCount associations detectMax: [:m | m value]]]].
+	Transcript showln: {aBlock. max. maxType}.
+	^ max
+]
+
+{ #category : #'block deduplication' }
+SBMetaBlockFactory class >> maxSimpleRecursionCountOf: aBlock [
+
+	| typeCount |
+	" find the maximum number of repeated elements in this block"
+	typeCount := Dictionary new.
+	aBlock allMorphsDo: [:morph | (morph isKindOf: SBInlineBlockSymbol) ifTrue: [typeCount at: morph type put: (typeCount at: morph type ifAbsentPut: [0]) + 1]].
+	Transcript showln: {aBlock. typeCount associations detectMax: [:assoc | assoc value]}.
+	^ typeCount values max
+]
+
 { #category : #languages }
 SBMetaBlockFactory class >> python [
 	" https://github.com/tree-sitter/tree-sitter-python/blob/master/src/grammar.json "
@@ -12626,11 +12655,19 @@ SBMetaBlockFactory class >> python [
 { #category : #'block deduplication' }
 SBMetaBlockFactory class >> removeDuplicateChoices: aCollection [
 
-	| shortest |
 	aCollection size = 1 ifTrue: [^ aCollection].
 	
-	shortest := aCollection detectMin: [:choice | choice lengthOfLeftMostPath].
-	aCollection select: [:choice | choice ~= shortest and: []]
+	SBToggledCode comment: '' active: 1 do: {
+		[ | min |
+			min := aCollection detectMin: [:m | self maxRecursionCountOf: m].
+			^ aCollection select: [:m | (self maxRecursionCountOf: m) = (self maxRecursionCountOf: min)]].
+		[ | shortest |
+			shortest := aCollection detectMin: [:choice | choice lengthOfLeftMostPath].
+			^ aCollection select: [:choice |
+				choice = shortest or: [ | a b |
+					a := choice leftMostRule ownerThatIsA: SBInlineBlockSymbol.
+					b := shortest leftMostRule ownerThatIsA: SBInlineBlockSymbol.
+					a notNil and: [b notNil and: [a type ~= b type]]]]]}
 ]
 
 { #category : #languages }
@@ -19242,6 +19279,10 @@ SBMetaBlockFactory >> cleanGrammar [
 		comment: ''
 		active: 1
 		do: {[grammar rules do: [:rule | self removeDuplicateAlternatives: rule]]}.
+	SBToggledCode
+		comment: ''
+		active: 1
+		do: {[grammar rules do: [:rule | self mergeNestedChoices: rule]]}.
 	grammar rules do: [:rule | self checkStructure: rule]
 ]
 
@@ -19272,7 +19313,7 @@ SBMetaBlockFactory >> delimitedRules: aDictionary [
 { #category : #helper }
 SBMetaBlockFactory >> escapeStringForRegex: aString [
 
-	^ aString copyWithRegex: '[.*+?^${}()|\[\]\\]' matchesTranslatedUsing: [:m | '\', m]
+	^ aString copyWithRegex: '[.*+?^${}:()|\[\]\\]' matchesTranslatedUsing: [:m | '\', m]
 ]
 
 { #category : #accessing }
@@ -19455,6 +19496,21 @@ SBMetaBlockFactory >> isStatementContainer: aString [
 SBMetaBlockFactory >> isSuperType: aTypeString [
 
 	^ supertypes includes: aTypeString
+]
+
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> mergeNestedChoices: anObject [
+
+	anObject type = 'CHOICE' ifTrue: [
+		(anObject members noneSatisfy: [:m | m type = 'BLANK']) ifTrue: [
+			anObject members: (Array streamContents: [:stream |
+				anObject members do: [:nested |
+					(nested type = 'CHOICE' and: [nested members noneSatisfy: [:m | m type = 'BLANK']])
+						ifTrue: [stream nextPutAll: nested members]
+						ifFalse: [stream nextPut: nested]]])]].
+	
+	anObject content ifNotNil: [:c | self mergeNestedChoices: c].
+	anObject members ifNotNil: [anObject members do: [:m | self mergeNestedChoices: m]]
 ]
 
 { #category : #'grammar clean' }

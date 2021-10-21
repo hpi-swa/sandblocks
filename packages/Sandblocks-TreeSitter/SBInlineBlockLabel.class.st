@@ -74,7 +74,8 @@ SBInlineBlockLabel >> contents [
 SBInlineBlockLabel >> firstDifferingBlocksWith: aMorph do: aBlock [
 
 	self class ~= aMorph class ifTrue: [^ aBlock value: self value: aMorph].
-	self label ~= aMorph label ifTrue: [^ aBlock value: self value: aMorph]
+	self label ~= aMorph label ifTrue: [^ aBlock value: self value: aMorph].
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -177,26 +178,24 @@ SBInlineBlockLabel >> takeParsedFrom: aCursor [
 { #category : #'as yet unclassified' }
 SBInlineBlockLabel >> takeStreamFrom: option [
 
-	^ option stream atEnd not and: [
-		(self factory notNil and: [self factory wordRule notNil and: [self streamHasWord: option stream]])
+	^ option atEnd not and: [
+		(self factory notNil and: [self factory wordRule notNil and: [self streamHasWord: option]])
 			ifTrue: [ | start nextWord |
-				start := option stream position + 1.
+				start := option position + 1.
 				
-				self factory wordRule matchesStreamPrefix: option stream.
-				nextWord := option stream originalContents
-					copyFrom: start
-					to: option stream position.
+				self factory wordRule matchesStreamPrefix: option.
+				nextWord := option originalContents copyFrom: start to: option position.
 				^ (option matchFullToken
 					ifTrue: [self label = nextWord]
 					ifFalse: [nextWord = (self label first: (nextWord size min: self label size))])
 					ifTrue: [true]
 					ifFalse: [
-						option stream position: start - 1.
+						option position: start - 1.
 						false]]
 			ifFalse: [
 				option matchFullToken
-					ifTrue: [option stream nextMatchAll: self label]
-					ifFalse: [option stream nextMatchAll: (self label first: (option stream size - option stream position min: self label size))]]]
+					ifTrue: [option nextMatchAll: self label]
+					ifFalse: [option nextMatchAll: (self label first: (option size - option position min: self label size))]]]
 ]
 
 { #category : #'as yet unclassified' }

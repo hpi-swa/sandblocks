@@ -14,15 +14,122 @@ Class {
 		'nestedBlock',
 		'nestedBefore',
 		'recursionDepth',
-		'stringIsLabel'
+		'stringIsLabel',
+		'currentBlock',
+		'positions',
+		'maxRecursionDepth'
 	],
 	#category : #'Sandblocks-TreeSitter'
 }
+
+{ #category : #deduplicate }
+SBTSRuleExplore class >> deduplicateResults: aCollection [
+
+	| candidates |
+	" try and find a minimum of symbols the user hasn't typed "
+	SBToggledCode comment: '' active: 1 do: {
+		[candidates := aCollection collect: #first].
+		[ | min |
+			min := 0.
+			candidates := OrderedCollection new.
+			aCollection do: [:result | | count |
+				count := self newLabelCountIn: result first usedLabels: result second.
+				count < min ifTrue: [
+					min := count.
+					candidates removeAll].
+				count = min ifTrue: [candidates add: result first]]]}.
+	
+	" look for blocks that are contain one of the other blocks, starting from their first different ancestor "
+	^ candidates reject: [:candidate |
+		SBToggledCode comment: '' active: 1 do: {
+			[
+				(candidates anySatisfy: [:compare | | diff |
+					diff := candidate firstDifferingBlocksWith: compare do: [:a :b | b unwrapSuperType].
+					candidate containsEqual: diff]) or: [candidate leftMostChain anySatisfy: [:root | candidates anySatisfy: [:compare | root ~= compare and: [root hasSameContentsAs: compare]]]]].
+			[
+				candidate leftMostChain anySatisfy: [:root |
+					candidates anySatisfy: [:compare |
+						root ~= compare and: [
+							root hasSameContentsAs: (SBToggledCode
+								comment: ''
+								active: 1
+								do: {[compare]. [root firstDifferingBlocksWith: compare do: [:mine :their | their]]})]]]]}]
+]
+
+{ #category : #deduplicate }
+SBTSRuleExplore class >> labelCountInTemplate: aTemplate [
+
+	| count |
+	count := 0.
+	aTemplate allElementsDo: [:elem |
+		(elem isKindOf: SBInlineBlockLabel) ifTrue: [count := count + 1].
+		(elem isKindOf: SBTSUnknown) ifTrue: [count := count + (self labelCountInTemplate: elem template value)]].
+	^ count
+]
+
+{ #category : #deduplicate }
+SBTSRuleExplore class >> newLabelCountIn: aBlock usedLabels: aCollection [
+
+	| count |
+	count := 0.
+	aBlock allMorphsDo: [:m |
+		((m isKindOf: SBInlineBlockLabel) and: [(aCollection includes: m) not]) ifTrue: [count := count + 1].
+		(m isKindOf: SBTSUnknown) ifTrue: [count := count + (self labelCountInTemplate: m template value)]].
+	^ count
+]
+
+{ #category : #helper }
+SBTSRuleExplore class >> promptBlockChoice: aCollectionOfBlocks values: aCollectionOfValues [
+
+	| dialog |
+	(ProvideAnswerNotification signal: nil) ifNotNil: [:answer |
+		(answer = #cancel or: [answer isNil]) ifTrue: [^ nil].
+		^ aCollectionOfValues at: answer].
+	
+	aCollectionOfValues ifEmpty: [^ nil].
+	
+	dialog := DialogWindow new
+		title: 'Please Choose';
+		message: '';
+		filterEnabled: true;
+		autoCancel: true;
+		yourself.
+	"Like a pop-up menu, click anywhere to dismiss."
+	aCollectionOfBlocks withIndexDo: [:ea :index |
+		dialog
+			createButton: (ea
+				fullBounds;
+				yourself)
+			value: index].
+	dialog selectedButtonIndex: 1.
+	^ dialog getUserResponseAtHand ifNotNil: [:index | aCollectionOfValues at: index]
+]
+
+{ #category : #helper }
+SBTSRuleExplore >> addResult [
+
+	| copiedReferences copy index |
+	copiedReferences := OrderedDictionary new.
+	root allMorphsDo: [:m | copiedReferences add: m -> nil].
+	copy := root buildCopy.
+	index := 1.
+	copy allMorphsDo: [:m |
+		(copiedReferences atIndex: index) value: m.
+		index := index + 1].
+	
+	results add: {copy. positions copy mapValues: [:block | copiedReferences at: block]}
+]
 
 { #category : #accessing }
 SBTSRuleExplore >> addVisitedSymbol: aSymbol [
 
 	visitedSymbols add: aSymbol
+]
+
+{ #category : #stream }
+SBTSRuleExplore >> atEnd [
+
+	^ stream atEnd
 ]
 
 { #category : #accessing }
@@ -31,14 +138,21 @@ SBTSRuleExplore >> canVisitSymbol: aSymbol [
 	^ (stack allButLast count: [:pair | (pair second isKindOf: SBInlineBlockSymbol) and: [pair second type = aSymbol]]) <= recursionDepth
 ]
 
+{ #category : #deduplicate }
+SBTSRuleExplore >> deduplicate [
+
+	^ self class deduplicateResults: results
+]
+
 { #category : #explore }
 SBTSRuleExplore >> doExplore: aBlock withNested: aSubBlock nestedBefore: aBoolean for: aString startSymbol: aSymbolString [
 
+	matchFullToken := aString notEmpty and: [aString last = Character space].
+	stream := (matchFullToken ifTrue: [aString allButLast] ifFalse: [aString]) readStream.
+	
 	self resetState.
 	
-	matchFullToken := aString notEmpty and: [aString last = Character space].
 	stringIsLabel := aString notEmpty and: [aBlock factory notNil and: [aBlock factory fullTokensInclude: aString withBlanksTrimmed]].
-	stream := (matchFullToken ifTrue: [aString allButLast] ifFalse: [aString]) readStream.
 	nestedBlock := aSubBlock.
 	nestedBefore := aBoolean.
 	
@@ -55,7 +169,7 @@ SBTSRuleExplore >> doExplore: aBlock withNested: aSubBlock nestedBefore: aBoolea
 				at: index
 				ifPresent: [:template | | child |
 					pair at: 1 put: index + 1.
-					(nestedBlock notNil and: [foundNested not and: [((nestedBefore and: [stream position = 0]) or: [nestedBefore not and: [stream atEnd]]) and: [template hasSameStructureAs: nestedBlock]]])
+					(nestedBlock notNil and: [foundNested not and: [((nestedBefore and: [self position = 0]) or: [nestedBefore not and: [self atEnd]]) and: [template hasSameStructureAs: nestedBlock]]])
 						ifTrue: [
 							child := nestedBlock buildCopy.
 							foundNested := true]
@@ -69,24 +183,24 @@ SBTSRuleExplore >> doExplore: aBlock withNested: aSubBlock nestedBefore: aBoolea
 					self done
 						ifTrue: [
 							stack ifEmpty: [
-								results add: root buildCopy.
-								self restartFromLastChoiceIfDone: [^ results]]]
+								self addResult.
+								self restartFromLastChoiceIfDone: [^ self]]]
 						ifFalse: [
-							((nestedBefore not or: [foundNested]) and: [block takeStreamFrom: self])
+							((nestedBefore not or: [foundNested]) and: [self tryTakeStreamWith: block])
 								ifTrue: [
 									stack ifEmpty: [
-										self done ifTrue: [results add: root buildCopy].
-										self restartFromLastChoiceIfDone: [^ results]]]
-								ifFalse: [self restartFromLastChoiceIfDone: [^ results]]]]]] repeat
+										self done ifTrue: [self addResult].
+										self restartFromLastChoiceIfDone: [^ self]]]
+								ifFalse: [self restartFromLastChoiceIfDone: [^ self]]]]]] repeat
 ]
 
 { #category : #helper }
 SBTSRuleExplore >> done [
 
-	^ stream atEnd and: [nestedBlock isNil or: [foundNested]]
+	^ self atEnd and: [nestedBlock isNil or: [foundNested]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBTSRuleExplore >> expandSymbol: aSymbolBlock [
 
 	^ true
@@ -95,14 +209,14 @@ SBTSRuleExplore >> expandSymbol: aSymbolBlock [
 { #category : #explore }
 SBTSRuleExplore >> explore: aBlock for: aString [
 
-	^ self explore: aBlock withNested: nil nestedBefore: false for: aString startSymbol: nil
+	^ (self explore: aBlock withNested: nil nestedBefore: false for: aString startSymbol: nil) collect: #first
 ]
 
 { #category : #explore }
 SBTSRuleExplore >> explore: aBlock withNested: aSubBlock nestedBefore: aBoolean for: aString startSymbol: aSymbolString [
 
 	recursionDepth := 0.
-	2 timesRepeat: [
+	maxRecursionDepth + 1 timesRepeat: [
 		self
 			doExplore: aBlock
 			withNested: aSubBlock
@@ -139,14 +253,63 @@ SBTSRuleExplore >> indexFor: aChoice [
 SBTSRuleExplore >> initialize [
 
 	super initialize.
-	
-	
+	maxRecursionDepth := 1
 ]
 
 { #category : #accessing }
 SBTSRuleExplore >> matchFullToken [
 
 	^ matchFullToken
+]
+
+{ #category : #accessing }
+SBTSRuleExplore >> maxRecursionDepth: aNumber [
+
+	maxRecursionDepth := aNumber
+]
+
+{ #category : #stream }
+SBTSRuleExplore >> next [
+
+	stream position + 1 <= positions size ifTrue: [positions at: stream position + 1 put: currentBlock].
+	^ stream next
+]
+
+{ #category : #stream }
+SBTSRuleExplore >> nextMatchAll: aString [
+
+	| save |
+	save := self position.
+	aString do: [:each |
+		self next = each ifFalse: [
+			self position: save.
+			^ false]].
+	^ true
+]
+
+{ #category : #stream }
+SBTSRuleExplore >> originalContents [
+
+	^ stream originalContents
+]
+
+{ #category : #stream }
+SBTSRuleExplore >> peek [
+
+	^ stream peek
+]
+
+{ #category : #stream }
+SBTSRuleExplore >> position [
+
+	^ stream position
+]
+
+{ #category : #stream }
+SBTSRuleExplore >> position: aNumber [
+
+	stream position: aNumber.
+	aNumber + 1 to: stream size do: [:index | positions at: index put: nil]
 ]
 
 { #category : #helper }
@@ -157,7 +320,7 @@ SBTSRuleExplore >> push: aBlockTemplate [
 	stack add: {1. instance}.
 	((aBlockTemplate numAlternativesIn: self) > 1 and: [self done not]) ifTrue: [
 		self indexFor: instance.
-		lastOptions add: {instance. stack collect: [:pair | pair copy]. stream position. visitedSymbols copy. foundNested}].
+		lastOptions add: {instance. stack collect: [:pair | pair copy]. self position. visitedSymbols copy. foundNested}].
 	^ instance
 ]
 
@@ -182,7 +345,8 @@ SBTSRuleExplore >> resetState [
 	choiceIndices := Dictionary new.
 	visitedSymbols := Set new.
 	results := OrderedCollection new.
-	foundNested := false
+	foundNested := false.
+	positions := RunArray new: stream size
 ]
 
 { #category : #helper }
@@ -194,7 +358,7 @@ SBTSRuleExplore >> restartFromLastChoiceIfDone: aBlock [
 	option := lastOptions last.
 	choice := option first.
 	stack := option second collect: [:pair | pair copy].
-	stream position: option third.
+	self position: option third.
 	visitedSymbols := option fourth copy.
 	foundNested := option fifth.
 	
@@ -207,6 +371,12 @@ SBTSRuleExplore >> restartFromLastChoiceIfDone: aBlock [
 	self removeAllMorphsAfter: choice in: root
 ]
 
+{ #category : #stream }
+SBTSRuleExplore >> size [
+
+	^ stream size
+]
+
 { #category : #helper }
 SBTSRuleExplore >> skipOptionIn: aBlock [
 
@@ -216,13 +386,7 @@ SBTSRuleExplore >> skipOptionIn: aBlock [
 	number >= (aBlock numAlternativesIn: self) ifTrue: [lastOptions removeAllSuchThat: [:option | option first = aBlock]]
 ]
 
-{ #category : #accessing }
-SBTSRuleExplore >> stream [
-
-	^ stream
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBTSRuleExplore >> streamContainsBlock [
 
 	^ false
@@ -232,4 +396,14 @@ SBTSRuleExplore >> streamContainsBlock [
 SBTSRuleExplore >> stringIsLabel [
 
 	^ stringIsLabel
+]
+
+{ #category : #helper }
+SBTSRuleExplore >> tryTakeStreamWith: aBlock [
+
+	| ret |
+	currentBlock := aBlock.
+	ret := aBlock takeStreamFrom: self.
+	currentBlock := nil.
+	^ ret
 ]

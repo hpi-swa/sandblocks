@@ -96,6 +96,15 @@ SBInlineBlockText >> cursorPositionsDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockText >> firstDifferingBlocksWith: aMorph do: aBlock [
+
+	self class ~= aMorph class ifTrue: [^ aBlock value: self value: aMorph].
+	self regexString ~= aMorph regexString ifTrue: [^ aBlock value: self value: aMorph].
+	self contents ~= aMorph contents ifTrue: [^ aBlock value: self value: aMorph].
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockText >> hasSameContentsAs: aBlock [
 
 	^ (super hasSameStructureAs: aBlock) and: [self contents = aBlock contents]
@@ -199,12 +208,10 @@ SBInlineBlockText >> takeStreamFrom: anObject [
 	self flag: #fixme.
 	(anObject matchFullToken and: [anObject stringIsLabel]) ifTrue: [^ false].
 	
-	start := anObject stream position + 1.
-	^ (self regex matchesStreamPrefix: anObject stream)
+	start := anObject position + 1.
+	^ (self regex matchesStreamPrefix: anObject)
 		ifTrue: [
-			self contents: (anObject stream originalContents
-				copyFrom: start
-				to: anObject stream position).
+			self contents: (anObject originalContents copyFrom: start to: anObject position).
 			true]
 		ifFalse: [false]
 ]

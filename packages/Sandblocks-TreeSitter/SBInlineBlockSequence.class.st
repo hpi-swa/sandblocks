@@ -84,6 +84,20 @@ SBInlineBlockSequence >> elements: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSequence >> firstDifferingBlocksWith: aMorph do: aBlock [
+
+	self class ~= aMorph class ifTrue: [^ aBlock value: self value: aMorph].
+	self submorphCount ~= aMorph submorphCount ifTrue: [^ aBlock value: self value: aMorph].
+	self elements
+		with: aMorph elements
+		do: [:a :b | (a hasSameStructureAs: b) ifFalse: [^ aBlock value: self value: aMorph]].
+	self submorphs
+		with: aMorph submorphs
+		do: [:mine :their | mine firstDifferingBlocksWith: their do: [:a :b | ^ aBlock value: a value: b]].
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSequence >> hardLineBreakMatch: aBlock [
 
 	^ self factory ifNotNil: [:f | f hardLineBreakMatch: aBlock] ifNil: [false]
@@ -93,9 +107,12 @@ SBInlineBlockSequence >> hardLineBreakMatch: aBlock [
 SBInlineBlockSequence >> hasSameContentsAs: aBlock [
 
 	(super hasSameContentsAs: aBlock) ifFalse: [^ false].
+	self elements size = aBlock elements size ifFalse: [^ false].
+	
 	self submorphs
 		with: aBlock submorphs
 		do: [:a :b | (a hasSameContentsAs: b) ifFalse: [^ false]].
+	
 	^ true
 ]
 

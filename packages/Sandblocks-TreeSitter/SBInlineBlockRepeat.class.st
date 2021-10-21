@@ -109,18 +109,23 @@ SBInlineBlockRepeat >> firstDifferingBlocksWith: aMorph do: aBlock [
 
 	self class ~= aMorph class ifTrue: [^ aBlock value: self value: aMorph].
 	self submorphCount ~= aMorph submorphCount ifTrue: [^ aBlock value: self value: aMorph].
+	(self element hasSameStructureAs: aMorph element) ifTrue: [^ aBlock value: self value: aMorph].
 	self submorphs
 		with: aMorph submorphs
-		do: [:mine :their | mine firstDifferingBlocksWith: their do: aBlock]
+		do: [:mine :their | mine firstDifferingBlocksWith: their do: [:a :b | ^ aBlock value: a value: b]].
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> hasSameContentsAs: aBlock [
 
 	(super hasSameContentsAs: aBlock) ifFalse: [^ false].
+	self submorphCount = aBlock submorphCount ifFalse: [^ false].
+	
 	self submorphs
 		with: aBlock submorphs
 		do: [:a :b | (a hasSameContentsAs: b) ifFalse: [^ false]].
+	
 	^ true
 ]
 
@@ -220,7 +225,7 @@ SBInlineBlockRepeat >> printTitleOn: aStream [
 { #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> repeaterChild [
 
-	
+	^ self multiple ifTrue: [self] ifFalse: [super repeaterChild]
 ]
 
 { #category : #'as yet unclassified' }

@@ -78,6 +78,16 @@ SBInlineBlock >> changeToUnknown [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> childSymbolsDo: aBlock [
+
+	self submorphsDo: [:morph |
+		morph isInlineBlock ifTrue: [
+			(morph isKindOf: SBInlineBlockSymbol)
+				ifTrue: [aBlock value: morph]
+				ifFalse: [morph childSymbolsDo: aBlock]]]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> childrenForQuery [
 
 	^ Array streamContents: [:s | self submorphsDo: [:m | m childrenForQueryDo: [:child | s nextPut: child]]]
@@ -98,22 +108,31 @@ SBInlineBlock >> childrenIn: anExplore [
 { #category : #'as yet unclassified' }
 SBInlineBlock >> choicesForInput: aString before: aBoolean do: aBlock ifNone: anotherBlock [
 
-	| current |
-	current := SBToggledCode
-		comment: ''
-		active: 2
-		do: {[self]. [self currentTextMorph ifNil: [self] ifNotNil: [:t | t owner]]}.
+	| current recursionDepth |
+	" to find a transition, we first go up all nested alternatives until we reach our top-level symbol
+ if no matches were found, we do the same but allow one level of recursion
+
+why: many grammars encode a deep subtype tree in the owner hierarchy, so we should always
+first query the entire hierarchy as each element should have equal importance, before allowing
+recursion, which tends to produce more complex, combined blocks"
+	recursionDepth := 0.
+	2 timesRepeat: [
+		(Array streamContents: [:stream |
+			current := self currentTextMorph ifNil: [self] ifNotNil: [:t | t owner].
+			[current notNil and: [current isInlineBlock]] whileTrue: [
+				(current isKindOf: SBInlineBlockChoice) ifTrue: [
+					(SBTSRuleExplore new
+						maxRecursionDepth: recursionDepth;
+						explore: current
+							withNested: current firstBlock
+							nestedBefore: aBoolean
+							for: aString
+							startSymbol: nil) ifNotEmpty: [:choices |
+						choices do: [:block | block first setProperty: #rootBlock toValue: current].
+						stream nextPutAll: choices]].
+				current := current owner.
+				(current notNil and: [current isInlineBlock and: [current inline not and: [current ~= self]]]) ifTrue: [current := nil]]]) ifNotEmpty: [:results | ^ aBlock value: ((SBTSRuleExplore deduplicateResults: results) collect: [:block | {block. block valueOfProperty: #rootBlock}])]].
 	
-	[current notNil and: [current isInlineBlock]] whileTrue: [
-		(current isKindOf: SBInlineBlockChoice) ifTrue: [
-			(SBTSRuleExplore new
-				explore: current
-				withNested: current firstSubmorph
-				nestedBefore: aBoolean
-				for: aString
-				startSymbol: nil) ifNotEmpty: [:choices | ^ aBlock value: choices value: current]].
-		current := current owner.
-		(current notNil and: [current isInlineBlock and: [current inline not and: [current ~= self]]]) ifTrue: [current := nil]].
 	^ anotherBlock value
 ]
 
@@ -137,16 +156,23 @@ SBInlineBlock >> containingSandblock [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> containsEqual: aBlock [
+
+	self allMorphsDo: [:morph | (morph isInlineBlock and: [morph hasSameContentsAs: aBlock]) ifTrue: [^ true]].
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> convertedFor: anInterfaceCollection do: aBlock [
 
 	anInterfaceCollection first = #isInlineBlock ifTrue: [
 		^ (SBTSRuleExplore new
 			explore: anInterfaceCollection last
-			withNested: self
-			nestedBefore: false
-			for: ''
-			startSymbol: nil)
-			ifNotEmpty: [:choices | aBlock value: choices first]].
+				withNested: self
+				nestedBefore: false
+				for: ''
+				startSymbol: nil;
+			deduplicate) ifNotEmpty: [:choices | aBlock value: choices first]].
 	
 	^ super convertedFor: anInterfaceCollection do: aBlock
 ]
@@ -227,6 +253,12 @@ SBInlineBlock >> factory: aFactory [
 SBInlineBlock >> field [
 
 	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> firstDifferingBlocksWith: aMorph do: aBlock [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }
@@ -439,6 +471,14 @@ SBInlineBlock >> layoutInset [
 	^ self inline ifTrue: [0] ifFalse: [super layoutInset]
 ]
 
+{ #category : #accessing }
+SBInlineBlock >> leftMostChain [
+
+	^ (self hasSubmorphs not or: [self firstSubmorph isInlineBlock not])
+		ifTrue: [{self}]
+		ifFalse: [{self}, self firstSubmorph leftMostChain]
+]
+
 { #category : #'as yet unclassified' }
 SBInlineBlock >> leftMostRule [
 
@@ -530,6 +570,20 @@ SBInlineBlock >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> printSExpr [
+
+	^ String streamContents: [:s | self printSExprOn: s depth: 0]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> printSExprOn: aStream depth: aNumber [
+
+	self childSymbolsDo: [:m |
+		m printSExprOn: aStream depth: aNumber.
+		aStream crtab: aNumber]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> printTitleOn: aStream [
 
 	^ self subclassResponsibility
@@ -591,27 +645,21 @@ SBInlineBlock >> tryInterpretInput: aString before: aBoolean [
 	self
 		choicesForInput: aString
 		before: aBoolean
-		do: [:choices :root |
+		do: [:choices |
 			choices size = 1
 				ifTrue: [
 					self sandblockEditor do: (SBReplaceCommand new
-						target: root;
-						replacer: choices first).
-					choices first inputContainedUnknown]
-				ifFalse: [ | shortest shortestLabel labels selected |
-					shortest := choices detectMin: [:choice | choice lengthOfLeftMostPath].
-					shortestLabel := nil.
-					labels := (choices copyWithout: shortest) collect: [:choice |
-						shortest differenceTo: choice labelsDo: [:a :b |
-							shortestLabel ifNil: [shortestLabel := a].
-							b]].
-					selected := (UIManager default
-						chooseFrom: {shortestLabel}, labels
-						values: {shortest}, (choices copyWithout: shortest)) ifNil: [^ self].
+						target: choices first second;
+						replacer: choices first first).
+					choices first first inputContainedUnknown]
+				ifFalse: [ | selected |
+					selected := (SBTSRuleExplore promptBlockChoice: (choices collect: #first) values: choices) ifNil: [^ self].
 					self sandblockEditor do: (SBReplaceCommand new
-						target: root;
-						replacer: selected).
-					selected firstBlock select; inputContainedUnknown]]
+						target: selected second;
+						replacer: selected first).
+					selected first firstBlock
+						select;
+						inputContainedUnknown]]
 		ifNone: []
 ]
 
@@ -619,6 +667,12 @@ SBInlineBlock >> tryInterpretInput: aString before: aBoolean [
 SBInlineBlock >> unbuiltChildrenIn: anExplore [
 
 	^ built ifTrue: [#()] ifFalse: [self childrenIn: anExplore]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlock >> unwrapSuperType [
+
+	^ self
 ]
 
 { #category : #'as yet unclassified' }

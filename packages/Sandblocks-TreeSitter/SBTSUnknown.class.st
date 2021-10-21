@@ -52,9 +52,22 @@ SBTSUnknown >> factory: aFactory [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSUnknown >> firstDifferingBlocksWith: aMorph do: aBlock [
+
+	(self template value hasSameStructureAs: aMorph template value) ifFalse: [^ aBlock value: self value: aMorph].
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBTSUnknown >> grammarHandler [
 
 	^ self factory ifNotNil: #grammarHandler
+]
+
+{ #category : #'as yet unclassified' }
+SBTSUnknown >> hasSameContentsAs: aBlock [
+
+	^ aBlock class = self class and: [aBlock template value hasSameStructureAs: self template value]
 ]
 
 { #category : #'as yet unclassified' }
@@ -85,7 +98,7 @@ SBTSUnknown >> isBuilt [
 SBTSUnknown >> keyStroke: anEvent [
 
 	self currentTextMorph keyStroke: anEvent.
-	self tryInterpretContents
+	self tryInterpretInput: self contents
 ]
 
 { #category : #'as yet unclassified' }
@@ -114,54 +127,41 @@ SBTSUnknown >> template: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBTSUnknown >> tryInterpretContents [
-
-	self tryInterpretInput: self contents
-]
-
-{ #category : #'as yet unclassified' }
 SBTSUnknown >> tryInterpretInput: aString [
 
-	| choices |
-	choices := SBTSRuleExplore new
+	| choices selected replacer |
+	choices := (SBTSRuleExplore new
 		explore: template value
-		withNested: nil
-		nestedBefore: false
-		for: aString
-		startSymbol: type.
+			withNested: nil
+			nestedBefore: false
+			for: aString
+			startSymbol: type;
+		deduplicate) ifEmpty: [^ self].
 	
-	choices size > 1 ifTrue: [ | shortest |
-		shortest := choices detectMin: [:choice | choice lengthOfLeftMostPath].
-		choices removeAllSuchThat: [:choice |
-			choice ~= shortest and: [
-				choice leftMostRule
-					firstDifferingUpBlocksWith: shortest leftMostRule
-					do: [:a :b | (a hasSubmorphs and: [a firstSubmorph isKindOf: SBInlineBlockSymbol]) or: [b isNil]]
-					ifNone: [false]]]].
+	selected := choices size = 1
+		ifTrue: [choices first]
+		ifFalse: [(SBTSRuleExplore promptBlockChoice: choices values: choices) ifNil: [^ self]].
+	replacer := type
+		ifNotNil: [SBInlineBlockSymbol new type: type factory: self factory block: selected]
+		ifNil: [selected].
+	self sandblockEditor do: (SBReplaceCommand new
+		target: self;
+		replacer: replacer).
 	
-	choices size = 1 ifTrue: [ | replacer |
-		replacer := type
-			ifNotNil: [SBInlineBlockSymbol new type: type factory: self factory block: choices first]
-			ifNil: [choices first].
-		self sandblockEditor do: (SBReplaceCommand new
-			target: self;
-			replacer: replacer).
-		
-		SBToggledCode
-			comment: ''
-			active: 0
-			do: {[(replacer firstBlock ifNil: [replacer containingSandblock]) inputContainedUnknown]}.
-		
-		SBToggledCode comment: '' active: 1 do: {
-			[
-				(replacer firstBlock ifNil: [replacer containingSandblock]) select.
-				3 timesRepeat: [replacer sandblockEditor performForSelection: #moveCursorSmaller]].
-			[
-				(replacer startInputCommand
-					ifNotNil: [replacer]
-					ifNil: [replacer nextBlockThat: [:m | m startInputCommand notNil]])
-					ifNotNil: [:m | ((m hasOwner: replacer) or: [m = replacer]) ifTrue: [replacer sandblockEditor startInput: m at: 900000000 replacingContents: false]]
-					ifNil: [replacer firstBlock ifNotNil: #select]]}]
+	SBToggledCode
+		comment: ''
+		active: 0
+		do: {[(replacer firstBlock ifNil: [replacer containingSandblock]) inputContainedUnknown]}.
+	SBToggledCode comment: '' active: 1 do: {
+		[
+			(replacer firstBlock ifNil: [replacer containingSandblock]) select.
+			3 timesRepeat: [replacer sandblockEditor performForSelection: #moveCursorSmaller]].
+		[
+			(replacer startInputCommand
+				ifNotNil: [replacer]
+				ifNil: [replacer nextBlockThat: [:m | m startInputCommand notNil]])
+				ifNotNil: [:m | ((m hasOwner: replacer) or: [m = replacer]) ifTrue: [replacer sandblockEditor startInput: m at: 900000000 replacingContents: false]]
+				ifNil: [replacer firstBlock ifNotNil: #select]]}
 ]
 
 { #category : #'as yet unclassified' }

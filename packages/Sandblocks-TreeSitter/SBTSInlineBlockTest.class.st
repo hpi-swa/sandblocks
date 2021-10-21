@@ -64,6 +64,47 @@ SBTSInlineBlockTest >> testConsecutiveIdenticalChoices [
 	self assert: 1 equals: result size
 ]
 
+{ #category : #'tests - deduplicate' }
+SBTSInlineBlockTest >> testDeduplicateExtraChoice [
+
+	| factory result |
+	factory := SBMetaBlockFactory new.
+	factory
+		at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
+			SBInlineBlockSymbol new type: 'id' factory: factory.
+			SBInlineBlockSequence new elements: {
+				SBInlineBlockSymbol new type: 'expr' factory: factory.
+				SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: '.'. SBInlineBlockLabel new label: '?.'}.
+				SBInlineBlockSymbol new type: 'expr' factory: factory}});
+		at: 'id' putTemplate: (SBInlineBlockText new regexString: '[a-z]+').
+	
+	result := SBTSRuleExplore new
+		explore: (factory getTemplate: 'expr') for: 'a';
+		deduplicate.
+	self assert: 1 equals: result size
+]
+
+{ #category : #'tests - deduplicate' }
+SBTSInlineBlockTest >> testDeduplicateExtraLabels [
+
+	| factory result |
+	factory := SBMetaBlockFactory new.
+	factory
+		at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
+			SBInlineBlockSymbol new type: 'id' factory: factory.
+			SBInlineBlockSequence new elements: {SBInlineBlockSymbol new type: 'expr' factory: factory. SBInlineBlockLabel new label: '=>'}.
+			SBInlineBlockSequence new elements: {
+				SBInlineBlockSymbol new type: 'expr' factory: factory.
+				SBInlineBlockLabel new label: ','.
+				SBInlineBlockSymbol new type: 'expr' factory: factory}});
+		at: 'id' putTemplate: (SBInlineBlockText new regexString: '[a-z]+').
+	
+	result := SBTSRuleExplore new
+		explore: (factory getTemplate: 'expr') for: 'a';
+		deduplicate.
+	self assert: 1 equals: result size
+]
+
 { #category : #'tests - continue match' }
 SBTSInlineBlockTest >> testFailNestedPrefixOp [
 
@@ -88,7 +129,7 @@ SBTSInlineBlockTest >> testFailNestedPrefixOp [
 	unknown keyStroke: (self keyboardEvent: $1).
 	num := editor childSandblocks first firstBlock.
 	
-	num choicesForInput: '+' before: false do: [:choices :root | self assert: choices isEmpty] ifNone: []
+	num choicesForInput: '+' before: false do: [:choices | self assert: choices isEmpty] ifNone: []
 ]
 
 { #category : #'tests - match in unknown' }
@@ -236,12 +277,12 @@ SBTSInlineBlockTest >> testMatchIfBeforeAndAfter [
 	num
 		choicesForInput: 'if'
 		before: true
-		do: [:choices :root | self assert: 1 equals: choices size]
+		do: [:choices | self assert: 1 equals: choices size]
 		ifNone: [self assert: false].
 	num
 		choicesForInput: 'if'
 		before: false
-		do: [:choices :root | self assert: 1 equals: choices size]
+		do: [:choices | self assert: 1 equals: choices size]
 		ifNone: [self assert: false]
 ]
 
@@ -290,6 +331,32 @@ SBTSInlineBlockTest >> testMatchOptional [
 ]
 
 { #category : #'tests - continue match' }
+SBTSInlineBlockTest >> testMatchPartialLabel [
+
+	| factory unknown editor num |
+	factory := SBMetaBlockFactory new.
+	factory at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
+		SBInlineBlockText new regexString: '[0-9]+'.
+		SBInlineBlockSequence new elements: {
+			SBInlineBlockSymbol new type: 'expr' factory: factory.
+			SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: '-='. SBInlineBlockLabel new label: '+='}.
+			SBInlineBlockSymbol new type: 'expr' factory: factory}}).
+	
+	editor := self editorFor: (unknown := factory instantiateTemplate: 'expr').
+	unknown keyStroke: (self keyboardEvent: $1).
+	num := editor childSandblocks first.
+	num
+		choicesForInput: '+'
+		before: true
+		do: [:choices | | label |
+			self assert: 1 equals: choices size.
+			label := nil.
+			choices first first allMorphsDo: [:morph | (morph isKindOf: SBInlineBlockLabel) ifTrue: [label := morph]].
+			self assert: '+=' equals: label contents]
+		ifNone: [self assert: false]
+]
+
+{ #category : #'tests - continue match' }
 SBTSInlineBlockTest >> testMatchPrefixOp [
 
 	| factory unknown editor num |
@@ -306,7 +373,7 @@ SBTSInlineBlockTest >> testMatchPrefixOp [
 	num
 		choicesForInput: '+'
 		before: false
-		do: [:choices :root | self assert: 1 equals: choices size]
+		do: [:choices | self assert: 1 equals: choices size]
 		ifNone: [self assert: false]
 ]
 

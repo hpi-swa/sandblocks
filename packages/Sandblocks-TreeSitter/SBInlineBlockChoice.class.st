@@ -112,10 +112,14 @@ SBInlineBlockChoice >> deleteTargetFor: aBlock [
 SBInlineBlockChoice >> firstDifferingBlocksWith: aMorph do: aBlock [
 
 	self class ~= aMorph class ifTrue: [^ aBlock value: self value: aMorph].
-	(self alternatives hasEqualElements: aMorph alternatives) ifTrue: [^ aBlock value: self value: aMorph].
+	self alternatives size = aMorph alternatives size ifFalse: [^ aBlock value: self value: aMorph].
+	self alternatives
+		with: aMorph alternatives
+		do: [:mine :their | (mine hasSameStructureAs: their) ifFalse: [^ aBlock value: self value: aMorph]].
 	self submorphs
 		with: aMorph submorphs
-		do: [:mine :their | mine firstDifferingBlocksWith: their do: aBlock]
+		do: [:mine :their | mine firstDifferingBlocksWith: their do: [:a :b | ^ aBlock value: a value: b]].
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }

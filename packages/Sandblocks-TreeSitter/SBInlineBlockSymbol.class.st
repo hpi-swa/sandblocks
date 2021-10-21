@@ -126,6 +126,14 @@ SBInlineBlockSymbol >> field: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> firstDifferingBlocksWith: aMorph do: aBlock [
+
+	self class = aMorph class ifFalse: [^ aBlock value: self value: aMorph].
+	self type = aMorph type ifFalse: [^ aBlock value: self value: aMorph].
+	^ self firstSubmorph firstDifferingBlocksWith: aMorph firstSubmorph do: aBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> hasSameContentsAs: aBlock [
 
 	^ (super hasSameStructureAs: aBlock) and: [self type = aBlock type and: [self firstSubmorph hasSameContentsAs: aBlock firstSubmorph]]
@@ -206,7 +214,7 @@ SBInlineBlockSymbol >> layoutCommands [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> newEmptyChildNear: aBlock before: aBoolean [
 
-	SBToggledCode comment: '' active: 1 do: {
+	^ SBToggledCode comment: '' active: 1 do: {
 		[self repeaterChild newEmptyChildNear: aBlock before: aBoolean].
 		[
 			aBlock ifNotNil: [(aBlock ownerThatIsA: SBInlineBlockRepeat) ifNotNil: [:container | ^ container newEmptyChildNear: aBlock before: aBoolean]].
@@ -229,6 +237,21 @@ SBInlineBlockSymbol >> newNullBlock [
 SBInlineBlockSymbol >> ownerWithColor [
 
 	^ highlight ifNil: [self owner ifNotNil: [:o | o ownerWithColor]] ifNotNil: [self]
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> printSExprOn: aStream depth: aNumber [
+
+	| any |
+	aStream nextPutAll: '('.
+	aStream nextPutAll: self type.
+	any := false.
+	self childSymbolsDo: [:morph |
+		any ifFalse: [any := true].
+		aStream crtab: aNumber + 1.
+		morph printSExprOn: aStream depth: aNumber + 1].
+	any ifTrue: [aStream crtab: aNumber].
+	aStream nextPutAll: ')'
 ]
 
 { #category : #'as yet unclassified' }
@@ -310,6 +333,14 @@ SBInlineBlockSymbol >> type: aSymbol factory: aFactory visitedSymbols: aSet [
 
 	aSet add: aSymbol.
 	self type: aSymbol factory: aFactory
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> unwrapSuperType [
+
+	^ (factory isSuperType: self type)
+		ifTrue: [self firstSubmorph unwrapSuperType]
+		ifFalse: [self]
 ]
 
 { #category : #'as yet unclassified' }
