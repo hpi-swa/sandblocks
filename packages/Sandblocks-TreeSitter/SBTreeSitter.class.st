@@ -314,7 +314,7 @@ SBTreeSitter >> python [
 { #category : #'ffi languages' }
 SBTreeSitter >> ruby [
 
-	<apicall: void* tree_sitter_ruby () module: 'tree-sitter-ruby'>
+	<apicall: SBTSLanguage* tree_sitter_ruby () module: 'tree-sitter-ruby'>
 	^ self externalCallFailed
 ]
 

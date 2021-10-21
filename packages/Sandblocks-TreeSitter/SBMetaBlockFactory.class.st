@@ -12702,7 +12702,37 @@ SBMetaBlockFactory class >> removeDuplicateChoices: aCollection [
 { #category : #languages }
 SBMetaBlockFactory class >> ruby [
 
-	^ SBMetaBlockFactory new name: 'ruby' preprocess: [:f|] postprocess: [:f|] grammar: '{
+	^ SBMetaBlockFactory new
+		name: 'ruby'
+		preprocess: [:f |
+			f grammar rules
+				at: '_line_break'
+				put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> String cr}).
+			f grammar rules
+				at: 'heredoc_end'
+				put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> 'end'}).
+			f grammar rules
+				at: 'heredoc_content'
+				put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> 'content'}).
+			f grammar rules
+				at: 'heredoc_beginning'
+				put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> 'begin'}).
+			f grammar rules
+				at: '_heredoc_body_start'
+				put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> 'start'}).
+			f grammar rules
+				at: 'hash_key_symbol'
+				put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '[A-Za-z0-9_]+\:'}).
+			f grammar rules
+				at: 'string_content'
+				put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '.*'}).
+			f grammar rules at: 'simple_symbol' put: (JsonObject fromAssociations: {
+				'type' -> 'SEQ'.
+				'members' -> {
+					JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> ':'}.
+					JsonObject fromAssociations: {'type' -> 'SYMBOL'. 'value' -> 'identifier'}}})]
+		postprocess: [:f | ]
+		grammar: '{
   "name": "ruby",
   "word": "identifier",
   "rules": {
@@ -18931,7 +18961,8 @@ SBMetaBlockFactory class >> ruby [
   ]
 }
 
-' highlight: '; Keywords
+'
+		highlight: '; Keywords
 
 [
   "alias"
