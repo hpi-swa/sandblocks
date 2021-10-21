@@ -27,7 +27,11 @@ SBMetaBlockFactory class >> compileParserIn: path name: aString [
 	| filename |
 	filename := 'tree-sitter-', aString, '.so'.
 	self assert: (OSProcess waitForCommand: ('cd {1}; npx -p tree-sitter-cli tree-sitter generate' format: {path fullName})) exitStatus = 0.
-	self assert: (OSProcess waitForCommand: ('cd {1}; gcc -shared -fPIC -o {2} src/parser.c src/scanner.c -I./src/' format: {path fullName. filename})) exitStatus = 0.
+	
+	self assert: (OSProcess waitForCommand: ('cd {1}; CXXFLAGS="-I./src" CFLAGS="-I./src" make src/scanner.o' format: {path fullName})) exitStatus = 0.
+	self assert: (OSProcess waitForCommand: ('cd {1}; CXXFLAGS="-I./src" CFLAGS="-I./src" make src/parser.o' format: {path fullName})) exitStatus = 0.
+	self assert: (OSProcess waitForCommand: ('cd {1}; g++ -shared -fPIC -o tree-sitter-{2}.so src/parser.o src/scanner.o' format: {path fullName. aString})) exitStatus = 0.
+	
 	path / filename copyTo: FileDirectory default
 ]
 
@@ -57,7 +61,7 @@ SBMetaBlockFactory class >> generateFFIMethodFor: aName [
 	SBTreeSitter
 		compile: ('{1}
 
-	<apicall: void* tree_sitter_{1} () module: ''tree-sitter-{1}''>
+	<apicall: SBTSLanguage* tree_sitter_{1} () module: ''tree-sitter-{1}''>
 	^ self externalCallFailed' format: {aName})
 		classified: 'ffi languages'
 ]
@@ -81,8 +85,11 @@ SBMetaBlockFactory class >> javascript [
 		name: 'javascript'
 		preprocess: [:f | | rulesWithSemicolon |
 			f grammar rules
-				at: '_ternary_qmark'
-				put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> '?'}).
+				at: '_automatic_semicolon'
+				put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> ''}).
+			f grammar rules
+				at: '_template_chars'
+				put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '.*'}).
 			rulesWithSemicolon := ((f grammar rules associations collect: [:pair |
 				f
 					traverse: pair value
@@ -7562,7 +7569,22 @@ SBMetaBlockFactory class >> python [
 						members: {
 							JsonObject fromAssociations: {'type' -> 'SYMBOL'. 'name' -> '"'}.
 							JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '.*'}.
-							JsonObject fromAssociations: {'type' -> 'SYMBOL'. 'name' -> '"'}}].
+							JsonObject fromAssociations: {'type' -> 'SYMBOL'. 'name' -> '"'}}.
+					f grammar rules
+						at: '_string_content'
+						put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '.*'}).
+					f grammar rules
+						at: '_string_start'
+						put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '''|"'}).
+					f grammar rules
+						at: '_string_end'
+						put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '''|"'}).
+					f grammar rules
+						at: '_indent'
+						put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> ''}).
+					f grammar rules
+						at: '_dedent'
+						put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> ''})].
 				[
 					f grammar externals: (f grammar externals reject: [:o | o name = '_string_content']).
 					f grammar rules
@@ -19122,6 +19144,31 @@ SBMetaBlockFactory >> at: aString putTemplate: aBlock [
 	templateCache at: aString put: aBlock
 ]
 
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> autofixExternals [
+
+	| externals |
+	externals := (grammar externals select: [:rule | rule type = 'SYMBOL']) collect: #name.
+	
+	externals do: [:external |
+		grammar rules keysAndValuesDo: [:name :rule |
+			self
+				traverse: rule
+				detect: [:obj | obj type = 'ALIAS' and: obj content name = external]
+				ifFound: [:obj |
+					self grammar rules
+						at: external
+						put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> obj value})]
+				ifNone: []]].
+	
+	(grammar externals select: [:rule | rule type = 'STRING']) do: [:external |
+		self grammar rules
+			at: external
+			put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> external value})].
+	
+	(externals reject: [:external | grammar rules includesKey: external]) ifNotEmpty: [:missing | UIManager default inform: 'Missing declarations for: ', (missing joinSeparatedBy: ', ')]
+]
+
 { #category : #configuration }
 SBMetaBlockFactory >> blockInline: aCollection [
 
@@ -19240,6 +19287,7 @@ SBMetaBlockFactory >> checkStructure: anObject [
 { #category : #'grammar clean' }
 SBMetaBlockFactory >> cleanGrammar [
 
+	SBToggledCode comment: '' active: 1 do: {[self autofixExternals]}.
 	SBToggledCode
 		comment: ''
 		active: 1
