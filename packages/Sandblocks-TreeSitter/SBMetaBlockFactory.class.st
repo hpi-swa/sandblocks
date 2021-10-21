@@ -79,15 +79,22 @@ SBMetaBlockFactory class >> javascript [
 
 	^ SBMetaBlockFactory new
 		name: 'javascript'
-		preprocess: [:f |
+		preprocess: [:f | | rulesWithSemicolon |
 			f grammar rules
 				at: '_ternary_qmark'
 				put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> '?'}).
+			rulesWithSemicolon := ((f grammar rules associations collect: [:pair |
+				f
+					traverse: pair value
+					detect: [:obj | obj type = 'SYMBOL' and: [obj name = '_semicolon']]
+					ifFound: [:obj | pair key -> ';']
+					ifNone: [nil]]) select: #notNil) as: Dictionary.
+			f addDelimitedRules: rulesWithSemicolon.
 			f grammar at: 'inline' put: f grammar inline, {'_ternary_qmark'}.
 			f grammar rules statement members: (f grammar rules statement members reject: [:m | m name = 'labeled_statement'])]
 		postprocess: [:f |
 			f rootRuleName: 'program'.
-			f delimitedRules: ({'object' -> ','} as: Dictionary).
+			f addDelimitedRules: ({'object' -> ','} as: Dictionary).
 			f blockInline: {'expression_statement'. 'arguments'}.
 			f statementContainerTypes: #('program' 'statement_block')]
 		grammar: '{
@@ -19051,6 +19058,12 @@ SBMetaBlockFactory class >> ruby [
 '
 ]
 
+{ #category : #configuration }
+SBMetaBlockFactory >> addDelimitedRules: aCollection [
+
+	delimitedRules addAll: aCollection
+]
+
 { #category : #accessing }
 SBMetaBlockFactory >> aliases [
 
@@ -19297,13 +19310,13 @@ SBMetaBlockFactory >> deepCompare: anObject to: anotherObject [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : #configuration }
 SBMetaBlockFactory >> delimitedRules [
 
 	^ delimitedRules
 ]
 
-{ #category : #accessing }
+{ #category : #configuration }
 SBMetaBlockFactory >> delimitedRules: aDictionary [
 	" ruleName -> delimiterString, e.g. 'parameters'->',' "
 
@@ -19752,6 +19765,21 @@ SBMetaBlockFactory >> symbolsProducedBy: anObject on: aStream [
 SBMetaBlockFactory >> toplevel [
 
 	^ self instantiateToplevel: self rootRuleName
+]
+
+{ #category : #helper }
+SBMetaBlockFactory >> traverse: anObject detect: aBlock ifFound: aSuccessBlock ifNone: aFailBlock [
+
+	self traverse: anObject do: [:block | (aBlock value: block) ifTrue: [^ aSuccessBlock value: block]].
+	^ aFailBlock value
+]
+
+{ #category : #helper }
+SBMetaBlockFactory >> traverse: anObject do: aBlock [
+
+	aBlock value: anObject.
+	anObject members ifNotNil: [:m | m do: [:member | self traverse: member do: aBlock]].
+	anObject content ifNotNil: [:content | self traverse: content do: aBlock]
 ]
 
 { #category : #'configuration helpers' }

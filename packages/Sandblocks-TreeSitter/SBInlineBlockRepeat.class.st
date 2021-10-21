@@ -169,7 +169,7 @@ SBInlineBlockRepeat >> layoutCommands [
 			self submorphs withIndexDo: [:morph :index |
 				stream nextPut: morph layoutCommands.
 				index ~= self submorphCount ifTrue: [
-					stream nextPut: ((self factory hardLineBreakMatcher value: morph)
+					stream nextPut: (((self factory hardLineBreakMatcher value: morph) or: [self containingSandblock isStatementContainer])
 						ifTrue: [SBAlgebraCommand hardLine]
 						ifFalse: [SBAlgebraCommand softLineOrGap])]]])
 ]
