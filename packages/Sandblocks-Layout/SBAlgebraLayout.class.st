@@ -42,6 +42,19 @@ SBAlgebraLayout >> commandsForRoot: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBAlgebraLayout >> ensureLayouted: aMorph [
+	"Normally, when a morph is layed-out, it only required local knowledge.
+as such, when fullBounds is called, only the local morph may compute a layout.
+in the case of the AlgebraLayout, the local morph has no clue where it actually is,
+unless it is a layout root morph.
+
+Through this hook, we get a generic way of verifying that a layout for a local morph
+is indeed computed, by asking its root morph to ensure its layout."
+
+	(aMorph orOwnerSuchThat: [:o | o owner isNil or: [o owner layoutPolicy class ~= SBAlgebraLayout]]) fullBounds
+]
+
+{ #category : #'as yet unclassified' }
 SBAlgebraLayout >> flushLayoutCache [
 
 	minExtentCache := nil

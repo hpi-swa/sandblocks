@@ -967,6 +967,12 @@ SBBlock >> ensureDecorator: aClass do: aBlock [
 SBBlock >> ensureExpanded [
 ]
 
+{ #category : #layout }
+SBBlock >> ensureLayouted [
+
+	self layoutPolicy ifNotNil: [:l | l ensureLayouted: self]
+]
+
 { #category : #actions }
 SBBlock >> ensureVisible [
 	<action>
@@ -975,8 +981,7 @@ SBBlock >> ensureVisible [
 	method := self containingArtefact.
 	(method ~= self and: [method notNil and: [self visibleInWorld not]]) ifTrue: [method ensureExpanded].
 	
-	Project current addDeferredUIMessage: [
-		self isInWorld ifTrue: [self sandblockEditor ifNotNil: [:e | e scrollToShow: self]]]
+	self isInWorld ifTrue: [self sandblockEditor ifNotNil: [:e | e scrollToShow: self]]
 ]
 
 { #category : #actions }

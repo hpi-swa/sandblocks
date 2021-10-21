@@ -179,6 +179,8 @@ SBEditorCanvas >> scrollToCenter: aMorph [
 SBEditorCanvas >> scrollToShow: aMorph [
 
 	| viewport x y target c |
+	aMorph ensureLayouted.
+	
 	viewport := 0 @ 0 extent: self extent.
 	target := (aMorph boundsInWorld translateBy: self topLeft negated) expandBy: self scrollShowMargin.
 	(viewport containsRect: target) ifTrue: [

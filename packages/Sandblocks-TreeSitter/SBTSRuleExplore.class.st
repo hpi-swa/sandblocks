@@ -45,7 +45,7 @@ SBTSRuleExplore class >> deduplicateResults: aCollection [
 			[
 				(candidates anySatisfy: [:compare | | diff |
 					diff := candidate firstDifferingBlocksWith: compare do: [:a :b | b unwrapSuperType].
-					candidate containsEqual: diff]) or: [candidate leftMostChain anySatisfy: [:root | candidates anySatisfy: [:compare | root ~= compare and: [root hasSameContentsAs: compare]]]]].
+					compare ~= candidate and: [candidate containsEqual: diff]]) or: [candidate leftMostChain anySatisfy: [:root | candidates anySatisfy: [:compare | root ~= compare and: [root hasSameContentsAs: compare]]]]].
 			[
 				candidate leftMostChain anySatisfy: [:root |
 					candidates anySatisfy: [:compare |
