@@ -196,11 +196,13 @@ SBStBlockBody >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 	(aBlock notNil and: [aBlock owner = bindings]) ifTrue: [
 		^ SBRelInsertCommand new
 			near: aBlock before: aBoolean in: bindings morph: aMorph;
+			shouldMergeWithNext: true;
 			yourself].
 	
 	(aBlock notNil and: [aMorph owner = temporaries]) ifTrue: [
 		^ SBRelInsertCommand new
 			near: aBlock before: aBoolean in: temporaries morph: aMorph;
+			shouldMergeWithNext: true;
 			yourself].
 	
 	(aBlock isNil and: [aBoolean]) ifTrue: [
@@ -208,9 +210,10 @@ SBStBlockBody >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 		^ SBInsertCommand new
 			container: self;
 			index: 2;
-			morph: aMorph].
+			morph: aMorph;
+			shouldMergeWithNext: true].
 	
-	^ super insertCommandRequest: aMorph near: aBlock before: aBoolean
+	^ (super insertCommandRequest: aMorph near: aBlock before: aBoolean) shouldMergeWithNext: true
 ]
 
 { #category : #'as yet unclassified' }
