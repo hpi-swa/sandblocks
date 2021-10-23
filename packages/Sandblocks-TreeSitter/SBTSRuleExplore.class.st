@@ -41,19 +41,9 @@ SBTSRuleExplore class >> deduplicateResults: aCollection [
 	
 	" look for blocks that are contain one of the other blocks, starting from their first different ancestor "
 	^ candidates reject: [:candidate |
-		SBToggledCode comment: '' active: 1 do: {
-			[
-				(candidates anySatisfy: [:compare | | diff |
-					diff := candidate firstDifferingBlocksWith: compare do: [:a :b | b unwrapSuperType].
-					compare ~= candidate and: [candidate containsEqual: diff]]) or: [candidate leftMostChain anySatisfy: [:root | candidates anySatisfy: [:compare | root ~= compare and: [root hasSameContentsAs: compare]]]]].
-			[
-				candidate leftMostChain anySatisfy: [:root |
-					candidates anySatisfy: [:compare |
-						root ~= compare and: [
-							root hasSameContentsAs: (SBToggledCode
-								comment: ''
-								active: 1
-								do: {[compare]. [root firstDifferingBlocksWith: compare do: [:mine :their | their]]})]]]]}]
+		(candidates anySatisfy: [:compare | | diff |
+			diff := candidate firstDifferingBlocksWith: compare do: [:a :b | b unwrapSuperType].
+			compare ~= candidate and: [candidate containsEqual: diff]]) or: [candidate leftMostChain anySatisfy: [:root | candidates anySatisfy: [:compare | root ~= compare and: [root hasSameContentsAs: compare]]]]]
 ]
 
 { #category : #deduplicate }

@@ -19,3 +19,19 @@ SBTSLanguageTests >> testPythonBinaryOperator [
 	
 	self assert: (block matchesQuery: '(module (expression_statement (binary_operator)))')
 ]
+
+{ #category : #'as yet unclassified' }
+SBTSLanguageTests >> testPythonNumber [
+
+	| block e |
+	block := SBMetaBlockFactory python parse: 'a'.
+	e := self editorFor: block.
+	block childSandblocks first
+		select;
+		insertStatementBelow.
+	[block childSandblocks second keyStroke: (self keyboardEvent: $1)]
+		on: ProvideAnswerNotification
+		do: [:n | self assert: false].
+	
+	self assert: (block matchesQuery: '(module (expression_statement (integer)))')
+]

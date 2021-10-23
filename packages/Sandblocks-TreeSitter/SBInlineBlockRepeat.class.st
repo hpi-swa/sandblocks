@@ -95,7 +95,7 @@ SBInlineBlockRepeat >> deleteTargetFor: aBlock [
 
 	^ (required not or: [self submorphCount > 1])
 		ifTrue: [aBlock]
-		ifFalse: [nil]
+		ifFalse: [self owner deleteTargetFor: self]
 ]
 
 { #category : #'as yet unclassified' }
@@ -109,7 +109,7 @@ SBInlineBlockRepeat >> firstDifferingBlocksWith: aMorph do: aBlock [
 
 	self class ~= aMorph class ifTrue: [^ aBlock value: self value: aMorph].
 	self submorphCount ~= aMorph submorphCount ifTrue: [^ aBlock value: self value: aMorph].
-	(self element hasSameStructureAs: aMorph element) ifTrue: [^ aBlock value: self value: aMorph].
+	(self element hasSameStructureAs: aMorph element) ifFalse: [^ aBlock value: self value: aMorph].
 	self submorphs
 		with: aMorph submorphs
 		do: [:mine :their | mine firstDifferingBlocksWith: their do: [:a :b | ^ aBlock value: a value: b]].
@@ -152,9 +152,7 @@ SBInlineBlockRepeat >> insertCommandRequest: aMorph near: aBlock before: aBoolea
 
 	^ SBTSRelInsertCommand new
 		near: (aBlock ifNotNil: [
-			aBlock owner = self
-				ifTrue: [aMorph]
-				ifFalse: [aBlock ownerSatisfying: [:o | o owner = self]]])
+			aBlock orOwnerSuchThat: [:o | o owner = self]])
 		before: aBoolean
 		in: self
 		morph: aMorph

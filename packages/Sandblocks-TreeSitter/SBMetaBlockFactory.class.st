@@ -7602,7 +7602,7 @@ SBMetaBlockFactory class >> python [
 				#members -> {
 					JsonObject fromAssociations: {#type -> 'STRING'. #value -> '"'}.
 					JsonObject fromAssociations: {#type -> 'STRING'. #value -> ''''}}}).
-			f hardLineBreakMatcher: [:b | ((b isKindOf: SBInlineBlockLabel) and: [b label = ':']) or: [(b parentSandblock isKindOf: SBInlineBlockSymbol) and: [{'block'. 'module'} includes: b parentSandblock type]]]]
+			f hardLineBreakMatcher: [:b | (((b isKindOf: SBInlineBlockLabel) and: [b label = ':']) and: [(#('typed_parameter' 'typed_default_parameter') includes: b parentSandblock type) not]) or: [(b parentSandblock isKindOf: SBInlineBlockSymbol) and: [{'block'. 'module'} includes: b parentSandblock type]]]]
 		grammar: '{
   "name": "python",
   "word": "identifier",
@@ -19375,6 +19375,10 @@ SBMetaBlockFactory >> cleanGrammar [
 		comment: ''
 		active: 1
 		do: {[grammar rules do: [:rule | self mergeNestedChoices: rule]]}.
+	SBToggledCode
+		comment: ''
+		active: 1
+		do: {[grammar rules do: [:rule | self mergeAdjacentOptions: rule]]}.
 	grammar rules do: [:rule | self checkStructure: rule]
 ]
 
@@ -19588,6 +19592,22 @@ SBMetaBlockFactory >> isStatementContainer: aString [
 SBMetaBlockFactory >> isSuperType: aTypeString [
 
 	^ supertypes includes: aTypeString
+]
+
+{ #category : #'grammar clean' }
+SBMetaBlockFactory >> mergeAdjacentOptions: anObject [
+	" look for (element | element*) and change to element+ "
+
+	anObject type = 'CHOICE' ifTrue: [
+		anObject members copy do: [:alt |
+			((alt type beginsWith: 'REPEAT') and: [alt content type = 'SYMBOL']) ifTrue: [
+				anObject members do: [:otherAlt |
+					(otherAlt type = 'SYMBOL' and: [alt content name = otherAlt name]) ifTrue: [
+						alt type: 'REPEAT1'.
+						anObject members: (anObject members copyWithout: otherAlt)]]]]].
+	
+	anObject content ifNotNil: [:c | self mergeNestedChoices: c].
+	anObject members ifNotNil: [anObject members do: [:m | self mergeNestedChoices: m]]
 ]
 
 { #category : #'grammar clean' }
