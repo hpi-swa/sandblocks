@@ -7,9 +7,9 @@ Class {
 { #category : #'as yet unclassified' }
 SBTSLanguageTests >> testPythonBinaryOperator [
 
-	| block |
+	| block e |
 	block := SBMetaBlockFactory python parse: '123'.
-	self editorFor: block.
+	e := self editorFor: block.
 	[
 		block childSandblocks first
 			select;

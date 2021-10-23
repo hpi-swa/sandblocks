@@ -60,9 +60,10 @@ SBInlineBlockSymbol >> buildEmpty [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> buildWithFields: aStream alternatives: aDictionary [
 
+	self isSuperType ifTrue: [^ true].
 	aStream peek second isMorph ifFalse: [^ false].
 	
-	^ ((aStream peek second isKindOf: SBInlineBlockSymbol) and: [factory type: aStream peek second type compatibleWith: self type])
+	^ ((aStream peek second isKindOf: SBInlineBlockSymbol) and: [self type = aStream peek second type])
 		ifTrue: [ | block |
 			self assert: self hasSubmorphs not.
 			block := aStream next second.
@@ -91,7 +92,7 @@ SBInlineBlockSymbol >> childrenForQueryDo: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> childrenIn: anExplore [
 
-	(anExplore expandSymbol: self) ifFalse: [^ #()].
+	(anExplore expandSymbol: self) not and: [self isSuperType not] ifTrue: [^ #()].
 	^ (anExplore notNil and: [
 		SBToggledCode
 			comment: ''
@@ -189,6 +190,12 @@ SBInlineBlockSymbol >> isHidden [
 SBInlineBlockSymbol >> isStatementContainer [
 
 	^ factory isStatementContainer: type
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> isSuperType [
+
+	^ factory isSuperType: self type
 ]
 
 { #category : #'as yet unclassified' }
@@ -338,9 +345,7 @@ SBInlineBlockSymbol >> type: aSymbol factory: aFactory visitedSymbols: aSet [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> unwrapSuperType [
 
-	^ (factory isSuperType: self type)
-		ifTrue: [self firstSubmorph unwrapSuperType]
-		ifFalse: [self]
+	^ self isSuperType ifTrue: [self firstSubmorph unwrapSuperType] ifFalse: [self]
 ]
 
 { #category : #'as yet unclassified' }
