@@ -18,7 +18,11 @@ SBTSBlockChooseDialog >> do: aBlock query: aString [
 	self update.
 	
 	currentValues ifEmpty: [^ nil].
-	^ currentValues size = 1 ifTrue: [currentValues first] ifFalse: [self getUserResponseAtHand]
+	^ currentValues size = 1 ifTrue: [currentValues first] ifFalse: [
+		(ProvideAnswerNotification signal: nil) ifNotNil: [:answer |
+			(answer = #cancel or: [answer isNil]) ifTrue: [^ nil].
+			^ currentValues at: answer].
+		self getUserResponseAtHand]
 ]
 
 { #category : #'as yet unclassified' }

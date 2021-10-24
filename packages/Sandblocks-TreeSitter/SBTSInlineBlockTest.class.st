@@ -325,7 +325,7 @@ SBTSInlineBlockTest >> testMatchOptional [
 { #category : #'tests - continue match' }
 SBTSInlineBlockTest >> testMatchPartialLabel [
 
-	| factory unknown editor num label choices |
+	| factory unknown editor num label result |
 	factory := SBMetaBlockFactory new.
 	factory at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
 		SBInlineBlockText new regexString: '[0-9]+'.
@@ -338,10 +338,10 @@ SBTSInlineBlockTest >> testMatchPartialLabel [
 	unknown keyStroke: (self keyboardEvent: $1).
 	num := editor childSandblocks first.
 	
-	choices := num choicesForInput: '+' before: true.
-	self assert: 1 equals: choices.
+	result := num choicesForInput: '+' before: true.
+	self assert: 1 equals: result size.
 	label := nil.
-	choices first first allMorphsDo: [:morph | (morph isKindOf: SBInlineBlockLabel) ifTrue: [label := morph]].
+	result first allMorphsDo: [:morph | (morph isKindOf: SBInlineBlockLabel) ifTrue: [label := morph]].
 	self assert: '+=' equals: label contents
 ]
 
