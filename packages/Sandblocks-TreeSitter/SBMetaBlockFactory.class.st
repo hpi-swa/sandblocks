@@ -7584,7 +7584,11 @@ SBMetaBlockFactory class >> python [
 						put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> ''}).
 					f grammar rules
 						at: '_dedent'
-						put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> ''})].
+						put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> ''}).
+					f grammar rules
+						at: '_newline'
+						put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> ''}).
+					(f grammar rules at: '_suite') members: {(f grammar rules at: '_suite') members second}].
 				[
 					f grammar externals: (f grammar externals reject: [:o | o name = '_string_content']).
 					f grammar rules
