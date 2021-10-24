@@ -516,16 +516,15 @@ SBStGrammarHandler >> wrapInMessageSend: aString [
 { #category : #actions }
 SBStGrammarHandler >> wrapInReturn [
 	<action>
-	<actionValidIf: #isExpression>
 
-	self block parentSandblock isReturn ifTrue: [^ self].
-	
-	self block sandblockEditor do: (SBWrapCommand new
-		outer: SBStReturn new;
-		inner: self block;
-		wrap: [:outer :inner | outer expression: inner];
-		yourself).
-	self block startInputAtEnd
+	self block containingStatement ifNotNil: [:stmt |
+		stmt isReturn ifTrue: [^ self].
+		self block sandblockEditor do: (SBWrapCommand new
+			outer: SBStReturn new;
+			inner: stmt;
+			wrap: [:outer :inner | outer expression: inner];
+			yourself).
+		stmt startInputAtEnd]
 ]
 
 { #category : #actions }

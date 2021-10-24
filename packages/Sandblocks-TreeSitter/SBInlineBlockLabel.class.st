@@ -39,6 +39,8 @@ SBInlineBlockLabel >> buildEmpty [
 { #category : #'as yet unclassified' }
 SBInlineBlockLabel >> buildWithFields: aStream alternatives: aDictionary [
 
+	aStream atEnd ifTrue: [^ false].
+	
 	^ aStream peek second = self label
 		ifTrue: [
 			aStream next.

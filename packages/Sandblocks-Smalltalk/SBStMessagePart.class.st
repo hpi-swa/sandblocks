@@ -423,16 +423,6 @@ SBStMessagePart >> wrapInMessageSend [
 ]
 
 { #category : #actions }
-SBStMessagePart >> wrapInReturn [
-	<action>
-	<actionValidIf: #parentIsExpression>
-
-	self parentSandblock
-		select;
-		performAction: #wrapInReturn
-]
-
-{ #category : #actions }
 SBStMessagePart >> wrapWithExampleWatch [
 	<action>
 	<actionValidIf: #parentIsExpression>

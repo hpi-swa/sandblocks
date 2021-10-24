@@ -129,18 +129,15 @@ SBTSUnknown >> template: aBlock [
 { #category : #'as yet unclassified' }
 SBTSUnknown >> tryInterpretInput: aString [
 
-	| choices selected replacer |
-	choices := (SBTSRuleExplore new
-		explore: template value
-			withNested: nil
-			nestedBefore: false
-			for: aString
-			startSymbol: type;
-		deduplicate) ifEmpty: [^ self].
+	| selected replacer |
+	selected := SBTSBlockChooseDialog new
+		do: [:query |
+			SBTSRuleExplore new
+				explore: template value withNested: nil nestedBefore: false for: query startSymbol: type;
+				deduplicate]
+		query: aString.
+	selected ifNil: [^ self].
 	
-	selected := choices size = 1
-		ifTrue: [choices first]
-		ifFalse: [(SBTSRuleExplore promptBlockChoice: choices values: choices) ifNil: [^ self]].
 	replacer := type
 		ifNotNil: [SBInlineBlockSymbol new type: type factory: self factory block: selected]
 		ifNil: [selected].

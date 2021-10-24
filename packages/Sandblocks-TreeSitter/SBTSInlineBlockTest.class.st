@@ -129,7 +129,7 @@ SBTSInlineBlockTest >> testFailNestedPrefixOp [
 	unknown keyStroke: (self keyboardEvent: $1).
 	num := editor childSandblocks first firstBlock.
 	
-	num choicesForInput: '+' before: false do: [:choices | self assert: choices isEmpty] ifNone: []
+	self assert: (num choicesForInput: '+' before: false) isEmpty
 ]
 
 { #category : #'tests - match in unknown' }
@@ -274,16 +274,8 @@ SBTSInlineBlockTest >> testMatchIfBeforeAndAfter [
 		type: 'expr' factory: factory).
 	unknown keyStroke: (self keyboardEvent: $1).
 	num := editor childSandblocks first.
-	num
-		choicesForInput: 'if'
-		before: true
-		do: [:choices | self assert: 1 equals: choices size]
-		ifNone: [self assert: false].
-	num
-		choicesForInput: 'if'
-		before: false
-		do: [:choices | self assert: 1 equals: choices size]
-		ifNone: [self assert: false]
+	self assert: 1 equals: (num choicesForInput: 'if' before: true) size.
+	self assert: 1 equals: (num choicesForInput: 'if' before: false) size
 ]
 
 { #category : #'tests - match in unknown' }
@@ -333,7 +325,7 @@ SBTSInlineBlockTest >> testMatchOptional [
 { #category : #'tests - continue match' }
 SBTSInlineBlockTest >> testMatchPartialLabel [
 
-	| factory unknown editor num |
+	| factory unknown editor num label choices |
 	factory := SBMetaBlockFactory new.
 	factory at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
 		SBInlineBlockText new regexString: '[0-9]+'.
@@ -345,15 +337,12 @@ SBTSInlineBlockTest >> testMatchPartialLabel [
 	editor := self editorFor: (unknown := factory instantiateTemplate: 'expr').
 	unknown keyStroke: (self keyboardEvent: $1).
 	num := editor childSandblocks first.
-	num
-		choicesForInput: '+'
-		before: true
-		do: [:choices | | label |
-			self assert: 1 equals: choices size.
-			label := nil.
-			choices first first allMorphsDo: [:morph | (morph isKindOf: SBInlineBlockLabel) ifTrue: [label := morph]].
-			self assert: '+=' equals: label contents]
-		ifNone: [self assert: false]
+	
+	choices := num choicesForInput: '+' before: true.
+	self assert: 1 equals: choices.
+	label := nil.
+	choices first first allMorphsDo: [:morph | (morph isKindOf: SBInlineBlockLabel) ifTrue: [label := morph]].
+	self assert: '+=' equals: label contents
 ]
 
 { #category : #'tests - continue match' }
@@ -370,11 +359,7 @@ SBTSInlineBlockTest >> testMatchPrefixOp [
 	editor := self editorFor: (unknown := factory instantiateTemplate: 'expr').
 	unknown keyStroke: (self keyboardEvent: $1).
 	num := editor childSandblocks first.
-	num
-		choicesForInput: '+'
-		before: false
-		do: [:choices | self assert: 1 equals: choices size]
-		ifNone: [self assert: false]
+	self assert: 1 equals: (num choicesForInput: '+' before: false) size
 ]
 
 { #category : #'tests - match in unknown' }

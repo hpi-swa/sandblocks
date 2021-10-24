@@ -7562,38 +7562,31 @@ SBMetaBlockFactory class >> python [
 	^ SBMetaBlockFactory new
 		name: #python
 		preprocess: [:f |
-			SBToggledCode comment: '' active: 1 do: {
-				[
-					(f grammar rules at: 'string')
-						type: 'SEQ';
-						members: {
-							JsonObject fromAssociations: {'type' -> 'SYMBOL'. 'name' -> '"'}.
-							JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '.*'}.
-							JsonObject fromAssociations: {'type' -> 'SYMBOL'. 'name' -> '"'}}.
-					f grammar rules
-						at: '_string_content'
-						put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '.*'}).
-					f grammar rules
-						at: '_string_start'
-						put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '''|"'}).
-					f grammar rules
-						at: '_string_end'
-						put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '''|"'}).
-					f grammar rules
-						at: '_indent'
-						put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> ''}).
-					f grammar rules
-						at: '_dedent'
-						put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> ''}).
-					f grammar rules
-						at: '_newline'
-						put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> ''}).
-					(f grammar rules at: '_suite') members: {(f grammar rules at: '_suite') members second}].
-				[
-					f grammar externals: (f grammar externals reject: [:o | o name = '_string_content']).
-					f grammar rules
-						at: '_string_content'
-						put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '.*'})]}]
+			(f grammar rules at: 'string')
+				type: 'SEQ';
+				members: {
+					JsonObject fromAssociations: {'type' -> 'SYMBOL'. 'name' -> '"'}.
+					JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '.*'}.
+					JsonObject fromAssociations: {'type' -> 'SYMBOL'. 'name' -> '"'}}.
+			f grammar rules
+				at: '_string_content'
+				put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '.*'}).
+			f grammar rules
+				at: '_string_start'
+				put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '''|"'}).
+			f grammar rules
+				at: '_string_end'
+				put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '''|"'}).
+			f grammar rules
+				at: '_indent'
+				put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> ''}).
+			f grammar rules
+				at: '_dedent'
+				put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> ''}).
+			f grammar rules
+				at: '_newline'
+				put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> ''}).
+			(f grammar rules at: '_suite') members: {(f grammar rules at: '_suite') members second}]
 		postprocess: [:f |
 			f statementContainerTypes: #('block' 'module').
 			f blockInline: {'expression_statement'. 'parameters'}.
@@ -7606,7 +7599,7 @@ SBMetaBlockFactory class >> python [
 				#members -> {
 					JsonObject fromAssociations: {#type -> 'STRING'. #value -> '"'}.
 					JsonObject fromAssociations: {#type -> 'STRING'. #value -> ''''}}}).
-			f hardLineBreakMatcher: [:b | (((b isKindOf: SBInlineBlockLabel) and: [b label = ':']) and: [(#('typed_parameter' 'typed_default_parameter') includes: b parentSandblock type) not]) or: [(b parentSandblock isKindOf: SBInlineBlockSymbol) and: [{'block'. 'module'} includes: b parentSandblock type]]]]
+			f hardLineBreakMatcher: [:b | (((b isKindOf: SBInlineBlockLabel) and: [b label = ':']) and: [(b submorphAfter ifNotNil: #type) ~= 'type']) or: [(b parentSandblock isKindOf: SBInlineBlockSymbol) and: [{'block'. 'module'} includes: b parentSandblock type]]]]
 		grammar: '{
   "name": "python",
   "word": "identifier",
@@ -12709,6 +12702,7 @@ SBMetaBlockFactory class >> ruby [
 	^ SBMetaBlockFactory new
 		name: 'ruby'
 		preprocess: [:f |
+			f statementContainerTypes: #('program' 'do_block').
 			f grammar rules
 				at: '_line_break'
 				put: (JsonObject fromAssociations: {'type' -> 'STRING'. 'value' -> String cr}).

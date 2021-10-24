@@ -106,9 +106,9 @@ SBInlineBlock >> childrenIn: anExplore [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlock >> choicesForInput: aString before: aBoolean do: aBlock ifNone: anotherBlock [
+SBInlineBlock >> choicesForInput: aString before: aBoolean [
 
-	| current recursionDepth |
+	| recursionDepth |
 	" to find a transition, we first go up all nested alternatives until we reach our top-level symbol
  if no matches were found, we do the same but allow one level of recursion
 
@@ -117,7 +117,7 @@ first query the entire hierarchy as each element should have equal importance, b
 recursion, which tends to produce more complex, combined blocks"
 	recursionDepth := 0.
 	2 timesRepeat: [
-		(Array streamContents: [:stream |
+		(Array streamContents: [:stream | | current |
 			current := self currentTextMorph ifNil: [self] ifNotNil: [:t | t owner].
 			[current notNil and: [current isInlineBlock]] whileTrue: [
 				(current isKindOf: SBInlineBlockChoice) ifTrue: [
@@ -131,9 +131,8 @@ recursion, which tends to produce more complex, combined blocks"
 						choices do: [:block | block first setProperty: #rootBlock toValue: current].
 						stream nextPutAll: choices]].
 				current := current owner.
-				(current notNil and: [current isInlineBlock and: [current inline not and: [current ~= self]]]) ifTrue: [current := nil]]]) ifNotEmpty: [:results | ^ aBlock value: ((SBTSRuleExplore deduplicateResults: results) collect: [:block | {block. block valueOfProperty: #rootBlock}])]].
-	
-	^ anotherBlock value
+				(current notNil and: [current isInlineBlock and: [current inline not and: [current ~= self]]]) ifTrue: [current := nil]]]) ifNotEmpty: [:results | ^ SBTSRuleExplore deduplicateResults: results]].
+	^ #()
 ]
 
 { #category : #'as yet unclassified' }
@@ -642,25 +641,20 @@ SBInlineBlock >> title [
 { #category : #'as yet unclassified' }
 SBInlineBlock >> tryInterpretInput: aString before: aBoolean [
 
-	self
-		choicesForInput: aString
-		before: aBoolean
-		do: [:choices |
-			choices size = 1
-				ifTrue: [
-					self sandblockEditor do: (SBReplaceCommand new
-						target: choices first second;
-						replacer: choices first first).
-					choices first first inputContainedUnknown]
-				ifFalse: [ | selected |
-					selected := (SBTSRuleExplore promptBlockChoice: (choices collect: #first) values: choices) ifNil: [^ self].
-					self sandblockEditor do: (SBReplaceCommand new
-						target: selected second;
-						replacer: selected first).
-					selected first firstBlock
-						select;
-						inputContainedUnknown]]
-		ifNone: []
+	| selected |
+	selected := SBTSBlockChooseDialog new
+		do: [:query | self choicesForInput: query before: aBoolean]
+		query: aString.
+	self sandblockEditor do: (SBReplaceCommand new
+		target: (selected valueOfProperty: #rootBlock);
+		replacer: selected).
+	selected removeProperty: #rootBlock.
+	SBToggledCode comment: '' active: 1 do: {
+		[
+			selected firstBlock
+				select;
+				inputContainedUnknown].
+		[selected inputContainedUnknown]}
 ]
 
 { #category : #'as yet unclassified' }

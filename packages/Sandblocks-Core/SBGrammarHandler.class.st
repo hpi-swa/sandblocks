@@ -78,6 +78,9 @@ SBGrammarHandler >> insertStatementAboveOrBelow: anAboveBoolean [
 		ifFalse: [topMost parentSandblock]
 		ifTrue: [self block containingArtefact nextBlockThat: [:b | b isBlockBody]]) ifNil: [
 			self block isBlockBody ifTrue: [self block] ifFalse: [^ self]].
+	
+	(body = self block containingFloat or: [body hasOwner: self block containingFloat]) ifFalse: [^ self].
+	
 	newStatement := body newEmptyChildNear: topMost before: anAboveBoolean.
 	
 	self block sandblockEditor
