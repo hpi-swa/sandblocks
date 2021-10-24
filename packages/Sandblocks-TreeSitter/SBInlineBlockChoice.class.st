@@ -72,10 +72,14 @@ SBInlineBlockChoice >> buildWithFields: aStream alternatives: aDictionary [
 SBInlineBlockChoice >> changeToUnknown [
 	<action>
 
-	self
+	| new |
+	new := self buildCopy
 		removeAllMorphs;
-		buildDefault;
-		startInputAtEnd
+		buildDefault.
+	self sandblockEditor do: (SBReplaceCommand new
+		target: self;
+		replacer: new).
+	new startInputAtEnd
 ]
 
 { #category : #'as yet unclassified' }
