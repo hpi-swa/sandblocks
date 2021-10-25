@@ -131,6 +131,13 @@ SBTreeSitter >> fetchLibrary: aGithubString language: language andRetry: aBlock 
 ]
 
 { #category : #'ffi languages' }
+SBTreeSitter >> gdscript [
+
+	<apicall: SBTSLanguage* tree_sitter_gdscript () module: 'tree-sitter-gdscript'>
+	^ self externalCallFailed
+]
+
+{ #category : #'ffi languages' }
 SBTreeSitter >> javascript [
 
 	<apicall: SBTSLanguage* tree_sitter_javascript () module: 'tree-sitter-javascript'>
@@ -228,12 +235,10 @@ SBTreeSitter >> parse: aString language: aSymbol factory: aFactory [
 	root := self treeRootNode: tree.
 	
 	cursor := self cursorNew: root.
-	self printTreeFrom: (SBTSCursor new library: self cursor: cursor factory: aFactory) depth: 0.
 	
 	cursor := self cursorNew: root.
 	block := (SBToggledCode comment: '' active: 1 do: {
-		[
-		self buildTreeFrom: (SBTSCursor new library: self cursor: cursor factory: aFactory)].
+		[self buildTreeFrom: (SBTSCursor new library: self cursor: cursor factory: aFactory)].
 		[SBTSParseExplore new explore: (SBTSCursor new library: self cursor: cursor factory: aFactory)].
 		[(SBInlineBlockSymbol new type: (self nodeType: root) factory: aFactory) takeParsedFrom: (SBTSCursor new library: self cursor: cursor factory: aFactory)]})
 		hResizing: #rigid;
