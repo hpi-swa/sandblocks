@@ -47,7 +47,7 @@ SBEditor class >> current [
 { #category : #configuration }
 SBEditor class >> defaultColorPolicy [
 
-	^ DefaultColorPolicy ifNil: [DefaultColorPolicy := SBColorMinimalPolicy]
+	^ DefaultColorPolicy ifNil: [DefaultColorPolicy := SBLightPlusTheme]
 ]
 
 { #category : #configuration }

@@ -95,3 +95,9 @@ CodeHolder >> toggleBlockEditor [
 		self setContentsToForceRefetch.
 		self contentsChanged]
 ]
+
+{ #category : #'*Sandblocks-Core' }
+CodeHolder class >> toggleSandblocksDefault [
+
+	self addSandblocksDefault: ContentsSymbolQuints first first ~= #blockEditor
+]
