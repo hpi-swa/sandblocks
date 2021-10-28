@@ -104,7 +104,7 @@ SBTSCursor >> position: aPosition [
 ]
 
 { #category : #'as yet unclassified' }
-SBTSCursor >> resolveCurrentAlias [
+SBTSCursor >> resolveCurrentAliasIfString: aBlock [
 
 	| symbolIndex rule |
 	symbolIndex := self node context at: 4.
@@ -115,6 +115,7 @@ SBTSCursor >> resolveCurrentAlias [
 		symbolIndex: symbolIndex
 		factory: factory.
 	
+	rule value type = 'STRING' ifTrue: [^ aBlock value: rule value value].
 	self flag: #todo.
 	" support other types "
 	self assert: rule value type = 'SYMBOL'.

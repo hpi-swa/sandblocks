@@ -22,7 +22,7 @@ SBTreeSitter >> buildTreeFrom: aCursor [
 	field := aCursor currentFieldName.
 	fallback := {field. aCursor text}.
 	template := aCursor factory getTemplate: type ifAbsent: [^ aCursor text].
-	template = 'ALIAS' ifTrue: [type := aCursor resolveCurrentAlias].
+	template = 'ALIAS' ifTrue: [type := aCursor resolveCurrentAliasIfString: [:str | ^ str]].
 	
 	fieldStream := ((Array streamContents: [:stream |
 		aCursor gotoFirstChild ifTrue: [ | first |
@@ -313,6 +313,13 @@ SBTreeSitter >> printTreeFrom: aCursor depth: aNumber [
 SBTreeSitter >> python [
 
 	<apicall: SBTSLanguage* tree_sitter_python () module: 'tree-sitter-python'>
+	^ self externalCallFailed
+]
+
+{ #category : #'ffi languages' }
+SBTreeSitter >> regex [
+
+	<apicall: SBTSLanguage* tree_sitter_regex () module: 'tree-sitter-regex'>
 	^ self externalCallFailed
 ]
 
