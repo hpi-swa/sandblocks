@@ -132,7 +132,7 @@ SBExample >> collectTypeInfo [
 	
 	SBTypeCollectSimulator new
 		methodMap: self currentMethodMap;
-		simulate: [[receiver perform: selector withArguments: arguments] on: Error do: []]
+		runSimulated: [[receiver perform: selector withArguments: arguments] on: Error do: []]
 ]
 
 { #category : #'as yet unclassified' }
