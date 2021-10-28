@@ -222,6 +222,26 @@ SBTSInlineBlockTest >> testMatchChoice [
 	self assert: 'ab' equals: result second firstSubmorph contents
 ]
 
+{ #category : #'tests - continue match' }
+SBTSInlineBlockTest >> testMatchEarlyExplorationStoppedRegression [
+
+	| factory basic editor unknown |
+	factory := SBMetaBlockFactory new.
+	
+	factory at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
+		SBInlineBlockSequence new elements: {SBInlineBlockLabel new label: '(?<'. SBInlineBlockSymbol new type: 'nested' factory: factory}.
+		SBInlineBlockSymbol new type: 'basic' factory: factory}).
+	factory
+		at: 'nested'
+		putTemplate: (SBInlineBlockChoice new alternatives: {SBInlineBlockSymbol new type: 'expr' factory: factory. SBInlineBlockLabel new label: 'other'}).
+	factory at: 'basic' putTemplate: (SBInlineBlockLabel new label: 'basic').
+	
+	editor := self editorFor: (unknown := factory instantiateTemplate: 'expr').
+	unknown keyStroke: (self keyboardEvent: $b).
+	basic := editor childSandblocks first.
+	self assert: 1 equals: (basic choicesForInput: '(' before: false) size
+]
+
 { #category : #'tests - match in unknown' }
 SBTSInlineBlockTest >> testMatchFullToken [
 
@@ -483,6 +503,30 @@ SBTSInlineBlockTest >> testMatchWithSeparatorNonAlphanum [
 	
 	result := SBTSRuleExplore new explore: (factory getTemplate: 'expr') for: '+'.
 	self assert: 1 equals: result size
+]
+
+{ #category : #'tests - continue match' }
+SBTSInlineBlockTest >> testMatchWithUnknownBetween [
+
+	| factory basic editor unknown choices |
+	factory := SBMetaBlockFactory new.
+	factory at: 'expr' putTemplate: (SBInlineBlockChoice new alternatives: {
+		SBInlineBlockSequence new elements: {
+			SBInlineBlockLabel new label: '(?<'.
+			SBInlineBlockSymbol new type: 'other' factory: factory.
+			SBInlineBlockSymbol new type: 'expr' factory: factory}.
+		SBInlineBlockSymbol new type: 'basic' factory: factory}).
+	factory at: 'basic' putTemplate: (SBInlineBlockLabel new label: 'basic').
+	factory
+		at: 'other'
+		putTemplate: (SBInlineBlockChoice new alternatives: {SBInlineBlockLabel new label: 'other'. SBInlineBlockLabel new label: 'yetother'}).
+	
+	editor := self editorFor: (unknown := factory instantiateTemplate: 'expr').
+	unknown keyStroke: (self keyboardEvent: $b).
+	basic := editor childSandblocks first.
+	choices := basic choicesForInput: '(' before: false.
+	self assert: 1 equals: choices size.
+	self assert: choices first childSandblocks first isUnknown
 ]
 
 { #category : #'tests - match in unknown' }

@@ -549,7 +549,11 @@ SBInlineBlock >> preferredColorIn: aColorPolicy [
 			['variable'] -> [aColorPolicy identifier].
 			['type'] -> [aColorPolicy keyword].
 			['number'] -> [aColorPolicy literal].
-			['string'] -> [aColorPolicy literal]}
+			['string'] -> [aColorPolicy literal].
+			['escape'] -> [aColorPolicy literal].
+			['punctuation.bracket'] -> [aColorPolicy builtIn].
+			['operator'] -> [aColorPolicy identifier].
+			['property'] -> [aColorPolicy identifier]}
 		otherwise: [aColorPolicy default]
 ]
 
@@ -645,6 +649,8 @@ SBInlineBlock >> tryInterpretInput: aString before: aBoolean [
 	selected := SBTSBlockChooseDialog new
 		do: [:query | self choicesForInput: query before: aBoolean]
 		query: aString.
+	selected ifNil: [^ self].
+	
 	self sandblockEditor do: (SBReplaceCommand new
 		target: (selected valueOfProperty: #rootBlock);
 		replacer: selected).

@@ -970,7 +970,7 @@ SBBlock >> ensureExpanded [
 { #category : #layout }
 SBBlock >> ensureLayouted [
 
-	self layoutPolicy ifNotNil: [:l | l ensureLayouted: self]
+	self owner ifNotNil: [:o | o layoutPolicy ifNotNil: [:l | l ensureLayouted: self]]
 ]
 
 { #category : #actions }

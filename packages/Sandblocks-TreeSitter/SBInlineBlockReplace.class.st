@@ -14,16 +14,6 @@ SBInlineBlockReplace class >> matchAgainst: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBInlineBlockReplace class >> matchPython: aDictionary [
-	<lang: 'python' match: '(call
-	(identifier) @open
-    (argument_list
-    	(string) @path))'>
-
-	(aDictionary at: 'path') contents
-]
-
-{ #category : #'as yet unclassified' }
 SBInlineBlockReplace >> initialize [
 
 	super initialize.

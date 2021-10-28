@@ -108,10 +108,22 @@ SBTSUnknown >> lengthOfLeftMostPath [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSUnknown >> numAlternativesIn: anOption [
+
+	^ 1
+]
+
+{ #category : #'as yet unclassified' }
 SBTSUnknown >> printOn: aStream [
 
 	aStream nextPutAll: 'unknown '.
 	template value printTitleOn: aStream
+]
+
+{ #category : #'as yet unclassified' }
+SBTSUnknown >> takeStreamFrom: anOption [
+
+	^ false
 ]
 
 { #category : #'as yet unclassified' }
@@ -172,6 +184,12 @@ SBTSUnknown >> type: aString factory: aFactory [
 
 	type := aString.
 	factory := aFactory
+]
+
+{ #category : #'as yet unclassified' }
+SBTSUnknown >> unbuiltChildrenIn: anOption [
+
+	^ #()
 ]
 
 { #category : #'as yet unclassified' }

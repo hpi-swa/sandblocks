@@ -69,33 +69,6 @@ SBTSRuleExplore class >> newLabelCountIn: aBlock usedLabels: aCollection [
 ]
 
 { #category : #helper }
-SBTSRuleExplore class >> promptBlockChoice: aCollectionOfBlocks values: aCollectionOfValues [
-
-	| dialog |
-	(ProvideAnswerNotification signal: nil) ifNotNil: [:answer |
-		(answer = #cancel or: [answer isNil]) ifTrue: [^ nil].
-		^ aCollectionOfValues at: answer].
-	
-	aCollectionOfValues ifEmpty: [^ nil].
-	
-	dialog := DialogWindow new
-		title: 'Please Choose';
-		message: '';
-		filterEnabled: true;
-		autoCancel: true;
-		yourself.
-	"Like a pop-up menu, click anywhere to dismiss."
-	aCollectionOfBlocks withIndexDo: [:ea :index |
-		dialog
-			createButton: (ea
-				fullBounds;
-				yourself)
-			value: index].
-	dialog selectedButtonIndex: 1.
-	^ dialog getUserResponseAtHand ifNotNil: [:index | aCollectionOfValues at: index]
-]
-
-{ #category : #helper }
 SBTSRuleExplore >> addResult [
 
 	| copiedReferences copy index |
@@ -163,9 +136,7 @@ SBTSRuleExplore >> doExplore: aBlock withNested: aSubBlock nestedBefore: aBoolea
 						ifTrue: [
 							child := nestedBlock buildCopy.
 							foundNested := true]
-						ifFalse: [
-							child := self push: template.
-							self done ifTrue: [child := child buildDefault]].
+						ifFalse: [child := self push: template].
 					block addMorphBack: child]
 				ifAbsent: [
 					stack removeLast.
@@ -307,8 +278,9 @@ SBTSRuleExplore >> push: aBlockTemplate [
 
 	| instance |
 	instance := aBlockTemplate buildEmpty.
+	self done ifTrue: [instance := instance buildDefault].
 	stack add: {1. instance}.
-	((aBlockTemplate numAlternativesIn: self) > 1 and: [self done not]) ifTrue: [
+	((instance numAlternativesIn: self) > 1 and: [self done not]) ifTrue: [
 		self indexFor: instance.
 		lastOptions add: {instance. stack collect: [:pair | pair copy]. self position. visitedSymbols copy. foundNested}].
 	^ instance
