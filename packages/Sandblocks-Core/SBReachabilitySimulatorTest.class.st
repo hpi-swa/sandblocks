@@ -4,7 +4,7 @@ Class {
 	#category : #'Sandblocks-Core-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBReachabilitySimulatorTest >> exampleColorPolicy [
 
 	| a |
@@ -12,7 +12,7 @@ SBReachabilitySimulatorTest >> exampleColorPolicy [
 	#(21) do: [:num | 5 squared]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBReachabilitySimulatorTest >> exampleMethod [
 
 	| a |
@@ -21,7 +21,7 @@ SBReachabilitySimulatorTest >> exampleMethod [
 	a := 5 squared
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBReachabilitySimulatorTest >> testColorPolicy [
 
 	| editor method nestedSend compiledMethod |
@@ -34,7 +34,7 @@ SBReachabilitySimulatorTest >> testColorPolicy [
 	self assert: (editor colorPolicy wasReached: nestedSend)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBReachabilitySimulatorTest >> testReachability [
 
 	| policy m |
@@ -44,7 +44,7 @@ SBReachabilitySimulatorTest >> testReachability [
 	policy := SBReachabilityColorPolicy new.
 	SBStReachabilitySimulator new
 		store: policy;
-		simulate: [self exampleMethod].
+		runSimulated: [self exampleMethod].
 	
 	self assert: (policy reached: 101 in: m) description: 'Loop starter'.
 	self assert: (policy reached: (m literalAt: 2) -> 35 in: m) description: 'Send in loop'.

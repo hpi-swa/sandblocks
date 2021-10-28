@@ -400,7 +400,7 @@ SBExample >> showReachability [
 	self evaluateIn: [:exec |
 		SBStReachabilitySimulator new
 			store: policy;
-			simulate: exec].
+			runSimulated: exec].
 	self sandblockEditor colorPolicy: policy
 ]
 
