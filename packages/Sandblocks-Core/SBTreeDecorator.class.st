@@ -15,10 +15,26 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBTreeDecorator class >> createExampleIn: aContainer [
+	
+	 | child1 child2 root child3 |
+	root := SBTreeDecorator new.
+	aContainer addMorph: (SBStPlayground new attachDecorator: root; detachDecorators: SBForceMoveDecorator).
+	child1 := root addExampleChildIn: aContainer.
+	child2 := root addExampleChildIn: aContainer.
+	child3 := root addExampleChildIn: aContainer.
+	child1 addExampleChildIn: aContainer; addExampleChildIn: aContainer.
+	child3 addExampleChildIn: aContainer; addExampleChildIn: aContainer.
+	root layout.
+]
+
+{ #category : #'as yet unclassified' }
 SBTreeDecorator >> addChild: aDecorator [
 	
 	self children add: aDecorator.
 	aDecorator parent: self.
+	self morph containingFloat owner
+		addMorphBack: (SBConnectorLine connect: self morph to: aDecorator morph).
 ]
 
 { #category : #'as yet unclassified' }
@@ -26,8 +42,8 @@ SBTreeDecorator >> addExampleChildIn: aContainer [
 	
 	| child |
 	child := SBTreeDecorator new.
+	aContainer addMorph: (SBStPlayground new attachDecorator: child; detachDecorators: SBForceMoveDecorator; attachDecorator: SBMoveDecorator new).
 	self addChild: child.
-	aContainer addMorph: (SBStPlayground new attachDecorator: child).
 	^ child.
 ]
 
@@ -133,15 +149,9 @@ SBTreeDecorator >> example [
 	
 	SBMorphExample
 		setUp: [SBBlock new]
-		cases: {SBMorphExampleCase name: 'example 1' caseBlock: [:container | | child1 child2 root |
-			root := SBTreeDecorator new.
-			child1 := root addExampleChildIn: container.
-			child2 := root addExampleChildIn: container.
-			root addExampleChildIn: container.
-			child1 addExampleChildIn: container; addExampleChildIn: container.
-			child2 addExampleChildIn: container; addExampleChildIn: container.
-			container addMorph: (SBStPlayground new attachDecorator: root).
-			root layout.]}
+		cases: {SBMorphExampleCase name: 'example 1' caseBlock: [:container |
+			SBTreeDecorator createExampleIn: container.
+			"container position: 100@100."]}
 		extent: 1000 @ 1000
 ]
 
@@ -263,9 +273,9 @@ SBTreeDecorator >> parent: anObject [
 
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> secondWalk: modSum [
-	
+
 	self x: self x + modSum.
-	self morph position: (self x @ self depth) * 100.
+	self morph position: self x @ self depth * 150.
 	
 	self children do: [:child | child secondWalk: modSum + self mod]
 ]
