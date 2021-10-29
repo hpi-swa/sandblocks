@@ -454,6 +454,7 @@ SBBlock >> clearInput [
 SBBlock >> click: anEvent [
 
 	(anEvent redButtonPressed and: [anEvent shiftPressed]) ifTrue: [^ self startOrAddToMultiSelection].
+	(anEvent yellowButtonPressed and: [anEvent shiftPressed]) ifTrue: [^ self openPropertiesMenu].
 	
 	self sandblockEditor selectClick: self at: anEvent position.
 	(anEvent yellowButtonPressed and: [SBPreferences rightClickContextMenu]) ifTrue: [self promptAction].
@@ -1324,6 +1325,12 @@ SBBlock >> insertStatementHasCandidate [
 		ifNil: [false]
 ]
 
+{ #category : #'event handling' }
+SBBlock >> inspectableProperties [
+
+  ^ {#color. #position}
+]
+
 { #category : #initialization }
 SBBlock >> intoWorld: aWorld [
 
@@ -1800,6 +1807,18 @@ SBBlock >> openLocalPalette [
 		container := SBPaletteContainer new.
 		palettes do: [:class | class buildOn: container].
 		self sandblockEditor openMorphInView: container]
+]
+
+{ #category : #'event handling' }
+SBBlock >> openPropertiesMenu [
+
+	| propertyInspector |
+	propertyInspector := SBPropertyInspector newFor: self.
+	self sandblockEditor openMorphInOverlay: propertyInspector.
+	propertyInspector bottomLeft: self boundsInWorld topLeft.
+	propertyInspector select.
+	
+	
 ]
 
 { #category : #initialization }
