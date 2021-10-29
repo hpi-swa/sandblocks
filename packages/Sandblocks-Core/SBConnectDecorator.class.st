@@ -4,14 +4,18 @@ Class {
 	#instVars : [
 		'isMouseClose',
 		'connectors',
-		'connectionPoints'
+		'connectionPoints',
+		'isConnecting'
 	],
 	#category : #'Sandblocks-Core'
 }
 
-{ #category : #accessing }
+{ #category : #connecting }
 SBConnectDecorator >> addConnectorFrom: sourceMorph to: destinationMorph [
-	self connectors add: (SBConnectorLine connect: sourceMorph to: destinationMorph)
+	| connector |
+	connector := (SBConnectorLine connect: sourceMorph to: destinationMorph).
+	self connectors add: connector.
+	self morph sandblockEditor openMorph: connector
 ]
 
 { #category : #'as yet unclassified' }
@@ -42,6 +46,24 @@ SBConnectDecorator >> connectors: anObject [
 	connectors := anObject
 ]
 
+{ #category : #'initialize-release' }
+SBConnectDecorator >> deleteConnectionPoints [
+	self connectionPoints do: [:point | point delete]
+]
+
+{ #category : #'initialize-release' }
+SBConnectDecorator >> deleteConnectors [
+	self connectors do: [:connector	| connector delete]
+]
+
+{ #category : #connecting }
+SBConnectDecorator >> endConnecting: anEvent [
+	| target |
+	target := self morphAtPoint: anEvent position satisfying: [:m | m isSandblock].
+	self addConnectorFrom: self morph to: target.
+	self isConnecting: false
+]
+
 { #category : #'as yet unclassified' }
 SBConnectDecorator >> example [
 
@@ -57,14 +79,52 @@ SBConnectDecorator >> initialize [
 	super initialize.
 	self 
 		isMouseClose: false;
-		connectors: Set new
+		connectors: Set new;
+		isConnecting: false
 ]
 
 { #category : #'initialize-release' }
 SBConnectDecorator >> initializeConnectionPoints [
 
-	self connectionPoints: (Array streamContents: [:stream | 4 timesRepeat: [stream nextPut:( CircleMorph new extent: 4@4; yourself)]]).
-	self connectionPoints do: [:morph | self morph owner addMorph: morph]
+	self connectionPoints: (Array streamContents: 
+		[:stream | 4 timesRepeat: [stream nextPut:
+			(CircleMorph new 
+				extent: 8@8;
+				yourself)]]).
+		
+	self connectionPoints do: [: connectionPoint | 
+		self initializeEventListenersOnConnectionPoint: connectionPoint.
+		self morph owner addMorph: connectionPoint].
+	
+	self initializeEventListenersOnMorph
+]
+
+{ #category : #'initialize-release' }
+SBConnectDecorator >> initializeEventListenersOnConnectionPoint: connectionPoint [
+
+	(self installEventBroadcasterFor: connectionPoint)
+			when: #mouseDown send: #startConnecting to: self;
+			when: #mouseUp send: #endConnecting: to: self.
+		
+]
+
+{ #category : #'initialize-release' }
+SBConnectDecorator >> initializeEventListenersOnMorph [
+
+	self morph 
+		when: #position: send: #positionConnectionPoints to: self;
+		when: #delete send: #deleteConnectionPoints to: self;
+		when: #delete send: #deleteConnectors to: self
+]
+
+{ #category : #accessing }
+SBConnectDecorator >> isConnecting [
+	^ isConnecting
+]
+
+{ #category : #accessing }
+SBConnectDecorator >> isConnecting: anObject [
+	isConnecting := anObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -79,7 +139,26 @@ SBConnectDecorator >> isMouseClose: aBoolean [
 	isMouseClose := aBoolean
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #connecting }
+SBConnectDecorator >> morphAtPoint: aPoint satisfying: aBlock [
+	"copied from SBForceMoveDecorator"
+	
+	| best bestArea |
+	best := nil.
+	bestArea := 0.
+	
+	self morph owner submorphsDo: [:aMorph |
+		((aMorph containsPoint: aPoint)
+			and: [aMorph bounds area > bestArea]
+			and: [aMorph ~= self morph]
+			and: [aBlock value: aMorph]) ifTrue: [
+			best := aMorph.
+			bestArea := aMorph bounds area]].
+	
+	^ best
+]
+
+{ #category : #'as yet unclassified' }
 SBConnectDecorator >> positionConnectionPoints [
 
 	self connectionPoints first center: self morph bounds topCenter.
@@ -95,6 +174,12 @@ SBConnectDecorator >> postDrawOn: aCanvas [
 	super postDrawOn: aCanvas
 ]
 
+{ #category : #connecting }
+SBConnectDecorator >> startConnecting [
+
+	self isConnecting: true
+]
+
 { #category : #stepping }
 SBConnectDecorator >> step [
 
@@ -103,8 +188,8 @@ SBConnectDecorator >> step [
 	newIsMouseClose ~= self isMouseClose ifTrue: [
 		self morph changed.
 		self isMouseClose: newIsMouseClose].
-	self connectionPoints do: [:connectionPoint | connectionPoint visible: newIsMouseClose].
-	self positionConnectionPoints
+	self connectionPoints do: [:connectionPoint | connectionPoint visible: (newIsMouseClose or: self isConnecting)].
+	self positionConnectionPoints	
 ]
 
 { #category : #stepping }

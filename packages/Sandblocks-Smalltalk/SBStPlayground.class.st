@@ -136,13 +136,17 @@ SBStPlayground >> initialize [
 			addMorphBack: (SBTextBubble new
 				layoutInset: 4;
 				colored: false;
-				color: Color white;
+				color: (Color r: 1 g: 1 b: 1);
 				contents: 'Workspace');
 			addMorphBack: (bindings := SBRow new cellGap: 4));
 		vResizing: #shrinkWrap;
 		hResizing: #rigid;
 		attachDecorator: SBForceMoveDecorator newConfigured;
-		attachDecorator: SBResizableDecorator new
+		attachDecorator: SBResizableDecorator new;
+		attachDecorator: SBConnectDecorator new.
+	
+	
+	
 ]
 
 { #category : #'as yet unclassified' }
