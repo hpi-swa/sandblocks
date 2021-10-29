@@ -21,6 +21,16 @@ SBTreeDecorator >> addChild: aDecorator [
 	aDecorator parent: self.
 ]
 
+{ #category : #'as yet unclassified' }
+SBTreeDecorator >> addExampleChildIn: aContainer [
+	
+	| child |
+	child := SBTreeDecorator new.
+	self addChild: child.
+	aContainer addMorph: (SBStPlayground new attachDecorator: child).
+	^ child.
+]
+
 { #category : #accessing }
 SBTreeDecorator >> ancestor [
 
@@ -123,14 +133,16 @@ SBTreeDecorator >> example [
 	
 	SBMorphExample
 		setUp: [SBBlock new]
-		cases: {SBMorphExampleCase name: 'example 1' caseBlock: [:container | | child1 child2 root child3 |
-			root := SBTreeDecorator new. child1 := SBTreeDecorator new. child2 := SBTreeDecorator new. child3 := SBTreeDecorator new. root addChild: child1; addChild: child2; addChild: child3.
+		cases: {SBMorphExampleCase name: 'example 1' caseBlock: [:container | | child1 child2 root |
+			root := SBTreeDecorator new.
+			child1 := root addExampleChildIn: container.
+			child2 := root addExampleChildIn: container.
+			root addExampleChildIn: container.
+			child1 addExampleChildIn: container; addExampleChildIn: container.
+			child2 addExampleChildIn: container; addExampleChildIn: container.
 			container addMorph: (SBStPlayground new attachDecorator: root).
-			container addMorph: (SBStPlayground new attachDecorator: child1).
-			container addMorph: (SBStPlayground new attachDecorator: child2).
-			container addMorph: (SBStPlayground new attachDecorator: child3).
 			root layout.]}
-		extent: 300 @ 300
+		extent: 1000 @ 1000
 ]
 
 { #category : #'as yet unclassified' }
