@@ -30,21 +30,24 @@ SBTreeDecorator class >> createExampleIn: aContainer [
 
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> addChild: aDecorator [
-	
+
 	self children add: aDecorator.
 	aDecorator parent: self.
 	self morph containingFloat owner
-		addMorphBack: (SBConnectorLine connect: self morph to: aDecorator morph).
+		addMorphBack: (SBConnectorLine connect: self morph to: aDecorator morph)
 ]
 
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> addExampleChildIn: aContainer [
-	
+
 	| child |
 	child := SBTreeDecorator new.
-	aContainer addMorph: (SBStPlayground new attachDecorator: child; detachDecorators: SBForceMoveDecorator; attachDecorator: SBMoveDecorator new).
+	aContainer addMorph: (SBStPlayground new
+		attachDecorator: child;
+		detachDecorators: SBForceMoveDecorator;
+		attachDecorator: SBMoveDecorator new).
 	self addChild: child.
-	^ child.
+	^ child
 ]
 
 { #category : #accessing }
@@ -61,8 +64,8 @@ SBTreeDecorator >> ancestor: anObject [
 
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> apportion: defaultAncestor [
-	
-	| left shift sil sir sol sor vil vir vol vor newDefaultAncestor|
+
+	| left shift sil sir sol sor vil vir vol vor newDefaultAncestor |
 	newDefaultAncestor := defaultAncestor.
 	left := self leftSibling.
 	left ifNotNil: [
@@ -85,8 +88,7 @@ SBTreeDecorator >> apportion: defaultAncestor [
 				a := (self parent children includes: vil ancestor) ifTrue: [vil ancestor] ifFalse: [defaultAncestor].
 				a moveSubtree: self by: shift.
 				sir := sir + shift.
-				sor := sor + shift.
-				].
+				sor := sor + shift].
 			sil := sil + vil mod.
 			sir := sir + vir mod.
 			sol := sol + vol mod.
@@ -95,10 +97,7 @@ SBTreeDecorator >> apportion: defaultAncestor [
 				ifTrue: [vor mod: vor mod + sil - sor]
 				ifFalse: [
 					(vir children notEmpty and: vol children isEmpty) ifTrue: [vol mod: vol mod + sir - sol].
-					newDefaultAncestor := self.]
-			
-			]
-		].	
+					newDefaultAncestor := self]]].	
 	^ newDefaultAncestor
 ]
 
@@ -146,51 +145,46 @@ SBTreeDecorator >> distance [
 
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> example [
-	
+
 	SBMorphExample
 		setUp: [SBBlock new]
 		cases: {SBMorphExampleCase name: 'example 1' caseBlock: [:container |
-			SBTreeDecorator createExampleIn: container.
-			"container position: 100@100."]}
+			SBTreeDecorator createExampleIn: container]}
 		extent: 1000 @ 1000
 ]
 
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> executeShifts [
-	
+
 	| shift change | 
 	shift := 0.
 	change := 0.
-	self children reverseDo: [ :child |
+	self children reverseDo: [:child |
 		child x: child x + shift.
 		child mod: child mod + shift.
 		change := change + child change.
-		shift := shift + child shift + change.
-		]
+		shift := shift + child shift + change]
 ]
 
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> firstWalk [
 
 	| left |
-	
 	left := self leftSibling.
 	
 	self children
-		ifEmpty: [
-			left ifNil: [self x: 0] ifNotNil: [self x: left x + self distance]]
+		ifEmpty: [left ifNil: [self x: 0] ifNotNil: [self x: left x + self distance]]
 		ifNotEmpty: [ | defaultAncestor midpoint |
 			defaultAncestor := self children first.
 			self children do: [ :child |
 				child depth: self depth + 1.
 				child firstWalk.
-				defaultAncestor := child apportion: defaultAncestor.
-				].
+				defaultAncestor := child apportion: defaultAncestor].
 			self executeShifts.
 			midpoint := (self children first x + self children last x) / 2.
 			left ifNil: [self x: midpoint] ifNotNil: [
 				self x: left x + self distance.
-				self mod: self x - midpoint]].
+				self mod: self x - midpoint]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -202,7 +196,7 @@ SBTreeDecorator >> initialize [
 	parent := nil.
 	mod := 0.
 	shift := 0.
-	change := 0.
+	change := 0
 ]
 
 { #category : #'as yet unclassified' }
@@ -210,12 +204,12 @@ SBTreeDecorator >> layout [
 
 	self
 		firstWalk;
-		secondWalk: 0.
+		secondWalk: 0
 ]
 
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> leftMostSibling [
-	
+
 	self parent
 		ifNil: [^ nil]
 		ifNotNil: [^ self parent children first]
@@ -223,16 +217,14 @@ SBTreeDecorator >> leftMostSibling [
 
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> leftSibling [
-	
+
 	self parent
 		ifNil: [^ nil]
 		ifNotNil: [ | last |
 			last := nil.
-			self parent children do: [ :child |
-				(child = self) ifTrue: [^ last] ifFalse: [last := child]
-				].
-			^ self parent children
-		]
+			self parent children do: [:child |
+				(child = self) ifTrue: [^ last] ifFalse: [last := child]].
+			^ self parent children]
 ]
 
 { #category : #accessing }
@@ -256,7 +248,7 @@ SBTreeDecorator >> moveSubtree: node by: shift [
 	node shift: node shift + shift.
 	node x: node x + shift.
 	node mod: node mod + shift.
-	self change: self change + shift / numberOfSubtrees.
+	self change: self change + shift / numberOfSubtrees
 ]
 
 { #category : #accessing }
@@ -276,7 +268,6 @@ SBTreeDecorator >> secondWalk: modSum [
 
 	self x: self x + modSum.
 	self morph position: self x @ self depth * 150.
-	
 	self children do: [:child | child secondWalk: modSum + self mod]
 ]
 
@@ -294,7 +285,7 @@ SBTreeDecorator >> shift: anObject [
 
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> siblingIndex [
-	
+
 	^ self parent ifNotNil: [self parent children indexOf: self] ifNil: [0]
 ]
 
@@ -309,7 +300,7 @@ SBTreeDecorator >> traverse [
 		child traverse. 
 		index := index + 1.
 		child x: index].
-	desiredX := (self children length - 1) / 2.
+	desiredX := (self children length - 1) / 2
 ]
 
 { #category : #accessing }
