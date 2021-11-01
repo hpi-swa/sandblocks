@@ -1,7 +1,7 @@
 Class {
 	#name : #SBPyFilepath,
 	#superclass : #SBInlineBlockReplace,
-	#category : #'Sandblocks-TreeSitter'
+	#category : #'Sandblocks-Python'
 }
 
 { #category : #'as yet unclassified' }

@@ -20,5 +20,9 @@ OrderedDictionary {
 	'packages/Sandblocks-Ohm' : #SquotTonelSerializer,
 	'packages/Sandblocks-Python' : #SquotTonelSerializer,
 	'packages/Sandblocks-Squeak6Fixes' : #SquotTonelSerializer,
-	'packages/Sandblocks-TreeSitter' : #SquotTonelSerializer
+	'packages/Sandblocks-TreeSitter' : #SquotTonelSerializer,
+	'packages/Sandblocks-Ruby' : #SquotTonelSerializer,
+	'packages/Sandblocks-Regex' : #SquotTonelSerializer,
+	'packages/Sandblocks-Json' : #SquotTonelSerializer,
+	'packages/Sandblocks-GDScript' : #SquotTonelSerializer
 }

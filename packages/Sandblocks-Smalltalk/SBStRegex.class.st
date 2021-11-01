@@ -1,5 +1,5 @@
 Class {
-	#name : #SBRegex,
+	#name : #SBStRegex,
 	#superclass : #SBStSubstitution,
 	#instVars : [
 		'text',
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBRegex class >> matches: aBlock [
+SBStRegex class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
 
@@ -19,7 +19,7 @@ SBRegex class >> matches: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex class >> newFor: aBubble [
+SBStRegex class >> newFor: aBubble [
 
 	^ aBubble selector = 'asRegex'
 		ifTrue: [
@@ -31,13 +31,13 @@ SBRegex class >> newFor: aBubble [
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex class >> regex: aRegex examples: aCollection [
+SBStRegex class >> regex: aRegex examples: aCollection [
 
 	^ aRegex asRegex
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> addExample: aString [
+SBStRegex >> addExample: aString [
 
 	examples
 		addMorph: (self createExample: aString)
@@ -46,13 +46,13 @@ SBRegex >> addExample: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> canDeleteChild: aBlock [
+SBStRegex >> canDeleteChild: aBlock [
 
 	^ aBlock owner = examples
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> checkExamples [
+SBStRegex >> checkExamples [
 
 	examples submorphsDo: [:example |
 		(self regexMatches: example contents)
@@ -61,19 +61,19 @@ SBRegex >> checkExamples [
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> contents [
+SBStRegex >> contents [
 
 	^ text contents
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> contents: aString [
+SBStRegex >> contents: aString [
 
 	text contents: aString
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> createExample: aString [
+SBStRegex >> createExample: aString [
 
 	^ SBTextBubble new
 		contents: aString;
@@ -82,19 +82,19 @@ SBRegex >> createExample: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> currentTextMorph [
+SBStRegex >> currentTextMorph [
 
 	^ text
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> guessedClass [
+SBStRegex >> guessedClass [
 
 	^ RxParser preferredMatcherClass
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> initialize [
+SBStRegex >> initialize [
 
 	super initialize.
 	
@@ -115,31 +115,31 @@ SBRegex >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> newEmptyChildNear: aBlock before: aBoolean [
+SBStRegex >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ self createExample: ''
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> prefix [
+SBStRegex >> prefix [
 
 	^ 'r '
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> printOn: aStream [
+SBStRegex >> printOn: aStream [
 
 	aStream nextPutAll: 'regex '; nextPutAll: self contents
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> regexMatches: aString [
+SBStRegex >> regexMatches: aString [
 
 	^ self contents asRegex matches: aString
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> regexString: aString examples: aCollection [
+SBStRegex >> regexString: aString examples: aCollection [
 
 	self contents: aString.
 	
@@ -148,7 +148,7 @@ SBRegex >> regexString: aString examples: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> stopEditing: aCommand [
+SBStRegex >> stopEditing: aCommand [
 
 	aCommand
 		newText: self contents;
@@ -158,13 +158,13 @@ SBRegex >> stopEditing: aCommand [
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> symbols [
+SBStRegex >> symbols [
 
 	^ self colorPolicy symbolsForRegex: self
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> toggleExamples [
+SBStRegex >> toggleExamples [
 
 	examples owner
 		ifNotNil: [examples delete]
@@ -172,20 +172,20 @@ SBRegex >> toggleExamples [
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> updateLabel [
+SBStRegex >> updateLabel [
 
 	exampleLabel contents: ' -- Examples: '
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> valid [
+SBStRegex >> valid [
 
 	[self contents asRegex] on: RegexSyntaxError do: [^ false].
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBRegex >> writeSourceOn: aStream [
+SBStRegex >> writeSourceOn: aStream [
 
 	examples hasSubmorphs
 		ifTrue: [
