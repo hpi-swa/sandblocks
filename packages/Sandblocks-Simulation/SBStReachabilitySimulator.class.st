@@ -5,7 +5,7 @@ Class {
 	#instVars : [
 		'store'
 	],
-	#category : #'Sandblocks-Smalltalk'
+	#category : #'Sandblocks-Simulation'
 }
 
 { #category : #'initialize-release' }

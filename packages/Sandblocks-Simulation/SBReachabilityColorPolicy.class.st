@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'methods'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Simulation'
 }
 
 { #category : #'as yet unclassified' }

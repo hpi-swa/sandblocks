@@ -24,5 +24,6 @@ OrderedDictionary {
 	'packages/Sandblocks-Ruby' : #SquotTonelSerializer,
 	'packages/Sandblocks-Regex' : #SquotTonelSerializer,
 	'packages/Sandblocks-Json' : #SquotTonelSerializer,
-	'packages/Sandblocks-GDScript' : #SquotTonelSerializer
+	'packages/Sandblocks-GDScript' : #SquotTonelSerializer,
+	'packages/Sandblocks-Simulation' : #SquotTonelSerializer
 }

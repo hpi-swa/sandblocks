@@ -1,7 +1,7 @@
 Class {
 	#name : #SBReachabilitySimulatorTest,
 	#superclass : #SBTest,
-	#category : #'Sandblocks-Core-Tests'
+	#category : #'Sandblocks-Simulation'
 }
 
 { #category : #accessing }
