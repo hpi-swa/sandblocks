@@ -1,89 +1,40 @@
 Class {
 	#name : #SBStReachabilitySimulator,
-	#superclass : #SBStSimulator,
+	#superclass : #SimulationContext,
+	#type : #variable,
 	#instVars : [
 		'store'
 	],
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
-SBStReachabilitySimulator >> jump: offset if: condition [ 
-	store report: currentContext method pc: currentContext previousPc.
-	^ super jump: offset if: condition
+{ #category : #'initialize-release' }
+SBStReachabilitySimulator >> initializeFrom: anotherContext [
+
+	super initializeFrom: anotherContext.
+	store := anotherContext store.
 ]
 
-{ #category : #'as yet unclassified' }
-SBStReachabilitySimulator >> methodReturnConstant: value [ 
+{ #category : #private }
+SBStReachabilitySimulator >> report [
 
-	store report: currentContext method pc: currentContext previousPc.
-	^ super methodReturnConstant: value
+	store report: self method pc: self pc.
 ]
 
-{ #category : #'as yet unclassified' }
-SBStReachabilitySimulator >> methodReturnReceiver [
+{ #category : #'system simulation' }
+SBStReachabilitySimulator >> step [
 
-	store report: currentContext method pc: currentContext previousPc.
-	^ super methodReturnReceiver
+	self report.
+	^ super step
 ]
 
-{ #category : #'as yet unclassified' }
-SBStReachabilitySimulator >> methodReturnTop [
+{ #category : #accessing }
+SBStReachabilitySimulator >> store [
 
-	store report: currentContext method pc: currentContext previousPc.
-	^ super methodReturnTop
+	^ store
 ]
 
-{ #category : #'as yet unclassified' }
-SBStReachabilitySimulator >> popIntoLiteralVariable: offset [ 
-
-	store report: currentContext method pc: currentContext previousPc.
-	^ super popIntoLiteralVariable: offset
-]
-
-{ #category : #'as yet unclassified' }
-SBStReachabilitySimulator >> popIntoReceiverVariable: offset [ 
-
-	store report: currentContext method pc: currentContext previousPc.
-	^ super popIntoReceiverVariable: offset
-]
-
-{ #category : #'as yet unclassified' }
-SBStReachabilitySimulator >> popIntoRemoteTemp: remoteTempIndex inVectorAt: tempVectorIndex [
-
-	store report: currentContext method pc: currentContext previousPc.
-	^ super popIntoRemoteTemp: remoteTempIndex inVectorAt: tempVectorIndex
-]
-
-{ #category : #'as yet unclassified' }
-SBStReachabilitySimulator >> popIntoTemporaryVariable: offset [ 
-
-	store report: currentContext method pc: currentContext previousPc.
-	^ super popIntoTemporaryVariable: offset
-]
-
-{ #category : #'as yet unclassified' }
-SBStReachabilitySimulator >> pushClosureCopyNumCopiedValues: numCopied numArgs: numArgs blockSize: blockSize [
-
-	store report: currentContext method pc: currentContext previousPc.
-	^ super pushClosureCopyNumCopiedValues: numCopied numArgs: numArgs blockSize: blockSize
-]
-
-{ #category : #'as yet unclassified' }
-SBStReachabilitySimulator >> pushFullClosure: aCompiledBlock numCopied: numCopied [
-
-	store report: currentContext method pc: currentContext previousPc.
-	^ super pushFullClosure: aCompiledBlock numCopied: numCopied
-]
-
-{ #category : #'as yet unclassified' }
-SBStReachabilitySimulator >> send: selector super: supered numArgs: numArgs [
-
-	store report: currentContext method pc: currentContext previousPc.
-	^ super send: selector super: supered numArgs: numArgs
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStReachabilitySimulator >> store: aColorPolicy [
 
 	store := aColorPolicy

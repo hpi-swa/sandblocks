@@ -47,7 +47,7 @@ SBExtractFieldRepresentation >> name: aSymbol [
 { #category : #'as yet unclassified' }
 SBExtractFieldRepresentation >> newFor: anObject [
 
-	^ SBStSandboxSimulator new simulate: [anObject perform: name]
+	^ Sandbox evaluate: [anObject perform: name]
 ]
 
 { #category : #'as yet unclassified' }

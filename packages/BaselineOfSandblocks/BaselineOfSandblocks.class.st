@@ -50,13 +50,17 @@ BaselineOfSandblocks >> baseline: spec [
 			baseline: 'RatPack' with: [spec repository: 'github://hpi-swa-teaching/RatPack:develop/packages'];
 			baseline: 'QoppaS' with: [spec repository: 'github://hpi-swa-lab/QoppaS/packages'];
 			baseline: 'Ohm' with: [spec repository: 'github://hpi-swa/Ohm-S:master/packages'];
+			baseline: 'SimulationStudio' with: [
+				spec
+					repository: 'github://LinqLover/SimulationStudio/packages';
+					loads: #('SimulationStudio-Base' 'SimulationStudio-Sandbox')];
 			package: 'SVG-Morphic' with: [spec repository: 'http://www.squeaksource.com/SVGMorph'];
 			package: 'PoppyPrint-Core' with: [spec repository: 'github://tom95/poppy-print/packages'].
 
 		spec
 			package: 'Sandblocks-Core'
 				with: [spec requires: #('SVG-Morphic' 'Sandblocks-Morphs' 'Sandblocks-Layout' 'compatibility')];
-			package: 'Sandblocks-Smalltalk' with: [spec requires: #('Sandblocks-Core' 'PoppyPrint-Core')];
+			package: 'Sandblocks-Smalltalk' with: [spec requires: #('Sandblocks-Core' 'SimulationStudio' 'PoppyPrint-Core')];
 			package: 'Sandblocks-Explorer' with: [spec requires: #('Sandblocks-Core')];
 			package: 'Sandblocks-Watch' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-Debugger' with: [spec requires: 'Sandblocks-Core'];
@@ -72,7 +76,7 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Compiler' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-Babylonian' with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Smalltalk')];
 			package: 'Sandblocks-Tutorial' with: [spec requires: 'default'];
-			package: 'Sandblocks-Representation' with: [spec requires: 'Sandblocks-Core'];
+			package: 'Sandblocks-Representation' with: [spec requires: #('Sandblocks-Core' 'SimulationStudio')];
 			package: 'Sandblocks-RatPack' with: [spec requires: #('default' 'RatPack')];
 			package: 'Sandblocks-ActiveExpression' with: [spec requires: #('default' 'ActiveExpressions')];
 			package: 'JumpingCubes' with: [spec requires: #('Sandblocks-ActiveExpression')].
