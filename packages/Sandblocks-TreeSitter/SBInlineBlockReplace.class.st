@@ -5,12 +5,9 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBInlineBlockReplace class >> matchAgainst: aBlock [
+SBInlineBlockReplace >> childrenForQueryDo: aBlock [
 
-	| query captures |
-	query := (self class >> #matchPython:) pragmas first arguments second.
-	captures := nil.
-	(SBTSQuery new execute: query against: aBlock capturesDo: [:c | captures := c]) ifTrue: [self matchPython: captures]
+	
 ]
 
 { #category : #'as yet unclassified' }

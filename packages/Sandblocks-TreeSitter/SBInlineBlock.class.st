@@ -29,6 +29,22 @@ SBInlineBlock >> allElementsDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> applyReplacements [
+	<action>
+
+	| replacements commands |
+	replacements := SBInlineBlockReplace allSubclasses gather: [:class | (Pragma allNamed: #lang:match: in: class class) select: [:pragma | pragma arguments first = self factory name]].
+	commands := Array streamContents: [:stream |
+		self allBlocksDo: [:block |
+			replacements do: [:pragma |
+				SBTSQuery new execute: pragma arguments second against: block capturesDo: [:captures |
+					stream nextPut: (pragma methodClass theNonMetaClass
+						perform: pragma selector
+						with: captures)]]]].
+	commands ifNotEmpty: [self sandblockEditor do: (SBCombinedCommand newWith: commands)]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> artefactChanged: aMethodBlock [
 
 	aMethodBlock = self ifTrue: [self updateAllHighlights]
@@ -90,7 +106,7 @@ SBInlineBlock >> childSymbolsDo: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlock >> childrenForQuery [
 
-	^ Array streamContents: [:s | self submorphsDo: [:m | m childrenForQueryDo: [:child | s nextPut: child]]]
+	^ Array streamContents: [:s | self submorphsDo: [:m | (m isKindOf: SBInlineBlock) ifTrue: [m childrenForQueryDo: [:child | s nextPut: child]]]]
 ]
 
 { #category : #'as yet unclassified' }

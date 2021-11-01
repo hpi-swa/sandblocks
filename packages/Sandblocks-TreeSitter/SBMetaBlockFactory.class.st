@@ -23780,6 +23780,12 @@ SBMetaBlockFactory >> mergeRepeats: anObject [
 	anObject members ifNotNil: [anObject members do: [:m | self mergeRepeats: m]]
 ]
 
+{ #category : #'as yet unclassified' }
+SBMetaBlockFactory >> name [
+
+	^ name
+]
+
 { #category : #accessing }
 SBMetaBlockFactory >> name: aSymbol preprocess: aBlock postprocess: anotherBlock grammar: aString highlight: anotherString [
 

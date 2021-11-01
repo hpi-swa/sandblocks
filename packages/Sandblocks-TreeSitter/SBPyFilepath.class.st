@@ -11,7 +11,12 @@ SBPyFilepath class >> matchPython: aDictionary [
     (argument_list
     	(string) @path))'>
 
-	(aDictionary at: 'path') replaceBy: (self new path: (aDictionary at: 'path') contents)
+	
+	^ SBReplaceCommand new
+		target: (aDictionary at: 'path');
+		replacer: (self new
+			factory: (aDictionary at: 'path') factory;
+			path: (aDictionary at: 'path') contents)
 ]
 
 { #category : #'as yet unclassified' }
