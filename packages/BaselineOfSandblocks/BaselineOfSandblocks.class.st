@@ -62,7 +62,7 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Core'
 				with: [spec requires: #('SVG-Morphic' 'Sandblocks-Morphs' 'Sandblocks-Layout' 'squeak6-extra')];
 			package: 'Sandblocks-Smalltalk'
-				with: [spec requires: #('Sandblocks-Core' 'SimulationStudio' 'PoppyPrint-Core')];
+				with: [spec requires: #('Sandblocks-Core' 'PoppyPrint-Core' 'squeak6-extra')];
 			package: 'Sandblocks-Explorer' with: [spec requires: #('Sandblocks-Core')];
 			package: 'Sandblocks-Watch' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-Debugger' with: [spec requires: 'Sandblocks-Core'];
@@ -80,8 +80,7 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Babylonian'
 				with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Smalltalk')];
 			package: 'Sandblocks-Tutorial' with: [spec requires: 'default'];
-			package: 'Sandblocks-Representation'
-				with: [spec requires: #('Sandblocks-Core' 'SimulationStudio')];
+			package: 'Sandblocks-Representation' with: [spec requires: #('Sandblocks-Core' 'squeak6-extra')];
 			package: 'Sandblocks-RatPack' with: [spec requires: #('default' 'RatPack')];
 			package: 'Sandblocks-ActiveExpression' with: [spec requires: #('default' 'ActiveExpressions')];
 			package: 'JumpingCubes' with: [spec requires: #('Sandblocks-ActiveExpression')].
@@ -90,7 +89,7 @@ BaselineOfSandblocks >> baseline: spec [
 		spec for: #'squeak6.x' do: [
 			spec
 				package: 'Sandblocks-Squeak6Fixes';
-				package: 'Sandblocks-Simulation';
+				package: 'Sandblocks-Simulation' with: [spec requires: #('SimulationStudio')];
 				group: 'squeak6-extra' with: #('Sandblocks-Squeak6Fixes' 'Sandblocks-Simulation')].
 		
 		spec
