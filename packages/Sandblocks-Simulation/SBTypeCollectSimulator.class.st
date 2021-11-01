@@ -6,7 +6,7 @@ Class {
 		'methodMap',
 		'topContext'
 	],
-	#category : #'Sandblocks-Babylonian'
+	#category : #'Sandblocks-Simulation'
 }
 
 { #category : #'instruction decoding' }

@@ -127,12 +127,17 @@ SBExample >> collectTypeInfo [
 	arguments := [self evaluateArguments] on: Error do: [^ self].
 	selector := self containingArtefact selector asSymbol.
 	
-	self containingArtefact arguments with: arguments do: [:arg :obj |
-		self containingArtefact cacheType: obj class for: arg].
+	self containingArtefact arguments
+		with: arguments
+		do: [:arg :obj | self containingArtefact cacheType: obj class for: arg].
 	
-	SBTypeCollectSimulator new
-		methodMap: self currentMethodMap;
-		runSimulated: [[receiver perform: selector withArguments: arguments] on: Error do: []]
+	Smalltalk at: #SBTypeCollectSimulator ifPresent: [:typeCollectorClass |
+		typeCollectorClass new
+			methodMap: self currentMethodMap;
+			runSimulated: [
+				[receiver perform: selector withArguments: arguments]
+					on: Error
+					do: []]]
 ]
 
 { #category : #'as yet unclassified' }
