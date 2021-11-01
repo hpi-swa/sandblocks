@@ -1,7 +1,7 @@
 Class {
 	#name : #SBJsGrammarHandler,
 	#superclass : #SBGrammarHandler,
-	#category : #'Sandblocks-Javascript'
+	#category : #'Sandblocks-CustomJavascript'
 }
 
 { #category : #'callback helpers' }

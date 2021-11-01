@@ -72,7 +72,7 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Drawing' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-Ohm'
 				with: [spec requires: #('Sandblocks-Core' 'Ohm' 'Sandblocks-Smalltalk')];
-			package: 'Sandblocks-Javascript'
+			package: 'Sandblocks-CustomJavascript'
 				with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Representation' 'Ohm')];
 			package: 'Sandblocks-Scheme'
 				with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Representation' 'QoppaS')];
@@ -80,7 +80,8 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Babylonian'
 				with: [spec requires: #('Sandblocks-Core' 'Sandblocks-Smalltalk')];
 			package: 'Sandblocks-Tutorial' with: [spec requires: 'default'];
-			package: 'Sandblocks-Representation' with: [spec requires: #('Sandblocks-Core' 'squeak6-simulation')];
+			package: 'Sandblocks-Representation'
+				with: [spec requires: #('Sandblocks-Core' 'squeak6-simulation')];
 			package: 'Sandblocks-RatPack' with: [spec requires: #('default' 'RatPack')];
 			package: 'Sandblocks-ActiveExpression' with: [spec requires: #('default' 'ActiveExpressions')];
 			package: 'JumpingCubes' with: [spec requires: #('Sandblocks-ActiveExpression')].
@@ -96,7 +97,7 @@ BaselineOfSandblocks >> baseline: spec [
 		
 		spec
 			group: 'default'
-				with: #('Sandblocks-Core' 'Sandblocks-Smalltalk' 'Sandblocks-Layout' 'Sandblocks-Utils' 'Sandblocks-Debugger' 'Sandblocks-Morphs' 'Sandblocks-Explorer' 'Sandblocks-Watch' 'Sandblocks-Drawing' 'Sandblocks-Representation' 'Sandblocks-Compiler' 'Sandblocks-Babylonian' 'Sandblocks-Javascript' 'Sandblocks-Scheme' 'Sandblocks-Ohm');
+				with: #('Sandblocks-Core' 'Sandblocks-Smalltalk' 'Sandblocks-Layout' 'Sandblocks-Utils' 'Sandblocks-Debugger' 'Sandblocks-Morphs' 'Sandblocks-Explorer' 'Sandblocks-Watch' 'Sandblocks-Drawing' 'Sandblocks-Representation' 'Sandblocks-Compiler' 'Sandblocks-Babylonian' 'Sandblocks-CustomJavascript' 'Sandblocks-Scheme' 'Sandblocks-Ohm');
 			group: 'tutorial' with: #('Sandblocks-Tutorial');
 			group: 'withActiveExpressions' with: #('Sandblocks-ActiveExpression' 'JumpingCubes');
 			group: 'withRatPack' with: #('Sandblocks-RatPack')]

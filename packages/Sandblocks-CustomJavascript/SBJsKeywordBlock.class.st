@@ -1,7 +1,7 @@
 Class {
 	#name : #SBJsKeywordBlock,
 	#superclass : #SBJsBlockScope,
-	#category : #'Sandblocks-Javascript'
+	#category : #'Sandblocks-CustomJavascript'
 }
 
 { #category : #'as yet unclassified' }

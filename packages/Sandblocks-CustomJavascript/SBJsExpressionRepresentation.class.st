@@ -1,7 +1,7 @@
 Class {
 	#name : #SBJsExpressionRepresentation,
 	#superclass : #SBRepresentation,
-	#category : #'Sandblocks-Javascript'
+	#category : #'Sandblocks-CustomJavascript'
 }
 
 { #category : #'as yet unclassified' }

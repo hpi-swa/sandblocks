@@ -1,7 +1,7 @@
 Class {
 	#name : #SBJsSemantic,
 	#superclass : #OhmSemanticAction,
-	#category : #'Sandblocks-Javascript'
+	#category : #'Sandblocks-CustomJavascript'
 }
 
 { #category : #'as yet unclassified' }

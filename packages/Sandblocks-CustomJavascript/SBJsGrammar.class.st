@@ -1,7 +1,7 @@
 Class {
 	#name : #SBJsGrammar,
 	#superclass : #OhmGrammarSmalltalkProxy,
-	#category : #'Sandblocks-Javascript'
+	#category : #'Sandblocks-CustomJavascript'
 }
 
 { #category : #'as yet unclassified' }

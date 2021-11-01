@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'symbols'
 	],
-	#category : #'Sandblocks-Javascript'
+	#category : #'Sandblocks-CustomJavascript'
 }
 
 { #category : #'as yet unclassified' }

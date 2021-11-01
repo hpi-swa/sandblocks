@@ -1,7 +1,7 @@
 Class {
 	#name : #SBJsVariable,
 	#superclass : #SBJsLiteral,
-	#category : #'Sandblocks-Javascript'
+	#category : #'Sandblocks-CustomJavascript'
 }
 
 { #category : #'as yet unclassified' }

@@ -1,7 +1,7 @@
 Class {
 	#name : #SBJsInfixOperator,
 	#superclass : #SBJsASTNode,
-	#category : #'Sandblocks-Javascript'
+	#category : #'Sandblocks-CustomJavascript'
 }
 
 { #category : #'as yet unclassified' }

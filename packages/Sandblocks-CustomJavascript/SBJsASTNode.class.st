@@ -1,7 +1,7 @@
 Class {
 	#name : #SBJsASTNode,
 	#superclass : #SBBlock,
-	#category : #'Sandblocks-Javascript'
+	#category : #'Sandblocks-CustomJavascript'
 }
 
 { #category : #'as yet unclassified' }
