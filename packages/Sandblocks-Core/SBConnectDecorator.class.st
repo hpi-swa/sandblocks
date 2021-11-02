@@ -12,10 +12,12 @@ Class {
 
 { #category : #connecting }
 SBConnectDecorator >> addConnectorFrom: sourceMorph to: destinationMorph [
+
 	| connector |
-	connector := (SBConnectorLine connect: sourceMorph to: destinationMorph).
-	self connectors add: connector.
-	self morph sandblockEditor openMorph: connector
+	(self connectors anySatisfy: [:con | con to = destinationMorph]) ifFalse: [
+		connector := SBNodeConnector connect: sourceMorph to: destinationMorph.
+		self connectors add: connector.
+		self morph sandblockEditor openMorph: connector]
 ]
 
 { #category : #'as yet unclassified' }
@@ -58,9 +60,10 @@ SBConnectDecorator >> deleteConnectors [
 
 { #category : #connecting }
 SBConnectDecorator >> endConnecting: anEvent [
+
 	| target |
 	target := self morphAtPoint: anEvent position satisfying: [:m | m isSandblock].
-	self addConnectorFrom: self morph to: target.
+	target ifNotNil: [self addConnectorFrom: self morph to: target].
 	self isConnecting: false
 ]
 
@@ -112,7 +115,7 @@ SBConnectDecorator >> initializeEventListenersOnConnectionPoint: connectionPoint
 SBConnectDecorator >> initializeEventListenersOnMorph [
 
 	self morph 
-		when: #position: send: #positionConnectionPoints to: self;
+		when: #positionChanged send: #positionConnectionPoints to: self;
 		when: #delete send: #deleteConnectionPoints to: self;
 		when: #delete send: #deleteConnectors to: self
 ]
@@ -172,6 +175,13 @@ SBConnectDecorator >> postDrawOn: aCanvas [
 
 	self isMouseClose ifTrue: [aCanvas frameRectangle: self morph bounds color: Color red].
 	super postDrawOn: aCanvas
+]
+
+{ #category : #connecting }
+SBConnectDecorator >> removeConnector: aConnector [
+	
+	self connectors remove: aConnector.
+	aConnector abandon
 ]
 
 { #category : #connecting }
