@@ -113,9 +113,9 @@ SBStASTNode >> guessClassExpensive [
 	^ self guessedClass ifNil: [
 		(Smalltalk at: #Sandbox) ifNotNil: [:sandboxClass |
 			[
-				sandboxClass new
+				(sandboxClass new
 					stepLimit: 100000;
-					evaluate: [self evaluate class] ifFailed: [nil]]
+					evaluate: [self evaluate] ifFailed: [nil]) ifNotNil: #class]
 				on: SandboxError
 				do: [:err | nil]]]
 ]

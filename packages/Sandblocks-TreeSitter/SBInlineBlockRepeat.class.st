@@ -159,6 +159,12 @@ SBInlineBlockRepeat >> insertCommandRequest: aMorph near: aBlock before: aBoolea
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockRepeat >> isTemplate [
+
+	^ required and: [self hasSubmorphs not]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockRepeat >> layoutCommands [
 
 	^ SBAlgebraCommand container

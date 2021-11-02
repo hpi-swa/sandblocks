@@ -133,6 +133,12 @@ SBInlineBlockText >> inline [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockText >> isTemplate [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockText >> labelDifferenceOf: aMorph do: aBlock [
 
 	^ self regexString = aMorph regexString

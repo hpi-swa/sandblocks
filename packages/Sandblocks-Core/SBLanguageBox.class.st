@@ -163,7 +163,7 @@ SBLanguageBox >> root [
 { #category : #accessing }
 SBLanguageBox >> setEmptyWithHint: aString [
 
-	self statements: {self root newNullBlock label: aString}
+	self statements: {self root grammarHandler newNullBlock label: aString}
 ]
 
 { #category : #initialization }

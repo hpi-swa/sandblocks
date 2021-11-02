@@ -95,6 +95,12 @@ SBTSUnknown >> isBuilt [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSUnknown >> isTemplate [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBTSUnknown >> keyStroke: anEvent [
 
 	self currentTextMorph keyStroke: anEvent.

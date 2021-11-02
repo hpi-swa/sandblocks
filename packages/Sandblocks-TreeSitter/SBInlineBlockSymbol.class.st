@@ -199,6 +199,12 @@ SBInlineBlockSymbol >> isSuperType [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> isTemplate [
+
+	^ self hasSubmorphs not
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> labelDifferenceOf: aMorph do: aBlock [
 
 	self type = aMorph type ifFalse: [
