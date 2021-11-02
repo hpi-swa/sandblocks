@@ -56,8 +56,8 @@ SBTSParseExplore >> explore: aStream type: aString factory: aFactory [
 			ifAbsent: [
 				stack removeLast.
 				(stream atEnd and: [stack isEmpty]) ifTrue: [^ root].
-				(block buildWithFields: stream alternatives: Dictionary new) not ifTrue: [self restartFromLastChoiceIfDone: [^ nil]].
-				(stack isEmpty and: [stream atEnd not]) ifTrue: [self restartFromLastChoiceIfDone: [^ nil]].]].
+				(block buildWithFields: stream alternatives: Dictionary new) ifFalse: [self restartFromLastChoiceIfDone: [^ nil]].
+				(stack isEmpty and: [stream atEnd not]) ifTrue: [self restartFromLastChoiceIfDone: [^ nil]]]].
 	
 	^ root
 ]

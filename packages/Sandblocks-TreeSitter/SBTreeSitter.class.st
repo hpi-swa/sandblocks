@@ -138,6 +138,13 @@ SBTreeSitter >> gdscript [
 ]
 
 { #category : #'ffi languages' }
+SBTreeSitter >> java [
+
+	<apicall: SBTSLanguage* tree_sitter_java () module: 'tree-sitter-java'>
+	^ self externalCallFailed
+]
+
+{ #category : #'ffi languages' }
 SBTreeSitter >> javascript [
 
 	<apicall: SBTSLanguage* tree_sitter_javascript () module: 'tree-sitter-javascript'>

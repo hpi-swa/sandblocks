@@ -70,20 +70,49 @@ SBMetaBlockFactory class >> generateFFIMethodFor: aName [
 ]
 
 { #category : #helper }
-SBMetaBlockFactory class >> generateGrammarMethodFrom: path name: aString [
+SBMetaBlockFactory class >> generateGrammarMethodFrom: path name: aString github: anotherString [
 
 	| grammarFile highlightsFile |
-	[
-		grammarFile := path / 'src' / 'grammar.json' in: [:file | file exists ifTrue: [FileStream readOnlyFileNamed: file fullName]  ifFalse: [nil]].
-		highlightsFile := path / 'queries' / 'highlights.scm' in: [:file | file exists ifTrue: [FileStream readOnlyFileNamed: file fullName]  ifFalse: [nil]].
+	[ | class |
+		grammarFile := path / 'src' / 'grammar.json' in: [:file | file exists ifTrue: [FileStream readOnlyFileNamed: file fullName] ifFalse: [nil]].
+		highlightsFile := path / 'queries' / 'highlights.scm' in: [:file | file exists ifTrue: [FileStream readOnlyFileNamed: file fullName] ifFalse: [nil]].
 		
-		self class
-			compile: ('{4}
+		class := SBGrammarLanguage
+			subclass: ('SB', aString capitalized) asSymbol
+			instanceVariableNames: ''
+			classVariableNames: ''
+			poolDictionaries: ''
+			category: 'Sandblocks-', aString capitalized.
+		class class
+			compile: ('grammarJson
 
-		^ SBMetaBlockFactory new name: {1} preprocess: [:f|] postprocess: [:f|] grammar: {2} highlight: {3}' format: {aString storeString. grammarFile contents storeString. highlightsFile ifNotNil: [:f | f contents storeString] ifNil: ['''''']. aString})
-			classified: 'languages'] ensure: [
-				grammarFile ifNotNil: #close.
-				highlightsFile ifNotNil: #close]
+    " https://github.com/{1}/blob/master/src/grammar.json "
+    ^ {2}' format: {anotherString. grammarFile contents storeString})
+			classified: 'properties'.
+		class class
+			compile: ('language
+
+    ^ {1}' format: {aString asSymbol storeString})
+			classified: 'properties'.
+		class class compile: 'rootRuleName
+
+    ^ self shouldImplement' classified: 'properties'.
+		
+		highlightsFile ifNotNil: [:f |
+			class class
+				compile: ('highlightQuery
+
+    " https://github.com/{1}/blob/master/src/queries/highlights.scm "
+    ^ {2}' format: {anotherString. f contents storeString})
+				classified: 'properties']] ensure: [
+		grammarFile ifNotNil: #close.
+		highlightsFile ifNotNil: #close]
+]
+
+{ #category : #languages }
+SBMetaBlockFactory class >> loadDefaultLanguage: aString [
+
+	^ self loadLanguage: 'tree-sitter/tree-sitter-', aString name: aString
 ]
 
 { #category : #languages }
@@ -92,7 +121,7 @@ SBMetaBlockFactory class >> loadLanguage: aGithubString name: aString [
 	| path |
 	path := self fetchLibrary: aGithubString language: aString.
 	self compileParserIn: path name: aString.
-	self generateGrammarMethodFrom: path name: aString.
+	self generateGrammarMethodFrom: path name: aString github: aGithubString.
 	self generateFFIMethodFor: aString
 ]
 
