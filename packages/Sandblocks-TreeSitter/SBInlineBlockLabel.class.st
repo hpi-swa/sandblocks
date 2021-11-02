@@ -107,6 +107,12 @@ SBInlineBlockLabel >> inline [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockLabel >> isTemplate [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockLabel >> label [
 
 	^ self firstSubmorph contents

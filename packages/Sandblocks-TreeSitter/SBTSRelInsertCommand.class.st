@@ -20,8 +20,7 @@ SBTSRelInsertCommand >> continueAfterInsert [
 { #category : #'as yet unclassified' }
 SBTSRelInsertCommand >> do [
 
-	morph := morph ifNil: [
-		element isBuilt ifTrue: [element] ifFalse: [element instantiate]].
+	morph := morph ifNil: [element isTemplate ifTrue: [element instantiate] ifFalse: [element]].
 	super do.
 	^ morph firstBlock ifNil: #containingSandblock
 ]
