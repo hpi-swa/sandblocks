@@ -113,12 +113,9 @@ SBTreeSitter >> externalCallFailed [
 	^ ExternalFunction getLastError = 15
 		ifTrue: [ | path |
 			path := SBMetaBlockFactory fetchTreeSitter fullName.
-			self class methodDict valuesDo: [:method | | name |
-				name := method externalLibraryName.
-				SBToggledCode comment: '' active: 2 do: {
-					[method externalLibraryName: path].
-					[" only change for those that don't have an explicit module (lang-specific) "
-					(method hasPragma: #apicall:) ifTrue: [method externalLibraryName: path]]}].
+			self class methodDict valuesDo: [:method |
+				" only change for those that don't have an explicit module (lang-specific) "
+				method methodReference category ~= 'ffi languages' ifTrue: [method externalLibraryName: path]].
 			thisContext sender method externalLibraryFunction invokeWithArguments: thisContext sender arguments]
 		ifFalse: [self externalCallFailed]
 ]
