@@ -27,6 +27,15 @@ SBUpdatingPaletteContainer >> addPalette: aPalette [
 ]
 
 { #category : #'as yet unclassified' }
+SBUpdatingPaletteContainer >> delete [
+
+	super delete.
+	categories removeAllMorphs.
+	content removeAllMorphs.
+	paletteMapping := Dictionary new
+]
+
+{ #category : #'as yet unclassified' }
 SBUpdatingPaletteContainer >> initialize [
 
 	super initialize.

@@ -9,23 +9,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBInlineBlockSymbol >> advanceParseFrom: aCursor index: aNumber [
-
-	type = 'assignment' ifTrue: [self halt].
-	^ (factory type: aCursor type compatibleWith: type)
-		ifTrue: [ | descend |
-			" if types were only compatible but not matching this is a hidden symbol "
-			descend := aCursor type = type.
-			descend
-				ifTrue: [
-					self assert: self isHidden not.
-					self setProperty: #didDescend toValue: aCursor gotoFirstChild.
-					true]
-				ifFalse: [true]]
-		ifFalse: [false]
-]
-
-{ #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> allElementsDo: aBlock [
 
 	aBlock value: self
@@ -41,12 +24,12 @@ SBInlineBlockSymbol >> buildCopy [
 SBInlineBlockSymbol >> buildDefaultIn: anExplore [
 
 	super buildDefaultIn: anExplore.
-	self addMorphBack: ((factory shouldBlockInline: type)
-		ifTrue: [factory instantiateTemplate: type]
+	self addMorphBack: ((factory shouldBlockInline: self type)
+		ifTrue: [factory instantiateTemplate: self type]
 		ifFalse: [
 			SBTSUnknown new
-				template: [factory getTemplate: type];
-				type: type factory: factory])
+				template: [factory getTemplate: self type];
+				type: self type factory: factory])
 ]
 
 { #category : #'as yet unclassified' }
@@ -77,14 +60,14 @@ SBInlineBlockSymbol >> buildWithFields: aStream alternatives: aDictionary [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> candidatesForWrappingOn: aStream [
 
-	(factory isSuperType: type) ifTrue: [aStream nextPut: self].
+	(factory isSuperType: self type) ifTrue: [aStream nextPut: self].
 	super candidatesForWrappingOn: aStream
 ]
 
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> childrenForQueryDo: aBlock [
 
-	(factory isSuperType: type)
+	(factory isSuperType: self type)
 		ifTrue: [self firstSubmorph childrenForQueryDo: aBlock]
 		ifFalse: [aBlock value: self]
 ]
@@ -175,27 +158,33 @@ SBInlineBlockSymbol >> insertCommandRequest: aMorph near: aBlock before: aBoolea
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> instantiate [
 
-	^ (factory isSuperType: type)
-		ifTrue: [factory instantiateTemplate: type]
-		ifFalse: [self buildEmpty addMorphBack: (factory instantiateTemplate: type)]
+	^ (factory isSuperType: self type)
+		ifTrue: [factory instantiateTemplate: self type]
+		ifFalse: [self buildEmpty addMorphBack: (factory instantiateTemplate: self type)]
 ]
 
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> isHidden [
 
-	^ type first = $_ or: [factory isSuperType: type]
+	^ self type first = $_ or: [factory isSuperType: self type]
 ]
 
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> isStatementContainer [
 
-	^ factory isStatementContainer: type
+	^ factory isStatementContainer: self type
 ]
 
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> isSuperType [
 
 	^ factory isSuperType: self type
+]
+
+{ #category : #'as yet unclassified' }
+SBInlineBlockSymbol >> isTemplate [
+
+	^ self hasSubmorphs not
 ]
 
 { #category : #'as yet unclassified' }
@@ -265,14 +254,14 @@ SBInlineBlockSymbol >> printSExprOn: aStream depth: aNumber [
 SBInlineBlockSymbol >> printTitleOn: aStream [
 
 	SBToggledCode comment: '' active: 0 do: {
-		[((factory shouldBlockInline: type) and: [self hasSubmorphs and: [self firstSubmorph isUnknown not]]) ifTrue: [^ self firstSubmorph printTitleOn: aStream]]}.
-	aStream nextPutAll: type
+		[((factory shouldBlockInline: self type) and: [self hasSubmorphs and: [self firstSubmorph isUnknown not]]) ifTrue: [^ self firstSubmorph printTitleOn: aStream]]}.
+	aStream nextPutAll: self type
 ]
 
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> takeParseFrom: aCursor [
 
-	aCursor type = type ifTrue: [
+	aCursor type = self type ifTrue: [
 		" if there was more on this level, fail "
 		aCursor gotoNextSibling ifTrue: [^ false].
 		(self valueOfProperty: #didDescend) ifTrue: [aCursor gotoParent]].
@@ -282,10 +271,10 @@ SBInlineBlockSymbol >> takeParseFrom: aCursor [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> takeParsedFrom: aCursor [
 
-	^ (factory type: aCursor type compatibleWith: type)
+	^ (factory type: aCursor type compatibleWith: self type)
 		ifTrue: [ | descend didDescend |
 			" if types were only compatible not matching this is a hidden symbol "
-			descend := aCursor type = type.
+			descend := aCursor type = self type.
 			didDescend := false.
 			
 			descend ifTrue: [didDescend := aCursor gotoFirstChild].

@@ -110,7 +110,14 @@ SBStASTNode >> grammarHandler [
 { #category : #accessing }
 SBStASTNode >> guessClassExpensive [
 
-	^ self guessedClass ifNil: [[(SBStSandboxSimulator new simulate: [self evaluate]) ifNotNil: #class] on: Error do: [nil]]
+	^ self guessedClass ifNil: [
+		(Smalltalk at: #Sandbox) ifNotNil: [:sandboxClass |
+			[
+				(sandboxClass new
+					stepLimit: 100000;
+					evaluate: [self evaluate] ifFailed: [nil]) ifNotNil: #class]
+				on: SandboxError
+				do: [:err | nil]]]
 ]
 
 { #category : #accessing }

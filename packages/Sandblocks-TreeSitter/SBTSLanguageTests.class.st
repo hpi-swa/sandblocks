@@ -8,7 +8,7 @@ Class {
 SBTSLanguageTests >> testPythonBinaryOperator [
 
 	| block e |
-	block := SBMetaBlockFactory python parse: '123'.
+	block := SBPython parse: '123'.
 	e := self editorFor: block.
 	[
 		block childSandblocks first
@@ -24,7 +24,7 @@ SBTSLanguageTests >> testPythonBinaryOperator [
 SBTSLanguageTests >> testPythonNumber [
 
 	| block e |
-	block := SBMetaBlockFactory python parse: 'a'.
+	block := SBPython parse: 'a'.
 	e := self editorFor: block.
 	block childSandblocks first
 		select;

@@ -158,6 +158,12 @@ SBInlineBlockChoice >> inline [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockChoice >> isTemplate [
+
+	^ self hasSubmorphs not
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockChoice >> layoutCommands [
 
 	^ SBAlgebraCommand container

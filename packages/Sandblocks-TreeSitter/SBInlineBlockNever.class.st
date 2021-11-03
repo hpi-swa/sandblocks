@@ -56,6 +56,12 @@ SBInlineBlockNever >> hasSameStructureAs: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlockNever >> isTemplate [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlockNever >> layoutCommands [
 
 	^ SBAlgebraCommand morph data: self

@@ -29,6 +29,24 @@ SBInlineBlock >> allElementsDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBInlineBlock >> applyReplacements [
+	<action>
+
+	| replacements commands |
+	replacements := SBInlineBlockReplace allSubclasses gather: [:class |
+		(Pragma allNamed: #lang:match: in: class class) select: [:pragma |
+			pragma arguments first = self factory name]].
+	commands := Array streamContents: [:stream |
+		self allBlocksDo: [:block |
+			replacements do: [:pragma |
+				SBTSQuery new execute: pragma arguments second against: block capturesDo: [:captures |
+					(pragma methodClass theNonMetaClass
+						perform: pragma selector
+						with: captures) ifNotNil: [:cmd | stream nextPut: cmd]]]]].
+	commands ifNotEmpty: [self sandblockEditor do: (SBCombinedCommand newWith: commands)]
+]
+
+{ #category : #'as yet unclassified' }
 SBInlineBlock >> artefactChanged: aMethodBlock [
 
 	aMethodBlock = self ifTrue: [self updateAllHighlights]
@@ -90,7 +108,7 @@ SBInlineBlock >> childSymbolsDo: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlock >> childrenForQuery [
 
-	^ Array streamContents: [:s | self submorphsDo: [:m | m childrenForQueryDo: [:child | s nextPut: child]]]
+	^ Array streamContents: [:s | self submorphsDo: [:m | (m isKindOf: SBInlineBlock) ifTrue: [m childrenForQueryDo: [:child | s nextPut: child]]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -165,13 +183,16 @@ SBInlineBlock >> containsEqual: aBlock [
 SBInlineBlock >> convertedFor: anInterfaceCollection do: aBlock [
 
 	anInterfaceCollection first = #isInlineBlock ifTrue: [
+		SBToggledCode comment: '' active: 0 do: {[self halt]}.
 		^ (SBTSRuleExplore new
 			explore: anInterfaceCollection last
 				withNested: self
 				nestedBefore: false
 				for: ''
 				startSymbol: nil;
-			deduplicate) ifNotEmpty: [:choices | aBlock value: choices first]].
+			deduplicate)
+			ifNotEmpty: [:choices | aBlock value: choices first]
+			ifEmpty: [nil]].
 	
 	^ super convertedFor: anInterfaceCollection do: aBlock
 ]
@@ -312,7 +333,7 @@ SBInlineBlock >> hasSameContentsAs: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlock >> hasSameStructureAs: aBlock [
 
-	^ aBlock class = self class
+	^ aBlock isKindOf: self class
 ]
 
 { #category : #accessing }
@@ -408,6 +429,12 @@ SBInlineBlock >> isBuilt [
 	^ built
 ]
 
+{ #category : #accessing }
+SBInlineBlock >> isBuilt: aBoolean [
+
+	built := aBoolean
+]
+
 { #category : #'as yet unclassified' }
 SBInlineBlock >> isInlineBlock [
 
@@ -430,6 +457,12 @@ SBInlineBlock >> isStatement [
 SBInlineBlock >> isStatementContainer [
 
 	^ false
+]
+
+{ #category : #testing }
+SBInlineBlock >> isTemplate [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -456,6 +489,12 @@ SBInlineBlock >> labelDifferenceOf: aMorph do: aBlock [
 		with: aMorph submorphs
 		do: [:a :b | (a labelDifferenceOf: b do: aBlock) ifFalse: [^ false]].
 	^ true
+]
+
+{ #category : #accessing }
+SBInlineBlock >> language [
+
+	^ self factory name
 ]
 
 { #category : #'as yet unclassified' }
@@ -549,7 +588,11 @@ SBInlineBlock >> preferredColorIn: aColorPolicy [
 			['variable'] -> [aColorPolicy identifier].
 			['type'] -> [aColorPolicy keyword].
 			['number'] -> [aColorPolicy literal].
-			['string'] -> [aColorPolicy literal]}
+			['string'] -> [aColorPolicy literal].
+			['escape'] -> [aColorPolicy literal].
+			['punctuation.bracket'] -> [aColorPolicy builtIn].
+			['operator'] -> [aColorPolicy identifier].
+			['property'] -> [aColorPolicy identifier]}
 		otherwise: [aColorPolicy default]
 ]
 
@@ -645,6 +688,8 @@ SBInlineBlock >> tryInterpretInput: aString before: aBoolean [
 	selected := SBTSBlockChooseDialog new
 		do: [:query | self choicesForInput: query before: aBoolean]
 		query: aString.
+	selected ifNil: [^ self].
+	
 	self sandblockEditor do: (SBReplaceCommand new
 		target: (selected valueOfProperty: #rootBlock);
 		replacer: selected).
