@@ -29,21 +29,22 @@ SBMetaBlockFactory class >> compileParserIn: path name: aString [
 	hasScanner := false.
 	self assert: (OSProcess waitForCommand: ('cd {1}; npx -p tree-sitter-cli tree-sitter generate' format: {path fullName})) exitStatus = 0.
 	
-	((path / 'src' / 'scanner.c') exists or: [(path / 'src' / 'scanner.c') exists]) ifTrue: [
+	((path / 'src' / 'scanner.c') exists or: [(path / 'src' / 'scanner.cc') exists]) ifTrue: [
 		self assert: (OSProcess waitForCommand: ('cd {1}; CXXFLAGS="-I./src" CFLAGS="-I./src" make src/scanner.o' format: {path fullName})) exitStatus = 0.
 		hasScanner := true].
 	self assert: (OSProcess waitForCommand: ('cd {1}; CXXFLAGS="-I./src" CFLAGS="-I./src" make src/parser.o' format: {path fullName})) exitStatus = 0.
 	self assert: (OSProcess waitForCommand: ('cd {1}; g++ -shared -fPIC -o tree-sitter-{2}.so src/parser.o {3}' format: {path fullName. aString. hasScanner ifTrue: [' src/scanner.o'] ifFalse: ['']})) exitStatus = 0.
 	
-	path / filename copyTo: FileDirectory default
+	path / filename copyTo: FileDirectory default.
+	
+	^ FileDirectory default / ('tree-sitter-{1}.so' format: {aString})
 ]
 
 { #category : #helper }
-SBMetaBlockFactory class >> fetchLibrary: aGithubString language: language [
+SBMetaBlockFactory class >> fetchLibrary: aGithubString [
 
 	SBToggledCode comment: '' active: 1 do: {
-		[ | path filename |
-			filename := 'tree-sitter-{1}.so' format: {language}.
+		[ | path |
 			path := (MCFetchGithubRepository new
 				projectPath: aGithubString
 				projectVersion: 'master'
@@ -59,13 +60,23 @@ SBMetaBlockFactory class >> fetchLibrary: aGithubString language: language [
 ]
 
 { #category : #helper }
-SBMetaBlockFactory class >> generateFFIMethodFor: aName [
+SBMetaBlockFactory class >> fetchTreeSitter [
+
+	| path |
+	path := self fetchLibrary: 'tree-sitter/tree-sitter'.
+	self assert: (OSProcess waitForCommand: ('cd {1}; make' format: {path fullName})) exitStatus = 0.
+	path / 'libtree-sitter.so' copyTo: FileDirectory default.
+	^ FileDirectory default / 'libtree-sitter.so'
+]
+
+{ #category : #helper }
+SBMetaBlockFactory class >> generateFFIMethodFor: aName github: aGithubString [
 
 	SBTreeSitter
 		compile: ('{1}
 
 	<apicall: SBTSLanguage* tree_sitter_{1} () module: ''tree-sitter-{1}''>
-	^ self externalCallFailed' format: {aName})
+	^ SBMetaBlockFactory tryPatchLibrary: {2} name: ''{1}'' context: thisContext' format: {aName. aGithubString storeString})
 		classified: 'ffi languages'
 ]
 
@@ -119,10 +130,10 @@ SBMetaBlockFactory class >> loadDefaultLanguage: aString [
 SBMetaBlockFactory class >> loadLanguage: aGithubString name: aString [
 
 	| path |
-	path := self fetchLibrary: aGithubString language: aString.
+	path := self fetchLibrary: aGithubString.
 	self compileParserIn: path name: aString.
 	self generateGrammarMethodFrom: path name: aString github: aGithubString.
-	self generateFFIMethodFor: aString
+	self generateFFIMethodFor: aString github: aGithubString
 ]
 
 { #category : #'block deduplication' }
@@ -169,6 +180,18 @@ SBMetaBlockFactory class >> removeDuplicateChoices: aCollection [
 					a := choice leftMostRule ownerThatIsA: SBInlineBlockSymbol.
 					b := shortest leftMostRule ownerThatIsA: SBInlineBlockSymbol.
 					a notNil and: [b notNil and: [a type ~= b type]]]]]}
+]
+
+{ #category : #helper }
+SBMetaBlockFactory class >> tryPatchLibrary: aGithubString name: aString context: aContext [
+
+	| path library |
+	ExternalFunction getLastError = 15 ifFalse: [^ self externalCallFailed].
+	
+	path := self fetchLibrary: aGithubString.
+	library := self compileParserIn: path name: aString.
+	aContext method externalLibraryName: library fullName.
+	^ aContext method externalLibraryFunction invoke
 ]
 
 { #category : #configuration }

@@ -75,7 +75,7 @@ SBInlineBlockSymbol >> childrenForQueryDo: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlockSymbol >> childrenIn: anExplore [
 
-	(anExplore expandSymbol: self) not and: [self isSuperType not] ifTrue: [^ #()].
+	((anExplore expandSymbol: self) not and: [self isSuperType not]) ifTrue: [^ #()].
 	^ (anExplore notNil and: [
 		SBToggledCode
 			comment: ''
