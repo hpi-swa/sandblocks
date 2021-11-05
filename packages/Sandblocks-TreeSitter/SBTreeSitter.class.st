@@ -21,7 +21,7 @@ SBTreeSitter >> buildTreeFrom: aCursor [
 	type := aCursor type.
 	field := aCursor currentFieldName.
 	fallback := {field. aCursor text}.
-	template := aCursor factory getTemplate: type ifAbsent: [^ aCursor text].
+	template := aCursor isNamed ifTrue: [aCursor factory getTemplate: type ifAbsent: [^ aCursor text]] ifFalse: [^ aCursor text].
 	template = 'ALIAS' ifTrue: [type := aCursor resolveCurrentAliasIfString: [:str | ^ str]].
 	
 	fieldStream := ((Array streamContents: [:stream |
@@ -108,6 +108,19 @@ SBTreeSitter >> cursorNew: root [
 ]
 
 { #category : #helper }
+SBTreeSitter >> externalCallFailed [
+
+	^ ExternalFunction getLastError = 15
+		ifTrue: [ | path |
+			path := SBMetaBlockFactory fetchTreeSitter fullName.
+			self class methodDict valuesDo: [:method |
+				" only change for those that don't have an explicit module (lang-specific) "
+				method methodReference category ~= 'ffi languages' ifTrue: [method externalLibraryName: path]].
+			thisContext sender method externalLibraryFunction invokeWithArguments: thisContext sender arguments]
+		ifFalse: [self externalCallFailed]
+]
+
+{ #category : #helper }
 SBTreeSitter >> fetchLibrary: aGithubString language: language andRetry: aBlock [
 
 	SBToggledCode comment: '' active: 1 do: {
@@ -134,21 +147,28 @@ SBTreeSitter >> fetchLibrary: aGithubString language: language andRetry: aBlock 
 SBTreeSitter >> gdscript [
 
 	<apicall: SBTSLanguage* tree_sitter_gdscript () module: 'tree-sitter-gdscript'>
-	^ self externalCallFailed
+	^ SBMetaBlockFactory tryPatchLibrary: 'PrestonKnopp/tree-sitter-gdscript' name: 'gdscript' context: thisContext
+]
+
+{ #category : #'ffi languages' }
+SBTreeSitter >> java [
+
+	<apicall: SBTSLanguage* tree_sitter_java () module: 'tree-sitter-java'>
+	^ SBMetaBlockFactory tryPatchLibrary: 'tree-sitter/tree-sitter-java' name: 'java' context: thisContext
 ]
 
 { #category : #'ffi languages' }
 SBTreeSitter >> javascript [
 
 	<apicall: SBTSLanguage* tree_sitter_javascript () module: 'tree-sitter-javascript'>
-	^ self externalCallFailed
+	^ SBMetaBlockFactory tryPatchLibrary: 'tree-sitter/tree-sitter-javascript' name: 'javascript' context: thisContext
 ]
 
 { #category : #'ffi languages' }
 SBTreeSitter >> json [
 
 	<apicall: SBTSLanguage* tree_sitter_json () module: 'tree-sitter-json'>
-	^ self externalCallFailed
+	^ SBMetaBlockFactory tryPatchLibrary: 'tree-sitter/tree-sitter-json' name: 'json' context: thisContext
 ]
 
 { #category : #accessing }
@@ -175,6 +195,13 @@ SBTreeSitter >> node: aNode childByFieldName: aString length: aNumber [
 SBTreeSitter >> nodeEndByte: aNode [
 
 	<apicall: uint32_t ts_node_end_byte (SBTSNode)>
+	^ self externalCallFailed
+]
+
+{ #category : #ffi }
+SBTreeSitter >> nodeIsNamed: aNode [
+
+	<apicall: bool ts_node_is_named (SBTSNode)>
 	^ self externalCallFailed
 ]
 
@@ -225,9 +252,9 @@ SBTreeSitter >> parse: aString language: aSymbol factory: aFactory [
 
 	| parser root tree block cursor |
 	currentString := aString withUnixLineEndings.
+	parser := self parserNew.
 	language := self perform: aSymbol asSymbol.
 	
-	parser := self parserNew.
 	self parser: parser setLanguage: language.
 	
 	tree := self parser: parser old: nil parseString: currentString length: currentString size.
@@ -313,21 +340,21 @@ SBTreeSitter >> printTreeFrom: aCursor depth: aNumber [
 SBTreeSitter >> python [
 
 	<apicall: SBTSLanguage* tree_sitter_python () module: 'tree-sitter-python'>
-	^ self externalCallFailed
+	^ SBMetaBlockFactory tryPatchLibrary: 'tree-sitter/tree-sitter-python' name: 'python' context: thisContext
 ]
 
 { #category : #'ffi languages' }
 SBTreeSitter >> regex [
 
 	<apicall: SBTSLanguage* tree_sitter_regex () module: 'tree-sitter-regex'>
-	^ self externalCallFailed
+	^ SBMetaBlockFactory tryPatchLibrary: 'tree-sitter/tree-sitter-regex' name: 'regex' context: thisContext
 ]
 
 { #category : #'ffi languages' }
 SBTreeSitter >> ruby [
 
 	<apicall: SBTSLanguage* tree_sitter_ruby () module: 'tree-sitter-ruby'>
-	^ self externalCallFailed
+	^ SBMetaBlockFactory tryPatchLibrary: 'tree-sitter/tree-sitter-ruby' name: 'ruby' context: thisContext
 ]
 
 { #category : #helper }

@@ -6,11 +6,12 @@ Class {
 
 { #category : #'as yet unclassified' }
 SBPyFilepath class >> matchPython: aDictionary [
-	<lang: 'python' match: '(call
+	<lang: #python match: '(call
 	(identifier) @open
     (argument_list
     	(string) @path))'>
 
+	(aDictionary at: 'open') contents = 'open' ifFalse: [^ nil].
 	
 	^ SBReplaceCommand new
 		target: (aDictionary at: 'path');
@@ -56,6 +57,12 @@ SBPyFilepath >> path: aString [
 
 	self addMorphBack: (SBIcon iconFile on: #click send: #choose to: self).
 	self addMorphBack: (SBOwnTextMorph new contents: aString)
+]
+
+{ #category : #'as yet unclassified' }
+SBPyFilepath >> type [
+
+	^ 'string'
 ]
 
 { #category : #'as yet unclassified' }

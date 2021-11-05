@@ -6769,9 +6769,10 @@ SBJavascript >> configure [
 			ifFound: [:obj | pair key -> ';']
 			ifNone: [nil]]) select: #notNil) as: Dictionary.
 	self addDelimitedRules: rulesWithSemicolon.
-	self addDelimitedRules: ({'object' -> ','} as: Dictionary).
+	self addDelimitedRules: ({'object' -> ','. 'arguments' -> ','} as: Dictionary).
+	self hardLineBreakMatcher: [:block | (block submorphAfter ifNotNil: #type) = 'statement_block'].
 	
-	self blockInline: {'expression_statement'. 'arguments'}
+	self blockInline: {'expression_statement'. 'arguments'. 'formal_parameters'}
 ]
 
 { #category : #'as yet unclassified' }

@@ -8,7 +8,10 @@ Class {
 SBPyPalette class >> buildOn: aBuilder [
 
 	aBuilder addSectionHeader: 'Python'.
-	aBuilder addBlock: 'Open' as: (SBPython parse: 'open("")') childSandblocks first
+	aBuilder addBlock: 'Open' as: (SBPython parse: 'open("")') childSandblocks first.
+	aBuilder addBlock: 'Path' as: (SBPyFilepath new
+		factory: SBPython new;
+		path: '')
 ]
 
 { #category : #'as yet unclassified' }

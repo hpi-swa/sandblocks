@@ -33,14 +33,16 @@ SBInlineBlock >> applyReplacements [
 	<action>
 
 	| replacements commands |
-	replacements := SBInlineBlockReplace allSubclasses gather: [:class | (Pragma allNamed: #lang:match: in: class class) select: [:pragma | pragma arguments first = self factory name]].
+	replacements := SBInlineBlockReplace allSubclasses gather: [:class |
+		(Pragma allNamed: #lang:match: in: class class) select: [:pragma |
+			pragma arguments first = self factory name]].
 	commands := Array streamContents: [:stream |
 		self allBlocksDo: [:block |
 			replacements do: [:pragma |
 				SBTSQuery new execute: pragma arguments second against: block capturesDo: [:captures |
-					stream nextPut: (pragma methodClass theNonMetaClass
+					(pragma methodClass theNonMetaClass
 						perform: pragma selector
-						with: captures)]]]].
+						with: captures) ifNotNil: [:cmd | stream nextPut: cmd]]]]].
 	commands ifNotEmpty: [self sandblockEditor do: (SBCombinedCommand newWith: commands)]
 ]
 
@@ -181,6 +183,7 @@ SBInlineBlock >> containsEqual: aBlock [
 SBInlineBlock >> convertedFor: anInterfaceCollection do: aBlock [
 
 	anInterfaceCollection first = #isInlineBlock ifTrue: [
+		SBToggledCode comment: '' active: 0 do: {[self halt]}.
 		^ (SBTSRuleExplore new
 			explore: anInterfaceCollection last
 				withNested: self
@@ -330,7 +333,7 @@ SBInlineBlock >> hasSameContentsAs: aBlock [
 { #category : #'as yet unclassified' }
 SBInlineBlock >> hasSameStructureAs: aBlock [
 
-	^ aBlock class = self class
+	^ aBlock isKindOf: self class
 ]
 
 { #category : #accessing }
@@ -697,6 +700,12 @@ SBInlineBlock >> tryInterpretInput: aString before: aBoolean [
 				select;
 				inputContainedUnknown].
 		[selected inputContainedUnknown]}
+]
+
+{ #category : #accessing }
+SBInlineBlock >> type [
+
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }

@@ -50,8 +50,9 @@ SBInlineBlockText >> buildWithFields: aStream alternatives: aDictionary [
 				^ true]
 			ifFalse: [^ false]].
 	
-	self contents: aStream next second.
-	^ true
+	^ (regex matches: aStream peek second)
+		ifTrue: [self contents: aStream next second. true]
+		ifFalse: [regex matches: '']
 ]
 
 { #category : #'as yet unclassified' }

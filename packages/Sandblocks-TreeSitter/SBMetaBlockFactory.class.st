@@ -29,21 +29,22 @@ SBMetaBlockFactory class >> compileParserIn: path name: aString [
 	hasScanner := false.
 	self assert: (OSProcess waitForCommand: ('cd {1}; npx -p tree-sitter-cli tree-sitter generate' format: {path fullName})) exitStatus = 0.
 	
-	((path / 'src' / 'scanner.c') exists or: [(path / 'src' / 'scanner.c') exists]) ifTrue: [
+	((path / 'src' / 'scanner.c') exists or: [(path / 'src' / 'scanner.cc') exists]) ifTrue: [
 		self assert: (OSProcess waitForCommand: ('cd {1}; CXXFLAGS="-I./src" CFLAGS="-I./src" make src/scanner.o' format: {path fullName})) exitStatus = 0.
 		hasScanner := true].
 	self assert: (OSProcess waitForCommand: ('cd {1}; CXXFLAGS="-I./src" CFLAGS="-I./src" make src/parser.o' format: {path fullName})) exitStatus = 0.
 	self assert: (OSProcess waitForCommand: ('cd {1}; g++ -shared -fPIC -o tree-sitter-{2}.so src/parser.o {3}' format: {path fullName. aString. hasScanner ifTrue: [' src/scanner.o'] ifFalse: ['']})) exitStatus = 0.
 	
-	path / filename copyTo: FileDirectory default
+	path / filename copyTo: FileDirectory default.
+	
+	^ FileDirectory default / ('tree-sitter-{1}.so' format: {aString})
 ]
 
 { #category : #helper }
-SBMetaBlockFactory class >> fetchLibrary: aGithubString language: language [
+SBMetaBlockFactory class >> fetchLibrary: aGithubString [
 
 	SBToggledCode comment: '' active: 1 do: {
-		[ | path filename |
-			filename := 'tree-sitter-{1}.so' format: {language}.
+		[ | path |
 			path := (MCFetchGithubRepository new
 				projectPath: aGithubString
 				projectVersion: 'master'
@@ -59,41 +60,80 @@ SBMetaBlockFactory class >> fetchLibrary: aGithubString language: language [
 ]
 
 { #category : #helper }
-SBMetaBlockFactory class >> generateFFIMethodFor: aName [
+SBMetaBlockFactory class >> fetchTreeSitter [
+
+	| path |
+	path := self fetchLibrary: 'tree-sitter/tree-sitter'.
+	self assert: (OSProcess waitForCommand: ('cd {1}; make' format: {path fullName})) exitStatus = 0.
+	path / 'libtree-sitter.so' copyTo: FileDirectory default.
+	^ FileDirectory default / 'libtree-sitter.so'
+]
+
+{ #category : #helper }
+SBMetaBlockFactory class >> generateFFIMethodFor: aName github: aGithubString [
 
 	SBTreeSitter
 		compile: ('{1}
 
 	<apicall: SBTSLanguage* tree_sitter_{1} () module: ''tree-sitter-{1}''>
-	^ self externalCallFailed' format: {aName})
+	^ SBMetaBlockFactory tryPatchLibrary: {2} name: ''{1}'' context: thisContext' format: {aName. aGithubString storeString})
 		classified: 'ffi languages'
 ]
 
 { #category : #helper }
-SBMetaBlockFactory class >> generateGrammarMethodFrom: path name: aString [
+SBMetaBlockFactory class >> generateGrammarMethodFrom: path name: aString github: anotherString [
 
 	| grammarFile highlightsFile |
-	[
-		grammarFile := path / 'src' / 'grammar.json' in: [:file | file exists ifTrue: [FileStream readOnlyFileNamed: file fullName]  ifFalse: [nil]].
-		highlightsFile := path / 'queries' / 'highlights.scm' in: [:file | file exists ifTrue: [FileStream readOnlyFileNamed: file fullName]  ifFalse: [nil]].
+	[ | class |
+		grammarFile := path / 'src' / 'grammar.json' in: [:file | file exists ifTrue: [FileStream readOnlyFileNamed: file fullName] ifFalse: [nil]].
+		highlightsFile := path / 'queries' / 'highlights.scm' in: [:file | file exists ifTrue: [FileStream readOnlyFileNamed: file fullName] ifFalse: [nil]].
 		
-		self class
-			compile: ('{4}
+		class := SBGrammarLanguage
+			subclass: ('SB', aString capitalized) asSymbol
+			instanceVariableNames: ''
+			classVariableNames: ''
+			poolDictionaries: ''
+			category: 'Sandblocks-', aString capitalized.
+		class class
+			compile: ('grammarJson
 
-		^ SBMetaBlockFactory new name: {1} preprocess: [:f|] postprocess: [:f|] grammar: {2} highlight: {3}' format: {aString storeString. grammarFile contents storeString. highlightsFile ifNotNil: [:f | f contents storeString] ifNil: ['''''']. aString})
-			classified: 'languages'] ensure: [
-				grammarFile ifNotNil: #close.
-				highlightsFile ifNotNil: #close]
+    " https://github.com/{1}/blob/master/src/grammar.json "
+    ^ {2}' format: {anotherString. grammarFile contents storeString})
+			classified: 'properties'.
+		class class
+			compile: ('language
+
+    ^ {1}' format: {aString asSymbol storeString})
+			classified: 'properties'.
+		class class compile: 'rootRuleName
+
+    ^ self shouldImplement' classified: 'properties'.
+		
+		highlightsFile ifNotNil: [:f |
+			class class
+				compile: ('highlightQuery
+
+    " https://github.com/{1}/blob/master/src/queries/highlights.scm "
+    ^ {2}' format: {anotherString. f contents storeString})
+				classified: 'properties']] ensure: [
+		grammarFile ifNotNil: #close.
+		highlightsFile ifNotNil: #close]
+]
+
+{ #category : #languages }
+SBMetaBlockFactory class >> loadDefaultLanguage: aString [
+
+	^ self loadLanguage: 'tree-sitter/tree-sitter-', aString name: aString
 ]
 
 { #category : #languages }
 SBMetaBlockFactory class >> loadLanguage: aGithubString name: aString [
 
 	| path |
-	path := self fetchLibrary: aGithubString language: aString.
+	path := self fetchLibrary: aGithubString.
 	self compileParserIn: path name: aString.
-	self generateGrammarMethodFrom: path name: aString.
-	self generateFFIMethodFor: aString
+	self generateGrammarMethodFrom: path name: aString github: aGithubString.
+	self generateFFIMethodFor: aString github: aGithubString
 ]
 
 { #category : #'block deduplication' }
@@ -140,6 +180,18 @@ SBMetaBlockFactory class >> removeDuplicateChoices: aCollection [
 					a := choice leftMostRule ownerThatIsA: SBInlineBlockSymbol.
 					b := shortest leftMostRule ownerThatIsA: SBInlineBlockSymbol.
 					a notNil and: [b notNil and: [a type ~= b type]]]]]}
+]
+
+{ #category : #helper }
+SBMetaBlockFactory class >> tryPatchLibrary: aGithubString name: aString context: aContext [
+
+	| path library |
+	ExternalFunction getLastError = 15 ifFalse: [^ self externalCallFailed].
+	
+	path := self fetchLibrary: aGithubString.
+	library := self compileParserIn: path name: aString.
+	aContext method externalLibraryName: library fullName.
+	^ aContext method externalLibraryFunction invoke
 ]
 
 { #category : #configuration }
