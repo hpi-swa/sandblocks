@@ -142,11 +142,7 @@ SBStPlayground >> initialize [
 		vResizing: #shrinkWrap;
 		hResizing: #rigid;
 		attachDecorator: SBForceMoveDecorator newConfigured;
-		attachDecorator: SBResizableDecorator new;
-		attachDecorator: SBConnectDecorator new.
-	
-	
-	
+		attachDecorator: SBResizableDecorator new
 ]
 
 { #category : #'as yet unclassified' }
