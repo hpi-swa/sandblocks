@@ -18,7 +18,6 @@ OrderedDictionary {
 	'packages/Sandblocks-Ohm' : #SquotTonelSerializer,
 	'packages/Sandblocks-CustomJavascript' : #SquotTonelSerializer,
 	'packages/Sandblocks-Squeak6Fixes' : #SquotTonelSerializer,
-	'packages/Sandblocks-VisualPrimitives' : #SquotTonelSerializer,
 	'packages/Sandblocks-Simulation' : #SquotTonelSerializer,
 	'packages/Sandblocks-TreeSitter' : #SquotTonelSerializer,
 	'packages/Sandblocks-Scheme' : #SquotTonelSerializer,
