@@ -14,7 +14,7 @@ Class {
 SBConnectDecorator >> addConnectorFrom: sourceMorph to: destinationMorph [
 
 	| connector |
-	(self connectors anySatisfy: [:con | con to = destinationMorph]) ifFalse: [
+	(self connectors noneSatisfy: [:con | con to = destinationMorph]) ifTrue: [
 		connector := SBNodeConnector connect: sourceMorph to: destinationMorph.
 		self connectors add: connector.
 		self morph containingFloat owner addMorphBack: connector]
@@ -50,11 +50,13 @@ SBConnectDecorator >> connectors: anObject [
 
 { #category : #'initialize-release' }
 SBConnectDecorator >> deleteConnectionPoints [
+
 	self connectionPoints do: [:point | point delete]
 ]
 
 { #category : #'initialize-release' }
 SBConnectDecorator >> deleteConnectors [
+
 	self connectors do: [:connector	| connector delete]
 ]
 
@@ -107,7 +109,7 @@ SBConnectDecorator >> initializeEventListenersOnConnectionPoint: connectionPoint
 
 	(self installEventBroadcasterFor: connectionPoint)
 			when: #mouseDown send: #startConnecting to: self;
-			when: #mouseUp send: #endConnecting: to: self.
+			when: #mouseUp send: #endConnecting: to: self
 		
 ]
 
