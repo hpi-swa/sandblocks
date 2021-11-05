@@ -21,7 +21,7 @@ SBTreeSitter >> buildTreeFrom: aCursor [
 	type := aCursor type.
 	field := aCursor currentFieldName.
 	fallback := {field. aCursor text}.
-	template := aCursor factory getTemplate: type ifAbsent: [^ aCursor text].
+	template := aCursor isNamed ifTrue: [aCursor factory getTemplate: type ifAbsent: [^ aCursor text]] ifFalse: [^ aCursor text].
 	template = 'ALIAS' ifTrue: [type := aCursor resolveCurrentAliasIfString: [:str | ^ str]].
 	
 	fieldStream := ((Array streamContents: [:stream |
@@ -195,6 +195,13 @@ SBTreeSitter >> node: aNode childByFieldName: aString length: aNumber [
 SBTreeSitter >> nodeEndByte: aNode [
 
 	<apicall: uint32_t ts_node_end_byte (SBTSNode)>
+	^ self externalCallFailed
+]
+
+{ #category : #ffi }
+SBTreeSitter >> nodeIsNamed: aNode [
+
+	<apicall: bool ts_node_is_named (SBTSNode)>
 	^ self externalCallFailed
 ]
 

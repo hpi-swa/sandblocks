@@ -72,6 +72,12 @@ SBTSCursor >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBTSCursor >> isNamed [
+
+	^ library nodeIsNamed: self node
+]
+
+{ #category : #'as yet unclassified' }
 SBTSCursor >> library [
 
 	^ library

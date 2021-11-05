@@ -702,6 +702,12 @@ SBInlineBlock >> tryInterpretInput: aString before: aBoolean [
 		[selected inputContainedUnknown]}
 ]
 
+{ #category : #accessing }
+SBInlineBlock >> type [
+
+	^ nil
+]
+
 { #category : #'as yet unclassified' }
 SBInlineBlock >> unbuiltChildrenIn: anExplore [
 

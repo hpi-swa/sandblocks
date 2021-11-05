@@ -5122,12 +5122,31 @@ SBPython >> configure [
 { #category : #'as yet unclassified' }
 SBPython >> preprocessGrammar [
 
-	(self grammar rules at: 'string')
-		type: 'SEQ';
-		members: {
-			JsonObject fromAssociations: {'type' -> 'SYMBOL'. 'name' -> '"'}.
-			JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '.*'}.
-			JsonObject fromAssociations: {'type' -> 'SYMBOL'. 'name' -> '"'}}.
+	SBToggledCode comment: '' active: 2 do: {
+		[ | str |
+			str := self grammar rules at: 'string'.
+			str members
+				at: 1
+				put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '''|"'}).
+			str members
+				at: 3
+				put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '''|"'})].
+		[
+			(self grammar rules at: 'string')
+				type: 'SEQ';
+				members: {
+					JsonObject fromAssociations: {
+						#type -> 'CHOICE'.
+						#members -> {
+							JsonObject fromAssociations: {#type -> 'STRING'. #value -> '"'}.
+							JsonObject fromAssociations: {#type -> 'STRING'. #value -> ''''}}}.
+					JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '[^''"]*'}.
+					JsonObject fromAssociations: {
+						#type -> 'CHOICE'.
+						#members -> {
+							JsonObject fromAssociations: {#type -> 'STRING'. #value -> '"'}.
+							JsonObject fromAssociations: {#type -> 'STRING'. #value -> ''''}}}}]}.
+	
 	self grammar rules
 		at: '_string_content'
 		put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '.*'}).
@@ -5137,12 +5156,16 @@ SBPython >> preprocessGrammar [
 	self grammar rules
 		at: '_string_end'
 		put: (JsonObject fromAssociations: {'type' -> 'PATTERN'. 'value' -> '''|"'}).
+	self grammar at: 'inline' put: (self grammar at: #inline), #('_string_start' '_string_end').
+	
 	(self grammar rules at: '_suite') members: {(self grammar rules at: '_suite') members second}.
-	self grammar rules at: '"' put: (JsonObject fromAssociations: {
-		#type -> 'CHOICE'.
-		#members -> {
-			JsonObject fromAssociations: {#type -> 'STRING'. #value -> '"'}.
-			JsonObject fromAssociations: {#type -> 'STRING'. #value -> ''''}}}).
+	SBToggledCode comment: '' active: 0 do: {
+		[
+			self grammar rules at: '"' put: (JsonObject fromAssociations: {
+				#type -> 'CHOICE'.
+				#members -> {
+					JsonObject fromAssociations: {#type -> 'STRING'. #value -> '"'}.
+					JsonObject fromAssociations: {#type -> 'STRING'. #value -> ''''}}})]}.
 	self ignoreExternals: #('_indent' '_dedent' '_newline').
 	
 	self rulesDo: [:r | self removeOptionalString: ',' in: r]
