@@ -17,7 +17,7 @@ SBConnectDecorator >> addConnectorFrom: sourceMorph to: destinationMorph [
 	(self connectors anySatisfy: [:con | con to = destinationMorph]) ifFalse: [
 		connector := SBNodeConnector connect: sourceMorph to: destinationMorph.
 		self connectors add: connector.
-		self morph sandblockEditor openMorph: connector]
+		self morph containingFloat owner addMorphBack: connector]
 ]
 
 { #category : #'as yet unclassified' }
@@ -198,12 +198,11 @@ SBConnectDecorator >> step [
 	newIsMouseClose ~= self isMouseClose ifTrue: [
 		self morph changed.
 		self isMouseClose: newIsMouseClose].
-	self connectionPoints do: [:connectionPoint | connectionPoint visible: (newIsMouseClose or: self isConnecting)].
-	self positionConnectionPoints	
+	self connectionPoints do: [:connectionPoint | connectionPoint visible: (newIsMouseClose or: self isConnecting)]
 ]
 
 { #category : #stepping }
 SBConnectDecorator >> stepTime [
-
-	^ 250
+	
+	^200
 ]
