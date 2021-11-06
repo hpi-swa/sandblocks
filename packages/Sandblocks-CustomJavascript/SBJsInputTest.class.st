@@ -1,7 +1,7 @@
 Class {
 	#name : #SBJsInputTest,
 	#superclass : #SBTest,
-	#category : #'Sandblocks-Javascript-Tests'
+	#category : #'Sandblocks-CustomJavascript-Tests'
 }
 
 { #category : #'as yet unclassified' }

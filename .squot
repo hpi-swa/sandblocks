@@ -19,13 +19,5 @@ OrderedDictionary {
 	'packages/Sandblocks-CustomJavascript' : #SquotTonelSerializer,
 	'packages/Sandblocks-Squeak6Fixes' : #SquotTonelSerializer,
 	'packages/Sandblocks-Simulation' : #SquotTonelSerializer,
-	'packages/Sandblocks-TreeSitter' : #SquotTonelSerializer,
-	'packages/Sandblocks-Scheme' : #SquotTonelSerializer,
-	'packages/Sandblocks-Javascript' : #SquotTonelSerializer,
-	'packages/Sandblocks-Python' : #SquotTonelSerializer,
-	'packages/Sandblocks-Ruby' : #SquotTonelSerializer,
-	'packages/Sandblocks-Regex' : #SquotTonelSerializer,
-	'packages/Sandblocks-Json' : #SquotTonelSerializer,
-	'packages/Sandblocks-GDScript' : #SquotTonelSerializer,
-	'packages/Sandblocks-Java' : #SquotTonelSerializer
+	'packages/Sandblocks-Scheme' : #SquotTonelSerializer
 }
