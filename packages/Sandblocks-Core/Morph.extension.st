@@ -16,6 +16,13 @@ Morph >> allMorphsDoBreadthFirst: aBlock [
 	self submorphsDo: [:m | m allMorphsDoBreadthFirst: aBlock]
 ]
 
+{ #category : #'*Sandblocks-Core' }
+Morph >> allMorphsMutableDo: aBlock [
+
+	submorphs copy do: [:m | m allMorphsMutableDo: aBlock].
+	aBlock value: self
+]
+
 { #category : #'*Sandblocks-Core-hierarchy' }
 Morph >> allVisibleMorphsDo: aBlock [
 
@@ -194,6 +201,12 @@ Morph >> isBlockBindings [
 
 { #category : #'*Sandblocks-Core' }
 Morph >> isBlockBody [
+
+	^ false
+]
+
+{ #category : #'*Sandblocks-Core' }
+Morph >> isInlineBlock [
 
 	^ false
 ]
