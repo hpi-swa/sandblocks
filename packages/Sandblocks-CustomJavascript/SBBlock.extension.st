@@ -1,6 +1,6 @@
 Extension { #name : #SBBlock }
 
-{ #category : #'*Sandblocks-Javascript' }
+{ #category : #'*Sandblocks-CustomJavascript' }
 SBBlock >> isJavascript [
 
 	^ false

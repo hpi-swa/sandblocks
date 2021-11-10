@@ -182,7 +182,8 @@ SBTextInputMapping >> registerDefaultShortcuts [
 	" meta blocks "
 	self
 		registerShortcut: Character space do: #promptMetaTransform;
-		registerShortcut: Character space shift do: #promptMetaTransform
+		registerShortcut: Character space shift do: #promptMetaTransform;
+		registerShortcut: $r command do: #applyReplacements
 ]
 
 { #category : #'event handling' }

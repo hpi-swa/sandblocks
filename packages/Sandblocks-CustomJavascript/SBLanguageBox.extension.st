@@ -1,18 +1,18 @@
 Extension { #name : #SBLanguageBox }
 
-{ #category : #'*Sandblocks-Javascript' }
+{ #category : #'*Sandblocks-CustomJavascript' }
 SBLanguageBox >> isJavascript [
 
 	^ true
 ]
 
-{ #category : #'*Sandblocks-Javascript' }
+{ #category : #'*Sandblocks-CustomJavascript' }
 SBLanguageBox >> isVariable [
 
 	^ false
 ]
 
-{ #category : #'*Sandblocks-Javascript' }
+{ #category : #'*Sandblocks-CustomJavascript' }
 SBLanguageBox >> writeJsSourceOn: aStream [
 
 	aStream

@@ -51,6 +51,13 @@ SBReplaceCommand >> target: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBReplaceCommand >> target: aBlock replacer: anotherBlock [
+
+	self target: aBlock.
+	self replacer: anotherBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBReplaceCommand >> undo [
 
 	replacer owner removeMorph: replacer.

@@ -1435,12 +1435,6 @@ SBBlock >> isLiteralBlock [
 	^ false
 ]
 
-{ #category : #'Sandblocks-TreeSitter' }
-SBBlock >> isMetaBlock [
-
-	^ false
-]
-
 { #category : #testing }
 SBBlock >> isMethod [
 
