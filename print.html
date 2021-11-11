@@ -448,6 +448,10 @@ If you are creating an artefact, such as a method or class, you can call <code>s
 <h1 id="tree-sitter"><a class="header" href="#tree-sitter">Tree Sitter</a></h1>
 <p>In this video, we work with Sandblocks' Tree Sitter backend, giving us access to languages such as Python or Javascript.
 We create a replacement for Javascript's <code>window.fetch</code> and a palette for Javascript.</p>
+<blockquote>
+<p><strong>Notes &amp; Errata</strong></p>
+<p>[46min09] when we add the <code>factory:</code> call for the palette block, use <code>SBJavascript instance</code> instead of <code>SBJavascript new</code> to avoid rebuilding the grammar.</p>
+</blockquote>
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;"><iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://player.vimeo.com/video/643502024" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
 <h2 id="git-setup-links"><a class="header" href="#git-setup-links">Git Setup Links</a></h2>
 <ul>
@@ -462,6 +466,31 @@ We create a replacement for Javascript's <code>window.fetch</code> and a palette
 <li><a href="https://tree-sitter.github.io/tree-sitter/using-parsers#pattern-matching-with-queries">Documentation</a> for Queries in Tree Sitter</li>
 <li><a href="https://tree-sitter.github.io/tree-sitter/playground">Playground</a> for parsing and queris in Tree Sitter</li>
 </ul>
+<h2 id="questions-and-common-patterns"><a class="header" href="#questions-and-common-patterns">Questions and Common Patterns</a></h2>
+<h3 id="adding-existing-tree-sitter-blocks-inside-a-replacement"><a class="header" href="#adding-existing-tree-sitter-blocks-inside-a-replacement">Adding Existing Tree Sitter Blocks Inside a Replacement</a></h3>
+<p>This is generally easy, just add them as you usually would and include a <code>buildCopy</code> to support undo:</p>
+<pre><code class="language-smalltalk">SBBlock new addMorphBack: aTSBlock buildCopy.
+</code></pre>
+<p>(Without <code>buildCopy</code> the replaced block will contain a hole where the nested block used to be, breaking undo).</p>
+<h3 id="adding-new-tree-sitter-blocks-inside-a-replacement"><a class="header" href="#adding-new-tree-sitter-blocks-inside-a-replacement">Adding New Tree Sitter Blocks Inside a Replacement</a></h3>
+<p>To create a new instance of a specific rule, use e.g.:</p>
+<pre><code>SBBlock new addMorphBack: (SBPython build: 'expression')
+</code></pre>
+<p>If you need a complete block, you can use <code>parse:</code>:</p>
+<pre><code>SBBlock new addMorphBack: (SBPython parse: '3 + 4') childSandblocks first
+</code></pre>
+<p>Note the <code>childSandblocks first</code> suffix: we add this because Tree Sitter will wrap a top-level element (<code>module</code> in this case) around the expression, which we may not want.</p>
+<h3 id="accessing-fields"><a class="header" href="#accessing-fields">Accessing Fields</a></h3>
+<p>Many Tree Sitter blocks contain field names, e.g.:</p>
+<pre><code class="language-javascript">pair: $ =&gt; seq(
+  field('key', $._property_name),
+  ':',
+  field('value', $.expression)
+)
+</code></pre>
+<p>You can access these using <code>get:</code>, e.g.</p>
+<pre><code>(aPairBlock get: 'key') sourceString
+</code></pre>
 
                     </main>
 
