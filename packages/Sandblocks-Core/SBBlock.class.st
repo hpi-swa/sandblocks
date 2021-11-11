@@ -970,7 +970,9 @@ SBBlock >> ensureExpanded [
 { #category : #layout }
 SBBlock >> ensureLayouted [
 
-	self owner ifNotNil: [:o | o layoutPolicy ifNotNil: [:l | l ensureLayouted: self]]
+	SBToggledCode comment: '' active: 1 do: {
+		[self allOwnersDo: #fullBounds].
+		[self owner ifNotNil: [:o | o layoutPolicy ifNotNil: [:l | l ensureLayouted: self]]]}
 ]
 
 { #category : #actions }
