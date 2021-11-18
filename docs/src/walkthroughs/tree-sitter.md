@@ -5,6 +5,8 @@ We create a replacement for Javascript's `window.fetch` and a palette for Javasc
 
 > **Notes & Errata**
 > 
+> [41min04] instead of calling `SBJavascript parse: '2 + 2'` it is now recommended to call `SBJavascript parseElement: '2 + 2'` if we only want a single parsed AST node instead of a full program
+>
 > [46min09] when we add the `factory:` call for the palette block, use `SBJavascript instance` instead of `SBJavascript new` to avoid rebuilding the grammar.
 
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;"><iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://player.vimeo.com/video/643502024" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
