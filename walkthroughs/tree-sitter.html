@@ -168,6 +168,7 @@
 We create a replacement for Javascript's <code>window.fetch</code> and a palette for Javascript.</p>
 <blockquote>
 <p><strong>Notes &amp; Errata</strong></p>
+<p>[41min04] instead of calling <code>SBJavascript parse: '2 + 2'</code> it is now recommended to call <code>SBJavascript parseElement: '2 + 2'</code> if we only want a single parsed AST node instead of a full program</p>
 <p>[46min09] when we add the <code>factory:</code> call for the palette block, use <code>SBJavascript instance</code> instead of <code>SBJavascript new</code> to avoid rebuilding the grammar.</p>
 </blockquote>
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;"><iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://player.vimeo.com/video/643502024" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
