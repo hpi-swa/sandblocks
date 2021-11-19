@@ -194,7 +194,10 @@ SBMultilineOwnTextMorph >> moveCursorTo: aNumber [
 { #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> moveCursorVertically: aNumber ifAtBound: aBlock [
 
-	self moveCursorVertically: aNumber selecting: ActiveEvent shiftPressed ifAtBound: aBlock
+	self
+		moveCursorVertically: aNumber
+		selecting: (ActiveEvent ifNotNil: #shiftPressed ifNil: [false])
+		ifAtBound: aBlock
 ]
 
 { #category : #'as yet unclassified' }
