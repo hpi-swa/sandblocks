@@ -49,3 +49,14 @@ SBStMethodToBlockWithSubs >> visitMethodNode: aNode [
 	
 	^ method
 ]
+
+{ #category : #'as yet unclassified' }
+SBStMethodToBlockWithSubs >> visitPragma: aPragma [
+
+	| block |
+	block := super visitPragma: aPragma.
+	block converterOptionsDo: [:option | | c |
+		c := SBConvert new success: [:obj | ^ obj].
+		option automatic ifTrue: [option apply: c]].
+	^ block
+]

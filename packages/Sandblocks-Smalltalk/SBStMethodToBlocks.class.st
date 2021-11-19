@@ -156,7 +156,7 @@ SBStMethodToBlocks >> visitMethodNode: aNode [
 		methodComment: aNode comment;
 		yourself.
 	
-	aNode properties pragmas reverseDo: [:pragma | method body prependStatement: pragma asSandblock].
+	aNode properties pragmas reverseDo: [:pragma | method body prependStatement: (self visitPragma: pragma)].
 	
 	^ method
 ]
@@ -165,6 +165,12 @@ SBStMethodToBlocks >> visitMethodNode: aNode [
 SBStMethodToBlocks >> visitNewArrayNode: aNewArrayNode [
 
 	self assert: false
+]
+
+{ #category : #'as yet unclassified' }
+SBStMethodToBlocks >> visitPragma: aPragma [
+
+	^ aPragma asSandblock
 ]
 
 { #category : #'as yet unclassified' }

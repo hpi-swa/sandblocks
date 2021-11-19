@@ -150,6 +150,22 @@ SBCursorText >> mode [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorText >> moveCursorDown: aCursor [
+
+	self block currentTextMorph
+		moveCursorVertically: 1
+		ifAtBound: [super moveCursorDown: aCursor]
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorText >> moveCursorUp: aCursor [
+
+	self block currentTextMorph
+		moveCursorVertically: -1
+		ifAtBound: [super moveCursorUp: aCursor]
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorText >> moveHorizontal: aNumber wordWise: aBoolean [
 
 	self block currentTextMorph

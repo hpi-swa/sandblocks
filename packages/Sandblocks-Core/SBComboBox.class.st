@@ -53,13 +53,15 @@ SBComboBox >> object: anObject [
 { #category : #'as yet unclassified' }
 SBComboBox >> promptChangeValue [
 
-	| index |
-	index := UIManager default chooseFrom: self values.
-	index > 0 ifTrue: [
+	| choice |
+	choice := UIManager default
+		chooseFrom: (self values collect: [:obj | self display: obj])
+		values: self values.
+	choice ifNotNil: [
 		self sandblockEditor do: (SBMutatePropertyCommand new
 			target: self;
 			selector: #object;
-			value: (self values at: index))]
+			value: choice)]
 ]
 
 { #category : #'as yet unclassified' }
