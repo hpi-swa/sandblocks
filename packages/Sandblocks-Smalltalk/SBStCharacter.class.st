@@ -7,7 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBStCharacter >> absorbsInput: anEvent [
 
-	^ SBGrammarHandler eventValidForString: anEvent
+	^ (SBGrammarHandler eventValidForString: anEvent) and: [anEvent keyCharacter ~= Character tab]
 ]
 
 { #category : #'as yet unclassified' }
