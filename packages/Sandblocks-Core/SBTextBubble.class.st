@@ -8,10 +8,27 @@ Class {
 		'bordered',
 		'suffix',
 		'emphasis',
-		'object'
+		'object',
+		'textMorphClass'
 	],
 	#category : #'Sandblocks-Core'
 }
+
+{ #category : #'as yet unclassified' }
+SBTextBubble class >> multiLine [
+
+	^ self basicNew
+		textMorphClass: SBMultilineOwnTextMorph;
+		initialize
+]
+
+{ #category : #'as yet unclassified' }
+SBTextBubble >> absorbsInput: anEvent [
+
+	^ self textMorphClass = SBMultilineOwnTextMorph
+		ifTrue: [SBGrammarHandler eventValidForString: anEvent]
+		ifFalse: [super absorbsInput: anEvent]
+]
 
 { #category : #'as yet unclassified' }
 SBTextBubble >> bordered [
@@ -110,8 +127,11 @@ SBTextBubble >> initialize [
 	bordered := true.
 	
 	self
-		addMorphBack: (text := SBOwnTextMorph new
-			when: #contentsChanged send: #triggerEvent: to: self with: #contentsChanged);
+		addMorphBack: (text := self textMorphClass new
+			when: #contentsChanged
+			send: #triggerEvent:
+			to: self
+			with: #contentsChanged);
 		layoutPolicy: SBVerticalLayout new;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
@@ -134,6 +154,13 @@ SBTextBubble >> object [
 SBTextBubble >> object: anObject [
 
 	object := anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBTextBubble >> pasteReplace [
+	<action>
+
+	self currentTextMorph insertString: Clipboard clipboardText
 ]
 
 { #category : #'as yet unclassified' }
@@ -221,6 +248,18 @@ SBTextBubble >> textContents [
 SBTextBubble >> textMorph [
 
 	^ text
+]
+
+{ #category : #'as yet unclassified' }
+SBTextBubble >> textMorphClass [
+
+	^ textMorphClass ifNil: [SBOwnTextMorph]
+]
+
+{ #category : #'as yet unclassified' }
+SBTextBubble >> textMorphClass: aClass [
+
+	textMorphClass := aClass
 ]
 
 { #category : #'as yet unclassified' }

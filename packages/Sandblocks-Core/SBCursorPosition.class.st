@@ -127,6 +127,28 @@ SBCursorPosition >> mode [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorPosition >> moveCursorDown: aCursor [
+
+	aCursor nextVertical
+		ifNotNil: [:next |
+			aCursor
+				cursorPosition: (aCursor cursorForBlock: next at: (aCursor idealPixelPositionEnterNear: #top for: next))
+				explicitMove: true
+				axis: #y]
+		ifNil: [aCursor moveCursorSmaller]
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorPosition >> moveCursorUp: aCursor [
+
+	aCursor previousVertical ifNotNil: [:previous |
+		aCursor
+			cursorPosition: (aCursor cursorForBlock: previous at: (aCursor idealPixelPositionEnterNear: #bottom for: previous))
+			explicitMove: true
+			axis: #y]
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorPosition >> moveHorizontal: aNumber wordWise: aBoolean [
 
 	self subclassResponsibility

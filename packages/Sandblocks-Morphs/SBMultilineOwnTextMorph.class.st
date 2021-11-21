@@ -61,13 +61,22 @@ SBMultilineOwnTextMorph >> cursorPosition [
 { #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> drawOn: aCanvas [
 
-	aCanvas
-		paragraph: (self paragraph
-			positionWhenComposed: self position;
-			showCaret: self cursorVisible;
-			caretColor: self color)
-		bounds: (self position extent: self paragraph extent)
-		color: self color
+	self contents
+		ifEmpty: [
+			self
+				drawString: self placeholderText
+				on: aCanvas
+				at: self position
+				font: self placeholderFont
+				color: (self color alpha: 0.7)]
+		ifNotEmpty: [
+			aCanvas
+				paragraph: (self paragraph
+					positionWhenComposed: self position;
+					showCaret: self cursorVisible;
+					caretColor: self color)
+				bounds: (self position extent: self paragraph extent)
+				color: self color]
 ]
 
 { #category : #'as yet unclassified' }
@@ -144,6 +153,7 @@ SBMultilineOwnTextMorph >> maxWidth: aNumber [
 { #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> minExtent [
 
+	self contents ifEmpty: [^ super minExtent].
 	^ self paragraph extent
 ]
 
@@ -184,7 +194,10 @@ SBMultilineOwnTextMorph >> moveCursorTo: aNumber [
 { #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> moveCursorVertically: aNumber ifAtBound: aBlock [
 
-	self moveCursorVertically: aNumber selecting: ActiveEvent shiftPressed ifAtBound: aBlock
+	self
+		moveCursorVertically: aNumber
+		selecting: (ActiveEvent ifNotNil: #shiftPressed ifNil: [false])
+		ifAtBound: aBlock
 ]
 
 { #category : #'as yet unclassified' }
