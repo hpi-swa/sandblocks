@@ -60,13 +60,13 @@ BaselineOfSandblocks >> baseline: spec [
 		
 		spec
 			package: 'Sandblocks-Core'
-				with: [spec requires: #('SVG-Morphic' 'Sandblocks-Morphs' 'Sandblocks-Layout' 'squeak6-compat')];
+				with: [spec requires: #('SVG-Morphic' 'Sandblocks-Morphs' 'Sandblocks-Utils' 'Sandblocks-Layout' 'squeak6-compat')];
 			package: 'Sandblocks-Smalltalk'
 				with: [spec requires: #('Sandblocks-Core' 'PoppyPrint-Core' 'squeak6-simulation')];
 			package: 'Sandblocks-Explorer' with: [spec requires: #('Sandblocks-Core')];
 			package: 'Sandblocks-Watch' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-Debugger' with: [spec requires: 'Sandblocks-Core'];
-			package: 'Sandblocks-Utils' with: [spec requires: 'Sandblocks-Core'];
+			package: 'Sandblocks-Utils';
 			package: 'Sandblocks-Layout';
 			package: 'Sandblocks-Morphs';
 			package: 'Sandblocks-Drawing' with: [spec requires: 'Sandblocks-Core'];
@@ -97,7 +97,7 @@ BaselineOfSandblocks >> baseline: spec [
 		
 		spec
 			group: 'default'
-				with: #('Sandblocks-Core' 'Sandblocks-Smalltalk' 'Sandblocks-Layout' 'Sandblocks-Utils' 'Sandblocks-Debugger' 'Sandblocks-Morphs' 'Sandblocks-Explorer' 'Sandblocks-Watch' 'Sandblocks-Drawing' 'Sandblocks-Representation' 'Sandblocks-Compiler' 'Sandblocks-Babylonian' 'Sandblocks-CustomJavascript' 'Sandblocks-Scheme' 'Sandblocks-Ohm');
+				with: #('Sandblocks-Core' 'Sandblocks-Smalltalk' 'Sandblocks-Debugger' 'Sandblocks-Morphs' 'Sandblocks-Explorer' 'Sandblocks-Watch' 'Sandblocks-Drawing' 'Sandblocks-Representation' 'Sandblocks-Compiler' 'Sandblocks-Babylonian' 'Sandblocks-CustomJavascript' 'Sandblocks-Scheme' 'Sandblocks-Ohm');
 			group: 'tutorial' with: #('Sandblocks-Tutorial');
 			group: 'withActiveExpressions' with: #('Sandblocks-ActiveExpression' 'JumpingCubes');
 			group: 'withRatPack' with: #('Sandblocks-RatPack')]
