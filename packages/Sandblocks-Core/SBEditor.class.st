@@ -798,12 +798,13 @@ SBEditor >> initialize [
 	
 	self
 		registerGlobalShortcutListener: self;
-		registerGlobalShortcutListener: errors;
 		registerGlobalShortcutListener: searchInput;
 		registerGlobalShortcutListener: cursor;
 		resetState;
 		openMorph: cursor;
-		updateSelectionLabel
+		updateSelectionLabel.
+	
+	errors ifNotNil: [self registerGlobalShortcutListener: errors]
 ]
 
 { #category : #testing }
