@@ -357,7 +357,9 @@ SBEditor >> colorPolicy: aPolicy [
 { #category : #accessing }
 SBEditor >> compileTime [
 
-	^ self errors hasSubmorphs ifTrue: [#compileOnSave] ifFalse: [compileTime]
+	^ (self errors notNil and: [self errors hasSubmorphs])
+		ifTrue: [#compileOnSave]
+		ifFalse: [compileTime]
 ]
 
 { #category : #accessing }
