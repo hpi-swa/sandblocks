@@ -187,7 +187,10 @@ SBEditor >> buildBottomPanel [
 		addMorphBack: (modeLabel := SBStringMorph new emphasis: TextEmphasis bold emphasisCode);
 		addMorphBack: (selectionLabel := SBStringMorph new contents: '');
 		addMorphBack: searchInput;
-		addMorphBack: (errors := SBErrorPanel new);
+		addMorphBack: (Smalltalk
+			at: #SBErrorPanel
+			ifPresent: [:cl | errors := cl new]
+			ifAbsent: [Morph new extent: 0 @ 0]);
 		addMorphBack: (Morph new
 			extent: 0 @ 0;
 			hResizing: #spaceFill;
@@ -779,10 +782,12 @@ SBEditor >> initialize [
 		listDirection: #topToBottom.
 	
 	self wantsMinimalLayout
-		ifTrue: [
-			self addMorphBack: (SBRow new
-				addMorphBack: searchInput toggleCollapsed;
-				addMorphBack: (errors := SBErrorPanel new))]
+		ifTrue: [ | row |
+			row := SBRow new addMorphBack: searchInput toggleCollapsed.
+			Smalltalk
+				at: #SBErrorPanel
+				ifPresent: [:errorPanelClass | row addMorphBack: (errors := errorPanelClass new)].
+			self addMorphBack: row]
 		ifFalse: [self addMorphBack: self buildCommandBar].
 	self addMorphBack: (SBRow new
 		changeTableLayout;
@@ -1249,7 +1254,7 @@ SBEditor >> replaceInput: aMorph [
 { #category : #'as yet unclassified' }
 SBEditor >> reportError: anError process: aProcess [
 
-	^ errors addError: anError process: aProcess
+	^ errors ifNotNil: [errors addError: anError process: aProcess]
 ]
 
 { #category : #errors }
