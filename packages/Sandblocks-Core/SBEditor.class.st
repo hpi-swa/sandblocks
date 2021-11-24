@@ -658,11 +658,7 @@ SBEditor >> filterEvent: anEvent for: aMorph [
 		ifTrue: [self toggleHelperTimer: anEvent type = #keyDown]
 		ifFalse: [self removeHelperTimer].
 	
-	(self performShortcutFor: anEvent)
-		ifTrue: [
-			inputMapping handledEvent: anEvent in: self.
-			^ anEvent ignore]
-		ifFalse: [self cursor unhandledEvent: anEvent in: self didHandle: [^ anEvent ignore]].
+	self handle: anEvent.
 	
 	anEvent wasHandled: false.
 	^ anEvent ignore
@@ -686,6 +682,16 @@ SBEditor >> goToMark [
 
 	self waitForLetterDo: [:letter |
 		self allBlocksDo: [:morph | (morph withDecorator: SBMarkedDecorator do: [:mark | mark letter = letter ifTrue: [^ self select: morph]])]]
+]
+
+{ #category : #events }
+SBEditor >> handle: anEvent [
+
+	(self performShortcutFor: anEvent)
+		ifTrue: [
+			inputMapping handledEvent: anEvent in: self.
+			^ anEvent ignore]
+		ifFalse: [self cursor unhandledEvent: anEvent in: self didHandle: [^ anEvent ignore]]
 ]
 
 { #category : #'event handling' }
