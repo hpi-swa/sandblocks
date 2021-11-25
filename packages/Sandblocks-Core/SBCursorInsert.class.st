@@ -188,8 +188,11 @@ SBCursorInsert >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 	SBToggledCode comment: '' active: 1 do: {
 		[ | position |
 			position := nil.
-			command morph cursorPositionsDo: [:pos | (position isNil or: [position isKindOf: SBCursorSelect]) ifTrue: [position := pos]].
-			position ifNotNil: [anEditor cursor cursorPosition: position explicitMove: false axis: #none]].
+			(command respondsTo: #morph)
+				ifTrue: [
+					command morph cursorPositionsDo: [:pos | (position isNil or: [position isKindOf: SBCursorSelect]) ifTrue: [position := pos]].
+					position ifNotNil: [anEditor cursor cursorPosition: position explicitMove: false axis: #none]]
+				ifFalse: [anEditor selection inputContainedUnknown]].
 		[anEditor performAction: #moveCursorSmaller].
 		[anEditor selection inputContainedUnknown]}.
 	(command continueAfterInsert: anEvent keyCharacter) ifTrue: [anEditor handle: anEvent].
