@@ -1,7 +1,7 @@
 Class {
 	#name : #SBExecutionEnvironment,
 	#superclass : #ProcessLocalVariable,
-	#category : #'Sandblocks-Babylonian'
+	#category : #'Sandblocks-Smalltalk'
 }
 
 { #category : #'as yet unclassified' }
