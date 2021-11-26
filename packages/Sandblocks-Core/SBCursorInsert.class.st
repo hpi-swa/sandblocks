@@ -185,7 +185,16 @@ SBCursorInsert >> selectSmaller [
 SBCursorInsert >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 
 	anEditor do: command.
-	anEditor selection inputContainedUnknown.
-	command continueAfterInsert ifTrue: [anEditor selection keyStroke: anEvent].
+	SBToggledCode comment: '' active: 1 do: {
+		[ | position |
+			position := nil.
+			(command respondsTo: #morph)
+				ifTrue: [
+					command morph cursorPositionsDo: [:pos | (position isNil or: [position isKindOf: SBCursorSelect]) ifTrue: [position := pos]].
+					position ifNotNil: [anEditor cursor cursorPosition: position explicitMove: false axis: #none]]
+				ifFalse: [anEditor selection inputContainedUnknown]].
+		[anEditor performAction: #moveCursorSmaller].
+		[anEditor selection inputContainedUnknown]}.
+	(command continueAfterInsert: anEvent keyCharacter) ifTrue: [anEditor handle: anEvent].
 	aBlock value
 ]

@@ -117,7 +117,11 @@ SBCursorSelect >> selectionBounds [
 { #category : #'as yet unclassified' }
 SBCursorSelect >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 
-	(self block grammarHandler ifNotNil: [:h | h characterCanStartInput: anEvent keyCharacter] ifNil: [false]) ifTrue: [
-			self block grammarHandler startOverrideInput: anEvent in: anEditor.
-			aBlock value]
+	(self block grammarHandler
+		ifNotNil: [:h | h characterCanStartInput: anEvent keyCharacter]
+		ifNil: [false]) ifTrue: [
+		self block grammarHandler
+			block: self block;
+			startOverrideInput: anEvent in: anEditor.
+		aBlock value]
 ]

@@ -187,7 +187,10 @@ SBEditor >> buildBottomPanel [
 		addMorphBack: (modeLabel := SBStringMorph new emphasis: TextEmphasis bold emphasisCode);
 		addMorphBack: (selectionLabel := SBStringMorph new contents: '');
 		addMorphBack: searchInput;
-		addMorphBack: (errors := SBErrorPanel new);
+		addMorphBack: (Smalltalk
+			at: #SBErrorPanel
+			ifPresent: [:cl | errors := cl new]
+			ifAbsent: [Morph new extent: 0 @ 0]);
 		addMorphBack: (Morph new
 			extent: 0 @ 0;
 			hResizing: #spaceFill;
@@ -354,7 +357,9 @@ SBEditor >> colorPolicy: aPolicy [
 { #category : #accessing }
 SBEditor >> compileTime [
 
-	^ self errors hasSubmorphs ifTrue: [#compileOnSave] ifFalse: [compileTime]
+	^ (self errors notNil and: [self errors hasSubmorphs])
+		ifTrue: [#compileOnSave]
+		ifFalse: [compileTime]
 ]
 
 { #category : #accessing }
@@ -653,11 +658,7 @@ SBEditor >> filterEvent: anEvent for: aMorph [
 		ifTrue: [self toggleHelperTimer: anEvent type = #keyDown]
 		ifFalse: [self removeHelperTimer].
 	
-	(self performShortcutFor: anEvent)
-		ifTrue: [
-			inputMapping handledEvent: anEvent in: self.
-			^ anEvent ignore]
-		ifFalse: [self cursor unhandledEvent: anEvent in: self didHandle: [^ anEvent ignore]].
+	self handle: anEvent.
 	
 	anEvent wasHandled: false.
 	^ anEvent ignore
@@ -681,6 +682,16 @@ SBEditor >> goToMark [
 
 	self waitForLetterDo: [:letter |
 		self allBlocksDo: [:morph | (morph withDecorator: SBMarkedDecorator do: [:mark | mark letter = letter ifTrue: [^ self select: morph]])]]
+]
+
+{ #category : #events }
+SBEditor >> handle: anEvent [
+
+	(self performShortcutFor: anEvent)
+		ifTrue: [
+			inputMapping handledEvent: anEvent in: self.
+			^ anEvent ignore]
+		ifFalse: [self cursor unhandledEvent: anEvent in: self didHandle: [^ anEvent ignore]]
 ]
 
 { #category : #'event handling' }
@@ -779,10 +790,12 @@ SBEditor >> initialize [
 		listDirection: #topToBottom.
 	
 	self wantsMinimalLayout
-		ifTrue: [
-			self addMorphBack: (SBRow new
-				addMorphBack: searchInput toggleCollapsed;
-				addMorphBack: (errors := SBErrorPanel new))]
+		ifTrue: [ | row |
+			row := SBRow new addMorphBack: searchInput toggleCollapsed.
+			Smalltalk
+				at: #SBErrorPanel
+				ifPresent: [:errorPanelClass | row addMorphBack: (errors := errorPanelClass new)].
+			self addMorphBack: row]
 		ifFalse: [self addMorphBack: self buildCommandBar].
 	self addMorphBack: (SBRow new
 		changeTableLayout;
@@ -793,12 +806,13 @@ SBEditor >> initialize [
 	
 	self
 		registerGlobalShortcutListener: self;
-		registerGlobalShortcutListener: errors;
 		registerGlobalShortcutListener: searchInput;
 		registerGlobalShortcutListener: cursor;
 		resetState;
 		openMorph: cursor;
-		updateSelectionLabel
+		updateSelectionLabel.
+	
+	errors ifNotNil: [self registerGlobalShortcutListener: errors]
 ]
 
 { #category : #testing }
@@ -1249,7 +1263,7 @@ SBEditor >> replaceInput: aMorph [
 { #category : #'as yet unclassified' }
 SBEditor >> reportError: anError process: aProcess [
 
-	^ errors addError: anError process: aProcess
+	^ errors ifNotNil: [errors addError: anError process: aProcess]
 ]
 
 { #category : #errors }

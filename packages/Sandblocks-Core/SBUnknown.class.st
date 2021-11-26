@@ -20,10 +20,11 @@ SBUnknown >> acceptInputEvent: anEvent [
 
 	self currentTextMorph keyStroke: anEvent.
 	
-	self flag: #fixme. " auto-complete unambiguous matches? "
+	self flag: #fixme.
+	" auto-complete unambiguous matches? "
 	self validContents ifFalse: [
 		self currentTextMorph deleteBeforeCursor.
-		SBScmGrammarHandler new perform: anEvent keyCharacter for: self empty: false]
+		self grammarHandler perform: anEvent keyCharacter for: self empty: false]
 ]
 
 { #category : #'action helpers' }

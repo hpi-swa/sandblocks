@@ -79,7 +79,7 @@ SBCommand >> artefactFrom: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBCommand >> continueAfterInsert [
+SBCommand >> continueAfterInsert: aCharacter [
 	" mark that if this command has been used as an insertion point, the input should be forward to the new block "
 
 	^ true
