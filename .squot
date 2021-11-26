@@ -20,5 +20,5 @@ OrderedDictionary {
 	'packages/Sandblocks-Squeak6Fixes' : #SquotTonelSerializer,
 	'packages/Sandblocks-Simulation' : #SquotTonelSerializer,
 	'packages/Sandblocks-Scheme' : #SquotTonelSerializer,
-	'Sandblocks-JavascriptReact' : #SquotTonelSerializer
+	'packages/Sandblocks-JavascriptReact' : #SquotTonelSerializer
 }
