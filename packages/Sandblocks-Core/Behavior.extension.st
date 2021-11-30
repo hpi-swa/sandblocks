@@ -15,14 +15,16 @@ Behavior >> lookupSelector: aSymbol upTo: aClass ifPresent: aBlock ifAbsent: ano
 { #category : #'*Sandblocks-Core-converting' }
 Behavior >> open: converter [
 	<convert>
-	
+	<convertPriority: 10>
+
 	converter do: [SBStClass newFor: self at: 0 @ 0]
 ]
 
 { #category : #'*Sandblocks-Core-converting' }
 Behavior >> openFull: converter [
 	<convert>
-	
+	<convertPriority: 5>
+
 	converter do: [SBStClassMethodEditor new class: self]
 ]
 

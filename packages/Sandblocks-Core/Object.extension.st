@@ -47,8 +47,12 @@ Object >> asSandblock [
 { #category : #'*Sandblocks-Core-converting' }
 Object >> bindToPlayground: convert [
 	<convert>
-	
-	convert do: [SBStPlayground new receiver: self; statements: {SBStName contents: 'self'}]
+	<convertPriority: -3>
+
+	convert do: [
+		SBStPlayground new
+			receiver: self;
+			statements: {SBStName contents: 'self'}]
 ]
 
 { #category : #'*Sandblocks-Core-converting' }
@@ -96,7 +100,8 @@ Object >> convertedFor: anInterfaceCollection doWithChooser: aBlock [
 { #category : #'*Sandblocks-Core-converting' }
 Object >> converterOptionsDo: aBlock [
 
-	(Pragma allNamed: #convert from: self class to: Object) do: [:pragma | aBlock value: (SBConvertOption on: self send: pragma selector)]
+	((Pragma allNamed: #convert from: self class to: Object) sorted: [:pragmaA :pragmaB |
+		((pragmaA method pragmaAt: #convertPriority:) ifNotNil: [:p | p arguments first] ifNil: [0]) > ((pragmaB method pragmaAt: #convertPriority:) ifNotNil: [:p | p arguments first] ifNil: [0])]) do: [:pragma | aBlock value: (SBConvertOption on: self send: pragma selector)]
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -147,14 +152,16 @@ Object >> object [
 { #category : #'*Sandblocks-Core-converting' }
 Object >> openClass: converter [
 	<convert>
-	
+	<convertPriority: -2>
+
 	converter do: [SBStClassMethodEditor new class: self class]
 ]
 
 { #category : #'*Sandblocks-Core-converting' }
 Object >> openExplorer: convert [
 	<convert>
-	
+	<convertPriority: -1>
+
 	convert do: [SBExplorer on: self]
 ]
 

@@ -1019,9 +1019,9 @@ SBEditor >> open: anObject [
 SBEditor >> open: anObject withInterfaces: aCollection [
 
 	^ self blockFor: anObject withInterfaces: aCollection ifOpen: #select ifClosed: [
-		anObject
-			convertedFor: (self objectInterfaceNear: nil at: #after), aCollection
-			do: [:repr | self openMorphInView: repr. repr]]
+		anObject convertedFor: (self objectInterfaceNear: nil at: #after), aCollection do: [:repr |
+			self openMorphInView: repr.
+			repr]]
 ]
 
 { #category : #'insert/delete' }
