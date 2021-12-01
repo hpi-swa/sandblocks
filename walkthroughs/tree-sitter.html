@@ -195,10 +195,17 @@ We create a replacement for Javascript's <code>window.fetch</code> and a palette
 <p>To create a new instance of a specific rule, use e.g.:</p>
 <pre><code>SBBlock new addMorphBack: (SBPython build: 'expression')
 </code></pre>
-<p>If you need a complete block, you can use <code>parse:</code>:</p>
-<pre><code>SBBlock new addMorphBack: (SBPython parse: '3 + 4') childSandblocks first
+<p>If you need a complete block, you can use <code>parse:</code> or <code>parseElement:</code>:</p>
+<pre><code>SBBlock new addMorphBack: (SBPython parseElement: '3 + 4')
 </code></pre>
-<p>Note the <code>childSandblocks first</code> suffix: we add this because Tree Sitter will wrap a top-level element (<code>module</code> in this case) around the expression, which we may not want.</p>
+<p>With <code>parseElement:</code>, you get the first child of the toplevel node.
+In this specific example, the toplevel node is a <code>program</code>, nesting a <code>binary_operator</code>.
+If you need multiple elements, use <code>parse:</code> instead:</p>
+<pre><code>SBPython parse:
+'def a():
+  pass
+a()'
+</code></pre>
 <h3 id="accessing-fields"><a class="header" href="#accessing-fields">Accessing Fields</a></h3>
 <p>Many Tree Sitter blocks contain field names, e.g.:</p>
 <pre><code class="language-javascript">pair: $ =&gt; seq(
@@ -210,6 +217,14 @@ We create a replacement for Javascript's <code>window.fetch</code> and a palette
 <p>You can access these using <code>get:</code>, e.g.</p>
 <pre><code>(aPairBlock get: 'key') sourceString
 </code></pre>
+<h3 id="creating-a-replacement"><a class="header" href="#creating-a-replacement">Creating a Replacement</a></h3>
+<ol>
+<li>Subclass <code>SBInlineBlockReplace</code>.</li>
+<li>Create a matcher function on its class side (see video).</li>
+<li>Build your UI.</li>
+<li>Implement <code>writeSourceOn:</code> to produce textual source code that is the equivalent of your replacement.</li>
+<li>Implement <code>type</code> to inform the system what sort of node you are replacing. For example, if you are replacing a <code>(call)</code> in python, simple return <code>^ 'call'</code> from <code>type</code>.</li>
+</ol>
 
                     </main>
 
