@@ -462,7 +462,16 @@ SBBlockCursor >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 { #category : #'as yet unclassified' }
 SBBlockCursor >> updateBounds [
 
-	^ self bounds: cursorPosition bounds
+	| b |
+	b := cursorPosition bounds.
+	^ self bounds: (cursorPosition block
+		ifNotNil: [:block | | referenceMorph |
+			block = self sandblockEditor
+				ifTrue: [self owner offset extent: self owner extent]
+				ifFalse: [
+					referenceMorph := block ownerSatisfying: [:o | o owner = self owner].
+					referenceMorph ifNil: [b] ifNotNil: [block bounds: b in: referenceMorph]]]
+		ifNil: [b])
 ]
 
 { #category : #'vertical movement' }

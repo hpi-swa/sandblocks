@@ -115,11 +115,11 @@ SBStASTNode >> guessClassExpensive [
 			[
 				(sandboxClass new
 					stepLimit: 100000;
-					evaluate: [| result |
-						result := self evaluate.
-						[result class]
-							on: MessageNotUnderstood "might be ProtoObject"
-							do: [thisContext objectClass: result]]
+					evaluate: [
+						self evaluate ifNotNil: [:result |
+							[result class]
+								on: MessageNotUnderstood "might be ProtoObject"
+								do: [thisContext objectClass: result]]]
 						ifFailed: [nil])]
 				on: SandboxError
 				do: [:err | nil]]]
