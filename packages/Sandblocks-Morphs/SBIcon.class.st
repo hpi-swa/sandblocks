@@ -6031,7 +6031,10 @@ SBIcon >> cleanCache [
 { #category : #drawing }
 SBIcon >> color [
 
-	^ color ifNil: [self containingSandblock ifNil: [super color] ifNotNil: [:b | b foregroundColor]]
+	^ color ifNil: [
+		self containingSandblock
+			ifNil: [super color ifNil: [Color black]]
+			ifNotNil: [:b | b foregroundColor]]
 ]
 
 { #category : #colors }

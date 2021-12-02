@@ -16,6 +16,22 @@ SBComboBox >> activate [
 ]
 
 { #category : #'as yet unclassified' }
+SBComboBox >> chooseMorphs: aCollection [
+
+	| dialog |
+	dialog := DialogWindow new
+		title: 'Please Choose';
+		message: '';
+		filterEnabled: true;
+		autoCancel: true;
+		yourself.
+	"Like a pop-up menu, click anywhere to dismiss."
+	aCollection withIndexDo: [:ea :index | dialog createButton: ea value: index].
+	dialog selectedButtonIndex: 1.
+	^ dialog getUserResponseAtHand ifNotNil: [:index | aCollection at: index]
+]
+
+{ #category : #'as yet unclassified' }
 SBComboBox >> currentTextMorph [
 
 	^ nil
@@ -24,6 +40,7 @@ SBComboBox >> currentTextMorph [
 { #category : #'as yet unclassified' }
 SBComboBox >> display: anObject [
 
+	anObject isMorph ifTrue: [^ anObject imageForm].
 	^ anObject printString
 ]
 
@@ -47,16 +64,21 @@ SBComboBox >> object [
 SBComboBox >> object: anObject [
 
 	object := anObject.
-	self contents: (self display: object)
+	self contents: (self display: object) asString
 ]
 
 { #category : #'as yet unclassified' }
 SBComboBox >> promptChangeValue [
 
 	| choice |
-	choice := UIManager default
-		chooseFrom: (self values collect: [:obj | self display: obj])
-		values: self values.
+	choice := (self values allSatisfy: [:val | val isMorph or: [val isForm]])
+		ifTrue: [self chooseMorphs: self values]
+		ifFalse: [
+			UIManager default
+				chooseFrom: (self values collect: [:obj | self display: obj])
+				values: self values].
+	
+	
 	choice ifNotNil: [
 		self sandblockEditor do: (SBMutatePropertyCommand new
 			target: self;
