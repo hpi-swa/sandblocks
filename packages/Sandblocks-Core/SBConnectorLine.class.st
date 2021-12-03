@@ -9,7 +9,8 @@ Class {
 		'lineType',
 		'curveModifier',
 		'connectorType',
-		'evade'
+		'evade',
+		'lineWidth'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -325,7 +326,8 @@ SBConnectorLine >> initialize [
 	toAlign := #none.
 	curveModifier := 0.
 	connectorType := #arrow.
-	evade := #none
+	evade := #none.
+	lineWidth := 3
 ]
 
 { #category : #'as yet unclassified' }
@@ -361,7 +363,13 @@ SBConnectorLine >> lineType: aSymbol [
 { #category : #'as yet unclassified' }
 SBConnectorLine >> lineWidth [
 	
-	^ 3
+	^ lineWidth
+]
+
+{ #category : #'as yet unclassified' }
+SBConnectorLine >> lineWidth: aNumber [
+	
+	lineWidth := aNumber
 ]
 
 { #category : #'as yet unclassified' }

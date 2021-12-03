@@ -5,7 +5,8 @@ Class {
 		'command',
 		'before',
 		'adjacent',
-		'container'
+		'container',
+		'bounds'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -49,6 +50,8 @@ SBCursorInsert >> block [
 { #category : #'as yet unclassified' }
 SBCursorInsert >> bounds [
 
+	bounds ifNotNil: [^ bounds].
+	
 	^ self container hasHorizontalLayout
 		ifTrue: [
 			self adjacent
@@ -72,6 +75,12 @@ SBCursorInsert >> bounds [
 					self before
 						ifTrue: [self adjacent topLeft - (0 @ (self lineWidth // 2)) extent: self adjacent width @ self lineWidth]
 						ifFalse: [self adjacent bottomLeft extent: self adjacent width @ self lineWidth]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorInsert >> bounds: aRectangle [
+
+	bounds := aRectangle
 ]
 
 { #category : #'as yet unclassified' }

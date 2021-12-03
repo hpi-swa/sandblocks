@@ -36,6 +36,7 @@ CompiledMethod >> enumerateInstructions: aDebuggerMap of: aCompiledCode on: aStr
 { #category : #'*Sandblocks-Core' }
 CompiledMethod >> open: convert [
 	<convert>
+	<convertPriority: 10>
 	
 	convert do: [self asSandblock]
 ]

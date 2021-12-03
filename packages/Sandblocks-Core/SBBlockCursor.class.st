@@ -353,10 +353,16 @@ SBBlockCursor >> resetBlink [
 
 	blinkCount := 0.
 	cursorShown := true.
+	lastBlinkTime := Time now.
 	self editor ifNotNil: [:e |
 		e world ifNotNil: [:w |
 			w stopStepping: self.
-			w startStepping: self at: Time millisecondClockValue + self stepTime selector: #step arguments: {} stepTime: self stepTime]]
+			w
+				startStepping: self
+				at: Time millisecondClockValue + self stepTime
+				selector: #step
+				arguments: {}
+				stepTime: self stepTime]]
 ]
 
 { #category : #drawing }
@@ -426,7 +432,7 @@ SBBlockCursor >> step [
 	oldVisible := self cursorVisible.
 	
 	now := Time current.
-	(lastBlinkTime isNil or: [((lastBlinkTime addSeconds: 0.5) < now)]) ifTrue: [
+	(lastBlinkTime isNil or: [(lastBlinkTime addSeconds: 0.5) < now]) ifTrue: [
 		lastBlinkTime := now.
 		cursorShown := cursorShown not.
 		blinkCount := blinkCount + 1].
@@ -456,7 +462,16 @@ SBBlockCursor >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 { #category : #'as yet unclassified' }
 SBBlockCursor >> updateBounds [
 
-	^ self bounds: cursorPosition bounds
+	| b |
+	b := cursorPosition bounds.
+	^ self bounds: (cursorPosition block
+		ifNotNil: [:block | | referenceMorph |
+			block = self sandblockEditor
+				ifTrue: [self owner offset extent: self owner extent]
+				ifFalse: [
+					referenceMorph := block ownerSatisfying: [:o | o owner = self owner].
+					referenceMorph ifNil: [b] ifNotNil: [block bounds: b in: referenceMorph]]]
+		ifNil: [b])
 ]
 
 { #category : #'vertical movement' }

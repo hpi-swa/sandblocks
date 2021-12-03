@@ -101,7 +101,9 @@ SBIconDescriptor >> renderForm [
 	| rect form |
 	rect := 0 @ 0 extent: self size asPoint * SBIcon supersamplingFactor.
 	self svg bounds: rect.
-	self svg allMorphsDo: [:morph | morph style at: 'fill' put: self color].
+	self svg allMorphsDo: [:morph |
+		self color ifNil: [self halt].
+		morph style at: 'fill' put: self color].
 	
 	form := self svg imageFormForRectangle: rect.
 	^ SBIcon supersamplingFactor > 1

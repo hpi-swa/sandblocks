@@ -37,11 +37,20 @@ To create a new instance of a specific rule, use e.g.:
 ```
 SBBlock new addMorphBack: (SBPython build: 'expression')
 ```
-If you need a complete block, you can use `parse:`:
+
+If you need a complete block, you can use `parse:` or `parseElement:`:
 ```
-SBBlock new addMorphBack: (SBPython parse: '3 + 4') childSandblocks first
+SBBlock new addMorphBack: (SBPython parseElement: '3 + 4')
 ```
-Note the `childSandblocks first` suffix: we add this because Tree Sitter will wrap a top-level element (`module` in this case) around the expression, which we may not want.
+With `parseElement:`, you get the first child of the toplevel node.
+In this specific example, the toplevel node is a `program`, nesting a `binary_operator`.
+If you need multiple elements, use `parse:` instead:
+```
+SBPython parse:
+'def a():
+  pass
+a()'
+```
 
 ### Accessing Fields
 Many Tree Sitter blocks contain field names, e.g.:
@@ -57,3 +66,9 @@ You can access these using `get:`, e.g.
 (aPairBlock get: 'key') sourceString
 ```
 
+### Creating a Replacement
+1. Subclass `SBInlineBlockReplace`.
+2. Create a matcher function on its class side (see video).
+3. Build your UI.
+4. Implement `writeSourceOn:` to produce textual source code that is the equivalent of your replacement.
+5. Implement `type` to inform the system what sort of node you are replacing. For example, if you are replacing a `(call)` in python, simple return `^ 'call'` from `type`.
