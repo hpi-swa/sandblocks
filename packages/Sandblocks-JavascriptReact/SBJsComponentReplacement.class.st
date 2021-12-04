@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBJsComponentReplacement class >> exampleHTMLTemplateFor: aString forClass: anotherString [
+SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forClass: aClassNameString withOptions: aObjectString [
 
 	^ '<!DOCTYPE html>
 <html lang="en">
@@ -27,9 +27,13 @@ SBJsComponentReplacement class >> exampleHTMLTemplateFor: aString forClass: anot
     <script src="https://fb.me/react-dom-0.14.3.js"></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <script type="text/babel">
-      ReactDOM.render(<div id="container"></div>, document.getElementById("root"));',
-	aString,
-	'ReactDOM.render(<' , anotherString , '/>, document.getElementById("container"));
+      ReactDOM.render(<div id="container"></div>, document.getElementById("root"));
+',
+	aSourceCodeString,
+	'
+	const options = ', aObjectString, ';
+	const { componentProps } = options;
+	ReactDOM.render(<' , aClassNameString , ' {...componentProps} />, document.getElementById("container"));
     </script>
   </body>
 </html>'
@@ -39,7 +43,7 @@ SBJsComponentReplacement class >> exampleHTMLTemplateFor: aString forClass: anot
 { #category : #'as yet unclassified' }
 SBJsComponentReplacement class >> getTestHTMLFilePath [
 
-	 ^ '/home/michael/Desktop/test.html'
+	 ^ '/Users/michael/Desktop/test.html'
 ]
 
 { #category : #'as yet unclassified' }
@@ -49,50 +53,52 @@ SBJsComponentReplacement class >> matchJs: aDictionary do: aBlock [
     body: (class_body
     	(field_definition
         	(property_identifier) @example_name
+	      (object) @options
         ) @example_object
 	(method_definition
         	(property_identifier) @method_name
   	)
     )
 ) @class'>
-	| classa reactClassName |
-	(aDictionary at: 'example_name') contents = 'example' ifFalse: [^ nil].
+	| wholeReactClass reactClassName options htmlFileContents |
+	"(aDictionary at: 'example_name') contents = 'example' ifFalse: [^ nil]."
 	(aDictionary at: 'method_name') contents = 'render' ifFalse: [^ nil].
-	classa := aDictionary at: 'class'. 
+	wholeReactClass := aDictionary at: 'class'. 
 	reactClassName := (aDictionary at: 'class_name') contents.
-	Transcript showln: classa sourceString.
-	FileStream forceNewFileNamed: self getTestHTMLFilePath do: [:stream | stream nextPutAll: (self exampleHTMLTemplateFor: classa sourceString forClass: reactClassName)].
+	options := (aDictionary at: 'options').
+	Transcript showln: wholeReactClass sourceString.
+	htmlFileContents := (self exampleHTMLTemplateFor: wholeReactClass sourceString forClass: reactClassName withOptions: options sourceString).
+	htmlFileContents := htmlFileContents copyReplaceAll: 'h2style' with: 'h2 style'.
+	FileStream forceNewFileNamed: self getTestHTMLFilePath do: [:stream | stream nextPutAll: htmlFileContents].
 	
 	"First argument: What will be replaced, second argument: With what it will be replaced."
 	 ^ aBlock
 		value: (aDictionary at: 'example_object')
-		value: (self new props: (aDictionary at: 'class_name') url: 'file://' , self getTestHTMLFilePath)
+		value: (self new exampleObject: (aDictionary at: 'example_object') url: 'file://' , self getTestHTMLFilePath)
 		
 	
 
 ]
 
 { #category : #'as yet unclassified' }
-SBJsComponentReplacement >> props: aJsObjectString [
-	
-	self
-		listDirection: #topToBottom;
-		addMorphBack: (SBRow new
-			addMorphBack: (SBStringMorph new contents: 'I am replacing an example object')
-			"addMorphBack: (SBTextBubble new contents: aString)")
-		
-	
+SBJsComponentReplacement class >> sampleReactClassAsString [
 
+	 ^ 'class Car extends React.Component {
+ 	example = {};
+	render(){
+		return <h2>Hi, I am a Car! </h2>;
+	}
+}'
 ]
 
 { #category : #'as yet unclassified' }
-SBJsComponentReplacement >> props: aJsObjectString url: aString [
+SBJsComponentReplacement >> exampleObject: aJsObjectString url: aString [
 	
 	self
 		listDirection: #topToBottom;
 		addMorphBack: (SBRow new
-			addMorphBack: (SBStringMorph new contents: 'I am replacing an example object');
-			addMorphBack: (MMBrowserMorph openOn: aString)).
+			addMorphBack: (MMBrowserMorph reactOpenOn: aString);
+			addMorphBack: aJsObjectString buildCopy).
 			"addMorphBack: (SBTextBubble new contents: aString))"
 		
 	
