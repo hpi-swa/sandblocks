@@ -2707,6 +2707,12 @@ SBBlock >> wantsInteractiveErrorCorrection [
 	^ false
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> wantsMethodBody [
+
+	^ self isArtefact
+]
+
 { #category : #callbacks }
 SBBlock >> wasDeselected [
 
