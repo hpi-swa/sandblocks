@@ -64,7 +64,7 @@ SBJsComponentReplacement class >> getTestHTMLFileUrl [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsComponentReplacement class >> matchJs: aDictionary do: aBlock [
+SBJsComponentReplacement class >> matchComponentExample: aDictionary do: aBlock [
 	<lang: #javascript match: '(class_declaration
     name: (identifier) @class_name
     body: (class_body
@@ -88,7 +88,7 @@ SBJsComponentReplacement class >> matchJs: aDictionary do: aBlock [
 	"First argument: What will be replaced, second argument: With what it will be replaced."
 	 ^ aBlock
 		value: (aDictionary at: 'example_object')
-		value: (self new exampleObject: wholeOptions forAComponent: reactClassName withComponentNode: wholeReactClass url: self getTestHTMLFileUrl
+		value: (self new exampleObject: options forAComponent: reactClassName withComponentNode: wholeReactClass url: self getTestHTMLFileUrl
 		)
 		
 	
@@ -99,9 +99,10 @@ SBJsComponentReplacement class >> matchJs: aDictionary do: aBlock [
 SBJsComponentReplacement class >> sampleReactClassAsString [
 
 	 ^ 'class Car extends React.Component {
- 	example = {};
+ 	example = {componentProps: {color: "red", kind: "stuff"}, 
+				parentProps: {style: {display: "inline-block", animation: "spin 4s infinite linear", backgroundColor: "blue"}}};
 	render(){
-		return <h2>Hi, I am a Car! </h2>;
+		return <h2 style={{color: this.props.color}}>Hi, I am a {this.props.kind}! </h2>;
 	}
 }'
 ]
@@ -126,8 +127,6 @@ SBJsComponentReplacement >> generateHtmlFileFor: aReactComponentString withClass
 
 	| htmlString |
 	htmlString := self class exampleHTMLTemplateFor: aReactComponentString forClass: aClassNameString withOptions: aJsObjectString.
-	"Hotfix for source code generation"
-	htmlString := htmlString copyReplaceAll: 'h2style' with: 'h2 style'.
 	FileStream forceNewFileNamed: self class getTestHTMLFilePath do: [:stream | stream nextPutAll: htmlString].
 		
 	
@@ -166,7 +165,7 @@ SBJsComponentReplacement >> skipHtmlFileGeneration: aBoolean [
 SBJsComponentReplacement >> writeSourceOn: aStream [
 
       | optionsObject |
-	optionsObject :=  self firstSubmorph submorphs second firstSubmorph sourceString , ';'.
+	optionsObject :=  'example = ', self firstSubmorph submorphs second firstSubmorph sourceString , ';'.
 	aStream nextPutAll: optionsObject.
 	self skipHtmlFileGeneration ifFalse: [
 		| className componentClass |
