@@ -2,7 +2,8 @@ Class {
 	#name : #SBComboBox,
 	#superclass : #SBTextBubble,
 	#instVars : [
-		'values'
+		'values',
+		'tooltips'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -27,6 +28,7 @@ SBComboBox >> chooseMorphs: aCollection [
 		yourself.
 	"Like a pop-up menu, click anywhere to dismiss."
 	aCollection withIndexDo: [:ea :index | dialog createButton: ea value: index].
+	tooltips ifNotNil: [tooltips with: dialog buttons do: [:tooltip :button | button balloonText: tooltip]].
 	dialog selectedButtonIndex: 1.
 	^ dialog getUserResponseAtHand ifNotNil: [:index | aCollection at: index]
 ]
@@ -84,6 +86,12 @@ SBComboBox >> promptChangeValue [
 			target: self;
 			selector: #object;
 			value: choice)]
+]
+
+{ #category : #'as yet unclassified' }
+SBComboBox >> tooltips: aCollection [
+
+	tooltips := aCollection
 ]
 
 { #category : #'as yet unclassified' }
