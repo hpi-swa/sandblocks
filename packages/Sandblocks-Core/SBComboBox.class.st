@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBTextBubble,
 	#instVars : [
 		'values',
-		'tooltips'
+		'tooltips',
+		'labels'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -30,7 +31,7 @@ SBComboBox >> chooseMorphs: aCollection [
 	aCollection withIndexDo: [:ea :index | dialog createButton: ea value: index].
 	tooltips ifNotNil: [tooltips with: dialog buttons do: [:tooltip :button | button balloonText: tooltip]].
 	dialog selectedButtonIndex: 1.
-	^ dialog getUserResponseAtHand ifNotNil: [:index | aCollection at: index]
+	^ dialog getUserResponseAtHand
 ]
 
 { #category : #'as yet unclassified' }
@@ -57,6 +58,18 @@ SBComboBox >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBComboBox >> labels [
+
+	^ labels
+]
+
+{ #category : #'as yet unclassified' }
+SBComboBox >> labels: aCollection [
+
+	labels := aCollection
+]
+
+{ #category : #'as yet unclassified' }
 SBComboBox >> object [
 
 	^ object
@@ -72,14 +85,14 @@ SBComboBox >> object: anObject [
 { #category : #'as yet unclassified' }
 SBComboBox >> promptChangeValue [
 
-	| choice |
-	choice := (self values allSatisfy: [:val | val isMorph or: [val isForm]])
-		ifTrue: [self chooseMorphs: self values]
+	| choice actualLabels |
+	actualLabels := self labels ifNil: [self values].
+	choice := (actualLabels allSatisfy: [:val | val isMorph or: [val isForm]])
+		ifTrue: [self values at: (self chooseMorphs: actualLabels)]
 		ifFalse: [
 			UIManager default
-				chooseFrom: (self values collect: [:obj | self display: obj])
+				chooseFrom: (actualLabels collect: [:obj | self display: obj])
 				values: self values].
-	
 	
 	choice ifNotNil: [
 		self sandblockEditor do: (SBMutatePropertyCommand new

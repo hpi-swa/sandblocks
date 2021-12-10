@@ -96,6 +96,38 @@ SBJsComponentReplacement class >> matchComponentExample: aDictionary do: aBlock 
 ]
 
 { #category : #'as yet unclassified' }
+SBJsComponentReplacement class >> matchComponentExamples: aDictionary do: aBlock [
+	<lang: #javascript match: '(class_declaration
+    name: (identifier) @class_name
+    body: (class_body
+    	(field_definition
+        	(property_identifier) @example_name
+	      (object) @options
+        ) @example_object
+	(method_definition
+        	(property_identifier) @method_name
+  	)
+    )
+) @class'>
+	| wholeReactClass reactClassName options wholeOptions  |
+	(aDictionary at: 'example_name') contents = 'example' ifFalse: [^ nil].
+	(aDictionary at: 'method_name') contents = 'render' ifFalse: [^ nil].
+	wholeReactClass := aDictionary at: 'class'. 
+	reactClassName := (aDictionary at: 'class_name') contents.
+	options := (aDictionary at: 'options').
+	wholeOptions := (aDictionary at: 'example_object').
+	
+	"First argument: What will be replaced, second argument: With what it will be replaced."
+	 ^ aBlock
+		value: (aDictionary at: 'example_object')
+		value: (self new exampleObject: options forAComponent: reactClassName withComponentNode: wholeReactClass url: self getTestHTMLFileUrl
+		)
+		
+	
+
+]
+
+{ #category : #'as yet unclassified' }
 SBJsComponentReplacement class >> sampleReactClassAsString [
 
 	 ^ 'class Car extends React.Component {
