@@ -6,17 +6,38 @@ Class {
 		'registerBlock',
 		'extraShortcuts'
 	],
+	#classVars : [
+		'ShortcutProviders'
+	],
 	#category : #'Sandblocks-Core'
 }
+
+{ #category : #'as yet unclassified' }
+SBInputMapping class >> findShortcutProviders [
+
+	^ Array streamContents: [:stream | SBBlock allSubclassesDo: [:class | (class class includesSelector: #registerShortcuts:) ifTrue: [stream nextPut: class]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBInputMapping class >> shortcutProviders [
+
+	^ ShortcutProviders ifNil: [ShortcutProviders := self findShortcutProviders]
+]
+
+{ #category : #'as yet unclassified' }
+SBInputMapping class >> updateShortcutProviders [
+
+	ShortcutProviders := nil.
+	^ self shortcutProviders
+]
 
 { #category : #'event handling' }
 SBInputMapping >> actionFor: anEvent mode: aMode do: aBlock ifNone: anotherBlock [
 
-	registerBlock := [:shortcut :action | | ret |
-		(shortcut asSandblockShortcut matchesEvent: anEvent mode: aMode)
-			ifTrue: [(ret := aBlock value: action) ifTrue: [^ ret]]].
+	registerBlock := [:shortcut :action |  | ret |(shortcut asSandblockShortcut matchesEvent: anEvent mode: aMode) ifTrue: [(ret := aBlock value: action) ifTrue: [^ ret]]].
 	
 	self registerDefaultShortcuts.
+	self class shortcutProviders do: [:provider | provider registerShortcuts: self].
 	
 	^ anotherBlock value
 ]
