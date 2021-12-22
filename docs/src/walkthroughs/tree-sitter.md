@@ -61,10 +61,28 @@ pair: $ => seq(
   field('value', $.expression)
 )
 ```
-You can access these using `get:`, e.g.
+You can access these using the `access` helper, e.g.
 ```
-(aPairBlock get: 'key') sourceString
+aPairBlock access key sourceString
 ```
+This helper wraps the block in a proxy object that looks up field names and, if matched, returns the corresponding block. All other messages are forwarded to the wrapped block.
+
+A more complex example:
+```python
+ax.set(12, "abc",
+       xlim=(0,8), xticks=np.arange(1,8), ylim=(0,8), yticks=np.arange(1,8))
+```
+Query all arguments as either just plain values or key/value pairs:
+```smalltalk
+self access arguments children collect: [:arg |
+  arg type = 'keyword_argument' ifTrue: [arg name contents -> arg value] ifFalse: [arg]]
+```
+Resulting in:
+```
+{(integer) . (string) . 'xlim'->(tuple) . 'xticks'->(call) . 'ylim'->(tuple) . 'yticks'->(call)}
+```
+
+You can send `fields` to any block to find what field names this block knows (e.g. a `keyword_argument` knows `name` and `value`).
 
 ### Creating a Replacement
 1. Subclass `SBInlineBlockReplace`.
