@@ -496,9 +496,22 @@ a()'
   field('value', $.expression)
 )
 </code></pre>
-<p>You can access these using <code>get:</code>, e.g.</p>
-<pre><code>(aPairBlock get: 'key') sourceString
+<p>You can access these using the <code>access</code> helper, e.g.</p>
+<pre><code>aPairBlock access key sourceString
 </code></pre>
+<p>This helper wraps the block in a proxy object that looks up field names and, if matched, returns the corresponding block. All other messages are forwarded to the wrapped block.</p>
+<p>A more complex example:</p>
+<pre><code class="language-python">ax.set(12, &quot;abc&quot;,
+       xlim=(0,8), xticks=np.arange(1,8), ylim=(0,8), yticks=np.arange(1,8))
+</code></pre>
+<p>Query all arguments as either just plain values or key/value pairs:</p>
+<pre><code class="language-smalltalk">self access arguments children collect: [:arg |
+  arg type = 'keyword_argument' ifTrue: [arg name contents -&gt; arg value] ifFalse: [arg]]
+</code></pre>
+<p>Resulting in:</p>
+<pre><code>{(integer) . (string) . 'xlim'-&gt;(tuple) . 'xticks'-&gt;(call) . 'ylim'-&gt;(tuple) . 'yticks'-&gt;(call)}
+</code></pre>
+<p>You can send <code>fields</code> to any block to find what field names this block knows (e.g. a <code>keyword_argument</code> knows <code>name</code> and <code>value</code>).</p>
 <h3 id="creating-a-replacement"><a class="header" href="#creating-a-replacement">Creating a Replacement</a></h3>
 <ol>
 <li>Subclass <code>SBInlineBlockReplace</code>.</li>
