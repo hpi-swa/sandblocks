@@ -620,6 +620,22 @@ SBBlock >> copyAround [
 	self removeProperty: #copyPlaceholder
 ]
 
+{ #category : #'ast helpers' }
+SBBlock >> copyFindSelection: aBlock in: aParentBlock [
+
+	| index |
+	"assume we are an exact copy of aParentBlock and aBlock is a child of aParentBlock
+this method returns our child that corresponds to aBlock"
+	index := 0.
+	aParentBlock allBlocksDo: [:b |
+		b = aBlock ifTrue: [
+			self allBlocksDo: [:b2 |
+				index = 0 ifTrue: [^ b2].
+				index := index - 1]].
+		index := index + 1].
+	self error: 'block could not be found again'
+]
+
 { #category : #testing }
 SBBlock >> copyOnDrag [
 	" return true if you always want to copy when drags are started "
@@ -1468,6 +1484,12 @@ SBBlock >> isSandblock [
 ]
 
 { #category : #testing }
+SBBlock >> isSelectable [
+
+	^ true
+]
+
+{ #category : #testing }
 SBBlock >> isSelected [
 
 	^ self sandblockEditor ifNil: [false] ifNotNil: [:editor | editor selection = self]
@@ -2069,6 +2091,12 @@ SBBlock >> proposeCodeActions: aCollection for: aBlock [
 	| index |
 	index := UIManager default chooseFrom: (aCollection collect: #label).
 	index > 0 ifTrue: [(aCollection at: index) do]
+]
+
+{ #category : #testing }
+SBBlock >> providesExecutionEnvironment [
+
+	^ false
 ]
 
 { #category : #actions }

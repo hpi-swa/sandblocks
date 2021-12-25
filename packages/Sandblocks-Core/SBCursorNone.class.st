@@ -63,3 +63,9 @@ SBCursorNone >> selectLarger [
 { #category : #'as yet unclassified' }
 SBCursorNone >> selectSmaller [
 ]
+
+{ #category : #'as yet unclassified' }
+SBCursorNone >> valid [
+
+	^ true
+]

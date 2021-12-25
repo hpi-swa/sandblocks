@@ -22,14 +22,22 @@ Class {
 		'cursor',
 		'activateForcesButton',
 		'hoverHighlight',
-		'suggestAlways'
+		'suggestAlways',
+		'activePlugins'
 	],
 	#classVars : [
+		'ActivatedPluginClasses',
 		'DefaultColorPolicy',
 		'InputMappingClass'
 	],
 	#category : #'Sandblocks-Core'
 }
+
+{ #category : #plugins }
+SBEditor class >> activatedPluginClasses [
+
+	^ ActivatedPluginClasses ifNil: [ActivatedPluginClasses := Set new]
+]
 
 { #category : #shortcuts }
 SBEditor class >> anyShortcutForAction: aSymbol [
@@ -60,6 +68,12 @@ SBEditor class >> defaultColorPolicy: aColorPolicyClass [
 SBEditor class >> initialize [
 
 	self registerInWorldMenu
+]
+
+{ #category : #plugins }
+SBEditor class >> isPluginActive: aPluginClass [
+
+	^ self activatedPluginClasses includes: aPluginClass
 ]
 
 { #category : #'initialize-release' }
@@ -97,6 +111,26 @@ SBEditor class >> openFor: aMethodOrClass [
 SBEditor class >> registerInWorldMenu [
 
 	TheWorldMenu registerOpenCommand: {'Sandblocks'. {self. #open}}
+]
+
+{ #category : #plugins }
+SBEditor class >> removeActivatedPlugin: aPluginClass [
+
+	self activatedPluginClasses remove: aPluginClass
+]
+
+{ #category : #plugins }
+SBEditor class >> saveActivatedPlugin: aPluginClass [
+
+	self activatedPluginClasses add: aPluginClass
+]
+
+{ #category : #plugins }
+SBEditor class >> setPlugin: aPluginClass active: aBoolean [
+
+	aBoolean
+		ifTrue: [self activatedPluginClasses add: aPluginClass]
+		ifFalse: [self activatedPluginClasses remove: aPluginClass ifAbsent: []]
 ]
 
 { #category : #shortcuts }
@@ -140,6 +174,18 @@ SBEditor >> activateForces [
 	
 	self childSandblocksDo: [:each | each withDecorator: SBForceMoveDecorator do:
 		[:decorator | decorator activateForces]]
+]
+
+{ #category : #plugins }
+SBEditor >> activatePlugin: aPluginClass [
+
+	self activePlugins add: (aPluginClass activatePluginIn: self)
+]
+
+{ #category : #plugins }
+SBEditor >> activePlugins [
+
+	^ activePlugins ifNil: [activePlugins := OrderedCollection new]
 ]
 
 { #category : #shortcuts }
@@ -239,9 +285,7 @@ SBEditor >> buildCommandBar [
 				do: [self promptAddArtifact];
 			balloonText: 'Add artifact');
 		addMorphBack: (activateForcesButton := SBButton new
-			icon: SBIcon iconMagnet
-				shortcut: (self class anyShortcutForAction: #activateForces)
-				do: [];
+			icon: SBIcon iconMagnet shortcut: (self class anyShortcutForAction: #activateForces) do: [];
 			balloonText: 'Activate Layouting');
 		addMorphBack: (Morph new
 			height: 0;
@@ -265,6 +309,10 @@ SBEditor >> buildCommandBar [
 				cornerStyle: #square;
 				icon: SBIcon iconThLarge shortcut: nil do: [self colorPolicy: SBScratchColorPolicy new];
 				balloonText: 'Scratch Layout'));
+		addMorphBack: (SBButton new
+			icon: SBIcon iconCog
+			shortcut: nil
+			do: [self openMorphInView: SBPreferencesEditor new]);
 		addMorphBack: (SBButton new
 			icon: SBIcon iconExpand
 			shortcut: (self class anyShortcutForAction: #toggleFullscreen)
@@ -530,6 +578,14 @@ SBEditor >> deactivateForces [
 	
 	self childSandblocksDo: [:each | each withDecorator: SBForceMoveDecorator do:
 		[:decorator | decorator deactivateForces]]
+]
+
+{ #category : #plugins }
+SBEditor >> deactivatePlugin: aPluginClass [
+
+	self activePlugins detect: [:p | p class = aPluginClass] ifFound: [:plugin |
+		aPluginClass deactivatePlugin: plugin in: self.
+		self activePlugins remove: plugin]
 ]
 
 { #category : #actions }
@@ -812,7 +868,9 @@ SBEditor >> initialize [
 		openMorph: cursor;
 		updateSelectionLabel.
 	
-	errors ifNotNil: [self registerGlobalShortcutListener: errors]
+	errors ifNotNil: [self registerGlobalShortcutListener: errors].
+	
+	self class activatedPluginClasses do: [:pluginClass | self activatePlugin: pluginClass]
 ]
 
 { #category : #testing }

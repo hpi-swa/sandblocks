@@ -212,6 +212,33 @@ SBExample >> evaluateSelf [
 ]
 
 { #category : #'as yet unclassified' }
+SBExample >> execute [
+
+	| newSelf arguments |
+	newSelf := self evaluateSelf.
+	arguments := self evaluateArguments.
+	^ newSelf perform: self containingArtefact selector asSymbol withArguments: arguments
+]
+
+{ #category : #'as yet unclassified' }
+SBExample >> executeForBlock: aBlock ifFound: aClosure [
+
+	[ | newSelf arguments |
+		newSelf := self evaluateSelf.
+		arguments := self evaluateArguments.
+		SBStRunUntilSandbox new
+			selector: aBlock containingArtefact selector;
+			receiverClass: aBlock containingArtefact methodClass;
+			stepLimit: 5000;
+			pc: aBlock pc;
+			evaluate: [newSelf perform: self containingArtefact selector asSymbol withArguments: arguments]]
+		on: SBStRunUntilValue
+		do: [:val | aClosure value: val value]
+		on: SandboxError
+		do: [:err | SBWatch report: err for: 477523582]
+]
+
+{ #category : #'as yet unclassified' }
 SBExample >> initialize [
 
 	super initialize.
@@ -304,6 +331,12 @@ SBExample >> outOfWorld: aWorld [
 SBExample >> printOn: aStream [
 
 	aStream nextPutAll: 'example'
+]
+
+{ #category : #'as yet unclassified' }
+SBExample >> providesExecutionEnvironment [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

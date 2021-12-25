@@ -166,6 +166,17 @@ SBStBasicMethod >> collapsed: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBStBasicMethod >> compileMethodObject [
+
+	^ [(self methodClass newParser
+		parse: self sourceString
+		class: self methodClass
+		noPattern: false
+		notifying: nil
+		ifFail: nil) generateWithTempNames] on: SyntaxErrorNotification do: [nil]
+]
+
+{ #category : #'as yet unclassified' }
 SBStBasicMethod >> compiledMethod [
 
 	^ (self methodClass ifNil: [^ self])

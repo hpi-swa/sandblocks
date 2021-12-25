@@ -118,9 +118,3 @@ SBPreferences class >> showHoverDecorator: aBoolean [
 
 	ShowHoverDecorator := aBoolean
 ]
-
-{ #category : #'as yet unclassified' }
-SBPreferences class >> useNewCursor [
-
-	^ true
-]

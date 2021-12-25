@@ -108,6 +108,25 @@ SBStTestCase >> drawnColor [
 ]
 
 { #category : #'as yet unclassified' }
+SBStTestCase >> execute [
+
+	^ self methodClass new perform: self currentSelector
+]
+
+{ #category : #'as yet unclassified' }
+SBStTestCase >> executeForBlock: aBlock ifFound: aClosure [
+
+	^ [
+		SBStRunUntilSandbox new
+			selector: aBlock containingArtefact selector;
+			receiverClass: aBlock containingArtefact methodClass;
+			pc: aBlock pc;
+			evaluate: [self methodClass new perform: self currentSelector]]
+		on: SBStRunUntilValue
+		do: [:val | aClosure value: val value]
+]
+
+{ #category : #'as yet unclassified' }
 SBStTestCase >> initialize [
 
 	super initialize.
@@ -181,6 +200,12 @@ SBStTestCase >> outOfWorld: aWorld [
 	super outOfWorld: aWorld.
 	
 	self sendStopNotification
+]
+
+{ #category : #'as yet unclassified' }
+SBStTestCase >> providesExecutionEnvironment [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

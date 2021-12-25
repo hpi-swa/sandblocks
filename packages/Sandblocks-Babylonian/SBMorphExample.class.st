@@ -114,7 +114,20 @@ SBMorphExample >> drawnColor [
 	^ self colorPolicy toolColorFor: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
+SBMorphExample >> execute [
+
+	| morph |
+	morph := self setUpMorph evaluate.
+	morph ifNotNil: [ | tempView |
+		tempView := SBSandboxPasteUpMorph new.
+		tempView addMorphBack: (morph
+			fullBounds;
+			center: tempView center).
+		self cases first evaluateFor: morph in: tempView]
+]
+
+{ #category : #events }
 SBMorphExample >> filterEvent: anEvent for: anObject [
 
 	recordedEvents ifNotNil: [(anEvent isMouseUp or: [anEvent isMouseDown or: [anEvent isKeyboard]]) ifTrue: [recordedEvents add: anEvent]].
@@ -178,6 +191,12 @@ SBMorphExample >> pickAndExplore [
 	<action>
 
 	self sandblockEditor openMorphInView: (SBExplorer on: (self outermostWorldMorph morphsAt: (Cursor crossHair showWhile: [Sensor waitButton])) first)
+]
+
+{ #category : #testing }
+SBMorphExample >> providesExecutionEnvironment [
+
+	^ true
 ]
 
 { #category : #errors }
