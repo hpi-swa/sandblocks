@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'value'
 	],
-	#category : #'Sandblocks-Smalltalk'
+	#category : #'Sandblocks-Plugin-StLivePreview'
 }
 
 { #category : #'as yet unclassified' }

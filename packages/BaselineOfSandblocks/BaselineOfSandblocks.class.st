@@ -92,6 +92,8 @@ BaselineOfSandblocks >> baseline: spec [
 			spec
 				package: 'Sandblocks-Squeak6Fixes';
 				package: 'Sandblocks-Simulation' with: [spec requires: #('Sandblocks-Core' 'SimulationStudio')];
+				package: 'Sandblocks-Plugin-StLivePreview'
+					with: [spec requires: #('Sandblocks-Smalltalk' 'SimulationStudio')];
 				group: 'squeak6-compat' with: #('Sandblocks-Squeak6Fixes');
 				group: 'squeak6-simulation' with: #('Sandblocks-Simulation')].
 		

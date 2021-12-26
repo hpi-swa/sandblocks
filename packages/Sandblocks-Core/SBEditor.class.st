@@ -1319,20 +1319,23 @@ SBEditor >> replaceInput: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBEditor >> reportError: anError process: aProcess [
+SBEditor >> reportError: anError process: aProcess source: anExecutableEnvironment [
 
-	^ errors ifNotNil: [errors addError: anError process: aProcess]
+	^ errors ifNotNil: [errors addError: anError process: aProcess source: anExecutableEnvironment]
 ]
 
 { #category : #errors }
-SBEditor >> reportErrorWithProcessCopy: anError [
+SBEditor >> reportErrorWithProcessCopy: anError source: anExecutableEnvironment [
 
 	| stack priority |
 	stack := anError signalerContext copyStack.
 	priority := Processor activeProcess priority.
-	^ self reportError: anError process: ((Process forContext: stack priority: priority)
-		shouldResumeFromDebugger: false;
-		yourself)
+	^ self
+		reportError: anError
+		process: ((Process forContext: stack priority: priority)
+			shouldResumeFromDebugger: false;
+			yourself)
+		source: anExecutableEnvironment
 ]
 
 { #category : #initialization }

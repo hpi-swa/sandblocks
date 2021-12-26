@@ -216,12 +216,17 @@ Object >> sandblocksHalt [
 		shouldResumeFromDebugger: false;
 		yourself.
 	
-	uiBlock := [SBEditor current reportError: Halt new process: processCopy].
+	uiBlock := [SBEditor current reportError: Halt new process: processCopy source: nil].
 	
-	(Project current uiProcess isActiveProcess not or: [process isActiveProcess]) ifTrue: [Project current addDeferredUIMessage: uiBlock] ifFalse: uiBlock.
+	(Project current uiProcess isActiveProcess not or: [process isActiveProcess])
+		ifTrue: [Project current addDeferredUIMessage: uiBlock]
+		ifFalse: uiBlock.
 	
 	parent := thisContext sender.
-	[processCopy popTo: processCopy suspendedContext sender; step] fork.
+	[
+		processCopy
+			popTo: processCopy suspendedContext sender;
+			step] fork.
 	process suspend
 ]
 

@@ -40,11 +40,13 @@ SBSmallError >> drawOn: aCanvas [
 ]
 
 { #category : #'as yet unclassified' }
-SBSmallError >> error: anError process: aProcess [
+SBSmallError >> error: anError process: aProcess source: anExecutableEnvironment [
 
 	error := anError.
 	process := aProcess.
-	self balloonText: anError asString
+	self balloonText: anError asString.
+	
+	anExecutableEnvironment ifNotNil: [anExecutableEnvironment when: #outOfWorld send: #delete to: self]
 ]
 
 { #category : #'as yet unclassified' }

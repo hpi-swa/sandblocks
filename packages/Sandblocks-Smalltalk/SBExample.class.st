@@ -115,7 +115,9 @@ SBExample >> click: anEvent [
 		"self stopRunning."
 		error := lastError.
 		self lastError: nil.
-		self sandblockEditor reportError: error process: currentProcess; focusErrors.
+		self sandblockEditor
+			reportError: error process: currentProcess source: self;
+			focusErrors
 		"currentProcess debug: error signalerContext title: error asString full: true."]
 ]
 
@@ -165,7 +167,7 @@ SBExample >> debug [
 	process := Process
 		forBlock: [currentSelf perform: selector withArguments: arguments]
 		runUntil: [:context | context method == startMethod].
-	self sandblockEditor reportError: Halt new process: process.
+	self sandblockEditor reportError: Halt new process: process source: self.
 	self sandblockEditor errors focusErrors
 ]
 
@@ -293,19 +295,21 @@ SBExample >> lastError: anError [
 	
 	anError
 		ifNotNil: [
-			true ifTrue: [^ reportedError := self sandblockEditor reportError: anError process: ((Process
-				forContext: anError signalerContext copyStack
-				priority: Processor activeProcess priority)
-					shouldResumeFromDebugger: false;
-					yourself)"ToolSet debugException: anError"].
+			true ifTrue: [
+				"ToolSet debugException: anError"
+				^ reportedError := self sandblockEditor
+					reportError: anError
+					process: ((Process forContext: anError signalerContext copyStack priority: Processor activeProcess priority)
+						shouldResumeFromDebugger: false;
+						yourself)
+					source: self].
 			
-			errorIndicator ifNil: [self addMorphBack: (errorIndicator := SBIcon iconFlash large; color: Color orange)].
+			errorIndicator ifNil: [
+				self addMorphBack: (errorIndicator := SBIcon iconFlash
+					large;
+					color: (Color r: 1 g: 0.6 b: 0.0))].
 			
-			(anError signalerContext
-				findContextSuchThat: [:ctx | ctx method = self containingArtefact compiledMethod])
-				ifNotNil: [:errorContext |
-					(self containingArtefact blockForPC: errorContext previousPc)
-						ifNotNil: [:b | b attachDecorator: (errorDecorator := SBErrorDecorator new message: anError asString)]]]
+			(anError signalerContext findContextSuchThat: [:ctx | ctx method = self containingArtefact compiledMethod]) ifNotNil: [:errorContext | (self containingArtefact blockForPC: errorContext previousPc) ifNotNil: [:b | b attachDecorator: (errorDecorator := SBErrorDecorator new message: anError asString)]]]
 		ifNil: [
 			errorIndicator ifNotNil: #delete.
 			errorIndicator := nil]

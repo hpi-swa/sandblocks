@@ -90,15 +90,14 @@ SBStTestCase >> debug [
 	
 	SBToggledCode comment: 'doesn''t work yet :(' active: 1 do: {[self flag: #fixme]}.
 	
-	[testCase debugAsFailure]
-		on: Halt
-		do: [:halt |
-			self sandblockEditor
-				reportError: halt
-				process: ((Process forContext: halt signalerContext copyStack priority: Processor activeProcess priority)
-					shouldResumeFromDebugger: false;
-					yourself).
-			self sandblockEditor errors focusErrors]
+	[testCase debugAsFailure] on: Halt do: [:halt |
+		self sandblockEditor
+			reportError: halt
+			process: ((Process forContext: halt signalerContext copyStack priority: Processor activeProcess priority)
+				shouldResumeFromDebugger: false;
+				yourself)
+			source: self.
+		self sandblockEditor errors focusErrors]
 ]
 
 { #category : #'as yet unclassified' }
@@ -211,15 +210,17 @@ SBStTestCase >> providesExecutionEnvironment [
 { #category : #'as yet unclassified' }
 SBStTestCase >> reportError: anError [
 
-	passIcon changeIconName: #iconRemove; color: Color red.
+	passIcon
+		changeIconName: #iconRemove;
+		color: (Color r: 1 g: 0.0 b: 0.0).
 	
 	reportedError ifNotNil: #delete.
-	reportedError := self sandblockEditor reportError: anError process: ((Process
-				forContext: anError signalerContext copyStack
-				priority: Processor activeProcess priority)
-					shouldResumeFromDebugger: false;
-					yourself)
-	
+	reportedError := self sandblockEditor
+		reportError: anError
+		process: ((Process forContext: anError signalerContext copyStack priority: Processor activeProcess priority)
+			shouldResumeFromDebugger: false;
+			yourself)
+		source: self
 	"(anError signalerContext findContextSuchThat: [:context | context method selector = self selector and: [context method methodClass = self methodClass]])
 		ifNotNil: [:context | (self blockForPC: context previousPc) attachDecorator: (errorIndicator := SBErrorDecorator new message: anError asString)]"
 ]
