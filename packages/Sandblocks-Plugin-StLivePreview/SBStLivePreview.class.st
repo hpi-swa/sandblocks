@@ -158,7 +158,7 @@ SBStLivePreview >> valueForBlock: aBlock ifFound: aClosure [
 				currentMethod methodClass
 					addSelectorSilently: currentMethod selector
 					withMethod: newMethod.
-				[env execute]
+				[[env execute] valueWithin: 100 milliSeconds onTimeout: []]
 					on: SBStRunUntilValue
 					do: [:val | aClosure value: val value]
 					on: Exception
