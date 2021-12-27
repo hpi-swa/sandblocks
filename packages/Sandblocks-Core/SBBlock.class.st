@@ -2312,8 +2312,15 @@ SBBlock >> selectTopToplevel [
 SBBlock >> selectToplevelTowards: aSideSymbol [
 
 	| opposite |
-	opposite := aSideSymbol caseOf: {([#left] -> [#right]). ([#right] -> [#left]). ([#top] -> [#bottom]). ([#bottom] -> [#top])}.
-	(self containingToplevel closestAdjacentFrom: (aSideSymbol, 'Center') asSymbol to: (opposite, 'Center') asSymbol) select
+	opposite := aSideSymbol caseOf: {
+		[#left] -> [#right].
+		[#right] -> [#left].
+		[#top] -> [#bottom].
+		[#bottom] -> [#top]}.
+	self halt.
+	(self containingToplevel
+		closestAdjacentFrom: (aSideSymbol, 'Center') asSymbol
+		to: (opposite, 'Center') asSymbol) select
 ]
 
 { #category : #printing }

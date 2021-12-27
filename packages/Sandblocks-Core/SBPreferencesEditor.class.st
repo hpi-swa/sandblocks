@@ -1,6 +1,9 @@
 Class {
 	#name : #SBPreferencesEditor,
 	#superclass : #SBBlock,
+	#instVars : [
+		'themes'
+	],
 	#category : #'Sandblocks-Core'
 }
 
@@ -32,6 +35,28 @@ SBPreferencesEditor >> addSpacer [
 	self addMorphBack: (Morph new
 		height: 10;
 		color: Color transparent)
+]
+
+{ #category : #'as yet unclassified' }
+SBPreferencesEditor >> addTheme: aTheme [
+
+	| preview checkbox |
+	preview := (SBStMethod new
+		selector: 'step' arguments: #() class: Object;
+		body: (SBStBlockBody new in: [:b | b statements: {'self = 5 ifTrue: [5 squared]' parseAsSandblock}]))
+		layoutInset: 2;
+		localColorPolicy: aTheme.
+	SBSelection new addMorphBack: preview.
+	
+	checkbox := SBCheckbox new value: SBEditor defaultColorPolicy = aTheme.
+	checkbox when: #toggled evaluate: [
+		themes childSandblocksDo: [:check | check value: check = checkbox].
+		SBEditor defaultColorPolicy: aTheme.
+		self sandblockEditor colorPolicy: aTheme new].
+	themes addMorphBack: (SBRow new
+		cellGap: 10;
+		addMorphBack: preview imageForm asMorph;
+		addMorphBack: checkbox)
 ]
 
 { #category : #'as yet unclassified' }
@@ -96,7 +121,6 @@ SBPreferencesEditor >> initialize [
 							ifTrue: [self sandblockEditor activatePlugin: pluginClass]
 							ifFalse: [self sandblockEditor deactivatePlugin: pluginClass]]]]].
 	
-	
 	self
 		addSpacer;
 		addMorphBack: (SBStringMorph new
@@ -105,5 +129,20 @@ SBPreferencesEditor >> initialize [
 		addSeparator.
 	
 	self addPreference: #drawOnCanvas of: SBPreferences.
-	self addPreference: #addSandblocksDefault of: CodeHolder
+	self addPreference: #addSandblocksDefault of: CodeHolder.
+	
+	self
+		addSpacer;
+		addMorphBack: (SBStringMorph new
+			contents: 'Themes';
+			bold);
+		addSeparator.
+	
+	self addMorphBack: (themes := SBColumn new
+		hResizing: #spaceFill;
+		changeTableLayout).
+	self addTheme: SBLightPlusTheme.
+	self addTheme: SBSolarizedTheme.
+	self addTheme: SBSolarizedDarkTheme.
+	self addTheme: SBColorMinimalPolicy
 ]

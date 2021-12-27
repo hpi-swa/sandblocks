@@ -43,7 +43,7 @@ SBStLivePreview >> click: anEvent [
 
 	| target |
 	target := self blockForLookup: editor selection.
-	target ifNotNil: [self valueForBlock: target ifFound: [:res | res explore]]
+	target ifNotNil: [self valueForBlock: target ifFound: [:res | res explore] onTimeout: [] onError: [:err | ]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -54,13 +54,22 @@ SBStLivePreview >> editor: anEditor [
 ]
 
 { #category : #presentation }
+SBStLivePreview >> icon [
+
+	^ self submorphs first
+]
+
+{ #category : #presentation }
 SBStLivePreview >> initialize [
 
 	super initialize.
 	
 	self
+		addMorphBack: SBIcon iconInfoCircle;
 		addMorphBack: SBStringMorph new;
 		changeTableLayout;
+		listDirection: #leftToRight;
+		cellGap: 4;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		color: (Color r: 1 g: 1 b: 1);
@@ -73,6 +82,12 @@ SBStLivePreview >> initialize [
 SBStLivePreview >> isSelectable [
 
 	^ false
+]
+
+{ #category : #presentation }
+SBStLivePreview >> label [
+
+	^ self submorphs second
 ]
 
 { #category : #presentation }
@@ -115,16 +130,30 @@ SBStLivePreview >> selection: aBlock [
 { #category : #'as yet unclassified' }
 SBStLivePreview >> show [
 
-	| target |
+	| target show |
 	target := self blockForLookup: editor selection.
 	target ifNil: [^ self].
-	self valueForBlock: target ifFound: [:result |
-		editor openMorph: self.
-		target ensureLayouted.
-		self position: target bottomLeft.
-		self firstSubmorph contents: ([result printString]
-			on: Error
-			do: [:err | '<error ({1})>' format: {result className}])]
+	show := false.
+	self
+		valueForBlock: target
+		ifFound: [:result |
+			show := true.
+			self label contents: ([result printString]
+				on: Error
+				do: [:err | '<error ({1})>' format: {result className}]).
+			self icon changeIconName: #iconInfoCircle]
+		onTimeout: [
+			show := true.
+			self label contents: '<timeout>'.
+			self icon changeIconName: #iconClockO]
+		onError: [:err |
+			show := true.
+			self label contents: (err printStringLimitedTo: 40).
+			self icon changeIconName: #iconBolt].
+	
+	target ensureLayouted.
+	self position: target bottomLeft.
+	editor openMorph: self
 ]
 
 { #category : #'as yet unclassified' }
@@ -134,7 +163,7 @@ SBStLivePreview >> showDelay [
 ]
 
 { #category : #'as yet unclassified' }
-SBStLivePreview >> valueForBlock: aBlock ifFound: aClosure [
+SBStLivePreview >> valueForBlock: aBlock ifFound: aClosure onTimeout: timeoutBlock onError: errorBlock [
 
 	| env |
 	env := (SBExecutionEnvironment getAllIn: editor) first.
@@ -158,11 +187,11 @@ SBStLivePreview >> valueForBlock: aBlock ifFound: aClosure [
 				currentMethod methodClass
 					addSelectorSilently: currentMethod selector
 					withMethod: newMethod.
-				[[env execute] valueWithin: 100 milliSeconds onTimeout: []]
+				[[env execute] valueWithin: 100 milliSeconds onTimeout: [timeoutBlock value]]
 					on: SBStRunUntilValue
 					do: [:val | aClosure value: val value]
 					on: Exception
-					do: [:ex | ex]] ensure: [
+					do: [:ex | errorBlock value: ex]] ensure: [
 				currentMethod methodClass
 					addSelectorSilently: currentMethod selector
 					withMethod: currentMethod]].

@@ -53,7 +53,9 @@ SBCursorNone >> mode [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorNone >> moveHorizontal: anInteger wordWise: aBoolean [ 
+SBCursorNone >> moveHorizontal: anInteger wordWise: aBoolean [
+
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }
