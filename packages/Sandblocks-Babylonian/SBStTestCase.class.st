@@ -8,7 +8,7 @@ Class {
 		'reportedError',
 		'autoRun'
 	],
-	#category : #'Sandblocks-Smalltalk'
+	#category : #'Sandblocks-Babylonian'
 }
 
 { #category : #'as yet unclassified' }

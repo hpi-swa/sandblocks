@@ -10,7 +10,7 @@ Class {
 	#classVars : [
 		'Registry'
 	],
-	#category : #'Sandblocks-Smalltalk'
+	#category : #'Sandblocks-Babylonian'
 }
 
 { #category : #'as yet unclassified' }
@@ -96,12 +96,13 @@ SBExampleWatch >> exampleFinished: anExample [
 { #category : #'as yet unclassified' }
 SBExampleWatch >> exampleStarting: anExample [
 
-	(exampleValues
-		at: anExample
-		ifAbsentPut: [ | display |
-			display := SBExampleValueDisplay new.
-			self addMorphBack: (exampleValues at: anExample put: display).
-			display]) exampleStarting: anExample; name: anExample label
+	(exampleValues at: anExample ifAbsentPut: [ | display |
+		display := SBExampleValueDisplay new.
+		self addMorphBack: (exampleValues at: anExample put: display).
+		anExample when: #outOfWorld send: #exampleStopped: to: self with: anExample.
+		display])
+		exampleStarting: anExample;
+		name: anExample label
 ]
 
 { #category : #'as yet unclassified' }

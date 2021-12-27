@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBOhmASTNode class >> registerShortcuts: aProvider [
+
+	aProvider
+		cmdShortcut: $+ do: #wrapInPlus;
+		cmdShortcut: $* do: #wrapInStar;
+		cmdShortcut: $? do: #wrapInOptional;
+		cmdShortcut: $| do: #wrapInAlternative
+]
+
+{ #category : #'as yet unclassified' }
 SBOhmASTNode >> actionProviders [
 
 	^ {self grammarHandler. self}

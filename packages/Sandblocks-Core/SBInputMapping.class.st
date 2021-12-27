@@ -19,6 +19,24 @@ SBInputMapping class >> findShortcutProviders [
 ]
 
 { #category : #'as yet unclassified' }
+SBInputMapping class >> initialize [
+
+	SystemChangeNotifier uniqueInstance
+		noMoreNotificationsFor: self;
+		notify: self ofSystemChangesOfItem: #method using: #methodChanged:
+]
+
+{ #category : #'as yet unclassified' }
+SBInputMapping class >> methodChanged: anEvent [
+
+	anEvent item isCompiledMethod ifFalse: [^ self].
+	(anEvent item methodClass inheritsFrom: SBBlock class) ifFalse: [^ self].
+	anEvent item selector = #registerShortcuts: ifFalse: [^ self].
+	
+	self updateShortcutProviders
+]
+
+{ #category : #'as yet unclassified' }
 SBInputMapping class >> shortcutProviders [
 
 	^ ShortcutProviders ifNil: [ShortcutProviders := self findShortcutProviders]

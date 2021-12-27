@@ -20,6 +20,23 @@ SBStASTNode class >> preferredColor [
 	^ Color r: 0.216 g: 0.249 b: 0.436
 ]
 
+{ #category : #'as yet unclassified' }
+SBStASTNode class >> registerShortcuts: aProvider [
+
+	aProvider
+		cmdShortcut: $" do: #wrapInToggledCode;
+		registerShortcut: $[ do: #wrapInBlock;
+		registerShortcut: ${ do: #wrapInDynamicArray;
+		cmdShortcut: $: do: #wrapInAssignment;
+		registerShortcut: $; do: #wrapInCascade;
+		registerShortcut: $^ do: #wrapInReturn;
+		cmdShortcut: $' do: #useAsStString;
+		cmdShortcut: $# do: #useAsStSymbol;
+		cmdShortcut: $$ do: #useAsStCharacter;
+		shortcut: Character space shift modes: #(#input #command) do: #wrapAsArgument;
+		shortcut: Character space modes: #(#input #command) do: #wrapInMessageSend
+]
+
 { #category : #'action helpers' }
 SBStASTNode >> actionProviders [
 

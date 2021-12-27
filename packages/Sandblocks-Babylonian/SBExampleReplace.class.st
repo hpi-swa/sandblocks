@@ -1,7 +1,7 @@
 Class {
 	#name : #SBExampleReplace,
 	#superclass : #SBStSubstitution,
-	#category : #'Sandblocks-Smalltalk'
+	#category : #'Sandblocks-Babylonian'
 }
 
 { #category : #'as yet unclassified' }

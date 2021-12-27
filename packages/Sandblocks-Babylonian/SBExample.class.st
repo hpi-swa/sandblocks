@@ -14,7 +14,7 @@ Class {
 		'returnValue',
 		'reportedError'
 	],
-	#category : #'Sandblocks-Smalltalk'
+	#category : #'Sandblocks-Babylonian'
 }
 
 { #category : #'as yet unclassified' }
@@ -48,6 +48,12 @@ SBExample class >> newFor: aMessage [
 				self: aMessage arguments first statements first
 				args: aMessage arguments second statements first
 				label: aMessage arguments third contents]
+]
+
+{ #category : #'as yet unclassified' }
+SBExample class >> registerShortcuts: aProvider [
+
+	aProvider registerShortcut: $q command do: #wrapWithExampleWatch
 ]
 
 { #category : #'as yet unclassified' }
@@ -250,6 +256,9 @@ SBExample >> initialize [
 	
 	self
 		layoutInset: 8;
+		changeTableLayout;
+		listDirection: #leftToRight;
+		cellPositioning: #center;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		cellGap: 4 * self scalingFactor
