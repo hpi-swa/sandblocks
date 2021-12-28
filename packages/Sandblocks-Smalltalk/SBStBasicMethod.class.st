@@ -20,13 +20,13 @@ SBStBasicMethod class >> selector: aSymbol arguments: aCollection class: aClass 
 		body: aBlock asSandblock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> actualReceiver [
 
 	^ self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'ast helpers' }
 SBStBasicMethod >> allUsagesDo: aBlock [
 
 	^ self sandblockEditor allBlocksDo: [:block |
@@ -35,25 +35,25 @@ SBStBasicMethod >> allUsagesDo: aBlock [
 				block receiver guessClassExpensive = self methodClass]]) ifTrue: [aBlock value: block]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> arguments [
 
 	^ Array streamContents: [:stream | self argumentsDo: [:a | a isUnknown not ifTrue: [stream nextPut: a]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> argumentsDo: aBlock [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> artefact [
 
 	^ self compiledMethod
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'ast helpers' }
 SBStBasicMethod >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	self argumentsDo: [:a | a contents = aString ifTrue: [^ aBlock value: a]].
@@ -67,20 +67,20 @@ SBStBasicMethod >> binding: aString for: block class: aClass ifPresent: aBlock [
 	^ super binding: aString for: block class: aClass ifPresent: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'ast helpers' }
 SBStBasicMethod >> blockBodyForPC: assocPc [
 
 	self allBlocksDo: [:m | (m isBlockBody and: [m isSmalltalk and: [m startPC = assocPc]]) ifTrue: [^ m]].
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'ast helpers' }
 SBStBasicMethod >> blockForContext: aContext [
 
 	^ self blockForPC: aContext pc
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'ast helpers' }
 SBStBasicMethod >> blockForPC: aNumber [
 
 	self allBlocksDo: [:m | m pc = aNumber ifTrue: [^ m]].
@@ -94,7 +94,7 @@ SBStBasicMethod >> blockForPC: aNumber [
 	^ sortedBlocks last"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'ast helpers' }
 SBStBasicMethod >> blockForSelector: aSymbol [
 
 	self allBlocksDo: [:block |
@@ -102,58 +102,58 @@ SBStBasicMethod >> blockForSelector: aSymbol [
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'ast helpers' }
 SBStBasicMethod >> blocksForVariableNamed: aString do: aBlock [
 
 	self allBlocksDo: [:m | (m isBinding and: [m contents = aString]) ifTrue: [aBlock value: m]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> body [
 
 	^ self submorphCount = 1 ifTrue: [nil] ifFalse: [self lastSubmorph]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> body: aBlock [
 
 	self addMorphBack: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStBasicMethod >> browse [
 	<action>
 
 	Browser newOnClass: self methodClass selector: self selector
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #caching }
 SBStBasicMethod >> cacheType: aClass for: aBlock [
 
 	self typeCache at: aBlock put: aClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> category [
 
 	SBExample self: [(SBStBasicMethod >> #category) asSandblock] args: [{}] label: 'example'.
 	^ category ifNil: [self methodClass organization categoryOfElement: self currentSelector]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> category: aString [
 
 	category := aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStBasicMethod >> changeToUnknown [
 	<action>
 	
 	" ignore "
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> collapsed: aBoolean [
 
 	self body visible not = aBoolean ifTrue: [^ self].
@@ -165,7 +165,7 @@ SBStBasicMethod >> collapsed: aBoolean [
 	(aBoolean not and: [self isSelected not]) ifTrue: [self select]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'ast helpers' }
 SBStBasicMethod >> compileMethodObject [
 
 	^ [(self methodClass newParser
@@ -176,7 +176,7 @@ SBStBasicMethod >> compileMethodObject [
 		ifFail: nil) generateWithTempNames] on: SyntaxErrorNotification do: [nil]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> compiledMethod [
 
 	^ (self methodClass ifNil: [^ self])
@@ -184,7 +184,7 @@ SBStBasicMethod >> compiledMethod [
 		ifAbsent: [self]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStBasicMethod >> createTestMethod [
 	<action>
 
@@ -212,57 +212,57 @@ SBStBasicMethod >> createTestMethod [
 	self sandblockEditor startInput: method body statements first at: 1 replacingContents: true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> currentClass [
 
 	^ currentClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> currentClass: aClass [
 
 	currentClass := aClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> currentSelector [
 	" the selector this method is currently saved as "
 
 	^ currentSelector
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> currentSelector: aString [
 
 	currentSelector := aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> declarations [
 
 	^ self arguments, self instanceVariables
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStBasicMethod >> deleteMethod [
 	<action>
 
 	^ self sandblockEditor do: (SBStDeleteMethodCommand new target: self)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'artefact protocol' }
 SBStBasicMethod >> ensureExpanded [
 
 	self isCollapsed ifTrue: [self toggleCollapsed]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #evaluate }
 SBStBasicMethod >> evaluationContext [
 
 	^ self sandblockEditor errors focusedArtefact = self ifTrue: [self sandblockEditor editor errors focusedContext] ifFalse: [nil]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #evaluate }
 SBStBasicMethod >> evaluationReceiver [
 
 	^ self valueOfProperty: #evaluationReceiver ifAbsent: [
@@ -271,37 +271,37 @@ SBStBasicMethod >> evaluationReceiver [
 			ifFalse: [self relatedClass basicNew]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStBasicMethod >> exists [
 
 	^ self currentClass canUnderstand: self currentSelector
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> externalModification: aBoolean [
 
 	^ self setProperty: #externalModificationFlag toValue: aBoolean
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> guessedClass [
 
 	^ self relatedClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #events }
 SBStBasicMethod >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
 	self tryUseAsSelf: aBlock unpackSelection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStBasicMethod >> hasExternalModification [
 
 	^ self valueOfProperty: #externalModificationFlag ifAbsent: [false]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #events }
 SBStBasicMethod >> ignoreChangeNotifierDuring: aBlock [
 
 	self setProperty: #ignoreChangeNotifier toValue: true.
@@ -309,7 +309,7 @@ SBStBasicMethod >> ignoreChangeNotifierDuring: aBlock [
 	aBlock ensure: [self removeProperty: #ignoreChangeNotifier]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBStBasicMethod >> initialize [
 
 	super initialize.
@@ -317,7 +317,7 @@ SBStBasicMethod >> initialize [
 	self attachDecorator: SBForceMoveDecorator newConfigured
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
 SBStBasicMethod >> insertStatementAboveOrBelow: anAboveBoolean [
 
 	| statement |
@@ -332,7 +332,7 @@ SBStBasicMethod >> insertStatementAboveOrBelow: anAboveBoolean [
 		startInput: statement at: 1 replacingContents: false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> instanceVariables [
 
 	| editor |
@@ -348,7 +348,7 @@ SBStBasicMethod >> instanceVariables [
 						ifNotNil: [editor blockFor: class withInterfaces: #(#isEditor) ifOpen: [:c | c instanceVariables] ifClosed: open]]})]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBStBasicMethod >> intoWorld: aWorld [
 
 	super intoWorld: aWorld.
@@ -357,62 +357,62 @@ SBStBasicMethod >> intoWorld: aWorld [
 		notify: self ofSystemChangesOfItem: #method using: #methodChanged:
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStBasicMethod >> isArtefact [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStBasicMethod >> isClassSide [
 
 	^ self methodClass isClassSide
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStBasicMethod >> isClassSideMethod [
 
 	^ self relatedClass isMeta
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStBasicMethod >> isCollapsed [
 
 	^ self body visible not
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStBasicMethod >> isEditor [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStBasicMethod >> isInstanceSideMethod [
 
 	^ self isClassSideMethod not
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStBasicMethod >> isMethod [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStBasicMethod >> isMyArgument: aBlock [
 
 	self argumentsDo: [:b | aBlock = b ifTrue: [^ true]].
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStBasicMethod >> isTopLevel [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #events }
 SBStBasicMethod >> methodChanged: anEvent [
 
 	((self hasProperty: #ignoreChangeNotifier) not and: (anEvent item selector = self selector and: [anEvent item methodClass = self methodClass])) ifTrue: [
@@ -423,13 +423,13 @@ SBStBasicMethod >> methodChanged: anEvent [
 				ifFalse: [self reloadMethodInPlace]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> methodClass [
 
 	^ methodClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> methodComment: aCollection [
 
 	aCollection ifNil: [^ self].
@@ -437,7 +437,7 @@ SBStBasicMethod >> methodComment: aCollection [
 	self statements: (aCollection reversed collect: [:c | self newCommentBlock contents: c]), self statements
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStBasicMethod >> moveToClass [
 	<action>
 
@@ -449,7 +449,7 @@ SBStBasicMethod >> moveToClass [
 			self clearCache]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStBasicMethod >> moveToClassSide [
 	<action>
 	<actionValidIf: #isInstanceSideMethod>
@@ -459,7 +459,7 @@ SBStBasicMethod >> moveToClassSide [
 		toClass: self relatedClass class)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStBasicMethod >> moveToInstanceSide [
 	<action>
 	<actionValidIf: #isClassSideMethod>
@@ -469,25 +469,25 @@ SBStBasicMethod >> moveToInstanceSide [
 		toClass: self relatedClass theNonMetaClass)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> numArgs [
 
 	^ self arguments size
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBStBasicMethod >> object [
 
 	^ self compiledMethod
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBStBasicMethod >> objectInterface [
 
 	^ SBInterfaces stMethod
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBStBasicMethod >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ aBlock isBlockBody
@@ -495,21 +495,21 @@ SBStBasicMethod >> objectInterfaceNear: aBlock at: aSymbol [
 		ifFalse: [super objectInterfaceNear: aBlock at: aSymbol]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStBasicMethod >> openClassDefinition [
 	<action>
 	
 	self sandblockEditor open: self relatedClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBStBasicMethod >> outOfWorld: aWorld [
 
 	SystemChangeNotifier uniqueInstance noMoreNotificationsFor: self.
 	super outOfWorld: aWorld
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStBasicMethod >> pasteReplace [
 	<action>
 
@@ -529,14 +529,14 @@ SBStBasicMethod >> pasteReplace [
 		new select]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStBasicMethod >> pickSelf [
 	<action>
 	
 	self tryUseAsSelf: (self outermostWorldMorph morphsAt: (Cursor crossHair showWhile: [Sensor waitButton])) first
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #caching }
 SBStBasicMethod >> postDuplicateSelf [
 
 	SBToggledCode comment: '' active: 0 do: {
@@ -555,38 +555,38 @@ SBStBasicMethod >> postDuplicateSelf [
 		attachDecorator: SBForceMoveDecorator newConfigured
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> pragmas [
 
 	^ self statements select: [:s | s isPragma]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBStBasicMethod >> prefersNoBorder [
 
 	^ self sandblockEditor isSingleArtefactView
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBStBasicMethod >> printOn: aStream [
 
 	aStream nextPutAll: 'method ';  nextPutAll: self selector
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'artefact protocol' }
 SBStBasicMethod >> relatedClass [
 
 	^ self methodClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStBasicMethod >> reloadArtefact [
 	<action>
 
 	self sandblockEditor select: self reloadMethodInPlace
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #caching }
 SBStBasicMethod >> reloadMethodInPlace [
 
 	self externalModification: false.
@@ -597,7 +597,7 @@ SBStBasicMethod >> reloadMethodInPlace [
 		yourself)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStBasicMethod >> saveCopy [
 	<action>
 
@@ -606,17 +606,10 @@ SBStBasicMethod >> saveCopy [
 	self sandblockEditor save
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'artefact protocol' }
 SBStBasicMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
 
 	| text newSelector |
-	SBToggledCode comment: '' active: 0 do: {
-		[
-			(self savedMethodHasComments and: [(self valueOfProperty: #alreadyWarnedComments ifAbsent: [false]) not]) ifTrue: [
-				(UIManager default confirm: 'Currently saved version has comments that will be removed. Still save?')
-					ifTrue: [self setProperty: #alreadyWarnedComments toValue: true]
-					ifFalse: [^ false]]]}.
-	
 	self allBlocksDo: [:block | block valid ifFalse: [aBoolean ifFalse: [^ false] ifTrue: [block tryFixIfFail: [^ false]]]].
 	
 	(self hasExternalModification not or: [UIManager default confirm: 'Method may have changed elsewhere, continue?'])
@@ -637,36 +630,19 @@ SBStBasicMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
-SBStBasicMethod >> savedMethodHasComments [
-
-	SBExample self: [
-		SBStMethod newFor: SBStMethod >> #savedMethodHasComments at: 0 @ 0] args: [{}] label: 'no comment'.
-	SBExample self: [SBStMethod newFor: SBEditor >> #do: at: 0 @ 0] args: [{}] label: 'has comment'.
-	^ self methodClass methodDictionary
-		at: self selector asSymbol
-		ifPresent: [:method | | scanner |
-			scanner := Scanner new scan: method getSourceFromFile readStream.
-			[
-				scanner advance.
-				scanner tokenType = #doIt] whileFalse: [scanner currentComment ifNotNil: [^ true]].
-			false]
-		ifAbsent: [false]
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> selector [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> selector: aSymbol arguments: aCollection [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> selector: aSymbol arguments: aCollection class: aClass [
 
 	methodClass := aClass.
@@ -675,25 +651,25 @@ SBStBasicMethod >> selector: aSymbol arguments: aCollection class: aClass [
 	self currentClass ifNil: [self currentClass: aClass]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> statements [
 
 	^ self body statements
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> statements: aCollection [
 
 	(self body ifNil: [self body: SBStBlockBody empty. self body]) statements: aCollection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> textContents [
 
 	^ self selector
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStBasicMethod >> toggleCollapsed [
 	<action>
 
@@ -704,7 +680,7 @@ SBStBasicMethod >> toggleCollapsed [
 	(self body visible not and: [self isSelected not and: [self sandblockEditor notNil]]) ifTrue: [self select]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
 SBStBasicMethod >> tryUseAsSelf: anObject [
 
 	(anObject class includesBehavior: self relatedClass) ifTrue: [
@@ -719,19 +695,19 @@ SBStBasicMethod >> tryUseAsSelf: anObject [
 			Project current addDeferredUIMessage: [self layoutChanged]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBasicMethod >> typeCache [
 
 	^ typeCache ifNil: [typeCache := Dictionary new]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'artefact protocol' }
 SBStBasicMethod >> typeFor: aBlock [
 
 	^ typeCache ifNil: [nil] ifNotNil: [typeCache at: aBlock ifAbsent: [nil]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #caching }
 SBStBasicMethod >> updatePCs [
 
 	| method new old |
@@ -743,7 +719,7 @@ SBStBasicMethod >> updatePCs [
 	new size = old size ifTrue: [new with: old do: [:newBlock :oldBlock | (oldBlock isSmalltalk and: [newBlock isSmalltalk]) ifTrue: [oldBlock class == newBlock class ifTrue: [oldBlock updatePCFrom: newBlock]]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStBasicMethod >> valid [
 
 	^ self selector isEmpty or: [
@@ -751,19 +727,19 @@ SBStBasicMethod >> valid [
 			self selector allSatisfy: [:c | c isAlphaNumeric or: [c = $: or: [c = $_]]]]) or: [self selector allSatisfy: #isSpecial]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'artefact protocol' }
 SBStBasicMethod >> wantsInteractiveErrorCorrection [
 
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBStBasicMethod >> writeSignatureSourceOn: aStream [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBStBasicMethod >> writeSourceOn: aStream [
 
 	self writeSignatureSourceOn: aStream.

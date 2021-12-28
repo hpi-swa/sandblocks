@@ -1239,7 +1239,7 @@ SBBlock >> inputPreviousUnknown [
 				self sandblockEditor startInput: m at: 1 replacingContents: false]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBBlock >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 	" the user tries to add a block to us, do we want to do something now? "
 
@@ -1373,7 +1373,7 @@ SBBlock >> isArtefact [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBBlock >> isAttractedTo: aMorph [
 	
 	^ aMorph object class = self object class

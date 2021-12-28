@@ -36,11 +36,11 @@ SBStTestCase class >> newFrom: aMethodBlock [
 		body: aMethodBlock body
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStTestCase >> argumentsDo: aBlock [
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #callbacks }
 SBStTestCase >> artefactSaved: anArtefact [
 
 	super artefactSaved: anArtefact.
@@ -48,19 +48,19 @@ SBStTestCase >> artefactSaved: anArtefact [
 	self autoRun ifTrue: [self runTest]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStTestCase >> autoRun [
 
 	^ autoRun value
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStTestCase >> autoRun: aBoolean [
 
 	autoRun value: aBoolean
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #errors }
 SBStTestCase >> clearErrors [
 
 	errorIndicator ifNotNil: [
@@ -68,20 +68,20 @@ SBStTestCase >> clearErrors [
 		errorIndicator := nil]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStTestCase >> currentSelector: aString [
 
 	selectorInput contents: aString.
 	super currentSelector: aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStTestCase >> currentTextMorph [
 
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStTestCase >> debug [
 	<action>
 
@@ -100,19 +100,19 @@ SBStTestCase >> debug [
 		self sandblockEditor errors focusErrors]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBStTestCase >> drawnColor [
 
 	^ self colorPolicy toolColorFor: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStTestCase >> execute [
 
 	^ self methodClass new perform: self currentSelector
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'examples protocol' }
 SBStTestCase >> executeForBlock: aBlock ifFound: aClosure [
 
 	^ [
@@ -125,7 +125,7 @@ SBStTestCase >> executeForBlock: aBlock ifFound: aClosure [
 		do: [:val | aClosure value: val value]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBStTestCase >> initialize [
 
 	super initialize.
@@ -163,13 +163,13 @@ SBStTestCase >> initialize [
 		attachDecorator: SBResizableDecorator new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStTestCase >> label [
 
 	^ self selector
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBStTestCase >> layoutCommands [
 
 	^ SBAlgebraCommand container
@@ -179,7 +179,7 @@ SBStTestCase >> layoutCommands [
 			ifFalse: [{}])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBStTestCase >> objectInterfaceNear: aBlock at: aSymbol [
 
 	aSymbol ~= #replace ifTrue: [^ SBInterfaces never].
@@ -187,13 +187,13 @@ SBStTestCase >> objectInterfaceNear: aBlock at: aSymbol [
 	^ aBlock isLastChild ifTrue: [SBInterfaces stBlock] ifFalse: [SBInterfaces stName]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #errors }
 SBStTestCase >> openError [
 
 	(self methodClass selector: self currentSelector) runCase
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBStTestCase >> outOfWorld: aWorld [
 
 	super outOfWorld: aWorld.
@@ -201,13 +201,13 @@ SBStTestCase >> outOfWorld: aWorld [
 	self sendStopNotification
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStTestCase >> providesExecutionEnvironment [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #errors }
 SBStTestCase >> reportError: anError [
 
 	passIcon
@@ -225,7 +225,7 @@ SBStTestCase >> reportError: anError [
 		ifNotNil: [:context | (self blockForPC: context previousPc) attachDecorator: (errorIndicator := SBErrorDecorator new message: anError asString)]"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStTestCase >> runTest [
 	<action>
 
@@ -255,34 +255,34 @@ SBStTestCase >> runTest [
 		SBExecutionEnvironment value: nil]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStTestCase >> selector [
 
 	^ selectorInput contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'examples protocol' }
 SBStTestCase >> sendFinishNotification [
 
 	self sandblockEditor allMorphsDo: [:morph |
 		(morph isSandblock and: [morph listensToExamples]) ifTrue: [morph exampleFinished: self]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'examples protocol' }
 SBStTestCase >> sendStartNotification [
 
 	self sandblockEditor allBlocksDo: [:morph |
 		morph listensToExamples ifTrue: [morph exampleStarting: self]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'examples protocol' }
 SBStTestCase >> sendStopNotification [
 
 	self sandblockEditor allMorphsDo: [:morph |
 		(morph isSandblock and: [morph listensToExamples]) ifTrue: [morph exampleStopped: self]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #copying }
 SBStTestCase >> veryDeepCopy [
 
 	| previousError copy |
@@ -295,7 +295,7 @@ SBStTestCase >> veryDeepCopy [
 	^ copy
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBStTestCase >> writeSignatureSourceOn: aStream [
 
 	aStream nextPutAll: selectorInput contents
