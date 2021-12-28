@@ -21,6 +21,7 @@ SBColumn >> initialize [
 		color: Color transparent;
 		layoutPolicy: TableLayout new;
 		listDirection: #topToBottom;
+		cellPositioning: #topLeft;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
 ]

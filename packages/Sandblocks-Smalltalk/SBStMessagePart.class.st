@@ -20,6 +20,12 @@ SBStMessagePart >> asName: aConverter [
 	^ aConverter do: [SBStName new contents: self contents]
 ]
 
+{ #category : #'as yet unclassified' }
+SBStMessagePart >> canEvaluate [
+
+	^ true
+]
+
 { #category : #actions }
 SBStMessagePart >> changeToUnknown [
 	<action>

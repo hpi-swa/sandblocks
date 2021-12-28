@@ -59,6 +59,12 @@ SBStASTNode >> asMorphBlock: converter [
 	" we can't generally convert ourselves to morphs since we need our artefact owner "
 ]
 
+{ #category : #testing }
+SBStASTNode >> canEvaluate [
+
+	^ self isExpression
+]
+
 { #category : #evaluate }
 SBStASTNode >> compilationCueWith: aRequestor for: aContext [
 

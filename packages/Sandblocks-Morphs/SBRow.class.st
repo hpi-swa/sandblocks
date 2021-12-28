@@ -19,6 +19,7 @@ SBRow >> initialize [
 		color: Color transparent;
 		layoutPolicy: TableLayout new;
 		listDirection: #leftToRight;
+		cellPositioning: #topLeft;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
 ]
