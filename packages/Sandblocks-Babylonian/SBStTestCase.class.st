@@ -36,7 +36,7 @@ SBStTestCase class >> newFrom: aMethodBlock [
 		body: aMethodBlock body
 ]
 
-{ #category : #accessing }
+{ #category : #'method protocol' }
 SBStTestCase >> argumentsDo: aBlock [
 ]
 
@@ -134,7 +134,9 @@ SBStTestCase >> initialize [
 		layoutInset: 6;
 		cellGap: 8;
 		addMorphBack: (SBRow new
+			hResizing: #spaceFill;
 			cellGap: 8;
+			changeTableLayout;
 			addMorphBack: (selectorInput := SBTextBubble new
 				colored: false;
 				layoutInset: 5;
@@ -146,7 +148,7 @@ SBStTestCase >> initialize [
 				color: Color transparent;
 				yourself);
 			addMorphBack: (passIcon := SBIcon iconQuestion
-				color: Color white;
+				color: (Color r: 1 g: 1 b: 1);
 				on: #click send: #openError to: self;
 				yourself);
 			addMorphBack: (Morph new
@@ -159,6 +161,11 @@ SBStTestCase >> initialize [
 				nonEdit: true;
 				when: #toggled send: #sendStopNotification to: self);
 			addMorphBack: (SBStringMorph new contents: 'Auto-run');
+			addMorphBack: (Morph new
+				hResizing: #spaceFill;
+				height: 0;
+				color: Color transparent;
+				yourself);
 			yourself);
 		attachDecorator: SBResizableDecorator new
 ]
@@ -255,7 +262,7 @@ SBStTestCase >> runTest [
 		SBExecutionEnvironment value: nil]
 ]
 
-{ #category : #accessing }
+{ #category : #'method protocol' }
 SBStTestCase >> selector [
 
 	^ selectorInput contents
@@ -282,6 +289,12 @@ SBStTestCase >> sendStopNotification [
 		(morph isSandblock and: [morph listensToExamples]) ifTrue: [morph exampleStopped: self]]
 ]
 
+{ #category : #'method protocol' }
+SBStTestCase >> showRenameHint: aMorph [
+
+	self firstSubmorph addMorphBack: aMorph
+]
+
 { #category : #copying }
 SBStTestCase >> veryDeepCopy [
 
@@ -295,7 +308,7 @@ SBStTestCase >> veryDeepCopy [
 	^ copy
 ]
 
-{ #category : #printing }
+{ #category : #'method protocol' }
 SBStTestCase >> writeSignatureSourceOn: aStream [
 
 	aStream nextPutAll: selectorInput contents

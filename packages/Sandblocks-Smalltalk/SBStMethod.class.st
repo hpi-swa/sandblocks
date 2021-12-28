@@ -14,7 +14,7 @@ SBStMethod class >> newFor: aMethod at: aPoint [
 	^ aMethod asSandblock position: aPoint; yourself
 ]
 
-{ #category : #accessing }
+{ #category : #'method protocol' }
 SBStMethod >> argumentsDo: aBlock [
 
 	^ signature argumentsDo: aBlock
@@ -131,11 +131,9 @@ SBStMethod >> layoutCommands [
 		data: {
 			SBAlgebraCommand container
 				morph: self firstSubmorph;
-				data: {
-					self firstSubmorph submorphs first layoutCommands.
-					SBAlgebraCommand indent data: {SBAlgebraCommand softLine. self firstSubmorph submorphs second layoutCommands}
-				}
-		}, (self body visible
+				data: ((self firstSubmorph submorphs allButLast: 2) collect: [:c | c layoutCommands]), {
+					(self firstSubmorph submorphs atLast: 2) layoutCommands.
+					SBAlgebraCommand indent data: {SBAlgebraCommand softLine. self firstSubmorph submorphs last layoutCommands}}}, (self body visible
 			ifTrue: [{SBAlgebraCommand hardLine withGap: true. self body layoutCommands}]
 			ifFalse: [{}])
 ]
@@ -216,13 +214,13 @@ SBStMethod >> saveStringWhenNotEmpty [
 		]
 ]
 
-{ #category : #accessing }
+{ #category : #'method protocol' }
 SBStMethod >> selector [
 
 	^ signature selector
 ]
 
-{ #category : #accessing }
+{ #category : #'method protocol' }
 SBStMethod >> selector: aSymbol arguments: aCollection [
 
 	signature selector: aSymbol arguments: aCollection
@@ -233,6 +231,12 @@ SBStMethod >> selector: aSymbol arguments: aCollection class: aClass [
 
 	super selector: aSymbol arguments: aCollection class: aClass.
 	signature selector: aSymbol arguments: aCollection
+]
+
+{ #category : #'method protocol' }
+SBStMethod >> showRenameHint: aMorph [
+
+	self firstSubmorph addMorphFront: aMorph
 ]
 
 { #category : #accessing }
@@ -287,7 +291,7 @@ SBStMethod >> useSuggestion: aString [
 	(signature arguments anySatisfy: #wantsInput) ifFalse: [self inputNextUnknown]
 ]
 
-{ #category : #printing }
+{ #category : #'method protocol' }
 SBStMethod >> writeSignatureSourceOn: aStream [
 
 	signature writeSourceOn: aStream

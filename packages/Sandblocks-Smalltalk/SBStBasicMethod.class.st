@@ -41,7 +41,7 @@ SBStBasicMethod >> arguments [
 	^ Array streamContents: [:stream | self argumentsDo: [:a | a isUnknown not ifTrue: [stream nextPut: a]]]
 ]
 
-{ #category : #accessing }
+{ #category : #'method protocol' }
 SBStBasicMethod >> argumentsDo: aBlock [
 
 	^ self subclassResponsibility
@@ -51,6 +51,20 @@ SBStBasicMethod >> argumentsDo: aBlock [
 SBStBasicMethod >> artefact [
 
 	^ self compiledMethod
+]
+
+{ #category : #events }
+SBStBasicMethod >> artefactChanged: aMethodBlock [
+
+	aMethodBlock = self ifTrue: [ | currentHint |
+		currentHint := self valueOfProperty: #renameHint.
+		(self selector ~= self currentSelector and: [currentHint isNil]) ifTrue: [ | hint |
+			hint := SBIcon iconFilesO balloonText: 'Saving this method will rename it. Use <#saveCopy> instead to save a copy.' withSBShortcuts.
+			self setProperty: #renameHint toValue: hint.
+			self showRenameHint: hint].
+		(self selector = self currentSelector and: [currentHint notNil]) ifTrue: [
+			currentHint delete.
+			self removeProperty: #renameHint]]
 ]
 
 { #category : #'ast helpers' }
@@ -630,13 +644,13 @@ SBStBasicMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : #'method protocol' }
 SBStBasicMethod >> selector [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : #'method protocol' }
 SBStBasicMethod >> selector: aSymbol arguments: aCollection [
 
 	^ self subclassResponsibility
@@ -649,6 +663,12 @@ SBStBasicMethod >> selector: aSymbol arguments: aCollection class: aClass [
 	
 	self currentSelector ifNil: [self currentSelector: aSymbol asSymbol].
 	self currentClass ifNil: [self currentClass: aClass]
+]
+
+{ #category : #'method protocol' }
+SBStBasicMethod >> showRenameHint: aMorph [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
@@ -733,7 +753,7 @@ SBStBasicMethod >> wantsInteractiveErrorCorrection [
 	^ false
 ]
 
-{ #category : #printing }
+{ #category : #'method protocol' }
 SBStBasicMethod >> writeSignatureSourceOn: aStream [
 
 	^ self subclassResponsibility
