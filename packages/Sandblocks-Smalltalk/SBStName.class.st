@@ -34,8 +34,14 @@ SBStName class >> newWith: aNameBehavior [
 { #category : #'as yet unclassified' }
 SBStName class >> poolDeclaration: aString [
 
+	^ self poolDeclaration: aString binding: nil
+]
+
+{ #category : #'as yet unclassified' }
+SBStName class >> poolDeclaration: aString binding: aBinding [
+
 	^ (self contents: aString)
-		behavior: SBStDeclarationForPoolVariable new;
+		behavior: (SBStDeclarationForPoolVariable new binding: aBinding);
 		yourself
 ]
 

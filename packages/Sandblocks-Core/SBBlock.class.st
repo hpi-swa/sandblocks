@@ -333,6 +333,12 @@ SBBlock >> canDrag: aBoolean [
 	self setProperty: #canDrag toValue: aBoolean
 ]
 
+{ #category : #testing }
+SBBlock >> canEvaluate [
+
+	^ false
+]
+
 { #category : #'actions tests' }
 SBBlock >> canInput [
 

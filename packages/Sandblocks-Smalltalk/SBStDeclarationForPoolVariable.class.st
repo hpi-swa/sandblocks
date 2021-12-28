@@ -1,6 +1,9 @@
 Class {
 	#name : #SBStDeclarationForPoolVariable,
 	#superclass : #SBStDeclarationBehavior,
+	#instVars : [
+		'binding'
+	],
 	#category : #'Sandblocks-Smalltalk'
 }
 
@@ -19,6 +22,12 @@ SBStDeclarationForPoolVariable >> asSuggestionItem [
 ]
 
 { #category : #'as yet unclassified' }
+SBStDeclarationForPoolVariable >> binding: aBinding [
+
+	binding := aBinding
+]
+
+{ #category : #'as yet unclassified' }
 SBStDeclarationForPoolVariable >> browse [
 	<action>
 
@@ -28,7 +37,7 @@ SBStDeclarationForPoolVariable >> browse [
 { #category : #'as yet unclassified' }
 SBStDeclarationForPoolVariable >> browseReferences [
 
-	self systemNavigation browseAllCallsOnClass: self guessedClass
+	self systemNavigation browseAllCallsOnClass: binding
 ]
 
 { #category : #'as yet unclassified' }

@@ -25,15 +25,12 @@ SBStContainer >> artefact [
 SBStContainer >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	| outer |
-	Symbol
-		hasInterned: aString
-		ifTrue: [:sym | | binding |
-			binding := aClass bindingOf: sym environment: self methodClass environment.
-			binding ifNotNil: [^ aBlock value: ((SBStName poolDeclaration: aString) binding: binding)]].
+	Symbol hasInterned: aString ifTrue: [:sym | | binding |
+		binding := aClass bindingOf: sym environment: self methodClass environment.
+		binding ifNotNil: [^ aBlock value: ((SBStName poolDeclaration: aString binding: binding) binding: binding)]].
 	
 	outer := self outerArtefact.
-	(outer notNil and: [outer isSmalltalk])
-		ifTrue: [^ self outerArtefact binding: aString for: block class: aClass ifPresent: aBlock].
+	(outer notNil and: [outer isSmalltalk]) ifTrue: [^ self outerArtefact binding: aString for: block class: aClass ifPresent: aBlock].
 	
 	^ nil
 ]
