@@ -28,9 +28,12 @@ SBExample class >> matches: aMessage [
 
 	(super matches: aMessage) ifFalse: [^ false].
 	
-	^ (aMessage receiver satisfies: #(notNil isBinding))
+	^ ((aMessage receiver satisfies: #(#notNil #isBinding))
 		and: [aMessage receiver contents = self name]
-		and: [#('self:args:label:' 'self:args:label:assert:') includes: aMessage selector]
+		and: [#('self:args:label:' 'self:args:label:assert:') includes: aMessage selector]) or: [
+		(aMessage receiver satisfies: #(#notNil #isName))
+			and: [aMessage receiver contents = 'self']
+			and: [#('example:args:label:' 'example:args:label:assert:') includes: aMessage selector]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -519,9 +522,9 @@ SBExample >> writeSourceOn: aStream [
 
 	aStream nextPut: $(.
 	aStream
-		nextPutAll: self className;
+		nextPutAll: 'self';
 		space.
-	aStream nextPutAll: 'self: ['.
+	aStream nextPutAll: 'example: ['.
 	self selfBlock writeSourceOn: aStream.
 	aStream nextPutAll: '] args: ['.
 	self argumentsBlock writeSourceOn: aStream.

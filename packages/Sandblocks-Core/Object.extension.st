@@ -105,6 +105,20 @@ Object >> converterOptionsDo: aBlock [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Object >> example: aSelfClosure args: anArgumentsClosure label: aString [
+	"marker"
+
+	
+]
+
+{ #category : #'*Sandblocks-Core' }
+Object >> example: aSelfClosure args: anArgumentsClosure label: aString assert: anAssertClosure [
+	"marker"
+
+	
+]
+
+{ #category : #'*Sandblocks-Core' }
 Object >> firstSafeOptionFrom: aCollection [
 	" try to find the first representation that causes no side effects. If none were found assume, that the side effect was the user's intention "
 

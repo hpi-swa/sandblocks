@@ -58,7 +58,7 @@ SBStBasicMethod >> artefactChanged: aMethodBlock [
 
 	aMethodBlock = self ifTrue: [ | currentHint |
 		currentHint := self valueOfProperty: #renameHint.
-		(self selector ~= self currentSelector and: [currentHint isNil]) ifTrue: [ | hint |
+		(self selector ~= self currentSelector and: [currentHint isNil and: [self exists]]) ifTrue: [ | hint |
 			hint := SBIcon iconFilesO balloonText: 'Saving this method will rename it. Use <#saveCopy> instead to save a copy.' withSBShortcuts.
 			self setProperty: #renameHint toValue: hint.
 			self showRenameHint: hint].
@@ -150,7 +150,7 @@ SBStBasicMethod >> cacheType: aClass for: aBlock [
 { #category : #accessing }
 SBStBasicMethod >> category [
 
-	SBExample self: [(SBStBasicMethod >> #category) asSandblock] args: [{}] label: 'example'.
+	self example: [(SBStBasicMethod >> #category) asSandblock] args: [{}] label: 'example'.
 	^ category ifNil: [self methodClass organization categoryOfElement: self currentSelector]
 ]
 
@@ -617,7 +617,8 @@ SBStBasicMethod >> saveCopy [
 
 	category := self category.
 	self currentSelector: self selector.
-	self sandblockEditor save
+	self sandblockEditor save.
+	self valueOfProperty: #renameHint ifPresentDo: #delete
 ]
 
 { #category : #'artefact protocol' }

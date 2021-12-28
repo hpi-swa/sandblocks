@@ -84,10 +84,7 @@ SBButton >> hovered: aBoolean [
 { #category : #'as yet unclassified' }
 SBButton >> icon: anIconMorph label: aString do: aBlock [
 
-	SBExample
-		self: [SBButton new]
-		args: [{SBIcon iconUndo. $u asSandblockShortcut. [nil]}]
-		label: 'icon'.
+	self example: [SBButton new] args: [{SBIcon iconUndo. $u asSandblockShortcut. [nil]}] label: 'icon'.
 	
 	self widget: anIconMorph shortcut: nil do: aBlock.
 	
@@ -99,8 +96,8 @@ SBButton >> icon: anIconMorph label: aString do: aBlock [
 { #category : #'as yet unclassified' }
 SBButton >> icon: anIconMorph shortcut: aShortcut do: aBlock [
 
-	SBExample
-		self: [SBButton new]
+	self
+		example: [SBButton new]
 		args: [{SBIcon iconUndo. $u asSandblockShortcut. [nil]}]
 		label: 'icon'.
 	self widget: anIconMorph shortcut: aShortcut do: aBlock
@@ -153,7 +150,7 @@ SBButton >> label: aString [
 { #category : #'as yet unclassified' }
 SBButton >> label: aString shortcut: aShortcut do: aBlock [
 
-	SBExample self: [SBButton new] args: [{'hello'. $p command. [nil]}] label: 'label'.
+	self example: [SBButton new] args: [{'hello'. $p command. [nil]}] label: 'label'.
 	self
 		widget: (SBStringMorph new
 			contents: aString;

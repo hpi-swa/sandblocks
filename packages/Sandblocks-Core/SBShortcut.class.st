@@ -81,9 +81,9 @@ SBShortcut >> controlKeyPressed [
 { #category : #printing }
 SBShortcut >> displayString [
 
-	SBExample self: [$p asSandblockShortcut] args: [{}] label: 'p'.
-	SBExample self: [$p command] args: [{}] label: 'ctrl+p'.
-	SBExample self: [$P command] args: [{}] label: 'ctrl+P'.
+	self example: [$p asSandblockShortcut] args: [{}] label: 'p'.
+	self example: [$p command] args: [{}] label: 'ctrl+p'.
+	self example: [$P command] args: [{}] label: 'ctrl+P'.
 	^ String streamContents: [:stream | self printDisplayOn: stream automaticShift: true]
 ]
 
