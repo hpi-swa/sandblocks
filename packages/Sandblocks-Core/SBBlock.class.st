@@ -1811,6 +1811,15 @@ SBBlock >> objectInterfaceNear: aBlock at: aSymbol [
 	^ SBInterfaces never
 ]
 
+{ #category : #hierarchy }
+SBBlock >> open [
+	" tries to find the current SBEditor and open our block in it "
+
+	SBExecutionEnvironment value sandblockEditor
+		ifNotNil: [:editor | editor openMorphInView: self]
+		ifNil: [self error: 'No editor found in execution context']
+]
+
 { #category : #actions }
 SBBlock >> openLocalPalette [
 	<action>
