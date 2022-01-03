@@ -44,6 +44,7 @@ SBComboBox >> currentTextMorph [
 SBComboBox >> display: anObject [
 
 	anObject isMorph ifTrue: [^ anObject imageForm].
+	anObject isString ifTrue: [^ anObject].
 	^ anObject printString
 ]
 
@@ -79,7 +80,12 @@ SBComboBox >> object [
 SBComboBox >> object: anObject [
 
 	object := anObject.
-	self contents: (self display: object) asString
+	anObject ifNotNil: [ | actualLabels |
+		self labels
+			ifNotNil: [
+				actualLabels := self labels ifNil: [self values].
+				self contents: (self display: (actualLabels at: (self values indexOf: anObject)))]
+			ifNil: [self contents: (self display: anObject) asString]]
 ]
 
 { #category : #'as yet unclassified' }
