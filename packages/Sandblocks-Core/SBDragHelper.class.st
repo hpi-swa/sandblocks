@@ -180,7 +180,7 @@ SBDragHelper >> hintInsertOf: aBlock in: aParentBlock near: aChildBlock before: 
 	command := aParentBlock insertCommandRequest: aBlock near: aChildBlock before: aBoolean.
 	SBPreferences previewDropInsert ifTrue: [command do] ifFalse: [
 		insertPreviewMarker := SBDropInsertMarker new
-			color: (aBlock colorPolicy dropMarkerColorFor: aBlock);
+			color: (aParentBlock colorPolicy dropMarkerColorFor: aBlock);
 			bounds: (aChildBlock
 				ifNil: [10 @ 10 center: aParentBlock boundsInWorld center]
 				ifNotNil: [self insertMarkerFor: aChildBlock before: aBoolean]);
