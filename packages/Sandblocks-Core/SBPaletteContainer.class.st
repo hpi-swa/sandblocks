@@ -85,7 +85,9 @@ SBPaletteContainer >> initialize [
 	super initialize.
 	
 	self
-		addMorphBack: (categories := SBColumn new layoutInset: 4);
+		addMorphBack: (categories := SBColumn new
+			layoutInset: 4;
+			cellPositioning: #topLeft);
 		addMorphBack: (ScrollPane new
 			color: Color transparent;
 			hResizing: #spaceFill;
