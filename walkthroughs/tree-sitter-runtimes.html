@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Tree Sitter - Sandblocks</title>
+        <title>Tree Sitter Runtimes - Sandblocks</title>
         
         
 
@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="../faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="../chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="../walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="../walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="../walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="../walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="../walkthroughs/commands.html"><strong aria-hidden="true">3.6.</strong> Custom Commands</a></li><li class="chapter-item expanded "><a href="../walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.7.</strong> Lists of Blocks</a></li><li class="chapter-item expanded "><a href="../walkthroughs/drag-and-drop.html"><strong aria-hidden="true">3.8.</strong> Drag and Drop</a></li><li class="chapter-item expanded "><a href="../walkthroughs/artefacts.html"><strong aria-hidden="true">3.9.</strong> Saving and Artefacts</a></li><li class="chapter-item expanded "><a href="../walkthroughs/tree-sitter.html" class="active"><strong aria-hidden="true">3.10.</strong> Tree Sitter</a></li><li class="chapter-item expanded "><a href="../walkthroughs/tree-sitter-runtimes.html"><strong aria-hidden="true">3.11.</strong> Tree Sitter Runtimes</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="../faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="../chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="../walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="../walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="../walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="../walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="../walkthroughs/commands.html"><strong aria-hidden="true">3.6.</strong> Custom Commands</a></li><li class="chapter-item expanded "><a href="../walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.7.</strong> Lists of Blocks</a></li><li class="chapter-item expanded "><a href="../walkthroughs/drag-and-drop.html"><strong aria-hidden="true">3.8.</strong> Drag and Drop</a></li><li class="chapter-item expanded "><a href="../walkthroughs/artefacts.html"><strong aria-hidden="true">3.9.</strong> Saving and Artefacts</a></li><li class="chapter-item expanded "><a href="../walkthroughs/tree-sitter.html"><strong aria-hidden="true">3.10.</strong> Tree Sitter</a></li><li class="chapter-item expanded "><a href="../walkthroughs/tree-sitter-runtimes.html" class="active"><strong aria-hidden="true">3.11.</strong> Tree Sitter Runtimes</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -163,96 +163,81 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="tree-sitter"><a class="header" href="#tree-sitter">Tree Sitter</a></h1>
-<p>In this video, we work with Sandblocks' Tree Sitter backend, giving us access to languages such as Python or Javascript.
-We create a replacement for Javascript's <code>window.fetch</code> and a palette for Javascript.</p>
-<blockquote>
-<p><strong>Notes &amp; Errata</strong></p>
-<p>[41min04] instead of calling <code>SBJavascript parse: '2 + 2'</code> it is now recommended to call <code>SBJavascript parseElement: '2 + 2'</code> if we only want a single parsed AST node instead of a full program</p>
-<p>[46min09] when we add the <code>factory:</code> call for the palette block, use <code>SBJavascript instance</code> instead of <code>SBJavascript new</code> to avoid rebuilding the grammar.</p>
-</blockquote>
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;"><iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://player.vimeo.com/video/643502024" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
-<h2 id="git-setup-links"><a class="header" href="#git-setup-links">Git Setup Links</a></h2>
-<ul>
-<li><code>git clone</code> <a href="https://github.com/tom95/sandblocks">git@github.com:tom95/sandblocks</a></li>
-<li><code>git clone</code> <a href="https://github.com/hpi-swa-lab/sb-tree-sitter">git@github.com:hpi-swa-lab/sb-tree-sitter</a></li>
-</ul>
-<h2 id="relevant-entrypoints"><a class="header" href="#relevant-entrypoints">Relevant Entrypoints</a></h2>
-<ul>
-<li><code>SBTSPalette</code>: superclass for custom palettes. Make sure to look at its class-side.</li>
-<li><code>SBInlineBlockReplace</code>: superclass for replacing blocks with custom morphs</li>
-<li><code>applyReplacements</code> / <code>Ctrl/Cmd+r</code>: action / shortcut for performing all matching replacements on a block</li>
-<li><a href="https://tree-sitter.github.io/tree-sitter/using-parsers#pattern-matching-with-queries">Documentation</a> for Queries in Tree Sitter</li>
-<li><a href="https://tree-sitter.github.io/tree-sitter/playground">Playground</a> for parsing and queris in Tree Sitter</li>
-</ul>
-<h2 id="questions-and-common-patterns"><a class="header" href="#questions-and-common-patterns">Questions and Common Patterns</a></h2>
-<h3 id="adding-existing-tree-sitter-blocks-inside-a-replacement"><a class="header" href="#adding-existing-tree-sitter-blocks-inside-a-replacement">Adding Existing Tree Sitter Blocks Inside a Replacement</a></h3>
-<p>This is generally easy, just add them as you usually would and include a <code>buildCopy</code> to support undo:</p>
-<pre><code class="language-smalltalk">SBBlock new addMorphBack: aTSBlock buildCopy.
+                        <h1 id="sandblockstreesitter-runtimes"><a class="header" href="#sandblockstreesitter-runtimes">Sandblocks/TreeSitter Runtimes</a></h1>
+<p>The runtimes system as part of Sandblocks-TreeSitter allows you to execute code from supported languages.
+It comes with support for monitoring its stdout/stderr and injecting watches that report back to the Sandblocks IDE.</p>
+<h2 id="opening-and-running-a-file"><a class="header" href="#opening-and-running-a-file">Opening and Running a File</a></h2>
+<p>In a Sandblocks workspace, run:</p>
+<pre><code>(SBTSFile filepath: '/home/you/test.py') open
 </code></pre>
-<p>(Without <code>buildCopy</code> the replaced block will contain a hole where the nested block used to be, breaking undo).</p>
-<h3 id="adding-new-tree-sitter-blocks-inside-a-replacement"><a class="header" href="#adding-new-tree-sitter-blocks-inside-a-replacement">Adding New Tree Sitter Blocks Inside a Replacement</a></h3>
-<p>To create a new instance of a specific rule, use e.g.:</p>
-<pre><code>SBBlock new addMorphBack: (SBPython build: 'expression')
+<p>At the top of the file will be a Play button. Once clicked, it will try to find a python interpreter on your system and execute the given file.</p>
+<p><img src="../assets/python-file.png" alt="" /></p>
+<h2 id="watches"><a class="header" href="#watches">Watches</a></h2>
+<p>You can insert a watch on any block moment but most likely inserting it on anything but an expression will result in a syntax error upon serialization or execution.
+Insert a watch by either right-clicking the expression and filtering for <code>wrapWithWatch</code> or by pressing the Cmd+Shift+W shortcut.</p>
+<h2 id="offscreen-watches"><a class="header" href="#offscreen-watches">Offscreen Watches</a></h2>
+<p>By placing watches offscreen, you can use them to report values from the runtime back to your TreeSitter replacement blocks.</p>
+<p>For example, we could make all Javascript <code>console.log</code> calls log to the Squeak Transcript as well by creating a replacement for <code>console.log</code> and serializing the expression with the watch's source code wrapped around it (see also <code>SBConsoleLogReporter</code> class that comes with Sandblocks):</p>
+<pre><code class="language-smalltalk">SBConsoleLogReporter&gt;&gt;initialize
+    
+    super initialize.
+    &quot; create a new empty watch and connect its reportedValue signal to our
+      newValue: method &quot;
+    watch := SBTSWatch newEmpty when: #reportedValue send: #newValue: to: self
+
+SBConsoleLogReporter&gt;&gt;writeSourceOn: aStream
+
+    &quot; update the watch's expression to the expression our replacement is wrapping &quot;
+	watch expression: self expression.
+	
+	aStream nextPutAll: 'console.log('.
+	watch writeSourceOn: aStream.
+	aStream nextPutAll: ')'
+
+SBConsoleLogReporter&gt;&gt;newValue: aString
+
+    &quot; apparently our watch triggered a reportedValue signal, so we're called &quot;
+    Transcript showln: aString
 </code></pre>
-<p>If you need a complete block, you can use <code>parse:</code> or <code>parseElement:</code>:</p>
-<pre><code>SBBlock new addMorphBack: (SBPython parseElement: '3 + 4')
+<p>You can also use this with custom code to extract specific values from the runtime:</p>
+<pre><code class="language-smalltalk">SBRequestReplacement&gt;&gt;initialize
+
+    watch := SBTSWatch newEmpty when: #reportedValue send: #newRequest: to: self
+
+SBRequestReplacement&gt;&gt;writeSourceOn: aStream
+
+    &quot; we are inserting this object literal in the code that expects a `req` variable
+      to be in the local scope and reporting the object back to squeak &quot;
+    watch expression: (SBJavascript parseElement:
+        '{path: req.path, headers: req.headers.map(h =&gt; [h.key, h.value])}').
+
+    &quot; ...our other serialization code, then our watch at a place where it's
+      syntactically valid &quot;
+    watch writeSourceOn: aStream.
+    &quot; ...more serialization code &quot;
+
+SBRequestReplacement&gt;&gt;newRequest: aString
+
+   &quot; we get the data as a string, which we can then decode &quot;
+   data := Json readFrom: aString.
+   Transcript showln: data headers
 </code></pre>
-<p>With <code>parseElement:</code>, you get the first child of the toplevel node.
-In this specific example, the toplevel node is a <code>program</code>, nesting a <code>binary_operator</code>.
-If you need multiple elements, use <code>parse:</code> instead:</p>
-<pre><code>SBPython parse:
-'def a():
-  pass
-a()'
-</code></pre>
-<h3 id="accessing-fields"><a class="header" href="#accessing-fields">Accessing Fields</a></h3>
-<p>Many Tree Sitter blocks contain field names, e.g.:</p>
-<pre><code class="language-javascript">pair: $ =&gt; seq(
-  field('key', $._property_name),
-  ':',
-  field('value', $.expression)
-)
-</code></pre>
-<p>You can access these using the <code>access</code> helper, e.g.</p>
-<pre><code>aPairBlock access key sourceString
-</code></pre>
-<p>This helper wraps the block in a proxy object that looks up field names and, if matched, returns the corresponding block. All other messages are forwarded to the wrapped block.</p>
-<p>A more complex example:</p>
-<pre><code class="language-python">ax.set(12, &quot;abc&quot;,
-       xlim=(0,8), xticks=np.arange(1,8), ylim=(0,8), yticks=np.arange(1,8))
-</code></pre>
-<p>Query all arguments as either just plain values or key/value pairs:</p>
-<pre><code class="language-smalltalk">self access arguments children collect: [:arg |
-  arg type = 'keyword_argument' ifTrue: [arg name contents -&gt; arg value] ifFalse: [arg]]
-</code></pre>
-<p>Resulting in:</p>
-<pre><code>{(integer) . (string) . 'xlim'-&gt;(tuple) . 'xticks'-&gt;(call) . 'ylim'-&gt;(tuple) . 'yticks'-&gt;(call)}
-</code></pre>
-<p>You can send <code>fields</code> to any block to find what field names this block knows (e.g. a <code>keyword_argument</code> knows <code>name</code> and <code>value</code>).</p>
-<h3 id="creating-a-replacement"><a class="header" href="#creating-a-replacement">Creating a Replacement</a></h3>
-<ol>
-<li>Subclass <code>SBInlineBlockReplace</code>.</li>
-<li>Create a matcher function on its class side (see video).</li>
-<li>Build your UI.</li>
-<li>Implement <code>writeSourceOn:</code> to produce textual source code that is the equivalent of your replacement.</li>
-<li>Implement <code>type</code> to inform the system what sort of node you are replacing. For example, if you are replacing a <code>(call)</code> in python, simple return <code>^ 'call'</code> from <code>type</code>.</li>
-</ol>
+<h2 id="pretty-printing"><a class="header" href="#pretty-printing">Pretty-Printing</a></h2>
+<p>Runtimes may support pretty printing code. If they do, whenever code is serialized to text (e.g., when copying or writing to a file), the <code>#prettySourceString</code> is called on the block, which passes the regular <code>#sourceString</code> of the block to the external pretty printer.</p>
+<h2 id="javascript-web-runtime"><a class="header" href="#javascript-web-runtime">Javascript Web Runtime</a></h2>
+<p>The Javascript web runtime is special in that it does not actually invoke any programs.
+Instead, it will only spawn a server that listens for watches to trigger.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="../walkthroughs/artefacts.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../walkthroughs/tree-sitter.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
-                        
-                            <a rel="next" href="../walkthroughs/tree-sitter-runtimes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
                         
 
                         <div style="clear: both"></div>
@@ -262,15 +247,11 @@ a()'
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="../walkthroughs/artefacts.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../walkthroughs/tree-sitter.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
-                
-                    <a rel="next" href="../walkthroughs/tree-sitter-runtimes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
                 
             </nav>
 

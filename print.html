@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="walkthroughs/commands.html"><strong aria-hidden="true">3.6.</strong> Custom Commands</a></li><li class="chapter-item expanded "><a href="walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.7.</strong> Lists of Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/drag-and-drop.html"><strong aria-hidden="true">3.8.</strong> Drag and Drop</a></li><li class="chapter-item expanded "><a href="walkthroughs/artefacts.html"><strong aria-hidden="true">3.9.</strong> Saving and Artefacts</a></li><li class="chapter-item expanded "><a href="walkthroughs/tree-sitter.html"><strong aria-hidden="true">3.10.</strong> Tree Sitter</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="walkthroughs/commands.html"><strong aria-hidden="true">3.6.</strong> Custom Commands</a></li><li class="chapter-item expanded "><a href="walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.7.</strong> Lists of Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/drag-and-drop.html"><strong aria-hidden="true">3.8.</strong> Drag and Drop</a></li><li class="chapter-item expanded "><a href="walkthroughs/artefacts.html"><strong aria-hidden="true">3.9.</strong> Saving and Artefacts</a></li><li class="chapter-item expanded "><a href="walkthroughs/tree-sitter.html"><strong aria-hidden="true">3.10.</strong> Tree Sitter</a></li><li class="chapter-item expanded "><a href="walkthroughs/tree-sitter-runtimes.html"><strong aria-hidden="true">3.11.</strong> Tree Sitter Runtimes</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -520,6 +520,70 @@ a()'
 <li>Implement <code>writeSourceOn:</code> to produce textual source code that is the equivalent of your replacement.</li>
 <li>Implement <code>type</code> to inform the system what sort of node you are replacing. For example, if you are replacing a <code>(call)</code> in python, simple return <code>^ 'call'</code> from <code>type</code>.</li>
 </ol>
+<h1 id="sandblockstreesitter-runtimes"><a class="header" href="#sandblockstreesitter-runtimes">Sandblocks/TreeSitter Runtimes</a></h1>
+<p>The runtimes system as part of Sandblocks-TreeSitter allows you to execute code from supported languages.
+It comes with support for monitoring its stdout/stderr and injecting watches that report back to the Sandblocks IDE.</p>
+<h2 id="opening-and-running-a-file"><a class="header" href="#opening-and-running-a-file">Opening and Running a File</a></h2>
+<p>In a Sandblocks workspace, run:</p>
+<pre><code>(SBTSFile filepath: '/home/you/test.py') open
+</code></pre>
+<p>At the top of the file will be a Play button. Once clicked, it will try to find a python interpreter on your system and execute the given file.</p>
+<p><img src="walkthroughs/../assets/python-file.png" alt="" /></p>
+<h2 id="watches"><a class="header" href="#watches">Watches</a></h2>
+<p>You can insert a watch on any block moment but most likely inserting it on anything but an expression will result in a syntax error upon serialization or execution.
+Insert a watch by either right-clicking the expression and filtering for <code>wrapWithWatch</code> or by pressing the Cmd+Shift+W shortcut.</p>
+<h2 id="offscreen-watches"><a class="header" href="#offscreen-watches">Offscreen Watches</a></h2>
+<p>By placing watches offscreen, you can use them to report values from the runtime back to your TreeSitter replacement blocks.</p>
+<p>For example, we could make all Javascript <code>console.log</code> calls log to the Squeak Transcript as well by creating a replacement for <code>console.log</code> and serializing the expression with the watch's source code wrapped around it (see also <code>SBConsoleLogReporter</code> class that comes with Sandblocks):</p>
+<pre><code class="language-smalltalk">SBConsoleLogReporter&gt;&gt;initialize
+    
+    super initialize.
+    &quot; create a new empty watch and connect its reportedValue signal to our
+      newValue: method &quot;
+    watch := SBTSWatch newEmpty when: #reportedValue send: #newValue: to: self
+
+SBConsoleLogReporter&gt;&gt;writeSourceOn: aStream
+
+    &quot; update the watch's expression to the expression our replacement is wrapping &quot;
+	watch expression: self expression.
+	
+	aStream nextPutAll: 'console.log('.
+	watch writeSourceOn: aStream.
+	aStream nextPutAll: ')'
+
+SBConsoleLogReporter&gt;&gt;newValue: aString
+
+    &quot; apparently our watch triggered a reportedValue signal, so we're called &quot;
+    Transcript showln: aString
+</code></pre>
+<p>You can also use this with custom code to extract specific values from the runtime:</p>
+<pre><code class="language-smalltalk">SBRequestReplacement&gt;&gt;initialize
+
+    watch := SBTSWatch newEmpty when: #reportedValue send: #newRequest: to: self
+
+SBRequestReplacement&gt;&gt;writeSourceOn: aStream
+
+    &quot; we are inserting this object literal in the code that expects a `req` variable
+      to be in the local scope and reporting the object back to squeak &quot;
+    watch expression: (SBJavascript parseElement:
+        '{path: req.path, headers: req.headers.map(h =&gt; [h.key, h.value])}').
+
+    &quot; ...our other serialization code, then our watch at a place where it's
+      syntactically valid &quot;
+    watch writeSourceOn: aStream.
+    &quot; ...more serialization code &quot;
+
+SBRequestReplacement&gt;&gt;newRequest: aString
+
+   &quot; we get the data as a string, which we can then decode &quot;
+   data := Json readFrom: aString.
+   Transcript showln: data headers
+</code></pre>
+<h2 id="pretty-printing"><a class="header" href="#pretty-printing">Pretty-Printing</a></h2>
+<p>Runtimes may support pretty printing code. If they do, whenever code is serialized to text (e.g., when copying or writing to a file), the <code>#prettySourceString</code> is called on the block, which passes the regular <code>#sourceString</code> of the block to the external pretty printer.</p>
+<h2 id="javascript-web-runtime"><a class="header" href="#javascript-web-runtime">Javascript Web Runtime</a></h2>
+<p>The Javascript web runtime is special in that it does not actually invoke any programs.
+Instead, it will only spawn a server that listens for watches to trigger.</p>
 
                     </main>
 
