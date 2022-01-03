@@ -31,7 +31,7 @@ SBExampleMorph >> initialize [
 { #category : #'as yet unclassified' }
 SBExampleMorph >> step [
 
-	self position: 60 @ ((Time millisecondClock / 100) sin * 30 + 80)
+	self position: 60 @ ((Time millisecondClockValue / 100) sin * 30 + 80)
 ]
 
 { #category : #'as yet unclassified' }
