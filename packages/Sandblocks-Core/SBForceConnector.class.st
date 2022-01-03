@@ -117,7 +117,7 @@ SBForceConnector >> lineWidth [
 { #category : #'as yet unclassified' }
 SBForceConnector >> morphicLayerNumber [
 
-	^ SBBlock defaultLayer + 1
+	^ 101
 ]
 
 { #category : #'as yet unclassified' }

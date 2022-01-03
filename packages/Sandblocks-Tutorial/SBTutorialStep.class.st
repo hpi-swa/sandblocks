@@ -145,7 +145,7 @@ SBTutorialStep class >> stepAssignments: anEditor [
 					7 > 8 ifTrue: [Transcript showln: 'hi']]
 				in: anEditor.
 			step
-				addStep: 'Wrap the expression `42 squared` in an assignment by selecting the expression (use <#selectUp>) and press <#wrapInAssignment>. Then type `largeNum` as name.'
+				addStep: 'Wrap the expression `42 squared` in an assignment by selecting the expression (use <#moveCursorLarger>) and press <#wrapInAssignment>. Then type `largeNum` as name.'
 				checkCondition: [:editor | method statements first isAssignment].
 			step
 				addStep: 'Hit save (<#save>) and declare the variable as method temporary. Note that there is no other way to declare temporary variables currently (i.e., place them in the pipes)'
@@ -243,7 +243,7 @@ SBTutorialStep class >> stepDeleting: anEditor [
 Paste the 6 again at the start of the list by walking to the 1 and pressing <#pasteBefore> for paste-before.'
 				checkCondition: [:editor | method body statements first firstSubmorph contents = '6'].
 			step
-				addStep: 'Finally, select the entire array using <#selectUp> and replace it with the still copied 6 using <#pasteReplace> for paste-replace.'
+				addStep: 'Finally, select the entire array using <#moveCursorLarger> and replace it with the still copied 6 using <#pasteReplace> for paste-replace.'
 				checkCondition: [:editor | method body statements first contents = '6']]
 ]
 
@@ -512,7 +512,7 @@ SBTutorialStep class >> stepSelection: anEditor [
 				addStep: 'First, select the block closure argument '':each''. Note that the type of your selection is displayed in the bottom-left corner.'
 				checkCondition: [:editor | editor selection = method body statements third arguments first bindings first].
 			step
-				addStep: 'Then repeatedly use <#selectUp> to enlargen your selection to select the full `do:` message send. You can use <#selectDown> to go down again.'
+				addStep: 'Then repeatedly use <#moveCursorLarger> to enlargen your selection to select the full `do:` message send. You can use <#moveCursorSmaller> to go down again.'
 				checkCondition: [:editor | editor selection = method body statements third].
 			step
 				addStep: 'Finally, as an example use <#deleteBlock> to delete the full `do:` message send.'
