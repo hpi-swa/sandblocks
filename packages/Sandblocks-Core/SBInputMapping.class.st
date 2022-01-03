@@ -54,8 +54,7 @@ SBInputMapping >> actionFor: anEvent mode: aMode do: aBlock ifNone: anotherBlock
 
 	registerBlock := [:shortcut :action |  | ret |(shortcut asSandblockShortcut matchesEvent: anEvent mode: aMode) ifTrue: [(ret := aBlock value: action) ifTrue: [^ ret]]].
 	
-	self registerDefaultShortcuts.
-	self class shortcutProviders do: [:provider | provider registerShortcuts: self].
+	self registerAllShortcuts.
 	
 	^ anotherBlock value
 ]
@@ -102,6 +101,13 @@ SBInputMapping >> inputShortcut: aShortcut do: aSymbol [
 ]
 
 { #category : #'shortcut execute' }
+SBInputMapping >> registerAllShortcuts [
+
+	self registerDefaultShortcuts.
+	self class shortcutProviders do: [:provider | provider registerShortcuts: self]
+]
+
+{ #category : #'shortcut execute' }
 SBInputMapping >> registerDefaultShortcuts [
 
 	extraShortcuts do: [:s | self registerShortcut: s key do: s value]
@@ -135,7 +141,7 @@ SBInputMapping >> shortcuts [
 
 	^ OrderedCollection streamContents: [:stream |
 		registerBlock := [:shortcut :action | stream nextPut: shortcut asSandblockShortcut -> action].
-		self registerDefaultShortcuts]
+		self registerAllShortcuts]
 ]
 
 { #category : #'event handling' }

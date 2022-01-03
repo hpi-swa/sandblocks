@@ -445,7 +445,7 @@ SBForceMoveDecorator >> step [
 	
 	self isDragging ifTrue: [self panWhenNearEdge].
 	
-	(forceSteps > 0 or: self morph sandblockEditor keepForcesActivated)
+	forceSteps > 0
 		ifTrue: [self isForceCoordinator ifTrue: [self coordinateForces]]
 		ifFalse: [
 			super step.

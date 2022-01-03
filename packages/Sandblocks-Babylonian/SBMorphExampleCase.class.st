@@ -55,6 +55,12 @@ SBMorphExampleCase >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBMorphExampleCase >> intoWorld: aWorld [
+
+	self status = #restartOnSave ifTrue: [self run]
+]
+
+{ #category : #'as yet unclassified' }
 SBMorphExampleCase >> manualRestart [
 	<action>
 
