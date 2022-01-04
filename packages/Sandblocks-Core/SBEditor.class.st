@@ -205,6 +205,7 @@ SBEditor >> batchedChangeStep: aBlock [
 	| artefact |
 	" send this message when you are updating the tree rapidly for each update, but don't want to submit a command for each update, only at the end "
 	artefact := aBlock containingArtefact.
+	self history markChanged: {artefact} redraw: false.
 	(self compileTime = #compileOnChange and: [artefact notNil]) ifTrue: [
 		self save: artefact tryFixing: false quick: true.
 		artefact triggerEvent: #changed.

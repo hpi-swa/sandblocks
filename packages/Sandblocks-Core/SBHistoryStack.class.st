@@ -32,7 +32,7 @@ SBHistoryStack >> do: aCommand previousSelection: aMorph selectDo: aBlock [
 	aCommand previousSelection: aMorph.
 	
 	aCommand preDo.
-	self markChanged: aCommand affectedArtefacts.
+	self markChanged: aCommand affectedArtefacts redraw: true.
 	
 	nextSelection := aCommand do.
 	aCommand selectAfter ifNotNil: [:b | nextSelection := b = #none ifTrue: [nil] ifFalse: [b]].
@@ -53,10 +53,10 @@ SBHistoryStack >> initialize [
 ]
 
 { #category : #actions }
-SBHistoryStack >> markChanged: aCollection [
+SBHistoryStack >> markChanged: aCollection redraw: aBoolean [
 
 	changedArtefacts addAll: aCollection.
-	aCollection do: [:artefact | artefact changed]
+	aBoolean ifTrue: [aCollection do: [:artefact | artefact changed]]
 ]
 
 { #category : #actions }

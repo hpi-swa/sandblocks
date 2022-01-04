@@ -274,6 +274,12 @@ SBBlock >> barfFront [
 	self select
 ]
 
+{ #category : #'event handling' }
+SBBlock >> batchedChangeStep [
+
+	self sandblockEditor ifNotNil: [:e | e batchedChangeStep: self]
+]
+
 { #category : #'ast helpers' }
 SBBlock >> binding: aString for: block class: aClass ifPresent: aBlock [
 
@@ -765,7 +771,9 @@ SBBlock >> deleteBeforeCursor [
 	<actionValidIf: #hasCurrentTextMorph>
 
 	| editor adjacent parent |
-	self currentTextMorph cursor ~= 1 ifTrue: [^ self currentTextMorph deleteBeforeCursor].
+	self currentTextMorph cursor ~= 1 ifTrue: [
+		self currentTextMorph deleteBeforeCursor.
+		^ self batchedChangeStep].
 	self symbols first notNil ifTrue: [^ self changeToUnknown].
 	
 	editor := self sandblockEditor.
@@ -1552,7 +1560,9 @@ SBBlock >> isWaypoint [
 { #category : #'event handling' }
 SBBlock >> keyStroke: anEvent [
 
-	self currentTextMorph ifNotNil: [:t | t keyStroke: anEvent]
+	self currentTextMorph ifNotNil: [:t |
+		t keyStroke: anEvent.
+		self batchedChangeStep]
 ]
 
 { #category : #hierarchy }

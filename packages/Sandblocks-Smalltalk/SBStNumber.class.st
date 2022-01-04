@@ -57,6 +57,12 @@ SBStNumber >> keyStroke: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBStNumber >> mouseCursorAt: anEvent [
+
+	^ Cursor resizeLeft
+]
+
+{ #category : #'as yet unclassified' }
 SBStNumber >> mouseDown: anEvent [
 
 	(self valid not or: [anEvent redButtonPressed not or: [anEvent anyModifierKeyPressed]]) ifTrue: [^ super mouseDown: anEvent].
@@ -81,10 +87,11 @@ SBStNumber >> mouseMove: anEvent [
 	| delta |
 	isDown ifTrue: [
 		delta := anEvent position - lastMousePosition.
-		self flag: #todo. "preserve formatting like base"
+		self flag: #todo.
+		"preserve formatting like base"
 		self contents: (self parsedContents + delta x) asString.
 		lastMousePosition := anEvent position.
-		self sandblockEditor batchedChangeStep: self]
+		self batchedChangeStep]
 ]
 
 { #category : #'as yet unclassified' }
