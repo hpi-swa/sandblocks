@@ -31,7 +31,7 @@ SBSolarizedTheme >> default [
 { #category : #colors }
 SBSolarizedTheme >> defaultInverted [
 
-	^ Color fromString: '073642'
+	^ Color r: 1 g: 0.999 b: 0.995
 ]
 
 { #category : #colors }
