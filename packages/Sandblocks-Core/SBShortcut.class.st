@@ -115,28 +115,19 @@ SBShortcut >> matchesEvent: anEvent [
 	SBToggledCode
 		comment: 'needs to be adapted per keyboard layout'
 		active: 1
-		do: {[shiftedKeys := #($: $" $! $$ $% $/ $( $) $= $; $_ $* $' ${)]}.
+		do: {[shiftedKeys := #($: $" $! $$ $% $/ $( $) $= $; $_ $* $' ${ $^)]}.
 	
-	anEvent keyCharacter = self character
-		ifFalse: [^ false].
+	anEvent keyCharacter = self character ifFalse: [^ false].
 	
 	self shiftPressed ifNotNil: [:expected |
 		((expected or: [self character isUppercase]) = anEvent shiftPressed
 			or: [anEvent keyCharacter <= 32 and: [expected = anEvent shiftPressed]]
-			or: [shiftedKeys includes: anEvent keyCharacter])
-				ifFalse: [^ false]].
+			or: [shiftedKeys includes: anEvent keyCharacter]) ifFalse: [^ false]].
 	
-	self anyModifierKeyPressed = anEvent anyModifierKeyPressed
-		ifFalse: [^ false].
-	self commandKeyPressed ifNotNil: [:expected |
-		expected = anEvent commandKeyPressed
-			ifFalse: [^ false]].
-	self optionKeyPressed ifNotNil: [:expected |
-		expected = anEvent optionKeyPressed
-			ifFalse: [^ false]].
-	self controlKeyPressed ifNotNil: [:expected |
-		expected = anEvent controlKeyPressed
-			ifFalse: [^ false]].
+	self anyModifierKeyPressed = anEvent anyModifierKeyPressed ifFalse: [^ false].
+	self commandKeyPressed ifNotNil: [:expected | expected = anEvent commandKeyPressed ifFalse: [^ false]].
+	self optionKeyPressed ifNotNil: [:expected | expected = anEvent optionKeyPressed ifFalse: [^ false]].
+	self controlKeyPressed ifNotNil: [:expected | expected = anEvent controlKeyPressed ifFalse: [^ false]].
 	
 	^ true
 ]
