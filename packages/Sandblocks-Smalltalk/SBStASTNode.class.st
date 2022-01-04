@@ -143,7 +143,7 @@ SBStASTNode >> guessClassExpensive [
 								[result class] on: MessageNotUnderstood do: ["might be ProtoObject"
 								thisContext objectClass: result]]]
 						ifFailed: [nil]]
-				on: SandboxError
+				on: (Smalltalk at: #SandboxError)
 				do: [:err | nil]]]
 ]
 
