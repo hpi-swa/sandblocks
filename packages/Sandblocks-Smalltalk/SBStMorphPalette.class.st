@@ -40,7 +40,7 @@ SBStMorphPalette class >> buildOn: aContainer [
 			as: (SBStMessageSend new receiver: (SBStName contents: 'self') selector: #top);
 		addBlock: 'Bottom'
 			as: (SBStMessageSend new receiver: (SBStName contents: 'self') selector: #bottom);
-		addSectionHeader: 'Hierarchie';
+		addSectionHeader: 'Hierarchy';
 		addBlock: 'Owner'
 			as: (SBStMessageSend new receiver: (SBStName contents: 'self') selector: #owner);
 		addBlock: 'Submorphs'
