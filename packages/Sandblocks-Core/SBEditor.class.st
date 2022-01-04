@@ -820,7 +820,6 @@ SBEditor >> initialize [
 	history := SBHistoryStack new.
 	colorPolicy := self class defaultColorPolicy new.
 	compileTime := #compileOnSave.
-	suggestAlways := false.
 	globalShortcutListeners := OrderedCollection new.
 	inputMapping := self class newInputMapping.
 	searchInput := SBSearchPanel new.
@@ -1527,7 +1526,7 @@ SBEditor >> submorphsAreConsecutive: aCollection [
 { #category : #accessing }
 SBEditor >> suggestAlways [
 
-	^ suggestAlways
+	^ suggestAlways ifNil: [SBPreferences suggestionsOnClick]
 ]
 
 { #category : #accessing }

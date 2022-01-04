@@ -9,7 +9,8 @@ Class {
 		'HideIndicators',
 		'PreviewDropInsert',
 		'RightClickContextMenu',
-		'ShowHoverDecorator'
+		'ShowHoverDecorator',
+		'SuggestionsOnClick'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -60,7 +61,7 @@ SBPreferences class >> enableForceLayout [
 	^ EnableForceLayout ifNil: [true]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPreferences class >> enableForceLayout: aBoolean [
 
 	EnableForceLayout := aBoolean
@@ -78,14 +79,14 @@ SBPreferences class >> hideIndicators: aBoolean [
 	HideIndicators := aBoolean
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPreferences class >> previewDropInsert [
 	<preference: 'Preview block positions while dragging' category: 'sandblocks' description: 'Preview the block that would be inserted when dragging' type: #Boolean>
 
 	^ PreviewDropInsert ifNil: [false]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPreferences class >> previewDropInsert: aBoolean [
 
 	PreviewDropInsert := aBoolean
@@ -117,4 +118,17 @@ SBPreferences class >> showHoverDecorator [
 SBPreferences class >> showHoverDecorator: aBoolean [
 
 	ShowHoverDecorator := aBoolean
+]
+
+{ #category : #accessing }
+SBPreferences class >> suggestionsOnClick [
+	<preference: 'Show suggestions menu on click' category: 'sandblocks' description: 'Show the suggestions menu when a message send is clicked, not just when starting to type.' type: #Boolean>
+
+	^ SuggestionsOnClick ifNil: [false]
+]
+
+{ #category : #accessing }
+SBPreferences class >> suggestionsOnClick: aBoolean [
+
+	SuggestionsOnClick := aBoolean
 ]

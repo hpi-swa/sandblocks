@@ -130,6 +130,7 @@ SBPreferencesEditor >> initialize [
 	
 	self addPreference: #drawOnCanvas of: SBPreferences.
 	self addPreference: #addSandblocksDefault of: CodeHolder.
+	self addPreference: #suggestionsOnClick of: SBPreferences.
 	
 	self
 		addSpacer;
