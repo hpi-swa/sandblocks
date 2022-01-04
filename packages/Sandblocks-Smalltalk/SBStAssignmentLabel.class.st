@@ -68,7 +68,11 @@ SBStAssignmentLabel >> printBlockOn: aStream [
 { #category : #'as yet unclassified' }
 SBStAssignmentLabel >> resolveBinding [
 
-	self block binding: self contents for: self block class: self block containingArtefact relatedClass ifPresent: [:b | ^ b].
+	self block
+		binding: self contents
+		for: self block
+		class: (self block containingArtefact ifNotNil: #relatedClass)
+		ifPresent: [:b | ^ b].
 	^ nil
 ]
 

@@ -101,6 +101,13 @@ SBStClass >> createInitialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBStClass >> createNewEmptyMethod [
+	<action>
+
+	self sandblockEditor createEmptySmalltalkMethod
+]
+
+{ #category : #'as yet unclassified' }
 SBStClass >> createNewEmptyModule [
 	<action>
 

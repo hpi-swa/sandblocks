@@ -66,7 +66,11 @@ SBStDeclarationForBlock >> symbolsFor: aColorPolicy [
 
 { #category : #accessing }
 SBStDeclarationForBlock >> valid [
-
 	" check that this name does not already exist in a parent scope "
-	^ (self block containingBlock parentSandblock binding: self contents for: self block class: self block containingArtefact relatedClass ifPresent: [:binding | binding isMethodLocal ifTrue: [binding] ifFalse: [nil]]) isNil
+
+	^ (self block containingBlock parentSandblock
+		binding: self contents
+		for: self block
+		class: (self block containingArtefact ifNotNil: #relatedClass)
+		ifPresent: [:binding | binding isMethodLocal ifTrue: [binding] ifFalse: [nil]]) isNil
 ]

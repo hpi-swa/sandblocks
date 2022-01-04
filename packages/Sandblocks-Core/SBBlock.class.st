@@ -2333,7 +2333,6 @@ SBBlock >> selectToplevelTowards: aSideSymbol [
 		[#right] -> [#left].
 		[#top] -> [#bottom].
 		[#bottom] -> [#top]}.
-	self halt.
 	(self containingToplevel
 		closestAdjacentFrom: (aSideSymbol, 'Center') asSymbol
 		to: (opposite, 'Center') asSymbol) select
