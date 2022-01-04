@@ -6,7 +6,7 @@ Class {
 		'receiverClass',
 		'pc'
 	],
-	#category : #'Sandblocks-Plugin-StLivePreview'
+	#category : #'Sandblocks-Simulation'
 }
 
 { #category : #'as yet unclassified' }

@@ -116,7 +116,7 @@ SBStTestCase >> execute [
 SBStTestCase >> executeForBlock: aBlock ifFound: aClosure [
 
 	^ [
-		SBStRunUntilSandbox new
+		(Smalltalk at: #SBStRunUntilSandbox) new
 			selector: aBlock containingArtefact selector;
 			receiverClass: aBlock containingArtefact methodClass;
 			pc: aBlock pc;

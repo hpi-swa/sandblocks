@@ -237,7 +237,7 @@ SBExample >> executeForBlock: aBlock ifFound: aClosure [
 	[ | newSelf arguments |
 		newSelf := self evaluateSelf.
 		arguments := self evaluateArguments.
-		SBStRunUntilSandbox new
+		(Smalltalk at: #SBStRunUntilSandbox) new
 			selector: aBlock containingArtefact selector;
 			receiverClass: aBlock containingArtefact methodClass;
 			stepLimit: 5000;
