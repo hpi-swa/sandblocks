@@ -7,6 +7,7 @@ Class {
 		'EdgePanZone',
 		'EnableForceLayout',
 		'HideIndicators',
+		'LargeInsets',
 		'PreviewDropInsert',
 		'RightClickContextMenu',
 		'ShowHoverDecorator',
@@ -77,6 +78,24 @@ SBPreferences class >> hideIndicators [
 { #category : #accessing }
 SBPreferences class >> hideIndicators: aBoolean [
 	HideIndicators := aBoolean
+]
+
+{ #category : #accessing }
+SBPreferences class >> largeInsets [
+	<preference: 'Incerase size of insets around blocks' category: 'sandblocks' description: 'Incerase size of insets so that blocks are easier to distinguish' type: #Boolean>
+
+	^ LargeInsets ifNil: [false]
+]
+
+{ #category : #accessing }
+SBPreferences class >> largeInsets: aBoolean [
+
+	LargeInsets := aBoolean.
+	
+	SBEditor allSubInstancesDo: [:editor |
+		editor colorPolicy ifNotNil: [:c |
+			c enlarge: aBoolean.
+			editor allMorphsDo: #layoutChanged]]
 ]
 
 { #category : #accessing }

@@ -241,7 +241,7 @@ SBEditor >> buildBottomPanel [
 			hResizing: #spaceFill;
 			color: Color transparent);
 		addMorphBack: (SBButton new
-			balloonText: 'Convert to ...';
+			balloonText: 'Wrap with watch';
 			icon: SBIcon iconEye
 				shortcut: (self class anyShortcutForAction: #wrapWithWatch)
 				do: [self performForSelection: #wrapWithWatch]);
@@ -265,7 +265,9 @@ SBEditor >> buildCommandBar [
 		hResizing: #spaceFill;
 		cellGap: 4;
 		layoutInset: 4;
-		addMorphBack: (SBButton new icon: SBIcon iconColumns shortcut: nil do: [self togglePalette]);
+		addMorphBack: (SBButton new
+			icon: SBIcon iconColumns shortcut: nil do: [self togglePalette];
+			balloonText: 'Toggle Block Palette');
 		addMorphBack: (SBButton new
 			icon: SBIcon iconUndo
 			shortcut: (self class anyShortcutForAction: #undo)
@@ -287,24 +289,6 @@ SBEditor >> buildCommandBar [
 			height: 0;
 			color: Color transparent;
 			hResizing: #spaceFill);
-		addMorphBack: (SBButton new
-			icon: SBIcon iconSearchPlus shortcut: nil do: [
-				self colorPolicy toggleEnlarge.
-				self allMorphsDo: #layoutChanged];
-			balloonText: 'Toggle enlarge blocks insets');
-		addMorphBack: (SBRow new
-			addMorphBack: (SBButton new
-				cornerStyle: #square;
-				icon: SBIcon iconAlignLeft shortcut: nil do: [self colorPolicy: SBTextColorPolicy new];
-				balloonText: 'Text-like Layout');
-			addMorphBack: (SBButton new
-				cornerStyle: #square;
-				icon: SBIcon iconTh shortcut: nil do: [self colorPolicy: SBColorMinimalPolicy new];
-				balloonText: 'Compact Layout');
-			addMorphBack: (SBButton new
-				cornerStyle: #square;
-				icon: SBIcon iconThLarge shortcut: nil do: [self colorPolicy: SBScratchColorPolicy new];
-				balloonText: 'Scratch Layout'));
 		addMorphBack: (SBButton new
 			icon: SBIcon iconCog
 			shortcut: nil
@@ -387,6 +371,7 @@ SBEditor >> colorPolicy [
 SBEditor >> colorPolicy: aPolicy [
 
 	colorPolicy := aPolicy.
+	aPolicy enlarge: SBPreferences largeInsets.
 	self allMorphsDo: #layoutChanged.
 	self clearCache.
 	paletteContainer clearCache.
@@ -818,7 +803,7 @@ SBEditor >> initialize [
 	super initialize.
 	
 	history := SBHistoryStack new.
-	colorPolicy := self class defaultColorPolicy new.
+	colorPolicy := self class defaultColorPolicy new enlarge: SBPreferences largeInsets.
 	compileTime := #compileOnSave.
 	globalShortcutListeners := OrderedCollection new.
 	inputMapping := self class newInputMapping.
@@ -1332,7 +1317,7 @@ SBEditor >> resetState [
 
 	history clearUndoStack.
 	cursor resetState.
-	colorPolicy := colorPolicy class new
+	colorPolicy := colorPolicy class new enlarge: SBPreferences largeInsets
 ]
 
 { #category : #accessing }

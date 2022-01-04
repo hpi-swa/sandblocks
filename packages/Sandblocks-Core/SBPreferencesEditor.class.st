@@ -133,6 +133,7 @@ SBPreferencesEditor >> initialize [
 	self addPreference: #drawOnCanvas of: SBPreferences.
 	self addPreference: #addSandblocksDefault of: CodeHolder.
 	self addPreference: #suggestionsOnClick of: SBPreferences.
+	self addPreference: #largeInsets of: SBPreferences.
 	
 	self
 		addSpacer;
@@ -147,5 +148,7 @@ SBPreferencesEditor >> initialize [
 	self addTheme: SBLightPlusTheme.
 	self addTheme: SBSolarizedTheme.
 	self addTheme: SBSolarizedDarkTheme.
-	self addTheme: SBColorMinimalPolicy
+	self addTheme: SBColorMinimalPolicy.
+	self addTheme: SBTextColorPolicy.
+	self addTheme: SBScratchColorPolicy
 ]
