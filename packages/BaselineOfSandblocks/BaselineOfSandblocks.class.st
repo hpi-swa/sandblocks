@@ -66,8 +66,7 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'Sandblocks-Explorer' with: [spec requires: #('Sandblocks-Core')];
 			package: 'Sandblocks-Watch' with: [spec requires: 'Sandblocks-Core'];
 			package: 'Sandblocks-Debugger' with: [spec requires: 'Sandblocks-Core'];
-			package: 'Sandblocks-Plugin-StLivePreview'
-				with: [spec requires: #('Sandblocks-Smalltalk' 'SimulationStudio')];
+			package: 'Sandblocks-Plugin-StLivePreview' with: [spec requires: #('Sandblocks-Smalltalk')];
 			package: 'Sandblocks-Utils';
 			package: 'Sandblocks-Layout';
 			package: 'Sandblocks-Morphs';
