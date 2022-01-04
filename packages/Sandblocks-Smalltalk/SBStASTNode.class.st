@@ -134,16 +134,15 @@ SBStASTNode >> grammarHandler [
 SBStASTNode >> guessClassExpensive [
 
 	^ self guessedClass ifNil: [
-		(Smalltalk at: #Sandbox) ifNotNil: [:sandboxClass |
+		Smalltalk at: #Sandbox ifPresent: [:sandboxClass |
 			[
-				(sandboxClass new
+				sandboxClass new
 					stepLimit: 100000;
 					evaluate: [
-						self evaluate ifNotNil: [:result |
-							[result class]
-								on: MessageNotUnderstood "might be ProtoObject"
-								do: [thisContext objectClass: result]]]
-						ifFailed: [nil])]
+							self evaluate ifNotNil: [:result |
+								[result class] on: MessageNotUnderstood do: ["might be ProtoObject"
+								thisContext objectClass: result]]]
+						ifFailed: [nil]]
 				on: SandboxError
 				do: [:err | nil]]]
 ]

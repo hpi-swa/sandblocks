@@ -199,7 +199,7 @@ SBStBlockBody >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 			shouldMergeWithNext: true;
 			yourself].
 	
-	(aBlock notNil and: [aMorph owner = temporaries]) ifTrue: [
+	(aBlock notNil and: [aBlock owner = temporaries]) ifTrue: [
 		^ SBRelInsertCommand new
 			near: aBlock before: aBoolean in: temporaries morph: aMorph;
 			shouldMergeWithNext: true;
