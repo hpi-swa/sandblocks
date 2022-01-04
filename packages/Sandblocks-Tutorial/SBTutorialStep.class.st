@@ -226,22 +226,17 @@ SBTutorialStep class >> stepDeleting: anEditor [
 	SBTutorialStep new
 		title: 'Deleting';
 		addIntroText: 'Let''s look at deleting in more detail.';
+		addAction: #deleteBlockWithCopy;
 		addAction: #deleteBlock;
-		addAction: #pasteBefore;
-		addAction: #pasteAfter;
 		addAction: #pasteReplace;
 		setup: anEditor do: [:step | | method |
 			method := step createStepMethod: [{1. 2. 6. 3. 4. 5}] in: anEditor.
 			step
-				addStep: 'Delete the 6 in the list by pressing <#deleteBlock>'
+				addStep: 'Delete the 6 in the list by pressing <#deleteBlockWithCopy>. It will then be placed in your copy buffer (use <#deleteBlock> to not copy the deleted block).'
 				checkCondition: [:editor | method body statements first submorphs noneSatisfy: [:el | el contents = '6']].
 			step
-				addStep: 'A deleted element is automatically copied. Your current copy buffer is shown in the bottom-right corner. There are three commands for pasting. Use paste-after to paste the copied element at the end of the list by walking to the 5 and pressing <#pasteAfter>.'
+				addStep: 'Your current copy buffer is shown in the bottom-right corner. To insert the 6 in the right place, move your cursor using <#moveCursorRight> and <#moveCursorLeft> until you reach the gap just after the 5. A popup will tell you what block the insertion will take place in. Then use <#pasteReplace> to insert the block.'
 				checkCondition: [:editor | method body statements first lastSubmorph contents = '6'].
-			step
-				addStep: 'Many commands do the "inverse" or do "before" instead of "after" when holding shift (e.g. undo/redo).
-Paste the 6 again at the start of the list by walking to the 1 and pressing <#pasteBefore> for paste-before.'
-				checkCondition: [:editor | method body statements first firstSubmorph contents = '6'].
 			step
 				addStep: 'Finally, select the entire array using <#moveCursorLarger> and replace it with the still copied 6 using <#pasteReplace> for paste-replace.'
 				checkCondition: [:editor | method body statements first contents = '6']]
