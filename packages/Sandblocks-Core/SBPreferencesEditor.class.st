@@ -48,7 +48,9 @@ SBPreferencesEditor >> addTheme: aTheme [
 		localColorPolicy: aTheme.
 	SBSelection new addMorphBack: preview.
 	
-	checkbox := SBCheckbox new value: SBEditor defaultColorPolicy = aTheme.
+	checkbox := SBCheckbox new
+		value: SBEditor defaultColorPolicy = aTheme;
+		radioButtonLook: true.
 	checkbox when: #toggled evaluate: [
 		themes childSandblocksDo: [:check | check value: check = checkbox].
 		SBEditor defaultColorPolicy: aTheme.

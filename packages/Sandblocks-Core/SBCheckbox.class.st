@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBBlock,
 	#instVars : [
 		'value',
-		'nonEdit'
+		'nonEdit',
+		'radioButtonLook'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -36,6 +37,8 @@ SBCheckbox >> initialize [
 	nonEdit := false.
 	value := false.
 	
+	radioButtonLook := false.
+	
 	self
 		addMorphBack: SBIcon iconCheckSquareO;
 		changeTableLayout;
@@ -53,6 +56,19 @@ SBCheckbox >> nonEdit [
 SBCheckbox >> nonEdit: aBoolean [
 
 	nonEdit := aBoolean
+]
+
+{ #category : #'as yet unclassified' }
+SBCheckbox >> radioButtonLook [
+
+	^ radioButtonLook ifNil: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBCheckbox >> radioButtonLook: aBoolean [
+
+	radioButtonLook := aBoolean.
+	self updateIcon
 ]
 
 { #category : #'as yet unclassified' }
@@ -80,6 +96,14 @@ SBCheckbox >> toggleCommandFor: anArtefact [
 ]
 
 { #category : #'as yet unclassified' }
+SBCheckbox >> updateIcon [
+
+	^ self firstSubmorph changeIconName: (self value
+		ifTrue: [self radioButtonLook ifTrue: [#iconSquare] ifFalse: [#iconCheckSquareO]]
+		ifFalse: [self radioButtonLook ifTrue: [#iconSquareO] ifFalse: [#iconSquareO]])
+]
+
+{ #category : #'as yet unclassified' }
 SBCheckbox >> value [
 
 	^ value
@@ -88,6 +112,6 @@ SBCheckbox >> value [
 { #category : #'as yet unclassified' }
 SBCheckbox >> value: aBoolean [
 
-	self firstSubmorph changeIconName: (aBoolean ifTrue: [#iconCheckSquareO] ifFalse: [#iconSquareO]).
-	value := aBoolean
+	value := aBoolean.
+	self updateIcon
 ]
