@@ -165,6 +165,31 @@ SBOwnTextMorph >> deleteBeforeCursor [
 ]
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> displayDumbbellCursorOn: aCanvas at: leftX color: aColor [
+
+	| w |
+	" adapted from NewParagraph"
+	w := 2.
+	1 to: w do: [:i |
+		"Draw caret triangles at top and bottom"
+		aCanvas
+			fillRectangle: (leftX - w + i - 1 @ (self top + i - 1) extent: w - i * 2 + 3 @ 1)
+			color: aColor.
+		aCanvas
+			fillRectangle: (leftX - w + i - 1 @ (self bottom - i) extent: w - i * 2 + 3 @ 1)
+			color: aColor].
+	aCanvas line: leftX @ self top to: leftX @ (self bottom - 1) color: aColor
+]
+
+{ #category : #'as yet unclassified' }
+SBOwnTextMorph >> displaySimpleCursorOn: aCanvas at: cursorX color: aColor [
+
+	^ aCanvas
+		line: cursorX @ self top to: cursorX @ self bottom color: aColor;
+		line: cursorX + 1 @ self top to: cursorX + 1 @ self bottom color: (aColor alpha: 0.3)
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> drawOn: aCanvas [
 
 	| font cursorX colorToUse |
@@ -192,9 +217,9 @@ SBOwnTextMorph >> drawOn: aCanvas [
 	self cursorVisible ifTrue: [ | cursorColor |
 		cursorColor := self cursorColor ifNil: [colorToUse].
 		cursorX := (font widthOfString: self contentsToDisplay from: 1 to: cursor - 1) + self left.
-		aCanvas
-			line: cursorX @ self top to: cursorX @ self bottom color: cursorColor;
-			line: cursorX + 1 @ self top to: cursorX + 1 @ self bottom color: (cursorColor alpha: 0.3)]
+		Editor dumbbellCursor
+			ifTrue: [self displayDumbbellCursorOn: aCanvas at: cursorX - 1 color: cursorColor]
+			ifFalse: [self displaySimpleCursorOn: aCanvas at: cursorX color: cursorColor]]
 ]
 
 { #category : #'as yet unclassified' }
