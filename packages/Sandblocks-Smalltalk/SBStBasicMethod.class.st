@@ -694,6 +694,21 @@ SBStBasicMethod >> textContents [
 ]
 
 { #category : #actions }
+SBStBasicMethod >> toggleBreakOnEntry [
+	<action>
+
+	self sandblockEditor
+		do: ((self statements first isMessageSend and: [self statements first selector = #break])
+			ifTrue: [SBDeleteCommand new target: self statements first]
+			ifFalse: [
+				self body
+					insertCommandRequest: (SBStMessageSend new receiver: (SBStName contents: 'self') selector: #break)
+					near: nil
+					before: true]);
+		save: self tryFixing: true quick: false
+]
+
+{ #category : #actions }
 SBStBasicMethod >> toggleCollapsed [
 	<action>
 

@@ -82,7 +82,7 @@ SBPreferences class >> hideIndicators: aBoolean [
 
 { #category : #accessing }
 SBPreferences class >> largeInsets [
-	<preference: 'Incerase size of insets around blocks' category: 'sandblocks' description: 'Incerase size of insets so that blocks are easier to distinguish' type: #Boolean>
+	<preference: 'Increase size of insets around blocks' category: 'sandblocks' description: 'Increase size of insets so that blocks are easier to distinguish' type: #Boolean>
 
 	^ LargeInsets ifNil: [false]
 ]

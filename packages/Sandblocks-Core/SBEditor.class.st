@@ -920,7 +920,7 @@ SBEditor >> loadBlocks [
 
 { #category : #'do/undo/redo' }
 SBEditor >> markChangesAfterCommand: artefacts [
-	 
+
 	artefacts do: [:candidate | | artefact |
 		artefact := candidate canPersist
 			ifTrue: [candidate]
