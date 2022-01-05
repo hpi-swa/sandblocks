@@ -50,7 +50,7 @@ SBStCodeOpener >> colorPolicy: aColorPolicy [
 { #category : #'as yet unclassified' }
 SBStCodeOpener >> currentPanel [
 
-	^ self submorphs at: currentPanelIndex
+	^ {categories. classes. messages} at: currentPanelIndex
 ]
 
 { #category : #'as yet unclassified' }
@@ -123,6 +123,7 @@ SBStCodeOpener >> initialize [
 	self
 		addMouseCaptureFilter: self;
 		height: 200;
+		color: (Color r: 1 g: 1 b: 1);
 		changeTableLayout;
 		addDropShadow;
 		vResizing: #rigid;
@@ -152,19 +153,32 @@ SBStCodeOpener >> initialize [
 			vResizing: #spaceFill;
 			width: 200;
 			yourself);
-		addMorphBack: (messages := (PluggableListMorphPlus
-			on: self
-			list: #methods
-			selected: #selectedMethodIndex
-			changeSelected: #selectedMethodIndex:
-			menu: #menu:evaluate:)
-			getIconSelector: #messageIconAt:;
-			doubleClickSelector: #openSelectedMethod;
-			autoDeselect: false;
+		addMorphBack: (SBColumn new
 			vResizing: #spaceFill;
-			keystrokePreviewSelector: #keyStroke:;
-			width: 200;
-			yourself)
+			addMorphBack: (messages := (PluggableListMorphPlus
+				on: self
+				list: #methods
+				selected: #selectedMethodIndex
+				changeSelected: #selectedMethodIndex:
+				menu: #menu:evaluate:)
+				getIconSelector: #messageIconAt:;
+				doubleClickSelector: #openSelectedMethod;
+				autoDeselect: false;
+				vResizing: #spaceFill;
+				keystrokePreviewSelector: #keyStroke:;
+				width: 200;
+				yourself);
+			addMorphBack: (SBRow new
+				cellGap: 4;
+				layoutInset: 4;
+				addMorphBack: (SBButton new
+					label: 'Instance'
+					shortcut: Character tab asSandblockShortcut
+					do: [self showingClassSide: false]);
+				addMorphBack: (SBButton new
+					label: 'Class'
+					shortcut: Character tab asSandblockShortcut
+					do: [self showingClassSide: true])))
 ]
 
 { #category : #'as yet unclassified' }
