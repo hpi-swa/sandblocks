@@ -612,7 +612,7 @@ SBEditor >> doMultiSelectionEach: aBlock [
 { #category : #'event handling' }
 SBEditor >> dragCopyBuffer: anEvent [
 
-	anEvent hand grabMorph: self copyBuffer
+	anEvent hand grabMorph: copyBuffer veryDeepCopy
 ]
 
 { #category : #'event handling' }
