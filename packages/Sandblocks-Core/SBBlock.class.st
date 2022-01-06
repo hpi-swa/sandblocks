@@ -144,7 +144,7 @@ SBBlock >> appendElement [
 
 	| cmd |
 	cmd := (self
-		insertEmptyCommandRequestNear: (self childSandblocks ifNotEmpty: #last ifEmpty: [nil])
+		insertEmptyCommandRequestNear: nil
 		before: false) ifNil: [^ self].
 	
 	self sandblockEditor do: cmd.
