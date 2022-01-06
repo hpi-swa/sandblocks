@@ -2338,6 +2338,8 @@ SBBlock >> selectTopToplevel [
 SBBlock >> selectToplevelTowards: aSideSymbol [
 
 	| opposite |
+	self sandblockEditor = self containingToplevel ifTrue: [^ self].
+	
 	opposite := aSideSymbol caseOf: {
 		[#left] -> [#right].
 		[#right] -> [#left].
