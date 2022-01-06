@@ -54,11 +54,35 @@ SBStNameBehavior >> contentsChanged [
 ]
 
 { #category : #'as yet unclassified' }
+SBStNameBehavior >> createClass [
+
+	<action>
+	<actionValidIf: #noValidBinding>
+
+	self block sandblockEditor do: (SBStCreateClassCommand new
+		name: self contents;
+		source: self block;
+		editor: self block sandblockEditor;
+		artefact: self block containingArtefact)
+]
+
+{ #category : #'as yet unclassified' }
 SBStNameBehavior >> declareBlockVariable [
 	<action>
 	<actionValidIf: #noValidBinding>
 	
 	self block containingBlock declareTemporaryVariable: self contents
+]
+
+{ #category : #'as yet unclassified' }
+SBStNameBehavior >> declareClassVariable [
+	<action>
+	<actionValidIf: #noValidBinding>
+
+	self block sandblockEditor do: (SBStDeclareClassVarCommand new
+		class: self block containingArtefact methodClass theNonMetaClass;
+		name: self contents;
+		source: self block)
 ]
 
 { #category : #'as yet unclassified' }
