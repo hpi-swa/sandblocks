@@ -39,6 +39,12 @@ SBWatch class >> report: aValue for: identifier [
 ]
 
 { #category : #'as yet unclassified' }
+SBWatch class >> unregisterWatch: aWatch [
+
+	self registry remove: aWatch ifAbsent: []
+]
+
+{ #category : #'as yet unclassified' }
 SBWatch class >> watchViewClass [
 
 	^ WatchViewClass ifNil: [SBWatchView]
@@ -198,6 +204,14 @@ SBWatch >> newIdentifier [
 SBWatch >> object [
 
 	^ self
+]
+
+{ #category : #initialization }
+SBWatch >> outOfWorld: aWorld [
+
+	super outOfWorld: aWorld.
+	
+	self class unregisterWatch: self
 ]
 
 { #category : #caching }
