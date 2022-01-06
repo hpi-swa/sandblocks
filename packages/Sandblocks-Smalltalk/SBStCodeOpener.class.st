@@ -1,6 +1,6 @@
 Class {
 	#name : #SBStCodeOpener,
-	#superclass : #Morph,
+	#superclass : #SBBlock,
 	#instVars : [
 		'categories',
 		'selectedCategoryIndex',
@@ -12,7 +12,9 @@ Class {
 		'result',
 		'showingClassSide',
 		'preview',
-		'colorPolicy'
+		'colorPolicy',
+		'instanceButton',
+		'classButton'
 	],
 	#category : #'Sandblocks-Smalltalk'
 }
@@ -121,9 +123,10 @@ SBStCodeOpener >> initialize [
 	showingClassSide := false.
 	
 	self
+		localColorPolicy: SBEditor defaultColorPolicy;
 		addMouseCaptureFilter: self;
 		height: 200;
-		color: (Color r: 1 g: 1 b: 1);
+		color: SystemWindow new userInterfaceTheme color;
 		changeTableLayout;
 		addDropShadow;
 		vResizing: #rigid;
@@ -171,11 +174,11 @@ SBStCodeOpener >> initialize [
 			addMorphBack: (SBRow new
 				cellGap: 4;
 				layoutInset: 4;
-				addMorphBack: (SBButton new
+				addMorphBack: (instanceButton := SBButton new
 					label: 'Instance'
 					shortcut: Character tab asSandblockShortcut
 					do: [self showingClassSide: false]);
-				addMorphBack: (SBButton new
+				addMorphBack: (classButton := SBButton new
 					label: 'Class'
 					shortcut: Character tab asSandblockShortcut
 					do: [self showingClassSide: true])))
@@ -413,6 +416,8 @@ SBStCodeOpener >> showingClassSide: aBoolean [
 
 	showingClassSide := aBoolean.
 	self changed: #methods.
+	instanceButton active: aBoolean not.
+	classButton active: aBoolean.
 	self selectedMethodIndex: (self methods notEmpty ifTrue: [1] ifFalse: [0]) moved: false
 ]
 
