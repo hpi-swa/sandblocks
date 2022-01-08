@@ -46,37 +46,7 @@ SBStBinding >> contentsChanged [
 { #category : #'as yet unclassified' }
 SBStBinding >> fixActions [
 
-	^ self validBinding ifTrue: [#()] ifFalse: [Array streamContents: [:stream |
-		self contents first isLowercase ifTrue: [
-			self block containingBlock ifNotNil: [:b |
-				b isMethodBody ifFalse: [
-					stream nextPut: (SBCodeAction
-						labeled: 'Declare block-local'
-						for: self block
-						do: [:node | node containingBlock declareTemporaryVariable: node contents])]].
-			stream nextPut: (SBCodeAction
-				labeled: 'Declare method temporary'
-				for: self block
-				do: [:node | node containingArtefact body declareTemporaryVariable: node contents]).
-			stream nextPut: (SBCodeAction
-				labeled: 'Declare instance variable'
-				for: self block
-				do: [:node | self declareInstanceVariable]).
-			self block containingArtefact isMethod
-				ifTrue: [
-					stream nextPut: (SBCodeAction labeled: 'Add method argument' for: self block do: [:node |
-						node containingArtefact signature
-							addArgument: (self argNameToType: node contents)
-							block: node veryDeepCopy])]].
-		self contents first isUppercase ifTrue: [
-			stream nextPut: (SBCodeAction
-				labeled: 'Declare class variable'
-				for: self block
-				do: [:node | self declareClassVariable]).
-			stream nextPut: (SBCodeAction
-				labeled: 'Create class'
-				for: self block
-				do: [:node | self createClass])]]]
+	^ self validBinding ifTrue: [#()] ifFalse: [self fixActionsForBinding]
 ]
 
 { #category : #'as yet unclassified' }

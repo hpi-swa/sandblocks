@@ -154,14 +154,15 @@ SBStClass >> definitionString [
 { #category : #'as yet unclassified' }
 SBStClass >> deleteClass [
 	<action>
-	
+
 	| classToRemove |
+	class ifNil: [^ self delete].
+	
 	classToRemove := self relatedClass theNonMetaClass.
 	(self confirm: 'Are you certain that you want to DELETE the class ', classToRemove name, ' (no easy undo)?') ifTrue: [
-		classToRemove subclasses notEmpty ifTrue: [
-			(self confirm: 'class has subclasses: still delete?') ifFalse: [^ self]].
+		classToRemove subclasses notEmpty ifTrue: [(self confirm: 'class has subclasses: still delete?') ifFalse: [^ self]].
 		classToRemove removeFromSystem.
-		self delete].
+		self delete]
 ]
 
 { #category : #'artefact protocol' }

@@ -87,7 +87,7 @@ SBEditorOpenMorphCommand >> setArtefactFrom [
 { #category : #'as yet unclassified' }
 SBEditorOpenMorphCommand >> shouldOpenNewWindow [
 
-	^ editor isSingleArtefactView and: [(editor artefacts ifNotEmpty: [:a | a first hasUnsavedChanges] ifEmpty: [false]) and: [morph isSmalltalk and: [morph isMethod]]]
+	^ editor isSingleArtefactView and: [(editor artefacts ifNotEmpty: [:a | a first hasUnsavedChanges] ifEmpty: [false]) and: [morph isSmalltalk and: [morph isMethod or: [morph isClassContainer]]]]
 ]
 
 { #category : #'as yet unclassified' }

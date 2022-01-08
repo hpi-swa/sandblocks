@@ -120,6 +120,50 @@ SBStNameBehavior >> fixActions [
 	^ #()
 ]
 
+{ #category : #nil }
+SBStNameBehavior >> fixActionsForBinding [
+
+	^ self block contents first isUppercase
+		ifTrue: [self fixActionsForUppercaseBinding]
+		ifFalse: [self fixActionsForLowercaseBinding]
+]
+
+{ #category : #'as yet unclassified' }
+SBStNameBehavior >> fixActionsForLowercaseBinding [
+
+	^ Array streamContents: [:stream |
+		self block containingBlock ifNotNil: [:b |
+			b isMethodBody ifFalse: [
+				stream nextPut: (SBCodeAction
+					labeled: 'Declare block-local'
+					for: self block
+					do: [:node | node containingBlock declareTemporaryVariable: node contents])]].
+		stream nextPut: (SBCodeAction
+			labeled: 'Declare method temporary'
+			for: self block
+			do: [:node | node containingArtefact body declareTemporaryVariable: node contents]).
+		stream nextPut: (SBCodeAction
+			labeled: 'Declare instance variable'
+			for: self block
+			do: [:node | self declareInstanceVariable]).
+		self block containingArtefact isMethod ifTrue: [
+			stream nextPut: (SBCodeAction labeled: 'Add method argument' for: self block do: [:node |
+				node containingArtefact signature
+					addArgument: (self argNameToType: node contents)
+					block: node veryDeepCopy])]]
+]
+
+{ #category : #'as yet unclassified' }
+SBStNameBehavior >> fixActionsForUppercaseBinding [
+
+	^ Array streamContents: [:stream |
+		stream nextPut: (SBCodeAction
+			labeled: 'Declare class variable'
+			for: self block
+			do: [:node | self declareClassVariable]).
+		stream nextPut: (SBCodeAction labeled: 'Create class' for: self block do: [:node | self createClass])]
+]
+
 { #category : #'as yet unclassified' }
 SBStNameBehavior >> guessedClass [
 
