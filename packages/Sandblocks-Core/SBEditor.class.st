@@ -20,16 +20,23 @@ Class {
 		'history',
 		'dragHelper',
 		'cursor',
-		'activateForcesButton',
 		'hoverHighlight',
-		'suggestAlways'
+		'suggestAlways',
+		'activePlugins'
 	],
 	#classVars : [
+		'ActivatedPluginClasses',
 		'DefaultColorPolicy',
 		'InputMappingClass'
 	],
 	#category : #'Sandblocks-Core'
 }
+
+{ #category : #plugins }
+SBEditor class >> activatedPluginClasses [
+
+	^ ActivatedPluginClasses ifNil: [ActivatedPluginClasses := Set new]
+]
 
 { #category : #shortcuts }
 SBEditor class >> anyShortcutForAction: aSymbol [
@@ -60,6 +67,12 @@ SBEditor class >> defaultColorPolicy: aColorPolicyClass [
 SBEditor class >> initialize [
 
 	self registerInWorldMenu
+]
+
+{ #category : #plugins }
+SBEditor class >> isPluginActive: aPluginClass [
+
+	^ self activatedPluginClasses includes: aPluginClass
 ]
 
 { #category : #'initialize-release' }
@@ -97,6 +110,26 @@ SBEditor class >> openFor: aMethodOrClass [
 SBEditor class >> registerInWorldMenu [
 
 	TheWorldMenu registerOpenCommand: {'Sandblocks'. {self. #open}}
+]
+
+{ #category : #plugins }
+SBEditor class >> removeActivatedPlugin: aPluginClass [
+
+	self activatedPluginClasses remove: aPluginClass
+]
+
+{ #category : #plugins }
+SBEditor class >> saveActivatedPlugin: aPluginClass [
+
+	self activatedPluginClasses add: aPluginClass
+]
+
+{ #category : #plugins }
+SBEditor class >> setPlugin: aPluginClass active: aBoolean [
+
+	aBoolean
+		ifTrue: [self activatedPluginClasses add: aPluginClass]
+		ifFalse: [self activatedPluginClasses remove: aPluginClass ifAbsent: []]
 ]
 
 { #category : #shortcuts }
@@ -142,6 +175,18 @@ SBEditor >> activateForces [
 		[:decorator | decorator activateForces]]
 ]
 
+{ #category : #plugins }
+SBEditor >> activatePlugin: aPluginClass [
+
+	self activePlugins add: (aPluginClass activatePluginIn: self)
+]
+
+{ #category : #plugins }
+SBEditor >> activePlugins [
+
+	^ activePlugins ifNil: [activePlugins := OrderedCollection new]
+]
+
 { #category : #shortcuts }
 SBEditor >> addShortcuts: aCollection [
 
@@ -160,6 +205,7 @@ SBEditor >> batchedChangeStep: aBlock [
 	| artefact |
 	" send this message when you are updating the tree rapidly for each update, but don't want to submit a command for each update, only at the end "
 	artefact := aBlock containingArtefact.
+	self history markChanged: {artefact} redraw: false.
 	(self compileTime = #compileOnChange and: [artefact notNil]) ifTrue: [
 		self save: artefact tryFixing: false quick: true.
 		artefact triggerEvent: #changed.
@@ -196,7 +242,7 @@ SBEditor >> buildBottomPanel [
 			hResizing: #spaceFill;
 			color: Color transparent);
 		addMorphBack: (SBButton new
-			balloonText: 'Convert to ...';
+			balloonText: 'Wrap with watch';
 			icon: SBIcon iconEye
 				shortcut: (self class anyShortcutForAction: #wrapWithWatch)
 				do: [self performForSelection: #wrapWithWatch]);
@@ -220,7 +266,9 @@ SBEditor >> buildCommandBar [
 		hResizing: #spaceFill;
 		cellGap: 4;
 		layoutInset: 4;
-		addMorphBack: (SBButton new icon: SBIcon iconColumns shortcut: nil do: [self togglePalette]);
+		addMorphBack: (SBButton new
+			icon: SBIcon iconColumns shortcut: nil do: [self togglePalette];
+			balloonText: 'Toggle Block Palette');
 		addMorphBack: (SBButton new
 			icon: SBIcon iconUndo
 			shortcut: (self class anyShortcutForAction: #undo)
@@ -238,33 +286,14 @@ SBEditor >> buildCommandBar [
 				shortcut: (self class anyShortcutForAction: #promptAddArtifact)
 				do: [self promptAddArtifact];
 			balloonText: 'Add artifact');
-		addMorphBack: (activateForcesButton := SBButton new
-			icon: SBIcon iconMagnet
-				shortcut: (self class anyShortcutForAction: #activateForces)
-				do: [];
-			balloonText: 'Activate Layouting');
 		addMorphBack: (Morph new
 			height: 0;
 			color: Color transparent;
 			hResizing: #spaceFill);
 		addMorphBack: (SBButton new
-			icon: SBIcon iconSearchPlus shortcut: nil do: [
-				self colorPolicy toggleEnlarge.
-				self allMorphsDo: #layoutChanged];
-			balloonText: 'Toggle enlarge blocks insets');
-		addMorphBack: (SBRow new
-			addMorphBack: (SBButton new
-				cornerStyle: #square;
-				icon: SBIcon iconAlignLeft shortcut: nil do: [self colorPolicy: SBTextColorPolicy new];
-				balloonText: 'Text-like Layout');
-			addMorphBack: (SBButton new
-				cornerStyle: #square;
-				icon: SBIcon iconTh shortcut: nil do: [self colorPolicy: SBColorMinimalPolicy new];
-				balloonText: 'Compact Layout');
-			addMorphBack: (SBButton new
-				cornerStyle: #square;
-				icon: SBIcon iconThLarge shortcut: nil do: [self colorPolicy: SBScratchColorPolicy new];
-				balloonText: 'Scratch Layout'));
+			icon: SBIcon iconCog
+			shortcut: nil
+			do: [self openMorphInView: SBPreferencesEditor new]);
 		addMorphBack: (SBButton new
 			icon: SBIcon iconExpand
 			shortcut: (self class anyShortcutForAction: #toggleFullscreen)
@@ -343,6 +372,7 @@ SBEditor >> colorPolicy [
 SBEditor >> colorPolicy: aPolicy [
 
 	colorPolicy := aPolicy.
+	aPolicy enlarge: SBPreferences largeInsets.
 	self allMorphsDo: #layoutChanged.
 	self clearCache.
 	paletteContainer clearCache.
@@ -532,6 +562,14 @@ SBEditor >> deactivateForces [
 		[:decorator | decorator deactivateForces]]
 ]
 
+{ #category : #plugins }
+SBEditor >> deactivatePlugin: aPluginClass [
+
+	self activePlugins detect: [:p | p class = aPluginClass] ifFound: [:plugin |
+		aPluginClass deactivatePlugin: plugin in: self.
+		self activePlugins remove: plugin]
+]
+
 { #category : #actions }
 SBEditor >> deleteBlock [
 	<action>
@@ -574,7 +612,7 @@ SBEditor >> doMultiSelectionEach: aBlock [
 { #category : #'event handling' }
 SBEditor >> dragCopyBuffer: anEvent [
 
-	anEvent hand grabMorph: self copyBuffer
+	anEvent hand grabMorph: copyBuffer veryDeepCopy
 ]
 
 { #category : #'event handling' }
@@ -766,9 +804,8 @@ SBEditor >> initialize [
 	super initialize.
 	
 	history := SBHistoryStack new.
-	colorPolicy := self class defaultColorPolicy new.
+	colorPolicy := self class defaultColorPolicy new enlarge: SBPreferences largeInsets.
 	compileTime := #compileOnSave.
-	suggestAlways := false.
 	globalShortcutListeners := OrderedCollection new.
 	inputMapping := self class newInputMapping.
 	searchInput := SBSearchPanel new.
@@ -812,7 +849,9 @@ SBEditor >> initialize [
 		openMorph: cursor;
 		updateSelectionLabel.
 	
-	errors ifNotNil: [self registerGlobalShortcutListener: errors]
+	errors ifNotNil: [self registerGlobalShortcutListener: errors].
+	
+	self class activatedPluginClasses do: [:pluginClass | self activatePlugin: pluginClass]
 ]
 
 { #category : #testing }
@@ -853,12 +892,6 @@ SBEditor >> isSingleArtefactView [
 	^ false
 ]
 
-{ #category : #accessing }
-SBEditor >> keepForcesActivated [
-
-	^ activateForcesButton ifNotNil: #pressed ifNil: [false]
-]
-
 { #category : #events }
 SBEditor >> keyboardFocusChange: aBoolean [
 
@@ -874,7 +907,7 @@ SBEditor >> keyboardFocusColor [
 { #category : #accessing }
 SBEditor >> labelString [
 
-	^ 'Editor'
+	^ 'Sandblocks'
 ]
 
 { #category : #actions }
@@ -887,7 +920,7 @@ SBEditor >> loadBlocks [
 
 { #category : #'do/undo/redo' }
 SBEditor >> markChangesAfterCommand: artefacts [
-	 
+
 	artefacts do: [:candidate | | artefact |
 		artefact := candidate canPersist
 			ifTrue: [candidate]
@@ -1261,20 +1294,23 @@ SBEditor >> replaceInput: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBEditor >> reportError: anError process: aProcess [
+SBEditor >> reportError: anError process: aProcess source: anExecutableEnvironment [
 
-	^ errors ifNotNil: [errors addError: anError process: aProcess]
+	^ errors ifNotNil: [errors addError: anError process: aProcess source: anExecutableEnvironment]
 ]
 
 { #category : #errors }
-SBEditor >> reportErrorWithProcessCopy: anError [
+SBEditor >> reportErrorWithProcessCopy: anError source: anExecutableEnvironment [
 
 	| stack priority |
 	stack := anError signalerContext copyStack.
 	priority := Processor activeProcess priority.
-	^ self reportError: anError process: ((Process forContext: stack priority: priority)
-		shouldResumeFromDebugger: false;
-		yourself)
+	^ self
+		reportError: anError
+		process: ((Process forContext: stack priority: priority)
+			shouldResumeFromDebugger: false;
+			yourself)
+		source: anExecutableEnvironment
 ]
 
 { #category : #initialization }
@@ -1282,7 +1318,7 @@ SBEditor >> resetState [
 
 	history clearUndoStack.
 	cursor resetState.
-	colorPolicy := colorPolicy class new
+	colorPolicy := colorPolicy class new enlarge: SBPreferences largeInsets
 ]
 
 { #category : #accessing }
@@ -1476,7 +1512,7 @@ SBEditor >> submorphsAreConsecutive: aCollection [
 { #category : #accessing }
 SBEditor >> suggestAlways [
 
-	^ suggestAlways
+	^ suggestAlways ifNil: [SBPreferences suggestionsOnClick]
 ]
 
 { #category : #accessing }

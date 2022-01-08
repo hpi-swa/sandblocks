@@ -13,7 +13,7 @@ String >> inStringView: converter [
 String >> parseAsMethod [
 
 	| parser class methodNode |
-	SBExample self: ['test 5 + 12 squared'] args: [{}] label: 'simple'.
+	self example: ['test 5 + 12 squared'] args: [{}] label: 'simple'.
 	class := UndefinedObject.
 	parser := class newParser.
 	methodNode := parser parse: self class: class noPattern: false notifying: nil ifFail: nil.
@@ -24,7 +24,7 @@ String >> parseAsMethod [
 String >> parseAsMethodFor: aClass [
 
 	| methodNode |
-	SBExample self: ['test 5 + 12 squared'] args: [{}] label: 'simple'.
+	self example: ['test 5 + 12 squared'] args: [{}] label: 'simple'.
 	methodNode := PPParser new parse: self class: aClass noPattern: false notifying: nil ifFail: nil.
 	^ methodNode
 ]
@@ -33,7 +33,7 @@ String >> parseAsMethodFor: aClass [
 String >> parseAsNode [
 
 	| parser class methodNode |
-	SBExample self: ['5 + 12 squared'] args: [{}] label: 'simple'.
+	self example: ['5 + 12 squared'] args: [{}] label: 'simple'.
 	class := UndefinedObject.
 	parser := class newParser.
 	methodNode := parser parse: self class: class noPattern: true notifying: nil ifFail: nil.
@@ -43,7 +43,7 @@ String >> parseAsNode [
 { #category : #'*Sandblocks-Core' }
 String >> parseAsSandblock [
 
-	SBExample self: ['5 + 12 squared'] args: [{}] label: 'simple'.
+	self example: ['5 + 12 squared'] args: [{}] label: 'simple'.
 	^ self parseAsNode asSandblock
 ]
 
@@ -51,7 +51,7 @@ String >> parseAsSandblock [
 String >> parseAsSandblockWithoutSubstitution [
 
 	| parser class methodNode |
-	SBExample self: ['5 + 12 squared'] args: [{}] label: 'simple'.
+	self example: ['5 + 12 squared'] args: [{}] label: 'simple'.
 	class := UndefinedObject.
 	parser := class newParser.
 	methodNode := parser parse: self class: class noPattern: true notifying: nil ifFail: nil.

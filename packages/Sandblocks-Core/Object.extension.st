@@ -105,6 +105,20 @@ Object >> converterOptionsDo: aBlock [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Object >> example: aSelfClosure args: anArgumentsClosure label: aString [
+	"marker"
+
+	
+]
+
+{ #category : #'*Sandblocks-Core' }
+Object >> example: aSelfClosure args: anArgumentsClosure label: aString assert: anAssertClosure [
+	"marker"
+
+	
+]
+
+{ #category : #'*Sandblocks-Core' }
 Object >> firstSafeOptionFrom: aCollection [
 	" try to find the first representation that causes no side effects. If none were found assume, that the side effect was the user's intention "
 
@@ -216,12 +230,17 @@ Object >> sandblocksHalt [
 		shouldResumeFromDebugger: false;
 		yourself.
 	
-	uiBlock := [SBEditor current reportError: Halt new process: processCopy].
+	uiBlock := [SBEditor current reportError: Halt new process: processCopy source: nil].
 	
-	(Project current uiProcess isActiveProcess not or: [process isActiveProcess]) ifTrue: [Project current addDeferredUIMessage: uiBlock] ifFalse: uiBlock.
+	(Project current uiProcess isActiveProcess not or: [process isActiveProcess])
+		ifTrue: [Project current addDeferredUIMessage: uiBlock]
+		ifFalse: uiBlock.
 	
 	parent := thisContext sender.
-	[processCopy popTo: processCopy suspendedContext sender; step] fork.
+	[
+		processCopy
+			popTo: processCopy suspendedContext sender;
+			step] fork.
 	process suspend
 ]
 

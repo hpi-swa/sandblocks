@@ -133,12 +133,11 @@ SBStGrammarHandler >> emptyLine: aBlock [
 { #category : #actions }
 SBStGrammarHandler >> evaluateExpression [
 	<action>
-	<actionValidIf: #isExpression>
-	
+	<actionValidIf: #canEvaluate>
+
 	| result |
 	result := super evaluateExpression.
-	self block containingArtefact ifNotNil: [
-		self block containingArtefact cacheType: result class for: self].
+	self block containingArtefact ifNotNil: [self block containingArtefact cacheType: result class for: self].
 	^ result
 ]
 

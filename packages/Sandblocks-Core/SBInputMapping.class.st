@@ -6,17 +6,55 @@ Class {
 		'registerBlock',
 		'extraShortcuts'
 	],
+	#classVars : [
+		'ShortcutProviders'
+	],
 	#category : #'Sandblocks-Core'
 }
+
+{ #category : #'as yet unclassified' }
+SBInputMapping class >> findShortcutProviders [
+
+	^ Array streamContents: [:stream | SBBlock allSubclassesDo: [:class | (class class includesSelector: #registerShortcuts:) ifTrue: [stream nextPut: class]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBInputMapping class >> initialize [
+
+	SystemChangeNotifier uniqueInstance
+		noMoreNotificationsFor: self;
+		notify: self ofSystemChangesOfItem: #method using: #methodChanged:
+]
+
+{ #category : #'as yet unclassified' }
+SBInputMapping class >> methodChanged: anEvent [
+
+	anEvent item isCompiledMethod ifFalse: [^ self].
+	(anEvent item methodClass inheritsFrom: SBBlock class) ifFalse: [^ self].
+	anEvent item selector = #registerShortcuts: ifFalse: [^ self].
+	
+	self updateShortcutProviders
+]
+
+{ #category : #'as yet unclassified' }
+SBInputMapping class >> shortcutProviders [
+
+	^ ShortcutProviders ifNil: [ShortcutProviders := self findShortcutProviders]
+]
+
+{ #category : #'as yet unclassified' }
+SBInputMapping class >> updateShortcutProviders [
+
+	ShortcutProviders := nil.
+	^ self shortcutProviders
+]
 
 { #category : #'event handling' }
 SBInputMapping >> actionFor: anEvent mode: aMode do: aBlock ifNone: anotherBlock [
 
-	registerBlock := [:shortcut :action | | ret |
-		(shortcut asSandblockShortcut matchesEvent: anEvent mode: aMode)
-			ifTrue: [(ret := aBlock value: action) ifTrue: [^ ret]]].
+	registerBlock := [:shortcut :action |  | ret |(shortcut asSandblockShortcut matchesEvent: anEvent mode: aMode) ifTrue: [(ret := aBlock value: action) ifTrue: [^ ret]]].
 	
-	self registerDefaultShortcuts.
+	self registerAllShortcuts.
 	
 	^ anotherBlock value
 ]
@@ -63,6 +101,13 @@ SBInputMapping >> inputShortcut: aShortcut do: aSymbol [
 ]
 
 { #category : #'shortcut execute' }
+SBInputMapping >> registerAllShortcuts [
+
+	self registerDefaultShortcuts.
+	self class shortcutProviders do: [:provider | provider registerShortcuts: self]
+]
+
+{ #category : #'shortcut execute' }
 SBInputMapping >> registerDefaultShortcuts [
 
 	extraShortcuts do: [:s | self registerShortcut: s key do: s value]
@@ -96,7 +141,7 @@ SBInputMapping >> shortcuts [
 
 	^ OrderedCollection streamContents: [:stream |
 		registerBlock := [:shortcut :action | stream nextPut: shortcut asSandblockShortcut -> action].
-		self registerDefaultShortcuts]
+		self registerAllShortcuts]
 ]
 
 { #category : #'event handling' }

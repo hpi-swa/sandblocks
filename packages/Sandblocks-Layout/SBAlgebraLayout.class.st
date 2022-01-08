@@ -21,7 +21,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBAlgebraLayout class >> gap [
 
-	^ 4
+	^ 2
 ]
 
 { #category : #'as yet unclassified' }

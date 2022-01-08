@@ -258,6 +258,12 @@ SBSelection >> relatedClass [
 ]
 
 { #category : #'as yet unclassified' }
+SBSelection >> reportError: anError process: aProcess source: aBlock [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBSelection >> sandblockEditor [
 
 	^ self

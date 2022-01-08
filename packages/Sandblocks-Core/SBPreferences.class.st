@@ -7,9 +7,11 @@ Class {
 		'EdgePanZone',
 		'EnableForceLayout',
 		'HideIndicators',
+		'LargeInsets',
 		'PreviewDropInsert',
 		'RightClickContextMenu',
-		'ShowHoverDecorator'
+		'ShowHoverDecorator',
+		'SuggestionsOnClick'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -60,7 +62,7 @@ SBPreferences class >> enableForceLayout [
 	^ EnableForceLayout ifNil: [true]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPreferences class >> enableForceLayout: aBoolean [
 
 	EnableForceLayout := aBoolean
@@ -78,14 +80,32 @@ SBPreferences class >> hideIndicators: aBoolean [
 	HideIndicators := aBoolean
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
+SBPreferences class >> largeInsets [
+	<preference: 'Increase size of insets around blocks' category: 'sandblocks' description: 'Increase size of insets so that blocks are easier to distinguish' type: #Boolean>
+
+	^ LargeInsets ifNil: [false]
+]
+
+{ #category : #accessing }
+SBPreferences class >> largeInsets: aBoolean [
+
+	LargeInsets := aBoolean.
+	
+	SBEditor allSubInstancesDo: [:editor |
+		editor colorPolicy ifNotNil: [:c |
+			c enlarge: aBoolean.
+			editor allMorphsDo: #layoutChanged]]
+]
+
+{ #category : #accessing }
 SBPreferences class >> previewDropInsert [
 	<preference: 'Preview block positions while dragging' category: 'sandblocks' description: 'Preview the block that would be inserted when dragging' type: #Boolean>
 
 	^ PreviewDropInsert ifNil: [false]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPreferences class >> previewDropInsert: aBoolean [
 
 	PreviewDropInsert := aBoolean
@@ -119,8 +139,15 @@ SBPreferences class >> showHoverDecorator: aBoolean [
 	ShowHoverDecorator := aBoolean
 ]
 
-{ #category : #'as yet unclassified' }
-SBPreferences class >> useNewCursor [
+{ #category : #accessing }
+SBPreferences class >> suggestionsOnClick [
+	<preference: 'Show suggestions menu on click' category: 'sandblocks' description: 'Show the suggestions menu when a message send is clicked, not just when starting to type.' type: #Boolean>
 
-	^ true
+	^ SuggestionsOnClick ifNil: [false]
+]
+
+{ #category : #accessing }
+SBPreferences class >> suggestionsOnClick: aBoolean [
+
+	SuggestionsOnClick := aBoolean
 ]

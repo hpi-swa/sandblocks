@@ -44,6 +44,7 @@ SBComboBox >> currentTextMorph [
 SBComboBox >> display: anObject [
 
 	anObject isMorph ifTrue: [^ anObject imageForm].
+	anObject isString ifTrue: [^ anObject].
 	^ anObject printString
 ]
 
@@ -79,7 +80,12 @@ SBComboBox >> object [
 SBComboBox >> object: anObject [
 
 	object := anObject.
-	self contents: (self display: object) asString
+	anObject ifNotNil: [ | actualLabels |
+		self labels
+			ifNotNil: [
+				actualLabels := self labels ifNil: [self values].
+				self contents: (self display: (actualLabels at: (self values indexOf: anObject)))]
+			ifNil: [self contents: (self display: anObject) asString]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -88,7 +94,7 @@ SBComboBox >> promptChangeValue [
 	| choice actualLabels |
 	actualLabels := self labels ifNil: [self values].
 	choice := (actualLabels allSatisfy: [:val | val isMorph or: [val isForm]])
-		ifTrue: [self values at: (self chooseMorphs: actualLabels)]
+		ifTrue: [(self chooseMorphs: actualLabels) ifNotNil: [:index | self values at: index]]
 		ifFalse: [
 			UIManager default
 				chooseFrom: (actualLabels collect: [:obj | self display: obj])

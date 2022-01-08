@@ -114,7 +114,20 @@ SBMorphExample >> drawnColor [
 	^ self colorPolicy toolColorFor: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
+SBMorphExample >> execute [
+
+	| morph |
+	morph := self setUpMorph evaluate.
+	morph ifNotNil: [ | tempView |
+		tempView := SBSandboxPasteUpMorph new.
+		tempView addMorphBack: (morph
+			fullBounds;
+			center: tempView center).
+		self cases first evaluateFor: morph in: tempView]
+]
+
+{ #category : #events }
 SBMorphExample >> filterEvent: anEvent for: anObject [
 
 	recordedEvents ifNotNil: [(anEvent isMouseUp or: [anEvent isMouseDown or: [anEvent isKeyboard]]) ifTrue: [recordedEvents add: anEvent]].
@@ -180,6 +193,12 @@ SBMorphExample >> pickAndExplore [
 	self sandblockEditor openMorphInView: (SBExplorer on: (self outermostWorldMorph morphsAt: (Cursor crossHair showWhile: [Sensor waitButton])) first)
 ]
 
+{ #category : #testing }
+SBMorphExample >> providesExecutionEnvironment [
+
+	^ true
+]
+
 { #category : #errors }
 SBMorphExample >> reportError: anError [
 
@@ -193,11 +212,14 @@ SBMorphExample >> reportError: anError [
 		
 		stack := anError signalerContext copyStack.
 		priority := Processor activeProcess priority.
-		^ Project current addDeferredUIMessage: [reportedError := self sandblockEditor reportError: anError process: ((Process
-			forContext: stack
-			priority: priority)
-				shouldResumeFromDebugger: false;
-				yourself)"ToolSet debugException: anError"]].
+		^ Project current addDeferredUIMessage: [
+			reportedError := self sandblockEditor
+				reportError: anError
+				process: ((Process forContext: stack priority: priority)
+					shouldResumeFromDebugger: false;
+					yourself)
+				source: self
+			"ToolSet debugException: anError"]].
 	
 	editor := self sandblockEditor.
 	i := 1.
@@ -208,16 +230,14 @@ SBMorphExample >> reportError: anError [
 			caseBlock := self cases first caseBlock.
 			doItCtx := anError signalerContext stack at: i - 3.
 			" this 73 currently is a mystery, but maybe it's caseBlock pc - doItCtx method initialPC ? further investigation needed "
-			(caseBlock containingArtefact blockForPC: doItCtx pc + 73)  ifNotNil: [:b |
-				b attachDecorator: (errorDecorator := SBErrorDecorator new message: anError asString)].
+			(caseBlock containingArtefact blockForPC: doItCtx pc + 73) ifNotNil: [:b | b attachDecorator: (errorDecorator := SBErrorDecorator new message: anError asString)].
 			^ self].
 		
 		" error was elsewhere, see if we have an open artefact with this context "
 		self
 			methodForContext: ctx
 			ifOpen: [:method |
-				(method blockForPC: ctx previousPc) ifNotNil: [:b |
-					b attachDecorator: (errorDecorator := SBErrorDecorator new message: anError asString)].
+				(method blockForPC: ctx previousPc) ifNotNil: [:b | b attachDecorator: (errorDecorator := SBErrorDecorator new message: anError asString)].
 				^ self]
 			ifClosed: [false].
 		ctx := ctx sender.

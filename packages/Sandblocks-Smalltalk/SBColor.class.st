@@ -68,7 +68,7 @@ SBColor >> colorContents: aColor [
 SBColor >> colorContentsUpdate: aColor [
 
 	self colorContents: aColor.
-	self sandblockEditor batchedChangeStep: self
+	self batchedChangeStep
 ]
 
 { #category : #'as yet unclassified' }

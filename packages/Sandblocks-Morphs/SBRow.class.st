@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBRow >> initialize [ 
+SBRow >> initialize [
 
 	super initialize.
 	
@@ -17,8 +17,9 @@ SBRow >> initialize [
 	self
 		extent: 0 @ 0;
 		color: Color transparent;
-		layoutPolicy: SBHorizontalLayout new;
+		layoutPolicy: TableLayout new;
 		listDirection: #leftToRight;
+		cellPositioning: #topLeft;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
 ]

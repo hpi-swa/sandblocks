@@ -63,32 +63,6 @@ SBSelectionDecorator >> maxBlickCount [
 ]
 
 { #category : #'as yet unclassified' }
-SBSelectionDecorator >> postDrawOn: aCanvas [
-
-	| b color |
-	SBPreferences useNewCursor ifTrue: [^ self].
-	
-	self cursorVisible ifFalse: [^ self].
-	b := self morph bounds expandBy: 2.
-	color := self color.
-	
-	self morph sandblockEditor mode = #input
-		ifTrue: [
-			aCanvas
-				line: b bottomLeft + (0 @ 1)
-				to: b bottomRight + (0 @ 1)
-				width: self morph frameSize
-				color: color negated.
-			aCanvas line: b bottomLeft to: b bottomRight width: self morph frameSize color: color]
-		ifFalse: [
-			aCanvas
-				frameRoundRect: b
-				radius: self morph colorPolicy cornerRadius
-				width: self morph frameSize
-				color: color]
-]
-
-{ #category : #'as yet unclassified' }
 SBSelectionDecorator >> resetBlink [
 
 	

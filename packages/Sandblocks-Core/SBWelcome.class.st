@@ -32,9 +32,10 @@ SBWelcome >> initialize [
 				openMorphInView: SBScmModule example;
 				openMorphInView: SBJsModule example;
 				openMorphInView: (SBStPlayground example name: 'Smalltalk Workspace')]);
-		addMorphBack: (SBButton new icon: SBIcon iconVine label: 'Use Vim-like Shortcuts' do: [
-			self sandblockEditor useVimInput.
-			SBEditor useInputMapping: SBVimInputMapping]);
+		addMorphBack: (SBButton new
+			icon: SBIcon iconCog
+			label: 'Open Preferences'
+			do: [self sandblockEditor openMorphInView: SBPreferencesEditor new]);
 		addMorphBack: (SBButton new
 			icon: SBIcon iconCloudDownload
 			label: 'Update to bleeding-edge'

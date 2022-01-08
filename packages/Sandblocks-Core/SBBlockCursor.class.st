@@ -22,7 +22,7 @@ SBBlockCursor >> adjacentVerticalCalcDistance: aDistBlock validBlock: aValidBloc
 	
 	float := self selectedBlock containingFloat.
 	tolerance := 10.
-	allCandidates := Array streamContents: [:stream | float allVisibleMorphsDo: [:candidate | ((candidate isTextMorph or: [candidate isSandblock and: [candidate hasChildSandblocks not]]) and: [aValidBlock value: candidate]) ifTrue: [stream nextPut: candidate]]].
+	allCandidates := Array streamContents: [:stream | float allVisibleMorphsDo: [:candidate | ((candidate isTextMorph or: [candidate isSandblock and: [candidate hasChildSandblocks not and: [candidate isSelectable]]]) and: [aValidBlock value: candidate]) ifTrue: [stream nextPut: candidate]]].
 	candidates := OrderedCollection new.
 	candidatesBestDistance := 900000000.
 	allCandidates do: [:candidate | | distance |
@@ -100,7 +100,7 @@ SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol 
 	self selectedBlock ~= previousBlock ifTrue: [
 		previousBlock removeActionsWithReceiver: self.
 		previousBlock ifNotNil: #wasDeselected.
-		lastBlinkTime := Time current.
+		lastBlinkTime := DateAndTime current.
 		self selectedBlock ifNotNil: [:b |
 			b
 				wasSelected;
@@ -353,7 +353,7 @@ SBBlockCursor >> resetBlink [
 
 	blinkCount := 0.
 	cursorShown := true.
-	lastBlinkTime := Time now.
+	lastBlinkTime := DateAndTime now.
 	self editor ifNotNil: [:e |
 		e world ifNotNil: [:w |
 			w stopStepping: self.
@@ -431,8 +431,11 @@ SBBlockCursor >> step [
 	| oldVisible now |
 	oldVisible := self cursorVisible.
 	
-	now := Time current.
-	(lastBlinkTime isNil or: [(lastBlinkTime addSeconds: 0.5) < now]) ifTrue: [
+	now := DateAndTime current.
+	" crude upgrade helper "
+	lastBlinkTime class = Time ifTrue: [lastBlinkTime := now].
+	
+	(lastBlinkTime isNil or: [(lastBlinkTime + 0.5 seconds) < now]) ifTrue: [
 		lastBlinkTime := now.
 		cursorShown := cursorShown not.
 		blinkCount := blinkCount + 1].

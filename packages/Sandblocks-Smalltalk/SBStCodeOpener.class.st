@@ -1,6 +1,6 @@
 Class {
 	#name : #SBStCodeOpener,
-	#superclass : #Morph,
+	#superclass : #SBBlock,
 	#instVars : [
 		'categories',
 		'selectedCategoryIndex',
@@ -12,7 +12,9 @@ Class {
 		'result',
 		'showingClassSide',
 		'preview',
-		'colorPolicy'
+		'colorPolicy',
+		'instanceButton',
+		'classButton'
 	],
 	#category : #'Sandblocks-Smalltalk'
 }
@@ -50,7 +52,7 @@ SBStCodeOpener >> colorPolicy: aColorPolicy [
 { #category : #'as yet unclassified' }
 SBStCodeOpener >> currentPanel [
 
-	^ self submorphs at: currentPanelIndex
+	^ {categories. classes. messages} at: currentPanelIndex
 ]
 
 { #category : #'as yet unclassified' }
@@ -121,8 +123,10 @@ SBStCodeOpener >> initialize [
 	showingClassSide := false.
 	
 	self
+		localColorPolicy: SBEditor defaultColorPolicy;
 		addMouseCaptureFilter: self;
 		height: 200;
+		color: SystemWindow new userInterfaceTheme color;
 		changeTableLayout;
 		addDropShadow;
 		vResizing: #rigid;
@@ -152,19 +156,32 @@ SBStCodeOpener >> initialize [
 			vResizing: #spaceFill;
 			width: 200;
 			yourself);
-		addMorphBack: (messages := (PluggableListMorphPlus
-			on: self
-			list: #methods
-			selected: #selectedMethodIndex
-			changeSelected: #selectedMethodIndex:
-			menu: #menu:evaluate:)
-			getIconSelector: #messageIconAt:;
-			doubleClickSelector: #openSelectedMethod;
-			autoDeselect: false;
+		addMorphBack: (SBColumn new
 			vResizing: #spaceFill;
-			keystrokePreviewSelector: #keyStroke:;
-			width: 200;
-			yourself)
+			addMorphBack: (messages := (PluggableListMorphPlus
+				on: self
+				list: #methods
+				selected: #selectedMethodIndex
+				changeSelected: #selectedMethodIndex:
+				menu: #menu:evaluate:)
+				getIconSelector: #messageIconAt:;
+				doubleClickSelector: #openSelectedMethod;
+				autoDeselect: false;
+				vResizing: #spaceFill;
+				keystrokePreviewSelector: #keyStroke:;
+				width: 200;
+				yourself);
+			addMorphBack: (SBRow new
+				cellGap: 4;
+				layoutInset: 4;
+				addMorphBack: (instanceButton := SBButton new
+					label: 'Instance'
+					shortcut: Character tab asSandblockShortcut
+					do: [self showingClassSide: false]);
+				addMorphBack: (classButton := SBButton new
+					label: 'Class'
+					shortcut: Character tab asSandblockShortcut
+					do: [self showingClassSide: true])))
 ]
 
 { #category : #'as yet unclassified' }
@@ -399,6 +416,8 @@ SBStCodeOpener >> showingClassSide: aBoolean [
 
 	showingClassSide := aBoolean.
 	self changed: #methods.
+	instanceButton active: aBoolean not.
+	classButton active: aBoolean.
 	self selectedMethodIndex: (self methods notEmpty ifTrue: [1] ifFalse: [0]) moved: false
 ]
 

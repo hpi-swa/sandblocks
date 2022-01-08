@@ -82,7 +82,7 @@ SBStReturn >> symbols [
 { #category : #testing }
 SBStReturn >> valid [
 
-	^ self containingStatement = self and: [self containingBlock statements last = self]
+	^ self containingStatement = self and: [(self containingBlock statements findLast: [:stmt | stmt isExpression or: [stmt isSmalltalk and: [stmt isReturn]]]) = (self containingBlock statements indexOf: self)]
 ]
 
 { #category : #drawing }

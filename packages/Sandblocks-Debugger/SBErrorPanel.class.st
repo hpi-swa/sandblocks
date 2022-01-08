@@ -17,12 +17,13 @@ SBErrorPanel >> activeErrorDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBErrorPanel >> addError: anError process: aProcess [
+SBErrorPanel >> addError: anError process: aProcess source: anExecutableEnvironment [
 
 	| error |
 	error := (SBToggledCode comment: '' active: 1 do: {[SBSmallError new]. [SBError new]})
 		error: anError
-		process: aProcess.
+		process: aProcess
+		source: anExecutableEnvironment.
 	self addMorphFront: error.
 	^ error
 ]

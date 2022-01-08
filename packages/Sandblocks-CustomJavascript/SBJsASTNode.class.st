@@ -13,6 +13,17 @@ SBJsASTNode class >> icon [
 	offset: 0@0
 ]
 
+{ #category : #'as yet unclassified' }
+SBJsASTNode class >> registerShortcuts: aProvider [
+
+	aProvider
+		cmdShortcut: $} do: #wrapInObjectLiteral;
+		cmdShortcut: ${ do: #wrapInKeywordBlock;
+		cmdShortcut: $( do: #wrapInClosure;
+		cmdShortcut: Character space do: #wrapInInfixOp;
+		cmdShortcut: Character space shift do: #wrapInPrefixOp
+]
+
 { #category : #'action helpers' }
 SBJsASTNode >> actionProviders [
 

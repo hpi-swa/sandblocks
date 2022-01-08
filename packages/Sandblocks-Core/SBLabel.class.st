@@ -129,7 +129,9 @@ SBLabel >> initialize [
 		vResizing: #shrinkWrap;
 		changeTableLayout;
 		layoutInset: 0;
-		addMorphBack: (text := SBMultilineOwnTextMorph new emphasis: TextEmphasis italic);
+		addMorphBack: (text := SBMultilineOwnTextMorph new
+			emphasis: TextEmphasis italic;
+			maxWidth: 550);
 		headingLevel: 0
 ]
 

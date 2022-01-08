@@ -20,6 +20,12 @@ SBStMessagePart >> asName: aConverter [
 	^ aConverter do: [SBStName new contents: self contents]
 ]
 
+{ #category : #'as yet unclassified' }
+SBStMessagePart >> canEvaluate [
+
+	^ true
+]
+
 { #category : #actions }
 SBStMessagePart >> changeToUnknown [
 	<action>
@@ -192,6 +198,7 @@ SBStMessagePart >> keyStroke: anEvent [
 	
 	(({Character backspace. Character delete. $_} includes: anEvent keyCharacter) or: [(anEvent keyCharacter isSpecial and: [self actualContents isEmpty or: [self isBinary]]) or: [anEvent keyCharacter isAlphaNumeric and: [self actualContents isEmpty or: [self isBinary not]]]]) ifTrue: [
 		text keyStroke: anEvent.
+		self batchedChangeStep.
 		(anEvent keyCharacter isSpecial and: [self actualContents size = 1 and: [self isFirstPart]]) ifTrue: [^ self insertUnknownAfterAndInput: false].
 		^ self updateSuggestions].
 	

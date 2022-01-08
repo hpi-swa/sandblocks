@@ -63,12 +63,10 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $< command do: #stepInto;
 		registerShortcut: $y command do: #stepThrough;
 		registerShortcut: $Y command do: #restartFrame.
-	"registerShortcut: $e command do: #focusErrors;
-		registerShortcut: $E command do: #focusPreviousErrorFrame;"
+	
 	" tools "
 	self
 		registerShortcut: $W command do: #wrapWithWatch;
-		registerShortcut: $w command do: #wrapWithExampleWatch;
 		registerShortcut: $p command do: #evaluateExpression;
 		registerShortcut: $d command do: #doExpression;
 		registerShortcut: $D command do: #debugExpression;
@@ -90,7 +88,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $g command do: #nextSearchResult;
 		registerShortcut: $t command do: #promptAddArtifact;
 		registerShortcut: $J command do: #activateForces.
-	"registerShortcut: $r command do: #openRepl;"
+	
 	" navigation "
 	self
 		registerShortcut: Character pageDown do: #selectLast;
@@ -126,46 +124,6 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character backspace shift do: #deleteAround;
 		registerShortcut: Character cr shift do: #insertStatementAbove;
 		registerShortcut: Character cr do: #insertStatementBelow.
-	"registerShortcut: $k command do: #swapRight;
-		registerShortcut: $K command withShift do: #swapLeft;"
-	"registerShortcut: $c do: #changeToUnknown;"
-	"registerShortcut: $d do: #deleteAdjacent;"
-	"registerShortcut: $. do: #addElement;"
-	" modify smalltalk "
-	self
-		cmdShortcut: $" do: #wrapInToggledCode;
-		registerShortcut: $[ do: #wrapInBlock;
-		registerShortcut: ${ do: #wrapInDynamicArray;
-		cmdShortcut: $: do: #wrapInAssignment;
-		registerShortcut: $; do: #wrapInCascade;
-		registerShortcut: $^ do: #wrapInReturn;
-		cmdShortcut: $' do: #useAsStString;
-		cmdShortcut: $# do: #useAsStSymbol;
-		cmdShortcut: $$ do: #useAsStCharacter;
-		shortcut: Character space shift modes: #(#input #command) do: #wrapAsArgument;
-		shortcut: Character space modes: #(#input #command) do: #wrapInMessageSend.
-	
-	" modify scheme "
-	self
-		registerShortcut: $( do: #wrapInSExpr;
-		registerShortcut: $) do: #splitSExpr;
-		cmdShortcut: $' do: #useAsScmSymbol;
-		cmdShortcut: $" do: #useAsScmString.
-	
-	" javascript "
-	self
-		cmdShortcut: $} do: #wrapInObjectLiteral;
-		cmdShortcut: ${ do: #wrapInKeywordBlock;
-		cmdShortcut: $( do: #wrapInClosure;
-		cmdShortcut: Character space do: #wrapInInfixOp;
-		cmdShortcut: Character space shift do: #wrapInPrefixOp.
-	
-	" ohm "
-	self
-		cmdShortcut: $+ do: #wrapInPlus;
-		cmdShortcut: $* do: #wrapInStar;
-		cmdShortcut: $? do: #wrapInOptional;
-		cmdShortcut: $| do: #wrapInAlternative.
 	
 	" multi selection "
 	self
@@ -177,13 +135,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 	" special overrides "
 	self
 		registerShortcut: Character escape do: #dismiss;
-		cmdShortcut: Character space do: #activate.
-	
-	" meta blocks "
-	self
-		registerShortcut: Character space do: #promptMetaTransform;
-		registerShortcut: Character space shift do: #promptMetaTransform;
-		registerShortcut: $r command do: #applyReplacements
+		cmdShortcut: Character space do: #activate
 ]
 
 { #category : #'event handling' }

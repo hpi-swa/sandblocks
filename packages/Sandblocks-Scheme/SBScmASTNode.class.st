@@ -29,6 +29,16 @@ SBScmASTNode class >> icon [
 	offset: 0@0)
 ]
 
+{ #category : #'as yet unclassified' }
+SBScmASTNode class >> registerShortcuts: aProvider [
+
+	aProvider
+		registerShortcut: $( do: #wrapInSExpr;
+		registerShortcut: $) do: #splitSExpr;
+		cmdShortcut: $' do: #useAsScmSymbol;
+		cmdShortcut: $" do: #useAsScmString
+]
+
 { #category : #'action helpers' }
 SBScmASTNode >> actionProviders [
 

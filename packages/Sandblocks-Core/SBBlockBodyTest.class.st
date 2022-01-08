@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBBlockBodyTest >> testInsertAfterTemporaries [
+
+	| editor block |
+	block := SBStBlockBody empty temporaries: {SBStName contents: 'a'}.
+	editor := self methodFor: block.
+	editor do: (block insertEmptyCommandRequestNear: block temporaries first before: false).
+	self assert: block submorphs second isUnknown
+]
+
+{ #category : #'as yet unclassified' }
 SBBlockBodyTest >> testInsertCommandRequest [
 
 	| editor block |

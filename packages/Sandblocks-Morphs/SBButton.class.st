@@ -4,10 +4,25 @@ Class {
 	#instVars : [
 		'action',
 		'hovered',
-		'pressed'
+		'pressed',
+		'active'
 	],
 	#category : #'Sandblocks-Morphs'
 }
+
+{ #category : #'as yet unclassified' }
+SBButton >> active [
+
+	^ active ifNil: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBButton >> active: aBoolean [
+	" show the button as activated "
+
+	active := aBoolean.
+	self changed
+]
 
 { #category : #'as yet unclassified' }
 SBButton >> borderStyle [
@@ -26,10 +41,15 @@ SBButton >> clicked [
 SBButton >> color [
 
 	| base |
-	SBToggledCode
-		comment: ''
-		active: 1
-		do: {[base := self containingSandblock ifNotNil: #drawnColor ifNil: [Color white]]. [base := self colorPolicy colorForButton: self]}.
+	SBToggledCode comment: '' active: 1 do: {
+		[
+			base := self containingSandblock
+				ifNotNil: #drawnColor
+				ifNil: [Color r: 1 g: 1 b: 1]].
+		[base := self colorPolicy colorForButton: self]}.
+	
+	self active ifTrue: [base := base darker].
+	
 	self pressed ifTrue: [^ base darker darker].
 	self hovered ifTrue: [^ base darker].
 	^ base
@@ -84,10 +104,7 @@ SBButton >> hovered: aBoolean [
 { #category : #'as yet unclassified' }
 SBButton >> icon: anIconMorph label: aString do: aBlock [
 
-	SBExample
-		self: [SBButton new]
-		args: [{SBIcon iconUndo. $u asSandblockShortcut. [nil]}]
-		label: 'icon'.
+	self example: [SBButton new] args: [{SBIcon iconUndo. $u asSandblockShortcut. [nil]}] label: 'icon'.
 	
 	self widget: anIconMorph shortcut: nil do: aBlock.
 	
@@ -99,8 +116,8 @@ SBButton >> icon: anIconMorph label: aString do: aBlock [
 { #category : #'as yet unclassified' }
 SBButton >> icon: anIconMorph shortcut: aShortcut do: aBlock [
 
-	SBExample
-		self: [SBButton new]
+	self
+		example: [SBButton new]
 		args: [{SBIcon iconUndo. $u asSandblockShortcut. [nil]}]
 		label: 'icon'.
 	self widget: anIconMorph shortcut: aShortcut do: aBlock
@@ -153,7 +170,7 @@ SBButton >> label: aString [
 { #category : #'as yet unclassified' }
 SBButton >> label: aString shortcut: aShortcut do: aBlock [
 
-	SBExample self: [SBButton new] args: [{'hello'. $p command. [nil]}] label: 'label'.
+	self example: [SBButton new] args: [{'hello'. $p command. [nil]}] label: 'label'.
 	self
 		widget: (SBStringMorph new
 			contents: aString;
@@ -201,6 +218,7 @@ SBButton >> pressed [
 
 { #category : #'as yet unclassified' }
 SBButton >> pressed: aBoolean [
+	" the button is currently being held by the pressed mouse cursor "
 
 	pressed := aBoolean.
 	self changed

@@ -77,6 +77,7 @@ SBJsComponentReplacement class >> matchComponentExample: aDictionary do: aBlock 
   	)
     )
 ) @class'>
+
 	| wholeReactClass reactClassName options wholeOptions  |
 	(aDictionary at: 'example_name') contents = 'example' ifFalse: [^ nil].
 	(aDictionary at: 'method_name') contents = 'render' ifFalse: [^ nil].
@@ -97,18 +98,18 @@ SBJsComponentReplacement class >> matchComponentExample: aDictionary do: aBlock 
 
 { #category : #'as yet unclassified' }
 SBJsComponentReplacement class >> matchComponentExamples: aDictionary do: aBlock [
-	<lang: #javascript match: '(class_declaration
+	"<lang: #javascript match: '(class_declaration
     name: (identifier) @class_name
     body: (class_body
     	(field_definition
         	(property_identifier) @example_name
-	      (object) @options
+	      (array) @options
         ) @example_object
 	(method_definition
         	(property_identifier) @method_name
   	)
     )
-) @class'>
+) @class'>"
 	| wholeReactClass reactClassName options wholeOptions  |
 	(aDictionary at: 'example_name') contents = 'example' ifFalse: [^ nil].
 	(aDictionary at: 'method_name') contents = 'render' ifFalse: [^ nil].
@@ -142,7 +143,9 @@ SBJsComponentReplacement class >> sampleReactClassAsString [
 { #category : #'as yet unclassified' }
 SBJsComponentReplacement >> exampleObject: aJsObject forAComponent: aComponentNameString withComponentNode: aComponentNode url: aString [ 
 	
-	self generateHtmlFileFor: aComponentNode sourceString withClassName: aComponentNameString  forOptions: aJsObject sourceString.
+	|aJSObjectWithName|
+	aJSObjectWithName := 'example = ', aJsObject sourceString.
+	self generateHtmlFileFor: aComponentNode sourceString withClassName: aComponentNameString  forOptions: aJSObjectWithName.
 	self
 		listDirection: #topToBottom;
 		addMorphBack: (SBRow new

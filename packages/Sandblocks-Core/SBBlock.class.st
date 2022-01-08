@@ -144,7 +144,7 @@ SBBlock >> appendElement [
 
 	| cmd |
 	cmd := (self
-		insertEmptyCommandRequestNear: (self childSandblocks ifNotEmpty: #last ifEmpty: [nil])
+		insertEmptyCommandRequestNear: nil
 		before: false) ifNil: [^ self].
 	
 	self sandblockEditor do: cmd.
@@ -274,6 +274,12 @@ SBBlock >> barfFront [
 	self select
 ]
 
+{ #category : #'event handling' }
+SBBlock >> batchedChangeStep [
+
+	self sandblockEditor ifNotNil: [:e | e batchedChangeStep: self]
+]
+
 { #category : #'ast helpers' }
 SBBlock >> binding: aString for: block class: aClass ifPresent: aBlock [
 
@@ -331,6 +337,12 @@ SBBlock >> canDrag [
 SBBlock >> canDrag: aBoolean [
 
 	self setProperty: #canDrag toValue: aBoolean
+]
+
+{ #category : #testing }
+SBBlock >> canEvaluate [
+
+	^ false
 ]
 
 { #category : #'actions tests' }
@@ -425,10 +437,11 @@ SBBlock >> childIndex [
 
 { #category : #caching }
 SBBlock >> clearCache [
-
 	" this block may have just been duplicated or moved somewhere else, ensure to clear all caches and present yourself neatly "
-	self allMorphsDo: [:morph | morph layoutChanged].
-	self allBlocksDo: [:morph | morph clearCacheSelf]
+
+	self layoutChanged.
+	self clearCacheSelf.
+	self childSandblocksDo: [:m | m clearCache]
 ]
 
 { #category : #caching }
@@ -620,6 +633,22 @@ SBBlock >> copyAround [
 	self removeProperty: #copyPlaceholder
 ]
 
+{ #category : #'ast helpers' }
+SBBlock >> copyFindSelection: aBlock in: aParentBlock [
+
+	| index |
+	"assume we are an exact copy of aParentBlock and aBlock is a child of aParentBlock
+this method returns our child that corresponds to aBlock"
+	index := 0.
+	aParentBlock allBlocksDo: [:b |
+		b = aBlock ifTrue: [
+			self allBlocksDo: [:b2 |
+				index = 0 ifTrue: [^ b2].
+				index := index - 1]].
+		index := index + 1].
+	self error: 'block could not be found again'
+]
+
 { #category : #testing }
 SBBlock >> copyOnDrag [
 	" return true if you always want to copy when drags are started "
@@ -742,7 +771,9 @@ SBBlock >> deleteBeforeCursor [
 	<actionValidIf: #hasCurrentTextMorph>
 
 	| editor adjacent parent |
-	self currentTextMorph cursor ~= 1 ifTrue: [^ self currentTextMorph deleteBeforeCursor].
+	self currentTextMorph cursor ~= 1 ifTrue: [
+		self currentTextMorph deleteBeforeCursor.
+		^ self batchedChangeStep].
 	self symbols first notNil ifTrue: [^ self changeToUnknown].
 	
 	editor := self sandblockEditor.
@@ -1223,7 +1254,7 @@ SBBlock >> inputPreviousUnknown [
 				self sandblockEditor startInput: m at: 1 replacingContents: false]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBBlock >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 	" the user tries to add a block to us, do we want to do something now? "
 
@@ -1357,7 +1388,7 @@ SBBlock >> isArtefact [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBBlock >> isAttractedTo: aMorph [
 	
 	^ aMorph object class = self object class
@@ -1468,6 +1499,12 @@ SBBlock >> isSandblock [
 ]
 
 { #category : #testing }
+SBBlock >> isSelectable [
+
+	^ true
+]
+
+{ #category : #testing }
 SBBlock >> isSelected [
 
 	^ self sandblockEditor ifNil: [false] ifNotNil: [:editor | editor selection = self]
@@ -1523,7 +1560,9 @@ SBBlock >> isWaypoint [
 { #category : #'event handling' }
 SBBlock >> keyStroke: anEvent [
 
-	self currentTextMorph ifNotNil: [:t | t keyStroke: anEvent]
+	self currentTextMorph ifNotNil: [:t |
+		t keyStroke: anEvent.
+		self batchedChangeStep]
 ]
 
 { #category : #hierarchy }
@@ -1780,6 +1819,15 @@ SBBlock >> objectInterface [
 SBBlock >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ SBInterfaces never
+]
+
+{ #category : #hierarchy }
+SBBlock >> open [
+	" tries to find the current SBEditor and open our block in it "
+
+	SBExecutionEnvironment value sandblockEditor
+		ifNotNil: [:editor | editor openMorphInView: self]
+		ifNil: [self error: 'No editor found in execution context']
 ]
 
 { #category : #actions }
@@ -2071,6 +2119,12 @@ SBBlock >> proposeCodeActions: aCollection for: aBlock [
 	index > 0 ifTrue: [(aCollection at: index) do]
 ]
 
+{ #category : #testing }
+SBBlock >> providesExecutionEnvironment [
+
+	^ false
+]
+
 { #category : #actions }
 SBBlock >> refocus [
 	<multiSelectAction>
@@ -2284,8 +2338,16 @@ SBBlock >> selectTopToplevel [
 SBBlock >> selectToplevelTowards: aSideSymbol [
 
 	| opposite |
-	opposite := aSideSymbol caseOf: {([#left] -> [#right]). ([#right] -> [#left]). ([#top] -> [#bottom]). ([#bottom] -> [#top])}.
-	(self containingToplevel closestAdjacentFrom: (aSideSymbol, 'Center') asSymbol to: (opposite, 'Center') asSymbol) select
+	self sandblockEditor = self containingToplevel ifTrue: [^ self].
+	
+	opposite := aSideSymbol caseOf: {
+		[#left] -> [#right].
+		[#right] -> [#left].
+		[#top] -> [#bottom].
+		[#bottom] -> [#top]}.
+	(self containingToplevel
+		closestAdjacentFrom: (aSideSymbol, 'Center') asSymbol
+		to: (opposite, 'Center') asSymbol) select
 ]
 
 { #category : #printing }

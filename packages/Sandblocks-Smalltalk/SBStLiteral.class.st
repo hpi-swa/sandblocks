@@ -10,7 +10,8 @@ Class {
 { #category : #'as yet unclassified' }
 SBStLiteral >> acceptInputEvent: anEvent [
 
-	text keyStroke: anEvent
+	text keyStroke: anEvent.
+	self batchedChangeStep
 ]
 
 { #category : #'as yet unclassified' }
@@ -79,7 +80,8 @@ SBStLiteral >> keyStroke: anEvent [
 
 	(anEvent keyCharacter = Character backspace and: [self contents isEmpty]) ifTrue: [^ self replaceWithUnknown].
 	
-	self acceptInputEvent: anEvent
+	self acceptInputEvent: anEvent.
+	self batchedChangeStep
 ]
 
 { #category : #'colors and color policies' }

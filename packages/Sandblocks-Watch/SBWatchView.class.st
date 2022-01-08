@@ -137,10 +137,9 @@ SBWatchView >> reportValue: anObject [
 		applyingChange := true.
 		hadValue ifFalse: [hadValue := true].
 		
-		SBToggledCode
-			comment: 'we want to check if we can/should reuse the previous conversion procedure'
-			active: 1
-			do: {[self useDisplay: (anObject convertedFor: self watchObjectInterface do: #yourself)]}.
+		SBToggledCode comment: '' active: 1 do: {
+			[self useDisplay: (SBExplorer on: anObject)].
+			[self useDisplay: (anObject convertedFor: self watchObjectInterface do: #yourself)]}.
 		
 		clear
 			disableLayout: false;

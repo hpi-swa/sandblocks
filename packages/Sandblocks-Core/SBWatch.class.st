@@ -16,24 +16,32 @@ Class {
 { #category : #'as yet unclassified' }
 SBWatch class >> registerWatch: aWatch [
 
-	self registry at: aWatch identifier put: aWatch
+	self registry add: aWatch
 ]
 
 { #category : #'as yet unclassified' }
 SBWatch class >> registry [
 
-	^ Registry ifNil: [Registry := WeakValueDictionary new]
+	Registry isDictionary ifTrue: ["convert to current version"
+	Registry := Registry values as: WeakSet].
+	^ Registry ifNil: [Registry := WeakSet new]
 ]
 
 { #category : #'as yet unclassified' }
-SBWatch class >> report: aValue for: aSymbol [
+SBWatch class >> report: aValue for: identifier [
 
-	| reg watcher |
+	| reg watchers |
 	reg := self registry.
-	watcher := reg at: aSymbol ifAbsent: [^ aValue].
-	watcher ifNil: [reg removeKey: aSymbol] ifNotNil: [watcher reportValue: aValue].
+	watchers := reg select: [:watcher | watcher notNil and: [watcher identifier = identifier]].
+	watchers do: [:watcher | watcher reportValue: aValue].
 	
 	^ aValue
+]
+
+{ #category : #'as yet unclassified' }
+SBWatch class >> unregisterWatch: aWatch [
+
+	self registry remove: aWatch ifAbsent: []
 ]
 
 { #category : #'as yet unclassified' }
@@ -196,6 +204,14 @@ SBWatch >> newIdentifier [
 SBWatch >> object [
 
 	^ self
+]
+
+{ #category : #initialization }
+SBWatch >> outOfWorld: aWorld [
+
+	super outOfWorld: aWorld.
+	
+	self class unregisterWatch: self
 ]
 
 { #category : #caching }

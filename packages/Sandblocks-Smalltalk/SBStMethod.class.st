@@ -14,13 +14,13 @@ SBStMethod class >> newFor: aMethod at: aPoint [
 	^ aMethod asSandblock position: aPoint; yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'method protocol' }
 SBStMethod >> argumentsDo: aBlock [
 
 	^ signature argumentsDo: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStMethod >> collapsed: aBoolean [
 
 	self body visible not = aBoolean ifTrue: [^ self].
@@ -32,19 +32,19 @@ SBStMethod >> collapsed: aBoolean [
 	(aBoolean not and: [self isSelected not]) ifTrue: [self select]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStMethod >> contents [
 
 	^ signature selector
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStMethod >> contents: aString [
 
 	signature selector: aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStMethod >> currentClass: aClass [
 
 	super currentClass: aClass.
@@ -52,13 +52,13 @@ SBStMethod >> currentClass: aClass [
 	classPrefix object: aClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStMethod >> currentTextMorph [
 
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBStMethod >> deleteCommandFor: aBlock [
 
 	aBlock = self body ifTrue: [^ nil].
@@ -67,19 +67,19 @@ SBStMethod >> deleteCommandFor: aBlock [
 	^ signature deleteCommandFor: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBStMethod >> doubleClick: anEvent [
 
 	self toggleCollapsed
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'artefact protocol' }
 SBStMethod >> ensureExpanded [
 
 	self isCollapsed ifTrue: [self toggleCollapsed]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBStMethod >> initialize [
 
 	super initialize.
@@ -98,25 +98,25 @@ SBStMethod >> initialize [
 			addMorphBack: (signature := SBStSignature new))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBStMethod >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
 	^ self signature insertCommandRequest: aMorph near: aBlock before: aBoolean
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBStMethod >> isAttractedTo: aMorph [
 
 	^ aMorph relatedClass theNonMetaClass = self relatedClass theNonMetaClass and: [(aMorph isKindOf: SBStMethod) or: [aMorph isKindOf: SBStClass]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStMethod >> isCollapsed [
 
 	^ self body visible not
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBStMethod >> keyStroke: anEvent [
 
 	signature keyStroke: anEvent.
@@ -131,11 +131,9 @@ SBStMethod >> layoutCommands [
 		data: {
 			SBAlgebraCommand container
 				morph: self firstSubmorph;
-				data: {
-					self firstSubmorph submorphs first layoutCommands.
-					SBAlgebraCommand indent data: {SBAlgebraCommand softLine. self firstSubmorph submorphs second layoutCommands}
-				}
-		}, (self body visible
+				data: ((self firstSubmorph submorphs allButLast: 2) collect: [:c | c layoutCommands]), {
+					(self firstSubmorph submorphs atLast: 2) layoutCommands.
+					SBAlgebraCommand indent data: {SBAlgebraCommand softLine. self firstSubmorph submorphs last layoutCommands}}}, (self body visible
 			ifTrue: [{SBAlgebraCommand hardLine withGap: true. self body layoutCommands}]
 			ifFalse: [{}])
 ]
@@ -146,13 +144,13 @@ SBStMethod >> messageParts [
 	^ signature messageParts
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStMethod >> methodClass [
 
 	^ classPrefix selectedClass ifNil: [self outerArtefact ifNotNil: #relatedClass]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBStMethod >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ aBlock isBlockBody
@@ -160,7 +158,7 @@ SBStMethod >> objectInterfaceNear: aBlock at: aSymbol [
 		ifFalse: [signature objectInterfaceNear: aBlock at: aSymbol argumentInterface: SBInterfaces stName]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStMethod >> pasteString [
 	<action>
 
@@ -172,7 +170,7 @@ SBStMethod >> pasteString [
 		artefact: method)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #saving }
 SBStMethod >> saveString [
 
 	^ self currentSelector
@@ -180,7 +178,7 @@ SBStMethod >> saveString [
 		ifNotEmpty: [self saveStringWhenNotEmpty]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBStMethod >> saveStringWhenEmpty [
 
 	^ String streamContents: [:stream |
@@ -200,7 +198,7 @@ SBStMethod >> saveStringWhenEmpty [
 		]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBStMethod >> saveStringWhenNotEmpty [
 
 	^ String streamContents: [:stream |
@@ -216,45 +214,51 @@ SBStMethod >> saveStringWhenNotEmpty [
 		]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'method protocol' }
 SBStMethod >> selector [
 
 	^ signature selector
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'method protocol' }
 SBStMethod >> selector: aSymbol arguments: aCollection [
 
 	signature selector: aSymbol arguments: aCollection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStMethod >> selector: aSymbol arguments: aCollection class: aClass [
 
 	super selector: aSymbol arguments: aCollection class: aClass.
 	signature selector: aSymbol arguments: aCollection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'method protocol' }
+SBStMethod >> showRenameHint: aMorph [
+
+	self firstSubmorph addMorphFront: aMorph
+]
+
+{ #category : #accessing }
 SBStMethod >> signature [
 
 	^ signature
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #input }
 SBStMethod >> startInputAt: aNumber replacingContents: aBoolean [
 
 	^ signature startInputAt: aNumber replacingContents: aBoolean
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #input }
 SBStMethod >> stopEditing: aCommand [
 
 	signature stopEditing: aCommand.
 	self removeSuggestionMenu
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBStMethod >> storeOn: aStream [
 
 	aStream
@@ -269,7 +273,7 @@ SBStMethod >> storeOn: aStream [
 		nextPut: $)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #suggestions }
 SBStMethod >> updateSuggestions [
 
 	| selector |
@@ -280,14 +284,14 @@ SBStMethod >> updateSuggestions [
 			showNear: signature]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #suggestions }
 SBStMethod >> useSuggestion: aString [
 
 	signature selectorAndEdit: aString withFilledArgs: true.
 	(signature arguments anySatisfy: #wantsInput) ifFalse: [self inputNextUnknown]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'method protocol' }
 SBStMethod >> writeSignatureSourceOn: aStream [
 
 	signature writeSourceOn: aStream

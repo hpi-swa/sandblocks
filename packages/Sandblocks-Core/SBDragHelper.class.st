@@ -49,18 +49,27 @@ SBDragHelper >> blockAtPoint: aPoint [
 	best := nil.
 	bestArea := 900000000.
 	
-	blockBounds keysAndValuesDo: [:block :bounds |
-		((bounds containsPoint: aPoint) and: [bounds area < bestArea]) ifTrue: [
-			best := block.
-			bestArea := bounds area]].
+	SBPreferences previewDropInsert
+		ifFalse: [
+			editor morphsAt: aPoint unlocked: true do: [:morph |
+				morph bounds area < bestArea ifTrue: [
+					best := morph.
+					bestArea := morph bounds area]]]
+		ifTrue: [
+			blockBounds keysAndValuesDo: [:block :bounds |
+				((bounds containsPoint: aPoint) and: [bounds area < bestArea]) ifTrue: [
+					best := block.
+					bestArea := bounds area]]].
 	
 	^ best ifNotNil: #containingSandblock
 ]
 
 { #category : #'as yet unclassified' }
-SBDragHelper >> boundsOf: aMorph [
+SBDragHelper >> boundsOf: aMorph ifPresent: aBlock [
 
-	^ blockBounds at: aMorph
+	^ blockBounds
+		ifNotNil: [blockBounds at: aMorph ifPresent: aBlock]
+		ifNil: [aBlock value: aMorph boundsInWorld]
 ]
 
 { #category : #'as yet unclassified' }
@@ -105,7 +114,7 @@ SBDragHelper >> dropLocation: dropLocation [
 		dropLocation first = #replace ifTrue: [self dropLocationForReplace: dropLocation].
 		dropLocation first = #special ifTrue: [self dropLocationForSpecial: dropLocation]].
 	
-	self ensurePositionOfFloats
+	SBPreferences previewDropInsert ifTrue: [self ensurePositionOfFloats]
 ]
 
 { #category : #'as yet unclassified' }
@@ -146,11 +155,12 @@ SBDragHelper >> editor: anEditor [
 
 	editor := anEditor.
 	
-	blockBounds := Dictionary new.
-	floatingMorphs := OrderedCollection new.
-	anEditor allMorphsDo: [:morph |
-		morph ~= anEditor ifTrue: [blockBounds at: morph put: morph boundsInWorld].
-		(morph isSandblock and: [morph floating]) ifTrue: [floatingMorphs add: morph]]
+	SBPreferences previewDropInsert ifTrue: [
+		blockBounds := Dictionary new.
+		floatingMorphs := OrderedCollection new.
+		anEditor allMorphsDo: [:morph |
+			morph ~= anEditor ifTrue: [blockBounds at: morph put: morph boundsInWorld].
+			(morph isSandblock and: [morph floating]) ifTrue: [floatingMorphs add: morph]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -170,7 +180,7 @@ SBDragHelper >> hintInsertOf: aBlock in: aParentBlock near: aChildBlock before: 
 	command := aParentBlock insertCommandRequest: aBlock near: aChildBlock before: aBoolean.
 	SBPreferences previewDropInsert ifTrue: [command do] ifFalse: [
 		insertPreviewMarker := SBDropInsertMarker new
-			color: (aBlock colorPolicy dropMarkerColorFor: aBlock);
+			color: (aParentBlock colorPolicy dropMarkerColorFor: aBlock);
 			bounds: (aChildBlock
 				ifNil: [10 @ 10 center: aParentBlock boundsInWorld center]
 				ifNotNil: [self insertMarkerFor: aChildBlock before: aBoolean]);
@@ -289,7 +299,7 @@ SBDragHelper >> submorphOf: aMorph closestTo: aPoint do: aBlock [
 			calcDistanceAfter := [:m | (m bottom - aPoint y) abs]].
 	
 	aMorph childSandblocks do: [:morph | | distance |
-		blockBounds at: morph ifPresent: [:bounds |
+		self boundsOf: morph ifPresent: [:bounds |
 			distance := calcDistanceBefore value: bounds.
 			distance < bestDistance ifTrue: [
 				best := morph.

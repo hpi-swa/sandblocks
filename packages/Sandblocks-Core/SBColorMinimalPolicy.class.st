@@ -36,7 +36,7 @@ SBColorMinimalPolicy >> layoutInsetFor: aBlock [
 		^ 4].
 	(aBlock isUnknown or: [(aBlock isKindOf: SBStLiteral) or: [aBlock isBlockBody]]) ifTrue: [^ 2 @ 1].
 	(aBlock isMessageSend and: [aBlock messageParts size > 1]) ifTrue: [^ 4].
-	^ aBlock wantsExtraSpace ifTrue: [2 @ 2] ifFalse: [2 @ 0]
+	^ aBlock wantsExtraSpace ifTrue: [2 @ 1] ifFalse: [2 @ 0]
 ]
 
 { #category : #'as yet unclassified' }
