@@ -349,6 +349,25 @@ SBGit >> outOfWorld: newOwner [
 ]
 
 { #category : #'git external' }
+SBGit >> pull [
+
+	| currentHead newHead loader |
+	index isClean ifFalse: [^ self error: 'Working image is not clean. Please commit first.'].
+	
+	currentHead := self activeProject loadedHistorian version commit.
+	self
+		checkedCmd: ExternalUnixOSProcess defaultShellPath
+		arguments: {'-c'. 'cd {1}; git pull' format: {self activeProject repository fsgitRepository repository workingDir}}
+		env: nil
+		stdin: nil.
+	newHead := self activeProject loadedHistorian version commit.
+	
+	loader := MCPackageLoader new.
+	(SBGit diffIn: self activeProject from: currentHead to: newHead) do: [:op | op applyTo: loader].
+	loader load
+]
+
+{ #category : #'git external' }
 SBGit >> push [
 
 	self

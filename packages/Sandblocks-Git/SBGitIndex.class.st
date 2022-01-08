@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'commitDraft',
 		'message',
-		'project'
+		'project',
+		'changes'
 	],
 	#category : #'Sandblocks-Git'
 }
@@ -28,6 +29,12 @@ SBGitIndex >> isArtefact [
 ]
 
 { #category : #'as yet unclassified' }
+SBGitIndex >> isClean [
+
+	^ changes hasSubmorphs not
+]
+
+{ #category : #'as yet unclassified' }
 SBGitIndex >> project [
 
 	^ project
@@ -36,7 +43,7 @@ SBGitIndex >> project [
 { #category : #'as yet unclassified' }
 SBGitIndex >> project: aProject [
 
-	| changes headHex |
+	| headHex |
 	self removeAllMorphs.
 	project := aProject.
 	
