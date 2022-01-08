@@ -725,33 +725,11 @@ SBBlock >> deleteAfterCursor [
 SBBlock >> deleteAround [
 	<action>
 
-	| editor target |
-	SBExample self: ['3 squared' parseInMethod receiver] args: [{}] label: 'example'.
+	| editor |
+	self example: ['3 squared' parseInMethod receiver] args: [{}] label: 'example'.
 	editor := self sandblockEditor.
-	target := self parentSandblock.
-	
-	editor countModifier - 1 timesRepeat: [target := target parentSandblock ifNil: [^ self]].
-	
-	SBToggledCode comment: 'Special type of unwrap for dynamically sized parents' active: 0 do: {
-		[
-			(self parentSandblock childSandblocks size > 1 and: [target parentHasDynamicNumberOfChildren and: [self isStatement]]) ifTrue: [
-				self setProperty: #copyPlaceholder toValue: true.
-				SBToggledCode
-					comment: 'TODO: we still need to delete adjacent elements before copying'
-					active: 1
-					do: {[editor copyBuffer: target]}.
-				self removeProperty: #copyPlaceholder.
-				
-				editor do: (SBRecordedCommand new record: [:recorder |
-					recorder
-						moveAll: self parentSandblock childSandblocks
-						in: target owner
-						at: target submorphIndex + 1.
-					recorder remove: target]).
-				^ self]]}.
-	
-	[
-		self convertedFor: target objectInterface do: [:replacer |
+	self
+		deleteAroundTargetDo: [:target :replacer |
 			self setProperty: #copyPlaceholder toValue: true.
 			editor copyBuffer: target.
 			self removeProperty: #copyPlaceholder.
@@ -759,10 +737,19 @@ SBBlock >> deleteAround [
 				target: target;
 				replacer: replacer).
 			replacer postDuplicate.
-			^ self].
-		" if we did not find a valid conversion, try again with the parent "
+			^ self]
+		ifNone: []
+]
+
+{ #category : #'action helpers' }
+SBBlock >> deleteAroundTargetDo: aBlock ifNone: anotherBlock [
+
+	| target |
+	target := self parentSandblock.
+	[
+		self convertedFor: target objectInterface do: [:replacer | aBlock value: target value: replacer].
 		target := target parentSandblock.
-		(target isNil or: [target floating and: [target isArtefact]]) ifTrue: [^ self]] repeat
+		(target isNil or: [target floating and: [target isArtefact]]) ifTrue: [^ anotherBlock value]] repeat
 ]
 
 { #category : #actions }
@@ -795,8 +782,12 @@ SBBlock >> deleteBeforeCursor [
 					self deleteBlock.
 					editor startInput: parent childSandblocks first at: 900000000 replacingContents: false]
 				ifFalse: [
-					self deleteAround.
-					editor startInput: self at: 900000000 replacingContents: false]]
+					self
+						deleteAroundTargetDo: [:target :replacer |
+							target floating ifFalse: [
+								self deleteAround.
+								editor startInput: self at: 900000000 replacingContents: false]]
+						ifNone: []]]
 ]
 
 { #category : #actions }
