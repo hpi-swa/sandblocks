@@ -321,6 +321,12 @@ SBBlock >> canCopy [
 	^ true
 ]
 
+{ #category : #'actions tests' }
+SBBlock >> canDelete [
+
+	^ self parentSandblock canDeleteChild: self
+]
+
 { #category : #'insert/delete' }
 SBBlock >> canDeleteChild: aBlock [
 
@@ -354,6 +360,18 @@ SBBlock >> canInput [
 	"(self class lookupSelector: #startInputAt:replacingContents:) methodClass ~= SBBlock"
 	
 	^ self currentTextMorph notNil
+]
+
+{ #category : #'actions tests' }
+SBBlock >> canInsertAfter [
+
+	^ (self parentSandblock insertEmptyCommandRequestNear: self before: false) notNil
+]
+
+{ #category : #'actions tests' }
+SBBlock >> canInsertBefore [
+
+	^ (self parentSandblock insertEmptyCommandRequestNear: self before: true) notNil
 ]
 
 { #category : #'actions tests' }
@@ -793,6 +811,7 @@ SBBlock >> deleteBeforeCursor [
 { #category : #actions }
 SBBlock >> deleteBlock [
 	<multiSelectAction>
+	<actionValidIf: #canDelete>
 
 	self isSelected ifFalse: [^ self sandblockEditor do: (self parentSandblock deleteCommandFor: self)].
 	
@@ -802,12 +821,13 @@ SBBlock >> deleteBlock [
 { #category : #actions }
 SBBlock >> deleteBlockWithCopy [
 	<multiSelectAction>
+	<actionValidIf: #canDelete>
 
 	| blocks editor |
 	blocks := self sandblockEditor multiSelection.
 	editor := self sandblockEditor.
 	self deleteBlock.
-	editor copyBuffer: blocks.
+	editor copyBuffer: blocks
 ]
 
 { #category : #'insert/delete' }
@@ -1275,6 +1295,7 @@ SBBlock >> insertElement: aBeforeBoolean [
 SBBlock >> insertElementAfter [
 	<action>
 	<inputAction>
+	<actionValidIf: #canInsertAfter>
 
 	^ self insertElement: false
 ]
@@ -1283,6 +1304,7 @@ SBBlock >> insertElementAfter [
 SBBlock >> insertElementBefore [
 	<action>
 	<inputAction>
+	<actionValidIf: #canInsertBefore>
 
 	^ self insertElement: true
 ]
@@ -1723,6 +1745,7 @@ SBBlock >> moveCursorToStart [
 { #category : #actions }
 SBBlock >> multiSelectChildren [
 	<action>
+	<actionValidIf: #hasChildSandblocks>
 
 	self sandblockEditor multiSelection: self childSandblocks
 ]
