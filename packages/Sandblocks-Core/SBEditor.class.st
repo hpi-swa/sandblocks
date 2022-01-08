@@ -907,7 +907,7 @@ SBEditor >> keyboardFocusColor [
 { #category : #accessing }
 SBEditor >> labelString [
 
-	^ 'Editor'
+	^ 'Sandblocks'
 ]
 
 { #category : #actions }

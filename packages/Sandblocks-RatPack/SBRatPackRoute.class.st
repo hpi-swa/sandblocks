@@ -7,7 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBRatPackRoute class >> matchSpecific: aBlock [
 
-	^ (aBlock methodClass inheritsFrom: RPApplication) and: [aBlock pragmas anySatisfy: [:p | self validMethods includes: p keyword]]
+	^ Smalltalk at: #RPApplication ifPresent: [:a | (aBlock methodClass inheritsFrom: a) and: [aBlock pragmas anySatisfy: [:p | self validMethods includes: p keyword]]] ifAbsent: [false]
 ]
 
 { #category : #'as yet unclassified' }

@@ -53,11 +53,7 @@ SBStClassNameInput >> promptChangeClass [
 { #category : #'as yet unclassified' }
 SBStClassNameInput >> selectedClass [
 
-	self contents ifEmpty: [^ nil].
-	
-	^ (self contents endsWith: ' class')
-		ifTrue: [(Smalltalk at: (self contents allButLast: ' class' size) asSymbol ifAbsent: [nil]) ifNotNil: #class]
-		ifFalse: [Smalltalk at: self contents asSymbol ifAbsent: [nil]]
+	^ object
 ]
 
 { #category : #'as yet unclassified' }
@@ -65,8 +61,8 @@ SBStClassNameInput >> selectedClass: aClass [
 
 	self sandblockEditor do: (SBMutatePropertyCommand new
 		target: self;
-		selector: #contents;
-		value: aClass name)
+		selector: #object;
+		value: aClass)
 ]
 
 { #category : #'as yet unclassified' }
