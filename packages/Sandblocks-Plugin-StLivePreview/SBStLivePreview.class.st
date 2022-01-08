@@ -43,7 +43,7 @@ SBStLivePreview >> click: anEvent [
 
 	| target |
 	target := self blockForLookup: editor selection.
-	target ifNotNil: [self valueForBlock: target ifFound: [:res | res explore] onTimeout: [] onError: [:err | ]]
+	target ifNotNil: [self valueForBlock: target ifFound: [:res | res explore] onTimeout: [] onError: [:err | err explore]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -141,7 +141,8 @@ SBStLivePreview >> show [
 			self label contents: ([result printString]
 				on: Error
 				do: [:err | '<error ({1})>' format: {result className}]).
-			self icon changeIconName: #iconInfoCircle]
+			self icon changeIconName: #iconInfoCircle.
+			target containingArtefact ifNotNil: [:a | a cacheType: result class for: target]]
 		onTimeout: [
 			show := true.
 			self label contents: '<timeout>'.
@@ -163,10 +164,18 @@ SBStLivePreview >> showDelay [
 ]
 
 { #category : #'as yet unclassified' }
+SBStLivePreview >> timeout [
+
+	^ 100 milliSeconds
+]
+
+{ #category : #'as yet unclassified' }
 SBStLivePreview >> valueForBlock: aBlock ifFound: aClosure onTimeout: timeoutBlock onError: errorBlock [
 
 	| env |
 	env := (SBExecutionEnvironment getAllIn: editor) first.
+	aBlock containingArtefact exists ifFalse: [^ self].
+	
 	^ SBToggledCode comment: '' active: 1 do: {
 		[ | cmd currentMethod methodBlock selection newMethod |
 			methodBlock := aBlock containingArtefact veryDeepCopy.
@@ -187,10 +196,10 @@ SBStLivePreview >> valueForBlock: aBlock ifFound: aClosure onTimeout: timeoutBlo
 				currentMethod methodClass
 					addSelectorSilently: currentMethod selector
 					withMethod: newMethod.
-				[[env execute] valueWithin: 100 milliSeconds onTimeout: [timeoutBlock value]]
+				[[env execute] valueWithin: self timeout onTimeout: [timeoutBlock value]]
 					on: SBStRunUntilValue
 					do: [:val | aClosure value: val value]
-					on: Exception
+					on: Error, Halt
 					do: [:ex | errorBlock value: ex]] ensure: [
 				currentMethod methodClass
 					addSelectorSilently: currentMethod selector

@@ -1,6 +1,6 @@
 Class {
 	#name : #SBStRunUntilValue,
-	#superclass : #Error,
+	#superclass : #Exception,
 	#instVars : [
 		'value'
 	],

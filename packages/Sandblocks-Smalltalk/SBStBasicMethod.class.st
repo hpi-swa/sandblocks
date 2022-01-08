@@ -737,7 +737,7 @@ SBStBasicMethod >> tryUseAsSelf: anObject [
 { #category : #accessing }
 SBStBasicMethod >> typeCache [
 
-	^ typeCache ifNil: [typeCache := Dictionary new]
+	^ typeCache ifNil: [typeCache := WeakKeyDictionary new]
 ]
 
 { #category : #'artefact protocol' }
