@@ -20,5 +20,6 @@ OrderedDictionary {
 	'packages/Sandblocks-Squeak6Fixes' : #SquotTonelSerializer,
 	'packages/Sandblocks-Simulation' : #SquotTonelSerializer,
 	'packages/Sandblocks-Scheme' : #SquotTonelSerializer,
-	'packages/Sandblocks-Plugin-StLivePreview' : #SquotTonelSerializer
+	'packages/Sandblocks-Plugin-StLivePreview' : #SquotTonelSerializer,
+	'packages/Sandblocks-Git' : #SquotTonelSerializer
 }
