@@ -2,7 +2,7 @@ Extension { #name : #CodeHolder }
 
 { #category : #'*Sandblocks-Core' }
 CodeHolder class >> addSandblocksDefault [
-	<preference: 'Integrate Sandblocks into browsers' category: 'Sandblocks' description: 'If turned on, Smalltalk code in all standard tools such as browsers, message traces, etc. will be displayed as sandblocks. Reopen all tools to see an effect after toggling this preference.' type: #Boolean>
+	<preference: 'Integrate Sandblocks into browsers' category: 'sandblocks' description: 'If turned on, Smalltalk code in all standard tools such as browsers, message traces, etc. will be displayed as sandblocks. Reopen all tools to see an effect after toggling this preference.' type: #Boolean>
 
 	^ ContentsSymbolQuints first first = #blockEditor
 ]
