@@ -324,7 +324,7 @@ SBBlock >> canCopy [
 { #category : #'actions tests' }
 SBBlock >> canDelete [
 
-	^ self parentSandblock canDeleteChild: self
+	^ (self parentSandblock deleteCommandFor: self) notNil
 ]
 
 { #category : #'insert/delete' }
