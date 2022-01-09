@@ -20,6 +20,26 @@ SBGit class >> authorImageCache [
 	^ AuthorImageCache ifNil: [AuthorImageCache := Dictionary new]
 ]
 
+{ #category : #'author images' }
+SBGit class >> avatarForCommit: aGitCommit project: aProject [
+
+	^ self authorImageCache at: aGitCommit author email ifAbsentPut: [ | data url |
+		url := (SBGit githubProjectFor: aProject)
+			ifNotNil: [:project |
+				data := WebClient httpGet: ('https://api.github.com/repos/{1}/{2}/commits/{3}' format: project, {aGitCommit hexHash}).
+				(Json readFrom: data content readStream) author avatar_url, ('&size=', self avatarImageSize asString)]
+			ifNil: ['http://www.gravatar.com/avatar/', (WebUtils md5Digest: aGitCommit author email), ('?s=', self avatarImageSize asString)].
+		
+		data := WebClient httpGet: url.
+		(ImageReadWriter formFromStream: data content asByteArray readStream) scaledIntoFormOfSize: self avatarImageSize asPoint]
+]
+
+{ #category : #'author images' }
+SBGit class >> avatarImageSize [
+
+	^ 16
+]
+
 { #category : #'git utils' }
 SBGit class >> changeTo: aMethod concernsProject: aProject [
 
@@ -103,12 +123,19 @@ SBGit class >> extensionMethodsForAll: infos [
 	^ extensions
 ]
 
-{ #category : #'author images' }
-SBGit class >> imageForAuthor: aGitStamp [
+{ #category : #'git utils' }
+SBGit class >> githubProjectFor: aProject [
 
-	^ self authorImageCache at: aGitStamp email ifAbsentPut: [ | data |
-		data := WebClient httpGet: 'http://www.gravatar.com/avatar/', (WebUtils md5Digest: aGitStamp email), '?s=16'.
-		ImageReadWriter formFromStream: data content asByteArray readStream]
+	| branch git remote url regex |
+	self example: [SBGit] args: [{SBGit project: 'sandblocks'}] label: 'example'.
+	git := aProject loadedHistorian repository git.
+	branch := aProject loadedHistorian shortName.
+	remote := git upstreamRemoteOfBranchNamed: branch.
+	url := git remoteUrl: remote.
+	
+	regex := '.+github\.com[\:\/]([^\/]+)\/([^\/\.]+).*' asRegex.
+	(regex matches: url) ifFalse: [^ false].
+	^ {regex subexpression: 2. regex subexpression: 3}
 ]
 
 { #category : #'git utils' }
@@ -391,7 +418,7 @@ SBGit >> trimEOF: aString [
 SBGit >> updateCommitList [
 
 	commits removeAllMorphs.
-	(SBGit commitsFor: self activeProject max: 10) do: [:commit | commits addMorphBack: (SBGitCommit new commit: commit project: self activeProject)].
+	(SBGit commitsFor: self activeProject max: 83) do: [:commit | commits addMorphBack: (SBGitCommit new commit: commit project: self activeProject)].
 	self sandblockEditor ifNotNil: [commits childSandblocks first select].
 	
 	self updatePushButton
@@ -410,5 +437,5 @@ SBGit >> updatePushButton [
 
 	| unpushed |
 	unpushed := SBGit numberOfUnpushedCommits: self activeProject.
-	pushButton label: (unpushed > 0 ifTrue: ['({1})' format: {unpushed}] ifFalse: [''])
+	pushButton label: ('({1})' format: {unpushed})
 ]
