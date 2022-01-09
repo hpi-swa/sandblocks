@@ -149,6 +149,7 @@ SBGitIndex >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 	
 	(SBGit packagesIn: project) do: [:package | SBGitPackageWatcher clearTouchedFor: package name].
 	
+	message contents: ''.
 	self rebuild.
 	
 	^ true
