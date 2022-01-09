@@ -41,12 +41,6 @@ SBGit class >> avatarImageSize [
 ]
 
 { #category : #'git utils' }
-SBGit class >> changeTo: aMethod concernsProject: aProject [
-
-	^ (self packagesIn: aProject) values anySatisfy: [:package | (package systemCategories includes: aMethod methodClass category) or: [package isYourClassExtension: aMethod methodReference category]]
-]
-
-{ #category : #'git utils' }
 SBGit class >> commitsFor: aProject max: aNumber [
 
 	| walker count |
@@ -69,34 +63,22 @@ SBGit class >> createIndexFastFor: aProject [
 	currentHead := branch version commit.
 	fs := repository commitNamed: currentHead hexHash.
 	
-	(self packagesIn: aProject) keysAndValuesDo: [:path :package | | classes packagePath |
-		classes := ((SBGitPackageWatcher touchedArtefactsFor: package name) groupBy: [:method | method actualClass theNonMetaClass]) keys.
+	(self packagesIn: aProject) keysAndValuesDo: [:path :package | | classes packagePath methods extensionMethods |
 		packagePath := fs root resolvePath: (FSPath from: path delimiter: '/').
+		classes := Set new.
+		extensionMethods := OrderedCollection new.
+		
+		methods := (SBGitPackageWatcher touchedArtefactsFor: package name) do: [:m |
+			(m actualClass category beginsWith: package name)
+				ifTrue: [classes add: m actualClass theNonMetaClass]
+				ifFalse: [extensionMethods add: m]].
 		classes do: [:class |
 			(TonelWriter on: packagePath)
-				snapshot: (MCSnapshot fromDefinitions: ((package coreMethodsForClass: class) collect: [:m | m asMethodDefinition]));
-				writeClass: class asClassDefinition]].
-	
-	^ fs prepareNewCommit
-]
-
-{ #category : #'git utils' }
-SBGit class >> createIndexFastFor: aProject [
-
-	| repository fs currentHead branch |
-	self example: [SBGit] args: [{SBGit project: 'sandblocks'}] label: 'example'.
-	branch := aProject loadedHistorian.
-	repository := aProject repository fsgitRepository.
-	currentHead := branch version commit.
-	fs := repository commitNamed: currentHead hexHash.
-	
-	(self packagesIn: aProject) keysAndValuesDo: [:path :package | | classes packagePath |
-		classes := ((SBGitPackageWatcher touchedArtefactsFor: package name) groupBy: [:method | method actualClass theNonMetaClass]) keys.
-		packagePath := fs root resolvePath: (FSPath from: path delimiter: '/').
-		classes do: [:class |
-			(TonelWriter on: packagePath)
-				snapshot: (MCSnapshot fromDefinitions: ((package coreMethodsForClass: class) collect: [:m | m asMethodDefinition]));
-				writeClass: class asClassDefinition]].
+				snapshot: (MCSnapshot fromDefinitions: ((package coreMethodsForClass: class), (package coreMethodsForClass: class class) collect: [:m | m asMethodDefinition]));
+				writeClass: class asClassDefinition].
+		(TonelWriter on: packagePath)
+			snapshot: (MCSnapshot fromDefinitions: (extensionMethods collect: [:m | m asMethodDefinition]));
+			writeMethodExtensions].
 	
 	^ fs prepareNewCommit
 ]
@@ -106,6 +88,9 @@ SBGit class >> createIndexFor: aProject [
 
 	| repository fs currentHead branch snapshots |
 	self example: [SBGit new] args: [{SBGit project: 'sandblocks'}] label: 'example'.
+	
+	false ifTrue: [^ self createIndexFastFor: aProject].
+	
 	branch := aProject loadedHistorian.
 	repository := aProject repository fsgitRepository.
 	currentHead := branch version commit.
@@ -432,28 +417,6 @@ SBGit >> initialize [
 		attachDecorator: SBForceMoveDecorator newConfigured.
 	
 	self updateForProject
-]
-
-{ #category : #'as yet unclassified' }
-SBGit >> intoWorld: newOwner [
-
-	SystemChangeNotifier uniqueInstance
-		noMoreNotificationsFor: self;
-		notify: self ofSystemChangesOfItem: #method using: #objectChanged:;
-		notify: self ofSystemChangesOfItem: #class using: #objectChanged:
-]
-
-{ #category : #'as yet unclassified' }
-SBGit >> objectChanged: anEvent [
-
-	(anEvent itemKind = #method and: [SBGit changeTo: anEvent item concernsProject: self activeProject]) ifTrue: [SBWatch report: 123 for: 296110777].
-	SBWatch report: anEvent for: 343386515
-]
-
-{ #category : #'as yet unclassified' }
-SBGit >> outOfWorld: newOwner [
-
-	SystemChangeNotifier uniqueInstance noMoreNotificationsFor: self
 ]
 
 { #category : #'git external' }

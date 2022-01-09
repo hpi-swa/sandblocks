@@ -53,5 +53,7 @@ SBPatchOperation >> operation: anOperation [
 	anOperation isRemoval ifTrue: [self addMorphBack: (SBIcon iconMinus color: (Color r: 0.639 g: 0.082 b: 0.082))].
 	anOperation isModification ifTrue: [self addMorphBack: (SBIcon iconEdit color: (Color r: 0.474 g: 0.369 b: 0.149))].
 	
-	self addMorphBack: (SBStringMorph new contents: anOperation squotDiffNodeSummary)
+	self addMorphBack: (SBStringMorph new contents: (anOperation isClassPatch
+		ifTrue: ['(class definition)']
+		ifFalse: [anOperation definition selector]))
 ]

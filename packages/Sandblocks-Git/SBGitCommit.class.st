@@ -85,7 +85,21 @@ SBGitCommit >> project [
 ]
 
 { #category : #actions }
-SBGitCommit >> revertHeadOfActiveBranch [
+SBGitCommit >> resetHeadOfActiveBranch [
+	<action>
+
+	| project repository |
+	project := self project.
+	repository := project repository fsgitRepository.
+	repository unitOfWork
+		updateRef: project loadedHistorian name
+		to: commit hexHash
+		message: 'reset: moving to', commit hexHash.
+	self parentSandblock updateForProject
+]
+
+{ #category : #actions }
+SBGitCommit >> resetHeadOfActiveBranch [
 	<action>
 
 	| project repository |

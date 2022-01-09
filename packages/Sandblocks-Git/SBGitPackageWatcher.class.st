@@ -23,7 +23,9 @@ SBGitPackageWatcher class >> event: anEvent [
 			methodCategory := method category.
 			isInMyPackage := package systemCategories includes: method actualClass category.
 			isInMyExtensionCategory := package isYourClassExtension: methodCategory.
-			isInMyOverrideMethods := method compiledMethod notNil and: [(package isYourClassExtension: methodCategory) not and: [(package changeRecordForOverriddenMethod: method) notNil]].
+			
+			" TODO: this slows down saving quite a bit :( "
+			isInMyOverrideMethods := false and: [method compiledMethod notNil and: [(package isYourClassExtension: methodCategory) not and: [(package changeRecordForOverriddenMethod: method) notNil]]].
 			
 			isInMyExtensionCategory
 				ifTrue: [(records at: 'extensions') add: method]
@@ -33,7 +35,9 @@ SBGitPackageWatcher class >> event: anEvent [
 				ifTrue: [(records at: 'overrides') add: method]
 				ifFalse: [(records at: 'overrides') remove: method ifAbsent: []].
 			
-			(isInMyPackage or: [isInMyExtensionCategory]) ifTrue: [(records at: 'touched') add: method]]]
+			(isInMyPackage or: [isInMyExtensionCategory]) ifTrue: [
+				(records at: 'touched') add: method.
+				self triggerEvent: #packageTouched withArguments: {package. method}]]]
 ]
 
 { #category : #packages }
