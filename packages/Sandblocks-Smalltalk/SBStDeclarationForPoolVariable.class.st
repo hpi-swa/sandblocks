@@ -43,7 +43,7 @@ SBStDeclarationForPoolVariable >> browseReferences [
 { #category : #'as yet unclassified' }
 SBStDeclarationForPoolVariable >> guessedClass [
 
-	^ self block binding value class
+	^ self block binding value ifNotNil: #class
 ]
 
 { #category : #'as yet unclassified' }

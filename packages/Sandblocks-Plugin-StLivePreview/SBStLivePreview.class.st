@@ -170,6 +170,12 @@ SBStLivePreview >> timeout [
 ]
 
 { #category : #'as yet unclassified' }
+SBStLivePreview >> timeout [
+
+	^ 100 milliSeconds
+]
+
+{ #category : #'as yet unclassified' }
 SBStLivePreview >> valueForBlock: aBlock ifFound: aClosure onTimeout: timeoutBlock onError: errorBlock [
 
 	| env |

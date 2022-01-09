@@ -60,24 +60,60 @@ SBGit class >> commitsFor: aProject max: aNumber [
 ]
 
 { #category : #'git utils' }
-SBGit class >> createIndexFor: aProject [
+SBGit class >> createIndexFastFor: aProject [
 
 	| repository fs currentHead branch |
+	self example: [SBGit] args: [{SBGit project: 'sandblocks'}] label: 'example'.
+	branch := aProject loadedHistorian.
+	repository := aProject repository fsgitRepository.
+	currentHead := branch version commit.
+	fs := repository commitNamed: currentHead hexHash.
+	
+	(self packagesIn: aProject) keysAndValuesDo: [:path :package | | classes packagePath |
+		classes := ((SBGitPackageWatcher touchedArtefactsFor: package name) groupBy: [:method | method actualClass theNonMetaClass]) keys.
+		packagePath := fs root resolvePath: (FSPath from: path delimiter: '/').
+		classes do: [:class |
+			(TonelWriter on: packagePath)
+				snapshot: (MCSnapshot fromDefinitions: ((package coreMethodsForClass: class) collect: [:m | m asMethodDefinition]));
+				writeClass: class asClassDefinition]].
+	
+	^ fs prepareNewCommit
+]
+
+{ #category : #'git utils' }
+SBGit class >> createIndexFastFor: aProject [
+
+	| repository fs currentHead branch |
+	self example: [SBGit] args: [{SBGit project: 'sandblocks'}] label: 'example'.
+	branch := aProject loadedHistorian.
+	repository := aProject repository fsgitRepository.
+	currentHead := branch version commit.
+	fs := repository commitNamed: currentHead hexHash.
+	
+	(self packagesIn: aProject) keysAndValuesDo: [:path :package | | classes packagePath |
+		classes := ((SBGitPackageWatcher touchedArtefactsFor: package name) groupBy: [:method | method actualClass theNonMetaClass]) keys.
+		packagePath := fs root resolvePath: (FSPath from: path delimiter: '/').
+		classes do: [:class |
+			(TonelWriter on: packagePath)
+				snapshot: (MCSnapshot fromDefinitions: ((package coreMethodsForClass: class) collect: [:m | m asMethodDefinition]));
+				writeClass: class asClassDefinition]].
+	
+	^ fs prepareNewCommit
+]
+
+{ #category : #'git utils' }
+SBGit class >> createIndexFor: aProject [
+
+	| repository fs currentHead branch snapshots |
 	self example: [SBGit new] args: [{SBGit project: 'sandblocks'}] label: 'example'.
 	branch := aProject loadedHistorian.
 	repository := aProject repository fsgitRepository.
 	currentHead := branch version commit.
 	fs := repository commitNamed: currentHead hexHash.
-	SBGit writeSnapshots: (SBGit snapshotsForProject: aProject) on: fs root.
+	snapshots := SBGit snapshotsForProject: aProject.
+	SBGit writeSnapshots: snapshots on: fs root.
 	
 	^ fs prepareNewCommit
-]
-
-{ #category : #'git utils private' }
-SBGit class >> debugFastMode [
-	" disable scraping the system for extension + override methods for faster snapshots during debugging "
-
-	^ false
 ]
 
 { #category : #'git utils' }
@@ -101,7 +137,41 @@ SBGit class >> diffIn: aProject from: aFromHash to: aToHash [
 		ifTrue: [(repository unitOfWork objectNamed: aToHash) tree]
 		ifFalse: [aToHash].
 	
-	^ ((GitDiffCreator new diffTrees: from and: to) values select: [:entry | entry rightSide isInFileMode]) collect: [:entry | (self tonelDeserializeBlob: entry rightSide object) patchRelativeToBase: (self tonelDeserializeBlob: entry leftSide object)]
+	^ ((GitDiffCreator new diffTrees: from and: to) values select: [:entry | entry rightSide isInFileMode]) collect: [:entry |
+		(entry rightSide
+			ifNil: [MCSnapshot fromDefinitions: {}]
+			ifNotNil: [self tonelDeserializeBlob: entry rightSide object]) patchRelativeToBase: (entry leftSide
+			ifNil: [MCSnapshot fromDefinitions: {}]
+			ifNotNil: [self tonelDeserializeBlob: entry leftSide object])]
+]
+
+{ #category : #'git utils' }
+SBGit class >> diffIn: aProject from: aFromHash to: aToHash [
+
+	| repository from to |
+	self
+		example: [SBGit new]
+		args: [
+			{
+				SBGit project: 'sandblocks'.
+				'a63fd3c5fcb8903581b0ec750aab790987b772d6'.
+				'f23c3537834f65a2d7e653922c4092200b79667b'}]
+		label: 'example'.
+	repository := aProject repository fsgitRepository.
+	
+	from := aFromHash isString
+		ifTrue: [(repository unitOfWork objectNamed: aFromHash) tree]
+		ifFalse: [aFromHash].
+	to := aToHash isString
+		ifTrue: [(repository unitOfWork objectNamed: aToHash) tree]
+		ifFalse: [aToHash].
+	
+	^ ((GitDiffCreator new diffTrees: from and: to) values select: [:entry | entry rightSide isInFileMode]) collect: [:entry |
+		(entry rightSide
+			ifNil: [MCSnapshot fromDefinitions: {}]
+			ifNotNil: [self tonelDeserializeBlob: entry rightSide object]) patchRelativeToBase: (entry leftSide
+			ifNil: [MCSnapshot fromDefinitions: {}]
+			ifNotNil: [self tonelDeserializeBlob: entry leftSide object])]
 ]
 
 { #category : #'git utils private' }
@@ -110,7 +180,6 @@ SBGit class >> extensionMethodsForAll: infos [
 	| extensions |
 	self example: [SBGit new] args: [{{PackageInfo named: 'Sandblocks-Core'}}] label: 'example'.
 	extensions := Dictionary new.
-	self debugFastMode ifTrue: [^ extensions].
 	" TODO: missing externalTraits "
 	ProtoObject withAllSubclassesDo: [:class |
 		class organization categories do: [:category |
@@ -156,11 +225,11 @@ SBGit class >> overridenMethodsForAll: infos [
 
 	| overrides |
 	overrides := Dictionary new.
-	self debugFastMode ifTrue: [^ overrides].
 	infos first allOverriddenMethodsDo: [:method | | category changeRecord |
 		category := method category.
-		changeRecord := infos first changeRecordForOverriddenMethod: method.
-		infos do: [:info | ((info isYourClassExtension: category) not and: [changeRecord notNil]) ifTrue: [(overrides at: info packageName ifAbsentPut: [OrderedCollection new]) add: changeRecord]]].
+		infos do: [:info |
+			changeRecord := info changeRecordForOverriddenMethod: method.
+			((info isYourClassExtension: category) not and: [changeRecord notNil]) ifTrue: [(overrides at: info packageName ifAbsentPut: [OrderedCollection new]) add: changeRecord]]].
 	^ overrides
 ]
 
@@ -195,14 +264,19 @@ SBGit class >> snapshotsForPackages: aCollection [
 
 	| overrides extensions |
 	^ CurrentReadOnlySourceFiles cacheDuring: [
-		overrides := self overridenMethodsForAll: aCollection.
-		extensions := self extensionMethodsForAll: aCollection.
+		self useWatchers ifFalse: [
+			extensions := self extensionMethodsForAll: aCollection.
+			overrides := self overridenMethodsForAll: aCollection].
 		aCollection collect: [:info |
 			MCSnapshot fromDefinitions: (Array streamContents: [:stream |
 				info systemCategories ifNotEmpty: [:categories | stream nextPut: (MCOrganizationDefinition categories: categories)].
 				info coreMethods do: [:ea | stream nextPut: ea asMethodDefinition].
-				(extensions at: info packageName ifAbsent: [#()]) do: [:ea | stream nextPut: ea asMethodDefinition].
-				(overrides at: info packageName ifAbsent: [#()]) do: [:ea | stream nextPut: ea asMethodDefinition].
+				(self useWatchers
+					ifTrue: [SBGitPackageWatcher extensionMethodsFor: info packageName]
+					ifFalse: [extensions at: info packageName ifAbsent: [#()]]) do: [:ea | stream nextPut: ea asMethodDefinition].
+				(self useWatchers
+					ifTrue: [SBGitPackageWatcher overridenMethodsFor: info packageName]
+					ifFalse: [overrides at: info packageName ifAbsent: [#()]]) do: [:ea | stream nextPut: ea asMethodDefinition].
 				info classes do: [:ea | stream nextPutAll: ea classDefinitions]])]]
 ]
 
@@ -220,6 +294,12 @@ SBGit class >> snapshotsForProject: aProject [
 SBGit class >> tonelDeserializeBlob: aBlob [
 
 	^ MCSnapshot fromDefinitions: (TonelParser parseStream: aBlob bytes utf8Decoded readStream)
+]
+
+{ #category : #'git utils private' }
+SBGit class >> useWatchers [
+
+	^ true
 ]
 
 { #category : #'git utils private' }
@@ -348,7 +428,8 @@ SBGit >> initialize [
 				icon: SBIcon iconCloudUpload label: '' do: [self push];
 				balloonText: 'Push changes to remote'));
 		addMorphBack: (index := SBGitIndex new when: #commitCreated send: #updateCommitList to: self);
-		addMorphBack: (commits := SBColumn new).
+		addMorphBack: (commits := SBColumn new);
+		attachDecorator: SBForceMoveDecorator newConfigured.
 	
 	self updateForProject
 ]
@@ -418,7 +499,7 @@ SBGit >> trimEOF: aString [
 SBGit >> updateCommitList [
 
 	commits removeAllMorphs.
-	(SBGit commitsFor: self activeProject max: 83) do: [:commit | commits addMorphBack: (SBGitCommit new commit: commit project: self activeProject)].
+	(SBGit commitsFor: self activeProject max: 10) do: [:commit | commits addMorphBack: (SBGitCommit new commit: commit project: self activeProject)].
 	self sandblockEditor ifNotNil: [commits childSandblocks first select].
 	
 	self updatePushButton

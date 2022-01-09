@@ -28,6 +28,27 @@ SBGitCommit >> checkout [
 	loader load
 ]
 
+{ #category : #actions }
+SBGitCommit >> checkout [
+	<action>
+
+	| project headHex indexCommit patches loader |
+	project := self project.
+	
+	headHex := project loadedHistorian version commit hexHash.
+	indexCommit := (SBGit createIndexFor: project)
+		parents: {headHex};
+		yourself.
+	patches := SBGit
+		diffIn: project
+		from: indexCommit tree
+		to: (project repository fsgitRepository unitOfWork objectNamed: commit hexHash) tree.
+	
+	loader := MCPackageLoader new.
+	patches do: [:patch | [patch applyTo: loader]].
+	loader load
+]
+
 { #category : #initialize }
 SBGitCommit >> commit: aCommit project: aProject [
 
