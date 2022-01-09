@@ -63,22 +63,24 @@ SBGit class >> createIndexFastFor: aProject [
 	currentHead := branch version commit.
 	fs := repository commitNamed: currentHead hexHash.
 	
-	(self packagesIn: aProject) keysAndValuesDo: [:path :package | | classes packagePath methods extensionMethods |
+	(self packagesIn: aProject) keysAndValuesDo: [:path :package | | classes packagePath methods extensionMethods classesWithExtension |
 		packagePath := fs root resolvePath: (FSPath from: path delimiter: '/').
 		classes := Set new.
+		classesWithExtension := Set new.
 		extensionMethods := OrderedCollection new.
 		
 		methods := (SBGitPackageWatcher touchedArtefactsFor: package name) do: [:m |
 			(m actualClass category beginsWith: package name)
 				ifTrue: [classes add: m actualClass theNonMetaClass]
-				ifFalse: [extensionMethods add: m]].
+				ifFalse: [classesWithExtension add: m actualClass theNonMetaClass]].
 		classes do: [:class |
 			(TonelWriter on: packagePath)
 				snapshot: (MCSnapshot fromDefinitions: ((package coreMethodsForClass: class), (package coreMethodsForClass: class class) collect: [:m | m asMethodDefinition]));
 				writeClass: class asClassDefinition].
-		(TonelWriter on: packagePath)
-			snapshot: (MCSnapshot fromDefinitions: (extensionMethods collect: [:m | m asMethodDefinition]));
-			writeMethodExtensions].
+		classesWithExtension do: [:class |
+			(TonelWriter on: packagePath)
+				writeExtensionMethods: ((package extensionMethodsForClass: class) collect: [:m | m asMethodDefinition])
+				className: class name]].
 	
 	^ fs prepareNewCommit
 ]
@@ -89,7 +91,7 @@ SBGit class >> createIndexFor: aProject [
 	| repository fs currentHead branch snapshots |
 	self example: [SBGit new] args: [{SBGit project: 'sandblocks'}] label: 'example'.
 	
-	false ifTrue: [^ self createIndexFastFor: aProject].
+	true ifTrue: [^ self createIndexFastFor: aProject].
 	
 	branch := aProject loadedHistorian.
 	repository := aProject repository fsgitRepository.
@@ -99,35 +101,6 @@ SBGit class >> createIndexFor: aProject [
 	SBGit writeSnapshots: snapshots on: fs root.
 	
 	^ fs prepareNewCommit
-]
-
-{ #category : #'git utils' }
-SBGit class >> diffIn: aProject from: aFromHash to: aToHash [
-
-	| repository from to |
-	self
-		example: [SBGit new]
-		args: [
-			{
-				SBGit project: 'sandblocks'.
-				'a63fd3c5fcb8903581b0ec750aab790987b772d6'.
-				'f23c3537834f65a2d7e653922c4092200b79667b'}]
-		label: 'example'.
-	repository := aProject repository fsgitRepository.
-	
-	from := aFromHash isString
-		ifTrue: [(repository unitOfWork objectNamed: aFromHash) tree]
-		ifFalse: [aFromHash].
-	to := aToHash isString
-		ifTrue: [(repository unitOfWork objectNamed: aToHash) tree]
-		ifFalse: [aToHash].
-	
-	^ ((GitDiffCreator new diffTrees: from and: to) values select: [:entry | entry rightSide isInFileMode]) collect: [:entry |
-		(entry rightSide
-			ifNil: [MCSnapshot fromDefinitions: {}]
-			ifNotNil: [self tonelDeserializeBlob: entry rightSide object]) patchRelativeToBase: (entry leftSide
-			ifNil: [MCSnapshot fromDefinitions: {}]
-			ifNotNil: [self tonelDeserializeBlob: entry leftSide object])]
 ]
 
 { #category : #'git utils' }
