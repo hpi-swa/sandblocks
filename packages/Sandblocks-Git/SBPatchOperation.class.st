@@ -8,6 +8,22 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBPatchOperation >> diff: aLeftTree and: aRightTree [
+
+	| m l1 l2 minHeight |
+	minHeight := 2.
+	m := Set new.
+	l1 := Heap sortBlock: [:n1 :n2 | (self height: n1) < (self height: n2)].
+	l2 := Heap sortBlock: [:n1 :n2 | (self height: n1) < (self height: n2)].
+	
+	l1 add: aLeftTree.
+	l2 add: aRightTree.
+	
+	
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBPatchOperation >> discardChange [
 	<action>
 
@@ -17,6 +33,19 @@ SBPatchOperation >> discardChange [
 	loader load.
 	
 	self parentSandblock rebuild
+]
+
+{ #category : #'as yet unclassified' }
+SBPatchOperation >> doubleClick: evt [
+
+	self openDiff
+]
+
+{ #category : #'as yet unclassified' }
+SBPatchOperation >> height: aNode [
+
+	aNode childSandblocks ifEmpty: [^ 1].
+	^ (aNode childSandblocks collect: [:child | (self height: child) + 1]) max
 ]
 
 { #category : #'as yet unclassified' }
@@ -31,6 +60,20 @@ SBPatchOperation >> initialize [
 		listDirection: #leftToRight;
 		hResizing: #spaceFill;
 		vResizing: #shrinkWrap
+]
+
+{ #category : #'as yet unclassified' }
+SBPatchOperation >> openDiff [
+	<action>
+
+	self sandblockEditor openMorphInView: (operation isModification
+		ifTrue: [
+			SBTextBubble multiLine contents: (TextDiffBuilder
+				buildDisplayPatchFrom: operation obsoletion source
+				to: operation modification source
+				inClass: operation targetClass
+				prettyDiffs: false)]
+		ifFalse: [(operation sourceString string parseAsMethodFor: operation targetClass) asSandblock])
 ]
 
 { #category : #'as yet unclassified' }
