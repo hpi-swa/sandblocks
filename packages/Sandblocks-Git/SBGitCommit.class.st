@@ -9,21 +9,22 @@ Class {
 
 { #category : #actions }
 SBGitCommit >> checkout [
+	<action>
 
-	| project headHex indexCommit operations loader |
+	| project headHex indexCommit patches loader |
 	project := self project.
 	
 	headHex := project loadedHistorian version commit hexHash.
 	indexCommit := (SBGit createIndexFor: project)
 		parents: {headHex};
 		yourself.
-	operations := SBGit
+	patches := SBGit
 		diffIn: project
 		from: indexCommit tree
-		to: (project repository fsgitRepository unitOfWork objectNamed: headHex) tree.
+		to: (project repository fsgitRepository unitOfWork objectNamed: commit hexHash) tree.
 	
 	loader := MCPackageLoader new.
-	operations do: [:operation | operation applyTo: loader].
+	patches do: [:patch | [patch applyTo: loader]].
 	loader load
 ]
 
