@@ -40,13 +40,7 @@ SBGitIndex >> isArtefact [
 { #category : #'as yet unclassified' }
 SBGitIndex >> isClean [
 
-	^ changes hasChildSandblocks not
-]
-
-{ #category : #'as yet unclassified' }
-SBGitIndex >> isClean [
-
-	^ changes hasChildSandblocks not
+	^ changes childSandblocks isEmpty
 ]
 
 { #category : #'as yet unclassified' }
@@ -88,8 +82,9 @@ SBGitIndex >> project: aProject [
 			addMorphBack: (message := SBTextBubble multiLine
 				layoutInset: 2;
 				minimumHeight: 32;
-				minimumWidth: 200;
+				minimumWidth: 210;
 				maxWidth: 200;
+				contents: (message ifNotNil: #contents ifNil: ['']);
 				hResizing: #spaceFill;
 				placeholderText: 'Commit message ...');
 			cellGap: 4;
@@ -132,31 +127,6 @@ SBGitIndex >> project: aProject [
 SBGitIndex >> rebuild [
 
 	^ self project: project
-]
-
-{ #category : #'as yet unclassified' }
-SBGitIndex >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
-
-	| repository |
-	commitDraft
-		message: message contents;
-		author: GitStamp now;
-		committer: GitStamp now;
-		store.
-	
-	repository := project repository fsgitRepository.
-	repository unitOfWork
-		updateRef: project loadedHistorian name
-		to: commitDraft hexHash
-		message: 'commit: ', message contents.
-	
-	self triggerEvent: #commitCreated.
-	
-	(SBGit packagesIn: project) do: [:package | SBGitPackageWatcher clearTouchedFor: package name].
-	
-	self rebuild.
-	
-	^ true
 ]
 
 { #category : #'as yet unclassified' }

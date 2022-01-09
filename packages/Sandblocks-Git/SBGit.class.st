@@ -274,7 +274,7 @@ SBGit class >> writeSnapshots: aCollectionOfPairs on: aFSReference [
 				nextPut: (SquotTrackedObjectMetadata newFrom: {#objectClassName -> #PackageInfo. #objectsReplacedByNames -> true. #serializer -> #SquotTonelSerializer})]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBGit >> activeProject [
 
 	^ projectChooser object
@@ -395,13 +395,19 @@ SBGit >> initialize [
 { #category : #'git external' }
 SBGit >> pull [
 
-	| currentHead newHead loader |
+	| currentHead newHead loader directory |
+	directory := self activeProject repository fsgitRepository repository workingDir.
 	index isClean ifFalse: [^ self error: 'Working image is not clean. Please commit first.'].
 	
 	currentHead := self activeProject loadedHistorian version commit.
+	(self
+		checkedCmd: ExternalUnixOSProcess defaultShellPath
+		arguments: {'-c'. 'cd {1}; git status --untracked-files=no --porcelain' format: {directory}}
+		env: nil
+		stdin: nil) ifNotEmpty: [^ self error: 'Working copy in file system not clean. Please reset or commit first.'].
 	self
 		checkedCmd: ExternalUnixOSProcess defaultShellPath
-		arguments: {'-c'. 'cd {1}; git pull' format: {self activeProject repository fsgitRepository repository workingDir}}
+		arguments: {'-c'. 'cd {1}; git pull' format: {directory}}
 		env: nil
 		stdin: nil.
 	newHead := self activeProject loadedHistorian version commit.
@@ -431,7 +437,7 @@ SBGit >> trimEOF: aString [
 	^ aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBGit >> updateCommitList [
 
 	commits removeAllMorphs.
@@ -441,7 +447,7 @@ SBGit >> updateCommitList [
 	self updatePushButton
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBGit >> updateForProject [
 
 	self updateCommitList.
@@ -449,7 +455,7 @@ SBGit >> updateForProject [
 	branchChooser object: self activeProject loadedHistorian shortName
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBGit >> updatePushButton [
 
 	| unpushed |

@@ -876,6 +876,12 @@ SBBlock >> dismiss [
 	self removeSuggestionMenu
 ]
 
+{ #category : #'dropping/grabbing' }
+SBBlock >> dragTarget [
+
+	^ self veryDeepCopy
+]
+
 { #category : #drawing }
 SBBlock >> drawBackgroundOn: aCanvas [
 
@@ -1984,7 +1990,7 @@ SBBlock >> pickUp: anEvent [
 
 	| editor s |
 	self canDrag ifFalse: [^ self].
-
+	
 	editor := self sandblockEditor.
 	s := SBSelection new
 		homeArtefact: self containingArtefact;
@@ -1996,7 +2002,7 @@ SBBlock >> pickUp: anEvent [
 	
 	self containingBlock ifNotNil: [:b | (b sandblockBlockColorIfAbsent: [nil]) ifNotNil: [:c | s color: c]].
 	
-	s addMorphBack: self veryDeepCopy.
+	s addMorphBack: self dragTarget.
 	anEvent hand grabMorph: s.
 	
 	(anEvent shiftPressed not and: [self copyOnDrag not]) ifTrue: [

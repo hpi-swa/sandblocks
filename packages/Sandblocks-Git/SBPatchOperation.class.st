@@ -8,6 +8,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBPatchOperation >> browse [
+	<action>
+
+	self object browse
+]
+
+{ #category : #'as yet unclassified' }
 SBPatchOperation >> diff: aLeftTree and: aRightTree [
 
 	| m l1 l2 minHeight |
@@ -42,6 +49,12 @@ SBPatchOperation >> doubleClick: evt [
 ]
 
 { #category : #'as yet unclassified' }
+SBPatchOperation >> dragTarget [
+
+	^ self object asSandblock
+]
+
+{ #category : #'as yet unclassified' }
 SBPatchOperation >> height: aNode [
 
 	aNode childSandblocks ifEmpty: [^ 1].
@@ -60,6 +73,19 @@ SBPatchOperation >> initialize [
 		listDirection: #leftToRight;
 		hResizing: #spaceFill;
 		vResizing: #shrinkWrap
+]
+
+{ #category : #'as yet unclassified' }
+SBPatchOperation >> object [
+
+	| selector |
+	selector := operation definition selector.
+	
+	operation isClassPatch ifTrue: [^ operation targetClass].
+	
+	^ (operation targetClass includesSelector: selector)
+		ifTrue: [operation targetClass >> selector]
+		ifFalse: [operation sourceText string parseAsMethodFor: operation targetClass]
 ]
 
 { #category : #'as yet unclassified' }
