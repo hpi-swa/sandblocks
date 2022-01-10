@@ -273,6 +273,12 @@ SBStMethod >> storeOn: aStream [
 		nextPut: $)
 ]
 
+{ #category : #'insert/delete' }
+SBStMethod >> tryDelete [
+
+	
+]
+
 { #category : #suggestions }
 SBStMethod >> updateSuggestions [
 
