@@ -464,7 +464,8 @@ SBOwnTextMorph >> placeholderText [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> placeholderText: aString [
 
-	placeholderText := aString
+	placeholderText := aString.
+	self layoutChanged
 ]
 
 { #category : #'as yet unclassified' }
