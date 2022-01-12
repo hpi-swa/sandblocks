@@ -83,7 +83,7 @@ SBRepresentationEditor >> initialize [
 		addMorphBack: (SBRow new
 			addMorphBack: (SBStringMorph new contents: 'Match against: ');
 			addMorphBack: (SBStName new
-				autoCast: false;
+				autoCast: [];
 				contents: 'anObject';
 				behavior: SBStDeclarationForMethodArgument new;
 				yourself));

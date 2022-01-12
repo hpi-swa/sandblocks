@@ -24,11 +24,10 @@ SBGit class >> authorImageCache [
 SBGit class >> avatarForCommit: aGitCommit project: aProject [
 
 	^ self authorImageCache at: aGitCommit author email ifAbsentPut: [ | data url |
-		url := (SBGit githubProjectFor: aProject)
-			ifNotNil: [:project |
-				data := WebClient httpGet: ('https://api.github.com/repos/{1}/{2}/commits/{3}' format: project, {aGitCommit hexHash}).
-				(Json readFrom: data content readStream) author avatar_url, ('&size=', self avatarImageSize asString)]
-			ifNil: ['http://www.gravatar.com/avatar/', (WebUtils md5Digest: aGitCommit author email), ('?s=', self avatarImageSize asString)].
+		url := ((SBGit githubProjectFor: aProject) ifNotNil: [:project | | author |
+			data := WebClient httpGet: ('https://api.github.com/repos/{1}/{2}/commits/{3}' format: project, {aGitCommit hexHash}).
+			author := (Json readFrom: data content readStream) author.
+			author ifNotNil: [author avatar_url, ('&size=', self avatarImageSize asString)]]) ifNil: ['http://www.gravatar.com/avatar/', (WebUtils md5Digest: aGitCommit author email), ('?s=', self avatarImageSize asString)].
 		
 		data := WebClient httpGet: url.
 		(ImageReadWriter formFromStream: data content asByteArray readStream) scaledIntoFormOfSize: self avatarImageSize asPoint]
@@ -70,9 +69,11 @@ SBGit class >> createIndexFastFor: aProject [
 		extensionMethods := OrderedCollection new.
 		
 		methods := (SBGitPackageWatcher touchedArtefactsFor: package name) do: [:m |
-			(m actualClass category beginsWith: package name)
-				ifTrue: [classes add: m actualClass theNonMetaClass]
-				ifFalse: [classesWithExtension add: m actualClass theNonMetaClass]].
+			" actualClass may be nil a reference has been moved around "
+			m actualClass ifNotNil: [
+				(m actualClass category beginsWith: package name)
+					ifTrue: [classes add: m actualClass theNonMetaClass]
+					ifFalse: [classesWithExtension add: m actualClass theNonMetaClass]]].
 		classes do: [:class |
 			(TonelWriter on: packagePath)
 				snapshot: (MCSnapshot fromDefinitions: ((package coreMethodsForClass: class), (package coreMethodsForClass: class class) collect: [:m | m asMethodDefinition]));
