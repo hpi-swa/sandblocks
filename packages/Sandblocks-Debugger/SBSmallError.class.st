@@ -10,6 +10,21 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBSmallError class >> findOpenContextFrom: aContext in: anEditor [
+	" breaks for processes that timed out and have a very deep stack "
+
+	aContext findContextSuchThat: [:context |
+		anEditor
+			blockFor: context method homeMethod
+			withInterfaces: #()
+			ifOpen: [:method | | pc |
+				pc := context = aContext ifTrue: [context pc] ifFalse: [context previousPc].
+				^ method blockForPC: (context closure ifNotNil: [:c | c method -> pc] ifNil: [pc])]
+			ifClosed: [false]].
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBSmallError >> click: anEvent [
 
 	process debugWithTitle: error asString.
@@ -19,18 +34,8 @@ SBSmallError >> click: anEvent [
 { #category : #'as yet unclassified' }
 SBSmallError >> currentBlock [
 
-	self flag: #todo. " breaks for processes that timed out and have a very deep stack "
-	process suspendedContext findContextSuchThat: [:context |
-		self sandblockEditor
-			blockFor: context method homeMethod
-			withInterfaces: #()
-			ifOpen: [:method | | pc |
-				pc := context = process suspendedContext
-					ifTrue: [context pc]
-					ifFalse: [context previousPc].
-				^ method blockForPC: (context closure ifNotNil: [:c | c method -> pc] ifNil: [pc])]
-			ifClosed: [false]].
-	^ nil
+	self flag: #todo.
+	^ self class findOpenContextFrom: process suspendedContext in: self sandblockEditor
 ]
 
 { #category : #'as yet unclassified' }

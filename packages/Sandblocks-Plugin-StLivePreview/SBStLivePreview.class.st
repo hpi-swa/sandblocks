@@ -1,6 +1,6 @@
 Class {
 	#name : #SBStLivePreview,
-	#superclass : #SBBlock,
+	#superclass : #SBPopup,
 	#instVars : [
 		'scheduler',
 		'editor'
@@ -66,16 +66,7 @@ SBStLivePreview >> initialize [
 	
 	self
 		addMorphBack: SBIcon iconInfoCircle;
-		addMorphBack: SBStringMorph new;
-		changeTableLayout;
-		listDirection: #leftToRight;
-		cellGap: 4;
-		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap;
-		color: (Color r: 1 g: 1 b: 1);
-		layoutInset: 4;
-		disableLayout: true;
-		addDropShadow
+		addMorphBack: SBStringMorph new
 ]
 
 { #category : #presentation }
@@ -91,21 +82,9 @@ SBStLivePreview >> label [
 ]
 
 { #category : #presentation }
-SBStLivePreview >> morphicLayerNumber [
-
-	^ 99
-]
-
-{ #category : #presentation }
 SBStLivePreview >> mouseCursorAt: anEvent [
 
 	^ Cursor execute
-]
-
-{ #category : #presentation }
-SBStLivePreview >> preventOcclusion [
-
-	^ false
 ]
 
 { #category : #'as yet unclassified' }
@@ -148,25 +127,20 @@ SBStLivePreview >> show [
 			self label contents: '<timeout>'.
 			self icon changeIconName: #iconClockO]
 		onError: [:err |
-			show := true.
-			self label contents: (err printStringLimitedTo: 40).
-			self icon changeIconName: #iconBolt].
+			(SBSmallError findOpenContextFrom: err signalerContext in: editor)
+				ifNotNil: []
+				ifNil: [
+					show := true.
+					self label contents: (err printStringLimitedTo: 40).
+					self icon changeIconName: #iconBolt]].
 	
-	target ensureLayouted.
-	self position: target bottomLeft.
-	editor openMorph: self
+	show ifTrue: [self showBelow: target]
 ]
 
 { #category : #'as yet unclassified' }
 SBStLivePreview >> showDelay [
 
 	^ 500
-]
-
-{ #category : #'as yet unclassified' }
-SBStLivePreview >> timeout [
-
-	^ 100 milliSeconds
 ]
 
 { #category : #'as yet unclassified' }
@@ -205,8 +179,9 @@ SBStLivePreview >> valueForBlock: aBlock ifFound: aClosure onTimeout: timeoutBlo
 				[[env execute] valueWithin: self timeout onTimeout: [timeoutBlock value]]
 					on: SBStRunUntilValue
 					do: [:val | aClosure value: val value]
-					on: Error, Halt
-					do: [:ex | errorBlock value: ex]] ensure: [
+					on: Error, Halt, TestFailure
+					do: [:ex |
+						errorBlock value: ex]] ensure: [
 				currentMethod methodClass
 					addSelectorSilently: currentMethod selector
 					withMethod: currentMethod]].
