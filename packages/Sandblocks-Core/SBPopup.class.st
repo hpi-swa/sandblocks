@@ -1,7 +1,7 @@
 Class {
 	#name : #SBPopup,
 	#superclass : #SBBlock,
-	#category : #'Sandblocks-Morphs'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
