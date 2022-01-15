@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forClass: aClassNameString withOptions: aObjectString [
+SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forClass: aClassNameString withOption: aObjectString [
 
 	^ '<!DOCTYPE html>
 <html lang="en">
@@ -52,6 +52,57 @@ SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forC
 ]
 
 { #category : #'as yet unclassified' }
+SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forClass: aClassNameString withOptions: aArrayString [
+
+	^ '<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+
+    <meta
+      name="description"
+      content="component testing example page"
+    />
+   <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <title>Example</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">loading ...</div>
+	<style>
+	    @keyframes spin { 
+	    100% {
+	        transform:rotate(360deg); 
+	    } 
+	}
+    </style>
+    <script type="text/babel">
+',
+	aSourceCodeString,
+	'
+	const ', aArrayString, ';
+	const components = examples.map((example, index) => {
+        debugger;
+        const { componentProps } = example;
+        const { parentProps } = example;
+        return (
+          <div key={`container${index}`} {...parentProps}>
+            <', aClassNameString,' {...componentProps} />
+          </div>
+        );
+      });
+      ReactDOM.render(components, document.getElementById("root"));
+    </script>
+  </body>
+</html>'
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBJsComponentReplacement class >> getTestHTMLFilePath [
 
 	 ^ '/Users/michael/Desktop/test.html'
@@ -64,64 +115,30 @@ SBJsComponentReplacement class >> getTestHTMLFileUrl [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsComponentReplacement class >> matchComponentExample: aDictionary do: aBlock [
+SBJsComponentReplacement class >> matchComponentExamples: aDictionary do: aBlock [
 	<lang: #javascript match: '(class_declaration
     name: (identifier) @class_name
     body: (class_body
     	(field_definition
-        	(property_identifier) @example_name
-	      (object) @options
-        ) @example_object
+        	(property_identifier) @examples_name
+	      (array) @options
+        ) @example_array
 	(method_definition
         	(property_identifier) @method_name
   	)
     )
 ) @class'>
-
-	| wholeReactClass reactClassName options wholeOptions  |
-	(aDictionary at: 'example_name') contents = 'example' ifFalse: [^ nil].
+	| wholeReactClass reactClassName options  |
+	(aDictionary at: 'examples_name') contents = 'examples' ifFalse: [^ nil].
 	(aDictionary at: 'method_name') contents = 'render' ifFalse: [^ nil].
 	wholeReactClass := aDictionary at: 'class'. 
 	reactClassName := (aDictionary at: 'class_name') contents.
 	options := (aDictionary at: 'options').
-	wholeOptions := (aDictionary at: 'example_object').
 	
 	"First argument: What will be replaced, second argument: With what it will be replaced."
 	 ^ aBlock
-		value: (aDictionary at: 'example_object')
-		value: (self new exampleObject: options forAComponent: reactClassName withComponentNode: wholeReactClass url: self getTestHTMLFileUrl
-		)
-		
-	
-
-]
-
-{ #category : #'as yet unclassified' }
-SBJsComponentReplacement class >> matchComponentExamples: aDictionary do: aBlock [
-	"<lang: #javascript match: '(class_declaration
-    name: (identifier) @class_name
-    body: (class_body
-    	(field_definition
-        	(property_identifier) @example_name
-	      (array) @options
-        ) @example_object
-	(method_definition
-        	(property_identifier) @method_name
-  	)
-    )
-) @class'>"
-	| wholeReactClass reactClassName options wholeOptions  |
-	(aDictionary at: 'example_name') contents = 'example' ifFalse: [^ nil].
-	(aDictionary at: 'method_name') contents = 'render' ifFalse: [^ nil].
-	wholeReactClass := aDictionary at: 'class'. 
-	reactClassName := (aDictionary at: 'class_name') contents.
-	options := (aDictionary at: 'options').
-	wholeOptions := (aDictionary at: 'example_object').
-	
-	"First argument: What will be replaced, second argument: With what it will be replaced."
-	 ^ aBlock
-		value: (aDictionary at: 'example_object')
-		value: (self new exampleObject: options forAComponent: reactClassName withComponentNode: wholeReactClass url: self getTestHTMLFileUrl
+		value: (aDictionary at: 'example_array')
+		value: (self new exampleArray: options forAComponent: reactClassName withComponentNode: wholeReactClass url: self getTestHTMLFileUrl
 		)
 		
 	
@@ -131,26 +148,28 @@ SBJsComponentReplacement class >> matchComponentExamples: aDictionary do: aBlock
 { #category : #'as yet unclassified' }
 SBJsComponentReplacement class >> sampleReactClassAsString [
 
-	 ^ 'class Car extends React.Component {
+	 ^ 'sbEditor openMorphInView: (SBJavascript parseAndReplace: ''class Car extends React.Component {
  	example = {componentProps: {color: "red", kind: "stuff"}, 
 				parentProps: {style: {display: "inline-block", animation: "spin 4s infinite linear", backgroundColor: "blue"}}};
 	render(){
 		return <h2 style={{color: this.props.color}}>Hi, I am a {this.props.kind}! </h2>;
 	}
-}'
+}'')'
 ]
 
 { #category : #'as yet unclassified' }
-SBJsComponentReplacement >> exampleObject: aJsObject forAComponent: aComponentNameString withComponentNode: aComponentNode url: aString [ 
+SBJsComponentReplacement >> exampleArray: aJsArray forAComponent: aComponentNameString withComponentNode: aComponentNode url: aString [ 
 	
-	|aJSObjectWithName|
-	aJSObjectWithName := 'example = ', aJsObject sourceString.
-	self generateHtmlFileFor: aComponentNode sourceString withClassName: aComponentNameString  forOptions: aJSObjectWithName.
+	|aJSArrayWithName wrappedBrowser|
+	aJSArrayWithName := 'examples = ', aJsArray sourceString.
+	self generateHtmlFileFor: aComponentNode sourceString withClassName: aComponentNameString forOptions: aJSArrayWithName.
+	wrappedBrowser := SBBlock new attachDecorator: SBResizableDecorator new; addMorphBack: (MMBrowserMorph reactOpenOn: aString); color: Color seaFoam; 
+	changeTableLayout; hResizing: #shrinkWrap; vResizing: #shrinkWrap ;yourself.
 	self
 		listDirection: #topToBottom;
 		addMorphBack: (SBRow new
-			addMorphBack: (MMBrowserMorph reactOpenOn: aString);
-			addMorphBack: aJsObject buildCopy).
+			addMorphBack: wrappedBrowser;
+			addMorphBack: aJsArray buildCopy).
 			"addMorphBack: (SBTextBubble new contents: aString))"
 		
 	
@@ -158,10 +177,10 @@ SBJsComponentReplacement >> exampleObject: aJsObject forAComponent: aComponentNa
 ]
 
 { #category : #'as yet unclassified' }
-SBJsComponentReplacement >> generateHtmlFileFor: aReactComponentString withClassName: aClassNameString forOptions: aJsObjectString [
+SBJsComponentReplacement >> generateHtmlFileFor: aReactComponentString withClassName: aClassNameString forOptions: aJsArrayString [
 
 	| htmlString |
-	htmlString := self class exampleHTMLTemplateFor: aReactComponentString forClass: aClassNameString withOptions: aJsObjectString.
+	htmlString := self class exampleHTMLTemplateFor: aReactComponentString forClass: aClassNameString withOptions: aJsArrayString.
 	FileStream forceNewFileNamed: self class getTestHTMLFilePath do: [:stream | stream nextPutAll: htmlString].
 		
 	
@@ -197,10 +216,24 @@ SBJsComponentReplacement >> skipHtmlFileGeneration: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsComponentReplacement >> veryDeepCopyWith: deepCopier [
+
+	| new row mmBrowserMorph |
+	" assure that the browser morph is not included in the deepCopy "
+	row := self firstSubmorph.
+	mmBrowserMorph := row firstSubmorph.
+	row removeMorph: mmBrowserMorph.
+	new := super veryDeepCopyWith: deepCopier.
+	row addMorphFront: mmBrowserMorph.
+	
+	^ new
+]
+
+{ #category : #'as yet unclassified' }
 SBJsComponentReplacement >> writeSourceOn: aStream [
 
       | optionsObject |
-	optionsObject :=  'example = ', self firstSubmorph submorphs second firstSubmorph sourceString , ';'.
+	optionsObject :=  'examples = ', self firstSubmorph submorphs second firstSubmorph sourceString , ';'.
 	aStream nextPutAll: optionsObject.
 	self skipHtmlFileGeneration ifFalse: [
 		| className componentClass |
@@ -208,7 +241,7 @@ SBJsComponentReplacement >> writeSourceOn: aStream [
 		componentClass := self getOwningClass.
 		className := componentClass firstSubmorph submorphs third contents.
 		self generateHtmlFileFor: componentClass sourceString withClassName: className forOptions: optionsObject.
-		self firstSubmorph firstSubmorph doRefresh.
+		self firstSubmorph firstSubmorph firstSubmorph doRefresh.
 		self skipHtmlFileGeneration: false
 	]
 ]
