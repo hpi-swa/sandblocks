@@ -154,17 +154,18 @@ SBStClass >> definitionString [
 { #category : #'as yet unclassified' }
 SBStClass >> deleteClass [
 	<action>
-	
+
 	| classToRemove |
+	class ifNil: [^ self delete].
+	
 	classToRemove := self relatedClass theNonMetaClass.
 	(self confirm: 'Are you certain that you want to DELETE the class ', classToRemove name, ' (no easy undo)?') ifTrue: [
-		classToRemove subclasses notEmpty ifTrue: [
-			(self confirm: 'class has subclasses: still delete?') ifFalse: [^ self]].
+		classToRemove subclasses notEmpty ifTrue: [(self confirm: 'class has subclasses: still delete?') ifFalse: [^ self]].
 		classToRemove removeFromSystem.
-		self delete].
+		self delete]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'artefact protocol' }
 SBStClass >> ensureExpanded [
 ]
 
@@ -189,7 +190,7 @@ SBStClass >> inheritsFrom: aClass [
 	^ self superclass = aClass or: [self superclass inheritsFrom: aClass]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBStClass >> initialize [
 
 	super initialize.
@@ -248,55 +249,61 @@ SBStClass >> instanceVariables: aCollection [
 			addMorphBack: (SBStName instanceVariable: name class: self relatedClass)]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStClass >> isArtefact [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStClass >> isClassContainer [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStClass >> isEditor [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'*Sandblocks-Smalltalk' }
+SBStClass >> isSmalltalk [
+
+	^ true
+]
+
+{ #category : #testing }
 SBStClass >> isTopLevel [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStClass >> name [
 
 	^ self shownClassName
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBStClass >> object [
 
 	^ self relatedClass ifNil: [ UndefinedObject ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBStClass >> preferredColor [
 
 	^ SBStASTNode preferredColor
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStClass >> preventOcclusion [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBStClass >> printOn: aStream [
 
 	aStream nextPutAll: self shownClassName
@@ -312,7 +319,7 @@ SBStClass >> references [
 			(block object = self object and: [block ~= self]) ifTrue: [stream nextPut: block]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'artefact protocol' }
 SBStClass >> relatedClass [
 
 	^ class ifNil: [UndefinedObject]
@@ -336,7 +343,7 @@ SBStClass >> renameClass [
 	
 ]
 
-{ #category : #nil }
+{ #category : #saving }
 SBStClass >> saveString [
 
 	^ String streamContents: [:stream |
@@ -350,7 +357,7 @@ SBStClass >> saveString [
 		]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'artefact protocol' }
 SBStClass >> saveTryFixing: aBoolean quick: aQuickBoolean [
 
 	| oldClass environment newClassName oldName references blockReferences |
@@ -433,13 +440,13 @@ SBStClass >> superclass [
 	^ Smalltalk at: self superClassName asSymbol
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStClass >> textContents [
 
 	^ self shownClass name
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'artefact protocol' }
 SBStClass >> wantsInteractiveErrorCorrection [
 
 	^ false

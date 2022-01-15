@@ -2,7 +2,8 @@ Class {
 	#name : #SBErrorDecorator,
 	#superclass : #SBBlockDecorator,
 	#instVars : [
-		'message'
+		'message',
+		'subtle'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -30,5 +31,19 @@ SBErrorDecorator >> message: aString [
 { #category : #'as yet unclassified' }
 SBErrorDecorator >> postDrawOn: aCanvas [
 
-	aCanvas fillRectangle: self morph bounds color: (Color red alpha: 0.5)
+	self subtle
+		ifTrue: [aCanvas frameRoundRect: self morph bounds radius: 5 width: 3 color: (Color r: 1 g: 0.0 b: 0.0)]
+		ifFalse: [aCanvas fillRectangle: self morph bounds color: ((Color r: 1 g: 0.0 b: 0.0) alpha: 0.5)]
+]
+
+{ #category : #'as yet unclassified' }
+SBErrorDecorator >> subtle [
+
+	^ subtle ifNil: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBErrorDecorator >> subtle: aBoolean [
+
+	subtle := aBoolean
 ]

@@ -22,23 +22,7 @@ SBStAssignmentLabel >> fixActions [
 
 	^ (self valid or: [self block validContents not])
 		ifTrue: [#()]
-		ifFalse: [
-			{
-				(self block containingBlock ifNotNil: [:b | b isMethodBody not] ifNil: [false])
-					ifTrue: [
-						SBCodeAction
-							labeled: 'Declare block-local'
-							for: self block
-							do: [:node | node containingBlock declareTemporaryVariable: node contents]]
-					ifFalse: [nil].
-				SBCodeAction
-					labeled: 'Declare method temporary'
-					for: self block
-					do: [:node | node containingArtefact body declareTemporaryVariable: node contents].
-				SBCodeAction
-					labeled: 'Declare instance variable'
-					for: self block
-					do: [:node | node behavior declareInstanceVariable]} select: #notNil]
+		ifFalse: [self fixActionsForBinding]
 ]
 
 { #category : #'as yet unclassified' }

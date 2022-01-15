@@ -49,5 +49,5 @@ SBStCharacter >> valid [
 { #category : #'as yet unclassified' }
 SBStCharacter >> writeSourceOn: aStream [
 
-	aStream nextPut: $$; nextPut: self contents first
+	aStream nextPut: $$; nextPut: (self contents ifNotEmpty: #first ifEmpty: [' '])
 ]

@@ -14,7 +14,7 @@ SBNoColorPolicy >> background [
 SBNoColorPolicy >> borderColorForBlock: aBlock [
 
 	((aBlock isBlockBody and: [aBlock containingBlock notNil]) or: [aBlock isArtefact]) ifTrue: [^ self default alpha: (self dark ifTrue: [0.7] ifFalse: [0.4])].
-	^ self default alpha: (self dark ifTrue: [0.28] ifFalse: [self enlarge ifTrue: [0.35] ifFalse: [0.1]])
+	^ self default alpha: (self dark ifTrue: [0.28] ifFalse: [self enlarge ifTrue: [0.3] ifFalse: [0.1]])
 ]
 
 { #category : #'as yet unclassified' }

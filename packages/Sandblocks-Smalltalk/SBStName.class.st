@@ -298,7 +298,9 @@ SBStName >> noValidBinding [
 { #category : #'as yet unclassified' }
 SBStName >> noteNewOwner: aMorph [
 
-	(aMorph isNil or: [self autoCast isNil or: [self autoCast not]]) ifTrue: [^ self].
+	(aMorph isNil or: [self autoCast isNil or: [self autoCast isBoolean and: [self autoCast not]]]) ifTrue: [^ self].
+	
+	(self autoCast notNil and: [self autoCast isBlock]) ifTrue: [^ self autoCast value: self value: aMorph].
 	
 	SBStNameBehavior allSubclassesDo: [:cls | (cls checkCastFor: self parent: aMorph) ifTrue: [^ self behaviorClass: cls]].
 	

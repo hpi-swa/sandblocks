@@ -11,14 +11,14 @@ Class {
 { #category : #'as yet unclassified' }
 SBColor class >> matches: aMessage [
 
-	SBExample
+	"SBExample
 		self: [SBColor]
 		args: [{(SBStMessageSend new receiver: (SBStName contents: 'Color') selector: #orange)}]
 		label: 'matching'.
 	SBExample
 		self: [SBColor]
 		args: [{(SBStMessageSend new receiver: (SBStName contents: 'Color') selector: #fromUser)}]
-		label: 'non matching'.
+		label: 'non matching'."
 	
 	(super matches: aMessage) ifFalse: [^ false].
 	

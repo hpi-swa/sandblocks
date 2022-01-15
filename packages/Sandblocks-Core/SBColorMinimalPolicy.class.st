@@ -32,7 +32,7 @@ SBColorMinimalPolicy >> cornerRadius [
 SBColorMinimalPolicy >> layoutInsetFor: aBlock [
 
 	self enlarge ifTrue: [
-		aBlock isArtefact ifTrue: [^ 2].
+		aBlock isArtefact ifTrue: [^ 6].
 		^ 4].
 	(aBlock isUnknown or: [(aBlock isKindOf: SBStLiteral) or: [aBlock isBlockBody]]) ifTrue: [^ 2 @ 1].
 	(aBlock isMessageSend and: [aBlock messageParts size > 1]) ifTrue: [^ 4].

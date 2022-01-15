@@ -172,27 +172,26 @@ SBStMessageSend >> expression [
 SBStMessageSend >> fixActions [
 
 	^ self isDefined not
-		ifTrue: [
-			(self actualReceiver guessClassExpensive ifNil: [UIManager default chooseClassOrTrait])
-				ifNotNil: [:class |
-					{
-						SBCodeAction
-							labeled: 'Create method on ', (class ifNotNil: #name ifNil: ['...'])
-							for: self
-							do: [:node | | method |
-								method := SBStMethod new
-									selector: self selector
-										arguments: (self arguments collectWithIndex: [:arg :index | arg isName ifTrue: [arg veryDeepCopy] ifFalse: [SBStName contents: 'anObject', index asString]])
-										class: class;
-									body: SBStBlockBody new.
-								
-								self sandblockEditor do: (SBEditorOpenMorphCommand new
-									morph: method;
-									editor: self sandblockEditor;
-									isUnsaved: true;
-									yourself)].
-						SBCodeAction labeled: 'Confirm selector' for: self do: [:node | node selector asSymbol]}]
-				ifNil: [{}]]
+		ifTrue: [ | class |
+			class := self actualReceiver guessClassExpensive.
+			{
+				SBCodeAction
+					labeled: 'Create method on ', (class ifNotNil: #name ifNil: ['...'])
+					for: self
+					do: [:node | | method |
+						class := class ifNil: [UIManager default chooseClassOrTrait].
+						class ifNotNil: [
+							method := SBStMethod new
+								selector: self selector
+									arguments: (self arguments collectWithIndex: [:arg :index | arg isName ifTrue: [arg veryDeepCopy] ifFalse: [SBStName contents: 'anObject', index asString]])
+									class: class;
+								body: SBStBlockBody new.
+							self sandblockEditor do: (SBEditorOpenMorphCommand new
+								morph: method;
+								editor: self sandblockEditor;
+								isUnsaved: true;
+								yourself)]].
+				SBCodeAction labeled: 'Confirm selector' for: self do: [:node | node selector asSymbol]}]
 		ifFalse: [#()]
 ]
 

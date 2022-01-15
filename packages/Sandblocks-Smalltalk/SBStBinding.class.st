@@ -46,30 +46,7 @@ SBStBinding >> contentsChanged [
 { #category : #'as yet unclassified' }
 SBStBinding >> fixActions [
 
-	^ self validBinding ifTrue: [#()] ifFalse: [
-		{
-			(self block containingBlock ifNotNil: [:b | b isMethodBody not] ifNil: [false])
-				ifTrue: [
-					SBCodeAction
-						labeled: 'Declare block-local'
-						for: self block
-						do: [:node | node containingBlock declareTemporaryVariable: node contents]]
-				ifFalse: [nil].
-			SBCodeAction
-				labeled: 'Declare method temporary'
-				for: self block
-				do: [:node | node containingArtefact body declareTemporaryVariable: node contents].
-			SBCodeAction
-				labeled: 'Declare instance variable'
-				for: self block
-				do: [:node | self declareInstanceVariable].
-			self block containingArtefact isMethod
-				ifTrue: [
-					SBCodeAction labeled: 'Add method argument' for: self block do: [:node |
-						node containingArtefact signature
-							addArgument: (self argNameToType: node contents)
-							block: node veryDeepCopy]]
-				ifFalse: [nil]} select: #notNil]
+	^ self validBinding ifTrue: [#()] ifFalse: [self fixActionsForBinding]
 ]
 
 { #category : #'as yet unclassified' }

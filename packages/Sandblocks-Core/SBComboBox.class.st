@@ -85,7 +85,8 @@ SBComboBox >> object: anObject [
 			ifNotNil: [
 				actualLabels := self labels ifNil: [self values].
 				self contents: (self display: (actualLabels at: (self values indexOf: anObject)))]
-			ifNil: [self contents: (self display: anObject) asString]]
+			ifNil: [self contents: (self display: anObject) asString]].
+	self triggerEvent: #selectionChanged with: anObject
 ]
 
 { #category : #'as yet unclassified' }

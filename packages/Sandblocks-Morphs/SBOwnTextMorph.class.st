@@ -386,6 +386,12 @@ SBOwnTextMorph >> keyboardFocusChange: weHaveFocus [
 ]
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> maxWidth: aNumber [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> minExtent [
 
 	| font |
@@ -458,7 +464,8 @@ SBOwnTextMorph >> placeholderText [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> placeholderText: aString [
 
-	placeholderText := aString
+	placeholderText := aString.
+	self layoutChanged
 ]
 
 { #category : #'as yet unclassified' }

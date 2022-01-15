@@ -54,11 +54,35 @@ SBStNameBehavior >> contentsChanged [
 ]
 
 { #category : #'as yet unclassified' }
+SBStNameBehavior >> createClass [
+
+	<action>
+	<actionValidIf: #noValidBinding>
+
+	self block sandblockEditor do: (SBStCreateClassCommand new
+		name: self contents;
+		source: self block;
+		editor: self block sandblockEditor;
+		artefact: self block containingArtefact)
+]
+
+{ #category : #'as yet unclassified' }
 SBStNameBehavior >> declareBlockVariable [
 	<action>
 	<actionValidIf: #noValidBinding>
 	
 	self block containingBlock declareTemporaryVariable: self contents
+]
+
+{ #category : #'as yet unclassified' }
+SBStNameBehavior >> declareClassVariable [
+	<action>
+	<actionValidIf: #noValidBinding>
+
+	self block sandblockEditor do: (SBStDeclareClassVarCommand new
+		class: self block containingArtefact methodClass theNonMetaClass;
+		name: self contents;
+		source: self block)
 ]
 
 { #category : #'as yet unclassified' }
@@ -94,6 +118,50 @@ SBStNameBehavior >> doubleClick: anEvent [
 SBStNameBehavior >> fixActions [
 
 	^ #()
+]
+
+{ #category : #nil }
+SBStNameBehavior >> fixActionsForBinding [
+
+	^ self block contents first isUppercase
+		ifTrue: [self fixActionsForUppercaseBinding]
+		ifFalse: [self fixActionsForLowercaseBinding]
+]
+
+{ #category : #'as yet unclassified' }
+SBStNameBehavior >> fixActionsForLowercaseBinding [
+
+	^ Array streamContents: [:stream |
+		self block containingBlock ifNotNil: [:b |
+			b isMethodBody ifFalse: [
+				stream nextPut: (SBCodeAction
+					labeled: 'Declare block-local'
+					for: self block
+					do: [:node | node containingBlock declareTemporaryVariable: node contents])]].
+		stream nextPut: (SBCodeAction
+			labeled: 'Declare method temporary'
+			for: self block
+			do: [:node | node containingArtefact body declareTemporaryVariable: node contents]).
+		stream nextPut: (SBCodeAction
+			labeled: 'Declare instance variable'
+			for: self block
+			do: [:node | self declareInstanceVariable]).
+		self block containingArtefact isMethod ifTrue: [
+			stream nextPut: (SBCodeAction labeled: 'Add method argument' for: self block do: [:node |
+				node containingArtefact signature
+					addArgument: (self argNameToType: node contents)
+					block: node veryDeepCopy])]]
+]
+
+{ #category : #'as yet unclassified' }
+SBStNameBehavior >> fixActionsForUppercaseBinding [
+
+	^ Array streamContents: [:stream |
+		stream nextPut: (SBCodeAction
+			labeled: 'Declare class variable'
+			for: self block
+			do: [:node | self declareClassVariable]).
+		stream nextPut: (SBCodeAction labeled: 'Create class' for: self block do: [:node | self createClass])]
 ]
 
 { #category : #'as yet unclassified' }
