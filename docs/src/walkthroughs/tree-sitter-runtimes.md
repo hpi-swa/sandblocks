@@ -14,6 +14,15 @@ At the top of the file will be a Play button. Once clicked, it will try to find 
 
 ![](../assets/python-file.png)
 
+## Evaluating Foreign Code
+If you want to evaluate a snippet of code, use e.g.
+```
+SBPython instance runtime evaluate: 'print("Hello!")'
+```
+The return value will be the stdout of the program snippet.
+
+To receive stderr or to execute code asynchronously, check if your runtime implements `#evaluateFileAsync:cancel:`. Refer to its senders for examples on how to use the corresponding API.
+
 ## Watches
 
 You can insert a watch on any block moment but most likely inserting it on anything but an expression will result in a syntax error upon serialization or execution.
