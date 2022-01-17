@@ -180,7 +180,10 @@ SBButton >> invokeMetaMenu: evt [
 { #category : #accessing }
 SBButton >> label [
 
-	^ (self submorphs detect: [:m | m isKindOf: SBStringMorph]) contents
+	^ self submorphs
+		detect: [:m | m isKindOf: SBStringMorph]
+		ifFound: [:m | m contents]
+		ifNone: [self name]
 ]
 
 { #category : #accessing }
