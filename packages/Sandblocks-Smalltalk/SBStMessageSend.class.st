@@ -446,7 +446,7 @@ SBStMessageSend >> printOn: aStream [
 { #category : #'as yet unclassified' }
 SBStMessageSend >> receiver [
 
-	(self owner notNil and: [self isInCascade]) ifTrue: [self owner receiver].
+	(self owner notNil and: [self isInCascade]) ifTrue: [^ self owner receiver].
 	self submorphCount = 2 ifTrue: [^ self firstSubmorph].
 	^ nil
 ]
