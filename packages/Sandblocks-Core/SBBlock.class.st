@@ -73,15 +73,13 @@ SBBlock >> actionProviders [
 
 { #category : #'action helpers' }
 SBBlock >> actions [
-	
+
 	^ (Array streamContents: [:stream |
 		self actionProviders do: [:obj |
 			obj class withAllSuperclassesDo: [:class |
 				Pragma
 					withPragmasIn: class
-					do: [:pragma |
-						(#(#action #multiSelectAction #inputAction) includes: pragma keyword) ifTrue: [stream nextPut: pragma]]]]]) 
-		asIdentitySet asArray.
+					do: [:pragma | (#(#action #multiSelectAction #inputAction) includes: pragma keyword) ifTrue: [stream nextPut: pragma]]]]]) asIdentitySet asArray
 ]
 
 { #category : #hierarchy }
@@ -1656,8 +1654,9 @@ SBBlock >> localNestingDepth [
 SBBlock >> lookupAction: aSymbol [
 
 	self actionProviders do: [:provider |
-		((provider class lookupSelector: aSymbol) ifNotNil: [:m | self isValidAction: m] ifNil: [false]) ifTrue: [
-			^ provider]].
+		((provider class lookupSelector: aSymbol)
+			ifNotNil: [:m | self isValidAction: m]
+			ifNil: [false]) ifTrue: [^ provider]].
 	^ nil
 ]
 
@@ -1988,7 +1987,7 @@ SBBlock >> pasteReplace [
 SBBlock >> performAction: aSymbol [
 
 	(self lookupAction: aSymbol) ifNotNil: [:obj |
-		obj ~= self ifTrue: [obj block: self].
+		(obj ~= self and: [obj respondsTo: #block:]) ifTrue: [obj block: self].
 		obj perform: aSymbol.
 		^ true].
 	^ false
