@@ -73,10 +73,12 @@ SBSuggestionMenu >> initialize [
 	
 	activeIndex := 1.
 	
-	self hResizing: #shrinkWrap.
+	self
+		hResizing: #shrinkWrap;
+		disableLayout: true.
 	self scroller
 		changeTableLayout;
-		color: Color white.
+		color: (Color r: 1 g: 1 b: 1).
 	
 	container := Morph new
 		beTransparent;
@@ -88,7 +90,7 @@ SBSuggestionMenu >> initialize [
 		yourself.
 	self scroller addMorph: container.
 	
-	self height: 300.
+	self height: 300
 ]
 
 { #category : #'accessing - items' }
@@ -134,6 +136,12 @@ SBSuggestionMenu >> minExtent [
 			minExtent := minExtent x @ (minExtent y + extra)].
 
 	^ minExtent max: self minWidth @ self minHeight
+]
+
+{ #category : #layout }
+SBSuggestionMenu >> morphicLayerNumber [
+
+	^ 1
 ]
 
 { #category : #selecting }

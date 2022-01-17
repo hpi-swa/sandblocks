@@ -2707,14 +2707,15 @@ SBBlock >> updateSuggestions: aCollection showNear: aMorph [
 
 	(aCollection isEmpty or: [self hasInput not]) ifTrue: [^ self removeSuggestionMenu].
 	
+	self sandblockEditor ifNil: [^ self].
+	
 	self suggestionsMenu
 		editor: self sandblockEditor;
 		suggestions: (aCollection take: 30);
-		topLeft: aMorph positionInWorld + (0 @ aMorph height).
+		topLeft: aMorph position + (0 @ aMorph height).
 	
-	self world ifNotNil: [
-		self suggestionsMenu openInWorld.
-		self suggestionsMenu resize]
+	self sandblockEditor openMorph: self suggestionsMenu.
+	self suggestionsMenu resize
 ]
 
 { #category : #layout }
