@@ -20,7 +20,13 @@ SBStMessagePart >> asName: aConverter [
 	^ aConverter do: [SBStName new contents: self contents]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
+SBStMessagePart >> browse [
+
+	self browseImplementors
+]
+
+{ #category : #testing }
 SBStMessagePart >> canEvaluate [
 
 	^ true
@@ -33,13 +39,13 @@ SBStMessagePart >> changeToUnknown [
 	self sandblockEditor startInput: self at: 0 replacingContents: true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStMessagePart >> contents [
 
 	^ text contents, self contentsSuffix
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStMessagePart >> contents: aString [
 
 	aString = ':=' ifTrue: [
@@ -65,13 +71,13 @@ SBStMessagePart >> continueInputInArgument: anEvent [
 	^ self sandblockEditor selection keyStroke: anEvent
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStMessagePart >> currentTextMorph [
 
 	^ text
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStMessagePart >> deleteBeforeCursor [
 	<inputAction>
 
@@ -81,7 +87,7 @@ SBStMessagePart >> deleteBeforeCursor [
 	self isInWorld ifTrue: [self updateSuggestions]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBStMessagePart >> drawnColor [
 
 	^ self messageSend ifNotNil: [:m | m drawnColor alpha: 0] ifNil: [super drawnColor]
@@ -93,13 +99,13 @@ SBStMessagePart >> emphasis [
 	^ self colorPolicy emphasisForMessagePart: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #evaluate }
 SBStMessagePart >> evaluate [
 
 	^ self messageSend evaluate
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStMessagePart >> fontToUse [
 
 	^ super fontToUse emphasized: self emphasis emphasisCode
@@ -113,7 +119,7 @@ SBStMessagePart >> hasColon [
 		ifNotNil: [self owner lastSubmorph ~= self and: [self isBinary not and: [text contents ~= ':=']]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBStMessagePart >> initialize [
 
 	super initialize.
@@ -155,7 +161,7 @@ SBStMessagePart >> insertUnknownAfterAndInput: aBoolean [
 	self layoutChanged
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStMessagePart >> isAssignment [
 
 	^ text contents = ':'
@@ -173,7 +179,7 @@ SBStMessagePart >> isFirstPart [
 	^ self owner firstSubmorph = self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStMessagePart >> isMessagePart [
 
 	^ true
@@ -185,7 +191,7 @@ SBStMessagePart >> isUnary [
 	^ self owner lastSubmorph = self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBStMessagePart >> keyStroke: anEvent [
 	"(anEvent keyCharacter = Character space or: [
 		self actualContents notEmpty and: [
@@ -209,7 +215,7 @@ SBStMessagePart >> keyStroke: anEvent [
 			empty: false]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBStMessagePart >> layoutCommands [
 
 	^ SBAlgebraCommand container
@@ -229,13 +235,13 @@ SBStMessagePart >> parentIsExpression [
 	^ self parentSandblock isExpression
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBStMessagePart >> prefersNoBorder [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBStMessagePart >> printOn: aStream [
 
 	aStream
@@ -243,7 +249,7 @@ SBStMessagePart >> printOn: aStream [
 		nextPutAll: self contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStMessagePart >> selector [
 
 	^ self messageSend selector
@@ -256,13 +262,13 @@ SBStMessagePart >> selectorContentsBeforeMe [
 		((parts copyFrom: 1 to: (parts indexOf: self) - 1) collect: #contents) joinSeparatedBy: '']
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBStMessagePart >> startDrag: anEvent [
 
 	self parentSandblock isMessageSend ifTrue: [self parentSandblock startDrag: anEvent]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #input }
 SBStMessagePart >> startInputAt: aNumber replacingContents: aBoolean [
 
 	| cmd |
@@ -284,13 +290,13 @@ SBStMessagePart >> startOrAddToMultiSelection [
 	self messageSend startOrAddToMultiSelection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #input }
 SBStMessagePart >> stopEditing [
 
 	text stopEditing
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #input }
 SBStMessagePart >> stopEditing: aCommand [
 
 	aCommand
@@ -302,13 +308,13 @@ SBStMessagePart >> stopEditing: aCommand [
 	self removeSuggestionMenu
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBStMessagePart >> symbols [
 
 	^ self colorPolicy symbolsForMessagePart: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStMessagePart >> textContents [
 
 	^ self contents
@@ -348,13 +354,13 @@ SBStMessagePart >> useSuggestion: aString [
 	self messageSend useSuggestion: aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStMessagePart >> valid [
 
 	^ self contents notEmpty and: [self contents ~= ':']
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStMessagePart >> wantsInput [
 
 	^ self currentTextMorph contents isEmpty
@@ -445,7 +451,7 @@ SBStMessagePart >> wrapWithWatch [
 	self messageSend performAction: #wrapWithWatch
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBStMessagePart >> writeSourceOn: aStream [
 	" probably meant to address my parent message send "
 ]

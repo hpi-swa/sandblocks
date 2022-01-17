@@ -26,7 +26,7 @@ SBStBoolean >> doubleClick: anEvent [
 { #category : #'as yet unclassified' }
 SBStBoolean >> guessedClass [
 
-	^ Boolean
+	^ self parsedContents class
 ]
 
 { #category : #'as yet unclassified' }
