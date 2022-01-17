@@ -69,9 +69,10 @@ SBStSignature >> deleteCommandFor: aBlock [
 			ifFalse: [SBDeleteCommand new target: aBlock]].
 	
 	index := ((self submorphs indexOf: aBlock) - 1 / 2) floor * 2 + 1.
-	^ SBCombinedCommand newWith: {
+	^ (SBCombinedCommand newWith: {
 		SBDeleteCommand new target: (self submorphs at: index).
-		SBDeleteCommand new target: (self submorphs at: index + 1)}
+		SBDeleteCommand new target: (self submorphs at: index + 1)})
+			selectAfter: (self submorphs at: index - 1 ifAbsent: [self messageSend])
 ]
 
 { #category : #'as yet unclassified' }
