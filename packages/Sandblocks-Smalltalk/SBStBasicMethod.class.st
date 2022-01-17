@@ -606,12 +606,16 @@ SBStBasicMethod >> reloadArtefact [
 { #category : #caching }
 SBStBasicMethod >> reloadMethodInPlace [
 
+	| reloaded |
 	self externalModification: false.
-	^ self replaceBy: (self compiledMethod asSandblock
+	reloaded := self compiledMethod asSandblock
 		position: self position;
 		hResizing: self hResizing;
 		width: self width;
-		yourself)
+		yourself.
+	self replaceBy: reloaded.
+	reloaded withDecorator: SBForceMoveDecorator do: [:d | d createImplicitForces].
+	^ reloaded
 ]
 
 { #category : #actions }
