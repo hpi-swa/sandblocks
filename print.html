@@ -529,6 +529,12 @@ It comes with support for monitoring its stdout/stderr and injecting watches tha
 </code></pre>
 <p>At the top of the file will be a Play button. Once clicked, it will try to find a python interpreter on your system and execute the given file.</p>
 <p><img src="walkthroughs/../assets/python-file.png" alt="" /></p>
+<h2 id="evaluating-foreign-code"><a class="header" href="#evaluating-foreign-code">Evaluating Foreign Code</a></h2>
+<p>If you want to evaluate a snippet of code, use e.g.</p>
+<pre><code>SBPython instance runtime evaluate: 'print(&quot;Hello!&quot;)'
+</code></pre>
+<p>The return value will be the stdout of the program snippet.</p>
+<p>To receive stderr or to execute code asynchronously, check if your runtime implements <code>#evaluateFileAsync:cancel:</code>. Refer to its senders for examples on how to use the corresponding API.</p>
 <h2 id="watches"><a class="header" href="#watches">Watches</a></h2>
 <p>You can insert a watch on any block moment but most likely inserting it on anything but an expression will result in a syntax error upon serialization or execution.
 Insert a watch by either right-clicking the expression and filtering for <code>wrapWithWatch</code> or by pressing the Cmd+Shift+W shortcut.</p>
