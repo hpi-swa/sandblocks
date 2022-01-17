@@ -245,8 +245,16 @@ SBStNewMessageSend >> pc: aNumber [
 { #category : #'as yet unclassified' }
 SBStNewMessageSend >> possibleArgumentNamesFor: aString [
 
-	(self systemNavigation allImplementorsOf: aString asSymbol) do: [:impl | ^ impl compiledMethod asSandblock arguments collect: #contents].
-	^ #()
+	| selector method |
+	selector := aString asSymbol.
+	self owner receiver guessClassExpensive ifNotNil: [:class | (class lookupSelector: selector) ifNotNil: [:meth | method := meth]].
+	method ifNil: [
+		method := (self systemNavigation allImplementorsOf: selector)
+			at: 1
+			ifPresent: [:ref | ref compiledMethod]
+			ifAbsent: [nil]].
+	method ifNil: [^ #()].
+	^ method asSandblock arguments collect: #contents
 ]
 
 { #category : #accessing }
