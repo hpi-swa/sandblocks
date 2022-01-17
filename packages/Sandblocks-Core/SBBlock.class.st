@@ -798,7 +798,7 @@ SBBlock >> deleteBeforeCursor [
 				self hasChildSandblocks not
 					ifTrue: [self deleteBlock]
 					ifFalse: [(target = self childSandblocks first or: [target hasOwner: self childSandblocks first]) ifTrue: [self childSandblocks first deleteAround]]].
-			target isInWorld ifTrue: [editor startInput: target at: 900000000 replacingContents: false]]
+			target sandblockEditor ifNotNil: [editor startInput: target at: 900000000 replacingContents: false]]
 		ifFalse: [
 			(self parentHasDynamicNumberOfChildren and: [parent childSandblocks size > 1])
 				ifTrue: [
