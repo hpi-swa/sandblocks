@@ -138,6 +138,13 @@ SBBlock >> allChildBlocksSatisfy: aBlock [
 	^ true
 ]
 
+{ #category : #hierarchy }
+SBBlock >> andAllParentSandblocksDo: aBlock [
+
+	aBlock value: self.
+	self parentSandblock ifNotNil: [:p | p andAllParentSandblocksDo: aBlock]
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> appendElement [
 	<action>
@@ -1902,6 +1909,13 @@ SBBlock >> outerMostArtefact [
 SBBlock >> ownerWithColor [
 
 	^ self
+]
+
+{ #category : #accessing }
+SBBlock >> palettes [
+
+	" return SBPalette subclasses you'd like to have displayed here "
+	^ #()
 ]
 
 { #category : #hierarchy }

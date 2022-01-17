@@ -1162,6 +1162,12 @@ SBEditor >> outOfWorld: aWorld [
 	helpOverlay ifNotNil: #delete
 ]
 
+{ #category : #accessing }
+SBEditor >> palettes [
+
+	^ {SBCommonPalette}
+]
+
 { #category : #hierarchy }
 SBEditor >> parentSandblock [
 
