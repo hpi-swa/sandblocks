@@ -10,7 +10,7 @@ Class {
 	#category : 'Sandblocks-Core'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBSuggestionItem class >> selector: aSymbol label: aString [
 
 	^ self new

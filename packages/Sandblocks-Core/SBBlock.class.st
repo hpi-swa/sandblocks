@@ -2392,7 +2392,7 @@ SBBlock >> selectionLabel [
 { #category : #'actions tests' }
 SBBlock >> shouldAutocomplete [
 
-	^ self hasSuggestions and: [self suggestionsMenu activeSuggestion wouldChange: self]
+	^ self hasSuggestions and: [self suggestionsMenu activeItem wouldChange: self]
 ]
 
 { #category : #'as yet unclassified' }
@@ -2735,7 +2735,7 @@ SBBlock >> useSuggestion [
 
 	self suggestionMenuDo: [:menu | | editor |
 		editor := self sandblockEditor.
-		menu activeSuggestion ifNotNil: [:s |
+		menu activeItem ifNotNil: [:s |
 			(s wouldChange: self)
 				ifTrue: [
 					s useSuggestionOn: self.

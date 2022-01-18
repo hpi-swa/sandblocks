@@ -22,23 +22,25 @@ SBSuggestionMenu >> activeIndex [
 ]
 
 { #category : #accessing }
+SBSuggestionMenu >> activeItem [
+
+	^ self hasItems ifFalse: [nil] ifTrue: [self items at: activeIndex]
+]
+
+{ #category : #accessing }
 SBSuggestionMenu >> activeItem: anItem [
 
+	anItem = self activeItem ifTrue: [^ self].
+	
 	(self items at: activeIndex) active: false.
 	activeIndex := self items indexOf: anItem.
-	anItem active: true.
+	anItem active: true
 ]
 
 { #category : #accessing }
 SBSuggestionMenu >> activeSelector [
 
-	^ self activeSuggestion ifNotNil: #selector
-]
-
-{ #category : #accessing }
-SBSuggestionMenu >> activeSuggestion [
-
-	^ self hasItems ifFalse: [nil] ifTrue: [self items at: activeIndex]
+	^ self activeItem ifNotNil: #selector
 ]
 
 { #category : #accessing }
