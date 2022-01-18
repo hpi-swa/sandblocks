@@ -1,6 +1,9 @@
 Class {
 	#name : #SBGrammarHandler,
 	#superclass : #Object,
+	#instVars : [
+		'currentBlock'
+	],
 	#category : #'Sandblocks-Core'
 }
 
