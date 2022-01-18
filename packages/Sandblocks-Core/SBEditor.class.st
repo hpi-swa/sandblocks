@@ -348,7 +348,7 @@ SBEditor >> click: anEvent [
 	self select: nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBEditor >> close [
 
 	self containingWindow ifNotNil: #delete.
@@ -774,7 +774,7 @@ SBEditor >> handlesMouseDown: anEvent [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBEditor >> handlesMouseOver: anEvent [
 
 	^ true
@@ -860,7 +860,7 @@ SBEditor >> inputIsDefault [
 	^ inputMapping defaultState = #input
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBEditor >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
 	^ SBEditorOpenMorphCommand new
@@ -958,14 +958,14 @@ SBEditor >> modelWakeUp [
 		self valueOfProperty: #previousWindow ifPresentDo: [:window | self owner addMorphFront: self]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBEditor >> morphicLayerNumber [
 	" make sure we're at least over the docking bar "
 
 	^ 77 - 1
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBEditor >> mouseLeave: anEvent [
 
 	hoverHighlight ifNotNil: #detach
@@ -1024,7 +1024,7 @@ SBEditor >> objectInterface [
 	^ SBInterfaces never
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBEditor >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ SBInterfaces block, (SBToggledCode comment: '' active: 1 do: {[SBInterfaces always]. [SBInterfaces topLevel]})
@@ -1414,7 +1414,7 @@ SBEditor >> scrollToShow: aBlock [
 		scroll scrollToShow: aBlock]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBEditor >> scrollerClass [
 
 	^ SBEditorCanvasWithOverlay
@@ -1456,6 +1456,18 @@ SBEditor >> selection [
 SBEditor >> showHelper [
 
 	(helpOverlay isNil and: [self isInWorld and: [self selection notNil]]) ifTrue: [helpOverlay := SBHelpOverlay new target: self selection]
+]
+
+{ #category : #suggestions }
+SBEditor >> showSuggestionsMenu: menu near: aMorph [
+	"Hook for subclasses."
+
+	menu
+		editor: self;
+		topLeft: aMorph position + (0 @ aMorph height).
+	
+	self openMorph: menu.
+	menu resize
 ]
 
 { #category : #selection }
