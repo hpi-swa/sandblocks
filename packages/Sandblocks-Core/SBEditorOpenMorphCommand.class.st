@@ -27,7 +27,7 @@ SBEditorOpenMorphCommand >> do [
 	self shouldOpenNewWindow
 		ifTrue: [ | browser |
 			browser := Browser fullOnClass: morph relatedClass category: morph category.
-			browser contentsSymbol ~= #blockEditor ifTrue: [browser model toggleBlockEditor].
+			browser contentsSymbol ~= #blockEditor ifTrue: [browser toggleBlockEditor].
 			window := browser containingWindow.
 			Project current addDeferredUIMessage: [
 				browser blockEditor openOnlyMorph: morph.
@@ -42,8 +42,7 @@ SBEditorOpenMorphCommand >> do [
 			self applyPositionTo: morph in: nil.
 			isUnsaved ifTrue: [self editor do: (SBDoItCommand new artefact: morph)]].
 	
-	morph isSandblock ifTrue: [
-		morph withDecorator: SBForceMoveDecorator do: [:d | d createImplicitForces]].
+	morph isSandblock ifTrue: [morph withDecorator: SBForceMoveDecorator do: [:d | d createImplicitForces]].
 	
 	^ nil
 ]
