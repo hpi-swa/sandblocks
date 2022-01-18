@@ -493,6 +493,12 @@ SBOwnTextMorph >> suffix: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> userString [
+
+	^ self contents
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> wantsKeyboardFocus [
 
 	^ false
