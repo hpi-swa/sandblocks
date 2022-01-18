@@ -1319,6 +1319,16 @@ SBEditor >> reportErrorWithProcessCopy: anError source: anExecutableEnvironment 
 		source: anExecutableEnvironment
 ]
 
+{ #category : #suggestions }
+SBEditor >> repositionSuggestionsMenu [
+
+	| menu reference |
+	menu := self valueOfProperty: #sandblockSuggestionMenu ifAbsent: [^ self].
+	reference := self valueOfProperty: #sandblockSuggestionMenuReference ifAbsent: [^ self].
+	menu topLeft: reference positionInWorld + (0 @ reference height).
+	menu resize
+]
+
 { #category : #initialization }
 SBEditor >> resetState [
 
@@ -1460,14 +1470,14 @@ SBEditor >> showHelper [
 
 { #category : #suggestions }
 SBEditor >> showSuggestionsMenu: menu near: aMorph [
-	"Hook for subclasses."
 
-	menu
-		editor: self;
-		topLeft: aMorph position + (0 @ aMorph height).
+	menu editor: self.
 	
-	self openMorph: menu.
-	menu resize
+	self
+		setProperty: #sandblockSuggestionMenu toValue: menu;
+		setProperty: #sandblockSuggestionMenuReference toValue: aMorph.
+	self repositionSuggestionsMenu.
+	menu openInWorld
 ]
 
 { #category : #selection }
@@ -1497,6 +1507,18 @@ SBEditor >> startInput: aMorph at: aNumber replacingContents: aBoolean [
 SBEditor >> startOrAddToMultiSelection: aBlock [
 
 	self cursor startOrAddToMultiSelection: aBlock
+]
+
+{ #category : #stepping }
+SBEditor >> step [
+
+	self repositionSuggestionsMenu
+]
+
+{ #category : #stepping }
+SBEditor >> stepTime [
+
+	^ 0
 ]
 
 { #category : #printing }
