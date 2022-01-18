@@ -7,19 +7,19 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStSubstitution class >> applyAutomatically [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStSubstitution class >> catchesAll [
 
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStSubstitution class >> causesSideEffects [
 
 	^ false
@@ -31,67 +31,80 @@ SBStSubstitution class >> derive: anObject [
 	^ anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStSubstitution class >> identity [
 
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #suggestions }
+SBStSubstitution class >> instanceSuggestion [
+	"Answer a factory block that creates a new instance of the receiver. To be overridden by subclasses."
+
+	^ nil
+]
+
+{ #category : #testing }
 SBStSubstitution class >> isLeaf [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStSubstitution class >> isSmalltalkExpression [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStSubstitution class >> matches: aMessageSend [
 
 	^ aMessageSend isSandblock and: [(aMessageSend isMessageSend and: [aMessageSend receiver notNil]) or: [self matchesCascades and: [aMessageSend isCascade]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStSubstitution class >> matchesCascades [
 
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBStSubstitution class >> newFor: aMessage [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStSubstitution class >> prettyName [
 
 	^ self name allButFirst: 2
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStSubstitution class >> priority [
 
 	^ 10
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStSubstitution class >> selector: aString receiverMatches: aMessage [
 
 	^ (aMessage receiver satisfies: #(notNil isBinding)) and: [self name = aMessage receiver contents and: [aMessage selector = aString]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #suggestions }
 SBStSubstitution class >> suggestion [
+	"Answer a completion block that inserts a new instance of the receiver into a provided block. Subclasses may override this, but in many cases only need to override #instanceSuggestion."
 
-	^ nil
+	^ self instanceSuggestion ifNotNil: [:factory |
+		[:block |
+			block sandblockEditor do: (SBReplaceCommand new
+				target: block;
+				replacer: factory value;
+				yourself)]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStSubstitution class >> supports: aSymbol [
 
 	^ (self respondsTo: aSymbol) and: [self perform: aSymbol]

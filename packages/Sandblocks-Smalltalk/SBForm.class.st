@@ -9,7 +9,7 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBForm class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
@@ -20,7 +20,7 @@ SBForm class >> matches: aBlock [
 		and: [aBlock arguments first isStringBlock]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBForm class >> newFor: aBlock [
 
 	^ self new filename: aBlock arguments first contents

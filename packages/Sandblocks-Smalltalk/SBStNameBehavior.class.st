@@ -304,7 +304,12 @@ SBStNameBehavior >> uppercaseSuggestions [
 				stream nextPut: (SBSuggestionItem selector: key label: ((value isBehavior and: [key == value name])
 					ifTrue: ['class']
 					ifFalse: ['global']))]].
-		SBStSubstitution allSubclassesDo: [:class | (class name sandblockMatch: self contents) ifTrue: [class suggestion ifNotNil: [:block | stream nextPut: ((SBSuggestionItem selector: class name label: 'projection') completionAction: block)]]]]
+		SBStSubstitution allSubclassesDo: [:class |
+			(class name sandblockMatch: self contents) ifTrue: [
+				class suggestion ifNotNil: [:block |
+					stream nextPut: ((SBProjectionSuggestionItem selector: class name label: 'projection')
+						completionAction: block;
+						instanceSuggestion: class instanceSuggestion)]]]]
 ]
 
 { #category : #'as yet unclassified' }

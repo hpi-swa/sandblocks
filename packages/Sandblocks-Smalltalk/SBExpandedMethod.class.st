@@ -4,25 +4,25 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBExpandedMethod class >> applyAutomatically [
 
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBExpandedMethod class >> matches: aBlock [
 
 	^ super matches: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBExpandedMethod class >> newFor: aBlock [
 
 	^ self new send: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExpandedMethod class >> priority [
 
 	^ 3

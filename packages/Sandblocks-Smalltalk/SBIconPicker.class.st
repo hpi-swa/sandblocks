@@ -7,7 +7,7 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBIconPicker class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
@@ -18,7 +18,7 @@ SBIconPicker class >> matches: aBlock [
 	}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBIconPicker class >> newFor: aBlock [
 
 	^ self new icon: aBlock selector

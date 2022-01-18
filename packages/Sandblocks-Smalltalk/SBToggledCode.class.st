@@ -7,13 +7,19 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBToggledCode class >> comment: aString active: aNumber do: aCollection [
 
 	^ aNumber > 0 ifTrue: [(aCollection at: aNumber) value] ifFalse: [nil]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #suggestions }
+SBToggledCode class >> instanceSuggestion [
+
+	^ [self newEmpty]
+]
+
+{ #category : #testing }
 SBToggledCode class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
@@ -21,7 +27,13 @@ SBToggledCode class >> matches: aBlock [
 	^ aBlock receiver isBinding and: [aBlock receiver contents = 'SBToggledCode'] and: [aBlock selector = 'comment:active:do:']
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
+SBToggledCode class >> newEmpty [
+
+	^ self new comment: '' active: 0 do: {SBStBlockBody new}
+]
+
+{ #category : #'instance creation' }
 SBToggledCode class >> newFor: aBlock [
 
 	^ self new
