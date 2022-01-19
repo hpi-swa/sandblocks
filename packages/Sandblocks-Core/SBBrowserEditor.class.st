@@ -146,7 +146,7 @@ SBBrowserEditor >> modelSelection: anObject [
 		^ self].
 	
 	anObject isCompiledMethod ifTrue: [
-		((model respondsTo: #selectClass) and: [model selectedClass ~= anObject methodClass]) ifTrue: [model selectClass: anObject methodClass theNonMetaClass].
+		((model respondsTo: #selectClass:) and: [model selectedClass ~= anObject methodClass]) ifTrue: [model selectClass: anObject methodClass theNonMetaClass].
 		((model respondsTo: #selectMessageCategoryNamed:) and: [model messageCategoryListSelection ~= anObject methodReference category]) ifTrue: [model selectMessageCategoryNamed: anObject methodReference category].
 		((model respondsTo: #selectMessageNamed:) and: [model selectedMessage ~= anObject selector]) ifTrue: [model selectMessageNamed: anObject selector].
 		model
