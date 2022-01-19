@@ -8,14 +8,14 @@ Class {
 SBMessagePartTest >> testAddColon [
 
 	| message |
-	message := '5 yourself' parseAsSandblock
+	message := self parse: '5 yourself'
 ]
 
 { #category : #'as yet unclassified' }
 SBMessagePartTest >> testBinaryMessageEdit [
 
 	| message editor |
-	message := '5 + 2' parseAsSandblock.
+	message := self parse: '5 + 2'.
 	editor := self methodFor: message.
 	editor startInput: message messageParts first at: 0 replacingContents: false.
 	message messageParts first keyStroke: (self keyboardEvent: $-).
@@ -31,7 +31,7 @@ SBMessagePartTest >> testBinaryMessageEdit [
 SBMessagePartTest >> testChangeDoesNothing [
 
 	| message |
-	message := '5 yourself' parseAsSandblock.
+	message := self parse: '5 yourself'.
 	self methodFor: message.
 	message messageParts first select.
 	message messageParts first changeToUnknown.
@@ -42,7 +42,7 @@ SBMessagePartTest >> testChangeDoesNothing [
 SBMessagePartTest >> testDeleteAround [
 
 	| block |
-	block := '[5 yourself: 2 send: 8]' parseAsSandblock.
+	block := self parse: '[5 yourself: 2 send: 8]'.
 	self methodFor: block.
 	
 	block statements first messageParts second deleteAround.
@@ -53,7 +53,7 @@ SBMessagePartTest >> testDeleteAround [
 SBMessagePartTest >> testHasColon [
 
 	| message |
-	message := '5 yourself' parseAsSandblock.
+	message := self parse: '5 yourself'.
 	message selector: 'yourself' arguments: #().
 	self deny: message messageParts first hasColon.
 	message selector: 'yourself:' arguments: {SBUnknown new}.
@@ -66,7 +66,7 @@ SBMessagePartTest >> testHasColon [
 SBMessagePartTest >> testInsertMessagePartAtEnd [
 
 	| message |
-	message := 'a do: b' parseAsSandblock.
+	message := self parse: 'a do: b'.
 	self methodFor: message.
 	message arguments last insertElementAfter.
 	self assert: message selector = 'do::'.
@@ -77,7 +77,7 @@ SBMessagePartTest >> testInsertMessagePartAtEnd [
 SBMessagePartTest >> testInsertMessagePartAtStart [
 
 	| message |
-	message := 'a do: b' parseAsSandblock.
+	message := self parse: 'a do: b'.
 	self methodFor: message.
 	
 	" noop "
@@ -92,10 +92,10 @@ SBMessagePartTest >> testInsertMessagePartAtStart [
 SBMessagePartTest >> testInsertMessagePartBeforeEnd [
 
 	| message |
-	message := 'a do: b' parseAsSandblock.
+	message := self parse: 'a do: b'.
 	self methodFor: message.
 	message arguments last insertElementAfter.
-	self assert:  'do::' equals: message selector.
+	self assert: 'do::' equals: message selector.
 	self assert: message arguments last isUnknown
 ]
 
@@ -103,7 +103,7 @@ SBMessagePartTest >> testInsertMessagePartBeforeEnd [
 SBMessagePartTest >> testPressColonInExistingMessage [
 
 	| message argument part |
-	message := '5 yourself: 2' parseAsSandblock.
+	message := self parse: '5 yourself: 2'.
 	part := message messageParts first.
 	argument := message arguments first.
 	(self methodFor: message) startInput: message at: 3 replacingContents: false.
@@ -138,8 +138,11 @@ SBMessagePartTest >> testTypeBinary [
 SBMessagePartTest >> testUseSuggestion [
 
 	| message editor |
-	message := '5 yourself' parseAsSandblock.
-	(editor := self methodFor: message) startInput: message at: 1 replacingContents: false.
+	message := self parse: '5 yourself'.
+	(editor := self methodFor: message)
+		startInput: message
+		at: 1
+		replacingContents: false.
 	message useSuggestion: 'yourself:'.
 	self assert: message arguments last isSelected.
 	self assert: message arguments first isUnknown.
