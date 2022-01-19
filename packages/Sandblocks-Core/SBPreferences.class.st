@@ -18,10 +18,8 @@ Class {
 
 { #category : #accessing }
 SBPreferences class >> drawOnCanvas [
-	<preference: 'Left-click on canvas begins drawing'
-	category: 'sandblocks'
-	description: ''
-	type: #Boolean>
+	<preference: 'Left-click on canvas begins drawing' category: 'Sandblocks' description: '' type: #Boolean>
+
 	^ DrawOnCanvas ifNil: [false]
 ]
 
@@ -33,8 +31,8 @@ SBPreferences class >> drawOnCanvas: aBoolean [
 
 { #category : #accessing }
 SBPreferences class >> edgePanSpeed [
-	<preference: 'Edge Pan Speed' category: 'sandblocks' description: 'Speed at which the view will move when dragging a block near the edge of the screen.' type: #Number>
-	
+	<preference: 'Edge Pan Speed' category: 'Sandblocks' description: 'Speed at which the view will move when dragging a block near the edge of the screen.' type: #Number>
+
 	^ EdgePanSpeed ifNil: [500]
 ]
 
@@ -45,8 +43,8 @@ SBPreferences class >> edgePanSpeed: aNumber [
 
 { #category : #accessing }
 SBPreferences class >> edgePanZone [
-	<preference: 'Edge Pan Zone Size' category: 'sandblocks' description: 'From the edge of the editor, the length at which panning starts, as a divisor of the editors size' type: #Number>
-	
+	<preference: 'Edge Pan Zone Size' category: 'Sandblocks' description: 'From the edge of the editor, the length at which panning starts, as a divisor of the editors size' type: #Number>
+
 	^ EdgePanZone ifNil: [16]
 ]
 
@@ -57,7 +55,7 @@ SBPreferences class >> edgePanZone: aNumber [
 
 { #category : #accessing }
 SBPreferences class >> enableForceLayout [
-	<preference: 'Enable force-driven layout for blocks' category: 'sandblocks' description: '' type: #Boolean>
+	<preference: 'Enable force-driven layout for blocks' category: 'Sandblocks' description: '' type: #Boolean>
 
 	^ EnableForceLayout ifNil: [true]
 ]
@@ -70,7 +68,7 @@ SBPreferences class >> enableForceLayout: aBoolean [
 
 { #category : #accessing }
 SBPreferences class >> hideIndicators [
-	<preference: 'Hide always-visible offscreen indicators' category: 'sandblocks' description: '' type: #Boolean>
+	<preference: 'Hide always-visible offscreen indicators' category: 'Sandblocks' description: '' type: #Boolean>
 
 	^ HideIndicators ifNil: [false]
 ]
@@ -82,7 +80,7 @@ SBPreferences class >> hideIndicators: aBoolean [
 
 { #category : #accessing }
 SBPreferences class >> largeInsets [
-	<preference: 'Increase size of insets around blocks' category: 'sandblocks' description: 'Increase size of insets so that blocks are easier to distinguish' type: #Boolean>
+	<preference: 'Increase size of insets around blocks' category: 'Sandblocks' description: 'Increase size of insets so that blocks are easier to distinguish' type: #Boolean>
 
 	^ LargeInsets ifNil: [false]
 ]
@@ -100,7 +98,7 @@ SBPreferences class >> largeInsets: aBoolean [
 
 { #category : #accessing }
 SBPreferences class >> previewDropInsert [
-	<preference: 'Preview block positions while dragging' category: 'sandblocks' description: 'Preview the block that would be inserted when dragging' type: #Boolean>
+	<preference: 'Preview block positions while dragging' category: 'Sandblocks' description: 'Preview the block that would be inserted when dragging' type: #Boolean>
 
 	^ PreviewDropInsert ifNil: [false]
 ]
@@ -113,10 +111,8 @@ SBPreferences class >> previewDropInsert: aBoolean [
 
 { #category : #accessing }
 SBPreferences class >> rightClickContextMenu [
-	<preference: 'Right-click opens actions menu'
-	category: 'sandblocks'
-	description: 'Opens the actions menu on a right-clicked block. Disables right-click to move the canvas unless the canvas itself is clicked'
-	type: #Boolean>
+	<preference: 'Right-click opens actions menu' category: 'Sandblocks' description: 'Opens the actions menu on a right-clicked block. Disables right-click to move the canvas unless the canvas itself is clicked' type: #Boolean>
+
 	^ RightClickContextMenu ifNil: [true]
 ]
 
@@ -128,7 +124,7 @@ SBPreferences class >> rightClickContextMenu: aBoolean [
 
 { #category : #accessing }
 SBPreferences class >> showHoverDecorator [
-	<preference: 'Show an outline around hovered blocks' category: 'sandblocks' description: 'Show an outline around the currently hovered block to help drag-and-drop' type: #Boolean>
+	<preference: 'Show an outline around hovered blocks' category: 'Sandblocks' description: 'Show an outline around the currently hovered block to help drag-and-drop' type: #Boolean>
 
 	^ ShowHoverDecorator ifNil: [false]
 ]
@@ -141,7 +137,7 @@ SBPreferences class >> showHoverDecorator: aBoolean [
 
 { #category : #accessing }
 SBPreferences class >> suggestionsOnClick [
-	<preference: 'Show suggestions menu on click' category: 'sandblocks' description: 'Show the suggestions menu when a message send is clicked, not just when starting to type.' type: #Boolean>
+	<preference: 'Show suggestions menu on click' category: 'Sandblocks' description: 'Show the suggestions menu when a message send is clicked, not just when starting to type.' type: #Boolean>
 
 	^ SuggestionsOnClick ifNil: [false]
 ]
