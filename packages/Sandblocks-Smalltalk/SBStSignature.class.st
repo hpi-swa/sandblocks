@@ -251,7 +251,7 @@ SBStSignature >> possibleArgumentNamesFor: aString [
 	| selector method |
 	selector := aString asSymbol.
 	
-	self owner receiver guessClassExpensive ifNotNil: [:class | (class lookupSelector: selector) ifNotNil: [:meth | method := meth]].
+	(self owner receiver ifNotNil: [:b | b guessClassExpensive]) ifNotNil: [:class | (class lookupSelector: selector) ifNotNil: [:meth | method := meth]].
 	method ifNil: [
 		method := (self systemNavigation allImplementorsOf: selector)
 			at: 1
