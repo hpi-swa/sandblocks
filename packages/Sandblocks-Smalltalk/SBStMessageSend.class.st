@@ -92,7 +92,7 @@ SBStMessageSend >> binding: aBlock value: anotherBlock [
 	self receiver: aBlock selector: ':=' arguments: {anotherBlock}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStMessageSend >> browse [
 
 	self browseImplementors
