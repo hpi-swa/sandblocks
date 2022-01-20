@@ -125,9 +125,22 @@ SBPreferencesEditor >> initialize [
 	
 	self
 		addSpacer;
-		addMorphBack: (SBStringMorph new
-			contents: 'Settings';
-			bold);
+		addMorphBack: (SBRow new
+			changeTableLayout;
+			hResizing: #spaceFill;
+			cellPositioning: #leftCenter;
+			addMorphBack: (SBStringMorph new
+				contents: 'Settings';
+				bold);
+			addMorphBack: (Morph new
+				height: 0;
+				color: Color transparent;
+				hResizing: #spaceFill);
+			addMorphBack: (SBButton new
+				icon: SBIcon iconCogs
+					shortcut: nil
+					do: [PreferenceBrowser open selectedCategory: 'Sandblocks'];
+				balloonText: 'Browse all settings'));
 		addSeparator.
 	
 	self addPreference: #drawOnCanvas of: SBPreferences.
