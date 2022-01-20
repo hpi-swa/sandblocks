@@ -10,13 +10,13 @@ Class {
 	#category : #'Sandblocks-Morphs'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBButton >> active [
 
 	^ active ifNil: [false]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBButton >> active: aBoolean [
 	" show the button as activated "
 
@@ -24,20 +24,31 @@ SBButton >> active: aBoolean [
 	self changed
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBButton >> borderStyle [
 
 	^ BorderStyle width: 1 color: (self colorPolicy ifNotNil: [:c | c borderColorForButton: self] ifNil: [Color gray alpha: 0.3])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'debug and other' }
+SBButton >> buildDebugMenu: aHandMorph [
+
+	^ (super buildDebugMenu: aHandMorph)
+		addLine;
+		add: 'debug action invocation' translated
+			target: self
+			action: #debugAction;
+		yourself
+]
+
+{ #category : #'event handling' }
 SBButton >> clicked [
 
 	action value.
 	self mouseEntered
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBButton >> color [
 
 	| base |
@@ -55,10 +66,24 @@ SBButton >> color [
 	^ base
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBButton >> colorPolicy [
 
 	^ self containingSandblock ifNotNil: [:b | b colorPolicy]
+]
+
+{ #category : #'debug and other' }
+SBButton >> debugAction [
+
+	(Process
+		forBlock: [self doButtonAction]
+		runUntil: [:context | context closure = action or: [context receiver = action]]) debugWithTitle: ('Debug button action "{1}"' translated format: {self label})
+]
+
+{ #category : #button }
+SBButton >> doButtonAction [
+
+	^ self clicked
 ]
 
 { #category : #'as yet unclassified' }
@@ -76,32 +101,32 @@ SBButton >> example [
 		extent: 300 @ 300
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'visual properties' }
 SBButton >> fillStyle [
 
 	^ self color
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBButton >> handlesMouseDown: anEvent [
 
 	^ anEvent redButtonPressed
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBButton >> hovered [
 
 	^ hovered ifNil: [false]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBButton >> hovered: aBoolean [
 
 	hovered := aBoolean.
 	self changed
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBButton >> icon: anIconMorph label: aString do: aBlock [
 
 	self example: [SBButton new] args: [{SBIcon iconUndo. $u asSandblockShortcut. [nil]}] label: 'icon'.
@@ -113,7 +138,7 @@ SBButton >> icon: anIconMorph label: aString do: aBlock [
 		emphasis: TextEmphasis bold emphasisCode)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBButton >> icon: anIconMorph shortcut: aShortcut do: aBlock [
 
 	self
@@ -123,7 +148,7 @@ SBButton >> icon: anIconMorph shortcut: aShortcut do: aBlock [
 	self widget: anIconMorph shortcut: aShortcut do: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBButton >> initialize [
 
 	super initialize.
@@ -146,19 +171,22 @@ SBButton >> initialize [
 		on: #click send: #clicked to: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'meta-actions' }
 SBButton >> invokeMetaMenu: evt [
 
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBButton >> label [
 
-	^ (self submorphs detect: [:m | m isKindOf: SBStringMorph]) contents
+	^ self submorphs
+		detect: [:m | m isKindOf: SBStringMorph]
+		ifFound: [:m | m contents]
+		ifNone: [self name]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBButton >> label: aString [
 
 	(self submorphs detect: [:m | m isKindOf: SBStringMorph] ifNone: [
@@ -167,7 +195,7 @@ SBButton >> label: aString [
 			emphasis: TextEmphasis bold emphasisCode)]) contents: aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBButton >> label: aString shortcut: aShortcut do: aBlock [
 
 	self example: [SBButton new] args: [{'hello'. $p command. [nil]}] label: 'label'.
@@ -179,44 +207,44 @@ SBButton >> label: aString shortcut: aShortcut do: aBlock [
 		do: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBButton >> mouseDown [
 	
 	self pressed: true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBButton >> mouseEntered [
 
 	self hovered: true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBButton >> mouseLeft [
 
 	self hovered: false.
 	self pressed: false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBButton >> mouseUp [
 
 	self pressed: false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBButton >> onClick: aBlock [
 
 	action := aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBButton >> pressed [
 
 	^ pressed ifNil: [false]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBButton >> pressed: aBoolean [
 	" the button is currently being held by the pressed mouse cursor "
 
@@ -224,7 +252,7 @@ SBButton >> pressed: aBoolean [
 	self changed
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBButton >> widget: aMorph shortcut: aShortcut do: aBlock [
 
 	action := aBlock.
