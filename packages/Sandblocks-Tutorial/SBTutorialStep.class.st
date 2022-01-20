@@ -236,7 +236,7 @@ SBTutorialStep class >> stepDeleting: anEditor [
 				checkCondition: [:editor | method body statements first submorphs noneSatisfy: [:el | el contents = '6']].
 			step
 				addStep: 'Your current copy buffer is shown in the bottom-right corner. To insert the 6 in the right place, move your cursor using <#moveCursorRight> and <#moveCursorLeft> until you reach the gap just after the 5. A popup will tell you what block the insertion will take place in. Then use <#pasteReplace> to insert the block.'
-				checkCondition: [:editor | method body statements first lastSubmorph contents = '6'].
+				checkCondition: [:editor | method body statements first lastSubmorph submorphBefore contents = '5' and: [method body statements first lastSubmorph contents = '6']].
 			step
 				addStep: 'Finally, select the entire array using <#moveCursorLarger> and replace it with the still copied 6 using <#pasteReplace> for paste-replace.'
 				checkCondition: [:editor | method body statements first contents = '6']]

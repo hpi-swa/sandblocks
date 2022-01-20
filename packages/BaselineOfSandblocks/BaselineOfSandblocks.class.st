@@ -1,7 +1,7 @@
 Class {
 	#name : #BaselineOfSandblocks,
 	#superclass : #BaselineOf,
-	#category : 'BaselineOfSandblocks'
+	#category : #BaselineOfSandblocks
 }
 
 { #category : #'as yet unclassified' }
@@ -59,8 +59,10 @@ BaselineOfSandblocks >> baseline: spec [
 			package: 'PoppyPrint-Core' with: [spec repository: 'github://tom95/poppy-print/packages'].
 		
 		spec
-			package: 'Sandblocks-Core'
-				with: [spec requires: #('SVG-Morphic' 'Sandblocks-Morphs' 'Sandblocks-Utils' 'Sandblocks-Layout' 'squeak6-compat')];
+			package: 'Sandblocks-Core' with: [
+				spec
+					requires: #('SVG-Morphic' 'Sandblocks-Morphs' 'Sandblocks-Utils' 'Sandblocks-Layout' 'squeak6-compat');
+					postLoadDoIt: #postLoadCore];
 			package: 'Sandblocks-Smalltalk'
 				with: [spec requires: #('Sandblocks-Core' 'PoppyPrint-Core' 'squeak6-simulation')];
 			package: 'Sandblocks-Explorer' with: [spec requires: #('Sandblocks-Core')];
@@ -102,6 +104,13 @@ BaselineOfSandblocks >> baseline: spec [
 			group: 'tutorial' with: #('Sandblocks-Tutorial');
 			group: 'withActiveExpressions' with: #('Sandblocks-ActiveExpression' 'JumpingCubes');
 			group: 'withRatPack' with: #('Sandblocks-RatPack')]
+]
+
+{ #category : #scripts }
+BaselineOfSandblocks >> postLoadCore [
+	"Add block editor to 'what to show' menu"
+
+	CodeHolder addSandblocksDefault: false
 ]
 
 { #category : #baseline }
