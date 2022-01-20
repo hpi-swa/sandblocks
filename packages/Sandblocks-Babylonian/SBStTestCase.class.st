@@ -248,7 +248,7 @@ SBStTestCase >> runTest [
 			do: [:err |
 				self reportError: err.
 				err return: false]
-			on: TestResult error
+			on: TestResult exError
 			do: [:err |
 				self reportError: err.
 				err return: false]) ifTrue: [
