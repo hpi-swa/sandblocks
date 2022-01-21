@@ -73,15 +73,13 @@ SBBlock >> actionProviders [
 
 { #category : #'action helpers' }
 SBBlock >> actions [
-	
+
 	^ (Array streamContents: [:stream |
 		self actionProviders do: [:obj |
 			obj class withAllSuperclassesDo: [:class |
 				Pragma
 					withPragmasIn: class
-					do: [:pragma |
-						(#(#action #multiSelectAction #inputAction) includes: pragma keyword) ifTrue: [stream nextPut: pragma]]]]]) 
-		asIdentitySet asArray.
+					do: [:pragma | (#(#action #multiSelectAction #inputAction) includes: pragma keyword) ifTrue: [stream nextPut: pragma]]]]]) asIdentitySet asArray
 ]
 
 { #category : #hierarchy }
@@ -136,6 +134,13 @@ SBBlock >> allChildBlocksSatisfy: aBlock [
 
 	self allBlocksDo: [:b | (b ~= self and: [(aBlock value: b) not]) ifTrue: [^ false]].
 	^ true
+]
+
+{ #category : #hierarchy }
+SBBlock >> andAllParentSandblocksDo: aBlock [
+
+	aBlock value: self.
+	self parentSandblock ifNotNil: [:p | p andAllParentSandblocksDo: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
@@ -793,7 +798,7 @@ SBBlock >> deleteBeforeCursor [
 				self hasChildSandblocks not
 					ifTrue: [self deleteBlock]
 					ifFalse: [(target = self childSandblocks first or: [target hasOwner: self childSandblocks first]) ifTrue: [self childSandblocks first deleteAround]]].
-			editor startInput: target at: 900000000 replacingContents: false]
+			target sandblockEditor ifNotNil: [editor startInput: target at: 900000000 replacingContents: false]]
 		ifFalse: [
 			(self parentHasDynamicNumberOfChildren and: [parent childSandblocks size > 1])
 				ifTrue: [
@@ -1649,8 +1654,9 @@ SBBlock >> localNestingDepth [
 SBBlock >> lookupAction: aSymbol [
 
 	self actionProviders do: [:provider |
-		((provider class lookupSelector: aSymbol) ifNotNil: [:m | self isValidAction: m] ifNil: [false]) ifTrue: [
-			^ provider]].
+		((provider class lookupSelector: aSymbol)
+			ifNotNil: [:m | self isValidAction: m]
+			ifNil: [false]) ifTrue: [^ provider]].
 	^ nil
 ]
 
@@ -1904,6 +1910,13 @@ SBBlock >> ownerWithColor [
 	^ self
 ]
 
+{ #category : #accessing }
+SBBlock >> palettes [
+
+	" return SBPalette subclasses you'd like to have displayed here "
+	^ #()
+]
+
 { #category : #hierarchy }
 SBBlock >> parentAdjacentBlock: aNumber [
 
@@ -1974,7 +1987,7 @@ SBBlock >> pasteReplace [
 SBBlock >> performAction: aSymbol [
 
 	(self lookupAction: aSymbol) ifNotNil: [:obj |
-		obj ~= self ifTrue: [obj block: self].
+		(obj ~= self and: [obj respondsTo: #block:]) ifTrue: [obj block: self].
 		obj perform: aSymbol.
 		^ true].
 	^ false
@@ -2694,14 +2707,15 @@ SBBlock >> updateSuggestions: aCollection showNear: aMorph [
 
 	(aCollection isEmpty or: [self hasInput not]) ifTrue: [^ self removeSuggestionMenu].
 	
+	self sandblockEditor ifNil: [^ self].
+	
 	self suggestionsMenu
 		editor: self sandblockEditor;
 		suggestions: (aCollection take: 30);
-		topLeft: aMorph positionInWorld + (0 @ aMorph height).
+		topLeft: aMorph position + (0 @ aMorph height).
 	
-	self world ifNotNil: [
-		self suggestionsMenu openInWorld.
-		self suggestionsMenu resize]
+	self sandblockEditor openMorph: self suggestionsMenu.
+	self suggestionsMenu resize
 ]
 
 { #category : #layout }

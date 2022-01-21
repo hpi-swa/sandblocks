@@ -59,6 +59,14 @@ SBStASTNode >> asMorphBlock: converter [
 	" we can't generally convert ourselves to morphs since we need our artefact owner "
 ]
 
+{ #category : #actions }
+SBStASTNode >> browseImplementors [
+
+	^ self grammarHandler
+		block: self;
+		browseImplementors
+]
+
 { #category : #testing }
 SBStASTNode >> canEvaluate [
 

@@ -18,7 +18,13 @@ SBStKeywordBinding >> attached: aName [
 	aName currentTextMorph emphasis: TextEmphasis underlined
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
+SBStKeywordBinding >> browse [
+
+	self guessedClass ifNotNil: [:class | class browse]
+]
+
+{ #category : #macpal }
 SBStKeywordBinding >> contentsChanged [
 
 	(self contents = 'true' or: [self contents = 'false'])

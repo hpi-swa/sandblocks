@@ -24,13 +24,29 @@ SBStCascade >> asReactComponent: converter [
 					ifNone: [SBStArray new])]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
+SBStCascade >> browse [
+
+	(Project uiManager
+		chooseFromLabeledValues: (self messages collect: [:message | message selector -> message] as: OrderedDictionary)
+		title: 'Browse which message?') ifNotNil: [:message | message browse]
+]
+
+{ #category : #actions }
+SBStCascade >> browseImplementors [
+
+	(Project uiManager
+		chooseFromLabeledValues: (self messages collect: [:message | message selector -> message] as: OrderedDictionary)
+		title: 'Browse which message?') ifNotNil: [:message | message browseImplementors]
+]
+
+{ #category : #'insert/delete' }
 SBStCascade >> canDeleteChild: aBlock [
 
 	^ aBlock ~= self receiver
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'layout properties - table' }
 SBStCascade >> cellGap [
 
 	^ self colorPolicy lineGap
@@ -48,7 +64,7 @@ SBStCascade >> codeActions [
 					replacer: ((substitution newFrom: self) pc: self pc))]])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #converting }
 SBStCascade >> converterOptionsDo: aBlock [
 
 	super converterOptionsDo: aBlock.
@@ -58,38 +74,38 @@ SBStCascade >> converterOptionsDo: aBlock [
 			aBlock value: (SBConvertOption named: substitution prettyName do: [:converter | converter do: [substitution newFor: self]])]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'testing hierarchy' }
 SBStCascade >> fixedNumberOfChildren [
 
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStCascade >> guessedClass [
 
 	^ self submorphs last guessedClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBStCascade >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
 	((aBlock = self receiver or: [aBlock isNil]) and: [aBoolean]) ifTrue: [^ nil].
 	^ super insertCommandRequest: aMorph near: aBlock before: aBoolean
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStCascade >> isCascade [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStCascade >> isExpression [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBStCascade >> layoutCommands [
 
 	^ SBAlgebraCommand container
@@ -111,7 +127,7 @@ SBStCascade >> newEmptyChildNear: aBlock before: aBoolean [
 	^ SBStMessageSend new receiver: nil selector: #'' arguments: #()
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBStCascade >> objectInterfaceNear: aBlock at: aSymbol [
 
 	aBlock = self receiver
@@ -122,7 +138,7 @@ SBStCascade >> objectInterfaceNear: aBlock at: aSymbol [
 	^ SBInterfaces stMessage
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBStCascade >> printOn: aStream [
 
 	aStream nextPutAll: 'cascade to '.
@@ -142,7 +158,7 @@ SBStCascade >> receiver: aBlock messages: aCollection [
 	aCollection do: [:m | self addMorphBack: m]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBStCascade >> writeSourceOn: aStream [
 
 	aStream nextPut: $(.

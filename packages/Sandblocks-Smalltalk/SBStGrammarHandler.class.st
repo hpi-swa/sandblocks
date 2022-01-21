@@ -1,9 +1,6 @@
 Class {
 	#name : #SBStGrammarHandler,
 	#superclass : #SBGrammarHandler,
-	#instVars : [
-		'currentBlock'
-	],
 	#category : #'Sandblocks-Smalltalk'
 }
 

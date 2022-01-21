@@ -17,7 +17,7 @@ SBCommonPalette class >> buildOn: aContainer [
 { #category : #'as yet unclassified' }
 SBCommonPalette class >> context [
 
-	^ #()
+	^ SBInterfaces never
 ]
 
 { #category : #'as yet unclassified' }

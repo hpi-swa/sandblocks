@@ -144,7 +144,7 @@ SBMorphExample >> initialize [
 		addMouseCaptureFilter: self;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
-		changeTableLayout;
+		layoutPolicy: SBAlgebraLayout new;
 		layoutInset: 6;
 		addMorphBack: (TransformMorph new
 			hResizing: #shrinkWrap;
@@ -164,6 +164,17 @@ SBMorphExample >> isExpression [
 SBMorphExample >> isMorphExample [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBMorphExample >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (Array streamContents: [:stream |
+			self submorphs
+				do: [:m | stream nextPut: m layoutCommands]
+				separatedBy: [stream nextPut: (SBAlgebraCommand hardLine withGap: true)]])
 ]
 
 { #category : #helper }
@@ -272,6 +283,7 @@ SBMorphExample >> sendStartNotification [
 SBMorphExample >> setUp: aBlock cases: aCollectionOfBlocks extent: aPoint [
 
 	self addMorph: (header := SBRow new
+		layoutPolicy: SBAlgebraLayout new;
 		cellGap: 8 * self scalingFactor;
 		addMorphBack: (SBStringMorph new contents: 'Setup:');
 		addMorphBack: aBlock statements first veryDeepCopy;

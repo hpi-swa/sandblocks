@@ -72,6 +72,12 @@ SBCombinedCommand >> previousSelection [
 ]
 
 { #category : #'as yet unclassified' }
+SBCombinedCommand >> selectAfter [
+
+	^ selectAfter ifNil: [self commands last selectAfter]
+]
+
+{ #category : #'as yet unclassified' }
 SBCombinedCommand >> setArtefactFrom [
 
 	^ nil

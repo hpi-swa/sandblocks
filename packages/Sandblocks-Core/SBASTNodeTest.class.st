@@ -4,11 +4,11 @@ Class {
 	#category : #'Sandblocks-Core-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testBindingRename [
 
 	| block editor |
-	block := '[|from to| from squared. from squared]' parseAsSandblock.
+	block := self parse: '[|from to| from squared. from squared]'.
 	editor := self methodFor: block.
 	
 	editor startInput: block statements last receiver at: 1 replacingContents: true.
@@ -19,11 +19,11 @@ SBASTNodeTest >> testBindingRename [
 	self assert: 'to' equals: block statements last receiver contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testCanClearMessagePart [
 
 	| block selection editor |
-	block := '[a + 5]' parseAsSandblock.
+	block := self parse: '[a + 5]'.
 	selection := block statements first messageParts first.
 	editor := (self methodFor: block) select: selection.
 	editor startInput: selection at: 1 replacingContents: true.
@@ -32,11 +32,11 @@ SBASTNodeTest >> testCanClearMessagePart [
 	self assert: selection parentSandblock isMessageSend
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testCanUndoAppendLine [
 
 	| block selection editor |
-	block := '[5]' parseAsSandblock.
+	block := self parse: '[5]'.
 	editor := self methodFor: block.
 	selection := block statements first.
 	selection performAction: #insertStatementBelow.
@@ -50,11 +50,11 @@ SBASTNodeTest >> testCanUndoAppendLine [
 	self assert: 1 equals: block statements size
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testChangeSendToAssignment [
 
 	| block selection editor |
-	block := '[a + 5]' parseAsSandblock.
+	block := self parse: '[a + 5]'.
 	selection := block statements first messageParts first.
 	editor := (self methodFor: block) select: selection.
 	editor startInput: selection at: 1 replacingContents: true.
@@ -64,11 +64,11 @@ SBASTNodeTest >> testChangeSendToAssignment [
 	self assert: block statements first isMessageSend not
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testInsertStatementAboveOrBelow [
 
 	| block selection |
-	block := '[5]' parseAsSandblock.
+	block := self parse: '[5]'.
 	selection := block statements first.
 	self methodFor: block.
 	selection performAction: #insertStatementBelow.
@@ -77,22 +77,22 @@ SBASTNodeTest >> testInsertStatementAboveOrBelow [
 	self assert: block statements first isUnknown
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testMergeMessages [
 
 	| block editor |
-	block := '[self assert: (5 equals: 3)]' parseAsSandblock.
+	block := self parse: '[self assert: (5 equals: 3)]'.
 	editor := self methodFor: block.
 	
 	block statements first arguments first performAction: #unwrapList.
 	self assert: #assert:equals: equals: block statements first selector
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testUndoChangeSendToAssignment [
 
 	| block selection editor |
-	block := '[a + 5]' parseAsSandblock.
+	block := self parse: '[a + 5]'.
 	selection := block statements first messageParts first.
 	editor := (self methodFor: block) select: selection.
 	editor startInput: selection at: 1 replacingContents: true.
@@ -105,11 +105,11 @@ SBASTNodeTest >> testUndoChangeSendToAssignment [
 	self assert: block statements first isMessageSend not
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testUndoWrapInArray [
 
 	| block selection editor |
-	block := '[self squared. self changeTableLayout. self resize]' parseAsSandblock.
+	block := self parse: '[self squared. self changeTableLayout. self resize]'.
 	selection := block statements first.
 	editor := self methodFor: block.
 	editor select: selection.
@@ -128,11 +128,11 @@ SBASTNodeTest >> testUndoWrapInArray [
 	self assert: block statements third receiver contents = 'self'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testUndoWrapInBlock [
 
 	| block selection editor |
-	block := '[self squared. self changeTableLayout. self resize]' parseAsSandblock.
+	block := self parse: '[self squared. self changeTableLayout. self resize]'.
 	selection := block statements first.
 	editor := self methodFor: block.
 	editor select: selection.
@@ -151,11 +151,11 @@ SBASTNodeTest >> testUndoWrapInBlock [
 	self assert: block statements third receiver contents = 'self'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testUndoWrapInCascade [
 
 	| block selection editor |
-	block := '[self squared. self changeTableLayout. self resize]' parseAsSandblock.
+	block := self parse: '[self squared. self changeTableLayout. self resize]'.
 	selection := block statements first.
 	editor := self methodFor: block.
 	editor startOrAddToMultiSelection: block statements first.
@@ -172,11 +172,11 @@ SBASTNodeTest >> testUndoWrapInCascade [
 	self assert: block statements third receiver contents = 'self'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testWrapAsArgument [
 
 	| block selection |
-	block := '[5]' parseAsSandblock.
+	block := self parse: '[5]'.
 	self methodFor: block.
 	selection := block statements first.
 	selection performAction: #wrapAsArgument.
@@ -185,11 +185,11 @@ SBASTNodeTest >> testWrapAsArgument [
 	self assert: block statements first receiver isUnknown
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testWrapInArrayType [
 
 	| block selection |
-	block := '[5]' parseAsSandblock.
+	block := self parse: '[5]'.
 	selection := block statements first.
 	(self methodFor: block) select: selection.
 	selection performAction: #wrapInDynamicArray.
@@ -197,11 +197,11 @@ SBASTNodeTest >> testWrapInArrayType [
 	self assert: block statements first firstSubmorph = selection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testWrapInBlock [
 
 	| block selection |
-	block := '[5]' parseAsSandblock.
+	block := self parse: '[5]'.
 	selection := block statements first.
 	(self methodFor: block) select: selection.
 	selection performAction: #wrapInBlock.
@@ -209,11 +209,11 @@ SBASTNodeTest >> testWrapInBlock [
 	self assert: block statements first statements first = selection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testWrapInCascade [
 
 	| block selection |
-	block := '[5 squared]' parseAsSandblock.
+	block := self parse: '[5 squared]'.
 	selection := block statements first.
 	(self methodFor: block) select: selection.
 	selection wrapInCascade.
@@ -221,11 +221,11 @@ SBASTNodeTest >> testWrapInCascade [
 	self assert: block statements first messages first = selection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testWrapInCascadeMessageParts [
 
 	| block selection editor |
-	block := '[5 yourself. 5 parse: 2]' parseAsSandblock.
+	block := self parse: '[5 yourself. 5 parse: 2]'.
 	selection := block statements first.
 	editor := self methodFor: block.
 	editor select: selection.
@@ -238,11 +238,11 @@ SBASTNodeTest >> testWrapInCascadeMessageParts [
 	self assert: block statements first messages second receiver isNil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testWrapInCascadeMultiSelection [
 
 	| block selection editor |
-	block := '[5 squared. 5 + 2]' parseAsSandblock.
+	block := self parse: '[5 squared. 5 + 2]'.
 	selection := block statements first.
 	editor := self methodFor: block.
 	editor select: selection.
@@ -255,11 +255,11 @@ SBASTNodeTest >> testWrapInCascadeMultiSelection [
 	self assert: block statements first messages second receiver isNil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testWrapInMessageSend [
 
 	| block selection |
-	block := '[5]' parseAsSandblock.
+	block := self parse: '[5]'.
 	selection := block statements first.
 	self methodFor: block.
 	selection grammarHandler
@@ -270,11 +270,11 @@ SBASTNodeTest >> testWrapInMessageSend [
 	self assert: block statements first receiver = selection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBASTNodeTest >> testWrapInReturn [
 
 	| block selection |
-	block := '[5]' parseAsSandblock.
+	block := self parse: '[5]'.
 	self methodFor: block.
 	selection := block statements first.
 	selection performAction: #wrapInReturn.

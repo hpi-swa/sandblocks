@@ -270,34 +270,33 @@ SBEditor >> buildCommandBar [
 			icon: SBIcon iconColumns shortcut: nil do: [self togglePalette];
 			balloonText: 'Toggle Block Palette');
 		addMorphBack: (SBButton new
-			icon: SBIcon iconUndo
-			shortcut: (self class anyShortcutForAction: #undo)
-			do: [self undo]);
+			icon: SBIcon iconUndo shortcut: (self class anyShortcutForAction: #undo) do: [self undo];
+			balloonText: 'Undo');
 		addMorphBack: (SBButton new
-			icon: SBIcon iconRepeat
-			shortcut: (self class anyShortcutForAction: #redo)
-			do: [self redo]);
+			icon: SBIcon iconRepeat shortcut: (self class anyShortcutForAction: #redo) do: [self redo];
+			balloonText: 'Redo');
 		addMorphBack: (SBButton new
 			icon: SBIcon iconFolderOpen
-			shortcut: (self class anyShortcutForAction: #openOpenWindow)
-			do: [self openOpenWindow]);
+				shortcut: (self class anyShortcutForAction: #openOpenWindow)
+				do: [self openOpenWindow];
+			balloonText: 'Open method...');
 		addMorphBack: (SBButton new
 			icon: SBIcon iconPlus
 				shortcut: (self class anyShortcutForAction: #promptAddArtifact)
 				do: [self promptAddArtifact];
-			balloonText: 'Add artifact');
+			balloonText: 'Add artifact...');
 		addMorphBack: (Morph new
 			height: 0;
 			color: Color transparent;
 			hResizing: #spaceFill);
 		addMorphBack: (SBButton new
-			icon: SBIcon iconCog
-			shortcut: nil
-			do: [self openMorphInView: SBPreferencesEditor new]);
+			icon: SBIcon iconCog shortcut: nil do: [self openMorphInView: SBPreferencesEditor new];
+			balloonText: 'Open preferences');
 		addMorphBack: (SBButton new
 			icon: SBIcon iconExpand
-			shortcut: (self class anyShortcutForAction: #toggleFullscreen)
-			do: [self toggleFullscreen])
+				shortcut: (self class anyShortcutForAction: #toggleFullscreen)
+				do: [self toggleFullscreen];
+			balloonText: 'Toggle fullscreen')
 ]
 
 { #category : #ui }
@@ -1160,6 +1159,12 @@ SBEditor >> outOfWorld: aWorld [
 	super outOfWorld: aWorld.
 	
 	helpOverlay ifNotNil: #delete
+]
+
+{ #category : #accessing }
+SBEditor >> palettes [
+
+	^ {SBCommonPalette}
 ]
 
 { #category : #hierarchy }
