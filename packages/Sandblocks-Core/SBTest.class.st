@@ -76,49 +76,58 @@ SBTest class >> mouseEventAt: aPoint shift: aBoolean command: anotherBoolean con
 		hand: ActiveHand
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #asserting }
 SBTest >> assert: anObject structure: aCollection [
 
 	aCollection do: [:assoc | self assert: assoc value equals: (anObject perform: assoc key)]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #support }
 SBTest >> editorFor: aBlock [
 
 	^ self class editorFor: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'support - events' }
 SBTest >> keyboardEvent: aCharacter [
 
 	^ self class keyboardEvent: aCharacter
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'support - events' }
 SBTest >> keyboardEvent: aCharacter shift: aBoolean command: anotherBoolean [
 
 	^ self class keyboardEvent: aCharacter shift: aBoolean command: anotherBoolean
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'support - events' }
 SBTest >> keyboardEvent: aCharacter shift: aBoolean command: anotherBoolean control: aThirdBoolean [
 
 	^ self class keyboardEvent: aCharacter shift: aBoolean command: anotherBoolean control: aThirdBoolean
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #support }
 SBTest >> methodFor: aBlock [
 
 	^ self class methodFor: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #support }
+SBTest >> parse: aString [
+
+	^ [aString parseAsSandblock] on: UndeclaredVariableWarning do: [:ex |
+		ex resume.
+		
+		]
+]
+
+{ #category : #'support - events' }
 SBTest >> send: anEvent to: anEditor [
 
 	anEvent becomeActiveDuring: [anEditor filterEvent: anEvent for: nil]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'support - events' }
 SBTest >> tick [
 
 	World doOneCycle

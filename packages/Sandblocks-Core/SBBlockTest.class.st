@@ -8,7 +8,7 @@ Class {
 SBBlockTest >> testLeftRotateBinaryMessages [
 
 	| block selection editor |
-	block := '[(a + b) * c]' parseAsSandblock.
+	block := self parse: '[(a + b) * c]'.
 	editor := self methodFor: block.
 	selection := block statements first receiver.
 	selection leftRotate.
@@ -23,7 +23,7 @@ SBBlockTest >> testLeftRotateBinaryMessages [
 SBBlockTest >> testRotateBlock [
 
 	| block selection editor |
-	block := '[a or: [b]]' parseAsSandblock.
+	block := self parse: '[a or: [b]]'.
 	editor := self methodFor: block.
 	selection := block statements first arguments first.
 	selection leftRotate.
@@ -38,7 +38,7 @@ SBBlockTest >> testRotateBlock [
 SBBlockTest >> testRotateKeywordMessage [
 
 	| block selection editor |
-	block := '[(a or: b) ifTrue: c]' parseAsSandblock.
+	block := self parse: '[(a or: b) ifTrue: c]'.
 	editor := self methodFor: block.
 	selection := block statements first receiver.
 	selection leftRotate.
@@ -53,7 +53,7 @@ SBBlockTest >> testRotateKeywordMessage [
 SBBlockTest >> testSwap [
 
 	| block selection n5 n3 |
-	block := '[5 squared: 3]' parseAsSandblock.
+	block := self parse: '[5 squared: 3]'.
 	self methodFor: block.
 	selection := block statements first.
 	n5 := selection receiver.
