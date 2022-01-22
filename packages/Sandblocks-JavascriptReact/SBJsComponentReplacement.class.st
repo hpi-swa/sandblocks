@@ -173,7 +173,9 @@ SBJsComponentReplacement class >> getTestHTMLFileUrl [
 { #category : #'as yet unclassified' }
 SBJsComponentReplacement class >> isMatchCorrect: aDictionary [
 
-	^ (aDictionary at: 'examples_name') contents = 'examples' and: [(aDictionary at: 'method_name') contents = 'render'] and: [(aDictionary at: 'shared_example_props_name' ifAbsent: ['sharedExampleProps'] )= 'sharedExampleProps']
+	^ (aDictionary at: 'examples_name') contents = 'examples'
+		and: [(aDictionary at: 'method_name') contents = 'render']
+		and: [(aDictionary at: 'shared_example_props_name' ifAbsent: ['sharedExampleProps']) = 'sharedExampleProps']
 ]
 
 { #category : #'as yet unclassified' }
@@ -248,6 +250,24 @@ SBJsComponentReplacement class >> sampleReactClassAsString [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsComponentReplacement >> componentSourceWithSingleExample: aStream [
+
+	| optionsObject |
+	optionsObject := 'examples = ', self exampleArraySandblock sourceString, ';'.
+	aStream nextPutAll: optionsObject.
+	self skipHtmlFileGeneration ifFalse: [ | className componentClass |
+		self skipHtmlFileGeneration: true.
+		componentClass := self owningClass.
+		className := componentClass firstSubmorph submorphs third contents.
+		self class
+			generateHtmlFileFor: componentClass sourceString
+			withClassName: className
+			forOptions: optionsObject.
+		self firstSubmorph firstSubmorph firstSubmorph doRefresh.
+		self skipHtmlFileGeneration: false]
+]
+
+{ #category : #'as yet unclassified' }
 SBJsComponentReplacement >> exampleArray: aJsArray forAComponent: aComponentNameString withComponentNode: aComponentNode url: aString [
 
 	| aJSArrayWithName wrappedBrowser |
@@ -264,6 +284,12 @@ SBJsComponentReplacement >> exampleArray: aJsArray forAComponent: aComponentName
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		yourself.
+	wrappedBrowser addMorphBack: (SBButton new icon: SBIcon iconSave label: 'Save to Palette' do: [ | str temp |
+		str := '<', aComponentNameString.
+		temp := aJsArray.
+		self halt.
+		
+		]).
 	self
 		listDirection: #topToBottom;
 		addMorphBack: (SBRow new
@@ -280,16 +306,20 @@ SBJsComponentReplacement >> exampleArray: aJsArray withSharedProps: aJsObject fo
 	self class
 		generateHtmlFileFor: aComponentNode sourceString
 		withClassName: aComponentNameString
-		forOptions: aJSArrayWithName
-		"withSharedProps: (aJsObject ifNotNil: [:object | object sourceString] ifNil: ['sharedExampleProps = {}']).".
+		forOptions: aJSArrayWithName.
+	"withSharedProps: (aJsObject ifNotNil: [:object | object sourceString] ifNil: ['sharedExampleProps = {}'])."
 	wrappedBrowser := SBBlock new
 		attachDecorator: SBResizableDecorator new;
 		addMorphBack: (MMBrowserMorph reactOpenOn: aString);
+		addMorphBack: (SBButton new icon: SBIcon iconSave label: 'Save to Palette' do: [ | temp |
+			temp := SBJsComponentUsageReplacement inlineComponentUsageReplacementFor: aComponentNode sourceString.
+			SBJsReactComponentRegistry defaultRegistry addComponent: temp withName: aComponentNameString]);
 		color: Color seaFoam;
 		changeTableLayout;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		yourself.
+	
 	self
 		listDirection: #topToBottom;
 		addMorphBack: (SBRow new
@@ -299,12 +329,31 @@ SBJsComponentReplacement >> exampleArray: aJsArray withSharedProps: aJsObject fo
 ]
 
 { #category : #'as yet unclassified' }
-SBJsComponentReplacement >> getOwningClass [
+SBJsComponentReplacement >> exampleArraySandblock [
 
-	| currentOwner |
-	currentOwner := self owner.
-	[currentOwner type ~= 'class_declaration'] whileTrue: [currentOwner := currentOwner owner].
-	^ currentOwner
+	^ self firstSubmorph submorphs second firstSubmorph
+]
+
+{ #category : #'as yet unclassified' }
+SBJsComponentReplacement >> firstValidExampleComponentProps [
+
+	^ self exampleArraySandblock access children
+		detect: [:exampleObject |
+			(exampleObject children
+				detect: [:entry |
+					entry key contents = 'componentProps'
+						ifTrue: [^ entry value]
+						ifFalse: [false]]
+				ifNone: [false]) notNil]
+		ifNone: [self error: (Error signal: 'Could not find a object in the examples array with ''componentProps'' being set.')]
+]
+
+{ #category : #'as yet unclassified' }
+SBJsComponentReplacement >> firstValidExampleKeyValuePairs [
+
+	| temp |
+	temp := (self firstValidExampleComponentProps children reject: [:objectEntry | objectEntry type ~= 'pair']) collect: [:keyValuePair | keyValuePair key contents -> keyValuePair value].
+	^ temp
 ]
 
 { #category : #accessing }
@@ -312,6 +361,15 @@ SBJsComponentReplacement >> initialize [
 
 	super initialize.
 	self skipHtmlFileGeneration: false
+]
+
+{ #category : #'as yet unclassified' }
+SBJsComponentReplacement >> owningClass [
+
+	| currentOwner |
+	currentOwner := self owner.
+	[currentOwner type ~= 'class_declaration'] whileTrue: [currentOwner := currentOwner owner].
+	^ currentOwner
 ]
 
 { #category : #accessing }
@@ -344,11 +402,11 @@ SBJsComponentReplacement >> veryDeepCopyWith: deepCopier [
 SBJsComponentReplacement >> writeSourceOn: aStream [
 
 	| optionsObject |
-	optionsObject := 'examples = ', self firstSubmorph submorphs second firstSubmorph sourceString, ';'.
+	optionsObject := 'examples = ', self exampleArraySandblock sourceString.
 	aStream nextPutAll: optionsObject.
 	self skipHtmlFileGeneration ifFalse: [ | className componentClass |
 		self skipHtmlFileGeneration: true.
-		componentClass := self getOwningClass.
+		componentClass := self owningClass.
 		className := componentClass firstSubmorph submorphs third contents.
 		self class
 			generateHtmlFileFor: componentClass sourceString
