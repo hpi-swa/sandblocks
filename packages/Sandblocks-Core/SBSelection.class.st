@@ -35,11 +35,7 @@ SBSelection >> aboutToBeGrabbedBy: aHand [
 { #category : #'as yet unclassified' }
 SBSelection >> addedMorph: aMorph [
 
-	aMorph isSandblock ifTrue: [
-		aMorph allBlocksDo: [:block |
-			block
-				detachDecorators: SBMultiSelectionDecorator;
-				stopEditing]]
+	aMorph isSandblock ifTrue: [aMorph allBlocksDo: [:block | block detachDecorators: SBMultiSelectionDecorator]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -291,6 +287,12 @@ SBSelection >> sourceBlock: aBlock [
 SBSelection >> statements [
 
 	^ #()
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> suggestionMenu [
+
+	^ SBSuggestionMenu new
 ]
 
 { #category : #'as yet unclassified' }

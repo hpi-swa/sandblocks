@@ -165,7 +165,7 @@ SBUnknown >> lookupAction: aSymbol [
 { #category : #accessing }
 SBUnknown >> newNullBlock [
 
-	^ self veryDeepCopy
+	^ self class new grammarHandler: self grammarHandler
 ]
 
 { #category : #'as yet unclassified' }
@@ -211,23 +211,6 @@ SBUnknown >> startInputAt: aNumber replacingContents: aBoolean [
 		ifFalse: [self moveCursorTo: aNumber].
 	
 	^ cmd
-]
-
-{ #category : #'text input' }
-SBUnknown >> stopEditing [
-
-	self currentTextMorph stopEditing.
-	self removeSuggestionMenu
-]
-
-{ #category : #'text input' }
-SBUnknown >> stopEditing: aCommand [
-
-	aCommand
-		newText: self currentTextMorph contents;
-		newMorph: self.
-	
-	self stopEditing
 ]
 
 { #category : #accessing }

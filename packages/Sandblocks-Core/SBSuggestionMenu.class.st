@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'activeIndex',
 		'editor',
-		'container'
+		'container',
+		'reference',
+		'updateQueued'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -50,7 +52,15 @@ SBSuggestionMenu >> addItem: anItem [
 { #category : #accessing }
 SBSuggestionMenu >> editor: anEditor [
 
-	editor := anEditor
+	editor := anEditor.
+	
+	anEditor when: #keyboardFocusChanged send: #editorFocused: to: self
+]
+
+{ #category : #'events-processing' }
+SBSuggestionMenu >> editorFocused: aBoolean [
+
+	aBoolean ifFalse: [self delete]
 ]
 
 { #category : #'events-processing' }
@@ -88,9 +98,7 @@ SBSuggestionMenu >> initialize [
 		cellGap: 0;
 		layoutInset: 0;
 		yourself.
-	self scroller addMorph: container.
-	
-	self height: 300
+	self scroller addMorph: container
 ]
 
 { #category : #'accessing - items' }
@@ -160,29 +168,90 @@ SBSuggestionMenu >> next [
 	self moveActive: 1
 ]
 
+{ #category : #layout }
+SBSuggestionMenu >> openNear: aBlock [
+
+	self
+		editor: aBlock sandblockEditor;
+		reference: aBlock;
+		openInWorld: aBlock world;
+		repositionSuggestionsMenu
+]
+
+{ #category : #'submorphs - callbacks' }
+SBSuggestionMenu >> outOfWorld: aWorld [
+
+	super outOfWorld: aWorld.
+	activeIndex := 1.
+	self scrollToTop
+]
+
 { #category : #selecting }
 SBSuggestionMenu >> previous [
 
 	self moveActive: -1
 ]
 
-{ #category : #layout }
-SBSuggestionMenu >> resize [
+{ #category : #accessing }
+SBSuggestionMenu >> reference [
 
-	self extent: (self hasItems
-		ifFalse: [0 @ 0]
-		ifTrue: [self minExtent x @ ((container height min: 300) + 2)])
+	^ reference
 ]
 
 { #category : #accessing }
-SBSuggestionMenu >> suggestions: aCollectionOfSymbol [
+SBSuggestionMenu >> reference: aBlock [
 
-	container removeAllMorphs.
+	reference := aBlock
+]
+
+{ #category : #layout }
+SBSuggestionMenu >> repositionSuggestionsMenu [
+
+	reference ifNotNil: [self topLeft: reference positionInWorld + (0 @ reference height)].
+	self resize
+]
+
+{ #category : #layout }
+SBSuggestionMenu >> resize [
+
+	self extent: (self hasItems ifFalse: [0 @ 0] ifTrue: [0 @ ((container height min: 330) + 2)])
+]
+
+{ #category : #'stepping and presenter' }
+SBSuggestionMenu >> step [
+
+	self repositionSuggestionsMenu
+]
+
+{ #category : #'stepping and presenter' }
+SBSuggestionMenu >> stepTime [
+
+	^ 0
+]
+
+{ #category : #accessing }
+SBSuggestionMenu >> suggestions: aCollectionOfSymbols [
+
+	self updateQueued: false.
 	
-	aCollectionOfSymbol do: [:item |
-		self addItem: item].
+	container removeAllMorphs.
+	container extent: 0 @ 0.
+	
+	aCollectionOfSymbols do: [:item | self addItem: item].
 	
 	self hasItems ifTrue: [
 		activeIndex := activeIndex min: self itemCount.
 		(self items at: activeIndex) active: true]
+]
+
+{ #category : #accessing }
+SBSuggestionMenu >> updateQueued [
+
+	^ updateQueued
+]
+
+{ #category : #accessing }
+SBSuggestionMenu >> updateQueued: aBoolean [
+
+	updateQueued := aBoolean
 ]

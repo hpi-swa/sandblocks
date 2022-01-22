@@ -156,16 +156,6 @@ SBStRegex >> regexString: aString examples: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
-SBStRegex >> stopEditing: aCommand [
-
-	aCommand
-		newText: self contents;
-		newMorph: self.
-	
-	text stopEditing: aCommand
-]
-
-{ #category : #'as yet unclassified' }
 SBStRegex >> symbols [
 
 	^ self colorPolicy symbolsForRegex: self

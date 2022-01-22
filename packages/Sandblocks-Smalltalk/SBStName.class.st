@@ -258,7 +258,6 @@ SBStName >> isTemporaryVariable [
 { #category : #'as yet unclassified' }
 SBStName >> keyStroke: anEvent [
 
-	| oldContents |
 	(self isExpression and: [anEvent keyCharacter = $:]) ifTrue: [ | new |
 		new := self newNullBlock.
 		^ self sandblockEditor
@@ -269,10 +268,7 @@ SBStName >> keyStroke: anEvent [
 				wrap: [:outer :inner | outer binding: self value: new]);
 			startInput: new at: 0 replacingContents: false].
 	
-	oldContents := self contents.
-	super keyStroke: anEvent.
-	
-	oldContents ~= self contents ifTrue: [self updateSuggestions]
+	super keyStroke: anEvent
 ]
 
 { #category : #'as yet unclassified' }
@@ -334,6 +330,12 @@ SBStName >> resolveBinding [
 ]
 
 { #category : #'as yet unclassified' }
+SBStName >> suggestions [
+
+	^ self behavior suggestions
+]
+
+{ #category : #'as yet unclassified' }
 SBStName >> symbols [
 
 	^ self behavior symbolsFor: self colorPolicy
@@ -343,12 +345,6 @@ SBStName >> symbols [
 SBStName >> textContents [
 
 	^ self contents
-]
-
-{ #category : #'as yet unclassified' }
-SBStName >> updateSuggestions [
-
-	self behavior updateSuggestions
 ]
 
 { #category : #'as yet unclassified' }

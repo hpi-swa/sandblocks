@@ -321,7 +321,6 @@ SBStGrammarHandler >> replaceWithPragma: aBlock [
 
 	| pragma |
 	pragma := SBStPragma new.
-	aBlock stopEditing.
 	aBlock sandblockEditor do: (SBReplaceCommand new
 		target: aBlock;
 		replacer: pragma;
@@ -526,7 +525,7 @@ SBStGrammarHandler >> wrapInReturn [
 { #category : #actions }
 SBStGrammarHandler >> wrapInToggledCode [
 	<multiSelectAction>
-	<actionValidIf: #isExpression>
+	<actionValidIf: #canAppearInBlockBody>
 
 	| comment |
 	self assert: self block isSelected.

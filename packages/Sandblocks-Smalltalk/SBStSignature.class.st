@@ -45,7 +45,7 @@ SBStSignature >> cellGap [
 { #category : #'event handling' }
 SBStSignature >> click: anEvent [
 
-	anEvent redButtonPressed ifTrue: [self updateSuggestions].
+	anEvent redButtonPressed ifTrue: [self messageParts first updateSuggestions]
 ]
 
 { #category : #accessing }
@@ -72,7 +72,7 @@ SBStSignature >> deleteCommandFor: aBlock [
 	^ (SBCombinedCommand newWith: {
 		SBDeleteCommand new target: (self submorphs at: index).
 		SBDeleteCommand new target: (self submorphs at: index + 1)})
-			selectAfter: (self submorphs at: index - 1 ifAbsent: [self messageSend])
+			selectAfter: (self submorphs at: index - 1 ifAbsent: [self owner containingSandblock])
 ]
 
 { #category : #'as yet unclassified' }
@@ -251,7 +251,7 @@ SBStSignature >> possibleArgumentNamesFor: aString [
 	| selector method |
 	selector := aString asSymbol.
 	
-	(self owner receiver ifNotNil: [:b | b guessClassExpensive]) ifNotNil: [:class | (class lookupSelector: selector) ifNotNil: [:meth | method := meth]].
+	(self owner containingSandblock actualReceiver ifNotNil: [:b | b guessClassExpensive]) ifNotNil: [:class | (class lookupSelector: selector) ifNotNil: [:meth | method := meth]].
 	method ifNil: [
 		method := (self systemNavigation allImplementorsOf: selector)
 			at: 1

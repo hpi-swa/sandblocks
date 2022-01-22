@@ -22,7 +22,8 @@ Class {
 		'cursor',
 		'hoverHighlight',
 		'suggestAlways',
-		'activePlugins'
+		'activePlugins',
+		'suggestionMenu'
 	],
 	#classVars : [
 		'ActivatedPluginClasses',
@@ -1326,16 +1327,6 @@ SBEditor >> reportErrorWithProcessCopy: anError source: anExecutableEnvironment 
 		source: anExecutableEnvironment
 ]
 
-{ #category : #suggestions }
-SBEditor >> repositionSuggestionsMenu [
-
-	| menu reference |
-	menu := self valueOfProperty: #sandblockSuggestionMenu ifAbsent: [^ self].
-	reference := self valueOfProperty: #sandblockSuggestionMenuReference ifAbsent: [^ self].
-	menu topLeft: reference positionInWorld + (0 @ reference height).
-	menu resize
-]
-
 { #category : #initialization }
 SBEditor >> resetState [
 
@@ -1475,18 +1466,6 @@ SBEditor >> showHelper [
 	(helpOverlay isNil and: [self isInWorld and: [self selection notNil]]) ifTrue: [helpOverlay := SBHelpOverlay new target: self selection]
 ]
 
-{ #category : #suggestions }
-SBEditor >> showSuggestionsMenu: menu near: aMorph [
-
-	menu editor: self.
-	
-	self
-		setProperty: #sandblockSuggestionMenu toValue: menu;
-		setProperty: #sandblockSuggestionMenuReference toValue: aMorph.
-	self repositionSuggestionsMenu.
-	menu openInWorld
-]
-
 { #category : #selection }
 SBEditor >> sortedMultiSelection [
 
@@ -1514,12 +1493,6 @@ SBEditor >> startInput: aMorph at: aNumber replacingContents: aBoolean [
 SBEditor >> startOrAddToMultiSelection: aBlock [
 
 	self cursor startOrAddToMultiSelection: aBlock
-]
-
-{ #category : #stepping }
-SBEditor >> step [
-
-	self repositionSuggestionsMenu
 ]
 
 { #category : #stepping }
@@ -1566,6 +1539,12 @@ SBEditor >> suggestAlways [
 SBEditor >> suggestAlways: aBoolean [
 
 	suggestAlways := aBoolean
+]
+
+{ #category : #accessing }
+SBEditor >> suggestionMenu [
+
+	^ suggestionMenu ifNil: [suggestionMenu := SBSuggestionMenu new]
 ]
 
 { #category : #actions }

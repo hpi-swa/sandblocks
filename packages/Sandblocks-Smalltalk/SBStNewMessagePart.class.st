@@ -97,7 +97,7 @@ SBStNewMessagePart >> keyStroke: anEvent [
 				ifFalse: [self currentTextMorph deleteBeforeCursor].
 			^ self continueInputInArgument]].
 	
-	self valid ifTrue: [self updateSuggestions] ifFalse: [
+	self valid ifFalse: [
 		self currentTextMorph deleteBeforeCursor.
 		self argument
 			ifNotNil: [:a |
@@ -214,25 +214,27 @@ SBStNewMessagePart >> stopEditing: aCommand [
 ]
 
 { #category : #'as yet unclassified' }
-SBStNewMessagePart >> unaryToKeywordCommand [
-
-	^ SBInsertCommand new
-		morph: self newNullBlock;
-		container: self;
-		index: 3
-]
-
-{ #category : #'as yet unclassified' }
-SBStNewMessagePart >> updateSuggestions [
+SBStNewMessagePart >> suggestions [
 
 	| selector |
 	selector := self selectorContentsBeforeMe, self contents ifEmpty: [^ self].
 	
 	selector last = $: ifTrue: [selector := selector allButLast].
 	
-	self
-		updateSuggestions: ((self messageSend actualReceiver completionSuggestionsFor: selector) collect: [:sel | SBSuggestionItem selector: sel label: 'send'])
-		showNear: self
+	^ (self
+		sortedSuggestions: (self messageSend actualReceiver guessClassExpensive
+			ifNil: [Symbol allSymbols]
+			ifNotNil: [:class | class sandblocksSuggestionsFor: self])
+		for: selector) collect: [:sel | SBSuggestionItem selector: sel label: 'send']
+]
+
+{ #category : #'as yet unclassified' }
+SBStNewMessagePart >> unaryToKeywordCommand [
+
+	^ SBInsertCommand new
+		morph: self newNullBlock;
+		container: self;
+		index: 3
 ]
 
 { #category : #'as yet unclassified' }

@@ -10,8 +10,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBStLiteral >> acceptInputEvent: anEvent [
 
-	text keyStroke: anEvent.
-	self batchedChangeStep
+	super keyStroke: anEvent
 ]
 
 { #category : #'as yet unclassified' }
@@ -80,8 +79,7 @@ SBStLiteral >> keyStroke: anEvent [
 
 	(anEvent keyCharacter = Character backspace and: [self contents isEmpty]) ifTrue: [^ self replaceWithUnknown].
 	
-	self acceptInputEvent: anEvent.
-	self batchedChangeStep
+	self acceptInputEvent: anEvent
 ]
 
 { #category : #'colors and color policies' }
@@ -95,8 +93,6 @@ SBStLiteral >> replaceWithUnknown [
 
 	| new |
 	self isUnknown ifTrue: [^ self].
-	
-	self stopEditing.
 	
 	new := self newNullBlock label: 'expr'.
 	self replaceBy: new.
@@ -142,23 +138,6 @@ SBStLiteral >> startInputCommand [
 ]
 
 { #category : #'as yet unclassified' }
-SBStLiteral >> stopEditing [
-
-	text stopEditing.
-	self removeSuggestionMenu
-]
-
-{ #category : #'as yet unclassified' }
-SBStLiteral >> stopEditing: aCommand [
-
-	aCommand
-		newText: self contents;
-		newMorph: self.
-	
-	self stopEditing
-]
-
-{ #category : #'as yet unclassified' }
 SBStLiteral >> textMorphClass [
 
 	^ SBOwnTextMorph
@@ -180,11 +159,4 @@ SBStLiteral >> useAsStSymbol [
 	self sandblockEditor do: (SBReplaceCommand new
 		target: self;
 		replacer: (SBStSymbol new contents: self contents))
-]
-
-{ #category : #'as yet unclassified' }
-SBStLiteral >> useSuggestion: aString [
-
-	self contents: aString.
-	self containingSandblock sandblockEditor endInput
 ]

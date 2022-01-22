@@ -89,9 +89,9 @@ SBStDeclarationBehavior >> scope [
 ]
 
 { #category : #'as yet unclassified' }
-SBStDeclarationBehavior >> updateSuggestions [
+SBStDeclarationBehavior >> suggestions [
 
-	
+	^ #()
 ]
 
 { #category : #'as yet unclassified' }
