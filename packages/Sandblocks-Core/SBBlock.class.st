@@ -2793,7 +2793,7 @@ SBBlock >> useSuggestion [
 	self hasSuggestions ifFalse: [^ false].
 	" try to apply a suggestion, return whether anything was applied "
 	editor := self sandblockEditor.
-	editor suggestionMenu activeSuggestion ifNotNil: [:s |
+	editor suggestionMenu activeItem ifNotNil: [:s |
 		(s wouldChange: self)
 			ifTrue: [
 				s useSuggestionOn: self.
