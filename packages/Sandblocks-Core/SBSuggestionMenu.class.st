@@ -171,11 +171,12 @@ SBSuggestionMenu >> next [
 { #category : #layout }
 SBSuggestionMenu >> openNear: aBlock [
 
-	self
-		editor: aBlock sandblockEditor;
-		reference: aBlock;
-		openInWorld: aBlock world;
-		repositionSuggestionsMenu
+	aBlock isInWorld ifTrue: [
+		self
+			editor: aBlock sandblockEditor;
+			reference: aBlock;
+			openInWorld: aBlock world;
+			repositionSuggestionsMenu]
 ]
 
 { #category : #'submorphs - callbacks' }

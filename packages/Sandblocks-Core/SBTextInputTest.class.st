@@ -26,6 +26,9 @@ SBTextInputTest >> testAcceptAutoCompletion [
 	[editor openInWorld.
 	editor startInput: block statements first messageParts first at: 9e8 replacingContents: false.
 	self send: (self keyboardEvent: $r) to: editor.
+	
+	self tick.
+	
 	self send: (self keyboardEvent: Character tab) to: editor.
 	
 	self assert: block statements first selector size > 5] ensure: [editor delete]

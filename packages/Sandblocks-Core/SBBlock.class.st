@@ -1684,6 +1684,7 @@ SBBlock >> maximumNonOverlappingForce [
 SBBlock >> maybeUpdateSuggestions [
 
 	| menu |
+	self sandblockEditor ifNil: [^ self].
 	menu := self sandblockEditor suggestionMenu.
 	menu updateQueued ifTrue: [self updateSuggestions]
 ]
