@@ -10,13 +10,13 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 SBMemoize class >> cache [
 
 	^ Cache ifNil: [Cache := Dictionary new]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBMemoize class >> do: aBlock identifier: aNumber [
 
 	^ self cache
@@ -28,20 +28,29 @@ SBMemoize class >> do: aBlock identifier: aNumber [
 			value]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBMemoize class >> example [
 
 	SBMemoize do: [WebClient httpGet: 'https://google.com'] identifier: 123123
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #suggestions }
+SBMemoize class >> instanceSuggestion [
+
+	^ [
+		self new
+			expression: SBStGrammarHandler new newNullBlock;
+			identifier: self newIdentifier]
+]
+
+{ #category : #testing }
 SBMemoize class >> matches: aMessageSend [
 
 	(super matches: aMessageSend) ifFalse: [^ false].
 	^ self selector: 'do:identifier:' receiverMatches: aMessageSend
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBMemoize class >> newFor: aMessageSend [
 
 	| args |
@@ -50,6 +59,15 @@ SBMemoize class >> newFor: aMessageSend [
 		expression: args first;
 		identifier: args second parsedContents;
 		yourself
+]
+
+{ #category : #private }
+SBMemoize class >> newIdentifier [
+
+	| i |
+	i := self cache size.
+	[self cache includesKey: i] whileTrue: [i := i + 1].
+	^ i
 ]
 
 { #category : #'as yet unclassified' }

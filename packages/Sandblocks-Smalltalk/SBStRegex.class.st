@@ -9,7 +9,13 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
+SBStRegex class >> instanceSuggestion [
+
+	^ [self new regexString: '' examples: #()]
+]
+
+{ #category : #testing }
 SBStRegex class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
@@ -18,7 +24,7 @@ SBStRegex class >> matches: aBlock [
 	[(aBlock receiver satisfies: #(notNil isBinding)) and: [aBlock receiver contents = self name] and: [aBlock selector = 'regex:examples:']]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBStRegex class >> newFor: aBubble [
 
 	^ aBubble selector = 'asRegex'
@@ -30,7 +36,7 @@ SBStRegex class >> newFor: aBubble [
 				examples: (aBubble arguments second childSandblocks collect: #contents)]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBStRegex class >> regex: aRegex examples: aCollection [
 
 	^ aRegex asRegex

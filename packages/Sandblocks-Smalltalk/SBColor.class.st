@@ -8,7 +8,13 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #suggestions }
+SBColor class >> instanceSuggestion [
+
+	^ [self new colorContents: (Color r: 1 g: 0.0 b: 0.0)]
+]
+
+{ #category : #testing }
 SBColor class >> matches: aMessage [
 
 	SBExample
@@ -30,20 +36,10 @@ SBColor class >> matches: aMessage [
 		ifFalse: [(aMessage selector = 'r:g:b:' or: [aMessage selector = 'r:g:b:a:' or: [aMessage selector = 'fromString:']]) and: [aMessage arguments allSatisfy: #isLiteralBlock]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBColor class >> newFor: aMessage [
 
 	^ self new colorContents: aMessage evaluate
-]
-
-{ #category : #'as yet unclassified' }
-SBColor class >> suggestion [
-
-	^ [:block |
-		block sandblockEditor do: (SBReplaceCommand new
-			target: block;
-			replacer: (self new colorContents: Color red);
-			yourself)]
 ]
 
 { #category : #'as yet unclassified' }

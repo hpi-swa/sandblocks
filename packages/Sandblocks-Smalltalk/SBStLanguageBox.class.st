@@ -4,23 +4,32 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #suggestions }
+SBStLanguageBox class >> instanceSuggestion [
+
+	^ [
+		SBStLanguageBox new
+			source: '' lang: 'scheme';
+			yourself]
+]
+
+{ #category : #testing }
 SBStLanguageBox class >> matches: aMessageSend [
 
 	^ (false) and: [aMessageSend selector = 'eval:lang:']
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBStLanguageBox class >> newFor: aBlock [
 
 	^ self new source: aBlock arguments first contents lang: aBlock arguments second contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #suggestions }
 SBStLanguageBox class >> suggestion [
 
 	^ [:block | | box |
-		box := SBStLanguageBox new source: '' lang: 'scheme'.
+		box := self instanceSuggestion value.
 		block sandblockEditor do: (SBReplaceCommand new
 			target: block;
 			replacer: box).

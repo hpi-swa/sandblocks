@@ -9,7 +9,13 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #suggestions }
+SBStateMachineEditor class >> instanceSuggestion [
+
+	^ [SBStateMachineEditor new]
+]
+
+{ #category : #testing }
 SBStateMachineEditor class >> matches: aNode [
 
 	(super matches: aNode) ifFalse: [^ false].
@@ -17,26 +23,16 @@ SBStateMachineEditor class >> matches: aNode [
 	^ aNode isCascade and: [aNode receiver isMessageSend and: [aNode receiver receiver isName and: [aNode receiver receiver contents = 'SBStateMachine' and: [aNode receiver selector = 'new']]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStateMachineEditor class >> matchesCascades [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBStateMachineEditor class >> newFor: aNode [
 
 	^ self new buildFrom: aNode
-]
-
-{ #category : #'as yet unclassified' }
-SBStateMachineEditor class >> suggestion [
-
-	^ [:block |
-		block sandblockEditor do: (SBReplaceCommand new
-			target: block;
-			replacer: SBStateMachineEditor new;
-			yourself)]
 ]
 
 { #category : #'as yet unclassified' }

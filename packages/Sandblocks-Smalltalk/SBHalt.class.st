@@ -14,7 +14,13 @@ SBHalt class >> deactivated [
 	" marker "
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #suggestions }
+SBHalt class >> instanceSuggestion [
+
+	^ [self new]
+]
+
+{ #category : #testing }
 SBHalt class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
@@ -22,19 +28,10 @@ SBHalt class >> matches: aBlock [
 	^ (aBlock selector = 'sandblocksHalt' and: [aBlock receiver notNil]) or: [(aBlock receiver satisfies: #(#notNil #isName)) and: [aBlock receiver contents = 'SBHalt' and: [aBlock selector = #deactivated]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBHalt class >> newFor: aBlock [
 
 	^ self new active: aBlock selector ~= #deactivated
-]
-
-{ #category : #'as yet unclassified' }
-SBHalt class >> suggestion [
-
-	^ [:block |
-		block sandblockEditor do: (SBReplaceCommand new
-			target: block;
-			replacer: SBHalt new)]
 ]
 
 { #category : #'as yet unclassified' }
