@@ -1005,6 +1005,14 @@ SBEditor >> multiSelectionIsConsecutive [
 	^ true
 ]
 
+{ #category : #accessing }
+SBEditor >> newSelectionContainer [
+
+	^ SBSelection new
+		colorPolicy: self colorPolicy;
+		yourself
+]
+
 { #category : #'event handling' }
 SBEditor >> noteNewOwner: aMorph [
 

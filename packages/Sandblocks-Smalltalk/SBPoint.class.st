@@ -45,13 +45,6 @@ SBPoint class >> newForPoint: aPoint [
 		type: Point
 ]
 
-{ #category : #'instance creation' }
-SBPoint class >> newWithUnknown [
-
-	self flag: #broken.
-	^ self new addMorph: SBStMessageSend new
-]
-
 { #category : #accessing }
 SBPoint class >> priority [
 

@@ -307,7 +307,10 @@ SBStNameBehavior >> uppercaseSuggestions [
 		SBStSubstitution allSubclassesDo: [:class |
 			(class name sandblockMatch: self contents) ifTrue: [
 				class suggestion ifNotNil: [:block |
-					stream nextPut: ((SBProjectionSuggestionItem selector: class name label: 'projection')
+					stream nextPut: ((SBProjectionSuggestionItem
+						selector: class name
+						label: 'projection'
+						editor: self block sandblockEditor)
 						completionAction: block;
 						instanceSuggestion: class instanceSuggestion)]]]]
 ]

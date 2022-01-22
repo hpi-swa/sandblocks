@@ -1,8 +1,31 @@
 Class {
 	#name : #SBProjectionSuggestionItem,
 	#superclass : #SBSuggestionItem,
+	#instVars : [
+		'editor'
+	],
 	#category : #'Sandblocks-Core'
 }
+
+{ #category : #'as yet unclassified' }
+SBProjectionSuggestionItem class >> selector: aSymbol label: aString editor: anEditor [
+
+	^ (super selector: aSymbol label: aString)
+		editor: anEditor;
+		yourself
+]
+
+{ #category : #accessing }
+SBProjectionSuggestionItem >> editor [
+
+	^ editor
+]
+
+{ #category : #accessing }
+SBProjectionSuggestionItem >> editor: anEditor [
+
+	editor := anEditor
+]
 
 { #category : #geometry }
 SBProjectionSuggestionItem >> fontHeight [
@@ -23,19 +46,22 @@ SBProjectionSuggestionItem >> instance [
 	^ self roomForLabel submorphAfter
 ]
 
-{ #category : #accessing }
-SBProjectionSuggestionItem >> instanceSuggestion: factory [
+{ #category : #initialization }
+SBProjectionSuggestionItem >> instanceSuggestion: aFactoryClosure [
 
-	| instance |
+	| instance example |
 	self removeAllButFirstSubmorph.
-	factory ifNil: [^ self].
+	aFactoryClosure ifNil: [^ self].
 	
-	instance := (factory value
-		in: [:block |
-			block extent: block minExtent.
-			
-			];
-		imageForm) asMorph.
+	example := aFactoryClosure value.
+	example extent: example minExtent.
+	
+	" provides styling information to its children "
+	editor newSelectionContainer
+		addMorphBack: example;
+		yourself.
+	
+	instance := example imageForm asMorph.
 	self addMorphBack: instance.
 	instance position: self firstSubmorph bottomLeft
 ]
