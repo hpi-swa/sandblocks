@@ -94,6 +94,12 @@ Morph >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Morph >> clearCache [
+
+	self submorphsDo: [:m | m clearCache]
+]
+
+{ #category : #'*Sandblocks-Core' }
 Morph >> containingSandblock [
 
 	^ self owner ifNotNil: [:o | o containingSandblock]

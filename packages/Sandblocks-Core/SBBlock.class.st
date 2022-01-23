@@ -464,7 +464,7 @@ SBBlock >> clearCache [
 
 	self layoutChanged.
 	self clearCacheSelf.
-	self childSandblocksDo: [:m | m clearCache]
+	super clearCache
 ]
 
 { #category : #caching }

@@ -102,5 +102,9 @@ SBExampleValueDisplay >> reportValue: anObject name: aString [
 	label contents: aString.
 	hadValue := true.
 	
-	values add: (SBProbedValue new value: anObject context: thisContext sender sender sender sender sender sender sender)
+	SBToggledCode comment: '' active: 0 do: {
+		[
+			values add: (SBProbedValue new
+				value: anObject
+				context: thisContext sender sender sender sender sender sender sender)]}
 ]
