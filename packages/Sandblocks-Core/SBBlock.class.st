@@ -239,6 +239,23 @@ SBBlock >> attachDecorator: aDecorator [
 	self updateSteppingDecorators
 ]
 
+{ #category : #'dropping/grabbing' }
+SBBlock >> attachToHand: aHand in: anEditor [
+
+	| s |
+	s := SBSelection new
+		homeArtefact: self containingArtefact;
+		methodClass: (self containingArtefact ifNotNil: #relatedClass);
+		colorPolicy: anEditor colorPolicy;
+		sourceBlock: self;
+		yourself.
+	
+	self containingBlock ifNotNil: [:b | (b sandblockBlockColorIfAbsent: [nil]) ifNotNil: [:c | s color: c]].
+	
+	s addMorphBack: self dragTarget.
+	aHand grabMorph: s
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> attractionStrengthTo: aMorph [
 

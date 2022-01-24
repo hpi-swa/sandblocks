@@ -394,7 +394,8 @@ SBStName >> wasSelected [
 
 	self allUsagesDo: [:b | b attachDecorator: SBHighlightDecorator new].
 	self behavior wasSelected.
-	self resolveBinding ifNotNil: [:b | b attachDecorator: SBHighlightDecorator new]
+	self resolveBinding ifNotNil: [:b | b attachDecorator: SBHighlightDecorator new].
+	super wasSelected
 ]
 
 { #category : #'as yet unclassified' }
