@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="walkthroughs/commands.html"><strong aria-hidden="true">3.6.</strong> Custom Commands</a></li><li class="chapter-item expanded "><a href="walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.7.</strong> Lists of Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/drag-and-drop.html"><strong aria-hidden="true">3.8.</strong> Drag and Drop</a></li><li class="chapter-item expanded "><a href="walkthroughs/artefacts.html"><strong aria-hidden="true">3.9.</strong> Saving and Artefacts</a></li><li class="chapter-item expanded "><a href="walkthroughs/tree-sitter.html"><strong aria-hidden="true">3.10.</strong> Tree Sitter</a></li><li class="chapter-item expanded "><a href="walkthroughs/tree-sitter-runtimes.html"><strong aria-hidden="true">3.11.</strong> Tree Sitter Runtimes</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="sandblocks.html"><strong aria-hidden="true">1.</strong> Sandblocks</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">2.</strong> Frequently Asked Questions</a></li><li class="chapter-item expanded "><a href="chapter_walkthroughs.html"><strong aria-hidden="true">3.</strong> Walkthroughs</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="walkthroughs/squeak.html"><strong aria-hidden="true">3.1.</strong> Setting up Squeak</a></li><li class="chapter-item expanded "><a href="walkthroughs/git.html"><strong aria-hidden="true">3.2.</strong> Working with Git</a></li><li class="chapter-item expanded "><a href="walkthroughs/palettes.html"><strong aria-hidden="true">3.3.</strong> Custom Palettes</a></li><li class="chapter-item expanded "><a href="walkthroughs/blocks.html"><strong aria-hidden="true">3.4.</strong> Custom Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/projections.html"><strong aria-hidden="true">3.5.</strong> Custom Projections</a></li><li class="chapter-item expanded "><a href="walkthroughs/commands.html"><strong aria-hidden="true">3.6.</strong> Custom Commands</a></li><li class="chapter-item expanded "><a href="walkthroughs/lists-of-blocks.html"><strong aria-hidden="true">3.7.</strong> Lists of Blocks</a></li><li class="chapter-item expanded "><a href="walkthroughs/drag-and-drop.html"><strong aria-hidden="true">3.8.</strong> Drag and Drop</a></li><li class="chapter-item expanded "><a href="walkthroughs/artefacts.html"><strong aria-hidden="true">3.9.</strong> Saving and Artefacts</a></li><li class="chapter-item expanded "><a href="walkthroughs/shortcuts.html"><strong aria-hidden="true">3.10.</strong> Custom Shortcuts</a></li><li class="chapter-item expanded "><a href="walkthroughs/tree-sitter.html"><strong aria-hidden="true">3.11.</strong> Tree Sitter</a></li><li class="chapter-item expanded "><a href="walkthroughs/tree-sitter-runtimes.html"><strong aria-hidden="true">3.12.</strong> Tree Sitter Runtimes</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -445,6 +445,29 @@ In this video, we create an artefact that acts as a convenient editor over exist
 Explore its methods to see more.</p>
 <p>To create a block without saving it, do <code>[:b | b to: (b name: 'Object') send: #new] sbStBuild</code>.
 If you are creating an artefact, such as a method or class, you can call <code>sbStSave</code> instead, which will build the block, call save on it, and finally return it.</p>
+<h1 id="custom-shortcuts"><a class="header" href="#custom-shortcuts">Custom Shortcuts</a></h1>
+<p>To register a custom shortcut for your block, do the following:</p>
+<ol>
+<li>implement a method with the <code>&lt;action&gt;</code> pragma</li>
+<li>implement <code>registerShortcuts:</code> on your class</li>
+<li>run <code>SBInputMapping updateShortcutProviders</code></li>
+</ol>
+<p>In more detail:</p>
+<h3 id="1-implement-an-action"><a class="header" href="#1-implement-an-action">(1) Implement an Action</a></h3>
+<p>In your block class, implement e.g.,</p>
+<pre><code>MyBlock&gt;&gt;doubleQuantity
+    &lt;action&gt;
+    
+    self ...
+</code></pre>
+<h3 id="2-implement-registershortcuts"><a class="header" href="#2-implement-registershortcuts">(2) Implement registerShortcuts</a></h3>
+<p>On the <strong>class-side</strong> of your block class, implement e.g.,</p>
+<pre><code>MyBlock class&gt;&gt;registerShortcuts: aProvider
+    aProvider registerShortcut: $d command do: #doubleQuantity
+</code></pre>
+<p>For a lot of examples on different ways to specify shortcuts, see <code>SBTextInputMapping&gt;&gt;registerDefaultShortcuts</code>.</p>
+<h3 id="3-update-shortcut-providers"><a class="header" href="#3-update-shortcut-providers">(3) Update Shortcut Providers</a></h3>
+<p>Finally, just do-it <code>SBInputMapping updateShortcutProviders</code> once and the shortcut should start working.</p>
 <h1 id="tree-sitter"><a class="header" href="#tree-sitter">Tree Sitter</a></h1>
 <p>In this video, we work with Sandblocks' Tree Sitter backend, giving us access to languages such as Python or Javascript.
 We create a replacement for Javascript's <code>window.fetch</code> and a palette for Javascript.</p>
