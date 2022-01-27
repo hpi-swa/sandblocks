@@ -12,5 +12,6 @@
   - [Lists of Blocks](walkthroughs/lists-of-blocks.md)
   - [Drag and Drop](walkthroughs/drag-and-drop.md)
   - [Saving and Artefacts](walkthroughs/artefacts.md)
+  - [Custom Shortcuts](walkthroughs/shortcuts.md)
   - [Tree Sitter](walkthroughs/tree-sitter.md)
   - [Tree Sitter Runtimes](walkthroughs/tree-sitter-runtimes.md)
