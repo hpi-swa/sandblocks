@@ -5,6 +5,22 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBPopup >> checkClose: aSelectedBlock [
+
+	| editor |
+	editor := self sandblockEditor ifNil: [^ self delete].
+	aSelectedBlock ifNil: [^ self delete].
+	((aSelectedBlock hasOwner: self) not and: [aSelectedBlock ~= self]) ifTrue: [^ self delete]
+]
+
+{ #category : #'as yet unclassified' }
+SBPopup >> delete [
+
+	self sandblockEditor ifNotNil: [:editor | editor removeActionsWithReceiver: self].
+	super delete
+]
+
+{ #category : #'as yet unclassified' }
 SBPopup >> initialize [
 
 	super initialize.
@@ -33,10 +49,16 @@ SBPopup >> preventOcclusion [
 ]
 
 { #category : #'as yet unclassified' }
-SBPopup >> showBelow: aBlock [
+SBPopup >> showBelow: aBlock closeOnDeselect: aBoolean [
 
-	self assert: aBlock sandblockEditor notNil.
+	| editor |
+	editor := aBlock sandblockEditor.
+	self assert: editor notNil.
 	aBlock ensureLayouted.
 	self position: aBlock bottomLeft.
-	aBlock sandblockEditor openMorph: self
+	editor openMorph: self.
+	
+	aBoolean ifTrue: [
+		self select.
+		editor when: #selectionChanged send: #checkClose: to: self]
 ]

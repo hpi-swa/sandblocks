@@ -37,7 +37,8 @@ SBIndicatorDecorator >> indicator: anSBOffscreenBlockIndicator [
 SBIndicatorDecorator >> noteNewOwner: aMorph [
 
 	self indicator ifNotNil: [:indicator | indicator abandon].
-	(aMorph parentSandblock  = self morph sandblockEditor and: [aMorph containingSandblock isSingleArtefactView not]) ifTrue: [
+	aMorph parentSandblock ifNil: [^ self].
+	(aMorph parentSandblock = self morph sandblockEditor and: [aMorph parentSandblock isSingleArtefactView not]) ifTrue: [
 		self indicator: (SBOffscreenBlockIndicator newFor: self morph).
 		self morph sandblockEditor ifNotNil: [:editor | editor openMorphInOverlay: self indicator]]
 ]
