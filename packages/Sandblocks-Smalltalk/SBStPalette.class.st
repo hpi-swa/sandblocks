@@ -31,30 +31,6 @@ SBStPalette class >> buildOn: aContainer [
 			hResizing: #shrinkWrap;
 			body: (SBStBlockBody new in: [:b | b statements: {self newNullBlock: 'body'}]));
 		addBlock: 'Class' as: (SBStClass new category: 'UserObjects');
-		addBlock: 'Custom Morph' as: (SBStClassMethodEditor new category: 'UserObjects' superclass: Morph methodsDo: [:add :class |
-			{
-				add value: #initialization value: {
-					SBStMethod new
-						selector: 'initialize' arguments: #() class: class;
-						body: (SBStBlockBody new in: [:b |
-							b statements: {
-								SBStMessageSend new receiver: (SBStName contents: 'super') selector: #initialize.
-								self newNullBlock: 'body'}])}.
-				add value: #stepping value: {
-					SBStMethod new
-						selector: 'step' arguments: #() class: class;
-						body: (SBStBlockBody new in: [:b | b statements: {self newNullBlock: 'body'}]).
-					SBStMethod new
-						selector: 'stepTime' arguments: #() class: class;
-						body: (SBStBlockBody new in: [:b | b statements: {SBStReturn new expression: (SBStNumber new contents: '1')}])}.
-				add value: #drawing value: {
-					SBStMethod new
-						selector: 'drawOn:' arguments: {SBStName contents: 'aCanvas'} class: class;
-						body: (SBStBlockBody new in: [:b | b statements: {self newNullBlock: 'body'}])}.
-				add value: #examples value: {
-					SBStMethod new
-						selector: #example arguments: #() class: class;
-						statements: {SBMorphExample buildTemplateFor: aContainer selectedBlock extent: 300 @ 200}}}]);
 		addSectionHeader: 'Arithmetic Operators';
 		addBlock: 'Addition' as: (SBStMessageSend new
 			receiver: (self newNullBlock: 'a')
@@ -108,7 +84,33 @@ SBStPalette class >> buildOn: aContainer [
 		addBlock: 'ifTrue:ifFalse:' as: (SBStMessageSend new
 			receiver: (self newNullBlock: 'bool')
 			selector: #ifTrue:ifFalse:
-			arguments: {SBStBlockBody empty. SBStBlockBody empty})
+			arguments: {SBStBlockBody empty. SBStBlockBody empty}).
+	SBToggledCode comment: '' active: 0 do: {
+		[
+			aContainer addBlock: 'Custom Morph' as: (SBStClassMethodEditor new category: 'UserObjects' superclass: Morph methodsDo: [:add :class |
+				{
+					add value: #initialization value: {
+						SBStMethod new
+							selector: 'initialize' arguments: #() class: class;
+							body: (SBStBlockBody new in: [:b |
+								b statements: {
+									SBStMessageSend new receiver: (SBStName contents: 'super') selector: #initialize.
+									self newNullBlock: 'body'}])}.
+					add value: #stepping value: {
+						SBStMethod new
+							selector: 'step' arguments: #() class: class;
+							body: (SBStBlockBody new in: [:b | b statements: {self newNullBlock: 'body'}]).
+						SBStMethod new
+							selector: 'stepTime' arguments: #() class: class;
+							body: (SBStBlockBody new in: [:b | b statements: {SBStReturn new expression: (SBStNumber new contents: '1')}])}.
+					add value: #drawing value: {
+						SBStMethod new
+							selector: 'drawOn:' arguments: {SBStName contents: 'aCanvas'} class: class;
+							body: (SBStBlockBody new in: [:b | b statements: {self newNullBlock: 'body'}])}.
+					add value: #examples value: {
+						SBStMethod new
+							selector: #example arguments: #() class: class;
+							statements: {SBMorphExample buildTemplateFor: aContainer selectedBlock extent: 300 @ 200}}}])]}
 ]
 
 { #category : #'as yet unclassified' }
