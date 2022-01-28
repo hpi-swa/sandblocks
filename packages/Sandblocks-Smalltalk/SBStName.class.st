@@ -147,6 +147,20 @@ SBStName >> castToUnknownWhenEmpty [
 ]
 
 { #category : #'as yet unclassified' }
+SBStName >> clearCacheSelf [
+
+	super clearCacheSelf.
+	
+	(self owner isNil or: [self autoCast isNil or: [self autoCast isBoolean and: [self autoCast not]]]) ifTrue: [^ self].
+	
+	(self autoCast notNil and: [self autoCast isBlock]) ifTrue: [^ self autoCast value: self value: self owner].
+	
+	SBStNameBehavior allSubclassesDo: [:cls | (cls checkCastFor: self parent: self owner) ifTrue: [^ self behaviorClass: cls]].
+	
+	self behaviorClass: SBStBinding
+]
+
+{ #category : #'as yet unclassified' }
 SBStName >> contentsChanged [
 
 	self behavior contentsChanged.
@@ -258,7 +272,6 @@ SBStName >> isTemporaryVariable [
 { #category : #'as yet unclassified' }
 SBStName >> keyStroke: anEvent [
 
-	| oldContents |
 	(self isExpression and: [anEvent keyCharacter = $:]) ifTrue: [ | new |
 		new := self newNullBlock.
 		^ self sandblockEditor
@@ -269,10 +282,7 @@ SBStName >> keyStroke: anEvent [
 				wrap: [:outer :inner | outer binding: self value: new]);
 			startInput: new at: 0 replacingContents: false].
 	
-	oldContents := self contents.
-	super keyStroke: anEvent.
-	
-	oldContents ~= self contents ifTrue: [self updateSuggestions]
+	super keyStroke: anEvent
 ]
 
 { #category : #'as yet unclassified' }
@@ -293,18 +303,6 @@ SBStName >> name: aString [
 SBStName >> noValidBinding [
 
 	^ self behavior noValidBinding
-]
-
-{ #category : #'as yet unclassified' }
-SBStName >> noteNewOwner: aMorph [
-
-	(aMorph isNil or: [self autoCast isNil or: [self autoCast isBoolean and: [self autoCast not]]]) ifTrue: [^ self].
-	
-	(self autoCast notNil and: [self autoCast isBlock]) ifTrue: [^ self autoCast value: self value: aMorph].
-	
-	SBStNameBehavior allSubclassesDo: [:cls | (cls checkCastFor: self parent: aMorph) ifTrue: [^ self behaviorClass: cls]].
-	
-	self behaviorClass: SBStBinding
 ]
 
 { #category : #'colors and color policies' }
@@ -334,6 +332,12 @@ SBStName >> resolveBinding [
 ]
 
 { #category : #'as yet unclassified' }
+SBStName >> suggestions [
+
+	^ self behavior suggestions
+]
+
+{ #category : #'as yet unclassified' }
 SBStName >> symbols [
 
 	^ self behavior symbolsFor: self colorPolicy
@@ -343,12 +347,6 @@ SBStName >> symbols [
 SBStName >> textContents [
 
 	^ self contents
-]
-
-{ #category : #'as yet unclassified' }
-SBStName >> updateSuggestions [
-
-	self behavior updateSuggestions
 ]
 
 { #category : #'as yet unclassified' }
@@ -398,7 +396,8 @@ SBStName >> wasSelected [
 
 	self allUsagesDo: [:b | b attachDecorator: SBHighlightDecorator new].
 	self behavior wasSelected.
-	self resolveBinding ifNotNil: [:b | b attachDecorator: SBHighlightDecorator new]
+	self resolveBinding ifNotNil: [:b | b attachDecorator: SBHighlightDecorator new].
+	super wasSelected
 ]
 
 { #category : #'as yet unclassified' }

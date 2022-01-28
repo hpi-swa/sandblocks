@@ -84,7 +84,7 @@ SBStMessagePart >> deleteBeforeCursor [
 	(self actualContents isEmpty and: [self isFirstPart]) ifTrue: [^ self messageSend tryDelete].
 	super deleteBeforeCursor.
 	
-	self isInWorld ifTrue: [self updateSuggestions]
+	
 ]
 
 { #category : #'colors and color policies' }
@@ -203,10 +203,9 @@ SBStMessagePart >> keyStroke: anEvent [
 		^ self insertUnknownAfterAndInput: true].
 	
 	(({Character backspace. Character delete. $_} includes: anEvent keyCharacter) or: [(anEvent keyCharacter isSpecial and: [self actualContents isEmpty or: [self isBinary]]) or: [anEvent keyCharacter isAlphaNumeric and: [self actualContents isEmpty or: [self isBinary not]]]]) ifTrue: [
-		text keyStroke: anEvent.
-		self batchedChangeStep.
+		super keyStroke: anEvent.
 		(anEvent keyCharacter isSpecial and: [self actualContents size = 1 and: [self isFirstPart]]) ifTrue: [^ self insertUnknownAfterAndInput: false].
-		^ self updateSuggestions].
+		^ self].
 	
 	self parentIsExpression ifTrue: [
 		SBStGrammarHandler new
@@ -290,22 +289,20 @@ SBStMessagePart >> startOrAddToMultiSelection [
 	self messageSend startOrAddToMultiSelection
 ]
 
-{ #category : #input }
-SBStMessagePart >> stopEditing [
+{ #category : #'as yet unclassified' }
+SBStMessagePart >> suggestions [
 
-	text stopEditing
-]
-
-{ #category : #input }
-SBStMessagePart >> stopEditing: aCommand [
-
-	aCommand
-		newText: self contents;
-		newMorph: self.
+	| selector list |
+	selector := self selectorContentsBeforeMe, self contents.
+	(selector notEmpty and: [selector last = $:]) ifTrue: [selector := selector allButLast].
 	
-	self stopEditing.
+	list := OrderedCollection withAll: (self messageSend actualReceiver guessClassExpensive
+		ifNil: [Symbol allSymbols]
+		ifNotNil: [:class | class sandblocksSuggestionsFor: self]).
 	
-	self removeSuggestionMenu
+	self containingArtefact ifNotNil: [:artefact | artefact selector ifNotNil: [:sel | (sel sandblockMatch: selector) ifTrue: [list add: sel]]].
+	
+	^ (self sortedSuggestions: list for: selector) collect: [:sel | SBSuggestionItem selector: sel label: 'send']
 ]
 
 { #category : #'colors and color policies' }
@@ -318,21 +315,6 @@ SBStMessagePart >> symbols [
 SBStMessagePart >> textContents [
 
 	^ self contents
-]
-
-{ #category : #'as yet unclassified' }
-SBStMessagePart >> updateSuggestions [
-
-	| selector |
-	selector := self selectorContentsBeforeMe, self contents.
-	
-	selector
-		ifEmpty: [self suggestAlways ifFalse: [^ self]]
-		ifNotEmpty: [selector last = $: ifTrue: [selector := selector allButLast]].
-	
-	self
-		updateSuggestions: (((self messageSend actualReceiver completionSuggestionsFor: selector) take: 30) collect: [:sel | SBSuggestionItem selector: sel label: 'send'])
-		showNear: self
 ]
 
 { #category : #'as yet unclassified' }

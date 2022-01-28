@@ -207,16 +207,6 @@ SBLabel >> startInputAt: aNumber replacingContents: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBLabel >> stopEditing: aCommand [
-
-	aCommand
-		newText: self contents;
-		newMorph: self.
-	
-	text stopEditing
-]
-
-{ #category : #'as yet unclassified' }
 SBLabel >> symbols [
 
 	^ delimiter ifNil: [self colorPolicy symbolsForComment: self]

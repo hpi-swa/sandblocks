@@ -277,20 +277,20 @@ SBStNameBehavior >> resolveBinding [
 ]
 
 { #category : #'as yet unclassified' }
-SBStNameBehavior >> symbolsFor: aColorPolicy [
-
-	^ self subclassResponsibility
-]
-
-{ #category : #'as yet unclassified' }
-SBStNameBehavior >> updateSuggestions [
+SBStNameBehavior >> suggestions [
 
 	| suggestions |
 	suggestions := self contents ifEmpty: [#()] ifNotEmpty: [:text |
 		text first isUppercase
 			ifTrue: [self uppercaseSuggestions]
 			ifFalse: [self lowercaseSuggestions]].
-	self block updateSuggestions: (suggestions sort: #selectorSize ascending) showNear: self block
+	^ suggestions sort: #selectorSize ascending
+]
+
+{ #category : #'as yet unclassified' }
+SBStNameBehavior >> symbolsFor: aColorPolicy [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }
@@ -304,7 +304,15 @@ SBStNameBehavior >> uppercaseSuggestions [
 				stream nextPut: (SBSuggestionItem selector: key label: ((value isBehavior and: [key == value name])
 					ifTrue: ['class']
 					ifFalse: ['global']))]].
-		SBStSubstitution allSubclassesDo: [:class | (class name sandblockMatch: self contents) ifTrue: [class suggestion ifNotNil: [:block | stream nextPut: ((SBSuggestionItem selector: class name label: 'projection') completionAction: block)]]]]
+		SBStSubstitution allSubclassesDo: [:class |
+			(class name sandblockMatch: self contents) ifTrue: [
+				class suggestion ifNotNil: [:block |
+					stream nextPut: ((SBProjectionSuggestionItem
+						selector: class name
+						label: 'projection'
+						editor: self block sandblockEditor)
+						completionAction: block;
+						instanceSuggestion: class instanceSuggestion)]]]]
 ]
 
 { #category : #'as yet unclassified' }

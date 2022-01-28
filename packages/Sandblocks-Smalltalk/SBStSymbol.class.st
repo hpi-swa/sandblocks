@@ -28,9 +28,7 @@ SBStSymbol >> keyStroke: anEvent [
 
 	anEvent keyCharacter isSpecial
 		ifTrue: [self acceptInputEvent: anEvent]
-		ifFalse: [super keyStroke: anEvent].
-	
-	self updateSuggestions
+		ifFalse: [super keyStroke: anEvent]
 ]
 
 { #category : #'as yet unclassified' }
@@ -52,19 +50,17 @@ SBStSymbol >> selector [
 ]
 
 { #category : #'as yet unclassified' }
-SBStSymbol >> symbols [
+SBStSymbol >> suggestions [
 
-	^ self colorPolicy symbolsForSymbol: self
+	^ self contents
+		ifEmpty: [#()]
+		ifNotEmpty: [:text | (self sortedSuggestions: Symbol allSymbols for: text) collect: [:sel | SBSuggestionItem selector: sel label: 'symbol']]
 ]
 
 { #category : #'as yet unclassified' }
-SBStSymbol >> updateSuggestions [
+SBStSymbol >> symbols [
 
-	| suggestions |
-	suggestions := self contents
-		ifEmpty: [#()]
-		ifNotEmpty: [:text | (self completionSuggestionsFor: text) collect: [:sel | SBSuggestionItem selector: sel label: 'symbol']].
-	self updateSuggestions: suggestions showNear: self
+	^ self colorPolicy symbolsForSymbol: self
 ]
 
 { #category : #'as yet unclassified' }

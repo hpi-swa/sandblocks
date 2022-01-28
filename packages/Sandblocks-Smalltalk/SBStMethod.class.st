@@ -117,13 +117,6 @@ SBStMethod >> isCollapsed [
 	^ self body visible not
 ]
 
-{ #category : #'event handling' }
-SBStMethod >> keyStroke: anEvent [
-
-	signature keyStroke: anEvent.
-	self updateSuggestions
-]
-
 { #category : #accessing }
 SBStMethod >> layoutCommands [
 
@@ -252,13 +245,6 @@ SBStMethod >> startInputAt: aNumber replacingContents: aBoolean [
 	^ signature startInputAt: aNumber replacingContents: aBoolean
 ]
 
-{ #category : #input }
-SBStMethod >> stopEditing: aCommand [
-
-	signature stopEditing: aCommand.
-	self removeSuggestionMenu
-]
-
 { #category : #printing }
 SBStMethod >> storeOn: aStream [
 
@@ -278,17 +264,6 @@ SBStMethod >> storeOn: aStream [
 SBStMethod >> tryDelete [
 
 	
-]
-
-{ #category : #suggestions }
-SBStMethod >> updateSuggestions [
-
-	| selector |
-	selector := (signature selector splitBy: ':') first.
-	selector size > 2 ifTrue: [
-		self
-			updateSuggestions: (Array streamContents: [:stream | Symbol allSymbols do: [:sym | (sym asString sandblockMatch: selector) ifTrue: [stream nextPut: (SBSuggestionItem selector: sym label: 'method')]]])
-			showNear: signature]
 ]
 
 { #category : #suggestions }

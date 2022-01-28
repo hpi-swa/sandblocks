@@ -138,16 +138,6 @@ SBJsPrefixOperator >> startInputAt: aNumber replacingContents: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBJsPrefixOperator >> stopEditing: aCommand [
-
-	aCommand
-		newText: self currentTextMorph contents;
-		newMorph: self.
-	
-	self currentTextMorph stopEditing
-]
-
-{ #category : #'as yet unclassified' }
 SBJsPrefixOperator >> writeSourceOn: aStream [
 
 	aStream nextPutAll: self contents.

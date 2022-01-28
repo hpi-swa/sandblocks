@@ -11,7 +11,13 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #suggestions }
+SBPoint class >> instanceSuggestion [
+
+	^ [self new]
+]
+
+{ #category : #testing }
 SBPoint class >> matches: aBlock [
 
 	(aBlock isKindOf: SBPoint) ifTrue: [^ true].
@@ -21,7 +27,7 @@ SBPoint class >> matches: aBlock [
 	^ (aBlock selector = '@' or: [aBlock selector = ',']) and: [aBlock receiver isNumberBlock] and: [aBlock arguments first isNumberBlock]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBPoint class >> newFor: aBlock [
 
 	(aBlock isKindOf: SBPoint) ifTrue: [^ aBlock veryDeepCopy].
@@ -31,7 +37,7 @@ SBPoint class >> newFor: aBlock [
 		type: Point
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBPoint class >> newForPoint: aPoint [
 
 	^ self new
@@ -39,7 +45,7 @@ SBPoint class >> newForPoint: aPoint [
 		type: Point
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPoint class >> priority [
 
 	^ 21000

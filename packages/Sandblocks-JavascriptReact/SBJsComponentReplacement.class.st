@@ -310,14 +310,15 @@ SBJsComponentReplacement >> exampleArray: aJsArray withSharedProps: aJsObject fo
 	"withSharedProps: (aJsObject ifNotNil: [:object | object sourceString] ifNil: ['sharedExampleProps = {}'])."
 	wrappedBrowser := SBBlock new
 		attachDecorator: SBResizableDecorator new;
-		addMorphBack: (MMBrowserMorph reactOpenOn: aString);
+		addMorphBack: ((MMBrowserMorph reactOpenOn: aString) hResizing: #spaceFill; vResizing: #spaceFill; minimumExtent: 50@50);
 		addMorphBack: (SBButton new icon: SBIcon iconSave label: 'Save to Palette' do: [ | temp |
 			temp := SBJsComponentUsageReplacement inlineComponentUsageReplacementFor: aComponentNode sourceString.
 			SBJsReactComponentRegistry defaultRegistry addComponent: temp withName: aComponentNameString]);
 		color: Color seaFoam;
 		changeTableLayout;
-		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap;
+		hResizing: #rigid;
+		vResizing: #rigid;
+		extent: 190@170;
 		yourself.
 	
 	self

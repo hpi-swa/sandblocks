@@ -192,7 +192,7 @@ SBBlock >> artefactCompletionSuggestionsFor: aBlock matching: aString [
 			(sel sandblockMatch: aString)
 				ifTrue: [stream nextPut: sel];
 				yourself]]) sort: #size ascending.
-	list := exactMatches, fuzzyMatches, (self sandblockEditor suggestAlways ifTrue: [selectors] ifFalse: [#()]).
+	list := exactMatches, fuzzyMatches, (self suggestAlways ifTrue: [selectors] ifFalse: [#()]).
 	
 	"add outer artefact's selector, if any, to support recursion of not-yet-saved methods"
 	self ifNotNil: [:artefact | artefact selector ifNotNil: [:sel | (sel sandblockMatch: aString) ifTrue: [list := (list copyWithout: sel) copyWithFirst: sel]]].
@@ -237,6 +237,23 @@ SBBlock >> attachDecorator: aDecorator [
 	aDecorator attached: self.
 	self changed.
 	self updateSteppingDecorators
+]
+
+{ #category : #'dropping/grabbing' }
+SBBlock >> attachToHand: aHand in: anEditor [
+
+	| s |
+	s := SBSelection new
+		homeArtefact: self containingArtefact;
+		methodClass: (self containingArtefact ifNotNil: #relatedClass);
+		colorPolicy: anEditor colorPolicy;
+		sourceBlock: self;
+		yourself.
+	
+	self containingBlock ifNotNil: [:b | (b sandblockBlockColorIfAbsent: [nil]) ifNotNil: [:c | s color: c]].
+	
+	s addMorphBack: self dragTarget.
+	aHand grabMorph: s
 ]
 
 { #category : #'as yet unclassified' }
@@ -396,7 +413,7 @@ SBBlock >> canPersist [
 { #category : #'actions tests' }
 SBBlock >> canSelectPreviousSuggestion [
 
-	^ self hasMultipleSuggestions and: [self suggestionMenuDo: [:menu | menu activeIndex > 1]]
+	^ self hasMultipleSuggestions and: [self sandblockEditor suggestionMenu activeIndex > 1]
 ]
 
 { #category : #'colors and color policies' }
@@ -464,14 +481,16 @@ SBBlock >> clearCache [
 
 	self layoutChanged.
 	self clearCacheSelf.
-	self childSandblocksDo: [:m | m clearCache]
+	super clearCache
 ]
 
 { #category : #caching }
 SBBlock >> clearCacheSelf [
 
 	colorPolicyCache := nil.
-	self removeProperty: #sandblockBlockColor
+	self removeProperty: #sandblockBlockColor.
+	self removeProperty: #foregroundColorCache.
+	self removeProperty: #colorCache
 ]
 
 { #category : #actions }
@@ -519,7 +538,9 @@ SBBlock >> closestAdjacentFrom: mySide to: theirSide [
 { #category : #'colors and color policies' }
 SBBlock >> color [
 
-	^ self colorPolicy ifNotNil: [:p | p colorForBlock: self] ifNil: [Color white]
+	^ self
+		valueOfProperty: #colorCache
+		ifAbsentPut: [self colorPolicy ifNotNil: [:p | p colorForBlock: self] ifNil: [Color r: 1 g: 1 b: 1]]
 ]
 
 { #category : #'colors and color policies' }
@@ -540,8 +561,6 @@ SBBlock >> completeSubtree [
 { #category : #suggestions }
 SBBlock >> completionSuggestionsFor: aString [
 
-	(self suggestAlways or: [aString size > 2]) ifFalse: [^ #()].
-	
 	^ self containingArtefact
 		ifNotNil: [:a | a artefactCompletionSuggestionsFor: self matching: aString]
 		ifNil: [#()]
@@ -783,6 +802,7 @@ SBBlock >> deleteBeforeCursor [
 	| editor adjacent parent |
 	self currentTextMorph cursor ~= 1 ifTrue: [
 		self currentTextMorph deleteBeforeCursor.
+		self updateSuggestions.
 		^ self batchedChangeStep].
 	self symbols first notNil ifTrue: [^ self changeToUnknown].
 	
@@ -1100,8 +1120,8 @@ SBBlock >> focusAfterDeleteIfNone: aBlock [
 SBBlock >> focusNextSuggestion [
 	<inputAction>
 	<actionValidIf: #hasMultipleSuggestions>
-	
-	self suggestionMenuDo: #next
+
+	self sandblockEditor suggestionMenu next
 ]
 
 { #category : #actions }
@@ -1109,7 +1129,7 @@ SBBlock >> focusPreviousSuggestion [
 	<inputAction>
 	<actionValidIf: #canSelectPreviousSuggestion>
 
-	self suggestionMenuDo: #previous
+	self sandblockEditor suggestionMenu previous
 ]
 
 { #category : #'as yet unclassified' }
@@ -1126,7 +1146,9 @@ SBBlock >> forceAgainst: aMorph [
 { #category : #'colors and color policies' }
 SBBlock >> foregroundColor [
 
-	^ self colorPolicy foregroundColorForBlock: self
+	^ self
+		valueOfProperty: #foregroundColorCache
+		ifAbsentPut: [self colorPolicy foregroundColorForBlock: self]
 ]
 
 { #category : #decorators }
@@ -1193,8 +1215,10 @@ SBBlock >> hasGroup [
 { #category : #layout }
 SBBlock >> hasHorizontalLayout [
 
-	^ self submorphs size < 2 or: [ | delta |
-		delta := self submorphs first topLeft - self submorphs second topLeft.
+	| blocks |
+	blocks := self childSandblocks.
+	^ blocks size < 2 or: [ | delta |
+		delta := blocks first topLeft - blocks second topLeft.
 		delta x < delta y]
 ]
 
@@ -1213,7 +1237,7 @@ SBBlock >> hasMultiSelection [
 { #category : #'actions tests' }
 SBBlock >> hasMultipleSuggestions [
 
-	^ self hasSuggestions and: [(self valueOfProperty: #sandblockSuggestionMenu) itemCount > 1]
+	^ self hasSuggestions and: [self sandblockEditor suggestionMenu itemCount > 1]
 ]
 
 { #category : #'actions tests' }
@@ -1225,7 +1249,9 @@ SBBlock >> hasNoSuggestions [
 { #category : #'actions tests' }
 SBBlock >> hasSuggestions [
 
-	^ (self valueOfProperty: #sandblockSuggestionMenu ifAbsent: [^ false]) isInWorld
+	| editor |
+	editor := self sandblockEditor.
+	^ editor notNil and: [editor suggestionMenu isInWorld and: [editor suggestionMenu reference = self]]
 ]
 
 { #category : #testing }
@@ -1586,6 +1612,7 @@ SBBlock >> keyStroke: anEvent [
 
 	self currentTextMorph ifNotNil: [:t |
 		t keyStroke: anEvent.
+		self queueUpdateSuggestions.
 		self batchedChangeStep]
 ]
 
@@ -1666,10 +1693,25 @@ SBBlock >> lookupGlobalAction: aSymbol [
 	^ (self class lookupSelector: aSymbol) ifNotNil: [:m | ((m pragmaAt: #globalAction) notNil and: [(m pragmaAt: #actionValidIf:) ifNotNil: [:p | self perform: p arguments first] ifNil: [true]]) ifTrue: [m] ifFalse: [nil]]
 ]
 
+{ #category : #suggestions }
+SBBlock >> maxSuggestions [
+
+	^ 50
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> maximumNonOverlappingForce [
 
 	^ 10
+]
+
+{ #category : #suggestions }
+SBBlock >> maybeUpdateSuggestions [
+
+	| menu |
+	self sandblockEditor ifNil: [^ self].
+	menu := self sandblockEditor suggestionMenu.
+	menu updateQueued ifTrue: [self updateSuggestions]
 ]
 
 { #category : #layout }
@@ -1823,9 +1865,7 @@ SBBlock >> noteNewOwner: aMorph [
 		decorator noteNewOwner: aMorph.
 		
 		].
-	self clearCache.
-	" recheck name blocks "
-	self allBlocksDo: [:block | block isName ifTrue: [block noteNewOwner: block owner]]
+	self clearCache
 ]
 
 { #category : #'object interface' }
@@ -2158,6 +2198,17 @@ SBBlock >> providesExecutionEnvironment [
 	^ false
 ]
 
+{ #category : #suggestions }
+SBBlock >> queueUpdateSuggestions [
+
+	| editor |
+	editor := self sandblockEditor.
+	editor ifNil: [^ self].
+	
+	editor suggestionMenu updateQueued: true.
+	self addAlarm: #maybeUpdateSuggestions after: 0
+]
+
 { #category : #actions }
 SBBlock >> refocus [
 	<multiSelectAction>
@@ -2191,8 +2242,7 @@ SBBlock >> removeLocalColorPolicy [
 { #category : #suggestions }
 SBBlock >> removeSuggestionMenu [
 
-	self valueOfProperty: #sandblockSuggestionMenu ifPresentDo: #delete.
-	self removeProperty: #sandblockSuggestionMenu
+	self hasSuggestions ifTrue: [self sandblockEditor suggestionMenu delete]
 ]
 
 { #category : #'as yet unclassified' }
@@ -2392,7 +2442,13 @@ SBBlock >> selectionLabel [
 { #category : #'actions tests' }
 SBBlock >> shouldAutocomplete [
 
-	^ self hasSuggestions and: [self suggestionsMenu activeSuggestion wouldChange: self]
+	^ self hasSuggestions and: [self sandblockEditor suggestionMenu activeSuggestion wouldChange: self]
+]
+
+{ #category : #suggestions }
+SBBlock >> shouldSuggest [
+
+	^ self suggestAlways or: [self contents size > 2]
 ]
 
 { #category : #'as yet unclassified' }
@@ -2428,6 +2484,36 @@ SBBlock >> slurpFront [
 	(self adjacentBlock: -1) ifNotNil: [:block | 
 		self sandblockEditor do: (self insertCommandRequest: block near: self childSandblocks last before: true).
 		self select]
+]
+
+{ #category : #suggestions }
+SBBlock >> sortedSuggestions: aCollection for: aString [
+
+	| exactMatches fuzzyMatches list |
+	"sort list of provided suggestion strings by putting exact matches first and clamps to maxSuggestions.
+
+NOTE: may mutate aCollection"
+	list := (aCollection isKindOf: OrderedCollection)
+		ifTrue: [aCollection]
+		ifFalse: [OrderedCollection withAll: aCollection].
+	
+	exactMatches := (Array streamContents: [:stream |
+		list removeAllSuchThat: [:sel |
+			(sel sandblockBeginsWith: aString)
+				ifTrue: [stream nextPut: sel];
+				yourself]]) sort: #size ascending.
+	fuzzyMatches := (Array streamContents: [:stream |
+		list removeAllSuchThat: [:sel |
+			(sel sandblockMatch: aString)
+				ifTrue: [stream nextPut: sel];
+				yourself]]) sort: #size ascending.
+	
+	^ (Array
+		streamContents: [:stream |
+			stream nextPutAll: exactMatches.
+			stream nextPutAll: fuzzyMatches.
+			self suggestAlways ifTrue: [stream nextPutAll: list]]
+		limitedTo: self maxSuggestions) withoutDuplicates
 ]
 
 { #category : #'ast helpers' }
@@ -2496,6 +2582,9 @@ SBBlock >> startInputAt: aNumber replacingContents: aBoolean [
 					contents: '';
 					moveCursorTo: 0]
 			ifFalse: [self currentTextMorph moveCursorTo: aNumber].
+		
+		(self suggestAlways and: [aBoolean not]) ifTrue: [self queueUpdateSuggestions].
+		
 		^ cmd].
 	
 	^ nil
@@ -2557,10 +2646,6 @@ SBBlock >> startOrAddToMultiSelection [
 ]
 
 { #category : #input }
-SBBlock >> stopEditing [
-]
-
-{ #category : #input }
 SBBlock >> stopEditing: aCommand [
 
 	aCommand
@@ -2584,15 +2669,9 @@ SBBlock >> suggestAlways [
 ]
 
 { #category : #suggestions }
-SBBlock >> suggestionMenuDo: aBlock [
+SBBlock >> suggestions [
 
-	^ self valueOfProperty: #sandblockSuggestionMenu ifPresentDo: aBlock
-]
-
-{ #category : #suggestions }
-SBBlock >> suggestionsMenu [
-
-	^ self valueOfProperty: #sandblockSuggestionMenu ifAbsentPut: [SBSuggestionMenu new]
+	^ #()
 ]
 
 { #category : #'action helpers' }
@@ -2672,9 +2751,9 @@ SBBlock >> toggleDecorator: aDecorator [
 { #category : #suggestions }
 SBBlock >> toggleSuggestions [
 
-	self suggestionsMenu isInWorld
+	self hasSuggestions
 		ifTrue: [self removeSuggestionMenu]
-		ifFalse: [(self respondsTo: #updateSuggestions) ifTrue: [self updateSuggestions]].
+		ifFalse: [(self respondsTo: #updateSuggestions) ifTrue: [self updateSuggestions]]
 ]
 
 { #category : #'ast helpers' }
@@ -2703,19 +2782,20 @@ SBBlock >> updateSteppingDecorators [
 ]
 
 { #category : #suggestions }
-SBBlock >> updateSuggestions: aCollection showNear: aMorph [
+SBBlock >> updateSuggestions [
 
-	(aCollection isEmpty or: [self hasInput not]) ifTrue: [^ self removeSuggestionMenu].
+	| editor menu |
+	editor := self sandblockEditor ifNil: [^ self].
+	menu := editor suggestionMenu.
+	self hasInput ifFalse: [
+		self hasSuggestions ifTrue: [menu delete].
+		^ self].
 	
-	self sandblockEditor ifNil: [^ self].
+	self shouldSuggest ifFalse: [^ self].
 	
-	self suggestionsMenu
-		editor: self sandblockEditor;
-		suggestions: (aCollection take: 30);
-		topLeft: aMorph position + (0 @ aMorph height).
-	
-	self sandblockEditor openMorph: self suggestionsMenu.
-	self suggestionsMenu resize
+	self suggestions ifNotEmpty: [:s |
+		menu suggestions: (s take: self maxSuggestions).
+		menu openNear: self]
 ]
 
 { #category : #layout }
@@ -2729,21 +2809,28 @@ SBBlock >> useAlgebraLayout [
 
 { #category : #actions }
 SBBlock >> useSuggestion [
-	" try to apply a suggestion, return whether anything was applied "
 	<inputAction>
 	<actionValidIf: #hasSuggestions>
 
-	self suggestionMenuDo: [:menu | | editor |
-		editor := self sandblockEditor.
-		menu activeSuggestion ifNotNil: [:s |
-			(s wouldChange: self)
-				ifTrue: [
-					s useSuggestionOn: self.
-					editor selection startInputAtEnd]
-				ifFalse: [self inputNextUnknown]].
-		self removeSuggestionMenu.
-		^ true].
-	^ false
+	| editor |
+	self hasSuggestions ifFalse: [^ false].
+	" try to apply a suggestion, return whether anything was applied "
+	editor := self sandblockEditor.
+	editor suggestionMenu activeItem ifNotNil: [:s |
+		(s wouldChange: self)
+			ifTrue: [
+				s useSuggestionOn: self.
+				editor selection startInputAtEnd]
+			ifFalse: [self inputNextUnknown]].
+	self removeSuggestionMenu.
+	^ true
+]
+
+{ #category : #suggestions }
+SBBlock >> useSuggestion: aString [
+
+	self contents: aString.
+	self containingSandblock sandblockEditor endInput
 ]
 
 { #category : #testing }

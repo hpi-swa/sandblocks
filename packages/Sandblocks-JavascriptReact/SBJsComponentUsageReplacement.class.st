@@ -36,13 +36,13 @@ SBJsComponentUsageReplacement >> componentPropsFromExampleObject: aJsObject [
 { #category : #'as yet unclassified' }
 SBJsComponentUsageReplacement >> examples: aJsArray forAComponent: reactClassNameString withComponentNode: aReactComponentString [
 
-	| validExampleIndex examplePropsObject row keyValuePairs |
+	| validExampleIndex examplePropsObject row keyValuePairs componentPreviewImage |
 	validExampleIndex := self indexOfFirstValidExampleEntry: aJsArray.
 	examplePropsObject := self componentPropsFromExampleObject: (aJsArray access children at: validExampleIndex).
 	keyValuePairs := self keyValuesOfExampleIObject: examplePropsObject.
 	
 	row := SBRow new
-		cellGap: 7;
+		cellGap: 5;
 		addMorphBack: (SBStringMorph new contents: '<', reactClassNameString);
 		yourself.
 	keyValuePairs do: [:association |
@@ -51,10 +51,17 @@ SBJsComponentUsageReplacement >> examples: aJsArray forAComponent: reactClassNam
 			addMorphBack: association value].
 	row addMorphBack: (SBStringMorph new contents: '/>').
 	
+	componentPreviewImage := (SBJsComponentScreenshotDude
+			takeScreenshotOf: aReactComponentString
+			atExample: validExampleIndex
+			withExtent: 300 @ 250).
+	
 	^ self
 		factory: SBJavascript instance;
 		removeAllMorphs;
-		addMorphBack: row;
+		addMorphBack: (SBColumn new changeTableLayout; hResizing: #shrinkWrap; vResizing: #shrinkWrap;
+		addMorphBack: (ImageMorph new image: componentPreviewImage);
+		addMorphBack: row)
 		yourself
 ]
 
@@ -69,4 +76,16 @@ SBJsComponentUsageReplacement >> indexOfFirstValidExampleEntry: aJsArray [
 SBJsComponentUsageReplacement >> keyValuesOfExampleIObject: aJsObject [
 
 	^ (aJsObject children reject: [:objectEntry | objectEntry type ~= 'pair']) collect: [:keyValuePair | keyValuePair key contents -> keyValuePair value]
+]
+
+{ #category : #'as yet unclassified' }
+SBJsComponentUsageReplacement >> type [
+
+	^ 'jsx_expression'
+]
+
+{ #category : #'as yet unclassified' }
+SBJsComponentUsageReplacement >> writeSourceOn: aStream indent: aNumber [
+
+	self lastSubmorph writeSourceOn: aStream indent: aNumber.
 ]

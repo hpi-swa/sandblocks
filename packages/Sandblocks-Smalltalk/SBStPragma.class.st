@@ -110,12 +110,6 @@ SBStPragma >> startInputAt: aNumber replacingContents: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBStPragma >> stopEditing: aCommand [
-
-	signature stopEditing: aCommand
-]
-
-{ #category : #'as yet unclassified' }
 SBStPragma >> symbols [
 
 	^ self colorPolicy symbolsForPragma: self

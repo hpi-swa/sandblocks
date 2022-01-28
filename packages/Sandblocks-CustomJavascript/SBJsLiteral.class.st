@@ -90,8 +90,6 @@ SBJsLiteral >> replaceWithUnknown [
 	| new |
 	self isUnknown ifTrue: [^ self].
 	
-	self stopEditing.
-	
 	new := self newNullBlock.
 	self replaceBy: new.
 	new currentTextMorph moveCursorTo: 0.
@@ -125,23 +123,6 @@ SBJsLiteral >> startInputCommand [
 		oldMorph: self;
 		previousText: self contents;
 		yourself
-]
-
-{ #category : #'as yet unclassified' }
-SBJsLiteral >> stopEditing [
-
-	self currentTextMorph stopEditing.
-	self removeSuggestionMenu
-]
-
-{ #category : #'as yet unclassified' }
-SBJsLiteral >> stopEditing: aCommand [
-
-	aCommand
-		newText: self contents;
-		newMorph: self.
-	
-	self stopEditing
 ]
 
 { #category : #'as yet unclassified' }

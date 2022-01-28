@@ -22,7 +22,8 @@ Class {
 		'cursor',
 		'hoverHighlight',
 		'suggestAlways',
-		'activePlugins'
+		'activePlugins',
+		'suggestionMenu'
 	],
 	#classVars : [
 		'ActivatedPluginClasses',
@@ -347,7 +348,7 @@ SBEditor >> click: anEvent [
 	self select: nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBEditor >> close [
 
 	self containingWindow ifNotNil: #delete.
@@ -773,7 +774,7 @@ SBEditor >> handlesMouseDown: anEvent [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBEditor >> handlesMouseOver: anEvent [
 
 	^ true
@@ -859,7 +860,7 @@ SBEditor >> inputIsDefault [
 	^ inputMapping defaultState = #input
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBEditor >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
 	^ SBEditorOpenMorphCommand new
@@ -957,14 +958,14 @@ SBEditor >> modelWakeUp [
 		self valueOfProperty: #previousWindow ifPresentDo: [:window | self owner addMorphFront: self]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBEditor >> morphicLayerNumber [
 	" make sure we're at least over the docking bar "
 
 	^ 77 - 1
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBEditor >> mouseLeave: anEvent [
 
 	hoverHighlight ifNotNil: #detach
@@ -1005,6 +1006,14 @@ SBEditor >> multiSelectionIsConsecutive [
 	^ true
 ]
 
+{ #category : #accessing }
+SBEditor >> newSelectionContainer [
+
+	^ SBSelection new
+		colorPolicy: self colorPolicy;
+		yourself
+]
+
 { #category : #'event handling' }
 SBEditor >> noteNewOwner: aMorph [
 
@@ -1023,7 +1032,7 @@ SBEditor >> objectInterface [
 	^ SBInterfaces never
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBEditor >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ SBInterfaces block, (SBToggledCode comment: '' active: 1 do: {[SBInterfaces always]. [SBInterfaces topLevel]})
@@ -1413,7 +1422,7 @@ SBEditor >> scrollToShow: aBlock [
 		scroll scrollToShow: aBlock]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBEditor >> scrollerClass [
 
 	^ SBEditorCanvasWithOverlay
@@ -1486,6 +1495,12 @@ SBEditor >> startOrAddToMultiSelection: aBlock [
 	self cursor startOrAddToMultiSelection: aBlock
 ]
 
+{ #category : #stepping }
+SBEditor >> stepTime [
+
+	^ 0
+]
+
 { #category : #printing }
 SBEditor >> storeOn: aStream [
 
@@ -1524,6 +1539,12 @@ SBEditor >> suggestAlways [
 SBEditor >> suggestAlways: aBoolean [
 
 	suggestAlways := aBoolean
+]
+
+{ #category : #accessing }
+SBEditor >> suggestionMenu [
+
+	^ suggestionMenu ifNil: [suggestionMenu := SBSuggestionMenu new]
 ]
 
 { #category : #actions }

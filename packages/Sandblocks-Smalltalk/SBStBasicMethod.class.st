@@ -600,7 +600,10 @@ SBStBasicMethod >> relatedClass [
 SBStBasicMethod >> reloadArtefact [
 	<action>
 
-	self sandblockEditor select: self reloadMethodInPlace
+	| newMethod |
+	newMethod := self reloadMethodInPlace.
+	
+	newMethod exists ifTrue: [newMethod select] ifFalse: [newMethod inputContainedUnknown]
 ]
 
 { #category : #caching }
@@ -608,11 +611,14 @@ SBStBasicMethod >> reloadMethodInPlace [
 
 	| reloaded |
 	self externalModification: false.
-	reloaded := self compiledMethod asSandblock
+	reloaded := (self exists
+		ifTrue: [self compiledMethod asSandblock]
+		ifFalse: [self class selector: '' arguments: #() class: self relatedClass body: SBStBlockBody new])
 		position: self position;
 		hResizing: self hResizing;
 		width: self width;
 		yourself.
+	
 	self replaceBy: reloaded.
 	reloaded withDecorator: SBForceMoveDecorator do: [:d | d createImplicitForces].
 	^ reloaded

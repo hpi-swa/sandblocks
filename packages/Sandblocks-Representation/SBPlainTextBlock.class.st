@@ -79,12 +79,3 @@ SBPlainTextBlock >> startInputAt: aNumber replacingContents: aBoolean [
 	text moveCursorTo: aNumber.
 	^ cmd
 ]
-
-{ #category : #'as yet unclassified' }
-SBPlainTextBlock >> stopEditing: aCommand [
-
-	aCommand
-		newText: self contents;
-		newMorph: self.
-	text stopEditing
-]

@@ -45,7 +45,7 @@ SBStSignature >> cellGap [
 { #category : #'event handling' }
 SBStSignature >> click: anEvent [
 
-	anEvent redButtonPressed ifTrue: [self updateSuggestions].
+	anEvent redButtonPressed ifTrue: [self messageParts first updateSuggestions]
 ]
 
 { #category : #accessing }
@@ -72,7 +72,7 @@ SBStSignature >> deleteCommandFor: aBlock [
 	^ (SBCombinedCommand newWith: {
 		SBDeleteCommand new target: (self submorphs at: index).
 		SBDeleteCommand new target: (self submorphs at: index + 1)})
-			selectAfter: (self submorphs at: index - 1 ifAbsent: [self messageSend])
+			selectAfter: (self submorphs at: index - 1 ifAbsent: [self owner containingSandblock])
 ]
 
 { #category : #'as yet unclassified' }
@@ -248,8 +248,18 @@ SBStSignature >> objectInterfaceNear: aBlock at: aSymbol argumentInterface: anIn
 { #category : #'as yet unclassified' }
 SBStSignature >> possibleArgumentNamesFor: aString [
 
-	(self systemNavigation allImplementorsOf: aString asSymbol) do: [:impl | ^ impl compiledMethod asSandblock arguments collect: #contents].
-	^ #()
+	| selector method |
+	selector := aString asSymbol.
+	
+	(self owner containingSandblock actualReceiver ifNotNil: [:b | b guessClassExpensive]) ifNotNil: [:class | (class lookupSelector: selector) ifNotNil: [:meth | method := meth]].
+	method ifNil: [
+		method := (self systemNavigation allImplementorsOf: selector)
+			at: 1
+			ifPresent: [:ref | ref compiledMethod]
+			ifAbsent: [nil]].
+	method ifNil: [^ #()].
+	
+	^ method asSandblock arguments collect: #contents
 ]
 
 { #category : #'submorphs - callbacks' }

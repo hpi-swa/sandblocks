@@ -106,8 +106,6 @@ SBScmLiteral >> replaceWithUnknown [
 	| new |
 	self isUnknown ifTrue: [^ self].
 	
-	self stopEditing.
-	
 	new := self newNullBlock label: 'expr'.
 	self replaceBy: new.
 	new moveCursorTo: 0.
@@ -132,23 +130,6 @@ SBScmLiteral >> startInputAt: aNumber replacingContents: aBoolean [
 		ifFalse: [self moveCursorTo: aNumber].
 	
 	^ cmd
-]
-
-{ #category : #'as yet unclassified' }
-SBScmLiteral >> stopEditing [
-
-	self currentTextMorph stopEditing.
-	self removeSuggestionMenu
-]
-
-{ #category : #'as yet unclassified' }
-SBScmLiteral >> stopEditing: aCommand [
-
-	aCommand
-		newText: self currentTextMorph contents;
-		newMorph: self.
-	
-	self stopEditing
 ]
 
 { #category : #'as yet unclassified' }

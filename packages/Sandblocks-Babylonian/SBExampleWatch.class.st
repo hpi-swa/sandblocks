@@ -32,18 +32,14 @@ SBExampleWatch class >> newFor: aBlock [
 { #category : #'as yet unclassified' }
 SBExampleWatch class >> registerWatch: aWatch [
 
-	(self registry at: aWatch identifier ifAbsentPut: [OrderedCollection new]) add: aWatch
+	(self registry add: aWatch) add: aWatch
 ]
 
 { #category : #'as yet unclassified' }
 SBExampleWatch class >> registry [
 
-	SBToggledCode
-		comment: 'temporary migration fix'
-		active: 1
-		do: {[(Registry isKindOf: WeakValueDictionary) ifTrue: [Registry := nil]]}.
-	
-	^ Registry ifNil: [Registry := Dictionary new]
+	(Registry isKindOf: WeakSet) ifFalse: [Registry := nil].
+	^ Registry ifNil: [Registry := WeakSet new]
 ]
 
 { #category : #'as yet unclassified' }
@@ -53,7 +49,7 @@ SBExampleWatch class >> report: aValue for: aSymbol [
 	example := SBExecutionEnvironment value ifNil: [^ aValue].
 	
 	reg := self registry.
-	watchers := reg at: aSymbol ifAbsent: [^ aValue].
+	watchers := reg select: [:watcher | watcher notNil and: [watcher identifier = aSymbol]].
 	watchers do: [:watcher | watcher reportValue: aValue for: example].
 	
 	^ aValue
@@ -62,9 +58,7 @@ SBExampleWatch class >> report: aValue for: aSymbol [
 { #category : #'as yet unclassified' }
 SBExampleWatch class >> unregisterWatch: aWatch [
 
-	self registry at: aWatch identifier ifPresent: [:list |
-		list remove: aWatch ifAbsent: [].
-		list ifEmpty: [self registry removeKey: aWatch identifier]]
+	self registry remove: aWatch ifAbsent: []
 ]
 
 { #category : #'as yet unclassified' }

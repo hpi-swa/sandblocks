@@ -220,11 +220,7 @@ SBTextBubble >> startInputAt: aNumber replacingContents: aBoolean [
 { #category : #'as yet unclassified' }
 SBTextBubble >> stopEditing: aCommand [
 
-	aCommand
-		newText: self contents;
-		newMorph: self.
-	
-	text stopEditing.
+	super stopEditing: aCommand.
 	
 	self triggerEvent: #stopEditing
 ]

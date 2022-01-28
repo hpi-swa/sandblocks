@@ -10,8 +10,7 @@ SBCommonPalette class >> buildOn: aContainer [
 	aContainer
 		addHeader: 'Common';
 		addSectionHeader: 'Waypoints';
-		addBlock: 'Waypoint'
-			as: (SBWaypoint new)
+		addBlock: 'Waypoint' as: SBWaypoint new
 ]
 
 { #category : #'as yet unclassified' }
