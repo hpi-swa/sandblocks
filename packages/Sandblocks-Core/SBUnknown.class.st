@@ -135,6 +135,12 @@ SBUnknown >> keyStroke: anEvent [
 ]
 
 { #category : #accessing }
+SBUnknown >> label [
+
+	^ self currentTextMorph placeholderText
+]
+
+{ #category : #accessing }
 SBUnknown >> label: aString [
 
 	self currentTextMorph placeholderText: aString
