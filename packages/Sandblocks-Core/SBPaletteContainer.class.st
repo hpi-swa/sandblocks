@@ -65,12 +65,33 @@ SBPaletteContainer >> addSectionHeader: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBPaletteContainer >> addSubSectionHeader: aString [
+
+	| header |
+	header := SBStringMorph new contents: (aString asUppercase asText addAttribute: (TextFontChange fontNumber: 1)).
+	content hasSubmorphs ifTrue: [
+		content addMorphBack: (Morph new
+			color: Color transparent;
+			height: 4)].
+	content addMorphBack: header.
+	content addMorphBack: (Morph new
+		color: Color transparent;
+		height: 4)
+]
+
+{ #category : #'as yet unclassified' }
 SBPaletteContainer >> container: aBlock label: aString [
 
 	^ SBPalettePreviewContainer new
 		methodClass: nil;
 		label: aString;
 		addMorphBack: (self markCopyPlaceholder: aBlock)
+]
+
+{ #category : #'as yet unclassified' }
+SBPaletteContainer >> content [
+
+	^ content
 ]
 
 { #category : #'as yet unclassified' }
