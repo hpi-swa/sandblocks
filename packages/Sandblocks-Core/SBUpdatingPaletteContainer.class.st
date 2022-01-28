@@ -94,7 +94,7 @@ SBUpdatingPaletteContainer >> selectionChanged: aBlock [
 	selectedBlock := aBlock.
 	currentPalettes ifEmpty: [self removeNoPalettesNotice].
 	
-	newPalettes := ((Array streamContents: [:stream | aBlock andAllParentSandblocksDo: [:p | stream nextPutAll: p palettes]]), (SBPalette allSubclasses select: [:palette | (aBlock satisfies: palette context) and: [palette matchesBlock: aBlock]])) withoutDuplicates.
+	newPalettes := ((Array streamContents: [:stream | aBlock andAllParentSandblocksDo: [:p | stream nextPutAll: p palettes]]), (SBPalette allSubclasses select: [:palette | (aBlock satisfies: palette context) and: [palette matchesBlock: aBlock]])) withoutDuplicates reverse.
 	
 	(currentPalettes difference: newPalettes) do: [:palette | self removePalette: palette].
 	(newPalettes difference: currentPalettes) do: [:palette | self addPalette: palette].
