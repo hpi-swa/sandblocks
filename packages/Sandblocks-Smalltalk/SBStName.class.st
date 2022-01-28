@@ -147,6 +147,20 @@ SBStName >> castToUnknownWhenEmpty [
 ]
 
 { #category : #'as yet unclassified' }
+SBStName >> clearCacheSelf [
+
+	super clearCacheSelf.
+	
+	(self owner isNil or: [self autoCast isNil or: [self autoCast isBoolean and: [self autoCast not]]]) ifTrue: [^ self].
+	
+	(self autoCast notNil and: [self autoCast isBlock]) ifTrue: [^ self autoCast value: self value: self owner].
+	
+	SBStNameBehavior allSubclassesDo: [:cls | (cls checkCastFor: self parent: self owner) ifTrue: [^ self behaviorClass: cls]].
+	
+	self behaviorClass: SBStBinding
+]
+
+{ #category : #'as yet unclassified' }
 SBStName >> contentsChanged [
 
 	self behavior contentsChanged.
@@ -289,18 +303,6 @@ SBStName >> name: aString [
 SBStName >> noValidBinding [
 
 	^ self behavior noValidBinding
-]
-
-{ #category : #'as yet unclassified' }
-SBStName >> noteNewOwner: aMorph [
-
-	(aMorph isNil or: [self autoCast isNil or: [self autoCast isBoolean and: [self autoCast not]]]) ifTrue: [^ self].
-	
-	(self autoCast notNil and: [self autoCast isBlock]) ifTrue: [^ self autoCast value: self value: aMorph].
-	
-	SBStNameBehavior allSubclassesDo: [:cls | (cls checkCastFor: self parent: aMorph) ifTrue: [^ self behaviorClass: cls]].
-	
-	self behaviorClass: SBStBinding
 ]
 
 { #category : #'colors and color policies' }

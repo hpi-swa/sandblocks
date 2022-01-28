@@ -488,7 +488,9 @@ SBBlock >> clearCache [
 SBBlock >> clearCacheSelf [
 
 	colorPolicyCache := nil.
-	self removeProperty: #sandblockBlockColor
+	self removeProperty: #sandblockBlockColor.
+	self removeProperty: #foregroundColorCache.
+	self removeProperty: #colorCache
 ]
 
 { #category : #actions }
@@ -536,7 +538,9 @@ SBBlock >> closestAdjacentFrom: mySide to: theirSide [
 { #category : #'colors and color policies' }
 SBBlock >> color [
 
-	^ self colorPolicy ifNotNil: [:p | p colorForBlock: self] ifNil: [Color white]
+	^ self
+		valueOfProperty: #colorCache
+		ifAbsentPut: [self colorPolicy ifNotNil: [:p | p colorForBlock: self] ifNil: [Color r: 1 g: 1 b: 1]]
 ]
 
 { #category : #'colors and color policies' }
@@ -1142,7 +1146,9 @@ SBBlock >> forceAgainst: aMorph [
 { #category : #'colors and color policies' }
 SBBlock >> foregroundColor [
 
-	^ self colorPolicy foregroundColorForBlock: self
+	^ self
+		valueOfProperty: #foregroundColorCache
+		ifAbsentPut: [self colorPolicy foregroundColorForBlock: self]
 ]
 
 { #category : #decorators }
@@ -1209,8 +1215,10 @@ SBBlock >> hasGroup [
 { #category : #layout }
 SBBlock >> hasHorizontalLayout [
 
-	^ self submorphs size < 2 or: [ | delta |
-		delta := self submorphs first topLeft - self submorphs second topLeft.
+	| blocks |
+	blocks := self childSandblocks.
+	^ blocks size < 2 or: [ | delta |
+		delta := blocks first topLeft - blocks second topLeft.
 		delta x < delta y]
 ]
 
@@ -1857,9 +1865,7 @@ SBBlock >> noteNewOwner: aMorph [
 		decorator noteNewOwner: aMorph.
 		
 		].
-	self clearCache.
-	" recheck name blocks "
-	self allBlocksDo: [:block | block isName ifTrue: [block noteNewOwner: block owner]]
+	self clearCache
 ]
 
 { #category : #'object interface' }
