@@ -2857,15 +2857,17 @@ SBBlock >> validSubtree [
 { #category : #copying }
 SBBlock >> veryDeepCopyWith: aCopier [
 
-	| new previousDecorators m oldActions |
+	| new previousDecorators m |
 	m := self valueOfProperty: #sandblockSuggestionMenu.
 	self removeProperty: #sandblockSuggestionMenu.
-	oldActions := self valueOfProperty: #actionMap.
-	self removeProperty: #actionMap.
+	SBToggledCode comment: '' active: 0 do: {
+		[
+			oldActions := self valueOfProperty: #actionMap.
+			self removeProperty: #actionMap]}.
 	new := super veryDeepCopyWith: aCopier.
 	m ifNotNil: [self setProperty: #sandblockSuggestionMenu toValue: m].
 	
-	self setProperty: #actionMap toValue: oldActions.
+	SBToggledCode comment: '' active: 0 do: {[self setProperty: #actionMap toValue: oldActions]}.
 	previousDecorators := new decorators copy.
 	previousDecorators do: #detach.
 	previousDecorators do: [:decorator | new attachDecorator: decorator].

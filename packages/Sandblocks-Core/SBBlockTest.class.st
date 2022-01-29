@@ -5,6 +5,28 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBBlockTest >> testDeepCopy [
+
+	| myBlock editor copy |
+	myBlock := SBBlock new.
+	editor := self editorFor: myBlock.
+	editor when: #selectionChanged send: #update to: myBlock.
+	
+	self assert: 1 equals: myBlock actionMap size.
+	self assert: 1 equals: myBlock veryDeepCopy actionMap size.
+	self assert: editor equals: myBlock actionMap anyOne receiver sandblockEditor.
+	self assert: nil equals: myBlock veryDeepCopy actionMap anyOne receiver sandblockEditor.
+	
+	myBlock := SBBlock new.
+	myBlock addMorphBack: SBBlock new.
+	myBlock firstSubmorph when: #abc send: #test to: myBlock.
+	self assert: 1 equals: myBlock firstSubmorph actionMap size.
+	copy := myBlock veryDeepCopy.
+	self assert: 1 equals: copy firstSubmorph actionMap size.
+	self assert: copy equals: copy firstSubmorph actionMap anyOne receiver
+]
+
+{ #category : #'as yet unclassified' }
 SBBlockTest >> testLeftRotateBinaryMessages [
 
 	| block selection editor |
