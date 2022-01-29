@@ -2827,9 +2827,9 @@ SBBlock >> useSuggestion [
 ]
 
 { #category : #suggestions }
-SBBlock >> useSuggestion: aString [
+SBBlock >> useSuggestion: anItem [
 
-	self contents: aString.
+	self contents: anItem contents.
 	self containingSandblock sandblockEditor endInput
 ]
 

@@ -50,6 +50,12 @@ SBSuggestionItem >> completionAction: aBlock [
 	completionAction := aBlock
 ]
 
+{ #category : #accessing }
+SBSuggestionItem >> contents [
+
+	^ self selector
+]
+
 { #category : #drawing }
 SBSuggestionItem >> drawOn: aCanvas [
 
@@ -175,7 +181,9 @@ SBSuggestionItem >> selectorSize [
 { #category : #private }
 SBSuggestionItem >> useSuggestionOn: aBlock [
 
-	self completionAction ifNotNil: [self completionAction value: aBlock] ifNil: [aBlock useSuggestion: self selector]
+	self completionAction
+		ifNotNil: [self completionAction value: aBlock]
+		ifNil: [aBlock useSuggestion: self]
 ]
 
 { #category : #private }

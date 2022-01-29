@@ -331,9 +331,9 @@ SBStMessagePart >> useAsStSymbol [
 ]
 
 { #category : #'as yet unclassified' }
-SBStMessagePart >> useSuggestion: aString [
+SBStMessagePart >> useSuggestion: anItem [
 
-	self messageSend useSuggestion: aString
+	self messageSend useSuggestion: anItem contents
 ]
 
 { #category : #testing }

@@ -536,9 +536,9 @@ SBStMessageSend >> useAsVariable [
 ]
 
 { #category : #'as yet unclassified' }
-SBStMessageSend >> useSuggestion: aString [
+SBStMessageSend >> useSuggestion: anItem [
 
-	signature selectorAndEdit: aString withFilledArgs: false
+	signature selectorAndEdit: anItem contents withFilledArgs: false
 ]
 
 { #category : #'as yet unclassified' }

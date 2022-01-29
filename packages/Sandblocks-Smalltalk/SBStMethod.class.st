@@ -267,9 +267,9 @@ SBStMethod >> tryDelete [
 ]
 
 { #category : #suggestions }
-SBStMethod >> useSuggestion: aString [
+SBStMethod >> useSuggestion: anItem [
 
-	signature selectorAndEdit: aString withFilledArgs: true.
+	signature selectorAndEdit: anItem contents withFilledArgs: true.
 	(signature arguments anySatisfy: #wantsInput) ifFalse: [self inputNextUnknown]
 ]
 

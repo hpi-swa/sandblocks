@@ -238,9 +238,9 @@ SBStNewMessagePart >> unaryToKeywordCommand [
 ]
 
 { #category : #'as yet unclassified' }
-SBStNewMessagePart >> useSuggestion: aString [
+SBStNewMessagePart >> useSuggestion: anItem [
 
-	self messageSend useSuggestion: aString
+	self messageSend useSuggestion: anItem contents
 ]
 
 { #category : #'as yet unclassified' }
