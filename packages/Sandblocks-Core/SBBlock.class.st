@@ -804,7 +804,12 @@ SBBlock >> deleteBeforeCursor [
 		self currentTextMorph deleteBeforeCursor.
 		self updateSuggestions.
 		^ self batchedChangeStep].
-	self symbols first notNil ifTrue: [^ self changeToUnknown].
+	self symbols first notNil ifTrue: [
+		editor := self sandblockEditor.
+		" try and change to unknown. if no change occurred, delete "
+		self changeToUnknown.
+		editor selection class = self class ifTrue: [editor selection deleteBlock].
+		^ self].
 	
 	editor := self sandblockEditor.
 	parent := self parentSandblock.
