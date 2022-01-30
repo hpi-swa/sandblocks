@@ -15,7 +15,7 @@ In between our image even crashes, so we got to demonstrate recovering unsaved c
     * Enclose selection with brackets
 2. **Packages mentioned**
     * [Autocompletion](https://github.com/LeonMatthes/Autocompletion)
-    * [Sandblocks](https://github.com/tom95/sandblocks)
+    * [Sandblocks](https://github.com/hpi-swa/sandblocks)
 3. **Shortcuts mentioned**
     * Global
       * `Ctrl+w` close window (if adapted in `SystemWindow>>#filterEvent:for:`)

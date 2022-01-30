@@ -2,8 +2,8 @@
 
 Here, we describe the project on spatial code.
 
-![Screenshot of the subsystem](https://raw.githubusercontent.com/tom95/sandblocks/live21/screenshots/spatial-code-light.png)
-![Screenshot of the subsystem](https://raw.githubusercontent.com/tom95/sandblocks/live21/screenshots/spatial-code-dark.png)
+![Screenshot of the subsystem](https://raw.githubusercontent.com/hpi-swa/sandblocks/live21/screenshots/spatial-code-light.png)
+![Screenshot of the subsystem](https://raw.githubusercontent.com/hpi-swa/sandblocks/live21/screenshots/spatial-code-dark.png)
 
 ## Abstract
 
@@ -20,13 +20,13 @@ Our approach to solving this is to arrange whole software systems spatially on a
 
 ## Installing
 
-You can either directly use the [latest release](https://github.com/tom95/sandblocks/releases/latest/download/sandblocks-all.zip) or install it in your Squeak 5.3 or trunk image as shown below.
+You can either directly use the [latest release](https://github.com/hpi-swa/sandblocks/releases/latest/download/sandblocks-all.zip) or install it in your Squeak 5.3 or trunk image as shown below.
 
 To install it in an existing image, run:
 ```smalltalk
 Metacello new
   baseline: 'Sandblocks';
-  repository: 'github://tom95/Sandblocks:master/packages';
+  repository: 'github://hpi-swa/Sandblocks:master/packages';
   load: #tutorial.
 
 SBEditor open.

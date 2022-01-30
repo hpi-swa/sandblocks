@@ -1633,7 +1633,7 @@ SBEditor >> updateSandblocks [
 	(UIManager default confirm: 'Proceed to install the latest unstable version?') ifTrue: [
 		(Smalltalk at: #Metacello) new
 			baseline: 'Sandblocks';
-			repository: 'github://tom95/Sandblocks:master/packages';
+			repository: 'github://hpi-swa/Sandblocks:master/packages';
 			get; load: #tutorial]
 ]
 

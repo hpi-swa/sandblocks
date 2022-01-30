@@ -2,7 +2,7 @@
 
 Here, we describe a subsystem within our projectional editor dealing with active expressions [Ramson 2017].
 
-![Screenshot of the subsystem](https://raw.githubusercontent.com/tom95/sandblocks/master/screenshots/active-expressions-figure.png)
+![Screenshot of the subsystem](https://raw.githubusercontent.com/hpi-swa/sandblocks/master/screenshots/active-expressions-figure.png)
 
 ## Summary
 Babylonian Programming allows programmers to write code while being aware of the values flowing through the program. This reduces the burden on programmers to imagine program execution in their head. However, we identified three problems when looking at Babylonian Programming in combination with code that uses active expressions.
@@ -21,7 +21,7 @@ Install via (tested on Squeak5.3-rc3):
 ```
 Metacello new
   baseline: 'Sandblocks';
-  repository: 'github://tom95/Sandblocks:master/packages';
+  repository: 'github://hpi-swa/Sandblocks:master/packages';
   load: 'withActiveExpressions'.
 ```
 
