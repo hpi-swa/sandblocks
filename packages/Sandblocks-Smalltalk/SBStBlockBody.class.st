@@ -197,11 +197,13 @@ SBStBlockBody >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 		^ SBRelInsertCommand new
 			near: aBlock before: aBoolean in: bindings morph: aMorph;
 			shouldMergeWithNext: true;
+			title: 'insert block binding';
 			yourself].
 	
 	(aBlock notNil and: [aBlock owner = temporaries]) ifTrue: [
 		^ SBRelInsertCommand new
 			near: aBlock before: aBoolean in: temporaries morph: aMorph;
+			title: 'insert temporary';
 			shouldMergeWithNext: true;
 			yourself].
 	

@@ -50,6 +50,18 @@ SBCursorInsert >> block [
 { #category : #'as yet unclassified' }
 SBCursorInsert >> bounds [
 
+	^ self boundsWithWidth: self lineWidth
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorInsert >> bounds: aRectangle [
+
+	bounds := aRectangle
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorInsert >> boundsWithWidth: aNumber [
+
 	bounds ifNotNil: [^ bounds].
 	
 	^ self container hasHorizontalLayout
@@ -58,29 +70,23 @@ SBCursorInsert >> bounds [
 				ifNil: [ | inset |
 					inset := self container layoutInset asEdgeInsets.
 					self before
-						ifTrue: [self container topLeft + inset topLeft - (self lineWidth // 2 @ 0) extent: self lineWidth @ (self container height - inset vertical)]
-						ifFalse: [self container topRight - (self lineWidth // 2 + inset right @ inset top negated) extent: self lineWidth @ (self container height - inset vertical)]]
+						ifTrue: [self container topLeft + inset topLeft - (aNumber // 2 @ 0) extent: aNumber @ (self container height - inset vertical)]
+						ifFalse: [self container topRight - (aNumber // 2 + inset right @ inset top negated) extent: aNumber @ (self container height - inset vertical)]]
 				ifNotNil: [
 					self before
-						ifTrue: [self adjacent topLeft - (self lineWidth // 2 @ 0) extent: self lineWidth @ self adjacent height]
-						ifFalse: [self adjacent topRight extent: self lineWidth @ self adjacent height]]]
+						ifTrue: [self adjacent topLeft - (aNumber // 2 @ 0) extent: aNumber @ self adjacent height]
+						ifFalse: [self adjacent topRight extent: aNumber @ self adjacent height]]]
 		ifFalse: [
 			self adjacent
 				ifNil: [ | inset |
 					inset := self container layoutInset asEdgeInsets.
 					self before
-						ifTrue: [self container topLeft + inset topLeft extent: self container width - inset horizontal @ self lineWidth]
-						ifFalse: [self container bottomLeft - (inset left negated @ (self lineWidth + inset bottom)) extent: self container width - inset horizontal @ self lineWidth]]
+						ifTrue: [self container topLeft + inset topLeft extent: self container width - inset horizontal @ aNumber]
+						ifFalse: [self container bottomLeft - (inset left negated @ (aNumber + inset bottom)) extent: self container width - inset horizontal @ aNumber]]
 				ifNotNil: [
 					self before
-						ifTrue: [self adjacent topLeft - (0 @ (self lineWidth // 2)) extent: self adjacent width @ self lineWidth]
-						ifFalse: [self adjacent bottomLeft extent: self adjacent width @ self lineWidth]]]
-]
-
-{ #category : #'as yet unclassified' }
-SBCursorInsert >> bounds: aRectangle [
-
-	bounds := aRectangle
+						ifTrue: [self adjacent topLeft - (0 @ (aNumber // 2)) extent: self adjacent width @ aNumber]
+						ifFalse: [self adjacent bottomLeft extent: self adjacent width @ aNumber]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -143,6 +149,14 @@ SBCursorInsert >> horizontalOffsetInFloat [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorInsert >> isDistinctFrom: aPosition [
+
+	^ self class = aPosition class
+		ifTrue: [(self command hasSamePositionAs: aPosition command) not]
+		ifFalse: [self ~= aPosition]
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorInsert >> leaveIn: anEditor [
 
 	self triggerEvent: #showLabel with: nil
@@ -152,6 +166,12 @@ SBCursorInsert >> leaveIn: anEditor [
 SBCursorInsert >> lineWidth [
 
 	^ 3
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorInsert >> minimalBounds [
+
+	^ self boundsWithWidth: 0
 ]
 
 { #category : #'as yet unclassified' }

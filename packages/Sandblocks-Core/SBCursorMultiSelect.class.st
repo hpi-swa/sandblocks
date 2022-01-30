@@ -74,6 +74,12 @@ SBCursorMultiSelect >> leaveIn: anEditor [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorMultiSelect >> minimalBounds [
+
+	^ self block bounds
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorMultiSelect >> mode [
 
 	^ #selection

@@ -144,6 +144,12 @@ SBCursorText >> maybeUpdateFor: aPosition [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorText >> minimalBounds [
+
+	^ self block bounds
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorText >> mode [
 
 	^ #input

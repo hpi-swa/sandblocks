@@ -64,10 +64,12 @@ SBCursorTest >> testCursorKeepsHorizontalOffset [
 	self assert: cursor cursorPosition structure: {#cursorIndex -> 3}.
 	
 	cursor moveCursorDown.
+	cursor moveCursorDown.
 	self tick.
 	self assert: cursor cursorPosition structure: {#cursorIndex -> 3}.
 	
 	cursor moveCursorUp.
+	cursor moveCursorDown.
 	self tick.
 	self assert: cursor cursorPosition structure: {#cursorIndex -> 3}
 ]

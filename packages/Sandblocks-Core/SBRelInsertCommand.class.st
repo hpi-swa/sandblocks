@@ -8,7 +8,8 @@ Class {
 		'container',
 		'select',
 		'previousOwner',
-		'previousIndex'
+		'previousIndex',
+		'title'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -116,6 +117,18 @@ SBRelInsertCommand >> select: aBlock [
 SBRelInsertCommand >> setArtefactFrom [
 
 	^ container
+]
+
+{ #category : #'as yet unclassified' }
+SBRelInsertCommand >> title [
+
+	^ title ifNil: [super title]
+]
+
+{ #category : #'as yet unclassified' }
+SBRelInsertCommand >> title: aString [
+
+	title := aString
 ]
 
 { #category : #'as yet unclassified' }

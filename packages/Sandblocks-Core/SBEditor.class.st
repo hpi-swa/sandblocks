@@ -533,7 +533,7 @@ SBEditor >> createEmptySmalltalkMethod [
 		selector: ''
 			arguments: #()
 			class: ((self selectedArtefact ifNotNil: [:container | container relatedClass]) ifNil: [UIManager default chooseClassOrTrait ifNil: [^ self]]);
-		body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}]).
+		body: SBStBlockBody new.
 	
 	self createArtefactInView: method.
 	method inputContainedUnknown.
