@@ -410,7 +410,7 @@ SBEditor >> configurationString [
 SBEditor >> connectFrom: aMorph to: anotherMorph [
 
 	scroll scroller addMorph: ((SBConnectorLine new connectorType: #dots)
-		color: Color black;
+		color: ((Color r: 0.0 g: 0.0 b: 0.0) alpha: 0.3);
 		connect: aMorph to: anotherMorph;
 		yourself)
 ]

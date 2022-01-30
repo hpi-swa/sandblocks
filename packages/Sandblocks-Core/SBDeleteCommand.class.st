@@ -26,6 +26,7 @@ SBDeleteCommand >> nextBlockFrom: aMorph [
 
 	| next m |
 	m := aMorph isSandblock ifTrue: [aMorph] ifFalse: [aMorph firstBlock ifNil: [aMorph containingSandblock]].
+	m parentSandblock ifNil: [^ m sandblockEditor].
 	
 	m floating ifTrue: [
 		^ (m parentSandblock
