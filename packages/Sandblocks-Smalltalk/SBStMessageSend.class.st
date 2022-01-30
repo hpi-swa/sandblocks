@@ -584,7 +584,6 @@ SBStMessageSend >> wrapInCascade [
 	<actionValidIf: #notInCascade>
 
 	| cascade |
-	self assert: self isSelected.
 	cascade := SBStCascade new.
 	self sandblockEditor doMultiSelection: [:selected | | targets |
 		targets := selected collect: #messageSend.
@@ -599,7 +598,8 @@ SBStMessageSend >> wrapInCascade [
 						outer addAllMorphs: inner];
 					wrapUndo: [:outer :inner |
 						inner do: [:message | message receiver: outer receiver veryDeepCopy].
-						outer removeAllMorphs]]]
+						outer removeAllMorphs]]].
+	self sandblockEditor cursor moveCursorRight
 ]
 
 { #category : #converting }
