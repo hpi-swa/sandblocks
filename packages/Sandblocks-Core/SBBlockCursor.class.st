@@ -59,8 +59,12 @@ SBBlockCursor >> cursorAlwaysVisible [
 SBBlockCursor >> cursorForBlock: aBlock at: aPoint [
 
 	^ aBlock startInputCommand
-		ifNotNil: [:command | SBCursorText new block: aBlock; pixelPosition: aPoint; currentCommand: command]
-		ifNil: [SBCursorSelect new block: aBlock]
+		ifNotNil: [:command |
+			SBCursorText new
+				block: aBlock;
+				pixelPosition: aPoint;
+				currentCommand: command]
+		ifNil: [self selectOrInsertFor: aBlock]
 ]
 
 { #category : #accessing }
@@ -293,7 +297,7 @@ SBBlockCursor >> moveHorizontal: aNumber wordWise: aBoolean [
 
 	| newPos |
 	newPos := self cursorPosition.
-	[newPos := newPos moveHorizontal: aNumber wordWise: aBoolean] doWhileTrue: [aBoolean and: [newPos class ~= SBCursorText and: [newPos notNil]]].
+	[newPos := newPos moveHorizontal: aNumber wordWise: aBoolean] doWhileTrue: [aBoolean and: [newPos notNil and: [(newPos class = SBCursorText or: [newPos class = SBCursorInsert and: [newPos container wantsInput]]) not]]].
 	newPos ifNil: [^ self].
 	
 	newPos ~= self cursorPosition ifTrue: [newPos placeAtEnd: (aBoolean ifTrue: [aNumber > 0] ifFalse: [aNumber < 0])].
@@ -388,6 +392,14 @@ SBBlockCursor >> selectNoInput: aBlock [
 	self cursorPosition: (SBCursorSelect new block: aBlock) explicitMove: false axis: #none
 ]
 
+{ #category : #private }
+SBBlockCursor >> selectOrInsertFor: aBlock [
+
+	^ ((aBlock hasChildSandblocks not and: [aBlock dynamicNumberOfChildren])
+		ifTrue: [aBlock insertCursorNear: nil before: true do: #yourself]
+		ifFalse: [nil]) ifNil: [SBCursorSelect new block: aBlock]
+]
+
 { #category : #accessing }
 SBBlockCursor >> selectedBlock [
 
@@ -416,7 +428,17 @@ SBBlockCursor >> showLabel: aString [
 { #category : #api }
 SBBlockCursor >> startInput: aBlock at: aNumber replacingContents: aBoolean [
 
-	self cursorPosition: (aBlock startInputCommand ifNotNil: [:command | SBCursorText new block: aBlock; cursorIndex: aNumber; currentCommand: aBlock startInputCommand; replacingContents: aBoolean] ifNil: [SBCursorSelect new block: aBlock]) explicitMove: aBoolean axis: #none
+	self
+		cursorPosition: (aBlock startInputCommand
+			ifNotNil: [:command |
+				SBCursorText new
+					block: aBlock;
+					cursorIndex: aNumber;
+					currentCommand: aBlock startInputCommand;
+					replacingContents: aBoolean]
+			ifNil: [self selectOrInsertFor: aBlock])
+		explicitMove: aBoolean
+		axis: #none
 ]
 
 { #category : #multiselection }
@@ -462,7 +484,7 @@ SBBlockCursor >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 		cursorPosition unhandledEvent: anEvent in: anEditor didHandle: aBlock]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 SBBlockCursor >> updateBounds [
 
 	| b |

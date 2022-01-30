@@ -2883,7 +2883,7 @@ SBBlock >> wantsExtraSpace [
 { #category : #testing }
 SBBlock >> wantsInput [
 
-	^ false
+	^ self dynamicNumberOfChildren and: [self hasChildSandblocks not]
 ]
 
 { #category : #'artefact protocol' }
