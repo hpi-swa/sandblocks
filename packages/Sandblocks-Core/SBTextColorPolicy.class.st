@@ -172,5 +172,5 @@ SBTextColorPolicy >> symbolsForString: aBlock [
 { #category : #'as yet unclassified' }
 SBTextColorPolicy >> symbolsForUnknown: aBlock [
 
-	^ self symbolsCheckStatement: aBlock for: #(nil nil)
+	^ #(nil nil)
 ]
