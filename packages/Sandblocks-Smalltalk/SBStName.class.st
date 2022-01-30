@@ -111,7 +111,8 @@ SBStName >> behavior: anObject [
 
 	behavior class ~= anObject class ifTrue: [
 		behavior := anObject.
-		anObject attached: self]
+		anObject attached: self.
+		self clearCache]
 ]
 
 { #category : #'as yet unclassified' }
