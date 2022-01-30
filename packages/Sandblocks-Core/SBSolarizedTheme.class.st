@@ -71,6 +71,12 @@ SBSolarizedTheme >> literal [
 ]
 
 { #category : #'as yet unclassified' }
+SBSolarizedTheme >> symbolsOpacity [
+
+	^ 1
+]
+
+{ #category : #'as yet unclassified' }
 SBSolarizedTheme >> toolColor [
 
 	^ Color fromString: '002b36'
