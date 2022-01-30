@@ -9,7 +9,9 @@ Class {
 	#instVars : [
 		'type',
 		'morph',
-		'data'
+		'data',
+		'knownMinFit',
+		'knownMaxDoesntFit'
 	],
 	#category : #'Sandblocks-Layout'
 }
@@ -130,6 +132,43 @@ SBAlgebraCommand >> debugStoreString [
 		formatString: (String streamContents: [:stream | self storeOn: stream])
 		class: nil class
 		noPattern: true
+]
+
+{ #category : #'as yet unclassified' }
+SBAlgebraCommand >> fitsMaxRight: aNumber state: aState layout: aLayout [
+
+	| width fits state |
+	self
+		example: [SBAlgebraCommand softLine knowMin: 20 knownMax: 10]
+		args: [{15. SBAlgebraState new. SBAlgebraLayout new}]
+		label: 'example'.
+	width := aNumber - aState startX.
+	SBToggledCode comment: '' active: 0 do: {
+		[
+			width >= knownMinFit ifTrue: [^ true].
+			width <= knownMaxDoesntFit ifTrue: [^ false]]}.
+	
+	state := aLayout basicLineFitsDocument: self at: aState limit: aNumber ifNot: [false].
+	fits := state isBoolean ifTrue: [state] ifFalse: [state offset x <= aNumber].
+	fits ifTrue: [knownMinFit := width] ifFalse: [knownMaxDoesntFit := width].
+	
+	^ fits
+]
+
+{ #category : #'as yet unclassified' }
+SBAlgebraCommand >> initialize [
+
+	super initialize.
+	
+	knownMinFit := 900000000.
+	knownMaxDoesntFit := -900000000
+]
+
+{ #category : #'as yet unclassified' }
+SBAlgebraCommand >> knowMin: aNumber knownMax: anotherNumber [
+
+	knownMinFit := aNumber.
+	knownMaxDoesntFit := anotherNumber
 ]
 
 { #category : #'as yet unclassified' }
