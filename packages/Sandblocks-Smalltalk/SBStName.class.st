@@ -404,5 +404,5 @@ SBStName >> wasSelected [
 { #category : #'as yet unclassified' }
 SBStName >> writeSourceOn: aStream [
 
-	aStream nextPutAll: text contents
+	self behavior writeSourceOn: aStream
 ]

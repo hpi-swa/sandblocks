@@ -338,3 +338,9 @@ SBStNameBehavior >> wasSelected [
 
 	
 ]
+
+{ #category : #'as yet unclassified' }
+SBStNameBehavior >> writeSourceOn: aStream [
+
+	aStream nextPutAll: self block contents
+]
