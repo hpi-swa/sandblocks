@@ -168,7 +168,7 @@ SBBrowserEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean 
 	| ret |
 	ret := super save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean.
 	
-	model ifNotNil: [((anArtefact object isBehavior or: [anArtefact object isCompiledMethod]) and: [self modelSelection ~~ anArtefact object]) ifTrue: [self modelSelection: anArtefact object]].
+	model ifNotNil: [((anArtefact object isBehavior or: [anArtefact object isCompiledMethod]) and: [self modelSelection ~~ anArtefact object and: [anArtefact containingFloat = self]]) ifTrue: [self modelSelection: anArtefact object]].
 	^ ret
 ]
 
