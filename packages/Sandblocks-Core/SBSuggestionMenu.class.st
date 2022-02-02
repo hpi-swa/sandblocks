@@ -208,7 +208,9 @@ SBSuggestionMenu >> moveActive: aNumber [
 	
 	(self items at: activeIndex) active: false.
 	activeIndex := activeIndex + aNumber clampLow: 1 high: self itemCount.
-	(self items at: activeIndex) active: true
+	(self items at: activeIndex) active: true.
+	
+	self scrollToShow: (self items at: activeIndex)
 ]
 
 { #category : #selecting }
