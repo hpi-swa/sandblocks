@@ -38,3 +38,32 @@ MyListBlock>>newEmptyChildNear: aBlock before: aBoolean
 ```
 
 
+## Autocompletion at Insert Positions
+
+If you want to provide an autocompletion popup at insert positions, you need to provide a custom insert command. For example:
+
+```
+MyListBlock>>insertCommandRequest: aMorph near: aBlock before: aBoolean
+
+    ^ MyInsertCommand new
+		near: aBlock before: aBoolean in: self morph: aMorph;
+		yourself
+```
+
+```
+MyInsertCommand subclassOf: #SBRelInsertCommand
+
+MyInsertCommand>>suggestions
+
+    " you can access `self container` here if you want to compute these "
+    ^ {
+        (SBInsertSuggestionItem selector: 'a' label: 'choice')
+            morph: (SBTextBubble new contents: 'a') new previewOnly: true.
+        (SBInsertSuggestionItem selector: 'b' label: 'choice')
+            morph: (SBTextBubble new contents: 'b') new previewOnly: true.
+        (SBInsertSuggestionItem selector: 'c' label: 'choice')
+            morph: (SBTextBubble new contents: 'c') new previewOnly: true.
+    }
+```
+
+From above, `newEmptyChildNear:before:` will then only be called if the autocompletion is not used and is thus the default block that will be inserted.
