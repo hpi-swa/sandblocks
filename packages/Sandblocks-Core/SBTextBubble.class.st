@@ -175,7 +175,7 @@ SBTextBubble >> pasteReplace [
 { #category : #'as yet unclassified' }
 SBTextBubble >> placeholderText: aString [
 
-	self currentTextMorph placeholderText: aString
+	text placeholderText: aString
 ]
 
 { #category : #'as yet unclassified' }

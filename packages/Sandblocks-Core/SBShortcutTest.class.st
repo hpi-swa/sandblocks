@@ -42,6 +42,16 @@ SBShortcutTest >> testMatchesEscape [
 ]
 
 { #category : #'as yet unclassified' }
+SBShortcutTest >> testMatchesModifiedSquareBracket [
+
+	self assert: ($[ asSandblockShortcut matchesEvent: (SBTest keyboardEvent: $[ shift: false command: false)).
+	
+	"macOS may send cmd with [ and {"
+	self assert: ($[ asSandblockShortcut matchesEvent: (SBTest keyboardEvent: $[ shift: false command: true)).
+	self assert: (${ asSandblockShortcut matchesEvent: (SBTest keyboardEvent: ${ shift: false command: true))
+]
+
+{ #category : #'as yet unclassified' }
 SBShortcutTest >> testMatchesShiftCommandComma [
 
 	| shortcut |
