@@ -14,8 +14,7 @@ Class {
 SBSuggestionItem class >> selector: aSymbol label: aString [
 
 	^ self new
-		selector: aSymbol;
-		label: aString;
+		selector: aSymbol label: aString;
 		yourself
 ]
 
@@ -32,7 +31,7 @@ SBSuggestionItem >> active: aBoolean [
 	self changed
 ]
 
-{ #category : #private }
+{ #category : #drawing }
 SBSuggestionItem >> activeColor [
 
 	^ Color blue
@@ -57,25 +56,15 @@ SBSuggestionItem >> contents [
 ]
 
 { #category : #drawing }
-SBSuggestionItem >> drawOn: aCanvas [
+SBSuggestionItem >> fillStyle [
 
-	| font foreground |
-	active ifTrue: [aCanvas fillRectangle: self bounds color: self activeColor].
-	
-	font := self fontToUse.
-	foreground := active ifTrue: [Color white] ifFalse: [Color black].
-	
-	aCanvas
-		drawString: selector
-		at: self layoutBounds origin
-		font: font
-		color: foreground.
-	
-	aCanvas
-		drawString: label
-		at: self layoutBounds topRight - ((font widthOfString: label) @ 0)
-		font: font
-		color: (foreground alpha: 0.5)
+	^ active ifTrue: [self activeColor] ifFalse: [Color r: 1 g: 1 b: 1]
+]
+
+{ #category : #drawing }
+SBSuggestionItem >> foregroundColor [
+
+	^ active ifTrue: [Color white] ifFalse: [Color black]
 ]
 
 { #category : #'event handling' }
@@ -102,8 +91,10 @@ SBSuggestionItem >> initialize [
 		layoutInset: 10 @ 4 * self scalingFactor;
 		vResizing: #shrinkWrap;
 		hResizing: #spaceFill;
+		changeTableLayout;
+		listDirection: #leftToRight;
 		extent: 0 @ 0;
-		cellGap: 4 * self scalingFactor
+		cellGap: 8 * self scalingFactor
 ]
 
 { #category : #accessing }
@@ -113,23 +104,16 @@ SBSuggestionItem >> label [
 ]
 
 { #category : #accessing }
-SBSuggestionItem >> label: aString [
+SBSuggestionItem >> labelContainer [
+	"overwrite in your subclass if you want selector/label to be added to a different morph"
 
-	label := aString
+	^ self
 ]
 
 { #category : #accessing }
 SBSuggestionItem >> menu [
 
 	^ self ownerThatIsA: SBSuggestionMenu
-]
-
-{ #category : #layout }
-SBSuggestionItem >> minExtent [
-
-	| font |
-	font := self fontToUse.
-	^ (font widthOfString: selector) @ font height + (self layoutInset * 2) + (self cellGap @ 0) + ((font widthOfString: label) @ 0)
 ]
 
 { #category : #'event handling' }
@@ -144,6 +128,12 @@ SBSuggestionItem >> mouseDown: anEvent [
 SBSuggestionItem >> mouseMove: anEvent [
 
 	self menu activeItem: self
+]
+
+{ #category : #accessing }
+SBSuggestionItem >> ownerWithColor [
+
+	^ self
 ]
 
 { #category : #printing }
@@ -162,16 +152,16 @@ SBSuggestionItem >> selector [
 ]
 
 { #category : #accessing }
-SBSuggestionItem >> selector: aSymbol [
+SBSuggestionItem >> selector: aString label: anotherString [
 
-	selector := aSymbol.
-	self extent: self minExtent
-]
-
-{ #category : #private }
-SBSuggestionItem >> selectorPercentage [
-
-	^ 0.8
+	selector := aString.
+	label := anotherString.
+	self labelContainer addMorphBack: (SBStringMorph new
+		contents: aString;
+		hResizing: #spaceFill).
+	self labelContainer addMorphBack: (SBStringMorph new
+		contents: anotherString;
+		opacity: 0.5)
 ]
 
 { #category : #accessing }
@@ -180,7 +170,7 @@ SBSuggestionItem >> selectorSize [
 	^ self selector size
 ]
 
-{ #category : #private }
+{ #category : #suggestions }
 SBSuggestionItem >> useSuggestionOn: aBlock in: anEditor [
 
 	self completionAction
@@ -188,7 +178,7 @@ SBSuggestionItem >> useSuggestionOn: aBlock in: anEditor [
 		ifNil: [aBlock useSuggestion: self]
 ]
 
-{ #category : #private }
+{ #category : #suggestions }
 SBSuggestionItem >> wouldChange: aBlock [
 	" indicate whether activating this item would cause any change in the current block"
 
