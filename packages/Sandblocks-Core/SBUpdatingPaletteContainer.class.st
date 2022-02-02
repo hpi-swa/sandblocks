@@ -102,5 +102,6 @@ SBUpdatingPaletteContainer >> selectionChanged: aBlock [
 	currentPalettes := newPalettes.
 	currentPalettes ifEmpty: [self addNoPalettesNotice].
 	
+	search contents: ''.
 	self layoutChanged
 ]

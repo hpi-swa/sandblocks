@@ -31,7 +31,13 @@ SBColumn >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
-		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand hardLine withGap: (self cellGap > 0)])
+		data: (Array streamContents: [:stream | | first |
+			first := true.
+			self visibleSubmorphsDo: [:s |
+				stream nextPut: s layoutCommands.
+				first
+					ifTrue: [stream nextPut: (SBAlgebraCommand hardLine withGap: self cellGap > 0)]
+					ifFalse: [first := false]]])
 ]
 
 { #category : #'as yet unclassified' }

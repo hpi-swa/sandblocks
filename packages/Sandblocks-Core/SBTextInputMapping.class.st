@@ -84,7 +84,6 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $s command do: #save;
 		registerShortcut: $S command do: #saveCopy;
 		registerShortcut: $l command do: #reloadArtefact;
-		registerShortcut: $; command do: #promptGlobalAction;
 		registerShortcut: $f command do: #startSearch;
 		registerShortcut: $g command do: #nextSearchResult;
 		registerShortcut: $t command do: #promptAddArtifact;

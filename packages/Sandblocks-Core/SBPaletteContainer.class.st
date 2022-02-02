@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'stream',
 		'content',
-		'categories'
+		'categories',
+		'search'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -109,10 +110,20 @@ SBPaletteContainer >> initialize [
 		addMorphBack: (categories := SBColumn new
 			layoutInset: 4;
 			cellPositioning: #topLeft);
-		addMorphBack: (ScrollPane new
-			color: Color transparent;
+		addMorphBack: (SBColumn new
+			addMorphBack: (search := SBTextBubble new
+				placeholderText: 'Search ...';
+				when: #contentsChanged send: #updateSearch to: self;
+				layoutInset: 2;
+				hResizing: #spaceFill);
+			addMorphBack: (ScrollPane new
+				color: Color transparent;
+				hResizing: #spaceFill;
+				vResizing: #spaceFill);
+			vResizing: #spaceFill;
 			hResizing: #spaceFill;
-			vResizing: #spaceFill);
+			cellGap: 4;
+			layoutInset: (SBEdgeInsets top: 4));
 		layoutInset: 0;
 		cellGap: 8;
 		hResizing: #shrinkWrap;
@@ -124,7 +135,7 @@ SBPaletteContainer >> initialize [
 		attachDecorator: SBMoveDecorator new;
 		attachDecorator: SBResizableDecorator new.
 	
-	self lastSubmorph scroller
+	self lastSubmorph lastSubmorph scroller
 		addMorphBack: (content := SBColumn new
 			useAlgebraLayout;
 			minimumWidth: 300;
@@ -193,4 +204,23 @@ SBPaletteContainer >> selectedBlock [
 SBPaletteContainer >> specialDropCommand: aBlock [
 
 	^ SBDeleteCommand new target: aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBPaletteContainer >> submorph: aMorph matchesQuery: aString [
+
+	aMorph allMorphsDo: [:m |
+		((m respondsTo: #textContents) and: [m textContents asLowercase includesSubstring: aString]) ifTrue: [^ true].
+		((m respondsTo: #placeholderText) and: [m placeholderText asLowercase includesSubstring: aString]) ifTrue: [^ true].
+		m balloonText ifNotNil: [:text | (text asLowercase includesSubstring: aString) ifTrue: [^ true]]].
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBPaletteContainer >> updateSearch [
+
+	| query |
+	query := search contents asLowercase.
+	content submorphsDo: [:m | m visible: (query isEmpty or: [self submorph: m matchesQuery: query])].
+	content layoutChanged
 ]
