@@ -82,7 +82,7 @@ SBCursorPosition >> drawOn: aCanvas [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorPosition >> enter [
+SBCursorPosition >> enterWith: aCursor [
 
 	
 ]
@@ -123,7 +123,7 @@ SBCursorPosition >> isDistinctFrom: aPosition [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorPosition >> leaveIn: anEditor [
+SBCursorPosition >> leaveIn: anEditor with: aCursor [
 
 	
 ]

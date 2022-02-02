@@ -135,7 +135,9 @@ SBSuggestionItem >> minExtent [
 { #category : #'event handling' }
 SBSuggestionItem >> mouseDown: anEvent [
 
-	self menu activeItem: self; accept.
+	self menu
+		activeItem: self;
+		useSuggestion
 ]
 
 { #category : #'event handling' }
@@ -179,7 +181,7 @@ SBSuggestionItem >> selectorSize [
 ]
 
 { #category : #private }
-SBSuggestionItem >> useSuggestionOn: aBlock [
+SBSuggestionItem >> useSuggestionOn: aBlock in: anEditor [
 
 	self completionAction
 		ifNotNil: [self completionAction value: aBlock]

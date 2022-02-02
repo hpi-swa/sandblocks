@@ -177,29 +177,6 @@ SBBlock >> artefactCompletionSelectorsFor: aBlock class: aClass [
 	^ aClass sandblocksSuggestionsFor: self
 ]
 
-{ #category : #suggestions }
-SBBlock >> artefactCompletionSuggestionsFor: aBlock matching: aString [
-
-	| exactMatches fuzzyMatches selectors list |
-	selectors := OrderedCollection withAll: (self artefactCompletionSelectorsFor: aBlock class: aBlock guessClassExpensive).
-	exactMatches := (Array streamContents: [:stream |
-		selectors removeAllSuchThat: [:sel |
-			(sel sandblockBeginsWith: aString)
-				ifTrue: [stream nextPut: sel];
-				yourself]]) sort: #size ascending.
-	fuzzyMatches := (Array streamContents: [:stream |
-		selectors removeAllSuchThat: [:sel |
-			(sel sandblockMatch: aString)
-				ifTrue: [stream nextPut: sel];
-				yourself]]) sort: #size ascending.
-	list := exactMatches, fuzzyMatches, (self suggestAlways ifTrue: [selectors] ifFalse: [#()]).
-	
-	"add outer artefact's selector, if any, to support recursion of not-yet-saved methods"
-	self ifNotNil: [:artefact | artefact selector ifNotNil: [:sel | (sel sandblockMatch: aString) ifTrue: [list := (list copyWithout: sel) copyWithFirst: sel]]].
-	
-	^ list
-]
-
 { #category : #accessing }
 SBBlock >> artefactForPersisting [
 
@@ -410,12 +387,6 @@ SBBlock >> canPersist [
 	^ true
 ]
 
-{ #category : #'actions tests' }
-SBBlock >> canSelectPreviousSuggestion [
-
-	^ self hasMultipleSuggestions and: [self sandblockEditor suggestionMenu activeIndex > 1]
-]
-
 { #category : #'colors and color policies' }
 SBBlock >> centerAlignSymbols [
 
@@ -556,14 +527,6 @@ SBBlock >> completeSubtree [
 
 	self allBlocksDo: [:b | b isUnknown ifTrue: [^ false]].
 	^ true
-]
-
-{ #category : #suggestions }
-SBBlock >> completionSuggestionsFor: aString [
-
-	^ self containingArtefact
-		ifNotNil: [:a | a artefactCompletionSuggestionsFor: self matching: aString]
-		ifNil: [#()]
 ]
 
 { #category : #accessing }
@@ -903,7 +866,7 @@ SBBlock >> detachDecoratorsThat: aBlock [
 SBBlock >> dismiss [
 	<action>
 
-	self removeSuggestionMenu
+	self sandblockEditor suggestionMenu delete
 ]
 
 { #category : #'dropping/grabbing' }
@@ -1123,22 +1086,6 @@ SBBlock >> focusAfterDeleteIfNone: aBlock [
 	^ block isInWorld ifTrue: [block] ifFalse: [aBlock value]
 ]
 
-{ #category : #actions }
-SBBlock >> focusNextSuggestion [
-	<inputAction>
-	<actionValidIf: #hasMultipleSuggestions>
-
-	self sandblockEditor suggestionMenu next
-]
-
-{ #category : #actions }
-SBBlock >> focusPreviousSuggestion [
-	<inputAction>
-	<actionValidIf: #canSelectPreviousSuggestion>
-
-	self sandblockEditor suggestionMenu previous
-]
-
 { #category : #'as yet unclassified' }
 SBBlock >> forceAgainst: aMorph [
 
@@ -1240,18 +1187,6 @@ SBBlock >> hasInput [
 SBBlock >> hasMultiSelection [
 
 	^ self sandblockEditor cursor cursorPosition isKindOf: SBCursorMultiSelect
-]
-
-{ #category : #'actions tests' }
-SBBlock >> hasMultipleSuggestions [
-
-	^ self hasSuggestions and: [self sandblockEditor suggestionMenu itemCount > 1]
-]
-
-{ #category : #'actions tests' }
-SBBlock >> hasNoSuggestions [
-
-	^ self hasSuggestions not
 ]
 
 { #category : #'actions tests' }
@@ -2813,25 +2748,6 @@ SBBlock >> useAlgebraLayout [
 		vResizing: #shrinkWrap;
 		hResizing: #rigid;
 		layoutPolicy: SBAlgebraLayout new
-]
-
-{ #category : #actions }
-SBBlock >> useSuggestion [
-	<inputAction>
-	<actionValidIf: #hasSuggestions>
-
-	| editor |
-	self hasSuggestions ifFalse: [^ false].
-	" try to apply a suggestion, return whether anything was applied "
-	editor := self sandblockEditor.
-	editor suggestionMenu activeItem ifNotNil: [:s |
-		(s wouldChange: self)
-			ifTrue: [
-				s useSuggestionOn: self.
-				editor selection startInputAtEnd]
-			ifFalse: [self inputNextUnknown]].
-	self removeSuggestionMenu.
-	^ true
 ]
 
 { #category : #suggestions }

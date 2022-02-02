@@ -68,7 +68,7 @@ SBCursorMultiSelect >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorMultiSelect >> leaveIn: anEditor [
+SBCursorMultiSelect >> leaveIn: anEditor with: aCursor [
 
 	selected do: [:block | block detachDecorators: SBMultiSelectionDecorator]
 ]

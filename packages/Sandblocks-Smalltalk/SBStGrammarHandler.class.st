@@ -43,7 +43,7 @@ SBStGrammarHandler >> browseImplementors [
 		list := self systemNavigation allImplementorsOf: sel asSymbol.
 		
 		(self block sandblockEditor isSingleArtefactView or: [list size > 1]) ifTrue: [
-			self block sandblockEditor model ifNotNil: [:model | (model isKindOf: MessageTrace) ifTrue: [^ model browseAllImplementorsOf: sel asSymbol]].
+			self block sandblockEditor model ifNotNil: [:model | (model isKindOf: MessageTrace) ifTrue: [^ model browseAllImplementorsOf: sel asSymbol requestor: #modelMenu]].
 			^ self changeToBlockView: (self systemNavigation browseAllImplementorsOf: sel asSymbol)].
 		
 		self block sandblockEditor open: list first compiledMethod]
@@ -58,7 +58,7 @@ SBStGrammarHandler >> browseSenders [
 		calls ifEmpty: [^ self].
 		
 		(self block sandblockEditor isSingleArtefactView or: [calls size > 1]) ifTrue: [
-			self block sandblockEditor model ifNotNil: [:model | (model isKindOf: MessageTrace) ifTrue: [^ model browseAllCallsOn: sel asSymbol]].
+			self block sandblockEditor model ifNotNil: [:model | (model isKindOf: MessageTrace) ifTrue: [^ model browseAllCallsOn: sel asSymbol requestor: #modelMenu]].
 			^ self changeToBlockView: (self systemNavigation browseAllCallsOn: sel asSymbol)].
 		
 		self block sandblockEditor open: calls first compiledMethod]

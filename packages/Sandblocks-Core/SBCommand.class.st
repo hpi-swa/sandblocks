@@ -170,6 +170,13 @@ SBCommand >> shouldMergeWithNext: aBoolean [
 ]
 
 { #category : #accessing }
+SBCommand >> suggestions [
+	"used by insert commands, return a list of suggestion items here"
+
+	^ #()
+]
+
+{ #category : #accessing }
 SBCommand >> title [
 
 	^ nil

@@ -286,6 +286,11 @@ SBEditor >> buildCommandBar [
 				shortcut: (self class anyShortcutForAction: #promptAddArtifact)
 				do: [self promptAddArtifact];
 			balloonText: 'Add artifact...');
+		addMorphBack: (SBButton new
+			icon: SBIcon iconTerminal
+				shortcut: (self class anyShortcutForAction: #openRepl)
+				do: [self openRepl];
+			balloonText: 'Add artifact...');
 		addMorphBack: (Morph new
 			height: 0;
 			color: Color transparent;
@@ -809,6 +814,7 @@ SBEditor >> initialize [
 	globalShortcutListeners := OrderedCollection new.
 	inputMapping := self class newInputMapping.
 	searchInput := SBSearchPanel new.
+	suggestionMenu := SBSuggestionMenu new.
 	cursor := SBBlockCursor new editor: self.
 	
 	paletteContainer := SBUpdatingPaletteContainer new
@@ -843,6 +849,7 @@ SBEditor >> initialize [
 	
 	self
 		registerGlobalShortcutListener: self;
+		registerGlobalShortcutListener: suggestionMenu;
 		registerGlobalShortcutListener: searchInput;
 		registerGlobalShortcutListener: cursor;
 		resetState;
@@ -1544,7 +1551,9 @@ SBEditor >> suggestAlways: aBoolean [
 { #category : #accessing }
 SBEditor >> suggestionMenu [
 
-	^ suggestionMenu ifNil: [suggestionMenu := SBSuggestionMenu new]
+	suggestionMenu ifNil: [suggestionMenu := SBSuggestionMenu new].
+	(globalShortcutListeners includes: suggestionMenu) ifFalse: [globalShortcutListeners addFirst: suggestionMenu].
+	^ suggestionMenu
 ]
 
 { #category : #actions }

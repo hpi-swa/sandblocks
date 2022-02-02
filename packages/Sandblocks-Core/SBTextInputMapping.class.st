@@ -21,10 +21,10 @@ SBTextInputMapping >> registerDefaultShortcuts [
 	
 	" input "
 	self
-		inputShortcut: Character arrowDown do: #focusNextSuggestion;
-		inputShortcut: Character arrowUp do: #focusPreviousSuggestion;
-		inputShortcut: $j command do: #focusNextSuggestion;
-		inputShortcut: $k command do: #focusPreviousSuggestion;
+		registerShortcut: Character arrowDown do: #focusNextSuggestion;
+		registerShortcut: Character arrowUp do: #focusPreviousSuggestion;
+		registerShortcut: $j command do: #focusNextSuggestion;
+		registerShortcut: $k command do: #focusPreviousSuggestion;
 		inputShortcut: Character backspace do: #deleteBeforeCursor;
 		inputShortcut: Character delete do: #deleteAfterCursor;
 		registerShortcut: $a command do: #clearInput;
@@ -74,6 +74,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $m command do: #browseImplementors;
 		registerShortcut: $n command do: #browseSenders;
 		registerShortcut: $o command do: #openOpenWindow;
+		registerShortcut: $r command do: #openRepl;
 		registerShortcut: $b command do: #browse.
 	
 	" editor "

@@ -119,12 +119,9 @@ SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol 
 	(aPosition hasDifferentEffect: previousCursor)
 		ifTrue: [
 			cursorPosition := SBCursorNone new.
-			previousCursor ifNotNil: [:c |
-				c leaveIn: self editor.
-				c removeActionsWithReceiver: self].
+			previousCursor ifNotNil: [:c | c leaveIn: self editor with: self].
 			cursorPosition := aPosition.
-			cursorPosition when: #showLabel send: #showLabel: to: self.
-			cursorPosition ifNotNil: [:position | position enter]]
+			cursorPosition ifNotNil: [:position | position enterWith: self]]
 		ifFalse: [previousCursor maybeUpdateFor: aPosition].
 	
 	self resetBlink.

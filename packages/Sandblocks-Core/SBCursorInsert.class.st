@@ -126,10 +126,14 @@ SBCursorInsert >> drawOn: aCanvas in: aRectangle [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorInsert >> enter [
+SBCursorInsert >> enterWith: aCursor [
 
-	super enter.
-	self triggerEvent: #showLabel with: (command title ifNil: ['insert in ', self container printString])
+	super enterWith: aCursor.
+	aCursor showLabel: (command title ifNil: ['insert in ', self container printString]).
+	command suggestions ifNotEmpty: [:s |
+		aCursor editor suggestionMenu
+			suggestions: s;
+			openNear: self block requestor: command]
 ]
 
 { #category : #'as yet unclassified' }
@@ -157,9 +161,10 @@ SBCursorInsert >> isDistinctFrom: aPosition [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorInsert >> leaveIn: anEditor [
+SBCursorInsert >> leaveIn: anEditor with: aCursor [
 
-	self triggerEvent: #showLabel with: nil
+	aCursor showLabel: nil.
+	command suggestions ifNotEmpty: [:s | aCursor editor suggestionMenu delete]
 ]
 
 { #category : #'as yet unclassified' }
