@@ -5,9 +5,10 @@ Class {
 		'selector',
 		'active',
 		'label',
-		'completionAction'
+		'completionAction',
+		'preview'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'instance creation' }
@@ -89,12 +90,16 @@ SBSuggestionItem >> initialize [
 	
 	self
 		layoutInset: 10 @ 4 * self scalingFactor;
+		cellPositioning: #topLeft;
+		addMorphBack: (SBRow new
+			hResizing: #spaceFill;
+			cellGap: 8 * self scalingFactor);
 		vResizing: #shrinkWrap;
 		hResizing: #spaceFill;
 		changeTableLayout;
-		listDirection: #leftToRight;
+		listDirection: #topToBottom;
 		extent: 0 @ 0;
-		cellGap: 8 * self scalingFactor
+		cellGap: 2
 ]
 
 { #category : #accessing }
@@ -107,7 +112,7 @@ SBSuggestionItem >> label [
 SBSuggestionItem >> labelContainer [
 	"overwrite in your subclass if you want selector/label to be added to a different morph"
 
-	^ self
+	^ self hasSubmorphs ifTrue: [self firstSubmorph] ifFalse: [self]
 ]
 
 { #category : #accessing }
@@ -136,6 +141,19 @@ SBSuggestionItem >> ownerWithColor [
 	^ self
 ]
 
+{ #category : #accessing }
+SBSuggestionItem >> preview [
+
+	^ preview
+]
+
+{ #category : #accessing }
+SBSuggestionItem >> preview: aForm previewOnly: aBoolean [
+
+	self addMorphBack: (preview := aForm asMorph).
+	aBoolean ifTrue: [self firstSubmorph delete]
+]
+
 { #category : #printing }
 SBSuggestionItem >> printOn: aStream [
 
@@ -154,12 +172,14 @@ SBSuggestionItem >> selector [
 { #category : #accessing }
 SBSuggestionItem >> selector: aString label: anotherString [
 
+	| container |
+	container := self firstSubmorph.
 	selector := aString.
 	label := anotherString.
-	self labelContainer addMorphBack: (SBStringMorph new
+	container addMorphBack: (SBStringMorph new
 		contents: aString;
 		hResizing: #spaceFill).
-	self labelContainer addMorphBack: (SBStringMorph new
+	container addMorphBack: (SBStringMorph new
 		contents: anotherString;
 		opacity: 0.5)
 ]
@@ -174,7 +194,7 @@ SBSuggestionItem >> selectorSize [
 SBSuggestionItem >> useSuggestionOn: aBlock in: anEditor [
 
 	self completionAction
-		ifNotNil: [self completionAction value: aBlock]
+		ifNotNil: [self completionAction cull: aBlock cull: self]
 		ifNil: [aBlock useSuggestion: self]
 ]
 

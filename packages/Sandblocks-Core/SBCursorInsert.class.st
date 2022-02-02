@@ -133,7 +133,7 @@ SBCursorInsert >> enterWith: aCursor [
 	command suggestions ifNotEmpty: [:s |
 		aCursor editor suggestionMenu
 			suggestions: s;
-			openNear: self block requestor: command]
+			openNear: aCursor requestor: command]
 ]
 
 { #category : #'as yet unclassified' }
@@ -164,7 +164,7 @@ SBCursorInsert >> isDistinctFrom: aPosition [
 SBCursorInsert >> leaveIn: anEditor with: aCursor [
 
 	aCursor showLabel: nil.
-	command suggestions ifNotEmpty: [:s | aCursor editor suggestionMenu delete]
+	aCursor editor suggestionMenu delete
 ]
 
 { #category : #'as yet unclassified' }

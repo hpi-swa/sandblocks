@@ -1,16 +1,26 @@
 Class {
 	#name : #SBInsertSuggestionItem,
 	#superclass : #SBSuggestionItem,
+	#instVars : [
+		'morph'
+	],
 	#category : #'Sandblocks-Core'
 }
 
-{ #category : #'as yet unclassified' }
-SBInsertSuggestionItem >> useSuggestionOn: aCommand in: anEditor [
+{ #category : #accessing }
+SBInsertSuggestionItem >> morph: aBlock previewOnly: aBoolean [
 
-	anEditor do: aCommand
+	morph := aBlock.
+	self preview: aBlock imageForm previewOnly: aBoolean
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #suggestions }
+SBInsertSuggestionItem >> useSuggestionOn: aCommand in: anEditor [
+
+	anEditor do: (aCommand morph: morph)
+]
+
+{ #category : #suggestions }
 SBInsertSuggestionItem >> wouldChange: aBlock [
 
 	^ true

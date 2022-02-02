@@ -74,7 +74,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $m command do: #browseImplementors;
 		registerShortcut: $n command do: #browseSenders;
 		registerShortcut: $o command do: #openOpenWindow;
-		registerShortcut: $r command do: #openRepl;
+		registerShortcut: $g command do: #openRepl;
 		registerShortcut: $b command do: #browse.
 	
 	" editor "

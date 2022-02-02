@@ -330,7 +330,7 @@ SBSuggestionMenu >> useSuggestion [
 		(s wouldChange: requestor)
 			ifTrue: [
 				s useSuggestionOn: requestor in: editor.
-				editor selection startInputAtEnd]
+				editor selection ifNotNil: #startInputAtEnd]
 			ifFalse: [editor selection inputNextUnknown]].
 	self delete.
 	^ true

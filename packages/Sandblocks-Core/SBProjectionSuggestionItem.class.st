@@ -4,21 +4,10 @@ Class {
 	#category : #'Sandblocks-Core'
 }
 
-{ #category : #initialization }
-SBProjectionSuggestionItem >> initialize [
-
-	super initialize.
-	self
-		addMorphBack: (SBRow new hResizing: #spaceFill);
-		listDirection: #topToBottom;
-		cellPositioning: #topLeft;
-		cellGap: 2
-]
-
-{ #category : #initialization }
+{ #category : #accessing }
 SBProjectionSuggestionItem >> instanceSuggestion: aFactoryClosure editor: anEditor [
 
-	| instance example |
+	| example |
 	aFactoryClosure ifNil: [^ self].
 	
 	example := aFactoryClosure value.
@@ -29,13 +18,5 @@ SBProjectionSuggestionItem >> instanceSuggestion: aFactoryClosure editor: anEdit
 		addMorphBack: example;
 		yourself.
 	
-	instance := example imageForm asMorph.
-	self addMorphBack: instance.
-	instance position: self firstSubmorph bottomLeft
-]
-
-{ #category : #accessing }
-SBProjectionSuggestionItem >> labelContainer [
-
-	^ self firstSubmorph
+	self preview: example imageForm previewOnly: false
 ]

@@ -2696,7 +2696,7 @@ SBBlock >> toggleSuggestions [
 
 	self hasSuggestions
 		ifTrue: [self removeSuggestionMenu]
-		ifFalse: [(self respondsTo: #updateSuggestions) ifTrue: [self updateSuggestions]]
+		ifFalse: [self updateSuggestions]
 ]
 
 { #category : #'ast helpers' }
@@ -2730,7 +2730,7 @@ SBBlock >> updateSuggestions [
 	| editor menu |
 	editor := self sandblockEditor ifNil: [^ self].
 	menu := editor suggestionMenu.
-	self hasInput ifFalse: [
+	self isSelected ifFalse: [
 		self hasSuggestions ifTrue: [menu delete].
 		^ self].
 	
@@ -2825,7 +2825,7 @@ SBBlock >> wantsMethodBody [
 { #category : #callbacks }
 SBBlock >> wasDeselected [
 
-	" may be overriden "
+	self removeSuggestionMenu
 ]
 
 { #category : #callbacks }
