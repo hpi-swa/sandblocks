@@ -410,6 +410,29 @@ For this, we need to do three things:</p>
 
     ^ MyChildWidget new contents: 'empty'
 </code></pre>
+<h2 id="autocompletion-at-insert-positions"><a class="header" href="#autocompletion-at-insert-positions">Autocompletion at Insert Positions</a></h2>
+<p>If you want to provide an autocompletion popup at insert positions, you need to provide a custom insert command. For example:</p>
+<pre><code>MyListBlock&gt;&gt;insertCommandRequest: aMorph near: aBlock before: aBoolean
+
+    ^ MyInsertCommand new
+		near: aBlock before: aBoolean in: self morph: aMorph;
+		yourself
+</code></pre>
+<pre><code>MyInsertCommand subclassOf: #SBRelInsertCommand
+
+MyInsertCommand&gt;&gt;suggestions
+
+    &quot; you can access `self container` here if you want to compute these &quot;
+    ^ {
+        (SBInsertSuggestionItem selector: 'a' label: 'choice')
+            morph: (SBTextBubble new contents: 'a') new previewOnly: true.
+        (SBInsertSuggestionItem selector: 'b' label: 'choice')
+            morph: (SBTextBubble new contents: 'b') new previewOnly: true.
+        (SBInsertSuggestionItem selector: 'c' label: 'choice')
+            morph: (SBTextBubble new contents: 'c') new previewOnly: true.
+    }
+</code></pre>
+<p>From above, <code>newEmptyChildNear:before:</code> will then only be called if the autocompletion is not used and is thus the default block that will be inserted.</p>
 <h1 id="drag-and-drop"><a class="header" href="#drag-and-drop">Drag and Drop</a></h1>
 <p>Drag and drop is enabled on all blocks in Sandblocks by default.
 Those, that have a Move Decorator, can be picked up via Ctrl+Drag.
