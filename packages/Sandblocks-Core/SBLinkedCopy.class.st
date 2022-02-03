@@ -42,6 +42,12 @@ SBLinkedCopy >> artefactSaved: aMethodBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBLinkedCopy >> binding: aString for: block class: aClass ifPresent: aBlock [
+
+	^ link parentSandblock ifNotNil: [:p | p binding: aString for: block class: aClass ifPresent: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
 SBLinkedCopy >> for: aBlock [
 
 	| artefact |
@@ -82,6 +88,12 @@ SBLinkedCopy >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 		tryFixing: aFixBoolean
 		quick: aQuickBoolean.
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBLinkedCopy >> scopesDo: aBlock [
+
+	link parentSandblock scopesDo: aBlock
 ]
 
 { #category : #'as yet unclassified' }

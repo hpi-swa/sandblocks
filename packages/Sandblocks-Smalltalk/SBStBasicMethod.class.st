@@ -260,6 +260,13 @@ SBStBasicMethod >> declarations [
 	^ self arguments, self instanceVariables
 ]
 
+{ #category : #accessing }
+SBStBasicMethod >> declarationsDo: aBlock [
+
+	self arguments do: aBlock.
+	self instanceVariables do: aBlock
+]
+
 { #category : #actions }
 SBStBasicMethod >> deleteMethod [
 	<action>
@@ -421,6 +428,12 @@ SBStBasicMethod >> isMyArgument: aBlock [
 
 	self argumentsDo: [:b | aBlock = b ifTrue: [^ true]].
 	^ false
+]
+
+{ #category : #'ast helpers' }
+SBStBasicMethod >> isScope [
+
+	^ true
 ]
 
 { #category : #testing }

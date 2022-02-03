@@ -239,17 +239,7 @@ SBStNameBehavior >> isTemporaryVariable [
 { #category : #'as yet unclassified' }
 SBStNameBehavior >> lowercaseSuggestions [
 
-	^ Array streamContents: [:str |
-		self block containingArtefact declarations
-			select: [:v | v contents sandblockMatch: self contents]
-			thenDo: [:v | str nextPut: v asSuggestionItem].
-		self block containingBlocksDo: [:block |
-			block temporaries
-				select: [:v | v contents sandblockMatch: self contents]
-				thenDo: [:v | str nextPut: v asSuggestionItem].
-			block bindings
-				select: [:v | v contents sandblockMatch: self contents]
-				thenCollect: [:v | str nextPut: v asSuggestionItem]]]
+	^ Array streamContents: [:stream | self block scopesDo: [:scope | scope declarationsDo: [:decl | (decl contents sandblockMatch: self contents) ifTrue: [stream nextPut: decl asSuggestionItem]]]]
 ]
 
 { #category : #'as yet unclassified' }

@@ -701,6 +701,12 @@ SBBlock >> currentTextMorph [
 	^ nil
 ]
 
+{ #category : #'ast helpers' }
+SBBlock >> declarationsDo: aBlock [
+
+	
+]
+
 { #category : #decorators }
 SBBlock >> decorators [
 
@@ -1498,6 +1504,12 @@ SBBlock >> isSandblock [
 ]
 
 { #category : #testing }
+SBBlock >> isScope [
+
+	^ false
+]
+
+{ #category : #testing }
 SBBlock >> isSelectable [
 
 	^ true
@@ -2262,6 +2274,13 @@ SBBlock >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'ast helpers' }
+SBBlock >> scopesDo: aBlock [
+
+	self isScope ifTrue: [aBlock value: self].
+	self parentSandblock ifNotNil: [:p | p scopesDo: aBlock]
+]
+
 { #category : #actions }
 SBBlock >> screenshot [
 	<action>
@@ -2798,6 +2817,7 @@ SBBlock >> veryDeepCopyWith: aCopier [
 	previousDecorators := new decorators copy.
 	previousDecorators do: #detach.
 	previousDecorators do: [:decorator | new attachDecorator: decorator].
+	new currentTextMorph ifNotNil: #stopEditing.
 	^ new
 ]
 
