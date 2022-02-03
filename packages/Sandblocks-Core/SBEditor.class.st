@@ -925,6 +925,12 @@ SBEditor >> loadBlocks [
 	self class loadSaveInto: self
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> markChanged: anArtefact [
+
+	^ history markChanged: {anArtefact} redraw: true
+]
+
 { #category : #'do/undo/redo' }
 SBEditor >> markChangesAfterCommand: artefacts [
 

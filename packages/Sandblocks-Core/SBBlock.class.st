@@ -638,6 +638,12 @@ SBBlock >> copyAround [
 	self removeProperty: #copyPlaceholder
 ]
 
+{ #category : #copying }
+SBBlock >> copyBlock [
+
+	^ self veryDeepCopy
+]
+
 { #category : #'ast helpers' }
 SBBlock >> copyFindSelection: aBlock in: aParentBlock [
 
@@ -2781,15 +2787,12 @@ SBBlock >> validSubtree [
 { #category : #copying }
 SBBlock >> veryDeepCopyWith: aCopier [
 
-	| new previousDecorators m |
-	m := self valueOfProperty: #sandblockSuggestionMenu.
-	self removeProperty: #sandblockSuggestionMenu.
+	| new previousDecorators |
 	SBToggledCode comment: '' active: 0 do: {
 		[
 			oldActions := self valueOfProperty: #actionMap.
 			self removeProperty: #actionMap]}.
 	new := super veryDeepCopyWith: aCopier.
-	m ifNotNil: [self setProperty: #sandblockSuggestionMenu toValue: m].
 	
 	SBToggledCode comment: '' active: 0 do: {[self setProperty: #actionMap toValue: oldActions]}.
 	previousDecorators := new decorators copy.
