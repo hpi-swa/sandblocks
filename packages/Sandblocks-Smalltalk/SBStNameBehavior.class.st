@@ -44,6 +44,12 @@ SBStNameBehavior >> block: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBStNameBehavior >> castToUnknownWhenEmpty [
+
+	^ self block isExpression
+]
+
+{ #category : #'as yet unclassified' }
 SBStNameBehavior >> contents [
 
 	^ self block contents

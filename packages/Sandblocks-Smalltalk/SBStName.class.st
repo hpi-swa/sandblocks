@@ -144,7 +144,7 @@ SBStName >> browse [
 { #category : #'as yet unclassified' }
 SBStName >> castToUnknownWhenEmpty [
 
-	^ self isExpression
+	^ self behavior castToUnknownWhenEmpty
 ]
 
 { #category : #'as yet unclassified' }
@@ -317,13 +317,6 @@ SBStName >> preferredColorIn: aColorPolicy [
 SBStName >> printOn: aStream [
 
 	self behavior printBlockOn: aStream
-]
-
-{ #category : #'as yet unclassified' }
-SBStName >> replaceWithUnknown [
-
-	self behavior isExpression
-		ifTrue: [super replaceWithUnknown]
 ]
 
 { #category : #'as yet unclassified' }

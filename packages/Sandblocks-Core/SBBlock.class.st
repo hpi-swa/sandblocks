@@ -472,7 +472,8 @@ SBBlock >> clearInput [
 		ifTrue: [
 			self hasInput
 				ifTrue: [self contents: '']
-				ifFalse: [self sandblockEditor startInput: self at: 1 replacingContents: true]]
+				ifFalse: [
+					self sandblockEditor startInput: self at: 1 replacingContents: true]]
 		ifFalse: [self changeToUnknown]
 ]
 
@@ -2635,7 +2636,7 @@ SBBlock >> submorphIndex [
 { #category : #accessing }
 SBBlock >> suggestAlways [
 
-	^ self sandblockEditor suggestAlways
+	^ self sandblockEditor ifNotNil: [:e | e suggestAlways] ifNil: [false]
 ]
 
 { #category : #suggestions }
