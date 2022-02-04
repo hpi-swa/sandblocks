@@ -1768,13 +1768,15 @@ SBBlock >> multiSelectChildren [
 { #category : #'as yet unclassified' }
 SBBlock >> newEmptyChildNear: aBlock before: aBoolean [
 
-	^ self newNullBlock
+	^ self grammarHandler ifNotNil: [:g | g newNullBlock] ifNil: [nil]
 ]
 
 { #category : #'ast helpers' }
 SBBlock >> newNullBlock [
 
-	^ self grammarHandler ifNotNil: [:g | g newNullBlock] ifNil: [nil]
+	^ (self parentSandblock ifNil: [self])
+		newEmptyChildNear: nil
+		before: true
 ]
 
 { #category : #hierarchy }
