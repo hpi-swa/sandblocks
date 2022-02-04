@@ -381,7 +381,11 @@ SBConnectorLine >> morphicLayerNumber [
 { #category : #'as yet unclassified' }
 SBConnectorLine >> mouseDown: anEvent [
 
-	self sandblockEditor do: (SBDeleteCommand new target: self)
+	self sandblockEditor do: (SBDeleteCommand new
+		target: self;
+		selectAfter: (self from isInWorld
+			ifTrue: [self from]
+			ifFalse: [self to isInWorld ifTrue: [self to] ifFalse: [nil]]))
 ]
 
 { #category : #'as yet unclassified' }

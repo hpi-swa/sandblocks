@@ -299,13 +299,14 @@ SBStNewMessageSend >> startInputAt: aNumber replacingContents: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBStNewMessageSend >> useSuggestion: aString [
+SBStNewMessageSend >> useSuggestion: anItem [
 
-	| possibleArgumentNames |
-	possibleArgumentNames := self possibleArgumentNamesFor: aString.
+	| possibleArgumentNames string |
+	string := anItem contents.
+	possibleArgumentNames := self possibleArgumentNamesFor: string.
 	
 	self sandblockEditor do: (SBCombinedCommand newWith: (Array streamContents: [:stream |
-		aString keywords withIndexDo: [:partsContents :index | | p |
+		string keywords withIndexDo: [:partsContents :index | | p |
 			p := partsContents copyReplaceAll: ':' with: ''.
 			self messageParts
 				at: index
@@ -324,11 +325,11 @@ SBStNewMessageSend >> useSuggestion: aString [
 						index: index + 1)]].
 		
 		self messageParts
-			from: aString keywords size + 1
+			from: string keywords size + 1
 			to: self messageParts size
 			do: [:part | stream nextPut: (SBDeleteCommand new target: part)].
 		
-		aString asSymbol isUnary
+		string asSymbol isUnary
 			ifTrue: [self messageParts first hasArgument ifTrue: [stream nextPut: (SBDeleteCommand new target: self messageParts first argument)]]
 			ifFalse: [self messageParts first hasArgument ifFalse: [stream nextPut: self messageParts first unaryToKeywordCommand]]])).
 	self inputNextUnknown

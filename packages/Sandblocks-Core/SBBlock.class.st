@@ -177,29 +177,6 @@ SBBlock >> artefactCompletionSelectorsFor: aBlock class: aClass [
 	^ aClass sandblocksSuggestionsFor: self
 ]
 
-{ #category : #suggestions }
-SBBlock >> artefactCompletionSuggestionsFor: aBlock matching: aString [
-
-	| exactMatches fuzzyMatches selectors list |
-	selectors := OrderedCollection withAll: (self artefactCompletionSelectorsFor: aBlock class: aBlock guessClassExpensive).
-	exactMatches := (Array streamContents: [:stream |
-		selectors removeAllSuchThat: [:sel |
-			(sel sandblockBeginsWith: aString)
-				ifTrue: [stream nextPut: sel];
-				yourself]]) sort: #size ascending.
-	fuzzyMatches := (Array streamContents: [:stream |
-		selectors removeAllSuchThat: [:sel |
-			(sel sandblockMatch: aString)
-				ifTrue: [stream nextPut: sel];
-				yourself]]) sort: #size ascending.
-	list := exactMatches, fuzzyMatches, (self suggestAlways ifTrue: [selectors] ifFalse: [#()]).
-	
-	"add outer artefact's selector, if any, to support recursion of not-yet-saved methods"
-	self ifNotNil: [:artefact | artefact selector ifNotNil: [:sel | (sel sandblockMatch: aString) ifTrue: [list := (list copyWithout: sel) copyWithFirst: sel]]].
-	
-	^ list
-]
-
 { #category : #accessing }
 SBBlock >> artefactForPersisting [
 
@@ -410,12 +387,6 @@ SBBlock >> canPersist [
 	^ true
 ]
 
-{ #category : #'actions tests' }
-SBBlock >> canSelectPreviousSuggestion [
-
-	^ self hasMultipleSuggestions and: [self sandblockEditor suggestionMenu activeIndex > 1]
-]
-
 { #category : #'colors and color policies' }
 SBBlock >> centerAlignSymbols [
 
@@ -558,14 +529,6 @@ SBBlock >> completeSubtree [
 	^ true
 ]
 
-{ #category : #suggestions }
-SBBlock >> completionSuggestionsFor: aString [
-
-	^ self containingArtefact
-		ifNotNil: [:a | a artefactCompletionSuggestionsFor: self matching: aString]
-		ifNil: [#()]
-]
-
 { #category : #accessing }
 SBBlock >> containingArtefact [
 
@@ -675,6 +638,12 @@ SBBlock >> copyAround [
 	self removeProperty: #copyPlaceholder
 ]
 
+{ #category : #copying }
+SBBlock >> copyBlock [
+
+	^ self veryDeepCopy
+]
+
 { #category : #'ast helpers' }
 SBBlock >> copyFindSelection: aBlock in: aParentBlock [
 
@@ -730,6 +699,12 @@ SBBlock >> copyToBuffer [
 SBBlock >> currentTextMorph [
 
 	^ nil
+]
+
+{ #category : #'ast helpers' }
+SBBlock >> declarationsDo: aBlock [
+
+	
 ]
 
 { #category : #decorators }
@@ -804,7 +779,12 @@ SBBlock >> deleteBeforeCursor [
 		self currentTextMorph deleteBeforeCursor.
 		self updateSuggestions.
 		^ self batchedChangeStep].
-	self symbols first notNil ifTrue: [^ self changeToUnknown].
+	self symbols first notNil ifTrue: [
+		editor := self sandblockEditor.
+		" try and change to unknown. if no change occurred, delete "
+		self changeToUnknown.
+		editor selection class = self class ifTrue: [editor selection deleteBlock].
+		^ self].
 	
 	editor := self sandblockEditor.
 	parent := self parentSandblock.
@@ -898,7 +878,7 @@ SBBlock >> detachDecoratorsThat: aBlock [
 SBBlock >> dismiss [
 	<action>
 
-	self removeSuggestionMenu
+	self sandblockEditor suggestionMenu delete
 ]
 
 { #category : #'dropping/grabbing' }
@@ -978,26 +958,28 @@ SBBlock >> drawSubmorphsOn: aCanvas [
 { #category : #drawing }
 SBBlock >> drawSymbolsOn: aCanvas [
 
-	| symbols fg font space y centerAlign |
+	| symbols fg font space y centerAlign opacity |
 	centerAlign := self colorPolicy centerAlignSymbols and: [self centerAlignSymbols].
 	symbols := self symbols.
 	space := self spaceForSymbols.
 	font := self fontToUse.
 	fg := self sandblockForegroundColor.
-	y := centerAlign ifTrue: [
-		((self layoutBounds height / 2) - (font height / 2)) rounded] ifFalse: [0].
+	opacity := self colorPolicy symbolsOpacity.
+	y := centerAlign
+		ifTrue: [(self layoutBounds height / 2 - (font height / 2)) rounded]
+		ifFalse: [0].
 	symbols first ifNotNil: [
 		aCanvas
 			drawString: symbols first
 			at: self layoutBounds origin + (space first negated rounded @ y)
 			font: font
-			color: (fg alpha: 0.7)].
+			color: (fg alpha: opacity)].
 	symbols second ifNotNil: [
 		aCanvas
 			drawString: symbols second
 			at: self layoutBounds topRight + (0 @ (centerAlign ifTrue: [y] ifFalse: [self layoutBounds height - font height]))
 			font: font
-			color: (fg alpha: 0.7)]
+			color: (fg alpha: opacity)]
 ]
 
 { #category : #'colors and color policies' }
@@ -1116,22 +1098,6 @@ SBBlock >> focusAfterDeleteIfNone: aBlock [
 	^ block isInWorld ifTrue: [block] ifFalse: [aBlock value]
 ]
 
-{ #category : #actions }
-SBBlock >> focusNextSuggestion [
-	<inputAction>
-	<actionValidIf: #hasMultipleSuggestions>
-
-	self sandblockEditor suggestionMenu next
-]
-
-{ #category : #actions }
-SBBlock >> focusPreviousSuggestion [
-	<inputAction>
-	<actionValidIf: #canSelectPreviousSuggestion>
-
-	self sandblockEditor suggestionMenu previous
-]
-
 { #category : #'as yet unclassified' }
 SBBlock >> forceAgainst: aMorph [
 
@@ -1216,6 +1182,7 @@ SBBlock >> hasGroup [
 SBBlock >> hasHorizontalLayout [
 
 	| blocks |
+	self isBlockBody ifTrue: [^ false].
 	blocks := self childSandblocks.
 	^ blocks size < 2 or: [ | delta |
 		delta := blocks first topLeft - blocks second topLeft.
@@ -1232,18 +1199,6 @@ SBBlock >> hasInput [
 SBBlock >> hasMultiSelection [
 
 	^ self sandblockEditor cursor cursorPosition isKindOf: SBCursorMultiSelect
-]
-
-{ #category : #'actions tests' }
-SBBlock >> hasMultipleSuggestions [
-
-	^ self hasSuggestions and: [self sandblockEditor suggestionMenu itemCount > 1]
-]
-
-{ #category : #'actions tests' }
-SBBlock >> hasNoSuggestions [
-
-	^ self hasSuggestions not
 ]
 
 { #category : #'actions tests' }
@@ -1546,6 +1501,12 @@ SBBlock >> isNumberBlock [
 SBBlock >> isSandblock [
 
 	^ true
+]
+
+{ #category : #testing }
+SBBlock >> isScope [
+
+	^ false
 ]
 
 { #category : #testing }
@@ -2313,6 +2274,13 @@ SBBlock >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'ast helpers' }
+SBBlock >> scopesDo: aBlock [
+
+	self isScope ifTrue: [aBlock value: self].
+	self parentSandblock ifNotNil: [:p | p scopesDo: aBlock]
+]
+
 { #category : #actions }
 SBBlock >> screenshot [
 	<action>
@@ -2753,7 +2721,7 @@ SBBlock >> toggleSuggestions [
 
 	self hasSuggestions
 		ifTrue: [self removeSuggestionMenu]
-		ifFalse: [(self respondsTo: #updateSuggestions) ifTrue: [self updateSuggestions]]
+		ifFalse: [self updateSuggestions]
 ]
 
 { #category : #'ast helpers' }
@@ -2787,7 +2755,7 @@ SBBlock >> updateSuggestions [
 	| editor menu |
 	editor := self sandblockEditor ifNil: [^ self].
 	menu := editor suggestionMenu.
-	self hasInput ifFalse: [
+	self isSelected ifFalse: [
 		self hasSuggestions ifTrue: [menu delete].
 		^ self].
 	
@@ -2807,29 +2775,10 @@ SBBlock >> useAlgebraLayout [
 		layoutPolicy: SBAlgebraLayout new
 ]
 
-{ #category : #actions }
-SBBlock >> useSuggestion [
-	<inputAction>
-	<actionValidIf: #hasSuggestions>
-
-	| editor |
-	self hasSuggestions ifFalse: [^ false].
-	" try to apply a suggestion, return whether anything was applied "
-	editor := self sandblockEditor.
-	editor suggestionMenu activeItem ifNotNil: [:s |
-		(s wouldChange: self)
-			ifTrue: [
-				s useSuggestionOn: self.
-				editor selection startInputAtEnd]
-			ifFalse: [self inputNextUnknown]].
-	self removeSuggestionMenu.
-	^ true
-]
-
 { #category : #suggestions }
-SBBlock >> useSuggestion: aString [
+SBBlock >> useSuggestion: anItem [
 
-	self contents: aString.
+	self contents: anItem contents.
 	self containingSandblock sandblockEditor endInput
 ]
 
@@ -2857,18 +2806,18 @@ SBBlock >> validSubtree [
 { #category : #copying }
 SBBlock >> veryDeepCopyWith: aCopier [
 
-	| new previousDecorators m oldActions |
-	m := self valueOfProperty: #sandblockSuggestionMenu.
-	self removeProperty: #sandblockSuggestionMenu.
-	oldActions := self valueOfProperty: #actionMap.
-	self removeProperty: #actionMap.
+	| new previousDecorators |
+	SBToggledCode comment: '' active: 0 do: {
+		[
+			oldActions := self valueOfProperty: #actionMap.
+			self removeProperty: #actionMap]}.
 	new := super veryDeepCopyWith: aCopier.
-	m ifNotNil: [self setProperty: #sandblockSuggestionMenu toValue: m].
 	
-	self setProperty: #actionMap toValue: oldActions.
+	SBToggledCode comment: '' active: 0 do: {[self setProperty: #actionMap toValue: oldActions]}.
 	previousDecorators := new decorators copy.
 	previousDecorators do: #detach.
 	previousDecorators do: [:decorator | new attachDecorator: decorator].
+	new currentTextMorph ifNotNil: #stopEditing.
 	^ new
 ]
 
@@ -2881,7 +2830,7 @@ SBBlock >> wantsExtraSpace [
 { #category : #testing }
 SBBlock >> wantsInput [
 
-	^ false
+	^ self dynamicNumberOfChildren and: [self hasChildSandblocks not]
 ]
 
 { #category : #'artefact protocol' }
@@ -2899,7 +2848,7 @@ SBBlock >> wantsMethodBody [
 { #category : #callbacks }
 SBBlock >> wasDeselected [
 
-	" may be overriden "
+	self removeSuggestionMenu
 ]
 
 { #category : #callbacks }

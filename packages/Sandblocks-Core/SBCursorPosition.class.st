@@ -38,6 +38,12 @@ SBCursorPosition >> block [
 	^ self subclassResponsibility
 ]
 
+{ #category : #geometry }
+SBCursorPosition >> bottom [
+
+	^ self minimalBounds bottom
+]
+
 { #category : #'as yet unclassified' }
 SBCursorPosition >> bounds [
 
@@ -76,7 +82,7 @@ SBCursorPosition >> drawOn: aCanvas [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorPosition >> enter [
+SBCursorPosition >> enterWith: aCursor [
 
 	
 ]
@@ -111,13 +117,31 @@ SBCursorPosition >> insertCursorIn: aBlock near: anotherBlock before: aBoolean d
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorPosition >> leaveIn: anEditor [
+SBCursorPosition >> isDistinctFrom: aPosition [
+
+	^ self ~= aPosition
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorPosition >> leaveIn: anEditor with: aCursor [
 
 	
 ]
 
+{ #category : #geometry }
+SBCursorPosition >> left [
+
+	^ self minimalBounds left
+]
+
 { #category : #'as yet unclassified' }
 SBCursorPosition >> maybeUpdateFor: aPosition [
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorPosition >> minimalBounds [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }
@@ -167,9 +191,21 @@ SBCursorPosition >> navigationRootIn: anEditor [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorPosition >> pixelPosition: aPoint [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorPosition >> placeAtEnd: aBoolean [
 
 	
+]
+
+{ #category : #geometry }
+SBCursorPosition >> right [
+
+	^ self minimalBounds right
 ]
 
 { #category : #'as yet unclassified' }
@@ -200,6 +236,12 @@ SBCursorPosition >> selectionBounds [
 SBCursorPosition >> startOrAddToMultiSelection: aBlock [
 
 	^ SBCursorMultiSelect new start: aBlock
+]
+
+{ #category : #geometry }
+SBCursorPosition >> top [
+
+	^ self minimalBounds top
 ]
 
 { #category : #'as yet unclassified' }

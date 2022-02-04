@@ -101,6 +101,12 @@ SBInputMapping >> inputShortcut: aShortcut do: aSymbol [
 ]
 
 { #category : #'shortcut execute' }
+SBInputMapping >> noInsertShortcut: aShortcut do: aSymbol [
+
+	self shortcut: aShortcut modes: #(#command #input #selection) do: aSymbol
+]
+
+{ #category : #'shortcut execute' }
 SBInputMapping >> registerAllShortcuts [
 
 	self registerDefaultShortcuts.

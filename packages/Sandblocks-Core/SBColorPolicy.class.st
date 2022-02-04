@@ -373,6 +373,12 @@ SBColorPolicy >> symbolsForUnknown: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBColorPolicy >> symbolsOpacity [
+
+	^ 0.7
+]
+
+{ #category : #'as yet unclassified' }
 SBColorPolicy >> toggleEnlarge [
 
 	self enlarge: self enlarge not

@@ -12,6 +12,7 @@ SBStringView >> initialize [
 	self
 		layoutPolicy: TableLayout new;
 		listDirection: #topToBottom;
+		layoutInset: 8;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		addMorphBack: (SBMultilineOwnTextMorph new
@@ -23,8 +24,9 @@ SBStringView >> initialize [
 			addMorphBack: (SBStNumberWithPrefix new prefix: 'Start: ');
 			addMorphBack: (SBStNumberWithPrefix new prefix: 'Stop: ');
 			addMorphBack: (SBStNumberWithPrefix new prefix: 'Length: '));
-		updateSelectionLabels.
-		
+		updateSelectionLabels;
+		attachDecorator: SBForceMoveDecorator newConfigured.
+	
 	self firstSubmorph cursor: 1
 ]
 

@@ -111,7 +111,8 @@ SBStName >> behavior: anObject [
 
 	behavior class ~= anObject class ifTrue: [
 		behavior := anObject.
-		anObject attached: self]
+		anObject attached: self.
+		self clearCache]
 ]
 
 { #category : #'as yet unclassified' }
@@ -403,5 +404,5 @@ SBStName >> wasSelected [
 { #category : #'as yet unclassified' }
 SBStName >> writeSourceOn: aStream [
 
-	aStream nextPutAll: text contents
+	self behavior writeSourceOn: aStream
 ]

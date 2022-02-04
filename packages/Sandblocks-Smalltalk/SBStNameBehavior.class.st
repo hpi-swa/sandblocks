@@ -239,17 +239,7 @@ SBStNameBehavior >> isTemporaryVariable [
 { #category : #'as yet unclassified' }
 SBStNameBehavior >> lowercaseSuggestions [
 
-	^ Array streamContents: [:str |
-		self block containingArtefact declarations
-			select: [:v | v contents sandblockMatch: self contents]
-			thenDo: [:v | str nextPut: v asSuggestionItem].
-		self block containingBlocksDo: [:block |
-			block temporaries
-				select: [:v | v contents sandblockMatch: self contents]
-				thenDo: [:v | str nextPut: v asSuggestionItem].
-			block bindings
-				select: [:v | v contents sandblockMatch: self contents]
-				thenCollect: [:v | str nextPut: v asSuggestionItem]]]
+	^ Array streamContents: [:stream | self block scopesDo: [:scope | scope declarationsDo: [:decl | (decl contents sandblockMatch: self contents) ifTrue: [stream nextPut: decl asSuggestionItem]]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -307,12 +297,10 @@ SBStNameBehavior >> uppercaseSuggestions [
 		SBStSubstitution allSubclassesDo: [:class |
 			(class name sandblockMatch: self contents) ifTrue: [
 				class suggestion ifNotNil: [:block |
-					stream nextPut: ((SBProjectionSuggestionItem
-						selector: class name
-						label: 'projection'
-						editor: self block sandblockEditor)
+					stream nextPut: ((SBProjectionSuggestionItem selector: class name label: 'projection')
 						completionAction: block;
-						instanceSuggestion: class instanceSuggestion)]]]]
+						instanceSuggestion: class instanceSuggestion
+							editor: self block sandblockEditor)]]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -337,4 +325,10 @@ SBStNameBehavior >> wasDeselected [
 SBStNameBehavior >> wasSelected [
 
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBStNameBehavior >> writeSourceOn: aStream [
+
+	aStream nextPutAll: self block contents
 ]

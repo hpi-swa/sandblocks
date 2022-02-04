@@ -79,16 +79,13 @@ SBGrammarHandler >> insertStatementAboveOrBelow: anAboveBoolean [
 	(topMost hasOwner: self block containingArtefact) ifFalse: [topMost := nil].
 	body := ((topMost isNil or: [topMost parentSandblock isNil])
 		ifFalse: [topMost parentSandblock]
-		ifTrue: [self block containingArtefact nextBlockThat: [:b | b isBlockBody]]) ifNil: [
-			self block isBlockBody ifTrue: [self block] ifFalse: [^ self]].
+		ifTrue: [self block containingArtefact nextBlockThat: [:b | b isBlockBody]]) ifNil: [self block isBlockBody ifTrue: [self block] ifFalse: [^ self]].
 	
 	(body = self block containingFloat or: [body hasOwner: self block containingFloat]) ifFalse: [^ self].
 	
 	newStatement := body newEmptyChildNear: topMost before: anAboveBoolean.
 	
-	self block sandblockEditor
-		do: (body insertCommandRequest: newStatement near: topMost before: anAboveBoolean);
-		startInput: newStatement at: 1 replacingContents: false
+	self block sandblockEditor do: (body insertCommandRequest: newStatement near: topMost before: anAboveBoolean)
 ]
 
 { #category : #actions }

@@ -25,11 +25,11 @@ SBStASTNode class >> registerShortcuts: aProvider [
 
 	aProvider
 		cmdShortcut: $" do: #wrapInToggledCode;
-		registerShortcut: $[ do: #wrapInBlock;
-		registerShortcut: ${ do: #wrapInDynamicArray;
+		noInsertShortcut: $[ do: #wrapInBlock;
+		noInsertShortcut: ${ do: #wrapInDynamicArray;
 		cmdShortcut: $: do: #wrapInAssignment;
-		registerShortcut: $; do: #wrapInCascade;
-		registerShortcut: $^ do: #wrapInReturn;
+		noInsertShortcut: $; do: #wrapInCascade;
+		noInsertShortcut: $^ do: #wrapInReturn;
 		cmdShortcut: $' do: #useAsStString;
 		cmdShortcut: $# do: #useAsStSymbol;
 		cmdShortcut: $$ do: #useAsStCharacter;

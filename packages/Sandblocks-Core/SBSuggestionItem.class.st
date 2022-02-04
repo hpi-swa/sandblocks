@@ -5,17 +5,17 @@ Class {
 		'selector',
 		'active',
 		'label',
-		'completionAction'
+		'completionAction',
+		'preview'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'instance creation' }
 SBSuggestionItem class >> selector: aSymbol label: aString [
 
 	^ self new
-		selector: aSymbol;
-		label: aString;
+		selector: aSymbol label: aString;
 		yourself
 ]
 
@@ -32,7 +32,7 @@ SBSuggestionItem >> active: aBoolean [
 	self changed
 ]
 
-{ #category : #private }
+{ #category : #drawing }
 SBSuggestionItem >> activeColor [
 
 	^ Color blue
@@ -50,26 +50,22 @@ SBSuggestionItem >> completionAction: aBlock [
 	completionAction := aBlock
 ]
 
-{ #category : #drawing }
-SBSuggestionItem >> drawOn: aCanvas [
+{ #category : #accessing }
+SBSuggestionItem >> contents [
 
-	| font foreground |
-	active ifTrue: [aCanvas fillRectangle: self bounds color: self activeColor].
-	
-	font := self fontToUse.
-	foreground := active ifTrue: [Color white] ifFalse: [Color black].
-	
-	aCanvas
-		drawString: selector
-		at: self layoutBounds origin
-		font: font
-		color: foreground.
-	
-	aCanvas
-		drawString: label
-		at: self layoutBounds topRight - ((font widthOfString: label) @ 0)
-		font: font
-		color: (foreground alpha: 0.5)
+	^ self selector
+]
+
+{ #category : #drawing }
+SBSuggestionItem >> fillStyle [
+
+	^ active ifTrue: [self activeColor] ifFalse: [Color r: 1 g: 1 b: 1]
+]
+
+{ #category : #drawing }
+SBSuggestionItem >> foregroundColor [
+
+	^ active ifTrue: [Color white] ifFalse: [Color black]
 ]
 
 { #category : #'event handling' }
@@ -94,10 +90,16 @@ SBSuggestionItem >> initialize [
 	
 	self
 		layoutInset: 10 @ 4 * self scalingFactor;
+		cellPositioning: #topLeft;
+		addMorphBack: (SBRow new
+			hResizing: #spaceFill;
+			cellGap: 8 * self scalingFactor);
 		vResizing: #shrinkWrap;
 		hResizing: #spaceFill;
+		changeTableLayout;
+		listDirection: #topToBottom;
 		extent: 0 @ 0;
-		cellGap: 4 * self scalingFactor
+		cellGap: 2
 ]
 
 { #category : #accessing }
@@ -107,9 +109,10 @@ SBSuggestionItem >> label [
 ]
 
 { #category : #accessing }
-SBSuggestionItem >> label: aString [
+SBSuggestionItem >> labelContainer [
+	"overwrite in your subclass if you want selector/label to be added to a different morph"
 
-	label := aString
+	^ self hasSubmorphs ifTrue: [self firstSubmorph] ifFalse: [self]
 ]
 
 { #category : #accessing }
@@ -118,24 +121,37 @@ SBSuggestionItem >> menu [
 	^ self ownerThatIsA: SBSuggestionMenu
 ]
 
-{ #category : #layout }
-SBSuggestionItem >> minExtent [
-
-	| font |
-	font := self fontToUse.
-	^ (font widthOfString: selector) @ font height + (self layoutInset * 2) + (self cellGap @ 0) + ((font widthOfString: label) @ 0)
-]
-
 { #category : #'event handling' }
 SBSuggestionItem >> mouseDown: anEvent [
 
-	self menu activeItem: self; accept.
+	self menu
+		activeItem: self;
+		useSuggestion
 ]
 
 { #category : #'event handling' }
 SBSuggestionItem >> mouseMove: anEvent [
 
 	self menu activeItem: self
+]
+
+{ #category : #accessing }
+SBSuggestionItem >> ownerWithColor [
+
+	^ self
+]
+
+{ #category : #accessing }
+SBSuggestionItem >> preview [
+
+	^ preview
+]
+
+{ #category : #accessing }
+SBSuggestionItem >> preview: aForm previewOnly: aBoolean [
+
+	self addMorphBack: (preview := aForm asMorph).
+	aBoolean ifTrue: [self firstSubmorph delete]
 ]
 
 { #category : #printing }
@@ -154,16 +170,18 @@ SBSuggestionItem >> selector [
 ]
 
 { #category : #accessing }
-SBSuggestionItem >> selector: aSymbol [
+SBSuggestionItem >> selector: aString label: anotherString [
 
-	selector := aSymbol.
-	self extent: self minExtent
-]
-
-{ #category : #private }
-SBSuggestionItem >> selectorPercentage [
-
-	^ 0.8
+	| container |
+	container := self firstSubmorph.
+	selector := aString.
+	label := anotherString.
+	container addMorphBack: (SBStringMorph new
+		contents: aString;
+		hResizing: #spaceFill).
+	container addMorphBack: (SBStringMorph new
+		contents: anotherString;
+		opacity: 0.5)
 ]
 
 { #category : #accessing }
@@ -172,13 +190,15 @@ SBSuggestionItem >> selectorSize [
 	^ self selector size
 ]
 
-{ #category : #private }
-SBSuggestionItem >> useSuggestionOn: aBlock [
+{ #category : #suggestions }
+SBSuggestionItem >> useSuggestionOn: aBlock in: anEditor [
 
-	self completionAction ifNotNil: [self completionAction value: aBlock] ifNil: [aBlock useSuggestion: self selector]
+	self completionAction
+		ifNotNil: [self completionAction cull: aBlock cull: self]
+		ifNil: [aBlock useSuggestion: self]
 ]
 
-{ #category : #private }
+{ #category : #suggestions }
 SBSuggestionItem >> wouldChange: aBlock [
 	" indicate whether activating this item would cause any change in the current block"
 

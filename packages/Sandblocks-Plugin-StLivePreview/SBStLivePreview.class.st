@@ -155,7 +155,7 @@ SBStLivePreview >> show [
 			onTimeout: []
 			onError: [:f | (SBSmallError findOpenContextFrom: f signalerContext in: editor) ifNotNil: [:b | b attachDecorator: (errorDecorator := SBErrorDecorator new subtle: true)]]].
 	
-	show ifTrue: [self showBelow: target]
+	show ifTrue: [self showBelow: target closeOnDeselect: false]
 ]
 
 { #category : #'as yet unclassified' }

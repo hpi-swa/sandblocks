@@ -331,9 +331,9 @@ SBStMessagePart >> useAsStSymbol [
 ]
 
 { #category : #'as yet unclassified' }
-SBStMessagePart >> useSuggestion: aString [
+SBStMessagePart >> useSuggestion: anItem [
 
-	self messageSend useSuggestion: aString
+	self messageSend useSuggestion: anItem contents
 ]
 
 { #category : #testing }
@@ -373,25 +373,9 @@ SBStMessagePart >> wrapInCascade [
 	<action>
 	<actionValidIf: #parentIsExpression>
 
-	| cascade |
 	self messageSend isExpression ifFalse: [^ self].
 	
-	self assert: self isSelected.
-	cascade := SBStCascade new.
-	self sandblockEditor doMultiSelection: [:selected | | targets |
-		targets := selected collect: #messageSend.
-		(self sandblockEditor submorphsAreConsecutive: targets)
-			ifFalse: [nil]
-			ifTrue: [
-				SBWrapConsecutiveCommand new
-					targets: (selected collect: #messageSend);
-					outer: SBStCascade new;
-					wrap: [:outer :inner |
-						outer addMorphFront: inner first receiver.
-						outer addAllMorphs: inner];
-					wrapUndo: [:outer :inner |
-						inner do: [:message | message receiver: outer receiver veryDeepCopy].
-						outer removeAllMorphs]]]
+	self messageSend wrapInCascade
 ]
 
 { #category : #actions }

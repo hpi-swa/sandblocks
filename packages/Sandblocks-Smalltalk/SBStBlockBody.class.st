@@ -121,6 +121,13 @@ SBStBlockBody >> cellGap [
 	^ self colorPolicy lineGap
 ]
 
+{ #category : #'ast helpers' }
+SBStBlockBody >> declarationsDo: aBlock [
+
+	self temporaries do: aBlock.
+	self bindings do: aBlock
+]
+
 { #category : #'as yet unclassified' }
 SBStBlockBody >> declareTemporaryVariable: aString [
 
@@ -197,11 +204,13 @@ SBStBlockBody >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 		^ SBRelInsertCommand new
 			near: aBlock before: aBoolean in: bindings morph: aMorph;
 			shouldMergeWithNext: true;
+			title: 'insert block binding';
 			yourself].
 	
 	(aBlock notNil and: [aBlock owner = temporaries]) ifTrue: [
 		^ SBRelInsertCommand new
 			near: aBlock before: aBoolean in: temporaries morph: aMorph;
+			title: 'insert temporary';
 			shouldMergeWithNext: true;
 			yourself].
 	
@@ -232,6 +241,12 @@ SBStBlockBody >> isExpression [
 SBStBlockBody >> isMethodBody [
 
 	^ self owner notNil and: [self parentSandblock wantsMethodBody]
+]
+
+{ #category : #'ast helpers' }
+SBStBlockBody >> isScope [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

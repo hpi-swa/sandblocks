@@ -6,7 +6,8 @@ Class {
 		'editor',
 		'container',
 		'reference',
-		'updateQueued'
+		'updateQueued',
+		'requestor'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -51,6 +52,12 @@ SBSuggestionMenu >> addItem: anItem [
 	container addMorphBack: anItem.
 ]
 
+{ #category : #'action helpers' }
+SBSuggestionMenu >> canSelectPreviousSuggestion [
+
+	^ self hasMultipleSuggestions and: [self activeIndex > 1]
+]
+
 { #category : #accessing }
 SBSuggestionMenu >> editor: anEditor [
 
@@ -65,6 +72,22 @@ SBSuggestionMenu >> editorFocused: aBoolean [
 	aBoolean ifFalse: [self delete]
 ]
 
+{ #category : #actions }
+SBSuggestionMenu >> focusNextSuggestion [
+	<globalAction>
+	<actionValidIf: #hasMultipleSuggestions>
+
+	self next
+]
+
+{ #category : #actions }
+SBSuggestionMenu >> focusPreviousSuggestion [
+	<globalAction>
+	<actionValidIf: #canSelectPreviousSuggestion>
+
+	self previous
+]
+
 { #category : #'events-processing' }
 SBSuggestionMenu >> handleMouseEnter: anEvent [
 	
@@ -76,6 +99,18 @@ SBSuggestionMenu >> handleMouseEnter: anEvent [
 SBSuggestionMenu >> hasItems [
 
 	^ self items notEmpty
+]
+
+{ #category : #'action helpers' }
+SBSuggestionMenu >> hasMultipleSuggestions [
+
+	^ self hasSuggestions and: [self itemCount > 1]
+]
+
+{ #category : #'action helpers' }
+SBSuggestionMenu >> hasSuggestions [
+
+	^ self isInWorld and: [self reference isInWorld]
 ]
 
 { #category : #initialization }
@@ -113,6 +148,18 @@ SBSuggestionMenu >> itemCount [
 SBSuggestionMenu >> items [
 
 	^ container submorphs
+]
+
+{ #category : #'action helpers' }
+SBSuggestionMenu >> lookupGlobalAction: aSymbol [
+
+	^ (self class lookupSelector: aSymbol) ifNotNil: [:m |
+		((m pragmaAt: #globalAction) notNil and: [
+			(m pragmaAt: #actionValidIf:)
+				ifNotNil: [:p | self perform: p arguments first]
+				ifNil: [true]])
+			ifTrue: [m]
+			ifFalse: [nil]]
 ]
 
 { #category : #layout }
@@ -161,7 +208,9 @@ SBSuggestionMenu >> moveActive: aNumber [
 	
 	(self items at: activeIndex) active: false.
 	activeIndex := activeIndex + aNumber clampLow: 1 high: self itemCount.
-	(self items at: activeIndex) active: true
+	(self items at: activeIndex) active: true.
+	
+	self scrollToShow: (self items at: activeIndex)
 ]
 
 { #category : #selecting }
@@ -173,10 +222,17 @@ SBSuggestionMenu >> next [
 { #category : #layout }
 SBSuggestionMenu >> openNear: aBlock [
 
+	self openNear: aBlock requestor: aBlock
+]
+
+{ #category : #layout }
+SBSuggestionMenu >> openNear: aBlock requestor: anObject [
+
 	aBlock isInWorld ifTrue: [
 		self
 			editor: aBlock sandblockEditor;
 			reference: aBlock;
+			requestor: anObject;
 			openInWorld: aBlock world;
 			repositionSuggestionsMenu]
 ]
@@ -212,6 +268,12 @@ SBSuggestionMenu >> repositionSuggestionsMenu [
 
 	reference ifNotNil: [self topLeft: reference positionInWorld + (0 @ reference height)].
 	self resize
+]
+
+{ #category : #accessing }
+SBSuggestionMenu >> requestor: anObject [
+
+	requestor := anObject
 ]
 
 { #category : #layout }
@@ -257,4 +319,21 @@ SBSuggestionMenu >> updateQueued [
 SBSuggestionMenu >> updateQueued: aBoolean [
 
 	updateQueued := aBoolean
+]
+
+{ #category : #actions }
+SBSuggestionMenu >> useSuggestion [
+	" try to apply a suggestion, return whether anything was applied "
+	<globalAction>
+	<actionValidIf: #hasSuggestions>
+
+	self hasSuggestions ifFalse: [^ false].
+	self activeItem ifNotNil: [:s |
+		(s wouldChange: requestor)
+			ifTrue: [
+				s useSuggestionOn: requestor in: editor.
+				editor selection ifNotNil: #startInputAtEnd]
+			ifFalse: [editor selection inputNextUnknown]].
+	self delete.
+	^ true
 ]

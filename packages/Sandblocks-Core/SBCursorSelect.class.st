@@ -64,6 +64,12 @@ SBCursorSelect >> horizontalOffsetInFloat [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorSelect >> minimalBounds [
+
+	^ self block bounds
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorSelect >> mode [
 
 	^ #command

@@ -286,6 +286,11 @@ SBEditor >> buildCommandBar [
 				shortcut: (self class anyShortcutForAction: #promptAddArtifact)
 				do: [self promptAddArtifact];
 			balloonText: 'Add artifact...');
+		addMorphBack: (SBButton new
+			icon: SBIcon iconTerminal
+				shortcut: (self class anyShortcutForAction: #openRepl)
+				do: [self openRepl];
+			balloonText: 'Add artifact...');
 		addMorphBack: (Morph new
 			height: 0;
 			color: Color transparent;
@@ -410,7 +415,7 @@ SBEditor >> configurationString [
 SBEditor >> connectFrom: aMorph to: anotherMorph [
 
 	scroll scroller addMorph: ((SBConnectorLine new connectorType: #dots)
-		color: Color black;
+		color: ((Color r: 0.0 g: 0.0 b: 0.0) alpha: 0.3);
 		connect: aMorph to: anotherMorph;
 		yourself)
 ]
@@ -533,7 +538,7 @@ SBEditor >> createEmptySmalltalkMethod [
 		selector: ''
 			arguments: #()
 			class: ((self selectedArtefact ifNotNil: [:container | container relatedClass]) ifNil: [UIManager default chooseClassOrTrait ifNil: [^ self]]);
-		body: (SBStBlockBody new in: [:b | b statements: {b newNullBlock}]).
+		body: SBStBlockBody new.
 	
 	self createArtefactInView: method.
 	method inputContainedUnknown.
@@ -809,6 +814,7 @@ SBEditor >> initialize [
 	globalShortcutListeners := OrderedCollection new.
 	inputMapping := self class newInputMapping.
 	searchInput := SBSearchPanel new.
+	suggestionMenu := SBSuggestionMenu new.
 	cursor := SBBlockCursor new editor: self.
 	
 	paletteContainer := SBUpdatingPaletteContainer new
@@ -843,6 +849,7 @@ SBEditor >> initialize [
 	
 	self
 		registerGlobalShortcutListener: self;
+		registerGlobalShortcutListener: suggestionMenu;
 		registerGlobalShortcutListener: searchInput;
 		registerGlobalShortcutListener: cursor;
 		resetState;
@@ -916,6 +923,12 @@ SBEditor >> loadBlocks [
 
 	scroll scroller submorphs copy do: [:each | each abandon].
 	self class loadSaveInto: self
+]
+
+{ #category : #'as yet unclassified' }
+SBEditor >> markChanged: anArtefact [
+
+	^ history markChanged: {anArtefact} redraw: true
 ]
 
 { #category : #'do/undo/redo' }
@@ -1544,7 +1557,9 @@ SBEditor >> suggestAlways: aBoolean [
 { #category : #accessing }
 SBEditor >> suggestionMenu [
 
-	^ suggestionMenu ifNil: [suggestionMenu := SBSuggestionMenu new]
+	suggestionMenu ifNil: [suggestionMenu := SBSuggestionMenu new].
+	(globalShortcutListeners includes: suggestionMenu) ifFalse: [globalShortcutListeners addFirst: suggestionMenu].
+	^ suggestionMenu
 ]
 
 { #category : #actions }
@@ -1633,7 +1648,7 @@ SBEditor >> updateSandblocks [
 	(UIManager default confirm: 'Proceed to install the latest unstable version?') ifTrue: [
 		(Smalltalk at: #Metacello) new
 			baseline: 'Sandblocks';
-			repository: 'github://tom95/Sandblocks:master/packages';
+			repository: 'github://hpi-swa/Sandblocks:master/packages';
 			get; load: #tutorial]
 ]
 

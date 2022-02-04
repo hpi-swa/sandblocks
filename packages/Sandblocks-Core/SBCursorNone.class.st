@@ -47,6 +47,12 @@ SBCursorNone >> horizontalOffsetInFloat [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorNone >> minimalBounds [
+
+	^ self bounds
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorNone >> mode [
 
 	^ #none

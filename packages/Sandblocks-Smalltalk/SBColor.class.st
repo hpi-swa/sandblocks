@@ -43,12 +43,6 @@ SBColor class >> newFor: aMessage [
 ]
 
 { #category : #'as yet unclassified' }
-SBColor >> click: anEvent [
-
-	super click: anEvent
-]
-
-{ #category : #'as yet unclassified' }
 SBColor >> colorContents [
 
 	^ indicator color

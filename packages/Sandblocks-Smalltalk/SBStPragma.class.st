@@ -122,9 +122,9 @@ SBStPragma >> tryDelete [
 ]
 
 { #category : #'as yet unclassified' }
-SBStPragma >> useSuggestion: aString [
+SBStPragma >> useSuggestion: anItem [
 
-	signature selectorAndEdit: aString
+	signature selectorAndEdit: anItem contents
 ]
 
 { #category : #'as yet unclassified' }

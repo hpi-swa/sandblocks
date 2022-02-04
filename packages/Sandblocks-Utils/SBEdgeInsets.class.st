@@ -20,6 +20,12 @@ SBEdgeInsets class >> all: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
+SBEdgeInsets class >> bottom: aNumber [
+
+	^ self basicNew left: 0 right: 0 top: 0 bottom: aNumber
+]
+
+{ #category : #'as yet unclassified' }
 SBEdgeInsets class >> left: leftNumber [
 
 	^ self basicNew left: leftNumber right: 0 top: 0 bottom: 0
@@ -35,6 +41,12 @@ SBEdgeInsets class >> left: leftNumber right: rightNumber top: topNumber bottom:
 SBEdgeInsets class >> right: aNumber [
 
 	^ self basicNew left: 0 right: aNumber top: 0 bottom: 0
+]
+
+{ #category : #'as yet unclassified' }
+SBEdgeInsets class >> top: aNumber [
+
+	^ self basicNew left: 0 right: 0 top: aNumber bottom: 0
 ]
 
 { #category : #'as yet unclassified' }

@@ -92,7 +92,7 @@ SBCursorText >> drawOn: aCanvas in: aRectangle [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorText >> enter [
+SBCursorText >> enterWith: aCursor [
 
 	replacingContents ifTrue: [self block currentTextMorph contents: ''].
 	self block currentTextMorph moveCursorTo: self cursorIndex
@@ -130,7 +130,7 @@ SBCursorText >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorText >> leaveIn: anEditor [
+SBCursorText >> leaveIn: anEditor with: aCursor [
 
 	self applyCommandIn: anEditor.
 	self block currentTextMorph stopEditing
@@ -141,6 +141,12 @@ SBCursorText >> maybeUpdateFor: aPosition [
 
 	self cursorIndex: aPosition cursorIndex.
 	self block currentTextMorph moveCursorTo: self cursorIndex
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorText >> minimalBounds [
+
+	^ self block bounds
 ]
 
 { #category : #'as yet unclassified' }

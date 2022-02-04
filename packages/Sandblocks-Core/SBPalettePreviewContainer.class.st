@@ -99,3 +99,9 @@ SBPalettePreviewContainer >> wantsDroppedMorph: aMorph event: evt [
 
 	^ false
 ]
+
+{ #category : #'as yet unclassified' }
+SBPalettePreviewContainer >> wasSelected [
+
+	self sandblockEditor select: nil
+]
