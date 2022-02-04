@@ -2857,7 +2857,9 @@ SBBlock >> wasDeselected [
 SBBlock >> wasSelected [
 
 	" may be overriden "
-	self triggerEvent: #selected
+	self triggerEvent: #selected.
+	
+	self suggestAlways ifTrue: [self queueUpdateSuggestions]
 ]
 
 { #category : #decorators }
