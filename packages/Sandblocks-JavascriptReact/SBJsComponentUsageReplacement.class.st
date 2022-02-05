@@ -1,9 +1,12 @@
+"
+A SBJsComponentUsageReplacement is a SBInlineBlockReplace that replaces the usage of a React Component via JSX.
+It has a preview of the component's examples taken by the SBJsComponentScreenshotTaker and offers to adjust its props. The props are prefilled with the props of the first example the component has. Its usage is to be added to the TODOPalette and dragged from there into the React Code.
+
+
+"
 Class {
 	#name : #SBJsComponentUsageReplacement,
 	#superclass : #SBInlineBlockReplace,
-	#instVars : [
-		'skipHtmlFileGeneration'
-	],
 	#category : #'Sandblocks-JavascriptReact'
 }
 
@@ -26,14 +29,14 @@ SBJsComponentUsageReplacement class >> inlineComponentUsageReplacementFor: aReac
 	self signal: (Error signal: 'Could not find a valid examples array in the given component.')
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'example-extracting' }
 SBJsComponentUsageReplacement >> componentPropsFromExampleObject: aJsObject [
-	
+
 	aJsObject children do: [:objectEntry | (objectEntry type = 'pair' and: [objectEntry key contents = 'componentProps']) ifTrue: [^ objectEntry value]].
 	^ self error: (Error signal: 'Could not find ''componentProps'' in example object')
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacing }
 SBJsComponentUsageReplacement >> examples: aJsArray forAComponent: reactClassNameString withComponentNode: aReactComponentString [
 
 	| validExampleIndex examplePropsObject row keyValuePairs componentPreviewImage |
@@ -51,41 +54,43 @@ SBJsComponentUsageReplacement >> examples: aJsArray forAComponent: reactClassNam
 			addMorphBack: association value].
 	row addMorphBack: (SBStringMorph new contents: '/>').
 	
-	componentPreviewImage := (SBJsComponentScreenshotDude
-			takeScreenshotOf: aReactComponentString
-			atExample: validExampleIndex
-			withExtent: 300 @ 250).
+	componentPreviewImage := SBJsComponentScreenshotTaker
+		takeScreenshotOf: aReactComponentString
+		atExample: validExampleIndex
+		withExtent: 300 @ 250.
 	
 	^ self
 		factory: SBJavascript instance;
 		removeAllMorphs;
-		addMorphBack: (SBColumn new changeTableLayout; hResizing: #shrinkWrap; vResizing: #shrinkWrap;
-		addMorphBack: (ImageMorph new image: componentPreviewImage);
-		addMorphBack: row)
-		yourself
+		addMorphBack: (SBColumn new
+			changeTableLayout;
+			hResizing: #shrinkWrap;
+			vResizing: #shrinkWrap;
+			addMorphBack: (ImageMorph new image: componentPreviewImage);
+			addMorphBack: row) yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'example-extracting' }
 SBJsComponentUsageReplacement >> indexOfFirstValidExampleEntry: aJsArray [
 
 	aJsArray access children withIndexDo: [:arrayEntry :index | (arrayEntry type = 'object' and: [arrayEntry children anySatisfy: [:objectEntry | objectEntry type = 'pair' and: [objectEntry key contents = 'componentProps']]]) ifTrue: [^ index]].
 	^ self error: (Error signal: 'Could not find an example with ''componentProps'' set')
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'example-extracting' }
 SBJsComponentUsageReplacement >> keyValuesOfExampleIObject: aJsObject [
 
 	^ (aJsObject children reject: [:objectEntry | objectEntry type ~= 'pair']) collect: [:keyValuePair | keyValuePair key contents -> keyValuePair value]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBJsComponentUsageReplacement >> type [
 
 	^ 'jsx_expression'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #saving }
 SBJsComponentUsageReplacement >> writeSourceOn: aStream indent: aNumber [
 
-	self lastSubmorph writeSourceOn: aStream indent: aNumber.
+	self lastSubmorph writeSourceOn: aStream indent: aNumber
 ]

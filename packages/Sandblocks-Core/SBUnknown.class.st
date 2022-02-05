@@ -250,7 +250,9 @@ SBUnknown >> wasDeselected [
 		
 		(previousSelection notNil and: [previousSelection sandblockEditor notNil]) ifTrue: [
 			previousSelection select.
-			wasInput ifTrue: [editor startInput: previousSelection at: 900000000 replacingContents: false]]]
+			wasInput ifTrue: [editor startInput: previousSelection at: 900000000 replacingContents: false]]].
+	
+	super wasDeselected
 ]
 
 { #category : #printing }

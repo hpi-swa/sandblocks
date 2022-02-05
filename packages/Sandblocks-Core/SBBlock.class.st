@@ -472,7 +472,8 @@ SBBlock >> clearInput [
 		ifTrue: [
 			self hasInput
 				ifTrue: [self contents: '']
-				ifFalse: [self sandblockEditor startInput: self at: 1 replacingContents: true]]
+				ifFalse: [
+					self sandblockEditor startInput: self at: 1 replacingContents: true]]
 		ifFalse: [self changeToUnknown]
 ]
 
@@ -1768,13 +1769,15 @@ SBBlock >> multiSelectChildren [
 { #category : #'as yet unclassified' }
 SBBlock >> newEmptyChildNear: aBlock before: aBoolean [
 
-	^ self newNullBlock
+	^ self grammarHandler ifNotNil: [:g | g newNullBlock] ifNil: [nil]
 ]
 
 { #category : #'ast helpers' }
 SBBlock >> newNullBlock [
 
-	^ self grammarHandler ifNotNil: [:g | g newNullBlock] ifNil: [nil]
+	^ (self parentSandblock ifNil: [self])
+		newEmptyChildNear: nil
+		before: true
 ]
 
 { #category : #hierarchy }
@@ -2633,7 +2636,7 @@ SBBlock >> submorphIndex [
 { #category : #accessing }
 SBBlock >> suggestAlways [
 
-	^ self sandblockEditor suggestAlways
+	^ self sandblockEditor ifNotNil: [:e | e suggestAlways] ifNil: [false]
 ]
 
 { #category : #suggestions }
@@ -2855,7 +2858,9 @@ SBBlock >> wasDeselected [
 SBBlock >> wasSelected [
 
 	" may be overriden "
-	self triggerEvent: #selected
+	self triggerEvent: #selected.
+	
+	self suggestAlways ifTrue: [self queueUpdateSuggestions]
 ]
 
 { #category : #decorators }

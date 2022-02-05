@@ -126,6 +126,7 @@ SBStLivePreview >> show [
 	| target show hadError |
 	target := self blockForLookup: editor selection.
 	target ifNil: [^ self].
+	target containingArtefact exists ifFalse: [^ self].
 	show := false.
 	hadError := false.
 	
