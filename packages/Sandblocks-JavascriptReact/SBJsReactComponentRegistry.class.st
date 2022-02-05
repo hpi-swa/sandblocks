@@ -34,19 +34,42 @@ SBJsReactComponentRegistry class >> defaultRegistry [
 	^ DefaultRegistry ifNil: [DefaultRegistry := self new]
 ]
 
-{ #category : #adding }
-SBJsReactComponentRegistry >> addComponent: aSbJsComponentUsageReplacement withName: anotherString [
+{ #category : #accessing }
+SBJsReactComponentRegistry class >> resetDefaultRegistry [
 
-	self flag: #TODO.
-	"Add argument to give a category"
-	
-	self componentRegistry at: anotherString put: [aSbJsComponentUsageReplacement]
+	"Only use when necessary; when the registry should be flushed"
+
+	^ DefaultRegistry := self new
+]
+
+{ #category : #adding }
+SBJsReactComponentRegistry >> addComponent: aSBJsComponentUsageReplacement withName: aString [
+
+	self addComponent: aSBJsComponentUsageReplacement withName: aString inCategory: 'default'
+]
+
+{ #category : #adding }
+SBJsReactComponentRegistry >> addComponent: aSBJsComponentUsageReplacement withName: aString inCategory: anotherString [
+
+	self componentRegistry
+		at: anotherString
+		ifPresent: [:entriesOfCategory | entriesOfCategory at: aString put: aSBJsComponentUsageReplacement]
+		ifAbsentPut: [
+			Dictionary new
+				at: aString put: aSBJsComponentUsageReplacement;
+				yourself]
 ]
 
 { #category : #accessing }
 SBJsReactComponentRegistry >> componentRegistry [
 
 	^ componentRegistry
+]
+
+{ #category : #accessing }
+SBJsReactComponentRegistry >> componentRegistryCategoriesDo: aBlock [
+
+	self componentRegistry keysAndValuesDo: [:categoryName :componentReplacementsDict | aBlock value: categoryName value: componentReplacementsDict]
 ]
 
 { #category : #accessing }

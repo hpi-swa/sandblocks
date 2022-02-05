@@ -32,7 +32,7 @@ SBJsComponentScreenshotTaker class >> takeScreenshotOf: aReactComponentString at
 	"index ist currently ignored"
 	reactComponentAST allBlocksDo: [:block |
 		SBTSQuery new execute: SBJsComponentReplacement replacementQuery against: block capturesDo: [:captures :success |
-			(success and: [SBJsComponentReplacement isMatchCorrect: captures]) ifTrue: [ | reactClassName wholeReactClass optionsWithName instance tabId screenshot |
+			success  ifTrue: [ | reactClassName wholeReactClass optionsWithName instance tabId screenshot |
 				instance := self new.
 				wholeReactClass := (captures at: 'class') sourceString.
 				reactClassName := (captures at: 'class_name') contents.
@@ -47,6 +47,7 @@ SBJsComponentScreenshotTaker class >> takeScreenshotOf: aReactComponentString at
 					for: instance.
 				screenshot := instance waitAndGetScreenshot.
 				MMProcessWrapper getOSDependentSingleton closeTab: tabId.
+				screenshot := screenshot trimBordersOfColor: Color white.
 				^ screenshot]]].
 	self error: 'Looks like there is no matching examples array in the component.'
 ]

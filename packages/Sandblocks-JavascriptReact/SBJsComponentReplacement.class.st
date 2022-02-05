@@ -159,14 +159,6 @@ SBJsComponentReplacement class >> generateHtmlFileFor: aReactComponentString wit
 ]
 
 { #category : #'inline-replacement' }
-SBJsComponentReplacement class >> isMatchCorrect: aDictionary [
-
-	^ (aDictionary at: 'examples_name') contents = 'examples'
-		and: [(aDictionary at: 'method_name') contents = 'render']
-		and: [(aDictionary at: 'shared_example_props_name' ifAbsent: ['sharedExampleProps']) = 'sharedExampleProps']
-]
-
-{ #category : #'inline-replacement' }
 SBJsComponentReplacement class >> matchComponentExamples: aDictionary do: aBlock [
 	<lang: #javascript match: '(class_declaration
     name: (identifier) @class_name
@@ -186,7 +178,6 @@ SBJsComponentReplacement class >> matchComponentExamples: aDictionary do: aBlock
 ) @class'>
 
 	| wholeReactClass reactClassName options sharedOptions |
-	(self isMatchCorrect: aDictionary) ifFalse: [^ nil].
 	wholeReactClass := aDictionary at: 'class'.
 	reactClassName := (aDictionary at: 'class_name') contents.
 	options := aDictionary at: 'options'.
@@ -244,24 +235,15 @@ SBJsComponentReplacement >> exampleArray: aJsArray withSharedProps: aJsObject fo
 		generateHtmlFileFor: aComponentNode sourceString
 		withClassName: aComponentNameString
 		forOptions: aJSArrayWithName.
-	self flag: #TODO.
 	"withSharedProps: (aJsObject ifNotNil: [:object | object sourceString] ifNil: ['sharedExampleProps = {}'])."
 	wrappedBrowser := SBBlock new
-		attachDecorator: SBResizableDecorator new;
-		addMorphBack: ((MMBrowserMorph reactOpenOn: aString)
-			hResizing: #spaceFill;
-			vResizing: #spaceFill;
-			minimumExtent: 50 @ 50);
+		addMorphBack: (MMBrowserMorph reactOpenOn: aString);
 		addMorphBack: (SBButton new icon: SBIcon iconSave label: 'Save to Palette' do: [ | temp |
 			temp := SBJsComponentUsageReplacement inlineComponentUsageReplacementFor: aComponentNode sourceString.
-			SBJsReactComponentRegistry defaultRegistry
-				addComponent: temp
-				withName: aComponentNameString]);
-		color: Color seaFoam;
+			SBJsReactComponentRegistry defaultRegistry addComponent: temp withName: aComponentNameString]);
 		changeTableLayout;
-		hResizing: #rigid;
-		vResizing: #rigid;
-		extent: 190 @ 170;
+		hResizing: #shrinkWrap;
+		vResizing: #shrinkWrap;
 		yourself.
 	
 	self
@@ -269,6 +251,7 @@ SBJsComponentReplacement >> exampleArray: aJsArray withSharedProps: aJsObject fo
 		addMorphBack: (SBRow new
 			addMorphBack: wrappedBrowser;
 			addMorphBack: aJsArray buildCopy)
+	"addMorphBack: (SBTextBubble new contents: aString))"
 ]
 
 { #category : #accessing }
@@ -280,8 +263,8 @@ SBJsComponentReplacement >> exampleArraySandblock [
 { #category : #accessing }
 SBJsComponentReplacement >> firstValidExampleComponentProps [
 
-	self flag: #TODO "Reassess whether needed here in the future or only in SBJsComponentUsageReplacement".
-
+	self flag: #TODO.
+	"Reassess whether needed here in the future or only in SBJsComponentUsageReplacement"
 	^ self exampleArraySandblock access children
 		detect: [:exampleObject |
 			(exampleObject children
@@ -296,7 +279,8 @@ SBJsComponentReplacement >> firstValidExampleComponentProps [
 { #category : #accessing }
 SBJsComponentReplacement >> firstValidExampleKeyValuePairs [
 
-	self flag: #TODO "Reassess whether needed here in the future or only in SBJsComponentUsageReplacement".
+	self flag: #TODO.
+	"Reassess whether needed here in the future or only in SBJsComponentUsageReplacement"
 	^ (self firstValidExampleComponentProps children reject: [:objectEntry | objectEntry type ~= 'pair']) collect: [:keyValuePair | keyValuePair key contents -> keyValuePair value]
 ]
 
