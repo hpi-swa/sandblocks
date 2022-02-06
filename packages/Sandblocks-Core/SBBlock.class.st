@@ -808,7 +808,7 @@ SBBlock >> deleteBeforeCursor [
 				ifFalse: [
 					self
 						deleteAroundTargetDo: [:target :replacer |
-							target floating ifFalse: [
+							(target floating not and: [target parentSandblock ~= editor]) ifTrue: [
 								self deleteAround.
 								editor startInput: self at: 900000000 replacingContents: false]]
 						ifNone: []]]

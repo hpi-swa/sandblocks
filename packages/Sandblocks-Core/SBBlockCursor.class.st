@@ -128,6 +128,7 @@ SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol 
 	blinkCount := 0.
 	self updateBounds.
 	Project current addDeferredUIMessage: [self updateBounds].
+	self visible: (aPosition block ifNotNil: [:b | b hasOwner: editor canvas] ifNil: [false]).
 	aSymbol ~= #z ifTrue: [selectLargerHistory removeAll].
 	self editor
 		triggerEvent: #selectionChanged with: self selectedBlock;
