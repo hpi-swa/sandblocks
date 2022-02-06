@@ -129,6 +129,27 @@ SBWatchView >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBWatchView >> reportValue: anObject [
+
+	applyingChange ifTrue: [^ self].
+	
+	[
+		applyingChange := true.
+		hadValue ifFalse: [hadValue := true].
+		
+		SBToggledCode comment: '' active: 1 do: {
+			[self useDisplay: (SBExplorer on: anObject)].
+			[self useDisplay: (anObject convertedFor: self watchObjectInterface do: #yourself)]}.
+		
+		clear
+			disableLayout: false;
+			visible: true.
+		
+		count contents: (count contents asInteger + 1) asString.
+		lastValue := anObject] ensure: [applyingChange := false]
+]
+
+{ #category : #'as yet unclassified' }
 SBWatchView >> storeAsExample [
 
 	| name class value |
