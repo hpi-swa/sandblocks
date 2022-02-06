@@ -23,8 +23,14 @@ Class {
 }
 
 { #category : #'generate-html' }
-SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forClass: aClassNameString withOptions: aArrayString [
+SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forClass: aClassNameString withOptions: aArrayString withUsedReactComponents: aOrderedCollection [
 
+	| usedReactComponentsSourceStrings |
+	"self halt."
+	usedReactComponentsSourceStrings := aOrderedCollection
+		ifEmpty: ['']
+		ifNotEmpty: [(aOrderedCollection collect: [:aSBJsComponentUsageReplacement | aSBJsComponentUsageReplacement referencedComponentClassSourceString]) joinSeparatedBy: ' '].
+	
 	^ '<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -43,20 +49,211 @@ SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forC
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
+	<style>
+		body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .topnav {
+        background-color: #333;
+        position: sticky;
+        top: 0px;
+        width: 100%;
+        height: 48px;
+      }
+
+      .topnav > a,
+      .topnav > span,
+      .topnav > div {
+        float: left;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+      }
+
+      .topnav > a:hover,
+      .topnav > span:hover,
+      .topnav > div:hover {
+        background-color: #ddd;
+        color: black;
+      }
+
+      .main-content {
+        text-align: center;
+        padding: 40px 100px;
+      }
+
+      .topnav a.active {
+        background-color: #04aa6d;
+        color: white;
+      }
+
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      td,
+      th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+      .search-container input[type="text"] {
+        padding: 6px;
+        margin-top: 8px;
+        font-size: 17px;
+        border-color: #ddd;
+        border-style: double;
+      }
+
+      .search-container button {
+        padding: 8px 10px;
+        margin-top: 8px;
+        margin-right: 16px;
+        background: #ddd;
+        font-size: 17px;
+        border: none;
+        cursor: pointer;
+      }
+
+      @keyframes spin {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      #snackbar {
+        visibility: hidden;
+        min-width: 250px;
+        margin-left: -125px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1;
+        left: 50%;
+        bottom: 30px;
+        font-size: 17px;
+      }
+
+      #snackbar.show {
+        visibility: visible;
+        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      }
+
+      @-webkit-keyframes fadein {
+        from {
+          bottom: 0;
+          opacity: 0;
+        }
+        to {
+          bottom: 30px;
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadein {
+        from {
+          bottom: 0;
+          opacity: 0;
+        }
+        to {
+          bottom: 30px;
+          opacity: 1;
+        }
+      }
+
+      @-webkit-keyframes fadeout {
+        from {
+          bottom: 30px;
+          opacity: 1;
+        }
+        to {
+          bottom: 0;
+          opacity: 0;
+        }
+      }
+
+      @keyframes fadeout {
+        from {
+          bottom: 30px;
+          opacity: 1;
+        }
+        to {
+          bottom: 0;
+          opacity: 0;
+        }
+      }
+
+      .dropbtn {
+        background-color: #4caf50;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-content {
+        position: absolute;
+        right: 0;
+        background-color: #ddd;
+        padding: 8px;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 10;
+      }
+
+      .dropdown-background {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0px;
+        left: 0px;
+        z-index: 9;
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content a:hover {
+        background-color: #f1f1f1;
+      }
+
+      .dropdown:hover .dropbtn {
+        background-color: #3e8e41;
+      }
+	</style>
+	
     <title>Example</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">loading ...</div>
-	<style>
-	    @keyframes spin { 
-	    100% {
-	        transform:rotate(360deg); 
-	    } 
-	}
-    </style>
     <script type="text/babel">
-', aSourceCodeString, '
+', usedReactComponentsSourceStrings, aSourceCodeString, '
 	const ', aArrayString, ';
 	const components = examples.map((example, index) => {
         debugger;
@@ -75,7 +272,7 @@ SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forC
 ]
 
 { #category : #'generate-html' }
-SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forClass: aClassNameString withOptions: aArrayString withSharedProps: aJsObjectString [
+SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forClass: aClassNameString withOptions: aArrayString withUsedReactComponents: aOrderedCollection withSharedProps: aJsObjectString [
 
 	^ '<!DOCTYPE html>
 <html lang="en">
@@ -95,6 +292,204 @@ SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forC
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
+<style>
+		body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .topnav {
+        background-color: #333;
+        position: sticky;
+        top: 0px;
+        width: 100%;
+        height: 48px;
+      }
+
+      .topnav > a,
+      .topnav > span,
+      .topnav > div {
+        float: left;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+      }
+
+      .topnav > a:hover,
+      .topnav > span:hover,
+      .topnav > div:hover {
+        background-color: #ddd;
+        color: black;
+      }
+
+      .main-content {
+        text-align: center;
+        padding: 40px 100px;
+      }
+
+      .topnav a.active {
+        background-color: #04aa6d;
+        color: white;
+      }
+
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      td,
+      th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+      .search-container input[type="text"] {
+        padding: 6px;
+        margin-top: 8px;
+        font-size: 17px;
+        border-color: #ddd;
+        border-style: double;
+      }
+
+      .search-container button {
+        padding: 8px 10px;
+        margin-top: 8px;
+        margin-right: 16px;
+        background: #ddd;
+        font-size: 17px;
+        border: none;
+        cursor: pointer;
+      }
+
+      @keyframes spin {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      #snackbar {
+        visibility: hidden;
+        min-width: 250px;
+        margin-left: -125px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1;
+        left: 50%;
+        bottom: 30px;
+        font-size: 17px;
+      }
+
+      #snackbar.show {
+        visibility: visible;
+        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      }
+
+      @-webkit-keyframes fadein {
+        from {
+          bottom: 0;
+          opacity: 0;
+        }
+        to {
+          bottom: 30px;
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadein {
+        from {
+          bottom: 0;
+          opacity: 0;
+        }
+        to {
+          bottom: 30px;
+          opacity: 1;
+        }
+      }
+
+      @-webkit-keyframes fadeout {
+        from {
+          bottom: 30px;
+          opacity: 1;
+        }
+        to {
+          bottom: 0;
+          opacity: 0;
+        }
+      }
+
+      @keyframes fadeout {
+        from {
+          bottom: 30px;
+          opacity: 1;
+        }
+        to {
+          bottom: 0;
+          opacity: 0;
+        }
+      }
+
+      .dropbtn {
+        background-color: #4caf50;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-content {
+        position: absolute;
+        right: 0;
+        background-color: #ddd;
+        padding: 8px;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 10;
+      }
+
+      .dropdown-background {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0px;
+        left: 0px;
+        z-index: 9;
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content a:hover {
+        background-color: #f1f1f1;
+      }
+
+      .dropdown:hover .dropbtn {
+        background-color: #3e8e41;
+      }
+	</style>
+	
     <title>Example</title>
   </head>
   <body>
@@ -146,13 +541,14 @@ SBJsComponentReplacement class >> exampleReactClassAsString [
 ]
 
 { #category : #'generate-html' }
-SBJsComponentReplacement class >> generateHtmlFileFor: aReactComponentString withClassName: aClassNameString forOptions: aJsArrayString [
+SBJsComponentReplacement class >> generateHtmlFileFor: aReactComponentString withClassName: aClassNameString forOptions: aJsArrayString withUsedReactComponents: aOrderedCollection [
 
 	| htmlString |
 	htmlString := self
 		exampleHTMLTemplateFor: aReactComponentString
 		forClass: aClassNameString
-		withOptions: aJsArrayString.
+		withOptions: aJsArrayString
+		withUsedReactComponents: aOrderedCollection.
 	FileStream
 		forceNewFileNamed: self testHTMLFilePath
 		do: [:stream | stream nextPutAll: htmlString]
@@ -229,18 +625,23 @@ SBJsComponentReplacement class >> testHTMLFileUrl [
 { #category : #replacing }
 SBJsComponentReplacement >> exampleArray: aJsArray withSharedProps: aJsObject forAComponent: aComponentNameString withComponentNode: aComponentNode url: aString [
 
-	| aJSArrayWithName wrappedBrowser |
+	| aJSArrayWithName wrappedBrowser usedComponentReplacements |
 	aJSArrayWithName := 'examples = ', aJsArray sourceString.
+	usedComponentReplacements := aComponentNode collectComponentUsageReplacements.
 	self class
 		generateHtmlFileFor: aComponentNode sourceString
 		withClassName: aComponentNameString
-		forOptions: aJSArrayWithName.
+		forOptions: aJSArrayWithName
+		withUsedReactComponents: usedComponentReplacements.
 	"withSharedProps: (aJsObject ifNotNil: [:object | object sourceString] ifNil: ['sharedExampleProps = {}'])."
 	wrappedBrowser := SBBlock new
-		addMorphBack: (MMBrowserMorph reactOpenOn: aString);
-		addMorphBack: (SBButton new icon: SBIcon iconSave label: 'Save to Palette' do: [ | temp |
-			temp := SBJsComponentUsageReplacement inlineComponentUsageReplacementFor: aComponentNode sourceString.
-			SBJsReactComponentRegistry defaultRegistry addComponent: temp withName: aComponentNameString]);
+		addMorphBack: (SBJsMMBrowserWrapper new
+			addMorphBack: (MMBrowserMorph reactOpenOn: aString);
+			changeTableLayout;
+			hResizing: #shrinkWrap;
+			vResizing: #shrinkWrap;
+			yourself);
+		addMorphBack: (self savePaletteButtonFor: aComponentNode withName: aComponentNameString);
 		changeTableLayout;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
@@ -251,7 +652,6 @@ SBJsComponentReplacement >> exampleArray: aJsArray withSharedProps: aJsObject fo
 		addMorphBack: (SBRow new
 			addMorphBack: wrappedBrowser;
 			addMorphBack: aJsArray buildCopy)
-	"addMorphBack: (SBTextBubble new contents: aString))"
 ]
 
 { #category : #accessing }
@@ -300,6 +700,23 @@ SBJsComponentReplacement >> owningClass [
 	^ currentOwner
 ]
 
+{ #category : #replacing }
+SBJsComponentReplacement >> savePaletteButtonFor: aComponentNode withName: aComponentNameString [
+
+	^ SBButton new icon: SBIcon iconSave label: 'Save to Palette' do: [ | category componentUsageReplacement |
+		category := UIManager default
+			chooseFromOrAddTo: SBJsReactComponentRegistry defaultRegistry allCategories
+			lines: nil
+			title: 'Choose Category'.
+		category ifNotNil: [
+			Cursor wait showWhile: [
+				componentUsageReplacement := SBJsComponentUsageReplacement inlineComponentUsageReplacementFor: aComponentNode sourceString.
+				SBJsReactComponentRegistry defaultRegistry
+					addComponent: componentUsageReplacement
+					withName: aComponentNameString
+					inCategory: category]]]
+]
+
 { #category : #accessing }
 SBJsComponentReplacement >> skipHtmlFileGeneration [
 
@@ -332,14 +749,16 @@ SBJsComponentReplacement >> writeSourceOn: aStream [
 	| optionsObject |
 	optionsObject := 'examples = ', self exampleArraySandblock sourceString.
 	aStream nextPutAll: optionsObject.
-	self skipHtmlFileGeneration ifFalse: [ | className componentClass |
+	self skipHtmlFileGeneration ifFalse: [ | className componentClass usedComponentReplacements |
 		self skipHtmlFileGeneration: true.
 		componentClass := self owningClass.
 		className := componentClass firstSubmorph submorphs third contents.
+		usedComponentReplacements := componentClass collectComponentUsageReplacements.
 		self class
 			generateHtmlFileFor: componentClass sourceString
 			withClassName: className
-			forOptions: optionsObject.
-		self firstSubmorph firstSubmorph firstSubmorph doRefresh.
+			forOptions: optionsObject
+			withUsedReactComponents: usedComponentReplacements.
+		self firstSubmorph firstSubmorph firstSubmorph firstSubmorph doRefresh.
 		self skipHtmlFileGeneration: false]
 ]

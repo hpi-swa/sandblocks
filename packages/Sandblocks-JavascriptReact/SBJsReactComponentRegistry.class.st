@@ -36,7 +36,6 @@ SBJsReactComponentRegistry class >> defaultRegistry [
 
 { #category : #accessing }
 SBJsReactComponentRegistry class >> resetDefaultRegistry [
-
 	"Only use when necessary; when the registry should be flushed"
 
 	^ DefaultRegistry := self new
@@ -61,6 +60,12 @@ SBJsReactComponentRegistry >> addComponent: aSBJsComponentUsageReplacement withN
 ]
 
 { #category : #accessing }
+SBJsReactComponentRegistry >> allCategories [
+
+	^ self componentRegistry keys
+]
+
+{ #category : #accessing }
 SBJsReactComponentRegistry >> componentRegistry [
 
 	^ componentRegistry
@@ -73,9 +78,10 @@ SBJsReactComponentRegistry >> componentRegistryCategoriesDo: aBlock [
 ]
 
 { #category : #accessing }
-SBJsReactComponentRegistry >> componentRegistryDo: aBlock [
+SBJsReactComponentRegistry >> componentReplacementForComponentName: aString [
 
-	self componentRegistry keysAndValuesDo: [:componentName :componentParsingBlock | aBlock value: componentName value: componentParsingBlock value]
+	self componentRegistry do: [:catgoryEntries | catgoryEntries keysAndValuesDo: [:componentName :componentReplacement | componentName = aString ifTrue: [^ componentReplacement]]].
+	^ nil
 ]
 
 { #category : #accessing }
@@ -83,4 +89,24 @@ SBJsReactComponentRegistry >> initialize [
 
 	super initialize.
 	componentRegistry := Dictionary new
+]
+
+{ #category : #removing }
+SBJsReactComponentRegistry >> removeComponentByName: aString [ 
+
+	self componentRegistryCategoriesDo: [:categoryName :entries | self removeComponentByName: aString inCategory: categoryName ifAbsent: []]
+
+	
+]
+
+{ #category : #removing }
+SBJsReactComponentRegistry >> removeComponentByName: aString inCategory: anotherString [
+
+	self removeComponentByName: aString inCategory: anotherString ifAbsent: [Error signal: 'Could not find ', aString, ' in category ', anotherString].
+]
+
+{ #category : #removing }
+SBJsReactComponentRegistry >> removeComponentByName: aString inCategory: anotherString ifAbsent: aBlock [
+
+	(self componentRegistry at: anotherString) removeKey: aString ifAbsent: aBlock.
 ]

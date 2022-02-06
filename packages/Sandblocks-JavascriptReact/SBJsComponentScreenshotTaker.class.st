@@ -32,15 +32,17 @@ SBJsComponentScreenshotTaker class >> takeScreenshotOf: aReactComponentString at
 	"index ist currently ignored"
 	reactComponentAST allBlocksDo: [:block |
 		SBTSQuery new execute: SBJsComponentReplacement replacementQuery against: block capturesDo: [:captures :success |
-			success  ifTrue: [ | reactClassName wholeReactClass optionsWithName instance tabId screenshot |
+			success ifTrue: [ | reactClassName wholeReactClass optionsWithName instance tabId screenshot usedComponentReplacements |
 				instance := self new.
 				wholeReactClass := (captures at: 'class') sourceString.
 				reactClassName := (captures at: 'class_name') contents.
 				optionsWithName := 'examples = ', (captures at: 'options') sourceString.
+				usedComponentReplacements := (captures at: 'class') collectComponentUsageReplacements.
 				SBJsComponentReplacement
 					generateHtmlFileFor: wholeReactClass
 					withClassName: reactClassName
-					forOptions: optionsWithName.
+					forOptions: optionsWithName
+					withUsedReactComponents: usedComponentReplacements.
 				tabId := MMProcessWrapper getOSDependentSingleton
 					takeScreenshotAt: SBJsComponentReplacement testHTMLFileUrl
 					withExtend: aPoint
