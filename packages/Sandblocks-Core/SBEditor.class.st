@@ -1340,6 +1340,12 @@ SBEditor >> reportErrorWithProcessCopy: anError source: anExecutableEnvironment 
 		source: anExecutableEnvironment
 ]
 
+{ #category : #accessing }
+SBEditor >> requestor [
+
+	^ Requestor default
+]
+
 { #category : #initialization }
 SBEditor >> resetState [
 
