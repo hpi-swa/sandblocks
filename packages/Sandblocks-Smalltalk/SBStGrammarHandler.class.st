@@ -476,6 +476,13 @@ SBStGrammarHandler >> wrapInBlock [
 ]
 
 { #category : #actions }
+SBStGrammarHandler >> wrapInCascade [
+	<action>
+
+	(self block ownerSatisfying: [:owner | owner isMessageSend and: [owner isExpression]]) ifNotNil: [:msg | msg wrapInCascade]
+]
+
+{ #category : #actions }
 SBStGrammarHandler >> wrapInDynamicArray [
 	<multiSelectAction>
 	<actionValidIf: #isExpression>

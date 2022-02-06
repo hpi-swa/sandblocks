@@ -369,16 +369,6 @@ SBStMessagePart >> wrapInBlock [
 ]
 
 { #category : #actions }
-SBStMessagePart >> wrapInCascade [
-	<action>
-	<actionValidIf: #parentIsExpression>
-
-	self messageSend isExpression ifFalse: [^ self].
-	
-	self messageSend wrapInCascade
-]
-
-{ #category : #actions }
 SBStMessagePart >> wrapInDynamicArray [
 	<multiSelectAction>
 	<actionValidIf: #parentIsExpression>

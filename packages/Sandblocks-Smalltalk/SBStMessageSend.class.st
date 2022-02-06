@@ -585,9 +585,11 @@ SBStMessageSend >> wrapInCascade [
 
 	| cascade |
 	cascade := SBStCascade new.
-	self sandblockEditor doMultiSelection: [:selected | | targets |
-		targets := selected collect: #messageSend.
-		(self sandblockEditor submorphsAreConsecutive: targets)
+	
+	self isSelected ifFalse: [self select].
+	
+	self sandblockEditor doMultiSelection: [:selected |
+		(self sandblockEditor submorphsAreConsecutive: selected)
 			ifFalse: [nil]
 			ifTrue: [
 				SBWrapConsecutiveCommand new
