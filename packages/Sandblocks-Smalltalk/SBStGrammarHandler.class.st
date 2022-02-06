@@ -349,10 +349,15 @@ SBStGrammarHandler >> useArgument: aNumber [
 	artefact arguments size >= aNumber ifTrue: [ | content editor |
 		content := (artefact arguments at: aNumber) contents.
 		editor := self block sandblockEditor.
-		(SBStName contents: content) convertedFor: self block objectInterface do: [:replace |
-			editor do: (SBReplaceCommand new
-				replacer: replace;
-				target: self block)].
+		(self block sandblockEditor cursor mode = #insert or: [self block isExpression not])
+			ifTrue: [
+				editor handle: (SBTest keyboardEvent: content first).
+				editor selection isName ifTrue: [editor selection contents: content]]
+			ifFalse: [
+				(SBStName contents: content) convertedFor: self block objectInterface do: [:replace |
+					editor do: (SBReplaceCommand new
+						replacer: replace;
+						target: self block)]].
 		editor selection startInputAtEnd]
 ]
 
