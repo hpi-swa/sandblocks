@@ -153,23 +153,37 @@ SBCursorPosition >> mode [
 { #category : #'as yet unclassified' }
 SBCursorPosition >> moveCursorDown: aCursor [
 
-	aCursor nextVertical
-		ifNotNil: [:next |
-			aCursor
-				cursorPosition: (aCursor cursorForBlock: next at: (aCursor idealPixelPositionEnterNear: #top for: next))
-				explicitMove: true
-				axis: #y]
-		ifNil: [aCursor moveCursorSmaller]
+	SBBlockCursor legacyVerticalMovement
+		ifTrue: [
+			aCursor nextVertical
+				ifNotNil: [:next |
+					aCursor
+						cursorPosition: (aCursor cursorForBlock: next at: (aCursor idealPixelPositionEnterNear: #top for: next))
+						explicitMove: true
+						axis: #y]
+				ifNil: [aCursor moveCursorSmaller]]
+		ifFalse: [
+			aCursor nextVerticalCursor
+				ifNotNil: [:pos |
+					pos pixelPosition: (aCursor idealPixelPositionEnterNear: #top for: pos block).
+					aCursor cursorPosition: pos explicitMove: true axis: #y]
+				ifNil: [aCursor moveCursorSmaller]]
 ]
 
 { #category : #'as yet unclassified' }
 SBCursorPosition >> moveCursorUp: aCursor [
 
-	aCursor previousVertical ifNotNil: [:previous |
-		aCursor
-			cursorPosition: (aCursor cursorForBlock: previous at: (aCursor idealPixelPositionEnterNear: #bottom for: previous))
-			explicitMove: true
-			axis: #y]
+	SBBlockCursor legacyVerticalMovement
+		ifTrue: [
+			aCursor previousVertical ifNotNil: [:previous |
+				aCursor
+					cursorPosition: (aCursor cursorForBlock: previous at: (aCursor idealPixelPositionEnterNear: #bottom for: previous))
+					explicitMove: true
+					axis: #y]]
+		ifFalse: [
+			aCursor previousVerticalCursor ifNotNil: [:pos |
+				pos pixelPosition: (aCursor idealPixelPositionEnterNear: #bottom for: pos block).
+				aCursor cursorPosition: pos explicitMove: true axis: #y]]
 ]
 
 { #category : #'as yet unclassified' }

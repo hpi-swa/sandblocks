@@ -263,14 +263,7 @@ SBBlockCursor >> moveCursorClick: aBlock at: aPoint [
 SBBlockCursor >> moveCursorDown [
 	<globalAction>
 
-	self class legacyVerticalMovement
-		ifTrue: [cursorPosition moveCursorDown: self]
-		ifFalse: [
-			self nextVerticalCursor
-				ifNotNil: [:pos |
-					pos pixelPosition: (self idealPixelPositionEnterNear: #top for: pos block).
-					self cursorPosition: pos explicitMove: true axis: #y]
-				ifNil: [self moveCursorSmaller]]
+	cursorPosition moveCursorDown: self
 ]
 
 { #category : #api }
@@ -330,12 +323,7 @@ SBBlockCursor >> moveCursorSmaller [
 SBBlockCursor >> moveCursorUp [
 	<globalAction>
 
-	self class legacyVerticalMovement
-		ifTrue: [cursorPosition moveCursorUp: self]
-		ifFalse: [
-			self previousVerticalCursor ifNotNil: [:pos |
-				pos pixelPosition: (self idealPixelPositionEnterNear: #bottom for: pos block).
-				self cursorPosition: pos explicitMove: true axis: #y]]
+	cursorPosition moveCursorUp: self
 ]
 
 { #category : #private }
