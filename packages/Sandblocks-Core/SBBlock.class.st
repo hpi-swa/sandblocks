@@ -1956,7 +1956,7 @@ SBBlock >> pasteBeforeOrAfter: aBeforeBoolean [
 			objectInterfaceNear: self
 			at: (aBeforeBoolean ifTrue: [#before] ifFalse: [#after]))
 		reversed: true
-		do: [:repr :index :isLast | self sandblockEditor do: ((self parentSandblock insertCommandRequest: repr near: self before: aBeforeBoolean) shouldMergeWithNext: isLast not)]
+		do: [:repr :index :isLast | (self parentSandblock insertCommandRequest: repr near: self before: aBeforeBoolean) ifNotNil: [:cmd | self sandblockEditor do: (cmd shouldMergeWithNext: isLast not)]]
 		ifWrappingDo: [:block | self wrapSelectionWith: block unpackSelection veryDeepCopy]
 ]
 

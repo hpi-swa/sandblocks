@@ -38,6 +38,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character space shift withCommand do: #insertElementBefore;
 		registerShortcut: $i command do: #appendElement;
 		registerShortcut: $I shift withCommand do: #prependElement;
+		registerShortcut: Character tab asSandblockShortcut, Character cr do: #useSuggestion;
 		inputShortcut: Character cr command do: #typeNewLine.
 	
 	" cursor "
@@ -95,7 +96,6 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character pageUp do: #selectArtefact;
 		registerShortcut: Character home do: #selectStartOfStatement;
 		registerShortcut: Character end do: #selectRightMostBlock;
-		registerShortcut: Character tab do: #useSuggestion;
 		registerShortcut: Character tab shift do: #inputPreviousUnknown;
 		registerShortcut: Character tab do: #inputNextUnknown;
 		registerShortcut: Character arrowLeft option do: #selectLeftToplevel;
