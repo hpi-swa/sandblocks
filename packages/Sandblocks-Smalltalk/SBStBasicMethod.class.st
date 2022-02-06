@@ -450,7 +450,7 @@ SBStBasicMethod >> methodChanged: anEvent [
 		anEvent isModified ifTrue: [
 			^ self hasUnsavedChanges
 				ifTrue: [self externalModification: true]
-				ifFalse: [self reloadMethodInPlace]]]
+				ifFalse: [self reloadMethodInPlaceUndoable: false]]]
 ]
 
 { #category : #accessing }
@@ -614,13 +614,13 @@ SBStBasicMethod >> reloadArtefact [
 	<action>
 
 	| newMethod |
-	newMethod := self reloadMethodInPlace.
+	newMethod := self reloadMethodInPlaceUndoable: true.
 	
 	newMethod exists ifTrue: [newMethod select] ifFalse: [newMethod inputContainedUnknown]
 ]
 
 { #category : #caching }
-SBStBasicMethod >> reloadMethodInPlace [
+SBStBasicMethod >> reloadMethodInPlaceUndoable: aBoolean [
 
 	| reloaded |
 	self externalModification: false.
@@ -632,8 +632,10 @@ SBStBasicMethod >> reloadMethodInPlace [
 		width: self width;
 		yourself.
 	
-	self replaceBy: reloaded.
-	reloaded withDecorator: SBForceMoveDecorator do: [:d | d createImplicitForces].
+	aBoolean
+		ifTrue: [self sandblockEditor do: (SBReplaceCommand new target: self replacer: reloaded)]
+		ifFalse: [self replaceBy: reloaded].
+	Project current addDeferredUIMessage: [reloaded withDecorator: SBForceMoveDecorator do: [:d | d createImplicitForces]].
 	^ reloaded
 ]
 
