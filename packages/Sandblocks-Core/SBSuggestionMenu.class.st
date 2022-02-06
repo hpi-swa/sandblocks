@@ -7,7 +7,9 @@ Class {
 		'container',
 		'reference',
 		'updateQueued',
-		'requestor'
+		'requestor',
+		'focusOnOpen',
+		'focusHint'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -27,7 +29,7 @@ SBSuggestionMenu >> activeIndex [
 { #category : #accessing }
 SBSuggestionMenu >> activeItem [
 
-	^ self hasItems ifFalse: [nil] ifTrue: [self items at: activeIndex]
+	^ (self hasItems and: [activeIndex > 0]) ifTrue: [self items at: activeIndex] ifFalse: [nil]
 ]
 
 { #category : #accessing }
@@ -35,9 +37,19 @@ SBSuggestionMenu >> activeItem: anItem [
 
 	anItem = self activeItem ifTrue: [^ self].
 	
-	(self items at: activeIndex) active: false.
-	activeIndex := self items indexOf: anItem.
-	anItem active: true
+	self activeItemIndex: (self items indexOf: anItem)
+]
+
+{ #category : #selecting }
+SBSuggestionMenu >> activeItemIndex: aNumber [
+
+	self hasItems ifFalse: [^ self].
+	
+	activeIndex > 0 ifTrue: [(self items at: activeIndex) active: false].
+	activeIndex := aNumber clampLow: 0 high: self itemCount.
+	activeIndex > 0 ifTrue: [
+		(self items at: activeIndex) active: true.
+		self scrollToShow: (self items at: activeIndex)]
 ]
 
 { #category : #accessing }
@@ -53,9 +65,15 @@ SBSuggestionMenu >> addItem: anItem [
 ]
 
 { #category : #'action helpers' }
-SBSuggestionMenu >> canSelectPreviousSuggestion [
+SBSuggestionMenu >> canMoveDown [
 
-	^ self hasMultipleSuggestions and: [self activeIndex > 1]
+	^ self hasSuggestions and: [self itemCount > 1 and: [self isFocused]]
+]
+
+{ #category : #'action helpers' }
+SBSuggestionMenu >> canMoveUp [
+
+	^ self canMoveDown and: [self activeIndex > 1]
 ]
 
 { #category : #accessing }
@@ -75,17 +93,37 @@ SBSuggestionMenu >> editorFocused: aBoolean [
 { #category : #actions }
 SBSuggestionMenu >> focusNextSuggestion [
 	<globalAction>
-	<actionValidIf: #hasMultipleSuggestions>
+	<actionValidIf: #canMoveDown>
 
 	self next
+]
+
+{ #category : #accessing }
+SBSuggestionMenu >> focusOnOpen [
+
+	^ focusOnOpen ifNil: [false]
+]
+
+{ #category : #accessing }
+SBSuggestionMenu >> focusOnOpen: aBoolean [
+
+	focusOnOpen := aBoolean
 ]
 
 { #category : #actions }
 SBSuggestionMenu >> focusPreviousSuggestion [
 	<globalAction>
-	<actionValidIf: #canSelectPreviousSuggestion>
+	<actionValidIf: #canMoveUp>
 
 	self previous
+]
+
+{ #category : #actions }
+SBSuggestionMenu >> focusSuggestions [
+	<globalAction>
+	<actionValidIf: #hasSuggestionsButIsNotFocused>
+
+	self activeItemIndex: 1
 ]
 
 { #category : #'events-processing' }
@@ -102,20 +140,21 @@ SBSuggestionMenu >> hasItems [
 ]
 
 { #category : #'action helpers' }
-SBSuggestionMenu >> hasMultipleSuggestions [
-
-	^ self hasSuggestions and: [self itemCount > 1]
-]
-
-{ #category : #'action helpers' }
 SBSuggestionMenu >> hasSuggestions [
 
 	^ self isInWorld and: [self reference isInWorld]
 ]
 
+{ #category : #'action helpers' }
+SBSuggestionMenu >> hasSuggestionsButIsNotFocused [
+
+	^ self hasSuggestions and: [self isFocused not]
+]
+
 { #category : #initialization }
 SBSuggestionMenu >> initialize [
 
+	| focusShortcut |
 	super initialize.
 	
 	activeIndex := 1.
@@ -135,7 +174,19 @@ SBSuggestionMenu >> initialize [
 		cellGap: 0;
 		layoutInset: 0;
 		yourself.
-	self scroller addMorph: container
+	
+	focusShortcut := SBEditor anyShortcutForAction: #focusSuggestions.
+	self scroller
+		addMorphBack: (focusHint := SBStringMorph new contents: (focusShortcut
+			ifNotNil: ['Use ', (focusShortcut displayString, ' to focus')]
+			ifNil: ['Hover to focus']));
+		addMorphBack: container
+]
+
+{ #category : #'action helpers' }
+SBSuggestionMenu >> isFocused [
+
+	^ self hasSuggestions and: [self activeItem notNil]
 ]
 
 { #category : #'accessing - items' }
@@ -204,13 +255,7 @@ SBSuggestionMenu >> morphicLayerNumber [
 { #category : #selecting }
 SBSuggestionMenu >> moveActive: aNumber [
 
-	self hasItems ifFalse: [^ self].
-	
-	(self items at: activeIndex) active: false.
-	activeIndex := activeIndex + aNumber clampLow: 1 high: self itemCount.
-	(self items at: activeIndex) active: true.
-	
-	self scrollToShow: (self items at: activeIndex)
+	self activeItemIndex: (activeIndex + aNumber clampLow: 1 high: self itemCount)
 ]
 
 { #category : #selecting }
@@ -234,7 +279,12 @@ SBSuggestionMenu >> openNear: aBlock requestor: anObject [
 			reference: aBlock;
 			requestor: anObject;
 			openInWorld: aBlock world;
-			repositionSuggestionsMenu]
+			repositionSuggestionsMenu.
+		self focusOnOpen ifTrue: [self activeItemIndex: 1] ifFalse: [self activeItemIndex: 0].
+		focusHint ifNotNil: [
+			focusHint
+				visible: self focusOnOpen not;
+				disableLayout: self focusOnOpen]]
 ]
 
 { #category : #'submorphs - callbacks' }
@@ -279,7 +329,9 @@ SBSuggestionMenu >> requestor: anObject [
 { #category : #layout }
 SBSuggestionMenu >> resize [
 
-	self extent: (self hasItems ifFalse: [0 @ 0] ifTrue: [0 @ ((container height min: 330) + 2)])
+	self extent: (self hasItems
+		ifFalse: [0 @ 0]
+		ifTrue: [0 @ ((container height + ((focusHint notNil and: [focusHint visible]) ifTrue: [focusHint height] ifFalse: [0]) min: 330) + 2)])
 ]
 
 { #category : #'stepping and presenter' }
@@ -304,7 +356,7 @@ SBSuggestionMenu >> suggestions: aCollectionOfSymbols [
 	
 	aCollectionOfSymbols do: [:item | self addItem: item].
 	
-	self hasItems ifTrue: [
+	(self hasItems and: [activeIndex > 0]) ifTrue: [
 		activeIndex := activeIndex min: self itemCount.
 		(self items at: activeIndex) active: true]
 ]
@@ -325,7 +377,7 @@ SBSuggestionMenu >> updateQueued: aBoolean [
 SBSuggestionMenu >> useSuggestion [
 	" try to apply a suggestion, return whether anything was applied "
 	<globalAction>
-	<actionValidIf: #hasSuggestions>
+	<actionValidIf: #isFocused>
 
 	self hasSuggestions ifFalse: [^ false].
 	self activeItem ifNotNil: [:s |

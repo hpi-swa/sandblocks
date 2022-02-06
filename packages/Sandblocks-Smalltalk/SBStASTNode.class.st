@@ -73,6 +73,13 @@ SBStASTNode >> canEvaluate [
 	^ self isExpression
 ]
 
+{ #category : #'as yet unclassified' }
+SBStASTNode >> clearCacheSelf [
+
+	super clearCacheSelf.
+	self removeProperty: #guessedClassExpensive
+]
+
 { #category : #evaluate }
 SBStASTNode >> compilationCueWith: aRequestor for: aContext [
 
@@ -142,17 +149,18 @@ SBStASTNode >> grammarHandler [
 SBStASTNode >> guessClassExpensive [
 
 	^ self guessedClass ifNil: [
-		Smalltalk at: #Sandbox ifPresent: [:sandboxClass |
-			[
-				sandboxClass new
-					stepLimit: 100000;
-					evaluate: [
-							self evaluate ifNotNil: [:result |
-								[result class] on: MessageNotUnderstood do: ["might be ProtoObject"
-								thisContext objectClass: result]]]
-						ifFailed: [nil]]
-				on: (Smalltalk at: #SandboxError)
-				do: [:err | nil]]]
+		self valueOfProperty: #guessedClassExpensive ifAbsentPut: [
+			Smalltalk at: #Sandbox ifPresent: [:sandboxClass |
+				[
+					sandboxClass new
+						stepLimit: 100000;
+						evaluate: [
+								self evaluate ifNotNil: [:result |
+									[result class] on: MessageNotUnderstood do: ["might be ProtoObject"
+									thisContext objectClass: result]]]
+							ifFailed: [nil]]
+					on: (Smalltalk at: #SandboxError)
+					do: [:err | nil]]]]
 ]
 
 { #category : #accessing }

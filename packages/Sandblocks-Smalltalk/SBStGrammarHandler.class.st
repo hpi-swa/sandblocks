@@ -341,6 +341,13 @@ SBStGrammarHandler >> startOverrideInput: anEvent in: anEditor [
 	super startOverrideInput: anEvent in: anEditor
 ]
 
+{ #category : #callbacks }
+SBStGrammarHandler >> suggestionsFor: aBlock [
+
+	aBlock parentSandblock isMessageSend ifTrue: [^ (aBlock parentSandblock argumentChoicesFor: aBlock) collect: [:literal | SBStLiteralSuggestionItem new literal: literal]].
+	^ #()
+]
+
 { #category : #'action helpers' }
 SBStGrammarHandler >> useArgument: aNumber [
 

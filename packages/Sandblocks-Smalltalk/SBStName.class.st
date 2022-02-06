@@ -328,6 +328,7 @@ SBStName >> resolveBinding [
 { #category : #'as yet unclassified' }
 SBStName >> suggestions [
 
+	super suggestions ifNotEmpty: [:s | ^ s].
 	^ self behavior suggestions
 ]
 

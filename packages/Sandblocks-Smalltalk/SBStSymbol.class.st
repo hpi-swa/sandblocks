@@ -52,6 +52,7 @@ SBStSymbol >> selector [
 { #category : #'as yet unclassified' }
 SBStSymbol >> suggestions [
 
+	super suggestions ifNotEmpty: [:s | ^ s].
 	^ self contents
 		ifEmpty: [#()]
 		ifNotEmpty: [:text | (self sortedSuggestions: Symbol allSymbols for: text) collect: [:sel | SBSuggestionItem selector: sel label: 'symbol']]

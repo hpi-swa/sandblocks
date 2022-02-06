@@ -10,7 +10,10 @@ Class {
 { #category : #helper }
 SBGrammarHandler class >> eventValidForString: anEvent [
 
-	(anEvent commandKeyPressed or: [anEvent optionKeyPressed or: [anEvent controlKeyPressed]]) ifTrue: [^ false].
+	| keysWithCmd |
+	" macOS may require users to hold alt/cmd to input these "
+	keysWithCmd := '{[]}'.
+	((anEvent commandKeyPressed and: [(keysWithCmd includes: anEvent keyCharacter) not]) or: [anEvent optionKeyPressed or: [anEvent controlKeyPressed]]) ifTrue: [^ false].
 	
 	^ anEvent keyCharacter isPrintable
 ]
@@ -153,6 +156,12 @@ SBGrammarHandler >> startOverrideInput: anEvent in: anEditor [
 	anEditor selection changeToUnknown.
 	anEditor mode = #input ifTrue: [
 		anEditor selection keyStroke: anEvent]
+]
+
+{ #category : #callbacks }
+SBGrammarHandler >> suggestionsFor: aBlock [
+
+	^ #()
 ]
 
 { #category : #actions }
