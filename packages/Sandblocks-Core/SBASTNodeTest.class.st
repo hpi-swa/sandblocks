@@ -229,8 +229,8 @@ SBASTNodeTest >> testWrapInCascadeMessageParts [
 	selection := block statements first.
 	editor := self methodFor: block.
 	editor select: selection.
-	editor startOrAddToMultiSelection: block statements first.
-	editor startOrAddToMultiSelection: block statements second messageParts first.
+	block statements first startOrAddToMultiSelection.
+	block statements second messageParts first startOrAddToMultiSelection.
 	selection wrapInCascade.
 	self assert: block statements first isCascade.
 	self assert: block statements first messages first = selection.
