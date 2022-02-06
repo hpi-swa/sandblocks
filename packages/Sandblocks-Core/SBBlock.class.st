@@ -2419,7 +2419,7 @@ SBBlock >> shouldAutocomplete [
 { #category : #suggestions }
 SBBlock >> shouldSuggest [
 
-	^ self suggestAlways or: [self contents size > 2]
+	^ self suggestAlways or: [self contents size >= 2]
 ]
 
 { #category : #'as yet unclassified' }
