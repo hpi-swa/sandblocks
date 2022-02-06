@@ -104,7 +104,9 @@ SBStSignature >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 	(self isBinary or: [self isAssignment]) ifTrue: [^ nil].
 	self isUnary ifTrue: [
 		aBoolean ifTrue: [^ nil].
-		^ SBRelInsertCommand new near: self messageParts first before: false in: self morph: aMorph].
+		^ SBRelInsertCommand new
+			near: self messageParts first before: false in: self morph: aMorph;
+			title: 'add argument to ', self containingSandblock printString].
 	
 	" only allow inserting before message parts and after arguments "
 	(aBlock notNil and: [(aBlock isMessagePart and: [aBoolean not]) or: [aBlock isMessagePart not and: [aBoolean]]]) ifTrue: [^ nil].
@@ -126,6 +128,7 @@ SBStSignature >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 		container: self;
 		index: index;
 		morph: aMorph;
+		title: 'add argument to ', self containingSandblock printString;
 		yourself.
 	^ SBCombinedCommand newWith: {insertArg. insertPart}
 ]
