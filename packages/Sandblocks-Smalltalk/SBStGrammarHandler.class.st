@@ -313,7 +313,7 @@ SBStGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 			do: [:outer :inner | outer receiver: inner selector: char asString arguments: {outer newNullBlock label: 'arg'}]
 			with: self class messageSendClass new
 			focusOuter: [:msg | msg messageParts first]].
-	char = $( ifTrue: [^ self wrap: aBlock do: [:outer :inner | outer type: #literal contents: {inner}] with: SBStArray new]
+	char = $( ifTrue: [^ self replace: aBlock with: (SBStArray new type: #literal contents: #())]
 ]
 
 { #category : #'callback helpers' }
@@ -341,6 +341,13 @@ SBStGrammarHandler >> startOverrideInput: anEvent in: anEditor [
 	super startOverrideInput: anEvent in: anEditor
 ]
 
+{ #category : #callbacks }
+SBStGrammarHandler >> suggestionsFor: aBlock [
+
+	aBlock parentSandblock isMessageSend ifTrue: [^ (aBlock parentSandblock argumentChoicesFor: aBlock) collect: [:literal | SBStLiteralSuggestionItem new literal: literal]].
+	^ #()
+]
+
 { #category : #'action helpers' }
 SBStGrammarHandler >> useArgument: aNumber [
 
@@ -349,10 +356,15 @@ SBStGrammarHandler >> useArgument: aNumber [
 	artefact arguments size >= aNumber ifTrue: [ | content editor |
 		content := (artefact arguments at: aNumber) contents.
 		editor := self block sandblockEditor.
-		(SBStName contents: content) convertedFor: self block objectInterface do: [:replace |
-			editor do: (SBReplaceCommand new
-				replacer: replace;
-				target: self block)].
+		(self block sandblockEditor cursor mode = #insert or: [self block isExpression not])
+			ifTrue: [
+				editor handle: (SBTest keyboardEvent: content first).
+				editor selection isName ifTrue: [editor selection contents: content]]
+			ifFalse: [
+				(SBStName contents: content) convertedFor: self block objectInterface do: [:replace |
+					editor do: (SBReplaceCommand new
+						replacer: replace;
+						target: self block)]].
 		editor selection startInputAtEnd]
 ]
 
@@ -419,12 +431,17 @@ SBStGrammarHandler >> wrapInArrayType: aSymbol [
 	self assert: self block isSelected.
 	self block sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
 	self block sandblockEditor doMultiSelection: [:selected |
-		SBWrapConsecutiveCommand new
-			outer: SBStArray new;
-			targets: selected;
-			wrap: [:outer :inner | outer type: aSymbol contents: inner];
-			yourself].
-	self block startInput
+		(selected size = 1 and: [selected first isUnknown])
+			ifTrue: [
+				SBReplaceCommand new
+					target: selected first;
+					replacer: (SBStArray new type: aSymbol contents: #())]
+			ifFalse: [
+				SBWrapConsecutiveCommand new
+					outer: SBStArray new;
+					targets: selected;
+					wrap: [:outer :inner | outer type: aSymbol contents: inner];
+					yourself]]
 ]
 
 { #category : #actions }
@@ -452,12 +469,24 @@ SBStGrammarHandler >> wrapInBlock [
 	self assert: self block isSelected.
 	self block sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
 	self block sandblockEditor doMultiSelection: [:selected |
-		SBWrapConsecutiveCommand new
-			outer: SBStBlockBody new;
-			targets: selected;
-			wrap: [:outer :inner | outer statements: inner];
-			yourself].
-	self block startInput
+		(selected size = 1 and: [selected first isUnknown])
+			ifTrue: [
+				SBReplaceCommand new
+					target: selected first;
+					replacer: SBStBlockBody new]
+			ifFalse: [
+				SBWrapConsecutiveCommand new
+					outer: SBStBlockBody new;
+					targets: selected;
+					wrap: [:outer :inner | outer statements: inner];
+					yourself]]
+]
+
+{ #category : #actions }
+SBStGrammarHandler >> wrapInCascade [
+	<action>
+
+	(self block ownerSatisfying: [:owner | owner isMessageSend and: [owner isExpression]]) ifNotNil: [:msg | msg wrapInCascade]
 ]
 
 { #category : #actions }

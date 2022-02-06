@@ -125,7 +125,10 @@ SBStMessagePart >> initialize [
 	super initialize.
 	
 	self
-		addMorphBack: (text := SBOwnTextMorph new emphasis: #derive; placeholderText: 'msg');
+		addMorphBack: (text := SBOwnTextMorph new
+			emphasis: #derive;
+			placeholderText: 'msg';
+			when: #contentsChanged send: #triggerEvent: to: self with: #contentsChanged);
 		layoutPolicy: SBAlgebraLayout new;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
@@ -366,16 +369,6 @@ SBStMessagePart >> wrapInBlock [
 	self parentSandblock
 		select;
 		performAction: #wrapInBlock
-]
-
-{ #category : #actions }
-SBStMessagePart >> wrapInCascade [
-	<action>
-	<actionValidIf: #parentIsExpression>
-
-	self messageSend isExpression ifFalse: [^ self].
-	
-	self messageSend wrapInCascade
 ]
 
 { #category : #actions }

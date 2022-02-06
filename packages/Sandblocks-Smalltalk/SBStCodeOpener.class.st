@@ -175,13 +175,14 @@ SBStCodeOpener >> initialize [
 				cellGap: 4;
 				layoutInset: 4;
 				addMorphBack: (instanceButton := SBButton new
-					label: 'Instance'
+					label: 'Inst'
 					shortcut: Character tab asSandblockShortcut
 					do: [self showingClassSide: false]);
 				addMorphBack: (classButton := SBButton new
 					label: 'Class'
 					shortcut: Character tab asSandblockShortcut
-					do: [self showingClassSide: true])))
+					do: [self showingClassSide: true]);
+				addMorphBack: (SBButton new icon: SBIcon iconPlus shortcut: nil do: [self openForNewMethod])))
 ]
 
 { #category : #'as yet unclassified' }
@@ -260,6 +261,19 @@ SBStCodeOpener >> openFor: aMethodOrClass [
 
 	self focus: aMethodOrClass.
 	^ self open
+]
+
+{ #category : #'as yet unclassified' }
+SBStCodeOpener >> openForNewMethod [
+
+	| class |
+	self selectedClassIndex < 1 ifTrue: [^ self].
+	class := Smalltalk at: self selectedClass.
+	self showingClassSide ifTrue: [class := class class].
+	result := SBStMethod new
+		selector: '' arguments: #() class: class;
+		body: SBStBlockBody new.
+	self delete
 ]
 
 { #category : #'as yet unclassified' }

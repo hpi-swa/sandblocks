@@ -484,7 +484,7 @@ SBBlock >> click: anEvent [
 	
 	self sandblockEditor selectClick: self at: anEvent position.
 	(anEvent yellowButtonPressed and: [SBPreferences rightClickContextMenu]) ifTrue: [self promptAction].
-	(self isInWorld and: [self suggestAlways and: [anEvent redButtonPressed]]) ifTrue: [self toggleSuggestions]
+	(self isInWorld and: [self suggestAlways and: [anEvent redButtonPressed]]) ifTrue: [self queueUpdateSuggestionsFocused: false]
 ]
 
 { #category : #hierarchy }
@@ -1574,7 +1574,7 @@ SBBlock >> keyStroke: anEvent [
 
 	self currentTextMorph ifNotNil: [:t |
 		t keyStroke: anEvent.
-		self queueUpdateSuggestions.
+		self queueUpdateSuggestionsFocused: true.
 		self batchedChangeStep]
 ]
 
@@ -1956,7 +1956,7 @@ SBBlock >> pasteBeforeOrAfter: aBeforeBoolean [
 			objectInterfaceNear: self
 			at: (aBeforeBoolean ifTrue: [#before] ifFalse: [#after]))
 		reversed: true
-		do: [:repr :index :isLast | self sandblockEditor do: ((self parentSandblock insertCommandRequest: repr near: self before: aBeforeBoolean) shouldMergeWithNext: isLast not)]
+		do: [:repr :index :isLast | (self parentSandblock insertCommandRequest: repr near: self before: aBeforeBoolean) ifNotNil: [:cmd | self sandblockEditor do: (cmd shouldMergeWithNext: isLast not)]]
 		ifWrappingDo: [:block | self wrapSelectionWith: block unpackSelection veryDeepCopy]
 ]
 
@@ -2163,13 +2163,15 @@ SBBlock >> providesExecutionEnvironment [
 ]
 
 { #category : #suggestions }
-SBBlock >> queueUpdateSuggestions [
+SBBlock >> queueUpdateSuggestionsFocused: aBoolean [
 
 	| editor |
 	editor := self sandblockEditor.
 	editor ifNil: [^ self].
 	
-	editor suggestionMenu updateQueued: true.
+	editor suggestionMenu
+		updateQueued: true;
+		focusOnOpen: aBoolean.
 	self addAlarm: #maybeUpdateSuggestions after: 0
 ]
 
@@ -2419,7 +2421,7 @@ SBBlock >> shouldAutocomplete [
 { #category : #suggestions }
 SBBlock >> shouldSuggest [
 
-	^ self suggestAlways or: [self contents size > 2]
+	^ self suggestAlways or: [self contents size >= 2]
 ]
 
 { #category : #'as yet unclassified' }
@@ -2554,7 +2556,7 @@ SBBlock >> startInputAt: aNumber replacingContents: aBoolean [
 					moveCursorTo: 0]
 			ifFalse: [self currentTextMorph moveCursorTo: aNumber].
 		
-		(self suggestAlways and: [aBoolean not]) ifTrue: [self queueUpdateSuggestions].
+		(self suggestAlways and: [aBoolean not]) ifTrue: [self queueUpdateSuggestionsFocused: false].
 		
 		^ cmd].
 	
@@ -2636,13 +2638,13 @@ SBBlock >> submorphIndex [
 { #category : #accessing }
 SBBlock >> suggestAlways [
 
-	^ self sandblockEditor ifNotNil: [:e | e suggestAlways] ifNil: [false]
+	^ (self sandblockEditor ifNotNil: [:e | e suggestAlways] ifNil: [false]) or: [self grammarHandler ifNotNil: [:g | (g suggestionsFor: self) notEmpty] ifNil: [false]]
 ]
 
 { #category : #suggestions }
 SBBlock >> suggestions [
 
-	^ #()
+	^ self grammarHandler ifNotNil: [:g | g suggestionsFor: self] ifNil: [#()]
 ]
 
 { #category : #'action helpers' }
@@ -2717,14 +2719,6 @@ SBBlock >> toggleDecorator: aDecorator [
 		detect: [:d | d class = aDecorator class]
 		ifFound: [:d | self detachDecorator: d]
 		ifNone: [self attachDecorator: aDecorator]
-]
-
-{ #category : #suggestions }
-SBBlock >> toggleSuggestions [
-
-	self hasSuggestions
-		ifTrue: [self removeSuggestionMenu]
-		ifFalse: [self updateSuggestions]
 ]
 
 { #category : #'ast helpers' }
@@ -2856,11 +2850,11 @@ SBBlock >> wasDeselected [
 
 { #category : #callbacks }
 SBBlock >> wasSelected [
-
 	" may be overriden "
+
 	self triggerEvent: #selected.
 	
-	self suggestAlways ifTrue: [self queueUpdateSuggestions]
+	self suggestAlways ifTrue: [self queueUpdateSuggestionsFocused: false]
 ]
 
 { #category : #decorators }

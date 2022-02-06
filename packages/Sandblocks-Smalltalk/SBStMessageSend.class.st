@@ -15,6 +15,22 @@ SBStMessageSend >> actualReceiver [
 ]
 
 { #category : #'as yet unclassified' }
+SBStMessageSend >> argumentChoicesFor: aBlock [
+
+	| index |
+	index := self arguments indexOf: aBlock.
+	index < 1 ifTrue: [^ #()].
+	
+	^ (signature likelyImplementorOf: self selector)
+		ifNotNil: [:method |
+			method pragmas
+				detect: [:pragma | pragma keyword = #argument:choices: and: [pragma arguments first = index]]
+				ifFound: [:pragma | ^ pragma arguments second]
+				ifNone: [#()]]
+		ifNil: [#()]
+]
+
+{ #category : #'as yet unclassified' }
 SBStMessageSend >> arguments [
 
 	^ signature arguments
@@ -585,9 +601,11 @@ SBStMessageSend >> wrapInCascade [
 
 	| cascade |
 	cascade := SBStCascade new.
-	self sandblockEditor doMultiSelection: [:selected | | targets |
-		targets := selected collect: #messageSend.
-		(self sandblockEditor submorphsAreConsecutive: targets)
+	
+	self isSelected ifFalse: [self select].
+	
+	self sandblockEditor doMultiSelection: [:selected |
+		(self sandblockEditor submorphsAreConsecutive: selected)
 			ifFalse: [nil]
 			ifTrue: [
 				SBWrapConsecutiveCommand new

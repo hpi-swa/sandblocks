@@ -5,9 +5,10 @@ Class {
 		'index',
 		'morph',
 		'container',
-		'select'
+		'select',
+		'title'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
@@ -76,6 +77,18 @@ SBInsertCommand >> select: aBlock [
 SBInsertCommand >> setArtefactFrom [
 
 	^ container
+]
+
+{ #category : #'as yet unclassified' }
+SBInsertCommand >> title [
+
+	^ title
+]
+
+{ #category : #'as yet unclassified' }
+SBInsertCommand >> title: aString [
+
+	title := aString
 ]
 
 { #category : #'as yet unclassified' }

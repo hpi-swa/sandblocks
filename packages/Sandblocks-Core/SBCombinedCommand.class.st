@@ -96,6 +96,12 @@ SBCombinedCommand >> shouldMergeWithNext: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBCombinedCommand >> title [
+
+	^ self commands first title
+]
+
+{ #category : #'as yet unclassified' }
 SBCombinedCommand >> undo [
 
 	self commands allButFirst reverseDo: #undo.

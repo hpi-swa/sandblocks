@@ -24,6 +24,16 @@ SBExample class >> getAllInMethod: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBExample class >> instanceSuggestion [
+
+	^ [
+		self new
+			self: SBStGrammarHandler new newNullBlock
+			args: (SBStArray new type: #dynamic)
+			label: 'example']
+]
+
+{ #category : #'as yet unclassified' }
 SBExample class >> matches: aMessage [
 
 	(super matches: aMessage) ifFalse: [^ false].

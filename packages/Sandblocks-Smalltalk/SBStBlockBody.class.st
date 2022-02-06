@@ -220,9 +220,12 @@ SBStBlockBody >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 			container: self;
 			index: 2;
 			morph: aMorph;
-			shouldMergeWithNext: true].
+			shouldMergeWithNext: true;
+			title: 'insert statement'].
 	
-	^ (super insertCommandRequest: aMorph near: aBlock before: aBoolean) shouldMergeWithNext: true
+	^ (super insertCommandRequest: aMorph near: aBlock before: aBoolean)
+		shouldMergeWithNext: true;
+		title: 'insert statement'
 ]
 
 { #category : #'as yet unclassified' }

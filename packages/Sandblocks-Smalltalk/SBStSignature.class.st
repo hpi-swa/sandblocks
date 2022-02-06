@@ -18,10 +18,10 @@ SBStSignature >> addArgument: aString block: aBlock [
 			index: self submorphCount + 2})
 ]
 
-{ #category : #'change reporting' }
+{ #category : #'event handling' }
 SBStSignature >> addedMorph: aMorph [
 
-	self messageParts do: #layoutChanged
+	aMorph isMessagePart ifTrue: [aMorph when: #contentsChanged send: #selectorChanged to: self]
 ]
 
 { #category : #accessing }
@@ -104,7 +104,9 @@ SBStSignature >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 	(self isBinary or: [self isAssignment]) ifTrue: [^ nil].
 	self isUnary ifTrue: [
 		aBoolean ifTrue: [^ nil].
-		^ SBRelInsertCommand new near: self messageParts first before: false in: self morph: aMorph].
+		^ SBRelInsertCommand new
+			near: self messageParts first before: false in: self morph: aMorph;
+			title: 'add argument to ', self containingSandblock printString].
 	
 	" only allow inserting before message parts and after arguments "
 	(aBlock notNil and: [(aBlock isMessagePart and: [aBoolean not]) or: [aBlock isMessagePart not and: [aBoolean]]]) ifTrue: [^ nil].
@@ -126,6 +128,7 @@ SBStSignature >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 		container: self;
 		index: index;
 		morph: aMorph;
+		title: 'add argument to ', self containingSandblock printString;
 		yourself.
 	^ SBCombinedCommand newWith: {insertArg. insertPart}
 ]
@@ -175,6 +178,27 @@ SBStSignature >> layoutCommands [
 							ifFalse: [SBAlgebraCommand gap].
 						argument layoutCommands}).
 					argument ~= self lastSubmorph ifTrue: [stream nextPut: (SBAlgebraCommand softLineOrGap withGap: true)]]]])
+]
+
+{ #category : #'as yet unclassified' }
+SBStSignature >> likelyImplementorOf: aString [
+
+	| selector method |
+	self valueOfProperty: #likelyImplementor ifPresentDo: [:ref | ^ ref compiledMethod].
+	
+	(Symbol hasInterned: aString ifTrue: [:s | true]) ifFalse: [^ nil].
+	
+	selector := aString asSymbol.
+	
+	(self owner containingSandblock actualReceiver ifNotNil: [:b | b guessClassExpensive]) ifNotNil: [:class | (class lookupSelector: selector) ifNotNil: [:meth | method := meth]].
+	method ifNil: [
+		method := (self systemNavigation allImplementorsOf: selector)
+			at: 1
+			ifPresent: [:ref | ref compiledMethod]
+			ifAbsent: [nil]].
+	
+	self setProperty: #likelyImplementor toValue: (method ifNotNil: #methodReference).
+	^ method
 ]
 
 { #category : #accessing }
@@ -248,24 +272,15 @@ SBStSignature >> objectInterfaceNear: aBlock at: aSymbol argumentInterface: anIn
 { #category : #'as yet unclassified' }
 SBStSignature >> possibleArgumentNamesFor: aString [
 
-	| selector method |
-	selector := aString asSymbol.
-	
-	(self owner containingSandblock actualReceiver ifNotNil: [:b | b guessClassExpensive]) ifNotNil: [:class | (class lookupSelector: selector) ifNotNil: [:meth | method := meth]].
-	method ifNil: [
-		method := (self systemNavigation allImplementorsOf: selector)
-			at: 1
-			ifPresent: [:ref | ref compiledMethod]
-			ifAbsent: [nil]].
-	method ifNil: [^ #()].
-	
-	^ method asSandblock arguments collect: #contents
+	^ (self likelyImplementorOf: aString)
+		ifNotNil: [:method | method asSandblock arguments collect: #contents]
+		ifNil: [#()]
 ]
 
-{ #category : #'submorphs - callbacks' }
+{ #category : #'event handling' }
 SBStSignature >> removedMorph: aMorph [
 
-	self messageParts do: #layoutChanged
+	aMorph isMessagePart ifTrue: [aMorph removeActionsWithReceiver: self]
 ]
 
 { #category : #accessing }
@@ -379,6 +394,12 @@ SBStSignature >> selectorAndEdit: aString withFilledArgs: aBoolean [
 			self sandblockEditor do: (SBDoItCommand new
 				artefactFrom: self;
 				do: [self messageParts last select])]
+]
+
+{ #category : #'event handling' }
+SBStSignature >> selectorChanged [
+
+	self removeProperty: #likelyImplementor
 ]
 
 { #category : #'as yet unclassified' }
