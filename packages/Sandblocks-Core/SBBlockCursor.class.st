@@ -213,6 +213,12 @@ SBBlockCursor >> initialize [
 	cursorPosition := SBCursorNone new
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlockCursor >> isArtefact [ 
+	
+	^ false
+]
+
 { #category : #layout }
 SBBlockCursor >> layout: aMorph in: aRectangle [
 

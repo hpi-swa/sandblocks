@@ -2776,7 +2776,7 @@ SBBlock >> useAlgebraLayout [
 SBBlock >> useSuggestion: anItem [
 
 	self contents: anItem contents.
-	self containingSandblock sandblockEditor endInput
+	self containingSandblock sandblockEditor ifNotNil: #endInput
 ]
 
 { #category : #testing }
