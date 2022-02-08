@@ -128,6 +128,7 @@ SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol 
 	blinkCount := 0.
 	self updateBounds.
 	Project current addDeferredUIMessage: [self updateBounds].
+	self visible: (aPosition block ifNotNil: [:b | b hasOwner: editor canvas] ifNil: [false]).
 	aSymbol ~= #z ifTrue: [selectLargerHistory removeAll].
 	self editor
 		triggerEvent: #selectionChanged with: self selectedBlock;
@@ -210,6 +211,12 @@ SBBlockCursor >> initialize [
 	blinkCount := 0.
 	horizontalOffsetInFloat := 0.
 	cursorPosition := SBCursorNone new
+]
+
+{ #category : #'as yet unclassified' }
+SBBlockCursor >> isArtefact [ 
+	
+	^ false
 ]
 
 { #category : #layout }
@@ -539,6 +546,12 @@ SBBlockCursor >> step [
 SBBlockCursor >> stepTime [
 
 	^ 0
+]
+
+{ #category : #'as yet unclassified' }
+SBBlockCursor >> survivesReload [ 
+	
+	^ true
 ]
 
 { #category : #api }

@@ -34,13 +34,14 @@ SBJsComponentUsageReplacement class >> inlineComponentUsageReplacementFor: aReac
 SBJsComponentUsageReplacement class >> matchComponentExamples: aDictionary do: aBlock [
 	<lang: #javascript match: '(jsx_self_closing_element) @element'>
 
-	| element replacementComponent elementName |
+	| element replacementComponent elementName blockToReplace |
 	element := aDictionary at: 'element'.
 	elementName := element access children first contents.
 	replacementComponent := SBJsReactComponentRegistry defaultRegistry componentReplacementForComponentName: elementName.
 	replacementComponent ifNil: [^ nil].
+	blockToReplace := element owner owner class = self ifTrue:[element owner owner] ifFalse:[element].
 	"First argument: What will be replaced, second argument: With what it will be replaced."
-	^ aBlock value: element value: (self new
+	^ aBlock value: blockToReplace value: (self new
 		replacementFor: element
 		withComponentSource: replacementComponent referencedComponentClassSourceString
 		withExampleImage: replacementComponent previewImageCopy)
@@ -49,6 +50,7 @@ SBJsComponentUsageReplacement class >> matchComponentExamples: aDictionary do: a
 { #category : #comparing }
 SBJsComponentUsageReplacement >> = aComponentUsageReplacement [
 
+	self componentName ifNil: [^ super = aComponentUsageReplacement].
 	^ aComponentUsageReplacement class = self class and: [aComponentUsageReplacement componentName = self componentName]
 ]
 
@@ -65,7 +67,8 @@ SBJsComponentUsageReplacement >> collectComponentUsageReplacements [
 SBJsComponentUsageReplacement >> componentName [
 	
 	|identifier|
-	identifier :=  self firstSubmorph submorphs second access children first.
+	 self access children size <= 0 ifTrue:[^nil].
+	identifier :=  self access children first.
 
 	^ identifier children size > 0 ifTrue:[identifier children first contents] ifFalse: [identifier contents]
 ]
@@ -94,6 +97,7 @@ SBJsComponentUsageReplacement >> examples: aJsArray forAComponent: reactClassNam
 		takeScreenshotOf: aReactComponentString
 		atExample: validExampleIndex
 		withExtent: 1000 @ 1000.
+		self halt.
 	componentPreviewImage := self shrinkPreviewImage: componentPreviewImage.
 	^ self
 		factory: SBJavascript instance;
@@ -145,6 +149,7 @@ SBJsComponentUsageReplacement >> referencedComponentClassSourceString: aString [
 SBJsComponentUsageReplacement >> replacementFor: aJsxSelfClosingElement withComponentSource: aReactComponentString withExampleImage: aForm [
 
 	self referencedComponentClassSourceString: aReactComponentString.
+	
 	
 	^ self
 		factory: SBJavascript instance;

@@ -808,7 +808,7 @@ SBBlock >> deleteBeforeCursor [
 				ifFalse: [
 					self
 						deleteAroundTargetDo: [:target :replacer |
-							target floating ifFalse: [
+							(target floating not and: [target parentSandblock ~= editor]) ifTrue: [
 								self deleteAround.
 								editor startInput: self at: 900000000 replacingContents: false]]
 						ifNone: []]]
@@ -2647,6 +2647,12 @@ SBBlock >> suggestions [
 	^ self grammarHandler ifNotNil: [:g | g suggestionsFor: self] ifNil: [#()]
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> survivesReload [
+	
+	^ false
+]
+
 { #category : #'action helpers' }
 SBBlock >> swap: aNumber [
 
@@ -2776,7 +2782,7 @@ SBBlock >> useAlgebraLayout [
 SBBlock >> useSuggestion: anItem [
 
 	self contents: anItem contents.
-	self containingSandblock sandblockEditor endInput
+	self containingSandblock sandblockEditor ifNotNil: #endInput
 ]
 
 { #category : #testing }
