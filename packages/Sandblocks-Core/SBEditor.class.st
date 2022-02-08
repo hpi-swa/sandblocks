@@ -921,7 +921,7 @@ SBEditor >> labelString [
 SBEditor >> loadBlocks [
 	<globalAction>
 
-	scroll scroller submorphs copy do: [:each | each abandon].
+	scroll scroller submorphs reject: [:each | each survivesReload ] thenDo: [:each | each abandon].
 	self class loadSaveInto: self
 ]
 

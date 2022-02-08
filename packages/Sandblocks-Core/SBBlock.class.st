@@ -2647,6 +2647,12 @@ SBBlock >> suggestions [
 	^ self grammarHandler ifNotNil: [:g | g suggestionsFor: self] ifNil: [#()]
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> survivesReload [
+	
+	^ false
+]
+
 { #category : #'action helpers' }
 SBBlock >> swap: aNumber [
 

@@ -548,6 +548,12 @@ SBBlockCursor >> stepTime [
 	^ 0
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlockCursor >> survivesReload [ 
+	
+	^ true
+]
+
 { #category : #api }
 SBBlockCursor >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 
