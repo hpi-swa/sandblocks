@@ -9,6 +9,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBLinkedCopy class >> for: aBlock [
+
+	^ self new for: aBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBLinkedCopy >> artefactChanged: aMethodBlock [
 
 	myUpdate ifTrue: [^ self].
