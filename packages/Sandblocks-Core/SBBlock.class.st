@@ -882,6 +882,13 @@ SBBlock >> dismiss [
 	self sandblockEditor suggestionMenu delete
 ]
 
+{ #category : #'event handling' }
+SBBlock >> doubleClick: evt [
+
+	super doubleClick: evt.
+	self triggerEvent: #doubleClicked
+]
+
 { #category : #'dropping/grabbing' }
 SBBlock >> dragTarget [
 
