@@ -141,6 +141,7 @@ SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol 
 		lastBlinkTime := DateAndTime current.
 		self selectedBlock ifNotNil: [:b |
 			b
+				wasSelectedFromCursor: previousCursor;
 				wasSelected;
 				ensureVisible]]
 ]
@@ -210,14 +211,14 @@ SBBlockCursor >> initialize [
 SBBlockCursor >> insertPositionIn: aBlock near: aPoint [
 
 	aPoint
-		ifNil: [aBlock cursorPositionsDo: [:pos | pos class = SBCursorInsert ifTrue: [^ pos]]]
+		ifNil: [aBlock cursorPositionsDo: [:pos | (pos class = SBCursorInsert and: [pos container = aBlock]) ifTrue: [^ pos]]]
 		ifNotNil: [ | best bestDistance |
 			best := nil.
 			bestDistance := 20.
 			aBlock cursorPositionsDo: [:pos | | distance |
-				(pos class = SBCursorInsert and: [
+				(pos class = SBCursorInsert and: [pos container containingSandblock = aBlock and: [
 					distance := pos minimalBounds distanceTo: aPoint.
-					distance < bestDistance]) ifTrue: [
+					distance < bestDistance]]) ifTrue: [
 					best := pos.
 					bestDistance := distance]].
 			^ best].

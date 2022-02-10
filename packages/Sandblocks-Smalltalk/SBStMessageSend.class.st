@@ -610,14 +610,14 @@ SBStMessageSend >> wrapInCascade [
 			ifTrue: [
 				SBWrapConsecutiveCommand new
 					targets: (selected collect: #messageSend);
-					outer: SBStCascade new;
+					outer: cascade;
 					wrap: [:outer :inner |
 						outer addMorphFront: inner first receiver.
 						outer addAllMorphs: inner];
 					wrapUndo: [:outer :inner |
 						inner do: [:message | message receiver: outer receiver veryDeepCopy].
 						outer removeAllMorphs]]].
-	self sandblockEditor cursor moveCursorRight
+	cascade selectLastInsertPosition
 ]
 
 { #category : #converting }

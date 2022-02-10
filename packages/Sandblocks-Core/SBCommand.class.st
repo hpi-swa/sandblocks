@@ -79,6 +79,13 @@ SBCommand >> artefactFrom: aMorph [
 ]
 
 { #category : #testing }
+SBCommand >> canInsert: aBlock [
+	"return true if this an insert command for which aBlock would have been a valid insertion"
+
+	^ false
+]
+
+{ #category : #testing }
 SBCommand >> continueAfterInsert: aCharacter [
 	" mark that if this command has been used as an insertion point, the input should be forward to the new block "
 

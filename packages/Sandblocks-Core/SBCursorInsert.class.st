@@ -123,17 +123,14 @@ SBCursorInsert >> container: aBlock [
 SBCursorInsert >> drawOn: aCanvas in: aRectangle [
 
 	SBToggledCode comment: '' active: 1 do: {
-		[
+		[ | r |
+			r := aRectangle expandBy: -1.
 			aCanvas
-				line: aRectangle topLeft
-				to: (aRectangle height > 4
-					ifTrue: [aRectangle bottomLeft]
-					ifFalse: [aRectangle topRight])
-				width: (aRectangle height > 4
-					ifTrue: [aRectangle width]
-					ifFalse: [aRectangle height])
+				line: r topLeft
+				to: (aRectangle height > 4 ifTrue: [r bottomLeft] ifFalse: [r topRight])
+				width: (aRectangle height > 4 ifTrue: [aRectangle width] ifFalse: [aRectangle height])
 				color: self color
-				dashLength: 2
+				dashLength: 1
 				secondColor: Color transparent
 				secondDashLength: 5
 				startingOffset: 0].

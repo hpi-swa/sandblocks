@@ -2365,6 +2365,17 @@ SBBlock >> selectLast [
 		startInputAtEnd
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> selectLastInsertPosition [
+
+	| last |
+	last := nil.
+	self cursorPositionsDo: [:pos | last := pos].
+	last
+		ifNotNil: [self sandblockEditor cursor cursorPosition: last explicitMove: true axis: #none]
+		ifNil: [self select]
+]
+
 { #category : #actions }
 SBBlock >> selectLeftToplevel [
 	<multiSelectAction>
@@ -2868,6 +2879,13 @@ SBBlock >> wasSelected [
 	self triggerEvent: #selected.
 	
 	self suggestAlways ifTrue: [self queueUpdateSuggestionsFocused: false]
+]
+
+{ #category : #callbacks }
+SBBlock >> wasSelectedFromCursor: aCursorPosition [
+	"callback you can override"
+
+	
 ]
 
 { #category : #decorators }
