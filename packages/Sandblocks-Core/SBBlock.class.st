@@ -1337,6 +1337,11 @@ SBBlock >> insertStatementAbove [
 SBBlock >> insertStatementAboveOrBelow: anAboveBoolean [
 
 	| candidate |
+	self grammarHandler ifNotNil: [:g |
+		^ g
+			block: self;
+			insertStatementAboveOrBelow: anAboveBoolean].
+	
 	" default behavior is to find the first parent that can take multiple children "
 	candidate := self.
 	[candidate parentSandblock fixedNumberOfChildren and: [candidate isArtefact not]] whileTrue: [candidate := candidate parentSandblock].
