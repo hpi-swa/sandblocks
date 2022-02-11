@@ -32,7 +32,8 @@ SBUpdatingPaletteContainer >> delete [
 	super delete.
 	categories removeAllMorphs.
 	content removeAllMorphs.
-	paletteMapping := Dictionary new
+	paletteMapping := Dictionary new.
+	currentPalettes := Set new
 ]
 
 { #category : #'as yet unclassified' }
