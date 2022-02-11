@@ -115,10 +115,7 @@ SBTest >> methodFor: aBlock [
 { #category : #support }
 SBTest >> parse: aString [
 
-	^ [aString parseAsSandblock] on: UndeclaredVariableWarning do: [:ex |
-		ex resume.
-		
-		]
+	^ aString parseAsSandblock
 ]
 
 { #category : #'support - events' }

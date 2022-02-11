@@ -100,7 +100,7 @@ SBBlockCursor >> cursorForBlock: aBlock at: aPoint [
 				block: aBlock;
 				pixelPosition: aPoint;
 				currentCommand: command]
-		ifNil: [self selectOrInsertFor: aBlock]
+		ifNil: [self selectOrInsertFor: aBlock near: aPoint]
 ]
 
 { #category : #accessing }
@@ -141,6 +141,7 @@ SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol 
 		lastBlinkTime := DateAndTime current.
 		self selectedBlock ifNotNil: [:b |
 			b
+				wasSelectedFromCursor: previousCursor;
 				wasSelected;
 				ensureVisible]]
 ]
@@ -167,13 +168,6 @@ SBBlockCursor >> editor [
 SBBlockCursor >> editor: anEditor [
 
 	editor := anEditor
-]
-
-{ #category : #private }
-SBBlockCursor >> firstInsertPositionFor: aBlock [
-
-	aBlock cursorPositionsDo: [:pos | pos class = SBCursorInsert ifTrue: [^ pos]].
-	^ nil
 ]
 
 { #category : #layout }
@@ -211,6 +205,24 @@ SBBlockCursor >> initialize [
 	blinkCount := 0.
 	horizontalOffsetInFloat := 0.
 	cursorPosition := SBCursorNone new
+]
+
+{ #category : #private }
+SBBlockCursor >> insertPositionIn: aBlock near: aPoint [
+
+	aPoint
+		ifNil: [aBlock cursorPositionsDo: [:pos | (pos class = SBCursorInsert and: [pos container = aBlock]) ifTrue: [^ pos]]]
+		ifNotNil: [ | best bestDistance |
+			best := nil.
+			bestDistance := 20.
+			aBlock cursorPositionsDo: [:pos | | distance |
+				(pos class = SBCursorInsert and: [pos container containingSandblock = aBlock and: [
+					distance := pos minimalBounds distanceTo: aPoint.
+					distance < bestDistance]]) ifTrue: [
+					best := pos.
+					bestDistance := distance]].
+			^ best].
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -454,7 +466,7 @@ SBBlockCursor >> select: aBlock [
 
 	aBlock
 		ifNil: [self cursorPosition: SBCursorNone new explicitMove: false axis: #none]
-		ifNotNil: [self cursorPosition: (self cursorForBlock: aBlock at: aBlock topLeft) explicitMove: false axis: #none]
+		ifNotNil: [self cursorPosition: (self cursorForBlock: aBlock at: nil) explicitMove: false axis: #none]
 ]
 
 { #category : #api }
@@ -464,10 +476,10 @@ SBBlockCursor >> selectNoInput: aBlock [
 ]
 
 { #category : #private }
-SBBlockCursor >> selectOrInsertFor: aBlock [
+SBBlockCursor >> selectOrInsertFor: aBlock near: aPoint [
 
-	^ ((aBlock hasChildSandblocks not and: [aBlock dynamicNumberOfChildren])
-		ifTrue: [self firstInsertPositionFor: aBlock]
+	^ (aBlock dynamicNumberOfChildren
+		ifTrue: [self insertPositionIn: aBlock near: aPoint]
 		ifFalse: [nil]) ifNil: [SBCursorSelect new block: aBlock]
 ]
 
@@ -507,7 +519,7 @@ SBBlockCursor >> startInput: aBlock at: aNumber replacingContents: aBoolean [
 					cursorIndex: aNumber;
 					currentCommand: aBlock startInputCommand;
 					replacingContents: aBoolean]
-			ifNil: [self selectOrInsertFor: aBlock])
+			ifNil: [self selectOrInsertFor: aBlock near: nil])
 		explicitMove: aBoolean
 		axis: #none
 ]

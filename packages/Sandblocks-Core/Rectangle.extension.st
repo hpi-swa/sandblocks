@@ -11,6 +11,17 @@ Rectangle >> asEdgeInsets [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Rectangle >> distanceTo: aPoint [
+
+	| delta |
+	"  var dx = Math.max(rect.min.x - p.x, 0, p.x - rect.max.x);
+  var dy = Math.max(rect.min.y - p.y, 0, p.y - rect.max.y);
+  return Math.sqrt(dx*dx + dy*dy);"
+	delta := (origin - aPoint max: 0 @ 0) max: aPoint - corner.
+	^ (delta x * delta x + (delta y * delta y)) sqrt
+]
+
+{ #category : #'*Sandblocks-Core' }
 Rectangle >> horizontal [
 
 	^ self left + self right

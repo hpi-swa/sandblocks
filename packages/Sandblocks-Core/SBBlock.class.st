@@ -882,6 +882,13 @@ SBBlock >> dismiss [
 	self sandblockEditor suggestionMenu delete
 ]
 
+{ #category : #'event handling' }
+SBBlock >> doubleClick: evt [
+
+	super doubleClick: evt.
+	self triggerEvent: #doubleClicked
+]
+
 { #category : #'dropping/grabbing' }
 SBBlock >> dragTarget [
 
@@ -1186,7 +1193,7 @@ SBBlock >> hasHorizontalLayout [
 	self isBlockBody ifTrue: [^ false].
 	blocks := self childSandblocks.
 	^ blocks size < 2 or: [ | delta |
-		delta := blocks first topLeft - blocks second topLeft.
+		delta := blocks first topLeft - blocks last topLeft.
 		delta x < delta y]
 ]
 
@@ -2358,6 +2365,17 @@ SBBlock >> selectLast [
 		startInputAtEnd
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> selectLastInsertPosition [
+
+	| last |
+	last := nil.
+	self cursorPositionsDo: [:pos | last := pos].
+	last
+		ifNotNil: [self sandblockEditor cursor cursorPosition: last explicitMove: true axis: #none]
+		ifNil: [self select]
+]
+
 { #category : #actions }
 SBBlock >> selectLeftToplevel [
 	<multiSelectAction>
@@ -2861,6 +2879,13 @@ SBBlock >> wasSelected [
 	self triggerEvent: #selected.
 	
 	self suggestAlways ifTrue: [self queueUpdateSuggestionsFocused: false]
+]
+
+{ #category : #callbacks }
+SBBlock >> wasSelectedFromCursor: aCursorPosition [
+	"callback you can override"
+
+	
 ]
 
 { #category : #decorators }

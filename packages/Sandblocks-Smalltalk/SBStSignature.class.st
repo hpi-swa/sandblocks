@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStSignature class >> precedence: aString [
+	"copied here to avoid calling asSymbol"
+
+	aString size = 0 ifTrue: [^ 0].
+	aString first canBeIdentifierInitial ifFalse: [^ 2].
+	aString last = $: ifTrue: [^ 3].
+	^ 1
+]
+
+{ #category : #'as yet unclassified' }
 SBStSignature >> addArgument: aString block: aBlock [
 
 	self sandblockEditor do: (SBCombinedCommand newWith: {
@@ -160,7 +170,7 @@ SBStSignature >> isKeyword [
 { #category : #testing }
 SBStSignature >> isUnary [
 
-	^ self selector isEmpty or: [self selector asSymbol isUnary]
+	^ self selector isEmpty or: [(SBStSignature precedence: self selector) = 1]
 ]
 
 { #category : #'as yet unclassified' }
@@ -186,7 +196,7 @@ SBStSignature >> likelyImplementorOf: aString [
 	| selector method |
 	self valueOfProperty: #likelyImplementor ifPresentDo: [:ref | ^ ref compiledMethod].
 	
-	(Symbol hasInterned: aString ifTrue: [:s | true]) ifFalse: [^ nil].
+	(Symbol hasInterned: aString ifTrue: [:s | ]) ifFalse: [^ nil].
 	
 	selector := aString asSymbol.
 	

@@ -110,16 +110,19 @@ String >> sandblockBeginsWith: aString [
 { #category : #'*Sandblocks-Core' }
 String >> sandblockMatch: aString [
 	" matching specific to what appears a good heuristic in auto completion "
-
 	" first two letters are exact match, afterwards allow any combination of successive letters "
+
 	aString ifEmpty: [^ true].
+	self size < aString size ifTrue: [^ false].
 	(aString size < 2 or: [self size < 2]) ifTrue: [^ self asLowercase beginsWith: aString asLowercase].
-	^ aString size > 1 and: [self first = aString first] and: [self second = aString second] and: [ | rhsIndex |
-		rhsIndex := 3.
-		3 to: self size do: [:lhsIndex |
-			rhsIndex > aString size ifTrue: [^ true].
-			(self at: lhsIndex) asLowercase = (aString at: rhsIndex) asLowercase ifTrue: [rhsIndex := rhsIndex + 1]].
-		rhsIndex > aString size]
+	^ aString size > 1 and: [
+		self first = aString first and: [
+			self second = aString second and: [ | rhsIndex |
+				rhsIndex := 3.
+				3 to: self size do: [:lhsIndex |
+					rhsIndex > aString size ifTrue: [^ true].
+					(self at: lhsIndex) asLowercase = (aString at: rhsIndex) asLowercase ifTrue: [rhsIndex := rhsIndex + 1]].
+				rhsIndex > aString size]]]
 ]
 
 { #category : #'*Sandblocks-Core' }

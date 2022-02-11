@@ -11,10 +11,8 @@ Class {
 SBGrammarHandler class >> eventValidForString: anEvent [
 
 	| keysWithCmd |
-	" macOS may require users to hold alt/cmd to input these "
 	keysWithCmd := '{[]}'.
-	((anEvent commandKeyPressed and: [(keysWithCmd includes: anEvent keyCharacter) not]) or: [anEvent optionKeyPressed or: [anEvent controlKeyPressed]]) ifTrue: [^ false].
-	
+	((anEvent commandKeyPressed or: [anEvent optionKeyPressed or: [anEvent controlKeyPressed]]) and: [(keysWithCmd includes: anEvent keyCharacter) not]) ifTrue: [^ false].
 	^ anEvent keyCharacter isPrintable
 ]
 

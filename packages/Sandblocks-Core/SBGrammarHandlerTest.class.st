@@ -113,7 +113,7 @@ SBGrammarHandlerTest >> testWrapWithMessageSend [
 		block := '[]' parseAsSandblock.
 		editor := self methodFor: block.
 		block addMorphBack: leaf.
-		editor startInput: leaf at: 0 replacingContents: false.
+		editor startInput: leaf lastDeepChild at: 0 replacingContents: false.
 		self send: (self keyboardEvent: $ ) to: editor.
 		self assert: (block statements first isMessageSend and: [block statements first ~= leaf]).
 		self assert: block statements first messageParts first equals: editor selection]

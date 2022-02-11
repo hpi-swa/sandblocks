@@ -185,7 +185,9 @@ SBCursorText >> moveHorizontal: aNumber wordWise: aBoolean [
 { #category : #'as yet unclassified' }
 SBCursorText >> pixelPosition: aPoint [
 
-	cursorIndex := (self block currentTextMorph cursorIndexForPosition: aPoint) max: 1
+	cursorIndex := aPoint
+		ifNotNil: [(self block currentTextMorph cursorIndexForPosition: aPoint) max: 1]
+		ifNil: [1]
 ]
 
 { #category : #'as yet unclassified' }

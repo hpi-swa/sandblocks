@@ -14,7 +14,7 @@ SBCursorPosition >> = aPosition [
 SBCursorPosition >> adjacentPosition: aNumber in: anEditor [
 
 	^ self adjacentPosition: aNumber to: self in: (self navigationRootIn: anEditor) that: [:s | " skip over selects unless that block would otherwise not get visited at all "
-	(s isKindOf: SBCursorSelect) not or: [s block currentTextMorph isNil and: [s block hasChildSandblocks not]]]
+	(s isKindOf: SBCursorSelect) not or: [s block currentTextMorph isNil and: [s block hasChildSandblocks not and: [s block dynamicNumberOfChildren not]]]]
 ]
 
 { #category : #'as yet unclassified' }

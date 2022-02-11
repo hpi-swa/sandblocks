@@ -38,7 +38,7 @@ SBJsComponentScreenshotTaker class >> takeScreenshotOf: aReactComponentString at
 				reactClassName := (captures at: 'class_name') contents.
 				optionsWithName := 'examples = ', (captures at: 'options') sourceString.
 				usedComponentReplacements := (captures at: 'class') collectComponentUsageReplacements.
-				self halt.
+				"self halt."
 				SBJsComponentReplacement
 					generateHtmlFileFor: wholeReactClass
 					withClassName: reactClassName

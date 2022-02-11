@@ -122,7 +122,19 @@ SBCursorInsert >> container: aBlock [
 { #category : #'as yet unclassified' }
 SBCursorInsert >> drawOn: aCanvas in: aRectangle [
 
-	aCanvas fillRectangle: aRectangle color: self color
+	SBToggledCode comment: '' active: 1 do: {
+		[ | r |
+			r := aRectangle expandBy: -1.
+			aCanvas
+				line: r topLeft
+				to: (aRectangle height > 4 ifTrue: [r bottomLeft] ifFalse: [r topRight])
+				width: (aRectangle height > 4 ifTrue: [aRectangle width] ifFalse: [aRectangle height])
+				color: self color
+				dashLength: 1
+				secondColor: Color transparent
+				secondDashLength: 5
+				startingOffset: 0].
+		[aCanvas fillRectangle: aRectangle color: self color]}
 ]
 
 { #category : #'as yet unclassified' }

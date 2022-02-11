@@ -105,3 +105,15 @@ SBPalettePreviewContainer >> wasSelected [
 
 	self sandblockEditor select: nil
 ]
+
+{ #category : #'as yet unclassified' }
+SBPalettePreviewContainer >> wasSelectedFromCursor: aCursorPosition [
+
+	super wasSelectedFromCursor: aCursorPosition.
+	
+	aCursorPosition mode = #insert ifTrue: [
+		(aCursorPosition command canInsert: self firstSubmorph) ifTrue: [
+			aCursorPosition command
+				morph: self firstSubmorph copyBlock;
+				do]]
+]

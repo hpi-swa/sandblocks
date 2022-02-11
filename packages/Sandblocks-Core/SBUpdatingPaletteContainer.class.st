@@ -3,8 +3,8 @@ Class {
 	#superclass : #SBPaletteContainer,
 	#instVars : [
 		'currentPalettes',
-		'paletteMapping',
-		'selectedBlock'
+		'selectedBlock',
+		'palettes'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -17,13 +17,14 @@ SBUpdatingPaletteContainer >> addNoPalettesNotice [
 ]
 
 { #category : #'as yet unclassified' }
-SBUpdatingPaletteContainer >> addPalette: aPalette [
+SBUpdatingPaletteContainer >> build [
 
-	| currentMorphs newMorphs |
-	currentMorphs := content submorphs, categories submorphs.
-	aPalette buildOn: self.
-	newMorphs := content submorphs, categories submorphs.
-	paletteMapping at: aPalette put: (newMorphs difference: currentMorphs)
+	content removeAllMorphs.
+	categories removeAllMorphs.
+	^ currentPalettes do: [:palette | | p |
+		p := palettes at: palette.
+		content addMorphBack: p.
+		categories addMorphBack: p categories]
 ]
 
 { #category : #'as yet unclassified' }
@@ -32,7 +33,8 @@ SBUpdatingPaletteContainer >> delete [
 	super delete.
 	categories removeAllMorphs.
 	content removeAllMorphs.
-	paletteMapping := Dictionary new
+	currentPalettes := {}.
+	palettes reset
 ]
 
 { #category : #'as yet unclassified' }
@@ -40,14 +42,17 @@ SBUpdatingPaletteContainer >> initialize [
 
 	super initialize.
 	
-	currentPalettes := Set new.
-	paletteMapping := Dictionary new.
+	currentPalettes := {}.
+	palettes := LRUCache size: 10 factory: [:key | | container |
+		container := SBPaletteBuilder new.
+		key buildOn: container.
+		container].
 	
 	self
 		minimumWidth: 270;
 		shadowOffset: (-10 @ 0 corner: 10 @ 0);
 		hasDropShadow: true;
-		shadowColor: (Color black alpha: 0.01);
+		shadowColor: ((Color r: 0.0 g: 0.0 b: 0.0) alpha: 0.01);
 		layoutInset: (SBEdgeInsets right: 4);
 		detachDecorators: SBResizableDecorator;
 		attachDecorator: (SBResizableDecorator new edge: #right)
@@ -56,8 +61,8 @@ SBUpdatingPaletteContainer >> initialize [
 { #category : #'as yet unclassified' }
 SBUpdatingPaletteContainer >> rebuild [
 
-	currentPalettes do: [:palette | self removePalette: palette].
-	currentPalettes do: [:palette | self addPalette: palette]
+	palettes reset.
+	self build
 ]
 
 { #category : #'as yet unclassified' }
@@ -65,12 +70,6 @@ SBUpdatingPaletteContainer >> removeNoPalettesNotice [
 
 	"self assert: categories submorphCount <= 1."
 	categories removeAllMorphs
-]
-
-{ #category : #'as yet unclassified' }
-SBUpdatingPaletteContainer >> removePalette: aPalette [
-
-	paletteMapping at: aPalette ifPresent: [:morphs | morphs do: #delete]
 ]
 
 { #category : #'as yet unclassified' }
@@ -94,12 +93,12 @@ SBUpdatingPaletteContainer >> selectionChanged: aBlock [
 	selectedBlock := aBlock.
 	currentPalettes ifEmpty: [self removeNoPalettesNotice].
 	
-	newPalettes := ((Array streamContents: [:stream | aBlock andAllParentSandblocksDo: [:p | stream nextPutAll: p palettes]]), (SBPalette allSubclasses select: [:palette | (aBlock satisfies: palette context) and: [palette matchesBlock: aBlock]])) withoutDuplicates reverse.
+	newPalettes := ((Array streamContents: [:stream | aBlock andAllParentSandblocksDo: [:p | stream nextPutAll: p palettes]]), (SBPalette allSubclasses select: [:palette | (aBlock satisfies: palette context) and: [palette matchesBlock: aBlock]])) withoutDuplicates.
 	
-	(currentPalettes difference: newPalettes) do: [:palette | self removePalette: palette].
-	(newPalettes difference: currentPalettes) do: [:palette | self addPalette: palette].
+	(newPalettes hasEqualElements: currentPalettes) ifFalse: [
+		currentPalettes := newPalettes.
+		self build].
 	
-	currentPalettes := newPalettes.
 	currentPalettes ifEmpty: [self addNoPalettesNotice].
 	
 	search contents: ''.

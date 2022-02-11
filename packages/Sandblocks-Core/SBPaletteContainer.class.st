@@ -23,85 +23,6 @@ SBPaletteContainer class >> matchesBlock: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBPaletteContainer >> addBlock: aString as: aBlock [
-
-	| block |
-	"addMorphBack: (SBStringMorph new contents: aString);"
-	block := (aBlock isInlineBlock and: [aBlock factory rootRuleName = aBlock type])
-		ifTrue: [aBlock childSandblocks first]
-		ifFalse: [aBlock].
-	content addMorphBack: (self container: block label: aString)
-]
-
-{ #category : #'as yet unclassified' }
-SBPaletteContainer >> addHeader: aString [
-
-	categories submorphs ifNotEmpty: [
-		categories addMorphBack: (Morph new
-			color: Color transparent;
-			height: 8)].
-	categories addMorphBack: (SBStringMorph new
-		contents: aString;
-		bold)
-]
-
-{ #category : #'as yet unclassified' }
-SBPaletteContainer >> addSectionHeader: aString [
-
-	| header |
-	header := SBStringMorph new
-		contents: aString;
-		bold.
-	content hasSubmorphs ifTrue: [
-		content addMorphBack: (Morph new
-			color: Color transparent;
-			height: 16)].
-	content addMorphBack: header.
-	categories addMorphBack: (SBStringMorph new
-		contents: aString;
-		on: #click send: #scrollToSection:event:morph: to: self withValue: header).
-	content addMorphBack: (Morph new
-		color: Color transparent;
-		height: 4)
-]
-
-{ #category : #'as yet unclassified' }
-SBPaletteContainer >> addSubSectionHeader: aString [
-
-	| header |
-	header := SBStringMorph new contents: (aString asUppercase asText addAttribute: (TextFontChange fontNumber: 1)).
-	content hasSubmorphs ifTrue: [
-		content addMorphBack: (Morph new
-			color: Color transparent;
-			height: 4)].
-	content addMorphBack: header.
-	content addMorphBack: (Morph new
-		color: Color transparent;
-		height: 4)
-]
-
-{ #category : #'as yet unclassified' }
-SBPaletteContainer >> container: aBlock label: aString [
-
-	^ SBPalettePreviewContainer new
-		methodClass: nil;
-		label: aString;
-		addMorphBack: (self markCopyPlaceholder: aBlock)
-]
-
-{ #category : #'as yet unclassified' }
-SBPaletteContainer >> content [
-
-	^ content
-]
-
-{ #category : #'as yet unclassified' }
-SBPaletteContainer >> grammarHandler [
-
-	^ self subclassResponsibility
-]
-
-{ #category : #'as yet unclassified' }
 SBPaletteContainer >> initialize [
 
 	super initialize.
@@ -154,14 +75,6 @@ SBPaletteContainer >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
-SBPaletteContainer >> markCopyPlaceholder: aBlock [
-
-	(aBlock nextBlockThat: [:m | m isUnknown]) ifNotNil: [:m |
-		m setProperty: #copyPlaceholder toValue: true].
-	^ aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBPaletteContainer >> newNullBlock [
 
 	^ SBUnknown new
@@ -186,12 +99,6 @@ SBPaletteContainer >> pickUp: anEvent [
 	| morphs |
 	morphs := content morphsAt: anEvent position.
 	morphs size > 1 ifTrue: [(morphs at: morphs size - 1) pickUp: anEvent]
-]
-
-{ #category : #'as yet unclassified' }
-SBPaletteContainer >> scrollToSection: aBlock event: anEvent morph: aMorph [
-
-	content owner owner vScrollBar setValue: aBlock top
 ]
 
 { #category : #'as yet unclassified' }

@@ -97,7 +97,7 @@ SBJsComponentUsageReplacement >> examples: aJsArray forAComponent: reactClassNam
 		takeScreenshotOf: aReactComponentString
 		atExample: validExampleIndex
 		withExtent: 1000 @ 1000.
-		self halt.
+		"self halt."
 	componentPreviewImage := self shrinkPreviewImage: componentPreviewImage.
 	^ self
 		factory: SBJavascript instance;
