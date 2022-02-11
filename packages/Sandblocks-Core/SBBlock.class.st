@@ -1858,6 +1858,12 @@ SBBlock >> objectInterface [
 ]
 
 { #category : #'object interface' }
+SBBlock >> objectInterfaceForDrop: aBlock near: anotherBlock at: aSymbol [
+
+	^ self objectInterfaceNear: anotherBlock at: aSymbol
+]
+
+{ #category : #'object interface' }
 SBBlock >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ SBInterfaces never

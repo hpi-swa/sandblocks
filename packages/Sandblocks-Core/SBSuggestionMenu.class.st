@@ -177,9 +177,11 @@ SBSuggestionMenu >> initialize [
 	
 	focusShortcut := SBEditor anyShortcutForAction: #focusSuggestions.
 	self scroller
-		addMorphBack: (focusHint := SBStringMorph new contents: (focusShortcut
-			ifNotNil: ['Use ', (focusShortcut displayString, ' to focus')]
-			ifNil: ['Hover to focus']));
+		addMorphBack: (focusHint := SBStringMorph new
+			contents: (focusShortcut
+				ifNotNil: ['Use ', (focusShortcut displayString, ' to focus')]
+				ifNil: ['Hover to focus']);
+			opacity: 0.6);
 		addMorphBack: container
 ]
 
