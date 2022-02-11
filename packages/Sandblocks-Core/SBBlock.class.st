@@ -1193,7 +1193,7 @@ SBBlock >> hasHorizontalLayout [
 	self isBlockBody ifTrue: [^ false].
 	blocks := self childSandblocks.
 	^ blocks size < 2 or: [ | delta |
-		delta := blocks first topLeft - blocks second topLeft.
+		delta := blocks first topLeft - blocks last topLeft.
 		delta x < delta y]
 ]
 
