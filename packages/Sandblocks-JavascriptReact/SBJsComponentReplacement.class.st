@@ -657,7 +657,9 @@ SBJsComponentReplacement >> exampleArray: aJsArray withSharedProps: aJsObject fo
 { #category : #accessing }
 SBJsComponentReplacement >> exampleArraySandblock [
 
-	^ self firstSubmorph submorphs second firstSubmorph
+	|rowSubmorphs|
+	rowSubmorphs :=  self firstSubmorph submorphs.
+	^ rowSubmorphs size > 1 ifTrue:[rowSubmorphs second firstSubmorph] ifFalse: [rowSubmorphs first].
 ]
 
 { #category : #accessing }
@@ -710,7 +712,7 @@ SBJsComponentReplacement >> savePaletteButtonFor: aComponentNode withName: aComp
 			title: 'Choose Category'.
 		category ifNotNil: [
 			Cursor wait showWhile: [
-				componentUsageReplacement := SBJsComponentUsageReplacement inlineComponentUsageReplacementFor: aComponentNode sourceString.
+				componentUsageReplacement := SBJsComponentUsageReplacement inlineComponentUsageReplacementFor: self owningClass buildCopy.
 				SBJsReactComponentRegistry defaultRegistry
 					addComponent: componentUsageReplacement
 					withName: aComponentNameString
@@ -732,7 +734,7 @@ SBJsComponentReplacement >> skipHtmlFileGeneration: aBoolean [
 { #category : #saving }
 SBJsComponentReplacement >> veryDeepCopyWith: deepCopier [
 
-	| new row mmBrowserMorph |
+	| new mmBrowserMorph row |
 	" assure that the browser morph is not included in the deepCopy; Does not seem to work :/ "
 	row := self firstSubmorph.
 	mmBrowserMorph := row firstSubmorph.

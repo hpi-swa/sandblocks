@@ -274,7 +274,10 @@ SBDragHelper >> mouseMove: anEvent [
 						ifFalse: [
 							self closestAdjacentTo: anEvent position in: blockAtCursor do: [:adjacent :before |
 								(morph
-									convertedFor: (blockAtCursor objectInterfaceNear: adjacent at: (before ifTrue: [#before] ifFalse: [#after]))
+									convertedFor: (blockAtCursor
+										objectInterfaceForDrop: morph
+										near: adjacent
+										at: (before ifTrue: [#before] ifFalse: [#after]))
 									do: [:res | {#insert. blockAtCursor. adjacent. before. res}]) ifNil: [{#replace. blockAtCursor}]]]]]
 		ifNil: [#(#none nil)].
 	

@@ -14,19 +14,18 @@ Class {
 }
 
 { #category : #'inline-replacement' }
-SBJsComponentUsageReplacement class >> inlineComponentUsageReplacementFor: aReactComponentString [
-
-	| reactComponentAST |
-	reactComponentAST := SBJavascript parse: aReactComponentString.
-	reactComponentAST allBlocksDo: [:block |
-		SBTSQuery new execute: SBJsComponentReplacement replacementQuery against: block capturesDo: [:captures :success |
+SBJsComponentUsageReplacement class >> inlineComponentUsageReplacementFor: aReactComponentClass [
+	self halt.
+	aReactComponentClass allBlocksDo: [:block |
+		SBTSQuery new execute: self queryForFirstValidExample against: block capturesDo: [:captures :success |
 			success ifTrue: [ | reactClassName examples |
 				reactClassName := (captures at: 'class_name') contents.
 				examples := captures at: 'options'.
+				self halt.
 				^ self new
 					examples: examples
 					forAComponent: reactClassName
-					withComponentNode: aReactComponentString]]].
+					withComponentNode: aReactComponentClass sourceString]]].
 	self signal: (Error signal: 'Could not find a valid examples array in the given component.')
 ]
 
@@ -45,6 +44,35 @@ SBJsComponentUsageReplacement class >> matchComponentExamples: aDictionary do: a
 		replacementFor: element
 		withComponentSource: replacementComponent referencedComponentClassSourceString
 		withExampleImage: replacementComponent previewImageCopy)
+]
+
+{ #category : #'inline-replacement' }
+SBJsComponentUsageReplacement class >> queryForFirstValidExample [
+	"Got no better solutution than to keep an extra copy of the query as it cannot be accessed from the pragma that simply."
+
+	^ '(class_declaration
+    name: (identifier) @class_name
+    body: (class_body
+	(field_definition
+        	(property_identifier) @shared_example_props_name
+	      (object)
+        )? @shared_example_props
+    	(field_definition
+        	(property_identifier) ="examples"
+	      (array
+			(object
+				(pair
+					(property_identifier) ="componentProps"
+					(object)
+				) @first_valid_example
+			)
+		) @options
+        ) @example_array
+	(method_definition
+        	(property_identifier) ="render"
+  	) @render_method
+    )
+) @class'
 ]
 
 { #category : #comparing }
