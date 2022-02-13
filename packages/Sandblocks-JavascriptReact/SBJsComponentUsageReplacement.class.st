@@ -14,18 +14,22 @@ Class {
 }
 
 { #category : #'inline-replacement' }
-SBJsComponentUsageReplacement class >> inlineComponentUsageReplacementFor: aReactComponentClass [
-	self halt.
-	aReactComponentClass allBlocksDo: [:block |
+SBJsComponentUsageReplacement class >> inlineComponentUsageReplacementFor: aReactComponentString [
+
+	| reactComponentAST |
+	reactComponentAST := SBJavascript parse: aReactComponentString.
+	reactComponentAST allBlocksDo: [:block |
 		SBTSQuery new execute: self queryForFirstValidExample against: block capturesDo: [:captures :success |
 			success ifTrue: [ | reactClassName examples |
 				reactClassName := (captures at: 'class_name') contents.
 				examples := captures at: 'options'.
-				self halt.
+				examples childSandblocks do: [:child | "Filter out all examples in the the array except for the first one."
+				(child access children size < 1 or: [child access children first yourself ~= (captures at: 'first_valid_example')]) ifTrue: [child deleteTarget delete]].
+				"TODO: Find replacements!"
 				^ self new
-					examples: examples
+					example: (captures at: 'first_valid_example')
 					forAComponent: reactClassName
-					withComponentNode: aReactComponentClass sourceString]]].
+					withComponentNode: reactComponentAST sourceString]]].
 	self signal: (Error signal: 'Could not find a valid examples array in the given component.')
 ]
 
@@ -38,7 +42,9 @@ SBJsComponentUsageReplacement class >> matchComponentExamples: aDictionary do: a
 	elementName := element access children first contents.
 	replacementComponent := SBJsReactComponentRegistry defaultRegistry componentReplacementForComponentName: elementName.
 	replacementComponent ifNil: [^ nil].
-	blockToReplace := element owner owner class = self ifTrue:[element owner owner] ifFalse:[element].
+	blockToReplace := element owner owner class = self
+		ifTrue: [element owner owner]
+		ifFalse: [element].
 	"First argument: What will be replaced, second argument: With what it will be replaced."
 	^ aBlock value: blockToReplace value: (self new
 		replacementFor: element
@@ -54,22 +60,22 @@ SBJsComponentUsageReplacement class >> queryForFirstValidExample [
     name: (identifier) @class_name
     body: (class_body
 	(field_definition
-        	(property_identifier) @shared_example_props_name
+        	(property_identifier) ="sharedExampleProps"
 	      (object)
         )? @shared_example_props
     	(field_definition
-        	(property_identifier) ="examples"
+        	(property_identifier)="examples"
 	      (array
 			(object
 				(pair
-					(property_identifier) ="componentProps"
+					(property_identifier)="componentProps"
 					(object)
 				) @first_valid_example
 			)
 		) @options
         ) @example_array
 	(method_definition
-        	(property_identifier) ="render"
+        	(property_identifier)="render"
   	) @render_method
     )
 ) @class'
@@ -93,12 +99,14 @@ SBJsComponentUsageReplacement >> collectComponentUsageReplacements [
 
 { #category : #accessing }
 SBJsComponentUsageReplacement >> componentName [
-	
-	|identifier|
-	 self access children size <= 0 ifTrue:[^nil].
-	identifier :=  self access children first.
 
-	^ identifier children size > 0 ifTrue:[identifier children first contents] ifFalse: [identifier contents]
+	| identifier |
+	self access children size <= 0 ifTrue: [^ nil].
+	identifier := self access children first.
+	
+	^ identifier children size > 0
+		ifTrue: [identifier children first contents]
+		ifFalse: [identifier contents]
 ]
 
 { #category : #'example-extracting' }
@@ -109,23 +117,20 @@ SBJsComponentUsageReplacement >> componentPropsFromExampleObject: aJsObject [
 ]
 
 { #category : #replacing }
-SBJsComponentUsageReplacement >> examples: aJsArray forAComponent: reactClassNameString withComponentNode: aReactComponentString [
+SBJsComponentUsageReplacement >> example: aJsArrayEntry forAComponent: reactClassNameString withComponentNode: aReactComponentString [
 
-	| validExampleIndex examplePropsObject keyValuePairs componentPreviewImage jsxString |
-	validExampleIndex := self indexOfFirstValidExampleEntry: aJsArray.
-	examplePropsObject := self componentPropsFromExampleObject: (aJsArray access children at: validExampleIndex).
-	keyValuePairs := self keyValuesOfExampleIObject: examplePropsObject.
+	| keyValuePairs componentPreviewImage jsxString |
+	keyValuePairs := self keyValuesOfExampleIObject: aJsArrayEntry access children second.
 	self referencedComponentClassSourceString: aReactComponentString.
 	
 	jsxString := '<', reactClassNameString.
-	keyValuePairs do: [:association | jsxString := jsxString, ' ', association key, '={', association value sourceString,'}'].
+	keyValuePairs do: [:association | jsxString := jsxString, ' ', association key, '={', association value sourceString, '}'].
 	jsxString := jsxString, ' ', '/>'.
 	
 	componentPreviewImage := SBJsComponentScreenshotTaker
 		takeScreenshotOf: aReactComponentString
-		atExample: validExampleIndex
 		withExtent: 1000 @ 1000.
-		"self halt."
+	
 	componentPreviewImage := self shrinkPreviewImage: componentPreviewImage.
 	^ self
 		factory: SBJavascript instance;
@@ -178,7 +183,6 @@ SBJsComponentUsageReplacement >> replacementFor: aJsxSelfClosingElement withComp
 
 	self referencedComponentClassSourceString: aReactComponentString.
 	
-	
 	^ self
 		factory: SBJavascript instance;
 		removeAllMorphs;
@@ -199,18 +203,20 @@ SBJsComponentUsageReplacement >> shrinkPreviewImage: aForm [
 
 	aForm height > (aForm width * 2)
 		ifTrue: [aForm height > 100 ifTrue: [^ aForm scaledToHeight: 100]]
-		ifFalse: [aForm width > (200) ifTrue: [^ aForm scaledToWidth: 200]].
+		ifFalse: [aForm width > 200 ifTrue: [^ aForm scaledToWidth: 200]].
 	^ aForm
 ]
 
 { #category : #accessing }
 SBJsComponentUsageReplacement >> type [
 
-	^ 'jsx_expression'
+	^ 'jsx_element'
 ]
 
 { #category : #saving }
 SBJsComponentUsageReplacement >> writeSourceOn: aStream indent: aNumber [
 
-	self firstSubmorph submorphs second writeSourceOn: aStream indent: aNumber
+	self firstSubmorph submorphs second
+		writeSourceOn: aStream
+		indent: aNumber
 ]

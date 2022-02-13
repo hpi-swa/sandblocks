@@ -23,257 +23,16 @@ Class {
 }
 
 { #category : #'generate-html' }
-SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forClass: aClassNameString withOptions: aArrayString withUsedReactComponents: aOrderedCollection [
+SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forClass: aClassNameString withOptions: aArrayString withUsedReactComponents: aOrderedCollection withSharedProps: aJsObjectStringMaybe [
 
-	| usedReactComponentsSourceStrings |
+	| usedReactComponentsSourceStrings aJsObjectString |
 	"self halt."
 	usedReactComponentsSourceStrings := aOrderedCollection
 		ifEmpty: ['']
 		ifNotEmpty: [(aOrderedCollection collect: [:aSBJsComponentUsageReplacement | aSBJsComponentUsageReplacement referencedComponentClassSourceString]) joinSeparatedBy: ' '].
-	
-	^ '<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-
-    <meta
-      name="description"
-      content="component testing example page"
-    />
-   <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-<link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
-	<style>
-		body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-      }
-
-      .topnav {
-        background-color: #333;
-        position: sticky;
-        top: 0px;
-        width: 100%;
-        height: 48px;
-      }
-
-      .topnav > a,
-      .topnav > span,
-      .topnav > div {
-        float: left;
-        color: #f2f2f2;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-        font-size: 17px;
-      }
-
-      .topnav > a:hover,
-      .topnav > span:hover,
-      .topnav > div:hover {
-        background-color: #ddd;
-        color: black;
-      }
-
-      .main-content {
-        text-align: center;
-        padding: 40px 100px;
-      }
-
-      .topnav a.active {
-        background-color: #04aa6d;
-        color: white;
-      }
-
-      table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-      }
-
-      td,
-      th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-      }
-
-      tr:nth-child(even) {
-        background-color: #dddddd;
-      }
-      .search-container input[type="text"] {
-        padding: 6px;
-        margin-top: 8px;
-        font-size: 17px;
-        border-color: #ddd;
-        border-style: double;
-      }
-
-      .search-container button {
-        padding: 8px 10px;
-        margin-top: 8px;
-        margin-right: 16px;
-        background: #ddd;
-        font-size: 17px;
-        border: none;
-        cursor: pointer;
-      }
-
-      @keyframes spin {
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      #snackbar {
-        visibility: hidden;
-        min-width: 250px;
-        margin-left: -125px;
-        background-color: #555;
-        color: #fff;
-        text-align: center;
-        border-radius: 2px;
-        padding: 16px;
-        position: fixed;
-        z-index: 1;
-        left: 50%;
-        bottom: 30px;
-        font-size: 17px;
-      }
-
-      #snackbar.show {
-        visibility: visible;
-        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-        animation: fadein 0.5s, fadeout 0.5s 2.5s;
-      }
-
-      @-webkit-keyframes fadein {
-        from {
-          bottom: 0;
-          opacity: 0;
-        }
-        to {
-          bottom: 30px;
-          opacity: 1;
-        }
-      }
-
-      @keyframes fadein {
-        from {
-          bottom: 0;
-          opacity: 0;
-        }
-        to {
-          bottom: 30px;
-          opacity: 1;
-        }
-      }
-
-      @-webkit-keyframes fadeout {
-        from {
-          bottom: 30px;
-          opacity: 1;
-        }
-        to {
-          bottom: 0;
-          opacity: 0;
-        }
-      }
-
-      @keyframes fadeout {
-        from {
-          bottom: 30px;
-          opacity: 1;
-        }
-        to {
-          bottom: 0;
-          opacity: 0;
-        }
-      }
-
-      .dropbtn {
-        background-color: #4caf50;
-        color: white;
-        padding: 16px;
-        font-size: 16px;
-        border: none;
-        cursor: pointer;
-      }
-
-      .dropdown {
-        position: relative;
-        display: inline-block;
-      }
-
-      .dropdown-content {
-        position: absolute;
-        right: 0;
-        background-color: #ddd;
-        padding: 8px;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-        z-index: 10;
-      }
-
-      .dropdown-background {
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        top: 0px;
-        left: 0px;
-        z-index: 9;
-        background-color: rgba(0, 0, 0, 0.2);
-      }
-
-      .dropdown-content a {
-        color: black;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-      }
-
-      .dropdown-content a:hover {
-        background-color: #f1f1f1;
-      }
-
-      .dropdown:hover .dropbtn {
-        background-color: #3e8e41;
-      }
-	</style>
-	
-    <title>Example</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root">loading ...</div>
-    <script type="text/babel">
-', usedReactComponentsSourceStrings, aSourceCodeString, '
-	const ', aArrayString, ';
-	const components = examples.map((example, index) => {
-        debugger;
-        const { componentProps } = example;
-        const { parentProps } = example;
-        return (
-          <div key={`container${index}`} {...parentProps}>
-            <', aClassNameString, ' {...componentProps} />
-          </div>
-        );
-      });
-      ReactDOM.render(components, document.getElementById("root"));
-    </script>
-  </body>
-</html>'
-]
-
-{ #category : #'generate-html' }
-SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forClass: aClassNameString withOptions: aArrayString withUsedReactComponents: aOrderedCollection withSharedProps: aJsObjectString [
-
+	aJsObjectString := aJsObjectStringMaybe
+		ifNil: ['sharedExampleProps = {}']
+		ifNotNil: [aJsObjectStringMaybe sourceString].
 	^ '<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -503,7 +262,7 @@ SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forC
 	}
     </style>
     <script type="text/babel">
-', aSourceCodeString, '
+', usedReactComponentsSourceStrings, aSourceCodeString, '
 	const ', aJsObjectString, ';
 	const ', aArrayString, ';
 	const components = examples.map((example, index) => {
@@ -541,14 +300,15 @@ SBJsComponentReplacement class >> exampleReactClassAsString [
 ]
 
 { #category : #'generate-html' }
-SBJsComponentReplacement class >> generateHtmlFileFor: aReactComponentString withClassName: aClassNameString forOptions: aJsArrayString withUsedReactComponents: aOrderedCollection [
+SBJsComponentReplacement class >> generateHtmlFileFor: aReactComponentString withClassName: aClassNameString forOptions: aJsArrayString withUsedReactComponents: aOrderedCollection withSharedProps: aJsObjectString [
 
 	| htmlString |
 	htmlString := self
 		exampleHTMLTemplateFor: aReactComponentString
 		forClass: aClassNameString
 		withOptions: aJsArrayString
-		withUsedReactComponents: aOrderedCollection.
+		withUsedReactComponents: aOrderedCollection
+		withSharedProps: aJsObjectString.
 	FileStream
 		forceNewFileNamed: self testHTMLFilePath
 		do: [:stream | stream nextPutAll: htmlString]
@@ -560,7 +320,7 @@ SBJsComponentReplacement class >> matchComponentExamples: aDictionary do: aBlock
     name: (identifier) @class_name
     body: (class_body
 	(field_definition
-        	(property_identifier) @shared_example_props_name
+        	(property_identifier) ="sharedExampleProps"
 	      (object)
         )? @shared_example_props
     	(field_definition
@@ -622,6 +382,14 @@ SBJsComponentReplacement class >> testHTMLFileUrl [
 	^ 'file://', self testHTMLFilePath
 ]
 
+{ #category : #accessing }
+SBJsComponentReplacement >> componentMemberAboveSelf [
+
+	| componentMembers |
+	componentMembers := self owningClass access children third children.
+	^ componentMembers at: (componentMembers indexOf: self) - 1 ifAbsent: [nil]
+]
+
 { #category : #replacing }
 SBJsComponentReplacement >> exampleArray: aJsArray withSharedProps: aJsObject forAComponent: aComponentNameString withComponentNode: aComponentNode url: aString [
 
@@ -632,8 +400,8 @@ SBJsComponentReplacement >> exampleArray: aJsArray withSharedProps: aJsObject fo
 		generateHtmlFileFor: aComponentNode sourceString
 		withClassName: aComponentNameString
 		forOptions: aJSArrayWithName
-		withUsedReactComponents: usedComponentReplacements.
-	"withSharedProps: (aJsObject ifNotNil: [:object | object sourceString] ifNil: ['sharedExampleProps = {}'])."
+		withUsedReactComponents: usedComponentReplacements
+		withSharedProps: aJsObject.
 	wrappedBrowser := SBBlock new
 		addMorphBack: (SBJsMMBrowserWrapper new
 			addMorphBack: (MMBrowserMorph reactOpenOn: aString);
@@ -657,9 +425,11 @@ SBJsComponentReplacement >> exampleArray: aJsArray withSharedProps: aJsObject fo
 { #category : #accessing }
 SBJsComponentReplacement >> exampleArraySandblock [
 
-	|rowSubmorphs|
-	rowSubmorphs :=  self firstSubmorph submorphs.
-	^ rowSubmorphs size > 1 ifTrue:[rowSubmorphs second firstSubmorph] ifFalse: [rowSubmorphs first].
+	| rowSubmorphs |
+	rowSubmorphs := self firstSubmorph submorphs.
+	^ rowSubmorphs size > 1
+		ifTrue: [rowSubmorphs second firstSubmorph]
+		ifFalse: [rowSubmorphs first]
 ]
 
 { #category : #accessing }
@@ -712,11 +482,18 @@ SBJsComponentReplacement >> savePaletteButtonFor: aComponentNode withName: aComp
 			title: 'Choose Category'.
 		category ifNotNil: [
 			Cursor wait showWhile: [
-				componentUsageReplacement := SBJsComponentUsageReplacement inlineComponentUsageReplacementFor: self owningClass buildCopy.
+				componentUsageReplacement := SBJsComponentUsageReplacement inlineComponentUsageReplacementFor: self owningClass sourceString.
 				SBJsReactComponentRegistry defaultRegistry
 					addComponent: componentUsageReplacement
 					withName: aComponentNameString
 					inCategory: category]]]
+]
+
+{ #category : #accessing }
+SBJsComponentReplacement >> sharedExampleProps [
+
+	self componentMemberAboveSelf ifNotNil: [:memberAbove | memberAbove access children first contents = 'sharedExampleProps' ifTrue: [^ memberAbove]].
+	^ nil
 ]
 
 { #category : #accessing }
@@ -751,16 +528,18 @@ SBJsComponentReplacement >> writeSourceOn: aStream [
 	| optionsObject |
 	optionsObject := 'examples = ', self exampleArraySandblock sourceString.
 	aStream nextPutAll: optionsObject.
-	self skipHtmlFileGeneration ifFalse: [ | className componentClass usedComponentReplacements |
+	self skipHtmlFileGeneration ifFalse: [ | className componentClass usedComponentReplacements sharedExampleProps |
 		self skipHtmlFileGeneration: true.
 		componentClass := self owningClass.
 		className := componentClass firstSubmorph submorphs third contents.
 		usedComponentReplacements := componentClass collectComponentUsageReplacements.
+		sharedExampleProps := self sharedExampleProps.
 		self class
 			generateHtmlFileFor: componentClass sourceString
 			withClassName: className
 			forOptions: optionsObject
-			withUsedReactComponents: usedComponentReplacements.
+			withUsedReactComponents: usedComponentReplacements
+			withSharedProps: sharedExampleProps.
 		self firstSubmorph firstSubmorph firstSubmorph firstSubmorph doRefresh.
 		self skipHtmlFileGeneration: false]
 ]

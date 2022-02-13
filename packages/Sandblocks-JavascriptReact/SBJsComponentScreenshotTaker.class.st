@@ -24,9 +24,9 @@ Class {
 }
 
 { #category : #'screenshot-taking' }
-SBJsComponentScreenshotTaker class >> takeScreenshotOf: aReactComponentString atExample: index withExtent: aPoint [
+SBJsComponentScreenshotTaker class >> takeScreenshotOf: aReactComponentString withExtent: aPoint [
 
-	| reactComponentAST |
+	| reactComponentAST sharedOptions |
 	reactComponentAST := SBJavascript parse: aReactComponentString.
 	self flag: #TODO.
 	"index ist currently ignored"
@@ -37,13 +37,14 @@ SBJsComponentScreenshotTaker class >> takeScreenshotOf: aReactComponentString at
 				wholeReactClass := (captures at: 'class') sourceString.
 				reactClassName := (captures at: 'class_name') contents.
 				optionsWithName := 'examples = ', (captures at: 'options') sourceString.
-				usedComponentReplacements := (captures at: 'class') collectComponentUsageReplacements.
-				"self halt."
+				sharedOptions := captures at: 'shared_example_props' ifAbsent: [nil].
+				usedComponentReplacements := (captures at: 'class') applyReplacements collectComponentUsageReplacements.
 				SBJsComponentReplacement
 					generateHtmlFileFor: wholeReactClass
 					withClassName: reactClassName
 					forOptions: optionsWithName
-					withUsedReactComponents: usedComponentReplacements.
+					withUsedReactComponents: usedComponentReplacements
+					withSharedProps: sharedOptions.
 				tabId := MMProcessWrapper getOSDependentSingleton
 					takeScreenshotAt: SBJsComponentReplacement testHTMLFileUrl
 					withExtend: aPoint
@@ -60,11 +61,7 @@ SBJsComponentScreenshotTaker class >> test [
 
 	self flag: #TODO.
 	"Try to make this an SBExample"
-	[:sbEditor |
-		sbEditor openMorphInView: (ImageMorph new image: (self
-			takeScreenshotOf: SBJsComponentReplacement exampleReactClassAsString
-			atExample: 0
-			withExtent: 300 @ 300))]
+	[:sbEditor | sbEditor openMorphInView: (ImageMorph new image: (self takeScreenshotOf: SBJsComponentReplacement exampleReactClassAsString withExtent: 300 @ 300))]
 ]
 
 { #category : #testing }
@@ -75,10 +72,7 @@ SBJsComponentScreenshotTaker class >> test: sbEditor [
 	[ | morphy |
 		morphy := ImageMorph new.
 		sbEditor openMorphInView: morphy.
-		morphy image: (self
-			takeScreenshotOf: SBJsComponentReplacement exampleReactClassAsString
-			atExample: 0
-			withExtent: 300 @ 300)] fork
+		morphy image: (self takeScreenshotOf: SBJsComponentReplacement exampleReactClassAsString withExtent: 300 @ 300)] fork
 ]
 
 { #category : #'ignored-mm-events' }

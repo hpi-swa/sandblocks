@@ -78,6 +78,15 @@ SBJsReactComponentRegistry >> componentRegistryCategoriesDo: aBlock [
 ]
 
 { #category : #accessing }
+SBJsReactComponentRegistry >> componentRegistryComponents [
+
+	| allReplacementComponents |
+	allReplacementComponents := OrderedCollection new.
+	self componentRegistry keysAndValuesDo: [:categoryName :componentReplacementsDict | allReplacementComponents addAll: componentReplacementsDict associations].
+	^ allReplacementComponents
+]
+
+{ #category : #accessing }
 SBJsReactComponentRegistry >> componentReplacementForComponentName: aString [
 
 	self componentRegistry do: [:catgoryEntries | catgoryEntries keysAndValuesDo: [:componentName :componentReplacement | componentName = aString ifTrue: [^ componentReplacement]]].
@@ -92,21 +101,24 @@ SBJsReactComponentRegistry >> initialize [
 ]
 
 { #category : #removing }
-SBJsReactComponentRegistry >> removeComponentByName: aString [ 
+SBJsReactComponentRegistry >> removeComponentByName: aString [
 
 	self componentRegistryCategoriesDo: [:categoryName :entries | self removeComponentByName: aString inCategory: categoryName ifAbsent: []]
-
-	
 ]
 
 { #category : #removing }
 SBJsReactComponentRegistry >> removeComponentByName: aString inCategory: anotherString [
 
-	self removeComponentByName: aString inCategory: anotherString ifAbsent: [Error signal: 'Could not find ', aString, ' in category ', anotherString].
+	self
+		removeComponentByName: aString
+		inCategory: anotherString
+		ifAbsent: [Error signal: 'Could not find ', aString, ' in category ', anotherString]
 ]
 
 { #category : #removing }
 SBJsReactComponentRegistry >> removeComponentByName: aString inCategory: anotherString ifAbsent: aBlock [
 
-	(self componentRegistry at: anotherString) removeKey: aString ifAbsent: aBlock.
+	(self componentRegistry at: anotherString)
+		removeKey: aString
+		ifAbsent: aBlock
 ]
