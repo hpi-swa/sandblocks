@@ -453,7 +453,7 @@ SBEditor >> copyBufferForContext: anInterface reversed: aBoolean do: aBlock ifWr
 			copyBuffer wrapsAround
 				ifTrue: [aWrapBlock value: copyBuffer unpackSelection veryDeepCopy]
 				ifFalse: [ | list |
-					list := copyBuffer submorphs veryDeepCopy.
+					list := copyBuffer submorphs collect: #copyBlock.
 					aBoolean ifTrue: [list := list reversed].
 					list withIndexDo: [:morph :index |
 						morph

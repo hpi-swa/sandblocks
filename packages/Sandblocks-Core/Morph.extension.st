@@ -6,6 +6,7 @@ Morph >> adjacentBlock: aNumber [
 	| adjacent index |
 	adjacent := (self parentSandblock ifNil: [^ nil]) childSandblocks.
 	index := adjacent indexOf: self.
+	index = 0 ifTrue: [^ nil].
 	^ adjacent at: index + aNumber ifAbsent: [nil]
 ]
 
