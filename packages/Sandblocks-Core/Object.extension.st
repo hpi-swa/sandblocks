@@ -171,14 +171,6 @@ Object >> openClass: converter [
 	converter do: [SBStClassMethodEditor new class: self class]
 ]
 
-{ #category : #'*Sandblocks-Core-converting' }
-Object >> openExplorer: convert [
-	<convert>
-	<convertPriority: -1>
-
-	convert do: [SBExplorer on: self]
-]
-
 { #category : #'*Sandblocks-Core' }
 Object >> representationsThat: aSymbol [
 
