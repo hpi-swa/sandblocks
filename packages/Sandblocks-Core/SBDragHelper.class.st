@@ -178,12 +178,13 @@ SBDragHelper >> hintInsertOf: aBlock in: aParentBlock near: aChildBlock before: 
 
 	| command insertPreviewMarker |
 	command := aParentBlock insertCommandRequest: aBlock near: aChildBlock before: aBoolean.
+	self assert: command notNil.
 	SBPreferences previewDropInsert ifTrue: [command do] ifFalse: [
 		insertPreviewMarker := SBDropInsertMarker new
 			color: (aParentBlock colorPolicy dropMarkerColorFor: aBlock);
 			bounds: (aChildBlock
 				ifNil: [10 @ 10 center: aParentBlock boundsInWorld center]
-				ifNotNil: [self insertMarkerFor: aChildBlock before: aBoolean]);
+				ifNotNil: [aChildBlock transformFromWorld transformRect: command hintBounds]);
 			openInWorld].
 	
 	onMove := [:event | (aChildBlock notNil and: [insertPreviewMarker notNil and: [aChildBlock floating]]) ifTrue: [insertPreviewMarker center: event position]].

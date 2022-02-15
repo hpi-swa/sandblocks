@@ -74,6 +74,16 @@ SBRelInsertCommand >> hasSamePositionAs: aCommand [
 ]
 
 { #category : #'as yet unclassified' }
+SBRelInsertCommand >> hintBounds [
+
+	^ SBCursorInsert new
+		before: before;
+		adjacent: adjacent;
+		container: container;
+		boundsWithWidth: 3
+]
+
+{ #category : #'as yet unclassified' }
 SBRelInsertCommand >> index [
 
 	^ self insertIndex

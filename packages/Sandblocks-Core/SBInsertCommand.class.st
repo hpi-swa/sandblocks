@@ -38,6 +38,16 @@ SBInsertCommand >> hasSamePositionAs: aCommand [
 ]
 
 { #category : #'as yet unclassified' }
+SBInsertCommand >> hintBounds [
+
+	^ SBCursorInsert new
+		before: index <= container submorphCount;
+		adjacent: (container submorphs at: index ifAbsent: [nil]);
+		container: container;
+		boundsWithWidth: 3
+]
+
+{ #category : #'as yet unclassified' }
 SBInsertCommand >> index [
 
 	^ index

@@ -5,11 +5,26 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBTest class >> dropAt: aPoint with: aBlock in: anEditor [
+
+	| event |
+	event := MouseEvent new
+		setType: #mouseMove
+		position: aPoint
+		buttons: MouseEvent blueButton
+		hand: (HandMorph new addMorph: (SBSelection new addMorphBack: aBlock)).
+	^ (SBDragHelper for: event in: anEditor)
+		mouseMove: event;
+		applyHintAt: event
+]
+
+{ #category : #'as yet unclassified' }
 SBTest class >> editorFor: aBlock [
 
 	| editor |
 	editor := SBEditor new useVimInput.
 	editor openMorphInView: aBlock.
+	aBlock ensureLayouted.
 	aBlock select.
 	^ editor
 ]
@@ -61,7 +76,7 @@ SBTest class >> mouseEventAt: aPoint [
 
 	^ MouseEvent new
 		setType: #mouseDown
-		position: 0 @ 0
+		position: aPoint
 		buttons: MouseEvent blueButton
 		hand: ActiveHand
 ]
@@ -71,8 +86,18 @@ SBTest class >> mouseEventAt: aPoint shift: aBoolean command: anotherBoolean con
 
 	^ MouseEvent new
 		setType: #mouseDown
-		position: 0 @ 0
+		position: aPoint
 		buttons: (MouseEvent redButton bitOr: (((aBoolean ifTrue: [8] ifFalse: [0]) bitOr: (anotherBoolean ifTrue: [64] ifFalse: [0])) bitOr: (anotherBoolean ifTrue: [16] ifFalse: [0])))
+		hand: ActiveHand
+]
+
+{ #category : #'as yet unclassified' }
+SBTest class >> mouseMoveEventAt: aPoint [
+
+	^ MouseEvent new
+		setType: #mouseMove
+		position: aPoint
+		buttons: MouseEvent blueButton
 		hand: ActiveHand
 ]
 
