@@ -115,5 +115,10 @@ SBPalettePreviewContainer >> wasSelectedFromCursor: aCursorPosition [
 		(aCursorPosition command canInsert: self firstSubmorph) ifTrue: [
 			aCursorPosition command
 				morph: self firstSubmorph copyBlock;
-				do]]
+				do.
+			Project current addDeferredUIMessage: [
+				self sandblockEditor cursor
+					cursorPosition: aCursorPosition
+					explicitMove: true
+					axis: #none]]]
 ]
