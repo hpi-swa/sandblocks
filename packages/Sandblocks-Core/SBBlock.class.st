@@ -249,6 +249,17 @@ SBBlock >> attractionTo: aMorph [
 	
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> backspaceShouldUnwrapTo: aBlock [
+
+	^ aBlock floating not and: [
+		aBlock parentSandblock ~= self sandblockEditor and: [ | num |
+			"check how many blocks would disappear and only allow if it's a small number"
+			num := 0.
+			aBlock allBlocksDo: [:b | num := num + 1].
+			num < 4]]
+]
+
 { #category : #actions }
 SBBlock >> barf [
 	<action>
@@ -808,7 +819,7 @@ SBBlock >> deleteBeforeCursor [
 				ifFalse: [
 					self
 						deleteAroundTargetDo: [:target :replacer |
-							(target floating not and: [target parentSandblock ~= editor]) ifTrue: [
+							(self backspaceShouldUnwrapTo: target) ifTrue: [
 								self deleteAround.
 								editor startInput: self at: 900000000 replacingContents: false]]
 						ifNone: []]]
