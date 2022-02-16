@@ -79,8 +79,8 @@ SBCommand >> artefactFrom: aMorph [
 ]
 
 { #category : #testing }
-SBCommand >> canInsert: aBlock [
-	"return true if this an insert command for which aBlock would have been a valid insertion"
+SBCommand >> canInsert: aBlock do: aClosure [
+	"return true if this an insert command for which aBlock would have been a valid insertion and return the morph or an adapted block via the closure"
 
 	^ false
 ]
