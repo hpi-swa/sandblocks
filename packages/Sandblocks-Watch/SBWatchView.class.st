@@ -8,7 +8,8 @@ Class {
 		'currentRepresentation',
 		'clear',
 		'updateScheduled',
-		'numReportedValues'
+		'numReportedValues',
+		'env'
 	],
 	#category : #'Sandblocks-Watch'
 }
@@ -134,6 +135,7 @@ SBWatchView >> reportValue: anObject [
 	numReportedValues := numReportedValues + 1.
 	lastValue := anObject.
 	
+	env := SBExecutionEnvironment value.
 	updateScheduled ifFalse: [
 		updateScheduled := true.
 		Project current addDeferredUIMessage: [self updateDisplay]]
@@ -168,9 +170,10 @@ SBWatchView >> updateDisplay [
 				vResizing: #shrinkWrap;
 				changeTableLayout;
 				layoutInset: 6.
-			vp := (Smalltalk at: #SBVisualPrimitive)
-				newFromObject: lastValue
-				in: morph.
+			SBExecutionEnvironment value: env during: [
+				vp := (Smalltalk at: #SBVisualPrimitive)
+					newFromObject: lastValue
+					in: morph].
 			vp attachTreeDecorator.
 			vp layout.
 			self useDisplay: morph]
