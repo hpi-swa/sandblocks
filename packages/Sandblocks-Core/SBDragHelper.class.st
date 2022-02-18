@@ -230,27 +230,6 @@ SBDragHelper >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBDragHelper >> insertMarkerFor: aBlock before: aBoolean [
-
-	| horizontal b width |
-	aBlock floating ifTrue: [^ 10 @ 10 center: aBlock center].
-	
-	horizontal := aBlock parentSandblock hasHorizontalLayout.
-	b := aBlock boundsInWorld.
-	width := 6.
-	
-	^ aBoolean
-		ifTrue: [
-			horizontal
-				ifTrue: [b topLeft - (width @ 0) corner: b bottomLeft]
-				ifFalse: [b topLeft - (0 @ width) corner: b topRight]]
-		ifFalse: [
-			horizontal
-				ifTrue: [b topRight corner: b bottomRight + (width @ 0)]
-				ifFalse: [b bottomLeft corner: b bottomRight + (0 @ width)]]
-]
-
-{ #category : #'as yet unclassified' }
 SBDragHelper >> morph: aMorph [
 
 	((aMorph isSandblock and: [aMorph isSelection]) or: [aMorph isKindOf: TransferMorph]) ifFalse: [^ false].

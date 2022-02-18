@@ -1197,17 +1197,6 @@ SBBlock >> hasGroup [
 	^ self group notNil
 ]
 
-{ #category : #layout }
-SBBlock >> hasHorizontalLayout [
-
-	| blocks |
-	self isBlockBody ifTrue: [^ false].
-	blocks := self childSandblocks.
-	^ blocks size < 2 or: [ | delta |
-		delta := blocks first topLeft - blocks last topLeft.
-		delta x < delta y]
-]
-
 { #category : #testing }
 SBBlock >> hasInput [
 

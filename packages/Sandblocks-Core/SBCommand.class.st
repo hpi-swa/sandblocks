@@ -98,6 +98,13 @@ SBCommand >> do [
 	^ self subclassResponsibility
 ]
 
+{ #category : #testing }
+SBCommand >> hasHorizontalLayout [
+	"used by insert commands to communicate the layout direction"
+
+	^ self container hasHorizontalLayout
+]
+
 { #category : #'initialize-release' }
 SBCommand >> initialize [
 

@@ -65,7 +65,7 @@ SBCursorInsert >> boundsWithWidth: aNumber [
 	| inset |
 	bounds ifNotNil: [^ bounds].
 	
-	^ self container hasHorizontalLayout
+	^ self hasHorizontalLayout
 		ifTrue: [
 			self adjacent
 				ifNil: [ | height |
@@ -149,6 +149,12 @@ SBCursorInsert >> enterWith: aCursor [
 			suggestions: s;
 			focusOnOpen: false;
 			openNear: aCursor requestor: command]
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorInsert >> hasHorizontalLayout [
+
+	^ (command ifNil: [container]) hasHorizontalLayout
 ]
 
 { #category : #'as yet unclassified' }

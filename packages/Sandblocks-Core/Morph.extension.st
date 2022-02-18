@@ -172,6 +172,17 @@ Morph >> fontToUse [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Morph >> hasHorizontalLayout [
+
+	| blocks |
+	self isBlockBody ifTrue: [^ false].
+	blocks := self childSandblocks.
+	^ blocks size < 2 or: [ | delta |
+		delta := blocks first topLeft - blocks last topLeft.
+		delta x < delta y]
+]
+
+{ #category : #'*Sandblocks-Core' }
 Morph >> innerBoundsInWorld [
 	
 	^ self bounds: self innerBounds in: self world
