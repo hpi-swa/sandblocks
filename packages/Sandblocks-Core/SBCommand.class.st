@@ -79,8 +79,8 @@ SBCommand >> artefactFrom: aMorph [
 ]
 
 { #category : #testing }
-SBCommand >> canInsert: aBlock [
-	"return true if this an insert command for which aBlock would have been a valid insertion"
+SBCommand >> canInsert: aBlock do: aClosure [
+	"return true if this an insert command for which aBlock would have been a valid insertion and return the morph or an adapted block via the closure"
 
 	^ false
 ]
@@ -96,6 +96,13 @@ SBCommand >> continueAfterInsert: aCharacter [
 SBCommand >> do [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #testing }
+SBCommand >> hasHorizontalLayout [
+	"used by insert commands to communicate the layout direction"
+
+	^ self container hasHorizontalLayout
 ]
 
 { #category : #'initialize-release' }

@@ -60,6 +60,12 @@ SBEditorOpenMorphCommand >> editor: anEditor [
 ]
 
 { #category : #'as yet unclassified' }
+SBEditorOpenMorphCommand >> hintBounds [
+
+	^ 10 @ 10 center: morph center
+]
+
+{ #category : #'as yet unclassified' }
 SBEditorOpenMorphCommand >> isUnsaved: aBoolean [
 
 	isUnsaved := aBoolean

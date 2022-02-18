@@ -4,11 +4,12 @@ Class {
 	#instVars : [
 		'lastValue',
 		'dark',
-		'hadValue',
 		'count',
 		'currentRepresentation',
-		'applyingChange',
-		'clear'
+		'clear',
+		'updateScheduled',
+		'numReportedValues',
+		'env'
 	],
 	#category : #'Sandblocks-Watch'
 }
@@ -75,8 +76,8 @@ SBWatchView >> initialize [
 	super initialize.
 	
 	dark := true.
-	hadValue := false.
-	applyingChange := false.
+	updateScheduled := false.
+	numReportedValues := 0.
 	
 	self
 		changeTableLayout;
@@ -129,6 +130,18 @@ SBWatchView >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBWatchView >> reportValue: anObject [
+
+	numReportedValues := numReportedValues + 1.
+	lastValue := anObject.
+	
+	env := SBExecutionEnvironment value.
+	updateScheduled ifFalse: [
+		updateScheduled := true.
+		Project current addDeferredUIMessage: [self updateDisplay]]
+]
+
+{ #category : #'as yet unclassified' }
 SBWatchView >> storeAsExample [
 
 	| name class value |
@@ -137,6 +150,37 @@ SBWatchView >> storeAsExample [
 	value := lastValue veryDeepCopy.
 	class compile: name, String cr, '^', value storeString.
 	self sandblockEditor open: class >> name asSymbol
+]
+
+{ #category : #'as yet unclassified' }
+SBWatchView >> updateDisplay [
+
+	updateScheduled := false.
+	
+	clear
+		disableLayout: false;
+		visible: true.
+	
+	count contents: numReportedValues asString.
+	
+	((lastValue class respondsTo: #visualPrimitiveMapping) and: [lastValue class visualPrimitiveMapping notEmpty])
+		ifTrue: [ | morph vp |
+			morph := SBBlock new
+				hResizing: #shrinkWrap;
+				vResizing: #shrinkWrap;
+				changeTableLayout;
+				layoutInset: 6.
+			SBExecutionEnvironment value: env during: [
+				vp := (Smalltalk at: #SBVisualPrimitive)
+					newFromObject: lastValue
+					in: morph].
+			vp attachTreeDecorator.
+			vp layout.
+			self useDisplay: morph]
+		ifFalse: [
+			SBToggledCode comment: '' active: 1 do: {
+				[self useDisplay: (SBExplorer on: lastValue)].
+				[self useDisplay: (anObject convertedFor: self watchObjectInterface do: #yourself)]}]
 ]
 
 { #category : #'as yet unclassified' }

@@ -178,12 +178,13 @@ SBDragHelper >> hintInsertOf: aBlock in: aParentBlock near: aChildBlock before: 
 
 	| command insertPreviewMarker |
 	command := aParentBlock insertCommandRequest: aBlock near: aChildBlock before: aBoolean.
+	self assert: command notNil.
 	SBPreferences previewDropInsert ifTrue: [command do] ifFalse: [
 		insertPreviewMarker := SBDropInsertMarker new
 			color: (aParentBlock colorPolicy dropMarkerColorFor: aBlock);
 			bounds: (aChildBlock
 				ifNil: [10 @ 10 center: aParentBlock boundsInWorld center]
-				ifNotNil: [self insertMarkerFor: aChildBlock before: aBoolean]);
+				ifNotNil: [aChildBlock transformFromWorld transformRect: command hintBounds]);
 			openInWorld].
 	
 	onMove := [:event | (aChildBlock notNil and: [insertPreviewMarker notNil and: [aChildBlock floating]]) ifTrue: [insertPreviewMarker center: event position]].
@@ -226,27 +227,6 @@ SBDragHelper >> hintWrap: draggedBlock around: anOldMorph as: aNewMorph [
 SBDragHelper >> initialize [
 
 	currentDropLocation := #(#none nil)
-]
-
-{ #category : #'as yet unclassified' }
-SBDragHelper >> insertMarkerFor: aBlock before: aBoolean [
-
-	| horizontal b width |
-	aBlock floating ifTrue: [^ 10 @ 10 center: aBlock center].
-	
-	horizontal := aBlock parentSandblock hasHorizontalLayout.
-	b := aBlock boundsInWorld.
-	width := 6.
-	
-	^ aBoolean
-		ifTrue: [
-			horizontal
-				ifTrue: [b topLeft - (width @ 0) corner: b bottomLeft]
-				ifFalse: [b topLeft - (0 @ width) corner: b topRight]]
-		ifFalse: [
-			horizontal
-				ifTrue: [b topRight corner: b bottomRight + (width @ 0)]
-				ifFalse: [b bottomLeft corner: b bottomRight + (0 @ width)]]
 ]
 
 { #category : #'as yet unclassified' }

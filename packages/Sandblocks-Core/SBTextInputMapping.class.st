@@ -143,10 +143,12 @@ SBTextInputMapping >> registerDefaultShortcuts [
 SBTextInputMapping >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 
 	anEditor selection ifNil: [^ self].
-
+	
 	((anEditor selection grammarHandler
 		ifNotNil: [:h | h characterCanStartInput: anEvent keyCharacter]
 		ifNil: [false]) and: [anEvent commandKeyPressed not and: [anEvent optionKeyPressed not and: [anEvent controlKeyPressed not]]]) ifTrue: [
-			anEditor selection grammarHandler startOverrideInput: anEvent in: anEditor.
-			aBlock value]
+		anEditor selection grammarHandler
+			startOverrideInput: anEvent
+			in: anEditor.
+		aBlock value]
 ]

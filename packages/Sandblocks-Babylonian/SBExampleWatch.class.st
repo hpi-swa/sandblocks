@@ -32,7 +32,7 @@ SBExampleWatch class >> newFor: aBlock [
 { #category : #'as yet unclassified' }
 SBExampleWatch class >> registerWatch: aWatch [
 
-	(self registry add: aWatch) add: aWatch
+	self registry add: aWatch
 ]
 
 { #category : #'as yet unclassified' }

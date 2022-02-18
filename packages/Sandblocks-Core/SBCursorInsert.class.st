@@ -62,23 +62,25 @@ SBCursorInsert >> bounds: aRectangle [
 { #category : #'as yet unclassified' }
 SBCursorInsert >> boundsWithWidth: aNumber [
 
+	| inset |
 	bounds ifNotNil: [^ bounds].
 	
-	^ self container hasHorizontalLayout
+	^ self hasHorizontalLayout
 		ifTrue: [
 			self adjacent
-				ifNil: [ | inset |
+				ifNil: [ | height |
 					inset := self container layoutInset asEdgeInsets.
+					height := self container height max: TextStyle defaultFont height // 2.
 					self before
-						ifTrue: [self container topLeft + inset topLeft - (aNumber // 2 @ 0) extent: aNumber @ (self container height - inset vertical)]
-						ifFalse: [self container topRight - (aNumber // 2 + inset right @ inset top negated) extent: aNumber @ (self container height - inset vertical)]]
+						ifTrue: [self container topLeft + inset topLeft - (aNumber // 2 @ 0) extent: aNumber @ (height - inset vertical)]
+						ifFalse: [self container topRight - (aNumber // 2 + inset right @ inset top negated) extent: aNumber @ (height - inset vertical)]]
 				ifNotNil: [
 					self before
 						ifTrue: [self adjacent topLeft - (aNumber // 2 @ 0) extent: aNumber @ self adjacent height]
 						ifFalse: [self adjacent topRight extent: aNumber @ self adjacent height]]]
 		ifFalse: [
 			self adjacent
-				ifNil: [ | inset |
+				ifNil: [
 					inset := self container layoutInset asEdgeInsets.
 					self before
 						ifTrue: [self container topLeft + inset topLeft extent: self container width - inset horizontal @ aNumber]
@@ -147,6 +149,12 @@ SBCursorInsert >> enterWith: aCursor [
 			suggestions: s;
 			focusOnOpen: false;
 			openNear: aCursor requestor: command]
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorInsert >> hasHorizontalLayout [
+
+	^ (command ifNil: [container]) hasHorizontalLayout
 ]
 
 { #category : #'as yet unclassified' }

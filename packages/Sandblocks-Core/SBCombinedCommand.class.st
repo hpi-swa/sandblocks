@@ -43,6 +43,15 @@ SBCombinedCommand >> do [
 ]
 
 { #category : #'as yet unclassified' }
+SBCombinedCommand >> hasHorizontalLayout [
+
+	^ self commands
+		detect: [:c | c respondsTo: #container]
+		ifFound: [:c | c container hasHorizontalLayout]
+		ifNone: [false]
+]
+
+{ #category : #'as yet unclassified' }
 SBCombinedCommand >> hasSamePositionAs: aCommand [
 
 	aCommand class = self class ifFalse: [^ false].

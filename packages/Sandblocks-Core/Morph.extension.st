@@ -6,6 +6,7 @@ Morph >> adjacentBlock: aNumber [
 	| adjacent index |
 	adjacent := (self parentSandblock ifNil: [^ nil]) childSandblocks.
 	index := adjacent indexOf: self.
+	index = 0 ifTrue: [^ nil].
 	^ adjacent at: index + aNumber ifAbsent: [nil]
 ]
 
@@ -168,6 +169,17 @@ Morph >> focusPreviousMorph: anEvent [
 Morph >> fontToUse [
 
 	^ TextStyle defaultFont
+]
+
+{ #category : #'*Sandblocks-Core' }
+Morph >> hasHorizontalLayout [
+
+	| blocks |
+	self isBlockBody ifTrue: [^ false].
+	blocks := self childSandblocks.
+	^ blocks size < 2 or: [ | delta |
+		delta := blocks first topLeft - blocks last topLeft.
+		delta x < delta y]
 ]
 
 { #category : #'*Sandblocks-Core' }
