@@ -45,6 +45,7 @@ SBJsComponentScreenshotTaker class >> takeScreenshotOf: aReactComponentString wi
 					forOptions: optionsWithName
 					withUsedReactComponents: usedComponentReplacements
 					withSharedProps: sharedOptions.
+					self flag: #TODO "Fix the file path!!!!".
 				tabId := MMProcessWrapper getOSDependentSingleton
 					takeScreenshotAt: SBJsComponentReplacement testHTMLFileUrl
 					withExtend: aPoint
