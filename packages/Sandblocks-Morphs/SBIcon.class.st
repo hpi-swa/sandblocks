@@ -6049,7 +6049,7 @@ SBIcon >> color: aColor [
 { #category : #drawing }
 SBIcon >> drawOn: aCanvas [
 
-	aCanvas translucentImage: (self cachedFormFor: self extent) at: self layoutBounds origin
+	aCanvas translucentImage: (self cachedFormFor: self extent) at: self bounds origin
 ]
 
 { #category : #colors }
