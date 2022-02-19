@@ -9,7 +9,8 @@ Class {
 		'select',
 		'previousOwner',
 		'previousIndex',
-		'title'
+		'title',
+		'secondaryInsertPosition'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -115,6 +116,18 @@ SBRelInsertCommand >> near: aBlock before: aBoolean in: aContainer morph: aMorph
 	before := aBoolean.
 	container := aContainer.
 	morph := aMorph
+]
+
+{ #category : #'as yet unclassified' }
+SBRelInsertCommand >> secondaryInsertPosition [
+
+	^ secondaryInsertPosition ifNil: [false]
+]
+
+{ #category : #'as yet unclassified' }
+SBRelInsertCommand >> secondaryInsertPosition: aBoolean [
+
+	secondaryInsertPosition := aBoolean
 ]
 
 { #category : #'as yet unclassified' }

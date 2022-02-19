@@ -247,6 +247,12 @@ SBCursorInsert >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorInsert >> secondaryInsertPosition [
+
+	^ self command secondaryInsertPosition
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorInsert >> selectLarger [
 
 	^ SBCursorSelect new block: self container containingSandblock

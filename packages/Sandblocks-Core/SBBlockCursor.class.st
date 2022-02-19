@@ -214,7 +214,7 @@ SBBlockCursor >> initialize [
 SBBlockCursor >> insertPositionIn: aBlock near: aPoint [
 
 	aPoint
-		ifNil: [aBlock cursorPositionsDo: [:pos | (pos class = SBCursorInsert and: [pos container containingSandblock = aBlock]) ifTrue: [^ pos]]]
+		ifNil: [aBlock cursorPositionsDo: [:pos | (pos class = SBCursorInsert and: [pos container containingSandblock = aBlock and: [pos secondaryInsertPosition not]]) ifTrue: [^ pos]]]
 		ifNotNil: [ | best bestDistance |
 			best := nil.
 			bestDistance := 20.
