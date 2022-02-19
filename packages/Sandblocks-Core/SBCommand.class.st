@@ -151,6 +151,13 @@ SBCommand >> previousSelection: aBlock [
 	previousSelection := aBlock
 ]
 
+{ #category : #testing }
+SBCommand >> secondaryInsertPosition [
+	"if this is an insert command, you can return true here to tell the cursor that this position should not receive default focus, even if it comes first in the container"
+
+	^ false
+]
+
 { #category : #apply }
 SBCommand >> selectAfter [
 

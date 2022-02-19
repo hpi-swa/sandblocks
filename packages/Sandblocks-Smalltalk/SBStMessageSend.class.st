@@ -101,6 +101,12 @@ SBStMessageSend >> balloonText [
 	^ super balloonText
 ]
 
+{ #category : #accessing }
+SBStMessageSend >> binding [
+
+	^ self isAssignment ifTrue: [self receiver] ifFalse: [self error: 'not an assignment']
+]
+
 { #category : #assignment }
 SBStMessageSend >> binding: aBlock value: anotherBlock [
 	" construct this send as an assignment "

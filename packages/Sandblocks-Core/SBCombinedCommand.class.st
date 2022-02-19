@@ -81,6 +81,12 @@ SBCombinedCommand >> previousSelection [
 ]
 
 { #category : #'as yet unclassified' }
+SBCombinedCommand >> secondaryInsertPosition [
+
+	^ self commands anySatisfy: [:command | command secondaryInsertPosition]
+]
+
+{ #category : #'as yet unclassified' }
 SBCombinedCommand >> selectAfter [
 
 	^ selectAfter ifNil: [self commands last selectAfter]

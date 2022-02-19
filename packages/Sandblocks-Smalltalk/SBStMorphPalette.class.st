@@ -10,12 +10,14 @@ SBStMorphPalette class >> buildOn: aContainer [
 	aContainer
 		addHeader: 'Morph';
 		addSectionHeader: 'Examples'.
-	(aContainer selectedBlock notNil and: [aContainer selectedBlock containingArtefact notNil]) ifTrue: [
-		aContainer addBlock: 'Example' as: (SBStMethod new
-			selector: #example
-				arguments: #()
-				class: aContainer selectedBlock containingArtefact relatedClass;
-			statements: {SBMorphExample buildTemplateFor: aContainer selectedBlock extent: 40 asPoint})].
+	SBToggledCode comment: '' active: 0 do: {
+		[
+			(aContainer selectedBlock notNil and: [aContainer selectedBlock containingArtefact notNil]) ifTrue: [
+				aContainer addBlock: 'Example' as: (SBStMethod new
+					selector: #example
+						arguments: #()
+						class: aContainer selectedBlock containingArtefact relatedClass;
+					statements: {SBMorphExample buildTemplateFor: aContainer selectedBlock extent: 40 asPoint})]]}.
 	aContainer
 		addSectionHeader: 'Geometry';
 		addBlock: 'Set Position' as: (SBStMessageSend new

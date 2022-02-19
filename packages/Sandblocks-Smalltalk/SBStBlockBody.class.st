@@ -203,6 +203,7 @@ SBStBlockBody >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 	(aBlock notNil and: [aBlock owner = bindings]) ifTrue: [
 		^ SBRelInsertCommand new
 			near: aBlock before: aBoolean in: bindings morph: aMorph;
+			secondaryInsertPosition: true;
 			shouldMergeWithNext: true;
 			title: 'insert block binding';
 			yourself].
@@ -214,14 +215,8 @@ SBStBlockBody >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 			shouldMergeWithNext: true;
 			yourself].
 	
-	(aBlock isNil and: [aBoolean]) ifTrue: [
-		" make sure we don't insert before our bindings/temps "
-		^ SBInsertCommand new
-			container: self;
-			index: 2;
-			morph: aMorph;
-			shouldMergeWithNext: true;
-			title: 'insert statement'].
+	(aBlock isNil and: [aBoolean]) ifTrue: [" make sure we don't insert before our bindings/temps "
+	^ nil].
 	
 	^ (super insertCommandRequest: aMorph near: aBlock before: aBoolean)
 		shouldMergeWithNext: true;

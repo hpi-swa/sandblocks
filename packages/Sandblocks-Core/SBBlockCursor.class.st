@@ -46,7 +46,7 @@ SBBlockCursor >> adjacentVerticalCalcDistance: aDistBlock validBlock: aValidBloc
 { #category : #'vertical movement' }
 SBBlockCursor >> adjacentVerticalCursorCalcDistance: aDistBlock validBlock: aValidBlock equalBock: anEqualBlock downwards: aBoolean [
 
-	| allCandidates candidates candidatesBestDistance tolerance float |
+	| allCandidates candidates candidatesBestDistance tolerance float preferVerticallyCloseWeight |
 	self selectedBlock ifNil: [^ nil].
 	
 	float := self selectedBlock containingFloat.
@@ -56,7 +56,7 @@ SBBlockCursor >> adjacentVerticalCursorCalcDistance: aDistBlock validBlock: aVal
 		previousInsert := nil.
 		float cursorPositionsDo: [:pos | | validPosition |
 			pos = cursorPosition ifTrue: [seenCurrent := true].
-			validPosition := (previousInsert isNil or: [previousInsert isDistinctFrom: pos]) and: [(((aValidBlock value: pos) or: [anEqualBlock value: pos value: seenCurrent]) and: [pos class ~= SBCursorInsert or: [pos hasHorizontalLayout not]]) and: [pos class ~= SBCursorSelect or: [pos block hasChildSandblocks not and: [pos block currentTextMorph isNil]]]].
+			validPosition := (previousInsert isNil or: [previousInsert isDistinctFrom: pos]) and: [(((aValidBlock value: pos) or: [anEqualBlock value: pos value: seenCurrent]) and: [pos class ~= SBCursorInsert or: [pos hasHorizontalLayout not or: [pos container hasChildSandblocks not]]]) and: [pos class ~= SBCursorSelect or: [pos block hasChildSandblocks not and: [pos block currentTextMorph isNil and: [pos block fixedNumberOfChildren]]]]].
 			(validPosition and: [pos ~= cursorPosition]) ifTrue: [stream nextPut: pos].
 			validPosition ifTrue: [(pos isKindOf: SBCursorInsert) ifTrue: [previousInsert := pos]]]].
 	aBoolean ifFalse: [allCandidates reverseInPlace].
@@ -71,7 +71,9 @@ SBBlockCursor >> adjacentVerticalCursorCalcDistance: aDistBlock validBlock: aVal
 					ifFalse: [candidates := OrderedCollection with: candidate].
 				candidatesBestDistance := distance]
 			ifFalse: [(distance between: candidatesBestDistance and: candidatesBestDistance + tolerance) ifTrue: [candidates add: candidate]]].
-	^ candidates detectMin: [:candidate | (candidate left - float left to: candidate right - float left) distanceTo: horizontalOffsetInFloat]
+	
+	preferVerticallyCloseWeight := 3.
+	^ candidates detectMin: [:candidate | ((candidate left - float left to: candidate right - float left) distanceTo: horizontalOffsetInFloat) + (preferVerticallyCloseWeight * (aDistBlock value: candidate))]
 ]
 
 { #category : #api }
@@ -212,7 +214,7 @@ SBBlockCursor >> initialize [
 SBBlockCursor >> insertPositionIn: aBlock near: aPoint [
 
 	aPoint
-		ifNil: [aBlock cursorPositionsDo: [:pos | (pos class = SBCursorInsert and: [pos container containingSandblock = aBlock]) ifTrue: [^ pos]]]
+		ifNil: [aBlock cursorPositionsDo: [:pos | (pos class = SBCursorInsert and: [pos container containingSandblock = aBlock and: [pos secondaryInsertPosition not]]) ifTrue: [^ pos]]]
 		ifNotNil: [ | best bestDistance |
 			best := nil.
 			bestDistance := 20.

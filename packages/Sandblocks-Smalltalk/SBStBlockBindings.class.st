@@ -10,6 +10,7 @@ SBStBlockBindings >> cursorPositionsDo: aBlock [
 	self hasSubmorphs ifTrue: [super cursorPositionsDo: aBlock] ifFalse: [ | cmd |
 		cmd := SBRelInsertCommand new
 			near: nil before: true in: self morph: SBStName new;
+			secondaryInsertPosition: true;
 			shouldMergeWithNext: true;
 			title: 'insert block binding';
 			yourself.

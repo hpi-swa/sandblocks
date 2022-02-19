@@ -418,7 +418,8 @@ SBJsComponentReplacement >> browserMorphFor: aJsObject withSharedProps: anotherJ
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap;
 			yourself);
-		changeTableLayout;
+		borderWidth: 3;
+		 changeTableLayout;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		yourself.
@@ -433,6 +434,12 @@ SBJsComponentReplacement >> componentMemberAboveSelf [
 	^ componentMembers at: (componentMembers indexOf: self) - 1 ifAbsent: [nil]
 ]
 
+{ #category : #accessing }
+SBJsComponentReplacement >> drawnColor [ 
+
+	^ Color veryDarkGray
+]
+
 { #category : #replacing }
 SBJsComponentReplacement >> exampleArray: aJsArray withSharedProps: aJsObject forAComponent: aComponentNameString withComponentNode: aComponentNode fileDir: aString [
 
@@ -441,7 +448,8 @@ SBJsComponentReplacement >> exampleArray: aJsArray withSharedProps: aJsObject fo
 	usedComponentReplacements := aComponentNode collectComponentUsageReplacements.
 	self
 		listDirection: #topToBottom;
-		addMorphBack: (row := SBRow new).
+		addMorphBack: (SBRow new layoutInset: 4;  addMorphBack: (SBStringMorph new contents: 'examples' ; bold));
+		addMorphBack: (row := SBRow new cellGap: 8; layoutInset: 4; yourself).
 		
 	aJsArray access children withIndexDo: [:example :index | |filePath|
 		filePath := self filePathForDir: aString withComponentName: aComponentNameString andIndex:index.
@@ -588,7 +596,6 @@ SBJsComponentReplacement >> writeSourceOn: aStream [
 	optionsObject := 'examples = [', ((self allExamples collect: [:jsObject | jsObject sourceString]) joinSeparatedBy: ','),']'.
 	aStream nextPutAll: optionsObject.
 	self skipHtmlFileGeneration ifFalse: [ | className componentClass usedComponentReplacements sharedExampleProps |
-		self flag: #TODO "Needs to be fixed heavily as there are now multiple mmbrowser".
 		self skipHtmlFileGeneration: true.
 		componentClass := self owningClass.
 		className := componentClass firstSubmorph submorphs third contents.
