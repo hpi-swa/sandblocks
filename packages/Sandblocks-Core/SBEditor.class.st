@@ -978,6 +978,13 @@ SBEditor >> morphicLayerNumber [
 	^ 77 - 1
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> mouseEnter: event [
+
+	super mouseEnter: event.
+	Preferences mouseOverForKeyboardFocus ifTrue: [event hand newKeyboardFocus: self]
+]
+
 { #category : #'event handling' }
 SBEditor >> mouseLeave: anEvent [
 
