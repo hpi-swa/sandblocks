@@ -155,11 +155,14 @@ SBWatchView >> storeAsExample [
 { #category : #'as yet unclassified' }
 SBWatchView >> updateDisplay [
 
+	updateScheduled ifFalse: [^ self].
+	
 	updateScheduled := false.
 	
-	clear
-		disableLayout: false;
-		visible: true.
+	numReportedValues = 0 ifTrue: [
+		clear
+			disableLayout: false;
+			visible: true].
 	
 	count contents: numReportedValues asString.
 	
