@@ -129,6 +129,12 @@ SBCursorText >> initialize [
 	cursorIndex := 1
 ]
 
+{ #category : #testing }
+SBCursorText >> isText [
+
+	^ true
+]
+
 { #category : #'as yet unclassified' }
 SBCursorText >> leaveIn: anEditor with: aCursor [
 

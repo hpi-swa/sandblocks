@@ -67,6 +67,12 @@ SBCursorMultiSelect >> initialize [
 	selected := OrderedCollection new
 ]
 
+{ #category : #testing }
+SBCursorMultiSelect >> isMultiSelect [
+
+	^ true
+]
+
 { #category : #'as yet unclassified' }
 SBCursorMultiSelect >> leaveIn: anEditor with: aCursor [
 

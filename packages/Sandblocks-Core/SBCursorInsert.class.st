@@ -194,6 +194,12 @@ SBCursorInsert >> isDistinctFrom: aPosition [
 		ifFalse: [self ~= aPosition]
 ]
 
+{ #category : #testing }
+SBCursorInsert >> isInsert [
+
+	^ true
+]
+
 { #category : #'as yet unclassified' }
 SBCursorInsert >> leaveIn: anEditor with: aCursor [
 
