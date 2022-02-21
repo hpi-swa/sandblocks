@@ -171,7 +171,6 @@ SBWatchView >> updateDisplay [
 			morph := SBBlock new
 				hResizing: #shrinkWrap;
 				vResizing: #shrinkWrap;
-				changeTableLayout;
 				layoutInset: 6.
 			SBExecutionEnvironment value: env during: [
 				vp := (Smalltalk at: #SBVisualPrimitive)
@@ -179,7 +178,10 @@ SBWatchView >> updateDisplay [
 					in: morph].
 			vp attachTreeDecorator.
 			vp layout.
-			self useDisplay: morph]
+			self useDisplay: (SBRow new
+				addMorphBack: morph;
+				hResizing: #shrinkWrap;
+				vResizing: #shrinkWrap)]
 		ifFalse: [
 			SBToggledCode comment: '' active: 1 do: {
 				[self useDisplay: (SBExplorer on: lastValue)].
