@@ -63,6 +63,12 @@ SBCursorSelect >> horizontalOffsetInFloat [
 		ifNil: [self bounds center x]
 ]
 
+{ #category : #testing }
+SBCursorSelect >> isSelect [
+
+	^ true
+]
+
 { #category : #'as yet unclassified' }
 SBCursorSelect >> minimalBounds [
 

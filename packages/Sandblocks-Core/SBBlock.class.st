@@ -1408,7 +1408,7 @@ SBBlock >> isArtefact [
 
 { #category : #layout }
 SBBlock >> isAttractedTo: aMorph [
-	
+	"^false."
 	^ aMorph object class = self object class
 ]
 

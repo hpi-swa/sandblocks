@@ -23,7 +23,8 @@ Class {
 		'hoverHighlight',
 		'suggestAlways',
 		'activePlugins',
-		'suggestionMenu'
+		'suggestionMenu',
+		'examples'
 	],
 	#classVars : [
 		'ActivatedPluginClasses',
@@ -669,6 +670,12 @@ SBEditor >> errors [
 	^ errors
 ]
 
+{ #category : #accessing }
+SBEditor >> examples [
+
+	^ examples
+]
+
 { #category : #events }
 SBEditor >> filterEvent: anEvent for: aMorph [
 
@@ -809,6 +816,7 @@ SBEditor >> initialize [
 	super initialize.
 	
 	history := SBHistoryStack new.
+	examples := SBExampleHub new editor: self.
 	colorPolicy := self class defaultColorPolicy new enlarge: SBPreferences largeInsets.
 	compileTime := #compileOnSave.
 	globalShortcutListeners := OrderedCollection new.

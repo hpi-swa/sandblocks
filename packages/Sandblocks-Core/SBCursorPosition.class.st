@@ -122,6 +122,30 @@ SBCursorPosition >> isDistinctFrom: aPosition [
 	^ self ~= aPosition
 ]
 
+{ #category : #testing }
+SBCursorPosition >> isInsert [
+
+	^ false
+]
+
+{ #category : #testing }
+SBCursorPosition >> isMultiSelect [
+
+	^ false
+]
+
+{ #category : #testing }
+SBCursorPosition >> isSelect [
+
+	^ false
+]
+
+{ #category : #testing }
+SBCursorPosition >> isText [
+
+	^ false
+]
+
 { #category : #'as yet unclassified' }
 SBCursorPosition >> leaveIn: anEditor with: aCursor [
 

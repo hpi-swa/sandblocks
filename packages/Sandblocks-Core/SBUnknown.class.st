@@ -182,6 +182,18 @@ SBUnknown >> noteNewOwner: aMorph [
 	hadOwner := true
 ]
 
+{ #category : #accessing }
+SBUnknown >> placeholderText [
+
+	^ self label
+]
+
+{ #category : #accessing }
+SBUnknown >> placeholderText: aString [
+
+	self label: aString
+]
+
 { #category : #'as yet unclassified' }
 SBUnknown >> prefersNoBorder [
 

@@ -20,5 +20,11 @@ SBJsMMBrowserWrapper >> absorbsInput: anEvent [
 { #category : #input }
 SBJsMMBrowserWrapper >> currentTextMorph [
 
-	^ self firstSubmorph
+	^ self submorphs size > 0 ifTrue: [self firstSubmorph] ifFalse:[nil]
+]
+
+{ #category : #input }
+SBJsMMBrowserWrapper >> drawnColor [
+
+	^ Color veryDarkGray
 ]

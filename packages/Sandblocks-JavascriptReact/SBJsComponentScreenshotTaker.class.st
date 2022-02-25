@@ -45,7 +45,8 @@ SBJsComponentScreenshotTaker class >> takeScreenshotOf: aReactComponentString wi
 					forOptions: optionsWithName
 					withUsedReactComponents: usedComponentReplacements
 					withSharedProps: sharedOptions.
-					self flag: #TODO "Fix the file path!!!!".
+				self flag: #TODO.
+				"Fix the file path!!!!"
 				tabId := MMProcessWrapper getOSDependentSingleton
 					takeScreenshotAt: SBJsComponentReplacement testHTMLFileUrl
 					withExtend: aPoint
@@ -55,6 +56,30 @@ SBJsComponentScreenshotTaker class >> takeScreenshotOf: aReactComponentString wi
 				screenshot := screenshot trimBordersOfColor: Color white.
 				^ screenshot]]].
 	self error: 'Looks like there is no matching examples array in the component.'
+]
+
+{ #category : #'screenshot-taking' }
+SBJsComponentScreenshotTaker class >> takeScreenshotOf: aReactComponentString withName: reactClassName withExample: aJsObject withUsedComponents: aCollection withSharedProps: sharedOptions withExtent: aPoint [
+
+	| tabId optionsWithName filePath screenshot instance |
+	instance := self new.
+	optionsWithName := 'examples = [', aJsObject sourceString, ']'.
+	filePath := SBJsComponentReplacement testHTMLFileDir, 'Screenshot_temp.html'.
+	SBJsComponentReplacement
+		generateHtmlFileFor: aReactComponentString
+		withClassName: reactClassName
+		forOptions: optionsWithName
+		withUsedReactComponents: aCollection
+		withSharedProps: sharedOptions
+		atFilePath: filePath.
+	tabId := MMProcessWrapper getOSDependentSingleton
+		takeScreenshotAt: (SBJsComponentReplacement filePathToURL: filePath)
+		withExtend: aPoint
+		for: instance.
+	screenshot := instance waitAndGetScreenshot.
+	MMProcessWrapper getOSDependentSingleton closeTab: tabId.
+	screenshot := screenshot trimBordersOfColor: Color white.
+	^ screenshot
 ]
 
 { #category : #testing }

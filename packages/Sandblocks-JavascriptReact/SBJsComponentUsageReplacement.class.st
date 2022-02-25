@@ -8,29 +8,21 @@ Class {
 	#name : #SBJsComponentUsageReplacement,
 	#superclass : #SBInlineBlockReplace,
 	#instVars : [
-		'referencedComponentClassSourceString'
+		'referencedComponentClassSourceString',
+		'usedComponents'
 	],
 	#category : #'Sandblocks-JavascriptReact'
 }
 
 { #category : #'inline-replacement' }
-SBJsComponentUsageReplacement class >> inlineComponentUsageReplacementFor: aReactComponentString [
+SBJsComponentUsageReplacement class >> inlineComponentUsageReplacementFor: aReactComponentString forExample: aJsObject withName: reactClassName withUsedComponents: aCollection withSharedProps: sharedOptions [
 
-	| reactComponentAST |
-	reactComponentAST := SBJavascript parse: aReactComponentString.
-	reactComponentAST allBlocksDo: [:block |
-		SBTSQuery new execute: self queryForFirstValidExample against: block capturesDo: [:captures :success |
-			success ifTrue: [ | reactClassName examples |
-				reactClassName := (captures at: 'class_name') contents.
-				examples := captures at: 'options'.
-				examples childSandblocks do: [:child | "Filter out all examples in the the array except for the first one."
-				(child access children size < 1 or: [child access children first yourself ~= (captures at: 'first_valid_example')]) ifTrue: [child deleteTarget delete]].
-				"TODO: Find replacements!"
-				^ self new
-					example: (captures at: 'first_valid_example')
-					forAComponent: reactClassName
-					withComponentNode: reactComponentAST sourceString]]].
-	self signal: (Error signal: 'Could not find a valid examples array in the given component.')
+	^ self new
+		example: aJsObject
+		forAComponent: reactClassName
+		withComponentNode: aReactComponentString
+		withUsedComponents: aCollection
+		withSharedProps: sharedOptions
 ]
 
 { #category : #'inline-replacement' }
@@ -92,8 +84,10 @@ SBJsComponentUsageReplacement >> = aComponentUsageReplacement [
 SBJsComponentUsageReplacement >> collectComponentUsageReplacements [
 
 	| componentUsageReplacements |
+	self flag: #TODO "refactor me".
 	componentUsageReplacements := super collectComponentUsageReplacements.
 	(componentUsageReplacements includes: self) ifFalse: [componentUsageReplacements add: self].
+	self usedComponents do: [:component| (componentUsageReplacements includes: component) ifFalse:[componentUsageReplacements add: component]] .
 	^ componentUsageReplacements
 ]
 
@@ -112,15 +106,17 @@ SBJsComponentUsageReplacement >> componentName [
 { #category : #'example-extracting' }
 SBJsComponentUsageReplacement >> componentPropsFromExampleObject: aJsObject [
 
-	aJsObject children do: [:objectEntry | (objectEntry type = 'pair' and: [objectEntry key contents = 'componentProps']) ifTrue: [^ objectEntry value]].
+	aJsObject access children do: [:objectEntry | (objectEntry type = 'pair' and: [objectEntry key contents = 'componentProps']) ifTrue: [^ objectEntry value]].
 	^ self error: (Error signal: 'Could not find ''componentProps'' in example object')
 ]
 
 { #category : #replacing }
-SBJsComponentUsageReplacement >> example: aJsArrayEntry forAComponent: reactClassNameString withComponentNode: aReactComponentString [
+SBJsComponentUsageReplacement >> example: aJsObject forAComponent: reactClassNameString withComponentNode: aReactComponentString withUsedComponents: aCollection withSharedProps: sharedOptions [
 
-	| keyValuePairs componentPreviewImage jsxString |
-	keyValuePairs := self keyValuesOfExampleIObject: aJsArrayEntry access children second.
+	| keyValuePairs componentPreviewImage jsxString componentProps |
+	"TODO get key value pairs"
+	componentProps := self componentPropsFromExampleObject: aJsObject.
+	keyValuePairs := self keyValuesOfExampleObject: componentProps.
 	self referencedComponentClassSourceString: aReactComponentString.
 	
 	jsxString := '<', reactClassNameString.
@@ -129,7 +125,13 @@ SBJsComponentUsageReplacement >> example: aJsArrayEntry forAComponent: reactClas
 	
 	componentPreviewImage := SBJsComponentScreenshotTaker
 		takeScreenshotOf: aReactComponentString
+		withName: reactClassNameString
+		withExample: aJsObject
+		withUsedComponents: aCollection
+		withSharedProps: sharedOptions
 		withExtent: 1000 @ 1000.
+	self flag: #TODO."Refactor this: Keep reference to original class and get the used replacents from there on demand"
+	self usedComponents: aCollection.
 	
 	componentPreviewImage := self shrinkPreviewImage: componentPreviewImage.
 	^ self
@@ -137,7 +139,7 @@ SBJsComponentUsageReplacement >> example: aJsArrayEntry forAComponent: reactClas
 		removeAllMorphs;
 		addMorphBack: (SBColumn new
 			addMorphBack: (ImageMorph new image: componentPreviewImage);
-			addMorphBack: (SBJavascript parse: jsxString);
+			addMorphBack: (SBJavascript parse: jsxString) access children first element;
 			changeTableLayout;
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap);
@@ -154,10 +156,18 @@ SBJsComponentUsageReplacement >> indexOfFirstValidExampleEntry: aJsArray [
 	^ self error: (Error signal: 'Could not find an example with ''componentProps'' set')
 ]
 
-{ #category : #'example-extracting' }
-SBJsComponentUsageReplacement >> keyValuesOfExampleIObject: aJsObject [
+{ #category : #saving }
+SBJsComponentUsageReplacement >> initialize [
 
-	^ (aJsObject children reject: [:objectEntry | objectEntry type ~= 'pair']) collect: [:keyValuePair | keyValuePair key contents -> keyValuePair value]
+	super initialize.
+	self referencedComponentClassSourceString: '';
+	usedComponents: OrderedCollection new.
+]
+
+{ #category : #'example-extracting' }
+SBJsComponentUsageReplacement >> keyValuesOfExampleObject: aJsObject [
+
+	^ (aJsObject access children reject: [:objectEntry | objectEntry type ~= 'pair']) collect: [:keyValuePair | keyValuePair key contents -> keyValuePair value]
 ]
 
 { #category : #accessing }
@@ -211,6 +221,16 @@ SBJsComponentUsageReplacement >> shrinkPreviewImage: aForm [
 SBJsComponentUsageReplacement >> type [
 
 	^ 'jsx_element'
+]
+
+{ #category : #accessing }
+SBJsComponentUsageReplacement >> usedComponents [
+	^ usedComponents
+]
+
+{ #category : #accessing }
+SBJsComponentUsageReplacement >> usedComponents: aCollection [
+	usedComponents := aCollection
 ]
 
 { #category : #saving }

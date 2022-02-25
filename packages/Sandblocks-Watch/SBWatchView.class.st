@@ -130,18 +130,6 @@ SBWatchView >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
-SBWatchView >> reportValue: anObject [
-
-	numReportedValues := numReportedValues + 1.
-	lastValue := anObject.
-	
-	env := SBExecutionEnvironment value.
-	updateScheduled ifFalse: [
-		updateScheduled := true.
-		Project current addDeferredUIMessage: [self updateDisplay]]
-]
-
-{ #category : #'as yet unclassified' }
 SBWatchView >> storeAsExample [
 
 	| name class value |
@@ -155,11 +143,14 @@ SBWatchView >> storeAsExample [
 { #category : #'as yet unclassified' }
 SBWatchView >> updateDisplay [
 
+	updateScheduled ifFalse: [^ self].
+	
 	updateScheduled := false.
 	
-	clear
-		disableLayout: false;
-		visible: true.
+	numReportedValues = 0 ifTrue: [
+		clear
+			disableLayout: false;
+			visible: true].
 	
 	count contents: numReportedValues asString.
 	
@@ -168,7 +159,6 @@ SBWatchView >> updateDisplay [
 			morph := SBBlock new
 				hResizing: #shrinkWrap;
 				vResizing: #shrinkWrap;
-				changeTableLayout;
 				layoutInset: 6.
 			SBExecutionEnvironment value: env during: [
 				vp := (Smalltalk at: #SBVisualPrimitive)
@@ -176,7 +166,10 @@ SBWatchView >> updateDisplay [
 					in: morph].
 			vp attachTreeDecorator.
 			vp layout.
-			self useDisplay: morph]
+			self useDisplay: (SBRow new
+				addMorphBack: morph;
+				hResizing: #shrinkWrap;
+				vResizing: #shrinkWrap)]
 		ifFalse: [
 			SBToggledCode comment: '' active: 1 do: {
 				[self useDisplay: (SBExplorer on: lastValue)].
