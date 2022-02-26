@@ -8,21 +8,15 @@ Class {
 	#name : #SBJsComponentUsageReplacement,
 	#superclass : #SBInlineBlockReplace,
 	#instVars : [
-		'referencedComponentClassSourceString',
-		'usedComponents'
+		'componentWrapper'
 	],
 	#category : #'Sandblocks-JavascriptReact'
 }
 
 { #category : #'inline-replacement' }
-SBJsComponentUsageReplacement class >> inlineComponentUsageReplacementFor: aReactComponentString forExample: aJsObject withName: reactClassName withUsedComponents: aCollection withSharedProps: sharedOptions [
+SBJsComponentUsageReplacement class >> for: aSBJsReactComponentWrapper withExample: aJsObject [
 
-	^ self new
-		example: aJsObject
-		forAComponent: reactClassName
-		withComponentNode: aReactComponentString
-		withUsedComponents: aCollection
-		withSharedProps: sharedOptions
+	^ self new example: aJsObject componentWrapper: aSBJsReactComponentWrapper
 ]
 
 { #category : #'inline-replacement' }
@@ -40,37 +34,8 @@ SBJsComponentUsageReplacement class >> matchComponentExamples: aDictionary do: a
 	"First argument: What will be replaced, second argument: With what it will be replaced."
 	^ aBlock value: blockToReplace value: (self new
 		replacementFor: element
-		withComponentSource: replacementComponent referencedComponentClassSourceString
+		withComponentWrapper: replacementComponent componentWrapper
 		withExampleImage: replacementComponent previewImageCopy)
-]
-
-{ #category : #'inline-replacement' }
-SBJsComponentUsageReplacement class >> queryForFirstValidExample [
-	"Got no better solutution than to keep an extra copy of the query as it cannot be accessed from the pragma that simply."
-
-	^ '(class_declaration
-    name: (identifier) @class_name
-    body: (class_body
-	(field_definition
-        	(property_identifier) ="sharedExampleProps"
-	      (object)
-        )? @shared_example_props
-    	(field_definition
-        	(property_identifier)="examples"
-	      (array
-			(object
-				(pair
-					(property_identifier)="componentProps"
-					(object)
-				) @first_valid_example
-			)
-		) @options
-        ) @example_array
-	(method_definition
-        	(property_identifier)="render"
-  	) @render_method
-    )
-) @class'
 ]
 
 { #category : #comparing }
@@ -83,12 +48,12 @@ SBJsComponentUsageReplacement >> = aComponentUsageReplacement [
 { #category : #collecting }
 SBJsComponentUsageReplacement >> collectComponentUsageReplacements [
 
-	| componentUsageReplacements |
-	self flag: #TODO "refactor me".
-	componentUsageReplacements := super collectComponentUsageReplacements.
-	(componentUsageReplacements includes: self) ifFalse: [componentUsageReplacements add: self].
-	self usedComponents do: [:component| (componentUsageReplacements includes: component) ifFalse:[componentUsageReplacements add: component]] .
-	^ componentUsageReplacements
+	| aSet |
+	aSet := super collectComponentUsageReplacements.
+	aSet
+		add: self;
+		addAll: self usedComponents.
+	^ aSet
 ]
 
 { #category : #accessing }
@@ -110,36 +75,41 @@ SBJsComponentUsageReplacement >> componentPropsFromExampleObject: aJsObject [
 	^ self error: (Error signal: 'Could not find ''componentProps'' in example object')
 ]
 
+{ #category : #accessing }
+SBJsComponentUsageReplacement >> componentWrapper [
+
+	^ componentWrapper
+]
+
+{ #category : #accessing }
+SBJsComponentUsageReplacement >> componentWrapper: aSBJsReactComponentWrapper [
+
+	componentWrapper := aSBJsReactComponentWrapper
+]
+
 { #category : #replacing }
-SBJsComponentUsageReplacement >> example: aJsObject forAComponent: reactClassNameString withComponentNode: aReactComponentString withUsedComponents: aCollection withSharedProps: sharedOptions [
+SBJsComponentUsageReplacement >> example: aJsObject componentWrapper: aSBJsReactComponentWrapper [
 
 	| keyValuePairs componentPreviewImage jsxString componentProps |
-	"TODO get key value pairs"
 	componentProps := self componentPropsFromExampleObject: aJsObject.
 	keyValuePairs := self keyValuesOfExampleObject: componentProps.
-	self referencedComponentClassSourceString: aReactComponentString.
+	self componentWrapper: aSBJsReactComponentWrapper.
 	
-	jsxString := '<', reactClassNameString.
+	jsxString := '<', aSBJsReactComponentWrapper componentName.
 	keyValuePairs do: [:association | jsxString := jsxString, ' ', association key, '={', association value sourceString, '}'].
 	jsxString := jsxString, ' ', '/>'.
 	
 	componentPreviewImage := SBJsComponentScreenshotTaker
-		takeScreenshotOf: aReactComponentString
-		withName: reactClassNameString
+		takeScreenshotOf: aSBJsReactComponentWrapper
 		withExample: aJsObject
-		withUsedComponents: aCollection
-		withSharedProps: sharedOptions
 		withExtent: 1000 @ 1000.
-	self flag: #TODO."Refactor this: Keep reference to original class and get the used replacents from there on demand"
-	self usedComponents: aCollection.
-	
 	componentPreviewImage := self shrinkPreviewImage: componentPreviewImage.
+	
 	^ self
-		factory: SBJavascript instance;
 		removeAllMorphs;
 		addMorphBack: (SBColumn new
 			addMorphBack: (ImageMorph new image: componentPreviewImage);
-			addMorphBack: (SBJavascript parse: jsxString) access children first element;
+			addMorphBack: (SBJavascript parseElement: jsxString);
 			changeTableLayout;
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap);
@@ -149,19 +119,14 @@ SBJsComponentUsageReplacement >> example: aJsObject forAComponent: reactClassNam
 		yourself
 ]
 
-{ #category : #'example-extracting' }
-SBJsComponentUsageReplacement >> indexOfFirstValidExampleEntry: aJsArray [
-
-	aJsArray access children withIndexDo: [:arrayEntry :index | (arrayEntry type = 'object' and: [arrayEntry children anySatisfy: [:objectEntry | objectEntry type = 'pair' and: [objectEntry key contents = 'componentProps']]]) ifTrue: [^ index]].
-	^ self error: (Error signal: 'Could not find an example with ''componentProps'' set')
-]
-
 { #category : #saving }
 SBJsComponentUsageReplacement >> initialize [
 
 	super initialize.
-	self referencedComponentClassSourceString: '';
-	usedComponents: OrderedCollection new.
+	self
+		referencedComponentClassSourceString: '';
+		usedComponents: OrderedCollection new;
+		factory: SBJavascript instance
 ]
 
 { #category : #'example-extracting' }
@@ -176,22 +141,10 @@ SBJsComponentUsageReplacement >> previewImageCopy [
 	^ self firstSubmorph firstSubmorph image copy
 ]
 
-{ #category : #accessing }
-SBJsComponentUsageReplacement >> referencedComponentClassSourceString [
-
-	^ referencedComponentClassSourceString
-]
-
-{ #category : #accessing }
-SBJsComponentUsageReplacement >> referencedComponentClassSourceString: aString [
-
-	referencedComponentClassSourceString := aString
-]
-
 { #category : #replacing }
-SBJsComponentUsageReplacement >> replacementFor: aJsxSelfClosingElement withComponentSource: aReactComponentString withExampleImage: aForm [
+SBJsComponentUsageReplacement >> replacementFor: aJsxSelfClosingElement withComponentWrapper: aSBJsReactComponentWrapper withExampleImage: aForm [
 
-	self referencedComponentClassSourceString: aReactComponentString.
+	self componentWrapper: aSBJsReactComponentWrapper.
 	
 	^ self
 		factory: SBJavascript instance;
@@ -225,12 +178,8 @@ SBJsComponentUsageReplacement >> type [
 
 { #category : #accessing }
 SBJsComponentUsageReplacement >> usedComponents [
-	^ usedComponents
-]
 
-{ #category : #accessing }
-SBJsComponentUsageReplacement >> usedComponents: aCollection [
-	usedComponents := aCollection
+	self componentWrapper reactComponent collectComponentUsageReplacements
 ]
 
 { #category : #saving }

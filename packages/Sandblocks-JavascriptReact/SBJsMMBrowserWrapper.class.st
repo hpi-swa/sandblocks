@@ -1,5 +1,5 @@
 "
-A SBJsMMBrowserWrapper is SBBlock used to wrap the MMBrowserMorph so that the MMBrowserMorph can take keyboard input from within sandblocks. For this to work the selection of the active Block of Sandblocks must be this instance and the highlightin must be only the lower border of the instance. To get there select this block or a outer block of it and navigate inwards via shift + down arrow until reached.
+A SBJsMMBrowserWrapper is SBBlock used to wrap the MMBrowserMorph so that the MMBrowserMorph can take keyboard input from within sandblocks. For this to work the selection of the active Block of Sandblocks must be this instance and the highlighting must be only the lower border of the instance. To get there select this block or a outer block of it and navigate inwards via shift + down arrow until reached. It is also possible to directly reach the selection via careful clicking.
 
 Instance Variables
 	- None
@@ -12,7 +12,6 @@ Class {
 
 { #category : #input }
 SBJsMMBrowserWrapper >> absorbsInput: anEvent [
-	"self firstSubmorph keyStroke: anEvent."
 
 	^ true
 ]
@@ -20,7 +19,7 @@ SBJsMMBrowserWrapper >> absorbsInput: anEvent [
 { #category : #input }
 SBJsMMBrowserWrapper >> currentTextMorph [
 
-	^ self submorphs size > 0 ifTrue: [self firstSubmorph] ifFalse:[nil]
+	^ self submorphs size > 0 ifTrue: [self firstSubmorph] ifFalse: [nil]
 ]
 
 { #category : #input }

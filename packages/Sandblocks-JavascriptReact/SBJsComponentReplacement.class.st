@@ -1,14 +1,17 @@
 "
-A SBJsComponentReplacement is a SBInlineBlockReplace for React Components that have a annotation for examples directly defined before their render method. The component needs to be a class, not a functional component. 
-The annotation prior to the render method must be an assignment to the class variable ""examples"" in form of an array.
-Each entry in this array will be rendered one below the other as an example in a MMBrowserMorph. The MMBrowserMorph is directly next to the examples array and above the render method. Thus this replacement replaces the assignment to the ""examples"" class variable. The annotation must look like this: 
+A SBJsComponentReplacement is a SBInlineBlockReplace for React Components that have a annotation for examples directly defined before their render method. The component needs to be a class and inherit from React.Component. Functional components are currently not supported. 
+The annotation prior to the render method must be an assignment to the class variable ""examples"" in form of an array. This assignment will be replaced by this class.
+Each entry in this array will be as one example in an independent MMBrowserMorph each. The MMBrowserMorph is directly below the example entry, which can be modified at will. But it should stay a valid JsObject in order for the example to work. The examples annotation must look like this: 
 `examples = [{componentProps:{<props passed to the rendered component>}}, <maybe more entries>]`.
+As the component is rendered inside a div in the example generated html page, it is possible to modify the div wrapping this component at free will. Just add property 'parentProps: {<options,,.>}' to the example object and the <options...> will be passed to that wrapping div.
+Additionally, it is possible to have share properties between examples using a `sharedExampleProps = {<properties...>}` like annotation above the 'examples' annotation. The properties defined within the 'sharedExampleProps' can be accessed in the examples like it would be done with normal JS syntax.
 
 Instance Variables
 	skipHtmlFileGeneration:		<Boolean>
 
 skipHtmlFileGeneration
 	- This boolean signals whether to generate a html file for the component when saving changes / writeSourceOn: is called. This behaviour helps to automatically update the displayed examples in the MMBrowserMorph. As the generation of the html file needs the source string of the whole class, the generation needs to call writeSourceOn: itself. To evade endless recursion, skipHtmlFileGeneration is needed. The instance variable is set to true when the html file should be generated to aviod an endless recursion of creating html file. After the generation, it is set to false again. For more details see the writeSourceOn: method on the instance side.
+If you want to get the sourceString of the component this instance is in without triggering a refresh of all examples, use the whileNotRefreshingExamples method.
 
 Dependency: A installed instance of the MagicMouse project in dev mode.
 For better performance turn of the debugging flag in the settings.
@@ -23,16 +26,16 @@ Class {
 }
 
 { #category : #'generate-html' }
-SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forClass: aClassNameString withOptions: aArrayString withUsedReactComponents: aOrderedCollection withSharedProps: aJsObjectStringMaybe [
+SBJsComponentReplacement class >> exampleHTMLTemplateForExample: aJsObject withCaptures: aDictWithBlockCaptures [
 
-	| usedReactComponentsSourceStrings aJsObjectString |
-	"self halt."
-	usedReactComponentsSourceStrings := aOrderedCollection
+	| usedComponentReplacements usedReactComponentsSourceStrings aJsObjectString |
+	usedComponentReplacements := aDictWithBlockCaptures at: 'class'.
+	usedReactComponentsSourceStrings := usedComponentReplacements
 		ifEmpty: ['']
-		ifNotEmpty: [(aOrderedCollection collect: [:aSBJsComponentUsageReplacement | aSBJsComponentUsageReplacement referencedComponentClassSourceString]) joinSeparatedBy: ' '].
-	aJsObjectString := aJsObjectStringMaybe
+		ifNotEmpty: [(usedComponentReplacements collect: [:aSBJsComponentUsageReplacement | aSBJsComponentUsageReplacement referencedComponentClassSourceString]) joinSeparatedBy: ' '].
+	aJsObjectString := (aDictWithBlockCaptures at: 'shared_example_props')
 		ifNil: ['sharedExampleProps = {}']
-		ifNotNil: [aJsObjectStringMaybe sourceString].
+		ifNotNil: [:anotherJsObject | anotherJsObject sourceString].
 	^ '<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -52,232 +55,26 @@ SBJsComponentReplacement class >> exampleHTMLTemplateFor: aSourceCodeString forC
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
 <style>
-		body {
+ 	/* Here is the place to add static CSS.*/
+	body {
         margin: 0;
         font-family: Arial, Helvetica, sans-serif;
       }
-
-      .topnav {
-        background-color: #333;
-        position: sticky;
-        top: 0px;
-        width: 100%;
-        height: 48px;
-      }
-
-      .topnav > a,
-      .topnav > span,
-      .topnav > div {
-        float: left;
-        color: #f2f2f2;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-        font-size: 17px;
-      }
-
-      .topnav > a:hover,
-      .topnav > span:hover,
-      .topnav > div:hover {
-        background-color: #ddd;
-        color: black;
-      }
-
-      .main-content {
-        text-align: center;
-        padding: 40px 100px;
-      }
-
-      .topnav a.active {
-        background-color: #04aa6d;
-        color: white;
-      }
-
-      table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-      }
-
-      td,
-      th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-      }
-
-      tr:nth-child(even) {
-        background-color: #dddddd;
-      }
-      .search-container input[type="text"] {
-        padding: 6px;
-        margin-top: 8px;
-        font-size: 17px;
-        border-color: #ddd;
-        border-style: double;
-      }
-
-      .search-container button {
-        padding: 8px 10px;
-        margin-top: 8px;
-        margin-right: 16px;
-        background: #ddd;
-        font-size: 17px;
-        border: none;
-        cursor: pointer;
-      }
-
-      @keyframes spin {
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      #snackbar {
-        visibility: hidden;
-        min-width: 250px;
-        margin-left: -125px;
-        background-color: #555;
-        color: #fff;
-        text-align: center;
-        border-radius: 2px;
-        padding: 16px;
-        position: fixed;
-        z-index: 1;
-        left: 50%;
-        bottom: 30px;
-        font-size: 17px;
-      }
-
-      #snackbar.show {
-        visibility: visible;
-        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-        animation: fadein 0.5s, fadeout 0.5s 2.5s;
-      }
-
-      @-webkit-keyframes fadein {
-        from {
-          bottom: 0;
-          opacity: 0;
-        }
-        to {
-          bottom: 30px;
-          opacity: 1;
-        }
-      }
-
-      @keyframes fadein {
-        from {
-          bottom: 0;
-          opacity: 0;
-        }
-        to {
-          bottom: 30px;
-          opacity: 1;
-        }
-      }
-
-      @-webkit-keyframes fadeout {
-        from {
-          bottom: 30px;
-          opacity: 1;
-        }
-        to {
-          bottom: 0;
-          opacity: 0;
-        }
-      }
-
-      @keyframes fadeout {
-        from {
-          bottom: 30px;
-          opacity: 1;
-        }
-        to {
-          bottom: 0;
-          opacity: 0;
-        }
-      }
-
-      .dropbtn {
-        background-color: #4caf50;
-        color: white;
-        padding: 16px;
-        font-size: 16px;
-        border: none;
-        cursor: pointer;
-      }
-
-      .dropdown {
-        position: relative;
-        display: inline-block;
-      }
-
-      .dropdown-content {
-        position: absolute;
-        right: 0;
-        background-color: #ddd;
-        padding: 8px;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-        z-index: 10;
-      }
-
-      .dropdown-background {
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        top: 0px;
-        left: 0px;
-        z-index: 9;
-        background-color: rgba(0, 0, 0, 0.2);
-      }
-
-      .dropdown-content a {
-        color: black;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-      }
-
-      .dropdown-content a:hover {
-        background-color: #f1f1f1;
-      }
-
-      .dropdown:hover .dropbtn {
-        background-color: #3e8e41;
-      }
-	.error {
-	  color: red;
-	}
 	</style>
-	
     <title>Example</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root">loading ...</div>
-	<style>
-	    @keyframes spin { 
-	    100% {
-	        transform:rotate(360deg); 
-	    } 
-	}
-    </style>
+    <div id="root">failed loading component ...</div>
     <script type="text/babel">
-', usedReactComponentsSourceStrings, aSourceCodeString, '
+', usedReactComponentsSourceStrings, (aDictWithBlockCaptures at: 'class') sourceString, '
 	const ', aJsObjectString, ';
-	const ', aArrayString, ';
-	const components = examples.map((example, index) => {
-        const { componentProps } = example;
-        const { parentProps } = example;
-        return (
-          <div key={`container${index}`} {...parentProps}>
-            <', aClassNameString, ' {...componentProps} />
-          </div>
-        );
-      });
-      ReactDOM.render(components, document.getElementById("root"));
+	const { componentProps, parentProps } = ', aJsObject sourceString, ';
+      ReactDOM.render(
+		<div key={`container${index}`} {...parentProps}>
+            	<', (aDictWithBlockCaptures at: 'class_name') sourceString, ' {...componentProps} />
+  	       </div>, 
+		document.getElementById("root"));
     </script>
   </body>
 </html>'
@@ -309,39 +106,24 @@ SBJsComponentReplacement class >> filePathToURL: aString [
 ]
 
 { #category : #'generate-html' }
-SBJsComponentReplacement class >> generateHtmlFileFor: aReactComponentString withClassName: aClassNameString forOptions: aJsArrayString withUsedReactComponents: aOrderedCollection withSharedProps: aJsObjectString [
+SBJsComponentReplacement class >> generateHtmlFileForExample: aJsObject withCaptures: aDictWithBlockCaptures atFilePath: aString [
 
 	| htmlString |
-	self flag: #TODO.
-	"remove me"
-	htmlString := self
-		exampleHTMLTemplateFor: aReactComponentString
-		forClass: aClassNameString
-		withOptions: aJsArrayString
-		withUsedReactComponents: aOrderedCollection
-		withSharedProps: aJsObjectString.
-	FileStream
-		forceNewFileNamed: self testHTMLFilePath
-		do: [:stream | stream nextPutAll: htmlString]
-]
-
-{ #category : #'generate-html' }
-SBJsComponentReplacement class >> generateHtmlFileFor: aReactComponentString withClassName: aClassNameString forOptions: aJsArrayString withUsedReactComponents: aOrderedCollection withSharedProps: aJsObjectString atFilePath: aString [
-
-	| htmlString |
-	htmlString := self
-		exampleHTMLTemplateFor: aReactComponentString
-		forClass: aClassNameString
-		withOptions: aJsArrayString
-		withUsedReactComponents: aOrderedCollection
-		withSharedProps: aJsObjectString.
+	htmlString := self exampleHTMLTemplateForExample: aJsObject withCaptures: aDictWithBlockCaptures.
 	FileStream forceNewFileNamed: aString do: [:stream | stream nextPutAll: htmlString]
 ]
 
 { #category : #'inline-replacement' }
-SBJsComponentReplacement class >> matchComponentExamples: aDictionary do: aBlock [
+SBJsComponentReplacement class >> matchComponentExamples: aDictWithBlockCaptures do: aBlock [
+	"First argument: What will be replaced, second argument: With what it will be replaced."
 	<lang: #javascript match: '(class_declaration
     name: (identifier) @class_name
+	(class_heritage
+		(member_expression
+			object: (identifier) ="React"
+			property: (idenfifier) ="Component"
+		)
+	)
     body: (class_body
 	(field_definition
         	(property_identifier) ="sharedExampleProps"
@@ -357,19 +139,9 @@ SBJsComponentReplacement class >> matchComponentExamples: aDictionary do: aBlock
     )
 ) @class'>
 
-	| wholeReactClass reactClassName options sharedOptions |
-	wholeReactClass := aDictionary at: 'class'.
-	reactClassName := (aDictionary at: 'class_name') contents.
-	options := aDictionary at: 'options'.
-	sharedOptions := aDictionary at: 'shared_example_props' ifAbsent: [nil].
-	
-	"First argument: What will be replaced, second argument: With what it will be replaced."
-	^ aBlock value: (aDictionary at: 'example_array') value: (self new
-		exampleArray: options
-		withSharedProps: sharedOptions
-		forAComponent: reactClassName
-		withComponentNode: wholeReactClass
-		fileDir: self testHTMLFileDir)
+	^ aBlock
+		value: (aDictWithBlockCaptures at: 'example_array')
+		value: (self new examplesFor: aDictWithBlockCaptures)
 ]
 
 { #category : #'inline-replacement' }
@@ -378,15 +150,21 @@ SBJsComponentReplacement class >> replacementQuery [
 
 	^ '(class_declaration
     name: (identifier) @class_name
+	(class_heritage
+		(member_expression
+			object: (identifier) ="React"
+			property: (idenfifier) ="Component"
+		)
+	)
     body: (class_body
 	(field_definition
-        	(property_identifier) @shared_example_props_name
+        	(property_identifier) ="sharedExampleProps"
 	      (object)
         )? @shared_example_props
     	(field_definition
         	(property_identifier) ="examples"
-	      (array) @options
-        ) @example_array
+	      (array) @examples_array
+        ) @example_array_declaration
 	(method_definition
         	(property_identifier) ="render"
   	) @render_method
@@ -405,17 +183,11 @@ SBJsComponentReplacement >> addNewEmptyExample [
 
 	| newExample defaultExampleObject exampleCount filePath |
 	exampleCount := self allExamples size.
-	defaultExampleObject := (SBJavascript parse: '{componentProps:{}}') access children first.
-	filePath := self
-		filePathForDir: self class testHTMLFileDir
-		withComponentName: self componentName
-		andIndex: exampleCount + 1.
+	defaultExampleObject := SBJavascript parseElement: '{componentProps:{}}'.
+	filePath := self filePathForIndex: exampleCount + 1.
 	newExample := self
-		browserMorphFor: defaultExampleObject
-		withSharedProps: self sharedExampleProps
-		forAComponent: self componentName
-		withComponentNode: self owningClass
-		withUsedReplacements: self owningClass collectComponentUsageReplacements
+		newExampleExample: defaultExampleObject
+		withCaptures: self wrappedOwningClass allCaptures
 		filePath: filePath.
 	self submorphs second addMorphBack: newExample
 ]
@@ -426,17 +198,70 @@ SBJsComponentReplacement >> allExamples [
 	^ self submorphs second submorphs collect: [:submorph | submorph firstSubmorph]
 ]
 
+{ #category : #accessing }
+SBJsComponentReplacement >> drawnColor [
+
+	^ Color veryDarkGray
+]
+
 { #category : #replacing }
-SBJsComponentReplacement >> browserMorphFor: aJsObject withSharedProps: anotherJsObject forAComponent: aComponentNameString withComponentNode: aComponentNode withUsedReplacements: aCollection filePath: aString [
+SBJsComponentReplacement >> examplesFor: aDictWithBlockCaptures [
+
+	(aDictWithBlockCaptures at: 'example_array') access children withIndexDo: [:example :index | | filePath |
+		filePath := self filePathForComponentName: (aDictWithBlockCaptures at: 'class_name') andIndex: index.
+		self examplesRow addMorphBack: (self newExampleExample: example withCaptures: aDictWithBlockCaptures filePath: filePath)]
+]
+
+{ #category : #accessing }
+SBJsComponentReplacement >> examplesRow [
+
+	^ self submorphs second
+]
+
+{ #category : #replacing }
+SBJsComponentReplacement >> filePathForComponentName: aComponentNameString andIndex: index [
+
+	^ self class testHTMLFileDir, 'Component_', aComponentNameString, '_', index asString, '.html'
+]
+
+{ #category : #replacing }
+SBJsComponentReplacement >> filePathForIndex: index [
+
+	^ self filePathForComponentName: self wrappedOwningClass componentName andIndex: index
+]
+
+{ #category : #accessing }
+SBJsComponentReplacement >> initialize [
+
+	super initialize.
+	self
+		skipHtmlFileGeneration: false;
+		listDirection: #topToBottom;
+		addMorphBack: (SBRow new
+			layoutInset: 4;
+			addMorphBack: (SBStringMorph new
+				contents: 'examples';
+				bold));
+		addMorphBack: (SBRow new
+			cellGap: 8;
+			layoutInset: 4;
+			yourself)
+]
+
+{ #category : #accessing }
+SBJsComponentReplacement >> isSBJsComponentReplacement [
+
+	^ true
+]
+
+{ #category : #replacing }
+SBJsComponentReplacement >> newExampleExample: aJsObject withCaptures: aDictWithBlockCaptures filePath: aString [
 
 	| aJSArrayWithName exampleOptionsCopy |
 	aJSArrayWithName := 'examples = [', aJsObject sourceString, ']'.
 	self class
-		generateHtmlFileFor: aComponentNode sourceString
-		withClassName: aComponentNameString
-		forOptions: aJSArrayWithName
-		withUsedReactComponents: aCollection
-		withSharedProps: anotherJsObject
+		generateHtmlFileForExample: aJsObject
+		withCaptures: aDictWithBlockCaptures
 		atFilePath: aString.
 	exampleOptionsCopy := aJsObject buildCopy.
 	
@@ -449,7 +274,7 @@ SBJsComponentReplacement >> browserMorphFor: aJsObject withSharedProps: anotherJ
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap;
 			yourself);
-		addMorphBack: (self savePaletteButtonFor: aComponentNode forExample: exampleOptionsCopy);
+		addMorphBack: (self savePaletteButtonForExample: exampleOptionsCopy);
 		borderWidth: 2;
 		changeTableLayout;
 		hResizing: #shrinkWrap;
@@ -457,155 +282,27 @@ SBJsComponentReplacement >> browserMorphFor: aJsObject withSharedProps: anotherJ
 		yourself
 ]
 
-{ #category : #accessing }
-SBJsComponentReplacement >> componentMemberAboveSelf [
-
-	| componentMembers |
-	componentMembers := self owningClass access children third children.
-	^ componentMembers at: (componentMembers indexOf: self) - 1 ifAbsent: [nil]
-]
-
-{ #category : #accessing }
-SBJsComponentReplacement >> componentName [
-
-	^ self owningClass firstSubmorph submorphs third contents
-]
-
-{ #category : #saving }
-SBJsComponentReplacement >> componentsSourceStringWithoutRefresh [
-
-	| sourceString |
-	self skipHtmlFileGeneration: true.
-	sourceString := self owningClass sourceString.
-	self skipHtmlFileGeneration: false.
-	^ sourceString
-]
-
-{ #category : #accessing }
-SBJsComponentReplacement >> drawnColor [
-
-	^ Color veryDarkGray
-]
-
 { #category : #replacing }
-SBJsComponentReplacement >> exampleArray: aJsArray withSharedProps: aJsObject forAComponent: aComponentNameString withComponentNode: aComponentNode fileDir: aString [
+SBJsComponentReplacement >> savePaletteButtonForExample: aJsObject [
 
-	| aJSArrayWithName usedComponentReplacements row |
-	aJSArrayWithName := 'examples = ', aJsArray sourceString.
-	usedComponentReplacements := aComponentNode collectComponentUsageReplacements.
-	self
-		listDirection: #topToBottom;
-		addMorphBack: (SBRow new
-			layoutInset: 4;
-			addMorphBack: (SBStringMorph new
-				contents: 'examples';
-				bold));
-		addMorphBack: (row := SBRow new
-			cellGap: 8;
-			layoutInset: 4;
-			yourself).
-	
-	aJsArray access children withIndexDo: [:example :index | | filePath |
-		filePath := self filePathForDir: aString withComponentName: aComponentNameString andIndex: index.
-		row addMorphBack: (self
-			browserMorphFor: example
-			withSharedProps: aJsObject
-			forAComponent: aComponentNameString
-			withComponentNode: aComponentNode
-			withUsedReplacements: usedComponentReplacements
-			filePath: filePath)]
-]
-
-{ #category : #accessing }
-SBJsComponentReplacement >> exampleArraySandblock [
-
-	| rowSubmorphs |
-	rowSubmorphs := self firstSubmorph submorphs.
-	^ rowSubmorphs size > 1
-		ifTrue: [rowSubmorphs second firstSubmorph]
-		ifFalse: [rowSubmorphs first]
-]
-
-{ #category : #replacing }
-SBJsComponentReplacement >> filePathForDir: aString withComponentName: aComponentNameString andIndex: index [
-
-	^ aString, 'Component_', aComponentNameString, '_', index asString, '.html'
-]
-
-{ #category : #accessing }
-SBJsComponentReplacement >> firstValidExampleComponentProps [
-
-	self flag: #TODO.
-	"Reassess whether needed here in the future or only in SBJsComponentUsageReplacement"
-	^ self exampleArraySandblock access children
-		detect: [:exampleObject |
-			(exampleObject children
-				detect: [:entry |
-					entry key contents = 'componentProps'
-						ifTrue: [^ entry value]
-						ifFalse: [false]]
-				ifNone: [false]) notNil]
-		ifNone: [self error: (Error signal: 'Could not find a object in the examples array with ''componentProps'' being set.')]
-]
-
-{ #category : #accessing }
-SBJsComponentReplacement >> firstValidExampleKeyValuePairs [
-
-	self flag: #TODO.
-	"Reassess whether needed here in the future or only in SBJsComponentUsageReplacement"
-	^ (self firstValidExampleComponentProps children reject: [:objectEntry | objectEntry type ~= 'pair']) collect: [:keyValuePair | keyValuePair key contents -> keyValuePair value]
-]
-
-{ #category : #accessing }
-SBJsComponentReplacement >> initialize [
-
-	super initialize.
-	self skipHtmlFileGeneration: false
-]
-
-{ #category : #accessing }
-SBJsComponentReplacement >> isSBJsComponentReplacement [
-
-	^ true
-]
-
-{ #category : #accessing }
-SBJsComponentReplacement >> owningClass [
-
-	^ self ownerOfType: 'class_declaration'
-]
-
-{ #category : #replacing }
-SBJsComponentReplacement >> savePaletteButtonFor: aComponentNode forExample: aJsObject [
-
-	| componentName owningClass |
-	^ SBButton new icon: SBIcon iconSave label: 'Save to Palette' do: [ | category componentUsageReplacement |
-		componentName := self componentName.
-		owningClass := self owningClass.
+	^ SBButton new icon: SBIcon iconSave label: 'Save to Palette' do: [ | category componentUsageReplacement wrappedOwningClass |
+		wrappedOwningClass := self wrappedOwningClass.
 		category := UIManager default
 			chooseFromOrAddTo: SBJsReactComponentRegistry defaultRegistry allCategories
 			lines: nil
 			title: 'Choose Category'.
 		category ifNotNil: [
 			Cursor wait showWhile: [
-				componentUsageReplacement := SBJsComponentUsageReplacement
-					inlineComponentUsageReplacementFor: self componentsSourceStringWithoutRefresh
-					forExample: aJsObject
-					withName: componentName
-					withUsedComponents: owningClass collectComponentUsageReplacements
-					withSharedProps: self sharedExampleProps.
-				SBJsReactComponentRegistry defaultRegistry
-					addComponent: componentUsageReplacement
-					withName: componentName
-					inCategory: category.
+				self skipHtmlFileGeneration: true.
+				self whileNotRefreshingExamples: [
+					componentUsageReplacement := SBJsComponentUsageReplacement
+						for: wrappedOwningClass
+						withExample: aJsObject.
+					SBJsReactComponentRegistry defaultRegistry
+						addComponent: componentUsageReplacement
+						withName: wrappedOwningClass componentName
+						inCategory: category].
 				self sandblockEditor rebuildPalette]]]
-]
-
-{ #category : #accessing }
-SBJsComponentReplacement >> sharedExampleProps [
-
-	self componentMemberAboveSelf ifNotNil: [:memberAbove | memberAbove access children first contents = 'sharedExampleProps' ifTrue: [^ memberAbove]].
-	^ nil
 ]
 
 { #category : #accessing }
@@ -621,39 +318,44 @@ SBJsComponentReplacement >> skipHtmlFileGeneration: aBoolean [
 ]
 
 { #category : #replacing }
-SBJsComponentReplacement >> updateSourceForAllBrowser: aComponentSourceString withSharedProps: aJsObject forAComponent: aComponentNameString withUsedReactComponents: aCollection [
+SBJsComponentReplacement >> updateAllExamples [
 
-	| aJSArrayWithName |
+	| captures |
+	captures := self wrappedOwningClass allCaptures.
 	self submorphs second submorphs withIndexDo: [:exampleTuple :index | | browser jsObject filePath |
 		browser := exampleTuple submorphs second firstSubmorph.
 		jsObject := exampleTuple firstSubmorph.
-		aJSArrayWithName := 'examples = [', jsObject sourceString, ']'.
-		filePath := self
-			filePathForDir: self class testHTMLFileDir
-			withComponentName: aComponentNameString
-			andIndex: index.
-		self class
-			generateHtmlFileFor: aComponentSourceString
-			withClassName: aComponentNameString
-			forOptions: aJSArrayWithName
-			withUsedReactComponents: aCollection
-			withSharedProps: aJsObject
-			atFilePath: filePath.
+		filePath := self filePathForComponentName: (captures at: 'class_name') andIndex: index.
+		self class generateHtmlFileForExample: jsObject withCaptures: captures atFilePath: filePath.
 		browser doRefresh]
 ]
 
 { #category : #saving }
 SBJsComponentReplacement >> veryDeepCopyWith: deepCopier [
 
-	| new mmBrowserMorph row |
-	" assure that the browser morph is not included in the deepCopy; Does not seem to work :/ "
-	row := self firstSubmorph.
-	mmBrowserMorph := row firstSubmorph.
-	row removeMorph: mmBrowserMorph.
+	| new examplesRow |
+	"Assure that the browser morph is not included in the deepCopy; Does not seem to work :/ "
+	self submorphs second.
+	examplesRow := self submorphs second.
+	self removeMorph: examplesRow.
 	new := super veryDeepCopyWith: deepCopier.
-	row addMorphFront: mmBrowserMorph.
+	self addMorphBack: examplesRow.
 	
 	^ new
+]
+
+{ #category : #saving }
+SBJsComponentReplacement >> whileNotRefreshingExamples: aBlock [
+
+	self skipHtmlFileGeneration: true.
+	aBlock value.
+	self skipHtmlFileGeneration: false
+]
+
+{ #category : #accessing }
+SBJsComponentReplacement >> wrappedOwningClass [
+
+	^ SBJsReactComponentWrapper reactComponent: self owningClass
 ]
 
 { #category : #saving }
@@ -662,16 +364,5 @@ SBJsComponentReplacement >> writeSourceOn: aStream [
 	| optionsObject |
 	optionsObject := 'examples = [', ((self allExamples collect: [:jsObject | jsObject sourceString]) joinSeparatedBy: ','), ']'.
 	aStream nextPutAll: optionsObject.
-	self skipHtmlFileGeneration ifFalse: [ | className componentClass usedComponentReplacements sharedExampleProps |
-		self skipHtmlFileGeneration: true.
-		componentClass := self owningClass.
-		className := self componentName.
-		usedComponentReplacements := componentClass collectComponentUsageReplacements.
-		sharedExampleProps := self sharedExampleProps.
-		self
-			updateSourceForAllBrowser: componentClass sourceString
-			withSharedProps: sharedExampleProps
-			forAComponent: className
-			withUsedReactComponents: usedComponentReplacements.
-		self skipHtmlFileGeneration: false]
+	self skipHtmlFileGeneration ifFalse: [self whileNotRefreshingExamples: [self updateAllExamples]]
 ]

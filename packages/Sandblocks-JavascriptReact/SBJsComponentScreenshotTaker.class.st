@@ -1,6 +1,7 @@
 "
-A SBJsComponentScreenshotTaker is a class to take screenshots of a given React Component. The screenshots can be take with the takeScreenshotOf:atExample:withExtent: method. This should be the onliest method how this class should be used. The rest is solely to handle taking the screenshot.
-Taking a screenshot works by using generating a html file for the given component similar to the way the SBJsComponentReplacement does it. Then the MMProcessWrapper is asked to take a screenshot of the examples rendered of the component for a instance of the SBJsComponentScreenshotTaker. As taking the screenshot is asynchonous the notifyGotScreenshotSemaphore is used to wait until the screenshot was taken. Then it can be access from the created instance of SBJsComponentScreenshotTaker via the instance variable screenshot.
+A SBJsComponentScreenshotTaker is a class to take screenshots of a given React Component via a SBJSReactComponentWrapper.
+Taking a screenshot works by generating a html file for the given component similar using the methods of SBJsComponentReplacement. Then the MMProcessWrapper is asked to take a screenshot of the examples rendered of the component for a instance of the SBJsComponentScreenshotTaker. As taking the screenshot is asynchonous the notifyGotScreenshotSemaphore is used to wait until the screenshot was taken. Note that this halts the process. After the screenshot is taken it is returned.
+Note that instances of this class implement the interface of the MMBrowserMorph so that they can be registered at the MMProcessWrapper as a pseudo browser. This makes it easier to optain the screenshot taken by MagicMouse.
 
 Instance Variables
 	notifyGotScreenshotSemaphore:		<Semaphore>
@@ -24,54 +25,17 @@ Class {
 }
 
 { #category : #'screenshot-taking' }
-SBJsComponentScreenshotTaker class >> takeScreenshotOf: aReactComponentString withExtent: aPoint [
+SBJsComponentScreenshotTaker class >> takeScreenshotOf: aSBJsReactComponentWrapper withExample: aJsObject withExtent: aPoint [
 
-	| reactComponentAST sharedOptions |
-	reactComponentAST := SBJavascript parse: aReactComponentString.
-	self flag: #TODO.
-	"index ist currently ignored"
-	reactComponentAST allBlocksDo: [:block |
-		SBTSQuery new execute: SBJsComponentReplacement replacementQuery against: block capturesDo: [:captures :success |
-			success ifTrue: [ | reactClassName wholeReactClass optionsWithName instance tabId screenshot usedComponentReplacements |
-				instance := self new.
-				wholeReactClass := (captures at: 'class') sourceString.
-				reactClassName := (captures at: 'class_name') contents.
-				optionsWithName := 'examples = ', (captures at: 'options') sourceString.
-				sharedOptions := captures at: 'shared_example_props' ifAbsent: [nil].
-				usedComponentReplacements := (captures at: 'class') applyReplacements collectComponentUsageReplacements.
-				SBJsComponentReplacement
-					generateHtmlFileFor: wholeReactClass
-					withClassName: reactClassName
-					forOptions: optionsWithName
-					withUsedReactComponents: usedComponentReplacements
-					withSharedProps: sharedOptions.
-				self flag: #TODO.
-				"Fix the file path!!!!"
-				tabId := MMProcessWrapper getOSDependentSingleton
-					takeScreenshotAt: SBJsComponentReplacement testHTMLFileUrl
-					withExtend: aPoint
-					for: instance.
-				screenshot := instance waitAndGetScreenshot.
-				MMProcessWrapper getOSDependentSingleton closeTab: tabId.
-				screenshot := screenshot trimBordersOfColor: Color white.
-				^ screenshot]]].
-	self error: 'Looks like there is no matching examples array in the component.'
-]
-
-{ #category : #'screenshot-taking' }
-SBJsComponentScreenshotTaker class >> takeScreenshotOf: aReactComponentString withName: reactClassName withExample: aJsObject withUsedComponents: aCollection withSharedProps: sharedOptions withExtent: aPoint [
-
-	| tabId optionsWithName filePath screenshot instance |
+	| tabId filePath screenshot instance |
 	instance := self new.
-	optionsWithName := 'examples = [', aJsObject sourceString, ']'.
 	filePath := SBJsComponentReplacement testHTMLFileDir, 'Screenshot_temp.html'.
 	SBJsComponentReplacement
-		generateHtmlFileFor: aReactComponentString
-		withClassName: reactClassName
-		forOptions: optionsWithName
-		withUsedReactComponents: aCollection
-		withSharedProps: sharedOptions
+		generateHtmlFileForExample: aJsObject
+		withCaptures: aSBJsReactComponentWrapper
 		atFilePath: filePath.
+	self flag: #TODO.
+	"Consider Tom's feedback about the interface how to take the screenshot."
 	tabId := MMProcessWrapper getOSDependentSingleton
 		takeScreenshotAt: (SBJsComponentReplacement filePathToURL: filePath)
 		withExtend: aPoint
@@ -80,25 +44,6 @@ SBJsComponentScreenshotTaker class >> takeScreenshotOf: aReactComponentString wi
 	MMProcessWrapper getOSDependentSingleton closeTab: tabId.
 	screenshot := screenshot trimBordersOfColor: Color white.
 	^ screenshot
-]
-
-{ #category : #testing }
-SBJsComponentScreenshotTaker class >> test [
-
-	self flag: #TODO.
-	"Try to make this an SBExample"
-	[:sbEditor | sbEditor openMorphInView: (ImageMorph new image: (self takeScreenshotOf: SBJsComponentReplacement exampleReactClassAsString withExtent: 300 @ 300))]
-]
-
-{ #category : #testing }
-SBJsComponentScreenshotTaker class >> test: sbEditor [
-
-	self flag: #TODO.
-	"Try to make this an SBExample"
-	[ | morphy |
-		morphy := ImageMorph new.
-		sbEditor openMorphInView: morphy.
-		morphy image: (self takeScreenshotOf: SBJsComponentReplacement exampleReactClassAsString withExtent: 300 @ 300)] fork
 ]
 
 { #category : #'ignored-mm-events' }

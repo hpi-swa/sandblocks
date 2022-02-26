@@ -1,7 +1,10 @@
 "
-A SBJsReactComponentRegistry is object that saves SBJsComponentUsageReplacements associated with a name and a category much like a small database. 
+A SBJsReactComponentRegistry is object that saves SBJsComponentUsageReplacements associated with a name and a category much like a small key value database. 
 There should only be single single running instance at a time to ensure that all access the same registry. The running instance is saved via the DefaultRegistry variable. 
-On the instance side the SBJsComponentUsageReplacements are stored in the componentRegistry dictionary and can be accessed via convenience functions like componentRegistryDo:.
+On the instance side the SBJsComponentUsageReplacements are stored in the nested componentRegistry dictionary and can be accessed via convenience functions like componentRegistryDo:.
+The registered components in the DefaultRegistry are automatically added to the SBJsReactPalette and are used for suggestions in JSX context. 
+
+The convenience functions are mainly unused and exist for programmers to interact with the SBJsComponentUsageReplacements instance. Thus they extend the SBJsReactPalette and the JSX suggestions on their own.
 
 Instance Variables
 	componentRegistry:		<Dictionary>
@@ -112,7 +115,7 @@ SBJsReactComponentRegistry >> removeComponentByName: aString inCategory: another
 	self
 		removeComponentByName: aString
 		inCategory: anotherString
-		ifAbsent: [Error signal: 'Could not find ', aString, ' in category ', anotherString]
+		ifAbsent: [self signal: 'Could not find ', aString, ' in category ', anotherString]
 ]
 
 { #category : #removing }
