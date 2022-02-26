@@ -63,7 +63,7 @@ SBHoverDecorator >> position: aPoint [
 { #category : #'as yet unclassified' }
 SBHoverDecorator >> postDrawOn: aCanvas [
 
-	(self shown and: [SBPreferences showHoverDecorator and: [cursor notNil]]) ifTrue: [ | c |
+	(self shown and: [SBPreferences showHoverDecorator and: [cursor notNil and: [ActiveHand hasSubmorphs not]]]) ifTrue: [ | c |
 		c := (cursor isKindOf: SBCursorText)
 			ifTrue: [SBCursorSelect new block: cursor block]
 			ifFalse: [cursor].
