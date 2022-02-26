@@ -440,7 +440,7 @@ SBEditor >> copyBuffer: aMorphOrCollection [
 		methodClass: (list first containingArtefact ifNotNil: #relatedClass);
 		colorPolicy: self colorPolicy.
 	
-	list do: [:m | copyBuffer addMorphBack: m veryDeepCopy].
+	list do: [:m | copyBuffer addMorphBack: m copyBlock].
 	Clipboard clipboardText: copyBuffer firstSubmorph textContentsForCopy.
 	form := copyBuffer imageForm.
 	copyBufferPreview ifNotNil: [copyBufferPreview image: (form scaledToFit: self copyBufferPreviewSize)]
@@ -593,7 +593,7 @@ SBEditor >> deleteCommandFor: aBlock [
 SBEditor >> do: aCommand [
 
 	cursor prepareForNextCommand.
-
+	
 	history do: aCommand previousSelection: self selection selectDo: [:block :artefacts |
 		self select: block.
 		self markChangesAfterCommand: artefacts]

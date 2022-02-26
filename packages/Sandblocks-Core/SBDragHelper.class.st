@@ -14,7 +14,8 @@ Class {
 		'blockBounds',
 		'onApply',
 		'floatingMorphs',
-		'onMove'
+		'onMove',
+		'transferContainer'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -35,6 +36,7 @@ SBDragHelper >> applyHintAt: anEvent [
 
 	onLeave ifNotNil: [onLeave value].
 	onMove := nil.
+	transferContainer applyDrag.
 	^ onApply
 		ifNotNil: [
 			onApply cull: anEvent.
@@ -234,6 +236,7 @@ SBDragHelper >> morph: aMorph [
 
 	((aMorph isSandblock and: [aMorph isSelection]) or: [aMorph isKindOf: TransferMorph]) ifFalse: [^ false].
 	
+	transferContainer := aMorph.
 	morph := aMorph unpackSelection.
 	^ true
 ]

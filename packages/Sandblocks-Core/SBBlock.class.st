@@ -2027,7 +2027,7 @@ SBBlock >> pickUp: anEvent [
 	self canDrag ifFalse: [^ self].
 	
 	editor := self sandblockEditor.
-	s := SBSelection new
+	s := SBDragContainer new
 		homeArtefact: self containingArtefact;
 		methodClass: (self containingArtefact ifNotNil: #relatedClass);
 		colorPolicy: self colorPolicy;
@@ -2039,13 +2039,16 @@ SBBlock >> pickUp: anEvent [
 	
 	s addMorphBack: self dragTarget.
 	anEvent hand grabMorph: s.
+	editor select: nil.
 	
-	(anEvent shiftPressed not and: [self copyOnDrag not]) ifTrue: [
-		(self parentSandblock deleteCommandFor: self) ifNotNil: [:cmd |
-			editor do: (cmd
-				shouldMergeWithNext: true;
-				selectAfter: #none;
-				yourself)]]
+	SBToggledCode comment: '' active: 0 do: {
+		[
+			(anEvent shiftPressed not and: [self copyOnDrag not]) ifTrue: [
+				(self parentSandblock deleteCommandFor: self) ifNotNil: [:cmd |
+					editor do: (cmd
+						shouldMergeWithNext: true;
+						selectAfter: #none;
+						yourself)]]]}
 ]
 
 { #category : #actions }
@@ -2553,10 +2556,7 @@ SBBlock >> startDrag: anEvent [
 		^ canvas startDrag: (anEvent transformBy: self transformFromWorld asMatrixTransform2x3 inverseTransformation)].
 	
 	((self hasDecorator: SBMoveDecorator) not or: [anEvent controlKeyPressed or: [anEvent commandKeyPressed]]) ifTrue: [
-		"(self nearestOwnerThat: [:o | o isSandblock and: [o isSelected]]) ifNotNil: [:o | ^ o pickUp: anEvent]."
-		^ self
-			select;
-			pickUp: anEvent].
+		^ self pickUp: anEvent].
 	
 	super startDrag: anEvent.
 	self sandblockEditor select: self

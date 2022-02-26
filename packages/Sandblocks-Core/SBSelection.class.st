@@ -18,7 +18,6 @@ Class {
 SBSelection >> abortDrag: anEvent [
 
 	self onAbortUndoIn ifNotNil: [:editor |
-		editor undo.
 		editor handleDropCancelMorph: self].
 	
 	self delete
@@ -287,6 +286,12 @@ SBSelection >> sourceBlock: aBlock [
 SBSelection >> statements [
 
 	^ #()
+]
+
+{ #category : #'as yet unclassified' }
+SBSelection >> suggestAlways [
+
+	^ false
 ]
 
 { #category : #'as yet unclassified' }
