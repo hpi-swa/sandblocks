@@ -71,8 +71,9 @@ SBJsComponentUsageReplacement >> componentName [
 { #category : #'example-extracting' }
 SBJsComponentUsageReplacement >> componentPropsFromExampleObject: aJsObject [
 
-	aJsObject access children do: [:objectEntry | (objectEntry type = 'pair' and: [objectEntry key contents = 'componentProps']) ifTrue: [^ objectEntry value]].
-	^ self error: (Error signal: 'Could not find ''componentProps'' in example object')
+	^ aJsObject access children
+		detect: [:objectEntry | objectEntry type = 'pair' and: [objectEntry key contents = 'componentProps']]
+		ifFound: #value
 ]
 
 { #category : #accessing }
@@ -95,9 +96,9 @@ SBJsComponentUsageReplacement >> example: aJsObject componentWrapper: aSBJsReact
 	keyValuePairs := self keyValuesOfExampleObject: componentProps.
 	self componentWrapper: aSBJsReactComponentWrapper.
 	
-	jsxString := '<', aSBJsReactComponentWrapper componentName.
-	keyValuePairs do: [:association | jsxString := jsxString, ' ', association key, '={', association value sourceString, '}'].
-	jsxString := jsxString, ' ', '/>'.
+	jsxString := self
+		jsxStringForProps: keyValuePairs
+		withComponentName: aSBJsReactComponentWrapper componentName.
 	
 	componentPreviewImage := SBJsComponentScreenshotTaker
 		takeScreenshotOf: aSBJsReactComponentWrapper
@@ -108,7 +109,7 @@ SBJsComponentUsageReplacement >> example: aJsObject componentWrapper: aSBJsReact
 	^ self
 		removeAllMorphs;
 		addMorphBack: (SBColumn new
-			addMorphBack: (ImageMorph new image: componentPreviewImage);
+			addMorphBack: componentPreviewImage asMorph;
 			addMorphBack: (SBJavascript parseElement: jsxString);
 			changeTableLayout;
 			hResizing: #shrinkWrap;
@@ -127,6 +128,25 @@ SBJsComponentUsageReplacement >> initialize [
 		referencedComponentClassSourceString: '';
 		usedComponents: OrderedCollection new;
 		factory: SBJavascript instance
+]
+
+{ #category : #'example-extracting' }
+SBJsComponentUsageReplacement >> jsxStringForProps: aCollectionOfKeyValuePairs withComponentName: aString [
+
+	^ String streamContents: [:stream |
+		stream
+			nextPutAll: '<';
+			nextPutAll: aString.
+		aCollectionOfKeyValuePairs do: [:association |
+			stream
+				space;
+				nextPutAll: association key;
+				nextPutAll: '={';
+				nextPutAll: association value sourceString;
+				nextPutAll: '}'].
+		stream
+			space;
+			nextPutAll: '/>']
 ]
 
 { #category : #'example-extracting' }
@@ -150,7 +170,7 @@ SBJsComponentUsageReplacement >> replacementFor: aJsxSelfClosingElement withComp
 		factory: SBJavascript instance;
 		removeAllMorphs;
 		addMorphBack: (SBColumn new
-			addMorphBack: (ImageMorph new image: aForm);
+			addMorphBack: aForm asMorph;
 			addMorphBack: aJsxSelfClosingElement buildCopy;
 			changeTableLayout;
 			hResizing: #shrinkWrap;

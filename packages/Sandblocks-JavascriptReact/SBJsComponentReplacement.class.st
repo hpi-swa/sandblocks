@@ -80,25 +80,6 @@ SBJsComponentReplacement class >> exampleHTMLTemplateForExample: aJsObject withC
 </html>'
 ]
 
-{ #category : #examples }
-SBJsComponentReplacement class >> exampleOpenReactClassInSbEditor [
-	"Useful if testing with a workspace"
-
-	^ 'sbEditor openMorphInView: (SBJavascript parseAndReplace: ', self exampleReactClassAsString, ')'
-]
-
-{ #category : #examples }
-SBJsComponentReplacement class >> exampleReactClassAsString [
-
-	^ 'class Car extends React.Component {
- 	examples = [{componentProps: {color: "red", kind: "stuff"}, 
-				parentProps: {style: {display: "inline-block", backgroundColor: "blue"}}}];
-	render(){
-		return <h2 style={{color: this.props.color}}>Hi, I am a {this.props.kind}! </h2>;
-	}
-}'
-]
-
 { #category : #'generate-html' }
 SBJsComponentReplacement class >> filePathToURL: aString [
 
@@ -148,28 +129,7 @@ SBJsComponentReplacement class >> matchComponentExamples: aDictWithBlockCaptures
 SBJsComponentReplacement class >> replacementQuery [
 	"Got no better solutution than to keep an extra copy of the query as it cannot be accessed from the pragma that simply."
 
-	^ '(class_declaration
-    name: (identifier) @class_name
-	(class_heritage
-		(member_expression
-			object: (identifier) ="React"
-			property: (idenfifier) ="Component"
-		)
-	)
-    body: (class_body
-	(field_definition
-        	(property_identifier) ="sharedExampleProps"
-	      (object)
-        )? @shared_example_props
-    	(field_definition
-        	(property_identifier) ="examples"
-	      (array) @examples_array
-        ) @example_array_declaration
-	(method_definition
-        	(property_identifier) ="render"
-  	) @render_method
-    )
-) @class'
+	^ (self class >> #matchComponentExamples:do:) pragmas first arguments second
 ]
 
 { #category : #'generate-html' }
@@ -347,9 +307,9 @@ SBJsComponentReplacement >> veryDeepCopyWith: deepCopier [
 { #category : #saving }
 SBJsComponentReplacement >> whileNotRefreshingExamples: aBlock [
 
-	self skipHtmlFileGeneration: true.
-	aBlock value.
-	self skipHtmlFileGeneration: false
+	[
+		self skipHtmlFileGeneration: true.
+		aBlock value] ensure: [self skipHtmlFileGeneration: false]
 ]
 
 { #category : #accessing }

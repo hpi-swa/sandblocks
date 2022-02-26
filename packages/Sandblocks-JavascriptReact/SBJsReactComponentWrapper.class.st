@@ -43,7 +43,7 @@ SBJsReactComponentWrapper >> allCaptures [
 { #category : #accessing }
 SBJsReactComponentWrapper >> componentName [
 
-	^ self query: self componentNameQuery
+	^ (self query: self componentNameQuery) contents
 ]
 
 { #category : #querying }
@@ -63,11 +63,9 @@ SBJsReactComponentWrapper >> copy [
 { #category : #querying }
 SBJsReactComponentWrapper >> query: aQueryString [
 
-	self reactComponent allBlocksDo: [:block |
-		SBTSQuery new
-			execute: aQueryString
-			against: block
-			capturesDo: [:captures :success | success ifTrue: [^ captures at: 'identifier']]].
+	self reactComponent
+		queryRecursiveFirstMatch: aQueryString
+		capturesDo: [:captures | ^ captures at: 'identifier'].
 	^ nil
 ]
 
