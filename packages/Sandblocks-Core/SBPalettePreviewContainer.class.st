@@ -78,11 +78,11 @@ SBPalettePreviewContainer >> pickUp: anEvent [
 	| editor |
 	editor := self sandblockEditor.
 	
-	anEvent hand grabMorph: (SBSelection new
+	anEvent hand grabMorph: (SBDragContainer new
 		homeArtefact: self containingArtefact;
 		methodClass: (self containingArtefact ifNotNil: #relatedClass);
 		colorPolicy: self colorPolicy;
-		color: (self sandblockBlockColorIfAbsent: [Color white]);
+		color: (self sandblockBlockColorIfAbsent: [Color r: 1 g: 1 b: 1]);
 		addMorphBack: self firstSubmorph veryDeepCopy;
 		yourself)
 ]

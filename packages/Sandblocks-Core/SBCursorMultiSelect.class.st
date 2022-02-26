@@ -34,13 +34,13 @@ SBCursorMultiSelect >> bounds [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorMultiSelect >> drawOn: aCanvas in: aRectangle [
+SBCursorMultiSelect >> drawOn: aCanvas in: aRectangle color: aColor [
 
 	aCanvas
 		frameRoundRect: (aRectangle insetBy: 2)
 		radius: self block colorPolicy cornerRadius
 		width: self block frameSize
-		color: self color
+		color: aColor
 ]
 
 { #category : #'as yet unclassified' }

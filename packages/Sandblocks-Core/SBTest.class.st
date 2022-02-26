@@ -12,7 +12,7 @@ SBTest class >> dropAt: aPoint with: aBlock in: anEditor [
 		setType: #mouseMove
 		position: aPoint
 		buttons: MouseEvent blueButton
-		hand: (HandMorph new addMorph: (SBSelection new addMorphBack: aBlock)).
+		hand: (HandMorph new addMorph: (SBDragContainer new addMorphBack: aBlock)).
 	^ (SBDragHelper for: event in: anEditor)
 		mouseMove: event;
 		applyHintAt: event

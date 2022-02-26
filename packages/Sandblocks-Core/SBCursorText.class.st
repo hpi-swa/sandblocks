@@ -75,7 +75,7 @@ SBCursorText >> cursorIndex: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorText >> drawOn: aCanvas in: aRectangle [
+SBCursorText >> drawOn: aCanvas in: aRectangle color: aColor [
 
 	| stroke |
 	stroke := self block frameSize.
@@ -83,12 +83,12 @@ SBCursorText >> drawOn: aCanvas in: aRectangle [
 		line: aRectangle bottomLeft - (-1 @ stroke)
 		to: aRectangle bottomRight - (1 @ stroke)
 		width: stroke
-		color: self color negated.
+		color: aColor negated.
 	aCanvas
 		line: aRectangle bottomLeft - (-1 @ (stroke * 2))
 		to: aRectangle bottomRight - (1 @ (stroke * 2))
 		width: stroke
-		color: self color
+		color: aColor
 ]
 
 { #category : #'as yet unclassified' }

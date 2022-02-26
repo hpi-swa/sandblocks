@@ -440,7 +440,7 @@ SBEditor >> copyBuffer: aMorphOrCollection [
 		methodClass: (list first containingArtefact ifNotNil: #relatedClass);
 		colorPolicy: self colorPolicy.
 	
-	list do: [:m | copyBuffer addMorphBack: m veryDeepCopy].
+	list do: [:m | copyBuffer addMorphBack: m copyBlock].
 	Clipboard clipboardText: copyBuffer firstSubmorph textContentsForCopy.
 	form := copyBuffer imageForm.
 	copyBufferPreview ifNotNil: [copyBufferPreview image: (form scaledToFit: self copyBufferPreviewSize)]
@@ -593,7 +593,7 @@ SBEditor >> deleteCommandFor: aBlock [
 SBEditor >> do: aCommand [
 
 	cursor prepareForNextCommand.
-
+	
 	history do: aCommand previousSelection: self selection selectDo: [:block :artefacts |
 		self select: block.
 		self markChangesAfterCommand: artefacts]
@@ -1650,10 +1650,12 @@ SBEditor >> updateMouseCursorFor: anEvent [
 	event := anEvent transformedBy: (self childSandblocks first transformedFrom: self).
 	
 	self firstBlockAt: anEvent position do: [:block |
-		hoverHighlight ifNil: [hoverHighlight := SBHoverDecorator new].
-		block ~= hoverHighlight morph ifTrue: [
-			hoverHighlight morph ifNotNil: [:p | p detachDecorators: SBHoverDecorator].
-			(block decorators noneSatisfy: [:d | d isKindOf: SBHoverDecorator]) ifTrue: [block attachDecorator: hoverHighlight]]].
+		hoverHighlight ifNil: [hoverHighlight := SBHoverDecorator new position: anEvent position].
+		block ~= hoverHighlight morph
+			ifTrue: [
+				hoverHighlight morph ifNotNil: [:p | p detachDecorators: SBHoverDecorator].
+				(block decorators noneSatisfy: [:d | d isKindOf: SBHoverDecorator]) ifTrue: [block attachDecorator: hoverHighlight]]
+			ifFalse: [hoverHighlight position: event position]].
 	
 	self
 		blocksAt: anEvent position
