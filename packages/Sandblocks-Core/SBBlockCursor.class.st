@@ -122,9 +122,13 @@ SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol 
 	(aPosition hasDifferentEffect: previousCursor)
 		ifTrue: [
 			cursorPosition := SBCursorNone new.
-			previousCursor ifNotNil: [:c | c leaveIn: self editor with: self].
+			previousCursor ifNotNil: [:c |
+				c block ifNotNil: [c block invalidRect: c bounds].
+				c leaveIn: self editor with: self].
 			cursorPosition := aPosition.
-			cursorPosition ifNotNil: [:position | position enterWith: self]]
+			cursorPosition ifNotNil: [:position |
+				position enterWith: self.
+				position block ifNotNil: [position block invalidRect: position bounds]]]
 		ifFalse: [previousCursor maybeUpdateFor: aPosition].
 	
 	self resetBlink.
@@ -158,7 +162,7 @@ SBBlockCursor >> cursorVisible [
 { #category : #drawing }
 SBBlockCursor >> drawOn: aCanvas [
 
-	self cursorVisible ifTrue: [self cursorPosition drawOn: aCanvas in: self bounds]
+	self cursorVisible ifTrue: [self cursorPosition drawOn: aCanvas in: self bounds color: self color]
 ]
 
 { #category : #accessing }

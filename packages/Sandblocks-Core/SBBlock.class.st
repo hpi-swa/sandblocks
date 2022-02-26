@@ -1911,12 +1911,6 @@ SBBlock >> outerArtefact [
 	^ a = self ifTrue: [self parentSandblock ifNotNil: #containingArtefact] ifFalse: [a]
 ]
 
-{ #category : #layout }
-SBBlock >> outerBounds [
-
-	^ super outerBounds expandBy: self frameSize
-]
-
 { #category : #'as yet unclassified' }
 SBBlock >> outerMostArtefact [
 

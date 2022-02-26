@@ -76,7 +76,7 @@ SBCursorPosition >> cursorPositionsIn: aContainer do: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorPosition >> drawOn: aCanvas [
+SBCursorPosition >> drawOn: aCanvas in: aRectangle color: aColor [
 
 	self subclassResponsibility
 ]

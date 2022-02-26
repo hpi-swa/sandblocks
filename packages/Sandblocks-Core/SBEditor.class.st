@@ -1650,10 +1650,12 @@ SBEditor >> updateMouseCursorFor: anEvent [
 	event := anEvent transformedBy: (self childSandblocks first transformedFrom: self).
 	
 	self firstBlockAt: anEvent position do: [:block |
-		hoverHighlight ifNil: [hoverHighlight := SBHoverDecorator new].
-		block ~= hoverHighlight morph ifTrue: [
-			hoverHighlight morph ifNotNil: [:p | p detachDecorators: SBHoverDecorator].
-			(block decorators noneSatisfy: [:d | d isKindOf: SBHoverDecorator]) ifTrue: [block attachDecorator: hoverHighlight]]].
+		hoverHighlight ifNil: [hoverHighlight := SBHoverDecorator new position: anEvent position].
+		block ~= hoverHighlight morph
+			ifTrue: [
+				hoverHighlight morph ifNotNil: [:p | p detachDecorators: SBHoverDecorator].
+				(block decorators noneSatisfy: [:d | d isKindOf: SBHoverDecorator]) ifTrue: [block attachDecorator: hoverHighlight]]
+			ifFalse: [hoverHighlight position: event position]].
 	
 	self
 		blocksAt: anEvent position

@@ -126,7 +126,7 @@ SBPreferences class >> rightClickContextMenu: aBoolean [
 SBPreferences class >> showHoverDecorator [
 	<preference: 'Show an outline around hovered blocks' category: 'Sandblocks' description: 'Show an outline around the currently hovered block to help drag-and-drop' type: #Boolean>
 
-	^ ShowHoverDecorator ifNil: [false]
+	^ ShowHoverDecorator ifNil: [true]
 ]
 
 { #category : #accessing }
