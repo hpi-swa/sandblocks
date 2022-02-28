@@ -6,12 +6,9 @@ Each entry in this array will be as one example in an independent MMBrowserMorph
 As the component is rendered inside a div in the example generated html page, it is possible to modify the div wrapping this component at free will. Just add property 'parentProps: {<options,,.>}' to the example object and the <options...> will be passed to that wrapping div.
 Additionally, it is possible to have share properties between examples using a `sharedExampleProps = {<properties...>}` like annotation above the 'examples' annotation. The properties defined within the 'sharedExampleProps' can be accessed in the examples like it would be done with normal JS syntax.
 
-Instance Variables
-	skipHtmlFileGeneration:		<Boolean>
-
-skipHtmlFileGeneration
-	- This boolean signals whether to generate a html file for the component when saving changes / writeSourceOn: is called. This behaviour helps to automatically update the displayed examples in the MMBrowserMorph. As the generation of the html file needs the source string of the whole class, the generation needs to call writeSourceOn: itself. To evade endless recursion, skipHtmlFileGeneration is needed. The instance variable is set to true when the html file should be generated to aviod an endless recursion of creating html file. After the generation, it is set to false again. For more details see the writeSourceOn: method on the instance side.
-If you want to get the sourceString of the component this instance is in without triggering a refresh of all examples, use the whileNotRefreshingExamples method.
+Interesting points where to start:
+ - matchComponentExamples:do: This method tries to match for the examples annotation mentioned above in React.Component classes. If replaces each entry in the examples array with an example with a MMBrowserMorph. The examples are created in examplesFor: using newExample:withCaptures:filePath where the captures are a dict that contain the captures of the tree sitter query used to match the replacement.
+- addNewEmptyExample is called once the addExample action is called on the render method SBInlineBlock to add a new example.
 
 Dependency: A installed instance of the MagicMouse project in dev mode.
 For better performance turn of the debugging flag in the settings.
@@ -19,9 +16,6 @@ For better performance turn of the debugging flag in the settings.
 Class {
 	#name : #SBJsComponentReplacement,
 	#superclass : #SBInlineBlockReplace,
-	#instVars : [
-		'skipHtmlFileGeneration'
-	],
 	#category : #'Sandblocks-JavascriptReact'
 }
 
@@ -32,9 +26,7 @@ SBJsComponentReplacement class >> exampleHTMLTemplateForExample: aJsObject withC
 	usedComponentReplacements := (aDictWithBlockCaptures at: 'class') collectComponentUsageReplacements asOrderedCollection.
 	usedReactComponentsSourceStrings := usedComponentReplacements
 		ifEmpty: ['']
-		ifNotEmpty: [
-			(usedComponentReplacements collect: [:aSBJsComponentUsageReplacement |
-				aSBJsComponentUsageReplacement componentWrapper sourceString]) joinSeparatedBy: ' '].
+		ifNotEmpty: [(usedComponentReplacements collect: [:aSBJsComponentUsageReplacement | aSBJsComponentUsageReplacement componentWrapper sourceString]) joinSeparatedBy: ' '].
 	aJsObjectString := aDictWithBlockCaptures
 		at: 'shared_example_props'
 		ifPresent: [:anotherJsObject | anotherJsObject sourceString]
@@ -130,10 +122,11 @@ SBJsComponentReplacement class >> matchComponentExamples: aDictWithBlockCaptures
 { #category : #'inline-replacement' }
 SBJsComponentReplacement class >> replacementQuery [
 
-	|query|
+	| query |
 	query := (self class >> #matchComponentExamples:do:) pragmas first arguments second copy.
-	^ query at: (query findString: ' @example_array_declaration' startingAt: 0 caseSensitive: true) put: $?; yourself
-	
+	^ query
+		at: (query findString: ' @example_array_declaration' startingAt: 0 caseSensitive: true) put: $?;
+		yourself
 ]
 
 { #category : #'generate-html' }
@@ -160,6 +153,12 @@ SBJsComponentReplacement >> addNewEmptyExample [
 SBJsComponentReplacement >> allExamples [
 
 	^ self submorphs second submorphs collect: [:submorph | submorph firstSubmorph]
+]
+
+{ #category : #saving }
+SBJsComponentReplacement >> artefactSaved: anArtefact [
+
+	anArtefact = self containingArtefact ifTrue: [self updateAllExamples]
 ]
 
 { #category : #accessing }
@@ -201,7 +200,6 @@ SBJsComponentReplacement >> initialize [
 
 	super initialize.
 	self
-		skipHtmlFileGeneration: false;
 		listDirection: #topToBottom;
 		addMorphBack: (SBRow new
 			layoutInset: 4;
@@ -253,7 +251,6 @@ SBJsComponentReplacement >> savePaletteButtonForExample: aJsObject [
 			title: 'Choose Category'.
 		category ifNotNil: [
 			Cursor wait showWhile: [
-				self whileNotRefreshingExamples: [
 					componentUsageReplacement := SBJsComponentUsageReplacement
 						for: wrappedOwningClass
 						withExample: aJsObject.
@@ -261,19 +258,7 @@ SBJsComponentReplacement >> savePaletteButtonForExample: aJsObject [
 						addComponent: componentUsageReplacement
 						withName: wrappedOwningClass componentName
 						inCategory: category].
-				self sandblockEditor rebuildPalette]]]
-]
-
-{ #category : #accessing }
-SBJsComponentReplacement >> skipHtmlFileGeneration [
-
-	^ skipHtmlFileGeneration
-]
-
-{ #category : #accessing }
-SBJsComponentReplacement >> skipHtmlFileGeneration: aBoolean [
-
-	skipHtmlFileGeneration := aBoolean
+				self sandblockEditor rebuildPalette]]
 ]
 
 { #category : #replacing }
@@ -284,7 +269,7 @@ SBJsComponentReplacement >> updateAllExamples [
 	self submorphs second submorphs withIndexDo: [:exampleTuple :index | | browser jsObject filePath |
 		browser := exampleTuple submorphs second firstSubmorph.
 		jsObject := exampleTuple firstSubmorph.
-		filePath := self filePathForComponentName: (captures at: 'class_name') andIndex: index.
+		filePath := self filePathForComponentName: (captures at: 'class_name') contents andIndex: index.
 		self class generateHtmlFileForExample: jsObject withCaptures: captures atFilePath: filePath.
 		browser doRefresh]
 ]
@@ -298,17 +283,9 @@ SBJsComponentReplacement >> veryDeepCopyWith: deepCopier [
 	Therfore the best solution is to simply give a copy of the examples array."
 	new := String streamContents: [:stream |
 		stream nextPutAll: 'class {'.
-		self whileNotRefreshingExamples: [self writeSourceOn: stream].
+		self writeSourceOn: stream.
 		stream nextPutAll: '}'].
 	^ (SBJavascript parseElement: new) access body member
-]
-
-{ #category : #saving }
-SBJsComponentReplacement >> whileNotRefreshingExamples: aBlock [
-
-	[
-		self skipHtmlFileGeneration: true.
-		aBlock value] ensure: [self skipHtmlFileGeneration: false]
 ]
 
 { #category : #accessing }
@@ -320,8 +297,7 @@ SBJsComponentReplacement >> wrappedOwningClass [
 { #category : #saving }
 SBJsComponentReplacement >> writeSourceOn: aStream [
 
-	| optionsObject |
-	optionsObject := 'examples = [', ((self allExamples collect: [:jsObject | jsObject sourceString]) joinSeparatedBy: ','), ']'.
-	aStream nextPutAll: optionsObject.
-	self skipHtmlFileGeneration ifFalse: [self whileNotRefreshingExamples: [self updateAllExamples]]
+	aStream nextPutAll: 'examples = [';
+		nextPutAll:  ((self allExamples collect: [:jsObject | jsObject sourceString]) joinSeparatedBy: ',');
+		nextPutAll: ']'
 ]
