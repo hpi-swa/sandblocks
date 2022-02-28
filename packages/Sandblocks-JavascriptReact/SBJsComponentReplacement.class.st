@@ -29,13 +29,16 @@ Class {
 SBJsComponentReplacement class >> exampleHTMLTemplateForExample: aJsObject withCaptures: aDictWithBlockCaptures [
 
 	| usedComponentReplacements usedReactComponentsSourceStrings aJsObjectString |
-	usedComponentReplacements := aDictWithBlockCaptures at: 'class'.
+	usedComponentReplacements := (aDictWithBlockCaptures at: 'class') collectComponentUsageReplacements asOrderedCollection.
 	usedReactComponentsSourceStrings := usedComponentReplacements
 		ifEmpty: ['']
-		ifNotEmpty: [(usedComponentReplacements collect: [:aSBJsComponentUsageReplacement | aSBJsComponentUsageReplacement referencedComponentClassSourceString]) joinSeparatedBy: ' '].
-	aJsObjectString := (aDictWithBlockCaptures at: 'shared_example_props')
-		ifNil: ['sharedExampleProps = {}']
-		ifNotNil: [:anotherJsObject | anotherJsObject sourceString].
+		ifNotEmpty: [
+			(usedComponentReplacements collect: [:aSBJsComponentUsageReplacement |
+				aSBJsComponentUsageReplacement componentWrapper sourceString]) joinSeparatedBy: ' '].
+	aJsObjectString := aDictWithBlockCaptures
+		at: 'shared_example_props'
+		ifPresent: [:anotherJsObject | anotherJsObject sourceString]
+		ifAbsent: ['sharedExampleProps = {}'].
 	^ '<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -71,8 +74,8 @@ SBJsComponentReplacement class >> exampleHTMLTemplateForExample: aJsObject withC
 	const ', aJsObjectString, ';
 	const { componentProps, parentProps } = ', aJsObject sourceString, ';
       ReactDOM.render(
-		<div key={`container${index}`} {...parentProps}>
-            	<', (aDictWithBlockCaptures at: 'class_name') sourceString, ' {...componentProps} />
+		<div {...parentProps}>
+            	<', (aDictWithBlockCaptures at: 'class_name') contents, ' {...componentProps} />
   	       </div>, 
 		document.getElementById("root"));
     </script>
@@ -96,13 +99,12 @@ SBJsComponentReplacement class >> generateHtmlFileForExample: aJsObject withCapt
 
 { #category : #'inline-replacement' }
 SBJsComponentReplacement class >> matchComponentExamples: aDictWithBlockCaptures do: aBlock [
-	"First argument: What will be replaced, second argument: With what it will be replaced."
 	<lang: #javascript match: '(class_declaration
     name: (identifier) @class_name
 	(class_heritage
 		(member_expression
 			object: (identifier) ="React"
-			property: (idenfifier) ="Component"
+			property: (identifier) ="Component"
 		)
 	)
     body: (class_body
@@ -112,8 +114,8 @@ SBJsComponentReplacement class >> matchComponentExamples: aDictWithBlockCaptures
         )? @shared_example_props
     	(field_definition
         	(property_identifier) ="examples"
-	      (array) @options
-        ) @example_array
+	      (array) @example_array
+        ) @example_array_declaration
 	(method_definition
         	(property_identifier) ="render"
   	) @render_method
@@ -121,15 +123,17 @@ SBJsComponentReplacement class >> matchComponentExamples: aDictWithBlockCaptures
 ) @class'>
 
 	^ aBlock
-		value: (aDictWithBlockCaptures at: 'example_array')
+		value: (aDictWithBlockCaptures at: 'example_array_declaration')
 		value: (self new examplesFor: aDictWithBlockCaptures)
 ]
 
 { #category : #'inline-replacement' }
 SBJsComponentReplacement class >> replacementQuery [
-	"Got no better solutution than to keep an extra copy of the query as it cannot be accessed from the pragma that simply."
 
-	^ (self class >> #matchComponentExamples:do:) pragmas first arguments second
+	|query|
+	query := (self class >> #matchComponentExamples:do:) pragmas first arguments second copy.
+	^ query at: (query findString: ' @example_array_declaration' startingAt: 0 caseSensitive: true) put: $?; yourself
+	
 ]
 
 { #category : #'generate-html' }
@@ -146,7 +150,7 @@ SBJsComponentReplacement >> addNewEmptyExample [
 	defaultExampleObject := SBJavascript parseElement: '{componentProps:{}}'.
 	filePath := self filePathForIndex: exampleCount + 1.
 	newExample := self
-		newExampleExample: defaultExampleObject
+		newExample: defaultExampleObject
 		withCaptures: self wrappedOwningClass allCaptures
 		filePath: filePath.
 	self submorphs second addMorphBack: newExample
@@ -168,8 +172,10 @@ SBJsComponentReplacement >> drawnColor [
 SBJsComponentReplacement >> examplesFor: aDictWithBlockCaptures [
 
 	(aDictWithBlockCaptures at: 'example_array') access children withIndexDo: [:example :index | | filePath |
-		filePath := self filePathForComponentName: (aDictWithBlockCaptures at: 'class_name') andIndex: index.
-		self examplesRow addMorphBack: (self newExampleExample: example withCaptures: aDictWithBlockCaptures filePath: filePath)]
+		filePath := self
+			filePathForComponentName: (aDictWithBlockCaptures at: 'class_name') contents
+			andIndex: index.
+		self examplesRow addMorphBack: (self newExample: example withCaptures: aDictWithBlockCaptures filePath: filePath)]
 ]
 
 { #category : #accessing }
@@ -208,14 +214,8 @@ SBJsComponentReplacement >> initialize [
 			yourself)
 ]
 
-{ #category : #accessing }
-SBJsComponentReplacement >> isSBJsComponentReplacement [
-
-	^ true
-]
-
 { #category : #replacing }
-SBJsComponentReplacement >> newExampleExample: aJsObject withCaptures: aDictWithBlockCaptures filePath: aString [
+SBJsComponentReplacement >> newExample: aJsObject withCaptures: aDictWithBlockCaptures filePath: aString [
 
 	| aJSArrayWithName exampleOptionsCopy |
 	aJSArrayWithName := 'examples = [', aJsObject sourceString, ']'.
@@ -253,7 +253,6 @@ SBJsComponentReplacement >> savePaletteButtonForExample: aJsObject [
 			title: 'Choose Category'.
 		category ifNotNil: [
 			Cursor wait showWhile: [
-				self skipHtmlFileGeneration: true.
 				self whileNotRefreshingExamples: [
 					componentUsageReplacement := SBJsComponentUsageReplacement
 						for: wrappedOwningClass
@@ -293,15 +292,15 @@ SBJsComponentReplacement >> updateAllExamples [
 { #category : #saving }
 SBJsComponentReplacement >> veryDeepCopyWith: deepCopier [
 
-	| new examplesRow |
-	"Assure that the browser morph is not included in the deepCopy; Does not seem to work :/ "
-	self submorphs second.
-	examplesRow := self submorphs second.
-	self removeMorph: examplesRow.
-	new := super veryDeepCopyWith: deepCopier.
-	self addMorphBack: examplesRow.
-	
-	^ new
+	| new |
+	"Avoid having copies of browsers. Therefore we exclude the whole replacement and simply return a copy an equivalent annotation.
+	If only the browser would be omitted, then the replacement would still try to refresh its non exsistent examples when asked for its sourceString.
+	Therfore the best solution is to simply give a copy of the examples array."
+	new := String streamContents: [:stream |
+		stream nextPutAll: 'class {'.
+		self whileNotRefreshingExamples: [self writeSourceOn: stream].
+		stream nextPutAll: '}'].
+	^ (SBJavascript parseElement: new) access body member
 ]
 
 { #category : #saving }
@@ -315,7 +314,7 @@ SBJsComponentReplacement >> whileNotRefreshingExamples: aBlock [
 { #category : #accessing }
 SBJsComponentReplacement >> wrappedOwningClass [
 
-	^ SBJsReactComponentWrapper reactComponent: self owningClass
+	^ SBJsReactComponentWrapper componentNode: self owningClass
 ]
 
 { #category : #saving }

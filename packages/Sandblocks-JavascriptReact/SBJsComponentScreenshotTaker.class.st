@@ -32,7 +32,7 @@ SBJsComponentScreenshotTaker class >> takeScreenshotOf: aSBJsReactComponentWrapp
 	filePath := SBJsComponentReplacement testHTMLFileDir, 'Screenshot_temp.html'.
 	SBJsComponentReplacement
 		generateHtmlFileForExample: aJsObject
-		withCaptures: aSBJsReactComponentWrapper
+		withCaptures: aSBJsReactComponentWrapper allCaptures
 		atFilePath: filePath.
 	self flag: #TODO.
 	"Consider Tom's feedback about the interface how to take the screenshot."

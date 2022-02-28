@@ -6,7 +6,7 @@ Instance Variables
 "
 Class {
 	#name : #SBJsMMBrowserWrapper,
-	#superclass : #SBBlock,
+	#superclass : #SBInlineBlockReplace,
 	#category : #'Sandblocks-JavascriptReact'
 }
 
@@ -26,4 +26,11 @@ SBJsMMBrowserWrapper >> currentTextMorph [
 SBJsMMBrowserWrapper >> drawnColor [
 
 	^ Color veryDarkGray
+]
+
+{ #category : #input }
+SBJsMMBrowserWrapper >> initialize [
+
+	super initialize.
+	self factory: SBJavascript instance
 ]

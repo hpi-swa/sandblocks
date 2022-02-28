@@ -73,7 +73,7 @@ SBJsComponentUsageReplacement >> componentPropsFromExampleObject: aJsObject [
 
 	^ aJsObject access children
 		detect: [:objectEntry | objectEntry type = 'pair' and: [objectEntry key contents = 'componentProps']]
-		ifFound: #value
+		ifFound: [:objectEntry | objectEntry access value]
 ]
 
 { #category : #accessing }
@@ -124,10 +124,7 @@ SBJsComponentUsageReplacement >> example: aJsObject componentWrapper: aSBJsReact
 SBJsComponentUsageReplacement >> initialize [
 
 	super initialize.
-	self
-		referencedComponentClassSourceString: '';
-		usedComponents: OrderedCollection new;
-		factory: SBJavascript instance
+	self factory: SBJavascript instance
 ]
 
 { #category : #'example-extracting' }
@@ -199,7 +196,7 @@ SBJsComponentUsageReplacement >> type [
 { #category : #accessing }
 SBJsComponentUsageReplacement >> usedComponents [
 
-	self componentWrapper reactComponent collectComponentUsageReplacements
+	^ self componentWrapper reactComponent collectComponentUsageReplacements
 ]
 
 { #category : #saving }

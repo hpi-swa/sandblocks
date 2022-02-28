@@ -4,7 +4,7 @@ Extension { #name : #Morph }
 Morph >> collectComponentUsageReplacements [
 
 	| componentUsageReplacements |
-	componentUsageReplacements := Set new.
+	componentUsageReplacements := KeyedSet keyBlock: #componentName.
 	self submorphsDo: [:morph | componentUsageReplacements addAll: morph collectComponentUsageReplacements].
 	^ componentUsageReplacements
 ]

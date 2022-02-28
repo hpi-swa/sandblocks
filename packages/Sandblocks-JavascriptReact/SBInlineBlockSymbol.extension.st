@@ -7,21 +7,15 @@ SBInlineBlockSymbol >> addExample [
 
 	| wrappedOwningClass |
 	wrappedOwningClass := SBJsReactComponentWrapper componentNode: (self owningClass ifNil: [^ nil]).
-	self halt.
-	self flag: #TODO
-	"
-	ownPositionInClass := classMembers indexOf: self.
-	alreadyHasExamples := (classMembers at: ownPositionInClass - 1 ifAbsent: [nil]) isSBJsComponentReplacement.
-	alreadyHasExamples
-		ifTrue: [ | aSBJsComponentReplacement |
-			aSBJsComponentReplacement := classMembers at: ownPositionInClass - 1.
-			aSBJsComponentReplacement addNewEmptyExample]
-		ifFalse: [ | newExampleMember |
-			newExampleMember := (SBJavascript parseElement: 'class {examples = [{componentProps:{}}]}') access children first body member owner owner.
+	wrappedOwningClass existingExamples
+		ifNotNil: [:aSBTSFieldAccessor | aSBTSFieldAccessor element addNewEmptyExample]
+		ifNil: [ | positionInClass newExampleMember |
+			positionInClass := wrappedOwningClass positionOfMember: self.
+			newExampleMember := (SBJavascript parseElement: 'class {examples = [{componentProps:{}}]}') access body member owner.
 			self owningClassBody firstSubmorph submorphs second
 				addMorph: newExampleMember
-				atIndex: ownPositionInClass.
-			self owningClass applyReplacements]"
+				atIndex: positionInClass.
+			self owningClass applyReplacements]
 ]
 
 { #category : #'*Sandblocks-JavascriptReact' }

@@ -60,6 +60,20 @@ SBJsReactComponentWrapper >> copy [
 	^ self class componentNode: self reactComponent buildCopy
 ]
 
+{ #category : #accessing }
+SBJsReactComponentWrapper >> existingExamples [
+
+	^ self reactComponent access body children
+		detect: [:member | member element class = SBJsComponentReplacement]
+		ifNone: [nil]
+]
+
+{ #category : #accessing }
+SBJsReactComponentWrapper >> positionOfMember: aSBInlineBlock [
+
+	^ self reactComponent access body children indexOf: aSBInlineBlock
+]
+
 { #category : #querying }
 SBJsReactComponentWrapper >> query: aQueryString [
 
@@ -79,4 +93,10 @@ SBJsReactComponentWrapper >> reactComponent [
 SBJsReactComponentWrapper >> reactComponent: aSBInlineBlockSymbolForClassDeclaration [
 
 	reactComponent := aSBInlineBlockSymbolForClassDeclaration
+]
+
+{ #category : #accessing }
+SBJsReactComponentWrapper >> sourceString [
+
+	^ self reactComponent sourceString
 ]
