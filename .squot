@@ -22,5 +22,5 @@ OrderedDictionary {
 	'packages/Sandblocks-Scheme' : #SquotTonelSerializer,
 	'packages/Sandblocks-Plugin-StLivePreview' : #SquotTonelSerializer,
 	'packages/Sandblocks-Git' : #SquotTonelSerializer,
-	'packages/Sandblocks-JavascriptReact' : #SquotTonelSerializer
+	'packages/Sandblocks-JavascriptReact.package' : #SquotCypressCodeSerializer
 }

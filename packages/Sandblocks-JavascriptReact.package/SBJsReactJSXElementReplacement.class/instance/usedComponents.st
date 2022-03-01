@@ -1,0 +1,4 @@
+accessing
+usedComponents
+
+	^ self componentWrapper reactComponent collectJSXElementReplacements

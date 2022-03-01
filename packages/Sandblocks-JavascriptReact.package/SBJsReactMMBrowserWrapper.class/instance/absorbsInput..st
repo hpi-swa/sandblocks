@@ -1,0 +1,4 @@
+input
+absorbsInput: anEvent
+
+	^ true

@@ -1,0 +1,4 @@
+accessing
+componentWrapper: aSBJsReactComponentWrapper
+
+	componentWrapper := aSBJsReactComponentWrapper

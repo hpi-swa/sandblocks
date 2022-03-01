@@ -1,0 +1,4 @@
+accessing
+drawnColor
+
+	^ Color veryDarkGray

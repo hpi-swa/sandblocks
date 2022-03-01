@@ -1,0 +1,11 @@
+{
+	"class" : {
+		"reactOpenOn:" : "" },
+	"instance" : {
+		"checkResize" : "",
+		"contents" : "",
+		"cursorIndexForPosition:" : "",
+		"cursorPosition" : "",
+		"moveCursorTo:" : "",
+		"stopEditing" : "",
+		"updateImage:" : "" } }

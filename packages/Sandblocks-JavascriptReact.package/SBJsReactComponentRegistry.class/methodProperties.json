@@ -1,0 +1,16 @@
+{
+	"class" : {
+		"defaultRegistry" : "",
+		"resetDefaultRegistry" : "" },
+	"instance" : {
+		"addComponent:withName:" : "MB 3/1/2022 21:07",
+		"addComponent:withName:inCategory:" : "MB 3/1/2022 21:07",
+		"allCategories" : "",
+		"componentRegistry" : "",
+		"componentRegistryCategoriesDo:" : "MB 3/1/2022 21:06",
+		"componentRegistryComponents" : "MB 3/1/2022 21:06",
+		"componentReplacementForComponentName:" : "MB 3/1/2022 21:05",
+		"initialize" : "",
+		"removeComponentByName:" : "",
+		"removeComponentByName:inCategory:" : "",
+		"removeComponentByName:inCategory:ifAbsent:" : "" } }

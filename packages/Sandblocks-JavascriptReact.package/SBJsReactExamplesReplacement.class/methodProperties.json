@@ -1,0 +1,26 @@
+{
+	"class" : {
+		"exampleHTMLTemplateForExample:withCaptures:" : "MB 3/1/2022 21:21",
+		"filePathToURL:" : "",
+		"generateHtmlFileForExample:withCaptures:atFilePath:" : "",
+		"generatedHTMLFileDir" : "MB 3/1/2022 21:16",
+		"generatedHTMLFileDir:" : "MB 3/1/2022 19:37",
+		"matchComponentExamples:do:" : "MB 3/1/2022 19:54",
+		"replacementQuery" : "MB 3/1/2022 19:53",
+		"testHTMLFileDir" : "" },
+	"instance" : {
+		"addNewEmptyExample" : "MB 2/27/2022 17:10",
+		"allExamples" : "",
+		"artefactSaved:" : "MB 2/28/2022 23:07",
+		"drawnColor" : "",
+		"examplesFor:" : "MB 2/27/2022 17:10",
+		"examplesRow" : "",
+		"filePathForComponentName:andIndex:" : "MB 3/1/2022 18:25",
+		"filePathForIndex:" : "",
+		"initialize" : "MB 2/28/2022 23:09",
+		"newExample:withCaptures:filePath:" : "MB 3/1/2022 20:40",
+		"savePaletteButtonForExample:" : "MB 3/1/2022 21:14",
+		"updateAllExamples" : "MB 2/28/2022 23:06",
+		"veryDeepCopyWith:" : "MB 2/28/2022 23:09",
+		"wrappedOwningClass" : "MB 2/27/2022 16:18",
+		"writeSourceOn:" : "MB 3/1/2022 19:37" } }

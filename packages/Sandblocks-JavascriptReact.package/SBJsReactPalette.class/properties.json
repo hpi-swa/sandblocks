@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-JavascriptReact",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "MB 3/1/2022 18:39",
+	"instvars" : [
+		 ],
+	"name" : "SBJsReactPalette",
+	"pools" : [
+		 ],
+	"super" : "SBTSPalette",
+	"type" : "normal" }

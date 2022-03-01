@@ -1,0 +1,21 @@
+{
+	"class" : {
+		"for:withExample:" : "MB 2/27/2022 23:28",
+		"matchComponentExamples:do:" : "MB 3/1/2022 21:18" },
+	"instance" : {
+		"=" : "",
+		"collectJSXElementReplacements" : "MB 3/1/2022 21:20",
+		"componentName" : "",
+		"componentPropsFromExampleObject:" : "MB 2/27/2022 23:26",
+		"componentWrapper" : "",
+		"componentWrapper:" : "",
+		"example:componentWrapper:" : "MB 3/1/2022 20:41",
+		"initialize" : "MB 2/28/2022 09:27",
+		"jsxStringForProps:withComponentName:" : "MB 2/26/2022 23:08",
+		"keyValuesOfExampleObject:" : "",
+		"previewImageCopy" : "",
+		"replacementFor:withComponentWrapper:withExampleImage:" : "MB 2/26/2022 23:08",
+		"shrinkPreviewImage:" : "",
+		"type" : "",
+		"usedComponents" : "MB 3/1/2022 21:21",
+		"writeSourceOn:indent:" : "" } }

@@ -1,0 +1,14 @@
+{
+	"category" : "Sandblocks-JavascriptReact",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "MB 3/1/2022 21:11",
+	"instvars" : [
+		"reactComponent" ],
+	"name" : "SBJsReactComponentWrapper",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

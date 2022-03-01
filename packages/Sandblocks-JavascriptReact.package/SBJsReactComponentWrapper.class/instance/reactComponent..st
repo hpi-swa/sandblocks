@@ -1,0 +1,4 @@
+accessing
+reactComponent: aSBInlineBlockSymbolForClassDeclaration
+
+	reactComponent := aSBInlineBlockSymbolForClassDeclaration
