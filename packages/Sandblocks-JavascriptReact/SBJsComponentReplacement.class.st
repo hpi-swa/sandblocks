@@ -6,6 +6,14 @@ Each entry in this array will be as one example in an independent MMBrowserMorph
 As the component is rendered inside a div in the example generated html page, it is possible to modify the div wrapping this component at free will. Just add property 'parentProps: {<options,,.>}' to the example object and the <options...> will be passed to that wrapping div.
 Additionally, it is possible to have share properties between examples using a `sharedExampleProps = {<properties...>}` like annotation above the 'examples' annotation. The properties defined within the 'sharedExampleProps' can be accessed in the examples like it would be done with normal JS syntax.
 
+
+Class Variables
+	GeneratedHTMLFileDir		<String>
+			
+GeneratedHTMLFileDir
+	- The directory where all generated files for the previews of examples should be saved at.
+	
+
 Interesting points where to start:
  - matchComponentExamples:do: This method tries to match for the examples annotation mentioned above in React.Component classes. If replaces each entry in the examples array with an example with a MMBrowserMorph. The examples are created in examplesFor: using newExample:withCaptures:filePath where the captures are a dict that contain the captures of the tree sitter query used to match the replacement.
 - addNewEmptyExample is called once the addExample action is called on the render method SBInlineBlock to add a new example.
@@ -16,6 +24,9 @@ For better performance turn of the debugging flag in the settings.
 Class {
 	#name : #SBJsComponentReplacement,
 	#superclass : #SBInlineBlockReplace,
+	#classVars : [
+		'GeneratedHTMLFileDir'
+	],
 	#category : #'Sandblocks-JavascriptReact'
 }
 
@@ -89,6 +100,19 @@ SBJsComponentReplacement class >> generateHtmlFileForExample: aJsObject withCapt
 	FileStream forceNewFileNamed: aString do: [:stream | stream nextPutAll: htmlString]
 ]
 
+{ #category : #accessing }
+SBJsComponentReplacement class >> generatedHTMLFileDir [
+	<preference: 'Html File Temp Folder' category: 'Sandblocks-JavascriptReact' description: 'Set the directory for the generated html files for magic mouse.' type: #String>
+
+	^ GeneratedHTMLFileDir ifNil: ['~/Desktop']
+]
+
+{ #category : #accessing }
+SBJsComponentReplacement class >> generatedHTMLFileDir: aString [
+
+	GeneratedHTMLFileDir := aString
+]
+
 { #category : #'inline-replacement' }
 SBJsComponentReplacement class >> matchComponentExamples: aDictWithBlockCaptures do: aBlock [
 	<lang: #javascript match: '(class_declaration
@@ -124,9 +148,11 @@ SBJsComponentReplacement class >> replacementQuery [
 
 	| query |
 	query := (self class >> #matchComponentExamples:do:) pragmas first arguments second copy.
+	self flag: #TOOD.
+	"Look where it is nessecarry to make the examples optional"
 	^ query
-		at: (query findString: ' @example_array_declaration' startingAt: 0 caseSensitive: true) put: $?;
-		yourself
+	"at: (query findString: ' @example_array_declaration' startingAt: 0 caseSensitive: true) put: $?;
+		yourself"
 ]
 
 { #category : #'generate-html' }
@@ -186,7 +212,7 @@ SBJsComponentReplacement >> examplesRow [
 { #category : #replacing }
 SBJsComponentReplacement >> filePathForComponentName: aComponentNameString andIndex: index [
 
-	^ self class testHTMLFileDir, 'Component_', aComponentNameString, '_', index asString, '.html'
+	^ self class generatedHTMLFileDir, 'Component_', aComponentNameString, '_', index asString, '.html'
 ]
 
 { #category : #replacing }
@@ -251,14 +277,14 @@ SBJsComponentReplacement >> savePaletteButtonForExample: aJsObject [
 			title: 'Choose Category'.
 		category ifNotNil: [
 			Cursor wait showWhile: [
-					componentUsageReplacement := SBJsComponentUsageReplacement
-						for: wrappedOwningClass
-						withExample: aJsObject.
-					SBJsReactComponentRegistry defaultRegistry
-						addComponent: componentUsageReplacement
-						withName: wrappedOwningClass componentName
-						inCategory: category].
-				self sandblockEditor rebuildPalette]]
+				componentUsageReplacement := SBJsComponentUsageReplacement
+					for: wrappedOwningClass
+					withExample: aJsObject.
+				SBJsReactComponentRegistry defaultRegistry
+					addComponent: componentUsageReplacement
+					withName: wrappedOwningClass componentName
+					inCategory: category].
+			self sandblockEditor rebuildPalette]]
 ]
 
 { #category : #replacing }
@@ -297,7 +323,8 @@ SBJsComponentReplacement >> wrappedOwningClass [
 { #category : #saving }
 SBJsComponentReplacement >> writeSourceOn: aStream [
 
-	aStream nextPutAll: 'examples = [';
-		nextPutAll:  ((self allExamples collect: [:jsObject | jsObject sourceString]) joinSeparatedBy: ',');
+	aStream
+		nextPutAll: 'examples = [';
+		nextPutAll: ((self allExamples collect: [:jsObject | jsObject sourceString]) joinSeparatedBy: ',');
 		nextPutAll: ']'
 ]

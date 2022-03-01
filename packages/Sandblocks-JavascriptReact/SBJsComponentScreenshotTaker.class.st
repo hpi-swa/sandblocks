@@ -1,18 +1,23 @@
 "
 A SBJsComponentScreenshotTaker is a class to take screenshots of a given React Component via a SBJSReactComponentWrapper.
-Taking a screenshot works by generating a html file for the given component similar using the methods of SBJsComponentReplacement. Then the MMProcessWrapper is asked to take a screenshot of the examples rendered of the component for a instance of the SBJsComponentScreenshotTaker. As taking the screenshot is asynchonous the notifyGotScreenshotSemaphore is used to wait until the screenshot was taken. Note that this halts the process. After the screenshot is taken it is returned.
-Note that instances of this class implement the interface of the MMBrowserMorph so that they can be registered at the MMProcessWrapper as a pseudo browser. This makes it easier to optain the screenshot taken by MagicMouse.
+Taking a screenshot works by generating a html file for the given component using the SBJsComponentReplacement's html generation class function. Then the MMProcessWrapper is asked to take a screenshot of the examples rendered of the component for an instance of the SBJsComponentScreenshotTaker. As taking the screenshot is asynchronous the notifyGotScreenshotSemaphore is used to wait until the screenshot was taken. After the screenshot is taken it is returned. This is all this class is used for in this package.
+
+Note that this halts the process while the screenshot is taken. 
+Note that instances of this class implement the interface of the MMBrowserMorph so that they can be registered at the MMProcessWrapper as a pseudo browser. This makes it easier to obtain the screenshot taken by MagicMouse than using an instrumented MMBrowserMorph.
 
 Instance Variables
 	notifyGotScreenshotSemaphore:		<Semaphore>
 	screenshot:		<Form>
 
 notifyGotScreenshotSemaphore
-	- A semaphore to wait until the screenshot was taken and stored in the screenshot instance varible.
+	- A semaphore to wait until the screenshot was taken and stored in the screenshot instance variable.
 
 screenshot
-	- Stores the screenshot taken of the component examples.
+	- Stores the screenshot taken of the component example.
 
+
+Interesting points where to start:
+- The onliest interesting method of this class is the takeScreenshotOf:withExample:withExtent: class method which is responsible for taking a screenshot accodring to the supplied parameters.
 "
 Class {
 	#name : #SBJsComponentScreenshotTaker,
@@ -29,7 +34,7 @@ SBJsComponentScreenshotTaker class >> takeScreenshotOf: aSBJsReactComponentWrapp
 
 	| tabId filePath screenshot instance |
 	instance := self new.
-	filePath := SBJsComponentReplacement testHTMLFileDir, 'Screenshot_temp.html'.
+	filePath := SBJsComponentReplacement generatedHTMLFileDir, 'Screenshot_temp.html'.
 	SBJsComponentReplacement
 		generateHtmlFileForExample: aJsObject
 		withCaptures: aSBJsReactComponentWrapper allCaptures
