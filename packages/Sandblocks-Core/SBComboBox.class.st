@@ -28,7 +28,7 @@ SBComboBox >> chooseMorphs: aCollection [
 		autoCancel: true;
 		yourself.
 	aCollection withIndexDo: [:ea :index | dialog createButton: ea value: index].
-	(tooltips ifNil: [aCollection collect: #balloonText])
+	(self tooltips ifNil: [aCollection collect: #balloonText])
 		with: dialog buttons
 		do: [:tooltip :button | button balloonText: tooltip].
 	dialog selectedButtonIndex: 1.
@@ -107,6 +107,12 @@ SBComboBox >> promptChangeValue [
 			target: self;
 			selector: #object;
 			value: choice)]
+]
+
+{ #category : #'as yet unclassified' }
+SBComboBox >> tooltips [
+
+	^ tooltips
 ]
 
 { #category : #'as yet unclassified' }
