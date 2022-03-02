@@ -108,6 +108,12 @@ Morph >> containingSandblock [
 
 { #category : #'*Sandblocks-Core' }
 Morph >> cursorPositionsDo: aBlock [
+
+	self cursorPositionsDo: aBlock shallow: false
+]
+
+{ #category : #'*Sandblocks-Core' }
+Morph >> cursorPositionsDo: aBlock shallow: aBoolean [
 	" enumerate all possible cursor positions recursively "
 
 	self isSandblock ifTrue: [
@@ -120,7 +126,7 @@ Morph >> cursorPositionsDo: aBlock [
 				aBlock value: (SBCursorText new
 					block: morph containingSandblock;
 					currentCommand: command)]].
-		morph cursorPositionsDo: aBlock.
+		(morph isSandblock not or: [aBoolean not]) ifTrue: [morph cursorPositionsDo: aBlock shallow: aBoolean].
 		morph isSandblock ifTrue: [self containingSandblock insertCursorNear: morph before: false do: aBlock]].
 	self isSandblock ifTrue: [self insertCursorNear: nil before: false do: aBlock]
 ]

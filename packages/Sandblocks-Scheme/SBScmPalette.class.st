@@ -94,14 +94,16 @@ SBScmPalette class >> buildOn: aContainer [
 			as: (SBScmExpression new addAllMorphs: {SBScmIdentifier new contents: 'perform'. self newNullBlock: 'object'. self newNullBlock: 'symbol'});
 		addBlock: 'Language Box' as: (SBScmLanguageBox lang: 'smalltalk' source: '').
 	
-	aContainer addSectionHeader: 'Your Definitions'.
-	aContainer selection containingArtefact definitions do: [:def |
-		def
-			ifDefinition: [:name |
-				aContainer
-					addBlock: name
-					as: (SBScmExpression new addMorphBack: (SBScmIdentifier new contents: name))]
-			otherwise: []]
+	SBToggledCode comment: '' active: 0 do: {
+		[
+			aContainer addSectionHeader: 'Your Definitions'.
+			aContainer selection containingArtefact definitions do: [:def |
+				def
+					ifDefinition: [:name |
+						aContainer
+							addBlock: name
+							as: (SBScmExpression new addMorphBack: (SBScmIdentifier new contents: name))]
+					otherwise: []]]}
 ]
 
 { #category : #'as yet unclassified' }

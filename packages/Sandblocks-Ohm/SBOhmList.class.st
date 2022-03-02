@@ -94,7 +94,7 @@ SBOhmList >> maybeUnwrapList [
 { #category : #'as yet unclassified' }
 SBOhmList >> newEmptyChildNear: aBlock before: aBoolean [
 
-	^ super newNullBlock label: 'seq'
+	^ super newNullBlock ifNotNil: [:l | l label: 'seq']
 ]
 
 { #category : #'as yet unclassified' }

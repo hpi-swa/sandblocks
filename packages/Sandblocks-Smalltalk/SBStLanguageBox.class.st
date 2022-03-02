@@ -16,7 +16,7 @@ SBStLanguageBox class >> instanceSuggestion [
 { #category : #testing }
 SBStLanguageBox class >> matches: aMessageSend [
 
-	^ (false) and: [aMessageSend selector = 'eval:lang:']
+	^ aMessageSend selector = 'eval:lang:'
 ]
 
 { #category : #'instance creation' }
@@ -92,6 +92,6 @@ SBStLanguageBox >> writeSourceOn: aStream [
 	aStream nextPutAll: ' eval: '.
 	aStream store: self root sourceString.
 	aStream nextPutAll: ' lang: '.
-	aStream nextPutAll: self language.
+	aStream store: self language.
 	aStream nextPutAll: ')'
 ]

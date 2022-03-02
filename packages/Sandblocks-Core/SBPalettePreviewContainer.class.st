@@ -88,12 +88,6 @@ SBPalettePreviewContainer >> pickUp: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
-SBPalettePreviewContainer >> sandblockBlockColorIfAbsent: aBlock [
-
-	^ self firstSubmorph preferredColor ifNil: [Color white]
-]
-
-{ #category : #'as yet unclassified' }
 SBPalettePreviewContainer >> sandblockEditor [
 
 	^ self owner ifNotNil: #sandblockEditor
