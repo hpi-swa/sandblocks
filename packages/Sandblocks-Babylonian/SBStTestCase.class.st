@@ -5,6 +5,7 @@ Class {
 		'selectorInput',
 		'errorIndicator',
 		'passIcon',
+		'passNote',
 		'reportedError',
 		'autoRun'
 	],
@@ -151,6 +152,7 @@ SBStTestCase >> initialize [
 				color: (Color r: 1 g: 1 b: 1);
 				on: #click send: #openError to: self;
 				yourself);
+			addMorphBack: (passNote := SBStringMorph new contents: '');
 			addMorphBack: (Morph new
 				width: 6;
 				height: 0;
@@ -220,6 +222,7 @@ SBStTestCase >> reportError: anError [
 	passIcon
 		changeIconName: #iconRemove;
 		color: (Color r: 1 g: 0.0 b: 0.0).
+	passNote contents: (self shouldPass ifFalse: ['(expected failure)'] ifTrue: ['']).
 	
 	reportedError ifNotNil: #delete.
 	reportedError := self sandblockEditor
@@ -238,6 +241,8 @@ SBStTestCase >> reportPass [
 	passIcon
 		changeIconName: #iconCheck;
 		color: (Color r: 0.8 g: 1 b: 0.6).
+	passNote contents: (self shouldPass ifFalse: ['(unexpected pass)'] ifTrue: ['']).
+	
 	reportedError ifNotNil: #delete.
 	reportedError := self sandblockEditor reportError: nil process: nil source: self
 ]
@@ -302,6 +307,12 @@ SBStTestCase >> sendStopNotification [
 
 	self sandblockEditor allMorphsDo: [:morph |
 		(morph isSandblock and: [morph listensToExamples]) ifTrue: [morph exampleStopped: self]]
+]
+
+{ #category : #testing }
+SBStTestCase >> shouldPass [
+
+	^ (self methodClass selector: self currentSelector) shouldPass
 ]
 
 { #category : #'method protocol' }
