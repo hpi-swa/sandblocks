@@ -2066,8 +2066,8 @@ SBBlock >> postDuplicate [
 
 { #category : #caching }
 SBBlock >> postDuplicateSelf [
-
 	" this block has been duplicated, adjust any identifiers if need be "
+
 	
 ]
 
@@ -2832,12 +2832,21 @@ SBBlock >> validSubtree [
 { #category : #copying }
 SBBlock >> veryDeepCopyWith: aCopier [
 
-	| new previousDecorators |
+	| new previousDecorators hover |
 	SBToggledCode comment: '' active: 0 do: {
 		[
 			oldActions := self valueOfProperty: #actionMap.
 			self removeProperty: #actionMap]}.
+	
+	hover := self
+		withDecorator: SBHoverDecorator
+		do: [:d |
+			self detachDecorator: d.
+			d]
+		ifAbsent: [nil].
+	
 	new := super veryDeepCopyWith: aCopier.
+	hover ifNotNil: [self attachDecorator: hover].
 	
 	SBToggledCode comment: '' active: 0 do: {[self setProperty: #actionMap toValue: oldActions]}.
 	previousDecorators := new decorators copy.
