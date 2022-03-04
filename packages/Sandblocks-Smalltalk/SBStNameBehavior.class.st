@@ -173,19 +173,7 @@ SBStNameBehavior >> fixActionsForUppercaseBinding [
 { #category : #'as yet unclassified' }
 SBStNameBehavior >> globalSuggestions [
 
-	^ Array streamContents: [:stream |
-		Smalltalk globals keysAndValuesDo: [:key :value |
-			(key sandblockMatch: self contents) ifTrue: [
-				stream nextPut: (SBSuggestionItem selector: key label: ((value isBehavior and: [key == value name])
-					ifTrue: ['class']
-					ifFalse: ['global']))]].
-		SBStSubstitution allSubclassesDo: [:class |
-			(class name sandblockMatch: self contents) ifTrue: [
-				class suggestion ifNotNil: [:block |
-					stream nextPut: ((SBProjectionSuggestionItem selector: class name label: 'projection')
-						completionAction: block;
-						instanceSuggestion: class instanceSuggestion
-							editor: self block sandblockEditor)]]]]
+	^ (self block completionSuggestionsForBinding: self contents), (self block completionSuggestionsForProjection: self contents)
 ]
 
 { #category : #'as yet unclassified' }

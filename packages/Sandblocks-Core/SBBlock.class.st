@@ -168,15 +168,6 @@ SBBlock >> artefactChanged: aMethodBlock [
 	
 ]
 
-{ #category : #suggestions }
-SBBlock >> artefactCompletionSelectorsFor: aBlock class: aClass [
-	"May be overridden by subclasses."
-	
-	aClass ifNil: [^ Symbol allSymbols].
-	
-	^ aClass sandblocksSuggestionsFor: self
-]
-
 { #category : #accessing }
 SBBlock >> artefactForPersisting [
 
@@ -539,6 +530,38 @@ SBBlock >> completeSubtree [
 
 	self allBlocksDo: [:b | b isUnknown ifTrue: [^ false]].
 	^ true
+]
+
+{ #category : #suggestions }
+SBBlock >> completionKeysFrom: objects matching: matchString stringBlock: stringBlock [
+
+	| input exactMatches fuzzyMatches |
+	input := OrderedCollection withAll: objects.
+	
+	exactMatches := (Array streamContents: [:stream |
+		input removeAllSuchThat: [:ea |
+			((stringBlock value: ea) sandblockBeginsWith: matchString)
+				ifTrue: [stream nextPut: ea];
+				yourself]]) sort: [:ea | (stringBlock value: ea) size] ascending.
+	fuzzyMatches := (Array streamContents: [:stream |
+		input removeAllSuchThat: [:ea |
+			((stringBlock value: ea) sandblockMatch: matchString)
+				ifTrue: [stream nextPut: ea];
+				yourself]]) sort: [:ea | (stringBlock value: ea) size] ascending.
+	
+	^ (Array
+		streamContents: [:stream |
+			stream
+				nextPutAll: exactMatches;
+				nextPutAll: fuzzyMatches.
+			self suggestAlways ifTrue: [stream nextPutAll: input]]
+		limitedTo: self maxSuggestions) withoutDuplicates
+]
+
+{ #category : #suggestions }
+SBBlock >> completionSelectorsFrom: selectors matching: matchString [
+
+	^ self completionKeysFrom: selectors matching: matchString stringBlock: [:sel | sel]
 ]
 
 { #category : #accessing }
@@ -2483,36 +2506,6 @@ SBBlock >> slurpFront [
 	(self adjacentBlock: -1) ifNotNil: [:block | 
 		self sandblockEditor do: (self insertCommandRequest: block near: self childSandblocks last before: true).
 		self select]
-]
-
-{ #category : #suggestions }
-SBBlock >> sortedSuggestions: aCollection for: aString [
-
-	| exactMatches fuzzyMatches list |
-	"sort list of provided suggestion strings by putting exact matches first and clamps to maxSuggestions.
-
-NOTE: may mutate aCollection"
-	list := (aCollection isKindOf: OrderedCollection)
-		ifTrue: [aCollection]
-		ifFalse: [OrderedCollection withAll: aCollection].
-	
-	exactMatches := (Array streamContents: [:stream |
-		list removeAllSuchThat: [:sel |
-			(sel sandblockBeginsWith: aString)
-				ifTrue: [stream nextPut: sel];
-				yourself]]) sort: #size ascending.
-	fuzzyMatches := (Array streamContents: [:stream |
-		list removeAllSuchThat: [:sel |
-			(sel sandblockMatch: aString)
-				ifTrue: [stream nextPut: sel];
-				yourself]]) sort: #size ascending.
-	
-	^ (Array
-		streamContents: [:stream |
-			stream nextPutAll: exactMatches.
-			stream nextPutAll: fuzzyMatches.
-			self suggestAlways ifTrue: [stream nextPutAll: list]]
-		limitedTo: self maxSuggestions) withoutDuplicates
 ]
 
 { #category : #'ast helpers' }
