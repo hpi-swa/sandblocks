@@ -4,26 +4,26 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStSymbol >> browse [
 
 	Smalltalk at: self selector asSymbol ifPresent: [:c | ^ self systemNavigation browseClass: c].
 	self browseImplementors
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStSymbol >> guessedClass [
 
 	^ Symbol
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStSymbol >> isSymbolBlock [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBStSymbol >> keyStroke: anEvent [
 
 	anEvent keyCharacter isSpecial
@@ -31,19 +31,19 @@ SBStSymbol >> keyStroke: anEvent [
 		ifFalse: [super keyStroke: anEvent]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStSymbol >> prefix [
 
 	^ '#'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBStSymbol >> printOn: aStream [
 
 	aStream nextPutAll: 'symbol '; nextPutAll: self contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStSymbol >> selector [
 
 	^ self contents
@@ -59,13 +59,13 @@ SBStSymbol >> suggestions [
 			matching: text]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBStSymbol >> symbols [
 
 	^ self colorPolicy symbolsForSymbol: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStSymbol >> useAsMessageSend [
 	<action>
 
@@ -77,7 +77,7 @@ SBStSymbol >> useAsMessageSend [
 		yourself)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBStSymbol >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '#'.

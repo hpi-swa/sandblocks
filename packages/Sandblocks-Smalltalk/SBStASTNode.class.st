@@ -168,7 +168,7 @@ SBStASTNode >> canEvaluate [
 	^ self isExpression
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #caching }
 SBStASTNode >> clearCacheSelf [
 
 	super clearCacheSelf.

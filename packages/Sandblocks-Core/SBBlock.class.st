@@ -88,7 +88,7 @@ SBBlock >> addBlock: aBlock [
 	(self insertCommandRequest: aBlock near: nil before: false) do
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> allBlocksDetect: aBlock [
 
 	self allBlocksDetect: aBlock ifFound: [:b | b] ifNone: [self error: 'no such block']
@@ -116,7 +116,7 @@ SBBlock >> allBlocksFor: anObject withInterfaces: aCollection [
 			(morph isSandblock and: [morph object = anObject and: [morph satisfies: aCollection]]) ifTrue: [stream nextPut: morph]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> allBlocksSatisfy: aBlock [
 
 	self allBlocksDo: [:b | (aBlock value: b) ifFalse: [^ false]].
@@ -129,7 +129,7 @@ SBBlock >> allBlocksSelect: aBlock [
 	^ Array streamContents: [:stream | self allBlocksDo: [:b | (aBlock value: b) ifTrue: [stream nextPut: b]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> allChildBlocksSatisfy: aBlock [
 
 	self allBlocksDo: [:b | (b ~= self and: [(aBlock value: b) not]) ifTrue: [^ false]].
@@ -143,7 +143,7 @@ SBBlock >> andAllParentSandblocksDo: aBlock [
 	self parentSandblock ifNotNil: [:p | p andAllParentSandblocksDo: aBlock]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBBlock >> appendElement [
 	<action>
 
@@ -224,7 +224,7 @@ SBBlock >> attachToHand: aHand in: anEditor [
 	aHand grabMorph: s
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBBlock >> attractionStrengthTo: aMorph [
 
 	^ (self isAttractedTo: aMorph)
@@ -232,7 +232,7 @@ SBBlock >> attractionStrengthTo: aMorph [
 		ifFalse: [0.0]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBBlock >> attractionTo: aMorph [
 
 	^ (self attractionStrengthTo: aMorph) + (aMorph attractionStrengthTo: self)
@@ -1177,7 +1177,7 @@ SBBlock >> grammarHandler [
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBlock >> group [ 
 	
 	^ self withDecorator: SBForceMoveDecorator do: [:decorator | decorator group] ifAbsent: [nil]
@@ -1214,7 +1214,7 @@ SBBlock >> hasDecorator: aClass [
 	^ decorators anySatisfy: [:d | d isKindOf: aClass]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBlock >> hasGroup [ 
 	
 	^ self group notNil
@@ -1332,7 +1332,7 @@ SBBlock >> insertElementBefore [
 	^ self insertElement: true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
 SBBlock >> insertEmptyCommandRequestNear: aBlock before: aBoolean [
 
 	| child |
@@ -1453,7 +1453,7 @@ SBBlock >> isDeclaration [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBBlock >> isDragging [ 
 	
 	^ self withDecorator: SBMoveDecorator do: [:decorator | decorator isDragging] ifAbsent: [false]
@@ -1598,7 +1598,7 @@ SBBlock >> isValidAction: aPragmaOrMethod [
 	^ validMode and: [validInvocation]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBBlock >> isWaypoint [
 
 	^ false
@@ -1926,7 +1926,7 @@ SBBlock >> outOfWorld: aWorld [
 	self triggerEvent: #outOfWorld
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBlock >> outerArtefact [
 
 	| a |
@@ -1934,7 +1934,7 @@ SBBlock >> outerArtefact [
 	^ a = self ifTrue: [self parentSandblock ifNotNil: #containingArtefact] ifFalse: [a]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBlock >> outerMostArtefact [
 
 	| a |
@@ -2152,7 +2152,7 @@ SBBlock >> previousVerticalNear: aNumber [
 		validBlock: [:candidate | self top >= candidate bottom]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBBlock >> printIdentityStringOn: aStream [
 
 	aStream
@@ -2396,7 +2396,7 @@ SBBlock >> selectLast [
 		startInputAtEnd
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
 SBBlock >> selectLastInsertPosition [
 
 	| last |
