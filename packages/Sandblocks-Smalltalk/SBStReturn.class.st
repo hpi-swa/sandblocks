@@ -35,6 +35,12 @@ SBStReturn >> initialize [
 ]
 
 { #category : #testing }
+SBStReturn >> isExpression [
+
+	^ true
+]
+
+{ #category : #testing }
 SBStReturn >> isReturn [
 
 	^ true
