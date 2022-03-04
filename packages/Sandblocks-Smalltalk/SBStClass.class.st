@@ -273,6 +273,12 @@ SBStClass >> isSmalltalk [
 	^ true
 ]
 
+{ #category : #'*Sandblocks-Smalltalk' }
+SBStClass >> isSmalltalk [
+
+	^ true
+]
+
 { #category : #testing }
 SBStClass >> isTopLevel [
 

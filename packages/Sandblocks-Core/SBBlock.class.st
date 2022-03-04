@@ -486,7 +486,10 @@ SBBlock >> click: anEvent [
 	
 	self sandblockEditor selectClick: self at: anEvent position.
 	(anEvent yellowButtonPressed and: [SBPreferences rightClickContextMenu]) ifTrue: [self promptAction].
-	(self isInWorld and: [self suggestAlways and: [anEvent redButtonPressed]]) ifTrue: [self queueUpdateSuggestionsFocused: false]
+	(self isInWorld and: [self suggestAlways and: [anEvent redButtonPressed]]) ifTrue: [
+		self hasSuggestions
+			ifFalse: [self queueUpdateSuggestionsFocused: false]
+			ifTrue: [self removeSuggestionMenu]]
 ]
 
 { #category : #hierarchy }
