@@ -2461,12 +2461,6 @@ SBBlock >> selectionLabel [
 	^ self printString
 ]
 
-{ #category : #'actions tests' }
-SBBlock >> shouldAutocomplete [
-
-	^ self hasSuggestions and: [self sandblockEditor suggestionMenu activeSuggestion wouldChange: self]
-]
-
 { #category : #suggestions }
 SBBlock >> shouldSuggest [
 
