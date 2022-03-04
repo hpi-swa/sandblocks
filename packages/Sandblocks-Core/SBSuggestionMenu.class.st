@@ -336,6 +336,12 @@ SBSuggestionMenu >> resize [
 		ifTrue: [0 @ ((container height + ((focusHint notNil and: [focusHint visible]) ifTrue: [focusHint height] ifFalse: [0]) min: 330) + 2)])
 ]
 
+{ #category : #accessing }
+SBSuggestionMenu >> sandblockEditor [
+
+	^ editor
+]
+
 { #category : #'stepping and presenter' }
 SBSuggestionMenu >> step [
 
