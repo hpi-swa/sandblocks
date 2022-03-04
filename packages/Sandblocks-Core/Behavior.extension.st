@@ -27,12 +27,3 @@ Behavior >> openFull: converter [
 
 	converter do: [SBStClassMethodEditor new class: self]
 ]
-
-{ #category : #'*Sandblocks-Core-suggestions' }
-Behavior >> sandblocksSuggestionsFor: aBlock [
-	"May be overriden by subclasses."
-
-	^ Array streamContents: [:stream |
-		self withAllSuperclassesDo: [:class |
-			stream nextPutAll: class selectors sorted]]
-]
