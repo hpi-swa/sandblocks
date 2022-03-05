@@ -304,7 +304,7 @@ SBStBasicMethod >> exists [
 { #category : #accessing }
 SBStBasicMethod >> externalModification: aBoolean [
 
-	^ self setProperty: #externalModificationFlag toValue: aBoolean
+	self setProperty: #externalModificationFlag toValue: aBoolean
 ]
 
 { #category : #accessing }

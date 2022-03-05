@@ -103,7 +103,8 @@ SBToggledCode >> buildRowFor: aBlock active: aBoolean [
 			yourself);
 		addMorphBack: (aBlock
 			setProperty: #previousBlockColor
-			toValue: (aBlock valueOfProperty: #sandblockBlockColor ifAbsent: [Color random])).
+				toValue: (aBlock valueOfProperty: #sandblockBlockColor ifAbsent: [Color random]);
+			yourself).
 	^ row
 ]
 
