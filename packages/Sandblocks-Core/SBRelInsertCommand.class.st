@@ -84,7 +84,7 @@ SBRelInsertCommand >> index [
 SBRelInsertCommand >> insertIndex [
 
 	self adjacent ifNil: [^ self before ifTrue: [1] ifFalse: [self container submorphCount + 1]].
-	^ (self container submorphs indexOf: self adjacent) + (self before ifTrue: [0] ifFalse: [1])
+	^ (self container submorphs indexOf: self adjacent) + (self before ifTrue: [0] ifFalse: [1]) max: 1
 ]
 
 { #category : #'as yet unclassified' }
