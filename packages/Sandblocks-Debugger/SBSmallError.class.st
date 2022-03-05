@@ -61,6 +61,12 @@ SBSmallError >> expanded [
 ]
 
 { #category : #'as yet unclassified' }
+SBSmallError >> focus [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBSmallError >> handlesMouseOver: anEvent [
 
 	^ true
