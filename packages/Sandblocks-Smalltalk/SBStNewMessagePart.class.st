@@ -217,15 +217,11 @@ SBStNewMessagePart >> stopEditing: aCommand [
 SBStNewMessagePart >> suggestions [
 
 	| selector |
-	selector := self selectorContentsBeforeMe, self contents ifEmpty: [^ self].
+	selector := self selectorContentsBeforeMe, self contents.
 	
-	selector last = $: ifTrue: [selector := selector allButLast].
+	(selector notEmpty and: [selector last = $:]) ifTrue: [selector := selector allButLast].
 	
-	^ (self
-		sortedSuggestions: (self messageSend actualReceiver guessClassExpensive
-			ifNil: [Symbol allSymbols]
-			ifNotNil: [:class | class sandblocksSuggestionsFor: self])
-		for: selector) collect: [:sel | SBSuggestionItem selector: sel label: 'send']
+	^ self messageSend actualReceiver completionSuggestionsForSend: selector
 ]
 
 { #category : #'as yet unclassified' }

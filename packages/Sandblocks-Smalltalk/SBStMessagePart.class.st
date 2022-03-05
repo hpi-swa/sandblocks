@@ -295,17 +295,11 @@ SBStMessagePart >> startOrAddToMultiSelection [
 { #category : #'as yet unclassified' }
 SBStMessagePart >> suggestions [
 
-	| selector list |
+	| selector |
 	selector := self selectorContentsBeforeMe, self contents.
 	(selector notEmpty and: [selector last = $:]) ifTrue: [selector := selector allButLast].
 	
-	list := OrderedCollection withAll: (self messageSend actualReceiver guessClassExpensive
-		ifNil: [Symbol allSymbols]
-		ifNotNil: [:class | class sandblocksSuggestionsFor: self]).
-	
-	self containingArtefact ifNotNil: [:artefact | artefact selector ifNotNil: [:sel | (sel sandblockMatch: selector) ifTrue: [list add: sel]]].
-	
-	^ (self sortedSuggestions: list for: selector) collect: [:sel | SBSuggestionItem selector: sel label: 'send']
+	^ self messageSend actualReceiver completionSuggestionsForSend: selector
 ]
 
 { #category : #'colors and color policies' }

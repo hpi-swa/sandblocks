@@ -1,9 +1,6 @@
 Class {
 	#name : #SBStDeclarationForInstanceVariable,
-	#superclass : #SBStDeclarationBehavior,
-	#instVars : [
-		'class'
-	],
+	#superclass : #SBStDeclarationForBehaviorVariable,
 	#category : #'Sandblocks-Smalltalk'
 }
 
@@ -15,20 +12,20 @@ SBStDeclarationForInstanceVariable class >> checkCastFor: aBlock parent: aMorph 
 	^ (artefact satisfies: {#notNil. #isEditor. #isClassContainer}) and: [aMorph = artefact instanceVariables]
 ]
 
-{ #category : #'as yet unclassified' }
-SBStDeclarationForInstanceVariable >> asSuggestionItem [
+{ #category : #accessing }
+SBStDeclarationForInstanceVariable >> allVariableNames [
 
-	^ SBSuggestionItem selector: self contents label: 'instance variable'
+	^ self block containingArtefact object instVarNames
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStDeclarationForInstanceVariable >> browse [
 	<action>
 
 	self systemNavigation browseAllAccessesTo: self contents from: self block containingArtefact shownClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBStDeclarationForInstanceVariable >> browseReferences [
 
 	self systemNavigation
@@ -36,73 +33,21 @@ SBStDeclarationForInstanceVariable >> browseReferences [
 		from: self relatedClass object
 ]
 
-{ #category : #'as yet unclassified' }
-SBStDeclarationForInstanceVariable >> class: aClass [
-
-	class := aClass
-]
-
-{ #category : #'as yet unclassified' }
-SBStDeclarationForInstanceVariable >> createGetterSetter [
-	<action>
-
-	self block sandblockEditor
-		createArtefactInView: self getterBlock;
-		createArtefactInView: self setterBlock
-]
-
-{ #category : #'as yet unclassified' }
-SBStDeclarationForInstanceVariable >> getterBlock [
-
-	^ SBStMethod new
-		selector: self contents asSymbol
-			arguments: #()
-			class: self block containingArtefact shownClass;
-		body: (SBStBlockBody new statements: {SBStReturn new expression: (SBStName contents: self contents)})
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStDeclarationForInstanceVariable >> guessedClass [
 
-	^ nil
+	class isMeta ifTrue: [^ (class theNonMetaClass instVarNamed: self contents) class].
+	^ super guessedClass
 ]
 
-{ #category : #'as yet unclassified' }
-SBStDeclarationForInstanceVariable >> printBlockOn: aStream [
-
-	aStream nextPutAll: 'instance variable '; nextPutAll: self contents
-]
-
-{ #category : #'as yet unclassified' }
-SBStDeclarationForInstanceVariable >> relatedClass [
-
-	^ class ifNil: [self block containingArtefact relatedClass]
-]
-
-{ #category : #'as yet unclassified' }
-SBStDeclarationForInstanceVariable >> scope [
-
-	^ self block sandblockEditor ifNotNil: [:e | e methods select: [:m | m methodClass = self block containingArtefact shownClass]] ifNil: [#()]
-]
-
-{ #category : #'as yet unclassified' }
-SBStDeclarationForInstanceVariable >> setterBlock [
-
-	^ SBStMethod new
-		selector: self contents asSymbol asSimpleSetter
-			arguments: {SBStName contents: 'anObject'}
-			class: self block containingArtefact shownClass;
-		body: (SBStBlockBody new statements: {[:b | b assign: self contents to: (b name: 'anObject')] sbStBuild})
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStDeclarationForInstanceVariable >> symbolsFor: aColorPolicy [
 
 	^ aColorPolicy symbolsForInstanceVariableDeclaration: self block
 ]
 
-{ #category : #'as yet unclassified' }
-SBStDeclarationForInstanceVariable >> valid [
+{ #category : #accessing }
+SBStDeclarationForInstanceVariable >> typeLabel [
 
-	^ self block containingArtefact object instVarNames includes: self contents
+	^ 'instance variable'
 ]

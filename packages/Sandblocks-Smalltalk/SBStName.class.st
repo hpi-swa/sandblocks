@@ -10,6 +10,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStName class >> classVariable: aString class: aClass [
+
+	^ (self contents: aString)
+		behavior: (SBStDeclarationForClassVariable new class: aClass);
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
 SBStName class >> contents: aString [
 
 	^ self new contents: aString; yourself

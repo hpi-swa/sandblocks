@@ -171,6 +171,22 @@ SBStBasicMethod >> changeToUnknown [
 ]
 
 { #category : #accessing }
+SBStBasicMethod >> classVariables [
+
+	| editor |
+	editor := self sandblockEditor.
+	^ Array streamContents: [:stream |
+		self methodClass withAllSuperclassesDo: [:class | | open |
+			open := [class classVarNames collect: [:name | SBStName classVariable: name class: class]].
+			stream nextPutAll: (SBToggledCode comment: '' active: 1 do: {
+				[open value].
+				[
+					editor
+						ifNil: open
+						ifNotNil: [editor blockFor: class withInterfaces: #(#isEditor) ifOpen: [:c | c classVariables] ifClosed: open]]})]]
+]
+
+{ #category : #accessing }
 SBStBasicMethod >> collapsed: aBoolean [
 
 	self body visible not = aBoolean ifTrue: [^ self].
@@ -257,14 +273,21 @@ SBStBasicMethod >> currentSelector: aString [
 { #category : #accessing }
 SBStBasicMethod >> declarations [
 
-	^ self arguments, self instanceVariables
+	^ Array streamContents: [:stream |
+		self declarationsDo: [:declaration |
+			stream nextPut: declaration.
+			
+			].
+		
+		]
 ]
 
 { #category : #accessing }
 SBStBasicMethod >> declarationsDo: aBlock [
 
 	self arguments do: aBlock.
-	self instanceVariables do: aBlock
+	self instanceVariables do: aBlock.
+	self classVariables do: aBlock
 ]
 
 { #category : #actions }

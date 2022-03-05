@@ -88,7 +88,7 @@ SBBlock >> addBlock: aBlock [
 	(self insertCommandRequest: aBlock near: nil before: false) do
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> allBlocksDetect: aBlock [
 
 	self allBlocksDetect: aBlock ifFound: [:b | b] ifNone: [self error: 'no such block']
@@ -116,7 +116,7 @@ SBBlock >> allBlocksFor: anObject withInterfaces: aCollection [
 			(morph isSandblock and: [morph object = anObject and: [morph satisfies: aCollection]]) ifTrue: [stream nextPut: morph]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> allBlocksSatisfy: aBlock [
 
 	self allBlocksDo: [:b | (aBlock value: b) ifFalse: [^ false]].
@@ -129,7 +129,7 @@ SBBlock >> allBlocksSelect: aBlock [
 	^ Array streamContents: [:stream | self allBlocksDo: [:b | (aBlock value: b) ifTrue: [stream nextPut: b]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hierarchy }
 SBBlock >> allChildBlocksSatisfy: aBlock [
 
 	self allBlocksDo: [:b | (b ~= self and: [(aBlock value: b) not]) ifTrue: [^ false]].
@@ -143,7 +143,7 @@ SBBlock >> andAllParentSandblocksDo: aBlock [
 	self parentSandblock ifNotNil: [:p | p andAllParentSandblocksDo: aBlock]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBBlock >> appendElement [
 	<action>
 
@@ -166,15 +166,6 @@ SBBlock >> artefactChanged: aMethodBlock [
 	" callback fired after each change to a method "
 
 	
-]
-
-{ #category : #suggestions }
-SBBlock >> artefactCompletionSelectorsFor: aBlock class: aClass [
-	"May be overridden by subclasses."
-	
-	aClass ifNil: [^ Symbol allSymbols].
-	
-	^ aClass sandblocksSuggestionsFor: self
 ]
 
 { #category : #accessing }
@@ -233,7 +224,7 @@ SBBlock >> attachToHand: aHand in: anEditor [
 	aHand grabMorph: s
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBBlock >> attractionStrengthTo: aMorph [
 
 	^ (self isAttractedTo: aMorph)
@@ -241,7 +232,7 @@ SBBlock >> attractionStrengthTo: aMorph [
 		ifFalse: [0.0]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBBlock >> attractionTo: aMorph [
 
 	^ (self attractionStrengthTo: aMorph) + (aMorph attractionStrengthTo: self)
@@ -495,7 +486,10 @@ SBBlock >> click: anEvent [
 	
 	self sandblockEditor selectClick: self at: anEvent position.
 	(anEvent yellowButtonPressed and: [SBPreferences rightClickContextMenu]) ifTrue: [self promptAction].
-	(self isInWorld and: [self suggestAlways and: [anEvent redButtonPressed]]) ifTrue: [self queueUpdateSuggestionsFocused: false]
+	(self isInWorld and: [self suggestAlways and: [anEvent redButtonPressed]]) ifTrue: [
+		self hasSuggestions
+			ifFalse: [self queueUpdateSuggestionsFocused: false]
+			ifTrue: [self removeSuggestionMenu]]
 ]
 
 { #category : #hierarchy }
@@ -539,6 +533,38 @@ SBBlock >> completeSubtree [
 
 	self allBlocksDo: [:b | b isUnknown ifTrue: [^ false]].
 	^ true
+]
+
+{ #category : #suggestions }
+SBBlock >> completionKeysFrom: objects matching: matchString stringBlock: stringBlock [
+
+	| input exactMatches fuzzyMatches |
+	input := OrderedCollection withAll: objects.
+	
+	exactMatches := (Array streamContents: [:stream |
+		input removeAllSuchThat: [:ea |
+			((stringBlock value: ea) sandblockBeginsWith: matchString)
+				ifTrue: [stream nextPut: ea];
+				yourself]]) sort: [:ea | (stringBlock value: ea) size] ascending.
+	fuzzyMatches := (Array streamContents: [:stream |
+		input removeAllSuchThat: [:ea |
+			((stringBlock value: ea) sandblockMatch: matchString)
+				ifTrue: [stream nextPut: ea];
+				yourself]]) sort: [:ea | (stringBlock value: ea) size] ascending.
+	
+	^ (Array
+		streamContents: [:stream |
+			stream
+				nextPutAll: exactMatches;
+				nextPutAll: fuzzyMatches.
+			self suggestAlways ifTrue: [stream nextPutAll: input]]
+		limitedTo: self maxSuggestions) withoutDuplicates
+]
+
+{ #category : #suggestions }
+SBBlock >> completionSelectorsFrom: selectors matching: matchString [
+
+	^ self completionKeysFrom: selectors matching: matchString stringBlock: [:sel | sel]
 ]
 
 { #category : #accessing }
@@ -1154,7 +1180,7 @@ SBBlock >> grammarHandler [
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBlock >> group [ 
 	
 	^ self withDecorator: SBForceMoveDecorator do: [:decorator | decorator group] ifAbsent: [nil]
@@ -1191,7 +1217,7 @@ SBBlock >> hasDecorator: aClass [
 	^ decorators anySatisfy: [:d | d isKindOf: aClass]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBlock >> hasGroup [ 
 	
 	^ self group notNil
@@ -1309,7 +1335,7 @@ SBBlock >> insertElementBefore [
 	^ self insertElement: true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
 SBBlock >> insertEmptyCommandRequestNear: aBlock before: aBoolean [
 
 	| child |
@@ -1430,7 +1456,7 @@ SBBlock >> isDeclaration [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBBlock >> isDragging [ 
 	
 	^ self withDecorator: SBMoveDecorator do: [:decorator | decorator isDragging] ifAbsent: [false]
@@ -1575,7 +1601,7 @@ SBBlock >> isValidAction: aPragmaOrMethod [
 	^ validMode and: [validInvocation]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBBlock >> isWaypoint [
 
 	^ false
@@ -1903,7 +1929,7 @@ SBBlock >> outOfWorld: aWorld [
 	self triggerEvent: #outOfWorld
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBlock >> outerArtefact [
 
 	| a |
@@ -1911,7 +1937,7 @@ SBBlock >> outerArtefact [
 	^ a = self ifTrue: [self parentSandblock ifNotNil: #containingArtefact] ifFalse: [a]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBlock >> outerMostArtefact [
 
 	| a |
@@ -2129,7 +2155,7 @@ SBBlock >> previousVerticalNear: aNumber [
 		validBlock: [:candidate | self top >= candidate bottom]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBBlock >> printIdentityStringOn: aStream [
 
 	aStream
@@ -2373,7 +2399,7 @@ SBBlock >> selectLast [
 		startInputAtEnd
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'action helpers' }
 SBBlock >> selectLastInsertPosition [
 
 	| last |
@@ -2438,12 +2464,6 @@ SBBlock >> selectionLabel [
 	^ self printString
 ]
 
-{ #category : #'actions tests' }
-SBBlock >> shouldAutocomplete [
-
-	^ self hasSuggestions and: [self sandblockEditor suggestionMenu activeSuggestion wouldChange: self]
-]
-
 { #category : #suggestions }
 SBBlock >> shouldSuggest [
 
@@ -2483,36 +2503,6 @@ SBBlock >> slurpFront [
 	(self adjacentBlock: -1) ifNotNil: [:block | 
 		self sandblockEditor do: (self insertCommandRequest: block near: self childSandblocks last before: true).
 		self select]
-]
-
-{ #category : #suggestions }
-SBBlock >> sortedSuggestions: aCollection for: aString [
-
-	| exactMatches fuzzyMatches list |
-	"sort list of provided suggestion strings by putting exact matches first and clamps to maxSuggestions.
-
-NOTE: may mutate aCollection"
-	list := (aCollection isKindOf: OrderedCollection)
-		ifTrue: [aCollection]
-		ifFalse: [OrderedCollection withAll: aCollection].
-	
-	exactMatches := (Array streamContents: [:stream |
-		list removeAllSuchThat: [:sel |
-			(sel sandblockBeginsWith: aString)
-				ifTrue: [stream nextPut: sel];
-				yourself]]) sort: #size ascending.
-	fuzzyMatches := (Array streamContents: [:stream |
-		list removeAllSuchThat: [:sel |
-			(sel sandblockMatch: aString)
-				ifTrue: [stream nextPut: sel];
-				yourself]]) sort: #size ascending.
-	
-	^ (Array
-		streamContents: [:stream |
-			stream nextPutAll: exactMatches.
-			stream nextPutAll: fuzzyMatches.
-			self suggestAlways ifTrue: [stream nextPutAll: list]]
-		limitedTo: self maxSuggestions) withoutDuplicates
 ]
 
 { #category : #'ast helpers' }
