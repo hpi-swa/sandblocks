@@ -16,7 +16,7 @@ SBCombinedCommand class >> newWith: aCollection [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBCombinedCommand >> affectedArtefacts [
 	" if we non-edit commands within our list we also may get nil artifacts "
 
@@ -35,23 +35,29 @@ SBCombinedCommand >> commands: aCollection [
 	commands := aCollection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert commands' }
+SBCombinedCommand >> container [
+
+	^ self commands detect: [:c | c isInsert] ifFound: [:c | c container] ifNone: [nil]
+]
+
+{ #category : #apply }
 SBCombinedCommand >> do [
 
 	self commands allButLastDo: #do.
 	^ self commands last do
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert commands' }
 SBCombinedCommand >> hasHorizontalLayout [
 
 	^ self commands
-		detect: [:c | c respondsTo: #container]
-		ifFound: [:c | c container hasHorizontalLayout]
+		detect: [:c | c isInsert]
+		ifFound: [:c | c hasHorizontalLayout]
 		ifNone: [false]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert commands' }
 SBCombinedCommand >> hasSamePositionAs: aCommand [
 
 	aCommand class = self class ifFalse: [^ false].
@@ -62,68 +68,74 @@ SBCombinedCommand >> hasSamePositionAs: aCommand [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert commands' }
+SBCombinedCommand >> insertIndex [
+
+	^ self commands detect: [:c | c isInsert] ifFound: [:c | c insertIndex] ifNone: [nil]
+]
+
+{ #category : #apply }
 SBCombinedCommand >> postDo [
 
 	commands do: #postDo
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #apply }
 SBCombinedCommand >> preDo [
 
 	^ commands do: #preDo
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBCombinedCommand >> previousSelection [
 
 	^ previousSelection ifNil: [self commands first previousSelection]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert commands' }
 SBCombinedCommand >> secondaryInsertPosition [
 
 	^ self commands anySatisfy: [:command | command secondaryInsertPosition]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #apply }
 SBCombinedCommand >> selectAfter [
 
 	^ selectAfter ifNil: [self commands last selectAfter]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBCombinedCommand >> setArtefactFrom [
 
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBCombinedCommand >> shouldMergeWithNext [
 
 	^ self commands last shouldMergeWithNext
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBCombinedCommand >> shouldMergeWithNext: aBoolean [
 
 	self commands last shouldMergeWithNext: aBoolean
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBCombinedCommand >> title [
 
 	^ self commands first title
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #apply }
 SBCombinedCommand >> undo [
 
 	self commands allButFirst reverseDo: #undo.
 	^ self commands first undo
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBCombinedCommand >> valid [
 
 	^ commands notEmpty

@@ -23,7 +23,7 @@ SBInsertCommand >> container: aMorph [
 	container := aMorph
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #apply }
 SBInsertCommand >> do [
 
 	container addMorph: morph asElementNumber: index.
@@ -31,20 +31,10 @@ SBInsertCommand >> do [
 	^ select ifNil: [morph]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert commands' }
 SBInsertCommand >> hasSamePositionAs: aCommand [
 
 	^ aCommand class ~= SBCombinedCommand and: [self container = aCommand container and: [self index = aCommand index]]
-]
-
-{ #category : #'as yet unclassified' }
-SBInsertCommand >> hintBounds [
-
-	^ SBCursorInsert new
-		before: index <= container submorphCount;
-		adjacent: (container submorphs at: index ifAbsent: [nil]);
-		container: container;
-		boundsWithWidth: 3
 ]
 
 { #category : #'as yet unclassified' }
@@ -59,10 +49,22 @@ SBInsertCommand >> index: aNumber [
 	index := aNumber
 ]
 
+{ #category : #'insert commands' }
+SBInsertCommand >> insertBoundsWithSize: aNumber [
+
+	
+]
+
 { #category : #'as yet unclassified' }
 SBInsertCommand >> insertIndex [
 
 	^ index
+]
+
+{ #category : #'as yet unclassified' }
+SBInsertCommand >> isInsert [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -83,13 +85,13 @@ SBInsertCommand >> select: aBlock [
 	select := aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBInsertCommand >> setArtefactFrom [
 
 	^ container
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBInsertCommand >> title [
 
 	^ title
@@ -101,7 +103,7 @@ SBInsertCommand >> title: aString [
 	title := aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #apply }
 SBInsertCommand >> undo [
 
 	| parentBlock |

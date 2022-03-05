@@ -248,6 +248,12 @@ Morph >> isStatement [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Morph >> isStringMorph [
+
+	^ false
+]
+
+{ #category : #'*Sandblocks-Core' }
 Morph >> isTemporaries [
 
 	^ false

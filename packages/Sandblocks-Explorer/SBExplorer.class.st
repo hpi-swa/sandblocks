@@ -201,7 +201,7 @@ SBExplorer >> on: anObject wrapper: aWrapper [
 				extent: 1 @ 1]).
 	icon := wrapper icon.
 	icon = (ToolIcons icons at: #blank) ifFalse: [row addMorphBack: icon asMorph].
-	row addMorphBack: (label := SBStringMorph new contents: (anObject printString truncateWithElipsisTo: 40)).
+	row addMorphBack: (label := SBStringMorph new contents: (anObject printString truncateWithElipsisTo: 50)).
 	
 	self addMorphBack: row
 ]

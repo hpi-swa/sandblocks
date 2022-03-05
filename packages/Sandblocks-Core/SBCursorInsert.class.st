@@ -30,42 +30,6 @@ SBCursorInsert >> adjacent: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorInsert >> basicBoundsWithWidth: aNumber [
-
-	| inset |
-	bounds ifNotNil: [^ bounds].
-	
-	^ self hasHorizontalLayout
-		ifTrue: [
-			self adjacent
-				ifNil: [ | height |
-					inset := self container layoutInset asEdgeInsets.
-					height := self container height max: TextStyle defaultFont height // 2.
-					self before
-						ifTrue: [self container topLeft + inset topLeft - (aNumber // 2 @ 0) extent: aNumber @ (height - inset vertical)]
-						ifFalse: [self container topRight - (aNumber // 2 + inset right @ inset top negated) extent: aNumber @ (height - inset vertical)]]
-				ifNotNil: [
-					self before
-						ifTrue: [self adjacent topLeft - (aNumber // 2 @ 0) extent: aNumber @ self adjacent height]
-						ifFalse: [self adjacent topRight extent: aNumber @ self adjacent height]]]
-		ifFalse: [
-			self adjacent
-				ifNil: [
-					inset := self container layoutInset asEdgeInsets.
-					"if we are in an empty container with vertical layout, we may get a 1x1 sized cursor. Scale it to be the font's height instead."
-					self container width - inset x < 5
-						ifTrue: [self container topLeft + inset topLeft extent: self lineWidth @ TextStyle defaultFont height]
-						ifFalse: [
-							self before
-								ifTrue: [self container topLeft + inset topLeft extent: self container width - inset horizontal @ aNumber]
-								ifFalse: [self container bottomLeft - (inset left negated @ (aNumber + inset bottom)) extent: self container width - inset horizontal @ aNumber]]]
-				ifNotNil: [
-					self before
-						ifTrue: [self adjacent topLeft - (0 @ (aNumber // 2)) extent: self adjacent width @ aNumber]
-						ifFalse: [self adjacent bottomLeft extent: self adjacent width @ aNumber]]]
-]
-
-{ #category : #'as yet unclassified' }
 SBCursorInsert >> before [
 
 	^ before
@@ -98,10 +62,7 @@ SBCursorInsert >> bounds: aRectangle [
 { #category : #'as yet unclassified' }
 SBCursorInsert >> boundsWithWidth: aNumber [
 
-	| b |
-	b := self basicBoundsWithWidth: aNumber.
-	(b width <= self lineWidth and: [b height <= self lineWidth]) ifTrue: [^ b origin extent: self lineWidth @ TextStyle defaultFont height].
-	^ b
+	^ command insertBoundsWithSize: aNumber
 ]
 
 { #category : #'as yet unclassified' }

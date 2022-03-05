@@ -55,6 +55,12 @@ SBStringMorph >> initialize [
 	color := nil
 ]
 
+{ #category : #testing }
+SBStringMorph >> isStringMorph [
+
+	^ true
+]
+
 { #category : #accessing }
 SBStringMorph >> italic [
 

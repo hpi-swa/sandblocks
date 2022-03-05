@@ -186,7 +186,7 @@ SBDragHelper >> hintInsertOf: aBlock in: aParentBlock near: aChildBlock before: 
 			color: (aParentBlock colorPolicy dropMarkerColorFor: aBlock);
 			bounds: (aChildBlock
 				ifNil: [10 @ 10 center: aParentBlock boundsInWorld center]
-				ifNotNil: [aChildBlock transformFromWorld transformRect: command hintBounds]);
+				ifNotNil: [aChildBlock transformFromWorld transformRect: command insertBounds]);
 			openInWorld].
 	
 	onMove := [:event | (aChildBlock notNil and: [insertPreviewMarker notNil and: [aChildBlock floating]]) ifTrue: [insertPreviewMarker center: event position]].
