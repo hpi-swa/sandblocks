@@ -168,24 +168,20 @@ SBWatchView >> updateDisplay [
 	
 	((lastValue class respondsTo: #visualPrimitiveMapping) and: [lastValue class visualPrimitiveMapping notEmpty])
 		ifTrue: [ | morph vp |
-			morph := SBBlock new
-				hResizing: #shrinkWrap;
-				vResizing: #shrinkWrap;
-				layoutInset: 6.
 			SBExecutionEnvironment value: env during: [
+				morph := SBBlock new
+					layoutPolicy: (Smalltalk at: #SBTreeLayoutPolicy) new;
+					hResizing: #shrinkWrap;
+					vResizing: #shrinkWrap;
+					layoutInset: 6.
+			
 				vp := (Smalltalk at: #SBVisualPrimitive)
 					newFromObject: lastValue
 					in: morph].
-			vp attachTreeDecorator.
-			vp layout.
-			self useDisplay: (SBRow new
-				addMorphBack: morph;
-				hResizing: #shrinkWrap;
-				vResizing: #shrinkWrap)]
+			self useDisplay: morph]
 		ifFalse: [
-			SBToggledCode comment: '' active: 1 do: {
-				[self useDisplay: (SBExplorer on: lastValue)].
-				[self useDisplay: (anObject convertedFor: self watchObjectInterface do: #yourself)]}]
+			self useDisplay: (SBExplorer on: lastValue)
+			"self useDisplay: (anObject convertedFor: self watchObjectInterface do: #yourself)"]
 ]
 
 { #category : #'as yet unclassified' }
