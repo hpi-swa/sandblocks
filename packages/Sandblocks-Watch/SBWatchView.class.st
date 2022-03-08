@@ -166,7 +166,7 @@ SBWatchView >> updateDisplay [
 	
 	count contents: numReportedValues asString.
 	
-	((lastValue class respondsTo: #visualPrimitiveMapping) and: [lastValue class visualPrimitiveMapping notEmpty])
+	((lastValue class respondsTo: #domainBlockMapping) and: [lastValue class domainBlockMapping notEmpty])
 		ifTrue: [ | morph vp |
 			SBExecutionEnvironment value: env during: [
 				morph := SBBlock new
@@ -175,7 +175,7 @@ SBWatchView >> updateDisplay [
 					vResizing: #shrinkWrap;
 					layoutInset: 6.
 			
-				vp := (Smalltalk at: #SBVisualPrimitive)
+				vp := (Smalltalk at: #SBDomainBlock)
 					newFromObject: lastValue
 					in: morph].
 			self useDisplay: morph]
