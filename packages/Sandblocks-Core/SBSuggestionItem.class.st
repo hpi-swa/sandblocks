@@ -195,7 +195,9 @@ SBSuggestionItem >> useSuggestionOn: aBlock in: anEditor [
 
 	self completionAction
 		ifNotNil: [self completionAction cull: aBlock cull: self]
-		ifNil: [aBlock useSuggestion: self]
+		ifNil: [
+			aBlock useSuggestion: self.
+			anEditor selection ifNotNil: #startInputAtEnd]
 ]
 
 { #category : #suggestions }

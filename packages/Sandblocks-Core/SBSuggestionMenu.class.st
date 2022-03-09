@@ -331,9 +331,10 @@ SBSuggestionMenu >> requestor: anObject [
 { #category : #layout }
 SBSuggestionMenu >> resize [
 
-	self extent: (self hasItems
-		ifFalse: [0 @ 0]
-		ifTrue: [0 @ ((container height + ((focusHint notNil and: [focusHint visible]) ifTrue: [focusHint height] ifFalse: [0]) min: 330) + 2)])
+	self extent: (self hasItems ifFalse: [0 @ 0] ifTrue: [
+		0 @ ((container height + ((focusHint notNil and: [focusHint visible])
+			ifTrue: [focusHint height]
+			ifFalse: [0]) min: 330) + 2)])
 ]
 
 { #category : #'stepping and presenter' }
@@ -382,11 +383,9 @@ SBSuggestionMenu >> useSuggestion [
 	<actionValidIf: #isFocused>
 
 	self hasSuggestions ifFalse: [^ false].
-	self activeItem ifNotNil: [:s |
-		(s wouldChange: requestor)
-			ifTrue: [
-				s useSuggestionOn: requestor in: editor.
-				editor selection ifNotNil: #startInputAtEnd]
+	self activeItem ifNotNil: [:item |
+		(item wouldChange: requestor)
+			ifTrue: [item useSuggestionOn: requestor in: editor]
 			ifFalse: [editor selection inputNextUnknown]].
 	self delete.
 	^ true

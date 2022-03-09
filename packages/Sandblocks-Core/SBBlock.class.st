@@ -2922,6 +2922,13 @@ SBBlock >> wrapEditor [
 	^ self
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> wrapOffscreen: anEditor [
+	"wrap a selection container with the visual styles of the given editor, such that e.g. imageForm produces consistent results"
+
+	anEditor newSelectionContainer addMorphBack: self
+]
+
 { #category : #'action helpers' }
 SBBlock >> wrapSelectionWith: aSelection [
 

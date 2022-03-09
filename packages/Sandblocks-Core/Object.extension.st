@@ -171,6 +171,12 @@ Object >> openClass: converter [
 	converter do: [SBStClassMethodEditor new class: self class]
 ]
 
+{ #category : #'*Sandblocks-Core-utils' }
+Object >> performEnum: aSymbol [
+
+	^ Array streamContents: [:stream | self perform: aSymbol with: [:element | stream nextPut: element]]
+]
+
 { #category : #'*Sandblocks-Core' }
 Object >> representationsThat: aSymbol [
 

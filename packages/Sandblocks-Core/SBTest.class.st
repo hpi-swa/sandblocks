@@ -1,6 +1,9 @@
 Class {
 	#name : #SBTest,
 	#superclass : #TestCase,
+	#instVars : [
+		'world'
+	],
 	#category : #'Sandblocks-Core-Tests'
 }
 
@@ -22,7 +25,7 @@ SBTest class >> dropAt: aPoint with: aBlock in: anEditor [
 SBTest class >> editorFor: aBlock [
 
 	| editor |
-	editor := SBEditor new useVimInput.
+	editor := SBEditor new.
 	editor openMorphInView: aBlock.
 	aBlock ensureLayouted.
 	aBlock select.
@@ -108,6 +111,25 @@ SBTest >> assert: anObject structure: aCollection [
 ]
 
 { #category : #support }
+SBTest >> editorAndWorldFor: aBlock [
+
+	| editor worldSize |
+	worldSize := 300 @ 200.
+	world := (PasteUpMorph newWorldForProject: nil)
+		extent: worldSize;
+		viewBox: (0 @ 0 extent: worldSize);
+		yourself.
+	(world instVarNamed: #worldState)
+		instVarNamed: #canvas
+		put: (Form extent: worldSize depth: 32) getCanvas.
+	
+	editor := self editorFor: aBlock.
+	editor openInWorld: world.
+	self tick.
+	^ editor
+]
+
+{ #category : #support }
 SBTest >> editorFor: aBlock [
 
 	^ self class editorFor: aBlock
@@ -152,5 +174,5 @@ SBTest >> send: anEvent to: anEditor [
 { #category : #'support - events' }
 SBTest >> tick [
 
-	World doOneCycle
+	(world ifNil: [World]) doOneCycleNow
 ]
