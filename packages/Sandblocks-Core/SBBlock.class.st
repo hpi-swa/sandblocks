@@ -136,6 +136,14 @@ SBBlock >> allChildBlocksSatisfy: aBlock [
 	^ true
 ]
 
+{ #category : #connections }
+SBBlock >> allConnectionsDo: aBlock [
+
+	self flag: #todo.
+	"considers only blocks that share the same container"
+	self owner submorphsDo: [:m | (m isConnector and: [m to = self or: [m from = self]]) ifTrue: [aBlock value: m]]
+]
+
 { #category : #hierarchy }
 SBBlock >> andAllParentSandblocksDo: aBlock [
 
@@ -539,6 +547,13 @@ SBBlock >> completeSubtree [
 
 	self allBlocksDo: [:b | b isUnknown ifTrue: [^ false]].
 	^ true
+]
+
+{ #category : #connections }
+SBBlock >> connectedBlocks [
+	"all blocks on the ends of *outoing* connections"
+
+	^ Array streamContents: [:stream | self outgoingConnectionsDo: [:m | stream nextPut: m to]]
 ]
 
 { #category : #accessing }
@@ -1221,6 +1236,12 @@ SBBlock >> hasSuggestions [
 SBBlock >> hasUnsavedChanges [
 
 	^ self sandblockEditor ifNotNil: [:e | e hasUnsavedChanges: self] ifNil: [false]
+]
+
+{ #category : #connections }
+SBBlock >> incomingConnectionsDo: aBlock [
+
+	self allConnectionsDo: [:m | m to = self ifTrue: [aBlock value: m]]
 ]
 
 { #category : #initialization }
@@ -1918,6 +1939,12 @@ SBBlock >> outerMostArtefact [
 	a := self containingArtefact.
 	a ownerChain do: [:morph | (morph isSandblock and: [morph isArtefact]) ifTrue: [a := morph]].
 	^ a
+]
+
+{ #category : #connections }
+SBBlock >> outgoingConnectionsDo: aBlock [
+
+	self allConnectionsDo: [:m | m from = self ifTrue: [aBlock value: m]]
 ]
 
 { #category : #hierarchy }

@@ -32,12 +32,6 @@ SBStateMachineTransition >> conditions [
 ]
 
 { #category : #'as yet unclassified' }
-SBStateMachineTransition >> connectAutoDelete: aBlock [
-
-	" ignored "
-]
-
-{ #category : #'as yet unclassified' }
 SBStateMachineTransition >> doLayoutIn: aRectangle [
 
 	| directions |

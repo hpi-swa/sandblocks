@@ -58,15 +58,7 @@ SBConnectorLine >> connect: anObject to: anotherObject [
 	to when: #extentChanged send: #update: to: self with: nil.
 	from addDependent: self.
 	to addDependent: self.
-	self update: nil.
-	self connectAutoDelete: to.
-	self connectAutoDelete: from
-]
-
-{ #category : #'as yet unclassified' }
-SBConnectorLine >> connectAutoDelete: aBlock [
-
-	aBlock when: #delete send: #delete to: self
+	self update: nil
 ]
 
 { #category : #'as yet unclassified' }

@@ -4,9 +4,10 @@ Class {
 	#instVars : [
 		'target',
 		'oldOwner',
-		'oldIndex'
+		'oldIndex',
+		'oldConnections'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
@@ -15,6 +16,7 @@ SBDeleteCommand >> do [
 	| nextSelection |
 	nextSelection := target containingSandblock focusAfterDeleteIfNone: [self nextBlockFrom: target].
 	oldOwner := target owner.
+	self removeConnectionsFor: target.
 	oldIndex := oldOwner submorphIndexOf: target.
 	oldOwner removeMorph: target.
 	
@@ -46,6 +48,21 @@ SBDeleteCommand >> nextBlockFrom: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBDeleteCommand >> removeConnectionsFor: aBlock [
+
+	oldConnections := Array streamContents: [:stream |
+		aBlock allConnectionsDo: [:m |
+			stream nextPut: m.
+			m delete]]
+]
+
+{ #category : #'as yet unclassified' }
+SBDeleteCommand >> restoreConnectionsFor: aBlock in: aContainer [
+
+	oldConnections do: [:connection | aContainer addMorphBack: connection]
+]
+
+{ #category : #'as yet unclassified' }
 SBDeleteCommand >> setArtefactFrom [
 
 	^ target
@@ -61,5 +78,6 @@ SBDeleteCommand >> target: aMorph [
 SBDeleteCommand >> undo [
 
 	oldOwner addMorph: target asElementNumber: oldIndex.
+	self restoreConnectionsFor: target in: oldOwner.
 	^ target containingSandblock
 ]
