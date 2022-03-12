@@ -159,6 +159,12 @@ SBStCascade >> receiver: aBlock messages: aCollection [
 	aCollection do: [:m | self addMorphBack: m]
 ]
 
+{ #category : #'as yet unclassified' }
+SBStCascade >> tryReplacements [
+
+	SBStSubstitution allSubclassesDo: [:substitution | (substitution matchesCascades and: [substitution matches: self]) ifTrue: [self replaceBy: ((substitution newFor: self) pc: self pc)]]
+]
+
 { #category : #printing }
 SBStCascade >> writeSourceOn: aStream [
 

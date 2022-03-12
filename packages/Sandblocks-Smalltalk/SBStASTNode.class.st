@@ -44,6 +44,12 @@ SBStASTNode >> actionProviders [
 ]
 
 { #category : #converting }
+SBStASTNode >> applyReplacements [
+
+	self allMorphsMutableDo: [:morph | (morph isSandblock and: [morph isSmalltalk and: [(morph isMessageSend and: [morph isInCascade not]) or: [morph isCascade]]]) ifTrue: [morph tryReplacements]]
+]
+
+{ #category : #converting }
 SBStASTNode >> asMessagePart: aConverter [
 	<convert>
 	

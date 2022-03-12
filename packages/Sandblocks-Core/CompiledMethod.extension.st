@@ -7,7 +7,7 @@ CompiledMethod >> asSandblock [
 	class := self methodClass.
 	source := self getSourceFor: (self selector ifNil: [self defaultSelector]) in: class.
 	methodNode := SBPCMapper new buildNodeMapFor: source string in: class.
-	^ methodNode accept: SBStMethodToBlockWithSubs new
+	^ (methodNode accept: SBStMethodToBlocks new) applyReplacements
 ]
 
 { #category : #'*Sandblocks-Core' }

@@ -283,7 +283,7 @@ SBStBasicMethod >> ensureExpanded [
 { #category : #evaluate }
 SBStBasicMethod >> evaluationContext [
 
-	^ self sandblockEditor errors focusedArtefact = self ifTrue: [self sandblockEditor editor errors focusedContext] ifFalse: [nil]
+	^ (self sandblockEditor notNil and: [self sandblockEditor errors focusedArtefact = self]) ifTrue: [self sandblockEditor editor errors focusedContext] ifFalse: [nil]
 ]
 
 { #category : #evaluate }

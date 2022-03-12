@@ -547,6 +547,15 @@ SBStMessageSend >> tryDelete [
 	editor selection startInputAtEnd
 ]
 
+{ #category : #converting }
+SBStMessageSend >> tryReplacements [
+
+	SBStSubstitution allSubclassesDo: [:substition | ((substition matches: self) and: [substition applyAutomatically]) ifTrue: [^ self replaceBy: ((substition newFor: self) pc: self pc)]].
+	self converterOptionsDo: [:option | | c |
+		c := SBConvert new success: [:obj | self replaceBy: obj].
+		option automatic ifTrue: [option apply: c]]
+]
+
 { #category : #accessing }
 SBStMessageSend >> useAsVariable [
 	<action>
