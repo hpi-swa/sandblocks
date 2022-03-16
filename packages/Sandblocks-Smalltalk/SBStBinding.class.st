@@ -34,16 +34,6 @@ SBStBinding >> browseSenders [
 ]
 
 { #category : #'as yet unclassified' }
-SBStBinding >> contentsChanged [
-
-	(self contents = 'true' or: [self contents = 'false'])
-		ifTrue: [^ self block behavior: SBStBoolean new].
-	
-	self block isReserved
-		ifTrue: [^ self block behavior: SBStKeywordBinding new]
-]
-
-{ #category : #'as yet unclassified' }
 SBStBinding >> fixActions [
 
 	^ self validBinding ifTrue: [#()] ifFalse: [self fixActionsForBinding]

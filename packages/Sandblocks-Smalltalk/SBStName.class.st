@@ -120,7 +120,8 @@ SBStName >> behaviorClass: aClass [
 
 	behavior class ~= aClass ifTrue: [
 		behavior := aClass new.
-		behavior attached: self]
+		behavior attached: self.
+		super clearCacheSelf]
 ]
 
 { #category : #'as yet unclassified' }
@@ -147,11 +148,9 @@ SBStName >> castToUnknownWhenEmpty [
 	^ self behavior castToUnknownWhenEmpty
 ]
 
-{ #category : #'as yet unclassified' }
-SBStName >> clearCacheSelf [
+{ #category : #converting }
+SBStName >> checkChangeBehavior [
 
-	super clearCacheSelf.
-	
 	(self owner isNil or: [self autoCast isNil or: [self autoCast isBoolean and: [self autoCast not]]]) ifTrue: [^ self].
 	
 	(self autoCast notNil and: [self autoCast isBlock]) ifTrue: [^ self autoCast value: self value: self owner].
@@ -162,9 +161,17 @@ SBStName >> clearCacheSelf [
 ]
 
 { #category : #'as yet unclassified' }
+SBStName >> clearCacheSelf [
+
+	super clearCacheSelf.
+	
+	self checkChangeBehavior
+]
+
+{ #category : #'as yet unclassified' }
 SBStName >> contentsChanged [
 
-	self behavior contentsChanged.
+	self checkChangeBehavior.
 	
 	super contentsChanged
 ]

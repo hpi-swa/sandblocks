@@ -11,13 +11,6 @@ SBStBoolean class >> checkCastFor: aBlock parent: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBStBoolean >> contentsChanged [
-
-	(self contents = 'true' or: [self contents = 'false'])
-		ifFalse: [^ self block behavior: (self block isReserved ifTrue: [SBStKeywordBinding] ifFalse: [SBStBinding new])]
-]
-
-{ #category : #'as yet unclassified' }
 SBStBoolean >> doubleClick: anEvent [
 
 	self toggle
