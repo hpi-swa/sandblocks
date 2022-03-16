@@ -7,6 +7,12 @@ LayoutPolicy >> ensureLayouted: aMorph [
 ]
 
 { #category : #'*Sandblocks-Core-layout' }
+LayoutPolicy >> floating [ 
+	
+	^ false
+]
+
+{ #category : #'*Sandblocks-Core-layout' }
 LayoutPolicy >> preferredSizeFor: aMorph width: aNumber [
 
 	self flag: #fixme. "magic number"

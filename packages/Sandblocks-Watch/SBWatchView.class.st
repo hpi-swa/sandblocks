@@ -167,17 +167,10 @@ SBWatchView >> updateDisplay [
 	count contents: numReportedValues asString.
 	
 	((lastValue class respondsTo: #domainBlockMapping) and: [lastValue class domainBlockMapping notEmpty])
-		ifTrue: [ | morph vp |
-			SBExecutionEnvironment value: env during: [
-				morph := SBBlock new
-					layoutPolicy: (Smalltalk at: #SBTreeLayoutPolicy) new;
-					hResizing: #shrinkWrap;
-					vResizing: #shrinkWrap;
-					layoutInset: 6.
-			
-				vp := (Smalltalk at: #SBDomainBlock)
-					newFromObject: lastValue
-					in: morph].
+		ifTrue: [ | morph |
+			SBExecutionEnvironment
+				value: env
+				during: [morph := (Smalltalk at: #SBDomainBlockContainer) visualize: ((Smalltalk at: #SBDomainBlock) newFromObject: lastValue)].
 			self useDisplay: morph]
 		ifFalse: [
 			self useDisplay: (SBExplorer on: lastValue)

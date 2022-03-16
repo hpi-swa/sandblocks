@@ -52,8 +52,8 @@ SBDeleteCommand >> removeConnectionsFor: aBlock [
 
 	oldConnections := Array streamContents: [:stream |
 		aBlock allConnectionsDo: [:m |
-			stream nextPut: m.
-			m delete]]
+			stream nextPut: m]].
+	oldConnections do: [:m | m delete]
 ]
 
 { #category : #'as yet unclassified' }

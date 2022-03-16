@@ -137,6 +137,12 @@ SBBlock >> allChildBlocksSatisfy: aBlock [
 ]
 
 { #category : #connections }
+SBBlock >> allConnections [
+
+	^ Array streamContents: [:stream | self allConnectionsDo: [:each | stream nextPut: each]]
+]
+
+{ #category : #connections }
 SBBlock >> allConnectionsDo: aBlock [
 
 	self flag: #todo.
@@ -1114,7 +1120,7 @@ SBBlock >> flattenChildren [
 { #category : #testing }
 SBBlock >> floating [
 
-	^ self owner isNil or: [self owner layoutPolicy isNil or: [self disableLayout]]
+	^ self owner isNil or: [self owner layoutPolicy isNil or: [self owner layoutPolicy floating or: [self disableLayout]]]
 ]
 
 { #category : #accessing }
