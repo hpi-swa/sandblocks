@@ -141,7 +141,7 @@ SBBlock >> allConnectionsDo: aBlock [
 
 	self flag: #todo.
 	"considers only blocks that share the same container"
-	self owner submorphsDo: [:m | (m isConnector and: [m to = self or: [m from = self]]) ifTrue: [aBlock value: m]]
+	self owner ifNotNil: [self owner submorphsDo: [:m | (m isConnector and: [m to = self or: [m from = self]]) ifTrue: [aBlock value: m]]]
 ]
 
 { #category : #hierarchy }
@@ -1858,7 +1858,7 @@ SBBlock >> nextVerticalNear: aNumber calcDistance: aDistBlock validBlock: aValid
 SBBlock >> noteNewOwner: aMorph [
 
 	super noteNewOwner: aMorph.
-	self decorators do: [:decorator |
+	self decorators copy do: [:decorator |
 		decorator noteNewOwner: aMorph.
 		
 		].
