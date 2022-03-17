@@ -283,6 +283,12 @@ SBSelection >> sourceBlock: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBSelection >> startInput: aBlock at: aNumber replacingContents: aBoolean [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBSelection >> statements [
 
 	^ #()
