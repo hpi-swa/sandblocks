@@ -744,6 +744,12 @@ SBStBasicMethod >> toggleCollapsed [
 	(self body visible not and: [self isSelected not and: [self sandblockEditor notNil]]) ifTrue: [self select]
 ]
 
+{ #category : #accessing }
+SBStBasicMethod >> tryReplacements [
+
+	SBStMethodSubstitution allSubclassesDo: [:substitution | (substitution matches: self) ifTrue: [^ self applyReplacement: (substitution newFrom: self)]]
+]
+
 { #category : #'action helpers' }
 SBStBasicMethod >> tryUseAsSelf: anObject [
 

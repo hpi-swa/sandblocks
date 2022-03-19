@@ -43,10 +43,19 @@ SBStASTNode >> actionProviders [
 	^ {self grammarHandler}, super actionProviders
 ]
 
+{ #category : #'as yet unclassified' }
+SBStASTNode >> applyReplacement: aBlock [
+
+	self owner ifNotNil: [self replaceBy: aBlock].
+	^ aBlock
+]
+
 { #category : #converting }
 SBStASTNode >> applyReplacements [
 
-	self allMorphsMutableDo: [:morph | (morph isSandblock and: [morph isSmalltalk and: [(morph isMessageSend and: [morph isInCascade not]) or: [morph isCascade]]]) ifTrue: [morph tryReplacements]]
+	self allMorphsMutableDo: [:morph |
+		(morph ~= self and: [morph isSandblock and: [morph isSmalltalk]]) ifTrue: [morph tryReplacements]].
+	^ self tryReplacements
 ]
 
 { #category : #converting }

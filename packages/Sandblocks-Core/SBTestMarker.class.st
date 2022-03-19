@@ -7,10 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBTestMarker class >> allTestSelectors [
 
-	SBExample self: [SBTestMarker] args: [{}] label: 'example'.
-	^ Array streamContents: [:stream |
-		(SystemNavigation default allCallsOn: #self:args:label:assert:) do: [:reference |
-			stream nextPutAll: ((self examplesFromMethod: reference compiledMethod) collect: [:node | (reference actualClass name, '_'), ((reference selector, '_'), node arguments third key)])]]
+	^ Array streamContents: [:stream | (SystemNavigation default allCallsOn: #self:args:label:assert:) do: [:reference | stream nextPutAll: ((self examplesFromMethod: reference compiledMethod) collect: [:node | reference actualClass name, '_', (reference selector, '_', node arguments third key)])]]
 ]
 
 { #category : #'as yet unclassified' }

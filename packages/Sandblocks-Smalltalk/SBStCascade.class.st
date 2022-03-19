@@ -162,7 +162,7 @@ SBStCascade >> receiver: aBlock messages: aCollection [
 { #category : #'as yet unclassified' }
 SBStCascade >> tryReplacements [
 
-	SBStSubstitution allSubclassesDo: [:substitution | (substitution matchesCascades and: [substitution matches: self]) ifTrue: [self replaceBy: ((substitution newFor: self) pc: self pc)]]
+	SBStSubstitution allSubclassesDo: [:substitution | (substitution matchesCascades and: [substitution matches: self]) ifTrue: [^ self applyReplacement: ((substitution newFor: self) pc: self pc)]]
 ]
 
 { #category : #printing }

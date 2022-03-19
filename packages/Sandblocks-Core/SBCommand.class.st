@@ -128,7 +128,7 @@ SBCommand >> container [
 	^ nil
 ]
 
-{ #category : #testing }
+{ #category : #'insert commands' }
 SBCommand >> continueAfterInsert: aCharacter [
 	" mark that if this command has been used as an insertion point, the input should be forward to the new block "
 
@@ -287,6 +287,13 @@ SBCommand >> suggestions [
 SBCommand >> title [
 
 	^ nil
+]
+
+{ #category : #'insert commands' }
+SBCommand >> tryExpandWithInput: aString [
+	"check if the given input is acceptable for this insert command and return an according boolean. if it is, you may already adapt the command according to the input."
+
+	^ true
 ]
 
 { #category : #apply }

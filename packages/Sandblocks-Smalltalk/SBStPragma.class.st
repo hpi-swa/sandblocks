@@ -122,6 +122,14 @@ SBStPragma >> tryDelete [
 ]
 
 { #category : #'as yet unclassified' }
+SBStPragma >> tryReplacements [
+
+	self converterOptionsDo: [:option | | c |
+		c := SBConvert new success: [:obj | ^ self applyReplacement: obj].
+		option automatic ifTrue: [option apply: c]]
+]
+
+{ #category : #'as yet unclassified' }
 SBStPragma >> useSuggestion: anItem [
 
 	signature selectorAndEdit: anItem contents

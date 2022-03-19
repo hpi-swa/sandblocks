@@ -550,9 +550,9 @@ SBStMessageSend >> tryDelete [
 { #category : #converting }
 SBStMessageSend >> tryReplacements [
 
-	SBStSubstitution allSubclassesDo: [:substition | ((substition matches: self) and: [substition applyAutomatically]) ifTrue: [^ self replaceBy: ((substition newFor: self) pc: self pc)]].
+	SBStSubstitution allSubclassesDo: [:substition | ((substition matches: self) and: [substition applyAutomatically]) ifTrue: [^ self applyReplacement: ((substition newFor: self) pc: self pc)]].
 	self converterOptionsDo: [:option | | c |
-		c := SBConvert new success: [:obj | self replaceBy: obj].
+		c := SBConvert new success: [:obj | ^ self applyReplacement: obj].
 		option automatic ifTrue: [option apply: c]]
 ]
 

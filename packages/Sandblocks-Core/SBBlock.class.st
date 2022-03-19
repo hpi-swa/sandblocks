@@ -1786,7 +1786,7 @@ SBBlock >> moveCursorToEnd [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
-	self currentTextMorph moveCursorTo: 9e8
+	self currentTextMorph ifNotNil: [:t | t moveCursorTo: 9e8]
 ]
 
 { #category : #actions }
@@ -2790,6 +2790,12 @@ SBBlock >> tryFixIfFail: aBlock [
 	self fixActions
 		ifNotEmpty: [:actions | self proposeCodeActions: actions for: self].
 	^ self valid ifTrue: [true] ifFalse: aBlock
+]
+
+{ #category : #replacements }
+SBBlock >> tryReplacements [
+
+	
 ]
 
 { #category : #'artefact protocol' }
