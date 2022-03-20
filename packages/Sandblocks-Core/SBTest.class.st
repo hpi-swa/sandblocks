@@ -176,3 +176,9 @@ SBTest >> tick [
 
 	(world ifNil: [World]) doOneCycleNow
 ]
+
+{ #category : #'support - events' }
+SBTest >> type: aString in: anEditor [
+
+	aString do: [:char | anEditor handle: (self keyboardEvent: char)]
+]
