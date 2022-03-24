@@ -45,7 +45,7 @@ SBPreferencesEditor >> addTheme: aTheme [
 		selector: 'step' arguments: #() class: Object;
 		body: (SBStBlockBody new in: [:b | b statements: {'self = 5 ifTrue: [5 squared]' parseAsSandblock}]))
 		layoutInset: 2;
-		localColorPolicy: aTheme.
+		localColorPolicy: aTheme new.
 	SBSelection new addMorphBack: preview.
 	
 	checkbox := SBCheckbox new

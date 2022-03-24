@@ -129,6 +129,13 @@ SBTest >> editorAndWorldFor: aBlock [
 	^ editor
 ]
 
+{ #category : #utilities }
+SBTest >> editorDebug: anEditor [
+
+	anEditor openInWorld.
+	self halt
+]
+
 { #category : #support }
 SBTest >> editorFor: aBlock [
 

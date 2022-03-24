@@ -422,8 +422,9 @@ SBBlock >> centerAlignSymbols [
 SBBlock >> changeLocalColorPolicy [
 	<action>
 
-	^ (UIManager default chooseFrom: (SBColorPolicy withAllSubclasses collect: #asString) values: SBColorPolicy withAllSubclasses) ifNotNil: [:policy |
-		self localColorPolicy: policy]
+	^ (UIManager default
+		chooseFrom: (SBColorPolicy withAllSubclasses collect: #asString)
+		values: SBColorPolicy withAllSubclasses) ifNotNil: [:policy | self localColorPolicy: policy new]
 ]
 
 { #category : #actions }
@@ -1667,9 +1668,10 @@ SBBlock >> leftRotate [
 { #category : #'colors and color policies' }
 SBBlock >> localColorPolicy: aPolicy [
 
-	self setProperty: #localColorPolicy toValue: aPolicy new;
-			clearCache;
-			changed
+	self
+		setProperty: #localColorPolicy toValue: aPolicy;
+		clearCache;
+		changed
 ]
 
 { #category : #hierarchy }

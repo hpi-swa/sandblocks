@@ -123,7 +123,7 @@ SBStCodeOpener >> initialize [
 	showingClassSide := false.
 	
 	self
-		localColorPolicy: SBEditor defaultColorPolicy;
+		localColorPolicy: SBEditor defaultColorPolicy new;
 		addMouseCaptureFilter: self;
 		height: 200;
 		color: SystemWindow new userInterfaceTheme color;

@@ -100,6 +100,15 @@ SBCursorSelect >> moveHorizontal: aNumber wordWise: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorSelect >> printOn: aStream [
+
+	aStream nextPutAll: self className.
+	aStream nextPut: $(.
+	aStream print: self block.
+	aStream nextPut: $)
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorSelect >> selectLarger [
 
 	^ self block parentSandblock ifNotNil: [:parent | SBCursorSelect new block: parent] ifNil: [self]

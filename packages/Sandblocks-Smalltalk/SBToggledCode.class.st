@@ -146,7 +146,7 @@ SBToggledCode >> deselectAllBut: aNumber [
 	self optionRows withIndexDo: [:row :rowIndex |
 		rowIndex ~= aNumber ifTrue: [
 			row firstSubmorph value: false.
-			row lastSubmorph localColorPolicy: SBPlainColorPolicy]]
+			row lastSubmorph localColorPolicy: SBPlainColorPolicy new]]
 ]
 
 { #category : #'as yet unclassified' }
