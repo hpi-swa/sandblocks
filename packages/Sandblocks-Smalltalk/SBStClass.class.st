@@ -136,7 +136,7 @@ SBStClass >> declarations [
 { #category : #'as yet unclassified' }
 SBStClass >> definitionString [
 
-	SBExample self: [SBStClass new class: SBStClass] args: [{}] label: 'simple'.
+	self example: [SBStClass new class: SBStClass] args: [{}] label: 'simple'.
 	^ '{1} subclass: #{2}
 	instanceVariableNames: ''{3}''
 	classVariableNames: ''{4}''

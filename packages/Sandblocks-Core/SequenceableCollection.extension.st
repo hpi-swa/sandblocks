@@ -4,8 +4,8 @@ Extension { #name : #SequenceableCollection }
 SequenceableCollection >> atPingPong: aNumber [
 
 	| index |
-	SBExample self: [{1. 2. 3. 4}] args: [{5}] label: 'example'.
-	SBExample self: [{1. 2. 3. 4}] args: [{16}] label: 'example 2'.
+	self example: [{1. 2. 3. 4}] args: [{5}] label: 'example'.
+	self example: [{1. 2. 3. 4}] args: [{16}] label: 'example 2'.
 	
 	index := ((aNumber - 1) \\ ((self size * 2) - 2)) + 1.
 	

@@ -120,8 +120,7 @@ SBStSubstitution >> asSmalltalk: converter [
 { #category : #'as yet unclassified' }
 SBStSubstitution >> constructorString: aString arguments: aCollection on: aStream [
 
-	SBExample
-		self: [SBStSubstitution new]
+	self example: [SBStSubstitution new]
 		args: [{'replace:'. ({(SBStNumber new contents: '3')}). '' writeStream}]
 		label: 'simple'.
 	aStream nextPut: $(.

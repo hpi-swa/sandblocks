@@ -45,8 +45,7 @@ SBStateMachineEditor >> addUponEnter: aBlock [
 SBStateMachineEditor >> buildFrom: aNode [
 
 	| states |
-	SBExample
-		self: [SBStateMachineEditor new]
+	self example: [SBStateMachineEditor new]
 		args: [
 			{
 				'TOMStateMachine new
@@ -281,8 +280,7 @@ SBStateMachineEditor >> states [
 { #category : #'as yet unclassified' }
 SBStateMachineEditor >> writeSourceOn: aStream [
 
-	SBExample
-		self: [
+	self example: [
 			SBStateMachineEditor new buildFrom: 'SBStateMachine new
 		initialState: #idle;
 		

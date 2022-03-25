@@ -233,8 +233,7 @@ SBStPlayground >> saveString [
 { #category : #'as yet unclassified' }
 SBStPlayground >> storeOn: aStream [
 
-	SBExample
-		self: [SBStPlayground newFromSource: '5 + 5 squared' named: 'REPL']
+	self example: [SBStPlayground newFromSource: '5 + 5 squared' named: 'REPL']
 		args: [{'' writeStream}]
 		label: 'simple'.
 	aStream nextPut: $(.

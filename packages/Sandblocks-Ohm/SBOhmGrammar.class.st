@@ -8,7 +8,7 @@ Class {
 SBOhmGrammar class >> example [
 
 	| grammar |
-	SBExample self: [SBOhmGrammar] args: [{}] label: 'example'.
+	self example: [SBOhmGrammar] args: [{}] label: 'example'.
 	grammar := OhmGrammar new: 'G <: BuiltInRules {
 email = name "@" domain
 

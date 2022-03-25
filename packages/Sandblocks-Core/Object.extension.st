@@ -193,7 +193,7 @@ Object >> representationsThat: aSymbol do: aBlock [
 { #category : #'*Sandblocks-Core' }
 Object >> representationsThat: aSymbol do: aBlock deep: aBoolean [
 
-	SBExample self: ['5+5' parseAsSandblock] args: [{#isToplevelMorph. [:repr | nil]. true}] label: 'simple'.
+	self example: ['5+5' parseAsSandblock] args: [{#isToplevelMorph. [:repr | nil]. true}] label: 'simple'.
 	aSymbol ifNil: [^ self].
 	aSymbol isSymbol ifFalse: [
 		^ aSymbol do: [:sym | self representationsThat: sym do: aBlock]].

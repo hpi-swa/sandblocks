@@ -8,7 +8,7 @@ Class {
 SBReachabilitySimulatorTest >> exampleColorPolicy [
 
 	| a |
-	SBExample self: [SBReachabilitySimulatorTest new] args: [{}] label: 'example'.
+	self example: [SBReachabilitySimulatorTest new] args: [{}] label: 'example'.
 	#(21) do: [:num | 5 squared]
 ]
 

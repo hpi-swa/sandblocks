@@ -136,8 +136,8 @@ SBStNumber >> symbols [
 SBStNumber >> valid [
 
 	| stream |
-	SBExample self: [SBStNumber new contents: '43a'] args: [{}] label: 'invalid'.
-	SBExample self: [SBStNumber new contents: '43'] args: [{}] label: 'valid'.
+	self example: [SBStNumber new contents: '43a'] args: [{}] label: 'invalid'.
+	self example: [SBStNumber new contents: '43'] args: [{}] label: 'valid'.
 	stream := self contents readStream.
 	[
 		(ExtendedNumberParser on: stream) nextNumber.

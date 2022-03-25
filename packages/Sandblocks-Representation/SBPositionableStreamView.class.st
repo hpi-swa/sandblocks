@@ -88,8 +88,8 @@ SBPositionableStreamView >> saveTryFixing: aBoolean quick: anotherBoolean [
 SBPositionableStreamView >> stream: aStream [
 
 	| start stop |
-	SBExample
-		self: [SBPositionableStreamView new]
+	self
+		example: [SBPositionableStreamView new]
 		args: [
 			{
 				({1. 2. 3. 4. 5. 8. 12. 2. 14} readStream

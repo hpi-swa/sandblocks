@@ -17,12 +17,12 @@ SBColor class >> instanceSuggestion [
 { #category : #testing }
 SBColor class >> matches: aMessage [
 
-	SBExample
-		self: [SBColor]
+	self
+		example: [SBColor]
 		args: [{(SBStMessageSend new receiver: (SBStName contents: 'Color') selector: #orange)}]
 		label: 'matching'.
-	SBExample
-		self: [SBColor]
+	self
+		example: [SBColor]
 		args: [{(SBStMessageSend new receiver: (SBStName contents: 'Color') selector: #fromUser)}]
 		label: 'non matching'.
 	

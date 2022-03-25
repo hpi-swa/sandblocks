@@ -24,7 +24,7 @@ SBDrawCanvas >> beginDraw [
 SBDrawCanvas >> createStampOfSize: aNumber [
 
 	| form |
-	SBExample self: [SBDrawCanvas basicNew] args: [{32}] label: 'small'.
+	self example: [SBDrawCanvas basicNew] args: [{32}] label: 'small'.
 	form := Form extent: aNumber asPoint depth: 32.
 	form getCanvas
 		fillRectangle: form boundingBox

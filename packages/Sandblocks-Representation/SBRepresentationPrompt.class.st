@@ -108,8 +108,7 @@ SBRepresentationPrompt >> object [
 { #category : #'as yet unclassified' }
 SBRepresentationPrompt >> options: aCollection target: anObject at: aPoint from: aSourceMorph [
 
-	SBExample
-		self: [SBRepresentationPrompt new]
+	self example: [SBRepresentationPrompt new]
 		args: [{5 representationsThat: #isToplevelMorph. 5. nil}]
 		label: 'example'.
 	target := anObject.
@@ -122,8 +121,7 @@ SBRepresentationPrompt >> options: aCollection target: anObject at: aPoint from:
 { #category : #'as yet unclassified' }
 SBRepresentationPrompt >> options: aCollection target: anObject current: aRepresentation [
 
-	SBExample
-		self: [SBRepresentationPrompt new]
+	self example: [SBRepresentationPrompt new]
 		args: [{5 representationsThat: #isToplevelMorph. 5. nil}]
 		label: 'example'.
 	currentRepresentation := SBWatch report: aRepresentation for: 779709522.

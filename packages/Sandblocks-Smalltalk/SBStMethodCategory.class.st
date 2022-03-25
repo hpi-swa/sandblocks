@@ -52,8 +52,7 @@ SBStMethodCategory >> expandAll [
 SBStMethodCategory >> handleDroppedBlock: aBlock event: anEvent adding: aBoolean near: aMorph [
 
 	| insertCommand changeCategoryCommand |
-	SBExample
-		self: [
+	self example: [
 			(SBStMethodCategory new
 				class: FrameRateMorph
 				category: 'stepping and presenter'
