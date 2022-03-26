@@ -1883,13 +1883,30 @@ SBBlock >> object [
 { #category : #'object interface' }
 SBBlock >> objectInterface [
 
-	^ self parentSandblock objectInterfaceNear: self at: #replace
+	^ self parentSandblock objectInterfaceForChild: self
+]
+
+{ #category : #'object interface' }
+SBBlock >> objectInterfaceForChild: aBlock [
+
+	^ self objectInterfaceNear: aBlock at: #replace
 ]
 
 { #category : #'object interface' }
 SBBlock >> objectInterfaceForDrop: aBlock near: anotherBlock at: aSymbol [
 
 	^ self objectInterfaceNear: anotherBlock at: aSymbol
+]
+
+{ #category : #'object interface' }
+SBBlock >> objectInterfaceForInsert: aCommand [
+
+	| adjacent at |
+	at := #before.
+	adjacent := self childSandblocks at: aCommand insertIndex ifAbsent: [
+		at := #after.
+		self childSandblocks last].
+	^ self objectInterfaceNear: adjacent at: at
 ]
 
 { #category : #'object interface' }
