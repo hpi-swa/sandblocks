@@ -594,8 +594,8 @@ SBEditor >> do: aCommand [
 
 	cursor prepareForNextCommand.
 	
-	history do: aCommand previousSelection: self selection selectDo: [:block :artefacts |
-		self select: block.
+	history do: aCommand previousSelection: self selection selectDo: [:block :artefacts :noInput |
+		noInput ifTrue: [self selectNoInput: block] ifFalse: [self select: block].
 		self markChangesAfterCommand: artefacts]
 ]
 
@@ -661,7 +661,7 @@ SBEditor >> endInputWith: aString [
 SBEditor >> endMultiSelection [
 	<action>
 
-	self selection select
+	self selectNoInput: self selection
 ]
 
 { #category : #accessing }
@@ -1480,6 +1480,14 @@ SBEditor >> select: aBlock [
 SBEditor >> selectClick: aBlock at: aPoint [
 
 	self cursor moveCursorClick: aBlock at: aPoint
+]
+
+{ #category : #selection }
+SBEditor >> selectNoInput: aBlock [
+
+	self assert: (aBlock isNil or: [aBlock isSandblock]).
+	
+	self cursor selectNoInput: aBlock
 ]
 
 { #category : #artefacts }

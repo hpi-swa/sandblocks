@@ -785,6 +785,7 @@ SBBlock >> deleteAround [
 			editor copyBuffer: target.
 			self removeProperty: #copyPlaceholder.
 			editor do: (SBReplaceCommand new
+				selectAfter: #block;
 				target: target;
 				replacer: replacer).
 			replacer postDuplicate.
@@ -1047,7 +1048,7 @@ SBBlock >> endMultiSelection [
 	<action>
 	<actionValidIf: #hasMultiSelection>
 
-	self select
+	self sandblockEditor selectNoInput: self
 ]
 
 { #category : #decorators }
@@ -2042,10 +2043,13 @@ SBBlock >> pasteReplace [
 					editor do: ((position container
 						insertCommandRequest: block
 						near: position adjacent
-						before: position before) shouldMergeWithNext: isLast not)]
+						before: position before)
+						shouldMergeWithNext: isLast not;
+						selectAfter: #block)]
 				ifFalse: [
 					index = 1 ifTrue: [
 						editor do: (SBReplaceCommand new
+							selectAfter: #block;
 							target: self;
 							replacer: block)]]]
 		ifWrappingDo: [:block | self wrapSelectionWith: block]
@@ -2741,8 +2745,8 @@ SBBlock >> survivesReload [
 SBBlock >> swap: aNumber [
 
 	| next children offset canSwap |
-	SBExample
-		self: ['3 + 4' parseInMethod receiver]
+	self
+		example: ['3 + 4' parseInMethod receiver]
 		args: [{1}]
 		label: 'example'
 		assert: [[:o | o parentSandblock receiver contents = '4']].
@@ -2754,6 +2758,7 @@ SBBlock >> swap: aNumber [
 	offset = children size ifTrue: [^ self].
 	
 	self sandblockEditor do: (SBSwapCommand new
+		selectAfter: #block;
 		a: self;
 		b: next)
 ]

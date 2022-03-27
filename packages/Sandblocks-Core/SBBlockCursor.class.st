@@ -485,7 +485,9 @@ SBBlockCursor >> select: aBlock [
 { #category : #api }
 SBBlockCursor >> selectNoInput: aBlock [
 
-	self cursorPosition: (SBCursorSelect new block: aBlock) explicitMove: false axis: #none
+	aBlock
+		ifNil: [self cursorPosition: SBCursorNone new explicitMove: false axis: #none]
+		ifNotNil: [self cursorPosition: (SBCursorSelect new block: aBlock) explicitMove: false axis: #none]
 ]
 
 { #category : #private }

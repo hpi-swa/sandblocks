@@ -538,6 +538,7 @@ SBStGrammarHandler >> wrapInToggledCode [
 	self block sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
 	self block sandblockEditor doMultiSelection: [:selected |
 		SBWrapConsecutiveCommand new
+			selectAfter: #block;
 			outer: comment;
 			targets: selected;
 			wrap: [:outer :inner | outer comment: '' active: 0 do: {SBStBlockBody new statements: inner}];
