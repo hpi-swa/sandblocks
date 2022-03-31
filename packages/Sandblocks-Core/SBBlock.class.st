@@ -2684,10 +2684,7 @@ SBBlock >> startInputSubstituting [
 { #category : #'as yet unclassified' }
 SBBlock >> startInsertAtEnd [
 
-	| last |
-	last := nil.
-	self cursorPositionsDo: [:pos | pos isInsert ifTrue: [last := pos]].
-	last ifNotNil: [self sandblockEditor cursor cursorPosition: last explicitMove: true axis: #none]
+	(self sandblockEditor cursor lastInsertPosition: self) ifNotNil: [:last | self sandblockEditor cursor cursorPosition: last explicitMove: true axis: #none]
 ]
 
 { #category : #'as yet unclassified' }

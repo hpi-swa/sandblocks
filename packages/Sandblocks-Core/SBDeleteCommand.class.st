@@ -69,6 +69,12 @@ SBDeleteCommand >> setArtefactFrom [
 ]
 
 { #category : #'as yet unclassified' }
+SBDeleteCommand >> target [
+
+	^ target
+]
+
+{ #category : #'as yet unclassified' }
 SBDeleteCommand >> target: aMorph [
 
 	target := aMorph

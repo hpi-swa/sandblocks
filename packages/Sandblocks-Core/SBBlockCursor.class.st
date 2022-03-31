@@ -177,6 +177,13 @@ SBBlockCursor >> editor: anEditor [
 	editor := anEditor
 ]
 
+{ #category : #hierarchy }
+SBBlockCursor >> firstInsertPosition: aBlock [
+
+	aBlock cursorPositionsDo: [:pos | pos isInsert ifTrue: [^ pos]].
+	^ nil
+]
+
 { #category : #layout }
 SBBlockCursor >> flushLayoutCache [
 
@@ -242,6 +249,15 @@ SBBlockCursor >> insertPositionIn: aBlock near: aPoint [
 SBBlockCursor >> isArtefact [ 
 	
 	^ false
+]
+
+{ #category : #hierarchy }
+SBBlockCursor >> lastInsertPosition: aBlock [
+
+	| last |
+	last := nil.
+	aBlock cursorPositionsDo: [:pos | pos isInsert ifTrue: [last := pos]].
+	^ last
 ]
 
 { #category : #layout }
@@ -407,6 +423,31 @@ SBBlockCursor >> nextVerticalCursor [
 		validBlock: [:candidate | candidate top > current bottom]
 		equalBock: [:candidate :seenCurrent | seenCurrent and: [candidate top = current bottom]]
 		downwards: true
+]
+
+{ #category : #hierarchy }
+SBBlockCursor >> positionAfter: aBlock [
+
+	| found block |
+	found := false.
+	block := aBlock containingSandblock.
+	block containingFloat cursorPositionsDo: [:pos |
+		(found and: [pos block ~= block and: [(pos block hasOwner: block) not]]) ifTrue: [^ pos].
+		pos block = block ifTrue: [found := true]].
+	^ nil
+]
+
+{ #category : #hierarchy }
+SBBlockCursor >> positionBefore: aBlock [
+
+	| last |
+	last := nil.
+	aBlock containingSandblock containingFloat cursorPositionsDo: [:pos |
+		(aBlock isTextMorph
+			ifTrue: [pos isText and: [pos block currentTextMorph = aBlock]]
+			ifFalse: [pos block = aBlock]) ifTrue: [^ last placeAtEnd: true].
+		last := pos].
+	^ nil
 ]
 
 { #category : #api }
