@@ -1,109 +1,118 @@
 Class {
-	#name : #SBInputCommand,
+	#name : #SBTextCommand,
 	#superclass : #SBCommand,
 	#instVars : [
 		'previousText',
 		'newText',
 		'oldMorph',
-		'newMorph'
+		'newMorph',
+		'textMorph'
 	],
-	#category : 'Sandblocks-Core'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> block [
+SBTextCommand >> block [
 
 	^ self oldMorph
 ]
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> contents: aString [
+SBTextCommand >> contents: aString [
 
 	self newText: aString
 ]
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> do [
+SBTextCommand >> do [
 
 	(oldMorph ~= newMorph and: [newMorph owner isNil]) ifTrue: [oldMorph replaceBy: newMorph].
-	self textMorph contents: newText.
+	newMorph contents: newText.
 	^ newMorph
 ]
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> hasChange [
+SBTextCommand >> hasChange [
 
 	^ newText ~= previousText or: [newMorph ~= oldMorph]
 ]
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> newMorph [
+SBTextCommand >> newMorph [
 
 	^ newMorph
 ]
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> newMorph: aMorph [
+SBTextCommand >> newMorph: aMorph [
 
 	newMorph := aMorph
 ]
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> newText [
+SBTextCommand >> newText [
 
 	^ newText
 ]
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> newText: aString [
+SBTextCommand >> newText: aString [
 
 	newText := aString
 ]
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> oldMorph [
+SBTextCommand >> oldMorph [
 
 	^ oldMorph
 ]
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> oldMorph: aMorph [
+SBTextCommand >> oldMorph: aMorph [
 
 	oldMorph := aMorph
 ]
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> previousText [
+SBTextCommand >> previousText [
 
 	^ previousText
 ]
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> previousText: aString [
+SBTextCommand >> previousText: aString [
 
 	previousText := aString
 ]
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> setArtefactFrom [
+SBTextCommand >> setArtefactFrom [
 
 	^ oldMorph
 ]
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> target [
+SBTextCommand >> target [
 
 	^ newMorph ifNil: [oldMorph]
 ]
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> textMorph [
+SBTextCommand >> textMorph [
 
-	^ (newMorph ifNil: [oldMorph]) currentTextMorph
+	^ textMorph
 ]
 
 { #category : #'as yet unclassified' }
-SBInputCommand >> undo [
+SBTextCommand >> textMorph: aMorph [
+
+	textMorph := aMorph.
+	oldMorph := aMorph containingSandblock.
+	previousText := aMorph contents
+]
+
+{ #category : #'as yet unclassified' }
+SBTextCommand >> undo [
 
 	oldMorph = newMorph ifFalse: [newMorph replaceBy: oldMorph].
 	oldMorph contents: previousText.

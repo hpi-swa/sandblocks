@@ -50,6 +50,18 @@ SBJsKeywordBlockInputCommand >> newMorph: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsKeywordBlockInputCommand >> oldMorph [
+
+	^ morph
+]
+
+{ #category : #'as yet unclassified' }
+SBJsKeywordBlockInputCommand >> oldMorph: aMorph [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBJsKeywordBlockInputCommand >> previousContents: aString [
 
 	previousContents := aString
@@ -62,9 +74,21 @@ SBJsKeywordBlockInputCommand >> previousOperands: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsKeywordBlockInputCommand >> previousText: aString [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBJsKeywordBlockInputCommand >> setArtefactFrom [
 
 	^ morph
+]
+
+{ #category : #'as yet unclassified' }
+SBJsKeywordBlockInputCommand >> textMorph [
+
+	^ morph currentTextMorph
 ]
 
 { #category : #'as yet unclassified' }

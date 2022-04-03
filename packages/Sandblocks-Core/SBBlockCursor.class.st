@@ -97,13 +97,13 @@ SBBlockCursor >> cursorAlwaysVisible [
 { #category : #private }
 SBBlockCursor >> cursorForBlock: aBlock at: aPoint [
 
-	^ aBlock startInputCommand
-		ifNotNil: [:command |
-			SBCursorText new
+	aBlock textMorphs do: [:morph |
+		(aPoint isNil or: [morph containsPoint: aPoint]) ifTrue: [
+			^ SBCursorText new
 				block: aBlock;
-				pixelPosition: aPoint;
-				currentCommand: command]
-		ifNil: [self selectOrInsertFor: aBlock near: aPoint]
+				currentCommand: (aBlock startInputCommandIn: morph);
+				pixelPosition: aPoint]].
+	^ self selectOrInsertFor: aBlock near: aPoint
 ]
 
 { #category : #accessing }
@@ -572,8 +572,8 @@ SBBlockCursor >> startInput: aBlock at: aNumber replacingContents: aBoolean [
 			ifNotNil: [:command |
 				SBCursorText new
 					block: aBlock;
-					cursorIndex: aNumber;
 					currentCommand: aBlock startInputCommand;
+					cursorIndex: aNumber;
 					replacingContents: aBoolean]
 			ifNil: [self selectOrInsertFor: aBlock near: nil])
 		explicitMove: aBoolean

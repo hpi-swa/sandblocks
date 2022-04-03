@@ -809,9 +809,10 @@ SBBlock >> deleteBeforeCursor [
 	<inputAction>
 	<actionValidIf: #hasCurrentTextMorph>
 
-	| editor adjacent parent |
-	self currentTextMorph cursor ~= 1 ifTrue: [
-		self currentTextMorph deleteBeforeCursor.
+	| editor adjacent parent textMorph |
+	textMorph := self sandblockEditor currentInputCommand textMorph.
+	textMorph cursor ~= 1 ifTrue: [
+		textMorph deleteBeforeCursor.
 		self updateSuggestions.
 		^ self batchedChangeStep].
 	self symbols first notNil ifTrue: [
@@ -824,12 +825,12 @@ SBBlock >> deleteBeforeCursor [
 	editor := self sandblockEditor.
 	parent := self parentSandblock.
 	
-	adjacent := self currentTextMorph previousMorphThat: [:b | b isTextMorph].
+	adjacent := textMorph previousMorphThat: [:b | b isTextMorph].
 	
 	(adjacent notNil and: [adjacent hasOwner: parent])
 		ifTrue: [ | target |
 			target := adjacent containingSandblock.
-			self currentTextMorph contents isEmpty ifTrue: [
+			textMorph contents isEmpty ifTrue: [
 				self hasChildSandblocks not
 					ifTrue: [self deleteBlock]
 					ifFalse: [(target = self childSandblocks first or: [target hasOwner: self childSandblocks first]) ifTrue: [self childSandblocks first deleteAround]]].
@@ -1613,8 +1614,8 @@ SBBlock >> isWaypoint [
 { #category : #'event handling' }
 SBBlock >> keyStroke: anEvent [
 
-	self currentTextMorph ifNotNil: [:t |
-		t keyStroke: anEvent.
+	self currentTextMorph ifNotNil: [
+		self sandblockEditor currentInputCommand textMorph keyStroke: anEvent.
 		self queueUpdateSuggestionsFocused: true.
 		self batchedChangeStep]
 ]
@@ -2666,12 +2667,17 @@ SBBlock >> startInputAtStart [
 { #category : #input }
 SBBlock >> startInputCommand [
 
-	^ self currentTextMorph
-		ifNotNil: [
-			SBInputCommand new
-				oldMorph: self;
-				previousText: self contents;
-				yourself]
+	^ self currentTextMorph ifNotNil: [
+		SBInputCommand new
+			oldMorph: self;
+			previousText: self currentTextMorph contents;
+			yourself]
+]
+
+{ #category : #input }
+SBBlock >> startInputCommandIn: aTextMorph [
+
+	^ self startInputCommand
 ]
 
 { #category : #actions }
@@ -2707,10 +2713,10 @@ SBBlock >> startOrAddToMultiSelection [
 SBBlock >> stopEditing: aCommand [
 
 	aCommand
-		newText: self contents;
+		newText: aCommand textMorph contents;
 		newMorph: self.
 	
-	self currentTextMorph stopEditing.
+	aCommand textMorph stopEditing.
 	self removeSuggestionMenu
 ]
 
@@ -2794,6 +2800,12 @@ SBBlock >> textContentsForCopy [
 	^ self grammarHandler
 		ifNotNil: [:g | g block: self; textContentsForCopy]
 		ifNil: [self textContents]
+]
+
+{ #category : #accessing }
+SBBlock >> textMorphs [
+
+	^ self currentTextMorph ifNil: [{}] ifNotNil: [:t | {t}]
 ]
 
 { #category : #actions }

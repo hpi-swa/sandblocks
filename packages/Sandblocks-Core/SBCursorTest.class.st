@@ -54,7 +54,7 @@ SBCursorTest >> testCursorKeepsHorizontalOffset [
 		position: 100 @ 20;
 		fullBounds.
 	
-	cursor := editor cursor moveCursorClick: block statements second at: 0 @ 0.
+	cursor := editor cursor moveCursorClick: block statements second at: block statements second currentTextMorph topLeft.
 	self tick.
 	self assert: cursor cursorPosition structure: {#cursorIndex -> 1}.
 	

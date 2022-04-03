@@ -13,7 +13,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBCursorText >> = aPosition [
 
-	^ self class = aPosition class and: [self block = aPosition block]
+	^ self class = aPosition class and: [self block = aPosition block and: [self currentCommand textMorph = aPosition currentCommand textMorph]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -71,7 +71,7 @@ SBCursorText >> cursorIndex [
 { #category : #'as yet unclassified' }
 SBCursorText >> cursorIndex: aNumber [
 
-	cursorIndex := aNumber clampLow: 1 high: self block currentTextMorph contents size + 1
+	cursorIndex := aNumber clampLow: 1 high: self textMorph contents size + 1
 ]
 
 { #category : #'as yet unclassified' }
@@ -94,8 +94,8 @@ SBCursorText >> drawOn: aCanvas in: aRectangle color: aColor [
 { #category : #'as yet unclassified' }
 SBCursorText >> enterWith: aCursor [
 
-	replacingContents ifTrue: [self block currentTextMorph contents: ''].
-	self block currentTextMorph moveCursorTo: self cursorIndex
+	replacingContents ifTrue: [self textMorph contents: ''].
+	self textMorph moveCursorTo: self cursorIndex
 ]
 
 { #category : #'as yet unclassified' }
@@ -115,7 +115,7 @@ SBCursorText >> horizontalOffsetInFloat [
 
 	^ self block containingFloat
 		ifNotNil: [:float | | reference |
-			reference := self block currentTextMorph cursorPosition x.
+			reference := self textMorph cursorPosition x.
 			reference - float left]
 		ifNil: [self block left]
 ]
@@ -139,14 +139,14 @@ SBCursorText >> isText [
 SBCursorText >> leaveIn: anEditor with: aCursor [
 
 	self applyCommandIn: anEditor.
-	self block currentTextMorph stopEditing
+	self textMorph stopEditing
 ]
 
 { #category : #'as yet unclassified' }
 SBCursorText >> maybeUpdateFor: aPosition [
 
 	self cursorIndex: aPosition cursorIndex.
-	self block currentTextMorph moveCursorTo: self cursorIndex
+	self textMorph moveCursorTo: self cursorIndex
 ]
 
 { #category : #'as yet unclassified' }
@@ -164,48 +164,50 @@ SBCursorText >> mode [
 { #category : #'as yet unclassified' }
 SBCursorText >> moveCursorDown: aCursor [
 
-	self block currentTextMorph
-		moveCursorVertically: 1
-		ifAtBound: [super moveCursorDown: aCursor]
+	self textMorph moveCursorVertically: 1 ifAtBound: [super moveCursorDown: aCursor]
 ]
 
 { #category : #'as yet unclassified' }
 SBCursorText >> moveCursorUp: aCursor [
 
-	self block currentTextMorph
-		moveCursorVertically: -1
-		ifAtBound: [super moveCursorUp: aCursor]
+	self textMorph moveCursorVertically: -1 ifAtBound: [super moveCursorUp: aCursor]
 ]
 
 { #category : #'as yet unclassified' }
 SBCursorText >> moveHorizontal: aNumber wordWise: aBoolean [
 
-	self block currentTextMorph
+	self textMorph
 		moveCursor: aNumber
 		ifAtBound: [^ self adjacentPosition: aNumber in: self block sandblockEditor]
 		wordWise: aBoolean.
 	
-	cursorIndex := self block currentTextMorph cursor
+	cursorIndex := self textMorph cursor
 ]
 
 { #category : #'as yet unclassified' }
 SBCursorText >> pixelPosition: aPoint [
 
 	cursorIndex := aPoint
-		ifNotNil: [(self block currentTextMorph cursorIndexForPosition: aPoint) max: 1]
+		ifNotNil: [(self textMorph cursorIndexForPosition: aPoint) max: 1]
 		ifNil: [1]
 ]
 
 { #category : #'as yet unclassified' }
 SBCursorText >> placeAtEnd: aBoolean [
 
-	cursorIndex := aBoolean ifTrue: [self block currentTextMorph contents size + 1] ifFalse: [1]
+	cursorIndex := aBoolean ifTrue: [self textMorph contents size + 1] ifFalse: [1]
 ]
 
 { #category : #'as yet unclassified' }
 SBCursorText >> replaceSelected: aBlock [
 
-	aBlock startInputCommand ifNotNil: [
+	aBlock startInputCommand ifNotNil: [:command |
+		currentCommand ifNotNil: [
+			command
+				newMorph: command oldMorph;
+				oldMorph: currentCommand oldMorph;
+				previousText: currentCommand previousText].
+		currentCommand := command.
 		self block: aBlock.
 		aBlock currentTextMorph moveCursorTo: 900000000]
 ]
@@ -238,4 +240,10 @@ SBCursorText >> selectSmaller [
 SBCursorText >> selectionBounds [
 
 	^ self block bounds
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorText >> textMorph [
+
+	^ currentCommand textMorph
 ]

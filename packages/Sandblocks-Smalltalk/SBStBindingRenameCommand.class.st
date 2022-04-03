@@ -25,7 +25,7 @@ SBStBindingRenameCommand >> do [
 		ifPresent: [:b | b ~= activeMorph ifTrue: [^ super do]].
 	
 	declaration := newMorph isDeclaration
-		ifTrue: [oldMorph contents: previousText]
+		ifTrue: [newMorph contents: previousText]
 		ifFalse: [
 			activeMorph
 				binding: previousText

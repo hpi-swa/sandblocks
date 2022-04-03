@@ -78,6 +78,12 @@ SBJsInfixOpInputCommand >> setArtefactFrom [
 ]
 
 { #category : #'as yet unclassified' }
+SBJsInfixOpInputCommand >> textMorph [
+
+	^ morph currentTextMorph
+]
+
+{ #category : #'as yet unclassified' }
 SBJsInfixOpInputCommand >> undo [
 
 	doRotate ifTrue: [(SBSubtreeRotateCommand new target: undoRotate) do].
