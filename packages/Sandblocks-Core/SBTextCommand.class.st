@@ -27,7 +27,7 @@ SBTextCommand >> contents: aString [
 SBTextCommand >> do [
 
 	(oldMorph ~= newMorph and: [newMorph owner isNil]) ifTrue: [oldMorph replaceBy: newMorph].
-	newMorph contents: newText.
+	textMorph contents: newText.
 	^ newMorph
 ]
 
