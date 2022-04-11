@@ -107,6 +107,13 @@ Morph >> containingSandblock [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Morph >> copyBlock [
+	"return a copy of yourself in the cheapest manner available (falling back to veryDeepCopy)"
+
+	^ self veryDeepCopy
+]
+
+{ #category : #'*Sandblocks-Core' }
 Morph >> cursorPositionsDo: aBlock [
 
 	self cursorPositionsDo: aBlock shallow: false

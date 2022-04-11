@@ -163,6 +163,18 @@ SBSuggestionItem >> printOn: aStream [
 	aStream nextPut: $)
 ]
 
+{ #category : #'string suggestion protocol' }
+SBSuggestionItem >> sandblockBeginsWith: aString [
+
+	^ selector sandblockBeginsWith: aString
+]
+
+{ #category : #'string suggestion protocol' }
+SBSuggestionItem >> sandblockMatch: aString [
+
+	^ selector sandblockMatch: aString
+]
+
 { #category : #accessing }
 SBSuggestionItem >> selector [
 
@@ -186,6 +198,12 @@ SBSuggestionItem >> selector: aString label: anotherString [
 
 { #category : #accessing }
 SBSuggestionItem >> selectorSize [
+
+	^ self selector size
+]
+
+{ #category : #'string suggestion protocol' }
+SBSuggestionItem >> size [
 
 	^ self selector size
 ]
