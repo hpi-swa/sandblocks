@@ -1355,6 +1355,12 @@ SBBlock >> insertEmptyCommandRequestNear: aBlock before: aBoolean [
 			yourself]
 ]
 
+{ #category : #'insert positions' }
+SBBlock >> insertPositions [
+
+	^ Array streamContents: [:stream | self cursorPositionsDo: [:pos | pos isInsert ifTrue: [stream nextPut: pos]]]
+]
+
 { #category : #actions }
 SBBlock >> insertStatementAbove [
 	<action>
@@ -1627,6 +1633,15 @@ SBBlock >> lastDeepChild [
 	current := self.
 	[current childSandblocks isEmpty] whileFalse: [current := current childSandblocks last].
 	^ current
+]
+
+{ #category : #'insert positions' }
+SBBlock >> lastInsertPosition [
+
+	| last |
+	last := nil.
+	self cursorPositionsDo: [:pos | pos isInsert ifTrue: [last := pos]].
+	^ last
 ]
 
 { #category : #layout }
