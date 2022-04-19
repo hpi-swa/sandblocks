@@ -51,6 +51,25 @@ Morph >> asThumbnail: converter [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Morph >> basicCursorPositionsDo: aBlock shallow: aBoolean [
+	" enumerate all possible cursor positions recursively "
+
+	self isSandblock ifTrue: [
+		aBlock value: (SBCursorSelect new block: self).
+		self insertCursorNear: nil before: true do: aBlock].
+	self visibleSubmorphsDo: [:morph |
+		morph isSandblock ifTrue: [self containingSandblock insertCursorNear: morph before: true do: aBlock].
+		morph isTextMorph ifTrue: [
+			morph containingSandblock startInputCommand ifNotNil: [:command |
+				aBlock value: (SBCursorText new
+					block: morph containingSandblock;
+					currentCommand: command)]].
+		(morph isSandblock not or: [aBoolean not]) ifTrue: [morph cursorPositionsDo: aBlock shallow: aBoolean].
+		morph isSandblock ifTrue: [self containingSandblock insertCursorNear: morph before: false do: aBlock]].
+	self isSandblock ifTrue: [self insertCursorNear: nil before: false do: aBlock]
+]
+
+{ #category : #'*Sandblocks-Core' }
 Morph >> blocksAt: aPoint do: aBlock [
 
 	(self fullBounds containsPoint: aPoint) ifFalse: [^ self].
@@ -121,21 +140,8 @@ Morph >> cursorPositionsDo: aBlock [
 
 { #category : #'*Sandblocks-Core' }
 Morph >> cursorPositionsDo: aBlock shallow: aBoolean [
-	" enumerate all possible cursor positions recursively "
 
-	self isSandblock ifTrue: [
-		aBlock value: (SBCursorSelect new block: self).
-		self insertCursorNear: nil before: true do: aBlock].
-	self visibleSubmorphsDo: [:morph |
-		morph isSandblock ifTrue: [self containingSandblock insertCursorNear: morph before: true do: aBlock].
-		morph isTextMorph ifTrue: [
-			morph containingSandblock startInputCommand ifNotNil: [:command |
-				aBlock value: (SBCursorText new
-					block: morph containingSandblock;
-					currentCommand: command)]].
-		(morph isSandblock not or: [aBoolean not]) ifTrue: [morph cursorPositionsDo: aBlock shallow: aBoolean].
-		morph isSandblock ifTrue: [self containingSandblock insertCursorNear: morph before: false do: aBlock]].
-	self isSandblock ifTrue: [self insertCursorNear: nil before: false do: aBlock]
+	self basicCursorPositionsDo: aBlock shallow: aBoolean
 ]
 
 { #category : #'*Sandblocks-Core-geometry-override' }
