@@ -17,7 +17,10 @@ SBSelect >> doubleClick: anEvent [
 		filterEnabled: true;
 		autoCancel: true;
 		yourself.
-	entries withIndexDo: [:ea :index | dialog createButton: ea value value: ea key].
+	entries withIndexDo: [:ea :index | | button |
+		button := dialog createButton: ea value value: ea key.
+		ea value isMorph ifTrue: [button balloonText: ea value balloonText].
+		button].
 	dialog selectedButtonIndex: 1.
 	dialog getUserResponseAtHand ifNotNil: [:choice |
 		self sandblockEditor do: (SBMutatePropertyCommand new
@@ -34,8 +37,22 @@ SBSelect >> entries [
 
 { #category : #'as yet unclassified' }
 SBSelect >> entries: aCollection [
+	"{key -> label. ...}"
 
 	entries := aCollection
+]
+
+{ #category : #'as yet unclassified' }
+SBSelect >> entryMorphs: aCollection [
+	"{{label. image. tooltip} ...}"
+
+	self entries: (aCollection collect: [:tuple |
+		tuple first -> (SBRow new
+			cellGap: 8;
+			cellPositioning: #center;
+			addMorphBack: (SBStringMorph new contents: tuple first);
+			addMorphBack: tuple second;
+			balloonText: tuple third)])
 ]
 
 { #category : #'as yet unclassified' }
@@ -47,6 +64,10 @@ SBSelect >> object [
 { #category : #'as yet unclassified' }
 SBSelect >> object: anObject [
 
-	self contents: (self entries detect: [:pair | pair key = anObject]) value.
+	| label |
+	label := (self entries detect: [:pair | pair key = anObject]) value.
+	label isMorph
+		ifTrue: [self firstSubmorph replaceBy: label]
+		ifFalse: [self contents: label].
 	object := anObject
 ]

@@ -44,5 +44,6 @@ SBRestoreCommand >> setArtefactFrom [
 SBRestoreCommand >> undo [
 
 	restore do: [:pair | pair second addMorph: pair first asElementNumber: pair third].
+	commonOwner allMorphsDo: [:m | m valueOfProperty: #tsReplacementPlaceholder ifPresentDo: [:original | m delete]].
 	^ morphs ifNotEmpty: #first ifEmpty: [nil]
 ]
