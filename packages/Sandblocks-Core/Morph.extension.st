@@ -640,6 +640,18 @@ Morph >> storeOn: aStream [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Morph >> swapWith: aMorph [
+
+	| currentOwner index |
+	currentOwner := self owner.
+	index := currentOwner submorphIndexOf: self.
+	aMorph replaceBy: self.
+	currentOwner addMorph: aMorph asElementNumber: index.
+	aMorph position: self position.
+	^ aMorph
+]
+
+{ #category : #'*Sandblocks-Core' }
 Morph >> topCenter: aPoint [
 
 	self position: aPoint x - (self width // 2) @ aPoint y
