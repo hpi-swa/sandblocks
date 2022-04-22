@@ -239,13 +239,16 @@ SBCursorInsert >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 	
 	anEditor do: command.
 	position := nil.
-	(command respondsTo: #morph)
-		ifTrue: [
-			command morph cursorPositionsDo: [:pos | " pick the first that is not a select, skipping over positions
+	SBToggledCode comment: '' active: 1 do: {
+		[anEditor selection inputContainedUnknown].
+		[
+			(command respondsTo: #morph)
+				ifTrue: [
+					command morph cursorPositionsDo: [:pos | " pick the first that is not a select, skipping over positions
 that would cause the same insert as us"
-			((position isNil or: [position isSelect]) and: [pos isInsert not or: [pos container ~= self container]]) ifTrue: [position := pos]].
-			position ifNotNil: [anEditor cursor cursorPosition: position explicitMove: false axis: #none]]
-		ifFalse: [anEditor selection inputContainedUnknown].
+					((position isNil or: [position isSelect]) and: [pos isInsert not or: [pos container ~= self container]]) ifTrue: [position := pos]].
+					position ifNotNil: [anEditor cursor cursorPosition: position explicitMove: false axis: #none]]
+				ifFalse: [anEditor selection inputContainedUnknown]]}.
 	(command continueAfterInsert: anEvent keyCharacter) ifTrue: [anEditor handle: anEvent].
 	aBlock value
 ]

@@ -97,13 +97,7 @@ SBBlockCursor >> cursorAlwaysVisible [
 { #category : #private }
 SBBlockCursor >> cursorForBlock: aBlock at: aPoint [
 
-	aBlock textMorphs do: [:morph |
-		(aPoint isNil or: [morph containsPoint: aPoint]) ifTrue: [
-			^ SBCursorText new
-				block: aBlock;
-				currentCommand: (aBlock startInputCommandIn: morph);
-				pixelPosition: aPoint]].
-	^ self selectOrInsertFor: aBlock near: aPoint
+	^ (self cursorsForBlock: aBlock at: aPoint) first
 ]
 
 { #category : #accessing }
@@ -157,6 +151,19 @@ SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol 
 SBBlockCursor >> cursorVisible [
 
 	^ cursorShown or: [self cursorAlwaysVisible]
+]
+
+{ #category : #private }
+SBBlockCursor >> cursorsForBlock: aBlock at: aPoint [
+
+	aBlock textMorphs do: [:morph |
+		(aPoint isNil or: [morph containsPoint: aPoint]) ifTrue: [
+			^ {
+				SBCursorText new
+					block: aBlock;
+					currentCommand: (aBlock startInputCommandIn: morph);
+					pixelPosition: aPoint}]].
+	^ self selectOrInsertFor: aBlock near: aPoint
 ]
 
 { #category : #drawing }
@@ -227,22 +234,22 @@ SBBlockCursor >> insertPositionIn: aBlock near: aPoint [
 	aPoint
 		ifNil: [
 			aBlock
-				cursorPositionsDo: [:pos | (pos class = SBCursorInsert and: [pos container containingSandblock = aBlock and: [pos secondaryInsertPosition not]]) ifTrue: [^ pos]]
+				cursorPositionsDo: [:pos | (pos class = SBCursorInsert and: [pos container containingSandblock = aBlock and: [pos secondaryInsertPosition not]]) ifTrue: [^ {pos}]]
 				shallow: true]
 		ifNotNil: [ | best bestDistance |
-			best := nil.
+			best := OrderedCollection new.
 			bestDistance := 20.
 			aBlock
 				cursorPositionsDo: [:pos | | distance |
 					(pos class = SBCursorInsert and: [
 						pos container containingSandblock = aBlock and: [
 							distance := pos minimalBounds distanceTo: aPoint.
-							distance < bestDistance]]) ifTrue: [
-						best := pos.
+							distance <= bestDistance]]) ifTrue: [
+						distance = bestDistance ifTrue: [best add: pos] ifFalse: [best := OrderedCollection with: pos].
 						bestDistance := distance]]
 				shallow: true.
 			^ best].
-	^ nil
+	^ {}
 ]
 
 { #category : #'as yet unclassified' }
@@ -536,7 +543,7 @@ SBBlockCursor >> selectOrInsertFor: aBlock near: aPoint [
 
 	^ (aBlock dynamicNumberOfChildren
 		ifTrue: [self insertPositionIn: aBlock near: aPoint]
-		ifFalse: [nil]) ifNil: [SBCursorSelect new block: aBlock]
+		ifFalse: [{}]) ifEmpty: [{SBCursorSelect new block: aBlock}]
 ]
 
 { #category : #accessing }
@@ -575,7 +582,7 @@ SBBlockCursor >> startInput: aBlock at: aNumber replacingContents: aBoolean [
 					currentCommand: aBlock startInputCommand;
 					cursorIndex: aNumber;
 					replacingContents: aBoolean]
-			ifNil: [self selectOrInsertFor: aBlock near: nil])
+			ifNil: [(self selectOrInsertFor: aBlock near: nil) first])
 		explicitMove: aBoolean
 		axis: #none
 ]

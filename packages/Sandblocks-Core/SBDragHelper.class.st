@@ -112,11 +112,9 @@ SBDragHelper >> dropLocation: dropLocation [
 	currentDropLocation := dropLocation.
 	
 	dropLocation ifNotNil: [
-		dropLocation first = #insert ifTrue: [self dropLocationForInsert: dropLocation].
+		dropLocation first = #insert ifTrue: [self hintInsert: dropLocation second command].
 		dropLocation first = #replace ifTrue: [self dropLocationForReplace: dropLocation].
-		dropLocation first = #special ifTrue: [self dropLocationForSpecial: dropLocation]].
-	
-	SBPreferences previewDropInsert ifTrue: [self ensurePositionOfFloats]
+		dropLocation first = #special ifTrue: [self dropLocationForSpecial: dropLocation]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -132,14 +130,16 @@ SBDragHelper >> dropLocationForInsert: aDropLocation [
 { #category : #'as yet unclassified' }
 SBDragHelper >> dropLocationForReplace: dropLocation [
 
-	(morph isMorph and: [morph wrapsAround and: [morph satisfies: dropLocation second objectInterface]]) ifTrue: [
-		dropLocation second convertedFor: morph copyPlaceholder objectInterface do: [:res |
-			self hintWrap: morph around: dropLocation second as: res.
-			^ true]].
+	(morph isMorph and: [morph wrapsAround and: [morph satisfies: dropLocation second block objectInterface]]) ifTrue: [
+		dropLocation second block
+			convertedFor: morph copyPlaceholder objectInterface
+			do: [:res |
+				self hintWrap: morph around: dropLocation second block as: res.
+				^ true]].
 	
 	" try replace then "
-	morph convertedFor: dropLocation second objectInterface do: [:res |
-		self hintReplaceOf: dropLocation second with: res.
+	morph convertedFor: dropLocation second block objectInterface do: [:res |
+		self hintReplaceOf: dropLocation second block with: res.
 		^ true].
 	
 	^ false
@@ -173,6 +173,25 @@ SBDragHelper >> ensurePositionOfFloats [
 		blockBounds at: morph ifPresent: [:fixedBounds | | localBounds |
 			localBounds := morph bounds: fixedBounds from: editor world.
 			morph bounds ~= localBounds ifTrue: [morph bounds: localBounds]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBDragHelper >> hintInsert: aCommand [
+
+	| insertPreviewMarker aChildBlock |
+	self assert: aCommand notNil.
+	insertPreviewMarker := SBDropInsertMarker new
+		color: (aCommand container colorPolicy dropMarkerColorFor: aCommand);
+		bounds: (aCommand container transformFromWorld transformRect: aCommand insertBounds);
+		openInWorld.
+	
+	onMove := [:event | (aChildBlock notNil and: [insertPreviewMarker notNil and: [aChildBlock floating]]) ifTrue: [insertPreviewMarker center: event position]].
+	onLeave := [insertPreviewMarker delete].
+	onApply := [:event | | localPoint |
+		localPoint := (editor canvas canvasTransform globalPointToLocal: event position) asIntegerPoint.
+		aCommand morph position: localPoint.
+		editor do: aCommand.
+		aCommand morph inputContainedUnknown]
 ]
 
 { #category : #'as yet unclassified' }
@@ -247,22 +266,16 @@ SBDragHelper >> mouseMove: anEvent [
 	| blockAtCursor dropLocation |
 	blockAtCursor := self blockAtPoint: anEvent position.
 	
-	dropLocation := blockAtCursor
-		ifNotNil: [
-			(blockAtCursor specialDropCommand: morph)
-				ifNotNil: [{#special. blockAtCursor}]
-				ifNil: [
-					blockAtCursor fixedNumberOfChildren
-						ifTrue: [{#replace. blockAtCursor}]
-						ifFalse: [
-							self closestAdjacentTo: anEvent position in: blockAtCursor do: [:adjacent :before |
-								(morph
-									convertedFor: (blockAtCursor
-										objectInterfaceForDrop: morph
-										near: adjacent
-										at: (before ifTrue: [#before] ifFalse: [#after]))
-									do: [:res | {#insert. blockAtCursor. adjacent. before. res}]) ifNil: [{#replace. blockAtCursor}]]]]]
-		ifNil: [#(#none nil)].
+	blockAtCursor ifNotNil: [ | event |
+		event := anEvent transformedBy: (editor childSandblocks first transformedFrom: self).
+		(editor cursor cursorsForBlock: blockAtCursor at: event position) do: [:cursor |
+			cursor isInsert ifTrue: [
+				morph convertedFor: (blockAtCursor objectInterfaceForInsert: cursor command) do: [:res |
+					cursor command morph: res.
+					dropLocation := {#insert. cursor}]].
+			cursor isSelect ifTrue: [dropLocation := {#replace. cursor}]]].
+	
+	dropLocation ifNil: [dropLocation := #(#none nil)].
 	
 	(currentDropLocation hasEqualElements: dropLocation) ifFalse: [self dropLocation: dropLocation].
 	onMove ifNotNil: [onMove value: anEvent]
