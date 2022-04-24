@@ -15,6 +15,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBAlgebraCommand class >> addIndent [
+
+	^ self new type: #addIndent
+]
+
+{ #category : #'as yet unclassified' }
 SBAlgebraCommand class >> container [
 
 	^ self new type: #container
@@ -66,6 +72,12 @@ SBAlgebraCommand class >> morph [
 SBAlgebraCommand class >> noop [
 
 	^ self new type: #noop
+]
+
+{ #category : #'as yet unclassified' }
+SBAlgebraCommand class >> removeIndent [
+
+	^ self new type: #removeIndent
 ]
 
 { #category : #'as yet unclassified' }

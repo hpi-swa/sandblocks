@@ -125,6 +125,8 @@ SBAlgebraLayout >> layoutDocument: command at: aState limit: maxRight wrap: aWra
 			command data
 				inject: aState
 				into: [:s :el | self layoutDocument: el at: s limit: maxRight wrap: fits not]].
+		[#addIndent] -> [aState startX: aState startX + self indent].
+		[#removeIndent] -> [aState startX: aState startX - self indent].
 		[#indent] -> [
 			state := aState startX: aState startX + self indent.
 			state := self
@@ -238,6 +240,8 @@ SBAlgebraLayout >> lineFitsDocument: command at: aState limit: maxRight ifNot: a
 				aState placeSized: (state containerExtentFrom: aState)].
 			[#hardLine] -> [aState newLineWithGap: command withGap].
 			[#softLine] -> [aState].
+			[#addIndent] -> [aState].
+			[#removeIndent] -> [aState].
 			[#softLineOrGap] -> [aState offset: aState offset + (self gap @ 0)].
 			[#gap] -> [aState offset: aState offset + (self gap @ 0)].
 			[#morph] -> [aState placeSized: command data minExtent].
