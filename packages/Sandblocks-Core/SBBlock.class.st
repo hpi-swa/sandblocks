@@ -1487,7 +1487,7 @@ SBBlock >> isExpression [
 { #category : #'testing hierarchy' }
 SBBlock >> isFirstChild [
 
-	^ self parentSandblock childSandblocks first = self
+	self parentSandblock childSandblocksDo: [:c | ^ c = self]
 ]
 
 { #category : #'testing hierarchy' }

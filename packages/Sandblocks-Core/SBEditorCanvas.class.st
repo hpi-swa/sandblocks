@@ -22,7 +22,7 @@ SBEditorCanvas >> addMorphToOverlay: aMorph [
 { #category : #'as yet unclassified' }
 SBEditorCanvas >> addedMorph: aMorph [
 
-	aMorph isSandblock ifTrue: [
+	(aMorph isSandblock and: [aMorph preventOcclusion]) ifTrue: [
 		self sandblockEditor activateForces.
 		aMorph attachDecorator: SBIndicatorDecorator new]
 ]
