@@ -1034,6 +1034,12 @@ SBEditor >> multiSelectionIsConsecutive [
 	^ true
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> newEmptyChildNear: aBlock before: aBoolean [
+
+	^ SBUnknown new
+]
+
 { #category : #accessing }
 SBEditor >> newSelectionContainer [
 

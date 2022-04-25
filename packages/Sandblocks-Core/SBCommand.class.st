@@ -183,6 +183,19 @@ SBCommand >> insertBoundsWithSize: aNumber [
 ]
 
 { #category : #'insert commands' }
+SBCommand >> insertBoundsWithSize: aNumber near: aPoint [
+
+	^ self container
+		ifNotNil: [:c |
+			self class
+				boundsWithSize: aNumber
+				in: c
+				index: self insertIndex
+				horizontal: self hasHorizontalLayout]
+		ifNil: [0 @ 0 extent: 0 @ 0]
+]
+
+{ #category : #'insert commands' }
 SBCommand >> insertIndex [
 
 	^ 1

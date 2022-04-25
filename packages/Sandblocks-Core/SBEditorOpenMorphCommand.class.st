@@ -20,6 +20,12 @@ SBEditorOpenMorphCommand >> applyLayoutProperties: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBEditorOpenMorphCommand >> container [
+
+	^ self editor
+]
+
+{ #category : #'as yet unclassified' }
 SBEditorOpenMorphCommand >> do [
 
 	self applyLayoutProperties: morph.
@@ -60,9 +66,21 @@ SBEditorOpenMorphCommand >> editor: anEditor [
 ]
 
 { #category : #'as yet unclassified' }
+SBEditorOpenMorphCommand >> insertBoundsWithSize: aNumber near: aPoint [
+
+	^ aPoint extent: 0 @ 0
+]
+
+{ #category : #'as yet unclassified' }
 SBEditorOpenMorphCommand >> isUnsaved: aBoolean [
 
 	isUnsaved := aBoolean
+]
+
+{ #category : #'as yet unclassified' }
+SBEditorOpenMorphCommand >> morph [
+
+	^ morph
 ]
 
 { #category : #'as yet unclassified' }

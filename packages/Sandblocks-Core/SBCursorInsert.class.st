@@ -50,7 +50,7 @@ SBCursorInsert >> block [
 { #category : #'as yet unclassified' }
 SBCursorInsert >> bounds [
 
-	^ self boundsWithWidth: self lineWidth
+	^ self boundsWithWidth: self lineWidth near: 0 @ 0
 ]
 
 { #category : #'as yet unclassified' }
@@ -60,9 +60,9 @@ SBCursorInsert >> bounds: aRectangle [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorInsert >> boundsWithWidth: aNumber [
+SBCursorInsert >> boundsWithWidth: aNumber near: aPoint [
 
-	^ command insertBoundsWithSize: aNumber
+	^ command insertBoundsWithSize: aNumber near: aPoint
 ]
 
 { #category : #'as yet unclassified' }
@@ -177,7 +177,13 @@ SBCursorInsert >> lineWidth [
 { #category : #'as yet unclassified' }
 SBCursorInsert >> minimalBounds [
 
-	^ self boundsWithWidth: 0
+	^ self boundsWithWidth: 0 near: 0 @ 0
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorInsert >> minimalBoundsNear: aPoint [
+
+	^ self boundsWithWidth: 0 near: aPoint
 ]
 
 { #category : #'as yet unclassified' }

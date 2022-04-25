@@ -107,7 +107,10 @@ SBDragHelper >> dropLocation: dropLocation [
 	currentDropLocation ifNotNil: [
 		onLeave ifNotNil: [
 			onLeave value.
-			onLeave := nil]].
+			onLeave := nil].
+		onLeave := nil.
+		onApply := nil.
+		onMove := nil].
 	
 	currentDropLocation := dropLocation.
 	
@@ -189,7 +192,7 @@ SBDragHelper >> hintInsert: aCommand [
 	onLeave := [insertPreviewMarker delete].
 	onApply := [:event | | localPoint |
 		localPoint := (editor canvas canvasTransform globalPointToLocal: event position) asIntegerPoint.
-		aCommand morph position: localPoint.
+		aCommand position: localPoint.
 		editor do: aCommand.
 		aCommand morph inputContainedUnknown]
 ]
@@ -267,13 +270,17 @@ SBDragHelper >> mouseMove: anEvent [
 	blockAtCursor := self blockAtPoint: anEvent position.
 	
 	blockAtCursor ifNotNil: [ | event |
-		event := anEvent transformedBy: (editor childSandblocks first transformedFrom: self).
-		(editor cursor cursorsForBlock: blockAtCursor at: event position) do: [:cursor |
-			cursor isInsert ifTrue: [
-				morph convertedFor: (blockAtCursor objectInterfaceForInsert: cursor command) do: [:res |
-					cursor command morph: res.
-					dropLocation := {#insert. cursor}]].
-			cursor isSelect ifTrue: [dropLocation := {#replace. cursor}]]].
+		(blockAtCursor specialDropCommand: morph)
+			ifNotNil: [dropLocation := {#special. blockAtCursor}]
+			ifNil: [
+				event := anEvent transformedBy: (editor childSandblocks first transformedFrom: self).
+				self haltOnce.
+				(editor cursor cursorsForBlock: blockAtCursor at: event position) do: [:cursor |
+					cursor isInsert ifTrue: [
+						morph convertedFor: (blockAtCursor objectInterfaceForInsert: cursor command) do: [:res |
+							cursor command morph: res.
+							dropLocation := {#insert. cursor}]].
+					cursor isSelect ifTrue: [dropLocation := {#replace. cursor}]]]].
 	
 	dropLocation ifNil: [dropLocation := #(#none nil)].
 	

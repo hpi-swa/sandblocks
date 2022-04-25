@@ -29,7 +29,7 @@ SBRestoreCommand >> notePositions [
 	restore ifNotNil: [^ morphs ifNotEmpty: #first ifEmpty: [nil]].
 	
 	set := morphs asSet.
-	order := Array streamContents: [:stream | commonOwner allMorphsDo: [:morph | (set remove: morph ifAbsent: [nil]) ifNotNil: [stream nextPut: morph]]].
+	order := Array streamContents: [:stream | commonOwner allMorphsDo: [:morph | (set remove: morph ifAbsent: [nil]) ifNotNil: [morph owner ifNotNil: [stream nextPut: morph]]]].
 	restore := order collect: [:morph | {morph. morph owner. morph submorphIndex}].
 	^ morphs ifNotEmpty: #first ifEmpty: [nil]
 ]
