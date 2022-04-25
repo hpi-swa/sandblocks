@@ -152,7 +152,7 @@ SBCursorText >> maybeUpdateFor: aPosition [
 { #category : #'as yet unclassified' }
 SBCursorText >> minimalBounds [
 
-	^ self block bounds
+	^ self textMorph bounds
 ]
 
 { #category : #'as yet unclassified' }

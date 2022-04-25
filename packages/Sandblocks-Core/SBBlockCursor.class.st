@@ -56,9 +56,9 @@ SBBlockCursor >> adjacentVerticalCursorCalcDistance: aDistBlock validBlock: aVal
 		previousInsert := nil.
 		float cursorPositionsDo: [:pos | | validPosition |
 			pos = cursorPosition ifTrue: [seenCurrent := true].
-			validPosition := (previousInsert isNil or: [previousInsert isDistinctFrom: pos]) and: [(((aValidBlock value: pos) or: [anEqualBlock value: pos value: seenCurrent]) and: [pos class ~= SBCursorInsert or: [pos hasHorizontalLayout not or: [pos container hasChildSandblocks not]]]) and: [pos class ~= SBCursorSelect or: [pos block hasChildSandblocks not and: [pos block currentTextMorph isNil and: [pos block fixedNumberOfChildren]]]]].
+			validPosition := (previousInsert isNil or: [previousInsert isDistinctFrom: pos]) and: [(((aValidBlock value: pos) or: [anEqualBlock value: pos value: seenCurrent]) and: [pos isInsert not or: [pos hasHorizontalLayout not or: [pos container hasChildSandblocks not]]]) and: [pos isSelect not or: [pos block hasChildSandblocks not and: [pos block currentTextMorph isNil and: [pos block fixedNumberOfChildren]]]]].
 			(validPosition and: [pos ~= cursorPosition]) ifTrue: [stream nextPut: pos].
-			validPosition ifTrue: [(pos isKindOf: SBCursorInsert) ifTrue: [previousInsert := pos]]]].
+			validPosition ifTrue: [pos isInsert ifTrue: [previousInsert := pos]]]].
 	aBoolean ifFalse: [allCandidates reverseInPlace].
 	candidates := OrderedCollection new.
 	candidatesBestDistance := 900000000.
