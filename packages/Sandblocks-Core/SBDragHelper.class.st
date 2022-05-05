@@ -36,7 +36,7 @@ SBDragHelper >> applyHintAt: anEvent [
 
 	onLeave ifNotNil: [onLeave value].
 	onMove := nil.
-	transferContainer applyDrag.
+	transferContainer isSandblock ifTrue: [transferContainer applyDrag].
 	^ onApply
 		ifNotNil: [
 			onApply cull: anEvent.
