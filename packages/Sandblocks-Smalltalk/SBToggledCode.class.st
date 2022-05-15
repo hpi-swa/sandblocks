@@ -226,6 +226,12 @@ SBToggledCode >> newEmptyChildNear: aBlock before: aBoolean [
 	^ self buildRowFor: SBStBlockBody empty active: false
 ]
 
+{ #category : #'as yet unclassified' }
+SBToggledCode >> objectInterfaceNear: aBlock at: aSymbol [
+
+	^ SBInterfaces stBlock
+]
+
 { #category : #accessing }
 SBToggledCode >> optionRows [
 

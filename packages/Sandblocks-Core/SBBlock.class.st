@@ -494,12 +494,11 @@ SBBlock >> clearCacheSelf [
 SBBlock >> clearInput [
 	<action>
 
-	self hasCurrentTextMorph
+	(self hasCurrentTextMorph and: [self hasChildSandblocks not])
 		ifTrue: [
 			self hasInput
 				ifTrue: [self contents: '']
-				ifFalse: [
-					self sandblockEditor startInput: self at: 1 replacingContents: true]]
+				ifFalse: [self sandblockEditor startInput: self at: 1 replacingContents: true]]
 		ifFalse: [self changeToUnknown]
 ]
 
