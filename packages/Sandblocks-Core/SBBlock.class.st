@@ -1882,10 +1882,7 @@ SBBlock >> nextVerticalNear: aNumber calcDistance: aDistBlock validBlock: aValid
 SBBlock >> noteNewOwner: aMorph [
 
 	super noteNewOwner: aMorph.
-	self decorators copy do: [:decorator |
-		decorator noteNewOwner: aMorph.
-		
-		].
+	self decorators copy do: [:decorator | decorator noteNewOwner: aMorph].
 	self clearCache
 ]
 
