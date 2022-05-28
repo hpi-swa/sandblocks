@@ -54,7 +54,7 @@ SBDragHelper >> blockAtPoint: aPoint [
 	SBPreferences previewDropInsert
 		ifFalse: [
 			editor morphsAt: aPoint unlocked: true do: [:morph |
-				morph bounds area < bestArea ifTrue: [
+				(morph bounds area < bestArea and: [editor cursor ~= morph]) ifTrue: [
 					best := morph.
 					bestArea := morph bounds area]]]
 		ifTrue: [

@@ -143,7 +143,7 @@ SBTextBubble >> initialize [
 { #category : #'as yet unclassified' }
 SBTextBubble >> keyStroke: anEvent [
 
-	text keyStroke: anEvent.
+	super keyStroke: anEvent.
 	self triggerEvent: #keyStroke with: anEvent
 ]
 

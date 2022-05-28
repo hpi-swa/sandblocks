@@ -113,7 +113,7 @@ SBTest >> assert: anObject structure: aCollection [
 { #category : #support }
 SBTest >> editorAndWorldFor: aBlock [
 
-	| editor worldSize |
+	| editor worldSize hand |
 	worldSize := 300 @ 200.
 	world := (PasteUpMorph newWorldForProject: nil)
 		extent: worldSize;
@@ -122,6 +122,10 @@ SBTest >> editorAndWorldFor: aBlock [
 	(world instVarNamed: #worldState)
 		instVarNamed: #canvas
 		put: (Form extent: worldSize depth: 32) getCanvas.
+	hand := HandMorphForEventTests new.
+	world
+		removeHand: world firstHand;
+		addHand: hand.
 	
 	editor := self editorFor: aBlock.
 	editor openInWorld: world.

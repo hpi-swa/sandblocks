@@ -1918,7 +1918,7 @@ SBBlock >> objectInterfaceForInsert: aCommand [
 	at := #before.
 	adjacent := self childSandblocks at: aCommand insertIndex ifAbsent: [
 		at := #after.
-		self childSandblocks last].
+		self hasChildSandblocks ifTrue: [self childSandblocks last] ifFalse: [nil]].
 	^ self objectInterfaceNear: adjacent at: at
 ]
 
@@ -2045,17 +2045,15 @@ SBBlock >> pasteReplace [
 	editor := self sandblockEditor.
 	position := editor cursor cursorPosition.
 	editor
-		copyBufferForContext: ((position isKindOf: SBCursorInsert)
-			ifTrue: [position objectInterface]
+		copyBufferForContext: (position isInsert
+			ifTrue: [position container objectInterfaceForInsert: position command]
 			ifFalse: [self objectInterface])
-		reversed: ((position isKindOf: SBCursorInsert) and: [position adjacent notNil])
+		reversed: (position isInsert and: [position adjacent notNil])
 		do: [:block :index :isLast |
-			(position isKindOf: SBCursorInsert)
+			position isInsert
 				ifTrue: [
-					editor do: ((position container
-						insertCommandRequest: block
-						near: position adjacent
-						before: position before)
+					editor do: (position command copy
+						morph: block;
 						shouldMergeWithNext: isLast not;
 						selectAfter: #block)]
 				ifFalse: [

@@ -14,6 +14,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> basicCursor: aNumber [
+
+	cursor := aNumber
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> bold [
 
 	self emphasis: TextEmphasis bold
@@ -96,7 +102,7 @@ SBOwnTextMorph >> cursor [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> cursor: aNumber [
 
-	cursor := aNumber.
+	self basicCursor: aNumber.
 	
 	self sandblockEditor ifNil: [true] ifNotNil: [:e | e cursor resetBlink].
 	
