@@ -13,10 +13,7 @@ SBTestMarker class >> allTestSelectors [
 { #category : #'as yet unclassified' }
 SBTestMarker class >> examplesFromMethod: method [
 
-	^ Array streamContents: [:stream |
-		method methodNode body statements doWithIndex: [:node :index |
-			(node isMessageNode and: [
-				node receiver isVariableNode and: [node receiver name = 'SBExample' and: [node selector key = #self:args:label:assert:]]]) ifTrue: [stream nextPut: node]]]
+	^ Array streamContents: [:stream | method methodNode body statements withIndexDo: [:node :index | (node isMessageNode and: [node receiver isVariableNode and: [node receiver name = 'SBExample' and: [node selector key = #self:args:label:assert:]]]) ifTrue: [stream nextPut: node]]]
 ]
 
 { #category : #'as yet unclassified' }

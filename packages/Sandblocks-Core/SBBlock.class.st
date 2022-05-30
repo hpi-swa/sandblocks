@@ -91,7 +91,7 @@ SBBlock >> addBlock: aBlock [
 { #category : #'as yet unclassified' }
 SBBlock >> allBlocksDetect: aBlock [
 
-	self allBlocksDetect: aBlock ifFound: [:b | b] ifNone: [self error: 'no such block']
+	^ self allBlocksDetect: aBlock ifFound: [:b | b] ifNone: [self error: 'no such block']
 ]
 
 { #category : #hierarchy }
