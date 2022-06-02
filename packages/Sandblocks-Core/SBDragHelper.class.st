@@ -274,7 +274,6 @@ SBDragHelper >> mouseMove: anEvent [
 			ifNotNil: [dropLocation := {#special. blockAtCursor}]
 			ifNil: [
 				event := anEvent transformedBy: (editor childSandblocks first transformedFrom: self).
-				self haltOnce.
 				(editor cursor cursorsForBlock: blockAtCursor at: event position) do: [:cursor |
 					cursor isInsert ifTrue: [
 						morph convertedFor: (blockAtCursor objectInterfaceForInsert: cursor command) do: [:res |

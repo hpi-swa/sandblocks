@@ -25,14 +25,16 @@ SBScmParser >> parseExpression [
 
 	| c |
 	c := stream peek.
-	^ c = $( ifTrue: [self parseSExpression] ifFalse: [self parseLiteral]
+	^ ({$[. ${. $(} includes: c)
+		ifTrue: [self parseSExpression]
+		ifFalse: [self parseLiteral]
 ]
 
 { #category : #'as yet unclassified' }
 SBScmParser >> parseLiteral [
 
 	| contents endCheck |
-	(stream size - stream position) >= 2 ifTrue: [
+	stream size - stream position >= 2 ifTrue: [
 		(stream next: 2) = '''(' ifTrue: [
 			stream peek = $) ifTrue: [
 				SBToggledCode comment: '()' active: 1 do: {[stream next: 1]}.
@@ -42,9 +44,11 @@ SBScmParser >> parseLiteral [
 		stream
 			back;
 			back].
-	endCheck := stream peek caseOf: {[$"] -> [[:c | c = $"]]} otherwise: [[:c | c isSeparator or: [c = $) or: [c = $(]]]].
-	contents := String streamContents: [:str |
-		[str nextPut: stream next] doWhileTrue: [stream peek notNil and: [(endCheck value: stream peek) not]]].
+	endCheck := stream peek
+		caseOf: {
+			[$"] -> [[:c | c = $"]]}
+		otherwise: [[:c | c isSeparator or: [({$]. $}. $)} includes: c) or: [{$[. ${. $(} includes: c]]]].
+	contents := String streamContents: [:str | [str nextPut: stream next] doWhileTrue: [stream peek notNil and: [(endCheck value: stream peek) not]]].
 	(contents first isDigit or: [contents first = $-]) ifTrue: [^ SBScmNumber new contents: contents].
 	contents first = $' ifTrue: [^ SBScmSymbol new contents: contents allButFirst].
 	contents first = $" ifTrue: [
@@ -56,11 +60,15 @@ SBScmParser >> parseLiteral [
 { #category : #'as yet unclassified' }
 SBScmParser >> parseSExpression [
 
-	| sexpr |
-	SBToggledCode comment: '(' active: 1 do: {[stream next]}.
+	| sexpr char end |
+	SBToggledCode comment: '(' active: 1 do: {[char := stream next]}.
 	sexpr := SBScmExpression new.
 	self skipWhitespacesOn: sexpr.
-	[stream peek ~= $)] whileTrue: [
+	end := char caseOf: {
+		[$(] -> [$)].
+		[${] -> [$}].
+		[$[] -> [$]]}.
+	[stream peek ~= end] whileTrue: [
 		self skipWhitespacesOn: sexpr.
 		sexpr addMorphBack: self parseExpression.
 		self skipWhitespacesOn: sexpr].

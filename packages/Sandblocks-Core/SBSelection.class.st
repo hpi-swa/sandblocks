@@ -80,6 +80,12 @@ SBSelection >> drawnColor [
 ]
 
 { #category : #'as yet unclassified' }
+SBSelection >> emphasis [
+
+	^ TextEmphasis normal
+]
+
+{ #category : #'as yet unclassified' }
 SBSelection >> evaluate [
 
 	^ self submorphCount = 1

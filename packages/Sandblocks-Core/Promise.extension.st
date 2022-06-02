@@ -8,7 +8,7 @@ Promise class >> all: aCollection [
 	pending := aCollection size.
 	grouped := Promise new.
 	result := aCollection copy.
-	aCollection doWithIndex: [:promise :index |
+	aCollection withIndexDo: [:promise :index |
 		promise
 			whenResolved: [:value |
 				pending := pending - 1.

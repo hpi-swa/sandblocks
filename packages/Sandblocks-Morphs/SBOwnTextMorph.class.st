@@ -249,6 +249,14 @@ SBOwnTextMorph >> drawString: aString on: aCanvas at: aPoint font: aFont color: 
 ]
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> effectiveEmphasis [
+
+	^ self emphasis == #derive
+		ifTrue: [self containingSandblock emphasis]
+		ifFalse: [self emphasis]
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> emphasis [
 
 	^ emphasis
@@ -277,8 +285,7 @@ SBOwnTextMorph >> font: aFont [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> fontToUse [
 
-	^ (font ifNil: [TextStyle defaultFont])
-		emphasized: (self emphasis == #derive ifTrue: [self containingSandblock emphasis] ifFalse: [self emphasis]) emphasisCode
+	^ (font ifNil: [TextStyle defaultFont]) emphasized: self effectiveEmphasis emphasisCode
 ]
 
 { #category : #'as yet unclassified' }

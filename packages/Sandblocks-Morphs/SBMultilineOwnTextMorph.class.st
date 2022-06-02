@@ -236,7 +236,7 @@ SBMultilineOwnTextMorph >> paragraph [
 
 	^ paragraph ifNil: [ | cursors |
 		paragraph := NewParagraph new
-			compose: self contents asText
+			compose: (self contents asText addAttribute: self effectiveEmphasis)
 				style: TextStyle default
 				from: 1
 				in: (self position extent: (maxWidth ifNil: [9999]) @ 9999);
