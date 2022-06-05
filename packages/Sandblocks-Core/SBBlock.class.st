@@ -862,7 +862,7 @@ SBBlock >> deleteBlockWithCopy [
 	blocks := self sandblockEditor multiSelection.
 	editor := self sandblockEditor.
 	self deleteBlock.
-	editor copyBuffer: blocks
+	editor copyBuffer: blocks preferQuick: true
 ]
 
 { #category : #'insert/delete' }

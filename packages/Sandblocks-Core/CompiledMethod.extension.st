@@ -40,3 +40,11 @@ CompiledMethod >> open: convert [
 	
 	convert do: [self asSandblock]
 ]
+
+{ #category : #'*Sandblocks-Core' }
+CompiledMethod >> openTS: convert [
+	<convert>
+	<convertPriority: 1>
+
+	convert do: [SBTSSmalltalk parseToplevel: self getSource asString]
+]

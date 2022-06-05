@@ -51,7 +51,7 @@ SBDeleteCommand >> nextBlockFrom: aMorph [
 SBDeleteCommand >> removeConnectionsFor: aBlock [
 
 	oldConnections := Array streamContents: [:stream |
-		aBlock isBlock ifTrue: [aBlock allConnectionsDo: [:m |
+		aBlock isSandblock ifTrue: [aBlock allConnectionsDo: [:m |
 			stream nextPut: m]]].
 	oldConnections do: [:m | m delete]
 ]
