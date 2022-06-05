@@ -162,14 +162,6 @@ SBGrammarHandler >> suggestionsFor: aBlock [
 	^ #()
 ]
 
-{ #category : #actions }
-SBGrammarHandler >> textContentsForCopy [
-
-	^ (self block respondsTo: #prettySourceString)
-		ifTrue: [self block prettySourceString]
-		ifFalse: [self block sourceString]
-]
-
 { #category : #'callback helpers' }
 SBGrammarHandler >> tryDelete: aBlock [
 

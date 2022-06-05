@@ -254,7 +254,7 @@ SBStPlayground >> textContents [
 ]
 
 { #category : #'as yet unclassified' }
-SBStPlayground >> textContentsForCopy [
+SBStPlayground >> textContentsForCopyPreferQuick: aBoolean [
 
 	^ self body textContentsForCopy
 ]

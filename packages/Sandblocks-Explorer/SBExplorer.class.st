@@ -261,7 +261,7 @@ SBExplorer >> startInputAt: aNumber replacingContents: aBoolean [
 ]
 
 { #category : #actions }
-SBExplorer >> textContentsForCopy [
+SBExplorer >> textContentsForCopyPreferQuick: aBoolean [
 
 	^ self object printString
 ]

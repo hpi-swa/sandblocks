@@ -711,12 +711,7 @@ SBBlock >> copyPlaceholder [
 SBBlock >> copyString [
 	<action>
 
-	Clipboard clipboardText: (self grammarHandler
-		ifNotNil: [:g |
-			g
-				block: self;
-				textContentsForCopy]
-		ifNil: [self textContentsForCopy])
+	Clipboard clipboardText: self textContentsForCopy
 ]
 
 { #category : #actions }
@@ -781,7 +776,7 @@ SBBlock >> deleteAround [
 	self
 		deleteAroundTargetDo: [:target :replacer |
 			self setProperty: #copyPlaceholder toValue: true.
-			editor copyBuffer: target.
+			editor copyBuffer: target preferQuick: true.
 			self removeProperty: #copyPlaceholder.
 			editor do: (SBReplaceCommand new
 				selectAfter: #block;
@@ -1260,11 +1255,11 @@ SBBlock >> initialize [
 	decorators := OrderedCollection new.
 	
 	color := Color transparent.
+	bounds := 0 @ 0 extent: 0 @ 0.
 	self
 		cellPositioning: #topLeft;
 		layoutInset: 0;
-		cellGap: 1;
-		extent: 0 @ 0
+		cellGap: 1
 ]
 
 { #category : #actions }
@@ -2806,9 +2801,18 @@ SBBlock >> textContents [
 { #category : #accessing }
 SBBlock >> textContentsForCopy [
 
-	^ self grammarHandler
-		ifNotNil: [:g | g block: self; textContentsForCopy]
-		ifNil: [self textContents]
+	^ self textContentsForCopyPreferQuick: false
+]
+
+{ #category : #accessing }
+SBBlock >> textContentsForCopyPreferQuick: aBoolean [
+
+	^ ((self respondsTo: #prettySourceString) and: [aBoolean not])
+		ifTrue: [self prettySourceString]
+		ifFalse: [
+			(self respondsTo: #writeSourceOn:)
+				ifTrue: [self sourceString]
+				ifFalse: [self textContents]]
 ]
 
 { #category : #accessing }

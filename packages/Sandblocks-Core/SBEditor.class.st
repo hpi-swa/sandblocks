@@ -430,6 +430,12 @@ SBEditor >> containingArtefact [
 { #category : #accessing }
 SBEditor >> copyBuffer: aMorphOrCollection [
 
+	^ self copyBuffer: aMorphOrCollection preferQuick: false
+]
+
+{ #category : #accessing }
+SBEditor >> copyBuffer: aMorphOrCollection preferQuick: aBoolean [
+
 	| form list |
 	list := (aMorphOrCollection isCollection
 		ifTrue: [aMorphOrCollection]
@@ -441,7 +447,7 @@ SBEditor >> copyBuffer: aMorphOrCollection [
 		colorPolicy: self colorPolicy.
 	
 	list do: [:m | copyBuffer addMorphBack: m copyBlock].
-	Clipboard clipboardText: copyBuffer firstSubmorph textContentsForCopy.
+	Clipboard clipboardText: (copyBuffer firstSubmorph textContentsForCopyPreferQuick: aBoolean).
 	form := copyBuffer imageForm.
 	copyBufferPreview ifNotNil: [copyBufferPreview image: (form scaledToFit: self copyBufferPreviewSize)]
 ]

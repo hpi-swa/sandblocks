@@ -205,7 +205,7 @@ SBStMessageSend >> fixActions [
 						class ifNotNil: [
 							method := SBStMethod new
 								selector: self selector
-									arguments: (self arguments collectWithIndex: [:arg :index | arg isName ifTrue: [arg veryDeepCopy] ifFalse: [SBStName contents: 'anObject', index asString]])
+									arguments: (self arguments withIndexCollect: [:arg :index | arg isName ifTrue: [arg veryDeepCopy] ifFalse: [SBStName contents: 'anObject', index asString]])
 									class: class;
 								body: SBStBlockBody new.
 							self sandblockEditor do: (SBEditorOpenMorphCommand new

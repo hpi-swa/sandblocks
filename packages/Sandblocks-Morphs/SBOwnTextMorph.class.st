@@ -69,10 +69,11 @@ SBOwnTextMorph >> contents: aString [
 		contents := aString.
 		cursor := cursor min: aString size + 1.
 		
-		self
-			changed;
-			layoutChanged;
-			triggerEvent: #contentsChanged]
+		self owner ifNotNil: [
+			self
+				changed;
+				layoutChanged].
+		self triggerEvent: #contentsChanged]
 ]
 
 { #category : #'as yet unclassified' }
@@ -314,12 +315,12 @@ SBOwnTextMorph >> hasCursor [
 
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> initialize [
-	
+
 	super initialize.
 	self
 		vResizing: #spaceFill;
 		hResizing: #spaceFill.
-	self extent: 0 @ 0.
+	bounds := 0 @ 0 extent: 0 @ 0.
 	cursor := 0.
 	suffix := ''.
 	contents := ''.
