@@ -261,7 +261,7 @@ SBWatch >> veryDeepCopyWith: deepCopier [
 { #category : #printing }
 SBWatch >> writeSourceOn: aStream [
 
-	self grammarHandler writeSourceOn: aStream for: self
+	self grammarHandler ifNotNil: [:g | g writeSourceOn: aStream for: self]
 ]
 
 { #category : #'as yet unclassified' }
