@@ -574,14 +574,14 @@ SBBlockCursor >> showLabel: aString [
 ]
 
 { #category : #api }
-SBBlockCursor >> startInput: aBlock at: aNumber replacingContents: aBoolean [
+SBBlockCursor >> startInput: aBlock at: aNumber replacingContents: aBoolean in: aTextMorph [
 
 	self
-		cursorPosition: (aBlock startInputCommand
+		cursorPosition: ((aBlock startInputCommandIn: aTextMorph)
 			ifNotNil: [:command |
 				SBCursorText new
 					block: aBlock;
-					currentCommand: aBlock startInputCommand;
+					currentCommand: (aBlock startInputCommandIn: aTextMorph);
 					cursorIndex: aNumber;
 					replacingContents: aBoolean]
 			ifNil: [(self selectOrInsertFor: aBlock near: nil) first])

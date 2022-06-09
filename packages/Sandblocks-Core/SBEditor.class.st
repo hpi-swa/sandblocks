@@ -1540,7 +1540,13 @@ SBEditor >> startDrag: anEvent [
 { #category : #input }
 SBEditor >> startInput: aMorph at: aNumber replacingContents: aBoolean [
 
-	self cursor startInput: aMorph at: aNumber replacingContents: aBoolean
+	self cursor startInput: aMorph at: aNumber replacingContents: aBoolean in: aMorph currentTextMorph
+]
+
+{ #category : #input }
+SBEditor >> startInput: aMorph at: aNumber replacingContents: aBoolean in: aTextMorph [
+
+	self cursor startInput: aMorph at: aNumber replacingContents: aBoolean in: aTextMorph
 ]
 
 { #category : #'action helpers' }
