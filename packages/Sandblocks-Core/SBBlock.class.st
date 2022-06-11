@@ -1694,10 +1694,13 @@ SBBlock >> localNestingDepth [
 { #category : #'action helpers' }
 SBBlock >> lookupAction: aSymbol [
 
+	| symbolWithArg |
+	symbolWithArg := (aSymbol, ':') asSymbol.
 	self actionProviders do: [:provider |
-		((provider class lookupSelector: aSymbol)
-			ifNotNil: [:m | self isValidAction: m]
-			ifNil: [false]) ifTrue: [^ provider]].
+		{aSymbol. symbolWithArg} do: [:sym |
+			((provider class lookupSelector: sym)
+				ifNotNil: [:m | self isValidAction: m]
+				ifNil: [false]) ifTrue: [^ provider]]].
 	^ nil
 ]
 
@@ -2065,7 +2068,9 @@ SBBlock >> performAction: aSymbol [
 
 	(self lookupAction: aSymbol) ifNotNil: [:obj |
 		(obj ~= self and: [obj respondsTo: #block:]) ifTrue: [obj block: self].
-		obj perform: aSymbol.
+		(obj respondsTo: aSymbol)
+			ifTrue: [obj perform: aSymbol]
+			ifFalse: [obj perform: (aSymbol, ':') asSymbol with: self].
 		^ true].
 	^ false
 	"self actionProviders do: [:obj |

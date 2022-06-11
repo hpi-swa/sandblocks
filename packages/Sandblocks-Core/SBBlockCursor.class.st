@@ -634,8 +634,7 @@ SBBlockCursor >> survivesReload [
 { #category : #api }
 SBBlockCursor >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 
-	(anEvent commandKeyPressed not and: [anEvent optionKeyPressed not and: [anEvent controlKeyPressed not]]) ifTrue: [
-		cursorPosition unhandledEvent: anEvent in: anEditor didHandle: aBlock]
+	(anEvent commandKeyPressed not and: [anEvent optionKeyPressed not and: [anEvent controlKeyPressed not and: [anEvent keyCharacter isPrintable]]]) ifTrue: [cursorPosition unhandledEvent: anEvent in: anEditor didHandle: aBlock]
 ]
 
 { #category : #drawing }

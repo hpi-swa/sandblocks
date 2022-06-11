@@ -22,7 +22,10 @@ SBCursorText >> applyCommandIn: anEditor [
 	self block stopEditing: currentCommand.
 	
 	currentCommand hasChange
-		ifTrue: [anEditor do: currentCommand]
+		ifTrue: [
+			" applying a command will cause a cursor change, however we are in the middle of a cursor change so prohibit any changes here "
+			currentCommand selectAfter: #none.
+			anEditor do: currentCommand]
 		ifFalse: [anEditor history noMoreMerge]
 ]
 
@@ -196,6 +199,15 @@ SBCursorText >> pixelPosition: aPoint [
 SBCursorText >> placeAtEnd: aBoolean [
 
 	cursorIndex := aBoolean ifTrue: [self textMorph contents size + 1] ifFalse: [1]
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorText >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream nextPut: $(.
+	aStream print: self textMorph.
+	aStream nextPut: $)
 ]
 
 { #category : #'as yet unclassified' }

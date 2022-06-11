@@ -87,3 +87,20 @@ SBDeleteCommand >> undo [
 	self restoreConnectionsFor: target in: oldOwner.
 	^ target containingSandblock
 ]
+
+{ #category : #'as yet unclassified' }
+SBDeleteCommand >> vrDo [
+
+	| vrNode |
+	vrNode := target sandblockEditor treeRegistry treeFor: target.
+	vrNode getParent removeChild: vrNode
+]
+
+{ #category : #'as yet unclassified' }
+SBDeleteCommand >> vrUndo [
+
+	| vrNode |
+	vrNode := target sandblockEditor treeRegistry treeFor: oldOwner.
+	vrNode getParent addChild: vrNode afterIndex: oldIndex.
+	vrNode relayout
+]

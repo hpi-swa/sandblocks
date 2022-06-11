@@ -27,6 +27,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: $j command do: #focusNextSuggestion;
 		registerShortcut: $k command do: #focusPreviousSuggestion;
 		inputShortcut: Character backspace do: #deleteBeforeCursor;
+		shortcut: Character backspace modes: {#insert} do: #moveCursorLeft;
 		inputShortcut: Character delete do: #deleteAfterCursor;
 		registerShortcut: $a command do: #clearInput;
 		registerShortcut: $1 command, $1 option do: #useFirstArgument;
