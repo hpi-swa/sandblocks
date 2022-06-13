@@ -76,6 +76,12 @@ SBSuggestionMenu >> canMoveUp [
 	^ self canMoveDown and: [self activeIndex > 1]
 ]
 
+{ #category : #'action helpers' }
+SBSuggestionMenu >> canUseSuggestion [
+
+	^ self isFocused and: [self hasSuggestions]
+]
+
 { #category : #accessing }
 SBSuggestionMenu >> editor: anEditor [
 
@@ -380,7 +386,7 @@ SBSuggestionMenu >> updateQueued: aBoolean [
 SBSuggestionMenu >> useSuggestion [
 	" try to apply a suggestion, return whether anything was applied "
 	<globalAction>
-	<actionValidIf: #isFocused>
+	<actionValidIf: #canUseSuggestion>
 
 	self hasSuggestions ifFalse: [^ false].
 	self activeItem ifNotNil: [:item |

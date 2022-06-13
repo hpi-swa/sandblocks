@@ -138,6 +138,7 @@ SBTextInputMapping >> registerDefaultShortcuts [
 	" special overrides "
 	self
 		registerShortcut: Character escape do: #dismiss;
+		registerShortcut: Character cr do: #confirm;
 		cmdShortcut: Character space do: #activate
 ]
 

@@ -52,9 +52,7 @@ SBInputMapping class >> updateShortcutProviders [
 { #category : #'event handling' }
 SBInputMapping >> actionFor: anEvent mode: aMode do: aBlock ifNone: anotherBlock [
 
-	registerBlock := [:shortcut :action | | ret |
-		(shortcut asSandblockShortcut matchesEvent: anEvent mode: aMode) ifTrue: [
-			(ret := aBlock value: action) ifTrue: [^ ret]]].
+	registerBlock := [:shortcut :action |  | ret |(shortcut asSandblockShortcut matchesEvent: anEvent mode: aMode) ifTrue: [(ret := aBlock value: action) ifTrue: [^ ret]]].
 	
 	self registerAllShortcuts.
 	
