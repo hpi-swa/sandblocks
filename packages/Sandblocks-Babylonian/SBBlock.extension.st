@@ -19,12 +19,6 @@ SBBlock >> isMorphExample [
 ]
 
 { #category : #'*Sandblocks-Babylonian' }
-SBBlock >> isWatch [
-
-	^ false
-]
-
-{ #category : #'*Sandblocks-Babylonian' }
 SBBlock >> listensToExamples [
 
 	^ false

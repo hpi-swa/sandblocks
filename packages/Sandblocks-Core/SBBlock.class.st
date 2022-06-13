@@ -1605,6 +1605,12 @@ SBBlock >> isValidAction: aPragmaOrMethod [
 	^ validMode and: [validInvocation]
 ]
 
+{ #category : #testing }
+SBBlock >> isWatch [
+
+	^ false
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> isWaypoint [
 
