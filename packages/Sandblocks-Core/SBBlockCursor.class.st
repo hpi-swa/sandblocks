@@ -157,7 +157,9 @@ SBBlockCursor >> cursorVisible [
 SBBlockCursor >> cursorsForBlock: aBlock at: aPoint [
 
 	aBlock textMorphs do: [:morph |
-		(aPoint isNil or: [morph containsPoint: aPoint]) ifTrue: [
+		(aPoint isNil or: [
+			(morph containsPoint: aPoint) or: ["if we only have a single child that is the textmorph, prefer to focus it directly"
+			aBlock submorphs size = 1]]) ifTrue: [
 			^ {
 				SBCursorText new
 					block: aBlock;
