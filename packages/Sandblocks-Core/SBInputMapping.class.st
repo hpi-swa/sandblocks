@@ -109,8 +109,8 @@ SBInputMapping >> noInsertShortcut: aShortcut do: aSymbol [
 { #category : #'shortcut execute' }
 SBInputMapping >> registerAllShortcuts [
 
-	self registerDefaultShortcuts.
-	self class shortcutProviders do: [:provider | provider registerShortcuts: self]
+	self class shortcutProviders do: [:provider | provider registerShortcuts: self].
+	self registerDefaultShortcuts
 ]
 
 { #category : #'shortcut execute' }

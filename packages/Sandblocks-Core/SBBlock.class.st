@@ -1600,7 +1600,8 @@ SBBlock >> isValidAction: aPragmaOrMethod [
 	
 	mode := self sandblockEditor mode.
 	validMode := (mode = #input ifTrue: [allPragmas] ifFalse: [#(#action #multiSelectAction)]) anySatisfy: [:s | (method pragmaAt: s) notNil].
-	validInvocation := (method pragmaAt: #actionValidIf:) ifNotNil: [:p | self perform: p arguments first] ifNil: [true].
+	validInvocation := (method pragmaAt: #actionValidIf:) ifNotNil: [:p |
+		p arguments first precedence = 3 ifTrue: [method methodClass theNonMetaClass perform: p arguments first with: self] ifFalse: [self perform: p arguments first]] ifNil: [true].
 	
 	^ validMode and: [validInvocation]
 ]
