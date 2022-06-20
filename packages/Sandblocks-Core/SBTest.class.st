@@ -189,7 +189,11 @@ SBTest >> tick [
 ]
 
 { #category : #'support - events' }
-SBTest >> type: aString in: anEditor [
+SBTest >> type: aStringOrEvent in: anEditor [
 
-	aString do: [:char | anEditor handle: (self keyboardEvent: char)]
+	aStringOrEvent isString ifFalse: [^ aStringOrEvent becomeActiveDuring: [anEditor handle: aStringOrEvent]].
+	
+	aStringOrEvent do: [:char | | event |
+		event := self keyboardEvent: char.
+		event becomeActiveDuring: [anEditor handle: event]]
 ]

@@ -14,6 +14,19 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> basicContents: aString [
+
+	contents ~= aString ifTrue: [
+		contents := aString.
+		cursor := cursor min: aString size + 1.
+		
+		self owner ifNotNil: [
+			self
+				changed;
+				layoutChanged]]
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> basicCursor: aNumber [
 
 	cursor := aNumber
@@ -65,14 +78,8 @@ SBOwnTextMorph >> contents [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> contents: aString [
 
-	contents ~= aString ifTrue: [
-		contents := aString.
-		cursor := cursor min: aString size + 1.
-		
-		self owner ifNotNil: [
-			self
-				changed;
-				layoutChanged].
+	aString ~= contents ifTrue: [
+		self basicContents: aString.
 		self triggerEvent: #contentsChanged]
 ]
 
@@ -390,7 +397,7 @@ SBOwnTextMorph >> keyStroke: anEvent [
 	char = Character backspace ifTrue: [^ self deleteBeforeCursor].
 	char = Character delete ifTrue: [^ self deleteAfterCursor].
 	
-	self insertString: char asString
+	anEvent commandKeyPressed ifFalse: [self insertString: char asString]
 ]
 
 { #category : #'as yet unclassified' }
