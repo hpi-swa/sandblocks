@@ -21,6 +21,12 @@ SBReplaceMultipleCommand >> do [
 ]
 
 { #category : #'as yet unclassified' }
+SBReplaceMultipleCommand >> morphs [
+
+	^ replacers
+]
+
+{ #category : #'as yet unclassified' }
 SBReplaceMultipleCommand >> replacers: aCollection [
 
 	replacers := aCollection

@@ -27,7 +27,7 @@ SBAlgebraLayout class >> gap [
 { #category : #'as yet unclassified' }
 SBAlgebraLayout class >> indent [
 
-	^ 20
+	^ 10
 ]
 
 { #category : #'as yet unclassified' }
