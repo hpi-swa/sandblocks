@@ -675,6 +675,16 @@ SBTutorialStep >> childSandblocksDo: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBTutorialStep >> createStep: aBlock [
+
+	self addMorphBack: (aBlock
+		hResizing: #spaceFill;
+		vResizing: #shrinkWrap;
+		height: 30).
+	^ aBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBTutorialStep >> createStepMethod: aBlock in: anEditor [
 
 	| method selector |
@@ -802,11 +812,11 @@ SBTutorialStep >> reset [
 { #category : #'as yet unclassified' }
 SBTutorialStep >> reset: anEditor [
 
-	self lastSubmorph isMethod ifTrue: [self lastSubmorph delete].
+	(self lastSubmorph isMethod or: [(self lastSubmorph respondsTo: #isTSBlock) and: [self lastSubmorph isTSBlock]]) ifTrue: [self lastSubmorph delete].
 	steps removeAllMorphs.
 	self extent: 0 @ 0.
-	setup value: self.
 	anEditor openMorphInView: self.
+	setup value: self.
 	anEditor when: #selectionChanged send: #checkConditions to: self.
 	self lastSubmorph isMethod ifTrue: [self sandblockEditor startInput: self lastSubmorph at: 1 replacingContents: false]
 ]

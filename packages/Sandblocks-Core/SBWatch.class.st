@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'identifier',
 		'expression',
-		'display'
+		'display',
+		'logOutput'
 	],
 	#classVars : [
 		'Registry',
@@ -188,6 +189,12 @@ SBWatch >> layoutCommands [
 			SBAlgebraCommand morph data: self submorphs second}
 ]
 
+{ #category : #accessing }
+SBWatch >> logOutput [
+
+	^ logOutput ifNil: [false]
+]
+
 { #category : #'event handling' }
 SBWatch >> mouseDown: anEvent [
 
@@ -231,7 +238,8 @@ SBWatch >> printOn: aStream [
 { #category : #'as yet unclassified' }
 SBWatch >> reportValue: anObject [
 
-	display reportValue: anObject
+	display reportValue: anObject.
+	self logOutput ifTrue: [Transcript showln: anObject]
 ]
 
 { #category : #actions }
@@ -239,6 +247,14 @@ SBWatch >> storeAsExample [
 	<action>
 
 	display storeAsExample
+]
+
+{ #category : #actions }
+SBWatch >> toggleLogOutput [
+	<action>
+
+	logOutput := self logOutput not.
+	logOutput ifTrue: [Transcript openIfNone]
 ]
 
 { #category : #copying }
