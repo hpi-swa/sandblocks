@@ -274,7 +274,7 @@ SBAlgebraLayoutTest >> testIndent [
 	
 	SBAlgebraLayout new layoutDocument: doc limit: a width + 21.
 	self assert: 0 @ 0 equals: a position.
-	self assert: 20 @ a height equals: b position
+	self assert: SBAlgebraLayout indent @ a height equals: b position
 ]
 
 { #category : #'as yet unclassified' }
@@ -289,7 +289,7 @@ SBAlgebraLayoutTest >> testIndentDifferentOrigin [
 	
 	SBAlgebraLayout new layoutDocument: doc at: ((SBAlgebraState new offset: 30 @ 20) startX: 30) limit: a width + 21 wrap: false.
 	self assert: 30 @ 20 equals: a position.
-	self assert: (30 @ 20) + (20 @ a height) equals: b position
+	self assert: (30 @ 20) + (SBAlgebraLayout indent @ a height) equals: b position
 ]
 
 { #category : #'as yet unclassified' }
@@ -435,7 +435,7 @@ SBAlgebraLayoutTest >> testNestedOptionalWrap2 [
 	SBAlgebraLayout new layoutDocument: doc limit: a width + 21.
 	self assert: 0 @ 0 equals: a position.
 	self assert: 0 @ a height equals: b position.
-	self assert: 20 @ (a height + b height) equals: c position
+	self assert: SBAlgebraLayout indent @ (a height + b height) equals: c position
 ]
 
 { #category : #'as yet unclassified' }

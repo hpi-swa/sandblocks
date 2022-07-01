@@ -1991,9 +1991,17 @@ SBBlock >> outgoingConnectionsDo: aBlock [
 ]
 
 { #category : #hierarchy }
-SBBlock >> ownerWithColor [
+SBBlock >> ownerWithBackgroundColor [
 
-	^ self
+	^ self drawnColor isTransparent not
+		ifTrue: [self]
+		ifFalse: [self owner ifNotNil: [:o | o ownerWithBackgroundColor]]
+]
+
+{ #category : #hierarchy }
+SBBlock >> ownerWithForegroundColor [
+
+	^ nil
 ]
 
 { #category : #accessing }

@@ -330,6 +330,7 @@ SBOwnTextMorph >> initialize [
 	bounds := 0 @ 0 extent: 0 @ 0.
 	cursor := 0.
 	suffix := ''.
+	color := Color transparent.
 	contents := ''.
 	colorAlpha := 1.
 	emphasis := TextEmphasis normal

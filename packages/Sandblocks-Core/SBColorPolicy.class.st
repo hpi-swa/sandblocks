@@ -18,6 +18,14 @@ SBColorPolicy class >> boldMessageSends [
 ]
 
 { #category : #'as yet unclassified' }
+SBColorPolicy class >> foregroundColorForColor: aColor [
+
+	^ aColor luminance > 0.57
+		ifTrue: [Color r: 0.0 g: 0.0 b: 0.0]
+		ifFalse: [Color r: 1 g: 1 b: 1]
+]
+
+{ #category : #'as yet unclassified' }
 SBColorPolicy class >> usePango [
 
 	^ UsePango ifNil: [false]
@@ -144,7 +152,7 @@ SBColorPolicy >> foregroundColorForButton: aButton [
 { #category : #'as yet unclassified' }
 SBColorPolicy >> foregroundColorForColor: aColor [
 
-	^ aColor luminance > 0.57 ifTrue: [Color black] ifFalse: [Color white]
+	^ self class foregroundColorForColor: aColor
 ]
 
 { #category : #'as yet unclassified' }

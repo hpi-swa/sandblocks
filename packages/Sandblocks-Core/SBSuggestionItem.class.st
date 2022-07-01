@@ -38,6 +38,12 @@ SBSuggestionItem >> activeColor [
 	^ Color blue
 ]
 
+{ #category : #drawing }
+SBSuggestionItem >> color [
+
+	^ active ifTrue: [self activeColor] ifFalse: [Color r: 1 g: 1 b: 1]
+]
+
 { #category : #accessing }
 SBSuggestionItem >> completionAction [
 
@@ -56,10 +62,10 @@ SBSuggestionItem >> contents [
 	^ self selector
 ]
 
-{ #category : #drawing }
-SBSuggestionItem >> fillStyle [
+{ #category : #'as yet unclassified' }
+SBSuggestionItem >> drawOn: aCanvas [
 
-	^ active ifTrue: [self activeColor] ifFalse: [Color r: 1 g: 1 b: 1]
+	aCanvas fillRectangle: self bounds color: self color
 ]
 
 { #category : #drawing }

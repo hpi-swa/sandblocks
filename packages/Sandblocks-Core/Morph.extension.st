@@ -416,9 +416,17 @@ Morph >> onHoverHighlight: aMorph labeled: aString [
 ]
 
 { #category : #'*Sandblocks-Core' }
-Morph >> ownerWithColor [
+Morph >> ownerWithBackgroundColor [
 
-	^ self owner ifNotNil: [:o | o ownerWithColor]
+	^ (color isNil not and: [color isTransparent not and: [self hasSubmorphs]])
+		ifTrue: [self]
+		ifFalse: [self owner ifNotNil: [:o | o ownerWithBackgroundColor]]
+]
+
+{ #category : #'*Sandblocks-Core' }
+Morph >> ownerWithForegroundColor [
+
+	^ self owner ifNotNil: [:o | o ownerWithForegroundColor]
 ]
 
 { #category : #'*Sandblocks-Core' }
@@ -558,7 +566,13 @@ Morph >> sandblockEditor [
 { #category : #'*Sandblocks-Core' }
 Morph >> sandblockForegroundColor [
 
-	^ (self ownerWithColor ifNotNil: [:b | b foregroundColor]) ifNil: [color]
+	^ (self ownerWithForegroundColor ifNotNil: [:b | b foregroundColor]) ifNil: [
+		self ownerWithBackgroundColor
+			ifNotNil: [:b |
+				b isSandblock
+					ifTrue: [b colorPolicy foregroundColorForBlock: b]
+					ifFalse: [SBColorPolicy foregroundColorForColor: (b color ifNil: [Color white])]]
+			ifNil: [color]]
 ]
 
 { #category : #'*Sandblocks-Core' }
