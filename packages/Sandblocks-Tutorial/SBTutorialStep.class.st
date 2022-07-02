@@ -7,7 +7,9 @@ Class {
 		'title',
 		'setup',
 		'selector',
-		'buttons'
+		'buttons',
+		'toplevelSteps',
+		'stepsProvider'
 	],
 	#classVars : [
 		'Progress'
@@ -774,8 +776,8 @@ SBTutorialStep >> maxTextWidth [
 SBTutorialStep >> next [
 
 	| nextSelector |
-	nextSelector := self class tutorialSteps at: self stepIndex + 1.
-	SBTutorialStep perform: nextSelector with: self sandblockEditor.
+	nextSelector := self toplevelSteps at: self stepIndex + 1.
+	self stepsProvider perform: nextSelector with: self sandblockEditor.
 	self delete
 ]
 
@@ -796,8 +798,8 @@ SBTutorialStep >> outOfWorld: aWorld [
 SBTutorialStep >> previous [
 
 	| previousSelector |
-	previousSelector := self class tutorialSteps at: self stepIndex - 1.
-	SBTutorialStep perform: previousSelector with: self sandblockEditor.
+	previousSelector := self toplevelSteps at: self stepIndex - 1.
+	self stepsProvider perform: previousSelector with: self sandblockEditor.
 	self delete
 ]
 
@@ -841,13 +843,13 @@ SBTutorialStep >> setup: anEditor do: aBlock [
 	setup := aBlock.
 	
 	self reset: anEditor.
-	title contents: ('({1}/{2}) {3}' format: {self stepIndex. self class tutorialSteps size. title contents}).
+	title contents: ('({1}/{2}) {3}' format: {self stepIndex. self toplevelSteps size. title contents}).
 	
 	self stepIndex > 1 ifTrue: [
 		buttons addMorphBack: (SBButton new
 			balloonText: 'Previous Task';
 			icon: SBIcon iconArrowLeft shortcut: nil do: [self previous])].
-	self stepIndex < self class tutorialSteps size ifTrue: [
+	self stepIndex < self toplevelSteps size ifTrue: [
 		buttons addMorphBack: (SBButton new
 			balloonText: 'Next Task';
 			icon: SBIcon iconArrowRight shortcut: nil do: [self next])]
@@ -862,7 +864,7 @@ SBTutorialStep >> step [
 { #category : #'as yet unclassified' }
 SBTutorialStep >> stepIndex [
 
-	^ self class tutorialSteps indexOf: selector
+	^ self toplevelSteps indexOf: selector
 ]
 
 { #category : #'as yet unclassified' }
@@ -872,9 +874,28 @@ SBTutorialStep >> stepTime [
 ]
 
 { #category : #'as yet unclassified' }
+SBTutorialStep >> stepsProvider [
+
+	^ stepsProvider ifNil: [SBTutorialStep]
+]
+
+{ #category : #'as yet unclassified' }
 SBTutorialStep >> title: aString [
 
 	title contents: aString
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep >> toplevelSteps [
+
+	^ toplevelSteps ifNil: [self class tutorialSteps]
+]
+
+{ #category : #'as yet unclassified' }
+SBTutorialStep >> toplevelSteps: aCollection in: aClass [
+
+	toplevelSteps := aCollection.
+	stepsProvider := aClass
 ]
 
 { #category : #'as yet unclassified' }
