@@ -7,10 +7,13 @@ Class {
 { #category : #suggestions }
 SBStLanguageBox class >> instanceSuggestion [
 
-	^ [
-		SBStLanguageBox new
-			source: '' lang: 'scheme';
-			yourself]
+	^ Smalltalk
+		at: #SBScmModule
+		ifPresent: [:cls |
+			SBStLanguageBox new
+				source: '' lang: 'scheme';
+				yourself]
+		ifAbsent: [nil]
 ]
 
 { #category : #testing }

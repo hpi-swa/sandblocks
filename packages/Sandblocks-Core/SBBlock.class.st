@@ -494,11 +494,13 @@ SBBlock >> clearCacheSelf [
 SBBlock >> clearInput [
 	<action>
 
-	(self hasCurrentTextMorph and: [self hasChildSandblocks not])
+	(self hasCurrentTextMorph and: [self hasInput])
 		ifTrue: [
-			self hasInput
-				ifTrue: [self contents: '']
-				ifFalse: [self sandblockEditor startInput: self at: 1 replacingContents: true]]
+			self sandblockEditor
+				startInput: self
+				at: 1
+				replacingContents: true
+				in: self sandblockEditor cursor cursorPosition textMorph]
 		ifFalse: [self changeToUnknown]
 ]
 
@@ -1279,7 +1281,7 @@ SBBlock >> inputNextUnknown [
 		self containingFloat = m containingFloat ifTrue: [
 			SBToggledCode comment: '' active: 1 do: {
 				[
-					(self sandblockEditor cursor firstInsertPosition: m)
+					(self sandblockEditor cursor lastInsertPosition: m)
 						ifNotNil: [:last | self sandblockEditor cursor cursorPosition: last explicitMove: true axis: #none]
 						ifNil: [self sandblockEditor startInput: m at: 1 replacingContents: false]].
 				[m startInsertAtEnd].
@@ -1291,10 +1293,15 @@ SBBlock >> inputPreviousUnknown [
 	<action>
 	<inputAction>
 
-	(self previousMorphThat: [:m | m isSandblock and: [m wantsInput]])
-		ifNotNil: [:m |
-			self containingFloat = m containingFloat ifTrue: [
-				self sandblockEditor startInput: m at: 1 replacingContents: false]]
+	(self previousMorphThat: [:m | m isSandblock and: [m wantsInput]]) ifNotNil: [:m |
+		self containingFloat = m containingFloat ifTrue: [
+			SBToggledCode comment: '' active: 1 do: {
+				[
+					(self sandblockEditor cursor lastInsertPosition: m)
+						ifNotNil: [:last | self sandblockEditor cursor cursorPosition: last explicitMove: true axis: #none]
+						ifNil: [self sandblockEditor startInput: m at: 1 replacingContents: false]].
+				[m startInsertAtEnd].
+				[self sandblockEditor startInput: m at: 1 replacingContents: false]}]]
 ]
 
 { #category : #'insert/delete' }
