@@ -24,10 +24,10 @@ SBCommand class >> boundsWithSize: aSizeNumber in: aBlock index: aNumber horizon
 					height := aBlock height max: TextStyle defaultFont height // 2.
 					aBlock topLeft + inset topLeft - (aSizeNumber // 2 @ 0) extent: aSizeNumber @ (height - inset vertical)]
 				ifTrue: [ | adjacent before |
-					adjacent := aNumber > aBlock submorphCount
-						ifTrue: [aBlock lastSubmorph]
-						ifFalse: [aBlock submorphs at: aNumber].
-					before := aNumber <= aBlock submorphCount.
+					adjacent := aNumber > 1
+						ifTrue: [aBlock submorphs at: aNumber - 1]
+						ifFalse: [aBlock firstSubmorph].
+					before := aNumber = 1.
 					before
 						ifTrue: [adjacent topLeft - (aSizeNumber // 2 @ 0) extent: aSizeNumber @ adjacent height]
 						ifFalse: [adjacent topRight extent: aSizeNumber @ adjacent height]]]
