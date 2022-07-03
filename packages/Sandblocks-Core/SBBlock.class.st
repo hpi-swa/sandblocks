@@ -1275,7 +1275,15 @@ SBBlock >> inputNextUnknown [
 	<action>
 	<inputAction>
 
-	(self nextBlockThat: [:m | m wantsInput]) ifNotNil: [:m | self containingFloat = m containingFloat ifTrue: [self sandblockEditor startInput: m at: 1 replacingContents: false]]
+	(self nextBlockThat: [:m | m wantsInput]) ifNotNil: [:m |
+		self containingFloat = m containingFloat ifTrue: [
+			SBToggledCode comment: '' active: 1 do: {
+				[
+					(self sandblockEditor cursor firstInsertPosition: m)
+						ifNotNil: [:last | self sandblockEditor cursor cursorPosition: last explicitMove: true axis: #none]
+						ifNil: [self sandblockEditor startInput: m at: 1 replacingContents: false]].
+				[m startInsertAtEnd].
+				[self sandblockEditor startInput: m at: 1 replacingContents: false]}]]
 ]
 
 { #category : #actions }
@@ -1375,7 +1383,7 @@ SBBlock >> insertStatementAboveOrBelow: anAboveBoolean [
 	" default behavior is to find the first parent that can take multiple children "
 	candidate := self.
 	[candidate parentSandblock fixedNumberOfChildren and: [candidate isArtefact not]] whileTrue: [candidate := candidate parentSandblock].
-	candidate isArtefact ifFalse: [candidate insertElement: anAboveBoolean]
+	(candidate isArtefact not and: [candidate parentSandblock ~= candidate sandblockEditor]) ifTrue: [candidate insertElement: anAboveBoolean]
 ]
 
 { #category : #actions }
