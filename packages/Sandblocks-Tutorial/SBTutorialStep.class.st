@@ -773,6 +773,12 @@ SBTutorialStep >> maxTextWidth [
 ]
 
 { #category : #'as yet unclassified' }
+SBTutorialStep >> newNullBlock [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBTutorialStep >> next [
 
 	| nextSelector |

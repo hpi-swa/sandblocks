@@ -496,11 +496,14 @@ SBBlock >> clearInput [
 
 	(self hasCurrentTextMorph and: [self hasInput])
 		ifTrue: [
-			self sandblockEditor
-				startInput: self
-				at: 1
-				replacingContents: true
-				in: self sandblockEditor cursor cursorPosition textMorph]
+			SBToggledCode comment: '' active: 1 do: {
+				[self contents: ''].
+				[
+					self sandblockEditor
+						startInput: self
+						at: 1
+						replacingContents: true
+						in: self sandblockEditor cursor cursorPosition textMorph]}]
 		ifFalse: [self changeToUnknown]
 ]
 
@@ -2730,6 +2733,12 @@ SBBlock >> startInputSubstituting [
 SBBlock >> startInsertAtEnd [
 
 	(self sandblockEditor cursor lastInsertPosition: self) ifNotNil: [:last | self sandblockEditor cursor cursorPosition: last explicitMove: true axis: #none]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> startInsertAtStart [
+
+	(self sandblockEditor cursor firstInsertPosition: self) ifNotNil: [:last | self sandblockEditor cursor cursorPosition: last explicitMove: true axis: #none]
 ]
 
 { #category : #'as yet unclassified' }
