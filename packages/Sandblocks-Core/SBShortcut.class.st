@@ -166,7 +166,14 @@ SBShortcut >> optionKeyPressed [
 SBShortcut >> printDisplayOn: aStream automaticShift: aBoolean [
 
 	| p |
-	command == true ifTrue: [aStream nextPutAll: 'Cmd '].
+	command == true ifTrue: [
+		Smalltalk windowSystemName = 'Aqua'
+			ifTrue: [aStream nextPutAll: 'Cmd ']
+			ifFalse: [
+				"ctrl+enter gets reported as ctrl+m on linux, have to use alt+enter"
+				character = Character cr
+					ifTrue: [aStream nextPutAll: 'Alt ']
+					ifFalse: [aStream nextPutAll: 'Ctrl ']]].
 	(shift or: [aBoolean and: [character isLetter and: [character isUppercase]]]) ifTrue: [aStream nextPutAll: 'Shift '].
 	ctrl ifNotNil: [
 		ctrl ifFalse: [aStream nextPutAll: 'no'].

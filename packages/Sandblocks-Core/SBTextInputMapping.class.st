@@ -100,13 +100,16 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character end do: #selectRightMostBlock;
 		registerShortcut: Character tab shift do: #inputPreviousUnknown;
 		registerShortcut: Character tab do: #inputNextUnknown;
-		registerShortcut: Character arrowLeft option do: #selectLeftToplevel;
-		registerShortcut: Character arrowDown option do: #selectBottomToplevel;
-		registerShortcut: Character arrowUp option do: #selectTopToplevel;
-		registerShortcut: Character arrowRight option do: #selectRightToplevel;
 		registerShortcut: Character end shift do: #selectAdjacentAfter;
 		registerShortcut: Character home shift do: #selectAdjacentBefore;
 		registerShortcut: $A command do: #selectAdjacent.
+	SBToggledCode comment: '' active: 0 do: {
+		[
+			self
+				registerShortcut: Character arrowLeft option do: #selectLeftToplevel;
+				registerShortcut: Character arrowDown option do: #selectBottomToplevel;
+				registerShortcut: Character arrowUp option do: #selectTopToplevel;
+				registerShortcut: Character arrowRight option do: #selectRightToplevel]}.
 	
 	" modify general "
 	self

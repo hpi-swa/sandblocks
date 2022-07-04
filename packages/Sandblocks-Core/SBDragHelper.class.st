@@ -184,7 +184,7 @@ SBDragHelper >> hintInsert: aCommand [
 	| insertPreviewMarker aChildBlock |
 	self assert: aCommand notNil.
 	insertPreviewMarker := SBDropInsertMarker new
-		color: (aCommand container colorPolicy dropMarkerColorFor: aCommand);
+		color: (aCommand container containingSandblock colorPolicy dropMarkerColorFor: aCommand);
 		bounds: (aCommand container transformFromWorld transformRect: aCommand insertBounds);
 		openInWorld.
 	
