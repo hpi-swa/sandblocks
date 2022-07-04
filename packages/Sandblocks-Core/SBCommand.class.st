@@ -207,6 +207,12 @@ SBCommand >> isInsert [
 	^ false
 ]
 
+{ #category : #testing }
+SBCommand >> isStatementInsert [
+
+	^ false
+]
+
 { #category : #'insert commands' }
 SBCommand >> minimalInsertBounds [
 

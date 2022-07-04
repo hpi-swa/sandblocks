@@ -49,10 +49,8 @@ SBTextInputTest >> testCursorKeepsHorizontalPosition [
 	
 	self assert: 3 equals: block statements second currentTextMorph cursor.
 	self send: (self keyboardEvent: Character arrowDown) to: editor.
-	self send: (self keyboardEvent: Character arrowDown) to: editor.
 	self tick.
 	self assert: 3 equals: block statements third currentTextMorph cursor.
-	self send: (self keyboardEvent: Character arrowUp) to: editor.
 	self send: (self keyboardEvent: Character arrowUp) to: editor.
 	self tick.
 	self assert: 3 equals: block statements second currentTextMorph cursor

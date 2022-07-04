@@ -56,7 +56,7 @@ SBBlockCursor >> adjacentVerticalCursorCalcDistance: aDistBlock validBlock: aVal
 		previousInsert := nil.
 		float cursorPositionsDo: [:pos | | validPosition |
 			pos = cursorPosition ifTrue: [seenCurrent := true].
-			validPosition := (previousInsert isNil or: [previousInsert isDistinctFrom: pos]) and: [(((aValidBlock value: pos) or: [anEqualBlock value: pos value: seenCurrent]) and: [pos isInsert not or: [pos hasHorizontalLayout not or: [pos container hasChildSandblocks not]]]) and: [pos isSelect not or: [pos block hasChildSandblocks not and: [pos block currentTextMorph isNil and: [pos block fixedNumberOfChildren]]]]].
+			validPosition := (previousInsert isNil or: [previousInsert isDistinctFrom: pos]) and: [((aValidBlock value: pos) or: [anEqualBlock value: pos value: seenCurrent]) and: [self visitPositionInVerticalMove: pos]].
 			(validPosition and: [pos ~= cursorPosition]) ifTrue: [stream nextPut: pos].
 			validPosition ifTrue: [pos isInsert ifTrue: [previousInsert := pos]]]].
 	aBoolean ifFalse: [allCandidates reverseInPlace].
@@ -668,6 +668,17 @@ SBBlockCursor >> updateHorizontalOffset [
 				Display getCanvas
 					fillRectangle: (self selectedBlock containingFloat positionInWorld + (horizontalOffsetInFloat @ -10) extent: 10 @ 10)
 					color: Color random]}]
+]
+
+{ #category : #testing }
+SBBlockCursor >> visitPositionInVerticalMove: aPosition [
+
+	aPosition isInsert ifTrue: [
+		^ aPosition command isStatementInsert
+			ifTrue: [aPosition container hasChildSandblocks not]
+			ifFalse: [aPosition hasHorizontalLayout not or: [aPosition container hasChildSandblocks not]]].
+	aPosition isSelect ifTrue: [^ aPosition block hasChildSandblocks not and: [aPosition block currentTextMorph isNil and: [aPosition block fixedNumberOfChildren]]].
+	^ true
 ]
 
 { #category : #'halos and balloon help' }

@@ -94,6 +94,14 @@ SBRelInsertCommand >> isInsert [
 ]
 
 { #category : #'as yet unclassified' }
+SBRelInsertCommand >> isStatementInsert [
+
+	self flag: #fixme.
+	"not a good solution"
+	^ title = 'insert statement'
+]
+
+{ #category : #'as yet unclassified' }
 SBRelInsertCommand >> morph [
 
 	^ morph
