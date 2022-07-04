@@ -570,9 +570,10 @@ SBBlockCursor >> showLabel: aString [
 			cornerRadius: 4;
 			color: (Color r: 1 g: 1 b: 1);
 			layoutInset: 4;
-			addMorphBack: (SBStringMorph new
+			addMorphBack: (SBMultilineOwnTextMorph new
 				contents: aString;
-				opacity: 0.8))]
+				vResizing: #shrinkWrap;
+				yourself))]
 ]
 
 { #category : #api }
