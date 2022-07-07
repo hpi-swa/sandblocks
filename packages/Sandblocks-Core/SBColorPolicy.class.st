@@ -196,7 +196,7 @@ SBColorPolicy >> layoutInset [
 { #category : #'as yet unclassified' }
 SBColorPolicy >> layoutInsetFor: aBlock [
 
-	^ 2
+	^ 2 sbScaled
 ]
 
 { #category : #'as yet unclassified' }

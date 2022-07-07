@@ -5999,6 +5999,15 @@ SBIcon class >> supersamplingFactor [
 	^ 4
 ]
 
+{ #category : #'as yet unclassified' }
+SBIcon >> applyUserInterfaceTheme [
+
+	super applyUserInterfaceTheme.
+	
+	cachedForm := nil.
+	self extent: 0 @ 0
+]
+
 { #category : #colors }
 SBIcon >> cachedFormFor: aPoint [
 

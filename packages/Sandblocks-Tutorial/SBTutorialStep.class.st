@@ -769,7 +769,7 @@ SBTutorialStep >> initialize [
 { #category : #'as yet unclassified' }
 SBTutorialStep >> maxTextWidth [
 
-	^ 400
+	^ 400 sbScaled
 ]
 
 { #category : #'as yet unclassified' }

@@ -21,13 +21,13 @@ Class {
 { #category : #'as yet unclassified' }
 SBAlgebraLayout class >> gap [
 
-	^ 2
+	^ 2 sbScaled
 ]
 
 { #category : #'as yet unclassified' }
 SBAlgebraLayout class >> indent [
 
-	^ 10
+	^ 10 sbScaled
 ]
 
 { #category : #'as yet unclassified' }

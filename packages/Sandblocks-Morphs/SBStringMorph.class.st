@@ -7,6 +7,15 @@ Class {
 	#category : #'Sandblocks-Morphs'
 }
 
+{ #category : #layout }
+SBStringMorph >> applyUserInterfaceTheme [
+
+	super applyUserInterfaceTheme.
+	
+	font := nil.
+	self extent: self minExtent
+]
+
 { #category : #accessing }
 SBStringMorph >> bold [
 
@@ -41,15 +50,9 @@ SBStringMorph >> drawOn: aCanvas [
 
 	aCanvas
 		drawString: self contents
-		in: (self layoutBounds translateBy: 0 @ 1)
+		in: (self layoutBounds translateBy: 0 @ 1.5 sbScaled)
 		font: self fontToUse
 		color: self color
-]
-
-{ #category : #'as yet unclassified' }
-SBStringMorph >> fontToUse [
-
-	^ super fontToUse
 ]
 
 { #category : #'as yet unclassified' }
@@ -74,7 +77,7 @@ SBStringMorph >> italic [
 { #category : #'as yet unclassified' }
 SBStringMorph >> large [
 
-	self font: (TextStyle default fontOfSize: 22)
+	self font: (TextStyle default fontOfSize: 22 sbScaled)
 ]
 
 { #category : #layout }

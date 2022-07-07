@@ -165,6 +165,12 @@ SBEdgeInsets >> right [
 ]
 
 { #category : #'as yet unclassified' }
+SBEdgeInsets >> sbScaled [
+
+	^ self class left: left sbScaled right: right sbScaled top: top sbScaled bottom: bottom sbScaled
+]
+
+{ #category : #'as yet unclassified' }
 SBEdgeInsets >> top [
 
 	^ top

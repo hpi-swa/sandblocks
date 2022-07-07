@@ -37,6 +37,12 @@ Point >> rotatedBy: anAngleNumber [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Point >> sbScaled [
+
+	^ self x sbScaled @ self y sbScaled
+]
+
+{ #category : #'*Sandblocks-Core' }
 Point >> scalarTowards: aSymbol [
 
 	aSymbol = #left ifTrue: [^ self x].

@@ -130,7 +130,7 @@ SBStContainer >> layoutCommands [
 { #category : #layout }
 SBStContainer >> layoutInset [
 
-	^ self floating ifTrue: [8] ifFalse: [0]
+	^ self floating ifTrue: [8 sbScaled] ifFalse: [0]
 ]
 
 { #category : #'artefact protocol' }

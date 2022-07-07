@@ -10,6 +10,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBMultilineOwnTextMorph >> applyUserInterfaceTheme [
+
+	super applyUserInterfaceTheme.
+	
+	paragraph := nil
+]
+
+{ #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> betterCursorAfterSelectionTo: aNumber [
 	" determine whether to go left or right upon arrow key hits when leaving a selection "
 	

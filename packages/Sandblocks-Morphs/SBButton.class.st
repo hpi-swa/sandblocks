@@ -24,6 +24,14 @@ SBButton >> active: aBoolean [
 	self changed
 ]
 
+{ #category : #'as yet unclassified' }
+SBButton >> applyUserInterfaceTheme [
+
+	super applyUserInterfaceTheme.
+	
+	self layoutChanged
+]
+
 { #category : #accessing }
 SBButton >> borderStyle [
 

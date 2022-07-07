@@ -7,7 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBDefaultColorPolicy >> borderWidthForBlock: aBlock [
 
-	^ aBlock prefersNoBorder ifTrue: [0] ifFalse: [1]
+	^ aBlock prefersNoBorder ifTrue: [0] ifFalse: [1 sbScaled]
 ]
 
 { #category : #'as yet unclassified' }
