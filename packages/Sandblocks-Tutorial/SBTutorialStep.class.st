@@ -618,6 +618,18 @@ SBTutorialStep >> addAction: anActionSymbol if: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
+SBTutorialStep >> addExplanationStep: aString [
+
+	steps addMorphBack: (SBRow new
+		cellPositioning: #topLeft;
+		changeTableLayout;
+		cellGap: 8;
+		addMorphBack: (SBMultilineOwnTextMorph new
+			contents: aString withSBShortcuts;
+			maxWidth: self maxTextWidth))
+]
+
+{ #category : #'as yet unclassified' }
 SBTutorialStep >> addIntroText: aString [
 
 	self
@@ -660,7 +672,7 @@ SBTutorialStep >> checkConditions [
 
 	steps submorphs withIndexDo: [:step :index | | checkbox |
 		checkbox := step firstSubmorph.
-		checkbox value ifFalse: [
+		((checkbox isKindOf: SBCheckbox) and: [checkbox value not]) ifTrue: [
 			([(checkbox valueOfProperty: #checkBlock) value: self sandblockEditor]
 				on: Error
 				do: [:error | "error signal."

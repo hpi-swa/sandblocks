@@ -193,6 +193,12 @@ SBCursorInsert >> mode [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorInsert >> morph [
+
+	^ self block
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorInsert >> moveHorizontal: aNumber wordWise: aBoolean [
 
 	| next |

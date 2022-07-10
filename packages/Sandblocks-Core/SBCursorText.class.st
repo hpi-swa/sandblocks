@@ -165,6 +165,12 @@ SBCursorText >> mode [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorText >> morph [
+
+	^ self textMorph
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorText >> moveCursorDown: aCursor [
 
 	self textMorph moveCursorVertically: 1 ifAtBound: [super moveCursorDown: aCursor]

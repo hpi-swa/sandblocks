@@ -115,6 +115,6 @@ SBTextCommand >> textMorph: aMorph [
 SBTextCommand >> undo [
 
 	oldMorph = newMorph ifFalse: [newMorph replaceBy: oldMorph].
-	oldMorph contents: previousText.
+	textMorph contents: previousText.
 	^ oldMorph
 ]

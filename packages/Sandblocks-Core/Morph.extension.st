@@ -144,6 +144,12 @@ Morph >> cursorPositionsDo: aBlock shallow: aBoolean [
 	self basicCursorPositionsDo: aBlock shallow: aBoolean
 ]
 
+{ #category : #'*Sandblocks-Core' }
+Morph >> cursorPositionsDoUntil: aBlock [
+
+	self cursorPositionsDo: [:c | (aBlock value: c) ifTrue: [^ self]]
+]
+
 { #category : #'*Sandblocks-Core-geometry-override' }
 Morph >> extent: aPoint [
 

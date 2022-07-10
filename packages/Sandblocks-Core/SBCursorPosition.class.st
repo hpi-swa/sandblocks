@@ -175,6 +175,12 @@ SBCursorPosition >> mode [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorPosition >> morph [
+
+	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorPosition >> moveCursorDown: aCursor [
 
 	SBBlockCursor legacyVerticalMovement

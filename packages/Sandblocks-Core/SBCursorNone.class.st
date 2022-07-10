@@ -59,6 +59,12 @@ SBCursorNone >> mode [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorNone >> morph [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorNone >> moveHorizontal: anInteger wordWise: aBoolean [
 
 	^ nil

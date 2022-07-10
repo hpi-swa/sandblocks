@@ -82,6 +82,12 @@ SBCursorSelect >> mode [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorSelect >> morph [
+
+	^ self block
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorSelect >> moveHorizontal: aNumber wordWise: aBoolean [
 
 	aNumber > 0 ifTrue: [ | next |

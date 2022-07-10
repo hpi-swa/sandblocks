@@ -50,7 +50,7 @@ SBStringMorph >> drawOn: aCanvas [
 
 	aCanvas
 		drawString: self contents
-		in: (self layoutBounds translateBy: 0 @ 1.5 sbScaled)
+		in: (self layoutBounds translateBy: 0 @ 0.75 sbScaled sbScaled)
 		font: self fontToUse
 		color: self color
 ]

@@ -92,6 +92,12 @@ SBCursorMultiSelect >> mode [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorMultiSelect >> morph [
+
+	^ self block
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorMultiSelect >> moveHorizontal: aNumber wordWise: aBoolean [
 
 	focused := (self adjacentPosition: aNumber to: (SBCursorSelect new block: self block) in: self block sandblockEditor that: [:s | s isKindOf: SBCursorSelect]) block.
