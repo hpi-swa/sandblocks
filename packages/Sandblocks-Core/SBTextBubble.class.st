@@ -150,7 +150,7 @@ SBTextBubble >> keyStroke: anEvent [
 { #category : #'as yet unclassified' }
 SBTextBubble >> maxWidth: aNumber [
 
-	self currentTextMorph maxWidth: aNumber
+	self firstSubmorph maxWidth: aNumber
 ]
 
 { #category : #'as yet unclassified' }
