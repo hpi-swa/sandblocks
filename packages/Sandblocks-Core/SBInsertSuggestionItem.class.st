@@ -11,13 +11,18 @@ Class {
 SBInsertSuggestionItem >> morph: aBlock editor: anEditor previewOnly: aBoolean [
 
 	morph := aBlock.
-	self preview: (aBlock wrapOffscreen: anEditor) imageForm previewOnly: aBoolean
+	self
+		preview: (anEditor ifNotNil: [aBlock wrapOffscreen: anEditor] ifNil: [
+			SBSelection new
+				addMorphBack: aBlock;
+				colorPolicy: SBEditor defaultColorPolicy new]) imageForm
+		previewOnly: aBoolean
 ]
 
 { #category : #accessing }
 SBInsertSuggestionItem >> morph: aBlock previewOnly: aBoolean [
 
-	self morph: aBlock editor: SBEditor new previewOnly: aBoolean
+	self morph: aBlock editor: nil previewOnly: aBoolean
 ]
 
 { #category : #suggestions }
