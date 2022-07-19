@@ -324,8 +324,12 @@ SBSuggestionMenu >> reference: aBlock [
 { #category : #layout }
 SBSuggestionMenu >> repositionSuggestionsMenu [
 
-	reference ifNotNil: [self topLeft: reference positionInWorld + (0 @ reference height)].
-	self resize
+	self resize.
+	reference ifNotNil: [ | needsInvert |
+		needsInvert := reference positionInWorld y + (reference height + self height) > Display height.
+		needsInvert
+			ifTrue: [self bottomLeft: reference positionInWorld]
+			ifFalse: [self topLeft: reference positionInWorld + (0 @ reference height)]]
 ]
 
 { #category : #accessing }

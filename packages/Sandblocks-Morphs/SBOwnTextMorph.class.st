@@ -98,7 +98,7 @@ SBOwnTextMorph >> contentsBeforeCursor [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> contentsToDisplay [
 
-	^ self contents ifEmpty: [self placeholderText]
+	^ self contents size = 0 ifTrue: [self placeholderText] ifFalse: [self contents]
 ]
 
 { #category : #'as yet unclassified' }

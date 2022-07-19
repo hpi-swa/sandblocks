@@ -240,7 +240,7 @@ SBBlockCursor >> insertPositionIn: aBlock near: aPoint [
 				shallow: true]
 		ifNotNil: [ | best bestDistance |
 			best := OrderedCollection new.
-			bestDistance := 20.
+			bestDistance := aBlock preferInsertCursor ifTrue: [9e8] ifFalse: [20].
 			aBlock
 				cursorPositionsDo: [:pos | | distance |
 					(pos isInsert and: [

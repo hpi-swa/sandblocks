@@ -2191,6 +2191,13 @@ SBBlock >> precedence [
 	^ 0
 ]
 
+{ #category : #testing }
+SBBlock >> preferInsertCursor [
+	"communicate that you would prefer to receive an insert cursor whenever clicked, not a select cursor"
+
+	^ false
+]
+
 { #category : #'colors and color policies' }
 SBBlock >> preferredColor [
 
@@ -2939,9 +2946,14 @@ SBBlock >> updateSuggestions [
 	
 	self shouldSuggest ifFalse: [^ self].
 	
-	self suggestions ifNotEmpty: [:s |
-		menu suggestions: (s take: self maxSuggestions).
-		menu openNear: self]
+	self suggestions
+		ifNotEmpty: [:s |
+			menu suggestions: (s take: self maxSuggestions).
+			menu openNear: self]
+		ifEmpty: [
+			menu
+				suggestions: #();
+				delete]
 ]
 
 { #category : #layout }

@@ -108,11 +108,12 @@ SBAlgebraLayout >> layout: aMorph in: aRectangle [
 			limit: aRectangle right
 			wrap: false].
 	
-	cache := nil.
 	placements do: [:pair | pair first layoutInBounds: pair second].
 	
 	" if we do not have an owner, enforce our minSize ourselves"
-	(aMorph owner isNil or: [aMorph owner layoutPolicy isNil]) ifTrue: [aMorph extent: ((final containerExtentFrom: initial) max: aRectangle extent) + aMorph layoutInset asEdgeInsets]
+	(aMorph owner isNil or: [aMorph owner layoutPolicy isNil]) ifTrue: [aMorph extent: ((final containerExtentFrom: initial) max: aRectangle extent) + aMorph layoutInset asEdgeInsets].
+	
+	cache := nil
 ]
 
 { #category : #'as yet unclassified' }

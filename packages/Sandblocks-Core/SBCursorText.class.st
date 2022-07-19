@@ -44,7 +44,7 @@ SBCursorText >> block: aBlock [
 { #category : #'as yet unclassified' }
 SBCursorText >> bounds [
 
-	^ self block bounds expandBy: 2 @ (self block frameSize * 2)
+	^ self textMorph bounds expandBy: 2 @ (self block frameSize * 2)
 ]
 
 { #category : #'as yet unclassified' }
@@ -257,7 +257,7 @@ SBCursorText >> selectSmaller [
 { #category : #'as yet unclassified' }
 SBCursorText >> selectionBounds [
 
-	^ self block bounds
+	^ self textMorph bounds
 ]
 
 { #category : #'as yet unclassified' }

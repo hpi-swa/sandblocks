@@ -5,7 +5,8 @@ Class {
 	#name : #SBImmediateStream,
 	#superclass : #Stream,
 	#instVars : [
-		'block'
+		'block',
+		'position'
 	],
 	#category : #'Sandblocks-Utils'
 }
@@ -14,6 +15,7 @@ Class {
 SBImmediateStream class >> with: aBlock [
 
 	^ self basicNew
+		initialize;
 		block: aBlock;
 		yourself
 ]
@@ -25,7 +27,22 @@ SBImmediateStream >> block: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBImmediateStream >> initialize [
+
+	super initialize.
+	
+	position := 0
+]
+
+{ #category : #'as yet unclassified' }
 SBImmediateStream >> nextPut: anObject [
 
-	block value: anObject
+	block value: anObject.
+	position := position + 1
+]
+
+{ #category : #'as yet unclassified' }
+SBImmediateStream >> position [
+
+	^ position
 ]
