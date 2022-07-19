@@ -2713,7 +2713,12 @@ SBBlock >> startInputAtEnd [
 	(self startInputCommand
 		ifNotNil: [self]
 		ifNil: [self lastMorphThat: [:b | b isSandblock and: [b startInputCommand notNil]]])
-		ifNotNil: [:b | self sandblockEditor startInput: b at: 900000000 replacingContents: false]
+		ifNotNil: [:b |
+			self sandblockEditor
+				startInput: b
+				at: 900000000
+				replacingContents: false
+				in: b textMorphs last]
 		ifNil: [
 			self lastDeepChild select.
 			" try and move into an insert position "
@@ -3056,7 +3061,7 @@ SBBlock >> wasSelected [
 
 	self triggerEvent: #selected.
 	
-	self suggestAlways ifTrue: [self queueUpdateSuggestionsFocused: false]
+	(self suggestAlways and: [self sandblockEditor cursor mode ~= #insert]) ifTrue: [self queueUpdateSuggestionsFocused: false]
 ]
 
 { #category : #callbacks }
