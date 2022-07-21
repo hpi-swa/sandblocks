@@ -505,7 +505,7 @@ SBBlock >> clearInput [
 	(self hasCurrentTextMorph and: [self hasInput])
 		ifTrue: [
 			SBToggledCode comment: '' active: 1 do: {
-				[self contents: ''].
+				[(self sandblockEditor currentInputCommand ifNotNil: #textMorph) contents: ''].
 				[
 					self sandblockEditor
 						startInput: self
@@ -3061,7 +3061,7 @@ SBBlock >> wasSelected [
 
 	self triggerEvent: #selected.
 	
-	(self suggestAlways and: [self sandblockEditor cursor mode ~= #insert]) ifTrue: [self queueUpdateSuggestionsFocused: false]
+	(self sandblockEditor notNil and: [self suggestAlways and: [self sandblockEditor cursor mode ~= #insert]]) ifTrue: [self queueUpdateSuggestionsFocused: false]
 ]
 
 { #category : #callbacks }

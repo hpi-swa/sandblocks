@@ -41,7 +41,7 @@ SBSuggestionItem >> activeColor [
 { #category : #drawing }
 SBSuggestionItem >> color [
 
-	^ active ifTrue: [self activeColor] ifFalse: [Color r: 1 g: 1 b: 1]
+	^ self active ifTrue: [self activeColor] ifFalse: [Color r: 1 g: 1 b: 1]
 ]
 
 { #category : #accessing }
@@ -71,7 +71,7 @@ SBSuggestionItem >> drawOn: aCanvas [
 { #category : #drawing }
 SBSuggestionItem >> foregroundColor [
 
-	^ active ifTrue: [Color white] ifFalse: [Color black]
+	^ self active ifTrue: [Color r: 1 g: 1 b: 1] ifFalse: [Color r: 0.0 g: 0.0 b: 0.0]
 ]
 
 { #category : #'event handling' }
