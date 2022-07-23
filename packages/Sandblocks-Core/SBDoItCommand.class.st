@@ -21,6 +21,12 @@ SBDoItCommand >> do: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBDoItCommand >> morphs [
+
+	^ {}
+]
+
+{ #category : #'as yet unclassified' }
 SBDoItCommand >> setArtefactFrom [
 
 	^ nil
