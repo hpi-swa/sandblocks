@@ -3101,20 +3101,12 @@ SBBlock >> wrapOffscreen: anEditor [
 { #category : #'action helpers' }
 SBBlock >> wrapSelectionWith: aSelection [
 
-	SBToggledCode
-		comment: 'TODO: this is not quite correct yet'
-		active: 1
-		do: {[(aSelection unpackSelection satisfies: self objectInterface) ifFalse: [^ self]]}.
-	
 	self sandblockEditor doMultiSelection: [:selected |
-		SBRecordedCommand new record: [:recorder | | new placeholder |
+		SBRecordedCommand new record: [:recorder | | new adapted adaptedInner |
 			new := aSelection.
-			placeholder := new copyPlaceholder.
-			recorder replace: selected first with: new.
-			recorder replace: placeholder with: selected first.
-			recorder moveAll: selected allButFirst after: selected first]].
-	
-	self parentSandblock postDuplicate
+			adaptedInner := recorder replace: selected first with: new.
+			adapted := recorder replace: adaptedInner copyPlaceholder with: selected first.
+			recorder moveAll: selected allButFirst after: adapted]]
 ]
 
 { #category : #'insert/delete' }

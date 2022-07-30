@@ -539,6 +539,13 @@ Morph >> previousMorphThat: aBlock [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Morph >> replaceBlock: aBlock [
+
+	self replaceBy: aBlock.
+	^ aBlock
+]
+
+{ #category : #'*Sandblocks-Core' }
 Morph >> replaceBy: aMorph [
 
 	| currentOwner index |

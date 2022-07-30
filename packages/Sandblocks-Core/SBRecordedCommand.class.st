@@ -103,11 +103,12 @@ SBRecordedCommand >> removed: aMorph from: anOwnerMorph [
 { #category : #action }
 SBRecordedCommand >> replace: aMorph with: anotherMorph [
 
-	| oldOwner |
+	| oldOwner adapted |
 	oldOwner := aMorph owner.
-	undo add: [anotherMorph replaceBy: aMorph].
-	aMorph replaceBy: anotherMorph.
-	self added: anotherMorph to: oldOwner
+	adapted := aMorph replaceBlock: anotherMorph.
+	undo add: [adapted replaceBlock: aMorph].
+	self added: adapted to: oldOwner.
+	^ adapted
 ]
 
 { #category : #action }

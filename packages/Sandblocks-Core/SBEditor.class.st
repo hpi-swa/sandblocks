@@ -455,10 +455,13 @@ SBEditor >> copyBuffer: aMorphOrCollection preferQuick: aBoolean [
 { #category : #accessing }
 SBEditor >> copyBufferForContext: anInterface reversed: aBoolean do: aBlock ifWrappingDo: aWrapBlock [
 
-	^ (copyBuffer notNil and: [copyBuffer unpackSelection textContentsForCopy = Clipboard clipboardText string or: [(copyBuffer unpackSelection textContentsForCopyPreferQuick: true) = Clipboard clipboardText]])
+	^ (copyBuffer notNil and: [copyBuffer unpackSelection textContentsForCopy = Clipboard clipboardText string or: [(copyBuffer unpackSelection textContentsForCopyPreferQuick: true) = Clipboard clipboardText string]])
 		ifTrue: [
 			copyBuffer wrapsAround
-				ifTrue: [aWrapBlock value: copyBuffer unpackSelection veryDeepCopy]
+				ifTrue: [
+					copyBuffer unpackSelection copyBlock
+						convertedFor: anInterface
+						do: [:repr | aWrapBlock value: repr]]
 				ifFalse: [ | list |
 					list := copyBuffer submorphs collect: #copyBlock.
 					aBoolean ifTrue: [list := list reversed].
