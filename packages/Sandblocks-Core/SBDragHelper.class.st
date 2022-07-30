@@ -279,7 +279,8 @@ SBDragHelper >> mouseMove: anEvent [
 						morph convertedFor: (blockAtCursor objectInterfaceForInsert: cursor command) do: [:res |
 							cursor command morph: res.
 							dropLocation := {#insert. cursor}]].
-					cursor isSelect ifTrue: [dropLocation := {#replace. cursor}]]]].
+					cursor isSelect ifTrue: [dropLocation := {#replace. cursor}].
+					cursor isText ifTrue: [dropLocation := {#replace. SBCursorSelect new block: cursor block}]]]].
 	
 	dropLocation ifNil: [dropLocation := #(#none nil)].
 	

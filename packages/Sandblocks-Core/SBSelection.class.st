@@ -17,8 +17,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBSelection >> abortDrag: anEvent [
 
-	self onAbortUndoIn ifNotNil: [:editor |
-		editor handleDropCancelMorph: self].
+	self onAbortUndoIn ifNotNil: [:editor | editor handleDropCancelMorph: self].
 	
 	self delete
 ]
