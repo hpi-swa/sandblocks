@@ -82,6 +82,16 @@ SBBlock >> actions [
 					do: [:pragma | (#(#action #multiSelectAction #inputAction) includes: pragma keyword) ifTrue: [stream nextPut: pragma]]]]]) asIdentitySet asArray
 ]
 
+{ #category : #accessing }
+SBBlock >> activeTextMorph [
+
+	| candidate |
+	candidate := self sandblockEditor currentInputCommand ifNotNil: #textMorph.
+	candidate ifNil: [^ nil].
+	(self textMorphs includes: candidate) ifFalse: [^ nil].
+	^ candidate
+]
+
 { #category : #hierarchy }
 SBBlock >> addBlock: aBlock [
 
@@ -2567,7 +2577,7 @@ SBBlock >> shouldAutocomplete [
 { #category : #suggestions }
 SBBlock >> shouldSuggest [
 
-	^ self suggestAlways or: [self contents size >= 2]
+	^ self suggestAlways or: [self activeTextMorph contents size >= 2]
 ]
 
 { #category : #'as yet unclassified' }
@@ -2973,7 +2983,7 @@ SBBlock >> useAlgebraLayout [
 { #category : #suggestions }
 SBBlock >> useSuggestion: anItem [
 
-	self contents: anItem contents.
+	self activeTextMorph contents: anItem contents.
 	self containingSandblock sandblockEditor ifNotNil: #endInput
 ]
 

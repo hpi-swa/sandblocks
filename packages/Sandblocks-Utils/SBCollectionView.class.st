@@ -49,7 +49,7 @@ SBCollectionView >> add: anObject [
 { #category : #'as yet unclassified' }
 SBCollectionView >> at: aNumber [
 
-	^ collection at: start + aNumber * step - 1
+	^ collection at: start + ((aNumber - 1) * step)
 ]
 
 { #category : #'as yet unclassified' }

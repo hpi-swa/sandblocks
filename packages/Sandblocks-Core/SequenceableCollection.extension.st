@@ -70,6 +70,12 @@ SequenceableCollection >> viewFrom: aNumber [
 ]
 
 { #category : #'*Sandblocks-Core' }
+SequenceableCollection >> viewFrom: aNumber by: aStepNumber [
+
+	^ SBCollectionView on: self from: aNumber to: self size by: aStepNumber
+]
+
+{ #category : #'*Sandblocks-Core' }
 SequenceableCollection >> viewFrom: aNumber to: anotherNumber [
 
 	^ SBCollectionView on: self from: aNumber to: anotherNumber
