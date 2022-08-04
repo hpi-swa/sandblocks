@@ -388,15 +388,20 @@ SBSuggestionMenu >> updateQueued: aBoolean [
 
 { #category : #actions }
 SBSuggestionMenu >> useSuggestion [
-	" try to apply a suggestion, return whether anything was applied "
 	<globalAction>
 	<actionValidIf: #canUseSuggestion>
 
+	| activeRequestor |
+	" try to apply a suggestion, return whether anything was applied "
 	self hasSuggestions ifFalse: [^ false].
+	activeRequestor := requestor.
 	self activeItem ifNotNil: [:item |
 		(item wouldChange: requestor)
 			ifTrue: [item useSuggestionOn: requestor in: editor]
 			ifFalse: [editor selection inputNextUnknown]].
-	self delete.
+	
+	"see if in the meantime we've been asked to show up elsewhere"
+	activeRequestor = requestor ifTrue: [self delete].
+	
 	^ true
 ]
