@@ -1,6 +1,9 @@
 Class {
 	#name : #SBTextInputMapping,
 	#superclass : #SBInputMapping,
+	#instVars : [
+		'useSuggestionViaCr'
+	],
 	#category : #'Sandblocks-Core'
 }
 
@@ -39,7 +42,10 @@ SBTextInputMapping >> registerDefaultShortcuts [
 		registerShortcut: Character space shift withCommand do: #insertElementBefore;
 		registerShortcut: $i command do: #appendElement;
 		registerShortcut: $I shift withCommand do: #prependElement;
-		registerShortcut: Character tab asSandblockShortcut, Character cr do: #useSuggestion;
+		registerShortcut: (self useSuggestionViaCr
+				ifTrue: [Character tab asSandblockShortcut, Character cr]
+				ifFalse: [Character tab asSandblockShortcut])
+			do: #useSuggestion;
 		inputShortcut: Character cr command do: #typeNewLine.
 	
 	" cursor "
@@ -156,4 +162,16 @@ SBTextInputMapping >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 			startOverrideInput: anEvent
 			in: anEditor.
 		aBlock value]
+]
+
+{ #category : #'as yet unclassified' }
+SBTextInputMapping >> useSuggestionViaCr [
+
+	^ useSuggestionViaCr ifNil: [true]
+]
+
+{ #category : #'as yet unclassified' }
+SBTextInputMapping >> useSuggestionViaCr: aBoolean [
+
+	useSuggestionViaCr := aBoolean
 ]
