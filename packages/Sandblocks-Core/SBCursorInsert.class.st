@@ -117,7 +117,7 @@ SBCursorInsert >> drawOn: aCanvas in: aRectangle color: aColor [
 SBCursorInsert >> enterWith: aCursor [
 
 	super enterWith: aCursor.
-	aCursor showLabel: (command title ifNil: ['insert in ', self container printString]).
+	command title ifNotNil: [:title | aCursor showLabel: title].
 	command suggestions ifNotEmpty: [:s |
 		aCursor editor suggestionMenu
 			suggestions: s;
