@@ -54,6 +54,12 @@ SBCursorText >> color [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorText >> command [
+
+	^ self currentCommand
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorText >> currentCommand [
 
 	^ currentCommand

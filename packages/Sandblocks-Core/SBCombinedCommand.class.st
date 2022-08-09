@@ -74,6 +74,12 @@ SBCombinedCommand >> insertIndex [
 	^ self commands detect: [:c | c isInsert] ifFound: [:c | c insertIndex] ifNone: [nil]
 ]
 
+{ #category : #'insert commands' }
+SBCombinedCommand >> morphs [
+
+	^ self commands detect: [:c | c respondsTo: #morphs] ifFound: [:c | c morphs] ifNone: [nil]
+]
+
 { #category : #apply }
 SBCombinedCommand >> postDo [
 

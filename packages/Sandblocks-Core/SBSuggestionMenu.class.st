@@ -344,7 +344,7 @@ SBSuggestionMenu >> resize [
 	self extent: (self hasItems ifFalse: [0 @ 0] ifTrue: [
 		0 @ ((container height + ((focusHint notNil and: [focusHint visible])
 			ifTrue: [focusHint height]
-			ifFalse: [0]) min: 330) + 2)])
+			ifFalse: [0]) min: 330 sbScaled) + 2 sbScaled)])
 ]
 
 { #category : #'stepping and presenter' }

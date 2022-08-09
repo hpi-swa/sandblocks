@@ -1244,6 +1244,8 @@ SBEditor >> performShortcutFor: anEvent [
 		self cursor updateHorizontalOffset.
 		^ true].
 	
+	self mode = #insert and: [self cursor unhandledEvent: anEvent in: self didHandle: [^ true]].
+	
 	^ inputMapping
 		actionFor: anEvent
 		mode: self mode
