@@ -247,6 +247,8 @@ SBCursorInsert >> selectSmaller [
 SBCursorInsert >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 
 	| ret |
+	(anEvent keyCharacter isPrintable not or: [anEvent keyCharacter = Character tab and: [anEvent shiftPressed]]) ifTrue: [^ self].
+	
 	ret := command tryExpandWithInput: anEvent keyCharacter asString.
 	ret == false ifTrue: [^ self].
 	

@@ -279,6 +279,15 @@ Morph >> isTemporaries [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Morph >> lastCursorPosition [
+
+	| last |
+	last := nil.
+	self cursorPositionsDo: [:pos | last := pos].
+	^ last
+]
+
+{ #category : #'*Sandblocks-Core' }
 Morph >> lastMorphThat: aBlock [
 
 	self reverseAllMorphsDo: [:m | (aBlock value: m) ifTrue: [^ m]].
