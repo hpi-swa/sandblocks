@@ -243,12 +243,6 @@ SBUnknown >> valid [
 	^ self isStatement
 ]
 
-{ #category : #testing }
-SBUnknown >> wantsInput [
-
-	^ true
-]
-
 { #category : #accessing }
 SBUnknown >> wasDeselected [
 

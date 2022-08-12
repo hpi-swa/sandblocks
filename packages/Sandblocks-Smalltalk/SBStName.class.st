@@ -376,12 +376,6 @@ SBStName >> veryDeepCopyWith: aCopier [
 	^ new
 ]
 
-{ #category : #testing }
-SBStName >> wantsInput [
-
-	^ self contents isEmpty
-]
-
 { #category : #'as yet unclassified' }
 SBStName >> wasDeselected [
 

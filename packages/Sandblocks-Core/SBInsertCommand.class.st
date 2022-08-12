@@ -68,6 +68,12 @@ SBInsertCommand >> isInsert [
 ]
 
 { #category : #'as yet unclassified' }
+SBInsertCommand >> isJumpPoint [
+
+	^ self container containingSandblock childSandblocks not
+]
+
+{ #category : #'as yet unclassified' }
 SBInsertCommand >> morph [
 
 	^ morph

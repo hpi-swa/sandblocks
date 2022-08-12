@@ -94,6 +94,12 @@ SBRelInsertCommand >> isInsert [
 ]
 
 { #category : #'as yet unclassified' }
+SBRelInsertCommand >> isJumpPoint [
+
+	^ self container containingSandblock hasChildSandblocks not
+]
+
+{ #category : #'as yet unclassified' }
 SBRelInsertCommand >> isStatementInsert [
 
 	self flag: #fixme.

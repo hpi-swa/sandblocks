@@ -199,6 +199,19 @@ SBBlockCursor >> flushLayoutCache [
 	
 ]
 
+{ #category : #private }
+SBBlockCursor >> getMoveHorizontal: aNumber wordWise: aBoolean [
+
+	| newPos |
+	newPos := self cursorPosition.
+	[newPos := newPos moveHorizontal: aNumber wordWise: aBoolean] doWhileTrue: [aBoolean and: [newPos notNil and: [(newPos class = SBCursorText or: [newPos class = SBCursorInsert and: [newPos isJumpPoint]]) not]]].
+	newPos ifNil: [^ self].
+	
+	newPos ~= self cursorPosition ifTrue: [newPos placeAtEnd: (aBoolean ifTrue: [aNumber > 0] ifFalse: [aNumber < 0])].
+	
+	^ newPos
+]
+
 { #category : #'vertical movement' }
 SBBlockCursor >> globalHorizontalOffset [
 
@@ -394,14 +407,7 @@ SBBlockCursor >> moveHorizontal: aNumber [
 { #category : #private }
 SBBlockCursor >> moveHorizontal: aNumber wordWise: aBoolean [
 
-	| newPos |
-	newPos := self cursorPosition.
-	[newPos := newPos moveHorizontal: aNumber wordWise: aBoolean] doWhileTrue: [aBoolean and: [newPos notNil and: [(newPos class = SBCursorText or: [newPos class = SBCursorInsert and: [newPos container wantsInput]]) not]]].
-	newPos ifNil: [^ self].
-	
-	newPos ~= self cursorPosition ifTrue: [newPos placeAtEnd: (aBoolean ifTrue: [aNumber > 0] ifFalse: [aNumber < 0])].
-	
-	self cursorPosition: newPos explicitMove: true axis: #x
+	self cursorPosition: (self getMoveHorizontal: aNumber wordWise: aBoolean) explicitMove: true axis: #x
 ]
 
 { #category : #multiselection }
@@ -414,6 +420,17 @@ SBBlockCursor >> multiSelection [
 SBBlockCursor >> multiSelection: aCollection [
 
 	self cursorPosition: (SBCursorMultiSelect new selected: aCollection) explicitMove: true axis: #none
+]
+
+{ #category : #'as yet unclassified' }
+SBBlockCursor >> nextCursorThat: aBlock [
+
+	| found |
+	found := false.
+	self selectedBlock containingFloat cursorPositionsDo: [:pos |
+		(found and: [aBlock value: pos]) ifTrue: [^ pos].
+		pos = cursorPosition ifTrue: [found := true]].
+	^ nil
 ]
 
 { #category : #'vertical movement' }
@@ -466,6 +483,17 @@ SBBlockCursor >> prepareForNextCommand [
 	" if we have a pending input command, make sure it is finished "
 	
 	cursorPosition mode = #input ifTrue: [self selectNoInput: self selectedBlock]
+]
+
+{ #category : #'as yet unclassified' }
+SBBlockCursor >> previousCursorThat: aBlock [
+
+	| last |
+	last := nil.
+	self selectedBlock containingFloat cursorPositionsDo: [:pos |
+		pos = cursorPosition ifTrue: [^ last].
+		(aBlock value: pos) ifTrue: [last := pos]].
+	^ last
 ]
 
 { #category : #'vertical movement' }

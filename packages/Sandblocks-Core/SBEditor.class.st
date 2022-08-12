@@ -568,6 +568,18 @@ SBEditor >> cursor [
 	^ cursor
 ]
 
+{ #category : #cursor }
+SBEditor >> cursorPosition: aPosition [
+
+	self cursor cursorPosition: aPosition explicitMove: true axis: #none
+]
+
+{ #category : #cursor }
+SBEditor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol [
+
+	self cursor cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol
+]
+
 { #category : #'as yet unclassified' }
 SBEditor >> deactivateForces [
 	

@@ -266,9 +266,3 @@ SBTextBubble >> textMorphClass: aClass [
 
 	textMorphClass := aClass
 ]
-
-{ #category : #'as yet unclassified' }
-SBTextBubble >> wantsInput [
-
-	^ self contents isEmpty
-]

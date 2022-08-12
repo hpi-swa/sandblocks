@@ -37,6 +37,12 @@ SBInputCommand >> hasChange [
 ]
 
 { #category : #'as yet unclassified' }
+SBInputCommand >> isJumpPoint [
+
+	^ self textMorph contents isEmpty
+]
+
+{ #category : #'as yet unclassified' }
 SBInputCommand >> newMorph [
 
 	^ newMorph

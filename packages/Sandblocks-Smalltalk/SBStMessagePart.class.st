@@ -345,12 +345,6 @@ SBStMessagePart >> valid [
 	^ self contents notEmpty and: [self contents ~= ':']
 ]
 
-{ #category : #testing }
-SBStMessagePart >> wantsInput [
-
-	^ self currentTextMorph contents isEmpty
-]
-
 { #category : #actions }
 SBStMessagePart >> wrapAsArgument [
 	<action>

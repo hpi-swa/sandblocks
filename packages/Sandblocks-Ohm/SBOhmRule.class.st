@@ -109,12 +109,6 @@ SBOhmRule >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
-SBOhmRule >> wantsInput [
-
-	^ self contents isEmpty
-]
-
-{ #category : #'as yet unclassified' }
 SBOhmRule >> writeRascalSourceOn: aStream [
 
 	aStream nextPutAll: 'syntax '.

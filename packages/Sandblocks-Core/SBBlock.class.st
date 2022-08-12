@@ -752,6 +752,51 @@ SBBlock >> currentTextMorph [
 	^ nil
 ]
 
+{ #category : #cursor }
+SBBlock >> cursorPositionAfterThat: aBlock [
+
+	self cursorPositionsAfterDo: [:pos | (aBlock value: pos) ifTrue: [^ pos]].
+	^ nil
+]
+
+{ #category : #cursor }
+SBBlock >> cursorPositionBeforeThat: aBlock [
+
+	| last |
+	last := nil.
+	self containingFloat cursorPositionsDo: [:pos |
+		pos block = self ifTrue: [^ last].
+		(aBlock value: pos) ifTrue: [last := pos]].
+	^ last
+]
+
+{ #category : #cursor }
+SBBlock >> cursorPositionInSelfOrAfterThat: aBlock [
+
+	self cursorPositionsInSelfOrAfterDo: [:pos | (aBlock value: pos) ifTrue: [^ pos]].
+	^ nil
+]
+
+{ #category : #cursor }
+SBBlock >> cursorPositionsAfterDo: aBlock [
+
+	| found |
+	found := false.
+	self containingFloat cursorPositionsDo: [:pos |
+		pos block = self ifTrue: [found := true].
+		(found and: [pos block ~= self and: [(pos block hasOwner: self) not]]) ifTrue: [aBlock value: pos]]
+]
+
+{ #category : #cursor }
+SBBlock >> cursorPositionsInSelfOrAfterDo: aBlock [
+
+	| found |
+	found := false.
+	self containingFloat cursorPositionsDo: [:pos |
+		pos block = self ifTrue: [found := true].
+		found ifTrue: [aBlock value: pos]]
+]
+
 { #category : #'ast helpers' }
 SBBlock >> declarationsDo: aBlock [
 
@@ -1290,7 +1335,11 @@ SBBlock >> inputContainedUnknown [
 	<action>
 	<inputAction>
 
-	(self wantsInput ifTrue: [self] ifFalse: [self nextBlockThat: [:m | m wantsInput]]) ifNotNil: [:m | ((m hasOwner: self) or: [m = self]) ifTrue: [self sandblockEditor startInput: m at: 1 replacingContents: false]]
+	self cursorPositionsDo: [:pos |
+		pos isJumpPoint ifTrue: [
+			self sandblockEditor cursorPosition: pos.
+			^ true]].
+	^ false
 ]
 
 { #category : #actions }
@@ -1298,15 +1347,9 @@ SBBlock >> inputNextUnknown [
 	<action>
 	<inputAction>
 
-	(self nextBlockThat: [:m | m wantsInput]) ifNotNil: [:m |
-		self containingFloat = m containingFloat ifTrue: [
-			SBToggledCode comment: '' active: 1 do: {
-				[
-					(self sandblockEditor cursor lastInsertPosition: m)
-						ifNotNil: [:last | self sandblockEditor cursor cursorPosition: last explicitMove: true axis: #none]
-						ifNil: [self sandblockEditor startInput: m at: 1 replacingContents: false]].
-				[m startInsertAtEnd].
-				[self sandblockEditor startInput: m at: 1 replacingContents: false]}]]
+	((self sandblockEditor cursor selectedBlock = self or: [self sandblockEditor cursor selectedBlock hasOwner: self])
+		ifTrue: [self sandblockEditor cursor nextCursorThat: [:pos | pos isJumpPoint]]
+		ifFalse: [self cursorPositionInSelfOrAfterThat: [:pos | pos isJumpPoint]]) ifNotNil: [:pos | self sandblockEditor cursorPosition: pos]
 ]
 
 { #category : #actions }
@@ -1314,15 +1357,9 @@ SBBlock >> inputPreviousUnknown [
 	<action>
 	<inputAction>
 
-	(self previousMorphThat: [:m | m isSandblock and: [m wantsInput]]) ifNotNil: [:m |
-		self containingFloat = m containingFloat ifTrue: [
-			SBToggledCode comment: '' active: 1 do: {
-				[
-					(self sandblockEditor cursor lastInsertPosition: m)
-						ifNotNil: [:last | self sandblockEditor cursor cursorPosition: last explicitMove: true axis: #none]
-						ifNil: [self sandblockEditor startInput: m at: 1 replacingContents: false]].
-				[m startInsertAtEnd].
-				[self sandblockEditor startInput: m at: 1 replacingContents: false]}]]
+	((self sandblockEditor cursor selectedBlock = self or: [self sandblockEditor cursor selectedBlock hasOwner: self])
+		ifTrue: [self sandblockEditor cursor previousCursorThat: [:pos | pos isJumpPoint]]
+		ifFalse: [self cursorPositionBeforeThat: [:pos | pos isJumpPoint]]) ifNotNil: [:pos | self sandblockEditor cursorPosition: pos]
 ]
 
 { #category : #'insert/delete' }
@@ -2780,10 +2817,7 @@ SBBlock >> startInsertAtStart [
 { #category : #'as yet unclassified' }
 SBBlock >> startNextInput [
 
-	((self wantsInput ifTrue: [self] ifFalse: [self nextBlockThat: [:m | m wantsInput]]) ifNil: [
-		self startInputCommand
-			ifNotNil: [self]
-			ifNil: [self nextBlockThat: [:m | m startInputCommand notNil]]]) ifNotNil: [:m | ((m hasOwner: self) or: [m = self]) ifTrue: [self sandblockEditor startInput: m at: 900000000 replacingContents: false]]
+	self inputContainedUnknown ifFalse: [(self cursorPositionInSelfOrAfterThat: [:m | m isText]) ifNotNil: [:pos | self sandblockEditor cursorPosition: pos]]
 ]
 
 { #category : #actions }
@@ -3039,12 +3073,6 @@ SBBlock >> veryDeepCopyWith: aCopier [
 SBBlock >> wantsExtraSpace [
 
 	^ true
-]
-
-{ #category : #testing }
-SBBlock >> wantsInput [
-
-	^ self dynamicNumberOfChildren and: [self hasChildSandblocks not]
 ]
 
 { #category : #'artefact protocol' }

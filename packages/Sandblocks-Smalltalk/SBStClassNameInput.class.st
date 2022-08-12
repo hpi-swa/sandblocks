@@ -64,9 +64,3 @@ SBStClassNameInput >> selectedClass: aClass [
 		selector: #object;
 		value: aClass)
 ]
-
-{ #category : #'as yet unclassified' }
-SBStClassNameInput >> wantsInput [
-
-	^ false
-]

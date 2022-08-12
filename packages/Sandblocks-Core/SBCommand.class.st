@@ -208,6 +208,12 @@ SBCommand >> isInsert [
 ]
 
 { #category : #testing }
+SBCommand >> isJumpPoint [
+
+	^ false
+]
+
+{ #category : #testing }
 SBCommand >> isStatementInsert [
 
 	^ false

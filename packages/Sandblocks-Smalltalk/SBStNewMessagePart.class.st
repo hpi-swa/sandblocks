@@ -255,12 +255,6 @@ SBStNewMessagePart >> wantsExtraSpace [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
-SBStNewMessagePart >> wantsInput [
-
-	^ self contents isEmpty
-]
-
 { #category : #actions }
 SBStNewMessagePart >> wrapAsArgument [
 	<action>

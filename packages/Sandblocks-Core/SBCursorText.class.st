@@ -139,6 +139,12 @@ SBCursorText >> initialize [
 ]
 
 { #category : #testing }
+SBCursorText >> isJumpPoint [
+
+	^ self command isJumpPoint
+]
+
+{ #category : #testing }
 SBCursorText >> isText [
 
 	^ true

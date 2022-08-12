@@ -270,7 +270,7 @@ SBStMethod >> tryDelete [
 SBStMethod >> useSuggestion: anItem [
 
 	signature selectorAndEdit: anItem contents withFilledArgs: true.
-	(signature arguments anySatisfy: #wantsInput) ifFalse: [self inputNextUnknown]
+	self inputContainedUnknown
 ]
 
 { #category : #'method protocol' }

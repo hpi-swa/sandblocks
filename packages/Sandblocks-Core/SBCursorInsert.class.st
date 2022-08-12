@@ -161,6 +161,12 @@ SBCursorInsert >> isInsert [
 	^ true
 ]
 
+{ #category : #testing }
+SBCursorInsert >> isJumpPoint [
+
+	^ self secondaryInsertPosition not and: [self command isJumpPoint]
+]
+
 { #category : #'as yet unclassified' }
 SBCursorInsert >> leaveIn: anEditor with: aCursor [
 
@@ -257,7 +263,7 @@ SBCursorInsert >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 		^ self].
 	
 	anEditor do: command.
-	anEditor selection inputContainedUnknown.
+	"anEditor selection inputContainedUnknown."
 	(command continueAfterInsert: anEvent keyCharacter) ifTrue: [anEditor handle: anEvent].
 	aBlock value
 ]

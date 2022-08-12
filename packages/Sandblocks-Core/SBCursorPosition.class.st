@@ -129,6 +129,12 @@ SBCursorPosition >> isInsert [
 ]
 
 { #category : #testing }
+SBCursorPosition >> isJumpPoint [
+
+	^ false
+]
+
+{ #category : #testing }
 SBCursorPosition >> isMultiSelect [
 
 	^ false
