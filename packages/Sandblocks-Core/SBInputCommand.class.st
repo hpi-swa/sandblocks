@@ -25,6 +25,9 @@ SBInputCommand >> contents: aString [
 { #category : #'as yet unclassified' }
 SBInputCommand >> do [
 
+	newMorph ifNil: [newMorph := oldMorph].
+	newText ifNil: [newText := previousText].
+	
 	(oldMorph ~= newMorph and: [newMorph owner isNil]) ifTrue: [oldMorph replaceBy: newMorph].
 	self textMorph contents: newText.
 	^ newMorph
@@ -40,6 +43,12 @@ SBInputCommand >> hasChange [
 SBInputCommand >> isJumpPoint [
 
 	^ self textMorph contents isEmpty
+]
+
+{ #category : #'as yet unclassified' }
+SBInputCommand >> morphs [
+
+	^ {newMorph}
 ]
 
 { #category : #'as yet unclassified' }
