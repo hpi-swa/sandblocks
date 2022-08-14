@@ -676,6 +676,12 @@ Morph >> storeOn: aStream [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Morph >> submorphIndex [
+
+	^ self owner submorphs indexOf: self
+]
+
+{ #category : #'*Sandblocks-Core' }
 Morph >> swapWith: aMorph [
 
 	| currentOwner index |

@@ -2838,12 +2838,6 @@ SBBlock >> stopEditing: aCommand [
 	self removeSuggestionMenu
 ]
 
-{ #category : #hierarchy }
-SBBlock >> submorphIndex [
-
-	^ self owner submorphs indexOf: self
-]
-
 { #category : #accessing }
 SBBlock >> suggestAlways [
 
