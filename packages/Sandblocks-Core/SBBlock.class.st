@@ -2599,6 +2599,12 @@ SBBlock >> selectToplevelTowards: aSideSymbol [
 		to: (opposite, 'Center') asSymbol) select
 ]
 
+{ #category : #callbacks }
+SBBlock >> selectedTextMorph: aMorph [
+
+	
+]
+
 { #category : #printing }
 SBBlock >> selectionLabel [
 

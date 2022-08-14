@@ -104,7 +104,8 @@ SBCursorText >> drawOn: aCanvas in: aRectangle color: aColor [
 SBCursorText >> enterWith: aCursor [
 
 	replacingContents ifTrue: [self textMorph contents: ''].
-	self textMorph moveCursorTo: self cursorIndex
+	self textMorph moveCursorTo: self cursorIndex.
+	self textMorph containingSandblock selectedTextMorph: self textMorph
 ]
 
 { #category : #'as yet unclassified' }

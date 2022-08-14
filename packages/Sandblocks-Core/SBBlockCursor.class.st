@@ -205,7 +205,7 @@ SBBlockCursor >> getMoveHorizontal: aNumber wordWise: aBoolean [
 	| newPos |
 	newPos := self cursorPosition.
 	[newPos := newPos moveHorizontal: aNumber wordWise: aBoolean] doWhileTrue: [aBoolean and: [newPos notNil and: [(newPos class = SBCursorText or: [newPos class = SBCursorInsert and: [newPos isJumpPoint]]) not]]].
-	newPos ifNil: [^ self].
+	newPos ifNil: [^ nil].
 	
 	newPos ~= self cursorPosition ifTrue: [newPos placeAtEnd: (aBoolean ifTrue: [aNumber > 0] ifFalse: [aNumber < 0])].
 	
@@ -407,7 +407,7 @@ SBBlockCursor >> moveHorizontal: aNumber [
 { #category : #private }
 SBBlockCursor >> moveHorizontal: aNumber wordWise: aBoolean [
 
-	self cursorPosition: (self getMoveHorizontal: aNumber wordWise: aBoolean) explicitMove: true axis: #x
+	(self getMoveHorizontal: aNumber wordWise: aBoolean) ifNotNil: [:pos | self cursorPosition: pos explicitMove: true axis: #x]
 ]
 
 { #category : #multiselection }
