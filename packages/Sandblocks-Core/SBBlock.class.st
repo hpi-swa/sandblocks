@@ -945,6 +945,12 @@ SBBlock >> deleteCommandFor: aBlock [
 					replacer: nullBlock]]
 ]
 
+{ #category : #callbacks }
+SBBlock >> deselectedTextMorph: aMorph [
+
+	
+]
+
 { #category : #decorators }
 SBBlock >> detachDecorator: aDecorator [
 

@@ -155,7 +155,8 @@ SBCursorText >> isText [
 SBCursorText >> leaveIn: anEditor with: aCursor [
 
 	self applyCommandIn: anEditor.
-	self textMorph stopEditing
+	self textMorph stopEditing.
+	self textMorph containingSandblock deselectedTextMorph: self textMorph
 ]
 
 { #category : #'as yet unclassified' }
