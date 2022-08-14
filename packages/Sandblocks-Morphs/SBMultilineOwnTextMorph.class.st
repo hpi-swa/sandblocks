@@ -30,7 +30,7 @@ SBMultilineOwnTextMorph >> betterCursorAfterSelectionTo: aNumber [
 { #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> canMoveCursorDirection: aNumber [
 
-	^ ((self cursor = (self contents size + 1) and: [aNumber > 0]) or: [self cursor = 1 and: [aNumber < 0]]) not
+	^ ((self cursor = (self contentsForEdit size + 1) and: [aNumber > 0]) or: [self cursor = 1 and: [aNumber < 0]]) not
 ]
 
 { #category : #'as yet unclassified' }
@@ -56,7 +56,7 @@ SBMultilineOwnTextMorph >> cursorFromEvent: anEvent [
 { #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> cursorIndexForPosition: aPoint [
 
-	self contents ifEmpty: [^ 0].
+	self contentsForEdit ifEmpty: [^ 0].
 	^ (self paragraph characterBlockAtPoint: aPoint) stringIndex
 ]
 
@@ -69,7 +69,7 @@ SBMultilineOwnTextMorph >> cursorPosition [
 { #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> drawOn: aCanvas [
 
-	self contents ifEmpty: [super drawOn: aCanvas] ifNotEmpty: [
+	self showPlaceholder ifTrue: [super drawOn: aCanvas] ifFalse: [
 		aCanvas
 			paragraph: (self paragraph
 				positionWhenComposed: self position;
@@ -206,19 +206,20 @@ SBMultilineOwnTextMorph >> moveCursorVertically: aNumber selecting: aBoolean ifA
 	| data line |
 	data := self lineNumberOfIndex: self cursor.
 	
-	(aNumber < 0 and: [(data first + aNumber) < 1])
+	(aNumber < 0 and: [data first + aNumber < 1])
 		ifTrue: [
 			self cursor: 1.
 			aBlock value]
 		ifFalse: [
-			(aNumber > 0 and: [
-				(data first + aNumber) > self paragraph numberOfLines])
+			(aNumber > 0 and: [data first + aNumber > self paragraph numberOfLines])
 				ifTrue: [
-					self cursor: self contents size + 1.
+					self cursor: self contentsForEdit size + 1.
 					aBlock value]
 				ifFalse: [
 					line := data first + aNumber.
-					data := self indexAtLine: line x: (self sandblockEditor ifNotNil: [:e | e cursor globalHorizontalOffset] ifNil: [data second]).
+					data := self indexAtLine: line x: (self sandblockEditor
+						ifNotNil: [:e | e cursor globalHorizontalOffset]
+						ifNil: [data second]).
 					
 					self cursor: data first + data second]].
 	
@@ -264,8 +265,8 @@ SBMultilineOwnTextMorph >> privateMoveBy: delta [
 SBMultilineOwnTextMorph >> selectFrom: aNumber to: anotherNumber [
 
 	self
-		cursor: (anotherNumber clampLow: 1 high: self contents size + 1);
-		selectionBound: (aNumber clampLow: 1 high: self contents size + 1)
+		cursor: (anotherNumber clampLow: 1 high: self contentsForEdit size + 1);
+		selectionBound: (aNumber clampLow: 1 high: self contentsForEdit size + 1)
 ]
 
 { #category : #'as yet unclassified' }
@@ -274,7 +275,7 @@ SBMultilineOwnTextMorph >> selection [
 	| cursors |
 	self hasSelection ifFalse: [^ ''].
 	cursors := self selectionBounds.
-	^ self contents copyFrom: cursors first to: cursors second - 1
+	^ self contentsForEdit copyFrom: cursors first to: cursors second - 1
 ]
 
 { #category : #'as yet unclassified' }
@@ -294,6 +295,12 @@ SBMultilineOwnTextMorph >> selectionBound: aNumber [
 SBMultilineOwnTextMorph >> selectionBounds [
 
 	^ {self selectionBound min: self cursor. self selectionBound max: self cursor}
+]
+
+{ #category : #'as yet unclassified' }
+SBMultilineOwnTextMorph >> showPlaceholder [
+
+	^ self contents isEmpty
 ]
 
 { #category : #'as yet unclassified' }

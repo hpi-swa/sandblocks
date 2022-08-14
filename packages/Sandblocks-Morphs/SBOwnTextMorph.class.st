@@ -86,13 +86,19 @@ SBOwnTextMorph >> contents: aString [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> contentsAfterCursor [
 
-	^ self contents copyFrom: self cursor to: self contents size
+	^ self contentsForEdit copyFrom: self cursor to: self contentsForEdit size
 ]
 
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> contentsBeforeCursor [
 
-	^ self contents copyFrom: 1 to: self cursor - 1
+	^ self contentsForEdit copyFrom: 1 to: self cursor - 1
+]
+
+{ #category : #'as yet unclassified' }
+SBOwnTextMorph >> contentsForEdit [
+
+	^ contents
 ]
 
 { #category : #'as yet unclassified' }
@@ -130,9 +136,9 @@ SBOwnTextMorph >> cursorIndexForPosition: aPoint [
 	font := self fontToUse.
 	offset := aPoint x - self position x.
 	index := 0.
-	[offset > 0 and: [index < self contents size]] whileTrue: [
+	[offset > 0 and: [index < self contentsForEdit size]] whileTrue: [
 		index := index + 1.
-		offset := offset - (font widthOf: (self contents at: index))].
+		offset := offset - (font widthOf: (self contentsForEdit at: index))].
 	^ offset > 0 ifTrue: [index + 1] ifFalse: [index]
 ]
 
@@ -141,7 +147,7 @@ SBOwnTextMorph >> cursorPosition [
 
 	| font |
 	font := self fontToUse.
-	^ (self left + (font widthOfString: self contents from: 1 to: self cursor - 1)) @ self y
+	^ self left + (font widthOfString: self contentsForEdit from: 1 to: self cursor - 1) @ self y
 ]
 
 { #category : #'as yet unclassified' }
@@ -153,12 +159,12 @@ SBOwnTextMorph >> cursorVisible [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> deleteAfterCursor [
 
-	self cursor <= self contents size ifTrue: [ | range rangeStop |
+	self cursor <= self contentsForEdit size ifTrue: [ | range rangeStop |
 		range := self selectionBounds.
 		rangeStop := range first = range second
 			ifTrue: [range second]
 			ifFalse: [range second - 1].
-		self contents: (self contents first: range first - 1), (self contents allButFirst: rangeStop).
+		self contents: (self contentsForEdit first: range first - 1), (self contentsForEdit allButFirst: rangeStop).
 		self moveCursorTo: range first]
 ]
 
@@ -168,13 +174,15 @@ SBOwnTextMorph >> deleteBeforeCursor [
 	| range rangeStart |
 	self cursor <= 1 ifTrue: [^ self].
 	
-	self cursor = (self contents size + 1) ifTrue: [
-		self contents: self contents allButLast.
+	self cursor = (self contentsForEdit size + 1) ifTrue: [
+		self contents: self contentsForEdit allButLast.
 		^ self].
 	
 	range := self selectionBounds.
-	rangeStart := range first = range second ifTrue: [range first - 2] ifFalse: [range first - 1].
-	self contents: (self contents first: rangeStart), (self contents allButFirst: range second - 1).
+	rangeStart := range first = range second
+		ifTrue: [range first - 2]
+		ifFalse: [range first - 1].
+	self contents: (self contentsForEdit first: rangeStart), (self contentsForEdit allButFirst: range second - 1).
 	self moveCursorTo: rangeStart + 1
 ]
 
@@ -339,18 +347,18 @@ SBOwnTextMorph >> initialize [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> insertCharacter: aCharacter [
 
-	self cursor > self contents size
-		ifTrue: [self contents: self contents, aCharacter]
-		ifFalse: [self contents: (self contents first: self cursor - 1), aCharacter, (self contents allButFirst: self cursor - 1)].
+	self cursor > self contentsForEdit size
+		ifTrue: [self contents: self contentsForEdit, aCharacter]
+		ifFalse: [self contents: (self contentsForEdit first: self cursor - 1), aCharacter, (self contentsForEdit allButFirst: self cursor - 1)].
 	self moveCursorTo: self cursor + 1
 ]
 
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> insertString: aString [
 
-	(self cursor > self contents size or: [self contents isEmpty])
-		ifTrue: [self contents: self contents, aString]
-		ifFalse: [self contents: (self contents first: self cursor - 1), aString, (self contents allButFirst: self cursor - 1)].
+	(self cursor > self contentsForEdit size or: [self contentsForEdit isEmpty])
+		ifTrue: [self contents: self contentsForEdit, aString]
+		ifFalse: [self contents: (self contentsForEdit first: self cursor - 1), aString, (self contentsForEdit allButFirst: self cursor - 1)].
 	self moveCursorTo: self cursor + aString size
 ]
 
@@ -363,7 +371,7 @@ SBOwnTextMorph >> invalidRect: aRectangle [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> isCursorAtEnd [
 
-	^ self cursor = (self contents size + 1)
+	^ self cursor = (self contentsForEdit size + 1)
 ]
 
 { #category : #'as yet unclassified' }
@@ -436,12 +444,11 @@ SBOwnTextMorph >> moveCursor: aNumber [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> moveCursor: aNumber ifAtBound: aBlock wordWise: aBoolean [
 
-	(aBoolean and: [(aNumber < 0 and: [self cursor = 1]) or: [aNumber > 0 and: [self cursor = (self contents size + 1)]]])
-		ifTrue: [^ aBlock value].
+	(aBoolean and: [(aNumber < 0 and: [self cursor = 1]) or: [aNumber > 0 and: [self cursor = (self contentsForEdit size + 1)]]]) ifTrue: [^ aBlock value].
 	
 	self
 		moveCursorTo: (aBoolean
-			ifTrue: [aNumber > 0 ifTrue: [self contents size + 1] ifFalse: [1]]
+			ifTrue: [aNumber > 0 ifTrue: [self contentsForEdit size + 1] ifFalse: [1]]
 			ifFalse: [self cursor + aNumber])
 		ifAtBound: aBlock
 ]
@@ -449,13 +456,13 @@ SBOwnTextMorph >> moveCursor: aNumber ifAtBound: aBlock wordWise: aBoolean [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> moveCursorTo: aNumber [
 
-	self cursor: (aNumber clampLow: 1 high: self contents size + 1)
+	self cursor: (aNumber clampLow: 1 high: self contentsForEdit size + 1)
 ]
 
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> moveCursorTo: aNumber ifAtBound: aBlock [
 
-	(aNumber < 1 or: [aNumber > (self contents size + 1)]) ifTrue: [^ aBlock value].
+	(aNumber < 1 or: [aNumber > (self contentsForEdit size + 1)]) ifTrue: [^ aBlock value].
 	self moveCursorTo: aNumber
 ]
 
@@ -517,7 +524,7 @@ SBOwnTextMorph >> suffix: aString [
 { #category : #'as yet unclassified' }
 SBOwnTextMorph >> userString [
 
-	^ self contents
+	^ self contentsForEdit
 ]
 
 { #category : #'as yet unclassified' }
