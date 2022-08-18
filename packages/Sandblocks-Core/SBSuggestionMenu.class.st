@@ -80,8 +80,7 @@ SBSuggestionMenu >> canUseSuggestion [
 SBSuggestionMenu >> delete [
 
 	super delete.
-	
-	editor updatedSuggestions
+	(reference ifNotNil: #sandblockEditor) ifNotNil: #updatedSuggestions
 ]
 
 { #category : #accessing }
