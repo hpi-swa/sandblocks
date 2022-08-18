@@ -1761,6 +1761,13 @@ SBEditor >> updateSelectionLabel [
 			[#none] -> [defaultModeColor]})]
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> updatedSuggestions [
+	"hook for notifying that the suggestions changed"
+
+	
+]
+
 { #category : #input }
 SBEditor >> useTextInput [
 

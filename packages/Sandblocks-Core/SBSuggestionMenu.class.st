@@ -14,12 +14,6 @@ Class {
 	#category : #'Sandblocks-Core'
 }
 
-{ #category : #selecting }
-SBSuggestionMenu >> accept [
-
-	editor selection useSuggestion.
-]
-
 { #category : #accessing }
 SBSuggestionMenu >> activeIndex [
 
@@ -80,6 +74,14 @@ SBSuggestionMenu >> canMoveUp [
 SBSuggestionMenu >> canUseSuggestion [
 
 	^ self isFocused and: [self hasSuggestions]
+]
+
+{ #category : #'submorphs - add/remove' }
+SBSuggestionMenu >> delete [
+
+	super delete.
+	
+	editor updatedSuggestions
 ]
 
 { #category : #accessing }
@@ -289,6 +291,7 @@ SBSuggestionMenu >> openNear: aBlock requestor: anObject [
 			openInWorld: aBlock world;
 			repositionSuggestionsMenu.
 		self focusOnOpen ifTrue: [self activeItemIndex: 1] ifFalse: [self activeItemIndex: 0].
+		editor updatedSuggestions.
 		focusHint ifNotNil: [
 			focusHint
 				visible: self focusOnOpen not;
