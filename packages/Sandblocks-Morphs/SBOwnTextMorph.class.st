@@ -406,7 +406,7 @@ SBOwnTextMorph >> keyStroke: anEvent [
 	char = Character backspace ifTrue: [^ self deleteBeforeCursor].
 	char = Character delete ifTrue: [^ self deleteAfterCursor].
 	
-	anEvent commandKeyPressed ifFalse: [self insertString: char asString]
+	(anEvent commandKeyPressed not and: [char isPrintable]) ifTrue: [self insertString: char asString]
 ]
 
 { #category : #'as yet unclassified' }

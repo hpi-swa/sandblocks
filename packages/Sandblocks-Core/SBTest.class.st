@@ -136,7 +136,7 @@ SBTest >> editorAndWorldFor: aBlock [
 { #category : #utilities }
 SBTest >> editorDebug: anEditor [
 
-	anEditor openWindow.
+	anEditor openInWindow.
 	self halt
 ]
 

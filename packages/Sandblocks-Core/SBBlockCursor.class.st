@@ -143,8 +143,8 @@ SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol 
 		self selectedBlock ifNotNil: [:b |
 			b
 				wasSelectedFromCursor: previousCursor;
-				wasSelected;
-				ensureVisible]]
+				wasSelected]].
+	self selectedBlock ifNotNil: #ensureVisible
 ]
 
 { #category : #testing }
@@ -595,9 +595,9 @@ SBBlockCursor >> showLabel: aString [
 			changeTableLayout;
 			addDropShadow;
 			cornerStyle: #rounded;
-			cornerRadius: 4;
+			cornerRadius: 4 sbScaled;
 			color: (Color r: 1 g: 1 b: 1);
-			layoutInset: 4;
+			layoutInset: 4 sbScaled;
 			addMorphBack: (SBMultilineOwnTextMorph new
 				contents: aString;
 				vResizing: #shrinkWrap;

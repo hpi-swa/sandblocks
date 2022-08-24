@@ -1481,8 +1481,7 @@ SBEditor >> scrollToPosition: aPoint [
 { #category : #selection }
 SBEditor >> scrollToShow: aBlock [
 
-	(aBlock isMorph not or: [aBlock hasOwner: scroll scroller]) ifTrue: [
-		scroll scrollToShow: aBlock]
+	(aBlock isMorph not or: [aBlock hasOwner: scroll scroller]) ifTrue: [scroll scrollToShow: aBlock]
 ]
 
 { #category : #accessing }

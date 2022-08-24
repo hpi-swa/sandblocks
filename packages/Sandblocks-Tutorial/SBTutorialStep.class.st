@@ -675,8 +675,9 @@ SBTutorialStep >> checkConditions [
 		((checkbox isKindOf: SBCheckbox) and: [checkbox value not]) ifTrue: [
 			([(checkbox valueOfProperty: #checkBlock) value: self sandblockEditor]
 				on: Error
-				do: [:error | "error signal."
-				false]) ifTrue: [
+				do: [:error |
+					SBToggledCode comment: '' active: 0 do: {[error signal]}.
+					false]) ifTrue: [
 				checkbox value: true.
 				self class markStepCompleted: selector index: index]]]
 ]

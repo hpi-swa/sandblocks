@@ -176,7 +176,7 @@ SBBrowserEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean 
 SBBrowserEditor >> scrollToShow: aRectangle [
 
 	" if we're larger than the total size and intersect already, don't move "
-	aRectangle height > scroll height ifTrue: [^ super scrollToShow: (aRectangle topLeft extent: 0 @ 0)].
+	aRectangle height > scroll height ifTrue: [^ self].
 	super scrollToShow: aRectangle
 ]
 
