@@ -51,6 +51,12 @@ SBCursorPosition >> bounds [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorPosition >> boundsInWorld [
+
+	^ self block bounds: self bounds in: self block world
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorPosition >> color [
 
 	^ self block colorPolicy selectionColorForBlock: (self block parentSandblock ifNil: [self block])
@@ -82,6 +88,12 @@ SBCursorPosition >> drawOn: aCanvas in: aRectangle color: aColor [
 ]
 
 { #category : #'as yet unclassified' }
+SBCursorPosition >> ensureLayouted [
+
+	self block ensureLayouted
+]
+
+{ #category : #'as yet unclassified' }
 SBCursorPosition >> enterWith: aCursor [
 
 	
@@ -97,6 +109,12 @@ SBCursorPosition >> hasDifferentEffect: aCursor [
 SBCursorPosition >> hash [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorPosition >> height [
+
+	^ self bounds height
 ]
 
 { #category : #'as yet unclassified' }
@@ -302,4 +320,10 @@ SBCursorPosition >> unhandledEvent: anEvent in: anEditor didHandle: aBlock [
 SBCursorPosition >> valid [
 
 	^ self block notNil and: [self block isInWorld]
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorPosition >> width [
+
+	^ self bounds width
 ]

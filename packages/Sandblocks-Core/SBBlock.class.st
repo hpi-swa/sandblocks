@@ -1150,7 +1150,7 @@ SBBlock >> ensureVisible [
 	(method ~= self and: [method notNil and: [self visibleInWorld not]]) ifTrue: [method ensureExpanded].
 	
 	self isInWorld ifTrue: [self sandblockEditor ifNotNil: [:e |
-		e scrollToShow: (e cursor cursorPosition block = self ifTrue: [e cursor cursorPosition bounds] ifFalse: [self])]]
+		e scrollToShow: (e cursor cursorPosition block = self ifTrue: [e cursor cursorPosition] ifFalse: [self])]]
 ]
 
 { #category : #actions }
