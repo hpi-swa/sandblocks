@@ -171,7 +171,7 @@ SBCursorPosition >> isText [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorPosition >> leaveIn: anEditor with: aCursor [
+SBCursorPosition >> leaveIn: anEditor with: aCursor for: aNewPosition [
 
 	
 ]

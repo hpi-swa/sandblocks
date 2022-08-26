@@ -118,7 +118,7 @@ SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol 
 			cursorPosition := SBCursorNone new.
 			previousCursor ifNotNil: [:c |
 				c block ifNotNil: [c block invalidRect: c bounds].
-				c leaveIn: self editor with: self].
+				c leaveIn: self editor with: self for: aPosition].
 			cursorPosition := aPosition.
 			cursorPosition ifNotNil: [:position |
 				position enterWith: self.

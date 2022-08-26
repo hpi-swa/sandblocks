@@ -168,7 +168,7 @@ SBCursorInsert >> isJumpPoint [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorInsert >> leaveIn: anEditor with: aCursor [
+SBCursorInsert >> leaveIn: anEditor with: aCursor for: aNewPosition [
 
 	aCursor showLabel: nil.
 	aCursor editor suggestionMenu delete

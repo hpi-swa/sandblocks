@@ -946,7 +946,7 @@ SBBlock >> deleteCommandFor: aBlock [
 ]
 
 { #category : #callbacks }
-SBBlock >> deselectedTextMorph: aMorph [
+SBBlock >> deselectedTextMorph: aMorph for: aNewPosition [
 
 	
 ]

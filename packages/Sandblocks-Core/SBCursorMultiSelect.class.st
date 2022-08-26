@@ -74,7 +74,7 @@ SBCursorMultiSelect >> isMultiSelect [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorMultiSelect >> leaveIn: anEditor with: aCursor [
+SBCursorMultiSelect >> leaveIn: anEditor with: aCursor for: aNewPosition [
 
 	selected do: [:block | block detachDecorators: SBMultiSelectionDecorator]
 ]

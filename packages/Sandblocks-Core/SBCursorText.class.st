@@ -152,11 +152,11 @@ SBCursorText >> isText [
 ]
 
 { #category : #'as yet unclassified' }
-SBCursorText >> leaveIn: anEditor with: aCursor [
+SBCursorText >> leaveIn: anEditor with: aCursor for: aNewPosition [
 
 	self applyCommandIn: anEditor.
 	self textMorph stopEditing.
-	self textMorph containingSandblock deselectedTextMorph: self textMorph
+	self textMorph containingSandblock deselectedTextMorph: self textMorph for: aNewPosition
 ]
 
 { #category : #'as yet unclassified' }
