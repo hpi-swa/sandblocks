@@ -272,7 +272,7 @@ SBStGrammarHandler >> perform: char for: aBlock empty: aBoolean [
 		char = $$ ifTrue: [^ self replace: aBlock with: (SBStCharacter new contents: '')].
 		char = $' ifTrue: [^ self replace: aBlock with: (SBStString new contents: '')].
 		char = $# ifTrue: [^ self replace: aBlock with: (SBStSymbol new contents: '')].
-		char = $" ifTrue: [^ self replace: aBlock with: self newCommentBlock].
+		(char = $" and: [aBlock parentSandblock isBlockBody]) ifTrue: [^ self replace: aBlock with: self newCommentBlock].
 		((char = Character space or: [char = Character cr]) and: [aBlock isStatement]) ifTrue: [^ self emptyLine: aBlock].
 		(char = $: and: [aBlock parentSandblock isBlockBody and: [aBlock parentSandblock isMethodBody not]]) ifTrue: [ | block |
 			block := aBlock parentSandblock.
