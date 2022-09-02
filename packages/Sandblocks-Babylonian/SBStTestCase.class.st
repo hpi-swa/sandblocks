@@ -5,6 +5,7 @@ Class {
 		'selectorInput',
 		'errorIndicator',
 		'passIcon',
+		'passNote',
 		'reportedError',
 		'autoRun'
 	],
@@ -151,6 +152,7 @@ SBStTestCase >> initialize [
 				color: (Color r: 1 g: 1 b: 1);
 				on: #click send: #openError to: self;
 				yourself);
+			addMorphBack: (passNote := SBStringMorph new contents: '');
 			addMorphBack: (Morph new
 				width: 6;
 				height: 0;
@@ -220,6 +222,7 @@ SBStTestCase >> reportError: anError [
 	passIcon
 		changeIconName: #iconRemove;
 		color: (Color r: 1 g: 0.0 b: 0.0).
+	passNote contents: (self shouldPass ifFalse: ['(expected failure)'] ifTrue: ['']).
 	
 	reportedError ifNotNil: #delete.
 	reportedError := self sandblockEditor
@@ -232,32 +235,49 @@ SBStTestCase >> reportError: anError [
 		ifNotNil: [:context | (self blockForPC: context previousPc) attachDecorator: (errorIndicator := SBErrorDecorator new message: anError asString)]"
 ]
 
+{ #category : #errors }
+SBStTestCase >> reportPass [
+
+	passIcon
+		changeIconName: #iconCheck;
+		color: (Color r: 0.8 g: 1 b: 0.6).
+	passNote contents: (self shouldPass ifFalse: ['(unexpected pass)'] ifTrue: ['']).
+	
+	reportedError ifNotNil: #delete.
+	reportedError := self sandblockEditor reportError: nil process: nil source: self
+]
+
 { #category : #actions }
 SBStTestCase >> runTest [
 	<action>
 
+	| case result |
 	SBExecutionEnvironment value: self during: [
 		self sendStartNotification.
-	
+		
 		self clearErrors.
 		passIcon
-			changeIconName: #'iconClockO';
-			color: Color yellow.
-		([(self methodClass selector: self currentSelector) runCase. true]
+			changeIconName: #iconClockO;
+			color: (Color r: 1 g: 1 b: 0.0).
+		case := self methodClass selector: self currentSelector.
+		result := TestResult new.
+		([
+			case runCase.
+			true]
 			on: TestResult failure
 			do: [:err |
+				result sandblocksAddFailure: case.
 				self reportError: err.
 				err return: false]
 			on: TestResult exError
 			do: [:err |
+				result sandblocksAddError: case.
 				self reportError: err.
 				err return: false]) ifTrue: [
-			passIcon
-				changeIconName: #iconCheck;
-				color: Color lightGreen.
-			reportedError ifNotNil: #delete.
-			reportedError := nil].
-	
+			result sandblocksAddPass: case.
+			self reportPass].
+		(result respondsTo: #dispatchResultsIntoHistory) ifTrue: [result dispatchResultsIntoHistory].
+		
 		self sendFinishNotification.
 		SBExecutionEnvironment value: nil]
 ]
@@ -287,6 +307,12 @@ SBStTestCase >> sendStopNotification [
 
 	self sandblockEditor allMorphsDo: [:morph |
 		(morph isSandblock and: [morph listensToExamples]) ifTrue: [morph exampleStopped: self]]
+]
+
+{ #category : #testing }
+SBStTestCase >> shouldPass [
+
+	^ (self methodClass selector: self currentSelector) shouldPass
 ]
 
 { #category : #'method protocol' }

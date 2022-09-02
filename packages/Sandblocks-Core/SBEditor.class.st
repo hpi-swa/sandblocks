@@ -1367,7 +1367,9 @@ SBEditor >> replaceInput: aMorph [
 { #category : #'as yet unclassified' }
 SBEditor >> reportError: anError process: aProcess source: anExecutableEnvironment [
 
-	^ errors ifNotNil: [errors addError: anError process: aProcess source: anExecutableEnvironment]
+	anError ifNil: [^ nil].
+	errors ifNil: [^ nil].
+	^ errors addError: anError process: aProcess source: anExecutableEnvironment
 ]
 
 { #category : #errors }
