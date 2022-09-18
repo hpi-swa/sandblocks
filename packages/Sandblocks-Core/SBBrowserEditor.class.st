@@ -162,6 +162,15 @@ SBBrowserEditor >> openOnlyMorph: aBlock [
 	self openMorph: aBlock
 ]
 
+{ #category : #'as yet unclassified' }
+SBBrowserEditor >> reportError: anError process: aProcess source: anExecutableEnvironment [
+
+	| result |
+	result := super reportError: anError process: aProcess source: anExecutableEnvironment.
+	self model changed: #messageList.
+	^ result
+]
+
 { #category : #artefacts }
 SBBrowserEditor >> save: anArtefact tryFixing: aFixBoolean quick: aQuickBoolean [
 

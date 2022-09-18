@@ -7,21 +7,20 @@ Class {
 	#category : #'Sandblocks-Core-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #running }
 SBClipboardTest >> setUp [
 
 	super setUp.
 	oldClipboard := Clipboard clipboardText
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #running }
 SBClipboardTest >> tearDown [
 
-	super tearDown.
-	Clipboard clipboardText: oldClipboard
+	[oldClipboard ifNotNil: [Clipboard clipboardText: oldClipboard]] ensure: super tearDown
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBClipboardTest >> testCopyPasteBlock [
 
 	| block from to |
@@ -37,7 +36,7 @@ SBClipboardTest >> testCopyPasteBlock [
 	self assert: '5' equals: block statements second contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBClipboardTest >> testCopyString [
 
 	| block from |
@@ -51,7 +50,7 @@ SBClipboardTest >> testCopyString [
 	self assert: '5 squared' equals: Clipboard clipboardText string
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBClipboardTest >> testPasteAfter [
 
 	| block selection editor |
@@ -67,7 +66,7 @@ SBClipboardTest >> testPasteAfter [
 	self assert: 'c' equals: block statements seventh contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBClipboardTest >> testPasteMultiple [
 
 	| block selection editor |
@@ -89,7 +88,7 @@ SBClipboardTest >> testPasteMultiple [
 	self assert: 'c' equals: block statements seventh contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBClipboardTest >> testPasteString [
 
 	| block from |
@@ -102,7 +101,7 @@ SBClipboardTest >> testPasteString [
 	self assert: '6' equals: block statements first contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBClipboardTest >> testPasteStringAfterCopyBlock [
 
 	| block from to |
