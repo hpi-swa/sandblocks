@@ -37,8 +37,8 @@ CompiledMethod >> enumerateInstructions: aDebuggerMap of: aCompiledCode on: aStr
 CompiledMethod >> open: convert [
 	<convert>
 	<convertPriority: 10>
-	
-	convert do: [self asSandblock]
+
+	convert do: [SBToggledCode comment: '' active: 2 do: {[SBTSStMethod for: self]. [self asSandblock]}]
 ]
 
 { #category : #'*Sandblocks-Core' }

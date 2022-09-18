@@ -74,7 +74,7 @@ SBNoColorPolicy >> colorForEditor: anEditor [
 { #category : #'as yet unclassified' }
 SBNoColorPolicy >> cornerRadius [
 
-	^ 4
+	^ 4 sbScaled
 ]
 
 { #category : #colors }

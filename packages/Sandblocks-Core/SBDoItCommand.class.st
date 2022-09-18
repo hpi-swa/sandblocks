@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBCommand,
 	#instVars : [
 		'do',
-		'undo'
+		'undo',
+		'postDo'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -24,6 +25,18 @@ SBDoItCommand >> do: aBlock [
 SBDoItCommand >> morphs [
 
 	^ {}
+]
+
+{ #category : #'as yet unclassified' }
+SBDoItCommand >> postDo [
+
+	postDo ifNotNil: [postDo value]
+]
+
+{ #category : #'as yet unclassified' }
+SBDoItCommand >> postDo: aBlock [
+
+	postDo := aBlock
 ]
 
 { #category : #'as yet unclassified' }

@@ -48,7 +48,7 @@ SBInputCommand >> isJumpPoint [
 { #category : #'as yet unclassified' }
 SBInputCommand >> morphs [
 
-	^ {newMorph}
+	^ {newMorph ifNil: [oldMorph]}
 ]
 
 { #category : #'as yet unclassified' }

@@ -28,27 +28,6 @@ SBGitCommit >> checkout [
 	loader load
 ]
 
-{ #category : #actions }
-SBGitCommit >> checkout [
-	<action>
-
-	| project headHex indexCommit patches loader |
-	project := self project.
-	
-	headHex := project loadedHistorian version commit hexHash.
-	indexCommit := (SBGit createIndexFor: project)
-		parents: {headHex};
-		yourself.
-	patches := SBGit
-		diffIn: project
-		from: indexCommit tree
-		to: (project repository fsgitRepository unitOfWork objectNamed: commit hexHash) tree.
-	
-	loader := MCPackageLoader new.
-	patches do: [:patch | [patch applyTo: loader]].
-	loader load
-]
-
 { #category : #initialize }
 SBGitCommit >> commit: aCommit project: aProject [
 
@@ -82,20 +61,6 @@ SBGitCommit >> initialize [
 SBGitCommit >> project [
 
 	^ self parentSandblock activeProject
-]
-
-{ #category : #actions }
-SBGitCommit >> resetHeadOfActiveBranch [
-	<action>
-
-	| project repository |
-	project := self project.
-	repository := project repository fsgitRepository.
-	repository unitOfWork
-		updateRef: project loadedHistorian name
-		to: commit hexHash
-		message: 'reset: moving to', commit hexHash.
-	self parentSandblock updateForProject
 ]
 
 { #category : #actions }
