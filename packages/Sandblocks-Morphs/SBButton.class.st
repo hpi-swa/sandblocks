@@ -168,8 +168,8 @@ SBButton >> initialize [
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		listDirection: #leftToRight;
-		cellGap: 8;
-		layoutInset: 8 @ 4;
+		cellGap: 8 sbScaled;
+		layoutInset: (8 @ 4) sbScaled;
 		cornerStyle: #rounded;
 		on: #mouseEnter send: #mouseEntered to: self;
 		on: #mouseLeave send: #mouseLeft to: self;

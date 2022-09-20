@@ -1634,8 +1634,11 @@ SBEditor >> toggleFullscreen [
 	<globalAction>
 
 	self owner = self world
-		ifTrue: [
-			(self valueOfProperty: #previousWindow) addMorph: self frame: (0@0 extent: 1@1).
+		ifTrue: [ | previous |
+			previous := self valueOfProperty: #previousWindow.
+			(previous respondsTo: #addMorph:frame:)
+				ifTrue: [previous addMorph: self frame: (0@0 extent: 1@1)]
+				ifFalse: [previous addMorph: self].
 			self removeProperty: #previousWindow]
 		ifFalse: [
 			self

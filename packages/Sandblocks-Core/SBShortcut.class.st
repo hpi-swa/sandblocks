@@ -19,7 +19,7 @@ SBShortcut class >> fromEvent: anEvent [
 	s := self new character: anEvent keyCharacter.
 	anEvent controlKeyPressed ifTrue: [s withCommand].
 	anEvent commandKeyPressed ifTrue: [s withCommand].
-	"anEvent shiftPressed ifTrue: [s withShift]."
+	(anEvent shiftPressed and: [anEvent keyCharacter isLetter not]) ifTrue: [s withShift].
 	anEvent optionKeyPressed ifTrue: [s withOption].
 	^ s
 ]
