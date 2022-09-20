@@ -1,7 +1,7 @@
 Class {
 	#name : #BaselineOfSandblocks,
 	#superclass : #BaselineOf,
-	#category : 'BaselineOfSandblocks'
+	#category : #BaselineOfSandblocks
 }
 
 { #category : #'as yet unclassified' }
