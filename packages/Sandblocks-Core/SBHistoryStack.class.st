@@ -84,6 +84,16 @@ SBHistoryStack >> redoDo: aBlock [
 ]
 
 { #category : #actions }
+SBHistoryStack >> summarizeActionsDuring: aBlock [
+
+	| mark |
+	mark := undoStack size.
+	aBlock value.
+	undoStack size = mark ifTrue: [^ self].
+	undoStack addLast: (SBCombinedCommand newWith: (undoStack removeLast: undoStack size - mark))
+]
+
+{ #category : #actions }
 SBHistoryStack >> undoDo: aBlock [
 
 	undoStack ifNotEmpty: [ | ret command |

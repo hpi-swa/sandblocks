@@ -1629,6 +1629,12 @@ SBEditor >> suggestionMenu [
 	^ suggestionMenu
 ]
 
+{ #category : #'do/undo/redo' }
+SBEditor >> summarizeActionsDuring: aBlock [
+
+	history summarizeActionsDuring: aBlock
+]
+
 { #category : #actions }
 SBEditor >> toggleFullscreen [
 	<globalAction>
