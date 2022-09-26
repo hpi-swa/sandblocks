@@ -532,7 +532,7 @@ SBBlock >> click: anEvent [
 	
 	self sandblockEditor selectClick: self at: anEvent position.
 	(anEvent yellowButtonPressed and: [SBPreferences rightClickContextMenu]) ifTrue: [self promptAction].
-	(self isInWorld and: [self suggestAlways and: [anEvent redButtonPressed]]) ifTrue: [self queueUpdateSuggestionsFocused: false]
+	(self isInWorld and: [self suggestAlways and: [anEvent redButtonPressed]]) ifTrue: [self queueUpdateSuggestionsFocused: self isOneStatementPerArtefact]
 ]
 
 { #category : #hierarchy }
@@ -1616,6 +1616,12 @@ SBBlock >> isMultiSelected [
 
 { #category : #testing }
 SBBlock >> isNumberBlock [
+
+	^ false
+]
+
+{ #category : #testing }
+SBBlock >> isOneStatementPerArtefact [
 
 	^ false
 ]
@@ -2759,7 +2765,7 @@ SBBlock >> startInputAt: aNumber replacingContents: aBoolean [
 					moveCursorTo: 0]
 			ifFalse: [self currentTextMorph moveCursorTo: aNumber].
 		
-		(self suggestAlways and: [aBoolean not]) ifTrue: [self queueUpdateSuggestionsFocused: false].
+		(self suggestAlways and: [aBoolean not]) ifTrue: [self queueUpdateSuggestionsFocused: self isOneStatementPerArtefact].
 		
 		^ cmd].
 	
@@ -3106,7 +3112,7 @@ SBBlock >> wasSelected [
 
 	self triggerEvent: #selected.
 	
-	(self sandblockEditor notNil and: [self suggestAlways and: [self sandblockEditor cursor mode ~= #insert]]) ifTrue: [self queueUpdateSuggestionsFocused: false]
+	(self sandblockEditor notNil and: [self suggestAlways and: [self sandblockEditor cursor mode ~= #insert]]) ifTrue: [self queueUpdateSuggestionsFocused: self isOneStatementPerArtefact]
 ]
 
 { #category : #callbacks }

@@ -121,7 +121,7 @@ SBCursorInsert >> enterWith: aCursor [
 	command suggestions ifNotEmpty: [:s |
 		aCursor editor suggestionMenu
 			suggestions: s;
-			focusOnOpen: self block suggestAlways;
+			focusOnOpen: self block isOneStatementPerArtefact;
 			openNear: aCursor requestor: command]
 ]
 
