@@ -171,6 +171,24 @@ SBStNameBehavior >> fixActionsForUppercaseBinding [
 ]
 
 { #category : #'as yet unclassified' }
+SBStNameBehavior >> globalSuggestions [
+
+	^ Array streamContents: [:stream |
+		Smalltalk globals keysAndValuesDo: [:key :value |
+			(key sandblockMatch: self contents) ifTrue: [
+				stream nextPut: (SBSuggestionItem selector: key label: ((value isBehavior and: [key == value name])
+					ifTrue: ['class']
+					ifFalse: ['global']))]].
+		SBStSubstitution allSubclassesDo: [:class |
+			(class name sandblockMatch: self contents) ifTrue: [
+				class suggestion ifNotNil: [:block |
+					stream nextPut: ((SBProjectionSuggestionItem selector: class name label: 'projection')
+						completionAction: block;
+						instanceSuggestion: class instanceSuggestion
+							editor: self block sandblockEditor)]]]]
+]
+
+{ #category : #'as yet unclassified' }
 SBStNameBehavior >> guessedClass [
 
 	^ self block binding ifNotNil: [:b | b value class]
@@ -243,7 +261,7 @@ SBStNameBehavior >> isTemporaryVariable [
 ]
 
 { #category : #'as yet unclassified' }
-SBStNameBehavior >> lowercaseSuggestions [
+SBStNameBehavior >> localSuggestions [
 
 	^ Array streamContents: [:stream | self block scopesDo: [:scope | scope declarationsDo: [:decl | (decl contents sandblockMatch: self contents) ifTrue: [stream nextPut: decl asSuggestionItem]]]]
 ]
@@ -276,10 +294,13 @@ SBStNameBehavior >> resolveBinding [
 SBStNameBehavior >> suggestions [
 
 	| suggestions |
-	suggestions := self contents ifEmpty: [#()] ifNotEmpty: [:text |
-		text first isUppercase
-			ifTrue: [self uppercaseSuggestions]
-			ifFalse: [self lowercaseSuggestions]].
+	suggestions := self contents ifEmpty: [#()] ifNotEmpty: [
+		Array streamContents: [:stream |
+			stream
+				nextPutAll: self localSuggestions;
+				nextPutAll: self globalSuggestions.
+			
+			]].
 	^ suggestions sort: #selectorSize ascending
 ]
 
@@ -287,26 +308,6 @@ SBStNameBehavior >> suggestions [
 SBStNameBehavior >> symbolsFor: aColorPolicy [
 
 	^ self subclassResponsibility
-]
-
-{ #category : #'as yet unclassified' }
-SBStNameBehavior >> uppercaseSuggestions [
-
-	self flag: #todo.
-	"pool dict etc"
-	^ Array streamContents: [:stream |
-		Smalltalk globals keysAndValuesDo: [:key :value |
-			(key sandblockMatch: self contents) ifTrue: [
-				stream nextPut: (SBSuggestionItem selector: key label: ((value isBehavior and: [key == value name])
-					ifTrue: ['class']
-					ifFalse: ['global']))]].
-		SBStSubstitution allSubclassesDo: [:class |
-			(class name sandblockMatch: self contents) ifTrue: [
-				class suggestion ifNotNil: [:block |
-					stream nextPut: ((SBProjectionSuggestionItem selector: class name label: 'projection')
-						completionAction: block;
-						instanceSuggestion: class instanceSuggestion
-							editor: self block sandblockEditor)]]]]
 ]
 
 { #category : #'as yet unclassified' }
