@@ -97,6 +97,12 @@ SBSuggestionMenu >> editorFocused: aBoolean [
 	aBoolean ifFalse: [self delete]
 ]
 
+{ #category : #accessing }
+SBSuggestionMenu >> focusHint [
+
+	^ focusHint
+]
+
 { #category : #actions }
 SBSuggestionMenu >> focusNextSuggestion [
 	<globalAction>
