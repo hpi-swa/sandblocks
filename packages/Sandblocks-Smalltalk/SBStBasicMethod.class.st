@@ -176,7 +176,7 @@ SBStBasicMethod >> classVariables [
 	| editor |
 	editor := self sandblockEditor.
 	^ Array streamContents: [:stream |
-		self methodClass withAllSuperclassesDo: [:class | | open |
+		self methodClass theNonMetaClass withAllSuperclassesDo: [:class | | open |
 			open := [class classVarNames collect: [:name | SBStName classVariable: name class: class]].
 			stream nextPutAll: (SBToggledCode comment: '' active: 1 do: {
 				[open value].
@@ -273,13 +273,7 @@ SBStBasicMethod >> currentSelector: aString [
 { #category : #accessing }
 SBStBasicMethod >> declarations [
 
-	^ Array streamContents: [:stream |
-		self declarationsDo: [:declaration |
-			stream nextPut: declaration.
-			
-			].
-		
-		]
+	^ Array streamContents: [:stream | self declarationsDo: [:declaration | stream nextPut: declaration]]
 ]
 
 { #category : #accessing }
