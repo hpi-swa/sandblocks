@@ -36,7 +36,7 @@ SBStDeclarationForInstanceVariable >> browseReferences [
 { #category : #accessing }
 SBStDeclarationForInstanceVariable >> guessedClass [
 
-	class isMeta ifTrue: [^ (class theNonMetaClass instVarNamed: self contents) class].
+	(class notNil and: [class isMeta]) ifTrue: [^ (class theNonMetaClass instVarNamed: self contents) class].
 	^ super guessedClass
 ]
 
