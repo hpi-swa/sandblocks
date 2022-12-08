@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBSelect >> currentTextMorph [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBSelect >> doubleClick: anEvent [
 
 	| dialog |

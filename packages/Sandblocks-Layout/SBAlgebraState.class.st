@@ -120,7 +120,7 @@ SBAlgebraState >> nestedInset: anEdgeInsets do: aBlock [
 SBAlgebraState >> newLineWithGap: aBoolean [
 
 	^ self
-		offset: self startX @ (self offset y + self lineHeight + (aBoolean ifTrue: [SBAlgebraLayout gap] ifFalse: [0]))
+		offset: self startX @ (self offset y + self lineHeight + (aBoolean ifTrue: [SBAlgebraLayout verticalGap] ifFalse: [0]))
 		lineHeight: 0
 ]
 

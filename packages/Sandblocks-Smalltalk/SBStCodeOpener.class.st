@@ -125,7 +125,7 @@ SBStCodeOpener >> initialize [
 	self
 		localColorPolicy: SBEditor defaultColorPolicy new;
 		addMouseCaptureFilter: self;
-		height: 200;
+		height: 200 sbScaled;
 		color: SystemWindow new userInterfaceTheme color;
 		changeTableLayout;
 		addDropShadow;

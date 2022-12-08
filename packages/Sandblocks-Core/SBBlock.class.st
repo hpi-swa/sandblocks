@@ -2343,6 +2343,13 @@ SBBlock >> promptAction [
 	index > 0 ifTrue: [self performAction: (options at: index) method selector]
 ]
 
+{ #category : #actions }
+SBBlock >> promptChangeCompile [
+	<action>
+
+	self sandblockEditor promptChangeCompile
+]
+
 { #category : #'ast helpers' }
 SBBlock >> proposeCodeActions: aCollection for: aBlock [
 

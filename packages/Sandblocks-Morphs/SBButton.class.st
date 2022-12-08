@@ -204,6 +204,17 @@ SBButton >> label: aString [
 ]
 
 { #category : #initialization }
+SBButton >> label: aString do: aBlock [
+
+	self
+		widget: (SBStringMorph new
+			contents: aString;
+			emphasis: TextEmphasis bold emphasisCode)
+		shortcut: nil
+		do: aBlock
+]
+
+{ #category : #initialization }
 SBButton >> label: aString shortcut: aShortcut do: aBlock [
 
 	self example: [SBButton new] args: [{'hello'. $p command. [nil]}] label: 'label'.

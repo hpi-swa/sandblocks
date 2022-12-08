@@ -78,7 +78,7 @@ SBPreferencesEditor >> addToggle: aTitlteString description: aString active: aBo
 				bold);
 			addMorphBack: (SBMultilineOwnTextMorph new
 				contents: aString;
-				maxWidth: 300));
+				maxWidth: 300 sbScaled));
 		addMorphBack: checkbox)
 ]
 
@@ -102,8 +102,8 @@ SBPreferencesEditor >> initialize [
 		listDirection: #topToBottom;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
-		layoutInset: 8;
-		cellGap: 10;
+		layoutInset: 8 sbScaled;
+		cellGap: 10 sbScaled;
 		addMorphBack: (SBStringMorph new
 			contents: 'Plugins';
 			bold);
