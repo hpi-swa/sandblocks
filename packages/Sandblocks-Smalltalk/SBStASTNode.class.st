@@ -272,7 +272,13 @@ SBStASTNode >> prettySourceString [
 
 	| source |
 	source := self sourceString.
-	^ [PPFormatter formatString: source class: (self containingArtefact ifNotNil: #relatedClass ifNil: [nil class]) noPattern: self ~= self containingArtefact] on: SyntaxErrorNotification do: [source]
+	^ [
+		PPFormatter
+			formatString: source
+			class: (self containingArtefact ifNotNil: #relatedClass ifNil: [nil class])
+			noPattern: self ~= self containingArtefact]
+		on: SyntaxErrorNotification
+		do: [source]
 ]
 
 { #category : #refactoring }

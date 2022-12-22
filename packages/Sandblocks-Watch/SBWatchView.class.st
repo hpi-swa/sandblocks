@@ -173,8 +173,9 @@ SBWatchView >> updateDisplay [
 				during: [morph := (Smalltalk at: #SBDomainBlockContainer) visualize: ((Smalltalk at: #SBDomainBlock) newFromObject: lastValue)].
 			self useDisplay: morph]
 		ifFalse: [
-			self useDisplay: (SBExplorer on: lastValue)
-			"self useDisplay: (anObject convertedFor: self watchObjectInterface do: #yourself)"]
+			SBToggledCode comment: '' active: 1 do: {
+				[self useDisplay: (lastValue convertedFor: self watchObjectInterface do: #yourself)].
+				[self useDisplay: (SBExplorer on: lastValue)]}]
 ]
 
 { #category : #'as yet unclassified' }

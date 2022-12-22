@@ -310,13 +310,10 @@ SBStMessageSend >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
-		data: (self receiver
-			ifNil: [{self signature layoutCommands}]
-			ifNotNil: [{
+		data: (self receiver ifNil: [{self signature layoutCommands}] ifNotNil: [
+			{
 				self receiver layoutCommands.
-				SBAlgebraCommand indent data: {
-					SBAlgebraCommand softLineOrGap withGap: true.
-					self signature layoutCommands}}])
+				SBAlgebraCommand indent data: {SBAlgebraCommand softLineOrGap withGap: true. self signature layoutCommands}}])
 ]
 
 { #category : #'as yet unclassified' }

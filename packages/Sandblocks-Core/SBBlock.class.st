@@ -2430,6 +2430,12 @@ SBBlock >> rightMostBlock [
 	^ self childSandblocks ifEmpty: [self] ifNotEmpty: [:c | c last rightMostBlock]
 ]
 
+{ #category : #accessing }
+SBBlock >> runtime [
+
+	^ nil
+]
+
 { #category : #'colors and color policies' }
 SBBlock >> sandblockBlockColorIfAbsent: aBlock [
 
