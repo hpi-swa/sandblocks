@@ -676,7 +676,9 @@ SBStBasicMethod >> saveTryFixing: aBoolean quick: aQuickBoolean [
 		ifTrue: [self externalModification: false]
 		ifFalse: [^ false].
 	
-	text := aQuickBoolean ifTrue: [self sourceString] ifFalse: [self prettySourceString].
+	text := aQuickBoolean
+		ifTrue: [self sourceString copyReplaceAll: '#ppEmptyLine.' with: '']
+		ifFalse: [self prettySourceString].
 	
 	self ignoreChangeNotifierDuring: [
 		newSelector := self methodClass compile: text asText classified: self category.

@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'scheduler',
 		'editor',
-		'errorDecorator'
+		'errorDecorator',
+		'label'
 	],
 	#category : #'Sandblocks-Plugin-StLivePreview'
 }
@@ -79,7 +80,7 @@ SBStLivePreview >> initialize [
 	
 	self
 		addMorphBack: SBIcon iconInfoCircle;
-		addMorphBack: SBStringMorph new
+		addMorphBack: (label := SBStringMorph new)
 ]
 
 { #category : #presentation }
@@ -134,18 +135,28 @@ SBStLivePreview >> show [
 		valueForBlock: target
 		ifFound: [:result |
 			show := true.
-			self label contents: ([result printString]
+			self lastSubmorph delete.
+			[
+				SBToggledCode comment: '' active: 1 do: {
+					[self addMorphBack: (result convertedFor: SBInterfaces topLevel, {[:o | o isEditor not]} do: #yourself)].
+					[result printString]}]
 				on: Error
-				do: [:err | '<error ({1})>' format: {result className}]).
+				do: [:err |
+					label contents: ('<error ({1})>' format: {result className}).
+					self addMorphBack: label].
 			self icon changeIconName: #iconInfoCircle.
 			target containingArtefact ifNotNil: [:a | a cacheType: result class for: target]]
 		onTimeout: [
 			show := true.
+			self lastSubmorph delete.
+			self addMorphBack: label.
 			self label contents: '<timeout>'.
 			self icon changeIconName: #iconClockO]
 		onError: [:err |
 			hadError := true.
 			show := true.
+			self lastSubmorph delete.
+			self addMorphBack: label.
 			self label contents: (err printStringLimitedTo: 40).
 			self icon changeIconName: #iconBolt].
 	
