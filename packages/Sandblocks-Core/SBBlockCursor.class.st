@@ -9,7 +9,8 @@ Class {
 		'selectLargerHistory',
 		'horizontalOffsetInFloat',
 		'multiSelection',
-		'lastBlinkTime'
+		'lastBlinkTime',
+		'previousMoveWasExplicit'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -144,6 +145,7 @@ SBBlockCursor >> cursorPosition: aPosition explicitMove: aBoolean axis: aSymbol 
 			b
 				wasSelectedFromCursor: previousCursor;
 				wasSelected]].
+	previousMoveWasExplicit := aBoolean.
 	self selectedBlock ifNotNil: #ensureVisible
 ]
 
@@ -240,7 +242,8 @@ SBBlockCursor >> initialize [
 	cursorShown := false.
 	blinkCount := 0.
 	horizontalOffsetInFloat := 0.
-	cursorPosition := SBCursorNone new
+	cursorPosition := SBCursorNone new.
+	previousMoveWasExplicit := false
 ]
 
 { #category : #private }
@@ -494,6 +497,12 @@ SBBlockCursor >> previousCursorThat: aBlock [
 		pos = cursorPosition ifTrue: [^ last].
 		(aBlock value: pos) ifTrue: [last := pos]].
 	^ last
+]
+
+{ #category : #'as yet unclassified' }
+SBBlockCursor >> previousMoveWasExplicit [
+
+	^ previousMoveWasExplicit
 ]
 
 { #category : #'vertical movement' }

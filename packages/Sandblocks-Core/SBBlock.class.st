@@ -797,6 +797,19 @@ SBBlock >> cursorPositionsInSelfOrAfterDo: aBlock [
 		found ifTrue: [aBlock value: pos]]
 ]
 
+{ #category : #cursor }
+SBBlock >> cursorPositionsInSelfOrBeforeThat: aBlock [
+
+	| last textMorph |
+	last := nil.
+	textMorph := self activeTextMorph.
+	textMorph ifNil: [^ self cursorPositionBeforeThat: aBlock].
+	
+	self containingFloat cursorPositionsDo: [:pos |
+		(pos isText and: [pos textMorph = textMorph]) ifTrue: [^ last].
+		(aBlock value: pos) ifTrue: [last := pos]]
+]
+
 { #category : #'ast helpers' }
 SBBlock >> declarationsDo: aBlock [
 
@@ -946,7 +959,7 @@ SBBlock >> deleteCommandFor: aBlock [
 ]
 
 { #category : #callbacks }
-SBBlock >> deselectedTextMorph: aMorph for: aNewPosition [
+SBBlock >> deselectedTextMorph: aMorph for: aNewPosition cursor: aCursor [
 
 	
 ]
