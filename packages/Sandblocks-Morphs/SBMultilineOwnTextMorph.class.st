@@ -70,13 +70,16 @@ SBMultilineOwnTextMorph >> cursorPosition [
 SBMultilineOwnTextMorph >> drawOn: aCanvas [
 
 	self showPlaceholder ifTrue: [super drawOn: aCanvas] ifFalse: [
-		aCanvas
-			paragraph: (self paragraph
-				positionWhenComposed: self position;
-				showCaret: self cursorVisible;
-				caretColor: self color)
-			bounds: (self position extent: self paragraph extent)
-			color: self color]
+		(self contents isText or: [self contents anySatisfy: [:c | c = Character cr]])
+			ifTrue: [
+				aCanvas
+					paragraph: (self paragraph
+						positionWhenComposed: self position;
+						showCaret: self cursorVisible;
+						caretColor: self color)
+					bounds: (self position extent: self paragraph extent)
+					color: self color]
+			ifFalse: [super drawOn: aCanvas]]
 ]
 
 { #category : #'as yet unclassified' }
