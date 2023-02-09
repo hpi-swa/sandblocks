@@ -607,10 +607,25 @@ Morph >> scalingFactor [
 Morph >> setFinalBounds: aRectangle [
 
 	self
-		setPositionFromLayout: aRectangle origin;
-		noSideEffectExtent: aRectangle extent.
+		setPositionWithoutChildren: aRectangle origin;
+		setExtentFromLayout: aRectangle extent.
 	
-	fullBounds := self privateFullBounds
+	fullBounds := aRectangle
+]
+
+{ #category : #'*Sandblocks-Core-layout' }
+Morph >> setPositionWithoutChildren: aPoint [
+
+	| delta box |
+	"Sets the position for laying out children of the receiver. We have to move the children here. We avoid triggering #layoutChanged again. This implementation is based on #position:."
+	delta := (aPoint - self bounds topLeft) rounded.
+	(delta x = 0 and: [delta y = 0]) ifTrue: [^ self].
+	
+	box := self privateFullBoundsForRedraw.
+	self invalidRect: (box merge: (box translateBy: delta)).
+	
+	bounds := bounds translateBy: delta.
+	fullBounds ifNotNil: [fullBounds := fullBounds translateBy: delta]
 ]
 
 { #category : #'*Sandblocks-Core-Simulate' }

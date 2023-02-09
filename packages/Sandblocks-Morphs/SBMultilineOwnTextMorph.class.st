@@ -70,7 +70,7 @@ SBMultilineOwnTextMorph >> cursorPosition [
 SBMultilineOwnTextMorph >> drawOn: aCanvas [
 
 	self showPlaceholder ifTrue: [super drawOn: aCanvas] ifFalse: [
-		(self contents isText or: [self paragraph numberOfLines > 1 or: [self contents anySatisfy: [:c | c = Character cr]]])
+		(self contentsToDisplay isText or: [self paragraph numberOfLines > 1 or: [self contents anySatisfy: [:c | c = Character cr]]])
 			ifTrue: [
 				aCanvas
 					paragraph: (self paragraph
