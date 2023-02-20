@@ -100,7 +100,7 @@ SBAlgebraLayout >> layout: aMorph in: aRectangle [
 	| final initial placements |
 	(self isAlgebraLayoutRoot: aMorph) ifFalse: [^ self].
 	
-	indent := self class indent * (aMorph colorPolicy enlarge ifTrue: [2] ifFalse: [1]).
+	indent := self class indent * ((aMorph isSandblock and: [aMorph colorPolicy enlarge]) ifTrue: [2] ifFalse: [1]).
 	cache := Dictionary new.
 	
 	initial := SBAlgebraState new
