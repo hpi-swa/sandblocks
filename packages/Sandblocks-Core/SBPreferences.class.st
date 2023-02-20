@@ -93,7 +93,7 @@ SBPreferences class >> largeInsets: aBoolean [
 	SBEditor allSubInstancesDo: [:editor |
 		editor colorPolicy ifNotNil: [:c |
 			c enlarge: aBoolean.
-			editor allMorphsDo: #layoutChanged]]
+			editor allMorphsDo: [:m | m clearCache]]]
 ]
 
 { #category : #accessing }

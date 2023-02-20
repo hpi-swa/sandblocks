@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBPalette class >> buildOn: aContainer [
+SBPalette class >> buildOn: aBuilder [
 
 	^ self subclassResponsibility
 ]

@@ -1348,6 +1348,15 @@ SBEditor >> registerGlobalShortcutListener: aMorph [
 	globalShortcutListeners add: aMorph
 ]
 
+{ #category : #actions }
+SBEditor >> reloadPalette [
+	<globalAction>
+
+	self
+		togglePalette;
+		togglePalette
+]
+
 { #category : #helper }
 SBEditor >> removeHelperTimer [
 
@@ -1398,6 +1407,12 @@ SBEditor >> resetState [
 	history clearUndoStack.
 	cursor resetState.
 	colorPolicy := colorPolicy class new enlarge: SBPreferences largeInsets
+]
+
+{ #category : #accessing }
+SBEditor >> runtimesDo: aBlock [
+
+	
 ]
 
 { #category : #accessing }
