@@ -36,12 +36,15 @@ SBDragHelper >> applyHintAt: anEvent [
 
 	onLeave ifNotNil: [onLeave value].
 	onMove := nil.
-	transferContainer isSandblock ifTrue: [transferContainer applyDrag].
-	^ onApply
-		ifNotNil: [
-			onApply cull: anEvent.
-			true]
-		ifNil: [false]
+	^ transferContainer isSandblock ifTrue: [
+		onApply
+			ifNil: [
+				transferContainer abortDrag: anEvent.
+				false]
+			ifNotNil: [
+				transferContainer applyDrag.
+				onApply cull: anEvent.
+				true]]
 ]
 
 { #category : #'as yet unclassified' }

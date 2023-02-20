@@ -67,6 +67,12 @@ SBPalettePreviewContainer >> label: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBPalettePreviewContainer >> layoutInset [
+
+	^ 0
+]
+
+{ #category : #'as yet unclassified' }
 SBPalettePreviewContainer >> parentSandblock [
 
 	^ self owner ifNotNil: #containingSandblock

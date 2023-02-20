@@ -93,7 +93,9 @@ SBPaletteBuilder >> initialize [
 
 	super initialize.
 	
-	categories := SBColumn new
+	categories := SBColumn new.
+	
+	self cellGap: 2
 ]
 
 { #category : #'as yet unclassified' }

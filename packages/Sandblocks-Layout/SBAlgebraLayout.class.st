@@ -13,7 +13,8 @@ Class {
 		'measure',
 		'minExtentCache',
 		'cache',
-		'placementStream'
+		'placementStream',
+		'indent'
 	],
 	#category : #'Sandblocks-Layout'
 }
@@ -75,7 +76,7 @@ SBAlgebraLayout >> gap [
 { #category : #'as yet unclassified' }
 SBAlgebraLayout >> indent [
 
-	^ self class indent
+	^ indent
 ]
 
 { #category : #'as yet unclassified' }
@@ -99,6 +100,7 @@ SBAlgebraLayout >> layout: aMorph in: aRectangle [
 	| final initial placements |
 	(self isAlgebraLayoutRoot: aMorph) ifFalse: [^ self].
 	
+	indent := self class indent * (aMorph colorPolicy enlarge ifTrue: [2] ifFalse: [1]).
 	cache := Dictionary new.
 	
 	initial := SBAlgebraState new
@@ -264,6 +266,7 @@ SBAlgebraLayout >> minExtentOf: aMorph in: aRectangle [
 	minExtentCache ifNotNil: [^ minExtentCache].
 	
 	cache := Dictionary new.
+	indent := self class indent * (aMorph colorPolicy enlarge ifTrue: [2] ifFalse: [1]).
 	
 	commands := self commandsForRoot: aMorph.
 	(commands type = #morph and: [commands data = aMorph]) ifTrue: [^ aRectangle extent].
