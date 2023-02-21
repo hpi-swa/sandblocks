@@ -195,6 +195,7 @@ SBAlgebraLayout >> layoutDocument: command at: aState limit: maxRight wrap: aWra
 		[#gap] -> [aState offset: aState offset + (self gap @ 0)].
 		[#morph] -> [ | extent |
 			extent := command data minExtent.
+			(command data hResizing == #spaceFill and: [command data isTextMorph not]) ifTrue: [extent := aState containerBottomRight x - aState offset x @ extent y].
 			measure ifFalse: [
 				SBToggledCode comment: '' active: 2 do: {
 					[{command data. aState offset extent: extent. true}].

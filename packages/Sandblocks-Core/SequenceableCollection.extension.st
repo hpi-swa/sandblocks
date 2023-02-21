@@ -34,6 +34,12 @@ SequenceableCollection >> viewAllButFirst: aNumber [
 ]
 
 { #category : #'*Sandblocks-Core' }
+SequenceableCollection >> viewAllButFirst: aNumber andLast: anotherNumber [
+
+	^ SBCollectionView on: self from: aNumber + 1 to: self size - anotherNumber
+]
+
+{ #category : #'*Sandblocks-Core' }
 SequenceableCollection >> viewAllButFirstAndLast [
 
 	^ SBCollectionView on: self from: 2 to: self size - 1

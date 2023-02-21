@@ -43,7 +43,9 @@ SBRestoreCommand >> setArtefactFrom [
 { #category : #'as yet unclassified' }
 SBRestoreCommand >> undo [
 
+	(Array streamContents: [:s | commonOwner allMorphsDo: [:m | m valueOfProperty: #tsReplacementPlaceholder ifPresentDo: [:original | s nextPut: m]]]) do: #delete.
+	
 	restore do: [:pair | pair second addMorph: pair first asElementNumber: pair third].
-	commonOwner allMorphsDo: [:m | m valueOfProperty: #tsReplacementPlaceholder ifPresentDo: [:original | m delete]].
+	
 	^ morphs ifNotEmpty: #first ifEmpty: [nil]
 ]
