@@ -2211,7 +2211,9 @@ SBBlock >> pickUp: anEvent [
 	
 	s addMorphBack: self dragTarget.
 	anEvent hand grabMorph: s.
-	editor select: nil.
+	editor
+		select: nil;
+		noteToggleDrag: true.
 	
 	SBToggledCode comment: '' active: 0 do: {
 		[

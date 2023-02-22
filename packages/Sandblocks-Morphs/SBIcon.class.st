@@ -6064,12 +6064,12 @@ SBIcon >> drawOn: aCanvas [
 { #category : #colors }
 SBIcon >> extent: aPoint [
 
-	super extent: (TextStyle defaultFont height asPoint * (size caseOf: {
-		[#large] -> [1.2].
-		[#veryLarge] -> [2].
-		[#small] -> [2/3].
-		[#regular] ->  [1].
-	})) rounded
+	size isNumber ifTrue: [super extent: size sbScaled asPoint] ifFalse: [
+		super extent: (TextStyle defaultFont height asPoint * (size caseOf: {
+			[#large] -> [1.2].
+			[#veryLarge] -> [2].
+			[#small] -> [2 / 3].
+			[#regular] -> [1]})) rounded]
 ]
 
 { #category : #colors }
@@ -6127,6 +6127,13 @@ SBIcon >> intoWorld: aWorld [
 SBIcon >> large [
 
 	size := #large.
+	self extent: 0 @ 0
+]
+
+{ #category : #accessing }
+SBIcon >> size: aNumberOrSymbol [
+
+	size := aNumberOrSymbol.
 	self extent: 0 @ 0
 ]
 

@@ -24,7 +24,8 @@ Class {
 		'suggestAlways',
 		'activePlugins',
 		'suggestionMenu',
-		'examples'
+		'examples',
+		'trash'
 	],
 	#classVars : [
 		'ActivatedPluginClasses',
@@ -769,6 +770,7 @@ SBEditor >> handle: anEvent [
 SBEditor >> handleDropCancelMorph: aMorph [
 
 	dragHelper ifNotNil: [
+		self noteToggleDrag: false.
 		dragHelper dragCancelled.
 		dragHelper := nil]
 ]
@@ -777,6 +779,7 @@ SBEditor >> handleDropCancelMorph: aMorph [
 SBEditor >> handleDropMorph: anEvent [
 
 	dragHelper ifNotNil: [
+		self noteToggleDrag: false.
 		(dragHelper applyHintAt: anEvent) ifTrue: [anEvent wasHandled: true].
 		dragHelper := nil]
 ]
@@ -1073,6 +1076,18 @@ SBEditor >> newSelectionContainer [
 SBEditor >> noteNewOwner: aMorph [
 
 	" ignore "
+]
+
+{ #category : #'event handling' }
+SBEditor >> noteToggleDrag: aBoolean [
+
+	aBoolean
+		ifTrue: [
+			self trash
+				bottomRight: self bottomRight - 60;
+				disableLayout: true.
+			self addMorphFront: self trash]
+		ifFalse: [self trash delete]
 ]
 
 { #category : #'object interface' }
@@ -1690,6 +1705,12 @@ SBEditor >> togglePalette [
 			self submorphs second addMorphFront: paletteContainer.
 			self when: #selectionChanged send: #selectionChanged: to: paletteContainer.
 			paletteContainer selectionChanged: self selection]
+]
+
+{ #category : #accessing }
+SBEditor >> trash [
+
+	^ trash ifNil: [trash := SBDropTrashCan new]
 ]
 
 { #category : #'do/undo/redo' }
