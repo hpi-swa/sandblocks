@@ -76,6 +76,16 @@ SBSuggestionMenu >> canUseSuggestion [
 	^ self isFocused and: [self hasSuggestions]
 ]
 
+{ #category : #'as yet unclassified' }
+SBSuggestionMenu >> delayedUpdateFor: aBlock filterCurrent: aClosure suggestionsPromise: aPromise [
+
+	aPromise then: [:s | Project current addDeferredUIMessage: [aBlock = self reference ifTrue: [self suggestions: s]]].
+	
+	^ aBlock = self reference
+		ifTrue: [aClosure value: self suggestions]
+		ifFalse: [{SBSuggestionItem selector: 'loading' label: 'loading'}]
+]
+
 { #category : #'submorphs - add/remove' }
 SBSuggestionMenu >> delete [
 
@@ -368,6 +378,12 @@ SBSuggestionMenu >> stepTime [
 ]
 
 { #category : #accessing }
+SBSuggestionMenu >> suggestions [
+
+	^ container submorphs
+]
+
+{ #category : #accessing }
 SBSuggestionMenu >> suggestions: aCollectionOfSymbols [
 
 	self updateQueued: false.
@@ -379,7 +395,9 @@ SBSuggestionMenu >> suggestions: aCollectionOfSymbols [
 	
 	(self hasItems and: [activeIndex > 0]) ifTrue: [
 		activeIndex := activeIndex min: self itemCount.
-		(self items at: activeIndex) active: true]
+		(self items at: activeIndex) active: true].
+	
+	self fullBounds
 ]
 
 { #category : #accessing }
