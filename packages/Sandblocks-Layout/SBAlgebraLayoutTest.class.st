@@ -272,7 +272,7 @@ SBAlgebraLayoutTest >> testIndent [
 			SBAlgebraCommand softLine.
 			SBAlgebraCommand morph data: (b := Morph new)}}.
 	
-	SBAlgebraLayout new layoutDocument: doc limit: a width + 21.
+	SBAlgebraLayout new indent: 10; layoutDocument: doc limit: a width + 21.
 	self assert: 0 @ 0 equals: a position.
 	self assert: SBAlgebraLayout indent @ a height equals: b position
 ]
@@ -287,7 +287,7 @@ SBAlgebraLayoutTest >> testIndentDifferentOrigin [
 			SBAlgebraCommand softLine.
 			SBAlgebraCommand morph data: (b := Morph new)}}.
 	
-	SBAlgebraLayout new layoutDocument: doc at: ((SBAlgebraState new offset: 30 @ 20) startX: 30) limit: a width + 21 wrap: false.
+	SBAlgebraLayout new indent: 10; layoutDocument: doc at: ((SBAlgebraState new offset: 30 @ 20) startX: 30) limit: a width + 21 wrap: false.
 	self assert: 30 @ 20 equals: a position.
 	self assert: (30 @ 20) + (SBAlgebraLayout indent @ a height) equals: b position
 ]
@@ -427,12 +427,12 @@ SBAlgebraLayoutTest >> testNestedOptionalWrap2 [
 					SBAlgebraCommand group data: {
 						SBAlgebraCommand morph data: (c := Morph new)}}}}}.
 	
-	SBAlgebraLayout new layoutDocument: doc limit: a width + b width + 1.
+	SBAlgebraLayout new indent: 10; layoutDocument: doc limit: a width + b width + 1.
 	self assert: 0 @ 0 equals: a position.
 	self assert: 0 @ a height equals: b position.
 	self assert: b width @ a height equals: c position.
 	
-	SBAlgebraLayout new layoutDocument: doc limit: a width + 21.
+	SBAlgebraLayout new indent: 10; layoutDocument: doc limit: a width + 21.
 	self assert: 0 @ 0 equals: a position.
 	self assert: 0 @ a height equals: b position.
 	self assert: SBAlgebraLayout indent @ (a height + b height) equals: c position

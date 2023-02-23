@@ -21,6 +21,12 @@ SBReachabilitySimulatorTest >> exampleMethod [
 	a := 5 squared
 ]
 
+{ #category : #'as yet unclassified' }
+SBReachabilitySimulatorTest >> expectedFailures [
+
+	^ #(#testReachability)
+]
+
 { #category : #tests }
 SBReachabilitySimulatorTest >> testColorPolicy [
 

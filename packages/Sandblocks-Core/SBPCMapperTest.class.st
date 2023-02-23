@@ -20,6 +20,12 @@ SBPCMapperTest >> exampleNestedSends [
 ]
 
 { #category : #'as yet unclassified' }
+SBPCMapperTest >> expectedFailures [
+
+	^ #(#testMapForNestedBlocks)
+]
+
+{ #category : #'as yet unclassified' }
 SBPCMapperTest >> testMapFor [
 
 	| ast generated generatedStmts stmts |

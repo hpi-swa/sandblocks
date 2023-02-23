@@ -80,6 +80,12 @@ SBAlgebraLayout >> indent [
 ]
 
 { #category : #'as yet unclassified' }
+SBAlgebraLayout >> indent: aNumber [
+
+	indent := aNumber
+]
+
+{ #category : #'as yet unclassified' }
 SBAlgebraLayout >> initialize [
 
 	super initialize.
