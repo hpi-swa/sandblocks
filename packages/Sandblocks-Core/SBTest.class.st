@@ -85,23 +85,53 @@ SBTest class >> mouseEventAt: aPoint [
 ]
 
 { #category : #'as yet unclassified' }
-SBTest class >> mouseEventAt: aPoint shift: aBoolean command: anotherBoolean control: aThirdBoolean [
+SBTest class >> mouseEventAt: aPoint pressed: aPressedBoolean shift: aBoolean command: anotherBoolean control: aThirdBoolean [
 
-	^ MouseEvent new
-		setType: #mouseDown
+	^ MouseButtonEvent new
+		setType: (aPressedBoolean ifTrue: [#mouseDown] ifFalse: [#mouseUp])
 		position: aPoint
+		which: MouseEvent redButton
 		buttons: (MouseEvent redButton bitOr: (((aBoolean ifTrue: [8] ifFalse: [0]) bitOr: (anotherBoolean ifTrue: [64] ifFalse: [0])) bitOr: (anotherBoolean ifTrue: [16] ifFalse: [0])))
 		hand: ActiveHand
+		stamp: nil
+]
+
+{ #category : #'as yet unclassified' }
+SBTest class >> mouseEventAt: aPoint shift: aBoolean command: anotherBoolean control: aThirdBoolean [
+
+	^ MouseButtonEvent new
+		setType: #mouseDown
+		position: aPoint
+		which: MouseEvent redButton
+		buttons: (MouseEvent redButton bitOr: (((aBoolean ifTrue: [8] ifFalse: [0]) bitOr: (anotherBoolean ifTrue: [64] ifFalse: [0])) bitOr: (anotherBoolean ifTrue: [16] ifFalse: [0])))
+		hand: ActiveHand
+		stamp: nil
 ]
 
 { #category : #'as yet unclassified' }
 SBTest class >> mouseMoveEventAt: aPoint [
 
-	^ MouseEvent new
+	^ MouseMoveEvent new
 		setType: #mouseMove
-		position: aPoint
-		buttons: MouseEvent blueButton
+		startPoint: aPoint
+		endPoint: aPoint
+		trail: nil
+		buttons: 0
 		hand: ActiveHand
+		stamp: nil
+]
+
+{ #category : #'as yet unclassified' }
+SBTest class >> mouseMoveEventAt: aPoint from: anotherPoint [
+
+	^ MouseMoveEvent new
+		setType: #mouseMove
+		startPoint: anotherPoint
+		endPoint: aPoint
+		trail: {aPoint. anotherPoint}
+		buttons: 0
+		hand: ActiveHand
+		stamp: nil
 ]
 
 { #category : #asserting }
@@ -113,20 +143,8 @@ SBTest >> assert: anObject structure: aCollection [
 { #category : #support }
 SBTest >> editorAndWorldFor: aBlock [
 
-	| editor worldSize hand |
-	worldSize := 300 @ 200.
-	world := (PasteUpMorph newWorldForProject: nil)
-		extent: worldSize;
-		viewBox: (0 @ 0 extent: worldSize);
-		yourself.
-	(world instVarNamed: #worldState)
-		instVarNamed: #canvas
-		put: (Form extent: worldSize depth: 32) getCanvas.
-	hand := HandMorphForEventTests new.
-	world
-		removeHand: world firstHand;
-		addHand: hand.
-	
+	| editor |
+	world := self offscreenWorld: 300 @ 200.
 	editor := self editorFor: aBlock.
 	editor openInWorld: world.
 	self tick.
@@ -168,6 +186,25 @@ SBTest >> keyboardEvent: aCharacter shift: aBoolean command: anotherBoolean cont
 SBTest >> methodFor: aBlock [
 
 	^ self class methodFor: aBlock
+]
+
+{ #category : #support }
+SBTest >> offscreenWorld: aPoint [
+
+	| worldSize hand |
+	worldSize := aPoint.
+	world := (PasteUpMorph newWorldForProject: nil)
+		extent: worldSize;
+		viewBox: (0 @ 0 extent: worldSize);
+		yourself.
+	(world instVarNamed: #worldState)
+		instVarNamed: #canvas
+		put: (Form extent: worldSize depth: 32) getCanvas.
+	hand := HandMorph new.
+	world
+		removeHand: world firstHand;
+		addHand: hand.
+	^ world
 ]
 
 { #category : #support }
