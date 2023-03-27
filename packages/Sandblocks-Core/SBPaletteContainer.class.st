@@ -128,11 +128,14 @@ SBPaletteContainer >> updateSearch [
 
 	| query |
 	query := search contents asLowercase.
-	content submorphsDo: [:container |
-		container submorphsDo: [:m | | show |
-			show := query isEmpty or: [self submorph: m matchesQuery: query].
-			m
-				visible: show;
-				disableLayout: show not]].
+	SBToggledCode comment: '' active: 2 do: {
+		[content submorphs do: [:m | m updateDisplayForSearch: query]].
+		[
+			content submorphsDo: [:container |
+				container submorphsDo: [:m | | show |
+					show := query isEmpty or: [self matchesSearchQuery: query].
+					m
+						visible: show;
+						disableLayout: show not]]]}.
 	content layoutChanged
 ]

@@ -128,7 +128,7 @@ SBTest class >> mouseMoveEventAt: aPoint from: anotherPoint [
 		setType: #mouseMove
 		startPoint: anotherPoint
 		endPoint: aPoint
-		trail: {aPoint. anotherPoint}
+		trail: {anotherPoint. aPoint}
 		buttons: 0
 		hand: ActiveHand
 		stamp: nil
@@ -200,7 +200,7 @@ SBTest >> offscreenWorld: aPoint [
 	(world instVarNamed: #worldState)
 		instVarNamed: #canvas
 		put: (Form extent: worldSize depth: 32) getCanvas.
-	hand := HandMorph new.
+	hand := SBHandMorph new.
 	world
 		removeHand: world firstHand;
 		addHand: hand.

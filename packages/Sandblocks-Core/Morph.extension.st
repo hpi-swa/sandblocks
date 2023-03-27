@@ -307,6 +307,16 @@ Morph >> leftMostMorph [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Morph >> matchesSearchQuery: aString [
+
+	((self respondsTo: #textContents) and: [self textContents asLowercase includesSubstring: aString]) ifTrue: [^ true].
+	((self respondsTo: #placeholderText) and: [self placeholderText asLowercase includesSubstring: aString]) ifTrue: [^ true].
+	((self respondsTo: #contents) and: [self contents isString and: [self contents asLowercase includesSubstring: aString]]) ifTrue: [^ true].
+	self balloonText ifNotNil: [:text | (text asLowercase includesSubstring: aString) ifTrue: [^ true]].
+	^ false
+]
+
+{ #category : #'*Sandblocks-Core' }
 Morph >> morphAfterThat: aBlock [
 
 	| next |
@@ -725,6 +735,21 @@ Morph >> topFirstMorphThat: aBlock [
 Morph >> unpackSelection [
 
 	^ self
+]
+
+{ #category : #'*Sandblocks-Core' }
+Morph >> updateDisplayForSearch: aString [
+
+	| show showChildren |
+	show := aString isEmpty or: [self matchesSearchQuery: aString].
+	"be careful not to use short-circuit so we get the side-effect everywhere"
+	self submorphs do: [:child |
+		showChildren := child updateDisplayForSearch: aString.
+		show := show or: [showChildren]].
+	self
+		visible: show;
+		disableLayout: show not.
+	^ show
 ]
 
 { #category : #'*Sandblocks-Core' }

@@ -80,7 +80,7 @@ SBMoveDecorator >> mouseCursorAt: anEvent [
 
 { #category : #'event handling' }
 SBMoveDecorator >> mouseMove: anEvent [
-	
+
 	lastDragPosition ifNotNil: [
 		self morph position: self morph position + (anEvent position - lastDragPosition).
 		lastDragPosition := anEvent position]

@@ -1531,8 +1531,8 @@ SBBlock >> isArtefact [
 
 { #category : #layout }
 SBBlock >> isAttractedTo: aMorph [
-	
-	^ aMorph object class = self object class
+
+	^ false
 ]
 
 { #category : #testing }
@@ -2755,8 +2755,7 @@ SBBlock >> startDrag: anEvent [
 		anEvent hand newMouseFocus: canvas.
 		^ canvas startDrag: (anEvent transformBy: self transformFromWorld asMatrixTransform2x3 inverseTransformation)].
 	
-	((self hasDecorator: SBMoveDecorator) not or: [anEvent controlKeyPressed or: [anEvent commandKeyPressed]]) ifTrue: [
-		^ self pickUp: anEvent].
+	((self hasDecorator: SBMoveDecorator) not or: [anEvent controlKeyPressed or: [anEvent commandKeyPressed]]) ifTrue: [^ self pickUp: anEvent].
 	
 	super startDrag: anEvent.
 	self sandblockEditor select: self
