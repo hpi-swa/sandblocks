@@ -29,7 +29,7 @@ unzip -q $BASE.zip
 rm "$BASE.zip"
 
 print_info "Preparing $BASE image..."
-$BASE_SHARED/Contents/Linux-x86_64/bin/squeak $COG_VM_PARAM "$BASE_SHARED/Contents/Resources/Squeak6.0-22104-64bit.image" "$(pwd)/../scripts/prepare_image.st" || EXIT_STATUS=$?
+$BASE_SHARED/Contents/Linux-x86_64/squeak $COG_VM_PARAM "$BASE_SHARED/Contents/Resources/Squeak6.0-22104-64bit.image" "$(pwd)/../scripts/prepare_image.st" || EXIT_STATUS=$?
 
 print_info "Zipping package ..."
 if [[ $EXIT_STATUS -eq 0 ]]; then
