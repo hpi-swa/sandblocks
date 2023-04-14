@@ -9,7 +9,8 @@ Class {
 		'clear',
 		'updateScheduled',
 		'numReportedValues',
-		'env'
+		'env',
+		'displayedValue'
 	],
 	#category : #'Sandblocks-Watch'
 }
@@ -80,9 +81,9 @@ SBWatchView >> initialize [
 	numReportedValues := 0.
 	
 	self
-		changeTableLayout;
+		layoutPolicy: SBAlgebraLayout new;
 		listDirection: #leftToRight;
-		color: Color transparent;
+		color: Color white;
 		cellGap: 8;
 		cellPositioning: #topLeft;
 		vResizing: #shrinkWrap;
@@ -102,6 +103,14 @@ SBWatchView >> initialize [
 SBWatchView >> lastValue: anObject [
 
 	lastValue := anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBWatchView >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand gap])
 ]
 
 { #category : #'event handling' }

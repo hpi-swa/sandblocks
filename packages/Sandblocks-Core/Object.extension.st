@@ -165,7 +165,7 @@ Object >> object [
 
 { #category : #'*Sandblocks-Core-converting' }
 Object >> openClass: converter [
-	<convert>
+	"<convert>"
 	<convertPriority: -2>
 
 	converter do: [SBStClassMethodEditor new class: self class]

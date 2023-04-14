@@ -208,6 +208,17 @@ Morph >> hasHorizontalLayout [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Morph >> hasSubmorphsGreaterThan: aNumber [
+
+	| count |
+	count := 0.
+	self allMorphsDo: [:m |
+		count := count + 1.
+		count > aNumber ifTrue: [^ true]].
+	^ false
+]
+
+{ #category : #'*Sandblocks-Core' }
 Morph >> innerBoundsInWorld [
 	
 	^ self bounds: self innerBounds in: self world

@@ -24,7 +24,9 @@ SBReachabilitySimulatorTest >> exampleMethod [
 { #category : #'as yet unclassified' }
 SBReachabilitySimulatorTest >> expectedFailures [
 
-	^ #(#testReachability)
+	^ Smalltalk version = 'Squeak6.0'
+		ifTrue: [{}]
+		ifFalse: {#(#testReachability)}
 ]
 
 { #category : #tests }

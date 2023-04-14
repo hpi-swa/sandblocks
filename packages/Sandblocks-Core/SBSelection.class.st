@@ -111,6 +111,12 @@ SBSelection >> handlesKeyboard: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBSelection >> hasSuggestionMenu [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBSelection >> hasUnsavedChanges: anArtefact [
 
 	^ false

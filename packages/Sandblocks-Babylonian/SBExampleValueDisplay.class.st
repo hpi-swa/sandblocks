@@ -56,7 +56,7 @@ SBExampleValueDisplay >> initialize [
 		cellGap: 4;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		changeTableLayout;
+		layoutPolicy: SBAlgebraLayout new;
 		changeListDirection: #leftToRight;
 		addMorphBack: (label := SBStringMorph new);
 		addMorphBack: (statusLabel := SBStringMorph new contents: '');
@@ -80,7 +80,7 @@ SBExampleValueDisplay >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
-		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand softLineOrGap])
+		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand gap])
 ]
 
 { #category : #'as yet unclassified' }

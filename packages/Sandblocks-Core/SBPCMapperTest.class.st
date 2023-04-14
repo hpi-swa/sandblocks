@@ -22,7 +22,9 @@ SBPCMapperTest >> exampleNestedSends [
 { #category : #'as yet unclassified' }
 SBPCMapperTest >> expectedFailures [
 
-	^ #(#testMapForNestedBlocks)
+	^ Smalltalk version = 'Squeak6.0'
+		ifTrue: [{}]
+		ifFalse: {#(#testMapForNestedBlocks)}
 ]
 
 { #category : #'as yet unclassified' }

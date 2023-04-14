@@ -183,10 +183,7 @@ SBWatch >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
-		data: {
-			self submorphs first layoutCommands.
-			SBAlgebraCommand hardLine.
-			SBAlgebraCommand morph data: self submorphs second}
+		data: {self submorphs first layoutCommands. SBAlgebraCommand hardLine. self submorphs second layoutCommands}
 ]
 
 { #category : #accessing }

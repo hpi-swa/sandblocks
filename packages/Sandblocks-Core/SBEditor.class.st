@@ -822,6 +822,12 @@ SBEditor >> handlesMouseOverDragging: evt [
 	^ true
 ]
 
+{ #category : #accessing }
+SBEditor >> hasSuggestionMenu [
+
+	^ suggestionMenu notNil
+]
+
 { #category : #'do/undo/redo' }
 SBEditor >> hasUnsavedChanges: anArtefact [
 

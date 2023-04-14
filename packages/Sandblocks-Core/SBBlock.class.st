@@ -1320,7 +1320,7 @@ SBBlock >> hasSuggestions [
 
 	| editor |
 	editor := self sandblockEditor.
-	^ editor notNil and: [editor suggestionMenu isInWorld and: [editor suggestionMenu reference = self]]
+	^ editor notNil and: [editor hasSuggestionMenu and: [editor suggestionMenu isInWorld and: [editor suggestionMenu reference = self]]]
 ]
 
 { #category : #testing }
@@ -2347,7 +2347,7 @@ SBBlock >> promptAction [
 	options := self validActions.
 	index := UIManager default chooseFrom: (options collect: [:option |
 		option method selector, (' ', (SBEditor shortcutStringForAction: option selector))]).
-	index > 0 ifTrue: [self performAction: (options at: index) method selector]
+	index > 0 ifTrue: [self performAction: (options at: index) method selector asSimpleGetter]
 ]
 
 { #category : #actions }

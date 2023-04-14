@@ -168,7 +168,13 @@ SBMultilineOwnTextMorph >> mouseDown: anEvent [
 	self paragraph selectionStart: block selectionStop: block.
 	self moveCursorTo: block stringIndex.
 	
-	self sandblockEditor ifNotNil: [:e | e cursor updateHorizontalOffset]
+	self sandblockEditor ifNotNil: [:e | e cursor updateHorizontalOffset].
+	
+	anEvent hand
+		waitForClicksOrDrag: self
+		event: anEvent
+		selectors: #(#click: #doubleClick: #doubleClickTimeout: #startDrag:)
+		threshold: 30
 ]
 
 { #category : #'as yet unclassified' }
