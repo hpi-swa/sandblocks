@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        smalltalk: [ Squeak64-trunk, Squeak64-5.3 ]
+        smalltalk: [ Squeak64-6.0 ]
     name: Test ${{ matrix.smalltalk }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -20,12 +20,12 @@ jobs:
         shell: bash
         timeout-minutes: 15
       - run: ./scripts/build_version.sh
-        if: startsWith(github.ref, 'refs/tags/') && matrix.smalltalk == 'Squeak64-5.3'
+        if: startsWith(github.ref, 'refs/tags/') && matrix.smalltalk == 'Squeak64-6.0'
         shell: bash
         timeout-minutes: 5
       - name: Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/') && matrix.smalltalk == 'Squeak64-5.3'
+        if: startsWith(github.ref, 'refs/tags/') && matrix.smalltalk == 'Squeak64-6.0'
         with:
           files: |
             deploy/sandblocks-all.zip
