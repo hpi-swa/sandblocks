@@ -31,6 +31,7 @@ $BASE_SHARED/Contents/Linux-x86_64/bin/squeak $COG_VM_PARAM "$BASE_SHARED/Conten
 
 print_info "Zipping package ..."
 if [[ $EXIT_STATUS -eq 0 ]]; then
+    rm -rf $BASE_SHARED/Contents/Resources/github-cache
     zip -r "${DEPLOY_PACKAGE}" *
 else
     print_info "Preparation of image file failed."
