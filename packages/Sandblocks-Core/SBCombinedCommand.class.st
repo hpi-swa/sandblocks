@@ -61,6 +61,7 @@ SBCombinedCommand >> hasHorizontalLayout [
 SBCombinedCommand >> hasSamePositionAs: aCommand [
 
 	aCommand class = self class ifFalse: [^ false].
+	aCommand commands size = self commands size ifFalse: [^ false].
 	
 	self commands
 		with: aCommand commands

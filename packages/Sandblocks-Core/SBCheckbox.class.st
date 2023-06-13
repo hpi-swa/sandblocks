@@ -43,7 +43,8 @@ SBCheckbox >> initialize [
 		addMorphBack: SBIcon iconCheckSquareO;
 		changeTableLayout;
 		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap
+		vResizing: #shrinkWrap;
+		updateIcon
 ]
 
 { #category : #'as yet unclassified' }
