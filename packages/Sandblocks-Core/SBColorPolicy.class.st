@@ -109,6 +109,12 @@ SBColorPolicy >> cornerRadius [
 ]
 
 { #category : #'as yet unclassified' }
+SBColorPolicy >> defaultEmphasis [
+
+	^ TextEmphasis normal
+]
+
+{ #category : #'as yet unclassified' }
 SBColorPolicy >> drawnColorOfOpaque: aBlock [
 
 	| block |

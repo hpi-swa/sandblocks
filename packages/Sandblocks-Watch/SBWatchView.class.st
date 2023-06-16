@@ -49,7 +49,7 @@ SBWatchView >> display [
 { #category : #'as yet unclassified' }
 SBWatchView >> drawnColor [
 
-	^ Color transparent
+	^ Color white
 ]
 
 { #category : #'event handling' }

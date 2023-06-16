@@ -151,7 +151,7 @@ SBCommand >> hasHorizontalLayout [
 { #category : #'insert commands' }
 SBCommand >> hasSamePositionAs: aCommand [
 
-	^ false
+	^ true
 ]
 
 { #category : #'initialize-release' }

@@ -15,11 +15,11 @@ SBWrapCommand >> do [
 	| currentOwner index originalPosition |
 	originalPosition := inner position.
 	currentOwner := inner owner.
-	index := currentOwner submorphIndexOf: inner.
+	index := currentOwner ifNotNil: [currentOwner submorphIndexOf: inner].
 	inner delete.
 	wrap value: outer value: inner.
 	
-	currentOwner addMorph: outer asElementNumber: index.
+	currentOwner ifNotNil: [currentOwner addMorph: outer asElementNumber: index].
 	outer position: originalPosition.
 	
 	^ inner
@@ -58,7 +58,7 @@ SBWrapCommand >> setArtefactFrom [
 { #category : #accessing }
 SBWrapCommand >> undo [
 
-	outer replaceBy: inner.
+	outer owner ifNotNil: [outer replaceBy: inner].
 	^ inner
 ]
 

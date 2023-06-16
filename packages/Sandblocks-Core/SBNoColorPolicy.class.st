@@ -11,6 +11,12 @@ SBNoColorPolicy >> background [
 ]
 
 { #category : #'as yet unclassified' }
+SBNoColorPolicy >> base [
+
+	^ Color black
+]
+
+{ #category : #'as yet unclassified' }
 SBNoColorPolicy >> borderColorForBlock: aBlock [
 
 	((aBlock isBlockBody and: [aBlock containingBlock notNil]) or: [aBlock isArtefact]) ifTrue: [^ self default alpha: (self dark ifTrue: [0.7] ifFalse: [0.4])].
@@ -34,7 +40,7 @@ SBNoColorPolicy >> borderWidthForBlock: aBlock [
 { #category : #colors }
 SBNoColorPolicy >> builtIn [
 
-	^ Color black
+	^ self base
 ]
 
 { #category : #'as yet unclassified' }
@@ -92,7 +98,7 @@ SBNoColorPolicy >> darkerBackground [
 { #category : #colors }
 SBNoColorPolicy >> default [
 
-	^ Color black
+	^ self base
 ]
 
 { #category : #colors }
@@ -104,7 +110,7 @@ SBNoColorPolicy >> defaultInverted [
 { #category : #colors }
 SBNoColorPolicy >> defaultLight [
 
-	^ Color black
+	^ self base
 ]
 
 { #category : #'as yet unclassified' }
@@ -138,25 +144,25 @@ SBNoColorPolicy >> foregroundColorForBlock: aBlock [
 { #category : #colors }
 SBNoColorPolicy >> identifier [
 
-	^ Color black
+	^ self base
 ]
 
 { #category : #colors }
 SBNoColorPolicy >> important [
 
-	^ Color black
+	^ self base
 ]
 
 { #category : #colors }
 SBNoColorPolicy >> keyword [
 
-	^ Color black
+	^ self base
 ]
 
 { #category : #colors }
 SBNoColorPolicy >> literal [
 
-	^ Color black
+	^ self base
 ]
 
 { #category : #'as yet unclassified' }
