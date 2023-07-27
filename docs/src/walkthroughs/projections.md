@@ -3,6 +3,7 @@
 Here, we take the custom block from the previous walkthrough and map it to a Smalltalk constructor. Using this mapping, whenever this constructor is seen in Smalltalk code, it will instead be displayed as our custom block.
 
 > **NOTES / API CHANGES:**
+> * the first condition of `asWeatherReport:` should be `self selector = 'newFor:temperature:' ` instead of `self receiver isName`
 > * an `object ^ self` method is no longer necessary but the default
 > * instead of `#canAppearInBlockBody`, you should now only implement `#isExpression` (which also sets `#canAppearInBlockBody`)
 
