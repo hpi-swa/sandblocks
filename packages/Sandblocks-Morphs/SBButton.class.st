@@ -226,6 +226,24 @@ SBButton >> label: aString shortcut: aShortcut do: aBlock [
 		do: aBlock
 ]
 
+{ #category : #'visual properties' }
+SBButton >> makeBold [
+
+	self widget bold
+]
+
+{ #category : #'visual properties' }
+SBButton >> makeSmall [
+
+	self
+		cellGap: 4.0 sbScaled;
+		layoutInset: (4.0 @ 2.0) sbScaled.
+	
+	self widget
+		clearEmphasis;
+		small
+]
+
 { #category : #'event handling' }
 SBButton >> mouseDown [
 	
@@ -269,6 +287,12 @@ SBButton >> pressed: aBoolean [
 
 	pressed := aBoolean.
 	self changed
+]
+
+{ #category : #accessing }
+SBButton >> widget [
+
+	^ self submorphs detect: [:m | m isKindOf: SBStringMorph]
 ]
 
 { #category : #initialization }
