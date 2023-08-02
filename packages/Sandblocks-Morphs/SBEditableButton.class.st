@@ -13,7 +13,13 @@ SBEditableButton >> widget: aMorph shortcut: aShortcut do: aBlock [
 			when: #contentsChanged
 			send: #triggerEvent:
 			to: self
-			with: #contentsChanged
+			with: #contentsChanged.
+			
+	self widgetMorph
+			when: #contentsChanged
+			send: #hResizing:
+			to: self
+			with: #shrinkWrap
 ]
 
 { #category : #initialization }
