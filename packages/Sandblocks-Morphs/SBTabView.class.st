@@ -12,15 +12,23 @@ Class {
 SBTabView class >> example [
 
 	SBMorphExample
-		setUp: [self new]
+		setUp: [self newEmpty]
 		cases: {SBMorphExampleCase name: 'example 1' caseBlock: [:m | m]}
 		extent: 300 @ 300
 ]
 
 { #category : #'as yet unclassified' }
-SBTabView class >> namedBlocks: aCollectionOfSBNamedBlocks [
+SBTabView class >> namedBlocks: aCollectionOfSBNamedBlocks activeIndex: aNumber [
 
 	^ self new namedBlocks: aCollectionOfSBNamedBlocks
+		     activeIndex: aNumber;
+		     yourself 
+]
+
+{ #category : #'as yet unclassified' }
+SBTabView class >> newEmpty [
+
+	^ self new updateTabs
 ]
 
 { #category : #'as yet unclassified' }
@@ -39,6 +47,16 @@ SBTabView >> activeBlock [
 SBTabView >> activeIndex [
 
 	^ activeIndex 
+]
+
+{ #category : #'as yet unclassified' }
+SBTabView >> activeIndex: aNumber [
+
+	self activeTab makeSmall.
+	
+	activeIndex := {aNumber. self namedBlocks size} min.
+	
+	self updateSelectedTab
 ]
 
 { #category : #'as yet unclassified' }
@@ -81,14 +99,18 @@ SBTabView >> addButton [
 SBTabView >> asTabButton: aNamedBlock [
 
 	| button |
-	button := SBButton new
+	button := SBEditableButton new
 		label: aNamedBlock name do: [self setActive: aNamedBlock];
 		cornerStyle: #squared;
 		makeSmall;
 		hResizing: #spaceFill.
 	
 	aNamedBlock = self active ifTrue: [button makeBold].
-	
+	button
+		when: #contentsChanged
+		send: #updateNameFor:on:
+		to: self
+		withArguments: {aNamedBlock .  button}.
 	
 	^ button
 		changeTableLayout;
@@ -150,8 +172,6 @@ SBTabView >> initialize [
 		listDirection: #topToBottom;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap.
-	
-	self updateTabs
 ]
 
 { #category : #'as yet unclassified' }
@@ -164,7 +184,17 @@ SBTabView >> namedBlocks [
 SBTabView >> namedBlocks: aCollectionOfSBBlocks [
 
 	namedBlocks := aCollectionOfSBBlocks asOrderedCollection.
+	activeIndex := namedBlocks size.
 	self updateTabs
+]
+
+{ #category : #'as yet unclassified' }
+SBTabView >> namedBlocks: aCollectionOfSBNamedBlocks activeIndex: aNumber [
+
+	namedBlocks := aCollectionOfSBNamedBlocks asOrderedCollection.
+	activeIndex := {aNumber. self namedBlocks size} min.
+	
+	self updateTabs.
 ]
 
 { #category : #'as yet unclassified' }
@@ -206,6 +236,12 @@ SBTabView >> setActive: aNamedBlock [
 SBTabView >> tabs [
 
 	^ (self submorphNamed: #tabs) submorphs
+]
+
+{ #category : #'as yet unclassified' }
+SBTabView >> updateNameFor: aNamedBlock on: aSBButton [
+
+	aNamedBlock name: aSBButton label
 ]
 
 { #category : #'as yet unclassified' }
