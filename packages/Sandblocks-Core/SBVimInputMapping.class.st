@@ -151,6 +151,7 @@ SBVimInputMapping >> registerDefaultShortcuts [
 
 		" smalltalk "
 		cmdShortcut: $" do: #wrapInToggledCode;
+		cmdShortcut: $Q do: #wrapInVariant;
 		cmdShortcut: $D do: #insertLabelAbove;
 		cmdShortcut: $b do: #insertHaltBelow;
 		cmdShortcut: $B do: #insertHaltAbove;
