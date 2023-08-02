@@ -13,7 +13,7 @@ SBNamedBlock class >> block: aSBBlock named: aString [
 
 	^ self new
 		block: aSBBlock;
-		named: aString
+		name: aString
 ]
 
 { #category : #'as yet unclassified' }
