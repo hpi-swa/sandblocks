@@ -125,6 +125,8 @@ SBVariant >> initialize [
 		namedBlocks: {SBNamedBlock block: (SBStBlockBody emptyWithDeclarations: {'a'. 'c'}) named: 'Code'}
 		activeIndex: 1.
 	
+	widget when: #deletedLastTab send: #replaceSelfWithChosenBlock: to: self.
+	
 	self
 		layoutInset: 2;
 		cellGap: 4;
@@ -157,6 +159,12 @@ SBVariant >> named: aString alternatives: aCollectionOfNamedBlocks activeIndex: 
 SBVariant >> namedBlocks [ 
 
 	^ self widget namedBlocks 
+]
+
+{ #category : #'as yet unclassified' }
+SBVariant >> replaceSelfWithChosenBlock: aNamedBlock [
+
+	self replaceBlock: aNamedBlock block lastSubmorph
 ]
 
 { #category : #'as yet unclassified' }

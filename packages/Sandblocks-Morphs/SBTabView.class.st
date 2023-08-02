@@ -212,12 +212,13 @@ SBTabView >> objectInterfaceNear: aBlock at: aSymbol [
 { #category : #'as yet unclassified' }
 SBTabView >> remove: aNamedBlock [
 
-	((self namedBlocks indexOf: aNamedBlock) <= activeIndex) 
-		ifTrue:  [activeIndex := {activeIndex - 1. 1} max]. 
+	(self namedBlocks indexOf: aNamedBlock) <= activeIndex ifTrue: [activeIndex := {activeIndex - 1. 1} max].
 	
 	self namedBlocks remove: aNamedBlock ifAbsent: [].
 	
-	self namedBlocks ifEmpty: [^ self delete].
+	self namedBlocks ifEmpty: [
+		self triggerEvent: #deletedLastTab with: aNamedBlock.
+		^ self delete].
 	
 	self updateTabs
 ]
