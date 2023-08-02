@@ -559,7 +559,7 @@ SBStGrammarHandler >> wrapInVariant [
 			selectAfter: #block;
 			outer: variant;
 			targets: selected;
-			wrap: [:outer :inner | variant named: 'Variants for Block' alternatives:{SBNamedBlock block: (SBStBlockBody new statements: inner) named:'A variant'} activeIndex: 1];
+			wrap: [:outer :inner | variant named: 'Variant' alternatives:{SBNamedBlock block: (SBStBlockBody new statements: inner) named:'alt'} activeIndex: 1];
 			yourself]
 ]
 

@@ -229,13 +229,16 @@ SBButton >> makeBold [
 { #category : #'visual properties' }
 SBButton >> makeSmall [
 
-	|widget|
+	| widget |
 	self
 		cellGap: 4.0 sbScaled;
-		layoutInset: (4.0 @ 2.0) sbScaled.
+		layoutInset: (6.0 @ 4.0) sbScaled.
 	
 	widget := self widgetMorph.
-	widget ifNotNil: [widget clearEmphasis; small]
+	widget ifNotNil: [
+		widget
+			clearEmphasis;
+			small]
 ]
 
 { #category : #'event handling' }

@@ -120,7 +120,8 @@ SBVariant >> initialize [
 	
 	name := SBTextBubble new
 		contents: 'variant X';
-		layoutInset: 5 @ 5.
+		layoutInset: 5 @ 5;
+		font: (TextStyle default fontOfSize: 8.0 sbScaled).
 	widget := SBTabView
 		namedBlocks: {SBNamedBlock block: (SBStBlockBody emptyWithDeclarations: {'a'. 'c'}) named: 'Code'}
 		activeIndex: 1.

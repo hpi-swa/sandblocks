@@ -85,8 +85,8 @@ SBTabView >> addButton [
 
 	^ SBButton new
 		icon: (SBIcon iconPlus
-				size: 8.0;
-				color: Color green)
+				size: 11.0;
+				color: (Color r: 0.0 g: 1 b: 0.0))
 			label: ''
 			do: [self add: (self active veryDeepCopy name: self activeName, '_copy')];
 		makeSmall;
@@ -242,7 +242,8 @@ SBTabView >> tabs [
 { #category : #'as yet unclassified' }
 SBTabView >> updateNameFor: aNamedBlock on: aSBButton [
 
-	aNamedBlock name: aSBButton label
+	aNamedBlock name: aSBButton label.
+	self tabs do: [:aTab | aTab hResizing: self hResizing]
 ]
 
 { #category : #'as yet unclassified' }
@@ -251,7 +252,10 @@ SBTabView >> updateSelectedTab [
 	self lastSubmorph delete.
 	
 	self buildView.
-	(self tabs at: activeIndex) makeBold  	
+	(self tabs at: activeIndex) makeBold.
+	
+	"so that bold text does not go over its borders"
+	self tabs do: [:aButton | aButton widgetMorph hResizing: self hResizing]
 ]
 
 { #category : #'as yet unclassified' }
