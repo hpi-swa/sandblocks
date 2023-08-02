@@ -85,10 +85,10 @@ SBTabView >> addButton [
 
 	^ SBButton new
 		icon: (SBIcon iconPlus
-				size: 11.0;
+				size: 6.0 sbScaled;
 				color: (Color r: 0.0 g: 1 b: 0.0))
 			label: ''
-			do: [self add: (self active veryDeepCopy name: self activeName, '_copy')];
+			do: [self add: (self active veryDeepCopy name: self activeName)];
 		makeSmall;
 		cornerStyle: #squared;
 		cellGap: -1.0 sbScaled;
@@ -106,11 +106,7 @@ SBTabView >> asTabButton: aNamedBlock [
 		hResizing: #spaceFill.
 	
 	aNamedBlock = self active ifTrue: [button makeBold].
-	button
-		when: #contentsChanged
-		send: #updateNameFor:on:
-		to: self
-		withArguments: {aNamedBlock .  button}.
+	button when: #contentsChanged send: #updateNameFor:on: to: self withArguments: {aNamedBlock. button}.
 	
 	^ button
 		changeTableLayout;

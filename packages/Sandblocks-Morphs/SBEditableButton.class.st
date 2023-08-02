@@ -4,22 +4,24 @@ Class {
 	#category : #'Sandblocks-Morphs'
 }
 
-{ #category : #'as yet unclassified' }
-SBEditableButton >> widget: aMorph shortcut: aShortcut do: aBlock [
+{ #category : #initialization }
+SBEditableButton >> textMorphFor: aString [
 
-	super widget: aMorph shortcut: aShortcut do: aBlock.
-	
-	self widgetMorph 
-			when: #contentsChanged
-			send: #triggerEvent:
-			to: self
-			with: #contentsChanged.
-			
-	self widgetMorph
-			when: #contentsChanged
-			send: #hResizing:
-			to: self
-			with: self hResizing
+	^ self widgetClass new
+		contents: aString;
+		emphasis: TextEmphasis bold emphasisCode;
+		bordered: false;
+		when: #clicked
+		send: #doButtonAction  
+		to: self;
+		when: #contentsChanged
+		send: #triggerEvent:
+		to: self
+		with: #contentsChanged;
+		when: #contentsChanged
+		send: #hResizing:
+		to: self
+		with: self hResizing
 ]
 
 { #category : #initialization }

@@ -107,7 +107,7 @@ SBStringMorph >> reportValue: anObject [
 { #category : #'as yet unclassified' }
 SBStringMorph >> small [
 
-	self font: (TextStyle default fontOfSize: 9 sbScaled)
+	self font: (TextStyle default fontOfSize: 10 sbScaled)
 ]
 
 { #category : #accessing }

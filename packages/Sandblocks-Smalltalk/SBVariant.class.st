@@ -114,14 +114,20 @@ SBVariant >> drawnColor [
 ]
 
 { #category : #'as yet unclassified' }
+SBVariant >> handlesMouseOver: anEvent [
+
+	^ true
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBVariant >> initialize [
 
 	super initialize.
 	
 	name := SBTextBubble new
 		contents: 'variant X';
-		layoutInset: 5 @ 5;
-		font: (TextStyle default fontOfSize: 8.0 sbScaled).
+		layoutInset: 5 @ 5.
 	widget := SBTabView
 		namedBlocks: {SBNamedBlock block: (SBStBlockBody emptyWithDeclarations: {'a'. 'c'}) named: 'Code'}
 		activeIndex: 1.
@@ -129,13 +135,27 @@ SBVariant >> initialize [
 	widget when: #deletedLastTab send: #replaceSelfWithChosenBlock: to: self.
 	
 	self
-		layoutInset: 2;
-		cellGap: 4;
+		layoutInset: 0;
+		cellGap: 0;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		changeTableLayout;
 		listDirection: #topToBottom;
-		addAllMorphsBack: {name. widget}
+		addAllMorphsBack: {widget}
+]
+
+{ #category : #'as yet unclassified' }
+SBVariant >> mouseEnter: anEvent [
+
+	super mouseEnter: anEvent.
+	self addMorphBack: name
+]
+
+{ #category : #'as yet unclassified' }
+SBVariant >> mouseLeave: anEvent [
+
+	super mouseLeave: anEvent.
+	self removeMorph: name
 ]
 
 { #category : #'as yet unclassified' }
