@@ -14,7 +14,9 @@ SBTabView class >> example [
 	SBMorphExample
 		setUp: [self newEmpty]
 		cases: {SBMorphExampleCase name: 'example 1' caseBlock: [:m | m]}
-		extent: 300 @ 300
+		extent: 300 @ 300.
+	
+	
 ]
 
 { #category : #'as yet unclassified' }
@@ -29,6 +31,26 @@ SBTabView class >> namedBlocks: aCollectionOfSBNamedBlocks activeIndex: aNumber 
 SBTabView class >> newEmpty [
 
 	^ self new updateTabs
+]
+
+{ #category : #'as yet unclassified' }
+SBTabView class >> registerShortcuts: aProvider [
+
+	aProvider registerShortcut: $n command do: #addTab.
+	aProvider registerShortcut: $w command do: #removeCurrentTab.
+	aProvider registerShortcut: Character arrowLeft  do: #jumpToPrevious.
+	aProvider registerShortcut: Character arrowRight  do: #jumpToNext.
+	
+	aProvider registerShortcut: $1 do: #jumpToFirstTab.
+	aProvider registerShortcut: $2 do: #jumpToSecondTab.
+	aProvider registerShortcut: $3 do: #jumpToThirdTab.
+	aProvider registerShortcut: $4 do: #jumpToFourthTab.
+	aProvider registerShortcut: $5 do: #jumpToFifthTab.
+	aProvider registerShortcut: $6 do: #jumpToSixthTab.
+	aProvider registerShortcut: $7 do: #jumpToSeventhTab.
+	aProvider registerShortcut: $8 do: #jumpToEightTab.
+	aProvider registerShortcut: $9 do: #jumpToNinthTab.
+	
 ]
 
 { #category : #'as yet unclassified' }
@@ -47,16 +69,6 @@ SBTabView >> activeBlock [
 SBTabView >> activeIndex [
 
 	^ activeIndex 
-]
-
-{ #category : #'as yet unclassified' }
-SBTabView >> activeIndex: aNumber [
-
-	self activeTab makeSmall.
-	
-	activeIndex := {aNumber. self namedBlocks size} min.
-	
-	self updateSelectedTab
 ]
 
 { #category : #'as yet unclassified' }
@@ -96,6 +108,13 @@ SBTabView >> addButton [
 ]
 
 { #category : #'as yet unclassified' }
+SBTabView >> addTab [
+	<action>
+
+	self add: (self namedBlocks last veryDeepCopy )
+]
+
+{ #category : #'as yet unclassified' }
 SBTabView >> asTabButton: aNamedBlock [
 
 	| button |
@@ -103,15 +122,15 @@ SBTabView >> asTabButton: aNamedBlock [
 		label: aNamedBlock name do: [self setActive: aNamedBlock];
 		cornerStyle: #squared;
 		makeSmall;
-		hResizing: #spaceFill.
+		hResizing: #spaceFill;
+		changeTableLayout;
+		listDirection: #leftToRight;
+		addMorphBack: (self deleteButtonFor: aNamedBlock).
 	
 	aNamedBlock = self active ifTrue: [button makeBold].
 	button when: #contentsChanged send: #updateNameFor:on: to: self withArguments: {aNamedBlock. button}.
 	
 	^ button
-		changeTableLayout;
-		listDirection: #leftToRight;
-		addMorphBack: (self deleteButtonFor: aNamedBlock)
 ]
 
 { #category : #'as yet unclassified' }
@@ -150,12 +169,6 @@ SBTabView >> deleteButtonFor: aNamedBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBTabView >> fixedNumberOfChildren [
-
-	^ false
-]
-
-{ #category : #'as yet unclassified' }
 SBTabView >> initialize [
 
 	super initialize.
@@ -168,6 +181,101 @@ SBTabView >> initialize [
 		listDirection: #topToBottom;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap.
+]
+
+{ #category : #'shortcut-utility' }
+SBTabView >> jumpToEightTab [
+
+	<action>
+	self jumpToTab: 8
+	
+]
+
+{ #category : #'shortcut-utility' }
+SBTabView >> jumpToFifthTab [
+
+	<action>
+	self jumpToTab: 5
+	
+]
+
+{ #category : #'shortcut-utility' }
+SBTabView >> jumpToFirstTab [
+
+	<action>
+	self jumpToTab: 1
+	
+]
+
+{ #category : #'shortcut-utility' }
+SBTabView >> jumpToFourthTab [
+
+	<action>
+	self jumpToTab: 4
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBTabView >> jumpToNext [
+
+	<action>
+	self jumpToTab: self activeIndex  \\ self namedBlocks size + 1
+	
+]
+
+{ #category : #'shortcut-utility' }
+SBTabView >> jumpToNinthTab [
+
+	<action>
+	self jumpToTab: 9
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBTabView >> jumpToPrevious [
+
+	<action>
+	self jumpToTab: self activeIndex - 2 \\ self namedBlocks size + 1
+	
+]
+
+{ #category : #'shortcut-utility' }
+SBTabView >> jumpToSecondTab [
+
+	<action>
+	self jumpToTab: 2
+	
+]
+
+{ #category : #'shortcut-utility' }
+SBTabView >> jumpToSeventhTab [
+
+	<action>
+	self jumpToTab: 7
+	
+]
+
+{ #category : #'shortcut-utility' }
+SBTabView >> jumpToSixthTab [
+
+	<action>
+	self jumpToTab: 6
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBTabView >> jumpToTab: anIndex [
+
+	self namedBlocks at: anIndex ifPresent: [:block | self setActive: block]
+	
+]
+
+{ #category : #'shortcut-utility' }
+SBTabView >> jumpToThirdTab [
+
+	<action>
+	self jumpToTab: 3
+	
 ]
 
 { #category : #'as yet unclassified' }
@@ -194,18 +302,6 @@ SBTabView >> namedBlocks: aCollectionOfSBNamedBlocks activeIndex: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
-SBTabView >> newEmptyChildNear: aBlock before: aBoolean [
-
-    ^ SBNamedBlock new
-]
-
-{ #category : #'as yet unclassified' }
-SBTabView >> objectInterfaceNear: aBlock at: aSymbol [
-
-	^ {[:o | o isKindOf: SBNamedBlock ]}
-]
-
-{ #category : #'as yet unclassified' }
 SBTabView >> remove: aNamedBlock [
 
 	(self namedBlocks indexOf: aNamedBlock) <= activeIndex ifTrue: [activeIndex := {activeIndex - 1. 1} max].
@@ -220,11 +316,18 @@ SBTabView >> remove: aNamedBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBTabView >> removeCurrentTab [
+	<action>
+
+	self remove: self active
+]
+
+{ #category : #'as yet unclassified' }
 SBTabView >> setActive: aNamedBlock [
 
 	self activeTab makeSmall.
 	
-	activeIndex := self namedBlocks indexOf: aNamedBlock ifAbsent: 1.
+	activeIndex := (self namedBlocks indexOf: aNamedBlock ifAbsent: 1).
 	
 	self updateSelectedTab
 ]
@@ -251,7 +354,8 @@ SBTabView >> updateSelectedTab [
 	(self tabs at: activeIndex) makeBold.
 	
 	"so that bold text does not go over its borders"
-	self tabs do: [:aButton | aButton widgetMorph hResizing: self hResizing]
+	self tabs do: [:aButton | aButton widgetMorph hResizing: self hResizing].
+	self triggerEvent: #changedActive.
 ]
 
 { #category : #'as yet unclassified' }
@@ -261,5 +365,7 @@ SBTabView >> updateTabs [
 	
 	self
 		buildTabs;
-		buildView
+		buildView.
+		
+	self triggerEvent: #changedActive
 ]

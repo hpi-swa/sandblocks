@@ -33,7 +33,7 @@ SBNamedBlock >> initialize [
 
 	super initialize.
 	
-	self name: 'A Tab'.
+	self name: 'A Block'.
 	self block: (SBLabel new contents: 'Some Content').
 ]
 

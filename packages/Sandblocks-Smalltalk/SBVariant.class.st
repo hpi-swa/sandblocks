@@ -14,7 +14,9 @@ SBVariant class >> example [
 	SBMorphExample
 		setUp: [self new]
 		cases: {SBMorphExampleCase name: 'example 1' caseBlock: [:m | m]}
-		extent: 300 @ 300
+		extent: 300 @ 300.
+	
+	
 ]
 
 { #category : #'as yet unclassified' }
@@ -37,8 +39,8 @@ SBVariant class >> matches: aBlock [
 SBVariant class >> named: aString alternatives: aCollectionOfNamedBlocks activeIndex: aNumber [
 
 	^ self new
-		name: aString;
-		alternatives: aCollectionOfNamedBlocks;
+		name: aString
+		alternatives: aCollectionOfNamedBlocks
 		activeIndex: aNumber
 		
 ]
@@ -66,6 +68,13 @@ SBVariant class >> newFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBVariant class >> registerShortcuts: aProvider [
+
+	aProvider registerShortcut: $f command do: #replaceSelfWithChosen.
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBVariant >> active [
 
 	^ self widget active
@@ -84,21 +93,9 @@ SBVariant >> activeIndex [
 ]
 
 { #category : #'as yet unclassified' }
-SBVariant >> activeIndex: aNumber [
-
-	^ self widget activeIndex: aNumber
-]
-
-{ #category : #'as yet unclassified' }
 SBVariant >> alternatives [
 
 	^ self widget namedBlocks
-]
-
-{ #category : #'as yet unclassified' }
-SBVariant >> alternatives: aCollectionOfNamedBlocks [
-
-	self widget namedBlocks: aCollectionOfNamedBlocks
 ]
 
 { #category : #'as yet unclassified' }
@@ -114,48 +111,30 @@ SBVariant >> drawnColor [
 ]
 
 { #category : #'as yet unclassified' }
-SBVariant >> handlesMouseOver: anEvent [
-
-	^ true
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBVariant >> initialize [
 
 	super initialize.
 	
-	name := SBTextBubble new
+	name := SBLabel new
 		contents: 'variant X';
-		layoutInset: 5 @ 5.
+		layoutInset: 5 @ 5;
+		vResizing: #shrinkWrap.
 	widget := SBTabView
 		namedBlocks: {SBNamedBlock block: (SBStBlockBody emptyWithDeclarations: {'a'. 'c'}) named: 'Code'}
 		activeIndex: 1.
 	
-	widget when: #deletedLastTab send: #replaceSelfWithChosenBlock: to: self.
+	widget when: #deletedLastTab send: #replaceSelfWithBlock: to: self.
+	widget when: #changedActive send: #updateResize to: self.
+	
 	
 	self
 		layoutInset: 0;
-		cellGap: 0;
+		cellGap: 2.0;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		changeTableLayout;
-		listDirection: #topToBottom;
-		addAllMorphsBack: {widget}
-]
-
-{ #category : #'as yet unclassified' }
-SBVariant >> mouseEnter: anEvent [
-
-	super mouseEnter: anEvent.
-	self addMorphBack: name
-]
-
-{ #category : #'as yet unclassified' }
-SBVariant >> mouseLeave: anEvent [
-
-	super mouseLeave: anEvent.
-	self removeMorph: name
+		listDirection: #leftToRight;
+		addAllMorphsBack: {name. widget}
 ]
 
 { #category : #'as yet unclassified' }
@@ -183,9 +162,29 @@ SBVariant >> namedBlocks [
 ]
 
 { #category : #'as yet unclassified' }
-SBVariant >> replaceSelfWithChosenBlock: aNamedBlock [
-
+SBVariant >> replaceSelfWithBlock: aNamedBlock [
+	
 	self replaceBlock: aNamedBlock block lastSubmorph
+]
+
+{ #category : #'as yet unclassified' }
+SBVariant >> replaceSelfWithChosen [ 
+	
+	<action>
+	self replaceSelfWithBlock: self active
+]
+
+{ #category : #'as yet unclassified' }
+SBVariant >> updateResize [
+
+	name vResizing: #shrinkWrap.
+	widget lastSubmorph vResizing: #spaceFill.
+	widget lastSubmorph hResizing: #spaceFill.
+	self vResizing: #shrinkWrap.
+	
+	" mark a change"
+	self flag: #todo. "replace with proper undo commands in tab view -jb"
+	"self sandblockEditor do: (SBDoItCommand new artefact: self parentSandblock)."
 ]
 
 { #category : #'as yet unclassified' }
