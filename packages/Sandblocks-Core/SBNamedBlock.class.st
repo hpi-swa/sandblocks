@@ -8,7 +8,7 @@ Class {
 	#category : #'Sandblocks-Core'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBNamedBlock class >> block: aSBBlock named: aString [
 
 	^ self new
@@ -16,19 +16,19 @@ SBNamedBlock class >> block: aSBBlock named: aString [
 		name: aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBNamedBlock >> block [
 
 	^ block
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBNamedBlock >> block: aSBBlock [
 
 	block := aSBBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBNamedBlock >> initialize [
 
 	super initialize.
@@ -37,13 +37,13 @@ SBNamedBlock >> initialize [
 	self block: (SBLabel new contents: 'Some Content').
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBNamedBlock >> name [
 
 	^ name
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBNamedBlock >> name: aString [
 
 	name := aString

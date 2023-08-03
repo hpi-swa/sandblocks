@@ -8,7 +8,7 @@ Class {
 	#category : #'Sandblocks-Morphs'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBTabView class >> example [
 
 	SBMorphExample
@@ -19,7 +19,7 @@ SBTabView class >> example [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBTabView class >> namedBlocks: aCollectionOfSBNamedBlocks activeIndex: aNumber [
 
 	^ self new namedBlocks: aCollectionOfSBNamedBlocks
@@ -27,13 +27,13 @@ SBTabView class >> namedBlocks: aCollectionOfSBNamedBlocks activeIndex: aNumber 
 		     yourself 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBTabView class >> newEmpty [
 
-	^ self new updateTabs
+	^ self new rebuild
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #shortcuts }
 SBTabView class >> registerShortcuts: aProvider [
 
 	aProvider registerShortcut: $n command do: #addTab.
@@ -53,46 +53,62 @@ SBTabView class >> registerShortcuts: aProvider [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTabView >> active [
 
 	^ self namedBlocks at: activeIndex
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTabView >> activeBlock [
 
 	^ self active block
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTabView >> activeIndex [
 
 	^ activeIndex 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
+SBTabView >> activeIndex: aNumber [ 
+
+	self activeTab makeSmall.
+
+	activeIndex := {aNumber. self namedBlocks size} min.
+
+	self updateSelectedTab.
+	
+	self triggerEvent: #changedActive
+]
+
+{ #category : #accessing }
 SBTabView >> activeName [
 
 	^ self active name
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTabView >> activeTab [
 
 	^ self tabs at: activeIndex 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tabs }
 SBTabView >> add: aNamedBlock [
-
-	self namedBlocks add: aNamedBlock.
-	activeIndex := self namedBlocks size.
 	
-	self updateTabs
+	|oldValue|
+	oldValue := self namedBlocks veryDeepCopy.
+	self namedBlocks add: aNamedBlock.
+	
+	self sandblockEditor do: (SBCombinedCommand newWith: {
+		self switchCommandFor: self namedBlocks size oldValue: self activeIndex.
+		(self addOrRemoveCommandFor: oldValue).
+		})
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #ui }
 SBTabView >> addButton [
 
 	^ SBButton new
@@ -100,21 +116,32 @@ SBTabView >> addButton [
 				size: 6.0 sbScaled;
 				color: (Color r: 0.0 g: 1 b: 0.0))
 			label: ''
-			do: [self add: (self active veryDeepCopy name: self activeName)];
+			do: [self addTab];
 		makeSmall;
 		cornerStyle: #squared;
 		cellGap: -1.0 sbScaled;
 		layoutInset: (4.0 @ 4.0) sbScaled
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #commands }
+SBTabView >> addOrRemoveCommandFor: anOldCollectionOfNamedBlocks [
+
+	^SBMutatePropertyCommand new 
+		target: self;
+		selector: #namedBlocks;
+		mutateSelector: #namedBlocks:;
+		oldValue: anOldCollectionOfNamedBlocks;
+		value: self namedBlocks
+]
+
+{ #category : #actions }
 SBTabView >> addTab [
 	<action>
 
-	self add: (self namedBlocks last veryDeepCopy )
+	self add: (self active veryDeepCopy name: self activeName, '_i')
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #ui }
 SBTabView >> asTabButton: aNamedBlock [
 
 	| button |
@@ -133,7 +160,7 @@ SBTabView >> asTabButton: aNamedBlock [
 	^ button
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #ui }
 SBTabView >> buildTabs [
 
 	self addMorphBack: (SBRow new
@@ -145,13 +172,13 @@ SBTabView >> buildTabs [
 		hResizing: #shrinkWrap)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #ui }
 SBTabView >> buildView [
 
-	self addMorphBack: self activeBlock
+	self addMorphBack: (self activeBlock hResizing: #spaceFill)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #ui }
 SBTabView >> deleteButtonFor: aNamedBlock [
 
 	| delete |
@@ -168,7 +195,7 @@ SBTabView >> deleteButtonFor: aNamedBlock [
 	^ delete
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBTabView >> initialize [
 
 	super initialize.
@@ -179,7 +206,7 @@ SBTabView >> initialize [
 	self
 		changeTableLayout;
 		listDirection: #topToBottom;
-		hResizing: #shrinkWrap;
+		hResizing: #spaceFill;
 		vResizing: #shrinkWrap.
 ]
 
@@ -215,7 +242,7 @@ SBTabView >> jumpToFourthTab [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBTabView >> jumpToNext [
 
 	<action>
@@ -231,7 +258,7 @@ SBTabView >> jumpToNinthTab [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBTabView >> jumpToPrevious [
 
 	<action>
@@ -263,7 +290,7 @@ SBTabView >> jumpToSixthTab [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tabs }
 SBTabView >> jumpToTab: anIndex [
 
 	self namedBlocks at: anIndex ifPresent: [:block | self setActive: block]
@@ -278,94 +305,126 @@ SBTabView >> jumpToThirdTab [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTabView >> namedBlocks [
 
 	^ namedBlocks
 ]
 
-{ #category : #'as yet unclassified' }
-SBTabView >> namedBlocks: aCollectionOfSBBlocks [
+{ #category : #accessing }
+SBTabView >> namedBlocks: aCollectionOfSBNamedBlocks [
 
-	namedBlocks := aCollectionOfSBBlocks asOrderedCollection.
-	activeIndex := namedBlocks size.
-	self updateTabs
+	self namedBlocks: aCollectionOfSBNamedBlocks activeIndex: namedBlocks size
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTabView >> namedBlocks: aCollectionOfSBNamedBlocks activeIndex: aNumber [
 
 	namedBlocks := aCollectionOfSBNamedBlocks asOrderedCollection.
 	activeIndex := {aNumber. self namedBlocks size} min.
 	
-	self updateTabs.
+	self rebuild
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #ui }
+SBTabView >> rebuild [
+
+	self submorphs copy do: #delete.
+	
+	self
+		buildTabs;
+		buildView
+]
+
+{ #category : #tabs }
 SBTabView >> remove: aNamedBlock [
 
-	(self namedBlocks indexOf: aNamedBlock) <= activeIndex ifTrue: [activeIndex := {activeIndex - 1. 1} max].
-	
-	self namedBlocks remove: aNamedBlock ifAbsent: [].
-	
-	self namedBlocks ifEmpty: [
-		self triggerEvent: #deletedLastTab with: aNamedBlock.
+	| oldValue newIndex oldIndex |
+	(self namedBlocks size - 1 <= 0) ifTrue: [
+		self triggerEvent: #deletedLastTab with: aNamedBlock veryDeepCopy.
 		^ self delete].
 	
-	self updateTabs
+	(self namedBlocks indexOf: aNamedBlock) <= self activeIndex 
+		ifTrue: [newIndex := {activeIndex - 1. 1} max]
+		ifFalse: [newIndex := self activeIndex].
+	oldValue := self namedBlocks veryDeepCopy.
+	oldIndex := self activeIndex.
+	
+	self namedBlocks remove: aNamedBlock ifAbsent: [].
+	self sandblockEditor do: (SBCombinedCommand newWith: {
+	"When removing, in order for the undo function to switch to the previous active tab,
+	the remove command has to be wrapped"
+		self switchCommandFor: newIndex oldValue: oldIndex.
+		(self addOrRemoveCommandFor: oldValue).
+		self switchCommandFor: newIndex oldValue: oldIndex.
+		})
+
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBTabView >> removeCurrentTab [
 	<action>
 
 	self remove: self active
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tabs }
 SBTabView >> setActive: aNamedBlock [
 
-	self activeTab makeSmall.
-	
-	activeIndex := (self namedBlocks indexOf: aNamedBlock ifAbsent: 1).
-	
-	self updateSelectedTab
+	self sandblockEditor do: 
+		(self switchCommandFor: (self namedBlocks indexOf: aNamedBlock ifAbsent: 1))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #commands }
+SBTabView >> switchCommandFor: aNumber [
+
+	^ SBMutatePropertyCommand new
+		target: self;
+		selector: #activeIndex;
+		mutateSelector: #activeIndex:;
+		value: aNumber
+]
+
+{ #category : #commands }
+SBTabView >> switchCommandFor: aNumber oldValue: oldNumber [
+
+	^ SBMutatePropertyCommand new
+		target: self;
+		selector: #activeIndex;
+		mutateSelector: #activeIndex:;
+		value: aNumber;
+		oldValue: oldNumber
+]
+
+{ #category : #accessing }
 SBTabView >> tabs [
 
 	^ (self submorphNamed: #tabs) submorphs
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #ui }
 SBTabView >> updateNameFor: aNamedBlock on: aSBButton [
 
 	aNamedBlock name: aSBButton label.
-	self tabs do: [:aTab | aTab hResizing: self hResizing]
+	
+	"Changing the extent of a tab should not affect other tabs, 
+	e.g. making a tab smaller should not make the left neighbor larger"
+	self tabs do: [:aTab | aTab hResizing: #shrinkWrap]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #ui }
 SBTabView >> updateSelectedTab [
 
-	self lastSubmorph delete.
-	
+	self view delete.
 	self buildView.
-	(self tabs at: activeIndex) makeBold.
 	
+	(self tabs at: self activeIndex) makeBold.
 	"so that bold text does not go over its borders"
-	self tabs do: [:aButton | aButton widgetMorph hResizing: self hResizing].
-	self triggerEvent: #changedActive.
+	self tabs do: [:aButton | aButton widgetMorph hResizing: self hResizing]
 ]
 
-{ #category : #'as yet unclassified' }
-SBTabView >> updateTabs [
+{ #category : #accessing }
+SBTabView >> view [
 
-	self submorphs copy do: #delete.
-	
-	self
-		buildTabs;
-		buildView.
-		
-	self triggerEvent: #changedActive
+	^ self lastSubmorph
 ]

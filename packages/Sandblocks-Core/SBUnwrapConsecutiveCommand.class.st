@@ -12,7 +12,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBUnwrapConsecutiveCommand >> do [
 
-	unwrapped := target childSandblocks.
+	unwrapped ifNil: [unwrapped := target childSandblocks].
 	oldPositions := unwrapped collect: [:m | {m owner. m submorphIndex}].
 	
 	target owner addAllMorphs: unwrapped after: target.
@@ -40,4 +40,10 @@ SBUnwrapConsecutiveCommand >> undo [
 		with: unwrapped
 		do: [:pos :morph | pos first addMorph: morph asElementNumber: pos second].
 	^ target
+]
+
+{ #category : #'as yet unclassified' }
+SBUnwrapConsecutiveCommand >> unwrapped: aCollectionOfBlocks [
+
+	unwrapped := aCollectionOfBlocks
 ]

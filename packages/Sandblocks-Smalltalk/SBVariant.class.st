@@ -8,7 +8,7 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBVariant class >> example [
 
 	SBMorphExample
@@ -19,46 +19,46 @@ SBVariant class >> example [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #suggestions }
 SBVariant class >> instanceSuggestion [
 
 	^ [self newEmpty]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBVariant class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
 	
 	^ aBlock receiver isBinding
 		and: [aBlock receiver contents = 'SBVariant']
-		and: [aBlock selector = 'named:associations:do:']
+		and: [aBlock selector = 'named:associations:activeIndex:']
 ]
 
-{ #category : #nil }
+{ #category : #'instance creation' }
 SBVariant class >> named: aString alternatives: aCollectionOfNamedBlocks activeIndex: aNumber [
 
 	^ self new
-		name: aString
+		named: aString
 		alternatives: aCollectionOfNamedBlocks
 		activeIndex: aNumber
 		
 ]
 
-{ #category : #nil }
+{ #category : #'instance creation' }
 SBVariant class >> named: aString associations: aCollectionOfAssociations activeIndex: aNumber [
 
 	^ aNumber > 0 ifTrue: [(aCollectionOfAssociations at: aNumber) value value] ifFalse: [nil]
 		
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBVariant class >> newEmpty [
 
 	^ self new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBVariant class >> newFor: aBlock [
 
 	^ self
@@ -67,50 +67,50 @@ SBVariant class >> newFor: aBlock [
 		activeIndex: aBlock arguments third parsedContents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #shortcuts }
 SBVariant class >> registerShortcuts: aProvider [
 
 	aProvider registerShortcut: $f command do: #replaceSelfWithChosen.
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBVariant >> active [
 
 	^ self widget active
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBVariant >> activeBlock [
 
 	^ self widget activeBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBVariant >> activeIndex [
 
 	^ self widget activeIndex
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBVariant >> alternatives [
 
 	^ self widget namedBlocks
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBVariant >> color [
 
 	^ Color transparent
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBVariant >> drawnColor [
 
 	^ Color white
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBVariant >> initialize [
 
 	super initialize.
@@ -118,82 +118,92 @@ SBVariant >> initialize [
 	name := SBLabel new
 		contents: 'variant X';
 		layoutInset: 5 @ 5;
-		vResizing: #shrinkWrap.
-	widget := SBTabView
+		hResizing: #spaceFill.
+	self widget: (SBTabView
 		namedBlocks: {SBNamedBlock block: (SBStBlockBody emptyWithDeclarations: {'a'. 'c'}) named: 'Code'}
-		activeIndex: 1.
-	
-	widget when: #deletedLastTab send: #replaceSelfWithBlock: to: self.
-	widget when: #changedActive send: #updateResize to: self.
+		activeIndex: 1).
 	
 	
 	self
 		layoutInset: 0;
 		cellGap: 2.0;
-		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap;
+		listDirection: #topToBottom;
 		changeTableLayout;
-		listDirection: #leftToRight;
-		addAllMorphsBack: {name. widget}
+		addAllMorphsBack: {name. widget};
+		vResizing: #shrinkWrap;
+		hResizing: #shrinkWrap
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBVariant >> name [
 
 	^ name contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBVariant >> name: aString [
 	name contents: aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBVariant >> named: aString alternatives: aCollectionOfNamedBlocks activeIndex: aNumber [
 
 	self name: aString.
 	self widget namedBlocks: aCollectionOfNamedBlocks activeIndex: aNumber
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBVariant >> namedBlocks [ 
 
 	^ self widget namedBlocks 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBVariant >> replaceSelfWithBlock: aNamedBlock [
 	
-	self replaceBlock: aNamedBlock block lastSubmorph
+	"As deleting the last tab also deletes the tab view, we gotta recreate it"
+	self widget: (SBTabView namedBlocks: {aNamedBlock} activeIndex: 1).
+	self addMorphBack: widget.
+	
+	self sandblockEditor do: (SBUnwrapConsecutiveCommand new 
+									target: self; 
+									unwrapped: {widget activeBlock lastSubmorph})
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBVariant >> replaceSelfWithChosen [ 
 	
 	<action>
-	self replaceSelfWithBlock: self active
+	self sandblockEditor do: (SBUnwrapConsecutiveCommand new 
+									target: self; 
+									unwrapped: {self activeBlock lastSubmorph})
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #ui }
 SBVariant >> updateResize [
 
-	name vResizing: #shrinkWrap.
-	widget lastSubmorph vResizing: #spaceFill.
-	widget lastSubmorph hResizing: #spaceFill.
-	self vResizing: #shrinkWrap.
+	self hResizing: #shrinkWrap.
+	name hResizing: #spaceFill
 	
-	" mark a change"
-	self flag: #todo. "replace with proper undo commands in tab view -jb"
-	"self sandblockEditor do: (SBDoItCommand new artefact: self parentSandblock)."
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBVariant >> widget [
 
 	^ widget
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
+SBVariant >> widget: aSBTabView [
+
+	
+	widget := aSBTabView.
+	
+	widget when: #deletedLastTab send: #replaceSelfWithBlock: to: self.
+	widget when: #changedActive send: #updateResize to: self
+]
+
+{ #category : #printing }
 SBVariant >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '(SBVariant named: '.

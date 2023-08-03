@@ -548,7 +548,7 @@ SBStGrammarHandler >> wrapInToggledCode [
 { #category : #actions }
 SBStGrammarHandler >> wrapInVariant [
 	<multiSelectAction>
-	<actionValidIf: #canAppearInBlockBody>
+	<actionValidIf: #isSandblock>
 
 	| variant |
 	self assert: self block isSelected.
@@ -559,7 +559,7 @@ SBStGrammarHandler >> wrapInVariant [
 			selectAfter: #block;
 			outer: variant;
 			targets: selected;
-			wrap: [:outer :inner | variant named: 'Variant' alternatives:{SBNamedBlock block: (SBStBlockBody new statements: inner) named:'alt'} activeIndex: 1];
+			wrap: [:outer :inner | variant named: inner printString alternatives:{SBNamedBlock block: (SBStBlockBody new statements: inner) named:'alt'} activeIndex: 1];
 			yourself]
 ]
 
