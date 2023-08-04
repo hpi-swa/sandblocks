@@ -141,9 +141,7 @@ SBButton >> icon: anIconMorph label: aString do: aBlock [
 	
 	self widget: anIconMorph shortcut: nil do: aBlock.
 	
-	self addMorphBack: (SBStringMorph new
-		contents: aString;
-		emphasis: TextEmphasis bold emphasisCode)
+	self addMorphBack: (self textMorphFor: aString)
 ]
 
 { #category : #initialization }
@@ -189,7 +187,7 @@ SBButton >> invokeMetaMenu: evt [
 SBButton >> label [
 
 	^ self submorphs
-		detect: [:m | m isKindOf: SBStringMorph]
+		detect: [:m | m isKindOf: self widgetClass ]
 		ifFound: [:m | m contents]
 		ifNone: [self name]
 ]
@@ -197,19 +195,15 @@ SBButton >> label [
 { #category : #accessing }
 SBButton >> label: aString [
 
-	(self submorphs detect: [:m | m isKindOf: SBStringMorph] ifNone: [
-		^ self addMorphFront: (SBStringMorph new
-			contents: aString;
-			emphasis: TextEmphasis bold emphasisCode)]) contents: aString
+	(self submorphs detect: [:m | m isKindOf: self widgetClass] ifNone: [
+		^ self addMorphFront: (self textMorphFor: aString)]) contents: aString
 ]
 
 { #category : #initialization }
 SBButton >> label: aString do: aBlock [
 
 	self
-		widget: (SBStringMorph new
-			contents: aString;
-			emphasis: TextEmphasis bold emphasisCode)
+		widget: (self textMorphFor: aString)
 		shortcut: nil
 		do: aBlock
 ]
@@ -219,11 +213,32 @@ SBButton >> label: aString shortcut: aShortcut do: aBlock [
 
 	self example: [SBButton new] args: [{'hello'. $p command. [nil]}] label: 'label'.
 	self
-		widget: (SBStringMorph new
-			contents: aString;
-			emphasis: TextEmphasis bold emphasisCode)
+		widget: (self textMorphFor: aString)
 		shortcut: aShortcut
 		do: aBlock
+]
+
+{ #category : #'visual properties' }
+SBButton >> makeBold [
+
+	|widget|
+	widget := self widgetMorph.
+	widget ifNotNil: [widget bold].
+]
+
+{ #category : #'visual properties' }
+SBButton >> makeSmall [
+
+	| widget |
+	self
+		cellGap: 4.0 sbScaled;
+		layoutInset: (4.0 @ 2.0) sbScaled.
+	
+	widget := self widgetMorph.
+	widget ifNotNil: [
+		widget
+			clearEmphasis;
+			small]
 ]
 
 { #category : #'event handling' }
@@ -272,14 +287,36 @@ SBButton >> pressed: aBoolean [
 ]
 
 { #category : #initialization }
+SBButton >> textMorphFor: aString [
+
+	^ self widgetClass new
+		contents: aString;
+		emphasis: TextEmphasis bold emphasisCode
+]
+
+{ #category : #initialization }
 SBButton >> widget: aMorph shortcut: aShortcut do: aBlock [
 
 	action := aBlock.
 	self addMorphBack: aMorph.
 	aShortcut ifNotNil: [
-		self addMorphBack: (SBStringMorph new
+		self addMorphBack: (self widgetClass new
 			contents: (aShortcut isCollection
 				ifTrue: [aShortcut anyOne displayString]
 				ifFalse: [aShortcut displayString]);
 			opacity: 0.7)]
+]
+
+{ #category : #initialization }
+SBButton >> widgetClass [
+
+	^ SBStringMorph 
+]
+
+{ #category : #initialization }
+SBButton >> widgetMorph [
+
+	^ self submorphs detect: [:m | m isKindOf: self widgetClass] 
+		ifFound:[:m | m] 
+		ifNone: [nil]
 ]

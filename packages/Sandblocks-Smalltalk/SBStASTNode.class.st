@@ -25,6 +25,7 @@ SBStASTNode class >> registerShortcuts: aProvider [
 
 	aProvider
 		cmdShortcut: $" do: #wrapInToggledCode;
+		cmdShortcut: $Q do: #wrapInVariant;
 		noInsertShortcut: $[ do: #wrapInBlock;
 		noInsertShortcut: ${ do: #wrapInDynamicArray;
 		cmdShortcut: $: do: #wrapInAssignment;

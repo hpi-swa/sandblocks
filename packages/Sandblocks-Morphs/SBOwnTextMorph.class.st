@@ -504,6 +504,12 @@ SBOwnTextMorph >> selectionBounds [
 ]
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> small [
+
+	self font: (TextStyle default fontOfSize: 10 sbScaled)
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> stopEditing [
 
 	self cursor: 0

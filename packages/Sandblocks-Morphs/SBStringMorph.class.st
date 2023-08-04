@@ -104,6 +104,12 @@ SBStringMorph >> reportValue: anObject [
 	self contents: anObject printString
 ]
 
+{ #category : #'as yet unclassified' }
+SBStringMorph >> small [
+
+	self font: (TextStyle default fontOfSize: 10 sbScaled)
+]
+
 { #category : #accessing }
 SBStringMorph >> wantsMetaMenu [
 

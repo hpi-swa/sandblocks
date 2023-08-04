@@ -50,6 +50,14 @@ SBTextBubble >> changeToUnknown [
 ]
 
 { #category : #'as yet unclassified' }
+SBTextBubble >> click: anEvent [
+
+	super click: anEvent.
+	
+	self triggerEvent: #clicked
+]
+
+{ #category : #'as yet unclassified' }
 SBTextBubble >> colorAlpha: aNumber [
 
 	text colorAlpha: aNumber

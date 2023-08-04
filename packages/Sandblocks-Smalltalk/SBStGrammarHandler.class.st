@@ -546,6 +546,24 @@ SBStGrammarHandler >> wrapInToggledCode [
 ]
 
 { #category : #actions }
+SBStGrammarHandler >> wrapInVariant [
+	<multiSelectAction>
+	<actionValidIf: #isSandblock>
+
+	| variant |
+	self assert: self block isSelected.
+	variant := SBVariant new.
+	self block sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
+	self block sandblockEditor doMultiSelection: [:selected |
+		SBWrapConsecutiveCommand new
+			selectAfter: #block;
+			outer: variant;
+			targets: selected;
+			wrap: [:outer :inner | variant named: inner printString alternatives:{SBNamedBlock block: (SBStBlockBody new statements: inner) named:'alt'} activeIndex: 1];
+			yourself]
+]
+
+{ #category : #actions }
 SBStGrammarHandler >> wrapWithExampleWatch [
 	<action>
 	<actionValidIf: #isExpression>
