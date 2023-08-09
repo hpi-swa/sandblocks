@@ -5,7 +5,7 @@ Class {
 		'namedBlocks',
 		'activeIndex'
 	],
-	#category : #'Sandblocks-Morphs'
+	#category : #'Sandblocks-Core'
 }
 
 { #category : #examples }
