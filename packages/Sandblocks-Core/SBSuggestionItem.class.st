@@ -192,6 +192,7 @@ SBSuggestionItem >> selector: aString label: anotherString [
 
 	| container |
 	container := self firstSubmorph.
+	container removeAllMorphs.
 	selector := aString.
 	label := anotherString.
 	container addMorphBack: (SBStringMorph new

@@ -495,7 +495,7 @@ SBStGrammarHandler >> wrapInMessageSend: aString [
 	| msg |
 	self block isExpression ifFalse: [^ self].
 	msg := self class messageSendClass new
-		receiver: (self block newNullBlock label: 'expr')
+		receiver: (self newNullBlock label: 'expr')
 		selector: aString
 		arguments: (aString numArgs > 0
 			ifTrue: [(1 to: aString numArgs) collect: [:i | self block newNullBlock label: 'arg']]
