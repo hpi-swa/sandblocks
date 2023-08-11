@@ -2,18 +2,31 @@ Class {
 	#name : #SBWatchView,
 	#superclass : #SBBlock,
 	#instVars : [
-		'lastValue',
+		'values',
+		'numSavedValues',
 		'dark',
 		'count',
-		'currentRepresentation',
 		'clear',
 		'updateScheduled',
-		'numReportedValues',
-		'env',
-		'displayedValue'
+		'env'
 	],
 	#category : #'Sandblocks-Watch'
 }
+
+{ #category : #'as yet unclassified' }
+SBWatchView class >> saving: anInteger [
+	"Any value < 1 will result in saving all reported values"
+
+	
+	^ self new numSavedValues: anInteger
+]
+
+{ #category : #'as yet unclassified' }
+SBWatchView >> addValue: anObject [
+
+	(values size >= numSavedValues and: [numSavedValues > 0]) ifTrue: [values removeFirst].
+	^ values addLast: anObject
+]
 
 { #category : #'as yet unclassified' }
 SBWatchView >> changeDisplay [
@@ -32,10 +45,18 @@ SBWatchView >> clear [
 	<action>
 
 	count contents: '0'.
+	values := LinkedList new.
+	
 	self display replaceBy: (self placeholder: 0 @ 0).
 	clear
 		disableLayout: true;
 		visible: false
+]
+
+{ #category : #'as yet unclassified' }
+SBWatchView >> count [
+
+	^ count contents
 ]
 
 { #category : #'event handling' }
@@ -68,7 +89,13 @@ SBWatchView >> exampleStarting: anExample [
 { #category : #'as yet unclassified' }
 SBWatchView >> exploreLastValue [
 
-	self sandblockEditor openMorphInView: (SBExplorer on: lastValue)
+	self sandblockEditor openMorphInView: (SBExplorer on: values last)
+]
+
+{ #category : #'as yet unclassified' }
+SBWatchView >> incrementCount [
+
+	count contents: (count contents + 1) asString
 ]
 
 { #category : #'as yet unclassified' }
@@ -78,12 +105,13 @@ SBWatchView >> initialize [
 	
 	dark := true.
 	updateScheduled := false.
-	numReportedValues := 0.
+	numSavedValues := 1.
+	values := LinkedList new.
 	
 	self
 		layoutPolicy: SBAlgebraLayout new;
 		listDirection: #leftToRight;
-		color: Color white;
+		color: (Color r: 1 g: 1 b: 1);
 		cellGap: 8;
 		cellPositioning: #topLeft;
 		vResizing: #shrinkWrap;
@@ -100,9 +128,9 @@ SBWatchView >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBWatchView >> lastValue: anObject [
+SBWatchView >> lastValue [
 
-	lastValue := anObject
+	^ values last
 ]
 
 { #category : #'as yet unclassified' }
@@ -120,9 +148,17 @@ SBWatchView >> noValue [
 ]
 
 { #category : #'as yet unclassified' }
+SBWatchView >> numSavedValues: anInteger [
+	"Private"
+
+	
+	numSavedValues := anInteger
+]
+
+{ #category : #'as yet unclassified' }
 SBWatchView >> object [
 
-	^ lastValue
+	^ self values
 ]
 
 { #category : #'event handling' }
@@ -141,8 +177,8 @@ SBWatchView >> printOn: aStream [
 { #category : #'as yet unclassified' }
 SBWatchView >> reportValue: anObject [
 
-	numReportedValues := numReportedValues + 1.
-	lastValue := anObject.
+	self addValue: anObject.
+	self incrementCount.
 	
 	env := SBExecutionEnvironment value.
 	updateScheduled ifFalse: [
@@ -153,11 +189,11 @@ SBWatchView >> reportValue: anObject [
 { #category : #'as yet unclassified' }
 SBWatchView >> storeAsExample [
 
-	| name class value |
+	| name class values |
 	name := (UIManager default request: 'Name for example method?') ifNil: [^ self].
 	class := self containingSandblock containingArtefact methodClass.
-	value := lastValue veryDeepCopy.
-	class compile: name, String cr, '^', value storeString.
+	values := self values veryDeepCopy.
+	class compile: name, String cr, '^', values storeString.
 	self sandblockEditor open: class >> name asSymbol
 ]
 
@@ -168,23 +204,21 @@ SBWatchView >> updateDisplay [
 	
 	updateScheduled := false.
 	
-	numReportedValues = 0 ifTrue: [
+	values size = 0 ifTrue: [
 		clear
 			disableLayout: false;
 			visible: true].
 	
-	count contents: numReportedValues asString.
-	
-	((lastValue class respondsTo: #domainBlockMapping) and: [lastValue class domainBlockMapping notEmpty])
+	((values last class respondsTo: #domainBlockMapping) and: [values last class domainBlockMapping notEmpty])
 		ifTrue: [ | morph |
 			SBExecutionEnvironment
 				value: env
-				during: [morph := (Smalltalk at: #SBDomainBlockContainer) visualize: ((Smalltalk at: #SBDomainBlock) newFromObject: lastValue)].
+				during: [morph := (Smalltalk at: #SBDomainBlockContainer) visualize: ((Smalltalk at: #SBDomainBlock) newFromObject: self values)].
 			self useDisplay: morph]
 		ifFalse: [
 			SBToggledCode comment: '' active: 1 do: {
-				[self useDisplay: (lastValue convertedFor: self watchObjectInterface do: #yourself)].
-				[self useDisplay: (SBExplorer on: lastValue)]}]
+				[self useDisplay: (self values convertedFor: self watchObjectInterface do: #yourself)].
+				[self useDisplay: (SBExplorer on: self values)]}]
 ]
 
 { #category : #'as yet unclassified' }
@@ -195,15 +229,27 @@ SBWatchView >> useDisplay: aDisplay [
 ]
 
 { #category : #'as yet unclassified' }
+SBWatchView >> values [
+
+	^ numSavedValues = 1 ifTrue: [values last] ifFalse: [^ values]
+]
+
+{ #category : #'as yet unclassified' }
+SBWatchView >> values: aLinkedList [
+
+	values := aLinkedList
+]
+
+{ #category : #'as yet unclassified' }
 SBWatchView >> veryDeepCopyWith: deepCopier [
 
-	| new oldLastValue |
-	oldLastValue := lastValue.
-	lastValue := nil.
+	| new oldValues |
+	oldValues := values.
+	values := nil.
 	
 	new := super veryDeepCopyWith: deepCopier.
-	lastValue := oldLastValue.
-	new lastValue: lastValue.
+	values := oldValues.
+	new values: values.
 	
 	^ new
 ]

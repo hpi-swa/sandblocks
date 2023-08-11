@@ -60,7 +60,7 @@ SBExampleValueDisplay >> initialize [
 		changeListDirection: #leftToRight;
 		addMorphBack: (label := SBStringMorph new);
 		addMorphBack: (statusLabel := SBStringMorph new contents: '');
-		addMorphBack: (display := SBWatch watchViewClass new)
+		addMorphBack: (display := SBWatch watchViewClass saving: -1)
 ]
 
 { #category : #'as yet unclassified' }
@@ -100,11 +100,5 @@ SBExampleValueDisplay >> reportValue: anObject name: aString [
 
 	display reportValue: anObject.
 	label contents: aString.
-	hadValue := true.
-	
-	SBToggledCode comment: '' active: 0 do: {
-		[
-			values add: (SBProbedValue new
-				value: anObject
-				context: thisContext sender sender sender sender sender sender sender)]}
+	hadValue := true
 ]
