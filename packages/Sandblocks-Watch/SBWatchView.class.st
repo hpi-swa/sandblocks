@@ -2,7 +2,7 @@ Class {
 	#name : #SBWatchView,
 	#superclass : #SBBlock,
 	#instVars : [
-		'values',
+		'watchValues',
 		'numSavedValues',
 		'dark',
 		'count',
@@ -21,19 +21,19 @@ SBWatchView class >> saving: anInteger [
 	^ self new numSavedValues: anInteger
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBWatchView >> addValue: anObject [
 
-	(values size >= numSavedValues and: [numSavedValues > 0]) ifTrue: [values removeFirst].
-	^ values addLast: anObject
+	(watchValues size >= numSavedValues and: [numSavedValues > 0]) ifTrue: [watchValues removeFirst].
+	^ watchValues addLast: (SBWatchValue value: anObject sbSnapshot identityHash: anObject identityHash)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #display }
 SBWatchView >> changeDisplay [
 	<action>
 
 	| index options |
-	options := Array streamContents: [:stream | lastValue allConversionsFor: SBInterfaces topLevel do: [:pair | stream nextPut: pair]].
+	options := Array streamContents: [:stream | self values allConversionsFor: SBInterfaces topLevel do: [:pair | stream nextPut: pair]].
 	index := UIManager default chooseFrom: (options collect: #first).
 	index = 0 ifTrue: [^ self].
 	
@@ -45,7 +45,7 @@ SBWatchView >> clear [
 	<action>
 
 	count contents: '0'.
-	values := LinkedList new.
+	watchValues := LinkedList new.
 	
 	self display replaceBy: (self placeholder: 0 @ 0).
 	clear
@@ -53,52 +53,62 @@ SBWatchView >> clear [
 		visible: false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBWatchView >> count [
 
 	^ count contents
 ]
 
-{ #category : #'event handling' }
-SBWatchView >> display [
+{ #category : #display }
+SBWatchView >> defaultDisplay [ 
 
-	^ self submorphCount = 3
-		ifTrue: [self submorphs second]
-		ifFalse: [nil]
+	^ SBBlock new 
+		layoutPolicy: SBHorizontalLayout new;
+		vResizing: #shrinkWrap;
+		hResizing: #shrinkWrap
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
+SBWatchView >> display [
+
+	(self submorphCount = 3)
+		ifFalse: [self addMorph: (self defaultDisplay) atIndex: 2].
+	^self submorphs second
+]
+
+{ #category : #display }
+SBWatchView >> displayWatchValues [
+	
+	self display delete.
+	
+	watchValues do: [:v | self display addMorphBack: (self valueMorphFor: v)]
+]
+
+{ #category : #'colors and color policies' }
 SBWatchView >> drawnColor [
 
 	^ Color white
 ]
 
 { #category : #'event handling' }
-SBWatchView >> exampleFinished: anExample [ 
+SBWatchView >> exampleFinished: anExample [
 
-	display exampleFinished: anExample
+	self updateDisplay
 ]
 
 { #category : #'event handling' }
 SBWatchView >> exampleStarting: anExample [
 
-	self clear.
-	"display exampleStarting: anExample"
+	self clear
 ]
 
-{ #category : #'as yet unclassified' }
-SBWatchView >> exploreLastValue [
-
-	self sandblockEditor openMorphInView: (SBExplorer on: values last)
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBWatchView >> incrementCount [
 
 	count contents: (count contents + 1) asString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBWatchView >> initialize [
 
 	super initialize.
@@ -106,7 +116,7 @@ SBWatchView >> initialize [
 	dark := true.
 	updateScheduled := false.
 	numSavedValues := 1.
-	values := LinkedList new.
+	watchValues := LinkedList new.
 	
 	self
 		layoutPolicy: SBAlgebraLayout new;
@@ -127,13 +137,13 @@ SBWatchView >> initialize [
 			visible: false)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBWatchView >> lastValue [
 
-	^ values last
+	^ watchValues last watchedValue
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBWatchView >> layoutCommands [
 
 	^ SBAlgebraCommand container
@@ -147,15 +157,14 @@ SBWatchView >> noValue [
 	self display ifNotNil: [self display replaceBy: (self placeholder: self display fullBounds extent)]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBWatchView >> numSavedValues: anInteger [
 	"Private"
 
-	
 	numSavedValues := anInteger
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBWatchView >> object [
 
 	^ self values
@@ -167,14 +176,14 @@ SBWatchView >> placeholder: aPoint [
 	^ Morph new color: Color transparent; extent: aPoint
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBWatchView >> printOn: aStream [
 
 	aStream nextPutAll: 'watch on '.
 	self object printOn: aStream
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBWatchView >> reportValue: anObject [
 
 	self addValue: anObject.
@@ -183,10 +192,12 @@ SBWatchView >> reportValue: anObject [
 	env := SBExecutionEnvironment value.
 	updateScheduled ifFalse: [
 		updateScheduled := true.
-		Project current addDeferredUIMessage: [self updateDisplay]]
+		"In case certain values have to be removed, update on any update.
+		Else, assume this watch is waiting for an example and update on its finish"
+		(numSavedValues > 0) ifTrue: [Project current addDeferredUIMessage: [self updateDisplay]]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBWatchView >> storeAsExample [
 
 	| name class values |
@@ -197,19 +208,21 @@ SBWatchView >> storeAsExample [
 	self sandblockEditor open: class >> name asSymbol
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #display }
 SBWatchView >> updateDisplay [
 
 	updateScheduled ifFalse: [^ self].
 	
 	updateScheduled := false.
 	
-	values size = 0 ifTrue: [
+	watchValues size = 0 ifTrue: [
 		clear
 			disableLayout: false;
 			visible: true].
-	
-	((values last class respondsTo: #domainBlockMapping) and: [values last class domainBlockMapping notEmpty])
+		
+	self displayWatchValues.
+		
+	"((self lastValue class respondsTo: #domainBlockMapping) and: [self lastValue class domainBlockMapping notEmpty])
 		ifTrue: [ | morph |
 			SBExecutionEnvironment
 				value: env
@@ -218,44 +231,54 @@ SBWatchView >> updateDisplay [
 		ifFalse: [
 			SBToggledCode comment: '' active: 1 do: {
 				[self useDisplay: (self values convertedFor: self watchObjectInterface do: #yourself)].
-				[self useDisplay: (SBExplorer on: self values)]}]
+				[self useDisplay: (SBExplorer on: self values)]}]"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #display }
 SBWatchView >> useDisplay: aDisplay [
 
-	self display ifNotNil: #delete.
-	self addMorph: aDisplay asElementNumber: 2
+	self display delete.
+	self addMorph: aDisplay atIndex: 2. 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #display }
+SBWatchView >> valueMorphFor: traceValue [
+	
+	| morph |
+	morph := traceValue asValueMorph.
+	morph on: #doubleClick send: #value to: [traceValue watchedValue explore].
+	^ morph 
+]
+
+{ #category : #accessing }
 SBWatchView >> values [
 
-	^ numSavedValues = 1 ifTrue: [values last] ifFalse: [^ values]
+	^ numSavedValues = 1 ifTrue: [watchValues last watchedValue] ifFalse: [^ watchValues collect: [:value | value watchedValue]]
 ]
 
-{ #category : #'as yet unclassified' }
-SBWatchView >> values: aLinkedList [
-
-	values := aLinkedList
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #copying }
 SBWatchView >> veryDeepCopyWith: deepCopier [
 
 	| new oldValues |
-	oldValues := values.
-	values := nil.
+	oldValues := watchValues.
+	watchValues := nil.
 	
 	new := super veryDeepCopyWith: deepCopier.
-	values := oldValues.
-	new values: values.
+	watchValues := oldValues.
+	new watchValues: watchValues.
 	
 	^ new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBWatchView >> watchObjectInterface [
 
 	^ SBInterfaces topLevel, {[:o | o isEditor not]}
+]
+
+{ #category : #accessing }
+SBWatchView >> watchValues: aLinkedList [
+	"Private"
+	
+	watchValues := aLinkedList
 ]

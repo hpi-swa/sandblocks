@@ -111,13 +111,6 @@ SBWatch >> evaluate [
 	^ result
 ]
 
-{ #category : #actions }
-SBWatch >> exploreLastValue [
-	<action>
-
-	display exploreLastValue
-]
-
 { #category : #accessing }
 SBWatch >> expression [
 

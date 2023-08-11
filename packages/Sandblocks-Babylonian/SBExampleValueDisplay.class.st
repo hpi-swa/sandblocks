@@ -14,7 +14,7 @@ Class {
 { #category : #'event handling' }
 SBExampleValueDisplay >> exampleFinished: anExample [ 
 
-	"display exampleFinished: anExample."
+	display exampleFinished: anExample.
 	
 	statusLabel contents: (hadValue
 		ifTrue: ['']
