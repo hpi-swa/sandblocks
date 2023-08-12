@@ -40,6 +40,13 @@ SBWatch class >> report: aValue for: identifier [
 ]
 
 { #category : #'as yet unclassified' }
+SBWatch class >> report: aValue for: identifier modifying: aBlock [
+
+	"Compatibility to SBExampleWatch"
+	^ self report: aValue for: identifier 
+]
+
+{ #category : #'as yet unclassified' }
 SBWatch class >> unregisterWatch: aWatch [
 
 	self registry remove: aWatch ifAbsent: []

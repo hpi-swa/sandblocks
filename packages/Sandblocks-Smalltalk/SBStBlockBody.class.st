@@ -32,6 +32,17 @@ SBStBlockBody class >> emptyWithDeclarations: aCollectionOfStrings [
 			yourself]
 ]
 
+{ #category : #'as yet unclassified' }
+SBStBlockBody class >> identityNamed: aString [
+
+	^ SBStBlockBody new in: [:body |
+		body
+			statements: {SBStName contents: aString};
+			temporaries: {};
+			bindings: {SBStName contents: aString};
+			yourself]
+]
+
 { #category : #converting }
 SBStBlockBody >> addBlockArgument [
 

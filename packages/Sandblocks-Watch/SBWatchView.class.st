@@ -220,18 +220,7 @@ SBWatchView >> updateDisplay [
 			disableLayout: false;
 			visible: true].
 		
-	self displayWatchValues.
-		
-	"((self lastValue class respondsTo: #domainBlockMapping) and: [self lastValue class domainBlockMapping notEmpty])
-		ifTrue: [ | morph |
-			SBExecutionEnvironment
-				value: env
-				during: [morph := (Smalltalk at: #SBDomainBlockContainer) visualize: ((Smalltalk at: #SBDomainBlock) newFromObject: self values)].
-			self useDisplay: morph]
-		ifFalse: [
-			SBToggledCode comment: '' active: 1 do: {
-				[self useDisplay: (self values convertedFor: self watchObjectInterface do: #yourself)].
-				[self useDisplay: (SBExplorer on: self values)]}]"
+	self displayWatchValues
 ]
 
 { #category : #display }

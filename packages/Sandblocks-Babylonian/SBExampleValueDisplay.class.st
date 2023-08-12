@@ -5,8 +5,7 @@ Class {
 		'display',
 		'label',
 		'statusLabel',
-		'hadValue',
-		'values'
+		'hadValue'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
@@ -27,8 +26,6 @@ SBExampleValueDisplay >> exampleStarting: anExample [
 	display exampleStarting: anExample.
 	display noValue.
 	
-	values := OrderedCollection new.
-	
 	statusLabel contents: '...'.
 	hadValue := false.
 	
@@ -39,7 +36,7 @@ SBExampleValueDisplay >> exampleStarting: anExample [
 SBExampleValueDisplay >> filterForContextId: aNumber [
 
 	| frames |
-	frames := values select: [:probedValue |
+	frames := self probedValues select: [:probedValue |
 		probedValue frames anySatisfy: [:frame | frame contextIdentityHash = aNumber]].
 	
 	self flag: #todo.
@@ -91,8 +88,8 @@ SBExampleValueDisplay >> name:  aString [
 
 { #category : #'as yet unclassified' }
 SBExampleValueDisplay >> probedValues [
-
-	^ values
+	
+	^ display values
 ]
 
 { #category : #'as yet unclassified' }

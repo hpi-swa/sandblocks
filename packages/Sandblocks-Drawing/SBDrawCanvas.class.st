@@ -33,7 +33,7 @@ SBDrawCanvas >> createStampOfSize: aNumber [
 			 radial: true;
 			 direction: aNumber asPoint // 2;
 			 yourself).
-	SBExampleWatch report: (form := form collectColors: [:col | Color black alpha: col red]) for: 893886548.
+	form := form collectColors: [:col | Color black alpha: col red].
 	^ form
 ]
 

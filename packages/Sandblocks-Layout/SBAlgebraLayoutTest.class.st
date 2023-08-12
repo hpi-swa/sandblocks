@@ -62,7 +62,7 @@ SBAlgebraLayoutTest >> testArrayLike [
 	
 	SBAlgebraLayout new layoutDocument: doc limit: 10.
 	
-	self assert: 260 @ 140 equals: (SBExampleWatch report: doc morph for: 922364101) extent
+	self assert: 260 @ 140 equals: doc morph extent
 ]
 
 { #category : #'as yet unclassified' }
