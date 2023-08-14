@@ -57,13 +57,6 @@ SBStBlockBody >> addBlockArgument [
 		startInput: self sandblockEditor selection at: 0 replacingContents: false
 ]
 
-{ #category : #converting }
-SBStBlockBody >> addExampleSlider [
-	<action>
-	
-	SBExampleBlockDecoration new wrapAround: self
-]
-
 { #category : #'as yet unclassified' }
 SBStBlockBody >> appendElement [
 	<action>

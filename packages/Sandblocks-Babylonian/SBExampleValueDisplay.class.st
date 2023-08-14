@@ -57,7 +57,7 @@ SBExampleValueDisplay >> initialize [
 		changeListDirection: #leftToRight;
 		addMorphBack: (label := SBStringMorph new);
 		addMorphBack: (statusLabel := SBStringMorph new contents: '');
-		addMorphBack: (display := SBWatch watchViewClass saving: -1)
+		addMorphBack: (display := SBExampleWatch watchViewClass saving: -1)
 ]
 
 { #category : #'as yet unclassified' }

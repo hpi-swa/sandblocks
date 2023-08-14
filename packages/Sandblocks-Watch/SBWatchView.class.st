@@ -71,7 +71,7 @@ SBWatchView >> defaultDisplay [
 { #category : #accessing }
 SBWatchView >> display [
 
-	(self submorphCount = 3)
+	(self submorphCount >= 3)
 		ifFalse: [self addMorph: (self defaultDisplay) atIndex: 2].
 	^self submorphs second
 ]
@@ -88,18 +88,6 @@ SBWatchView >> displayWatchValues [
 SBWatchView >> drawnColor [
 
 	^ Color white
-]
-
-{ #category : #'event handling' }
-SBWatchView >> exampleFinished: anExample [
-
-	self updateDisplay
-]
-
-{ #category : #'event handling' }
-SBWatchView >> exampleStarting: anExample [
-
-	self clear
 ]
 
 { #category : #accessing }
@@ -189,12 +177,9 @@ SBWatchView >> reportValue: anObject [
 	self addValue: anObject.
 	self incrementCount.
 	
-	env := SBExecutionEnvironment value.
 	updateScheduled ifFalse: [
 		updateScheduled := true.
-		"In case certain values have to be removed, update on any update.
-		Else, assume this watch is waiting for an example and update on its finish"
-		(numSavedValues > 0) ifTrue: [Project current addDeferredUIMessage: [self updateDisplay]]]
+		Project current addDeferredUIMessage: [self updateDisplay]]
 ]
 
 { #category : #'object interface' }
@@ -215,7 +200,7 @@ SBWatchView >> updateDisplay [
 	
 	updateScheduled := false.
 	
-	watchValues size = 0 ifTrue: [
+	watchValues size > 0 ifTrue: [
 		clear
 			disableLayout: false;
 			visible: true].

@@ -69,6 +69,12 @@ SBExampleWatch class >> unregisterWatch: aWatch [
 	self registry remove: aWatch ifAbsent: []
 ]
 
+{ #category : #'as yet unclassified' }
+SBExampleWatch class >> watchViewClass [
+
+	^ SBExampleWatchView
+]
+
 { #category : #'colors and color policies' }
 SBExampleWatch >> color [
 

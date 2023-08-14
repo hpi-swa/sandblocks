@@ -391,7 +391,8 @@ SBExample >> run [
 		currentProcess := nil.
 		processRunning := false.
 		Project current addDeferredUIMessage: [
-			returnValue reportValue: returned."contents: '-> ', returned printString".
+			returnValue reportValue: returned.
+			returnValue updateDisplay.
 			self sendFinishNotification]
 	] forkAt: Processor userBackgroundPriority
 ]
@@ -424,7 +425,7 @@ SBExample >> self: aBlock args: aCollectionBlock label: aString [
 		addMorphBack: aBlock;
 		addMorphBack: (SBStringMorph new contents: 'args:');
 		addMorphBack: aCollectionBlock;
-		addMorphBack: (returnValue := SBWatchView new);
+		addMorphBack: (returnValue := SBExampleWatchView new);
 		updateIcon
 ]
 

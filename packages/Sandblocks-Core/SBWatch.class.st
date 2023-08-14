@@ -8,8 +8,7 @@ Class {
 		'logOutput'
 	],
 	#classVars : [
-		'Registry',
-		'WatchViewClass'
+		'Registry'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -55,13 +54,7 @@ SBWatch class >> unregisterWatch: aWatch [
 { #category : #'as yet unclassified' }
 SBWatch class >> watchViewClass [
 
-	^ WatchViewClass ifNil: [SBWatchView]
-]
-
-{ #category : #'as yet unclassified' }
-SBWatch class >> watchViewClass: aClass [
-
-	WatchViewClass := aClass
+	^ SBWatchView
 ]
 
 { #category : #'as yet unclassified' }
@@ -74,13 +67,6 @@ SBWatch >> actionProviders [
 SBWatch >> canAppearInBlockBody [
 
 	^ true
-]
-
-{ #category : #actions }
-SBWatch >> chooseViewMode [
-	<action>
-
-	display promptChangeDisplay
 ]
 
 { #category : #'event handling' }
