@@ -1,3 +1,6 @@
+"
+Observes (watches) an expression locally for added SBExamples. Whenever an example has finished running, it updates its belonging view. Further, with a given modifyExpression, it transforms the watched expression values. Also known as a Probe in the context of Babylonian Smalltalk.
+"
 Class {
 	#name : #SBExampleWatch,
 	#superclass : #SBStSubstitution,
@@ -14,7 +17,7 @@ Class {
 	#category : #'Sandblocks-Babylonian'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBExampleWatch class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
@@ -22,7 +25,7 @@ SBExampleWatch class >> matches: aBlock [
 	^ (aBlock receiver satisfies: #(notNil isBinding)) and: [aBlock receiver contents = self name] and: [aBlock selector = 'report:for:modifying:']
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBExampleWatch class >> newFor: aBlock [
 
 	^ self new
@@ -30,27 +33,27 @@ SBExampleWatch class >> newFor: aBlock [
 		expression: aBlock arguments first
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBExampleWatch class >> registerWatch: aWatch [
 
 	self registry add: aWatch
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExampleWatch class >> registry [
 
 	(Registry isKindOf: WeakSet) ifFalse: [Registry := nil].
 	^ Registry ifNil: [Registry := WeakSet new]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBExampleWatch class >> report: aValue for: aSymbol [
 
 	"Compatibility to SBWatch"
 	^ self reportValue: aValue for: aSymbol  modifying: (SBStBlockBody identityNamed: 'result').
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBExampleWatch class >> report: aValue for: aSymbol modifying: aBlock [
 
 	| reg watchers example |
@@ -63,13 +66,13 @@ SBExampleWatch class >> report: aValue for: aSymbol modifying: aBlock [
 	^ aValue
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBExampleWatch class >> unregisterWatch: aWatch [
 
 	self registry remove: aWatch ifAbsent: []
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExampleWatch class >> watchViewClass [
 
 	^ SBExampleWatchView
@@ -133,12 +136,6 @@ SBExampleWatch >> expression: aBlock [
 	watchedExpression ifNotNil: #delete.
 	watchedExpression := aBlock.
 	self addMorphFront: watchedExpression.
-]
-
-{ #category : #actions }
-SBExampleWatch >> filterForContextId: aNumber example: anExample [
-
-	exampleValues at: anExample ifPresent: [:display | display filterForContextId: aNumber]
 ]
 
 { #category : #accessing }

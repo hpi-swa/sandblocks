@@ -26,7 +26,7 @@ Class {
 { #category : #utils }
 SBIcon class >> all [
 	
-	^ (self class selectors select: [:s | s beginsWith: 'icon']) "sorted?"
+	^ (self class selectors select: [:s | s beginsWith: 'icon'])
 ]
 
 { #category : #caching }

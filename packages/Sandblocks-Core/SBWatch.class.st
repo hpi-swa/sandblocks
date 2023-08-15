@@ -13,13 +13,13 @@ Class {
 	#category : #'Sandblocks-Core'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBWatch class >> registerWatch: aWatch [
 
 	self registry add: aWatch
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBWatch class >> registry [
 
 	Registry isDictionary ifTrue: ["convert to current version"
@@ -27,7 +27,7 @@ SBWatch class >> registry [
 	^ Registry ifNil: [Registry := WeakSet new]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBWatch class >> report: aValue for: identifier [
 
 	| reg watchers |
@@ -38,20 +38,20 @@ SBWatch class >> report: aValue for: identifier [
 	^ aValue
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBWatch class >> report: aValue for: identifier modifying: aBlock [
 
 	"Compatibility to SBExampleWatch"
 	^ self report: aValue for: identifier 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBWatch class >> unregisterWatch: aWatch [
 
 	self registry remove: aWatch ifAbsent: []
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBWatch class >> watchViewClass [
 
 	^ SBWatchView

@@ -50,11 +50,11 @@ SBWatchValue >> initialize [
 ]
 
 { #category : #printing }
-SBWatchValue >> printOn: aSteam [
+SBWatchValue >> printOn: aStream [
 	
-	super printOn: aSteam. 
-	aSteam space.
-	self watchedValue printOn: aSteam.
+	super printOn: aStream. 
+	aStream space.
+	self watchedValue printOn: aStream.
 ]
 
 { #category : #accessing }

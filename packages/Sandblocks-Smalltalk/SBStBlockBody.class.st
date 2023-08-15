@@ -11,7 +11,7 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBStBlockBody class >> empty [
 
 	^ SBStBlockBody new in: [:body |
@@ -21,7 +21,7 @@ SBStBlockBody class >> empty [
 			bindings: {}]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBStBlockBody class >> emptyWithDeclarations: aCollectionOfStrings [
 
 	^ SBStBlockBody new in: [:body |
@@ -32,7 +32,7 @@ SBStBlockBody class >> emptyWithDeclarations: aCollectionOfStrings [
 			yourself]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBStBlockBody class >> identityNamed: aString [
 
 	^ SBStBlockBody new in: [:body |

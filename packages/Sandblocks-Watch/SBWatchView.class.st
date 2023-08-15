@@ -1,3 +1,6 @@
+"
+A SBWatchView contains all the interesting information when watching an expression in scope of an example. It counts the expression evaluations, the expression results and offers reset options. 
+"
 Class {
 	#name : #SBWatchView,
 	#superclass : #SBBlock,
@@ -89,10 +92,11 @@ SBWatchView >> displayWatchValues [
 	| valuesMorph |
 	self scroller removeAllMorphs.
 	valuesMorph := self watchValuesContainer.
-	watchValues do: [:v | valuesMorph addMorphBack: (self valueMorphFor: v)].
+	watchValues do: [:aValue | valuesMorph addMorphBack: (aValue asValueMorph)].
 
 	self scroller addMorph: valuesMorph.
 	self scrollPane height: valuesMorph height + self scrollBarHeight.
+	"Simulates an expanding layout"
 	self scrollPane width: (valuesMorph width <= self maxWidth 
 		ifTrue: [valuesMorph width] 
 		ifFalse: [self maxWidth]).
@@ -253,21 +257,11 @@ SBWatchView >> useDisplay: aDisplay [
 	self addMorph: aDisplay atIndex: 2. 
 ]
 
-{ #category : #display }
-SBWatchView >> valueMorphFor: traceValue [
-	
-	| morph |
-	morph := traceValue asValueMorph.
-	morph on: #doubleClick send: #value to: [traceValue watchedValue explore].
-	morph on: #keyStroke send: #keyStroke to: traceValue.
-	^ morph 
-]
-
 { #category : #accessing }
 SBWatchView >> values [
 
 	watchValues ifEmpty: [^{}].
-	^ numSavedValues = 1 ifTrue: [watchValues last watchedValue] ifFalse: [^ watchValues collect: [:value | value watchedValue]]
+	^ watchValues collect: [:value | value watchedValue]
 ]
 
 { #category : #copying }

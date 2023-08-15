@@ -7,13 +7,20 @@ Class {
 	#category : #'Sandblocks-Babylonian'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #shortcuts }
 SBWatchValueBlock class >> registerShortcuts: aProvider [
 
 	aProvider registerShortcut: Character cr do: #exploreValue.
 	aProvider cmdShortcut: $i do: #exploreValue.
 	
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBWatchValueBlock >> doubleClick: evt [
+
+	super doubleClick: evt.
+	self exploreValue 
 ]
 
 { #category : #accessing }

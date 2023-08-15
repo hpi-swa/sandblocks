@@ -1,3 +1,6 @@
+"
+A row in SBExampleWatches, containing the belonging example name and a view (display) of the evaluated expression values 
+"
 Class {
 	#name : #SBExampleValueDisplay,
 	#superclass : #Morph,
@@ -10,7 +13,7 @@ Class {
 	#category : #'Sandblocks-Babylonian'
 }
 
-{ #category : #'event handling' }
+{ #category : #accessing }
 SBExampleValueDisplay >> exampleFinished: anExample [ 
 
 	display exampleFinished: anExample.
@@ -20,7 +23,7 @@ SBExampleValueDisplay >> exampleFinished: anExample [
 		ifFalse:  ['- Not reached -'])
 ]
 
-{ #category : #'event handling' }
+{ #category : #accessing }
 SBExampleValueDisplay >> exampleStarting: anExample [
 
 	display exampleStarting: anExample.
@@ -32,18 +35,7 @@ SBExampleValueDisplay >> exampleStarting: anExample [
 	self refreshWorld
 ]
 
-{ #category : #'as yet unclassified' }
-SBExampleValueDisplay >> filterForContextId: aNumber [
-
-	| frames |
-	frames := self probedValues select: [:probedValue |
-		probedValue frames anySatisfy: [:frame | frame contextIdentityHash = aNumber]].
-	
-	self flag: #todo.
-	frames ifNotEmpty: [display reportValue: frames first value]
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBExampleValueDisplay >> initialize [
 
 	super initialize.
@@ -60,39 +52,25 @@ SBExampleValueDisplay >> initialize [
 		addMorphBack: (display := SBExampleWatch watchViewClass saving: -1)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExampleValueDisplay >> label [
 
 	^ label contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExampleValueDisplay >> label: aString [
 
 	label contents: aString
 ]
 
-{ #category : #'as yet unclassified' }
-SBExampleValueDisplay >> layoutCommands [
-
-	^ SBAlgebraCommand container
-		morph: self;
-		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand gap])
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #naming }
 SBExampleValueDisplay >> name:  aString [
 
 	label contents: aString
 ]
 
-{ #category : #'as yet unclassified' }
-SBExampleValueDisplay >> probedValues [
-	
-	^ display values
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBExampleValueDisplay >> reportValue: anObject name: aString [
 
 	display reportValue: anObject.
