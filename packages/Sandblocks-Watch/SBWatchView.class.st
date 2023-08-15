@@ -205,7 +205,7 @@ SBWatchView >> reportValue: anObject [
 { #category : #accessing }
 SBWatchView >> scrollBarHeight [
 
-	^ 5 sbScaled 
+	^ 7 sbScaled 
 ]
 
 { #category : #accessing }

@@ -4,6 +4,6 @@ Extension { #name : #Collection }
 Collection >> sbWatchValueMorphFor: traceValue [
 
 	^ (SBWatchValue newContainerMorphFor: traceValue) 
-		addMorph: (SBStringMorph new contents: self printString)
+		addMorph: (SBStringMorph new contents: (self printStringLimitedTo: 1000));
 		yourself
 ]
