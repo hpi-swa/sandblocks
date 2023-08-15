@@ -20,7 +20,7 @@ Object >> sbWatchValueMorphFor: traceValue [
 
 	"This has to return a container block"
 		
-	^ SBWatchValue newContainerMorph 
+	^ (SBWatchValue newContainerMorphFor: traceValue) 
 		addMorphBack: (SBIcon iconFor: traceValue watchedValueIdentityHash) asMorph;
 		addMorphBack: (SBStringMorph new contents: (' ' , self printString));
 		yourself

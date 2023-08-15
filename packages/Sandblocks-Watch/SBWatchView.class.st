@@ -47,7 +47,7 @@ SBWatchView >> clear [
 	count contents: '0'.
 	watchValues := LinkedList new.
 	
-	self display replaceBy: (self placeholder: 0 @ 0).
+	self scroller removeAllMorphs.
 	clear
 		disableLayout: true;
 		visible: false
@@ -60,28 +60,42 @@ SBWatchView >> count [
 ]
 
 { #category : #display }
-SBWatchView >> defaultDisplay [ 
+SBWatchView >> defaultDisplay [
 
-	^ SBBlock new 
-		layoutPolicy: SBHorizontalLayout new;
+	^ SBBlock new
+		changeTableLayout;
+		listDirection: #topToBottom;
+		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap
+		addMorphBack: (ScrollPane new
+			color: Color transparent;
+			borderWidth: 0;
+			vScrollBarPolicy: #never;
+			showHScrollBarOnlyWhenNeeded;
+			scrollBarThickness: self scrollBarHeight;
+			width: 20;
+			height: 20)
 ]
 
 { #category : #accessing }
 SBWatchView >> display [
 
-	(self submorphCount >= 3)
-		ifFalse: [self addMorph: (self defaultDisplay) atIndex: 2].
 	^self submorphs second
 ]
 
 { #category : #display }
 SBWatchView >> displayWatchValues [
-	
-	self display delete.
-	
-	watchValues do: [:v | self display addMorphBack: (self valueMorphFor: v)]
+
+	| valuesMorph |
+	self scroller removeAllMorphs.
+	valuesMorph := self watchValuesContainer.
+	watchValues do: [:v | valuesMorph addMorphBack: (self valueMorphFor: v)].
+
+	self scroller addMorph: valuesMorph.
+	self scrollPane height: valuesMorph height + self scrollBarHeight.
+	self scrollPane width: (valuesMorph width <= self maxWidth 
+		ifTrue: [valuesMorph width] 
+		ifFalse: [self maxWidth]).
 ]
 
 { #category : #'colors and color policies' }
@@ -118,7 +132,7 @@ SBWatchView >> initialize [
 			contents: '0';
 			balloonText: 'Number of reported values';
 			yourself);
-		addMorphBack: (self placeholder: 0 @ 0);
+		addMorphBack: self defaultDisplay;
 		addMorphBack: (clear := SBIcon iconTrash
 			on: #click send: #clear to: self;
 			disableLayout: true;
@@ -139,10 +153,16 @@ SBWatchView >> layoutCommands [
 		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand gap])
 ]
 
+{ #category : #accessing }
+SBWatchView >> maxWidth [
+
+	^ 450
+]
+
 { #category : #'event handling' }
 SBWatchView >> noValue [
 
-	self display ifNotNil: [self display replaceBy: (self placeholder: self display fullBounds extent)]
+	self scroller removeAllMorphs 
 ]
 
 { #category : #accessing }
@@ -159,9 +179,9 @@ SBWatchView >> object [
 ]
 
 { #category : #'event handling' }
-SBWatchView >> placeholder: aPoint [
+SBWatchView >> placeholder [
 
-	^ Morph new color: Color transparent; extent: aPoint
+	^  Morph new color: Color transparent; extent: (0@0)
 ]
 
 { #category : #printing }
@@ -180,6 +200,24 @@ SBWatchView >> reportValue: anObject [
 	updateScheduled ifFalse: [
 		updateScheduled := true.
 		Project current addDeferredUIMessage: [self updateDisplay]]
+]
+
+{ #category : #accessing }
+SBWatchView >> scrollBarHeight [
+
+	^ 5 sbScaled 
+]
+
+{ #category : #accessing }
+SBWatchView >> scrollPane [
+
+	^ self display lastSubmorph
+]
+
+{ #category : #accessing }
+SBWatchView >> scroller [
+
+	^ self scrollPane scroller
 ]
 
 { #category : #'object interface' }
@@ -211,6 +249,7 @@ SBWatchView >> updateDisplay [
 { #category : #display }
 SBWatchView >> useDisplay: aDisplay [
 
+	self flag:#todo.
 	self display delete.
 	self addMorph: aDisplay atIndex: 2. 
 ]
@@ -221,12 +260,14 @@ SBWatchView >> valueMorphFor: traceValue [
 	| morph |
 	morph := traceValue asValueMorph.
 	morph on: #doubleClick send: #value to: [traceValue watchedValue explore].
+	morph on: #keyStroke send: #keyStroke to: traceValue.
 	^ morph 
 ]
 
 { #category : #accessing }
 SBWatchView >> values [
 
+	watchValues ifEmpty: [^{}].
 	^ numSavedValues = 1 ifTrue: [watchValues last watchedValue] ifFalse: [^ watchValues collect: [:value | value watchedValue]]
 ]
 
@@ -255,4 +296,18 @@ SBWatchView >> watchValues: aLinkedList [
 	"Private"
 	
 	watchValues := aLinkedList
+]
+
+{ #category : #display }
+SBWatchView >> watchValuesContainer [
+
+	^ SBRow new
+		color: Color transparent;
+		vResizing: #shrinkWrap;
+		hResizing: #shrinkWrap;
+		cellPositioning: #topLeft;
+		changeTableLayout;
+		listDirection: #leftToRight;
+		layoutInset: 1;
+		borderWidth: 0
 ]

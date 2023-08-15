@@ -9,9 +9,10 @@ Class {
 }
 
 { #category : #utility }
-SBWatchValue class >> newContainerMorph [
+SBWatchValue class >> newContainerMorphFor: aWatchValue [
 
-	^ SBBlock new
+	^ SBWatchValueBlock new
+		watchValue: aWatchValue;
 		layoutPolicy: SBHorizontalLayout new;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
@@ -31,6 +32,21 @@ SBWatchValue class >> value: aValue identityHash: tracedValueIdentityHash [
 SBWatchValue >> asValueMorph [
 
 	^ self watchedValue sbWatchValueMorphFor: self
+]
+
+{ #category : #accessing }
+SBWatchValue >> explore [
+
+	self watchedValue explore
+]
+
+{ #category : #'initialize-release' }
+SBWatchValue >> initialize [ 
+
+	super initialize.
+	
+	watchedValue := 0.
+	watchedValueIdentityHash := 0 identityHash.
 ]
 
 { #category : #printing }

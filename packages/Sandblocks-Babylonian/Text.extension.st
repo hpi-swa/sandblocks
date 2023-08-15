@@ -3,7 +3,7 @@ Extension { #name : #Text }
 { #category : #'*Sandblocks-Babylonian' }
 Text >> sbWatchValueMorphFor: traceValue [
 
-	^ SBWatchValue newContainerMorph 
+	^ (SBWatchValue newContainerMorphFor: traceValue)  
 		addMorphBack: (SBStringMorph new contents: self)
 		yourself
 ]

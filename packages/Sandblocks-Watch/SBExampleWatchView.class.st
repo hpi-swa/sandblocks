@@ -7,14 +7,6 @@ Class {
 	#category : #'Sandblocks-Watch'
 }
 
-{ #category : #accessing }
-SBExampleWatchView >> display [
-
-	(self submorphCount >= 2)
-		ifFalse: [self addMorph: (self defaultDisplay) atIndex: 2].
-	^self submorphs second
-]
-
 { #category : #'event handling' }
 SBExampleWatchView >> exampleFinished: anExample [
 
