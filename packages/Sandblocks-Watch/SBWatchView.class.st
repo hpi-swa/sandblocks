@@ -249,7 +249,6 @@ SBWatchView >> updateDisplay [
 { #category : #display }
 SBWatchView >> useDisplay: aDisplay [
 
-	self flag:#todo.
 	self display delete.
 	self addMorph: aDisplay atIndex: 2. 
 ]
