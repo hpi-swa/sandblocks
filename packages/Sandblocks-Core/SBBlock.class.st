@@ -1706,6 +1706,12 @@ SBBlock >> isValidAction: aPragmaOrMethod [
 ]
 
 { #category : #testing }
+SBBlock >> isVariant [
+
+	^ false
+]
+
+{ #category : #testing }
 SBBlock >> isWatch [
 
 	^ false

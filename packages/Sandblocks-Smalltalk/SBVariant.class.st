@@ -32,7 +32,13 @@ SBVariant class >> matches: aBlock [
 	
 	^ aBlock receiver isBinding
 		and: [aBlock receiver contents = 'SBVariant']
-		and: [aBlock selector = 'named:associations:activeIndex:']
+		and: [aBlock selector = self matchingSelector]
+]
+
+{ #category : #constants }
+SBVariant class >> matchingSelector [
+
+	^ #named:associations:activeIndex:
 ]
 
 { #category : #'instance creation' }
@@ -132,6 +138,12 @@ SBVariant >> initialize [
 		addAllMorphsBack: {name. widget};
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
+]
+
+{ #category : #testing }
+SBVariant >> isVariant [ 
+
+	^ true
 ]
 
 { #category : #accessing }
