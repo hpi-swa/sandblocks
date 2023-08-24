@@ -20,6 +20,12 @@ SBStBasicMethod class >> selector: aSymbol arguments: aCollection class: aClass 
 		body: aBlock asSandblock
 ]
 
+{ #category : #comparing }
+SBStBasicMethod >> = anotherSBStBasicMethod [
+
+	^ anotherSBStBasicMethod class = self class and: [anotherSBStBasicMethod compiledMethod equivalentTo: self compiledMethod]
+]
+
 { #category : #accessing }
 SBStBasicMethod >> actualReceiver [
 
@@ -217,6 +223,12 @@ SBStBasicMethod >> compiledMethod [
 		ifAbsent: [self]
 ]
 
+{ #category : #accessing }
+SBStBasicMethod >> containedVariants [ 
+
+	^ self body containedVariants
+]
+
 { #category : #actions }
 SBStBasicMethod >> createTestMethod [
 	<action>
@@ -289,6 +301,12 @@ SBStBasicMethod >> deleteMethod [
 	<action>
 
 	^ self sandblockEditor do: (SBStDeleteMethodCommand new target: self)
+]
+
+{ #category : #accessing }
+SBStBasicMethod >> detectVariant: aVariant [
+
+	^ self body detectVariant: aVariant
 ]
 
 { #category : #'artefact protocol' }

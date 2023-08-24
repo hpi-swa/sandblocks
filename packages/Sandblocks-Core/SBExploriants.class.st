@@ -25,11 +25,11 @@ SBExploriants >> initialize [
 	
 	self
 		attachDecorator: SBMoveDecorator new;
-		attachDecorator: SBResizableDecorator new;
 		changeTableLayout;
 		listDirection: #topToBottom;
 		layoutInset: 8;
 		cellGap: 16;
+		cellInset: 10;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap
 ]
@@ -45,7 +45,10 @@ SBExploriants >> visualize [
 
 	self allMethodsContainingVariants 
 		collect: #asSandblock
-		thenDo: [:aSBStMethod | self addMorphBack: aSBStMethod].
+		thenDo: [:aSBStMethod | 
+			self addMorphBack: aSBStMethod methodHeader copy.
+			aSBStMethod containedVariants do: [:aSBVariant | self addMorphBack: (SBVariantProxy for: aSBVariant)].
+			self addMorphBack: (LineMorph from: 0@0 to: 50@0 color: Color black width: 2)].
 	
 		
 	

@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBStSubstitution,
 	#instVars : [
 		'name',
-		'widget'
+		'widget',
+		'id'
 	],
 	#category : #'Sandblocks-Smalltalk'
 }
@@ -38,7 +39,7 @@ SBVariant class >> matches: aBlock [
 { #category : #constants }
 SBVariant class >> matchingSelector [
 
-	^ #named:associations:activeIndex:
+	^ #named:associations:activeIndex:id:
 ]
 
 { #category : #'instance creation' }
@@ -52,7 +53,18 @@ SBVariant class >> named: aString alternatives: aCollectionOfNamedBlocks activeI
 ]
 
 { #category : #'instance creation' }
-SBVariant class >> named: aString associations: aCollectionOfAssociations activeIndex: aNumber [
+SBVariant class >> named: aString alternatives: aCollectionOfNamedBlocks activeIndex: aNumber id: uuid [
+
+	^ self new
+		named: aString
+		alternatives: aCollectionOfNamedBlocks
+		activeIndex: aNumber
+		id: uuid
+		
+]
+
+{ #category : #'instance creation' }
+SBVariant class >> named: aString associations: aCollectionOfAssociations activeIndex: aNumber id: uuid [
 
 	^ aNumber > 0 ifTrue: [(aCollectionOfAssociations at: aNumber) value value] ifFalse: [nil]
 		
@@ -71,6 +83,7 @@ SBVariant class >> newFor: aBlock [
 		named: aBlock arguments first contents
 		alternatives: (aBlock arguments second childSandblocks collect: [:anAssociation | SBNamedBlock block: (anAssociation arguments first) named: (anAssociation receiver contents)])
 		activeIndex: aBlock arguments third parsedContents
+		id: aBlock arguments fourth contents
 ]
 
 { #category : #shortcuts }
@@ -78,6 +91,12 @@ SBVariant class >> registerShortcuts: aProvider [
 
 	aProvider registerShortcut: $f command do: #replaceSelfWithChosen.
 	
+]
+
+{ #category : #comparing }
+SBVariant >> = otherVariant [
+
+	^ otherVariant class = self class and: [otherVariant id = self id]
 ]
 
 { #category : #accessing }
@@ -104,6 +123,18 @@ SBVariant >> alternatives [
 	^ self widget namedBlocks
 ]
 
+{ #category : #comparing }
+SBVariant >> alternativesEqual: otherAlternatives [
+
+	"Private"
+	"Does a cheap version of python's zip and then allSatisfy:"
+	| areSame |
+	areSame := true.
+	^ self alternatives size = otherAlternatives size and: [
+		(1 to: self alternatives size) do: [:index | 
+			areSame := areSame and: [(self alternatives at: index) = (otherAlternatives at: index)]]. 		areSame]
+]
+
 { #category : #accessing }
 SBVariant >> color [
 
@@ -114,6 +145,16 @@ SBVariant >> color [
 SBVariant >> drawnColor [
 
 	^ Color white
+]
+
+{ #category : #accessing }
+SBVariant >> id [
+	^ id
+]
+
+{ #category : #accessing }
+SBVariant >> id: anObject [
+	id := anObject
 ]
 
 { #category : #initialization }
@@ -128,7 +169,7 @@ SBVariant >> initialize [
 	self widget: (SBTabView
 		namedBlocks: {SBNamedBlock block: (SBStBlockBody emptyWithDeclarations: {'a'. 'c'}) named: 'Code'}
 		activeIndex: 1).
-	
+	id := UUID new asString. 
 	
 	self
 		layoutInset: 0;
@@ -164,6 +205,13 @@ SBVariant >> named: aString alternatives: aCollectionOfNamedBlocks activeIndex: 
 	self widget namedBlocks: aCollectionOfNamedBlocks activeIndex: aNumber
 ]
 
+{ #category : #initialization }
+SBVariant >> named: aString alternatives: aCollectionOfNamedBlocks activeIndex: aNumber id: uuid [
+
+	self id: uuid.
+	self named: aString alternatives: aCollectionOfNamedBlocks activeIndex: aNumber
+]
+
 { #category : #accessing }
 SBVariant >> namedBlocks [ 
 
@@ -189,6 +237,12 @@ SBVariant >> replaceSelfWithChosen [
 	self sandblockEditor do: (SBUnwrapConsecutiveCommand new 
 									target: self; 
 									unwrapped: {self activeBlock lastSubmorph})
+]
+
+{ #category : #initialization }
+SBVariant >> replaceValuesFrom: anotherVariant [
+
+	self named: anotherVariant name alternatives: anotherVariant alternatives activeIndex: anotherVariant activeIndex  
 ]
 
 { #category : #ui }
@@ -231,5 +285,7 @@ SBVariant >> writeSourceOn: aStream [
 		separatedBy: [aStream nextPut: $.].
 	aStream nextPutAll: '} activeIndex: '.
 	self activeIndex storeOn: aStream.
+	aStream nextPutAll: ' id: '.
+	self id storeOn: aStream.
 	aStream nextPutAll: ')'
 ]

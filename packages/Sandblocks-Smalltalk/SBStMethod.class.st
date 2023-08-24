@@ -144,6 +144,12 @@ SBStMethod >> methodClass [
 	^ classPrefix selectedClass ifNil: [self outerArtefact ifNotNil: #relatedClass]
 ]
 
+{ #category : #accessing }
+SBStMethod >> methodHeader [
+
+	^ self firstSubmorph 
+]
+
 { #category : #'object interface' }
 SBStMethod >> objectInterfaceNear: aBlock at: aSymbol [
 
