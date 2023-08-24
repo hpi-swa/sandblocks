@@ -161,7 +161,7 @@ SBStBlockBody >> declareTemporaryVariableCommand: aString [
 { #category : #accessing }
 SBStBlockBody >> detectVariant: aVariant [
 
-	^ (self allBlocksSelect: #isVariant) detect: [:oneOfMyVariants | oneOfMyVariants = aVariant]
+	^ (self containedVariants) detect: [:oneOfMyVariants | oneOfMyVariants = aVariant]
 ]
 
 { #category : #'as yet unclassified' }

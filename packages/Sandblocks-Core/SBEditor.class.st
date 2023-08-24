@@ -1151,30 +1151,7 @@ SBEditor >> openAll: aCollection [
 SBEditor >> openExploriants [
 	<globalAction>
 	
-	SBExploriants openIn: self
-	
-	"| allCompiledMethodsContainingVariants |
-	allCompiledMethodsContainingVariants := ((self systemNavigation allCallsOn: #named:associations:activeIndex:) 
-		reject: [:aMethodReference | aMethodReference methodSymbol = #openExploriants])
-		collect: #compiledMethod.
-	
-	allCompiledMethodsContainingVariants
-		collect:  #asSandblock
-		thenDo: [:aSBStMethod | 
-		    aSBStMethod body allMorphsMutableDo: [:aMorph | aMorph visible: false].
-		    aSBStMethod containedVariants 
-			do: [:aVariant | |current|
-				current := aVariant.
-				[current := current owner] 
-							doWhileFalse: [current = aSBStMethod].
-				current submorphsDo: [:m| m visible: true]].
-		    self openMorphInView: aSBStMethod]."
-		
-		"collect: [:aMethodBlock | aMethodBlock allMorphs 
-				select: [:aMorph | aMorph submorphs 
-						ifEmpty: [false] 
-						ifNotEmpty: [(aMorph submorphOfClass: SBVariant) isNil not]]]
-		thenDo: [:aCollectionOfOwnersOfVariants | aCollectionOfOwnersOfVariants do: [:aVariantOwner| self openMorphInView: aVariantOwner]]"
+	self open: SBExploriants uniqueInstance visualize
 ]
 
 { #category : #'actions creating' }
