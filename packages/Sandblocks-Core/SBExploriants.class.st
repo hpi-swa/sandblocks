@@ -62,15 +62,15 @@ SBExploriants >> visualize [
 
 	self allMethodsContainingVariants 
 		collect: [:aCompiledMethod | 
-			self blockFor: aCompiledMethod withInterfaces: #(#isEditor) 
+			"We are looking for already opened methods so that we can assign the
+			variant there as the original in SBVariantProxy. That way, we immediately
+			have consistency between changes."
+			SBEditor current blockFor: aCompiledMethod withInterfaces: #(#isMethod) 
 				ifOpen: [:existingMethodBlock | existingMethodBlock] 
 				ifClosed: [aCompiledMethod asSandblock]]
 		thenDo: [:aSBStMethod | 
 			self addMorphBack: aSBStMethod methodHeader copy.
 			aSBStMethod containedVariants do: [:aSBVariant | 
 				self addMorphBack: (SBVariantProxy for: aSBVariant)].
-			self addMorphBack: (LineMorph from: 0@0 to: 50@0 color: Color black width: 2)].
-	
-		
-	
+			self addMorphBack: (LineMorph from: 0@0 to: 50@0 color: Color black width: 2)].	
 ]
