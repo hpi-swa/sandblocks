@@ -2,7 +2,8 @@ Class {
 	#name : #SBVariantProxy,
 	#superclass : #SBBlock,
 	#instVars : [
-		'original'
+		'original',
+		'containedMethod'
 	],
 	#category : #'Sandblocks-Smalltalk'
 }
@@ -30,20 +31,21 @@ SBVariantProxy >> artefactSaved: anArtefact [
 
 { #category : #'ast helpers' }
 SBVariantProxy >> binding: aString for: block class: aClass ifPresent: aBlock [
-
-	^ self containedMethod binding: aString for: block class: aClass ifPresent: aBlock
+	
+	^ original binding: aString for: block class: aClass ifPresent: aBlock
 ]
 
 { #category : #accessing }
 SBVariantProxy >> containedMethod [
 
-	^ original containingArtefact
+	^ containedMethod
 ]
 
 { #category : #initialization }
 SBVariantProxy >> for: aVariant [
 
-	self assert: aVariant containingArtefact notNil.
+	containedMethod := aVariant containingArtefact.
+	self assert: containedMethod notNil.
 	
 	original := aVariant.
 	self addMorphBack: original copyBlock.
@@ -87,11 +89,10 @@ SBVariantProxy >> scopesDo: aBlock [
 { #category : #callbacks }
 SBVariantProxy >> updateOriginalWithOwnValues [
 
-	
 	| variantThatNeedsChanging |
-	original replaceBy: (original := self firstSubmorph copyBlock).
 	variantThatNeedsChanging := self containedMethod detectVariant: original.
 	variantThatNeedsChanging ifNil: [self delete. ^ self].
+	original replaceBy: (original := self firstSubmorph copyBlock).
 	variantThatNeedsChanging replaceValuesFrom: original copyBlock.
 	self sandblockEditor markChanged: self containedMethod
 ]
