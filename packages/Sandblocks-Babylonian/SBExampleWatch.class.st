@@ -33,6 +33,14 @@ SBExampleWatch class >> newFor: aBlock [
 		expression: aBlock arguments first
 ]
 
+{ #category : #'as yet unclassified' }
+SBExampleWatch class >> registerShortcuts: aProvider [
+
+	aProvider registerShortcut: Character backspace do: #replaceWithWatchedExpression.
+	aProvider cmdShortcut: Character delete do: #replaceWithWatchedExpression.
+
+]
+
 { #category : #'event handling' }
 SBExampleWatch class >> registerWatch: aWatch [
 
@@ -84,12 +92,16 @@ SBExampleWatch >> color [
 	^ self parentSandblock color
 ]
 
+{ #category : #'insert/delete' }
+SBExampleWatch >> deleteCommandFor: aBlock [
+
+	^ nil
+]
+
 { #category : #'event handling' }
 SBExampleWatch >> doubleClick: anEvent [
 
-	self sandblockEditor do: (SBReplaceCommand new
-		replacer: self expression;
-		target: self)
+	self replaceWithWatchedExpression 
 ]
 
 { #category : #'colors and color policies' }
@@ -250,6 +262,15 @@ SBExampleWatch >> printOn: aStream [
 	self expression printOn: aStream.
 	aStream nextPutAll: ' modified by '.
 	self modifyExpression printOn: aStream.
+]
+
+{ #category : #'event handling' }
+SBExampleWatch >> replaceWithWatchedExpression [
+	<action>
+	
+	self sandblockEditor do: (SBReplaceCommand new
+		replacer: self expression;
+		target: self)
 ]
 
 { #category : #actions }

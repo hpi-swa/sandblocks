@@ -31,6 +31,18 @@ SBWatchView >> addValue: anObject [
 	^ watchValues addLast: (SBWatchValue value: anObject sbSnapshot identityHash: anObject identityHash)
 ]
 
+{ #category : #'insert/delete' }
+SBWatchView >> canDelete [
+
+	^ false
+]
+
+{ #category : #'insert/delete' }
+SBWatchView >> canDeleteChild: aBlock [
+
+	^ false
+]
+
 { #category : #display }
 SBWatchView >> changeDisplay [
 	<action>
@@ -78,6 +90,12 @@ SBWatchView >> defaultDisplay [
 			scrollBarThickness: self scrollBarHeight;
 			width: 20;
 			height: 20)
+]
+
+{ #category : #'insert/delete' }
+SBWatchView >> deleteCommandFor: aBlock [
+
+	^ nil
 ]
 
 { #category : #accessing }
