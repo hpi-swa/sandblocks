@@ -2210,7 +2210,7 @@ SBBlock >> pickUp: anEvent [
 	self containingBlock ifNotNil: [:b | (b sandblockBlockColorIfAbsent: [nil]) ifNotNil: [:c | s color: c]].
 	
 	s addMorphBack: self dragTarget.
-	anEvent hand grabMorph: s.
+	(anEvent ifNotNil: #hand ifNil: [self currentHand]) grabMorph: s.
 	editor
 		select: nil;
 		noteToggleDrag: true.
