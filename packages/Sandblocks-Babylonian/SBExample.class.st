@@ -18,12 +18,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBExample class >> getAllInMethod: aBlock [
-
-	^ aBlock body childSandblocks select: #isExample
-]
-
-{ #category : #'as yet unclassified' }
 SBExample class >> instanceSuggestion [
 
 	^ [
@@ -44,6 +38,12 @@ SBExample class >> matches: aMessage [
 		(aMessage receiver satisfies: #(#notNil #isName))
 			and: [aMessage receiver contents = 'self']
 			and: [#('example:args:label:' 'example:args:label:assert:') includes: aMessage selector]]
+]
+
+{ #category : #'as yet unclassified' }
+SBExample class >> matchingSelectors [
+
+	^ #(#self:args:label: #self:args:label:assert: #example:args:label: #example:args:label:assert:)
 ]
 
 { #category : #'as yet unclassified' }
@@ -123,6 +123,19 @@ SBExample >> artefactSaved: aMethod [
 SBExample >> assertionBlock [
 
 	^ self submorphCount > 7 ifTrue: [self submorphs ninth] ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBExample >> basicRunSynchronously [
+
+	| returned |
+	self sendStartNotification.
+	
+	SBExecutionEnvironment value: self.
+	[returned := self evaluate] on: Error do: [:e | self scheduleLastError: e. "^ self ?" ].
+	self scheduleLastError: nil.
+	
+	self sendFinishNotification.
 ]
 
 { #category : #'as yet unclassified' }
@@ -368,15 +381,8 @@ SBExample >> providesExecutionEnvironment [
 { #category : #'as yet unclassified' }
 SBExample >> run [
 
-	self containingArtefact valid ifFalse: [^ self].
-	processRunning ifTrue: [^ self].
-	currentProcess ifNotNil: #terminate.
-	
-	errorDecorator ifNotNil: #detach.
-	errorDecorator := nil.
-	returnValue clear.
+	self runSetup.
 	self sendStartNotification.
-	"self collectTypeInfo."
 	
 	processRunning := true.
 	currentProcess := [
@@ -394,7 +400,9 @@ SBExample >> run [
 			returnValue reportValue: returned.
 			returnValue updateDisplay.
 			self sendFinishNotification]
-	] forkAt: Processor userBackgroundPriority
+	] forkAt: Processor userBackgroundPriority.
+
+	^ currentProcess
 ]
 
 { #category : #'as yet unclassified' }
@@ -403,6 +411,19 @@ SBExample >> runOnlyThis [
 	
 	self sandblockEditor allBlocksDo: [:block | (block isExample and: [block ~= self]) ifTrue: [block stopRunning]].
 	self startRunning
+]
+
+{ #category : #'as yet unclassified' }
+SBExample >> runSetup [
+
+	Transcript show: 'i', Character cr.
+	self containingArtefact valid ifFalse: [^ self].
+	processRunning ifTrue: [^ self].
+	currentProcess ifNotNil: #terminate.
+	
+	errorDecorator ifNotNil: #detach.
+	errorDecorator := nil.
+	returnValue clear.
 ]
 
 { #category : #'as yet unclassified' }

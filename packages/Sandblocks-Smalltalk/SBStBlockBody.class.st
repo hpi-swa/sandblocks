@@ -126,6 +126,18 @@ SBStBlockBody >> cellGap [
 ]
 
 { #category : #accessing }
+SBStBlockBody >> containedExampleWatches [
+
+	^ self allBlocksSelect: #isExampleWatch
+]
+
+{ #category : #accessing }
+SBStBlockBody >> containedExamples [
+
+	^ self allBlocksSelect: #isExample
+]
+
+{ #category : #accessing }
 SBStBlockBody >> containedVariants [
 
 	^ self allBlocksSelect: #isVariant

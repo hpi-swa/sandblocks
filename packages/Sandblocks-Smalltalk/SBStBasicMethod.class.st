@@ -224,6 +224,18 @@ SBStBasicMethod >> compiledMethod [
 ]
 
 { #category : #accessing }
+SBStBasicMethod >> containedExampleWatches [ 
+
+	^ self body containedExampleWatches
+]
+
+{ #category : #accessing }
+SBStBasicMethod >> containedExamples [
+
+	^ self body containedExamples
+]
+
+{ #category : #accessing }
 SBStBasicMethod >> containedVariants [ 
 
 	^ self body containedVariants

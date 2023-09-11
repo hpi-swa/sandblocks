@@ -70,6 +70,12 @@ SBVariantProxy >> isArtefact [
 	^ true
 ]
 
+{ #category : #accessing }
+SBVariantProxy >> original [
+
+	^ original
+]
+
 { #category : #'artefact protocol' }
 SBVariantProxy >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 

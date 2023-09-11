@@ -160,6 +160,12 @@ SBTabView >> asTabButton: aNamedBlock [
 	^ button
 ]
 
+{ #category : #accessing }
+SBTabView >> blockAt: anIndex [
+
+	^ self namedBlocks at: anIndex
+]
+
 { #category : #ui }
 SBTabView >> buildTabs [
 
@@ -394,6 +400,12 @@ SBTabView >> switchCommandFor: aNumber oldValue: oldNumber [
 		mutateSelector: #activeIndex:;
 		value: aNumber;
 		oldValue: oldNumber
+]
+
+{ #category : #accessing }
+SBTabView >> tabCount [
+
+	^ self namedBlocks size 
 ]
 
 { #category : #accessing }

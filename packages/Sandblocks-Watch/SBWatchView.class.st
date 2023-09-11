@@ -19,7 +19,6 @@ Class {
 { #category : #'as yet unclassified' }
 SBWatchView class >> saving: anInteger [
 	"Any value < 1 will result in saving all reported values"
-
 	
 	^ self new numSavedValues: anInteger
 ]
@@ -72,6 +71,12 @@ SBWatchView >> clear [
 SBWatchView >> count [
 
 	^ count contents
+]
+
+{ #category : #accessing }
+SBWatchView >> count: aNumber [
+
+	count contents: aNumber asString
 ]
 
 { #category : #display }
@@ -181,12 +186,6 @@ SBWatchView >> maxWidth [
 	^ 450
 ]
 
-{ #category : #'event handling' }
-SBWatchView >> noValue [
-
-	self scroller removeAllMorphs 
-]
-
 { #category : #accessing }
 SBWatchView >> numSavedValues: anInteger [
 	"Private"
@@ -222,6 +221,27 @@ SBWatchView >> reportValue: anObject [
 	updateScheduled ifFalse: [
 		updateScheduled := true.
 		Project current addDeferredUIMessage: [self updateDisplay]]
+]
+
+{ #category : #accessing }
+SBWatchView >> reportValues: aCollectionOfObjects [
+
+	aCollectionOfObjects do: [:anObject | self addValue: anObject].
+	self count: self count contents + aCollectionOfObjects size.
+	
+	updateScheduled ifFalse: [
+		updateScheduled := true.
+		Project current addDeferredUIMessage: [self updateDisplay]]
+]
+
+{ #category : #display }
+SBWatchView >> reset [
+
+	self useDisplay: self defaultDisplay.
+	updateScheduled := false.
+	watchValues := LinkedList new.
+	count contents: '0'.
+	 
 ]
 
 { #category : #accessing }

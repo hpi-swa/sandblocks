@@ -36,10 +36,18 @@ SBExampleWatchView >> reportValue: anObject [
 	updateScheduled := true
 ]
 
+{ #category : #accessing }
+SBExampleWatchView >> reportValues: aCollectionOfObjects [
+
+	aCollectionOfObjects do: [:anObject | self addValue: anObject].
+	
+	updateScheduled := true
+]
+
 { #category : #display }
 SBExampleWatchView >> updateDisplay [
 
 	super updateDisplay.
 	
-	count contents: (watchValues size) asString
+	self count: (watchValues size) asString
 ]

@@ -1,15 +1,16 @@
 "
-Observes (watches) an expression locally for added SBExamples. Whenever an example has finished running, it updates its belonging view. Further, with a given modifyExpression, it transforms the watched expression values. Also known as a Probe in the context of Babylonian Smalltalk.
+Observes (watches) an expression locally for added SBExamples. Whenever an example has finished running, it updates its belonging view. Only active watches update their views. Further, with a given modifyExpression, it transforms the watched expression values. Also known as a Probe in the context of Babylonian Smalltalk.
 "
 Class {
 	#name : #SBExampleWatch,
 	#superclass : #SBStSubstitution,
 	#instVars : [
 		'identifier',
-		'display',
-		'exampleValues',
 		'watchedExpression',
-		'modifyExpression'
+		'modifyExpression',
+		'isActive',
+		'exampleToDisplay',
+		'exampleToValues'
 	],
 	#classVars : [
 		'Registry'
@@ -22,18 +23,36 @@ SBExampleWatch class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
 
-	^ (aBlock receiver satisfies: #(notNil isBinding)) and: [aBlock receiver contents = self name] and: [aBlock selector = 'report:for:modifying:']
+	^ (aBlock receiver satisfies: #(notNil isBinding)) and: [aBlock receiver contents = self name] and: [aBlock selector = self matchingSelectors first]
+]
+
+{ #category : #constants }
+SBExampleWatch class >> matchingSelector [
+
+	^ #report:for:modifying:
+]
+
+{ #category : #constants }
+SBExampleWatch class >> matchingSelectors [
+
+	^ #(#report:for:modifying:)
 ]
 
 { #category : #'instance creation' }
-SBExampleWatch class >> newFor: aBlock [
+SBExampleWatch class >> newFor: aMessageSend [
 
+	"Saving the temp is necessary here, as directly accessing will cause
+	the message send to lose an arguments with each assignment"
+	"Also done in SBMemoize"
+	| args |
+	args := aMessageSend arguments.
 	^ self new
-		identifier: aBlock arguments second contents asNumber;
-		expression: aBlock arguments first
+		identifier: args second contents asNumber;
+		modifyExpression: args third;
+		expression: args first 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #shortcuts }
 SBExampleWatch class >> registerShortcuts: aProvider [
 
 	aProvider registerShortcut: Character backspace do: #replaceWithWatchedExpression.
@@ -58,7 +77,7 @@ SBExampleWatch class >> registry [
 SBExampleWatch class >> report: aValue for: aSymbol [
 
 	"Compatibility to SBWatch"
-	^ self reportValue: aValue for: aSymbol  modifying: (SBStBlockBody identityNamed: 'result').
+	^ self reportValue: aValue for: aSymbol modifying: (SBStBlockBody identityNamed: 'result').
 ]
 
 { #category : #'event handling' }
@@ -68,8 +87,10 @@ SBExampleWatch class >> report: aValue for: aSymbol modifying: aBlock [
 	example := SBExecutionEnvironment value ifNil: [^ aValue].
 	
 	reg := self registry.
-	watchers := reg select: [:watcher | watcher notNil and: [watcher identifier = aSymbol]].
-	watchers do: [:watcher | watcher reportValue: aValue for: example modifying: aBlock].
+	watchers := reg select: [:watcher | watcher notNil 
+		and: [watcher identifier = aSymbol]
+		and: [watcher isActive]].
+	watchers do: [:watcher | watcher reportValue: aValue for: example].
 	
 	^ aValue
 ]
@@ -84,6 +105,50 @@ SBExampleWatch class >> unregisterWatch: aWatch [
 SBExampleWatch class >> watchViewClass [
 
 	^ SBExampleWatchView
+]
+
+{ #category : #callbacks }
+SBExampleWatch >> applyModifyExpressionOnValues [
+
+	exampleToDisplay associationsDo: [:anExampleDisplayPair | 
+		anExampleDisplayPair value clear.
+		 anExampleDisplayPair value
+			reportValues: (self modifiedValuesFor: anExampleDisplayPair key)
+			name: (anExampleDisplayPair key ifNotNil: #label ifNil: ['']).
+		anExampleDisplayPair value updateDisplay.
+		]
+]
+
+{ #category : #callbacks }
+SBExampleWatch >> artefactSaved: aBlock [
+
+	"As we are inactive, we have to manually apply our modifyExpression if it changes. 
+	Otherwise, we would reset by examples starting" 
+	(self isActive not and: [aBlock = self containingArtefact]) ifTrue: [self applyModifyExpressionOnValues] 
+]
+
+{ #category : #copying }
+SBExampleWatch >> asInactiveCopy [
+
+	^ (self veryDeepCopy) beInactive. 
+]
+
+{ #category : #accessing }
+SBExampleWatch >> beActive [
+	<action>
+
+	self flag: #todo. "action for debugging, remove later. bc when applying modification and 
+	then turning inactive, the already modified values are seen as the ground truth.
+	is aber allgemein ein problemchen....eig sollten die watchviews die wahren values haben und nur
+	die modifizierten anzeigen."
+	isActive := true
+]
+
+{ #category : #accessing }
+SBExampleWatch >> beInactive [
+	<action>
+
+	isActive := false
 ]
 
 { #category : #'colors and color policies' }
@@ -113,15 +178,25 @@ SBExampleWatch >> drawnColor [
 { #category : #'event handling' }
 SBExampleWatch >> exampleFinished: anExample [
 
-	exampleValues at: anExample ifPresent: [:val | val exampleFinished: anExample]
+	exampleToDisplay
+		at: anExample
+		ifPresent: [:aDisplay | | modifiedValues |
+			modifiedValues := self modifiedValuesFor: anExample.
+			modifiedValues ifNotEmpty: [
+			aDisplay 
+				reportValues: modifiedValues
+				name: (anExample ifNotNil: #label ifNil: [''])].
+			aDisplay exampleFinished: anExample]
 ]
 
 { #category : #'event handling' }
 SBExampleWatch >> exampleStarting: anExample [
 
-	(exampleValues at: anExample ifAbsentPut: [ | display |
+	exampleToValues at: anExample put: OrderedCollection new.
+
+	(exampleToDisplay at: anExample ifAbsentPut: [ | display |
 		display := SBExampleValueDisplay new.
-		self addMorph: (exampleValues at: anExample put: display) atIndex: 2.
+		self addMorph: (exampleToDisplay at: anExample put: display) atIndex: 2.
 		anExample when: #outOfWorld send: #exampleStopped: to: self with: anExample.
 		display])
 		exampleStarting: anExample;
@@ -131,9 +206,9 @@ SBExampleWatch >> exampleStarting: anExample [
 { #category : #'event handling' }
 SBExampleWatch >> exampleStopped: anExample [
 
-	exampleValues at: anExample ifPresent: [:val |
-		self removeMorph: val.
-		exampleValues removeKey: anExample]
+	exampleToDisplay at: anExample ifPresent: [:aDisplay |
+		self removeMorph: aDisplay.
+		exampleToDisplay removeKey: anExample]
 ]
 
 { #category : #accessing }
@@ -174,9 +249,11 @@ SBExampleWatch >> initialize [
 
 	super initialize.
 	
-	exampleValues := Dictionary new.
+	exampleToDisplay := Dictionary new.
+	exampleToValues := Dictionary new.
 	watchedExpression := SBStMessageSend new.
 	modifyExpression := SBStBlockBody identityNamed: 'result'.
+	isActive := true.
 	
 	self
 		cellGap: 4;
@@ -193,6 +270,12 @@ SBExampleWatch >> intoWorld: aWorld [
 	super intoWorld: aWorld.
 	
 	self class registerWatch: self
+]
+
+{ #category : #accessing }
+SBExampleWatch >> isActive [
+
+	^ isActive
 ]
 
 { #category : #'*Sandblocks-Babylonian' }
@@ -224,7 +307,16 @@ SBExampleWatch >> layoutCommands [
 { #category : #'*Sandblocks-Babylonian' }
 SBExampleWatch >> listensToExamples [
 
-	^ true
+	^ self isActive 
+]
+
+{ #category : #accessing }
+SBExampleWatch >> modifiedValuesFor: anExample [
+
+	^ exampleToValues at: anExample 
+		ifPresent: [:aCollection | aCollection 
+			collect: [:anObject | self modifyExpression evaluateWithArguments: {anObject}]]
+		ifAbsent: [{}]
 ]
 
 { #category : #accessing }
@@ -274,29 +366,32 @@ SBExampleWatch >> replaceWithWatchedExpression [
 ]
 
 { #category : #actions }
-SBExampleWatch >> reportValue: anObject for: anExample modifying: aBlock [
+SBExampleWatch >> reportValue: anObject for: anExample [ 
 
-	exampleValues
+	exampleToValues
 		at: anExample
-		ifPresent: [:display | display reportValue: (self modifyExpression evaluateWithArguments: {anObject}) name: (anExample ifNotNil: #label ifNil: [''])]
+		ifPresent: [:values | values add: anObject]
 ]
 
 { #category : #accessing }
 SBExampleWatch >> valuesForExample: anExample [
 
-	^ exampleValues at: anExample ifAbsent: [nil]
+	^ exampleToValues at: anExample ifAbsent: [nil]
 ]
 
 { #category : #copying }
 SBExampleWatch >> veryDeepCopyWith: deepCopier [
 
 	" assure that copies of us have a unique id "
-	| new oldExamplesValues |
-	oldExamplesValues := exampleValues.
-	exampleValues := Dictionary new.
+	| new oldExampleDisplays oldExampleValues |
+	oldExampleDisplays := exampleToDisplay.
+	oldExampleValues := exampleToValues.
+	exampleToDisplay := Dictionary new.
+	exampleToValues := Dictionary new.
 	
 	new := super veryDeepCopyWith: deepCopier.
-	exampleValues := oldExamplesValues.
+	exampleToDisplay := oldExampleDisplays.
+	exampleToValues := exampleToValues.
 	new newIdentifier.
 	^ new
 ]
@@ -304,9 +399,9 @@ SBExampleWatch >> veryDeepCopyWith: deepCopier [
 { #category : #printing }
 SBExampleWatch >> writeSourceOn: aStream [
 
-	aStream nextPutAll: '(SBExampleWatch report: '.
+	aStream nextPutAll: '(SBExampleWatch report: ('.
 	self expression writeSourceOn: aStream.
-	aStream nextPutAll: ' for: '.
+	aStream nextPutAll: ') for: '.
 	self identifier storeOn: aStream.
 	aStream nextPutAll: ' modifying: '.
 	self modifyExpression writeSourceOn: aStream.

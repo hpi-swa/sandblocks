@@ -33,13 +33,13 @@ SBVariant class >> matches: aBlock [
 	
 	^ aBlock receiver isBinding
 		and: [aBlock receiver contents = 'SBVariant']
-		and: [aBlock selector = self matchingSelector]
+		and: [aBlock selector = self matchingSelectors first]
 ]
 
 { #category : #constants }
-SBVariant class >> matchingSelector [
+SBVariant class >> matchingSelectors [
 
-	^ #named:associations:activeIndex:id:
+	^ #(#named:associations:activeIndex:id:)
 ]
 
 { #category : #'instance creation' }
@@ -66,7 +66,10 @@ SBVariant class >> named: aString alternatives: aCollectionOfNamedBlocks activeI
 { #category : #'instance creation' }
 SBVariant class >> named: aString associations: aCollectionOfAssociations activeIndex: aNumber id: uuid [
 
-	^ aNumber > 0 ifTrue: [(aCollectionOfAssociations at: aNumber) value value] ifFalse: [nil]
+	aNumber > 0 ifFalse: [^ nil].
+	^ SBActiveVariantPermutation value 
+		ifNil: [(aCollectionOfAssociations at: aNumber) value value]
+		ifNotNil: [(aCollectionOfAssociations at: (SBActiveVariantPermutation value at: uuid)) value value].
 		
 ]
 
@@ -123,6 +126,12 @@ SBVariant >> alternatives [
 	^ self widget namedBlocks
 ]
 
+{ #category : #accessing }
+SBVariant >> alternativesCount [
+
+	^ self widget tabCount
+]
+
 { #category : #comparing }
 SBVariant >> alternativesEqual: otherAlternatives [
 
@@ -133,6 +142,18 @@ SBVariant >> alternativesEqual: otherAlternatives [
 	^ self alternatives size = otherAlternatives size and: [
 		(1 to: self alternatives size) do: [:index | 
 			areSame := areSame and: [(self alternatives at: index) = (otherAlternatives at: index)]]. 		areSame]
+]
+
+{ #category : #converting }
+SBVariant >> asProxy [
+
+	^ SBVariantProxy for: self
+]
+
+{ #category : #accessing }
+SBVariant >> blockAt: anIndex [
+
+	^ self widget blockAt: anIndex
 ]
 
 { #category : #accessing }
@@ -243,6 +264,12 @@ SBVariant >> replaceSelfWithChosen [
 SBVariant >> replaceValuesFrom: anotherVariant [
 
 	self named: anotherVariant name alternatives: anotherVariant alternatives activeIndex: anotherVariant activeIndex  
+]
+
+{ #category : #actions }
+SBVariant >> switchToAlternative: anIndex [
+
+	self widget jumpToTab: anIndex
 ]
 
 { #category : #ui }
