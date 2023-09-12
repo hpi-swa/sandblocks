@@ -69,7 +69,8 @@ SBResultsView >> buildAllPossibleResults [
 	[ permutations do: [:aPermutation |
 		SBActiveVariantPermutation value: aPermutation.
 		activeExamples do: #basicRunSynchronously.
-		self buildPermutationFor: aPermutation collectingWatchesFrom: watchMethodBlocks]] 
+		self buildPermutationFor: aPermutation collectingWatchesFrom: watchMethodBlocks].
+		self resetWatchesToOriginalPermutationRunning: activeExamples] 
 	forkAt: Processor userSchedulingPriority
 ]
 
@@ -94,6 +95,13 @@ SBResultsView >> initialize [
 	self name: 'Possible Results'.
 	
 	self visualize
+]
+
+{ #category : #building }
+SBResultsView >> resetWatchesToOriginalPermutationRunning: activeExamples [
+
+	SBActiveVariantPermutation value: nil.
+	activeExamples do: #basicRunSynchronously
 ]
 
 { #category : #building }

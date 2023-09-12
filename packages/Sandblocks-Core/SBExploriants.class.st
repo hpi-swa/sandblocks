@@ -48,6 +48,18 @@ SBExploriants >> initialize [
 		vResizing: #shrinkWrap
 ]
 
+{ #category : #testing }
+SBExploriants >> isArtefact [ 
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBExploriants >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
+
+	^ true
+]
+
 { #category : #actions }
 SBExploriants >> visualize [
 

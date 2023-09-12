@@ -115,8 +115,7 @@ SBExampleWatch >> applyModifyExpressionOnValues [
 		 anExampleDisplayPair value
 			reportValues: (self modifiedValuesFor: anExampleDisplayPair key)
 			name: (anExampleDisplayPair key ifNotNil: #label ifNil: ['']).
-		anExampleDisplayPair value updateDisplay.
-		]
+		anExampleDisplayPair value updateDisplay]
 ]
 
 { #category : #callbacks }
@@ -212,6 +211,18 @@ SBExampleWatch >> exampleStopped: anExample [
 ]
 
 { #category : #accessing }
+SBExampleWatch >> exampleToDisplay: anExampleToDisplayDict [
+
+	exampleToDisplay := anExampleToDisplayDict
+]
+
+{ #category : #accessing }
+SBExampleWatch >> exampleToValues: anExampleToCollectionOfObjectsDict [
+
+	exampleToValues := anExampleToCollectionOfObjectsDict
+]
+
+{ #category : #accessing }
 SBExampleWatch >> expression [
 
 	^ watchedExpression
@@ -294,6 +305,13 @@ SBExampleWatch >> isGlobalWatch [
 SBExampleWatch >> isWatch [
 
 	^ true
+]
+
+{ #category : #copying }
+SBExampleWatch >> keepKeysDeepCopyValuesOf: aDictionary [
+
+	^ Dictionary newFrom: (
+		aDictionary associations collect: [:aKeyValuePair | aKeyValuePair key -> aKeyValuePair value sbSnapshot ])
 ]
 
 { #category : #layout }
@@ -383,6 +401,7 @@ SBExampleWatch >> valuesForExample: anExample [
 SBExampleWatch >> veryDeepCopyWith: deepCopier [
 
 	" assure that copies of us have a unique id "
+	" disregarding deep copy of dictionaries to avoid duplicating examples"
 	| new oldExampleDisplays oldExampleValues |
 	oldExampleDisplays := exampleToDisplay.
 	oldExampleValues := exampleToValues.
@@ -391,8 +410,14 @@ SBExampleWatch >> veryDeepCopyWith: deepCopier [
 	
 	new := super veryDeepCopyWith: deepCopier.
 	exampleToDisplay := oldExampleDisplays.
-	exampleToValues := exampleToValues.
+	exampleToValues := oldExampleValues.
+	
 	new newIdentifier.
+	new exampleToDisplay: (Dictionary newFrom: 
+		(exampleToDisplay keys withIndexCollect: [:anExample :i | anExample -> (new submorphs at: (i + 1))])).
+	new exampleToValues: (Dictionary newFrom: (
+		oldExampleValues associations collect: [:aKeyValuePair | aKeyValuePair key -> aKeyValuePair value sbSnapshot ])).
+	
 	^ new
 ]
 
