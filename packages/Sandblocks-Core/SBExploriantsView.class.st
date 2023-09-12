@@ -34,7 +34,7 @@ SBExploriantsView >> allCompiledMethodsContainingVariants [
 	^ self allCompiledMethodsContainingClass: SBVariant
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExploriantsView >> allMethodBlocksContainingVariants [
 
 	"We are looking for already opened methods so that we can assign the
@@ -60,7 +60,9 @@ SBExploriantsView >> containerRow [
 		cellPositioning: #topLeft;
 		changeTableLayout;
 		listDirection: #leftToRight;
-		layoutInset: 1;
+		layoutInset: 8;
+		cellGap: 8;
+		cellInset: 5;
 		borderWidth: 0
 ]
 
@@ -84,8 +86,8 @@ SBExploriantsView >> initialize [
 		color: Color white;
 		listDirection: #topToBottom;
 		layoutInset: 8;
-		cellGap: 16;
-		cellInset: 10;
+		cellGap: 8;
+		cellInset: 5;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap)
 ]

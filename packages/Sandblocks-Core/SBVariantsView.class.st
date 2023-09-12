@@ -26,5 +26,7 @@ SBVariantsView >> initialize [
 { #category : #actions }
 SBVariantsView >> visualize [ 
 
+	self clean.
+
 	self allMethodBlocksContainingVariants do: [:aSBStMethod | self buildMethodSectionFor: aSBStMethod]
 ]

@@ -1,9 +1,6 @@
 Class {
 	#name : #SBResultsView,
 	#superclass : #SBExploriantsView,
-	#instVars : [
-		'variants'
-	],
 	#category : #'Sandblocks-Core'
 }
 
@@ -46,9 +43,23 @@ SBResultsView >> allWatchesIn: aCollectionOfMethodBlocks [
 ]
 
 { #category : #building }
+SBResultsView >> applyButtonFor: aPermutation [ 
+	
+	self flag: #todo. "should check if there were any changes to the variants before applying -jb" 
+	^ SBButton new
+		icon: (SBIcon iconCheck
+				size: 6.0 sbScaled;
+				color: (Color r: 0.0 g: 1 b: 0.0))
+			label: 'Apply Permutation'
+			do: [aPermutation apply];
+		makeSmall;
+		cornerStyle: #squared
+]
+
+{ #category : #building }
 SBResultsView >> buildAllPossibleResults [
 
-	| permutations activeExamples watchMethodBlocks |
+	| permutations activeExamples watchMethodBlocks variants |
 	self flag: #todo. "don't calculate all variants a second time (first time being the variants view) -jb"
 	variants := (self allMethodBlocksContainingVariants collect: #containedVariants) flatten.
 	watchMethodBlocks := self allMethodBlocksContainingWatches.
@@ -65,11 +76,13 @@ SBResultsView >> buildAllPossibleResults [
 { #category : #building }
 SBResultsView >> buildPermutationFor: aPermutation collectingWatchesFrom: aCollectionOfMethodBlocks [
 
-	self block addMorphBack: (self titleMorphForPermutation: aPermutation).
+	self block addMorphBack: (SBOwnTextMorph new contents: aPermutation asString).
+	self block addMorphBack: (self applyButtonFor: aPermutation).
+	
 	self block addMorphBack: (
-		self containerRow 
-			addMorphBack: ((self containerRow listDirection: #leftToRight) 
-				addAllMorphsBack: (self allWatchesIn: aCollectionOfMethodBlocks))).
+		(self containerRow listDirection: #leftToRight) 
+			addAllMorphsBack: (self allWatchesIn: aCollectionOfMethodBlocks)).
+			
 	self block addMorphBack: (LineMorph from: 0@0 to: 50@0 color: Color black width: 2)
 ]
 
@@ -84,18 +97,20 @@ SBResultsView >> initialize [
 ]
 
 { #category : #building }
-SBResultsView >> titleMorphForPermutation: aPermutation [
+SBResultsView >> updateButton [
 
-	"collecting instead of calling (a active name), ', ', (b active name) in fold
-	as one variant only will not return a string but a variant"
-	^ SBOwnTextMorph new contents: (
-		(aPermutation referencedVariants collect: [:aVariant | 
-			(aVariant blockAt: (aPermutation at: aVariant id)) name]) 
-			fold: [:a :b | a, ', ', b ])
+	^ SBButton new
+		icon: SBIcon iconRotateLeft
+			label: 'Re-Generate'
+			do: [self visualize];
+		cornerStyle: #squared
 ]
 
 { #category : #actions }
 SBResultsView >> visualize [ 
 
+	self clean.
+
+	self block addMorphBack: self updateButton.
 	self buildAllPossibleResults 
 ]
