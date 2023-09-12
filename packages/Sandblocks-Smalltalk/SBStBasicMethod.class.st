@@ -23,7 +23,9 @@ SBStBasicMethod class >> selector: aSymbol arguments: aCollection class: aClass 
 { #category : #comparing }
 SBStBasicMethod >> = anotherSBStBasicMethod [
 
-	^ anotherSBStBasicMethod class = self class and: [anotherSBStBasicMethod compiledMethod equivalentTo: self compiledMethod]
+	^ anotherSBStBasicMethod class == self class 
+		and: [anotherSBStBasicMethod compiledMethod ~= anotherSBStBasicMethod]
+		and: [anotherSBStBasicMethod compiledMethod equivalentTo: self compiledMethod]
 ]
 
 { #category : #accessing }

@@ -61,8 +61,8 @@ SBExploriantsView >> containerRow [
 		changeTableLayout;
 		listDirection: #leftToRight;
 		layoutInset: 8;
-		cellGap: 8;
-		cellInset: 5;
+		cellGap: 3;
+		cellInset: 3;
 		borderWidth: 0
 ]
 
@@ -85,9 +85,9 @@ SBExploriantsView >> initialize [
 		changeTableLayout;
 		color: Color white;
 		listDirection: #topToBottom;
-		layoutInset: 8;
-		cellGap: 8;
-		cellInset: 5;
+		layoutInset: 3;
+		cellGap: 4;
+		cellInset: 2;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap)
 ]
