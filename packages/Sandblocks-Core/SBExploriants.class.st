@@ -1,6 +1,6 @@
 Class {
 	#name : #SBExploriants,
-	#superclass : #SBBlock,
+	#superclass : #SBTabView,
 	#instVars : [
 		'watchMethodBlocks',
 		'variants',
@@ -63,7 +63,5 @@ SBExploriants >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 { #category : #actions }
 SBExploriants >> visualize [
 
-	self submorphs copy do: #delete.
-	
-	self addMorphBack: SBExploriantsView asTabView.
+	self namedBlocks: SBExploriantsView getTabs activeIndex: 1
 ]

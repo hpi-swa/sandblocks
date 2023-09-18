@@ -7,7 +7,7 @@ Class {
 { #category : #'instance creation' }
 SBExploriantsView class >> asTabView [
 
-	^ SBTabView
+	^ SBExploriants
 		namedBlocks: (self subclasses collect: #new)
 		activeIndex: 1 
 ]
@@ -17,6 +17,12 @@ SBExploriantsView class >> block: aSBBlock named: aString [
 
 	"only calling new allowed to guarantee intented purpose"
 	self shouldNotImplement 
+]
+
+{ #category : #'instance creation' }
+SBExploriantsView class >> getTabs [
+
+	^ self subclasses collect: #new
 ]
 
 { #category : #accessing }

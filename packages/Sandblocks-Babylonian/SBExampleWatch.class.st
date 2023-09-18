@@ -133,19 +133,7 @@ SBExampleWatch >> asInactiveCopy [
 ]
 
 { #category : #accessing }
-SBExampleWatch >> beActive [
-	<action>
-
-	self flag: #todo. "action for debugging, remove later. bc when applying modification and 
-	then turning inactive, the already modified values are seen as the ground truth.
-	is aber allgemein ein problemchen....eig sollten die watchviews die wahren values haben und nur
-	die modifizierten anzeigen."
-	isActive := true
-]
-
-{ #category : #accessing }
 SBExampleWatch >> beInactive [
-	<action>
 
 	isActive := false
 ]

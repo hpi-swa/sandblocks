@@ -157,6 +157,14 @@ SBVariant >> blockAt: anIndex [
 ]
 
 { #category : #accessing }
+SBVariant >> codeFor: aNamedBlock [
+
+	^ (aNamedBlock block submorphs size > 1) 
+				ifTrue: [aNamedBlock block lastSubmorph]
+				ifFalse: [nil]
+]
+
+{ #category : #accessing }
 SBVariant >> color [
 
 	^ Color transparent
@@ -242,22 +250,32 @@ SBVariant >> namedBlocks [
 { #category : #actions }
 SBVariant >> replaceSelfWithBlock: aNamedBlock [
 	
+	| command |
 	"As deleting the last tab also deletes the tab view, we gotta recreate it"
 	self widget: (SBTabView namedBlocks: {aNamedBlock} activeIndex: 1).
 	self addMorphBack: widget.
 	
-	self sandblockEditor do: (SBUnwrapConsecutiveCommand new 
+	command := (self codeFor: widget active)
+		ifNil: [SBDeleteCommand new target: self]
+		ifNotNil: [SBUnwrapConsecutiveCommand new 
 									target: self; 
-									unwrapped: {widget activeBlock lastSubmorph})
+									unwrapped: {(self codeFor: widget active)}].	
+	
+	self sandblockEditor do: command
 ]
 
 { #category : #actions }
 SBVariant >> replaceSelfWithChosen [ 
 	
 	<action>
-	self sandblockEditor do: (SBUnwrapConsecutiveCommand new 
+	| command |
+	command := (self codeFor: widget active)
+		ifNil: [SBDeleteCommand new target: self]
+		ifNotNil: [SBUnwrapConsecutiveCommand new 
 									target: self; 
-									unwrapped: {self activeBlock lastSubmorph})
+									unwrapped: {(self codeFor: widget active)}].	
+	
+	self sandblockEditor do: command
 ]
 
 { #category : #initialization }
@@ -306,7 +324,9 @@ SBVariant >> writeSourceOn: aStream [
 		do: [:aNamedBlock |
 			aNamedBlock name storeOn: aStream.
 			aStream nextPutAll: ' -> ['.
-			aNamedBlock block lastSubmorph writeSourceOn: aStream.
+			(self codeFor: aNamedBlock)  
+				ifNotNil: [(self codeFor: aNamedBlock) writeSourceOn: aStream]
+				ifNil: [aStream nextPutAll: ' '].
 			aStream nextPut: $].
 			]
 		separatedBy: [aStream nextPut: $.].
