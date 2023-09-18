@@ -24,7 +24,7 @@ SBStBasicMethod class >> selector: aSymbol arguments: aCollection class: aClass 
 SBStBasicMethod >> = anotherSBStBasicMethod [
 
 	^ anotherSBStBasicMethod class == self class 
-		and: [anotherSBStBasicMethod compiledMethod ~= anotherSBStBasicMethod]
+		and: [anotherSBStBasicMethod compiledMethod class ~= self class]
 		and: [anotherSBStBasicMethod compiledMethod equivalentTo: self compiledMethod]
 ]
 
