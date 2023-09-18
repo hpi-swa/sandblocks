@@ -1,11 +1,6 @@
 Class {
 	#name : #SBExploriants,
 	#superclass : #SBTabView,
-	#instVars : [
-		'watchMethodBlocks',
-		'variants',
-		'activeExamples'
-	],
 	#classInstVars : [
 		'uniqueInstance'
 	],
@@ -54,7 +49,7 @@ SBExploriants >> isArtefact [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'artefact protocol' }
 SBExploriants >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 
 	^ true

@@ -27,12 +27,6 @@ SBExampleWatch class >> matches: aBlock [
 ]
 
 { #category : #constants }
-SBExampleWatch class >> matchingSelector [
-
-	^ #report:for:modifying:
-]
-
-{ #category : #constants }
 SBExampleWatch class >> matchingSelectors [
 
 	^ #(#report:for:modifying:)

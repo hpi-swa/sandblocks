@@ -8,7 +8,7 @@ Class {
 	#category : #'Sandblocks-Smalltalk'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 SBVariantProxy class >> for: aVariant [
 
 	^ self new for: aVariant
@@ -97,7 +97,9 @@ SBVariantProxy >> updateOriginalWithOwnValues [
 
 	| variantThatNeedsChanging |
 	variantThatNeedsChanging := self containedMethod detectVariant: original.
+	
 	variantThatNeedsChanging ifNil: [self delete. ^ self].
+	
 	original replaceBy: (original := self firstSubmorph copyBlock).
 	variantThatNeedsChanging replaceValuesFrom: original copyBlock.
 	self sandblockEditor markChanged: self containedMethod
@@ -109,7 +111,6 @@ SBVariantProxy >> updateSelfAfterMethodUpdate: newMethod [
 	| variantThatMaybeChanged |
 	variantThatMaybeChanged := newMethod detectVariant: original.
 	
-	"orignal variant has been deleted"
 	variantThatMaybeChanged ifNil: [self delete. ^ self].
 	
 	(variantThatMaybeChanged sourceString ~= self firstSubmorph sourceString)

@@ -45,7 +45,6 @@ SBResultsView >> allWatchesIn: aCollectionOfMethodBlocks [
 { #category : #building }
 SBResultsView >> applyButtonFor: aPermutation [ 
 	
-	self flag: #todo. "should check if there were any changes to the variants before applying -jb" 
 	^ SBButton new
 		icon: (SBIcon iconCheck
 				size: 6.0 sbScaled;
@@ -68,23 +67,19 @@ SBResultsView >> buildAllPossibleResults [
 	
 	[ permutations do: [:aPermutation |
 		SBActiveVariantPermutation value: aPermutation.
-		activeExamples do: #basicRunSynchronously.
+		activeExamples do: #runSynchronouslyIgnoreReturn.
 		self buildPermutationFor: aPermutation collectingWatchesFrom: watchMethodBlocks].
-		self resetWatchesToOriginalPermutationRunning: activeExamples] 
-	forkAt: Processor userSchedulingPriority
+		self resetWatchesToOriginalPermutationRunning: activeExamples] forkAt: Processor userSchedulingPriority
 ]
 
 { #category : #building }
 SBResultsView >> buildPermutationFor: aPermutation collectingWatchesFrom: aCollectionOfMethodBlocks [
 
-	self block addMorphBack: (SBOwnTextMorph new contents: aPermutation asString).
-	self block addMorphBack: (self applyButtonFor: aPermutation).
-	
-	self block addMorphBack: (
-		(self containerRow listDirection: #leftToRight) 
-			addAllMorphsBack: (self allWatchesIn: aCollectionOfMethodBlocks)).
-			
-	self block addMorphBack: (LineMorph from: 0@0 to: 50@0 color: Color black width: 2)
+	self block addAllMorphsBack: { SBOwnTextMorph new contents: aPermutation asString.
+									self applyButtonFor: aPermutation. 
+									(self containerRow listDirection: #leftToRight) 
+										addAllMorphsBack: (self allWatchesIn: aCollectionOfMethodBlocks).
+									LineMorph from: 0@0 to: 50@0 color: Color black width: 2}
 ]
 
 { #category : #initialization }
@@ -101,7 +96,7 @@ SBResultsView >> initialize [
 SBResultsView >> resetWatchesToOriginalPermutationRunning: activeExamples [
 
 	SBActiveVariantPermutation value: nil.
-	activeExamples do: #basicRunSynchronously
+	activeExamples do: #runSynchronouslyIgnoreReturn
 ]
 
 { #category : #building }

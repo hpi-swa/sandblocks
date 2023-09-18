@@ -66,7 +66,7 @@ SBVariant class >> named: aString alternatives: aCollectionOfNamedBlocks activeI
 { #category : #'instance creation' }
 SBVariant class >> named: aString associations: aCollectionOfAssociations activeIndex: aNumber id: uuid [
 
-	aNumber > 0 ifFalse: [^ nil].
+	aNumber <= 0 ifTrue: [^ nil].
 	^ SBActiveVariantPermutation value 
 		ifNil: [(aCollectionOfAssociations at: aNumber) value value]
 		ifNotNil: [(aCollectionOfAssociations at: (SBActiveVariantPermutation value at: uuid)) value value].
@@ -141,7 +141,8 @@ SBVariant >> alternativesEqual: otherAlternatives [
 	areSame := true.
 	^ self alternatives size = otherAlternatives size and: [
 		(1 to: self alternatives size) do: [:index | 
-			areSame := areSame and: [(self alternatives at: index) = (otherAlternatives at: index)]]. 		areSame]
+			areSame := areSame and: [(self alternatives at: index) = (otherAlternatives at: index)]]. 
+			areSame]
 ]
 
 { #category : #converting }

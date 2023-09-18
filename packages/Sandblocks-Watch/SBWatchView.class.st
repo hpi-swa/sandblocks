@@ -234,16 +234,6 @@ SBWatchView >> reportValues: aCollectionOfObjects [
 		Project current addDeferredUIMessage: [self updateDisplay]]
 ]
 
-{ #category : #display }
-SBWatchView >> reset [
-
-	self useDisplay: self defaultDisplay.
-	updateScheduled := false.
-	watchValues := LinkedList new.
-	count contents: '0'.
-	 
-]
-
 { #category : #accessing }
 SBWatchView >> scrollBarHeight [
 

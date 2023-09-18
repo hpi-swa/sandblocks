@@ -40,7 +40,7 @@ SBExample class >> matches: aMessage [
 			and: [#('example:args:label:' 'example:args:label:assert:') includes: aMessage selector]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #constants }
 SBExample class >> matchingSelectors [
 
 	^ #(#self:args:label: #self:args:label:assert: #example:args:label: #example:args:label:assert:)
@@ -123,19 +123,6 @@ SBExample >> artefactSaved: aMethod [
 SBExample >> assertionBlock [
 
 	^ self submorphCount > 7 ifTrue: [self submorphs ninth] ifFalse: [nil]
-]
-
-{ #category : #'as yet unclassified' }
-SBExample >> basicRunSynchronously [
-
-	| returned |
-	self sendStartNotification.
-	
-	SBExecutionEnvironment value: self.
-	[returned := self evaluate] on: Error do: [:e | self scheduleLastError: e. "^ self ?" ].
-	self scheduleLastError: nil.
-	
-	self sendFinishNotification.
 ]
 
 { #category : #'as yet unclassified' }
@@ -416,7 +403,6 @@ SBExample >> runOnlyThis [
 { #category : #'as yet unclassified' }
 SBExample >> runSetup [
 
-	Transcript show: 'i', Character cr.
 	self containingArtefact valid ifFalse: [^ self].
 	processRunning ifTrue: [^ self].
 	currentProcess ifNotNil: #terminate.
@@ -424,6 +410,19 @@ SBExample >> runSetup [
 	errorDecorator ifNotNil: #detach.
 	errorDecorator := nil.
 	returnValue clear.
+]
+
+{ #category : #'as yet unclassified' }
+SBExample >> runSynchronouslyIgnoreReturn [
+
+	| returned |
+	self sendStartNotification.
+	
+	SBExecutionEnvironment value: self.
+	[returned := self evaluate] on: Error do: [:e | self scheduleLastError: e].
+	self scheduleLastError: nil.
+	
+	self sendFinishNotification.
 ]
 
 { #category : #'as yet unclassified' }

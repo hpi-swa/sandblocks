@@ -1,5 +1,5 @@
 "
-helper class w/ synctactic sugars for variant -> alternative index dictionary
+A helper class with synctactic sugars for variant id -> alternative index dictionary
 "
 Class {
 	#name : #SBPermutation,
@@ -14,13 +14,8 @@ Class {
 { #category : #utils }
 SBPermutation class >> allPermutationsOf: aCollectionOfVariants [
 
-	"Returns a Collection of Collections containing indexes of alternatives,
-	e.g. a collection of two Variants, with A having 2 alternatives and B having 3, would result in
-	#( (A->1 B->1) (A->1 B->2) (A->1 B->3) 
-	     (A->2 B->1) (A->2 B->2) (A->2 B->3))"
 	| permutations |
-	permutations := (1 to: aCollectionOfVariants first alternativesCount) 
-		collect: [:anIndex | {anIndex}].
+	permutations := (1 to: aCollectionOfVariants first alternativesCount) collect: #asArray.
 	
 	(2 to: aCollectionOfVariants size) do: [:i | | alternatives |
 		alternatives := (aCollectionOfVariants at: i) alternativesCount.
