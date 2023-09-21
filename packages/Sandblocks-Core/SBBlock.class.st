@@ -98,6 +98,19 @@ SBBlock >> addBlock: aBlock [
 	(self insertCommandRequest: aBlock near: nil before: false) do
 ]
 
+{ #category : #hierarchy }
+SBBlock >> allBlocksBreadthFirst [
+
+	^ Array streamContents: [:s | self allBlocksBreadthFirstDo: [:b | s nextPut: b]]
+]
+
+{ #category : #hierarchy }
+SBBlock >> allBlocksBreadthFirstDo: aClosure [
+
+	(aClosure value: self) == true ifTrue: [^ true].
+	self childSandblocksDo: [:b | b allBlocksBreadthFirstDo: aClosure]
+]
+
 { #category : #'as yet unclassified' }
 SBBlock >> allBlocksDetect: aBlock [
 
@@ -1313,6 +1326,14 @@ SBBlock >> hasInput [
 SBBlock >> hasMultiSelection [
 
 	^ self sandblockEditor cursor cursorPosition isKindOf: SBCursorMultiSelect
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> hasParent: aBlock [
+
+	self parentSandblock ifNil: [^ false].
+	self parentSandblock = aBlock ifTrue: [^ true].
+	^ self parentSandblock hasParent: aBlock
 ]
 
 { #category : #'actions tests' }
@@ -3139,6 +3160,18 @@ SBBlock >> wasSelectedFromCursor: aCursorPosition [
 	"callback you can override"
 
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBBlock >> with: anotherBlock parentsDo: aClosure [
+
+	| currentSelf currentOther |
+	currentSelf := self.
+	currentOther := anotherBlock.
+	
+	[aClosure value: currentSelf value: currentOther] doWhileTrue: [
+		currentSelf := currentSelf parentSandblock.
+		(currentOther := currentOther parentSandblock) notNil]
 ]
 
 { #category : #decorators }
