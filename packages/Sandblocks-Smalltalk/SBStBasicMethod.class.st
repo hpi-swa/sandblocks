@@ -20,14 +20,6 @@ SBStBasicMethod class >> selector: aSymbol arguments: aCollection class: aClass 
 		body: aBlock asSandblock
 ]
 
-{ #category : #comparing }
-SBStBasicMethod >> = anotherSBStBasicMethod [
-
-	^ anotherSBStBasicMethod class == self class 
-		and: [anotherSBStBasicMethod compiledMethod class ~= self class]
-		and: [anotherSBStBasicMethod compiledMethod equivalentTo: self compiledMethod]
-]
-
 { #category : #accessing }
 SBStBasicMethod >> actualReceiver [
 
