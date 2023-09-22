@@ -78,7 +78,7 @@ SBCursorPosition >> cursorPositionsIn: aContainer [
 SBCursorPosition >> cursorPositionsIn: aContainer do: aBlock [
 	" enumerate all possible cursor positions recursively "
 
-	aContainer cursorPositionsDo: aBlock
+	aContainer cursorPositionsDo: [:pos | pos block selectable ifTrue: [aBlock value: pos]]
 ]
 
 { #category : #'as yet unclassified' }

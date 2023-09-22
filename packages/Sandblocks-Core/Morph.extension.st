@@ -135,7 +135,7 @@ Morph >> copyBlock [
 { #category : #'*Sandblocks-Core' }
 Morph >> cursorPositionsDo: aBlock [
 
-	self cursorPositionsDo: aBlock shallow: false
+	self cursorPositionsDo: [:pos | pos block selectable ifTrue: [aBlock value: pos]] shallow: false
 ]
 
 { #category : #'*Sandblocks-Core' }

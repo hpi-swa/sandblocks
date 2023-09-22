@@ -331,7 +331,9 @@ SBBlockCursor >> morphicLayerNumber [
 { #category : #api }
 SBBlockCursor >> moveCursorClick: aBlock at: aPoint [
 
-	self cursorPosition: (self cursorForBlock: aBlock at: aPoint) explicitMove: true axis: #none
+	| cursor |
+	cursor := self cursorForBlock: aBlock at: aPoint.
+	cursor block selectable ifTrue: [self cursorPosition: cursor explicitMove: true axis: #none]
 ]
 
 { #category : #api }
@@ -568,7 +570,7 @@ SBBlockCursor >> select: aBlock [
 
 	aBlock
 		ifNil: [self cursorPosition: SBCursorNone new explicitMove: false axis: #none]
-		ifNotNil: [self cursorPosition: (self cursorForBlock: aBlock at: nil) explicitMove: false axis: #none]
+		ifNotNil: [aBlock selectable ifTrue: [self cursorPosition: (self cursorForBlock: aBlock at: nil) explicitMove: false axis: #none]]
 ]
 
 { #category : #api }

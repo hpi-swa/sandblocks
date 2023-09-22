@@ -50,9 +50,10 @@ SBHoverDecorator >> position: aPoint [
 			c := self morph sandblockEditor cursor
 				cursorForBlock: self morph
 				at: position.
-			(c isKindOf: SBCursorText)
+			c := (c isKindOf: SBCursorText)
 				ifTrue: [SBCursorSelect new block: c block]
-				ifFalse: [c]]
+				ifFalse: [c].
+			c block selectable ifTrue: [c] ifFalse: [nil]]
 		ifFalse: [nil].
 	newCursor ~= cursor ifTrue: [
 		cursor ifNotNil: [self morph invalidRect: cursor bounds].

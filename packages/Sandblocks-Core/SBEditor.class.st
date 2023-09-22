@@ -1537,9 +1537,10 @@ SBEditor >> search [
 { #category : #selection }
 SBEditor >> select: aBlock [
 
-	(aBlock notNil and: [aBlock isTextMorph and: [aBlock containingSandblock textMorphs includes: aBlock]]) ifTrue: [
-		^ self startInput: aBlock containingSandblock at: 9e8 replacingContents: false in: aBlock].
-
+	(aBlock isNil or: [aBlock isSandblock not or: [aBlock selectable]]) ifFalse: [^ self].
+	
+	(aBlock notNil and: [aBlock isTextMorph and: [aBlock containingSandblock textMorphs includes: aBlock]]) ifTrue: [^ self startInput: aBlock containingSandblock at: 900000000 replacingContents: false in: aBlock].
+	
 	self assert: (aBlock isNil or: [aBlock isSandblock]).
 	self cursor select: aBlock
 ]

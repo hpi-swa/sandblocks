@@ -1177,10 +1177,12 @@ SBBlock >> ensureVisible [
 	
 	self isInWorld ifTrue: [ | show |
 		show := self fullBounds.
-		self allOwnersDo: [:o |
-			(o isKindOf: ScrollPane) ifTrue: [
-				o scrollToShow: show.
-				show := o fullBounds]].
+		"FIXME: for insert cursors, the block bounds are not relevant but this does not belong here (assumption of selection that is not in ensureVisible)"
+		self sandblockEditor cursor mode = #insert ifFalse: [
+			self allOwnersDo: [:o |
+				(o isKindOf: ScrollPane) ifTrue: [
+					o scrollToShow: show.
+					show := o fullBounds]]].
 		
 		self sandblockEditor ifNotNil: [:e |
 			e scrollToShow: (e cursor cursorPosition block = self
@@ -1684,7 +1686,7 @@ SBBlock >> isScope [
 { #category : #testing }
 SBBlock >> isSelectable [
 
-	^ true
+	^ self selectable
 ]
 
 { #category : #testing }
@@ -2660,6 +2662,18 @@ SBBlock >> selectToplevelTowards: aSideSymbol [
 	(self containingToplevel
 		closestAdjacentFrom: (aSideSymbol, 'Center') asSymbol
 		to: (opposite, 'Center') asSymbol) select
+]
+
+{ #category : #accessing }
+SBBlock >> selectable [
+
+	^ self valueOfProperty: #selectable ifAbsent: true
+]
+
+{ #category : #accessing }
+SBBlock >> selectable: aBoolean [
+
+	self allMorphsDo: [:m | m setProperty: #selectable toValue: aBoolean]
 ]
 
 { #category : #callbacks }
