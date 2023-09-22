@@ -1714,6 +1714,12 @@ SBEditor >> togglePalette [
 			paletteContainer selectionChanged: self selection]
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> transformToEditorSpace: aRectangle from: aMorph [
+
+	^ (aMorph bounds: aRectangle in: (aMorph ownerSatisfying: [:o | o owner = self canvas scroller])) rounded
+]
+
 { #category : #accessing }
 SBEditor >> trash [
 

@@ -55,7 +55,7 @@ SBPopup >> showBelow: aBlock closeOnDeselect: aBoolean [
 	editor := aBlock sandblockEditor.
 	self assert: editor notNil.
 	aBlock ensureLayouted.
-	self position: aBlock bottomLeft.
+	self position: aBlock boundsInEditor bottomLeft rounded.
 	editor openMorph: self.
 	
 	aBoolean ifTrue: [

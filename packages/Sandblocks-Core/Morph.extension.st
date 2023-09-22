@@ -77,6 +77,12 @@ Morph >> blocksAt: aPoint do: aBlock [
 	(self isSandblock and: [self bounds containsPoint: aPoint]) ifTrue: [aBlock value: self]
 ]
 
+{ #category : #'*Sandblocks-Core-geometry-override' }
+Morph >> boundsInEditor [
+
+	^ self sandblockEditor transformToEditorSpace: self bounds from: self
+]
+
 { #category : #'*Sandblocks-Core-layout' }
 Morph >> calculateSizeForWidth: aNumber [
 

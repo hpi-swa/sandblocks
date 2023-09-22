@@ -356,6 +356,12 @@ SBBlock >> blockFor: anObject withInterfaces: aCollection ifOpen: aBlock ifClose
 		ifNone: anotherBlock
 ]
 
+{ #category : #layout }
+SBBlock >> boundsInEditor [
+
+	^ self sandblockEditor transformToEditorSpace: self bounds from: self
+]
+
 { #category : #actions }
 SBBlock >> browse [
 	<action>
@@ -1176,6 +1182,7 @@ SBBlock >> ensureVisible [
 	(method ~= self and: [method notNil and: [self visibleInWorld not]]) ifTrue: [method ensureExpanded].
 	
 	self isInWorld ifTrue: [ | show |
+		self allOwnersDo: #fullBounds.
 		show := self fullBounds.
 		"FIXME: for insert cursors, the block bounds are not relevant but this does not belong here (assumption of selection that is not in ensureVisible)"
 		self sandblockEditor cursor mode = #insert ifFalse: [
