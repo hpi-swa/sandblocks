@@ -135,6 +135,12 @@ SBButton >> hovered: aBoolean [
 ]
 
 { #category : #initialization }
+SBButton >> icon: anIconMorph do: aBlock [
+
+	self widget: anIconMorph shortcut: nil do: aBlock
+]
+
+{ #category : #initialization }
 SBButton >> icon: anIconMorph label: aString do: aBlock [
 
 	self example: [SBButton new] args: [{SBIcon iconUndo. $u asSandblockShortcut. [nil]}] label: 'icon'.

@@ -1175,8 +1175,17 @@ SBBlock >> ensureVisible [
 	method := self containingArtefact.
 	(method ~= self and: [method notNil and: [self visibleInWorld not]]) ifTrue: [method ensureExpanded].
 	
-	self isInWorld ifTrue: [self sandblockEditor ifNotNil: [:e |
-		e scrollToShow: (e cursor cursorPosition block = self ifTrue: [e cursor cursorPosition] ifFalse: [self])]]
+	self isInWorld ifTrue: [ | show |
+		show := self fullBounds.
+		self allOwnersDo: [:o |
+			(o isKindOf: ScrollPane) ifTrue: [
+				o scrollToShow: show.
+				show := o fullBounds]].
+		
+		self sandblockEditor ifNotNil: [:e |
+			e scrollToShow: (e cursor cursorPosition block = self
+				ifTrue: [e cursor cursorPosition]
+				ifFalse: [self])]]
 ]
 
 { #category : #actions }
