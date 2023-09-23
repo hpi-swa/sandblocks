@@ -1187,7 +1187,7 @@ SBBlock >> ensureVisible [
 		"FIXME: for insert cursors, the block bounds are not relevant but this does not belong here (assumption of selection that is not in ensureVisible)"
 		self sandblockEditor cursor mode = #insert ifFalse: [
 			self allOwnersDo: [:o |
-				(o isKindOf: ScrollPane) ifTrue: [
+				((o isKindOf: ScrollPane) and: [o ~= self sandblockEditor canvas]) ifTrue: [
 					o scrollToShow: show.
 					show := o fullBounds]]].
 		
