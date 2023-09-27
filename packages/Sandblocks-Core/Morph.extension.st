@@ -60,7 +60,7 @@ Morph >> basicCursorPositionsDo: aBlock shallow: aBoolean [
 	self visibleSubmorphsDo: [:morph |
 		morph isSandblock ifTrue: [self containingSandblock insertCursorNear: morph before: true do: aBlock].
 		morph isTextMorph ifTrue: [
-			morph containingSandblock startInputCommand ifNotNil: [:command |
+			(morph containingSandblock startInputCommandIn: morph) ifNotNil: [:command |
 				aBlock value: (SBCursorText new
 					block: morph containingSandblock;
 					currentCommand: command)]].
@@ -342,6 +342,12 @@ Morph >> morphAfterThat: aBlock [
 	next := next submorphAfter.
 	next  ifNil: [^ nil].
 	(aBlock value: next) ifTrue: [^ next]] repeat
+]
+
+{ #category : #'*Sandblocks-Core-hierarchy' }
+Morph >> morphBeforeOrAfter: aBeforeBoolean [
+
+	^ aBeforeBoolean ifTrue: [self submorphBefore] ifFalse: [self submorphAfter]
 ]
 
 { #category : #'*Sandblocks-Core' }

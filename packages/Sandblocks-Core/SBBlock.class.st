@@ -86,7 +86,7 @@ SBBlock >> actions [
 SBBlock >> activeTextMorph [
 
 	| candidate |
-	candidate := self sandblockEditor currentInputCommand ifNotNil: #textMorph.
+	candidate := (self sandblockEditor ifNil: [^ nil]) currentInputCommand ifNotNil: #textMorph.
 	candidate ifNil: [^ nil].
 	(self textMorphs includes: candidate) ifFalse: [^ nil].
 	^ candidate
@@ -2073,7 +2073,7 @@ SBBlock >> objectInterfaceNear: aBlock at: aSymbol [
 SBBlock >> open [
 	" tries to find the current SBEditor and open our block in it "
 
-	SBExecutionEnvironment value sandblockEditor
+	(SBExecutionEnvironment value ifNotNil: #sandblockEditor)
 		ifNotNil: [:editor | editor openMorphInView: self]
 		ifNil: [self error: 'No editor found in execution context']
 ]
