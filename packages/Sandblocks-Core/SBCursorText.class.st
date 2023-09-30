@@ -26,7 +26,7 @@ SBCursorText >> applyCommandIn: anEditor [
 			" applying a command will cause a cursor change, however we are in the middle of a cursor change so prohibit any changes here "
 			currentCommand selectAfter: #none.
 			anEditor do: currentCommand]
-		ifFalse: [anEditor history noMoreMerge]
+		ifFalse: [SBToggledCode comment: '' active: 0 do: {[anEditor history noMoreMerge]}]
 ]
 
 { #category : #'as yet unclassified' }

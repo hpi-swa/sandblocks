@@ -726,6 +726,7 @@ Morph >> storeOn: aStream [
 { #category : #'*Sandblocks-Core' }
 Morph >> submorphIndex [
 
+	self owner ifNil: [^ 1].
 	^ self owner submorphs indexOf: self
 ]
 
