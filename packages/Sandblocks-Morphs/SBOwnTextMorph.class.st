@@ -274,7 +274,10 @@ SBOwnTextMorph >> drawString: aString on: aCanvas at: aPoint font: aFont color: 
 SBOwnTextMorph >> effectiveEmphasis [
 
 	^ self emphasis == #derive
-		ifTrue: [self containingSandblock emphasis]
+		ifTrue: [
+			self containingSandblock
+				ifNotNil: #emphasis
+				ifNil: [TextEmphasis normal]]
 		ifFalse: [self emphasis]
 ]
 

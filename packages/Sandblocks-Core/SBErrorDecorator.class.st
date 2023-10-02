@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBBlockDecorator,
 	#instVars : [
 		'message',
-		'subtle'
+		'subtle',
+		'fixActions'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -20,6 +21,12 @@ SBErrorDecorator >> detached: aMorph [
 
 	aMorph balloonText: nil.
 	super detached: aMorph
+]
+
+{ #category : #'as yet unclassified' }
+SBErrorDecorator >> fixActions: aCollection [
+
+	fixActions := aCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -46,4 +53,11 @@ SBErrorDecorator >> subtle [
 SBErrorDecorator >> subtle: aBoolean [
 
 	subtle := aBoolean
+]
+
+{ #category : #'as yet unclassified' }
+SBErrorDecorator >> tryFixIfFail: aBlock [
+
+	(fixActions isNil or: [fixActions isEmpty]) ifTrue: [^ aBlock value].
+	self morph proposeCodeActions: fixActions for: self morph
 ]

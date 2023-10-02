@@ -20,7 +20,7 @@ SBDeleteCommand >> do [
 	oldIndex := oldOwner submorphIndexOf: target.
 	oldOwner removeMorph: target.
 	
-	^ nextSelection isInEditor ifTrue: [nextSelection] ifFalse: [nil]
+	^ (nextSelection ifNotNil: #isInEditor ifNil: [false]) ifTrue: [nextSelection] ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }

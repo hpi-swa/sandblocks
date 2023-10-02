@@ -112,7 +112,7 @@ SBCommand >> artefact: anObject [
 SBCommand >> artefactFrom: aMorph [
 
 	aMorph ifNotNil: [
-		self artefact: aMorph containingSandblock containingArtefact]
+		self artefact: (aMorph containingSandblock ifNotNil: #containingArtefact)]
 ]
 
 { #category : #testing }

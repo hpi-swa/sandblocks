@@ -156,7 +156,9 @@ SBCursorText >> leaveIn: anEditor with: aCursor for: aNewPosition [
 
 	self applyCommandIn: anEditor.
 	self textMorph stopEditing.
-	self textMorph containingSandblock deselectedTextMorph: self textMorph for: aNewPosition cursor: aCursor
+	
+	self textMorph isInWorld ifTrue: [
+		self textMorph containingSandblock deselectedTextMorph: self textMorph for: aNewPosition cursor: aCursor]
 ]
 
 { #category : #'as yet unclassified' }

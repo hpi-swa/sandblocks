@@ -1765,6 +1765,12 @@ SBBlock >> keyStroke: anEvent [
 		self batchedChangeStep]
 ]
 
+{ #category : #accessing }
+SBBlock >> language [
+
+	^ nil
+]
+
 { #category : #hierarchy }
 SBBlock >> lastDeepChild [
 

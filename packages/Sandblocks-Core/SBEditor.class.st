@@ -209,6 +209,7 @@ SBEditor >> batchedChangeStep: aBlock [
 	" send this message when you are updating the tree rapidly for each update, but don't want to submit a command for each update, only at the end "
 	artefact := aBlock containingArtefact.
 	self history markChanged: {artefact} redraw: false.
+	self triggerEvent: #batchedChange with: artefact.
 	(self compileTime = #compileOnChange and: [artefact notNil]) ifTrue: [
 		self save: artefact tryFixing: false quick: true.
 		artefact triggerEvent: #changed.
@@ -416,10 +417,13 @@ SBEditor >> configurationString [
 { #category : #'as yet unclassified' }
 SBEditor >> connectFrom: aMorph to: anotherMorph [
 
-	scroll scroller addMorph: ((SBConnectorLine new connectorType: #dots)
+	| line |
+	line := (SBConnectorLine new connectorType: #dots)
 		color: ((Color r: 0.0 g: 0.0 b: 0.0) alpha: 0.3);
 		connect: aMorph to: anotherMorph;
-		yourself)
+		yourself.
+	scroll scroller addMorph: line.
+	^ line
 ]
 
 { #category : #hierarchy }

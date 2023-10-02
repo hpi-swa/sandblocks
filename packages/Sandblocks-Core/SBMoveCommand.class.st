@@ -20,10 +20,17 @@ SBMoveCommand >> container: aMorph [
 { #category : #'as yet unclassified' }
 SBMoveCommand >> do [
 
-	oldOwner := morph owner.
-	oldIndex := oldOwner submorphIndexOf: morph.
+	oldOwner ifNil: [
+		oldOwner := morph owner.
+		oldIndex := oldOwner submorphIndexOf: morph].
 	container addMorph: morph asElementNumber: index.
 	^ morph
+]
+
+{ #category : #'as yet unclassified' }
+SBMoveCommand >> index [
+
+	^ index
 ]
 
 { #category : #'as yet unclassified' }
@@ -36,6 +43,14 @@ SBMoveCommand >> index: aNumber [
 SBMoveCommand >> morph: aMorph [
 
 	morph := aMorph
+]
+
+{ #category : #'as yet unclassified' }
+SBMoveCommand >> notePosition [
+
+	self artefactFrom: self setArtefactFrom.
+	oldOwner := morph owner.
+	oldIndex := oldOwner submorphIndexOf: morph
 ]
 
 { #category : #'as yet unclassified' }
