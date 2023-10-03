@@ -39,6 +39,12 @@ SBOwnTextMorph >> bold [
 ]
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> characterAfterCursor [
+
+	^ self cursor > self contents size ifTrue: [nil] ifFalse: [self contents at: self cursor]
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> characterBeforeCursor [
 
 	^ self cursor = 1 ifTrue: [nil] ifFalse: [self contents at: self cursor - 1]

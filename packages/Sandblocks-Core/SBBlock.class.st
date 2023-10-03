@@ -58,6 +58,34 @@ SBBlock class >> navigation: aNavigation [
 	Navigation := aNavigation
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock class >> sortedSuggestions: aCollection for: aString addAll: aBoolean max: aNumber [
+
+	| exactMatches fuzzyMatches list |
+	"sort list of provided suggestion strings by putting exact matches first and clamps to maxSuggestions.
+
+NOTE: may mutate aCollection"
+	list := (aCollection isKindOf: OrderedCollection)
+		ifTrue: [aCollection]
+		ifFalse: [OrderedCollection withAll: aCollection].
+	exactMatches := (Array streamContents: [:stream |
+		list removeAllSuchThat: [:sel |
+			(sel sandblockBeginsWith: aString)
+				ifTrue: [stream nextPut: sel];
+				yourself]]) sort: #size ascending.
+	fuzzyMatches := (Array streamContents: [:stream |
+		list removeAllSuchThat: [:sel |
+			(sel sandblockMatch: aString)
+				ifTrue: [stream nextPut: sel];
+				yourself]]) sort: #size ascending.
+	^ (Array
+		streamContents: [:stream |
+			stream nextPutAll: exactMatches.
+			stream nextPutAll: fuzzyMatches.
+			aBoolean ifTrue: [stream nextPutAll: list]]
+		limitedTo: aNumber) withoutDuplicates
+]
+
 { #category : #input }
 SBBlock >> absorbsInput: anEvent [
 	" a chance for you to block this event from being dispatched as shortcut "
@@ -666,7 +694,7 @@ SBBlock >> containingToplevel [
 { #category : #accessing }
 SBBlock >> contents [
 
-	^ self currentTextMorph ifNotNil: [:t | t contents]
+	^ self currentTextMorph ifNotNil: [:t | t contents] ifNil: ['']
 ]
 
 { #category : #accessing }
@@ -2751,31 +2779,7 @@ SBBlock >> slurpFront [
 { #category : #suggestions }
 SBBlock >> sortedSuggestions: aCollection for: aString [
 
-	| exactMatches fuzzyMatches list |
-	"sort list of provided suggestion strings by putting exact matches first and clamps to maxSuggestions.
-
-NOTE: may mutate aCollection"
-	list := (aCollection isKindOf: OrderedCollection)
-		ifTrue: [aCollection]
-		ifFalse: [OrderedCollection withAll: aCollection].
-	
-	exactMatches := (Array streamContents: [:stream |
-		list removeAllSuchThat: [:sel |
-			(sel sandblockBeginsWith: aString)
-				ifTrue: [stream nextPut: sel];
-				yourself]]) sort: #size ascending.
-	fuzzyMatches := (Array streamContents: [:stream |
-		list removeAllSuchThat: [:sel |
-			(sel sandblockMatch: aString)
-				ifTrue: [stream nextPut: sel];
-				yourself]]) sort: #size ascending.
-	
-	^ (Array
-		streamContents: [:stream |
-			stream nextPutAll: exactMatches.
-			stream nextPutAll: fuzzyMatches.
-			self suggestAlways ifTrue: [stream nextPutAll: list]]
-		limitedTo: self maxSuggestions) withoutDuplicates
+	^ self class sortedSuggestions: aCollection for: aString addAll: self suggestAlways max: self maxSuggestions
 ]
 
 { #category : #'ast helpers' }
