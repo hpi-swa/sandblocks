@@ -2710,7 +2710,7 @@ SBBlock >> shouldAutocomplete [
 { #category : #suggestions }
 SBBlock >> shouldSuggest [
 
-	^ self suggestAlways or: [self activeTextMorph contents size >= 2]
+	^ self suggestAlways or: [self activeTextMorph notNil and: [self activeTextMorph contents size >= 2]]
 ]
 
 { #category : #'as yet unclassified' }
