@@ -1676,6 +1676,12 @@ SBEditor >> summarizeActionsDuring: aBlock [
 	history summarizeActionsDuring: aBlock
 ]
 
+{ #category : #'as yet unclassified' }
+SBEditor >> textFocus [
+
+	^ self selection activeTextMorph
+]
+
 { #category : #actions }
 SBEditor >> toggleFullscreen [
 	<globalAction>
