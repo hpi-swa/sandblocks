@@ -30,6 +30,12 @@ SBErrorDecorator >> fixActions: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBErrorDecorator >> message [
+
+	^ message
+]
+
+{ #category : #'as yet unclassified' }
 SBErrorDecorator >> message: aString [
 
 	message := aString
@@ -58,6 +64,9 @@ SBErrorDecorator >> subtle: aBoolean [
 { #category : #'as yet unclassified' }
 SBErrorDecorator >> tryFixIfFail: aBlock [
 
+	| index |
 	(fixActions isNil or: [fixActions isEmpty]) ifTrue: [^ aBlock value].
-	self morph proposeCodeActions: fixActions for: self morph
+	
+	index := UIManager default chooseFrom: (fixActions collect: #label).
+	index > 0 ifTrue: [(fixActions at: index) do] ifFalse: [^ aBlock value]
 ]

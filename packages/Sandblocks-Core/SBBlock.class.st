@@ -1165,6 +1165,12 @@ SBBlock >> dynamicNumberOfChildren [
 	^ self fixedNumberOfChildren not
 ]
 
+{ #category : #'colors and color policies' }
+SBBlock >> emphasis [
+
+	^ self colorPolicy defaultEmphasis
+]
+
 { #category : #actions }
 SBBlock >> endInput [
 	<inputAction>

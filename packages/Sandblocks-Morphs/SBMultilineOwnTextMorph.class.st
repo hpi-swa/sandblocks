@@ -313,6 +313,16 @@ SBMultilineOwnTextMorph >> selectionBounds [
 ]
 
 { #category : #'as yet unclassified' }
+SBMultilineOwnTextMorph >> setBoundsDirect: aRectangle [
+
+	| delta |
+	delta := aRectangle origin - bounds origin.
+	paragraph ifNotNil: [:p | p moveBy: delta].
+	
+	super setBoundsDirect: aRectangle
+]
+
+{ #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> showPlaceholder [
 
 	^ self contents isEmpty

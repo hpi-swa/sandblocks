@@ -1268,7 +1268,9 @@ SBEditor >> performForSelection: anActionSymbol [
 	self selection notNil ifTrue: [(self selection performAction: anActionSymbol) ifTrue: [^ true]].
 	
 	globalShortcutListeners do: [:listener |
-		(listener lookupGlobalAction: anActionSymbol) ifNotNil: [listener perform: anActionSymbol. ^ true]].
+		(listener lookupGlobalAction: anActionSymbol) ifNotNil: [
+			listener perform: anActionSymbol.
+			^ true]].
 	
 	^ false
 ]
@@ -1679,7 +1681,7 @@ SBEditor >> summarizeActionsDuring: aBlock [
 { #category : #'as yet unclassified' }
 SBEditor >> textFocus [
 
-	^ self selection activeTextMorph
+	^ self selection ifNotNil: #activeTextMorph
 ]
 
 { #category : #actions }

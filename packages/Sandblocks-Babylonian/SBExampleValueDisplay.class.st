@@ -14,13 +14,13 @@ Class {
 }
 
 { #category : #accessing }
-SBExampleValueDisplay >> exampleFinished: anExample [ 
+SBExampleValueDisplay >> exampleFinished: anExample [
 
 	display exampleFinished: anExample.
 	
-	statusLabel contents: (hadValue
-		ifTrue: ['']
-		ifFalse:  ['- Not reached -'])
+	statusLabel
+		contents: (hadValue ifTrue: [''] ifFalse: ['- Not reached -']);
+		visible: hadValue not
 ]
 
 { #category : #accessing }
@@ -69,11 +69,13 @@ SBExampleValueDisplay >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
-		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand gap])
+		data: ((self submorphs select: [:s | s visible])
+			collect: #layoutCommands
+			separatedBy: [SBAlgebraCommand gap])
 ]
 
 { #category : #naming }
-SBExampleValueDisplay >> name:  aString [
+SBExampleValueDisplay >> name: aString [
 
 	label contents: aString
 ]
@@ -83,5 +85,6 @@ SBExampleValueDisplay >> reportValue: anObject name: aString [
 
 	display reportValue: anObject.
 	label contents: aString.
+	label visible: aString notEmpty.
 	hadValue := true
 ]
