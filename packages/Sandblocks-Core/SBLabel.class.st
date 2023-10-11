@@ -213,6 +213,14 @@ SBLabel >> symbols [
 ]
 
 { #category : #'as yet unclassified' }
+SBLabel >> text: aSBOwnTextMorph [
+
+	text ifNotNil: [text abandon]. 
+	text := aSBOwnTextMorph.
+	self addMorphBack: text.
+]
+
+{ #category : #'as yet unclassified' }
 SBLabel >> textBlock: aBlock [
 
 	self label: (Compiler evaluate: aBlock sourceString) value

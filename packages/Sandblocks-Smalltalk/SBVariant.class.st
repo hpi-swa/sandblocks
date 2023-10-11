@@ -193,9 +193,10 @@ SBVariant >> initialize [
 	super initialize.
 	
 	name := SBLabel new
-		contents: 'variant X';
-		layoutInset: 5 @ 5;
-		hResizing: #spaceFill.
+		text: (SBOwnTextMorph new
+			emphasis: TextEmphasis italic;
+			small);
+		contents: 'Variant X'.
 	self widget: (SBTabView
 		namedBlocks: {SBNamedBlock block: (SBStBlockBody emptyWithDeclarations: {'a'. 'c'}) named: 'Code'}
 		activeIndex: 1).
@@ -206,7 +207,7 @@ SBVariant >> initialize [
 		cellGap: 2.0;
 		listDirection: #topToBottom;
 		changeTableLayout;
-		addAllMorphsBack: {name. widget};
+		addAllMorphsBack: {name . widget};
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
 ]
@@ -225,6 +226,7 @@ SBVariant >> name [
 
 { #category : #accessing }
 SBVariant >> name: aString [
+
 	name contents: aString
 ]
 
