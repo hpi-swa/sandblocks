@@ -123,7 +123,9 @@ SBExampleWatch >> artefactSaved: aBlock [
 { #category : #copying }
 SBExampleWatch >> asInactiveCopy [
 
-	^ (self veryDeepCopy) beInactive. 
+	^ self veryDeepCopy 
+		beInactive
+		setWatchedExpressionUneditable. 
 ]
 
 { #category : #accessing }
@@ -371,6 +373,12 @@ SBExampleWatch >> reportValue: anObject for: anExample [
 	exampleToValues
 		at: anExample
 		ifPresent: [:values | values add: anObject]
+]
+
+{ #category : #accessing }
+SBExampleWatch >> setWatchedExpressionUneditable [
+
+	watchedExpression selectable: false
 ]
 
 { #category : #accessing }
