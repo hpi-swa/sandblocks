@@ -86,6 +86,22 @@ NOTE: may mutate aCollection"
 		limitedTo: aNumber) withoutDuplicates
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock class >> sortedSymbolSuggestionsFor: aString max: aNumber [
+
+	| exactMatches fuzzyMatches |
+	exactMatches := OrderedCollection new.
+	fuzzyMatches := OrderedCollection new.
+	Symbol allSymbolTablesDo: [:sym |
+		(sym sandblockBeginsWith: aString) ifTrue: [exactMatches add: sym].
+		exactMatches size < aNumber ifTrue: [(sym sandblockMatch: aString) ifTrue: [fuzzyMatches add: sym]]].
+	
+	exactMatches sort: #size ascending.
+	exactMatches size >= aNumber ifTrue: [^ exactMatches first: aNumber].
+	exactMatches addAll: ((fuzzyMatches sort: #size ascending) first: (aNumber - exactMatches size min: fuzzyMatches size)).
+	^ exactMatches
+]
+
 { #category : #input }
 SBBlock >> absorbsInput: anEvent [
 	" a chance for you to block this event from being dispatched as shortcut "

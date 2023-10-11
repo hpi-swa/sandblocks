@@ -103,7 +103,7 @@ String >> parseInMethod [
 { #category : #'*Sandblocks-Core' }
 String >> sandblockBeginsWith: aString [
 
-	aString ifEmpty: [^ true].
+	aString isEmpty ifTrue: [^ true].
 	^ self beginsWith: aString
 ]
 
@@ -112,7 +112,7 @@ String >> sandblockMatch: aString [
 	" matching specific to what appears a good heuristic in auto completion "
 	" first two letters are exact match, afterwards allow any combination of successive letters "
 
-	aString ifEmpty: [^ true].
+	aString isEmpty ifTrue: [^ true].
 	self size < aString size ifTrue: [^ false].
 	(aString size < 2 or: [self size < 2]) ifTrue: [^ self asLowercase beginsWith: aString asLowercase].
 	^ aString size > 1 and: [
