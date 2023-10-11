@@ -8,7 +8,7 @@ Class {
 	#instVars : [
 		'referencedVariants'
 	],
-	#category : #'Sandblocks-Smalltalk'
+	#category : #'Sandblocks-Utils'
 }
 
 { #category : #utils }

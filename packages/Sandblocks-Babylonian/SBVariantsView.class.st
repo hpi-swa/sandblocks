@@ -1,7 +1,7 @@
 Class {
 	#name : #SBVariantsView,
 	#superclass : #SBExploriantsView,
-	#category : #'Sandblocks-Core'
+	#category : #'Sandblocks-Babylonian'
 }
 
 { #category : #building }

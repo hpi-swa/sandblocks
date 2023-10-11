@@ -4,7 +4,7 @@ Class {
 	#classInstVars : [
 		'uniqueInstance'
 	],
-	#category : #'Sandblocks-Core'
+	#category : #'Sandblocks-Babylonian'
 }
 
 { #category : #accessing }

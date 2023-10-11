@@ -1,7 +1,7 @@
 Class {
 	#name : #SBExploriantsView,
 	#superclass : #SBNamedBlock,
-	#category : #'Sandblocks-Core'
+	#category : #'Sandblocks-Babylonian'
 }
 
 { #category : #'instance creation' }
