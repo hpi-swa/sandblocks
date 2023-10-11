@@ -19,7 +19,6 @@ Class {
 { #category : #'as yet unclassified' }
 SBWatchView class >> saving: anInteger [
 	"Any value < 1 will result in saving all reported values"
-
 	
 	^ self new numSavedValues: anInteger
 ]
@@ -29,6 +28,18 @@ SBWatchView >> addValue: anObject [
 
 	(watchValues size >= numSavedValues and: [numSavedValues > 0]) ifTrue: [watchValues removeFirst].
 	^ watchValues addLast: (SBWatchValue value: anObject sbSnapshot identityHash: anObject identityHash)
+]
+
+{ #category : #'insert/delete' }
+SBWatchView >> canDelete [
+
+	^ false
+]
+
+{ #category : #'insert/delete' }
+SBWatchView >> canDeleteChild: aBlock [
+
+	^ false
 ]
 
 { #category : #display }
@@ -62,6 +73,12 @@ SBWatchView >> count [
 	^ count contents
 ]
 
+{ #category : #accessing }
+SBWatchView >> count: aNumber [
+
+	count contents: aNumber asString
+]
+
 { #category : #display }
 SBWatchView >> defaultDisplay [
 
@@ -78,6 +95,12 @@ SBWatchView >> defaultDisplay [
 			scrollBarThickness: self scrollBarHeight;
 			width: 20;
 			height: 20)
+]
+
+{ #category : #'insert/delete' }
+SBWatchView >> deleteCommandFor: aBlock [
+
+	^ nil
 ]
 
 { #category : #accessing }
@@ -163,12 +186,6 @@ SBWatchView >> maxWidth [
 	^ 450
 ]
 
-{ #category : #'event handling' }
-SBWatchView >> noValue [
-
-	self scroller removeAllMorphs 
-]
-
 { #category : #accessing }
 SBWatchView >> numSavedValues: anInteger [
 	"Private"
@@ -200,6 +217,17 @@ SBWatchView >> reportValue: anObject [
 
 	self addValue: anObject.
 	self incrementCount.
+	
+	updateScheduled ifFalse: [
+		updateScheduled := true.
+		Project current addDeferredUIMessage: [self updateDisplay]]
+]
+
+{ #category : #accessing }
+SBWatchView >> reportValues: aCollectionOfObjects [
+
+	aCollectionOfObjects do: [:anObject | self addValue: anObject].
+	self count: self count contents + aCollectionOfObjects size.
 	
 	updateScheduled ifFalse: [
 		updateScheduled := true.

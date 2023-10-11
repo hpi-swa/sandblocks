@@ -13,6 +13,14 @@ Class {
 	#category : #'Sandblocks-Babylonian'
 }
 
+{ #category : #actions }
+SBExampleValueDisplay >> clear [
+
+	display clear.
+	
+	hadValue := false
+]
+
 { #category : #accessing }
 SBExampleValueDisplay >> exampleFinished: anExample [
 
@@ -27,7 +35,6 @@ SBExampleValueDisplay >> exampleFinished: anExample [
 SBExampleValueDisplay >> exampleStarting: anExample [
 
 	display exampleStarting: anExample.
-	display noValue.
 	
 	statusLabel contents: '...'.
 	hadValue := false.
@@ -87,4 +94,22 @@ SBExampleValueDisplay >> reportValue: anObject name: aString [
 	label contents: aString.
 	label visible: aString notEmpty.
 	hadValue := true
+]
+
+{ #category : #'event handling' }
+SBExampleValueDisplay >> reportValues: aCollectionOfObjects name: aString [
+
+	display reportValues: aCollectionOfObjects.
+	label contents: aString.
+	hadValue := true
+]
+
+{ #category : #actions }
+SBExampleValueDisplay >> updateDisplay [ 
+
+	display updateDisplay.
+	
+	statusLabel contents: (hadValue
+		ifTrue: ['']
+		ifFalse:  ['- Not reached -'])
 ]

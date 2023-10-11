@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBStSubstitution,
 	#instVars : [
 		'name',
-		'widget'
+		'widget',
+		'id'
 	],
 	#category : #'Sandblocks-Smalltalk'
 }
@@ -32,7 +33,13 @@ SBVariant class >> matches: aBlock [
 	
 	^ aBlock receiver isBinding
 		and: [aBlock receiver contents = 'SBVariant']
-		and: [aBlock selector = 'named:associations:activeIndex:']
+		and: [aBlock selector = self matchingSelectors first]
+]
+
+{ #category : #constants }
+SBVariant class >> matchingSelectors [
+
+	^ #(#named:associations:activeIndex:id:)
 ]
 
 { #category : #'instance creation' }
@@ -46,9 +53,23 @@ SBVariant class >> named: aString alternatives: aCollectionOfNamedBlocks activeI
 ]
 
 { #category : #'instance creation' }
-SBVariant class >> named: aString associations: aCollectionOfAssociations activeIndex: aNumber [
+SBVariant class >> named: aString alternatives: aCollectionOfNamedBlocks activeIndex: aNumber id: uuid [
 
-	^ aNumber > 0 ifTrue: [(aCollectionOfAssociations at: aNumber) value value] ifFalse: [nil]
+	^ self new
+		named: aString
+		alternatives: aCollectionOfNamedBlocks
+		activeIndex: aNumber
+		id: uuid
+		
+]
+
+{ #category : #'instance creation' }
+SBVariant class >> named: aString associations: aCollectionOfAssociations activeIndex: aNumber id: uuid [
+
+	aNumber <= 0 ifTrue: [^ nil].
+	^ SBActiveVariantPermutation value 
+		ifNil: [(aCollectionOfAssociations at: aNumber) value value]
+		ifNotNil: [(aCollectionOfAssociations at: (SBActiveVariantPermutation value at: uuid)) value value].
 		
 ]
 
@@ -65,6 +86,7 @@ SBVariant class >> newFor: aBlock [
 		named: aBlock arguments first contents
 		alternatives: (aBlock arguments second childSandblocks collect: [:anAssociation | SBNamedBlock block: (anAssociation arguments first) named: (anAssociation receiver contents)])
 		activeIndex: aBlock arguments third parsedContents
+		id: aBlock arguments fourth contents
 ]
 
 { #category : #shortcuts }
@@ -72,6 +94,12 @@ SBVariant class >> registerShortcuts: aProvider [
 
 	aProvider registerShortcut: $f command do: #replaceSelfWithChosen.
 	
+]
+
+{ #category : #comparing }
+SBVariant >> = otherVariant [
+
+	^ otherVariant class = self class and: [otherVariant id = self id]
 ]
 
 { #category : #accessing }
@@ -99,6 +127,45 @@ SBVariant >> alternatives [
 ]
 
 { #category : #accessing }
+SBVariant >> alternativesCount [
+
+	^ self widget tabCount
+]
+
+{ #category : #comparing }
+SBVariant >> alternativesEqual: otherAlternatives [
+
+	"Private"
+	"Does a cheap version of python's zip and then allSatisfy:"
+	| areSame |
+	areSame := true.
+	^ self alternatives size = otherAlternatives size and: [
+		(1 to: self alternatives size) do: [:index | 
+			areSame := areSame and: [(self alternatives at: index) = (otherAlternatives at: index)]]. 
+			areSame]
+]
+
+{ #category : #converting }
+SBVariant >> asProxy [
+
+	^ SBVariantProxy for: self
+]
+
+{ #category : #accessing }
+SBVariant >> blockAt: anIndex [
+
+	^ self widget blockAt: anIndex
+]
+
+{ #category : #accessing }
+SBVariant >> codeFor: aNamedBlock [
+
+	^ (aNamedBlock block submorphs size > 1) 
+				ifTrue: [aNamedBlock block lastSubmorph]
+				ifFalse: [nil]
+]
+
+{ #category : #accessing }
 SBVariant >> color [
 
 	^ Color transparent
@@ -108,6 +175,16 @@ SBVariant >> color [
 SBVariant >> drawnColor [
 
 	^ Color white
+]
+
+{ #category : #accessing }
+SBVariant >> id [
+	^ id
+]
+
+{ #category : #accessing }
+SBVariant >> id: anObject [
+	id := anObject
 ]
 
 { #category : #initialization }
@@ -122,7 +199,7 @@ SBVariant >> initialize [
 	self widget: (SBTabView
 		namedBlocks: {SBNamedBlock block: (SBStBlockBody emptyWithDeclarations: {'a'. 'c'}) named: 'Code'}
 		activeIndex: 1).
-	
+	id := UUID new asString. 
 	
 	self
 		layoutInset: 0;
@@ -132,6 +209,12 @@ SBVariant >> initialize [
 		addAllMorphsBack: {name. widget};
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
+]
+
+{ #category : #testing }
+SBVariant >> isVariant [ 
+
+	^ true
 ]
 
 { #category : #accessing }
@@ -152,6 +235,13 @@ SBVariant >> named: aString alternatives: aCollectionOfNamedBlocks activeIndex: 
 	self widget namedBlocks: aCollectionOfNamedBlocks activeIndex: aNumber
 ]
 
+{ #category : #initialization }
+SBVariant >> named: aString alternatives: aCollectionOfNamedBlocks activeIndex: aNumber id: uuid [
+
+	self id: uuid.
+	self named: aString alternatives: aCollectionOfNamedBlocks activeIndex: aNumber
+]
+
 { #category : #accessing }
 SBVariant >> namedBlocks [ 
 
@@ -161,22 +251,44 @@ SBVariant >> namedBlocks [
 { #category : #actions }
 SBVariant >> replaceSelfWithBlock: aNamedBlock [
 	
+	| command |
 	"As deleting the last tab also deletes the tab view, we gotta recreate it"
 	self widget: (SBTabView namedBlocks: {aNamedBlock} activeIndex: 1).
 	self addMorphBack: widget.
 	
-	self sandblockEditor do: (SBUnwrapConsecutiveCommand new 
+	command := (self codeFor: widget active)
+		ifNil: [SBDeleteCommand new target: self]
+		ifNotNil: [SBUnwrapConsecutiveCommand new 
 									target: self; 
-									unwrapped: {widget activeBlock lastSubmorph})
+									unwrapped: {(self codeFor: widget active)}].	
+	
+	self sandblockEditor do: command
 ]
 
 { #category : #actions }
 SBVariant >> replaceSelfWithChosen [ 
 	
 	<action>
-	self sandblockEditor do: (SBUnwrapConsecutiveCommand new 
+	| command |
+	command := (self codeFor: widget active)
+		ifNil: [SBDeleteCommand new target: self]
+		ifNotNil: [SBUnwrapConsecutiveCommand new 
 									target: self; 
-									unwrapped: {self activeBlock lastSubmorph})
+									unwrapped: {(self codeFor: widget active)}].	
+	
+	self sandblockEditor do: command
+]
+
+{ #category : #initialization }
+SBVariant >> replaceValuesFrom: anotherVariant [
+
+	self named: anotherVariant name alternatives: anotherVariant alternatives activeIndex: anotherVariant activeIndex  
+]
+
+{ #category : #actions }
+SBVariant >> switchToAlternative: anIndex [
+
+	self widget jumpToTab: anIndex
 ]
 
 { #category : #ui }
@@ -213,11 +325,15 @@ SBVariant >> writeSourceOn: aStream [
 		do: [:aNamedBlock |
 			aNamedBlock name storeOn: aStream.
 			aStream nextPutAll: ' -> ['.
-			aNamedBlock block lastSubmorph writeSourceOn: aStream.
+			(self codeFor: aNamedBlock)  
+				ifNotNil: [(self codeFor: aNamedBlock) writeSourceOn: aStream]
+				ifNil: [aStream nextPutAll: ' '].
 			aStream nextPut: $].
 			]
 		separatedBy: [aStream nextPut: $.].
 	aStream nextPutAll: '} activeIndex: '.
 	self activeIndex storeOn: aStream.
+	aStream nextPutAll: ' id: '.
+	self id storeOn: aStream.
 	aStream nextPutAll: ')'
 ]

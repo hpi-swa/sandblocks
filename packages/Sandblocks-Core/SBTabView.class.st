@@ -160,6 +160,12 @@ SBTabView >> asTabButton: aNamedBlock [
 	^ button
 ]
 
+{ #category : #accessing }
+SBTabView >> blockAt: anIndex [
+
+	^ self namedBlocks at: anIndex
+]
+
 { #category : #ui }
 SBTabView >> buildTabs [
 
@@ -371,7 +377,7 @@ SBTabView >> removeCurrentTab [
 { #category : #tabs }
 SBTabView >> setActive: aNamedBlock [
 
-	self sandblockEditor do: 
+	SBEditor current do: 
 		(self switchCommandFor: (self namedBlocks indexOf: aNamedBlock ifAbsent: 1))
 ]
 
@@ -394,6 +400,12 @@ SBTabView >> switchCommandFor: aNumber oldValue: oldNumber [
 		mutateSelector: #activeIndex:;
 		value: aNumber;
 		oldValue: oldNumber
+]
+
+{ #category : #accessing }
+SBTabView >> tabCount [
+
+	^ self namedBlocks size 
 ]
 
 { #category : #accessing }

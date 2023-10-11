@@ -113,16 +113,34 @@ SBStBlockBody >> blockBodyNestingDepth [
 	^ d
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBStBlockBody >> canDeleteChild: aBlock [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'layout properties - table' }
 SBStBlockBody >> cellGap [
 
 	^ self colorPolicy lineGap
+]
+
+{ #category : #accessing }
+SBStBlockBody >> containedExampleWatches [
+
+	^ self allBlocksSelect: #isExampleWatch
+]
+
+{ #category : #accessing }
+SBStBlockBody >> containedExamples [
+
+	^ self allBlocksSelect: #isExample
+]
+
+{ #category : #accessing }
+SBStBlockBody >> containedVariants [
+
+	^ self allBlocksSelect: #isVariant
 ]
 
 { #category : #'ast helpers' }
@@ -152,6 +170,12 @@ SBStBlockBody >> declareTemporaryVariableCommand: aString [
 				yourself]
 ]
 
+{ #category : #accessing }
+SBStBlockBody >> detectVariant: aVariant [
+
+	^ (self containedVariants) detect: [:oneOfMyVariants | oneOfMyVariants = aVariant] ifNone: [nil]
+]
+
 { #category : #'as yet unclassified' }
 SBStBlockBody >> endPC [
 
@@ -176,13 +200,13 @@ SBStBlockBody >> fixedNumberOfChildren [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBlockBody >> guessedClass [
 
 	^ BlockClosure
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBStBlockBody >> initialize [
 
 	super initialize.
@@ -201,7 +225,7 @@ SBStBlockBody >> initialize [
 			addMorphBack: temporaries)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBStBlockBody >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
 	(aBlock notNil and: [aBlock owner = bindings]) ifTrue: [
@@ -227,7 +251,7 @@ SBStBlockBody >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 		title: 'insert statement'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBStBlockBody >> isBlockBody [
 
 	^ true
@@ -251,7 +275,7 @@ SBStBlockBody >> isScope [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBStBlockBody >> layoutCommands [
 
 	| preamble preambleHasContent multiLine |
@@ -294,13 +318,13 @@ SBStBlockBody >> localNestingDepth [
 	^ 1
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBStBlockBody >> minHeight [
 
 	^ self fontToUse height + self layoutInset asEdgeInsets y
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'geometry - layout' }
 SBStBlockBody >> minimumHeight [
 
 	^ self fontToUse height + self layoutInset asEdgeInsets vertical
@@ -320,7 +344,7 @@ SBStBlockBody >> newEmptyChildNear: aBlock before: aBoolean [
 	^ super newEmptyChildNear: aBlock before: aBoolean
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBStBlockBody >> objectInterfaceNear: aBlock at: aSymbol [
 
 	({bindings. temporaries} includes: (aBlock ifNotNil: #owner)) ifTrue: [^ SBInterfaces stName].
@@ -395,7 +419,7 @@ SBStBlockBody >> statementsDo: aBlock [
 	^ self submorphs allButFirstDo: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBStBlockBody >> symbols [
 
 	^ self isMethodBody ifTrue: [#(nil nil)] ifFalse: [self colorPolicy symbolsForBlock: self]
@@ -413,7 +437,7 @@ SBStBlockBody >> temporaries: aCollection [
 	temporaries bindings: aCollection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBStBlockBody >> updatePCFrom: aBlock [
 
 	super updatePCFrom: aBlock.

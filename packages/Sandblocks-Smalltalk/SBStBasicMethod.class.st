@@ -217,6 +217,24 @@ SBStBasicMethod >> compiledMethod [
 		ifAbsent: [self]
 ]
 
+{ #category : #accessing }
+SBStBasicMethod >> containedExampleWatches [ 
+
+	^ self body containedExampleWatches
+]
+
+{ #category : #accessing }
+SBStBasicMethod >> containedExamples [
+
+	^ self body containedExamples
+]
+
+{ #category : #accessing }
+SBStBasicMethod >> containedVariants [ 
+
+	^ self body containedVariants
+]
+
 { #category : #actions }
 SBStBasicMethod >> createTestMethod [
 	<action>
@@ -289,6 +307,12 @@ SBStBasicMethod >> deleteMethod [
 	<action>
 
 	^ self sandblockEditor do: (SBStDeleteMethodCommand new target: self)
+]
+
+{ #category : #accessing }
+SBStBasicMethod >> detectVariant: aVariant [
+
+	^ self body detectVariant: aVariant
 ]
 
 { #category : #'artefact protocol' }

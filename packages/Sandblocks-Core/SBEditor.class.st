@@ -1151,6 +1151,13 @@ SBEditor >> openAll: aCollection [
 	aCollection do: [:object | self open: object]
 ]
 
+{ #category : #actions }
+SBEditor >> openExploriants [
+	<globalAction>
+	
+	self open: SBExploriants uniqueInstance visualize
+]
+
 { #category : #'actions creating' }
 SBEditor >> openFile [
 	<addAction>
