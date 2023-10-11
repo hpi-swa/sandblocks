@@ -13,6 +13,12 @@ SBVariantsView >> buildMethodSectionFor: aSBStMethod [
 									LineMorph from: 0@0 to: 50@0 color: Color black width: 2}
 ]
 
+{ #category : #building }
+SBVariantsView >> buildNoVariantsText [
+	
+	self block addMorphBack: (SBOwnTextMorph new contents: 'No variants exist.')
+]
+
 { #category : #initialization }
 SBVariantsView >> initialize [ 
 
@@ -28,5 +34,7 @@ SBVariantsView >> visualize [
 
 	self clean.
 
-	self allMethodBlocksContainingVariants do: [:aSBStMethod | self buildMethodSectionFor: aSBStMethod]
+	self allMethodBlocksContainingVariants 
+		ifNotEmptyDo: [:aSBStMethod | self buildMethodSectionFor: aSBStMethod] 
+		ifEmpty: [self buildNoVariantsText]
 ]
