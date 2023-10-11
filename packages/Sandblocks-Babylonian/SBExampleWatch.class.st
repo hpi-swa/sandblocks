@@ -209,7 +209,7 @@ SBExampleWatch >> exampleToValues: anExampleToCollectionOfObjectsDict [
 { #category : #accessing }
 SBExampleWatch >> expression [
 
-	^ watchedExpression
+	^ self submorphs first
 ]
 
 { #category : #accessing }
