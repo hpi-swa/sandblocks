@@ -125,10 +125,24 @@ SBWatchView >> displayWatchValues [
 		ifFalse: [self maxWidth]).
 ]
 
+{ #category : #'event handling' }
+SBWatchView >> doubleClick: evt [
+
+	super doubleClick: evt.
+	self exploreValues
+]
+
 { #category : #'colors and color policies' }
 SBWatchView >> drawnColor [
 
 	^ Color white
+]
+
+{ #category : #accessing }
+SBWatchView >> exploreValues [
+	<action>
+
+	self object explore
 ]
 
 { #category : #accessing }
@@ -183,7 +197,7 @@ SBWatchView >> layoutCommands [
 { #category : #accessing }
 SBWatchView >> maxWidth [
 
-	^ 450
+	^ 300
 ]
 
 { #category : #accessing }
@@ -202,7 +216,9 @@ SBWatchView >> object [
 { #category : #'event handling' }
 SBWatchView >> placeholder [
 
-	^  Morph new color: Color transparent; extent: (0@0)
+	^  Morph new 
+		color: Color transparent; 
+		extent: (0@0)
 ]
 
 { #category : #printing }
@@ -330,5 +346,6 @@ SBWatchView >> watchValuesContainer [
 		changeTableLayout;
 		listDirection: #leftToRight;
 		layoutInset: 1;
-		borderWidth: 0
+		borderWidth: 0;
+		on: #doubleClick send: #exploreValues to: self
 ]

@@ -30,7 +30,7 @@ SBInactiveExampleWatch >> doubleClick: evt [
 	"Nothing"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBInactiveExampleWatch >> expression: aBlock [
 
 	super expression: aBlock.
