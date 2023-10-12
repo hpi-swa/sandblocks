@@ -1,6 +1,16 @@
 Extension { #name : #Number }
 
 { #category : #'*Sandblocks-Core' }
+Number >> adaptToEdgeInsets: anEdgeInsets andSend: aSymbol [
+
+	^ SBEdgeInsets
+		left: (anEdgeInsets left perform: aSymbol with: self)
+		right: (anEdgeInsets right perform: aSymbol with: self)
+		top: (anEdgeInsets top perform: aSymbol with: self)
+		bottom: (anEdgeInsets right perform: aSymbol with: self)
+]
+
+{ #category : #'*Sandblocks-Core' }
 Number >> adaptToEdgeInsetsAndAdd: anEdgeInsets [
 
 	^ SBEdgeInsets

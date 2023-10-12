@@ -49,10 +49,26 @@ SBEdgeInsets class >> top: aNumber [
 	^ self basicNew left: 0 right: 0 top: aNumber bottom: 0
 ]
 
+{ #category : #nil }
+SBEdgeInsets >> * anObject [
+
+	^ anObject adaptToEdgeInsets: self andSend: #*
+]
+
 { #category : #'as yet unclassified' }
 SBEdgeInsets >> + anObject [
 
-	^ anObject adaptToEdgeInsetsAndAdd: self
+	^ anObject adaptToEdgeInsets: self andSend: #+
+]
+
+{ #category : #'as yet unclassified' }
+SBEdgeInsets >> adaptToEdgeInsets: anEdgeInsets andSend: aSymbol [
+
+	^ SBEdgeInsets
+		left: (anEdgeInsets left perform: aSymbol with: self left)
+		right: (anEdgeInsets right perform: aSymbol with: self right)
+		top: (anEdgeInsets top perform: aSymbol with: self top)
+		bottom: (anEdgeInsets bottom perform: aSymbol with: self bottom)
 ]
 
 { #category : #'as yet unclassified' }

@@ -42,7 +42,7 @@ SBDoItCommand >> postDo: aBlock [
 { #category : #'as yet unclassified' }
 SBDoItCommand >> setArtefactFrom [
 
-	^ nil
+	^ artefact
 ]
 
 { #category : #'as yet unclassified' }
