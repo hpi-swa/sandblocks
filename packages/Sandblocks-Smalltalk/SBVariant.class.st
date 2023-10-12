@@ -314,7 +314,8 @@ SBVariant >> widget: aSBTabView [
 	widget := aSBTabView.
 	
 	widget when: #deletedLastTab send: #replaceSelfWithBlock: to: self.
-	widget when: #changedActive send: #updateResize to: self
+	widget when: #changedActive send: #updateResize to: self.
+	widget when: #doubleClicked send: #replaceSelfWithChosen to: self.
 ]
 
 { #category : #printing }
