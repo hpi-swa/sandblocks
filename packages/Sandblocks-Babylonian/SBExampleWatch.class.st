@@ -123,9 +123,14 @@ SBExampleWatch >> artefactSaved: aBlock [
 { #category : #copying }
 SBExampleWatch >> asInactiveCopy [
 
-	^ self veryDeepCopy 
-		beInactive
-		setWatchedExpressionUneditable. 
+	| copy |
+	copy := self veryDeepCopy beInactive.
+		
+	"Resolve bindings"
+	copy expression: (SBTextBubble new contents: copy expression sourceString).
+	copy setWatchedExpressionUneditable.
+
+	^ copy
 ]
 
 { #category : #accessing }

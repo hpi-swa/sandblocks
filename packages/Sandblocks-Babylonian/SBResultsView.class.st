@@ -7,9 +7,7 @@ Class {
 { #category : #building }
 SBResultsView >> addAllWatchesFrom: aCollectionOfMethodBlocks [
 
-	self block addAllMorphsBack: { 	(self containerRow listDirection: #leftToRight) 
-										addAllMorphsBack: (self allWatchesIn: aCollectionOfMethodBlocks).
-									LineMorph from: 0@0 to: 50@0 color: Color black width: 2}
+	self block addAllMorphsBack: (self allWatchesIn: aCollectionOfMethodBlocks)
 ]
 
 { #category : #accessing }

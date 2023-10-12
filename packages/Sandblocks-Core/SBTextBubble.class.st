@@ -130,6 +130,12 @@ SBTextBubble >> font: aFont [
 ]
 
 { #category : #'as yet unclassified' }
+SBTextBubble >> guessedClass [ 
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBTextBubble >> initialize [
 
 	super initialize.
@@ -207,7 +213,7 @@ SBTextBubble >> prefix: aString [
 { #category : #'as yet unclassified' }
 SBTextBubble >> printOn: aStream [
 
-	aStream nextPutAll: 'text bubble'
+	aStream nextPutAll: (self contents ifNil: ['text bubble'] ifNotNil: [self contents])
 ]
 
 { #category : #'as yet unclassified' }
