@@ -27,7 +27,9 @@ SBExampleValueDisplay >> exampleFinished: anExample [
 	display exampleFinished: anExample.
 	
 	statusLabel
-		contents: (hadValue ifTrue: [''] ifFalse: ['- Not reached -']);
+		contents: (hadValue 
+			ifTrue: [''] 
+			ifFalse: ['- Not reached -']);
 		visible: hadValue not
 ]
 

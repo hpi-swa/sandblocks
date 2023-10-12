@@ -15,5 +15,5 @@ SBExampleWatch >> isGlobalWatch [
 { #category : #'*Sandblocks-Babylonian' }
 SBExampleWatch >> listensToExamples [
 
-	^ self isActive 
+	^ true
 ]
