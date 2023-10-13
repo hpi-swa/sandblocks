@@ -47,7 +47,8 @@ SBWatchView >> changeDisplay [
 	<action>
 
 	| index options |
-	options := Array streamContents: [:stream | self values allConversionsFor: SBInterfaces topLevel do: [:pair | stream nextPut: pair]].
+	options := Array streamContents: [:stream | self values allConversionsFor: SBInterfaces topLevel do: [:pair | stream nextPut: pair]]. 
+	options := options, {{'default'. self watchValuesContainer addAllMorphsBack: (watchValues collect: #asValueMorph)}}.
 	index := UIManager default chooseFrom: (options collect: #first).
 	index = 0 ifTrue: [^ self].
 	
