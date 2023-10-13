@@ -51,7 +51,7 @@ SBWatchView >> changeDisplay [
 	index := UIManager default chooseFrom: (options collect: #first).
 	index = 0 ifTrue: [^ self].
 	
-	self useDisplay: (options at: index) second
+	self displayOnScrollPane: (options at: index) second.
 ]
 
 { #category : #'event handling' }
@@ -110,19 +110,27 @@ SBWatchView >> display [
 ]
 
 { #category : #display }
+SBWatchView >> displayOnScrollPane: aMorph [
+
+	self scroller removeAllMorphs.
+	
+	self scroller addMorph: aMorph.
+	self scrollPane height: aMorph height + self scrollBarHeight.
+	
+	"Simulates an expanding layout"
+	self scrollPane width: (aMorph width <= self maxWidth 
+		ifTrue: [aMorph width] 
+		ifFalse: [self maxWidth])
+]
+
+{ #category : #display }
 SBWatchView >> displayWatchValues [
 
 	| valuesMorph |
-	self scroller removeAllMorphs.
 	valuesMorph := self watchValuesContainer.
 	watchValues do: [:aValue | valuesMorph addMorphBack: (aValue asValueMorph)].
 
-	self scroller addMorph: valuesMorph.
-	self scrollPane height: valuesMorph height + self scrollBarHeight.
-	"Simulates an expanding layout"
-	self scrollPane width: (valuesMorph width <= self maxWidth 
-		ifTrue: [valuesMorph width] 
-		ifFalse: [self maxWidth]).
+	self displayOnScrollPane: valuesMorph.
 ]
 
 { #category : #'event handling' }
@@ -292,13 +300,6 @@ SBWatchView >> updateDisplay [
 			visible: true].
 		
 	self displayWatchValues
-]
-
-{ #category : #display }
-SBWatchView >> useDisplay: aDisplay [
-
-	self display delete.
-	self addMorph: aDisplay atIndex: 2. 
 ]
 
 { #category : #accessing }
