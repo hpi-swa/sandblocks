@@ -582,7 +582,12 @@ SBStGrammarHandler >> wrapInVariant [
 			selectAfter: #block;
 			outer: variant;
 			targets: selected;
-			wrap: [:outer :inner | variant named: inner printString alternatives:{SBNamedBlock block: (SBStBlockBody new statements: inner) named:'alt'} activeIndex: 1];
+			wrap: [:outer :inner | variant 
+				named: inner printString 
+				alternatives: {
+					SBNamedBlock block: (SBStBlockBody new statements: inner) named: 'original'.
+					SBNamedBlock block: (SBStBlockBody new statements: inner veryDeepCopy) named: 'alternative'. } 
+				activeIndex: 2];
 			yourself]
 ]
 
