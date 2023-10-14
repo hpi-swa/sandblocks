@@ -400,6 +400,13 @@ SBBlock >> blockFor: anObject withInterfaces: aCollection ifOpen: aBlock ifClose
 		ifNone: anotherBlock
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> borderVertices [
+	" return a collection of points to render these in place of the default rectangle "
+
+	^ nil
+]
+
 { #category : #layout }
 SBBlock >> boundsInEditor [
 

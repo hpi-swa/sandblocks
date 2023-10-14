@@ -40,11 +40,19 @@ SBCursorSelect >> color [
 { #category : #'as yet unclassified' }
 SBCursorSelect >> drawOn: aCanvas in: aRectangle color: aColor [
 
-	aCanvas
-		frameRoundRect: (aRectangle insetBy: 2)
-		radius: self block colorPolicy cornerRadius
-		width: self block frameSize
-		color: aColor
+	self block borderVertices
+		ifNotNil: [:v |
+			aCanvas
+				drawPolygon: v
+				color: nil
+				borderWidth: self block frameSize
+				borderColor: aColor]
+		ifNil: [
+			aCanvas
+				frameRoundRect: (aRectangle insetBy: 2)
+				radius: self block colorPolicy cornerRadius
+				width: self block frameSize
+				color: aColor]
 ]
 
 { #category : #'as yet unclassified' }

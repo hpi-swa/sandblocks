@@ -156,6 +156,12 @@ SBBrowserEditor >> modelSelection: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBBrowserEditor >> newEmptyChildNear: aBlock before: aBoolean [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBBrowserEditor >> openOnlyMorph: aBlock [
 
 	self childSandblocks do: [:block | block delete].
