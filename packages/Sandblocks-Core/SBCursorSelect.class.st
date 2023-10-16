@@ -28,7 +28,7 @@ SBCursorSelect >> block: aBlock [
 { #category : #'as yet unclassified' }
 SBCursorSelect >> bounds [
 
-	^ self block bounds expandBy: 4
+	^ self block bounds expandBy: self outset
 ]
 
 { #category : #'as yet unclassified' }
@@ -43,7 +43,7 @@ SBCursorSelect >> drawOn: aCanvas in: aRectangle color: aColor [
 	self block borderVertices
 		ifNotNil: [:v |
 			aCanvas
-				drawPolygon: v
+				drawPolygon: (v collect: [:p | p translateBy: aRectangle origin + self outset - self block position])
 				color: nil
 				borderWidth: self block frameSize
 				borderColor: aColor]
@@ -111,6 +111,12 @@ SBCursorSelect >> moveHorizontal: aNumber wordWise: aBoolean [
 		^ next ifNil: [" if we are past all positions, see if we want to enter this block instead "
 		self cursorPositionsIn: self block do: [:position | position = self ifFalse: [^ position]]]].
 	^ self adjacentPosition: aNumber in: self block sandblockEditor
+]
+
+{ #category : #'as yet unclassified' }
+SBCursorSelect >> outset [
+
+	^ 4
 ]
 
 { #category : #'as yet unclassified' }

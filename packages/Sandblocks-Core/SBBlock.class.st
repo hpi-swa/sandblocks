@@ -2676,9 +2676,11 @@ SBBlock >> selectLast [
 	<multiSelectAction>
 	<inputAction>
 
-	self containingFloat lastDeepChild
-		select;
-		startInputAtEnd
+	| last |
+	last := nil.
+	self containingFloat cursorPositionsDo: [:c | c isText ifTrue: [last := c]].
+	
+	last ifNotNil: [self sandblockEditor cursorPosition: last]
 ]
 
 { #category : #'as yet unclassified' }
