@@ -88,7 +88,7 @@ SBAxisNotation >> visualize [
 	self submorphs copy do: #abandon.
 	
 	self addAllMorphsBack: (
-		self relativeTickHeights do: [:aFraction | | annotation |
+		self relativeTickHeights collect: [:aFraction | | annotation |
 			annotation := SBOwnTextMorph new 
 				contents: ((self scale domainValueOfRelative: aFraction) asFloat asString);
 				verySmall;
@@ -99,7 +99,7 @@ SBAxisNotation >> visualize [
 			(aFraction = 1) ifTrue: [annotation layoutFrame topOffset: 0].
 			(aFraction = 0) ifTrue: [annotation layoutFrame topOffset: (-1*(annotation minExtent y))].
 			
-			^ annotation])
+			annotation])
 		
 	
 ]

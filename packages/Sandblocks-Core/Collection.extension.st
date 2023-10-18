@@ -1,6 +1,15 @@
 Extension { #name : #Collection }
 
 { #category : #'*Sandblocks-Core-converting' }
+Collection >> asBarChart: converter [
+	<convert>
+	
+	converter
+		if: [self isString not and: [self isDictionary not and: [self allSatisfy: SBBarChart supportedInterface]]]
+		do: [SBBarChart newWithValues: self]
+]
+
+{ #category : #'*Sandblocks-Core-converting' }
 Collection >> asCollectionView: converter [
 	<convert>
 	
