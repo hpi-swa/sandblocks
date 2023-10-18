@@ -9,6 +9,24 @@ Collection >> asCollectionView: converter [
 		do: [SBCollection new interface: converter objectInterface object: self]
 ]
 
+{ #category : #'*Sandblocks-Core-converting' }
+Collection >> asLineChart: converter [
+	<convert>
+	
+	converter
+		if: [self isString not and: [self isDictionary not and: [self allSatisfy: SBLineChart supportedInterface]]]
+		do: [SBLineChart newWithValues: self]
+]
+
+{ #category : #'*Sandblocks-Core-converting' }
+Collection >> asRectangleChart: converter [
+	<convert>
+	
+	converter
+		if: [self isString not and: [self isDictionary not and: [self allSatisfy: SBRectangleChart supportedInterface]]]
+		do: [SBRectangleChart newWithValues: self]
+]
+
 { #category : #'*Sandblocks-Core' }
 Collection >> asSandblockShortcut [
 

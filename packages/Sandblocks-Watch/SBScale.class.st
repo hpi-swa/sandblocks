@@ -56,6 +56,13 @@ SBScale >> domain: anInterval [
 	domain := anInterval
 ]
 
+{ #category : #calculating }
+SBScale >> domainValueOfRelative: aNumberFrom0To1 [
+	
+	"LERP the given number in domain before proceeding normally"
+	^ (1 - aNumberFrom0To1) * self domain min + (aNumberFrom0To1 * self domain max)
+]
+
 { #category : #accessing }
 SBScale >> range [
 
@@ -88,11 +95,4 @@ SBScale >> scaledValueOf: aNumberInDomain [
 	(aNumberInDomain = self domain first) ifTrue: [^ self range first]. 
 	
 	^ self range at: (self scaleBehavior value: self domain value: aNumberInDomain) * self range extent +1
-]
-
-{ #category : #calculating }
-SBScale >> scaledValueOfRelative: aNumberFrom0To1 [
-	
-	"LERP the given number in domain before proceeding normally"
-	^ self scaledValueOf: ((1 - aNumberFrom0To1) * self domain min + aNumberFrom0To1 * self domain max)
 ]

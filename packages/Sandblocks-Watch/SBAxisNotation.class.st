@@ -86,13 +86,20 @@ SBAxisNotation >> scale: aSBScale numberTicks: aNumber [
 SBAxisNotation >> visualize [
 
 	self submorphs copy do: #abandon.
-	self relativeTickHeights withIndexDo: [:aFraction :i | | annotation |
-		annotation := SBOwnTextMorph new 
-			contents: ((self scale scaledValueOfRelative: aFraction) asString);
-			layoutFrame: (LayoutFrame new topFraction: aFraction).
-		"Fraction 1 will result in the text being just underneath ourself, so substract height as offset"
-		(aFraction = 1) ifTrue: [annotation layoutFrame topOffset: (-1*(annotation minExtent y))].
-		self addMorph: annotation.]
+	
+	self addAllMorphsBack: (
+		self relativeTickHeights do: [:aFraction | | annotation |
+			annotation := SBOwnTextMorph new 
+				contents: ((self scale domainValueOfRelative: aFraction) asFloat asString);
+				verySmall;
+				layoutFrame: (LayoutFrame new topFraction: (1 - aFraction)).
+			
+			"Move text center to be fraction. 0 and 1 will be adjusted to align at the borders."
+			annotation layoutFrame topOffset: (-0.5*(annotation minExtent y)).
+			(aFraction = 1) ifTrue: [annotation layoutFrame topOffset: 0].
+			(aFraction = 0) ifTrue: [annotation layoutFrame topOffset: (-1*(annotation minExtent y))].
+			
+			^ annotation])
 		
 	
 ]

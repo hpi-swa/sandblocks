@@ -549,6 +549,12 @@ SBOwnTextMorph >> userString [
 ]
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> verySmall [
+
+	self font: (TextStyle default fontOfSize: 6 sbScaled)
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> wantsKeyboardFocus [
 
 	^ false
