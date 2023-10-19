@@ -25,16 +25,6 @@ SBLineChart class >> supportedInterface [
 	^ #isNumber
 ]
 
-{ #category : #visualization }
-SBLineChart >> datapointColorForValue: aValue [
-	
-	| scaledValue |
-	scaledValue := self scaleY scaleBehavior value: self scaleY domain value: aValue.
-	(scaledValue <= self class highlightedDataPercentage) ifTrue: [^ self datapointLowerPercentColor].
-	(scaledValue >= (1 - self class highlightedDataPercentage)) ifTrue: [^ self datapointHigherPercentColor].
-	^ self datapointDefaultColor
-]
-
 { #category : #'visualization - constants' }
 SBLineChart >> datapointDefaultColor [
 	
@@ -47,30 +37,26 @@ SBLineChart >> datapointExtent [
 	^ 5@5
 ]
 
-{ #category : #'visualization - constants' }
-SBLineChart >> datapointHigherPercentColor [
-	
-	^ Color green
-]
-
-{ #category : #'visualization - constants' }
-SBLineChart >> datapointLowerPercentColor [
-	
-	^ Color red
-]
-
 { #category : #visualization }
-SBLineChart >> lineColorFrom: aPoint1 to: aPoint2 [
+SBLineChart >> lineColorFrom: aDataPoint1 to: aDataPoint2 [
 	
-	^ (aPoint1 y >= aPoint2 y) 
-		ifTrue: [self datapointHigherPercentColor]
-		ifFalse: [self datapointLowerPercentColor]
+	"Comparing y coordinates might yield false results as the coordinates are rounded
+	to whole numbers"
+	^ ((aDataPoint1 valueOfProperty: #chartValue) <= (aDataPoint2 valueOfProperty: #chartValue))
+		ifTrue: [self positiveGradientColor]
+		ifFalse: [self negativeGradientColor]
 ]
 
 { #category : #'visualization - constants' }
 SBLineChart >> lineWidth [
 	
 	^ 2
+]
+
+{ #category : #'visualization - constants' }
+SBLineChart >> negativeGradientColor [
+	
+	^ Color red
 ]
 
 { #category : #visualization }
@@ -92,10 +78,11 @@ SBLineChart >> newDatapointFor: aValue at: positionIndex [
 		balloonText: aValue printString;
 		addMorph: (EllipseMorph new
 			extent: self datapointExtent;
-			color: (self datapointColorForValue: aValue);
+			color: self datapointDefaultColor;
 			borderWidth: 0;
 			left: positionIndex * self spaceBetweenPoints;
 			top: self class canvasHeight - (self scaleY scaledValueOf: aValue);
+			setProperty: #chartValue toValue: (self scaleY scaledValueOf: aValue); 
 			yourself);
 		yourself
 	
@@ -109,7 +96,7 @@ SBLineChart >> newLineFrom: aDataPointMorph1 to: aDataPointMorph2 [
 	^ LineMorph 
 		from: aDataPointMorph1 center 
 		to: aDataPointMorph2 center 
-		color: (self lineColorFrom: aDataPointMorph1 center to: aDataPointMorph2 center)
+		color: (self lineColorFrom: aDataPointMorph1 to: aDataPointMorph2)
 		width: self lineWidth
 		
 	
@@ -125,16 +112,47 @@ SBLineChart >> newLinesForDatapointsOn: visualizationMorph [
 ]
 
 { #category : #visualization }
-SBLineChart >> newScaleLinesOn: aMorph [
+SBLineChart >> newScaleLineFrom: anOrigin to: anEnd [ 
 	
-	^ {LineMorph from: 0@self scaleYOffset to: aMorph width@self scaleYOffset
-		color: self scaleLineColor width: self scaleLineWidth.
-		LineMorph from: 0@(self class canvasHeight/2)+self scaleYOffset to: aMorph width@(self class canvasHeight/2)+self scaleYOffset
-		color: self scaleLineColor width: self scaleLineWidth.
-		LineMorph from: 0@self class canvasHeight + self scaleYOffset to: aMorph width@self class canvasHeight + self scaleYOffset
-		color: self scaleLineColor width: self scaleLineWidth.}
+	^ LineMorph from: anOrigin to: anEnd color: self scaleLineColor width: self scaleLineWidth
 		
 	
+]
+
+{ #category : #visualization }
+SBLineChart >> newScaleLineHeight: height length: length [ 
+	
+	^ LineMorph 
+		from: 0 @ height 
+		to: length @ height 
+		color: self scaleLineColor 
+		width: self scaleLineWidth
+		
+	
+]
+
+{ #category : #visualization }
+SBLineChart >> newScaleLinesOn: aMorph [
+	
+	| section |
+	section := self class canvasHeight / (self numberScaleLines - 1).
+	
+	^ (0 to: (self numberScaleLines - 1)) collect: [:i | 
+		self newScaleLineHeight: (section * i) + self scaleYOffset length: aMorph width]
+		
+	
+]
+
+{ #category : #'visualization - constants' }
+SBLineChart >> numberScaleLines [
+
+	^ 5
+]
+
+{ #category : #'visualization - constants' }
+SBLineChart >> positiveGradientColor [
+	
+	^ Color green
 ]
 
 { #category : #'visualization - constants' }

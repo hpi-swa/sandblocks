@@ -22,7 +22,7 @@ SBBarChart class >> newWithValues: traceValues [
 { #category : #'visualization - constants' }
 SBBarChart >> barWidth [
 
-	^ self spaceBetweenPoints / 3
+	^ self spaceBetweenPoints / 2
 ]
 
 { #category : #visualization }
@@ -36,11 +36,12 @@ SBBarChart >> newBarFor: aValue at: positionIndex [
 		color: Color transparent;
 		balloonText: aValue printString;
 		addMorph: (Morph new
-			color: (self datapointColorForValue: aValue);
+			color: self datapointDefaultColor;
 			width: self barWidth;
-			height: (self scaleY scaledValueOf: aValue);
-			bottom: self class canvasHeight + self class heightMargin ;
+			height: {(self scaleY scaledValueOf: aValue). 1} max;
+			bottom: self class canvasHeight + self class heightMargin;
 			left: positionIndex * self spaceBetweenPoints;
+			setProperty: #chartValue toValue: (self scaleY scaledValueOf: aValue);
 			yourself);
 		yourself
 	
@@ -55,13 +56,13 @@ SBBarChart >> newDataPoints [
 ]
 
 { #category : #visualization }
-SBBarChart >> visualizationMorph [
+SBBarChart >> newLineFrom: aDataPointMorph1 to: aDataPointMorph2 [
 	
-	| visualizationMorph |
-	visualizationMorph := self newBackground.
+	^ LineMorph 
+		from: aDataPointMorph1 topCenter 
+		to: aDataPointMorph2 topCenter  
+		color: ((self lineColorFrom: aDataPointMorph1 to: aDataPointMorph2) alpha: 0.2)
+		width: self lineWidth
 		
-	visualizationMorph addAllMorphs: self newDataPoints.
-	visualizationMorph addAllMorphsBack: (self newScaleLinesOn: visualizationMorph).
 	
-	^ visualizationMorph
 ]

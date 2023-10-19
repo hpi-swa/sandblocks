@@ -52,7 +52,7 @@ SBVisualization class >> newWithValues: traceValues [
 { #category : #constants }
 SBVisualization class >> preferredHeight [
 	
-	^ 50 sbScaled 
+	^ 100 sbScaled 
 ]
 
 { #category : #conversion }
@@ -90,13 +90,15 @@ SBVisualization class >> visualizationObjectForValues: traceValues overMorph: tr
 { #category : #visualization }
 SBVisualization >> axisYNotation [
 	
-	^ SBAxisNotation newFromScale: self scaleY ticking: 3 
+	^ SBAxisNotation newFromScale: self scaleY ticking: 5 
 ]
 
 { #category : #initialization }
 SBVisualization >> initialize [ 
 
 	super initialize.
+	
+	self selectable: false.
 	
 	self color: self drawnColor;
 		layoutPolicy: TableLayout new;
@@ -134,7 +136,7 @@ SBVisualization >> newBackground [
 { #category : #'visualization - constants' }
 SBVisualization >> scaleLineColor [
 	
-	^ self sandblockForegroundColor
+	^ self sandblockForegroundColor alpha: 0.3
 ]
 
 { #category : #'visualization - constants' }
