@@ -1,5 +1,5 @@
 "
-Observes (watches) an expression locally for added SBExamples. Whenever an example has finished running, it updates its belonging view. Only active watches update their views. Further, with a given modifyExpression, it transforms the watched expression values. Also known as a Probe in the context of Babylonian Smalltalk.
+Observes (watches) an expression locally for added SBExamples. Whenever an example has finished running, it updates its belonging view. Further, with a given modifyExpression, it transforms the watched expression values. Also known as a Probe in the context of Babylonian Smalltalk.
 "
 Class {
 	#name : #SBExampleWatch,
@@ -8,7 +8,6 @@ Class {
 		'identifier',
 		'watchedExpression',
 		'modifyExpression',
-		'isActive',
 		'exampleToDisplay',
 		'exampleToValues'
 	],
@@ -71,7 +70,7 @@ SBExampleWatch class >> registry [
 SBExampleWatch class >> report: aValue for: aSymbol [
 
 	"Compatibility to SBWatch"
-	^ self reportValue: aValue for: aSymbol modifying: (SBStBlockBody identityNamed: 'result').
+	^ self reportValue: aValue for: aSymbol modifying: (SBStBlockBody identityNamed: 'each').
 ]
 
 { #category : #'event handling' }
@@ -112,24 +111,10 @@ SBExampleWatch >> applyModifyExpressionOnValues [
 		anExampleDisplayPair value updateDisplay]
 ]
 
-{ #category : #callbacks }
-SBExampleWatch >> artefactSaved: aBlock [
-
-	"As we are inactive, we have to manually apply our modifyExpression if it changes. 
-	Otherwise, we would reset by examples starting" 
-	(self isActive not and: [aBlock = self containingArtefact]) ifTrue: [self applyModifyExpressionOnValues] 
-]
-
 { #category : #copying }
 SBExampleWatch >> asInactiveCopy [
 
-	^ (self veryDeepCopy) beInactive. 
-]
-
-{ #category : #accessing }
-SBExampleWatch >> beInactive [
-
-	isActive := false
+	^ SBInactiveExampleWatch newFromWatch: self
 ]
 
 { #category : #'colors and color policies' }
@@ -207,7 +192,7 @@ SBExampleWatch >> exampleToValues: anExampleToCollectionOfObjectsDict [
 { #category : #accessing }
 SBExampleWatch >> expression [
 
-	^ watchedExpression
+	^ self submorphs first
 ]
 
 { #category : #accessing }
@@ -245,8 +230,7 @@ SBExampleWatch >> initialize [
 	exampleToDisplay := Dictionary new.
 	exampleToValues := Dictionary new.
 	watchedExpression := SBStMessageSend new.
-	modifyExpression := SBStBlockBody identityNamed: 'result'.
-	isActive := true.
+	modifyExpression := SBStBlockBody identityNamed: 'each'.
 	
 	self
 		cellGap: 4;
@@ -268,7 +252,7 @@ SBExampleWatch >> intoWorld: aWorld [
 { #category : #accessing }
 SBExampleWatch >> isActive [
 
-	^ isActive
+	^ true
 ]
 
 { #category : #'*Sandblocks-Babylonian' }
@@ -307,7 +291,7 @@ SBExampleWatch >> layoutCommands [
 { #category : #'*Sandblocks-Babylonian' }
 SBExampleWatch >> listensToExamples [
 
-	^ self isActive 
+	^ true
 ]
 
 { #category : #accessing }
@@ -371,6 +355,12 @@ SBExampleWatch >> reportValue: anObject for: anExample [
 	exampleToValues
 		at: anExample
 		ifPresent: [:values | values add: anObject]
+]
+
+{ #category : #accessing }
+SBExampleWatch >> setWatchedExpressionUneditable [
+
+	watchedExpression selectable: false
 ]
 
 { #category : #accessing }

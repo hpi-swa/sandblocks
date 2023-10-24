@@ -145,9 +145,15 @@ SBStMethod >> methodClass [
 ]
 
 { #category : #accessing }
-SBStMethod >> methodHeader [
+SBStMethod >> methodDefinition [
 
-	^ self firstSubmorph 
+	^  SBRow new
+			layoutPolicy: SBAlgebraLayout new;
+			addMorphBack: (SBOwnTextMorph new contents: 
+				('{1} >> {2}' 
+					format: {
+					self currentClass name asString.
+					self currentSelector asString})).
 ]
 
 { #category : #'object interface' }

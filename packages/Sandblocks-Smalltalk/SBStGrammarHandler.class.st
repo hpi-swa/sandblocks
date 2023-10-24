@@ -514,6 +514,29 @@ SBStGrammarHandler >> wrapInMessageSend: aString [
 ]
 
 { #category : #actions }
+SBStGrammarHandler >> wrapInOptionalVariant [
+	<multiSelectAction>
+	<actionValidIf: #isSandblock>
+
+	| variant |
+	self assert: self block isSelected.
+	variant := SBVariant new.
+	self block sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
+	self block sandblockEditor doMultiSelection: [:selected |
+		SBWrapConsecutiveCommand new
+			selectAfter: #block;
+			outer: variant;
+			targets: selected;
+			wrap: [:outer :inner | 
+				variant 
+					named: inner printString 
+					alternatives:{
+						SBNamedBlock block: (SBStBlockBody new statements: inner) named:'with'. 
+						SBNamedBlock block: (SBStBlockBody empty) named:'without'} 					activeIndex: 2];
+			yourself]
+]
+
+{ #category : #actions }
 SBStGrammarHandler >> wrapInReturn [
 	<action>
 
@@ -559,7 +582,12 @@ SBStGrammarHandler >> wrapInVariant [
 			selectAfter: #block;
 			outer: variant;
 			targets: selected;
-			wrap: [:outer :inner | variant named: inner printString alternatives:{SBNamedBlock block: (SBStBlockBody new statements: inner) named:'alt'} activeIndex: 1];
+			wrap: [:outer :inner | variant 
+				named: inner printString 
+				alternatives: {
+					SBNamedBlock block: (SBStBlockBody new statements: inner) named: 'original'.
+					SBNamedBlock block: (SBStBlockBody new statements: inner veryDeepCopy) named: 'alternative'. } 
+				activeIndex: 2];
 			yourself]
 ]
 

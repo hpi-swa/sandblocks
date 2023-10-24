@@ -14,6 +14,10 @@ SBEditableButton >> textMorphFor: aString [
 		when: #clicked
 		send: #doButtonAction  
 		to: self;
+		when: #doubleClicked
+		send: #triggerEvent:
+		to: self
+		with: #doubleClicked;
 		when: #contentsChanged
 		send: #triggerEvent:
 		to: self

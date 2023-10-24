@@ -16,7 +16,7 @@ SBWatchValueBlock class >> registerShortcuts: aProvider [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBWatchValueBlock >> doubleClick: evt [
 
 	super doubleClick: evt.
@@ -25,7 +25,7 @@ SBWatchValueBlock >> doubleClick: evt [
 
 { #category : #accessing }
 SBWatchValueBlock >> exploreValue [
-<action>
+	<action>
 
 	self watchValue watchedValue explore
 ]

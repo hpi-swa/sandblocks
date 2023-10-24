@@ -156,6 +156,7 @@ SBTabView >> asTabButton: aNamedBlock [
 	
 	aNamedBlock = self active ifTrue: [button makeBold].
 	button when: #contentsChanged send: #updateNameFor:on: to: self withArguments: {aNamedBlock. button}.
+	button when: #doubleClicked send: #triggerEvent: to: self with: #doubleClicked.
 	
 	^ button
 ]

@@ -4,6 +4,12 @@ Class {
 	#category : #'Sandblocks-Babylonian'
 }
 
+{ #category : #building }
+SBResultsView >> addAllWatchesFrom: aCollectionOfMethodBlocks [
+
+	self block addAllMorphsBack: (self allWatchesIn: aCollectionOfMethodBlocks)
+]
+
 { #category : #accessing }
 SBResultsView >> allActiveExamples [
 	
@@ -64,6 +70,8 @@ SBResultsView >> buildAllPossibleResults [
 	watchMethodBlocks := self allMethodBlocksContainingWatches.
 	activeExamples := self allActiveExamples.
 	permutations := SBPermutation allPermutationsOf: variants.
+	
+	permutations ifEmpty: [self addAllWatchesFrom: watchMethodBlocks].
 	
 	[ permutations do: [:aPermutation |
 		SBActiveVariantPermutation value: aPermutation.

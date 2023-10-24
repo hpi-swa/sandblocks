@@ -47,11 +47,12 @@ SBWatchView >> changeDisplay [
 	<action>
 
 	| index options |
-	options := Array streamContents: [:stream | self values allConversionsFor: SBInterfaces topLevel do: [:pair | stream nextPut: pair]].
+	options := Array streamContents: [:stream | self values allConversionsFor: SBInterfaces topLevel do: [:pair | stream nextPut: pair]]. 
+	options := options, {{'default'. self watchValuesContainer addAllMorphsBack: (watchValues collect: #asValueMorph)}}.
 	index := UIManager default chooseFrom: (options collect: #first).
 	index = 0 ifTrue: [^ self].
 	
-	self useDisplay: (options at: index) second
+	self displayOnScrollPane: (options at: index) second.
 ]
 
 { #category : #'event handling' }
@@ -110,25 +111,47 @@ SBWatchView >> display [
 ]
 
 { #category : #display }
+SBWatchView >> displayOnScrollPane: aMorph [
+
+	self scroller removeAllMorphs.
+	
+	self scroller addMorph: aMorph.
+	self scrollPane height: aMorph height + self scrollBarHeight.
+	
+	"Simulates an expanding layout"
+	self scrollPane width: (aMorph width <= self maxWidth 
+		ifTrue: [aMorph width] 
+		ifFalse: [self maxWidth])
+]
+
+{ #category : #display }
 SBWatchView >> displayWatchValues [
 
 	| valuesMorph |
-	self scroller removeAllMorphs.
 	valuesMorph := self watchValuesContainer.
-	watchValues do: [:aValue | valuesMorph addMorphBack: (aValue asValueMorph)].
+	valuesMorph addAllMorphsBack: (watchValues collect: #asValueMorph).
 
-	self scroller addMorph: valuesMorph.
-	self scrollPane height: valuesMorph height + self scrollBarHeight.
-	"Simulates an expanding layout"
-	self scrollPane width: (valuesMorph width <= self maxWidth 
-		ifTrue: [valuesMorph width] 
-		ifFalse: [self maxWidth]).
+	self displayOnScrollPane: valuesMorph.
+]
+
+{ #category : #'event handling' }
+SBWatchView >> doubleClick: evt [
+
+	super doubleClick: evt.
+	self exploreValues
 ]
 
 { #category : #'colors and color policies' }
 SBWatchView >> drawnColor [
 
 	^ Color white
+]
+
+{ #category : #accessing }
+SBWatchView >> exploreValues [
+	<action>
+
+	self object explore
 ]
 
 { #category : #accessing }
@@ -183,7 +206,7 @@ SBWatchView >> layoutCommands [
 { #category : #accessing }
 SBWatchView >> maxWidth [
 
-	^ 450
+	^ 300
 ]
 
 { #category : #accessing }
@@ -202,7 +225,9 @@ SBWatchView >> object [
 { #category : #'event handling' }
 SBWatchView >> placeholder [
 
-	^  Morph new color: Color transparent; extent: (0@0)
+	^  Morph new 
+		color: Color transparent; 
+		extent: (0@0)
 ]
 
 { #category : #printing }
@@ -278,13 +303,6 @@ SBWatchView >> updateDisplay [
 	self displayWatchValues
 ]
 
-{ #category : #display }
-SBWatchView >> useDisplay: aDisplay [
-
-	self display delete.
-	self addMorph: aDisplay atIndex: 2. 
-]
-
 { #category : #accessing }
 SBWatchView >> values [
 
@@ -330,5 +348,6 @@ SBWatchView >> watchValuesContainer [
 		changeTableLayout;
 		listDirection: #leftToRight;
 		layoutInset: 1;
-		borderWidth: 0
+		borderWidth: 0;
+		on: #doubleClick send: #exploreValues to: self
 ]
