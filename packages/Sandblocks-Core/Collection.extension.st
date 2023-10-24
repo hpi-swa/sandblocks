@@ -1,12 +1,39 @@
 Extension { #name : #Collection }
 
 { #category : #'*Sandblocks-Core-converting' }
+Collection >> asBarChart: converter [
+	<convert>
+	
+	converter
+		if: [self isString not and: [self isDictionary not and: [self allSatisfy: SBBarChart supportedInterface]]]
+		do: [SBBarChart newWithValues: self]
+]
+
+{ #category : #'*Sandblocks-Core-converting' }
 Collection >> asCollectionView: converter [
 	<convert>
 	
 	converter
 		if: [self size < 20 and: [self isString not and: [self isDictionary not]]]
 		do: [SBCollection new interface: converter objectInterface object: self]
+]
+
+{ #category : #'*Sandblocks-Core-converting' }
+Collection >> asLineChart: converter [
+	<convert>
+	
+	converter
+		if: [self isString not and: [self isDictionary not and: [self allSatisfy: SBLineChart supportedInterface]]]
+		do: [SBLineChart newWithValues: self]
+]
+
+{ #category : #'*Sandblocks-Core-converting' }
+Collection >> asRectangleChart: converter [
+	<convert>
+	
+	converter
+		if: [self isString not and: [self isDictionary not and: [self allSatisfy: SBRectangleChart supportedInterface]]]
+		do: [SBRectangleChart newWithValues: self]
 ]
 
 { #category : #'*Sandblocks-Core' }
