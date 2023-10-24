@@ -129,7 +129,7 @@ SBWatchView >> displayWatchValues [
 
 	| valuesMorph |
 	valuesMorph := self watchValuesContainer.
-	watchValues do: [:aValue | valuesMorph addMorphBack: (aValue asValueMorph)].
+	valuesMorph addAllMorphsBack: (watchValues collect: #asValueMorph).
 
 	self displayOnScrollPane: valuesMorph.
 ]

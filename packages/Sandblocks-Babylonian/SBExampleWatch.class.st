@@ -70,7 +70,7 @@ SBExampleWatch class >> registry [
 SBExampleWatch class >> report: aValue for: aSymbol [
 
 	"Compatibility to SBWatch"
-	^ self reportValue: aValue for: aSymbol modifying: (SBStBlockBody identityNamed: 'result').
+	^ self reportValue: aValue for: aSymbol modifying: (SBStBlockBody identityNamed: 'each').
 ]
 
 { #category : #'event handling' }
@@ -230,7 +230,7 @@ SBExampleWatch >> initialize [
 	exampleToDisplay := Dictionary new.
 	exampleToValues := Dictionary new.
 	watchedExpression := SBStMessageSend new.
-	modifyExpression := SBStBlockBody identityNamed: 'result'.
+	modifyExpression := SBStBlockBody identityNamed: 'each'.
 	
 	self
 		cellGap: 4;
