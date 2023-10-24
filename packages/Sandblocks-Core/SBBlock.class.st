@@ -2849,9 +2849,9 @@ SBBlock >> startDrag: anEvent [
 		comment: 'if the preference is on, we absorb the startDrag events'
 		active: 1
 		do: {[anEvent yellowButtonPressed and: [SBPreferences rightClickContextMenu]]}) ifTrue: [ | canvas |
-		canvas := self sandblockEditor canvas scroller.
+		canvas := self ownerThatIsA: SBEditorCanvas.
 		anEvent hand newMouseFocus: canvas.
-		^ canvas startDrag: (anEvent transformBy: self transformFromWorld asMatrixTransform2x3 inverseTransformation)].
+		^ canvas startDrag: (anEvent transformBy: (self transformFrom: canvas) asMatrixTransform2x3 inverseTransformation)].
 	
 	((self hasDecorator: SBMoveDecorator) not or: [anEvent controlKeyPressed or: [anEvent commandKeyPressed]]) ifTrue: [^ self pickUp: anEvent].
 	
