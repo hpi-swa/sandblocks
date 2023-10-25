@@ -49,15 +49,27 @@ SBExampleValueDisplay >> initialize [
 
 	super initialize.
 	
-	self
-		color: Color transparent;
-		cellGap: 4;
+	self color: Color transparent;
+		cellGap: 5;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		layoutPolicy: SBAlgebraLayout new;
 		changeListDirection: #leftToRight;
-		addMorphBack: (label := SBStringMorph new);
-		addMorphBack: (statusLabel := SBStringMorph new contents: '');
+		"To position the labels / buttons not directly at the top, which looks worse
+		for displays displaying text"
+		addMorphBack: (Morph new 
+							color: Color transparent;
+							changeTableLayout;
+							changeListDirection: #leftToRight;
+							vResizing: #shrinkWrap;
+							hResizing: #shrinkWrap;
+							cellGap: 2;
+							layoutInset: 2@3;
+							addAllMorphsBack: {
+							label := SBStringMorph new. 
+							statusLabel := SBStringMorph new contents: ''.
+							self newChangeVizButton};
+							yourself);
 		addMorphBack: (display := SBExampleWatch watchViewClass saving: -1)
 ]
 
@@ -87,6 +99,17 @@ SBExampleValueDisplay >> layoutCommands [
 SBExampleValueDisplay >> name: aString [
 
 	label contents: aString
+]
+
+{ #category : #layout }
+SBExampleValueDisplay >> newChangeVizButton [
+
+	^ SBButton new
+		icon: SBIcon iconBarChart
+			do: [display changeDisplay];
+		balloonText: 'Change Visualisation';
+		makeSmall;
+		cornerStyle: #squared
 ]
 
 { #category : #'event handling' }
