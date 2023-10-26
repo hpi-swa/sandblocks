@@ -55,6 +55,13 @@ SBExploriants >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 	^ true
 ]
 
+{ #category : #'as yet unclassified' }
+SBExploriants >> selector [
+	" if this node represents any selector, return it here "
+
+	^ nil
+]
+
 { #category : #actions }
 SBExploriants >> visualize [
 

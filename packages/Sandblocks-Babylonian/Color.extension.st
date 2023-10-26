@@ -1,9 +1,9 @@
 Extension { #name : #Color }
 
 { #category : #'*Sandblocks-Babylonian' }
-Color >> sbWatchValueMorphFor: traceValue [
+Color >> sbWatchValueMorphFor: aSBWatchValue sized: aSBMorphResizer [
 		
-	^ (SBWatchValue newContainerMorphFor: traceValue) 
-		addMorph: self asMorph; 
+	^ (SBWatchValue newContainerMorphFor: aSBWatchValue) 
+		addMorph: (aSBMorphResizer applyOn: self asMorph); 
 		yourself
 ]

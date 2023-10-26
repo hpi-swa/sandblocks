@@ -24,10 +24,13 @@ SBWatchView class >> saving: anInteger [
 ]
 
 { #category : #accessing }
-SBWatchView >> addValue: anObject [
+SBWatchView >> addValue: anObject sized: aSBMorphResizer [
 
 	(watchValues size >= numSavedValues and: [numSavedValues > 0]) ifTrue: [watchValues removeFirst].
-	^ watchValues addLast: (SBWatchValue value: anObject sbSnapshot identityHash: anObject identityHash)
+	^ watchValues addLast: (SBWatchValue 
+		value: anObject sbSnapshot 
+		identityHash: anObject identityHash
+		sized: aSBMorphResizer)
 ]
 
 { #category : #'insert/delete' }
@@ -56,7 +59,7 @@ SBWatchView >> changeDisplay [
 	self displayOnScrollPane: (options at: index) second.
 ]
 
-{ #category : #'event handling' }
+{ #category : #actions }
 SBWatchView >> clear [
 	<action>
 
@@ -148,7 +151,7 @@ SBWatchView >> drawnColor [
 	^ Color white
 ]
 
-{ #category : #accessing }
+{ #category : #actions }
 SBWatchView >> exploreValues [
 	<action>
 
@@ -204,10 +207,10 @@ SBWatchView >> layoutCommands [
 		data: (self submorphs collect: #layoutCommands separatedBy: [SBAlgebraCommand gap])
 ]
 
-{ #category : #accessing }
+{ #category : #layout }
 SBWatchView >> maxWidth [
 
-	^ 300
+	^ 350
 ]
 
 { #category : #accessing }
@@ -241,7 +244,7 @@ SBWatchView >> printOn: aStream [
 { #category : #accessing }
 SBWatchView >> reportValue: anObject [
 
-	self addValue: anObject.
+	self addValue: anObject sized: SBMorphResizer newIdentity.
 	self incrementCount.
 	
 	updateScheduled ifFalse: [
@@ -250,9 +253,9 @@ SBWatchView >> reportValue: anObject [
 ]
 
 { #category : #accessing }
-SBWatchView >> reportValues: aCollectionOfObjects [
+SBWatchView >> reportValues: aCollectionOfObjects sized: aMorphResizer [
 
-	aCollectionOfObjects do: [:anObject | self addValue: anObject].
+	aCollectionOfObjects do: [:anObject | self addValue: anObject sized: aMorphResizer].
 	self count: self count contents + aCollectionOfObjects size.
 	
 	updateScheduled ifFalse: [
@@ -260,7 +263,7 @@ SBWatchView >> reportValues: aCollectionOfObjects [
 		Project current addDeferredUIMessage: [self updateDisplay]]
 ]
 
-{ #category : #accessing }
+{ #category : #layout }
 SBWatchView >> scrollBarHeight [
 
 	^ 7 sbScaled 

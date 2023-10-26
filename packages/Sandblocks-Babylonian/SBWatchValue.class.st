@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'watchedValue',
-		'watchedValueIdentityHash'
+		'watchedValueIdentityHash',
+		'morphResizer'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
@@ -22,16 +23,26 @@ SBWatchValue class >> newContainerMorphFor: aWatchValue [
 { #category : #'instance creation' }
 SBWatchValue class >> value: aValue identityHash: tracedValueIdentityHash [
 	
+	^ self 
+		value: aValue 
+		identityHash: tracedValueIdentityHash 
+		sized: SBMorphResizer newIdentity
+]
+
+{ #category : #'instance creation' }
+SBWatchValue class >> value: aValue identityHash: tracedValueIdentityHash sized: aSBMorphResizer [
+	
 	^ self new
 		watchedValue: aValue;
 		watchedValueIdentityHash: tracedValueIdentityHash;
+		morphResizer: aSBMorphResizer;
 		yourself 
 ]
 
 { #category : #accessing }
 SBWatchValue >> asValueMorph [
 
-	^ self watchedValue sbWatchValueMorphFor: self
+	^ self watchedValue sbWatchValueMorphFor: self sized: self morphResizer
 ]
 
 { #category : #accessing }
@@ -47,6 +58,19 @@ SBWatchValue >> initialize [
 	
 	watchedValue := 0.
 	watchedValueIdentityHash := 0 identityHash.
+	morphResizer := SBMorphResizer newIdentity.
+]
+
+{ #category : #accessing }
+SBWatchValue >> morphResizer [
+
+	^ morphResizer
+]
+
+{ #category : #accessing }
+SBWatchValue >> morphResizer: aSBMorphResizer [
+
+	morphResizer := aSBMorphResizer
 ]
 
 { #category : #printing }

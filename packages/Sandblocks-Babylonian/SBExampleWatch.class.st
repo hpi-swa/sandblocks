@@ -102,7 +102,14 @@ SBExampleWatch class >> watchViewClass [
 ]
 
 { #category : #'event handling' }
-SBExampleWatch >> applyChosenDimension [
+SBExampleWatch >> applyChosenDimensionOnValues [
+	
+	"Clearing everything here as Morphs get distorted when resized multiple times."
+	self applyModifyExpressionOnValues.
+	self flag: #todo. "If the sizing should be saved for watches in the future, 
+	remove the markSaved here. That way, users will first browse and then decide if they want a size permanently"
+	self sandblockEditor markSaved: self containingArtefact 
+	
 ]
 
 { #category : #'event handling' }
@@ -112,7 +119,8 @@ SBExampleWatch >> applyModifyExpressionOnValues [
 		anExampleDisplayPair value clear.
 		 anExampleDisplayPair value
 			reportValues: (self modifiedValuesFor: anExampleDisplayPair key)
-			name: (anExampleDisplayPair key ifNotNil: #label ifNil: ['']).
+			name: (anExampleDisplayPair key ifNotNil: #label ifNil: [''])
+			sized: self selectedMorphResizer.
 		anExampleDisplayPair value updateDisplay]
 ]
 
@@ -156,7 +164,8 @@ SBExampleWatch >> exampleFinished: anExample [
 			modifiedValues ifNotEmpty: [
 			aDisplay 
 				reportValues: modifiedValues
-				name: (anExample ifNotNil: #label ifNil: [''])].
+				name: (anExample ifNotNil: #label ifNil: [''])
+				sized: self selectedMorphResizer].
 			aDisplay exampleFinished: anExample]
 ]
 
@@ -232,7 +241,7 @@ SBExampleWatch >> initialize [
 
 	| options |
 	super initialize.
-	options := SBDimension standardOptions.
+	options := SBMorphResizer standardOptions.
 	
 	exampleToDisplay := Dictionary new.
 	exampleToValues := Dictionary new.
@@ -242,7 +251,7 @@ SBExampleWatch >> initialize [
 			labels: (options collect: #label);
 			values: options;
 			object: options first;
-			when: #selectionChanged send: #applyChosenDimension to: self.
+			when: #selectionChanged send: #applyChosenDimensionOnValues to: self.
 	modifyExpression := SBStBlockBody identityNamed: 'each'.
 	
 	self
@@ -379,7 +388,7 @@ SBExampleWatch >> reportValue: anObject for: anExample [
 ]
 
 { #category : #accessing }
-SBExampleWatch >> selectedDimension [
+SBExampleWatch >> selectedMorphResizer [
 
 	^ dimensionOptions object
 ]

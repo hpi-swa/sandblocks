@@ -1,9 +1,9 @@
 Extension { #name : #Number }
 
 { #category : #'*Sandblocks-Babylonian' }
-Number >> sbWatchValueMorphFor: traceValue [
+Number >> sbWatchValueMorphFor: aSBWatchValue sized: aSBMorphResizer [
 
-	^ (SBWatchValue newContainerMorphFor: traceValue)  
+	^ (SBWatchValue newContainerMorphFor: aSBWatchValue)  
 		addMorphBack:  (SBStringMorph new contents: self printString);
 		yourself
 ]
