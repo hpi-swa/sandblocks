@@ -58,5 +58,12 @@ SBExploriants >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 { #category : #actions }
 SBExploriants >> visualize [
 
-	self namedBlocks: SBExploriantsView getTabs activeIndex: 1
+	"The Views need a parent to visualize themselves. We also want to avoid double-calculations"
+	| tabs |
+	tabs := SBExploriantsView getTabs.
+	tabs do: [:aTab | self addMorph: aTab block. aTab visualize.].
+	self removeAllMorphs.
+	
+	self namedBlocks: tabs activeIndex: 1.
+	
 ]

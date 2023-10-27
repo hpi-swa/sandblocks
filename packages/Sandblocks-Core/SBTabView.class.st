@@ -378,7 +378,7 @@ SBTabView >> removeCurrentTab [
 { #category : #tabs }
 SBTabView >> setActive: aNamedBlock [
 
-	SBEditor current do: 
+	self sandblockEditor do: 
 		(self switchCommandFor: (self namedBlocks indexOf: aNamedBlock ifAbsent: 1))
 ]
 

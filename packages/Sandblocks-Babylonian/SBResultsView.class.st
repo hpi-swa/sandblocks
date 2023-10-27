@@ -16,7 +16,7 @@ SBResultsView >> allActiveExamples [
 	^ (self allCompiledMethodsContainingExamples 
 		collect: [:aCompiledMethod | 
 			"Only examples which are open in the editor can actually be active."
-			SBEditor current blockFor: aCompiledMethod withInterfaces: #(#isMethod) 
+			self block sandblockEditor blockFor: aCompiledMethod withInterfaces: #(#isMethod) 
 				ifOpen: [:existingMethodBlock | existingMethodBlock containedExamples select: #active] 
 				ifClosed: [#()]]) flatten
 ]
@@ -95,9 +95,7 @@ SBResultsView >> initialize [
 
 	super initialize.
 	
-	self name: 'Possible Results'.
-	
-	self visualize
+	self name: 'Possible Results'
 ]
 
 { #category : #building }

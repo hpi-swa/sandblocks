@@ -25,8 +25,6 @@ SBVariantsView >> initialize [
 	super initialize.
 	
 	self name: 'Variant Manager'.
-	
-	self visualize
 ]
 
 { #category : #actions }
