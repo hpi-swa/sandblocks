@@ -102,17 +102,6 @@ SBExampleWatch class >> watchViewClass [
 ]
 
 { #category : #'event handling' }
-SBExampleWatch >> applyChosenDimensionOnValues [
-	
-	"Clearing everything here as Morphs get distorted when resized multiple times."
-	self applyModifyExpressionOnValues.
-	self flag: #todo. "If the sizing should be saved for watches in the future, 
-	remove the markSaved here. That way, users will first browse and then decide if they want a size permanently"
-	self sandblockEditor markSaved: self containingArtefact 
-	
-]
-
-{ #category : #'event handling' }
 SBExampleWatch >> applyModifyExpressionOnValues [
 
 	exampleToDisplay associationsDo: [:anExampleDisplayPair | 
@@ -122,6 +111,14 @@ SBExampleWatch >> applyModifyExpressionOnValues [
 			name: (anExampleDisplayPair key ifNotNil: #label ifNil: [''])
 			sized: self selectedMorphResizer.
 		anExampleDisplayPair value updateDisplay]
+]
+
+{ #category : #'event handling' }
+SBExampleWatch >> applyResizerOnValues [
+	
+	"Clearing everything here as Morphs get distorted when resized multiple times."
+	self applyModifyExpressionOnValues.
+	
 ]
 
 { #category : #copying }
@@ -251,7 +248,7 @@ SBExampleWatch >> initialize [
 			labels: (options collect: #label);
 			values: options;
 			object: options first;
-			when: #selectionChanged send: #applyChosenDimensionOnValues to: self.
+			when: #selectionChanged send: #applyResizerOnValues to: self.
 	modifyExpression := SBStBlockBody identityNamed: 'each'.
 	
 	self
