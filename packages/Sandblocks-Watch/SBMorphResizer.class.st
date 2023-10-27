@@ -41,19 +41,27 @@ SBMorphResizer class >> newMedium [
 { #category : #'initialize-release' }
 SBMorphResizer class >> newSmall [
 
-	^ self newLabeled: 'small' transforming: [:aMorph | aMorph extent: 30@30]
+	^ self newLabeled: 'small' transforming: [:aMorph | aMorph extent: 100@100]
 ]
 
 { #category : #'initialize-release' }
 SBMorphResizer class >> newThumbmail [
 
-	^ self newLabeled: 'medium' transforming: [:aMorph | aMorph extent: 50@50]
+	^ self newLabeled: 'thumbmail' transforming: [:aMorph | aMorph extent: 40@40]
+]
+
+{ #category : #'initialize-release' }
+SBMorphResizer class >> newTiny [
+
+	^ self newLabeled: 'small' transforming: [:aMorph | aMorph extent: 15@15]
 ]
 
 { #category : #'initialize-release' }
 SBMorphResizer class >> standardOptions [
 
-	^ {self newSmall.
+	^ {self newTiny.
+		self newThumbmail.
+		self newSmall.
 		self newMedium.
 		self newBig.
 		self newIdentity}
