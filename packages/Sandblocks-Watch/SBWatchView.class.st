@@ -244,12 +244,7 @@ SBWatchView >> printOn: aStream [
 { #category : #accessing }
 SBWatchView >> reportValue: anObject [
 
-	self addValue: anObject sized: SBMorphResizer newIdentity.
-	self incrementCount.
-	
-	updateScheduled ifFalse: [
-		updateScheduled := true.
-		Project current addDeferredUIMessage: [self updateDisplay]]
+	self reportValue: {anObject} sized: SBMorphResizer newIdentity
 ]
 
 { #category : #accessing }

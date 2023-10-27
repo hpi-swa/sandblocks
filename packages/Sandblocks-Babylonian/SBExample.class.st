@@ -384,7 +384,7 @@ SBExample >> run [
 		currentProcess := nil.
 		processRunning := false.
 		Project current addDeferredUIMessage: [
-			returnValue reportValue: returned.
+			returnValue reportValues: {returned} sized: SBMorphResizer newThumbmail.
 			returnValue updateDisplay.
 			self sendFinishNotification]
 	] forkAt: Processor userBackgroundPriority.
