@@ -1155,7 +1155,9 @@ SBEditor >> openAll: aCollection [
 SBEditor >> openExploriants [
 	<globalAction>
 	
-	self open: SBExploriants uniqueInstance visualize
+	"Not calling visualize directly as we first want the editor to be an owner of SBExploriants"
+	self open: SBExploriants uniqueInstance.
+	SBExploriants uniqueInstance visualize
 ]
 
 { #category : #'actions creating' }

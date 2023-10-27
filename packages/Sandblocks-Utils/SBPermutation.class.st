@@ -36,7 +36,7 @@ SBPermutation >> apply [
 
 	self referencedVariants do: [:aVariant | aVariant switchToAlternative: (self at: aVariant id)].
 	(Set newFrom: (referencedVariants collect: #containingArtefact thenSelect: #isMethod))
-		do: [:aMethodBlock | SBEditor current save: aMethodBlock tryFixing: true quick: true].
+		do: [:aMethodBlock | aMethodBlock sandblockEditor save: aMethodBlock tryFixing: true quick: true].
 ]
 
 { #category : #converting }

@@ -1,3 +1,7 @@
+"
+Caution:
+The Views need a parent who in in the editor to visualize themselves
+"
 Class {
 	#name : #SBExploriantsView,
 	#superclass : #SBNamedBlock,
@@ -69,7 +73,7 @@ SBExploriantsView >> findExistingOrConvertToBlocks: aCollectionOfCompiledMethods
 
 	^ aCollectionOfCompiledMethods
 		collect: [:aCompiledMethod | 
-			SBEditor current blockFor: aCompiledMethod withInterfaces: #(#isMethod) 
+			self block sandblockEditor blockFor: aCompiledMethod withInterfaces: #(#isMethod) 
 				ifOpen: [:existingMethodBlock | existingMethodBlock] 
 				ifClosed: [aCompiledMethod asSandblock]]
 ]
