@@ -21,7 +21,7 @@ SBInactiveExampleWatch >> artefactSaved: aBlock [
 
 	"As we are inactive, we have to manually apply our modifyExpression if it changes. 
 	Otherwise, we would reset by examples starting" 
-	(aBlock = self containingArtefact) ifTrue: [self applyModifyExpressionOnValues] 
+	(aBlock = self containingArtefact) ifTrue: [self applyModifyExpressionOnValues]
 ]
 
 { #category : #'event handling' }

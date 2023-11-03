@@ -7,10 +7,10 @@ Form >> sbSnapshot [
 ]
 
 { #category : #'*Sandblocks-Babylonian' }
-Form >> sbWatchValueMorphFor: traceValue [
+Form >> sbWatchValueMorphFor: aSBWatchValue sized: aSBMorphResizer [
 		
-	^ (SBWatchValue newContainerMorphFor: traceValue)  
-		addMorphBack: (SBIcon iconFor: traceValue watchedValueIdentityHash) asMorph;
-		addMorphBack: self asMorph;
+	^ (SBWatchValue newContainerMorphFor: aSBWatchValue)  
+		addMorphBack: (SBIcon iconFor: aSBWatchValue watchedValueIdentityHash) asMorph;
+		addMorphBack: (aSBMorphResizer applyOn: self asMorph);
 		yourself
 ]

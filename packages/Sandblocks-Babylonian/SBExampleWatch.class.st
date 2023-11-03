@@ -7,6 +7,7 @@ Class {
 	#instVars : [
 		'identifier',
 		'watchedExpression',
+		'dimensionOptions',
 		'modifyExpression',
 		'exampleToDisplay',
 		'exampleToValues'
@@ -100,15 +101,24 @@ SBExampleWatch class >> watchViewClass [
 	^ SBExampleWatchView
 ]
 
-{ #category : #callbacks }
+{ #category : #'event handling' }
 SBExampleWatch >> applyModifyExpressionOnValues [
 
 	exampleToDisplay associationsDo: [:anExampleDisplayPair | 
 		anExampleDisplayPair value clear.
 		 anExampleDisplayPair value
 			reportValues: (self modifiedValuesFor: anExampleDisplayPair key)
-			name: (anExampleDisplayPair key ifNotNil: #label ifNil: ['']).
+			name: (anExampleDisplayPair key ifNotNil: #label ifNil: [''])
+			sized: self selectedMorphResizer.
 		anExampleDisplayPair value updateDisplay]
+]
+
+{ #category : #'event handling' }
+SBExampleWatch >> applyResizerOnValues [
+	
+	"Clearing everything here as Morphs get distorted when resized multiple times."
+	self applyModifyExpressionOnValues.
+	
 ]
 
 { #category : #copying }
@@ -151,7 +161,8 @@ SBExampleWatch >> exampleFinished: anExample [
 			modifiedValues ifNotEmpty: [
 			aDisplay 
 				reportValues: modifiedValues
-				name: (anExample ifNotNil: #label ifNil: [''])].
+				name: (anExample ifNotNil: #label ifNil: [''])
+				sized: self selectedMorphResizer].
 			aDisplay exampleFinished: anExample]
 ]
 
@@ -192,7 +203,7 @@ SBExampleWatch >> exampleToValues: anExampleToCollectionOfObjectsDict [
 { #category : #accessing }
 SBExampleWatch >> expression [
 
-	^ self submorphs first
+	^ self firstSubmorph 
 ]
 
 { #category : #accessing }
@@ -225,19 +236,35 @@ SBExampleWatch >> identifier: aSymbol [
 { #category : #initialization }
 SBExampleWatch >> initialize [
 
+	| options |
 	super initialize.
+	options := SBMorphResizer standardOptions.
 	
 	exampleToDisplay := Dictionary new.
 	exampleToValues := Dictionary new.
 	watchedExpression := SBStMessageSend new.
+	dimensionOptions := SBComboBox new
+			prefix: 'Dimensions: ';
+			labels: (options collect: #label);
+			values: options;
+			object: options first;
+			when: #selectionChanged send: #applyResizerOnValues to: self.
 	modifyExpression := SBStBlockBody identityNamed: 'each'.
 	
 	self
+		changeTableLayout;
 		cellGap: 4;
 		layoutInset: 2;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		addAllMorphsBack: {watchedExpression. modifyExpression};
+		addAllMorphsBack: {
+			watchedExpression. 
+			 SBRow new
+				hResizing: #spaceFill;
+				listCentering: #bottomRight;
+				addMorphBack: dimensionOptions;
+				yourself. 
+			modifyExpression};
 		yourself 
 ]
 
@@ -340,7 +367,7 @@ SBExampleWatch >> printOn: aStream [
 	self modifyExpression printOn: aStream.
 ]
 
-{ #category : #'event handling' }
+{ #category : #actions }
 SBExampleWatch >> replaceWithWatchedExpression [
 	<action>
 	
@@ -355,6 +382,12 @@ SBExampleWatch >> reportValue: anObject for: anExample [
 	exampleToValues
 		at: anExample
 		ifPresent: [:values | values add: anObject]
+]
+
+{ #category : #accessing }
+SBExampleWatch >> selectedMorphResizer [
+
+	^ dimensionOptions object
 ]
 
 { #category : #accessing }

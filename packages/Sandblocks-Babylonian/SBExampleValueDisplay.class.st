@@ -113,19 +113,11 @@ SBExampleValueDisplay >> newChangeVizButton [
 ]
 
 { #category : #'event handling' }
-SBExampleValueDisplay >> reportValue: anObject name: aString [
+SBExampleValueDisplay >> reportValues: aCollectionOfObjects name: aString sized: aSBMorphResizer [
 
-	display reportValue: anObject.
+	display reportValues: aCollectionOfObjects sized: aSBMorphResizer.
 	label contents: aString.
 	label visible: aString notEmpty.
-	hadValue := true
-]
-
-{ #category : #'event handling' }
-SBExampleValueDisplay >> reportValues: aCollectionOfObjects name: aString [
-
-	display reportValues: aCollectionOfObjects.
-	label contents: aString.
 	hadValue := true
 ]
 

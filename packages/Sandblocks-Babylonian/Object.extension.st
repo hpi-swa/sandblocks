@@ -16,12 +16,13 @@ Object >> sbSnapshot [
 ]
 
 { #category : #'*Sandblocks-Babylonian' }
-Object >> sbWatchValueMorphFor: traceValue [
+Object >> sbWatchValueMorphFor: aSBWatchValue sized: aSBMorphResizer [
 
 	"This has to return a container block"
+	"Objects can choose if they want to apply a changed extent" 
 		
-	^ (SBWatchValue newContainerMorphFor: traceValue) 
-		addMorphBack: (SBIcon iconFor: traceValue watchedValueIdentityHash) asMorph;
-		addMorphBack: (SBStringMorph new contents: (' ' , self printString));
+	^ (SBWatchValue newContainerMorphFor: aSBWatchValue) 
+		addMorphBack: (SBIcon iconFor: aSBWatchValue watchedValueIdentityHash) asMorph;
+		addMorphBack: self asMorph;
 		yourself
 ]
