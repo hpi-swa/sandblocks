@@ -247,7 +247,7 @@ SBExampleWatch >> initialize [
 			prefix: 'Dimensions: ';
 			labels: (options collect: #label);
 			values: options;
-			object: options first;
+			object: options third;
 			when: #selectionChanged send: #applyResizerOnValues to: self.
 	modifyExpression := SBStBlockBody identityNamed: 'each'.
 	

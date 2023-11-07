@@ -138,6 +138,12 @@ SBWatchView >> displayWatchValues [
 	self displayOnScrollPane: valuesMorph.
 ]
 
+{ #category : #accessing }
+SBWatchView >> displayedMorphs [
+
+	^ self scroller submorphs first "container for scrolling" submorphs 
+]
+
 { #category : #'event handling' }
 SBWatchView >> doubleClick: evt [
 

@@ -53,7 +53,7 @@ SBMorphResizer class >> newThumbmail [
 { #category : #'initialize-release' }
 SBMorphResizer class >> newTiny [
 
-	^ self newLabeled: 'small' transforming: [:aMorph | aMorph extent: 15@15]
+	^ self newLabeled: 'tiny' transforming: [:aMorph | aMorph extent: 15@15]
 ]
 
 { #category : #'initialize-release' }

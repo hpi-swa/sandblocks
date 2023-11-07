@@ -66,11 +66,21 @@ SBVariant class >> named: aString alternatives: aCollectionOfNamedBlocks activeI
 { #category : #'instance creation' }
 SBVariant class >> named: aString associations: aCollectionOfAssociations activeIndex: aNumber id: uuid [
 
+	| defaultBehavior requestor requiredPermutation |
 	aNumber <= 0 ifTrue: [^ nil].
-	^ SBActiveVariantPermutation value 
-		ifNil: [(aCollectionOfAssociations at: aNumber) value value]
-		ifNotNil: [(aCollectionOfAssociations at: (SBActiveVariantPermutation value at: uuid)) value value].
-		
+	"Always prioritize the permutation which is marked as active"
+	SBActiveVariantPermutation value ifNotNil: [^ (aCollectionOfAssociations at: (SBActiveVariantPermutation value at: uuid)) value value].
+	
+	defaultBehavior := (aCollectionOfAssociations at: aNumber) value value.
+	
+	"The requesting object does not require dynamic update behavior in which it needs to know a certain alternative"
+	SBExploriants objectToPermutation at: (requestor := thisContext sender receiver) ifAbsent: [^ defaultBehavior].
+	"The permutation is outdated and does not know this variant"
+	(requiredPermutation := SBExploriants objectToPermutation at: requestor) at: uuid ifAbsent: [^ defaultBehavior].
+	"An outdated permutation in which an alternative with a higher index than current has been deleted"
+	aCollectionOfAssociations at: (requiredPermutation at: uuid) ifAbsent: [^ defaultBehavior].
+	
+	^ (aCollectionOfAssociations at: (requiredPermutation at: uuid)) value value
 ]
 
 { #category : #'instance creation' }

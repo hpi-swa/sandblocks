@@ -1,6 +1,12 @@
+"
+objectToPermutation is a WeakKeyDictionary to enable permutation execution for dynamic objects. E.G. UI is run in a shared process which does not know the SBActiveVariantPermutation of the example processes, resulting in all morphs running the same step method. 
+"
 Class {
 	#name : #SBExploriants,
 	#superclass : #SBTabView,
+	#instVars : [
+		'objectToPermutation'
+	],
 	#classInstVars : [
 		'uniqueInstance'
 	],
@@ -20,6 +26,12 @@ SBExploriants class >> new [
 ]
 
 { #category : #accessing }
+SBExploriants class >> objectToPermutation [
+
+	^ self uniqueInstance objectToPermutation
+]
+
+{ #category : #accessing }
 SBExploriants class >> uniqueInstance [ 
 
 	^ uniqueInstance ifNil: [uniqueInstance := super new]
@@ -36,6 +48,8 @@ SBExploriants >> initialize [
 
 	super initialize.
 	
+	objectToPermutation := WeakKeyDictionary new.
+	
 	self
 		attachDecorator: SBMoveDecorator new;
 		changeTableLayout;
@@ -47,6 +61,12 @@ SBExploriants >> initialize [
 SBExploriants >> isArtefact [ 
 
 	^ true
+]
+
+{ #category : #accessing }
+SBExploriants >> objectToPermutation [
+
+	^ objectToPermutation
 ]
 
 { #category : #'artefact protocol' }
