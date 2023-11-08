@@ -13,6 +13,7 @@ SBInactiveExampleWatch class >> newFromWatch: anActiveWatch [
 	^ (anActiveWatch veryDeepCopy)
 		primitiveChangeClassTo: self basicNew;
 		expression: (SBTextBubble new contents: anActiveWatch expression sourceString);
+		saveObjectsActivePermutations;
 		yourself 
 ]
 
@@ -21,7 +22,8 @@ SBInactiveExampleWatch >> artefactSaved: aBlock [
 
 	"As we are inactive, we have to manually apply our modifyExpression if it changes. 
 	Otherwise, we would reset by examples starting" 
-	(aBlock = self containingArtefact) ifTrue: [self applyModifyExpressionOnValues]
+	(aBlock = self containingArtefact) 
+		ifTrue: [self applyModifyExpressionOnValues. self saveObjectsActivePermutations.]
 ]
 
 { #category : #'event handling' }
@@ -47,4 +49,15 @@ SBInactiveExampleWatch >> isActive [
 SBInactiveExampleWatch >> listensToExamples [
 
 	^ false
+]
+
+{ #category : #'*Sandblocks-Babylonian' }
+SBInactiveExampleWatch >> saveObjectsActivePermutations [
+
+	"Force morphs to persist their permutation even when on the UI process"
+	exampleToDisplay associationsDo: [:anExampleDisplayPair |
+		anExampleDisplayPair value displayedWatchValueBlocks do: [:aValueMorph | 
+			SBExploriants objectToPermutation 
+				at: aValueMorph lastSubmorph 
+				put: SBActiveVariantPermutation value]].
 ]

@@ -22,6 +22,12 @@ SBExampleValueDisplay >> clear [
 ]
 
 { #category : #accessing }
+SBExampleValueDisplay >> displayedWatchValueBlocks [
+
+	^ display displayedMorphs
+]
+
+{ #category : #accessing }
 SBExampleValueDisplay >> exampleFinished: anExample [
 
 	display exampleFinished: anExample.
