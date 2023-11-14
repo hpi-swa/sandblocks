@@ -85,8 +85,11 @@ SBResultsView >> buildPermutationFor: aPermutation collectingWatchesFrom: aColle
 
 	self block addAllMorphsBack: { SBOwnTextMorph new contents: aPermutation asString.
 									self applyButtonFor: aPermutation. 
-									(self containerRow listDirection: #leftToRight) 
-										addAllMorphsBack: (self allWatchesIn: aCollectionOfMethodBlocks).
+									(self containerRow listDirection: #leftToRight)
+										 addMorph: ((
+											SBPermutationCluster
+												newFromWatches: (self allWatchesIn: aCollectionOfMethodBlocks)
+												havingSize: (SBMorphResizer newSmall))).
 									LineMorph from: 0@0 to: 50@0 color: Color black width: 2}
 ]
 

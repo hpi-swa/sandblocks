@@ -22,6 +22,12 @@ SBExampleValueDisplay >> clear [
 ]
 
 { #category : #accessing }
+SBExampleValueDisplay >> display [
+
+	^ display
+]
+
+{ #category : #accessing }
 SBExampleValueDisplay >> displayedWatchValueBlocks [
 
 	^ display displayedMorphs
@@ -89,6 +95,12 @@ SBExampleValueDisplay >> label [
 SBExampleValueDisplay >> label: aString [
 
 	label contents: aString
+]
+
+{ #category : #accessing }
+SBExampleValueDisplay >> labelMorph [
+
+	^ label
 ]
 
 { #category : #layout }

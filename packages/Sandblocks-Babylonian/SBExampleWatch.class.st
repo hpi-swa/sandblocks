@@ -189,6 +189,12 @@ SBExampleWatch >> exampleStopped: anExample [
 ]
 
 { #category : #accessing }
+SBExampleWatch >> exampleToDisplay [
+
+	^ exampleToDisplay
+]
+
+{ #category : #accessing }
 SBExampleWatch >> exampleToDisplay: anExampleToDisplayDict [
 
 	exampleToDisplay := anExampleToDisplayDict
@@ -198,6 +204,12 @@ SBExampleWatch >> exampleToDisplay: anExampleToDisplayDict [
 SBExampleWatch >> exampleToValues: anExampleToCollectionOfObjectsDict [
 
 	exampleToValues := anExampleToCollectionOfObjectsDict
+]
+
+{ #category : #accessing }
+SBExampleWatch >> examples [
+
+	^ exampleToDisplay keys
 ]
 
 { #category : #accessing }
@@ -244,7 +256,7 @@ SBExampleWatch >> initialize [
 	exampleToValues := Dictionary new.
 	watchedExpression := SBStMessageSend new.
 	dimensionOptions := SBComboBox new
-			prefix: 'Dimensions: ';
+			prefix: 'Morph Dimensions: ';
 			labels: (options collect: #label);
 			values: options;
 			object: options third;
