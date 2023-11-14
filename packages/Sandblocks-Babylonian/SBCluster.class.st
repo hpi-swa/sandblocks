@@ -66,7 +66,7 @@ SBCluster >> newCellMorph [
 
 	^ self morphResizer applyOn: (
 		Morph new
-			color: Color blue;
+			color: Color transparent ;
 			changeTableLayout;
 			listDirection: #topToBottom;
 			listCentering: #center;
@@ -79,7 +79,7 @@ SBCluster >> newCellMorph [
 SBCluster >> newContainerMorph [
 
 	^ Morph new
-		color: Color banana;
+		color: Color transparent ;
 		changeTableLayout;
 		listDirection: #topToBottom;
 		hResizing: #shrinkWrap;

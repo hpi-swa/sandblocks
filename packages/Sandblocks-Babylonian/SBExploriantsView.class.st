@@ -15,10 +15,16 @@ SBExploriantsView class >> block: aSBBlock named: aString [
 	self shouldNotImplement 
 ]
 
+{ #category : #util }
+SBExploriantsView class >> deepSubclasses: aClass [
+
+	^ {aClass}, ((aClass subclasses collect: [:aSubclass | self deepSubclasses: aSubclass]) flatten) 
+]
+
 { #category : #'instance creation' }
 SBExploriantsView class >> getTabs [
 
-	^ self subclasses collect: #new
+	^ (self subclasses collect: [:mySubClass | self deepSubclasses: mySubClass]) flatten collect: #new
 ]
 
 { #category : #accessing }

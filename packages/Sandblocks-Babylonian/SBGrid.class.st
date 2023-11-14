@@ -10,7 +10,7 @@ Class {
 { #category : #constants }
 SBGrid class >> cellInsetValue [
 
-	^ 5
+	^ 2
 ]
 
 { #category : #'initialize-release' }
@@ -58,5 +58,5 @@ SBGrid >> resizeContents: aSBMorphResizer [
 { #category : #visualisation }
 SBGrid >> updateWidthToPersistColumns [
 
-	 self width: (columnCount * (self submorphs first width + (2 * self class cellInsetValue)))
+	 self width: (columnCount * (self submorphs first width + (2 * self cellInset)))
 ]

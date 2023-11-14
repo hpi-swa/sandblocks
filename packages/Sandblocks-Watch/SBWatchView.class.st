@@ -216,7 +216,7 @@ SBWatchView >> layoutCommands [
 { #category : #layout }
 SBWatchView >> maxWidth [
 
-	^ 10
+	^ 350
 ]
 
 { #category : #accessing }
