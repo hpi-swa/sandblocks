@@ -7,17 +7,19 @@ Class {
 { #category : #visualisation }
 SBPermutationCluster >> extractColumnsFrom: anExampleWatch [
 
-	^ anExampleWatch exampleToDisplay collect: [:anExampleValueDisplay | | watchview | 
-		watchview := anExampleValueDisplay display copy.
+	^ anExampleWatch exampleToDisplay collect: [:anExampleValueDisplay | | displayedMorphs | 
+		displayedMorphs := anExampleValueDisplay display displayedMorphs 
+			collect: [:aMorph | aMorph watchValue morphResizer: self morphResizer. aMorph watchValue asValueMorph].
 		self flag: #todo. "Another way besides turning into an image to keep interactions.-jb"
-		ImageMorph new 
-			on: #click send: #exploreValues to: watchview;
-			newForm: (
-				self newCellMorph 
-					listDirection: #leftToRight;
-					wrapDirection: #topToBottom;
-					addAllMorphsBack: watchview displayedMorphs;
-					iconOrThumbnailOfSize: self newCellMorph extent)].
+		(displayedMorphs size = 1) 
+			ifTrue: [displayedMorphs first]
+			ifFalse: [
+				ImageMorph new newForm: (
+					self newCellMorph 
+						listDirection: #leftToRight;
+						wrapDirection: #topToBottom;
+						addAllMorphsBack: displayedMorphs;
+						iconOrThumbnailOfSize: self newCellMorph extent)]].
 ]
 
 { #category : #visualisation }

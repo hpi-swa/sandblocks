@@ -70,7 +70,8 @@ SBWatchValue >> morphResizer [
 { #category : #accessing }
 SBWatchValue >> morphResizer: aSBMorphResizer [
 
-	morphResizer := aSBMorphResizer
+	morphResizer := aSBMorphResizer.
+	
 ]
 
 { #category : #printing }

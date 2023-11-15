@@ -13,7 +13,7 @@ SBGridResultsView >> buildPermutationFor: aPermutation collectingWatchesFrom: aC
 										 addMorph: ((
 											SBPermutationCluster
 												newFromWatches: (self allWatchesIn: aCollectionOfMethodBlocks)
-												havingSize: (SBMorphResizer newSmall))).
+												havingSize: (SBMorphResizer newMedium))).
 									LineMorph from: 0@0 to: 50@0 color: Color black width: 2}
 ]
 
