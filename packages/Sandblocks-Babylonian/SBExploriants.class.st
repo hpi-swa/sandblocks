@@ -75,7 +75,7 @@ SBExploriants >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExploriants >> selector [
 	" if this node represents any selector, return it here "
 
@@ -85,11 +85,9 @@ SBExploriants >> selector [
 { #category : #actions }
 SBExploriants >> visualize [
 
-	"The Views need a parent to visualize themselves. We also want to avoid double-calculations"
 	| tabs |
-	tabs := SBExploriantsView getTabs.
-	tabs do: [:aTab | self addMorph: aTab block. aTab visualize.].
-	self removeAllMorphs.
+	tabs := SBExploriantsView getTabsInMultiverse: (SBMultiverse newInEditor: self sandblockEditor).
+	tabs do: #visualize.
 	
 	self namedBlocks: tabs activeIndex: 1.
 	

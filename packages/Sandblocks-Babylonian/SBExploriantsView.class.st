@@ -1,10 +1,9 @@
-"
-Caution:
-The Views need a parent who in in the editor to visualize themselves
-"
 Class {
 	#name : #SBExploriantsView,
 	#superclass : #SBNamedBlock,
+	#instVars : [
+		'multiverse'
+	],
 	#category : #'Sandblocks-Babylonian'
 }
 
@@ -22,34 +21,18 @@ SBExploriantsView class >> deepSubclasses: aClass [
 ]
 
 { #category : #'instance creation' }
-SBExploriantsView class >> getTabs [
+SBExploriantsView class >> getTabsInMultiverse: aSBMultiverse [
 
-	^ (self subclasses collect: [:mySubClass | self deepSubclasses: mySubClass]) flatten collect: #new
+	^ (self subclasses collect: [:mySubClass | self deepSubclasses: mySubClass]) flatten 
+		collect: [:mySubclass | mySubclass newMultiverse: aSBMultiverse]
 ]
 
-{ #category : #accessing }
-SBExploriantsView >> allCompiledMethodsContainingClass: aClass [
+{ #category : #'instance creation' }
+SBExploriantsView class >> newMultiverse: aSBMultiverse [
 
-	"aClass should have #matchingSelectors implemented"
-	^ (((aClass matchingSelectors collect: [:aSelector | self systemNavigation allCallsOn: aSelector]) flatten)
-		reject: [:aMethodReference | aMethodReference actualClass = aClass class])
-		collect: #compiledMethod
-]
-
-{ #category : #accessing }
-SBExploriantsView >> allCompiledMethodsContainingVariants [
-
-	^ self allCompiledMethodsContainingClass: SBVariant
-]
-
-{ #category : #accessing }
-SBExploriantsView >> allMethodBlocksContainingVariants [
-
-	"We are looking for already opened methods so that we can assign the
-	variant there as the original in SBVariantProxy. That way, we immediately
-	have consistency between changes."
-	^ self findExistingOrConvertToBlocks: self allCompiledMethodsContainingVariants 
-
+	^ self new
+		multiverse: aSBMultiverse;
+		yourself
 ]
 
 { #category : #actions }
@@ -98,6 +81,18 @@ SBExploriantsView >> initialize [
 		cellInset: 2;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap)
+]
+
+{ #category : #accessing }
+SBExploriantsView >> multiverse [
+
+	^ multiverse ifNil: [multiverse := SBMultiverse newInEditor: SBEditor current]
+]
+
+{ #category : #accessing }
+SBExploriantsView >> multiverse: aSBMultiverse [
+
+	multiverse := aSBMultiverse
 ]
 
 { #category : #actions }

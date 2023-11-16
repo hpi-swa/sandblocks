@@ -5,50 +5,6 @@ Class {
 }
 
 { #category : #building }
-SBResultsView >> addAllWatchesFrom: aCollectionOfMethodBlocks [
-
-	self block addAllMorphsBack: (self allWatchesIn: aCollectionOfMethodBlocks)
-]
-
-{ #category : #accessing }
-SBResultsView >> allActiveExamples [
-	
-	^ (self allCompiledMethodsContainingExamples 
-		collect: [:aCompiledMethod | 
-			"Only examples which are open in the editor can actually be active."
-			self block sandblockEditor blockFor: aCompiledMethod withInterfaces: #(#isMethod) 
-				ifOpen: [:existingMethodBlock | existingMethodBlock containedExamples select: #active] 
-				ifClosed: [#()]]) flatten
-]
-
-{ #category : #accessing }
-SBResultsView >> allCompiledMethodsContainingExampleWatches [
-
-	^ self allCompiledMethodsContainingClass: SBExampleWatch
-]
-
-{ #category : #accessing }
-SBResultsView >> allCompiledMethodsContainingExamples [
-
-	^ self allCompiledMethodsContainingClass: SBExample
-]
-
-{ #category : #accessing }
-SBResultsView >> allMethodBlocksContainingWatches [
-
-	"We need existing originals to be noticed of changes."
-	^ self findExistingOrConvertToBlocks: self allCompiledMethodsContainingExampleWatches 
-
-]
-
-{ #category : #accessing }
-SBResultsView >> allWatchesIn: aCollectionOfMethodBlocks [
-	
-	^ (aCollectionOfMethodBlocks collect: [:aMethodBlock | 
-		aMethodBlock containedExampleWatches collect: #asInactiveCopy]) flatten
-]
-
-{ #category : #building }
 SBResultsView >> applyButtonFor: aPermutation [ 
 	
 	^ SBButton new
@@ -63,30 +19,23 @@ SBResultsView >> applyButtonFor: aPermutation [
 
 { #category : #building }
 SBResultsView >> buildAllPossibleResults [
-
-	| permutations activeExamples watchMethodBlocks variants |
-	self flag: #todo. "don't calculate all variants a second time (first time being the variants view) -jb"
-	variants := (self allMethodBlocksContainingVariants collect: #containedVariants) flatten.
-	watchMethodBlocks := self allMethodBlocksContainingWatches.
-	activeExamples := self allActiveExamples.
-	permutations := SBPermutation allPermutationsOf: variants.
 	
-	permutations ifEmpty: [self addAllWatchesFrom: watchMethodBlocks].
+	self multiverse universes ifEmpty: [self block addAllMorphsBack: self mutliverse watches].
 	
-	[ permutations do: [:aPermutation |
-		SBActiveVariantPermutation value: aPermutation.
-		activeExamples do: #runSynchronouslyIgnoreReturn.
-		self buildPermutationFor: aPermutation collectingWatchesFrom: watchMethodBlocks].
-		self resetWatchesToOriginalPermutationRunning: activeExamples] forkAt: Processor userSchedulingPriority
+	[ self multiverse universes do: [:aUniverse |
+		SBActiveVariantPermutation value: aUniverse activePermutation.
+		self multiverse activeExamples do: #runSynchronouslyIgnoreReturn.
+		self buildPermutationFor: aUniverse].
+		self resetWatchesToOriginalPermutationRunning: self multiverse activeExamples] forkAt: Processor userSchedulingPriority
 ]
 
 { #category : #building }
-SBResultsView >> buildPermutationFor: aPermutation collectingWatchesFrom: aCollectionOfMethodBlocks [
+SBResultsView >> buildPermutationFor: aSBUniverse [
 
-	self block addAllMorphsBack: { SBOwnTextMorph new contents: aPermutation asString.
-									self applyButtonFor: aPermutation. 
+	self block addAllMorphsBack: { SBOwnTextMorph new contents: aSBUniverse activePermutation asString.
+									self applyButtonFor: aSBUniverse activePermutation. 
 									(self containerRow listDirection: #leftToRight) 
-										addAllMorphsBack: (self allWatchesIn: aCollectionOfMethodBlocks).
+										addAllMorphsBack: aSBUniverse watches.
 									LineMorph from: 0@0 to: 50@0 color: Color black width: 2}
 ]
 

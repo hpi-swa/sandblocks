@@ -5,14 +5,14 @@ Class {
 }
 
 { #category : #building }
-SBGridResultsView >> buildPermutationFor: aPermutation collectingWatchesFrom: aCollectionOfMethodBlocks [
+SBGridResultsView >> buildPermutationFor: aSBUniverse [
 
-	self block addAllMorphsBack: { SBOwnTextMorph new contents: aPermutation asString.
-									self applyButtonFor: aPermutation. 
+	self block addAllMorphsBack: { SBOwnTextMorph new contents: aSBUniverse activePermutation asString.
+									self applyButtonFor: aSBUniverse activePermutation. 
 									(self containerRow listDirection: #leftToRight)
 										 addMorph: ((
 											SBPermutationCluster
-												newFromWatches: (self allWatchesIn: aCollectionOfMethodBlocks)
+												newFromWatches: aSBUniverse watches
 												havingSize: (SBMorphResizer newMedium))).
 									LineMorph from: 0@0 to: 50@0 color: Color black width: 2}
 ]
