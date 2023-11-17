@@ -42,7 +42,7 @@ SBCluster >> initialize [
 	super initialize.
 	
 	self 
-		color: Color white;
+		color: Color transparent;
 		changeTableLayout;
 		listDirection: #topToBottom;
 		vResizing: #shrinkWrap;

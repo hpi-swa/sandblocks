@@ -1,3 +1,6 @@
+"
+A mostly data class for collecting and caching watches, variants, methods found in a point of time
+"
 Class {
 	#name : #SBMultiverse,
 	#superclass : #Object,

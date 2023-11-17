@@ -34,7 +34,7 @@ SBPermutationCluster >> extractedTopHeadingsFrom: aCollectionOfSBExampleWatches 
 	^ (aCollectionOfSBExampleWatches first exampleToDisplay values collect: [:aDisplay | aDisplay labelMorph copy])
 ]
 
-{ #category : #visualisation }
+{ #category : #converting }
 SBPermutationCluster >> watchesAsMatrix: aCollectionOfSBExampleWatches [
 
 	| matrix |

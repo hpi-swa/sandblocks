@@ -14,16 +14,10 @@ SBExploriantsView class >> block: aSBBlock named: aString [
 	self shouldNotImplement 
 ]
 
-{ #category : #util }
-SBExploriantsView class >> deepSubclasses: aClass [
-
-	^ {aClass}, ((aClass subclasses collect: [:aSubclass | self deepSubclasses: aSubclass]) flatten) 
-]
-
 { #category : #'instance creation' }
 SBExploriantsView class >> getTabsInMultiverse: aSBMultiverse [
 
-	^ (self subclasses collect: [:mySubClass | self deepSubclasses: mySubClass]) flatten 
+	^ {SBGridResultsView. SBPlainResultsView. SBVariantsView}
 		collect: [:mySubclass | mySubclass newMultiverse: aSBMultiverse]
 ]
 

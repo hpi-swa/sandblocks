@@ -32,19 +32,7 @@ SBResultsView >> buildAllPossibleResults [
 { #category : #building }
 SBResultsView >> buildPermutationFor: aSBUniverse [
 
-	self block addAllMorphsBack: { SBOwnTextMorph new contents: aSBUniverse activePermutation asString.
-									self applyButtonFor: aSBUniverse activePermutation. 
-									(self containerRow listDirection: #leftToRight) 
-										addAllMorphsBack: aSBUniverse watches.
-									LineMorph from: 0@0 to: 50@0 color: Color black width: 2}
-]
-
-{ #category : #initialization }
-SBResultsView >> initialize [ 
-
-	super initialize.
-	
-	self name: 'Simple View'
+	self subclassResponsibility
 ]
 
 { #category : #building }
@@ -60,7 +48,7 @@ SBResultsView >> updateButton [
 	^ SBButton new
 		icon: SBIcon iconRotateLeft
 			label: 'Re-Generate'
-			do: [self visualize];
+			do: [self multiverse initialize. self visualize];
 		cornerStyle: #squared
 ]
 
@@ -69,6 +57,6 @@ SBResultsView >> visualize [
 
 	self clean.
 
-	self block addMorphBack: self updateButton.
+	self block addMorphFront: self updateButton.
 	self buildAllPossibleResults 
 ]
