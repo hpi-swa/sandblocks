@@ -134,6 +134,8 @@ SBMultiverse >> initialize [
 	universes := (SBPermutation allPermutationsOf: variants) collect: [:aPermutation |
 		self createUniverseFomPermutation: aPermutation].
 	
+	self triggerEvent: #initialized.
+	
 	
 ]
 

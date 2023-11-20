@@ -48,7 +48,7 @@ SBResultsView >> updateButton [
 	^ SBButton new
 		icon: SBIcon iconRotateLeft
 			label: 'Re-Generate'
-			do: [self multiverse initialize. self visualize];
+			do: [self multiverse initialize];
 		cornerStyle: #squared
 ]
 

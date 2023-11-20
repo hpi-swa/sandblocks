@@ -86,7 +86,8 @@ SBExploriantsView >> multiverse [
 { #category : #accessing }
 SBExploriantsView >> multiverse: aSBMultiverse [
 
-	multiverse := aSBMultiverse
+	multiverse := aSBMultiverse.
+	multiverse when: #initialized send: #visualize to: self.
 ]
 
 { #category : #actions }
