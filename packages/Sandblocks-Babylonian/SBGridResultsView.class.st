@@ -21,7 +21,7 @@ SBGridResultsView >> buildPermutationFor: aSBUniverse [
 								havingSize: SBMorphResizer newSmall}.
 		LineMorph from: 0@0 to: 0@50 color: Color black width: 2}).
 		
-	gridContainer width: (self multiverse universes size safeSquareRoot ceiling) * (gridContainer lastSubmorph width + (2 * gridContainer cellInset) + (2 * gridContainer cellGap)) . 
+	gridContainer width: (self multiverse universes size safeSquareRoot ceiling) * (gridContainer lastSubmorph width + (2 * gridContainer cellInset) + (2 * gridContainer cellGap) + (2 * self block layoutInset x)). 
 ]
 
 { #category : #actions }
