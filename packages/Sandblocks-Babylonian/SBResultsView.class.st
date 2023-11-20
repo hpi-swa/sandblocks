@@ -18,9 +18,16 @@ SBResultsView >> applyButtonFor: aPermutation [
 ]
 
 { #category : #building }
+SBResultsView >> backUpWhenNoVariants [
+
+	self block addMorphBack: self noVariantsHeader.
+	self block addAllMorphsBack: self multiverse copyWatches
+]
+
+{ #category : #building }
 SBResultsView >> buildAllPossibleResults [
 	
-	self multiverse universes ifEmpty: [self block addAllMorphsBack: self mutliverse watches].
+	self multiverse universes ifEmpty: [self backUpWhenNoVariants. ^ self].
 	
 	[ self multiverse universes do: [:aUniverse |
 		SBActiveVariantPermutation value: aUniverse activePermutation.
@@ -33,6 +40,12 @@ SBResultsView >> buildAllPossibleResults [
 SBResultsView >> buildPermutationFor: aSBUniverse [
 
 	self subclassResponsibility
+]
+
+{ #category : #building }
+SBResultsView >> noVariantsHeader [
+
+	^ SBOwnTextMorph new contents: 'No variants found - displaying current'
 ]
 
 { #category : #building }

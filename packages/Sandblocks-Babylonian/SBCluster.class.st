@@ -22,7 +22,7 @@ SBCluster >> buildFromWatches: aCollectionOfSBExampleWatches [
 
 	| matrix |
 	matrix := self watchesAsMatrix: aCollectionOfSBExampleWatches.
-	(matrix rowCount < 2 or: [matrix columnCount < 2]) ifTrue: [ ^ self].
+	matrix ifEmpty: [ ^ self].
 	
 	self addAllMorphsBack: {
 		self newTopRowFrom: (matrix atRow: 1) allButFirst. "ignore placeholder morph"

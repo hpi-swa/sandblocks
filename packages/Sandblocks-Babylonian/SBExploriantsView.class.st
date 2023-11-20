@@ -17,7 +17,7 @@ SBExploriantsView class >> block: aSBBlock named: aString [
 { #category : #'instance creation' }
 SBExploriantsView class >> getTabsInMultiverse: aSBMultiverse [
 
-	^ {SBGridResultsView. SBPlainResultsView. SBVariantsView}
+	^ {SBPermutationGridsView. SBPlainResultsView. SBVariantsView}
 		collect: [:mySubclass | mySubclass newMultiverse: aSBMultiverse]
 ]
 

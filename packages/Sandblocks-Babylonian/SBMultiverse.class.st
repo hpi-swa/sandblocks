@@ -7,7 +7,6 @@ Class {
 	#instVars : [
 		'universes',
 		'variants',
-		'watches',
 		'activeExamples',
 		'allMethodBlocksContainingVariants',
 		'allMethodBlocksContainingWatches',
@@ -91,9 +90,9 @@ SBMultiverse >> allMethodBlocksContainingWatches [
 ]
 
 { #category : #collecting }
-SBMultiverse >> copyWatchesIn: aCollectionOfMethodBlocks [
+SBMultiverse >> copyWatches [
 	
-	^ (aCollectionOfMethodBlocks collect: [:aMethodBlock | 
+	^ (self allMethodBlocksContainingWatches collect: [:aMethodBlock | 
 		aMethodBlock containedExampleWatches collect: #asInactiveCopy]) flatten
 ]
 
@@ -102,7 +101,7 @@ SBMultiverse >> createUniverseFomPermutation: aSBPermutation [
 
 	^ SBUniverse 
 		newActive: aSBPermutation
-		watches: (self copyWatchesIn: self allMethodBlocksContainingWatches)
+		watches: self copyWatches
 ]
 
 { #category : #collecting }
