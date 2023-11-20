@@ -52,7 +52,6 @@ SBExploriants >> initialize [
 	
 	self
 		attachDecorator: SBMoveDecorator new;
-		changeTableLayout;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap
 ]
@@ -86,6 +85,7 @@ SBExploriants >> selector [
 SBExploriants >> visualize [
 
 	| tabs |
+	self width: 0.
 	tabs := SBExploriantsView getTabsInMultiverse: (SBMultiverse newInEditor: self sandblockEditor).
 	tabs do: #visualize.
 	

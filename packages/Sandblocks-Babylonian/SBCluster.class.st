@@ -68,6 +68,8 @@ SBCluster >> newCellMorph [
 		Morph new
 			color: Color transparent ;
 			changeTableLayout;
+			borderWidth: 1;
+			borderStyle: (BorderStyle width: 1 color: (Color gray alpha: 0.3));
 			listDirection: #topToBottom;
 			listCentering: #center;
 			wrapCentering: #center;
@@ -95,7 +97,8 @@ SBCluster >> newLeftColumnFrom: aCollectionOfMorphs [
 		cellPositioning: #rightCenter;
 		addAllMorphsBack: (aCollectionOfMorphs collect: [:aMorph | 
 			(self wrapInCell: aMorph flexVertically: false flexHorizontally: true)
-				listDirection: #rightToLeft])
+				listDirection: #rightToLeft;
+				borderWidth: 0])
 ]
 
 { #category : #visualisation }
@@ -115,7 +118,7 @@ SBCluster >> newTopRowFrom: aCollectionOfMorphs [
 		hResizing: #spaceFill;
 		addAllMorphsBack: (aCollectionOfMorphs collect: [:aMorph | 
 			aMorph rotationDegrees: 90.
-			self wrapInCell: aMorph owner flexVertically: true flexHorizontally: false])
+			(self wrapInCell: aMorph owner flexVertically: true flexHorizontally: false) borderWidth: 0])
 ]
 
 { #category : #converting }
@@ -135,13 +138,25 @@ SBCluster >> wrapInCell: aMorph [
 { #category : #helper }
 SBCluster >> wrapInCell: aMorph flexVertically: aVBoolean flexHorizontally: aHBoolean [
 
-	| cell |
+	| cell targetExtent|
 	cell := self newCellMorph.
 	
 	aVBoolean ifTrue: [cell vResizing: #shrinkWrap].
 	aHBoolean ifTrue: [cell hResizing: #shrinkWrap].
 	
-	cell addMorph: aMorph.
+	(((aMorph fullBounds extent <= cell extent) 
+		or: [aVBoolean and: (aMorph fullBounds width <= cell width)]) 
+		or: [aHBoolean and: (aMorph fullBounds height <= cell height)])
+			ifTrue: [cell addMorph: aMorph. ^ cell].
 	
+	targetExtent := cell extent - (cell borderWidth@cell borderWidth).
+	aVBoolean ifTrue: [targetExtent setX: targetExtent x setY: aMorph fullBounds height].
+	aHBoolean ifTrue: [targetExtent setX: aMorph fullBounds width setY: targetExtent height].
+	
+	self flag: #todo. "Another way besides turning into an image to keep interactions.-jb"
+	cell addMorph: (ImageMorph new 
+		newForm: (aMorph iconOrThumbnailOfSize: targetExtent);
+		when: #clicked send: #triggerEvent: to: aMorph with: #clicked).
+	cell on: #click send: #value to: [cell submorphs first triggerEvent: #clicked].
 	^ cell
 ]

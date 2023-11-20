@@ -53,7 +53,7 @@ SBGridResultsView >> newGridContainer [
 		wrapDirection: #topToBottom;
 		wrapCentering: #topLeft;
 		hResizing: #rigid;
-		width: 10;
+		width: 50;
 		cellInset: 0;
 		vResizing: #shrinkWrap;
 		yourself

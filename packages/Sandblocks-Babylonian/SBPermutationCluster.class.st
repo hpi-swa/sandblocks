@@ -10,16 +10,14 @@ SBPermutationCluster >> extractColumnsFrom: anExampleWatch [
 	^ anExampleWatch exampleToDisplay collect: [:anExampleValueDisplay | | displayedMorphs | 
 		displayedMorphs := anExampleValueDisplay display displayedMorphs 
 			collect: [:aMorph | aMorph watchValue morphResizer: self morphResizer. aMorph watchValue asValueMorph].
-		self flag: #todo. "Another way besides turning into an image to keep interactions.-jb"
 		(displayedMorphs size = 1) 
 			ifTrue: [displayedMorphs first]
-			ifFalse: [
-				ImageMorph new newForm: (
-					self newCellMorph 
+			ifFalse: [self newCellMorph 
+						borderWidth: 0;
+						when: #clicked send: #exploreValues to: anExampleValueDisplay display;
 						listDirection: #leftToRight;
 						wrapDirection: #topToBottom;
-						addAllMorphsBack: displayedMorphs;
-						iconOrThumbnailOfSize: self newCellMorph extent)]].
+						addAllMorphsBack: displayedMorphs]].
 ]
 
 { #category : #visualisation }
