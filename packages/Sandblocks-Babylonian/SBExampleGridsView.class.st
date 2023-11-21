@@ -19,12 +19,18 @@ SBExampleGridsView >> buildExampleFor: aNumber [
 				addAllMorphsBack: { 
 					SBOwnTextMorph new contents: 'example: ', (self multiverse activeExamples at: aNumber) label.
 					SBExampleCluster 
-						newForSize: SBMorphResizer newMedium 
+						newForSize: morphResizer
 						multiverse: self multiverse 
 						displaying: aNumber}.
 		LineMorph from: 0@0 to: 0@50 color: Color black width: 2}).
 		
 	self updateContainerWidth.
+]
+
+{ #category : #updating }
+SBExampleGridsView >> gridObjects [
+
+	^ self multiverse activeExamples
 ]
 
 { #category : #initialization }
@@ -33,15 +39,4 @@ SBExampleGridsView >> initialize [
 	super initialize.
 	
 	self name: 'Example Grid View'.
-]
-
-{ #category : #updating }
-SBExampleGridsView >> updateContainerWidth [
-
-	gridContainer width: 
-		(self multiverse activeExamples size safeSquareRoot ceiling) 
-			* (gridContainer lastSubmorph fullBounds width 
-				+ (2 * gridContainer cellInset) 
-				+ (2 * gridContainer cellGap) 
-				+ 10)
 ]

@@ -8,9 +8,20 @@ Class {
 }
 
 { #category : #visualisation }
-SBCluster >> buildDisplayMatrix [
+SBCluster >> compressedMorphsForDisplay: aSBWatchView [
 
-	self subclassResponsibility
+	| displayedMorphs |
+	displayedMorphs := aSBWatchView displayedMorphs collect: [:aMorph | 
+			aMorph watchValue morphResizer: self morphResizer. 
+			aMorph watchValue asValueMorph].
+	^ (displayedMorphs size = 1) 
+		ifTrue: [displayedMorphs first]
+		ifFalse: [self newCellMorph 
+					borderWidth: 0;
+					when: #clicked send: #exploreValues to: aSBWatchView;
+					listDirection: #leftToRight;
+					wrapDirection: #topToBottom;
+					addAllMorphsBack: displayedMorphs]
 ]
 
 { #category : #initialization }

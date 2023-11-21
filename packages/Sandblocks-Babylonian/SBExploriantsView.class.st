@@ -80,7 +80,7 @@ SBExploriantsView >> initialize [
 { #category : #accessing }
 SBExploriantsView >> multiverse [
 
-	^ multiverse ifNil: [multiverse := SBMultiverse newInEditor: SBEditor current]
+	^ multiverse ifNil: [self multiverse: (SBMultiverse newInEditor: SBEditor current)]
 ]
 
 { #category : #accessing }

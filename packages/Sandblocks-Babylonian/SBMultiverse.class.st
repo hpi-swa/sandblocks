@@ -133,7 +133,6 @@ SBMultiverse >> initialize [
 	
 	permutations := SBPermutation allPermutationsOf: variants.
 	universes := OrderedCollection new.
-	"sicher dass wir das so machen wollen?"
 	[permutations do: [:aPermutation |
 			SBActiveVariantPermutation value: aPermutation.
 			activeExamples do: #runSynchronouslyIgnoreReturn.

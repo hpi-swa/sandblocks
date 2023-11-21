@@ -16,6 +16,12 @@ SBGridResultsView >> clean [
 	
 ]
 
+{ #category : #updating }
+SBGridResultsView >> gridObjects [
+
+	self subclassResponsibility 
+]
+
 { #category : #initialization }
 SBGridResultsView >> initialize [ 
 
@@ -44,7 +50,7 @@ SBGridResultsView >> newGridContainer [
 SBGridResultsView >> updateContainerWidth [
 
 	gridContainer width: 
-		(self multiverse universes size safeSquareRoot ceiling) 
+		self gridObjects size safeSquareRoot ceiling
 			* (gridContainer lastSubmorph fullBounds width 
 				+ (2 * gridContainer cellInset) 
 				+ (2 * gridContainer cellGap) 

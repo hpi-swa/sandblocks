@@ -55,19 +55,9 @@ SBExampleCluster >> displayedIndex: aNumber [
 { #category : #visualisation }
 SBExampleCluster >> extractRowsFrom: aUniverse [
 
-	^ aUniverse watches collect: [:anExample | | display displayedMorphs | 
+	^ aUniverse watches collect: [:anExample | | display | 
 		display := (anExample exampleToDisplay associations at: self displayedIndex) value display.
-		displayedMorphs := display displayedMorphs collect: [:aMorph | 
-			aMorph watchValue morphResizer: self morphResizer. 
-			aMorph watchValue asValueMorph].
-		(displayedMorphs size = 1) 
-		ifTrue: [displayedMorphs first]
-		ifFalse: [self newCellMorph 
-					borderWidth: 0;
-					when: #clicked send: #exploreValues to: display;
-					listDirection: #leftToRight;
-					wrapDirection: #topToBottom;
-					addAllMorphsBack: displayedMorphs]]
+		self compressedMorphsForDisplay: display]
 ]
 
 { #category : #visualisation }

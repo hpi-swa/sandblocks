@@ -20,11 +20,17 @@ SBPermutationGridsView >> buildPermutationFor: aSBUniverse [
 					SBOwnTextMorph new contents: aSBUniverse activePermutation asString.
 					SBButton newApplyPermutationFor: aSBUniverse activePermutation. 
 					(SBPermutationCluster 
-						newForSize: SBMorphResizer newMedium 
+						newForSize: morphResizer
 						havingWatches: aSBUniverse watches)}.
 		LineMorph from: 0@0 to: 0@50 color: Color black width: 2}).
 		
 	self updateContainerWidth.
+]
+
+{ #category : #updating }
+SBPermutationGridsView >> gridObjects [
+
+	^ self multiverse universes
 ]
 
 { #category : #initialization }
