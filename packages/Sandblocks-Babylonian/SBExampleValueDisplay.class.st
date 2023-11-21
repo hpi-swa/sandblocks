@@ -21,7 +21,7 @@ SBExampleValueDisplay >> clear [
 	hadValue := false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExampleValueDisplay >> display [
 
 	^ display
