@@ -5,10 +5,16 @@ Class {
 }
 
 { #category : #building }
+SBPlainResultsView >> buildAllPossibleResults [
+	
+	self multiverse universes do: [:aUniverse | self buildPermutationFor: aUniverse]
+]
+
+{ #category : #building }
 SBPlainResultsView >> buildPermutationFor: aSBUniverse [
 
 	self block addAllMorphsBack: { SBOwnTextMorph new contents: aSBUniverse activePermutation asString.
-									self applyButtonFor: aSBUniverse activePermutation. 
+									SBButton newApplyPermutationFor: aSBUniverse activePermutation.
 									(self containerRow listDirection: #leftToRight) 
 										addAllMorphsBack: aSBUniverse watches.
 									LineMorph from: 0@0 to: 50@0 color: Color black width: 2}

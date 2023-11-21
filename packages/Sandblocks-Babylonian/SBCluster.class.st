@@ -7,33 +7,10 @@ Class {
 	#category : #'Sandblocks-Babylonian'
 }
 
-{ #category : #'initialize-release' }
-SBCluster class >> newFromWatches: aCollectionOfSBExampleWatches havingSize: aSBMorphResizer [
-
-	^ self new 
-		morphResizer: aSBMorphResizer;
-		buildFromWatches: aCollectionOfSBExampleWatches;
-		yourself 
-		
-]
-
 { #category : #visualisation }
-SBCluster >> buildFromWatches: aCollectionOfSBExampleWatches [
+SBCluster >> buildDisplayMatrix [
 
-	| matrix |
-	matrix := self watchesAsMatrix: aCollectionOfSBExampleWatches.
-	matrix ifEmpty: [ ^ self].
-	
-	self addAllMorphsBack: {
-		self newTopRowFrom: (matrix atRow: 1) allButFirst. "ignore placeholder morph"
-		self newContainerMorph 
-			listDirection: #leftToRight;
-			cellInset: 0;
-			addAllMorphsBack: {
-				self newLeftColumnFrom: (matrix atColumn: 1) allButFirst. "ignore placeholder morph"
-				SBGrid newDisplaying: 
-					((matrix atRows: 2 to: matrix rowCount columns: 2 to: matrix columnCount)
-						collect: [:aMorph | self wrapInCell: aMorph])}}
+	self subclassResponsibility
 ]
 
 { #category : #initialization }
@@ -121,11 +98,25 @@ SBCluster >> newTopRowFrom: aCollectionOfMorphs [
 			(self wrapInCell: aMorph owner flexVertically: true flexHorizontally: false) borderWidth: 0])
 ]
 
-{ #category : #converting }
-SBCluster >> watchesAsMatrix: aCollectionOfSBExampleWatches [
+{ #category : #visualisation }
+SBCluster >> visualize [
 
-	"Determine how watches are dissected to create a grid. We assume inclusion of headings per default"
-	^ self subclassResponsibility. 
+	| matrix |
+	self submorphs copy do: #delete.
+	
+	matrix := self buildDisplayMatrix.
+	matrix ifEmpty: [ ^ self].
+	
+	self addAllMorphsBack: {
+		self newTopRowFrom: (matrix atRow: 1) allButFirst. "ignore placeholder morph"
+		self newContainerMorph 
+			listDirection: #leftToRight;
+			cellInset: 0;
+			addAllMorphsBack: {
+				self newLeftColumnFrom: (matrix atColumn: 1) allButFirst. "ignore placeholder morph"
+				SBGrid newDisplaying: 
+					((matrix atRows: 2 to: matrix rowCount columns: 2 to: matrix columnCount)
+						collect: [:aMorph | self wrapInCell: aMorph])}}
 ]
 
 { #category : #helper }

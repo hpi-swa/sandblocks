@@ -5,47 +5,9 @@ Class {
 }
 
 { #category : #building }
-SBResultsView >> applyButtonFor: aPermutation [ 
-	
-	^ SBButton new
-		icon: (SBIcon iconCheck
-				size: 6.0 sbScaled;
-				color: (Color r: 0.0 g: 1 b: 0.0))
-			label: 'Apply Permutation'
-			do: [aPermutation apply];
-		makeSmall;
-		cornerStyle: #squared
-]
-
-{ #category : #building }
-SBResultsView >> backUpWhenNoVariants [
-
-	self block addMorphBack: self noVariantsHeader.
-	self block addAllMorphsBack: self multiverse copyWatches
-]
-
-{ #category : #building }
 SBResultsView >> buildAllPossibleResults [
 	
-	self multiverse universes ifEmpty: [self backUpWhenNoVariants. ^ self].
-	
-	[ self multiverse universes do: [:aUniverse |
-		SBActiveVariantPermutation value: aUniverse activePermutation.
-		self multiverse activeExamples do: #runSynchronouslyIgnoreReturn.
-		self buildPermutationFor: aUniverse].
-		self resetWatchesToOriginalPermutationRunning: self multiverse activeExamples] forkAt: Processor userSchedulingPriority
-]
-
-{ #category : #building }
-SBResultsView >> buildPermutationFor: aSBUniverse [
-
 	self subclassResponsibility
-]
-
-{ #category : #building }
-SBResultsView >> noVariantsHeader [
-
-	^ SBOwnTextMorph new contents: 'No variants found - displaying current'
 ]
 
 { #category : #building }

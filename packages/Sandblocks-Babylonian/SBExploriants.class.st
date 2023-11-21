@@ -86,8 +86,8 @@ SBExploriants >> visualize [
 
 	| tabs |
 	self width: 0.
+	"tabs will visualize as soon as multiverse is finished"
 	tabs := SBExploriantsView getTabsInMultiverse: (SBMultiverse newInEditor: self sandblockEditor).
-	tabs do: #visualize.
 	
 	self namedBlocks: tabs activeIndex: 1.
 	

@@ -1,13 +1,48 @@
 Class {
 	#name : #SBPermutationCluster,
 	#superclass : #SBCluster,
+	#instVars : [
+		'watches'
+	],
 	#category : #'Sandblocks-Babylonian'
 }
 
-{ #category : #visualisation }
-SBPermutationCluster >> extractColumnsFrom: anExampleWatch [
+{ #category : #'initialize-release' }
+SBPermutationCluster class >> newForSize: aSBMorphResizer havingWatches: aCollectionOfSBExampleWatches [
 
-	^ anExampleWatch exampleToDisplay collect: [:anExampleValueDisplay | | displayedMorphs | 
+	^ self new 
+		morphResizer: aSBMorphResizer;
+		watches: aCollectionOfSBExampleWatches;
+		visualize;
+		yourself 
+		
+]
+
+{ #category : #converting }
+SBPermutationCluster >> buildDisplayMatrix [
+
+	| matrix |
+	self watches ifEmpty: [^ Matrix new].
+	matrix := Matrix 
+		rows: self watches size + 1
+		columns: (self watches first examples size) + 1.
+		
+	matrix atRow: 1 put: ({self newTopLeftCornerPlaceholder}, 
+		(self extractedTopHeadingsFrom: self watches)).
+	matrix atColumn: 1 put: ({self newTopLeftCornerPlaceholder}, 
+		(self extractedLeftHeadingsFrom: self watches)).
+	
+	self watches withIndexDo: [:aWatch :row | 
+		(self extractColumnsFrom: aWatch) withIndexDo: [:aCellMorph :column| 
+			matrix at: row+1 at: column+1 put: aCellMorph]].
+
+	^ matrix
+]
+
+{ #category : #visualisation }
+SBPermutationCluster >> extractColumnsFrom: aCollectionOfSBExampleWatches [
+
+	^ aCollectionOfSBExampleWatches exampleToDisplay collect: [:anExampleValueDisplay | | displayedMorphs | 
 		displayedMorphs := anExampleValueDisplay display displayedMorphs 
 			collect: [:aMorph | aMorph watchValue morphResizer: self morphResizer. aMorph watchValue asValueMorph].
 		(displayedMorphs size = 1) 
@@ -32,22 +67,14 @@ SBPermutationCluster >> extractedTopHeadingsFrom: aCollectionOfSBExampleWatches 
 	^ (aCollectionOfSBExampleWatches first exampleToDisplay values collect: [:aDisplay | aDisplay labelMorph copy])
 ]
 
-{ #category : #converting }
-SBPermutationCluster >> watchesAsMatrix: aCollectionOfSBExampleWatches [
+{ #category : #accessing }
+SBPermutationCluster >> watches [
 
-	| matrix |
-	matrix := Matrix 
-		rows: aCollectionOfSBExampleWatches size + 1
-		columns: (aCollectionOfSBExampleWatches first examples size) + 1.
-		
-	matrix atRow: 1 put: ({self newTopLeftCornerPlaceholder}, 
-		(self extractedTopHeadingsFrom: aCollectionOfSBExampleWatches)).
-	matrix atColumn: 1 put: ({self newTopLeftCornerPlaceholder}, 
-		(self extractedLeftHeadingsFrom: aCollectionOfSBExampleWatches)).
-	
-	aCollectionOfSBExampleWatches withIndexDo: [:aWatch :row | 
-		(self extractColumnsFrom: aWatch) withIndexDo: [:aCellMorph :column| 
-			matrix at: row+1 at: column+1 put: aCellMorph]].
+	^ watches
+]
 
-	^ matrix
+{ #category : #accessing }
+SBPermutationCluster >> watches: aCollectionOfSBExampleWatches [
+
+	watches := aCollectionOfSBExampleWatches
 ]

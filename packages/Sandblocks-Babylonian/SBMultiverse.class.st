@@ -115,10 +115,11 @@ SBMultiverse >> findExistingOrConvertToBlocks: aCollectionOfCompiledMethods [
 ]
 
 { #category : #'initialize-release' }
-SBMultiverse >> initialize [
+SBMultiverse >> initialize [ 
 
+	| permutations |
 	super initialize.
-	
+
 	"We are looking for already opened methods so that we can assign the
 	variant there as the original in SBVariantProxy. That way, we immediately
 	have consistency between changes."
@@ -130,12 +131,24 @@ SBMultiverse >> initialize [
 	variants := (allMethodBlocksContainingVariants collect: #containedVariants) flatten.
 	activeExamples := self allActiveExamples.
 	
-	universes := (SBPermutation allPermutationsOf: variants) collect: [:aPermutation |
-		self createUniverseFomPermutation: aPermutation].
+	permutations := SBPermutation allPermutationsOf: variants.
+	universes := OrderedCollection new.
+	"sicher dass wir das so machen wollen?"
+	[permutations do: [:aPermutation |
+			SBActiveVariantPermutation value: aPermutation.
+			activeExamples do: #runSynchronouslyIgnoreReturn.
+			universes add: (self createUniverseFomPermutation: aPermutation)].
+		self resetWatchesToOriginalPermutationRunning: activeExamples.
+		self triggerEvent: #initialized] forkAt: Processor userSchedulingPriority.
 	
-	self triggerEvent: #initialized.
 	
-	
+]
+
+{ #category : #state }
+SBMultiverse >> resetWatchesToOriginalPermutationRunning: activeExamples [
+
+	SBActiveVariantPermutation value: nil.
+	activeExamples do: #runSynchronouslyIgnoreReturn
 ]
 
 { #category : #accessing }

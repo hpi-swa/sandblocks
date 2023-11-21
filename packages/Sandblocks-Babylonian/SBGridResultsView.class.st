@@ -39,3 +39,14 @@ SBGridResultsView >> newGridContainer [
 		vResizing: #shrinkWrap;
 		yourself
 ]
+
+{ #category : #updating }
+SBGridResultsView >> updateContainerWidth [
+
+	gridContainer width: 
+		(self multiverse universes size safeSquareRoot ceiling) 
+			* (gridContainer lastSubmorph fullBounds width 
+				+ (2 * gridContainer cellInset) 
+				+ (2 * gridContainer cellGap) 
+				+ 10)
+]
