@@ -171,12 +171,12 @@ SBExampleWatch >> exampleStarting: anExample [
 
 	exampleToValues at: anExample put: OrderedCollection new.
 
-	(exampleToDisplay at: anExample ifAbsentPut: [ | valueDisplay |
-		valueDisplay := SBExampleValueDisplay new.
-		valueDisplay display fallbackResizer: self selectedMorphResizer.
-		self addMorph: (exampleToDisplay at: anExample put: valueDisplay) atIndex: 2.
+	(exampleToDisplay at: anExample ifAbsentPut: [ | watchview |
+		watchview := SBExampleValueDisplay new.
+		watchview display fallbackResizer: self selectedMorphResizer.
+		self addMorph: (exampleToDisplay at: anExample put: watchview) atIndex: 2.
 		anExample when: #outOfWorld send: #exampleStopped: to: self with: anExample.
-		valueDisplay])
+		watchview])
 		exampleStarting: anExample;
 		name: anExample label
 ]
