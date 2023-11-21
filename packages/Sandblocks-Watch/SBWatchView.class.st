@@ -10,8 +10,8 @@ Class {
 		'dark',
 		'count',
 		'clear',
-		'fallbackResizer',
-		'updateScheduled'
+		'updateScheduled',
+		'env'
 	],
 	#category : #'Sandblocks-Watch'
 }
@@ -52,7 +52,6 @@ SBWatchView >> changeDisplay [
 	| index options |
 	options := Array streamContents: [:stream | 
 		self values allConversionsFor: SBInterfaces topLevel do: [:pair | stream nextPut: pair]]. 
-	options := options do: [:aPair | aPair at: 2 put: (self watchValuesContainer addMorphBack: (self fallbackResizer applyOn: aPair second))].
 	options := options, {{'default'. self watchValuesContainer addAllMorphsBack: (watchValues collect: #asValueMorph)}}.
 	index := UIManager default chooseFrom: (options collect: #first).
 	index = 0 ifTrue: [^ self].
@@ -166,18 +165,6 @@ SBWatchView >> exploreValues [
 ]
 
 { #category : #accessing }
-SBWatchView >> fallbackResizer [
-
-	^ fallbackResizer
-]
-
-{ #category : #accessing }
-SBWatchView >> fallbackResizer: aSBMorphResizer [
-
-	fallbackResizer := aSBMorphResizer
-]
-
-{ #category : #accessing }
 SBWatchView >> incrementCount [
 
 	count contents: (count contents + 1) asString
@@ -192,7 +179,6 @@ SBWatchView >> initialize [
 	updateScheduled := false.
 	numSavedValues := 1.
 	watchValues := LinkedList new.
-	fallbackResizer := SBMorphResizer newSmall.
 	
 	self
 		layoutPolicy: SBAlgebraLayout new;
@@ -261,36 +247,21 @@ SBWatchView >> printOn: aStream [
 	self object printOn: aStream
 ]
 
-{ #category : #actions }
+{ #category : #accessing }
 SBWatchView >> reportValue: anObject [
 
 	self reportValue: {anObject} sized: SBMorphResizer newIdentity
 ]
 
-{ #category : #actions }
+{ #category : #accessing }
 SBWatchView >> reportValues: aCollectionOfObjects sized: aMorphResizer [
 
-	self fallbackResizer: aMorphResizer.
 	aCollectionOfObjects do: [:anObject | self addValue: anObject sized: aMorphResizer].
 	self count: self count contents + aCollectionOfObjects size.
 	
 	updateScheduled ifFalse: [
 		updateScheduled := true.
 		Project current addDeferredUIMessage: [self updateDisplay]]
-]
-
-{ #category : #actions }
-SBWatchView >> resizeThrough: aMorphResizer [
-
-	"Clearing everything here as Morphs get distorted when resized multiple times."
-	| valuesMorph |
-	valuesMorph := self watchValuesContainer.
-	valuesMorph addAllMorphsBack: (self displayedMorphs 
-		collect: #sbSnapshot 
-		thenDo: [:aMorph | aMorphResizer applyOn: aMorph]).
-
-	self displayOnScrollPane: valuesMorph.
-	self fallbackResizer: aMorphResizer.
 ]
 
 { #category : #layout }

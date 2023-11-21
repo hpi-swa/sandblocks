@@ -116,8 +116,8 @@ SBExampleWatch >> applyModifyExpressionOnValues [
 { #category : #'event handling' }
 SBExampleWatch >> applyResizerOnValues [
 	
-	exampleToDisplay associationsDo: [:anExampleDisplayPair | 
-		anExampleDisplayPair value resizeThrough: self selectedMorphResizer]
+	"Clearing everything here as Morphs get distorted when resized multiple times."
+	self applyModifyExpressionOnValues.
 	
 ]
 
@@ -171,12 +171,11 @@ SBExampleWatch >> exampleStarting: anExample [
 
 	exampleToValues at: anExample put: OrderedCollection new.
 
-	(exampleToDisplay at: anExample ifAbsentPut: [ | watchview |
-		watchview := SBExampleValueDisplay new.
-		watchview display fallbackResizer: self selectedMorphResizer.
-		self addMorph: (exampleToDisplay at: anExample put: watchview) atIndex: 2.
+	(exampleToDisplay at: anExample ifAbsentPut: [ | display |
+		display := SBExampleValueDisplay new.
+		self addMorph: (exampleToDisplay at: anExample put: display) atIndex: 2.
 		anExample when: #outOfWorld send: #exampleStopped: to: self with: anExample.
-		watchview])
+		display])
 		exampleStarting: anExample;
 		name: anExample label
 ]

@@ -7,23 +7,33 @@ Class {
 	#category : #'Sandblocks-Watch'
 }
 
-{ #category : #'initialize-release' }
-SBRectangleChart class >> newWithValues: traceValues havingHeight: aNumber [
+{ #category : #constants }
+SBRectangleChart class >> coordinateSystemSize [
 	
-	| biggestCoordinate absolutePoints coordinateSystemSize |
+	^ self canvasHeight @ self canvasHeight
+]
+
+{ #category : #'initialize-release' }
+SBRectangleChart class >> newWithValues: traceValues [
+	
+	| biggestCoordinate absolutePoints |
 	absolutePoints := traceValues collect: [:aPoint | aPoint abs].
 	biggestCoordinate := {absolutePoints max x. absolutePoints max y} max.
-	coordinateSystemSize := aNumber - self heightMargin.
 	^ self new
-		targetHeight: aNumber;
 		traceValues: traceValues;
 		scaleY: (SBScale 
 			newLinearScaleWithDomain:  (biggestCoordinate negated to: biggestCoordinate) 
-			forRange: (coordinateSystemSize / 2 negated to: coordinateSystemSize  / 2))
+			forRange: (self coordinateSystemSize y / 2 negated to: self coordinateSystemSize y  / 2))
 		scaleX: (SBScale  
 			newLinearScaleWithDomain: (biggestCoordinate negated to: biggestCoordinate) 
-			forRange: (coordinateSystemSize / 2 negated to: coordinateSystemSize  / 2));
+			forRange: (self coordinateSystemSize x / 2 negated to: self coordinateSystemSize x  / 2));
 		yourself
+]
+
+{ #category : #constants }
+SBRectangleChart class >> preferredHeight [
+	
+	^ 40
 ]
 
 { #category : #conversion }
@@ -52,12 +62,6 @@ SBRectangleChart >> borderStyleFor: scaledValues [
 	^  BorderStyle width: borderWidth color: color
 ]
 
-{ #category : #'visualization - constants' }
-SBRectangleChart >> coordinateSystemSize [
-	
-	^ self canvasHeight @ self canvasHeight
-]
-
 { #category : #visualization }
 SBRectangleChart >> newCoordinateSystemFor: aValue at: positionIndex [
 	
@@ -66,7 +70,7 @@ SBRectangleChart >> newCoordinateSystemFor: aValue at: positionIndex [
 	left := ((positionIndex - 1) * self spaceBetweenPoints) rounded.
 	center := ((positionIndex - 0.5) * self spaceBetweenPoints) rounded.
 	^ Morph new
-		extent: self coordinateSystemSize;
+		extent: self class coordinateSystemSize;
 		left: left;
 		width: self spaceBetweenPoints;
 		color: Color transparent;
@@ -74,11 +78,11 @@ SBRectangleChart >> newCoordinateSystemFor: aValue at: positionIndex [
 		addAllMorphs: 
 			{LineMorph 
 				from: center@0 
-				to: center@(self coordinateSystemSize y)
+				to: center@(self class coordinateSystemSize y)
 				color: self lineColor width: self scaleLineWidth.
 			LineMorph 
-				from: left@(self coordinateSystemSize y / 2) 
-				to: (left + self spaceBetweenPoints)@(self coordinateSystemSize y / 2) 
+				from: left@(self class coordinateSystemSize y / 2) 
+				to: (left + self spaceBetweenPoints)@(self class coordinateSystemSize y / 2) 
 				color: self lineColor width: self scaleLineWidth.};
 		yourself
 ]
@@ -103,7 +107,7 @@ SBRectangleChart >> newRectangleFor: aValue at: positionIndex [
 		color: (self rectangleColorForValue: aValue);
 		borderStyle: (self borderStyleFor: (scaledWidth @ scaledHeight));
 		left:  (scaledWidth / 2) + left;
-		top: (self coordinateSystemSize y / 2) - (scaledHeight abs / 2) - (scaledHeight/2) ;
+		top: (self class coordinateSystemSize y / 2) - (scaledHeight abs / 2) - (scaledHeight/2) ;
 		yourself
 	
 ]
@@ -174,7 +178,7 @@ SBRectangleChart >> scaleY: aYSBScale scaleX: aXSBScale [
 { #category : #'visualization - constants' }
 SBRectangleChart >> spaceBetweenPoints [
 	
-	^ self coordinateSystemSize x
+	^ self class coordinateSystemSize x
 ]
 
 { #category : #'visualization - constants' }

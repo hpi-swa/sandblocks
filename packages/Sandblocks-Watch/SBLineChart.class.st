@@ -5,18 +5,17 @@ Class {
 }
 
 { #category : #'initialize-release' }
-SBLineChart class >> newWithValues: traceValues havingHeight: aNumber [
+SBLineChart class >> newWithValues: traceValues [
 	
 	| valuesToVisualize |
 	valuesToVisualize := traceValues 
 		ifEmpty: [#(0)]
 		ifNotEmpty: [traceValues].
 	^ self new
-		targetHeight: aNumber;
 		traceValues: valuesToVisualize;
 		scaleY: (SBScale 
 			newLinearScaleWithDomain: (valuesToVisualize min to: valuesToVisualize max) 
-			forRange: (0 to: aNumber));
+			forRange: (0 to: self canvasHeight));
 		yourself
 ]
 
@@ -72,7 +71,7 @@ SBLineChart >> newDatapointFor: aValue at: positionIndex [
 	
 	"There is an extra Morph containing the datapoint itself so the tooltip is far easier to activate through more area"
 	^ Morph new
-		height: self targetHeight;
+		height: self class preferredHeight;
 		left: ((positionIndex - 0.5) * self spaceBetweenPoints) rounded;
 		width: self spaceBetweenPoints;
 		color: Color transparent;
@@ -82,7 +81,7 @@ SBLineChart >> newDatapointFor: aValue at: positionIndex [
 			color: self datapointDefaultColor;
 			borderWidth: 0;
 			left: positionIndex * self spaceBetweenPoints;
-			top: self canvasHeight - (self scaleY scaledValueOf: aValue);
+			top: self class canvasHeight - (self scaleY scaledValueOf: aValue);
 			setProperty: #chartValue toValue: (self scaleY scaledValueOf: aValue); 
 			yourself);
 		yourself
@@ -136,7 +135,7 @@ SBLineChart >> newScaleLineHeight: height length: length [
 SBLineChart >> newScaleLinesOn: aMorph [
 	
 	| section |
-	section := self canvasHeight / (self numberScaleLines - 1).
+	section := self class canvasHeight / (self numberScaleLines - 1).
 	
 	^ (0 to: (self numberScaleLines - 1)) collect: [:i | 
 		self newScaleLineHeight: (section * i) + self scaleYOffset length: aMorph width]

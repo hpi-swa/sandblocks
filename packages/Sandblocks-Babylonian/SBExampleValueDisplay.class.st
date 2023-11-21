@@ -21,12 +21,6 @@ SBExampleValueDisplay >> clear [
 	hadValue := false
 ]
 
-{ #category : #'as yet unclassified' }
-SBExampleValueDisplay >> display [
-
-	^ display
-]
-
 { #category : #accessing }
 SBExampleValueDisplay >> displayedWatchValueBlocks [
 
@@ -131,12 +125,6 @@ SBExampleValueDisplay >> reportValues: aCollectionOfObjects name: aString sized:
 	label contents: aString.
 	label visible: aString notEmpty.
 	hadValue := true
-]
-
-{ #category : #actions }
-SBExampleValueDisplay >> resizeThrough: aMorphResizer [
-
-	display resizeThrough: aMorphResizer
 ]
 
 { #category : #actions }

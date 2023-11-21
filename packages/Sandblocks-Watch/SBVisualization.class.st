@@ -20,22 +20,21 @@ Class {
 	#superclass : #SBBlock,
 	#instVars : [
 		'scaleY',
-		'traceValues',
-		'targetHeight'
+		'traceValues'
 	],
 	#category : #'Sandblocks-Watch'
 }
 
 { #category : #constants }
-SBVisualization class >> defaultHeight [
+SBVisualization class >> canvasHeight [
 	
-	^ 100 sbScaled 
+	^ self preferredHeight - self heightMargin
 ]
 
 { #category : #constants }
-SBVisualization class >> heightMargin [ 
-
-	^ 5 sbScaled 
+SBVisualization class >> heightMargin [
+	
+	^ 5 sbScaled
 ]
 
 { #category : #constants }
@@ -47,13 +46,13 @@ SBVisualization class >> highlightedDataPercentage [
 { #category : #'initialize-release' }
 SBVisualization class >> newWithValues: traceValues [
 	
-	^ self newWithValues: traceValues havingHeight: self defaultHeight
+	^ self subclassResponsibility
 ]
 
-{ #category : #'initialize-release' }
-SBVisualization class >> newWithValues: traceValues havingHeight: aNumber [
+{ #category : #constants }
+SBVisualization class >> preferredHeight [
 	
-	^ self subclassResponsibility
+	^ 100 sbScaled 
 ]
 
 { #category : #conversion }
@@ -94,20 +93,6 @@ SBVisualization >> axisYNotation [
 	^ SBAxisNotation newFromScale: self scaleY ticking: 5 
 ]
 
-{ #category : #'visualization - constants' }
-SBVisualization >> canvasHeight [
-	
-	^ self targetHeight - self class heightMargin
-]
-
-{ #category : #nil }
-SBVisualization >> extent: aPoint [
-
-	super extent: aPoint.
-	self targetHeight: aPoint.
-	self visualize
-]
-
 { #category : #initialization }
 SBVisualization >> initialize [ 
 
@@ -133,16 +118,17 @@ SBVisualization >> isTopLevel [
 { #category : #'visualization - constants' }
 SBVisualization >> lineColor [
 	
-	^ self foregroundColor 
+	^ self drawnColor 
 ]
 
 { #category : #visualization }
 SBVisualization >> newBackground [
-
+	
+	
 	^ Morph new
 		color: self drawnColor;
 		width: (self traceValues size + 2 "to have some margin") * self spaceBetweenPoints;
-		height: self targetHeight;
+		height: self class preferredHeight;
 		borderWidth: 0;
 		yourself
 ]
@@ -177,18 +163,6 @@ SBVisualization >> scaleY: aSBScale [
 SBVisualization >> spaceBetweenPoints [
 	
 	^ 10 sbScaled 
-]
-
-{ #category : #accessing }
-SBVisualization >> targetHeight [
-
-	^ targetHeight ifNil: [targetHeight:= self class defaultHeight]
-]
-
-{ #category : #accessing }
-SBVisualization >> targetHeight: aNumber [
-
-	targetHeight := aNumber
 ]
 
 { #category : #accessing }
