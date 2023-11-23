@@ -553,15 +553,6 @@ SBStMessageSend >> tryReplacements [
 		option automatic ifTrue: [option apply: c]]
 ]
 
-{ #category : #converting }
-SBStMessageSend >> unwrappedSourceString [
-
-	^ String streamContents: [:aStream | 
-		self actualReceiver writeSourceOn: aStream.
-		aStream space.
-		signature writeSourceOn: aStream.]
-]
-
 { #category : #accessing }
 SBStMessageSend >> useAsVariable [
 	<action>

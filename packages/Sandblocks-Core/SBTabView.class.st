@@ -408,8 +408,8 @@ SBTabView >> paddedDiffTexts [
 	| diffs maxLines |
 	diffs := self namedBlocks collect: [:aNamedBlock |  
 		(TextDiffBuilder 
-				from: (self plainSourceStringFor: aNamedBlock) 
-				to: (self plainSourceStringFor: self active)) buildDisplayPatch].
+				from: (self sourceStringFor: aNamedBlock) 
+				to: (self sourceStringFor: self active)) buildDisplayPatch].
 			
 	maxLines := (diffs collect: [:aText | aText lineCount]) max.
 	
@@ -417,17 +417,6 @@ SBTabView >> paddedDiffTexts [
 		paddedText := aText. 
 		(maxLines - aText lineCount) timesRepeat: [paddedText := paddedText, ('', Character cr)]. 
 		paddedText]
-]
-
-{ #category : #diffing }
-SBTabView >> plainSourceStringFor: aNamedBlock [
-
-	^ aNamedBlock block isBlockBody
-		ifFalse: [aNamedBlock block sourceString]
-		ifTrue: [ ((aNamedBlock block statements 
-				reject: #isUnknown) 
-				collect: #unwrappedSourceString)
-				fold: [:a :b | a, Character cr, b]]
 ]
 
 { #category : #ui }
@@ -477,6 +466,15 @@ SBTabView >> setActive: aNamedBlock [
 
 	self sandblockEditor do: 
 		(self switchCommandFor: (self namedBlocks indexOf: aNamedBlock ifAbsent: 1))
+]
+
+{ #category : #diffing }
+SBTabView >> sourceStringFor: aNamedBlock [
+
+	^ aNamedBlock block isBlockBody
+		ifFalse: [aNamedBlock block sourceString]
+		ifTrue: [ (aNamedBlock block statements collect: #sourceString)
+				fold: [:a :b | a, Character cr, b]]
 ]
 
 { #category : #commands }
