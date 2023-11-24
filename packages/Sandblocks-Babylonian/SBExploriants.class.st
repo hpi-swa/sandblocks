@@ -43,13 +43,6 @@ SBExploriants >> = other [
 	^ self class = other class
 ]
 
-{ #category : #ui }
-SBExploriants >> buildTabs [
-
-	super buildTabs.
-	(self submorphNamed: #tabs) firstSubmorph delete.
-]
-
 { #category : #initialization }
 SBExploriants >> initialize [
 
@@ -87,12 +80,6 @@ SBExploriants >> selector [
 	" if this node represents any selector, return it here "
 
 	^ nil
-]
-
-{ #category : #accessing }
-SBExploriants >> tabs [
-
-	^ (self submorphNamed: #tabs) submorphs allButLast
 ]
 
 { #category : #actions }

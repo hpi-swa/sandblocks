@@ -3,8 +3,7 @@ Class {
 	#superclass : #SBBlock,
 	#instVars : [
 		'namedBlocks',
-		'activeIndex',
-		'isShowingDiff'
+		'activeIndex'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -119,6 +118,7 @@ SBTabView >> addButton [
 			do: [self addTab];
 		makeSmall;
 		cornerStyle: #squared;
+		vResizing: #spaceFill;
 		balloonText: 'Add';
 		cellGap: -1.0 sbScaled;
 		layoutInset: (4.0 @ 5.0) sbScaled
@@ -140,13 +140,6 @@ SBTabView >> addTab [
 	<action>
 
 	self add: (self active veryDeepCopy name: self activeName, '_i')
-]
-
-{ #category : #callbacks }
-SBTabView >> artefactSaved: aMethodBlock [
-
-	(aMethodBlock = self containingArtefact and: [self isShowingDiff]) 
-		ifTrue: [self updateSelectedTab]
 ]
 
 { #category : #ui }
@@ -175,20 +168,6 @@ SBTabView >> blockAt: anIndex [
 	^ self namedBlocks at: anIndex
 ]
 
-{ #category : #diffing }
-SBTabView >> buildDiffBlockFrom: aNamedBlock to: anotherNamedBlock given: aDiffText [
-
-	(aNamedBlock == anotherNamedBlock) ifTrue: [^ aNamedBlock block vResizing: #spaceFill].
-	
-	^ SBTextBubble multiLine 
-		vResizing: #spaceFill;
-		contents: aDiffText, 
-			 (Text fromString: 
-				'', Character cr,
-				'==========', Character cr,
-				(aNamedBlock name)) 
-]
-
 { #category : #ui }
 SBTabView >> buildTabs [
 
@@ -196,7 +175,6 @@ SBTabView >> buildTabs [
 		addAllMorphsBack: (self namedBlocks collect: [:block | self asTabButton: block]);
 		name: #tabs;
 		addMorphBack: self addButton;
-		addMorphFront: self diffButton;
 		changeTableLayout;
 		listDirection: #leftToRight;
 		hResizing: #shrinkWrap)
@@ -205,10 +183,7 @@ SBTabView >> buildTabs [
 { #category : #ui }
 SBTabView >> buildView [
 
-	self addMorphBack:  ((self isShowingDiff 
-		ifTrue: [self diffForSelected]
-		ifFalse: [self activeBlock])
-			hResizing: #spaceFill)
+	self addMorphBack: (self activeBlock hResizing: #spaceFill)
 ]
 
 { #category : #ui }
@@ -228,36 +203,6 @@ SBTabView >> deleteButtonFor: aNamedBlock [
 	^ delete
 ]
 
-{ #category : #ui }
-SBTabView >> diffButton [
-
-	^ SBButton new
-		icon: (SBIcon iconCodeFork size: 12.0 sbScaled)
-			do: [self toggleDiffView];
-		makeSmall;
-		balloonText: 'Toggle diff to others';
-		cornerStyle: #squared;
-		cellGap: -1.0 sbScaled;
-		layoutInset: (4.0 @ 3.0) sbScaled
-]
-
-{ #category : #diffing }
-SBTabView >> diffForSelected [
-
-	| diffs |
-	diffs := self paddedDiffTexts.
-
-	"Some blocks are only able to print themselves with a block as parent (eg block bodies). 
-	Thats why we don't use a SBRow here"
-	^ SBBlock new
-		changeTableLayout;
-		listDirection: #leftToRight;
-		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap;
-		addAllMorphsBack: (self namedBlocks withIndexCollect: [:aNamedBlock :i | 
-			self buildDiffBlockFrom: aNamedBlock to: self active given: (diffs at: i)])
-]
-
 { #category : #initialization }
 SBTabView >> initialize [
 
@@ -265,25 +210,12 @@ SBTabView >> initialize [
 	
 	namedBlocks := {SBNamedBlock new} asOrderedCollection.
 	activeIndex := 1.
-	isShowingDiff := false.
 	
 	self
 		changeTableLayout;
 		listDirection: #topToBottom;
 		hResizing: #spaceFill;
 		vResizing: #shrinkWrap.
-]
-
-{ #category : #accessing }
-SBTabView >> isShowingDiff [
-
-	^ isShowingDiff
-]
-
-{ #category : #accessing }
-SBTabView >> isShowingDiff: aBoolean [ 
-
-	isShowingDiff := aBoolean
 ]
 
 { #category : #'shortcut-utility' }
@@ -402,23 +334,6 @@ SBTabView >> namedBlocks: aCollectionOfSBNamedBlocks activeIndex: aNumber [
 	self rebuild
 ]
 
-{ #category : #diffing }
-SBTabView >> paddedDiffTexts [
-
-	| diffs maxLines |
-	diffs := self namedBlocks collect: [:aNamedBlock |  
-		(TextDiffBuilder 
-				from: (self sourceStringFor: aNamedBlock) 
-				to: (self sourceStringFor: self active)) buildDisplayPatch].
-			
-	maxLines := (diffs collect: [:aText | aText lineCount]) max.
-	
-	^ diffs collect: [:aText | | paddedText |
-		paddedText := aText. 
-		(maxLines - aText lineCount) timesRepeat: [paddedText := paddedText, ('', Character cr)]. 
-		paddedText]
-]
-
 { #category : #ui }
 SBTabView >> rebuild [
 
@@ -468,15 +383,6 @@ SBTabView >> setActive: aNamedBlock [
 		(self switchCommandFor: (self namedBlocks indexOf: aNamedBlock ifAbsent: 1))
 ]
 
-{ #category : #diffing }
-SBTabView >> sourceStringFor: aNamedBlock [
-
-	^ aNamedBlock block isBlockBody
-		ifFalse: [aNamedBlock block sourceString]
-		ifTrue: [ (aNamedBlock block statements collect: #sourceString)
-				fold: [:a :b | a, Character cr, b]]
-]
-
 { #category : #commands }
 SBTabView >> switchCommandFor: aNumber [
 
@@ -507,15 +413,7 @@ SBTabView >> tabCount [
 { #category : #accessing }
 SBTabView >> tabs [
 
-	^ (self submorphNamed: #tabs) submorphs viewAllButFirstAndLast
-]
-
-{ #category : #actions }
-SBTabView >> toggleDiffView [
-
-	self isShowingDiff: self isShowingDiff not.
-	self view delete.
-	self buildView.
+	^ (self submorphNamed: #tabs) submorphs
 ]
 
 { #category : #ui }
