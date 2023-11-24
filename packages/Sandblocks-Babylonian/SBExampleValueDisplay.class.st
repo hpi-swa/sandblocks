@@ -140,6 +140,12 @@ SBExampleValueDisplay >> reportValues: aCollectionOfObjects name: aString sized:
 ]
 
 { #category : #actions }
+SBExampleValueDisplay >> resizeThrough: aMorphResizer [
+
+	display resizeThrough: aMorphResizer
+]
+
+{ #category : #actions }
 SBExampleValueDisplay >> updateDisplay [ 
 
 	display updateDisplay.

@@ -5,17 +5,18 @@ Class {
 }
 
 { #category : #'initialize-release' }
-SBBarChart class >> newWithValues: traceValues [
+SBBarChart class >> newWithValues: traceValues havingHeight: aNumber [
 	
 	| valuesToVisualize |
 	valuesToVisualize := traceValues 
 		ifEmpty: [#(0)]
 		ifNotEmpty: [traceValues].
 	^ self new
+		targetHeight: aNumber;
 		traceValues: valuesToVisualize;
 		scaleY: (SBScale 
 			newLinearScaleWithDomain: (({valuesToVisualize min. 0} min) to: valuesToVisualize max) 
-			forRange: (0 to: self canvasHeight));
+			forRange: (0 to: aNumber));
 		yourself
 ]
 
@@ -30,7 +31,7 @@ SBBarChart >> newBarFor: aValue at: positionIndex [
 	
 	"There is an extra Morph containing the datapoint itself so the tooltip is far easier to activate through more area"
 	^ Morph new
-		height: self class preferredHeight;
+		height: self targetHeight;
 		left: ((positionIndex - 0.5) * self spaceBetweenPoints) rounded;
 		width: self spaceBetweenPoints;
 		color: Color transparent;
@@ -39,7 +40,7 @@ SBBarChart >> newBarFor: aValue at: positionIndex [
 			color: self datapointDefaultColor;
 			width: self barWidth;
 			height: {(self scaleY scaledValueOf: aValue). 1} max;
-			bottom: self class canvasHeight + self class heightMargin;
+			bottom: self canvasHeight + self class heightMargin;
 			left: positionIndex * self spaceBetweenPoints;
 			setProperty: #chartValue toValue: (self scaleY scaledValueOf: aValue);
 			yourself);
