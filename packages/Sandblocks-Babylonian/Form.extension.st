@@ -10,7 +10,6 @@ Form >> sbSnapshot [
 Form >> sbWatchValueMorphFor: aSBWatchValue sized: aSBMorphResizer [
 		
 	^ (SBWatchValue newContainerMorphFor: aSBWatchValue)  
-		addMorphBack: (SBIcon iconFor: aSBWatchValue watchedValueIdentityHash) asMorph;
 		addMorphBack: (aSBMorphResizer applyOn: self asMorph);
 		yourself
 ]

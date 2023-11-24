@@ -32,7 +32,7 @@ SBVariantsView >> visualize [
 
 	self clean.
 
-	self allMethodBlocksContainingVariants 
+	self multiverse allMethodBlocksContainingVariants
 		ifNotEmptyDo: [:theMethods | theMethods do: [:aSBStMethod | self buildMethodSectionFor: aSBStMethod]] 
 		ifEmpty: [self buildNoVariantsText]
 ]

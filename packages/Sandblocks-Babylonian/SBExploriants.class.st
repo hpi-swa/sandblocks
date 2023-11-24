@@ -52,7 +52,6 @@ SBExploriants >> initialize [
 	
 	self
 		attachDecorator: SBMoveDecorator new;
-		changeTableLayout;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap
 ]
@@ -75,7 +74,7 @@ SBExploriants >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExploriants >> selector [
 	" if this node represents any selector, return it here "
 
@@ -85,11 +84,10 @@ SBExploriants >> selector [
 { #category : #actions }
 SBExploriants >> visualize [
 
-	"The Views need a parent to visualize themselves. We also want to avoid double-calculations"
 	| tabs |
-	tabs := SBExploriantsView getTabs.
-	tabs do: [:aTab | self addMorph: aTab block. aTab visualize.].
-	self removeAllMorphs.
+	self width: 0.
+	"tabs will visualize as soon as multiverse is finished"
+	tabs := SBExploriantsView getTabsInMultiverse: (SBMultiverse newInEditor: self sandblockEditor).
 	
 	self namedBlocks: tabs activeIndex: 1.
 	

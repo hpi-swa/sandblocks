@@ -34,7 +34,7 @@ SBLineChart >> datapointDefaultColor [
 { #category : #'visualization - constants' }
 SBLineChart >> datapointExtent [
 	
-	^ 5@5
+	^ 4@4
 ]
 
 { #category : #visualization }
@@ -164,7 +164,7 @@ SBLineChart >> scaleYOffset [
 { #category : #'visualization - constants' }
 SBLineChart >> spaceBetweenPoints [
 	
-	^ 15
+	^ 10
 ]
 
 { #category : #visualization }

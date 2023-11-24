@@ -15,7 +15,7 @@ Class {
 SBPermutation class >> allPermutationsOf: aCollectionOfVariants [
 
 	| permutations |
-	aCollectionOfVariants ifEmpty:[^#()].
+	aCollectionOfVariants ifEmpty:[^{SBNilPermutation new referencedVariants: {}}].
 	permutations := (1 to: aCollectionOfVariants first alternativesCount) collect: #asArray.
 	
 	(2 to: aCollectionOfVariants size) do: [:i | | alternatives |
