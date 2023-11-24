@@ -7,6 +7,9 @@ Class {
 { #category : #building }
 SBExampleGridsView >> buildAllPossibleResults [
 	
+	self multiverse activeExamples 
+		ifEmpty: [gridContainer addMorph: (SBOwnTextMorph new contents: 'No examples active')].
+	
 	self multiverse activeExamples withIndexDo: [:anExample :anIndex | self buildExampleFor: anIndex]
 ]
 

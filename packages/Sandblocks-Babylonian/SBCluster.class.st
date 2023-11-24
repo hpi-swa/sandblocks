@@ -116,7 +116,10 @@ SBCluster >> visualize [
 	self submorphs copy do: #delete.
 	
 	matrix := self buildDisplayMatrix.
-	matrix ifEmpty: [ ^ self].
+	(matrix rowCount < 2 or: [matrix columnCount < 2]) 
+		ifTrue:[ 
+			self addMorph: (SBOwnTextMorph new contents: 'No watches to display').
+			^ self].
 	
 	self addAllMorphsBack: {
 		self newTopRowFrom: (matrix atRow: 1) allButFirst. "ignore placeholder morph"
