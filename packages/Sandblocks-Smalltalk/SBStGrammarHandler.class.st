@@ -83,6 +83,22 @@ SBStGrammarHandler >> debugExpression [
 		receiver: (context ifNil: [artefact ifNotNil: #evaluationReceiver] ifNotNil: #receiver)) debugWithTitle: 'Debug it'
 ]
 
+{ #category : #'action helpers' }
+SBStGrammarHandler >> defaultAlternativesForBlocks: aCollectionOfBlocks [
+
+	^ {
+		SBNamedBlock block: (SBStBlockBody new statements: aCollectionOfBlocks) named: 'original'.
+		SBNamedBlock block: (SBStBlockBody new statements: aCollectionOfBlocks veryDeepCopy) named: 'alternative'. } 
+]
+
+{ #category : #'action helpers' }
+SBStGrammarHandler >> defaultOptionalAlternativesForBlocks: aCollectionOfBlocks [
+
+	^ {
+		SBNamedBlock block: (SBStBlockBody new statements: aCollectionOfBlocks) named:'with'. 
+		SBNamedBlock block: (SBStBlockBody empty) named:'without'.} 
+]
+
 { #category : #actions }
 SBStGrammarHandler >> doExpression [
 	<action>
@@ -401,6 +417,44 @@ SBStGrammarHandler >> wrapAsArgument [
 		startInput: msg receiver at: 0 replacingContents: false
 ]
 
+{ #category : #actions }
+SBStGrammarHandler >> wrapEachInOptionalVariant [
+	<multiSelectAction>
+	<actionValidIf: #isSandblock>
+
+	self assert: self block isSelected.
+	self block sandblockEditor doMultiSelectionEach: [:selected | | variant |
+		variant := SBVariant new.
+		SBWrapCommand new
+			outer: variant;
+			inner: selected;
+			wrap:  [:outer :inner |
+				variant 
+					named: inner printString 
+					alternatives: (self defaultOptionalAlternativesForBlocks: {inner})
+					activeIndex: 2];
+			yourself]
+]
+
+{ #category : #actions }
+SBStGrammarHandler >> wrapEachInVariant [
+	<multiSelectAction>
+	<actionValidIf: #isSandblock>
+
+	self assert: self block isSelected.
+	self block sandblockEditor doMultiSelectionEach: [:selected | | variant |
+		variant := SBVariant new.
+		SBWrapCommand new
+			outer: variant;
+			inner: selected;
+			wrap:  [:outer :inner |
+				variant 
+					named: inner printString 
+					alternatives: (self defaultAlternativesForBlocks: {inner})
+					activeIndex: 2];
+			yourself]
+]
+
 { #category : #'action helpers' }
 SBStGrammarHandler >> wrapInArrayType: aSymbol [
 
@@ -527,12 +581,11 @@ SBStGrammarHandler >> wrapInOptionalVariant [
 			selectAfter: #block;
 			outer: variant;
 			targets: selected;
-			wrap: [:outer :inner | 
+			wrap:  [:outer :inner |
 				variant 
 					named: inner printString 
-					alternatives:{
-						SBNamedBlock block: (SBStBlockBody new statements: inner) named:'with'. 
-						SBNamedBlock block: (SBStBlockBody empty) named:'without'} 					activeIndex: 2];
+					alternatives: (self defaultOptionalAlternativesForBlocks: inner)
+					activeIndex: 2];
 			yourself]
 ]
 
@@ -582,12 +635,11 @@ SBStGrammarHandler >> wrapInVariant [
 			selectAfter: #block;
 			outer: variant;
 			targets: selected;
-			wrap: [:outer :inner | variant 
-				named: inner printString 
-				alternatives: {
-					SBNamedBlock block: (SBStBlockBody new statements: inner) named: 'original'.
-					SBNamedBlock block: (SBStBlockBody new statements: inner veryDeepCopy) named: 'alternative'. } 
-				activeIndex: 2];
+			wrap:  [:outer :inner |
+				variant 
+					named: inner printString 
+					alternatives: (self defaultAlternativesForBlocks: inner)
+					activeIndex: 2];
 			yourself]
 ]
 
