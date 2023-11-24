@@ -1,3 +1,7 @@
+"
+Caution:
+The Views need a parent who in in the editor to visualize themselves
+"
 Class {
 	#name : #SBExploriantsView,
 	#superclass : #SBNamedBlock,
