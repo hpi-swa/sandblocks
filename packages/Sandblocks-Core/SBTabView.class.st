@@ -413,7 +413,7 @@ SBTabView >> tabCount [
 { #category : #accessing }
 SBTabView >> tabs [
 
-	^ (self submorphNamed: #tabs) submorphs
+	^ (self submorphNamed: #tabs) submorphs allButLast
 ]
 
 { #category : #ui }
