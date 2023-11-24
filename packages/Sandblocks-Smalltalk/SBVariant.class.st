@@ -199,7 +199,7 @@ SBVariant >> initialize [
 			emphasis: TextEmphasis italic;
 			small);
 		contents: 'Variant X'.
-	self widget: (SBTabView
+	self widget: (SBDiffTabView
 		namedBlocks: {SBNamedBlock block: (SBStBlockBody emptyWithDeclarations: {'a'. 'c'}) named: 'Code'}
 		activeIndex: 1).
 	id := UUID new asString. 
