@@ -168,14 +168,6 @@ SBVariant >> blockAt: anIndex [
 ]
 
 { #category : #accessing }
-SBVariant >> codeFor: aNamedBlock [
-
-	^ (aNamedBlock block submorphs size > 1) 
-				ifTrue: [aNamedBlock block lastSubmorph]
-				ifFalse: [nil]
-]
-
-{ #category : #accessing }
 SBVariant >> color [
 
 	^ Color transparent
@@ -268,11 +260,11 @@ SBVariant >> replaceSelfWithBlock: aNamedBlock [
 	self widget: (SBTabView namedBlocks: {aNamedBlock} activeIndex: 1).
 	self addMorphBack: widget.
 	
-	command := (self codeFor: widget active)
-		ifNil: [SBDeleteCommand new target: self]
-		ifNotNil: [SBUnwrapConsecutiveCommand new 
+	command := (self statementsFor: widget active)
+		ifEmpty: [SBDeleteCommand new target: self]
+		ifNotEmpty: [:statements | SBUnwrapConsecutiveCommand new 
 									target: self; 
-									unwrapped: {(self codeFor: widget active)}].	
+									unwrapped: statements].
 	
 	self sandblockEditor do: command
 ]
@@ -282,11 +274,11 @@ SBVariant >> replaceSelfWithChosen [
 	
 	<action>
 	| command |
-	command := (self codeFor: widget active)
-		ifNil: [SBDeleteCommand new target: self]
-		ifNotNil: [SBUnwrapConsecutiveCommand new 
+	command := (self statementsFor: widget active)
+		ifEmpty: [SBDeleteCommand new target: self]
+		ifNotEmpty: [:statements | SBUnwrapConsecutiveCommand new 
 									target: self; 
-									unwrapped: {(self codeFor: widget active)}].	
+									unwrapped: statements].
 	
 	self sandblockEditor do: command
 ]
@@ -295,6 +287,14 @@ SBVariant >> replaceSelfWithChosen [
 SBVariant >> replaceValuesFrom: anotherVariant [
 
 	self named: anotherVariant name alternatives: anotherVariant alternatives activeIndex: anotherVariant activeIndex  
+]
+
+{ #category : #accessing }
+SBVariant >> statementsFor: aNamedBlock [
+
+	^ aNamedBlock block isBlockBody 
+		ifTrue: [aNamedBlock block statements]
+		ifFalse: [{}]
 ]
 
 { #category : #actions }
@@ -337,12 +337,8 @@ SBVariant >> writeSourceOn: aStream [
 	self alternatives
 		do: [:aNamedBlock |
 			aNamedBlock name storeOn: aStream.
-			aStream nextPutAll: ' -> ['.
-			(self codeFor: aNamedBlock)  
-				ifNotNil: [(self codeFor: aNamedBlock) writeSourceOn: aStream]
-				ifNil: [aStream nextPutAll: ' '].
-			aStream nextPut: $].
-			]
+			aStream nextPutAll: ' -> '.
+			aNamedBlock block writeSourceOn: aStream]
 		separatedBy: [aStream nextPut: $.].
 	aStream nextPutAll: '} activeIndex: '.
 	self activeIndex storeOn: aStream.
