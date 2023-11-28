@@ -43,6 +43,22 @@ SBExploriants >> = other [
 	^ self class = other class
 ]
 
+{ #category : #'as yet unclassified' }
+SBExploriants >> cacheType: aClass for: aBlock [
+]
+
+{ #category : #'as yet unclassified' }
+SBExploriants >> evaluationContext [
+
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBExploriants >> evaluationReceiver [
+
+	^ self object
+]
+
 { #category : #initialization }
 SBExploriants >> initialize [
 
