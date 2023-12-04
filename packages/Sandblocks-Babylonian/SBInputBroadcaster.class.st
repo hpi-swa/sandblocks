@@ -111,6 +111,18 @@ SBInputBroadcaster >> mouseEnter: anEvent [
 	anEvent hand newKeyboardFocus: self.
 ]
 
+{ #category : #accessing }
+SBInputBroadcaster >> replaceListener: oldListener with: newListener [
+
+	| index |
+	index := self listeners indexOf: oldListener ifAbsent: [^ self].
+	
+	(self containers at: index) replaceSubmorph: (self listeners at: index) by: newListener.
+	self listeners at: index put: newListener.
+	(self containers at: index) extent: newListener extent.
+	
+]
+
 { #category : #events }
 SBInputBroadcaster >> translatedPositionOf: anEvent from: anOriginMorph to: aTargetMorph [ 
 

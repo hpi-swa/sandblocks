@@ -43,17 +43,32 @@ SBExploriants >> = other [
 	^ self class = other class
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'ast helpers' }
+SBExploriants >> binding: aString for: block class: aClass ifPresent: aBlock [
+
+	"See SBStContainer >> binding:  for:  class:  ifPresent: "
+	| outer |
+	Symbol hasInterned: aString ifTrue: [:sym | | binding |
+		binding := aClass bindingOf: sym environment: UndefinedObject environment.
+		binding ifNotNil: [^ aBlock value: ((SBStName poolDeclaration: aString binding: binding) binding: binding)]].
+	
+	outer := self outerArtefact.
+	(outer notNil and: [outer isSmalltalk]) ifTrue: [^ self outerArtefact binding: aString for: block class: aClass ifPresent: aBlock].
+	
+	^ nil
+]
+
+{ #category : #testing }
 SBExploriants >> cacheType: aClass for: aBlock [
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBExploriants >> evaluationContext [
 
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBExploriants >> evaluationReceiver [
 
 	^ self object
