@@ -1,17 +1,61 @@
 Class {
 	#name : #SBInputBroadcaster,
-	#superclass : #Morph,
+	#superclass : #SBBlock,
 	#instVars : [
-		'listeners'
+		'listeners',
+		'mice',
+		'miceContainers'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
 
+{ #category : #input }
+SBInputBroadcaster >> absorbsInput: anEvent [
+
+	^ true
+]
+
+{ #category : #accessing }
+SBInputBroadcaster >> addListener: aMorph [
+
+	self listeners add: aMorph.
+	self mice add: CircleMorph newPin.
+	
+	"adding mice as our own morphs will cause rattling"
+	self containers add: (Morph new 
+		color: Color transparent;
+		extent: aMorph extent).
+	self containers last addMorph: aMorph.
+	self containers last addMorph: mice last.
+	
+	^ self containers last
+	
+]
+
+{ #category : #accessing }
+SBInputBroadcaster >> containers [
+	
+	^ miceContainers
+]
+
 { #category : #events }
 SBInputBroadcaster >> filterEvent: anEvent for: aMorph [
 
-	self flag: #todo. "Die Position im Morph in den listener transformieren"
-	self listeners do: [:aListener | aListener processEvent: (anEvent copy position: aListener position)].
+	self listeners withIndexDo: [:aListener :i | | targetPosition newEvent |
+		targetPosition := self translatedPositionOf: anEvent from: aMorph to: aListener.
+		newEvent := anEvent copy.
+		
+		anEvent isDropEvent 
+			ifTrue: [newEvent translateTo: targetPosition]
+			ifFalse: [newEvent translateBy: targetPosition - anEvent position].
+		
+		aListener processEvent: newEvent.
+		(self mice at: i) position: targetPosition.
+		
+		(aListener containsPoint: targetPosition) 
+			ifTrue: [(self mice at: i) show]
+			ifFalse: [(self mice at: i) hide]].
+	
 	^ anEvent
 ]
 
@@ -20,7 +64,7 @@ SBInputBroadcaster >> handleMouseOver: anEvent [
 
 	super handleMouseOver: anEvent.
 	anEvent hand newKeyboardFocus: self.
-
+	self sandblockEditor selectNoInput: self.
 ]
 
 { #category : #'event handling' }
@@ -36,20 +80,15 @@ SBInputBroadcaster >> initialize [
 	super initialize.
 	
 	listeners := OrderedCollection new.
+	mice := OrderedCollection new.
+	miceContainers := OrderedCollection new.
 	
 	self 
+		addEventCaptureFilter: self;
 		addKeyboardCaptureFilter: self;
-		"addMouseCaptureFilter: self;"
-		extent: 300@200;
-		color: Color veryLightGray;
-		changeTableLayout;
-		listDirection: #topToBottom;
-		wrapCentering: #center;
-		listCentering: #center;
-		addMorph: (StringMorph new 
-			contents: 'Enter Input here';
-			color: Color white;
-			yourself)
+		addMouseCaptureFilter: self;
+		canDrag: false;
+		color: Color veryLightGray
 		
 ]
 
@@ -60,7 +99,31 @@ SBInputBroadcaster >> listeners [
 ]
 
 { #category : #accessing }
-SBInputBroadcaster >> listeners: aCollectionOfMorphs [
+SBInputBroadcaster >> mice [
 
-	listeners := aCollectionOfMorphs.
+	^ mice
+]
+
+{ #category : #'events-processing' }
+SBInputBroadcaster >> mouseEnter: anEvent [
+
+	super mouseEnter: anEvent.
+	anEvent hand newKeyboardFocus: self.
+]
+
+{ #category : #events }
+SBInputBroadcaster >> translatedPositionOf: anEvent from: anOriginMorph to: aTargetMorph [ 
+
+	| localAbsPoint localRelPoint targetAbsPoint |
+	localAbsPoint := anEvent position - anOriginMorph position.
+	localRelPoint := localAbsPoint / anOriginMorph extent.
+	targetAbsPoint := (localRelPoint * aTargetMorph extent) + aTargetMorph position.
+	
+	^ targetAbsPoint rounded
+]
+
+{ #category : #'event handling' }
+SBInputBroadcaster >> wantsKeyboardFocus [
+
+	^ true
 ]

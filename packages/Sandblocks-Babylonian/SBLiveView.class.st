@@ -7,25 +7,36 @@ Class {
 	#category : #'Sandblocks-Babylonian'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #building }
 SBLiveView >> buildAllPossibleResults [
 	
 	self multiverse universes do: [:aUniverse | self buildPreviewFor: aUniverse activePermutation]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #building }
 SBLiveView >> buildBrodcaster [
 
-	self block addMorphBack: (SBRow new
+	gridContainer addMorphBack: (self containerRow cellPositioning: #center;
+		addAllMorphsBack: {
+			self containerRow listDirection: #topToBottom;
+				addAllMorphsBack: {
+					SBOwnTextMorph new contents: 'Event Broadcaster'.
+					broadcaster := SBInputBroadcaster new}.
+		LineMorph from: 0@0 to: 0@50 color: Color black width: 2}).
+
+	"gridContainer addMorphBack: (SBRow new
 		changeTableLayout;
 		hResizing: #spaceFill;
 		wrapCentering: #center;
 		listCentering: #center;
 		cellPositioning: #center;
-		addMorph: (broadcaster := SBInputBroadcaster new))
+		addMorph: (broadcaster := SBInputBroadcaster new))"
+		
+	self updateContainerWidth.	
+
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #building }
 SBLiveView >> buildPreviewFor: aPermutation [
 		
 	gridContainer addMorphBack: (self containerRow cellPositioning: #center;
@@ -40,7 +51,7 @@ SBLiveView >> buildPreviewFor: aPermutation [
 	self updateContainerWidth.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #building }
 SBLiveView >> buildSetUpRow [
 
 	self block addMorph: (SBRow new
@@ -54,10 +65,10 @@ SBLiveView >> buildSetUpRow [
 				balloonText: 'Toggle stepping';
 				on: #click send: #toggleStepping to: self);
 			addMorphBack: (SBStringMorph new contents: 'Setup:');
-			addMorphBack: (([Morph new] asSandblock statements first) width: 200))
+			addMorphBack: ([Morph new] asSandblock width: 200))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBLiveView >> clean [
 
 	self block submorphs allButFirst copy do: #delete.
@@ -65,16 +76,16 @@ SBLiveView >> clean [
 	gridContainer := self newGridContainer.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBLiveView >> evaluateSetUp [
 
-	^ self setUpMorph evaluate
+	^ self setUpMorph evaluate value
 ]
 
-{ #category : #'as yet unclassified' }
-SBLiveView >> gridObjects [
+{ #category : #updating }
+SBLiveView >> gridSize [
 	
-	^ self multiverse universes 
+	^ self multiverse universes size + 1
 ]
 
 { #category : #initialization }
@@ -86,40 +97,40 @@ SBLiveView >> initialize [
 	self buildSetUpRow.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBLiveView >> listeners [
 
 	^ broadcaster listeners 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBLiveView >> newRegisteredListenerFor: aPermutation [ 
 
-	| listener |
+	| listener container |
 	listener := self evaluateSetUp.
-	broadcaster listeners add: listener.
+	container := broadcaster addListener: listener.
 	
 	listener allMorphsDo: [:aSubMorph | 
 		SBExploriants objectToPermutation at: aSubMorph put: aPermutation].
 	
-	^ listener
+	^ container
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBLiveView >> setUpMorph [
 
 	^ self block firstSubmorph "setup row" lastSubmorph 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBLiveView >> toggleStepping [
 
 	self listeners do: [:aMorph |
 		aMorph isStepping ifFalse: [aMorph startStepping] ifTrue: [aMorph stopStepping]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBLiveView >> visualize [ 
 
 	self clean.
@@ -128,4 +139,6 @@ SBLiveView >> visualize [
 	self block addMorphBack: self updateButton.
 	self block addMorphBack: gridContainer.
 	self buildAllPossibleResults.
+	
+	broadcaster extent: self listeners last extent. 
 ]

@@ -31,9 +31,9 @@ SBExampleGridsView >> buildExampleFor: aNumber [
 ]
 
 { #category : #updating }
-SBExampleGridsView >> gridObjects [
+SBExampleGridsView >> gridSize [
 
-	^ self multiverse activeExamples
+	^ self multiverse activeExamples size
 ]
 
 { #category : #initialization }
