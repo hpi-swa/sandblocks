@@ -2,7 +2,10 @@ Class {
 	#name : #SBLiveView,
 	#superclass : #SBGridResultsView,
 	#instVars : [
-		'broadcaster'
+		'broadcaster',
+		'errorDecorator',
+		'errorIcon',
+		'reportedError'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
@@ -79,7 +82,13 @@ SBLiveView >> clean [
 { #category : #actions }
 SBLiveView >> evaluateSetUp [
 
-	^ self setUpMorph evaluate value
+	| return |
+	errorIcon ifNotNil: #delete.  
+	return := [self setUpMorph evaluate value asMorph] 
+		on: Error do: [:err | self reportError: err. err asMorph].
+	
+	
+	^ return
 ]
 
 { #category : #updating }
@@ -159,6 +168,31 @@ SBLiveView >> rebuildButtonIn: aContainer applying: aPermutation [
 			do: [self newRegisteredListenerFor: aPermutation replacing: aContainer lastSubmorph];
 		makeSmall;
 		cornerStyle: #squared
+]
+
+{ #category : #actions }
+SBLiveView >> reportError: anError [
+
+	reportedError ifNotNil: [
+		errorIcon ifNotNil: #delete. 
+		errorIcon := nil.
+		reportedError := nil.].
+	reportedError := anError.
+
+	"reportedError := self multiverse sandblockEditor
+			reportError: anError
+			process: ((Process forContext: anError signalerContext copyStack priority: Processor activeProcess priority)
+				shouldResumeFromDebugger: false;
+				yourself)
+			source: self."
+	errorIcon ifNil: [
+		self block firstSubmorph addMorphBack: (errorIcon := SBIcon iconFlash
+			large;
+			color: (Color r: 1 g: 0.6 b: 0.0))].
+	
+	(SBSmallError findOpenContextFrom: anError signalerContext in: self multiverse sandblockEditor) 
+		ifNotNil: [:b | b attachDecorator: (errorDecorator := SBErrorDecorator new message: anError asString; subtle: true; yourself)].
+	
 ]
 
 { #category : #accessing }

@@ -19,7 +19,7 @@ SBInputBroadcaster >> absorbsInput: anEvent [
 SBInputBroadcaster >> addListener: aMorph [
 
 	self listeners add: aMorph.
-	self mice add: CircleMorph newPin.
+	self mice add: CircleMorph newPin hide.
 	
 	"adding mice as our own morphs will cause rattling"
 	self containers add: (Morph new 
