@@ -173,25 +173,19 @@ SBLiveView >> rebuildButtonIn: aContainer applying: aPermutation [
 { #category : #actions }
 SBLiveView >> reportError: anError [
 
-	reportedError ifNotNil: [
-		errorIcon ifNotNil: #delete. 
-		errorIcon := nil.
-		reportedError := nil.].
-	reportedError := anError.
+	reportedError ifNotNil: [errorIcon delete. errorIcon := nil. reportedError := nil].
 
-	"reportedError := self multiverse sandblockEditor
+	reportedError := self multiverse sandblockEditor
 			reportError: anError
 			process: ((Process forContext: anError signalerContext copyStack priority: Processor activeProcess priority)
 				shouldResumeFromDebugger: false;
 				yourself)
-			source: self."
-	errorIcon ifNil: [
-		self block firstSubmorph addMorphBack: (errorIcon := SBIcon iconFlash
-			large;
-			color: (Color r: 1 g: 0.6 b: 0.0))].
+			source: self.
+			
+	self block firstSubmorph addMorphBack: (errorIcon := SBIcon iconFlash).
 	
 	(SBSmallError findOpenContextFrom: anError signalerContext in: self multiverse sandblockEditor) 
-		ifNotNil: [:b | b attachDecorator: (errorDecorator := SBErrorDecorator new message: anError asString; subtle: true; yourself)].
+		ifNotNil: [:b | b attachDecorator: (errorDecorator := SBErrorDecorator new message: anError asString; subtle: false; yourself)].
 	
 ]
 
