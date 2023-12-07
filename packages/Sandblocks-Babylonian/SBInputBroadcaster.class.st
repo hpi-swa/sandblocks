@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'listeners',
 		'mice',
-		'miceContainers'
+		'miceContainers',
+		'stateHands'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
@@ -20,13 +21,15 @@ SBInputBroadcaster >> addListener: aMorph [
 
 	self listeners add: aMorph.
 	self mice add: CircleMorph newPin hide.
+	self stateHands add: HandMorph new.
 	
 	"adding mice as our own morphs will cause rattling"
 	self containers add: (Morph new 
 		color: Color transparent;
-		extent: aMorph extent).
-	self containers last addMorph: aMorph.
-	self containers last addMorph: mice last.
+		extent: aMorph extent;
+		setProperty: #sbListener toValue: aMorph;
+		yourself).
+	self containers last addAllMorphsBack: {mice last. aMorph.}.
 	
 	^ self containers last
 	
@@ -39,22 +42,37 @@ SBInputBroadcaster >> containers [
 ]
 
 { #category : #events }
+SBInputBroadcaster >> eventProcessMouse: aMouse goingTo: aPosition in: aMorph [
+		
+	aMouse position: aPosition.
+	(aMorph containsPoint: aPosition) 
+		ifTrue: [aMouse show]
+		ifFalse: [aMouse hide]
+]
+
+{ #category : #events }
 SBInputBroadcaster >> filterEvent: anEvent for: aMorph [
 
-	self listeners withIndexDo: [:aListener :i | | targetPosition newEvent |
-		targetPosition := self translatedPositionOf: anEvent from: aMorph to: aListener.
+	self listeners withIndexDo: [:aListener :i | 
+		| localTarget newEvent delta |
+		localTarget := self translatedPositionOf: anEvent from: aMorph to: aListener.
+		delta := localTarget - anEvent position.
 		newEvent := anEvent copy.
 		
-		anEvent isDropEvent 
-			ifTrue: [newEvent translateTo: targetPosition]
-			ifFalse: [newEvent translateBy: targetPosition - anEvent position].
+		newEvent translateBy: delta.
+		anEvent isDropEvent ifTrue: [newEvent translateTo: localTarget].
 		
-		aListener processEvent: newEvent.
-		(self mice at: i) position: targetPosition.
+		(self needsHandHandling: newEvent)
+				ifTrue: [
+					self simulateGlobalHand: (self stateHands at: i) 
+						for: newEvent 
+						in: aListener 
+						pos: self activeHand position +  delta.]
+				ifFalse: [aListener processEvent: newEvent.].
 		
-		(aListener containsPoint: targetPosition) 
-			ifTrue: [(self mice at: i) show]
-			ifFalse: [(self mice at: i) hide]].
+		self eventProcessMouse: (self mice at: i) 
+			goingTo: localTarget 
+			in: aListener.].
 	
 	^ anEvent
 ]
@@ -82,6 +100,7 @@ SBInputBroadcaster >> initialize [
 	listeners := OrderedCollection new.
 	mice := OrderedCollection new.
 	miceContainers := OrderedCollection new.
+	stateHands := OrderedCollection new.
 	
 	self 
 		addEventCaptureFilter: self;
@@ -90,6 +109,22 @@ SBInputBroadcaster >> initialize [
 		canDrag: false;
 		color: Color veryLightGray
 		
+]
+
+{ #category : #accessing }
+SBInputBroadcaster >> insertListener: aListener into: aContainer [
+
+	| index |
+	index := self containers indexOf: aContainer ifAbsent: [^ self].
+	
+	(self containers at: index) 
+		addMorphBack: aListener;
+		extent: aListener extent;
+		setProperty: #sbListener toValue: aListener.
+	
+	aListener topLeft: (self containers at: index) topLeft.
+	self listeners at: index put: aListener.
+	
 ]
 
 { #category : #accessing }
@@ -111,16 +146,45 @@ SBInputBroadcaster >> mouseEnter: anEvent [
 	anEvent hand newKeyboardFocus: self.
 ]
 
+{ #category : #events }
+SBInputBroadcaster >> needsHandHandling: anEvent [
+
+	"rechte maustaste im sbeditor ausschließen?"
+	^ anEvent isMouse 
+			and: [anEvent isMouseDown or: [anEvent isMouseUp]]
+]
+
 { #category : #accessing }
 SBInputBroadcaster >> replaceListener: oldListener with: newListener [
 
 	| index |
 	index := self listeners indexOf: oldListener ifAbsent: [^ self].
 	
-	(self containers at: index) replaceSubmorph: (self listeners at: index) by: newListener.
+	(self containers at: index) 
+		replaceSubmorph: (self listeners at: index) 
+		by: newListener;
+		extent: newListener extent;
+	 	setProperty: #sbListener toValue: newListener. 
 	self listeners at: index put: newListener.
-	(self containers at: index) extent: newListener extent.
+]
+
+{ #category : #events }
+SBInputBroadcaster >> simulateGlobalHand: aHand for: anEvent in: aMorph pos: aPosition [
+
+	aMorph owner ifNotNil: [:theOwner | theOwner addMorphBack: aHand].
 	
+	anEvent 
+		position: aPosition;
+		setHand: aHand.
+	aHand handleEvent: anEvent.
+	
+	aMorph owner ifNotNil: [:theOwner | theOwner removeMorph: aHand].
+]
+
+{ #category : #accessing }
+SBInputBroadcaster >> stateHands [
+
+	^ stateHands
 ]
 
 { #category : #events }
@@ -129,6 +193,7 @@ SBInputBroadcaster >> translatedPositionOf: anEvent from: anOriginMorph to: aTar
 	| localAbsPoint localRelPoint targetAbsPoint |
 	localAbsPoint := anEvent position - anOriginMorph position.
 	localRelPoint := localAbsPoint / anOriginMorph extent.
+	localRelPoint := (localRelPoint x clampLow: 0 high: 1)@(localRelPoint y clampLow: 0 high: 1).	
 	targetAbsPoint := (localRelPoint * aTargetMorph extent) + aTargetMorph position.
 	
 	^ targetAbsPoint rounded

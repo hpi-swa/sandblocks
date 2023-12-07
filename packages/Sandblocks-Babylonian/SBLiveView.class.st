@@ -138,11 +138,14 @@ SBLiveView >> newRegisteredListenerFor: aPermutation [
 ]
 
 { #category : #initialization }
-SBLiveView >> newRegisteredListenerFor: aPermutation replacing: anOldListener [ 
+SBLiveView >> newRegisteredListenerFor: aPermutation in: aContainer [ 
 
-	| listener |
+	| listener oldListener |
 	listener := self evaluateSetUp.
-	broadcaster replaceListener: anOldListener with: listener.
+	oldListener := aContainer valueOfProperty: #sbListener.
+	oldListener owner
+		ifNil: [broadcaster insertListener: listener into: aContainer] 
+		ifNotNil: [broadcaster replaceListener: oldListener with: listener]. 
 	
 	listener allMorphsDo: [:aSubMorph | 
 		SBExploriants objectToPermutation at: aSubMorph put: aPermutation].
@@ -165,7 +168,7 @@ SBLiveView >> rebuildButtonIn: aContainer applying: aPermutation [
 	^ SBButton new
 		icon: (SBIcon iconRotateRight size: 8.0 sbScaled)
 			label: 'Re-Build This'
-			do: [self newRegisteredListenerFor: aPermutation replacing: aContainer lastSubmorph];
+			do: [self newRegisteredListenerFor: aPermutation in: aContainer];
 		makeSmall;
 		cornerStyle: #squared
 ]
