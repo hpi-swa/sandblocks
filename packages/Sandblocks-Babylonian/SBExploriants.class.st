@@ -58,6 +58,12 @@ SBExploriants >> binding: aString for: block class: aClass ifPresent: aBlock [
 	^ nil
 ]
 
+{ #category : #ui }
+SBExploriants >> buildView [
+
+	self addMorphBack: (self activeBlock hResizing: #shrinkWrap)
+]
+
 { #category : #testing }
 SBExploriants >> cacheType: aClass for: aBlock [
 ]

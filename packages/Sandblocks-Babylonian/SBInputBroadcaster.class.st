@@ -57,11 +57,8 @@ SBInputBroadcaster >> filterEvent: anEvent for: aMorph [
 		| localTarget newEvent delta |
 		localTarget := self translatedPositionOf: anEvent from: aMorph to: aListener.
 		delta := localTarget - anEvent position.
-		newEvent := anEvent copy.
-		
-		newEvent translateBy: delta.
-		anEvent isDropEvent ifTrue: [newEvent translateTo: localTarget].
-		
+		newEvent := anEvent copy translateBy: delta.
+
 		(self needsHandHandling: newEvent)
 				ifTrue: [
 					self simulateGlobalHand: (self stateHands at: i) 
@@ -149,9 +146,9 @@ SBInputBroadcaster >> mouseEnter: anEvent [
 { #category : #events }
 SBInputBroadcaster >> needsHandHandling: anEvent [
 
-	"rechte maustaste im sbeditor ausschließen?"
 	^ anEvent isMouse 
 			and: [anEvent isMouseDown or: [anEvent isMouseUp]]
+			and: [(SBPreferences rightClickContextMenu and: [anEvent yellowButtonPressed]) not]
 ]
 
 { #category : #accessing }
@@ -178,7 +175,7 @@ SBInputBroadcaster >> simulateGlobalHand: aHand for: anEvent in: aMorph pos: aPo
 		setHand: aHand.
 	aHand handleEvent: anEvent.
 	
-	aMorph owner ifNotNil: [:theOwner | theOwner removeMorph: aHand].
+	aHand delete.
 ]
 
 { #category : #accessing }
