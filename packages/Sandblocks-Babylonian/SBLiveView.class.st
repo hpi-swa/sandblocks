@@ -120,7 +120,8 @@ SBLiveView >> newPermutationButtonRowFor: aPermutation showing: aPreview [
 		cellGap: 8 * self scalingFactor;
 		addAllMorphsBack: {
 			SBButton newApplyPermutationFor: aPermutation. 
-			self rebuildButtonIn: aPreview applying: aPermutation. }
+			self rebuildButtonIn: aPreview applying: aPermutation. 
+			self synchronizeButtonIn: aPreview}
 ]
 
 { #category : #initialization }
@@ -138,16 +139,15 @@ SBLiveView >> newRegisteredListenerFor: aPermutation [
 ]
 
 { #category : #initialization }
-SBLiveView >> newRegisteredListenerFor: aPermutation in: aContainer [ 
+SBLiveView >> privateRegisterListener: aNewListener for: aPermutation in: aContainer [ 
 
-	| listener oldListener |
-	listener := self evaluateSetUp.
+	| oldListener |
 	oldListener := aContainer valueOfProperty: #sbListener.
 	oldListener owner
-		ifNil: [broadcaster insertListener: listener into: aContainer] 
-		ifNotNil: [broadcaster replaceListener: oldListener with: listener]. 
+		ifNil: [broadcaster insertListener: aNewListener into: aContainer] 
+		ifNotNil: [broadcaster replaceListener: oldListener with: aNewListener]. 
 	
-	listener allMorphsDo: [:aSubMorph | 
+	aNewListener allMorphsDo: [:aSubMorph | 
 		SBExploriants objectToPermutation at: aSubMorph put: aPermutation].
 	
 ]
@@ -168,9 +168,16 @@ SBLiveView >> rebuildButtonIn: aContainer applying: aPermutation [
 	^ SBButton new
 		icon: (SBIcon iconRotateRight size: 8.0 sbScaled)
 			label: 'Re-Build This'
-			do: [self newRegisteredListenerFor: aPermutation in: aContainer];
+			do: [self rebuildRegisteredListenerFor: aPermutation in: aContainer];
 		makeSmall;
 		cornerStyle: #squared
+]
+
+{ #category : #initialization }
+SBLiveView >> rebuildRegisteredListenerFor: aPermutation in: aContainer [ 
+
+	self privateRegisterListener: self evaluateSetUp for: aPermutation in: aContainer 
+	
 ]
 
 { #category : #actions }
@@ -196,6 +203,29 @@ SBLiveView >> reportError: anError [
 SBLiveView >> setUpMorph [
 
 	^ self block firstSubmorph "setup row" lastSubmorph 
+]
+
+{ #category : #building }
+SBLiveView >> synchronizeButtonIn: aContainer [
+
+	^ SBButton new
+		icon: (SBIcon iconRecycle size: 8.0 sbScaled)
+			label: 'Synchronize others'
+			do: [self synchronizePreviewsWith: aContainer];
+		makeSmall;
+		cornerStyle: #squared
+]
+
+{ #category : #building }
+SBLiveView >> synchronizePreviewsWith: aContainer [ 
+
+	| replacingListener |
+	replacingListener := (aContainer valueOfProperty: #sbListener).
+	(broadcaster containers reject: [:someContainer | aContainer == someContainer])
+		do: [:otherContainer |
+			self privateRegisterListener: replacingListener veryDeepCopy 
+				for: (SBExploriants objectToPermutation at: (otherContainer  valueOfProperty: #sbListener)) 
+				in: otherContainer ]
 ]
 
 { #category : #actions }
