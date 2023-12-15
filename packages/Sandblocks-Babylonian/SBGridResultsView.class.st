@@ -17,7 +17,7 @@ SBGridResultsView >> clean [
 ]
 
 { #category : #updating }
-SBGridResultsView >> gridObjects [
+SBGridResultsView >> gridSize [
 
 	self subclassResponsibility 
 ]
@@ -50,7 +50,7 @@ SBGridResultsView >> newGridContainer [
 SBGridResultsView >> updateContainerWidth [
 
 	gridContainer width: 
-		self gridObjects size safeSquareRoot ceiling
+		self gridSize safeSquareRoot ceiling
 			* (gridContainer lastSubmorph fullBounds width 
 				+ (2 * gridContainer cellInset) 
 				+ (2 * gridContainer cellGap) 

@@ -113,7 +113,7 @@ SBTabView >> addButton [
 
 	^ SBButton new
 		icon: (SBIcon iconPlus
-				size: 8.0 sbScaled;
+				size: 7.0 sbScaled;
 				color: (Color green))
 			do: [self addTab];
 		makeSmall;
@@ -121,7 +121,7 @@ SBTabView >> addButton [
 		vResizing: #spaceFill;
 		balloonText: 'Add';
 		cellGap: -1.0 sbScaled;
-		layoutInset: (4.0 @ 5.0) sbScaled
+		layoutInset: (4.0 @ 4.0) sbScaled
 ]
 
 { #category : #commands }

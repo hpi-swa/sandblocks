@@ -28,9 +28,9 @@ SBPermutationGridsView >> buildPermutationFor: aSBUniverse [
 ]
 
 { #category : #updating }
-SBPermutationGridsView >> gridObjects [
+SBPermutationGridsView >> gridSize [
 
-	^ self multiverse universes
+	^ self multiverse universes size
 ]
 
 { #category : #initialization }
