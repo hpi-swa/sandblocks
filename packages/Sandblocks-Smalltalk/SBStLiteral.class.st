@@ -195,7 +195,7 @@ SBStLiteral >> wrapInVariantGivenCollection: aCollection [
 				alternatives: (aCollection collect: [:anObject | 
 					SBNamedBlock block: (SBStBlockBody new 
 						statements: {(
-						anObject isString
+						(anObject isString and: anObject isSymbol not) 
 							ifTrue: [SBStString new contents: anObject]
 							ifFalse: [anObject asString parseAsSandblock])}) 
 						named: anObject asString])
