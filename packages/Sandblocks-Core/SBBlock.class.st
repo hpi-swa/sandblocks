@@ -2229,6 +2229,18 @@ SBBlock >> parentHasDynamicNumberOfChildren [
 	^ self parentSandblock fixedNumberOfChildren not
 ]
 
+{ #category : #accessing }
+SBBlock >> parentVariant [
+
+	^ self parentSandblock 
+		ifNil: [nil]
+		ifNotNil: [:theParent | 
+			theParent isVariant
+				ifTrue: [theParent] 
+				ifFalse: [theParent parentVariant]]
+
+]
+
 { #category : #actions }
 SBBlock >> pasteAfter [
 	<action>

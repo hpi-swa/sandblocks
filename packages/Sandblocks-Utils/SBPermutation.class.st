@@ -14,21 +14,30 @@ Class {
 { #category : #utils }
 SBPermutation class >> allPermutationsOf: aCollectionOfVariants [
 
-	| permutations |
+	| permutations topLevelVariants nestedPermutations |
 	aCollectionOfVariants ifEmpty:[^{SBNilPermutation new referencedVariants: {}}].
-	permutations := (1 to: aCollectionOfVariants first alternativesCount) collect: #asArray.
+	topLevelVariants := aCollectionOfVariants select: [:aVariant | aVariant parentVariant isNil].
+	nestedPermutations := topLevelVariants collect: #asNestedPaths.
+	permutations := nestedPermutations first.
 	
-	(2 to: aCollectionOfVariants size) do: [:i | | alternatives |
-		alternatives := (aCollectionOfVariants at: i) alternativesCount.
-		permutations := permutations gather: [:aCollectionOfIndexes | 
-			(1 to: alternatives) collect: [:aTabIndex | 
-				{aCollectionOfIndexes. aTabIndex} flatten]]].
+	(2 to: topLevelVariants size) do: [:i | | nestedPermutation |
+		nestedPermutation := (nestedPermutations at: i).
+		permutations := permutations gather: [:aPermutation | 
+			nestedPermutation collect: [:aNestedPermutation | self newCombinedOf: aPermutation and: aNestedPermutation]]].
 	
-	^ permutations collect: [:aCollectionOfIndexes | 
-		(self withAll: (aCollectionOfIndexes withIndexCollect: [:anAlternativeIndex :aVariantIndex | 
-			(aCollectionOfVariants at: aVariantIndex) id -> anAlternativeIndex]))
-		referencedVariants: aCollectionOfVariants]
+	^ permutations 
 		
+]
+
+{ #category : #utils }
+SBPermutation class >> newCombinedOf: onePermutation and: anotherPermutation [
+
+	| result |
+	result := self new referencedVariants: (onePermutation referencedVariants, anotherPermutation referencedVariants).
+	result addAll: onePermutation.
+	result addAll: anotherPermutation.
+	^ result
+	
 ]
 
 { #category : #actions }
