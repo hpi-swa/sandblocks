@@ -160,3 +160,44 @@ SBStLiteral >> useAsStSymbol [
 		target: self;
 		replacer: (SBStSymbol new contents: self contents))
 ]
+
+{ #category : #actions }
+SBStLiteral >> wrapInVariantCoveringRange [
+	<action>
+	
+	| rangeString collection |
+	rangeString := UIManager default
+		request: 'Enter any collection of literals as alternatives.'
+		initialAnswer: '1 to: 3, #($a $b $c), {''foo''. ''bar''. ''Squeak''.}...'.
+	((rangeString isNil) or: [rangeString = '']) ifTrue: [^ self].
+	
+	collection := [Compiler evaluate: rangeString] on: Error do: [:ex | UIManager inform: 'Not valid code'. ^ self].
+	collection isCollection ifFalse: [UIManager inform: 'Not a valid Collection'. ^ self].
+	
+	(collection isInterval and: [collection start > collection stop])
+		ifTrue: [collection := collection stop to: collection start. collection := collection reversed].
+	
+	self wrapInVariantGivenCollection: collection
+]
+
+{ #category : #actions }
+SBStLiteral >> wrapInVariantGivenCollection: aCollection [
+	
+	| variant |
+	variant := SBVariant new.
+	self sandblockEditor do:
+		(SBWrapCommand new
+			selectAfter: #block;
+			outer: variant;
+			inner: self;
+			wrap: [:outer :inner | variant 
+				named: aCollection asString
+				alternatives: (aCollection collect: [:anObject | 
+					SBNamedBlock block: (SBStBlockBody new 
+						statements: {(
+						anObject isString
+							ifTrue: [SBStString new contents: anObject]
+							ifFalse: [anObject asString parseAsSandblock])}) 
+						named: anObject asString])
+				activeIndex: 1])
+]
