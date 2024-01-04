@@ -156,6 +156,29 @@ SBVariant >> alternativesEqual: otherAlternatives [
 ]
 
 { #category : #converting }
+SBVariant >> asNestedPaths [
+
+	| allPaths |
+	allPaths := OrderedCollection new.
+	self asNestedPaths: allPaths currentPath: (SBPermutation new referencedVariants: OrderedCollection new). 
+	^ allPaths
+]
+
+{ #category : #converting }
+SBVariant >> asNestedPaths: allPaths currentPath: aPermutation [
+
+	"Private helper function"
+ 	self namedBlocks withIndexCollect: [:aNamedBlock :i | | nestedVariants currentPath |
+		nestedVariants := aNamedBlock block childSandblocks select: #isVariant. 
+		currentPath := aPermutation copyWith: (self id -> i).
+		currentPath referencedVariants: (aPermutation referencedVariants copyWith: self).
+		nestedVariants 
+			ifEmpty: [allPaths add: currentPath]
+			ifNotEmpty: [:children | children do: [:child | 
+					child asNestedPaths: allPaths currentPath: currentPath]]]
+]
+
+{ #category : #converting }
 SBVariant >> asProxy [
 
 	^ SBVariantProxy for: self
