@@ -12,7 +12,7 @@ SBInactiveExampleWatch class >> newFromWatch: anActiveWatch [
 
 	^ (anActiveWatch veryDeepCopy)
 		primitiveChangeClassTo: self basicNew;
-		expression: (SBTextBubble new contents: anActiveWatch expression sourceString);
+		expression: (SBTextBubble new contents: anActiveWatch cleanedExpression sourceString);
 		saveObjectsActivePermutations;
 		yourself 
 ]

@@ -127,6 +127,29 @@ SBExampleWatch >> asInactiveCopy [
 	^ SBInactiveExampleWatch newFromWatch: self
 ]
 
+{ #category : #accessing }
+SBExampleWatch >> cleanedExpression [
+
+	"ignores code wrappings for watches and variants"
+	| copy nextToRemove newOwner |
+	copy := self expression veryDeepCopy.
+	newOwner := SBStBlockBody new.
+	newOwner appendStatements: {copy}.
+	[copy allBlocksDo: [:subBlock | 
+		(subBlock isVariant or: [subBlock isWatch]) ifTrue: [nextToRemove := subBlock]]. nextToRemove]
+	 whileNotNil: [
+		nextToRemove isWatch ifTrue: [nextToRemove replaceBy: nextToRemove cleanedExpression].
+		nextToRemove isVariant ifTrue:[
+			"when users play around with putting multiple statements in a nested variant inside a watch,
+			even though watches are only possible on single expressions, 
+			we are ok with them losing information here"
+			nextToRemove replaceBy: (nextToRemove statementsFor: nextToRemove active) first].
+		nextToRemove = copy ifTrue: [^newOwner].
+		nextToRemove := nil].
+	
+	^ newOwner statements first
+]
+
 { #category : #'colors and color policies' }
 SBExampleWatch >> color [
 
