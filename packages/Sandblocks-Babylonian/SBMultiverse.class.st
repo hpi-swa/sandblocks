@@ -115,10 +115,7 @@ SBMultiverse >> findExistingOrConvertToBlocks: aCollectionOfCompiledMethods [
 ]
 
 { #category : #'initialize-release' }
-SBMultiverse >> initialize [ 
-
-	| permutations |
-	super initialize.
+SBMultiverse >> gatherElements [
 
 	"We are looking for already opened methods so that we can assign the
 	variant there as the original in SBVariantProxy. That way, we immediately
@@ -130,6 +127,17 @@ SBMultiverse >> initialize [
 	
 	variants := (allMethodBlocksContainingVariants collect: #containedVariants) flatten.
 	activeExamples := self allActiveExamples.
+	
+	
+]
+
+{ #category : #'initialize-release' }
+SBMultiverse >> initialize [ 
+
+	| permutations |
+	super initialize.
+
+	self gatherElements.
 	
 	permutations := SBPermutation allPermutationsOf: variants.
 	universes := OrderedCollection new.
@@ -150,6 +158,21 @@ SBMultiverse >> resetWatchesToOriginalPermutationRunning: activeExamples [
 	activeExamples do: #runSynchronouslyIgnoreReturn
 ]
 
+{ #category : #actions }
+SBMultiverse >> resolve [
+
+	self allActiveExamples do: #stopRunning.
+	
+	(self findExistingOrConvertToBlocks: self allCompiledMethodsContainingVariants) do: [:aVariantMethod | 
+		aVariantMethod containedVariants do: #replaceSelfWithChosen.
+		self saveMethod: aVariantMethod].
+	
+	(self findExistingOrConvertToBlocks: self allCompiledMethodsContainingExampleWatches) do: [:aWatchMethod | 
+		aWatchMethod  containedExampleWatches do: #replaceWithWatchedExpression.
+		self saveMethod: aWatchMethod].
+	
+]
+
 { #category : #accessing }
 SBMultiverse >> sandblockEditor [
 
@@ -160,6 +183,14 @@ SBMultiverse >> sandblockEditor [
 SBMultiverse >> sandblockEditor: aSandblockEditor [
 
 	sandblockEditor := aSandblockEditor
+]
+
+{ #category : #'action-helper' }
+SBMultiverse >> saveMethod: aMethod [
+
+	aMethod save.
+	aMethod sandblockEditor ifNotNil: [:theEditor | theEditor markSaved: aMethod]
+	
 ]
 
 { #category : #accessing }

@@ -289,7 +289,9 @@ SBVariant >> replaceSelfWithBlock: aNamedBlock [
 									target: self; 
 									unwrapped: statements].
 	
-	self sandblockEditor do: command
+	self sandblockEditor 
+		ifNil: [command do] 
+		ifNotNil:[:theEditor | theEditor do: command]
 ]
 
 { #category : #actions }
@@ -303,7 +305,9 @@ SBVariant >> replaceSelfWithChosen [
 									target: self; 
 									unwrapped: statements].
 	
-	self sandblockEditor do: command
+	self sandblockEditor 
+		ifNil: [command do] 
+		ifNotNil:[:theEditor | theEditor do: command]
 ]
 
 { #category : #initialization }

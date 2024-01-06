@@ -407,9 +407,14 @@ SBExampleWatch >> printOn: aStream [
 SBExampleWatch >> replaceWithWatchedExpression [
 	<action>
 	
-	self sandblockEditor do: (SBReplaceCommand new
+	| command |
+	command :=  (SBReplaceCommand new
 		replacer: self expression;
-		target: self)
+		target: self).
+		
+	self sandblockEditor 
+		ifNil: [command do] 
+		ifNotNil:[:theEditor | theEditor do: command]
 ]
 
 { #category : #actions }

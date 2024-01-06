@@ -29,6 +29,21 @@ SBExploriantsView class >> newMultiverse: aSBMultiverse [
 		yourself
 ]
 
+{ #category : #building }
+SBExploriantsView >> buildButtonRow [ 
+
+	self block addMorphFront: (SBRow new
+			changeTableLayout;
+			cellGap: 8 * self scalingFactor;
+			addAllMorphsBack: self buttons)
+]
+
+{ #category : #accessing }
+SBExploriantsView >> buttons [
+
+	^ {self updateButton. self resolveButton}
+]
+
 { #category : #actions }
 SBExploriantsView >> clean [
 
@@ -90,8 +105,30 @@ SBExploriantsView >> multiverse: aSBMultiverse [
 	multiverse when: #initialized send: #visualize to: self.
 ]
 
+{ #category : #building }
+SBExploriantsView >> resolveButton [
+
+	^ SBButton new
+		icon: SBIcon iconTrash
+			label: 'Resolve All From Code'
+			do: [self multiverse resolve];
+		cornerStyle: #squared
+]
+
+{ #category : #building }
+SBExploriantsView >> updateButton [
+
+	^ SBButton new
+		icon: SBIcon iconRotateLeft
+			label: 'Re-Generate Multiverse'
+			do: [self multiverse initialize];
+		cornerStyle: #squared
+]
+
 { #category : #actions }
 SBExploriantsView >> visualize [ 
 
-	self subclassResponsibility 
+	self clean.
+
+	self buildButtonRow
 ]
