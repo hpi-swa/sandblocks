@@ -101,6 +101,8 @@ SBVariantProxy >> updateOriginalWithOwnValues [
 	variantThatNeedsChanging ifNil: [self delete. ^ self].
 	
 	original replaceBy: (original := self firstSubmorph copyBlock).
+	original isVariant ifFalse: [self delete. ^ self].
+	
 	variantThatNeedsChanging replaceValuesFrom: original copyBlock.
 	self sandblockEditor markChanged: self containedMethod
 ]
