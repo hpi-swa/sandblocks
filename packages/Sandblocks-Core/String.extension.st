@@ -1,5 +1,11 @@
 Extension { #name : #String }
 
+{ #category : #'*Sandblocks-Core' }
+String >> asSandblock [
+
+	^ ('''',self,'''') parseAsSandblock
+]
+
 { #category : #'*Sandblocks-Core-converting' }
 String >> inStringView: converter [
 	<convert>

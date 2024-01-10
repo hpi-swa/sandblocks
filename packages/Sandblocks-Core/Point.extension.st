@@ -31,6 +31,18 @@ Point >> asEdgeInsets [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Point class >> asSandblock [
+
+	^ self asString parseAsSandblock
+]
+
+{ #category : #'*Sandblocks-Core' }
+Point >> asSandblock [ 
+
+	^ self asString parseAsSandblock 
+]
+
+{ #category : #'*Sandblocks-Core' }
 Point class >> fromSide: aSymbol [
 
 	aSymbol = #left ifTrue: [^ -1 @ 0].
