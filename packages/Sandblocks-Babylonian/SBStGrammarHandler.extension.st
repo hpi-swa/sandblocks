@@ -4,24 +4,30 @@ Extension { #name : #SBStGrammarHandler }
 SBStGrammarHandler >> addExample [
 	<action>
 
-	| method class example |
+	| method |
 	self block isExample ifTrue: [^ self block toggleRunning].
 	
 	method := self block containingArtefact.
-	class := method methodClass.
-	example := self createExampleIn: method of: class.
+	self addExample: (self createExampleIn: method classed: method methodClass).
+]
+
+{ #category : #'*Sandblocks-Babylonian' }
+SBStGrammarHandler >> addExample: anExample [
+
+	| method |
+	method := self block containingArtefact.
 	
 	self block sandblockEditor do: (SBInsertCommand new
 		container: method body;
 		index: 2;
-		morph: example).
+		morph: anExample).
 		
-	example startRunning.
-	self block sandblockEditor select: example nameBlock.
+	anExample startRunning.
+	self block sandblockEditor select: anExample nameBlock.
 ]
 
 { #category : #'*Sandblocks-Babylonian' }
-SBStGrammarHandler >> createExampleIn: aMethod of: aClass [
+SBStGrammarHandler >> createExampleIn: aMethod classed: aClass [
 
 	^ SBExample new
 			self: (aMethod isClassSide 
