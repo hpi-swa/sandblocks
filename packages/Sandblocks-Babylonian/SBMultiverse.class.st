@@ -107,7 +107,7 @@ SBMultiverse >> createUniverseFomPermutation: aSBPermutation [
 { #category : #collecting }
 SBMultiverse >> findExistingOrConvertToBlocks: aCollectionOfCompiledMethods [ 
 
-	^ aCollectionOfCompiledMethods
+	^ aCollectionOfCompiledMethods 
 		collect: [:aCompiledMethod | 
 			self sandblockEditor blockFor: aCompiledMethod withInterfaces: #(#isMethod) 
 				ifOpen: [:existingMethodBlock | existingMethodBlock] 
@@ -126,6 +126,8 @@ SBMultiverse >> gatherElements [
 	allMethodBlocksContainingWatches := self findExistingOrConvertToBlocks: self allCompiledMethodsContainingExampleWatches.
 	
 	variants := (allMethodBlocksContainingVariants collect: #containedVariants) flatten.
+	variants := variants select: #isActive.
+	
 	activeExamples := self allActiveExamples.
 	
 	

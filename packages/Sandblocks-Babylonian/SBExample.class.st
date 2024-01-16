@@ -423,7 +423,6 @@ SBExample >> runSynchronouslyIgnoreReturn [
 
 	| returned |
 	self sendStartNotification.
-	
 	SBExecutionEnvironment value: self.
 	[returned := self evaluate] on: Error do: [:e | self scheduleLastError: e].
 	self scheduleLastError: nil.

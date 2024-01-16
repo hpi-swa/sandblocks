@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'name',
 		'widget',
-		'id'
+		'id',
+		'isActive'
 	],
 	#category : #'Sandblocks-Smalltalk'
 }
@@ -39,7 +40,7 @@ SBVariant class >> matches: aBlock [
 { #category : #constants }
 SBVariant class >> matchingSelectors [
 
-	^ #(#named:associations:activeIndex:id:)
+	^ #(#named:associations:activeIndex:id:isActive:)
 ]
 
 { #category : #'instance creation' }
@@ -64,14 +65,28 @@ SBVariant class >> named: aString alternatives: aCollectionOfNamedBlocks activeI
 ]
 
 { #category : #'instance creation' }
-SBVariant class >> named: aString associations: aCollectionOfAssociations activeIndex: aNumber id: uuid [
+SBVariant class >> named: aString alternatives: aCollectionOfNamedBlocks activeIndex: aNumber id: uuid isActive: aBoolean [
+
+	^ self new
+		named: aString
+		alternatives: aCollectionOfNamedBlocks
+		activeIndex: aNumber
+		id: uuid
+		isActive: aBoolean
+		
+]
+
+{ #category : #'instance creation' }
+SBVariant class >> named: aString associations: aCollectionOfAssociations activeIndex: aNumber id: uuid isActive: aBoolean [
 
 	| defaultBehavior requestor requiredPermutation |
 	aNumber <= 0 ifTrue: [^ nil].
+	defaultBehavior := (aCollectionOfAssociations at: aNumber) value value.
+	"Inactive variants ignore any active or dynamic permutation shenanigans"
+	aBoolean ifFalse: [^ defaultBehavior].
+	
 	"Always prioritize the permutation which is marked as active"
 	SBActiveVariantPermutation value ifNotNil: [^ (aCollectionOfAssociations at: (SBActiveVariantPermutation value at: uuid)) value value].
-	
-	defaultBehavior := (aCollectionOfAssociations at: aNumber) value value.
 	
 	"The requesting object does not require dynamic update behavior in which it needs to know a certain alternative"
 	SBExploriants objectToPermutation at: (requestor := thisContext sender receiver) ifAbsent: [^ defaultBehavior].
@@ -97,6 +112,7 @@ SBVariant class >> newFor: aBlock [
 		alternatives: (aBlock arguments second childSandblocks collect: [:anAssociation | SBNamedBlock block: (anAssociation arguments first) named: (anAssociation receiver contents)])
 		activeIndex: aBlock arguments third parsedContents
 		id: aBlock arguments fourth contents
+		isActive: aBlock arguments fifth contents = 'true'
 ]
 
 { #category : #shortcuts }
@@ -128,6 +144,17 @@ SBVariant >> activeBlock [
 SBVariant >> activeIndex [
 
 	^ self widget activeIndex
+]
+
+{ #category : #actions }
+SBVariant >> activeMutateCommandWithNewValue: aBoolean [
+
+	^ SBMutatePropertyCommand new
+		target: self;
+		selector: #isActive;
+		mutateSelector: #isActive:;
+		value: aBoolean;
+		oldValue: self isActive
 ]
 
 { #category : #accessing }
@@ -184,6 +211,34 @@ SBVariant >> asProxy [
 	^ SBVariantProxy for: self
 ]
 
+{ #category : #actions }
+SBVariant >> beActive [
+	<action>
+
+	| command |
+	command := self activeMutateCommandWithNewValue: true.
+	
+	self sandblockEditor 
+		ifNil: [command do] 
+		ifNotNil:[:theEditor | theEditor do: command].
+		
+	self saveArtefact.
+]
+
+{ #category : #actions }
+SBVariant >> beInactive [
+	<action>
+
+	| command |
+	command := self activeMutateCommandWithNewValue: false.
+	
+	self sandblockEditor 
+		ifNil: [command do] 
+		ifNotNil:[:theEditor | theEditor do: command].
+		
+	self saveArtefact.
+]
+
 { #category : #accessing }
 SBVariant >> blockAt: anIndex [
 
@@ -194,12 +249,6 @@ SBVariant >> blockAt: anIndex [
 SBVariant >> color [
 
 	^ Color transparent
-]
-
-{ #category : #accessing }
-SBVariant >> drawnColor [
-
-	^ Color white
 ]
 
 { #category : #accessing }
@@ -226,6 +275,7 @@ SBVariant >> initialize [
 		namedBlocks: {SBNamedBlock block: (SBStBlockBody emptyWithDeclarations: {'a'. 'c'}) named: 'Code'}
 		activeIndex: 1).
 	id := UUID new asString. 
+	isActive := true.
 	
 	self
 		layoutInset: 0;
@@ -235,6 +285,23 @@ SBVariant >> initialize [
 		addAllMorphsBack: {name . widget};
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
+]
+
+{ #category : #accessing }
+SBVariant >> isActive [
+
+	^ isActive
+]
+
+{ #category : #accessing }
+SBVariant >> isActive: aBoolean [
+
+	isActive := aBoolean.
+	
+	isActive 
+		ifTrue:  [self localColorPolicy: SBEditor defaultColorPolicy new]
+		ifFalse: [self localColorPolicy: SBDisabledTheme new.
+				self activeBlock localColorPolicy: SBEditor defaultColorPolicy new.]
 ]
 
 { #category : #testing }
@@ -267,6 +334,13 @@ SBVariant >> named: aString alternatives: aCollectionOfNamedBlocks activeIndex: 
 
 	self id: uuid.
 	self named: aString alternatives: aCollectionOfNamedBlocks activeIndex: aNumber
+]
+
+{ #category : #initialization }
+SBVariant >> named: aString alternatives: aCollectionOfNamedBlocks activeIndex: aNumber id: uuid isActive: aBoolean [
+
+	self isActive: aBoolean.
+	self named: aString alternatives: aCollectionOfNamedBlocks activeIndex: aNumber id: uuid
 ]
 
 { #category : #accessing }
@@ -316,6 +390,14 @@ SBVariant >> replaceValuesFrom: anotherVariant [
 	self named: anotherVariant name alternatives: anotherVariant alternatives activeIndex: anotherVariant activeIndex  
 ]
 
+{ #category : #actions }
+SBVariant >> saveArtefact [
+
+	self containingArtefact save.
+	self containingArtefact sandblockEditor ifNotNil: [:theEditor | theEditor markSaved: self containingArtefact]
+	
+]
+
 { #category : #accessing }
 SBVariant >> statementsFor: aNamedBlock [
 
@@ -328,6 +410,12 @@ SBVariant >> statementsFor: aNamedBlock [
 SBVariant >> switchToAlternative: anIndex [
 
 	self widget jumpToTab: anIndex
+]
+
+{ #category : #accessing }
+SBVariant >> toggleActive [
+
+	isActive := isActive not
 ]
 
 { #category : #ui }
@@ -371,5 +459,7 @@ SBVariant >> writeSourceOn: aStream [
 	self activeIndex storeOn: aStream.
 	aStream nextPutAll: ' id: '.
 	self id storeOn: aStream.
+	aStream nextPutAll: ' isActive: '.
+	self isActive storeOn: aStream.
 	aStream nextPutAll: ')'
 ]
