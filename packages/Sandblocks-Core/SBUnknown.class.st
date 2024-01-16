@@ -9,6 +9,12 @@ Class {
 	#category : #'Sandblocks-Core'
 }
 
+{ #category : #'as yet unclassified' }
+SBUnknown class >> registerShortcuts: aProvider [
+
+	aProvider shortcut: $" do: #titleSection
+]
+
 { #category : #'text input' }
 SBUnknown >> acceptCharacter: aCharacter [
 

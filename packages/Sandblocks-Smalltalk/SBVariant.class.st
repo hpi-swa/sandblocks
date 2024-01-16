@@ -266,11 +266,11 @@ SBVariant >> initialize [
 
 	super initialize.
 	
-	name := SBLabel new
+	self nameBlock: (SBLabel new
 		text: (SBOwnTextMorph new
 			emphasis: TextEmphasis italic;
 			small);
-		contents: 'Variant X'.
+		contents: 'Variant X').
 	self widget: (SBDiffTabView
 		namedBlocks: {SBNamedBlock block: (SBStBlockBody emptyWithDeclarations: {'a'. 'c'}) named: 'Code'}
 		activeIndex: 1).
@@ -301,7 +301,8 @@ SBVariant >> isActive: aBoolean [
 	isActive 
 		ifTrue:  [self localColorPolicy: SBEditor defaultColorPolicy new]
 		ifFalse: [self localColorPolicy: SBDisabledTheme new.
-				self activeBlock localColorPolicy: SBEditor defaultColorPolicy new.]
+				self namedBlocks do: [:aBlock | 
+					aBlock block localColorPolicy: SBEditor defaultColorPolicy new]]
 ]
 
 { #category : #testing }
@@ -320,6 +321,20 @@ SBVariant >> name [
 SBVariant >> name: aString [
 
 	name contents: aString
+]
+
+{ #category : #accessing }
+SBVariant >> nameBlock [
+
+	^ name
+]
+
+{ #category : #accessing }
+SBVariant >> nameBlock: aSBLabel [
+
+	name := aSBLabel.
+	
+	name when: #doubleClicked send: #replaceSelfWithLabel to: self.
 ]
 
 { #category : #initialization }
@@ -384,6 +399,20 @@ SBVariant >> replaceSelfWithChosen [
 		ifNotNil:[:theEditor | theEditor do: command]
 ]
 
+{ #category : #actions }
+SBVariant >> replaceSelfWithLabel [ 
+	
+	<action>
+	| command |
+	command :=  SBReplaceCommand new 
+						target: self; 
+						replacer: (SBLabel new contents: self name).
+	
+	self sandblockEditor 
+		ifNil: [command do] 
+		ifNotNil:[:theEditor | theEditor do: command]
+]
+
 { #category : #initialization }
 SBVariant >> replaceValuesFrom: anotherVariant [
 
@@ -415,7 +444,9 @@ SBVariant >> switchToAlternative: anIndex [
 { #category : #accessing }
 SBVariant >> toggleActive [
 
-	isActive := isActive not
+	self isActive 
+		ifTrue: [self beInactive] 
+		ifFalse: [self beActive]
 ]
 
 { #category : #ui }

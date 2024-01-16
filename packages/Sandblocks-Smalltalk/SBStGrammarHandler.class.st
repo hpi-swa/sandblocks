@@ -340,6 +340,32 @@ SBStGrammarHandler >> suggestionsFor: aBlock [
 	^ #()
 ]
 
+{ #category : #actions }
+SBStGrammarHandler >> titleSection [
+	<multiSelectAction>
+	<actionValidIf: #isUnknown>
+
+	| variant |
+	self assert: self block isSelected.
+	variant := SBVariant new.
+	self block sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
+	self block sandblockEditor doMultiSelection: [:selected |
+		SBWrapConsecutiveCommand new
+			selectAfter: #block;
+			outer: variant;
+			targets: selected;
+			wrap:  [:outer :inner |
+				variant 
+					named: inner printString 
+					alternatives: {SBNamedBlock 
+						block: (SBStBlockBody new statements: inner) 
+						named: 'current'.}
+					activeIndex: 1];
+			yourself].
+		
+		self block sandblockEditor select: variant nameBlock.
+]
+
 { #category : #'action helpers' }
 SBStGrammarHandler >> useArgument: aNumber [
 
