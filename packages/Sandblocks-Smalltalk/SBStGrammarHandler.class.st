@@ -612,7 +612,10 @@ SBStGrammarHandler >> wrapInOptionalVariant [
 					named: inner printString 
 					alternatives: (self defaultOptionalAlternativesForBlocks: inner)
 					activeIndex: 2];
-			yourself]
+			yourself].
+		
+	variant sandblockEditor select: variant nameBlock.
+	variant sandblockEditor save: variant containingArtefact tryFixing: true quick: false.
 ]
 
 { #category : #actions }
@@ -666,7 +669,10 @@ SBStGrammarHandler >> wrapInVariant [
 					named: inner printString 
 					alternatives: (self defaultAlternativesForBlocks: inner)
 					activeIndex: 2];
-			yourself]
+			yourself].
+		
+	variant sandblockEditor select: variant nameBlock.
+	variant sandblockEditor save: variant containingArtefact tryFixing: true quick: false.
 ]
 
 { #category : #actions }

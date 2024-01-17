@@ -264,7 +264,7 @@ SBWatchView >> printOn: aStream [
 { #category : #actions }
 SBWatchView >> reportValue: anObject [
 
-	self reportValue: {anObject} sized: SBMorphResizer newIdentity
+	self reportValues: {anObject} sized: SBMorphResizer newIdentity
 ]
 
 { #category : #actions }

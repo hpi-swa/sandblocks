@@ -222,7 +222,7 @@ SBVariant >> beActive [
 		ifNil: [command do] 
 		ifNotNil:[:theEditor | theEditor do: command].
 		
-	self saveArtefact.
+	self containingArtefact sandblockEditor save: self containingArtefact tryFixing: true quick: false.
 ]
 
 { #category : #actions }
@@ -236,7 +236,7 @@ SBVariant >> beInactive [
 		ifNil: [command do] 
 		ifNotNil:[:theEditor | theEditor do: command].
 		
-	self saveArtefact.
+	self containingArtefact sandblockEditor save: self containingArtefact tryFixing: true quick: false.
 ]
 
 { #category : #accessing }
@@ -417,14 +417,6 @@ SBVariant >> replaceSelfWithLabel [
 SBVariant >> replaceValuesFrom: anotherVariant [
 
 	self named: anotherVariant name alternatives: anotherVariant alternatives activeIndex: anotherVariant activeIndex  
-]
-
-{ #category : #actions }
-SBVariant >> saveArtefact [
-
-	self containingArtefact save.
-	self containingArtefact sandblockEditor ifNotNil: [:theEditor | theEditor markSaved: self containingArtefact]
-	
 ]
 
 { #category : #accessing }

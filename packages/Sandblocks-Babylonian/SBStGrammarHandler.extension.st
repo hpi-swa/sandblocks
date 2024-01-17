@@ -24,6 +24,7 @@ SBStGrammarHandler >> addExample: anExample [
 		
 	anExample startRunning.
 	self block sandblockEditor select: anExample nameBlock.
+	self block sandblockEditor save: method tryFixing: true quick: false.
 ]
 
 { #category : #'*Sandblocks-Babylonian' }

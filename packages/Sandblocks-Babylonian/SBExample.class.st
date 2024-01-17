@@ -66,7 +66,7 @@ SBExample class >> newFor: aMessage [
 { #category : #'as yet unclassified' }
 SBExample class >> registerShortcuts: aProvider [
 
-	aProvider registerShortcut: $q command do: #wrapWithExampleWatch
+	aProvider registerShortcut: $w command do: #wrapWithExampleWatch
 ]
 
 { #category : #'as yet unclassified' }
