@@ -148,9 +148,22 @@ SBMultiverse >> initialize [
 			activeExamples do: #runSynchronouslyIgnoreReturn.
 			universes add: (self createUniverseFomPermutation: aPermutation)].
 		self resetWatchesToOriginalPermutationRunning: activeExamples.
-		self triggerEvent: #initialized] forkAt: Processor userSchedulingPriority.
+		self triggerEvent: #updated] forkAt: Processor userSchedulingPriority.
 	
 	
+]
+
+{ #category : #actions }
+SBMultiverse >> reset [
+
+	allMethodBlocksContainingVariants := OrderedCollection new.
+	allMethodBlocksContainingWatches := OrderedCollection new.
+	variants := OrderedCollection new.
+	activeExamples := OrderedCollection new.
+	universes := OrderedCollection withAll: ((SBPermutation allPermutationsOf: {}) 
+		collect: [:aPermutation | self createUniverseFomPermutation: aPermutation]) .
+	
+	self triggerEvent: #updated.
 ]
 
 { #category : #state }
@@ -170,8 +183,10 @@ SBMultiverse >> resolve [
 		self saveMethod: aVariantMethod].
 	
 	(self findExistingOrConvertToBlocks: self allCompiledMethodsContainingExampleWatches) do: [:aWatchMethod | 
-		aWatchMethod  containedExampleWatches do: #replaceWithWatchedExpression.
+		aWatchMethod containedExampleWatches do: #replaceWithWatchedExpression.
 		self saveMethod: aWatchMethod].
+	
+	self reset.
 	
 ]
 

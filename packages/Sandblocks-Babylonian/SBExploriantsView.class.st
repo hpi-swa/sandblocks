@@ -102,7 +102,7 @@ SBExploriantsView >> multiverse [
 SBExploriantsView >> multiverse: aSBMultiverse [
 
 	multiverse := aSBMultiverse.
-	multiverse when: #initialized send: #visualize to: self.
+	multiverse when: #updated send: #visualize to: self.
 ]
 
 { #category : #building }
