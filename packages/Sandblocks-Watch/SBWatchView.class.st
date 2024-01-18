@@ -142,7 +142,11 @@ SBWatchView >> displayWatchValues [
 { #category : #accessing }
 SBWatchView >> displayedMorphs [
 
-	^ self scroller submorphs first "container for scrolling" submorphs 
+	^ self scroller submorphs 
+			ifEmpty: [{}]
+			ifNotEmpty: [:valueContainer | valueContainer first "container for scrolling" submorphs ]
+	
+		
 ]
 
 { #category : #'event handling' }

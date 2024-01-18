@@ -23,6 +23,12 @@ SBInactiveExampleWatch class >> registerWatch: aWatch [
 	"we do not want the inactive watches in the registry"
 ]
 
+{ #category : #'event handling' }
+SBInactiveExampleWatch class >> unregisterWatch: aWatch [
+
+	"we do not want the inactive watches in the registry"
+]
+
 { #category : #callbacks }
 SBInactiveExampleWatch >> artefactSaved: aBlock [
 

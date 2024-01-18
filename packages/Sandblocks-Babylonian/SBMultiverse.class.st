@@ -89,13 +89,6 @@ SBMultiverse >> allMethodBlocksContainingWatches [
 
 ]
 
-{ #category : #collecting }
-SBMultiverse >> copyWatches [
-	
-	^ (self allMethodBlocksContainingWatches collect: [:aMethodBlock | 
-		aMethodBlock containedExampleWatches collect: #asInactiveCopy]) flatten
-]
-
 { #category : #converting }
 SBMultiverse >> createUniverseFomPermutation: aSBPermutation [ 
 
@@ -136,17 +129,23 @@ SBMultiverse >> gatherElements [
 { #category : #'initialize-release' }
 SBMultiverse >> initialize [ 
 
-	| permutations |
+	| permutations watches outOfWorldWatches |
 	super initialize.
 
 	self gatherElements.
 	
 	permutations := SBPermutation allPermutationsOf: variants.
 	universes := OrderedCollection new.
+	
+	watches := (self allMethodBlocksContainingWatches collect: #containedExampleWatches) flatten.
+	"Only open watches display values when examples are run. We want to show them too"
+	(outOfWorldWatches := watches reject: #isInEditor) do: [:aWatch | self sandblockEditor openMorph: aWatch].
+	
 	[permutations do: [:aPermutation |
 			SBActiveVariantPermutation value: aPermutation.
 			activeExamples do: #runSynchronouslyIgnoreReturn.
-			universes add: (self createUniverseFomPermutation: aPermutation)].
+			universes add: (SBUniverse newActive: aPermutation watches: (watches collect: #asInactiveCopy))].
+		outOfWorldWatches copy do: #delete.
 		self resetWatchesToOriginalPermutationRunning: activeExamples.
 		self triggerEvent: #updated] forkAt: Processor userSchedulingPriority.
 	
