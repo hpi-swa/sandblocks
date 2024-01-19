@@ -114,6 +114,34 @@ SBExploriants >> objectToPermutation [
 	^ objectToPermutation
 ]
 
+{ #category : #'as yet unclassified' }
+SBExploriants >> onlySwitchedTabsIn: aMethodBlock multiverse: aMultiverse [
+
+	| methodClass methodSelector latestChange diff changes |
+	(aMultiverse allMethodBlocksContainingVariants includes: aMethodBlock) 
+		ifFalse: [^ false].
+		
+	methodClass := aMethodBlock compiledMethod methodClass.
+	methodSelector := aMethodBlock compiledMethod selector.
+	latestChange := (ChangeSet 
+		scanVersionsOf: aMethodBlock compiledMethod
+		class: methodClass 
+		meta: methodClass isMeta
+		category: (methodClass organization categoryOfElement: methodSelector)
+		selector: methodSelector) second.
+	diff := TextDiffBuilder new
+		from: aMethodBlock compiledMethod getSource
+		to: latestChange text.
+	changes := OrderedCollection new.
+	diff patchSequenceDoIfMatch: [ :string |]
+			ifInsert: [ :string | changes add: string]
+			ifRemove: [ :string| changes add: string].
+	^ (changes allSatisfy: [:aString | aString matchesRegex: '\s*activeIndex\: \d*\s*']).
+		
+	
+	 
+]
+
 { #category : #'artefact protocol' }
 SBExploriants >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 
@@ -132,25 +160,19 @@ SBExploriants >> tryToUpdateInBackgroundAfterChangeIn: aMethodBlock [
 
 	| multiverse |
 	multiverse := self active multiverse.
-	"(multiverse allMethodBlocksContainingVariants includes: aMethodBlock) 
-		ifTrue: [ 
-			| methodClass methodSelector latestChange |
-			methodClass := aMethodBlock compiledMethod methodClass.
-			methodSelector := aMethodBlock compiledMethod selector.
-			self halt.
-			latestChange := (ChangeSet 
-				scanVersionsOf: aMethodBlock compiledMethod
-				class: methodClass 
-				meta: methodClass isMeta
-				category: (methodClass organization categoryOfElement: methodSelector)
-				selector: methodSelector) first."
-				
-				"mostRecentChangeSetWithChangeForClass: methodClass selector: methodSelector."
-			"aMethodBlock compiledMethod getSource asString allRangesOfRegexMatches: '(?<=activeIndex\: )\d*'."
-			"multiverse variants select: [:aVariant | aVariant containingArtefact = aMethodBlock]""]." 
+	(self onlySwitchedTabsIn: aMethodBlock multiverse: multiverse) ifTrue: [^ self].
+		
+	self updateInBackgroundOnTimeoutRevertTo: multiverse
 	
-	"updateProcessRunning ifTrue: [
+	 
+]
+
+{ #category : #'as yet unclassified' }
+SBExploriants >> updateInBackgroundOnTimeoutRevertTo: theOldMultiverse [
+
+	updateProcessRunning ifTrue: [
 		updateProcess ifNotNil: #terminate.
+		theOldMultiverse cleanUp.	
 		updateProcessRunning := false.].
 	
 	updateProcessRunning := true.
@@ -160,13 +182,16 @@ SBExploriants >> tryToUpdateInBackgroundAfterChangeIn: aMethodBlock [
 		self namedBlocks do: [:aTab | aTab multiverse: newMultiverse].
 		[newMultiverse kaboom] 
 			valueWithin: 5 seconds 
-			onTimeout: [
-				newMultiverse cleanUp. updateProcess := nil. updateProcessRunning := false.]. 
+			onTimeout: [newMultiverse cleanUp. 
+						  self namedBlocks do: [:aTab | aTab multiverse: theOldMultiverse]]. 
 		updateProcess := nil. updateProcessRunning := false.
-	] forkAt: Processor userBackgroundPriority."
+	] forkAt: Processor userBackgroundPriority.
+]
 
-	
-	
+{ #category : #'as yet unclassified' }
+SBExploriants >> updatePermutationStyling [
+
+	self namedBlocks do: #updatePermutationStyling
 ]
 
 { #category : #actions }

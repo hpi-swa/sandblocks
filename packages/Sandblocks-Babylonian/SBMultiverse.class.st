@@ -141,7 +141,7 @@ SBMultiverse >> gatherElements [
 	
 	watches := (self allMethodBlocksContainingWatches collect: #containedExampleWatches) flatten.
 	watches do: [:aWatch | activeExamples do: [:anExample | aWatch exampleStarting: anExample].
-							 aWatch hide].
+							 aWatch hide. aWatch extent: 1@1].
 	
 ]
 

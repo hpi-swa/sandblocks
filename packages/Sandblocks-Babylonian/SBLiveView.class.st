@@ -39,7 +39,7 @@ SBLiveView >> buildPreviewFor: aPermutation [
 		addAllMorphsBack: {
 			self containerRow listDirection: #topToBottom;
 				 addAllMorphsBack: { 
-					SBOwnTextMorph new contents: aPermutation asString.
+					TextMorph new contents: aPermutation asStylizedText.
 					self newPermutationButtonRowFor: aPermutation showing: preview.
 					preview}.
 		LineMorph from: 0@0 to: 0@50 color: Color black width: 2}).
