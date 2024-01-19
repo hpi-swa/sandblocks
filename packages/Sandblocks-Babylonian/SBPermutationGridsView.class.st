@@ -17,7 +17,7 @@ SBPermutationGridsView >> buildPermutationFor: aSBUniverse [
 		addAllMorphsBack: {
 			self containerRow listDirection: #topToBottom;
 				addAllMorphsBack: { 
-					SBOwnTextMorph new contents: aSBUniverse activePermutation asString.
+					TextMorph new contents: aSBUniverse activePermutation asStylizedText.
 					SBButton newApplyPermutationFor: aSBUniverse activePermutation. 
 					(SBPermutationCluster 
 						newForSize: morphResizer

@@ -11,7 +11,8 @@ Class {
 		'count',
 		'clear',
 		'fallbackResizer',
-		'updateScheduled'
+		'updateScheduled',
+		'shouldUpdateDisplay'
 	],
 	#category : #'Sandblocks-Watch'
 }
@@ -135,7 +136,8 @@ SBWatchView >> displayWatchValues [
 	| valuesMorph |
 	valuesMorph := self watchValuesContainer.
 	valuesMorph addAllMorphsBack: (watchValues collect: #asValueMorph).
-
+	"Will sometimes not update size otherwise when rushing through runs"
+	valuesMorph doLayoutSafely.
 	self displayOnScrollPane: valuesMorph.
 ]
 
@@ -197,6 +199,7 @@ SBWatchView >> initialize [
 	numSavedValues := 1.
 	watchValues := LinkedList new.
 	fallbackResizer := SBMorphResizer newSmall.
+	shouldUpdateDisplay := true.
 	
 	self
 		layoutPolicy: SBAlgebraLayout new;
@@ -284,13 +287,21 @@ SBWatchView >> reportValues: aCollectionOfObjects sized: aMorphResizer [
 ]
 
 { #category : #actions }
+SBWatchView >> resetOnlyValues [
+	"Private"
+
+	count contents: '0'.
+	watchValues := LinkedList new.
+]
+
+{ #category : #actions }
 SBWatchView >> resizeThrough: aMorphResizer [
 
 	"Clearing everything here as Morphs get distorted when resized multiple times."
 	| valuesMorph |
 	valuesMorph := self watchValuesContainer.
-	valuesMorph addAllMorphsBack: (self displayedMorphs 
-		collect: #sbSnapshot 
+	valuesMorph addAllMorphsBack: (self displayedMorphs  
+		collect: #sbSnapshot   
 		thenDo: [:aMorph | aMorphResizer applyOn: aMorph]).
 
 	self displayOnScrollPane: valuesMorph.
@@ -315,6 +326,18 @@ SBWatchView >> scroller [
 	^ self scrollPane scroller
 ]
 
+{ #category : #accessing }
+SBWatchView >> shouldUpdateDisplay [
+
+	^ shouldUpdateDisplay
+]
+
+{ #category : #accessing }
+SBWatchView >> shouldUpdateDisplay: aBoolean [
+	
+	shouldUpdateDisplay := aBoolean
+]
+
 { #category : #'object interface' }
 SBWatchView >> storeAsExample [
 
@@ -330,6 +353,7 @@ SBWatchView >> storeAsExample [
 SBWatchView >> updateDisplay [
 
 	updateScheduled ifFalse: [^ self].
+	shouldUpdateDisplay ifFalse: [^ self].
 	
 	updateScheduled := false.
 	
@@ -366,6 +390,12 @@ SBWatchView >> veryDeepCopyWith: deepCopier [
 SBWatchView >> watchObjectInterface [
 
 	^ SBInterfaces topLevel, {[:o | o isEditor not]}
+]
+
+{ #category : #accessing }
+SBWatchView >> watchValues [
+	
+	^ watchValues
 ]
 
 { #category : #accessing }

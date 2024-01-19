@@ -419,15 +419,15 @@ SBExample >> runSetup [
 ]
 
 { #category : #'as yet unclassified' }
-SBExample >> runSynchronouslyIgnoreReturn [
+SBExample >> runSynchUpdatingOnlyValuesOf: aCollectionOfSBWatches [
 
 	| returned |
-	self sendStartNotification.
+	aCollectionOfSBWatches do: [:aWatch | aWatch resetOnlyValuesFor: self].
 	SBExecutionEnvironment value: self.
 	[returned := self evaluate] on: Error do: [:e | self scheduleLastError: e].
 	self scheduleLastError: nil.
+	aCollectionOfSBWatches do: [:aWatch | aWatch exampleFinished: self]
 	
-	self sendFinishNotification.
 ]
 
 { #category : #'as yet unclassified' }

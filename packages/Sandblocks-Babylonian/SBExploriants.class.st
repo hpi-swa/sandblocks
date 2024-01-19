@@ -149,7 +149,7 @@ SBExploriants >> tryToUpdateInBackgroundAfterChangeIn: aMethodBlock [
 			"aMethodBlock compiledMethod getSource asString allRangesOfRegexMatches: '(?<=activeIndex\: )\d*'."
 			"multiverse variants select: [:aVariant | aVariant containingArtefact = aMethodBlock]""]." 
 	
-	updateProcessRunning ifTrue: [
+	"updateProcessRunning ifTrue: [
 		updateProcess ifNotNil: #terminate.
 		updateProcessRunning := false.].
 	
@@ -163,7 +163,7 @@ SBExploriants >> tryToUpdateInBackgroundAfterChangeIn: aMethodBlock [
 			onTimeout: [
 				newMultiverse cleanUp. updateProcess := nil. updateProcessRunning := false.]. 
 		updateProcess := nil. updateProcessRunning := false.
-	] forkAt: Processor userBackgroundPriority.
+	] forkAt: Processor userBackgroundPriority."
 
 	
 	

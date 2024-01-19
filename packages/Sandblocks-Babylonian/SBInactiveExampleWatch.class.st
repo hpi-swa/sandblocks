@@ -7,16 +7,6 @@ Class {
 	#category : #'Sandblocks-Babylonian'
 }
 
-{ #category : #'initialize-release' }
-SBInactiveExampleWatch class >> newFromWatch: anActiveWatch [
-
-	^ (anActiveWatch veryDeepCopy)
-		primitiveChangeClassTo: self basicNew;
-		expression: (SBTextBubble new contents: anActiveWatch cleanedExpression sourceString);
-		saveObjectsActivePermutations;
-		yourself 
-]
-
 { #category : #'event handling' }
 SBInactiveExampleWatch class >> registerWatch: aWatch [
 

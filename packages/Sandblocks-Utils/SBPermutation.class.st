@@ -40,6 +40,14 @@ SBPermutation class >> newCombinedOf: onePermutation and: anotherPermutation [
 	
 ]
 
+{ #category : #accessing }
+SBPermutation >> activeScore [
+
+	^ (self referencedVariants collect: [:aVariant |
+		aVariant activeIndex = (self at: aVariant id) ifTrue: [1] ifFalse: [0]]) 
+		inject: 0 into: [:a :c | a + c]
+]
+
 { #category : #actions }
 SBPermutation >> apply [
 
@@ -58,6 +66,24 @@ SBPermutation >> asString [
 			fold: [:a :b | a, ', ', b ]
 
 	
+]
+
+{ #category : #converting }
+SBPermutation >> asStylizedText [
+
+	| text |
+	text := Text fromString: self asString.
+	^ self isActive
+		ifTrue: [text allBold] 
+		ifFalse: [text]
+
+	
+]
+
+{ #category : #accessing }
+SBPermutation >> isActive [
+
+	^ self activeScore = self referencedVariants size
 ]
 
 { #category : #accessing }

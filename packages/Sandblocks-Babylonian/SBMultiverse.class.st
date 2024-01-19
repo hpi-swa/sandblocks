@@ -109,15 +109,8 @@ SBMultiverse >> asyncKaboom [
 { #category : #actions }
 SBMultiverse >> cleanUp [
 	
-	self resetWatchesToOriginalPermutationRunning: activeExamples.
+	watches do: #resumeGraphicalUpdates.
 	(watches select: [:anOpenWatch | anOpenWatch containingArtefact isNil]) copy do: #delete
-]
-
-{ #category : #actions }
-SBMultiverse >> cleanUpRemovingCopies: outOfWorldWatches [
-	
-	self resetWatchesToOriginalPermutationRunning: activeExamples.
-	outOfWorldWatches copy do: #delete
 ]
 
 { #category : #collecting }
@@ -140,14 +133,15 @@ SBMultiverse >> gatherElements [
 	
 	allMethodBlocksContainingWatches := self allCompiledMethodsContainingExampleWatches collect: #asSandblock.
 	
+	universes := OrderedCollection new.
+	activeExamples := self allActiveExamples.
+	
 	variants := (allMethodBlocksContainingVariants collect: #containedVariants) flatten.
 	variants := variants select: #isActive.
 	
 	watches := (self allMethodBlocksContainingWatches collect: #containedExampleWatches) flatten.
-	
-	universes := OrderedCollection new.
-	activeExamples := self allActiveExamples.
-	
+	watches do: [:aWatch | activeExamples do: [:anExample | aWatch exampleStarting: anExample].
+							 aWatch hide].
 	
 ]
 
@@ -162,14 +156,22 @@ SBMultiverse >> initialize [
 { #category : #actions }
 SBMultiverse >> kaboom [
 	
-	| outOfWorldWatches |
+	| outOfWorldWatches permutations |
 	"Only open watches display values when examples are run. We want to show them too"
 	(outOfWorldWatches := watches reject: #isInEditor) do: [:aWatch | self sandblockEditor openMorph: aWatch].
+	permutations := (SBPermutation allPermutationsOf: variants).
+	watches do: #stopGraphicalUpdates.
 	
-	(SBPermutation allPermutationsOf: variants) do: [:aPermutation | 
+	"Running the active one last"
+	(permutations sorted: [:a :b | a activeScore  <= b activeScore ] ) do: [:aPermutation | 
 		self runPermutation: aPermutation copyingWatches: watches ].
-	self resetWatchesToOriginalPermutationRunning: activeExamples.
-	outOfWorldWatches copy do: #delete.
+	
+	"but stay consistent of the permutation sequences for alignment in clusters" 
+	"sorting this is cheaper than running a permutation twice just to reset to prior state"
+	universes := universes sorted: [:a :b | 
+		(permutations indexOf: a activePermutation) <= (permutations indexOf: b activePermutation)].
+	self cleanUp.
+	
 	self triggerEvent: #updated.
 ]
 
@@ -185,13 +187,6 @@ SBMultiverse >> reset [
 		collect: [:aPermutation | SBUniverse newActive: aPermutation watches: {}]) .
 	
 	self triggerEvent: #updated.
-]
-
-{ #category : #'action-helper' }
-SBMultiverse >> resetWatchesToOriginalPermutationRunning: activeExamples [
-
-	SBActiveVariantPermutation value: nil.
-	activeExamples do: #runSynchronouslyIgnoreReturn
 ]
 
 { #category : #actions }
@@ -214,10 +209,9 @@ SBMultiverse >> resolve [
 { #category : #actions }
 SBMultiverse >> runPermutation: aPermutation copyingWatches: allWatches [
 	
-	
 	SBActiveVariantPermutation value: aPermutation.
-	activeExamples do: #runSynchronouslyIgnoreReturn.
-	universes add: (SBUniverse newActive: aPermutation watches: (watches collect: #asInactiveCopy))
+	activeExamples do: [:anExample | anExample runSynchUpdatingOnlyValuesOf: allWatches].
+	universes add: (SBUniverse newActive: aPermutation watches: (allWatches collect: #asInactiveCopy))
 			
 ]
 
