@@ -7,6 +7,7 @@ Class {
 	#instVars : [
 		'universes',
 		'variants',
+		'watches',
 		'activeExamples',
 		'allMethodBlocksContainingVariants',
 		'allMethodBlocksContainingWatches',
@@ -16,19 +17,29 @@ Class {
 }
 
 { #category : #'instance creation' }
-SBMultiverse class >> new [
-	
-	"Use constructor with editor instead"
-	self shouldNotImplement 
+SBMultiverse class >> bigbangInEditor: aSandblockEditor [
+
+	^ self basicNew
+		sandblockEditor: aSandblockEditor;
+		initialize;
+		asyncKaboom;
+		yourself 
 ]
 
 { #category : #'instance creation' }
-SBMultiverse class >> newInEditor: aSandblockEditor [
+SBMultiverse class >> bigbangInEditorWithoutKaboom: aSandblockEditor [ 
 
 	^ self basicNew
 		sandblockEditor: aSandblockEditor;
 		initialize;
 		yourself 
+]
+
+{ #category : #'instance creation' }
+SBMultiverse class >> new [
+	
+	"Use constructor with editor instead"
+	self shouldNotImplement 
 ]
 
 { #category : #accessing }
@@ -89,12 +100,24 @@ SBMultiverse >> allMethodBlocksContainingWatches [
 
 ]
 
-{ #category : #converting }
-SBMultiverse >> createUniverseFomPermutation: aSBPermutation [ 
+{ #category : #actions }
+SBMultiverse >> asyncKaboom [
+	
+	^ [self kaboom] forkAt: Processor userSchedulingPriority.
+]
 
-	^ SBUniverse 
-		newActive: aSBPermutation
-		watches: self copyWatches
+{ #category : #actions }
+SBMultiverse >> cleanUp [
+	
+	self resetWatchesToOriginalPermutationRunning: activeExamples.
+	(watches select: [:anOpenWatch | anOpenWatch containingArtefact isNil]) copy do: #delete
+]
+
+{ #category : #actions }
+SBMultiverse >> cleanUpRemovingCopies: outOfWorldWatches [
+	
+	self resetWatchesToOriginalPermutationRunning: activeExamples.
+	outOfWorldWatches copy do: #delete
 ]
 
 { #category : #collecting }
@@ -115,12 +138,14 @@ SBMultiverse >> gatherElements [
 	have consistency between changes."
 	allMethodBlocksContainingVariants := self findExistingOrConvertToBlocks: self allCompiledMethodsContainingVariants.
 	
-	"We need existing originals to be noticed of changes."
-	allMethodBlocksContainingWatches := self findExistingOrConvertToBlocks: self allCompiledMethodsContainingExampleWatches.
+	allMethodBlocksContainingWatches := self allCompiledMethodsContainingExampleWatches collect: #asSandblock.
 	
 	variants := (allMethodBlocksContainingVariants collect: #containedVariants) flatten.
 	variants := variants select: #isActive.
 	
+	watches := (self allMethodBlocksContainingWatches collect: #containedExampleWatches) flatten.
+	
+	universes := OrderedCollection new.
 	activeExamples := self allActiveExamples.
 	
 	
@@ -129,27 +154,23 @@ SBMultiverse >> gatherElements [
 { #category : #'initialize-release' }
 SBMultiverse >> initialize [ 
 
-	| permutations watches outOfWorldWatches |
 	super initialize.
-
+	
 	self gatherElements.
+]
+
+{ #category : #actions }
+SBMultiverse >> kaboom [
 	
-	permutations := SBPermutation allPermutationsOf: variants.
-	universes := OrderedCollection new.
-	
-	watches := (self allMethodBlocksContainingWatches collect: #containedExampleWatches) flatten.
+	| outOfWorldWatches |
 	"Only open watches display values when examples are run. We want to show them too"
 	(outOfWorldWatches := watches reject: #isInEditor) do: [:aWatch | self sandblockEditor openMorph: aWatch].
 	
-	[permutations do: [:aPermutation |
-			SBActiveVariantPermutation value: aPermutation.
-			activeExamples do: #runSynchronouslyIgnoreReturn.
-			universes add: (SBUniverse newActive: aPermutation watches: (watches collect: #asInactiveCopy))].
-		outOfWorldWatches copy do: #delete.
-		self resetWatchesToOriginalPermutationRunning: activeExamples.
-		self triggerEvent: #updated] forkAt: Processor userSchedulingPriority.
-	
-	
+	(SBPermutation allPermutationsOf: variants) do: [:aPermutation | 
+		self runPermutation: aPermutation copyingWatches: watches ].
+	self resetWatchesToOriginalPermutationRunning: activeExamples.
+	outOfWorldWatches copy do: #delete.
+	self triggerEvent: #updated.
 ]
 
 { #category : #actions }
@@ -159,13 +180,14 @@ SBMultiverse >> reset [
 	allMethodBlocksContainingWatches := OrderedCollection new.
 	variants := OrderedCollection new.
 	activeExamples := OrderedCollection new.
+	watches:= OrderedCollection new.
 	universes := OrderedCollection withAll: ((SBPermutation allPermutationsOf: {}) 
-		collect: [:aPermutation | self createUniverseFomPermutation: aPermutation]) .
+		collect: [:aPermutation | SBUniverse newActive: aPermutation watches: {}]) .
 	
 	self triggerEvent: #updated.
 ]
 
-{ #category : #state }
+{ #category : #'action-helper' }
 SBMultiverse >> resetWatchesToOriginalPermutationRunning: activeExamples [
 
 	SBActiveVariantPermutation value: nil.
@@ -187,6 +209,16 @@ SBMultiverse >> resolve [
 	
 	self reset.
 	
+]
+
+{ #category : #actions }
+SBMultiverse >> runPermutation: aPermutation copyingWatches: allWatches [
+	
+	
+	SBActiveVariantPermutation value: aPermutation.
+	activeExamples do: #runSynchronouslyIgnoreReturn.
+	universes add: (SBUniverse newActive: aPermutation watches: (watches collect: #asInactiveCopy))
+			
 ]
 
 { #category : #accessing }
@@ -219,4 +251,10 @@ SBMultiverse >> universes [
 SBMultiverse >> variants [
 
 	^ variants
+]
+
+{ #category : #accessing }
+SBMultiverse >> watches [
+
+	^ watches
 ]

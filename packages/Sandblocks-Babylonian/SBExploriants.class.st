@@ -5,7 +5,9 @@ Class {
 	#name : #SBExploriants,
 	#superclass : #SBTabView,
 	#instVars : [
-		'objectToPermutation'
+		'objectToPermutation',
+		'updateProcess',
+		'updateProcessRunning'
 	],
 	#classInstVars : [
 		'uniqueInstance'
@@ -41,6 +43,12 @@ SBExploriants class >> uniqueInstance [
 SBExploriants >> = other [
 
 	^ self class = other class
+]
+
+{ #category : #'as yet unclassified' }
+SBExploriants >> artefactSaved: aMethodBlock [
+
+	(aMethodBlock isMethod and: [self isInEditor]) ifTrue: [self tryToUpdateInBackgroundAfterChangeIn: aMethodBlock]
 ]
 
 { #category : #'ast helpers' }
@@ -86,6 +94,7 @@ SBExploriants >> initialize [
 	super initialize.
 	
 	objectToPermutation := WeakKeyDictionary new.
+	updateProcessRunning := false.
 	
 	self
 		attachDecorator: SBMoveDecorator new;
@@ -118,13 +127,55 @@ SBExploriants >> selector [
 	^ nil
 ]
 
+{ #category : #'as yet unclassified' }
+SBExploriants >> tryToUpdateInBackgroundAfterChangeIn: aMethodBlock [
+
+	| multiverse |
+	multiverse := self active multiverse.
+	"(multiverse allMethodBlocksContainingVariants includes: aMethodBlock) 
+		ifTrue: [ 
+			| methodClass methodSelector latestChange |
+			methodClass := aMethodBlock compiledMethod methodClass.
+			methodSelector := aMethodBlock compiledMethod selector.
+			self halt.
+			latestChange := (ChangeSet 
+				scanVersionsOf: aMethodBlock compiledMethod
+				class: methodClass 
+				meta: methodClass isMeta
+				category: (methodClass organization categoryOfElement: methodSelector)
+				selector: methodSelector) first."
+				
+				"mostRecentChangeSetWithChangeForClass: methodClass selector: methodSelector."
+			"aMethodBlock compiledMethod getSource asString allRangesOfRegexMatches: '(?<=activeIndex\: )\d*'."
+			"multiverse variants select: [:aVariant | aVariant containingArtefact = aMethodBlock]""]." 
+	
+	updateProcessRunning ifTrue: [
+		updateProcess ifNotNil: #terminate.
+		updateProcessRunning := false.].
+	
+	updateProcessRunning := true.
+	updateProcess := [
+		| newMultiverse |
+		newMultiverse := SBMultiverse bigbangInEditorWithoutKaboom: self sandblockEditor.
+		self namedBlocks do: [:aTab | aTab multiverse: newMultiverse].
+		[newMultiverse kaboom] 
+			valueWithin: 5 seconds 
+			onTimeout: [
+				newMultiverse cleanUp. updateProcess := nil. updateProcessRunning := false.]. 
+		updateProcess := nil. updateProcessRunning := false.
+	] forkAt: Processor userBackgroundPriority.
+
+	
+	
+]
+
 { #category : #actions }
 SBExploriants >> visualize [
 
 	| tabs |
 	self width: 0.
 	"tabs will visualize as soon as multiverse is finished"
-	tabs := SBExploriantsView getTabsInMultiverse: (SBMultiverse newInEditor: self sandblockEditor).
+	tabs := SBExploriantsView getTabsInMultiverse: (SBMultiverse bigbangInEditor: self sandblockEditor).
 	
 	self namedBlocks: tabs activeIndex: 1.
 	
