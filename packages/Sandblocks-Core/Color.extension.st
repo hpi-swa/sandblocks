@@ -6,3 +6,9 @@ Color >> asMorph: convert [
 	
 	^ convert do: [self asMorph]
 ]
+
+{ #category : #'*Sandblocks-Core' }
+Color >> asSandblock [
+
+	^ self shortPrintString parseAsSandblock
+]

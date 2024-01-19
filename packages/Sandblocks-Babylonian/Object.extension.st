@@ -1,6 +1,33 @@
 Extension { #name : #Object }
 
 { #category : #'*Sandblocks-Babylonian' }
+Object class >> exampleBlock [
+
+	^ (self name, ' new') parseAsSandblock
+]
+
+{ #category : #'*Sandblocks-Babylonian' }
+Object class >> exampleBlockContainingClass: aClass [
+
+	^ self exampleBlock 
+	
+	
+]
+
+{ #category : #'*Sandblocks-Babylonian' }
+Object class >> exampleObject [
+
+	^ self new
+]
+
+{ #category : #'*Sandblocks-Babylonian' }
+Object class >> exampleObjectContainingClass: aClass [
+
+	"For generic classes to overwrite"
+	^ self exampleObject
+]
+
+{ #category : #'*Sandblocks-Babylonian' }
 Object >> sbSnapshot [
 
 	"This is a copy of veryDeepCopy which skips fixDependents as it is currently of minor importance 

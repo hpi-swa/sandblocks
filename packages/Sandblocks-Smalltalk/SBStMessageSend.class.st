@@ -37,6 +37,18 @@ SBStMessageSend >> arguments [
 ]
 
 { #category : #converting }
+SBStMessageSend >> asExample [
+	<convert>
+	
+	^ SBExample new 
+			self: self actualReceiver veryDeepCopy
+			args: (SBStArray new
+				type: #dynamic
+				contents: self arguments veryDeepCopy)
+			label: 'example'
+]
+
+{ #category : #converting }
 SBStMessageSend >> asLanguageBox: converter [
 	<convert>
 	<automatic>
@@ -176,6 +188,21 @@ SBStMessageSend >> deleteCommandFor: aBlock [
 	^ signature deleteCommandFor: aBlock
 ]
 
+{ #category : #'action helpers' }
+SBStMessageSend >> determineReceiverClass [
+
+	| class method |
+	method := (Parser new parse: self receiver sourceString, ' class' 
+							class: UndefinedObject 
+							noPattern: true 
+							notifying: nil 
+							ifFail: nil) generate.
+	class := [Sandbox2 evaluate: [UndefinedObject executeMethod: method]] 
+		valueWithin: 5 seconds
+		onTimeout: [UIManager default chooseClassOrTrait label: 'Could not resolve. Select class to add example to.'].
+	^ class
+]
+
 { #category : #'as yet unclassified' }
 SBStMessageSend >> drawSubmorphsOn: aCanvas [
 
@@ -188,6 +215,27 @@ SBStMessageSend >> expression [
 
 	self assert: self isAssignment.
 	^ self arguments first
+]
+
+{ #category : #actions }
+SBStMessageSend >> extractExample [
+	<action>
+	
+	| class methodBlock |
+	self isMessageSend ifFalse: [^self].
+	class := self determineReceiverClass ifNil: [^ self].
+	methodBlock := self getOrCreateExistingMethodBlockFor: self selector classed: class.
+	methodBlock isInEditor ifFalse: [self sandblockEditor openMorphInView: methodBlock].
+	self sandblockEditor select: methodBlock.
+	
+	"to avoid recursive calls and infinite loops when examples run on addition"
+	self removeSelfAndSaveArtefact.
+	
+	self grammarHandler 
+		block: methodBlock;
+		addExample: self asExample.
+	
+	
 ]
 
 { #category : #accessing }
@@ -221,6 +269,16 @@ SBStMessageSend >> fixActions [
 SBStMessageSend >> fixedNumberOfChildren [
 
 	^ false
+]
+
+{ #category : #'action helpers' }
+SBStMessageSend >> getOrCreateExistingMethodBlockFor: aSelector classed: aClass [
+
+	| method |
+	method := aClass compiledMethodAt: aSelector asSymbol.
+	^ self sandblockEditor blockFor: method withInterfaces: #(#isMethod) 
+		ifOpen: [:existingMethodBlock | existingMethodBlock] 
+		ifClosed: [method asSandblock].
 ]
 
 { #category : #'as yet unclassified' }
@@ -466,6 +524,15 @@ SBStMessageSend >> receiver: aBlock selector: aSymbol arguments: aCollection [
 
 	signature selector: aSymbol arguments: aCollection.
 	self receiver: aBlock
+]
+
+{ #category : #'action helpers' }
+SBStMessageSend >> removeSelfAndSaveArtefact [
+	
+	| artefact |
+	artefact := self containingArtefact.
+	self delete.
+	artefact save.
 ]
 
 { #category : #'as yet unclassified' }

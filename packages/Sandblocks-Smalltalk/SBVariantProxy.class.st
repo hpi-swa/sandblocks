@@ -98,9 +98,11 @@ SBVariantProxy >> updateOriginalWithOwnValues [
 	| variantThatNeedsChanging |
 	variantThatNeedsChanging := self containedMethod detectVariant: original.
 	
-	variantThatNeedsChanging ifNil: [self delete. ^ self].
+	variantThatNeedsChanging ifNil: [^self delete].
 	
 	original replaceBy: (original := self firstSubmorph copyBlock).
+	original isVariant ifFalse: [^ self delete].
+	
 	variantThatNeedsChanging replaceValuesFrom: original copyBlock.
 	self sandblockEditor markChanged: self containedMethod
 ]
@@ -110,8 +112,9 @@ SBVariantProxy >> updateSelfAfterMethodUpdate: newMethod [
 		
 	| variantThatMaybeChanged |
 	variantThatMaybeChanged := newMethod detectVariant: original.
+	containedMethod := newMethod.
 	
-	variantThatMaybeChanged ifNil: [self delete. ^ self].
+	variantThatMaybeChanged ifNil: [^self delete].
 	
 	(variantThatMaybeChanged sourceString ~= self firstSubmorph sourceString)
 		ifTrue: [

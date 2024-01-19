@@ -347,6 +347,12 @@ SBExample >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
+SBExample >> nameBlock [
+
+	^ self submorphs second
+]
+
+{ #category : #'as yet unclassified' }
 SBExample >> outOfWorld: aWorld [
 
 	currentProcess ifNotNil: #terminate.

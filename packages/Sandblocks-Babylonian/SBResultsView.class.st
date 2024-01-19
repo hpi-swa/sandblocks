@@ -28,21 +28,9 @@ SBResultsView >> resetWatchesToOriginalPermutationRunning: activeExamples [
 	activeExamples do: #runSynchronouslyIgnoreReturn
 ]
 
-{ #category : #building }
-SBResultsView >> updateButton [
-
-	^ SBButton new
-		icon: SBIcon iconRotateLeft
-			label: 'Re-Generate Multiverse'
-			do: [self multiverse initialize];
-		cornerStyle: #squared
-]
-
 { #category : #actions }
 SBResultsView >> visualize [ 
 
-	self clean.
-
-	self block addMorphFront: self updateButton.
+	super visualize.
 	self buildAllPossibleResults 
 ]

@@ -31,15 +31,6 @@ SBLiveView >> buildBrodcaster [
 ]
 
 { #category : #building }
-SBLiveView >> buildButtonRow [
-
-	self block addMorphBack: (SBRow new
-			changeTableLayout;
-			cellGap: 8 * self scalingFactor;
-			addAllMorphsBack: {self updateButton. self rebuildButton})
-]
-
-{ #category : #building }
 SBLiveView >> buildPreviewFor: aPermutation [
 	
 	| preview |	
@@ -57,12 +48,13 @@ SBLiveView >> buildPreviewFor: aPermutation [
 { #category : #building }
 SBLiveView >> buildSetUpRow [
 
-	self block addMorph: (SBRow new
+	self block addMorphBack: (SBRow new
 			changeTableLayout;
 			hResizing: #spaceFill;
 			wrapCentering: #center;
 			listCentering: #center;
 			cellPositioning: #center;
+			name: #setup;
 			cellGap: 8 * self scalingFactor;
 			addMorphBack: (SBIcon iconSpinner
 				balloonText: 'Toggle stepping';
@@ -71,10 +63,16 @@ SBLiveView >> buildSetUpRow [
 			addMorphBack: ([Morph new] asSandblock width: 200))
 ]
 
+{ #category : #building }
+SBLiveView >> buttons [
+
+	^ {self updateButton. self rebuildButton. self resolveButton}
+]
+
 { #category : #actions }
 SBLiveView >> clean [
 
-	self block submorphs allButFirst copy do: #delete.
+	(self block submorphs reject: [:aSubmorph| aSubmorph externalName = 'setup']) copy do: #delete.
 	
 	gridContainer := self newGridContainer.
 ]
@@ -104,6 +102,8 @@ SBLiveView >> initialize [
 	
 	self name: 'Live View'.
 	self buildSetUpRow.
+	
+	
 ]
 
 { #category : #accessing }
@@ -202,7 +202,7 @@ SBLiveView >> reportError: anError [
 { #category : #accessing }
 SBLiveView >> setUpMorph [
 
-	^ self block firstSubmorph "setup row" lastSubmorph 
+	^ (self block submorphNamed: 'setup') lastSubmorph 
 ]
 
 { #category : #building }

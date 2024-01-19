@@ -31,6 +31,12 @@ Number >> asEdgeInsets [
 ]
 
 { #category : #'*Sandblocks-Core' }
+Number >> asSandblock [
+
+	^ SBStNumber new value: self
+]
+
+{ #category : #'*Sandblocks-Core' }
 Number >> sbScaled [
 
 	^ (self * RealEstateAgent scaleFactor) rounded
