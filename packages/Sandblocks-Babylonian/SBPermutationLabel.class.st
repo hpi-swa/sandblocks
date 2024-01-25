@@ -17,7 +17,7 @@ SBPermutationLabel class >> newDisplaying: aSBPermutation [
 ]
 
 { #category : #'*Sandblocks-Babylonian' }
-SBPermutationLabel >> listensToPermutations [
+SBPermutationLabel >> listensToPermutations [ 
 
 	^ true
 ]

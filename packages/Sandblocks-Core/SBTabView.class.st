@@ -142,6 +142,14 @@ SBTabView >> addTab [
 	self add: (self active veryDeepCopy name: self activeName, '_i')
 ]
 
+{ #category : #'submorphs - enumerating' }
+SBTabView >> allMorphsDepthFirstDo: aBlock [ 
+
+	submorphs do: [:m | m allMorphsDepthFirstDo: aBlock].
+	(self namedBlocks reject: [:m | m = self active]) do: [:m | m block allMorphsDepthFirstDo: aBlock].
+	aBlock value: self
+]
+
 { #category : #ui }
 SBTabView >> asTabButton: aNamedBlock [
 

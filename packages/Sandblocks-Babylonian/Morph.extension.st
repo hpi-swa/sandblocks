@@ -7,7 +7,7 @@ Morph class >> exampleObject [
 ]
 
 { #category : #'*Sandblocks-Babylonian' }
-Morph >> listensToPermutations [
+Morph >> listensToPermutations [ 
 
 	^ false
 ]
