@@ -45,7 +45,7 @@ SBExploriants >> = other [
 	^ self class = other class
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #callbacks }
 SBExploriants >> artefactSaved: aMethodBlock [
 
 	(aMethodBlock isMethod and: [self isInEditor]) ifTrue: [self tryToUpdateInBackgroundAfterChangeIn: aMethodBlock]
@@ -114,7 +114,7 @@ SBExploriants >> objectToPermutation [
 	^ objectToPermutation
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBExploriants >> onlySwitchedTabsIn: aMethodBlock multiverse: aMultiverse [
 
 	| methodClass methodSelector latestChange diff changes |
@@ -155,7 +155,7 @@ SBExploriants >> selector [
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBExploriants >> tryToUpdateInBackgroundAfterChangeIn: aMethodBlock [
 
 	| multiverse |
@@ -167,7 +167,7 @@ SBExploriants >> tryToUpdateInBackgroundAfterChangeIn: aMethodBlock [
 	 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBExploriants >> updateInBackgroundOnTimeoutRevertTo: theOldMultiverse [
 
 	updateProcessRunning ifTrue: [
