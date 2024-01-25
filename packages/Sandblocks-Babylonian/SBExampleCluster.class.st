@@ -72,7 +72,7 @@ SBExampleCluster >> extractedTopHeadingsFrom: aSBMultiverse [
 	^ (aSBMultiverse universes collect: [:aUniverse | 
 		self newContainerMorph 
 			addAllMorphsBack: {
-				TextMorph new contents: aUniverse activePermutation asStylizedText.
+				SBPermutationLabel newDisplaying: aUniverse activePermutation.
 				SBButton newApplyPermutationFor: aUniverse activePermutation}])
 ]
 

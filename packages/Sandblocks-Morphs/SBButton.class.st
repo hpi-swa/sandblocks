@@ -18,7 +18,8 @@ SBButton class >> newApplyPermutationFor: aPermutation [
 				size: 8.0 sbScaled;
 				color: (Color r: 0.0 g: 1 b: 0.0))
 			label: 'Apply'
-			do: [aPermutation apply];
+			do: [aPermutation apply.
+				self sandblockEditor sendNewPermutationNotification];
 		makeSmall;
 		cornerStyle: #squared
 ]

@@ -7,6 +7,12 @@ Morph class >> exampleObject [
 ]
 
 { #category : #'*Sandblocks-Babylonian' }
+Morph >> listensToPermutations [
+
+	^ false
+]
+
+{ #category : #'*Sandblocks-Babylonian' }
 Morph >> sbWatchValueMorphFor: aSBWatchValue sized: aSBMorphResizer [
 
 	^ (SBWatchValue newContainerMorphFor: aSBWatchValue)  

@@ -160,7 +160,9 @@ SBExploriants >> tryToUpdateInBackgroundAfterChangeIn: aMethodBlock [
 
 	| multiverse |
 	multiverse := self active multiverse.
-	(self onlySwitchedTabsIn: aMethodBlock multiverse: multiverse) ifTrue: [^ self].
+	(self onlySwitchedTabsIn: aMethodBlock multiverse: multiverse) 
+		ifTrue: [ [self sandblockEditor sendNewPermutationNotification] forkAt: Processor userBackgroundPriority.
+				^ self].
 		
 	self updateInBackgroundOnTimeoutRevertTo: multiverse
 	

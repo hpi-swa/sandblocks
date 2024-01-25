@@ -13,7 +13,7 @@ SBPlainResultsView >> buildAllPossibleResults [
 { #category : #building }
 SBPlainResultsView >> buildPermutationFor: aSBUniverse [
 
-	self block addAllMorphsBack: { TextMorph new contents: aSBUniverse activePermutation asStylizedText .
+	self block addAllMorphsBack: {SBPermutationLabel newDisplaying: aSBUniverse activePermutation.
 									SBButton newApplyPermutationFor: aSBUniverse activePermutation.
 									(self containerRow listDirection: #leftToRight) 
 										addAllMorphsBack: aSBUniverse watches.
