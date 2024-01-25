@@ -181,17 +181,11 @@ SBExploriants >> updateInBackgroundOnTimeoutRevertTo: theOldMultiverse [
 		newMultiverse := SBMultiverse bigbangInEditorWithoutKaboom: self sandblockEditor.
 		self namedBlocks do: [:aTab | aTab multiverse: newMultiverse].
 		[newMultiverse kaboom] 
-			valueWithin: 5 seconds 
+			valueWithin: 7 seconds 
 			onTimeout: [newMultiverse cleanUp. 
 						  self namedBlocks do: [:aTab | aTab multiverse: theOldMultiverse]]. 
 		updateProcess := nil. updateProcessRunning := false.
 	] forkAt: Processor userBackgroundPriority.
-]
-
-{ #category : #'as yet unclassified' }
-SBExploriants >> updatePermutationStyling [
-
-	self namedBlocks do: #updatePermutationStyling
 ]
 
 { #category : #actions }
