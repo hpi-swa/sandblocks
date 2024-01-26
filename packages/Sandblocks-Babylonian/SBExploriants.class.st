@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'objectToPermutation',
 		'updateProcess',
-		'updateProcessRunning'
+		'updateProcessRunning',
+		'ignoreUpdate'
 	],
 	#classInstVars : [
 		'uniqueInstance'
@@ -88,6 +89,18 @@ SBExploriants >> evaluationReceiver [
 	^ self object
 ]
 
+{ #category : #accessing }
+SBExploriants >> ignoreUpdate [
+
+	^ ignoreUpdate
+]
+
+{ #category : #accessing }
+SBExploriants >> ignoreUpdate: aBoolean [
+
+	ignoreUpdate := aBoolean
+]
+
 { #category : #initialization }
 SBExploriants >> initialize [
 
@@ -114,34 +127,6 @@ SBExploriants >> objectToPermutation [
 	^ objectToPermutation
 ]
 
-{ #category : #actions }
-SBExploriants >> onlySwitchedTabsIn: aMethodBlock multiverse: aMultiverse [
-
-	| methodClass methodSelector latestChange diff changes |
-	(aMultiverse allMethodBlocksContainingVariants includes: aMethodBlock) 
-		ifFalse: [^ false].
-		
-	methodClass := aMethodBlock compiledMethod methodClass.
-	methodSelector := aMethodBlock compiledMethod selector.
-	latestChange := (ChangeSet 
-		scanVersionsOf: aMethodBlock compiledMethod
-		class: methodClass 
-		meta: methodClass isMeta
-		category: (methodClass organization categoryOfElement: methodSelector)
-		selector: methodSelector) second.
-	diff := TextDiffBuilder new
-		from: aMethodBlock compiledMethod getSource
-		to: latestChange text.
-	changes := OrderedCollection new.
-	diff patchSequenceDoIfMatch: [ :string |]
-			ifInsert: [ :string | changes add: string]
-			ifRemove: [ :string| changes add: string].
-	^ (changes allSatisfy: [:aString | aString matchesRegex: '\s*activeIndex\: \d*\s*']).
-		
-	
-	 
-]
-
 { #category : #'artefact protocol' }
 SBExploriants >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 
@@ -160,11 +145,12 @@ SBExploriants >> tryToUpdateInBackgroundAfterChangeIn: aMethodBlock [
 
 	| multiverse |
 	multiverse := self active multiverse.
-	(self onlySwitchedTabsIn: aMethodBlock multiverse: multiverse) 
-		ifTrue: [ [self sandblockEditor sendNewPermutationNotification] forkAt: Processor userBackgroundPriority.
-				^ self].
+	self ignoreUpdate 
+		ifFalse: [self updateInBackgroundOnTimeoutRevertTo: multiverse]
+		ifTrue: [
+		[self sandblockEditor sendNewPermutationNotification] forkAt: Processor userBackgroundPriority.
+		self ignoreUpdate: false.]
 		
-	self updateInBackgroundOnTimeoutRevertTo: multiverse
 	
 	 
 ]

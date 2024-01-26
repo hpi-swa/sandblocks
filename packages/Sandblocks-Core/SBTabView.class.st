@@ -170,6 +170,14 @@ SBTabView >> asTabButton: aNamedBlock [
 	^ button
 ]
 
+{ #category : #tabs }
+SBTabView >> basicSetActive: aNamedBlock [
+
+	self sandblockEditor do: 
+		(self switchCommandFor: (self namedBlocks indexOf: aNamedBlock ifAbsent: 1)).
+	
+]
+
 { #category : #accessing }
 SBTabView >> blockAt: anIndex [
 
@@ -387,8 +395,13 @@ SBTabView >> removeCurrentTab [
 { #category : #tabs }
 SBTabView >> setActive: aNamedBlock [
 
-	self sandblockEditor do: 
-		(self switchCommandFor: (self namedBlocks indexOf: aNamedBlock ifAbsent: 1))
+	(self containingArtefact hasUnsavedChanges and: [self containingArtefact isMethod])
+		ifTrue: [self basicSetActive: aNamedBlock] 
+		ifFalse: ["changing tabs is latest change"
+			self basicSetActive: aNamedBlock.
+			SBExploriants uniqueInstance ignoreUpdate: true.
+			self sandblockEditor save: self containingArtefact  tryFixing: false quick: true.].
+	
 ]
 
 { #category : #commands }
