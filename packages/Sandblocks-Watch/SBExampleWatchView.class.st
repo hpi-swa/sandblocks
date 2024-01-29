@@ -40,6 +40,5 @@ SBExampleWatchView >> reportValues: aCollectionOfObjects sized: aMorphResizer [
 SBExampleWatchView >> updateDisplay [
 
 	super updateDisplay.
-	
-	self count: (watchValues size) asString
+	self count: (watchValues size) asString.
 ]

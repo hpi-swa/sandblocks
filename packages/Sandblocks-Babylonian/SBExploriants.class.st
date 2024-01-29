@@ -5,7 +5,10 @@ Class {
 	#name : #SBExploriants,
 	#superclass : #SBTabView,
 	#instVars : [
-		'objectToPermutation'
+		'objectToPermutation',
+		'updateProcess',
+		'updateProcessRunning',
+		'ignoreUpdate'
 	],
 	#classInstVars : [
 		'uniqueInstance'
@@ -41,6 +44,12 @@ SBExploriants class >> uniqueInstance [
 SBExploriants >> = other [
 
 	^ self class = other class
+]
+
+{ #category : #callbacks }
+SBExploriants >> artefactSaved: aMethodBlock [
+
+	(aMethodBlock isMethod and: [self isInEditor]) ifTrue: [self tryToUpdateInBackgroundAfterChangeIn: aMethodBlock]
 ]
 
 { #category : #'ast helpers' }
@@ -80,12 +89,25 @@ SBExploriants >> evaluationReceiver [
 	^ self object
 ]
 
+{ #category : #accessing }
+SBExploriants >> ignoreUpdate [
+
+	^ ignoreUpdate
+]
+
+{ #category : #accessing }
+SBExploriants >> ignoreUpdate: aBoolean [
+
+	ignoreUpdate := aBoolean
+]
+
 { #category : #initialization }
 SBExploriants >> initialize [
 
 	super initialize.
 	
 	objectToPermutation := WeakKeyDictionary new.
+	updateProcessRunning := false.
 	
 	self
 		attachDecorator: SBMoveDecorator new;
@@ -119,12 +141,48 @@ SBExploriants >> selector [
 ]
 
 { #category : #actions }
+SBExploriants >> tryToUpdateInBackgroundAfterChangeIn: aMethodBlock [
+
+	| multiverse |
+	multiverse := self active multiverse.
+	self ignoreUpdate 
+		ifFalse: [self updateInBackgroundOnTimeoutRevertTo: multiverse]
+		ifTrue: [
+		[self sandblockEditor sendNewPermutationNotification] forkAt: Processor userBackgroundPriority.
+		self ignoreUpdate: false.]
+		
+	
+	 
+]
+
+{ #category : #actions }
+SBExploriants >> updateInBackgroundOnTimeoutRevertTo: theOldMultiverse [
+
+	updateProcessRunning ifTrue: [
+		updateProcess ifNotNil: #terminate.
+		theOldMultiverse cleanUp.	
+		updateProcessRunning := false.].
+	
+	updateProcessRunning := true.
+	updateProcess := [
+		| newMultiverse |
+		newMultiverse := SBMultiverse bigbangInEditorWithoutKaboom: self sandblockEditor.
+		self namedBlocks do: [:aTab | aTab multiverse: newMultiverse].
+		[newMultiverse kaboom] 
+			valueWithin: 7 seconds 
+			onTimeout: [newMultiverse cleanUp. 
+						  self namedBlocks do: [:aTab | aTab multiverse: theOldMultiverse]]. 
+		updateProcess := nil. updateProcessRunning := false.
+	] forkAt: Processor userBackgroundPriority.
+]
+
+{ #category : #actions }
 SBExploriants >> visualize [
 
 	| tabs |
 	self width: 0.
 	"tabs will visualize as soon as multiverse is finished"
-	tabs := SBExploriantsView getTabsInMultiverse: (SBMultiverse newInEditor: self sandblockEditor).
+	tabs := SBExploriantsView getTabsInMultiverse: (SBMultiverse bigbangInEditor: self sandblockEditor).
 	
 	self namedBlocks: tabs activeIndex: 1.
 	

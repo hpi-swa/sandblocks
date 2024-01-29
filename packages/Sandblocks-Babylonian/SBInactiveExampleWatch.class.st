@@ -7,14 +7,16 @@ Class {
 	#category : #'Sandblocks-Babylonian'
 }
 
-{ #category : #'initialize-release' }
-SBInactiveExampleWatch class >> newFromWatch: anActiveWatch [
+{ #category : #'event handling' }
+SBInactiveExampleWatch class >> registerWatch: aWatch [
 
-	^ (anActiveWatch veryDeepCopy)
-		primitiveChangeClassTo: self basicNew;
-		expression: (SBTextBubble new contents: anActiveWatch cleanedExpression sourceString);
-		saveObjectsActivePermutations;
-		yourself 
+	"we do not want the inactive watches in the registry"
+]
+
+{ #category : #'event handling' }
+SBInactiveExampleWatch class >> unregisterWatch: aWatch [
+
+	"we do not want the inactive watches in the registry"
 ]
 
 { #category : #callbacks }

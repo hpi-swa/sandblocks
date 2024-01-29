@@ -142,6 +142,14 @@ SBTabView >> addTab [
 	self add: (self active veryDeepCopy name: self activeName, '_i')
 ]
 
+{ #category : #'submorphs - enumerating' }
+SBTabView >> allMorphsDepthFirstDo: aBlock [ 
+
+	submorphs do: [:m | m allMorphsDepthFirstDo: aBlock].
+	(self namedBlocks reject: [:m | m = self active]) do: [:m | m block allMorphsDepthFirstDo: aBlock].
+	aBlock value: self
+]
+
 { #category : #ui }
 SBTabView >> asTabButton: aNamedBlock [
 
@@ -160,6 +168,14 @@ SBTabView >> asTabButton: aNamedBlock [
 	button when: #doubleClicked send: #triggerEvent: to: self with: #doubleClicked.
 	
 	^ button
+]
+
+{ #category : #tabs }
+SBTabView >> basicSetActive: aNamedBlock [
+
+	self sandblockEditor do: 
+		(self switchCommandFor: (self namedBlocks indexOf: aNamedBlock ifAbsent: 1)).
+	
 ]
 
 { #category : #accessing }
@@ -379,8 +395,13 @@ SBTabView >> removeCurrentTab [
 { #category : #tabs }
 SBTabView >> setActive: aNamedBlock [
 
-	self sandblockEditor do: 
-		(self switchCommandFor: (self namedBlocks indexOf: aNamedBlock ifAbsent: 1))
+	(self containingArtefact hasUnsavedChanges and: [self containingArtefact isMethod])
+		ifTrue: [self basicSetActive: aNamedBlock] 
+		ifFalse: ["changing tabs is latest change"
+			self basicSetActive: aNamedBlock.
+			SBExploriants uniqueInstance ignoreUpdate: true.
+			self sandblockEditor save: self containingArtefact  tryFixing: false quick: true.].
+	
 ]
 
 { #category : #commands }

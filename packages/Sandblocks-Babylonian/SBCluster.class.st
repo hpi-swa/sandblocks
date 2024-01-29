@@ -11,9 +11,9 @@ Class {
 SBCluster >> compressedMorphsForDisplay: aSBWatchView [
 
 	| displayedMorphs |
-	displayedMorphs := aSBWatchView displayedMorphs collect: [:aMorph | 
-			aMorph watchValue morphResizer: self morphResizer. 
-			aMorph watchValue asValueMorph].
+	displayedMorphs := aSBWatchView watchValues collect: [:aWatchValue | 
+			aWatchValue morphResizer: self morphResizer. 
+			aWatchValue asValueMorph].
 	^ (displayedMorphs size = 1) 
 		ifTrue: [displayedMorphs first]
 		ifFalse: [self newCellMorph 

@@ -21,13 +21,6 @@ SBResultsView >> initialize [
 	morphResizer := SBMorphResizer newThumbmail.
 ]
 
-{ #category : #building }
-SBResultsView >> resetWatchesToOriginalPermutationRunning: activeExamples [
-
-	SBActiveVariantPermutation value: nil.
-	activeExamples do: #runSynchronouslyIgnoreReturn
-]
-
 { #category : #actions }
 SBResultsView >> visualize [ 
 

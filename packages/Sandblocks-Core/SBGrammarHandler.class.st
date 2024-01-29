@@ -194,7 +194,9 @@ SBGrammarHandler >> watchWith: aWatchClass [
 	self block sandblockEditor do: (SBWrapCommand new
 		outer: aWatchClass new newIdentifier;
 		inner: self block;
-		wrap: [:outer :inner | outer expression: inner])
+		wrap: [:outer :inner | outer expression: inner]).
+		
+	self block sandblockEditor save: self block containingArtefact tryFixing: true quick: false.
 ]
 
 { #category : #'callback helpers' }

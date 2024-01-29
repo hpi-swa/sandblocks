@@ -95,14 +95,14 @@ SBExploriantsView >> initialize [
 { #category : #accessing }
 SBExploriantsView >> multiverse [
 
-	^ multiverse ifNil: [self multiverse: (SBMultiverse newInEditor: SBEditor current)]
+	^ multiverse ifNil: [self multiverse: (SBMultiverse bigbangInEditor: SBEditor current)]
 ]
 
 { #category : #accessing }
 SBExploriantsView >> multiverse: aSBMultiverse [
 
 	multiverse := aSBMultiverse.
-	multiverse when: #initialized send: #visualize to: self.
+	multiverse when: #updated send: #visualize to: self.
 ]
 
 { #category : #building }
@@ -121,7 +121,7 @@ SBExploriantsView >> updateButton [
 	^ SBButton new
 		icon: SBIcon iconRotateLeft
 			label: 'Re-Generate Multiverse'
-			do: [self multiverse initialize];
+			do: [self multiverse gatherElements; asyncKaboom];
 		cornerStyle: #squared
 ]
 

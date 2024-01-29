@@ -131,7 +131,11 @@ SBLabel >> initialize [
 		layoutInset: 0;
 		addMorphBack: (text := SBMultilineOwnTextMorph new
 			emphasis: TextEmphasis italic;
-			maxWidth: 550);
+			maxWidth: 550;
+			when: #doubleClicked
+			send: #triggerEvent:
+			to: self
+			with: #doubleClicked);
 		headingLevel: 0
 ]
 

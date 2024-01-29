@@ -2586,7 +2586,7 @@ SBBlock >> sandblockForegroundColor [
 { #category : #'artefact protocol' }
 SBBlock >> save [
 
-	(self saveTryFixing: false quick: false) ifFalse: [self error: 'failed to save block']
+	(self saveTryFixing: false quick: false) 
 ]
 
 { #category : #saving }

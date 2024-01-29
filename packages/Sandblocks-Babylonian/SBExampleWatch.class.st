@@ -124,7 +124,21 @@ SBExampleWatch >> applyResizerOnValues [
 { #category : #copying }
 SBExampleWatch >> asInactiveCopy [
 
-	^ SBInactiveExampleWatch newFromWatch: self
+	"Ignore the existing morphs in ourselves and recreate the graphics from the data"
+	| copy |
+	copy := SBInactiveExampleWatch new 
+				newIdentifier;
+				expression: (SBTextBubble new contents: self cleanedExpression sourceString);
+				modifyExpression: self modifyExpression veryDeepCopy;
+				dimensionOptions: self dimensionOptions veryDeepCopy. 
+				
+	exampleToValues keys do: [:anExample |	copy exampleStarting: anExample;
+													   reportValues: (self valuesForExample: anExample) for: anExample;
+													   exampleFinished: anExample ].
+												
+	^ copy 
+		saveObjectsActivePermutations;
+		yourself
 ]
 
 { #category : #accessing }
@@ -160,6 +174,19 @@ SBExampleWatch >> color [
 SBExampleWatch >> deleteCommandFor: aBlock [
 
 	^ nil
+]
+
+{ #category : #accessing }
+SBExampleWatch >> dimensionOptions [ 
+
+	^ dimensionOptions
+]
+
+{ #category : #accessing }
+SBExampleWatch >> dimensionOptions: aSBComboBox [
+
+	"private"
+	dimensionOptions := aSBComboBox
 ]
 
 { #category : #'event handling' }
@@ -276,8 +303,8 @@ SBExampleWatch >> initialize [
 	super initialize.
 	options := SBMorphResizer standardOptions.
 	
-	exampleToDisplay := Dictionary new.
-	exampleToValues := Dictionary new.
+	exampleToDisplay := IdentityDictionary new.
+	exampleToValues := IdentityDictionary new.
 	watchedExpression := SBStMessageSend new.
 	dimensionOptions := SBComboBox new
 			prefix: 'Morph Dimensions: ';
@@ -425,6 +452,33 @@ SBExampleWatch >> reportValue: anObject for: anExample [
 		ifPresent: [:values | values add: anObject]
 ]
 
+{ #category : #actions }
+SBExampleWatch >> reportValues: aCollectionOfObjects for: anExample [ 
+
+	exampleToValues
+		at: anExample
+		ifPresent: [:values | values addAll: aCollectionOfObjects]
+]
+
+{ #category : #'event handling' }
+SBExampleWatch >> resetOnlyValuesFor: anExample [
+
+	"Private"
+	exampleToValues at: anExample put: OrderedCollection new.
+	(exampleToDisplay at: anExample) display resetOnlyValues
+	
+
+	
+]
+
+{ #category : #testing }
+SBExampleWatch >> resumeGraphicalUpdates [
+
+	exampleToDisplay values do: [:anExampleValueDisplay |
+		anExampleValueDisplay display shouldUpdateDisplay: true]
+
+]
+
 { #category : #accessing }
 SBExampleWatch >> selectedMorphResizer [
 
@@ -435,6 +489,14 @@ SBExampleWatch >> selectedMorphResizer [
 SBExampleWatch >> setWatchedExpressionUneditable [
 
 	watchedExpression selectable: false
+]
+
+{ #category : #testing }
+SBExampleWatch >> stopGraphicalUpdates [
+
+	exampleToDisplay values do: [:anExampleValueDisplay |
+		anExampleValueDisplay display shouldUpdateDisplay: false]
+
 ]
 
 { #category : #accessing }
