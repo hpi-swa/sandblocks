@@ -33,7 +33,7 @@ SBWatch class >> report: aValue for: identifier [
 	| reg watchers |
 	reg := self registry.
 	watchers := reg select: [:watcher | watcher notNil and: [watcher identifier = identifier]].
-	watchers do: [:watcher | watcher reportValue: aValue].
+	watchers do: [:watcher | watcher reportValue: aValue asSBWatchValue].
 	
 	^ aValue
 ]
@@ -219,10 +219,10 @@ SBWatch >> printOn: aStream [
 ]
 
 { #category : #'as yet unclassified' }
-SBWatch >> reportValue: anObject [
+SBWatch >> reportValue: aWatchValue [
 
-	display reportValue: anObject.
-	self logOutput ifTrue: [Transcript showln: anObject]
+	display reportValue: aWatchValue.
+	self logOutput ifTrue: [Transcript showln: aWatchValue watchedValue]
 ]
 
 { #category : #actions }

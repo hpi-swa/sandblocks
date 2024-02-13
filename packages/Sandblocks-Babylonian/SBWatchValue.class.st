@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'watchedValue',
 		'watchedValueIdentityHash',
-		'morphResizer'
+		'morphResizer',
+		'tracePosition',
+		'occuringWatchId'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
@@ -51,6 +53,12 @@ SBWatchValue >> explore [
 	self watchedValue explore
 ]
 
+{ #category : #accessing }
+SBWatchValue >> expressionString [
+
+	^ self occuringWatch expression sourceString
+]
+
 { #category : #'initialize-release' }
 SBWatchValue >> initialize [ 
 
@@ -59,6 +67,7 @@ SBWatchValue >> initialize [
 	watchedValue := 0.
 	watchedValueIdentityHash := 0 identityHash.
 	morphResizer := SBMorphResizer newIdentity.
+	tracePosition := 0.
 ]
 
 { #category : #accessing }
@@ -74,12 +83,37 @@ SBWatchValue >> morphResizer: aSBMorphResizer [
 	
 ]
 
+{ #category : #accessing }
+SBWatchValue >> occuringWatch [
+
+	^ SBExampleWatch registry detect: [:aWatch | 
+		aWatch notNil and: [aWatch identifier = occuringWatchId]]
+]
+
+{ #category : #accessing }
+SBWatchValue >> occuringWatchId: aNumber [
+
+	occuringWatchId := aNumber
+]
+
 { #category : #printing }
 SBWatchValue >> printOn: aStream [
 	
 	super printOn: aStream. 
 	aStream space.
 	self watchedValue printOn: aStream.
+]
+
+{ #category : #accessing }
+SBWatchValue >> tracePosition [
+
+	^ tracePosition
+]
+
+{ #category : #accessing }
+SBWatchValue >> tracePosition: aNumber [
+
+	tracePosition := aNumber
 ]
 
 { #category : #accessing }

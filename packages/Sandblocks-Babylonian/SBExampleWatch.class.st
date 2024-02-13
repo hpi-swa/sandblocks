@@ -77,14 +77,13 @@ SBExampleWatch class >> report: aValue for: aSymbol [
 { #category : #'event handling' }
 SBExampleWatch class >> report: aValue for: aSymbol modifying: aBlock [
 
-	| reg watchers example |
+	| watchers example |
 	example := SBExecutionEnvironment value ifNil: [^ aValue].
 	
-	reg := self registry.
-	watchers := reg select: [:watcher | watcher notNil 
+	watchers := self registry select: [:watcher | watcher notNil 
 		and: [watcher identifier = aSymbol]
 		and: [watcher isActive]].
-	watchers do: [:watcher | watcher reportValue: aValue for: example].
+	watchers do: [:watcher | watcher reportValue: aValue asSBWatchValue for: example].
 	
 	^ aValue
 ]
@@ -252,9 +251,9 @@ SBExampleWatch >> exampleToDisplay: anExampleToDisplayDict [
 ]
 
 { #category : #accessing }
-SBExampleWatch >> exampleToValues: anExampleToCollectionOfObjectsDict [
+SBExampleWatch >> exampleToValues: anExampleToCollectionOfWatchValuesDict [
 
-	exampleToValues := anExampleToCollectionOfObjectsDict
+	exampleToValues := anExampleToCollectionOfWatchValuesDict
 ]
 
 { #category : #accessing }
@@ -389,7 +388,9 @@ SBExampleWatch >> modifiedValuesFor: anExample [
 
 	^ exampleToValues at: anExample 
 		ifPresent: [:aCollection | aCollection 
-			collect: [:anObject | self modifyExpression evaluateWithArguments: {anObject}]]
+			collect: [:aWatchValue | |modifiedResult |
+				modifiedResult := self modifyExpression evaluateWithArguments: {aWatchValue watchedValue}.
+				aWatchValue shallowCopy watchedValue: modifiedResult.]]
 		ifAbsent: [{}]
 ]
 
@@ -445,19 +446,24 @@ SBExampleWatch >> replaceWithWatchedExpression [
 ]
 
 { #category : #actions }
-SBExampleWatch >> reportValue: anObject for: anExample [ 
+SBExampleWatch >> reportValue: aWatchValue for: anExample [ 
 
 	exampleToValues
 		at: anExample
-		ifPresent: [:values | values add: anObject]
+		ifPresent: [:values | 
+			anExample registerWatchValue.
+			values add: (aWatchValue 
+				tracePosition: anExample traceSize;
+				occuringWatchId: self identifier
+				yourself)]
 ]
 
 { #category : #actions }
-SBExampleWatch >> reportValues: aCollectionOfObjects for: anExample [ 
+SBExampleWatch >> reportValues: aCollectionOfWatchValues for: anExample [ 
 
 	exampleToValues
 		at: anExample
-		ifPresent: [:values | values addAll: aCollectionOfObjects]
+		ifPresent: [:values | values addAll: aCollectionOfWatchValues]
 ]
 
 { #category : #'event handling' }

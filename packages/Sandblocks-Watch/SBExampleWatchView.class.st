@@ -29,9 +29,9 @@ SBExampleWatchView >> initialize [
 ]
 
 { #category : #accessing }
-SBExampleWatchView >> reportValues: aCollectionOfObjects sized: aMorphResizer [
+SBExampleWatchView >> reportValues: aCollectionOfWatchValues sized: aMorphResizer [
 
-	aCollectionOfObjects do: [:anObject | self addValue: anObject sized: aMorphResizer].
+	aCollectionOfWatchValues do: [:anObject | self addValue: anObject sized: aMorphResizer].
 	
 	updateScheduled := true
 ]
