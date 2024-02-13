@@ -293,6 +293,12 @@ SBExample >> isCurrent [
 	^ currentProcess == Processor activeProcess
 ]
 
+{ #category : #'as yet unclassified' }
+SBExample >> isExample [
+
+	^ true
+]
+
 { #category : #'*Sandblocks-Babylonian' }
 SBExample >> isMorphExample [
 
