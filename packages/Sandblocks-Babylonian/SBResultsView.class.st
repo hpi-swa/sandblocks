@@ -18,7 +18,7 @@ SBResultsView >> initialize [
 
 	super initialize.
 	
-	morphResizer := SBMorphResizer newThumbmail.
+	morphResizer := SBMorphResizer newMedium.
 ]
 
 { #category : #actions }

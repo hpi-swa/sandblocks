@@ -110,6 +110,17 @@ SBCluster >> newTopRowFrom: aCollectionOfMorphs [
 ]
 
 { #category : #visualisation }
+SBCluster >> sortedWatchValuesFor: anExample givenWatches: aCollectionOfWatches [
+
+	| allValues |
+	allValues := SortedCollection sortBlock: [:a :b | a chronologicalPosition <= b chronologicalPosition].
+	aCollectionOfWatches exampleToDisplay at: anExample 
+		ifPresent: [:aSBWatchView | allValues addAll: aSBWatchView watchValues ]
+		ifAbsent: [{}].
+	^ allValues
+]
+
+{ #category : #visualisation }
 SBCluster >> visualize [
 
 	| matrix |
@@ -117,9 +128,7 @@ SBCluster >> visualize [
 	
 	matrix := self buildDisplayMatrix.
 	(matrix rowCount < 2 or: [matrix columnCount < 2]) 
-		ifTrue:[ 
-			self addMorph: (SBOwnTextMorph new contents: 'No watches to display').
-			^ self].
+		ifTrue:[self visualizeNothingToDisplay. ^ self].
 	
 	self addAllMorphsBack: {
 		self newTopRowFrom: (matrix atRow: 1) allButFirst. "ignore placeholder morph"
@@ -131,6 +140,13 @@ SBCluster >> visualize [
 				SBGrid newDisplaying: 
 					((matrix atRows: 2 to: matrix rowCount columns: 2 to: matrix columnCount)
 						collect: [:aMorph | self wrapInCell: aMorph])}}
+]
+
+{ #category : #visualisation }
+SBCluster >> visualizeNothingToDisplay [
+
+	self addMorph: (SBOwnTextMorph new contents: 'No watches to display')
+	
 ]
 
 { #category : #helper }
@@ -151,12 +167,13 @@ SBCluster >> wrapInCell: aMorph flexVertically: aVBoolean flexHorizontally: aHBo
 	
 	(((aMorph fullBounds extent <= cell extent) 
 		or: [aVBoolean and: (aMorph fullBounds width <= cell width)]) 
-		or: [aHBoolean and: (aMorph fullBounds height <= cell height)])
+		or: [aHBoolean and: (aMorph fullBounds height <= cell height)]
+		or: [aVBoolean and: aHBoolean])
 			ifTrue: [cell addMorph: aMorph. ^ cell].
 	
 	targetExtent := cell extent - (cell borderWidth@cell borderWidth).
 	aVBoolean ifTrue: [targetExtent setX: targetExtent x setY: aMorph fullBounds height].
-	aHBoolean ifTrue: [targetExtent setX: aMorph fullBounds width setY: targetExtent height].
+	aHBoolean ifTrue: [targetExtent setX: aMorph fullBounds width setY: targetExtent y].
 	
 	self flag: #todo. "Another way besides turning into an image to keep interactions.-jb"
 	cell addMorph: (ImageMorph new 
