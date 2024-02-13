@@ -299,7 +299,7 @@ SBExample >> isExample [
 	^ true
 ]
 
-{ #category : #'*Sandblocks-Babylonian' }
+{ #category : #'as yet unclassified' }
 SBExample >> isMorphExample [
 
 	^ false
