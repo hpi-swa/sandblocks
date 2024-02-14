@@ -66,7 +66,7 @@ SBLiveView >> buildSetUpRow [
 { #category : #building }
 SBLiveView >> buttons [
 
-	^ {self updateButton. self rebuildButton. self resolveButton}
+	^ super buttons, {self resolveButton}
 ]
 
 { #category : #actions }

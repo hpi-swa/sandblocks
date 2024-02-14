@@ -20,7 +20,7 @@ SBPermutationGridsView >> buildPermutationFor: aSBUniverse [
 					SBPermutationLabel newDisplaying: aSBUniverse activePermutation.
 					SBButton newApplyPermutationFor: aSBUniverse activePermutation. 
 					(self currentClusterClass 
-						newForSize: morphResizer
+						newForSize: self selectedResizer
 						havingWatches: aSBUniverse watches)}.
 		LineMorph from: 0@0 to: 0@50 color: Color black width: 2}).
 		

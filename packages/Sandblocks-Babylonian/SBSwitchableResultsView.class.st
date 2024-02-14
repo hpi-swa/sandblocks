@@ -5,10 +5,32 @@ Class {
 	#name : #SBSwitchableResultsView,
 	#superclass : #SBGridResultsView,
 	#instVars : [
-		'isDisplayingTrace'
+		'isDisplayingTrace',
+		'dimensionOptions'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
+
+{ #category : #actions }
+SBSwitchableResultsView >> applyResizer [
+
+	self visualize.
+	self multiverse sandblockEditor markSaved: SBExploriants uniqueInstance 
+]
+
+{ #category : #building }
+SBSwitchableResultsView >> buildDimensionOptions [
+
+	| options |
+	options := SBMorphResizer standardOptions.
+
+	^ SBComboBox new
+		prefix: 'Morph Dimensions: ';
+		labels: (options collect: #label);
+		values: options;
+		object: options third;
+		when: #selectionChanged send: #applyResizer to: self
+]
 
 { #category : #accessing }
 SBSwitchableResultsView >> buttons [
@@ -28,6 +50,13 @@ SBSwitchableResultsView >> initialize [
 	super initialize.
 	
 	isDisplayingTrace := false.
+	dimensionOptions := self buildDimensionOptions
+]
+
+{ #category : #accessing }
+SBSwitchableResultsView >> selectedResizer [
+
+	^ dimensionOptions object
 ]
 
 { #category : #building }
@@ -54,4 +83,15 @@ SBSwitchableResultsView >> toggleViewButton [
 			label: 'Group By Watches <> In Execution Order'
 			do: [self toggleView];
 		cornerStyle: #squared
+]
+
+{ #category : #actions }
+SBSwitchableResultsView >> visualize [ 
+
+	self clean.
+
+	self block addMorph: dimensionOptions.
+	self buildButtonRow.
+	
+	self buildAllPossibleResults 
 ]

@@ -22,7 +22,7 @@ SBExampleGridsView >> buildExampleFor: aNumber [
 				addAllMorphsBack: { 
 					SBOwnTextMorph new contents: 'example: ', (self multiverse activeExamples at: aNumber) label.
 					self currentClusterClass
-						newForSize: morphResizer
+						newForSize: self selectedResizer
 						multiverse: self multiverse 
 						displaying: aNumber}.
 		LineMorph from: 0@0 to: 0@50 color: Color black width: 2}).

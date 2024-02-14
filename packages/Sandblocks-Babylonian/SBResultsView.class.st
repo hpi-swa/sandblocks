@@ -1,9 +1,6 @@
 Class {
 	#name : #SBResultsView,
 	#superclass : #SBExploriantsView,
-	#instVars : [
-		'morphResizer'
-	],
 	#category : #'Sandblocks-Babylonian'
 }
 
@@ -11,14 +8,6 @@ Class {
 SBResultsView >> buildAllPossibleResults [
 	
 	self subclassResponsibility
-]
-
-{ #category : #initialization }
-SBResultsView >> initialize [ 
-
-	super initialize.
-	
-	morphResizer := SBMorphResizer newMedium.
 ]
 
 { #category : #actions }

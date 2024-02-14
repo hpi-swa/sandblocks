@@ -15,7 +15,10 @@ SBPermutationTraces >> buildDisplayMatrix [
 		
 	matrix atRow: 1 put: (self extractedTopHeadingsFrom: self watches).
 	matrix atRow: 2 put: (self watches first examples collect: [:anExample |
-		SBTrace newForExample: anExample watches: self watches]).
+		SBTrace 
+			newForSize: self morphResizer
+			example: anExample  
+			watches: self watches]).
 
 	^ matrix
 ]

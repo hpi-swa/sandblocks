@@ -4,22 +4,23 @@ Class {
 	#category : #'Sandblocks-Babylonian'
 }
 
-{ #category : #'as yet unclassified' }
-SBTrace class >> newForExample: anExample watches: aCollectionOfWatches [
+{ #category : #'initialize-release' }
+SBTrace class >> newForSize: aMorphResizer example: anExample watches: aCollectionOfWatches [
 
-	^ self new visualizeFor: anExample withWatches: aCollectionOfWatches
-		 
+	^ self new visualizeFor: anExample withWatches: aCollectionOfWatches resizer: aMorphResizer
+		
 ]
 
 { #category : #visualization }
-SBTrace >> addSectionFor: aWatchValue [
+SBTrace >> addSectionFor: aWatchValue resizer: aMorphResizer [
 
 	self addMorphBack: (
 		self placeHolderMorph
 			addMorphBack: (TextMorph new contents: (aWatchValue expressionString asText
 									addAttribute: (TextColor color: Color gray);
 									yourself));
-			addMorphBack: aWatchValue asValueMorph;
+			addMorphBack: ([aWatchValue morphResizer: aMorphResizer.
+							 aWatchValue asValueMorph] value);
 			yourself)
 
 ]
@@ -66,8 +67,8 @@ SBTrace >> sortedWatchValuesFor: anExample givenWatches: aCollectionOfWatches [
 ]
 
 { #category : #visualization }
-SBTrace >> visualizeFor: anExample withWatches: aCollectionOfWatches [
+SBTrace >> visualizeFor: anExample withWatches: aCollectionOfWatches resizer: aMorphResizer [
 
 	(self sortedWatchValuesFor: anExample givenWatches: aCollectionOfWatches)
-		 do: [:aWatchValue | self addSectionFor: aWatchValue]
+		 do: [:aWatchValue | self addSectionFor: aWatchValue resizer: aMorphResizer]
 ]

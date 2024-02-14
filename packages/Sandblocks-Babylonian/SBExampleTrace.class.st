@@ -18,7 +18,10 @@ SBExampleTrace >> buildDisplayMatrix [
 		matrix 
 			at: 2 
 			at: column 
-			put: (SBTrace newForExample: displayedExample watches: aUniverse watches)].
+			put: (SBTrace 
+				newForSize: self morphResizer
+				example: displayedExample 
+				watches: aUniverse watches)].
 
 	^ matrix
 ]
