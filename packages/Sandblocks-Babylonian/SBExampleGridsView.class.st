@@ -1,6 +1,6 @@
 Class {
 	#name : #SBExampleGridsView,
-	#superclass : #SBGridResultsView,
+	#superclass : #SBSwitchableResultsView,
 	#category : #'Sandblocks-Babylonian'
 }
 
@@ -21,13 +21,21 @@ SBExampleGridsView >> buildExampleFor: aNumber [
 			self containerRow listDirection: #topToBottom;
 				addAllMorphsBack: { 
 					SBOwnTextMorph new contents: 'example: ', (self multiverse activeExamples at: aNumber) label.
-					SBExampleCluster 
-						newForSize: morphResizer
+					self currentClusterClass
+						newForSize: self selectedResizer
 						multiverse: self multiverse 
 						displaying: aNumber}.
 		LineMorph from: 0@0 to: 0@50 color: Color black width: 2}).
 		
 	self updateContainerWidth.
+]
+
+{ #category : #accessing }
+SBExampleGridsView >> currentClusterClass [
+
+	^ isDisplayingTrace 
+		ifTrue: [SBExampleTrace] 
+		ifFalse: [SBExampleCluster]
 ]
 
 { #category : #updating }

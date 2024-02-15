@@ -12,7 +12,8 @@ Class {
 		'active',
 		'errorDecorator',
 		'returnValue',
-		'reportedError'
+		'reportedError',
+		'traceSize'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
@@ -86,13 +87,13 @@ SBExample class >> self: aBlock args: aCollection label: aString assert: anAsser
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExample >> active [
 
 	^ active
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBExample >> addAssertion [
 	<action>
 
@@ -100,32 +101,32 @@ SBExample >> addAssertion [
 	self addAssertion: self newNullBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBExample >> addAssertion: aBlock [
 
 	self addMorphBack: (SBStringMorph new contents: 'assert:').
 	^ self addMorphBack: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExample >> argumentsBlock [
 
 	^ self submorphs sixth
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #callbacks }
 SBExample >> artefactSaved: aMethod [
 
 	(aMethod isMethod and: [self active]) ifTrue: [self run]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExample >> assertionBlock [
 
 	^ self submorphCount > 7 ifTrue: [self submorphs ninth] ifFalse: [nil]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBExample >> click: anEvent [
 
 	super click: anEvent.
@@ -140,7 +141,7 @@ SBExample >> click: anEvent [
 		"currentProcess debug: error signalerContext title: error asString full: true."]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExample >> collectTypeInfo [
 
 	| arguments receiver selector |
@@ -161,19 +162,19 @@ SBExample >> collectTypeInfo [
 					do: []]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExample >> currentMethodMap [
 
 	^ (self sandblockEditor methods select: #exists) collect: [:method | method compiledMethod sandblocksFastHash -> method] as: Dictionary
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExample >> currentSelf [
 
 	^ currentSelf
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBExample >> debug [
 	<action>
 
@@ -190,19 +191,19 @@ SBExample >> debug [
 	self sandblockEditor errors focusErrors
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBExample >> doubleClick: anEvent [
 
 	self toggleRunning
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBExample >> drawnColor [
 
 	^ self colorPolicy toolColorFor: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #evaluate }
 SBExample >> evaluate [
 
 	| arguments |
@@ -211,13 +212,13 @@ SBExample >> evaluate [
 	^ currentSelf perform: self containingArtefact selector asSymbol withArguments: arguments
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #evaluate }
 SBExample >> evaluateArguments [
 
 	^ self argumentsBlock childSandblocks collect: [:block | Compiler evaluate: block sourceString]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #evaluate }
 SBExample >> evaluateIn: aBlock [
 
 	| arguments |
@@ -226,13 +227,13 @@ SBExample >> evaluateIn: aBlock [
 	^ aBlock value: [currentSelf perform: self containingArtefact selector asSymbol withArguments: arguments]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #evaluate }
 SBExample >> evaluateSelf [
 
 	^ Compiler evaluate: self selfBlock veryDeepCopy sourceString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #execution }
 SBExample >> execute [
 
 	| newSelf arguments |
@@ -241,7 +242,7 @@ SBExample >> execute [
 	^ newSelf perform: self containingArtefact selector asSymbol withArguments: arguments
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #execution }
 SBExample >> executeForBlock: aBlock ifFound: aClosure [
 
 	[ | newSelf arguments |
@@ -259,13 +260,14 @@ SBExample >> executeForBlock: aBlock ifFound: aClosure [
 		do: [:err | SBWatch report: err for: 477523582]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBExample >> initialize [
 
 	super initialize.
 	
 	active := false.
 	processRunning := false.
+	traceSize := 0.
 	
 	self
 		layoutInset: 8;
@@ -277,7 +279,7 @@ SBExample >> initialize [
 		cellGap: 4 * self scalingFactor
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBExample >> intoWorld: aWorld [
 
 	super intoWorld: aWorld.
@@ -285,7 +287,7 @@ SBExample >> intoWorld: aWorld [
 	"self startRunning"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExample >> isCurrent [
 
 	^ currentProcess == Processor activeProcess
@@ -303,13 +305,13 @@ SBExample >> isMorphExample [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExample >> label [
 
 	^ nameInput contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExample >> lastError: anError [
 
 	lastError := anError.
@@ -337,7 +339,7 @@ SBExample >> lastError: anError [
 			errorIndicator := nil]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBExample >> layoutCommands [
 
 	^ SBAlgebraCommand container
@@ -346,32 +348,38 @@ SBExample >> layoutCommands [
 			SBAlgebraCommand group data: {a layoutCommands. SBAlgebraCommand gap. b layoutCommands. SBAlgebraCommand softLineOrGap}]), {self lastSubmorph layoutCommands}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExample >> nameBlock [
 
 	^ self submorphs second
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBExample >> outOfWorld: aWorld [
 
 	currentProcess ifNotNil: #terminate.
 	super outOfWorld: aWorld
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBExample >> printOn: aStream [
 
 	aStream nextPutAll: 'example'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBExample >> providesExecutionEnvironment [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
+SBExample >> registerWatchValue [
+
+	traceSize := traceSize + 1
+]
+
+{ #category : #execution }
 SBExample >> run [
 
 	self runSetup.
@@ -390,7 +398,7 @@ SBExample >> run [
 		currentProcess := nil.
 		processRunning := false.
 		Project current addDeferredUIMessage: [
-			returnValue reportValues: {returned} sized: SBMorphResizer newThumbmail.
+			returnValue reportValues: {returned asSBWatchValue} sized: SBMorphResizer newThumbmail.
 			returnValue updateDisplay.
 			self sendFinishNotification]
 	] forkAt: Processor userBackgroundPriority.
@@ -398,7 +406,7 @@ SBExample >> run [
 	^ currentProcess
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBExample >> runOnlyThis [
 	<action>
 	
@@ -406,7 +414,7 @@ SBExample >> runOnlyThis [
 	self startRunning
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #execution }
 SBExample >> runSetup [
 
 	self containingArtefact valid ifFalse: [^ self].
@@ -415,14 +423,16 @@ SBExample >> runSetup [
 	
 	errorDecorator ifNotNil: #detach.
 	errorDecorator := nil.
+	traceSize := 0.
 	returnValue clear.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #execution }
 SBExample >> runSynchUpdatingOnlyValuesOf: aCollectionOfSBWatches [
 
 	| returned |
 	aCollectionOfSBWatches do: [:aWatch | aWatch resetOnlyValuesFor: self].
+	traceSize := 0.
 	SBExecutionEnvironment value: self.
 	[returned := self evaluate] on: Error do: [:e | self scheduleLastError: e].
 	self scheduleLastError: nil.
@@ -430,13 +440,13 @@ SBExample >> runSynchUpdatingOnlyValuesOf: aCollectionOfSBWatches [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #execution }
 SBExample >> scheduleLastError: anError [
 
 	Project current addDeferredUIMessage: [self lastError: anError]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBExample >> self: aBlock args: aCollectionBlock label: aString [
 
 	self
@@ -454,34 +464,34 @@ SBExample >> self: aBlock args: aCollectionBlock label: aString [
 		updateIcon
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBExample >> self: aBlock args: aCollectionBlock label: aString assert: anAssertBlock [
 
 	self self: aBlock args: aCollectionBlock label: aString.
 	self addAssertion: anAssertBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBExample >> selfBlock [
 
 	^ self submorphs fourth
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #execution }
 SBExample >> sendFinishNotification [
 
 	self sandblockEditor allMorphsDo: [:morph |
 		(morph isSandblock and: [morph listensToExamples]) ifTrue: [morph exampleFinished: self]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #execution }
 SBExample >> sendStartNotification [
 
 	self sandblockEditor allBlocksDo: [:morph |
 		morph listensToExamples ifTrue: [morph exampleStarting: self]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBExample >> showReachability [
 	<action>
 
@@ -494,7 +504,7 @@ SBExample >> showReachability [
 	self sandblockEditor colorPolicy: policy
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #execution }
 SBExample >> startRunning [
 
 	active ifTrue: [^ self].
@@ -504,13 +514,13 @@ SBExample >> startRunning [
 	self run
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'stepping and presenter' }
 SBExample >> stepTime [
 
 	^ 2000
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #execution }
 SBExample >> stopRunning [
 
 	active ifFalse: [^ false].
@@ -524,7 +534,7 @@ SBExample >> stopRunning [
 		(morph isSandblock and: [morph listensToExamples]) ifTrue: [morph exampleStopped: self]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBExample >> toggleRunning [
 	<action>
 
@@ -533,14 +543,20 @@ SBExample >> toggleRunning [
 		ifTrue: [self stopRunning]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
+SBExample >> traceSize [
+
+	^ traceSize
+]
+
+{ #category : #layout }
 SBExample >> updateIcon [
 
 	icon changeIconName: (self active
 		ifTrue: [#iconPause] ifFalse: [#iconPlay])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #copying }
 SBExample >> veryDeepCopyWith: aCopier [
 
 	| copy oldError |
@@ -553,7 +569,7 @@ SBExample >> veryDeepCopyWith: aCopier [
 	^ copy
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBExample >> writeSourceOn: aStream [
 
 	aStream nextPut: $(.

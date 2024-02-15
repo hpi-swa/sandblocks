@@ -25,13 +25,10 @@ SBWatchView class >> saving: anInteger [
 ]
 
 { #category : #accessing }
-SBWatchView >> addValue: anObject sized: aSBMorphResizer [
+SBWatchView >> addValue: aWatchValue sized: aSBMorphResizer [
 
 	(watchValues size >= numSavedValues and: [numSavedValues > 0]) ifTrue: [watchValues removeFirst].
-	^ watchValues addLast: (SBWatchValue 
-		value: anObject sbSnapshot 
-		identityHash: anObject identityHash
-		sized: aSBMorphResizer)
+	^ watchValues addLast: (aWatchValue morphResizer: aSBMorphResizer)
 ]
 
 { #category : #'insert/delete' }
@@ -269,17 +266,17 @@ SBWatchView >> printOn: aStream [
 ]
 
 { #category : #actions }
-SBWatchView >> reportValue: anObject [
+SBWatchView >> reportValue: aWatchValue [
 
-	self reportValues: {anObject} sized: SBMorphResizer newIdentity
+	self reportValues: {aWatchValue} sized: SBMorphResizer newIdentity
 ]
 
 { #category : #actions }
-SBWatchView >> reportValues: aCollectionOfObjects sized: aMorphResizer [
+SBWatchView >> reportValues: aCollectionOfWatchValues sized: aMorphResizer [
 
 	self fallbackResizer: aMorphResizer.
-	aCollectionOfObjects do: [:anObject | self addValue: anObject sized: aMorphResizer].
-	self count: self count contents + aCollectionOfObjects size.
+	aCollectionOfWatchValues do: [:anObject | self addValue: anObject sized: aMorphResizer].
+	self count: self count contents + aCollectionOfWatchValues size.
 	
 	updateScheduled ifFalse: [
 		updateScheduled := true.

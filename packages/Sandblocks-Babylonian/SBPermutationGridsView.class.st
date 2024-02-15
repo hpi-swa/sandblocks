@@ -1,6 +1,6 @@
 Class {
 	#name : #SBPermutationGridsView,
-	#superclass : #SBGridResultsView,
+	#superclass : #SBSwitchableResultsView,
 	#category : #'Sandblocks-Babylonian'
 }
 
@@ -19,12 +19,20 @@ SBPermutationGridsView >> buildPermutationFor: aSBUniverse [
 				addAllMorphsBack: { 
 					SBPermutationLabel newDisplaying: aSBUniverse activePermutation.
 					SBButton newApplyPermutationFor: aSBUniverse activePermutation. 
-					(SBPermutationCluster 
-						newForSize: morphResizer
+					(self currentClusterClass 
+						newForSize: self selectedResizer
 						havingWatches: aSBUniverse watches)}.
 		LineMorph from: 0@0 to: 0@50 color: Color black width: 2}).
 		
 	self updateContainerWidth.
+]
+
+{ #category : #building }
+SBPermutationGridsView >> currentClusterClass [
+
+	^ isDisplayingTrace 
+		ifTrue: [SBPermutationTraces] 
+		ifFalse: [SBPermutationCluster]
 ]
 
 { #category : #updating }

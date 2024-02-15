@@ -1,6 +1,14 @@
 Extension { #name : #Object }
 
 { #category : #'*Sandblocks-Babylonian' }
+Object >> asSBWatchValue [
+
+	^ SBWatchValue 
+		value: self sbSnapshot 
+		identityHash: self identityHash
+]
+
+{ #category : #'*Sandblocks-Babylonian' }
 Object class >> exampleBlock [
 
 	^ (self name, ' new') parseAsSandblock

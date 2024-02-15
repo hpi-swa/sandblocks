@@ -50,7 +50,7 @@ SBGridResultsView >> newGridContainer [
 SBGridResultsView >> updateContainerWidth [
 
 	gridContainer width: 
-		self gridSize safeSquareRoot ceiling
+		(self gridSize safeSquareRoot ceiling + 1)
 			* (gridContainer lastSubmorph fullBounds width 
 				+ (2 * gridContainer cellInset) 
 				+ (2 * gridContainer cellGap) 
