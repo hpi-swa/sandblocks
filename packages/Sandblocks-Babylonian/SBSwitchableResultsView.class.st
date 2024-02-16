@@ -59,6 +59,13 @@ SBSwitchableResultsView >> selectedResizer [
 	^ dimensionOptions object
 ]
 
+{ #category : #'as yet unclassified' }
+SBSwitchableResultsView >> snapshot [
+
+	^ {ImageMorph new newForm: gridContainer imageForm}
+	
+]
+
 { #category : #building }
 SBSwitchableResultsView >> toggleIcon [
 
@@ -93,5 +100,6 @@ SBSwitchableResultsView >> visualize [
 	self block addMorph: dimensionOptions.
 	self buildButtonRow.
 	
-	self buildAllPossibleResults 
+	self buildAllPossibleResults .
+	self concludeContainerWidth.
 ]

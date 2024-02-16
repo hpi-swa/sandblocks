@@ -23,10 +23,9 @@ SBLiveView >> buildBrodcaster [
 		addAllMorphsBack: {
 			self containerRow listDirection: #topToBottom;
 				addAllMorphsBack: {
-					SBOwnTextMorph new contents: 'Event Broadcaster'.
-					SBOwnTextMorph new contents: 'Interact to send events'.
-					broadcaster := SBInputBroadcaster new}.
-		LineMorph from: 0@0 to: 0@50 color: Color black width: 2}).
+					TextMorph new contents: 'Event Broadcaster'.
+					TextMorph new contents: 'Interact with to send events to all others'.
+					broadcaster := SBInputBroadcaster new}}).
 
 ]
 
@@ -41,8 +40,7 @@ SBLiveView >> buildPreviewFor: aPermutation [
 				 addAllMorphsBack: { 
 					SBPermutationLabel newDisplaying: aPermutation.
 					self newPermutationButtonRowFor: aPermutation showing: preview.
-					preview}.
-		LineMorph from: 0@0 to: 0@50 color: Color black width: 2}).
+					preview}}).
 ]
 
 { #category : #building }
@@ -66,7 +64,7 @@ SBLiveView >> buildSetUpRow [
 { #category : #building }
 SBLiveView >> buttons [
 
-	^ super buttons, {self resolveButton}
+	^ super buttons, {self rebuildButton}
 ]
 
 { #category : #actions }
@@ -100,7 +98,7 @@ SBLiveView >> initialize [
 
 	super initialize.
 	
-	self name: 'Live View'.
+	self name: 'Playground'.
 	self buildSetUpRow.
 	
 	
@@ -115,9 +113,9 @@ SBLiveView >> listeners [
 { #category : #building }
 SBLiveView >> newPermutationButtonRowFor: aPermutation showing: aPreview [
 
-	^ SBRow new
-		changeTableLayout;
-		cellGap: 8 * self scalingFactor;
+	^ self containerRow
+		layoutInset: 0;
+		cellInset: 0;
 		addAllMorphsBack: {
 			SBButton newApplyPermutationFor: aPermutation. 
 			self rebuildButtonIn: aPreview applying: aPermutation. 
@@ -205,6 +203,12 @@ SBLiveView >> setUpMorph [
 	^ (self block submorphNamed: 'setup') lastSubmorph 
 ]
 
+{ #category : #copying }
+SBLiveView >> snapshot [
+
+	^ {ImageMorph new newForm: gridContainer imageForm}
+]
+
 { #category : #building }
 SBLiveView >> synchronizeButtonIn: aContainer [
 
@@ -246,5 +250,5 @@ SBLiveView >> visualize [
 	self buildAllPossibleResults.
 	
 	broadcaster extent: self listeners last extent. 
-	self updateContainerWidth.	
+	self concludeContainerWidth.	
 ]

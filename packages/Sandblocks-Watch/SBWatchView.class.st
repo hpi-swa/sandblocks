@@ -289,6 +289,7 @@ SBWatchView >> resetOnlyValues [
 
 	count contents: '0'.
 	watchValues := LinkedList new.
+	
 ]
 
 { #category : #actions }

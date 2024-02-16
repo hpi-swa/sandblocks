@@ -8,7 +8,8 @@ Class {
 SBExampleGridsView >> buildAllPossibleResults [
 	
 	self multiverse activeExamples 
-		ifEmpty: [gridContainer addMorph: (SBOwnTextMorph new contents: 'No examples active')].
+		ifEmpty: [gridContainer addMorph: (TextMorph new contents: 'No examples active').
+				  gridContainer width: gridContainer firstSubmorph width + 5 "a bit of margin"].
 	
 	self multiverse activeExamples withIndexDo: [:anExample :anIndex | self buildExampleFor: anIndex]
 ]
@@ -24,10 +25,7 @@ SBExampleGridsView >> buildExampleFor: aNumber [
 					self currentClusterClass
 						newForSize: self selectedResizer
 						multiverse: self multiverse 
-						displaying: aNumber}.
-		LineMorph from: 0@0 to: 0@50 color: Color black width: 2}).
-		
-	self updateContainerWidth.
+						displaying: aNumber}})
 ]
 
 { #category : #accessing }
@@ -49,5 +47,5 @@ SBExampleGridsView >> initialize [
 
 	super initialize.
 	
-	self name: 'Example Grid View'.
+	self name: 'Example Focused'.
 ]

@@ -1,13 +1,16 @@
 Class {
 	#name : #SBVariantsView,
 	#superclass : #SBExploriantsView,
+	#instVars : [
+		'contents'
+	],
 	#category : #'Sandblocks-Babylonian'
 }
 
 { #category : #building }
 SBVariantsView >> buildMethodSectionFor: aSBStMethod [
 	
-	self block addAllMorphsBack: {aSBStMethod methodDefinition.
+	contents addAllMorphsBack: {aSBStMethod methodDefinition.
 									self containerRow 
 										addAllMorphsBack: (aSBStMethod containedVariants collect: #asProxy).
 									LineMorph from: 0@0 to: 50@0 color: Color black width: 2}
@@ -16,7 +19,16 @@ SBVariantsView >> buildMethodSectionFor: aSBStMethod [
 { #category : #building }
 SBVariantsView >> buildNoVariantsText [
 	
-	self block addMorphBack: (SBOwnTextMorph new contents: 'No variants exist.')
+	contents addMorphBack: (SBOwnTextMorph new contents: 'No variants exist.')
+]
+
+{ #category : #actions }
+SBVariantsView >> clean [
+
+	super clean.
+	
+	contents submorphs copy do: #delete
+	
 ]
 
 { #category : #initialization }
@@ -24,13 +36,22 @@ SBVariantsView >> initialize [
 
 	super initialize.
 	
-	self name: 'Variant Manager'.
+	contents := self containerRow listDirection: #topToBottom.
+	
+	self name: 'Variants'.
+]
+
+{ #category : #copying }
+SBVariantsView >> snapshot [
+
+	^ {ImageMorph new newForm: contents imageForm}
 ]
 
 { #category : #actions }
 SBVariantsView >> visualize [ 
 
 	super visualize.
+	self block addMorphBack: contents.
 	self multiverse allMethodBlocksContainingVariants
 		ifNotEmptyDo: [:theMethods | theMethods do: [:aSBStMethod | self buildMethodSectionFor: aSBStMethod]] 
 		ifEmpty: [self buildNoVariantsText]

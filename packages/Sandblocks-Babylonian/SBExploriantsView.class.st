@@ -17,7 +17,7 @@ SBExploriantsView class >> block: aSBBlock named: aString [
 { #category : #'instance creation' }
 SBExploriantsView class >> getTabsInMultiverse: aSBMultiverse [
 
-	^ {SBPermutationGridsView. SBExampleGridsView. SBPlainResultsView. SBLiveView. SBVariantsView}
+	^ {SBPermutationGridsView. SBExampleGridsView. SBLiveView. SBPlainResultsView. SBVariantsView. SBHistoryView}
 		collect: [:mySubclass | mySubclass newMultiverse: aSBMultiverse]
 ]
 
@@ -60,9 +60,9 @@ SBExploriantsView >> containerRow [
 		cellPositioning: #topLeft;
 		changeTableLayout;
 		listDirection: #leftToRight;
-		layoutInset: 8;
-		cellGap: 3;
-		cellInset: 3;
+		layoutInset: 2;
+		cellGap: 1;
+		cellInset: 2;
 		borderWidth: 0
 ]
 
@@ -113,6 +113,13 @@ SBExploriantsView >> resolveButton [
 			label: 'Resolve All From Code'
 			do: [self multiverse resolve];
 		cornerStyle: #squared
+]
+
+{ #category : #copying }
+SBExploriantsView >> snapshot [
+
+	"Return a collection of morphs which capture the current state of this view"
+	^ self subclassResponsibility 
 ]
 
 { #category : #building }

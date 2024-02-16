@@ -10,7 +10,7 @@ Class {
 { #category : #constants }
 SBGrid class >> cellInsetValue [
 
-	^ 2
+	^ 0
 ]
 
 { #category : #'initialize-release' }
