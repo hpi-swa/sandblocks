@@ -29,13 +29,7 @@ Class {
 { #category : #constants }
 SBVisualization class >> defaultHeight [
 	
-	^ 100 sbScaled 
-]
-
-{ #category : #constants }
-SBVisualization class >> heightMargin [ 
-
-	^ 5 sbScaled 
+	^ 100 
 ]
 
 { #category : #constants }
@@ -94,21 +88,6 @@ SBVisualization >> axisYNotation [
 	^ SBAxisNotation newFromScale: self scaleY ticking: 5 
 ]
 
-{ #category : #'visualization - constants' }
-SBVisualization >> canvasHeight [
-	
-	^ self targetHeight - self class heightMargin
-]
-
-{ #category : #geometry }
-SBVisualization >> extent: aPoint [
-
-	super extent: aPoint.
-	self targetHeight: aPoint y.
-	self scaleY range: (0 to: aPoint y).
-	self visualize
-]
-
 { #category : #initialization }
 SBVisualization >> initialize [ 
 
@@ -142,7 +121,7 @@ SBVisualization >> newBackground [
 
 	^ Morph new
 		color: self drawnColor;
-		width: (self traceValues size + 2 "to have some margin") * self spaceBetweenPoints;
+		width: self traceValues size * self spaceBetweenPoints;
 		height: self targetHeight;
 		borderWidth: 0;
 		yourself

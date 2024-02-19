@@ -251,6 +251,12 @@ SBExampleWatch >> exampleToDisplay: anExampleToDisplayDict [
 ]
 
 { #category : #accessing }
+SBExampleWatch >> exampleToValues [
+
+	^ exampleToValues
+]
+
+{ #category : #accessing }
 SBExampleWatch >> exampleToValues: anExampleToCollectionOfWatchValuesDict [
 
 	exampleToValues := anExampleToCollectionOfWatchValuesDict

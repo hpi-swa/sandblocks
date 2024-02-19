@@ -30,6 +30,7 @@ SBExampleValueDisplay >> display [
 { #category : #accessing }
 SBExampleValueDisplay >> displayedWatchValueBlocks [
 
+	display isDisplayingWatchValues ifFalse: [^ {}].
 	^ display displayedMorphs
 ]
 
@@ -82,7 +83,7 @@ SBExampleValueDisplay >> initialize [
 							statusLabel := SBStringMorph new contents: ''.
 							self newChangeVizButton};
 							yourself);
-		addMorphBack: (display := SBExampleWatch watchViewClass saving: -1)
+		addMorphBack: (display := SBExampleWatch watchViewClass new)
 ]
 
 { #category : #accessing }

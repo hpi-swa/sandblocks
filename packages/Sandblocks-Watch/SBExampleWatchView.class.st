@@ -36,6 +36,14 @@ SBExampleWatchView >> reportValues: aCollectionOfWatchValues sized: aMorphResize
 	updateScheduled := true
 ]
 
+{ #category : #accessing }
+SBExampleWatchView >> savingCount [
+
+	"Any value < 1 will result in saving all reported values"
+	"Save all values"
+	^ -1
+]
+
 { #category : #display }
 SBExampleWatchView >> updateDisplay [
 

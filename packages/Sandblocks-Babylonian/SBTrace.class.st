@@ -60,8 +60,8 @@ SBTrace >> sortedWatchValuesFor: anExample givenWatches: aCollectionOfWatches [
 	| allValues |
 	allValues := SortedCollection sortBlock: [:a :b | a tracePosition <= b tracePosition].
 	aCollectionOfWatches do: [:aWatch | 
-		aWatch exampleToDisplay at: anExample 
-			ifPresent: [:aSBWatchView | allValues addAll: aSBWatchView display watchValues ]
+		aWatch exampleToValues at: anExample 
+			ifPresent: [:aCollectionOfWatchValues | allValues addAll: aCollectionOfWatchValues ]
 			ifAbsent: [{}]].
 	^ allValues
 ]
