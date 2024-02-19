@@ -110,7 +110,8 @@ SBMultiverse >> asyncKaboom [
 SBMultiverse >> cleanUp [
 	
 	watches do: #resumeGraphicalUpdates.
-	(watches select: [:anOpenWatch | anOpenWatch containingArtefact isNil]) copy do: #delete
+	(watches select: [:anOpenWatch | anOpenWatch containingArtefact isNil]) copy do: #delete.
+	watches select: #isInEditor thenDo: [:aWatch | aWatch exampleToDisplay values do: #updateDisplay].
 ]
 
 { #category : #collecting }
@@ -123,6 +124,20 @@ SBMultiverse >> findExistingOrConvertToBlocks: aCollectionOfCompiledMethods [
 				ifClosed: [aCompiledMethod asSandblock]]
 ]
 
+{ #category : #collecting }
+SBMultiverse >> findExistingOrConvertToBlocksMaintainingWatches: aCollectionOfCompiledMethods [ 
+
+	^ aCollectionOfCompiledMethods 
+		collect: [:aCompiledMethod | | sandBlock |
+			sandBlock := aCompiledMethod asSandblock.
+			sandBlock setProperty: #originals toValue: WeakOrderedCollection new.
+			self sandblockEditor blockFor: aCompiledMethod withInterfaces: #(#isMethod) 
+				ifOpen: [:existingMethodBlock |
+					(sandBlock valueOfProperty: #originals) addAll: existingMethodBlock containedExampleWatches.
+					sandBlock] 
+				ifClosed: [sandBlock]]
+]
+
 { #category : #'initialize-release' }
 SBMultiverse >> gatherElements [
 
@@ -131,7 +146,7 @@ SBMultiverse >> gatherElements [
 	have consistency between changes."
 	allMethodBlocksContainingVariants := self findExistingOrConvertToBlocks: self allCompiledMethodsContainingVariants.
 	
-	allMethodBlocksContainingWatches := self allCompiledMethodsContainingExampleWatches collect: #asSandblock.
+	allMethodBlocksContainingWatches := self findExistingOrConvertToBlocksMaintainingWatches: self allCompiledMethodsContainingExampleWatches.
 	
 	universes := OrderedCollection new.
 	activeExamples := self allActiveExamples.
@@ -139,9 +154,12 @@ SBMultiverse >> gatherElements [
 	variants := (allMethodBlocksContainingVariants collect: #containedVariants) flatten.
 	variants := variants select: #isActive.
 	
-	watches := (self allMethodBlocksContainingWatches collect: #containedExampleWatches) flatten.
-	watches do: [:aWatch | activeExamples do: [:anExample | aWatch exampleStarting: anExample].
-							 aWatch hide. aWatch extent: 1@1].
+	watches := (allMethodBlocksContainingWatches collect: [:aMethodBlock | | copies |
+		copies := aMethodBlock containedExampleWatches.
+		(aMethodBlock valueOfProperty: #originals) withIndexDo: [:original :i |  (copies at: i) copySelectedDisplayIndicesFrom: original].
+		copies ]) flatten.
+	watches do: [:aWatch | activeExamples do: [:anExample | aWatch exampleStarting: anExample]].
+	watches reject: #isInEditor thenDo: [:aWatch | aWatch hide. aWatch extent: 1@1]
 	
 ]
 

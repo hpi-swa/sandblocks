@@ -42,7 +42,7 @@ SBLineChart >> datapointExtent [
 SBLineChart >> extent: aPoint [
 
 	super extent: aPoint.
-	self targetHeight: aPoint y.
+	self targetHeight: aPoint y- 6.
 	self scaleY range: (self scaleY range start to: aPoint y).
 	self visualize
 ]
@@ -91,13 +91,12 @@ SBLineChart >> newDatapointFor: aValue at: positionIndex [
 			color: self datapointDefaultColor;
 			borderWidth: 0;
 			left: positionIndex * self spaceBetweenPoints;
-			top: self targetHeight - (self scaleY scaledValueOf: aValue) - (self datapointExtent y / 2);
+			top: ((self targetHeight - (self scaleY scaledValueOf: aValue)) 
+				clampLow: 0 
+				high: (targetHeight - (self datapointExtent y / 2)));
 			setProperty: #chartValue toValue: (self scaleY scaledValueOf: aValue); 
 			yourself);
-		yourself
-	
-		
-	
+		yourself 
 ]
 
 { #category : #visualization }

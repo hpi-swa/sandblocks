@@ -9,6 +9,7 @@ Class {
 		'count',
 		'shouldUpdateDisplay',
 		'selectedDisplayIndex',
+		'displayOptionsCache',
 		'fallbackResizer',
 		'clear',
 		'updateScheduled'
@@ -24,20 +25,16 @@ SBWatchView >> addValue: aWatchValue sized: aSBMorphResizer [
 ]
 
 { #category : #display }
-SBWatchView >> buildCustomDisplayWith: aCollectionOfWatchValues [
+SBWatchView >> buildCustomDisplay [
 
-	| options |
-	options := Array streamContents: [:stream | 
-		(aCollectionOfWatchValues collect: #watchedValue) 
-			allConversionsFor: SBInterfaces topLevel do: [:pair | stream nextPut: pair]]. 
 	^ self watchValuesContainer 
-		addMorphBack: (self fallbackResizer applyOn: ((options atWrap: selectedDisplayIndex) second))
+		addMorphBack: (self displayOptionsCache at: selectedDisplayIndex) second
 ]
 
 { #category : #display }
-SBWatchView >> buildDefaultDisplayWith: aCollectionOfWatchValues [
+SBWatchView >> buildDefaultDisplay [
 
-	^ self watchValuesContainer addAllMorphsBack: (aCollectionOfWatchValues collect: #asValueMorph)
+	^ self watchValuesContainer addAllMorphsBack: (watchValues collect: #asValueMorph)
 ]
 
 { #category : #display }
@@ -47,7 +44,7 @@ SBWatchView >> buildDisplayOptions [
 	options := Array streamContents: [:stream | 
 		self values allConversionsFor: SBInterfaces topLevel do: [:pair | stream nextPut: pair]]. 
 	options := options do: [:aPair | aPair at: 2 put: (self watchValuesContainer addMorphBack: (self fallbackResizer applyOn: aPair second))].
-	options := options, {{'default'. self buildDefaultDisplayWith: watchValues}}.
+	options := options, {{'default'. self buildDefaultDisplay}}.
 	^ options
 ]
 
@@ -67,16 +64,15 @@ SBWatchView >> canDeleteChild: aBlock [
 SBWatchView >> changeDisplay [
 	<action>
 
-	| index options |
-	options := self buildDisplayOptions. 
-	index := UIManager default chooseFrom: (options collect: #first).
+	| index |
+	index := UIManager default chooseFrom: (self displayOptionsCache collect: #first).
 	index = 0 ifTrue: [^ self].
 	
-	(options at: index) first = 'default' 
+	(displayOptionsCache at: index) first = 'default' 
 		ifTrue: [selectedDisplayIndex := 0]
 		ifFalse: [selectedDisplayIndex := index].
 		
-	self displayOnScrollPane: (options at: index) second.
+	self displayOnScrollPane: (displayOptionsCache at: index) second.
 ]
 
 { #category : #actions }
@@ -148,13 +144,19 @@ SBWatchView >> displayOnScrollPane: aMorph [
 		ifFalse: [self maxWidth])
 ]
 
+{ #category : #accessing }
+SBWatchView >> displayOptionsCache [
+
+	^ displayOptionsCache ifNil: [displayOptionsCache := self buildDisplayOptions]
+]
+
 { #category : #display }
 SBWatchView >> displayWatchValues [
 
 	| valuesMorph |
 	valuesMorph := self isDisplayingWatchValues
-		ifTrue: [self buildDefaultDisplayWith: watchValues]  
-		ifFalse: [self buildCustomDisplayWith: watchValues].
+		ifTrue: [self buildDefaultDisplay]  
+		ifFalse: [self buildCustomDisplay].
 	"Will sometimes not update size otherwise when rushing through runs"
 	valuesMorph doLayoutSafely.
 	self displayOnScrollPane: valuesMorph.
@@ -352,6 +354,25 @@ SBWatchView >> scroller [
 	^ self scrollPane scroller
 ]
 
+{ #category : #display }
+SBWatchView >> selectedDisplay [
+
+	^ (self displayOptionsCache atWrap: selectedDisplayIndex) second
+]
+
+{ #category : #accessing }
+SBWatchView >> selectedDisplayIndex [
+
+	^ selectedDisplayIndex
+]
+
+{ #category : #accessing }
+SBWatchView >> selectedDisplayIndex: aNumber [
+	
+	"Private, no side effects! Call updateDisplay if an update is desired"
+	selectedDisplayIndex := aNumber
+]
+
 { #category : #accessing }
 SBWatchView >> shouldUpdateDisplay [
 
@@ -375,6 +396,13 @@ SBWatchView >> storeAsExample [
 	self sandblockEditor open: class >> name asSymbol
 ]
 
+{ #category : #accessing }
+SBWatchView >> updateCache [
+
+	self isDisplayingWatchValues ifTrue: [^ self].
+	displayOptionsCache := self buildDisplayOptions
+]
+
 { #category : #display }
 SBWatchView >> updateDisplay [
 
@@ -388,6 +416,7 @@ SBWatchView >> updateDisplay [
 			disableLayout: false;
 			visible: true].
 		
+	self updateCache.	
 	self displayWatchValues
 ]
 
