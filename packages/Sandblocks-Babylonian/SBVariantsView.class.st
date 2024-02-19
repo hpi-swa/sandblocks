@@ -56,3 +56,9 @@ SBVariantsView >> visualize [
 		ifNotEmptyDo: [:theMethods | theMethods do: [:aSBStMethod | self buildMethodSectionFor: aSBStMethod]] 
 		ifEmpty: [self buildNoVariantsText]
 ]
+
+{ #category : #copying }
+SBVariantsView >> wantsHistory [ 
+
+	^ false
+]

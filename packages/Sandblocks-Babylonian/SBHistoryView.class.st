@@ -31,7 +31,8 @@ SBHistoryView >> buildMetaUsageIn: aRow [
 	^ self containerRow
 		cellGap: 5@0;
 		addAllMorphsBack: {self deleteEpocheButton: aRow. 
-								TextMorph new contents: (Text fromString: TimeStamp current asStringOrText) allBold}
+								TextMorph new contents: (Text fromString: TimeStamp current asStringOrText) allBold.
+								SBLabel new contents: 'Notes'}
 	
 	
 ]
@@ -40,9 +41,8 @@ SBHistoryView >> buildMetaUsageIn: aRow [
 SBHistoryView >> buildSnapshotTabView [
 
 	^ SBTabView 
-		namedBlocks: (SBExploriants uniqueInstance namedBlocks 
-							select: #wantsHistory 
-							thenCollect: [:aTab | SBNamedBlock block: aTab snapshot named: aTab name]) 
+		namedBlocks: (self tabsToSnapshot
+							collect: [:aTab | SBNamedBlock block: aTab snapshot named: aTab name]) 
 		activeIndex: (SBExploriants uniqueInstance active wantsHistory
 							ifTrue: [SBExploriants uniqueInstance activeIndex] 
 							 ifFalse: [1])
@@ -52,7 +52,17 @@ SBHistoryView >> buildSnapshotTabView [
 { #category : #building }
 SBHistoryView >> buttons [
 
-	^ super buttons, {self clearButton}
+	^ super buttons, {self clearButton. self changeTabsButton. self saveButton }
+]
+
+{ #category : #building }
+SBHistoryView >> changeTabsButton [
+
+	^ SBButton new
+		icon: SBIcon iconTable
+			label: 'Change All Tabs To'
+			do: [self offerChangeTabMenu];
+		cornerStyle: #squared
 ]
 
 { #category : #building }
@@ -63,12 +73,6 @@ SBHistoryView >> clearButton [
 			label: 'Clear History'
 			do: [self clean. self block addMorphBack: self buildButtonRow];
 		cornerStyle: #squared
-]
-
-{ #category : #building }
-SBHistoryView >> collectSnapshots [
-
-	^ (SBExploriants uniqueInstance namedBlocks collect: [:aView | aView snapshot]) flatten
 ]
 
 { #category : #building }
@@ -97,6 +101,33 @@ SBHistoryView >> initialize [
 SBHistoryView >> maxEpoches [
 
 	^ 100
+]
+
+{ #category : #building }
+SBHistoryView >> offerChangeTabMenu [
+
+	| index options |
+	options := self tabsToSnapshot collect: #name.
+	index := UIManager default chooseFrom: options.
+	index = 0 ifTrue: [^ self].
+	
+	self block submorphs allButFirst do: [:anEpoche | anEpoche lastSubmorph activeIndex: index].
+]
+
+{ #category : #building }
+SBHistoryView >> saveButton [
+
+	^ SBButton new
+		icon: SBIcon iconSave
+			label: 'Save As PNG'
+			do: [self block exportAsPNG];
+		cornerStyle: #squared
+]
+
+{ #category : #accessing }
+SBHistoryView >> tabsToSnapshot [
+
+	^ SBExploriants uniqueInstance namedBlocks select: #wantsHistory
 ]
 
 { #category : #actions }
