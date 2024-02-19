@@ -62,7 +62,7 @@ SBSwitchableResultsView >> selectedResizer [
 { #category : #'as yet unclassified' }
 SBSwitchableResultsView >> snapshot [
 
-	^ {ImageMorph new newForm: gridContainer imageForm}
+	^ ImageMorph new newForm: gridContainer imageForm
 	
 ]
 

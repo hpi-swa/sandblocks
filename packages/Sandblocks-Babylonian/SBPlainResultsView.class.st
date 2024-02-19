@@ -29,7 +29,7 @@ SBPlainResultsView >> initialize [
 ]
 
 { #category : #copying }
-SBPlainResultsView >> snapshot [
-
-	^ {}
+SBPlainResultsView >> wantsHistory [
+	
+	^ false
 ]

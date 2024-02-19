@@ -87,12 +87,6 @@ SBLiveView >> evaluateSetUp [
 	^ return
 ]
 
-{ #category : #updating }
-SBLiveView >> gridSize [
-	
-	^ self multiverse universes size + 1
-]
-
 { #category : #initialization }
 SBLiveView >> initialize [ 
 
@@ -205,8 +199,12 @@ SBLiveView >> setUpMorph [
 
 { #category : #copying }
 SBLiveView >> snapshot [
-
-	^ {ImageMorph new newForm: gridContainer imageForm}
+						
+	^ self containerRow 
+				listDirection: #topToBottom;
+				addAllMorphsBack: {
+					ImageMorph new newForm: (self block submorphNamed: 'setup') imageForm.
+					ImageMorph new newForm: gridContainer imageForm}
 ]
 
 { #category : #building }

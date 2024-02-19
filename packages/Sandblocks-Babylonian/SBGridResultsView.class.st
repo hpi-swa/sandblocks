@@ -23,41 +23,9 @@ SBGridResultsView >> concludeContainerWidth [
 	widthTillWrap := self multiverse sandblockEditor width * 0.9.
 	gridContainer fullBounds width < widthTillWrap ifTrue: [^ self]. 
 	
-	self descentToScreenRatioMaxWidth: widthTillWrap.
-	
-	gridContainer hResizing: #shrinkWrap.
-]
-
-{ #category : #updating }
-SBGridResultsView >> descentToScreenRatioMaxWidth: maxWidth [
-
-	| editorRatio submorphIndex |
 	gridContainer hResizing: #rigid; wrapDirection: #topToBottom.
-	editorRatio := DisplayScreen boundingBox width /  DisplayScreen boundingBox height.
-	submorphIndex := gridContainer submorphs size.
-	
-	[gridContainer fullBounds width / gridContainer height > editorRatio 
-		and: [submorphIndex > 1]]
-		whileTrue: [ | isBelowMax |
-			isBelowMax := gridContainer width < maxWidth.
-			gridContainer width: gridContainer width 
-								- (gridContainer submorphs atWrap:  submorphIndex) width.
-				
-			(editorRatio > 1 
-			and: [gridContainer fullBounds height >= gridContainer width]
-			and: [isBelowMax])
-				ifTrue: [ gridContainer width: gridContainer width 
-											+(gridContainer submorphs atWrap:  submorphIndex) width.
-						submorphIndex := -1]
-				ifFalse: [submorphIndex := submorphIndex - 1]].
-				
-	gridContainer width > maxWidth ifTrue: [gridContainer width: maxWidth]
-]
-
-{ #category : #updating }
-SBGridResultsView >> gridSize [
-
-	self subclassResponsibility 
+	gridContainer width: widthTillWrap.
+	gridContainer hResizing: #shrinkWrap.
 ]
 
 { #category : #initialization }

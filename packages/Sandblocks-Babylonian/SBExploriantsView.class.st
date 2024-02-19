@@ -118,8 +118,7 @@ SBExploriantsView >> resolveButton [
 { #category : #copying }
 SBExploriantsView >> snapshot [
 
-	"Return a collection of morphs which capture the current state of this view"
-	^ self subclassResponsibility 
+	^ ImageMorph new newForm: self block imageForm
 ]
 
 { #category : #building }
@@ -138,4 +137,11 @@ SBExploriantsView >> visualize [
 	self clean.
 
 	self buildButtonRow
+]
+
+{ #category : #copying }
+SBExploriantsView >> wantsHistory [
+	
+	"If returning true, will be automatically collected for an epoche in the history view"
+	^ true
 ]

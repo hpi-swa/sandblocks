@@ -230,7 +230,7 @@ SBTabView >> initialize [
 	self
 		changeTableLayout;
 		listDirection: #topToBottom;
-		hResizing: #spaceFill;
+		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap.
 ]
 
@@ -395,7 +395,9 @@ SBTabView >> removeCurrentTab [
 { #category : #tabs }
 SBTabView >> setActive: aNamedBlock [
 
-	(self containingArtefact hasUnsavedChanges and: [self containingArtefact isMethod])
+	self containingArtefact isMethod ifFalse: [self basicSetActive: aNamedBlock. ^ self].
+	
+	self containingArtefact hasUnsavedChanges
 		ifTrue: [self basicSetActive: aNamedBlock] 
 		ifFalse: ["changing tabs is latest change"
 			self basicSetActive: aNamedBlock.

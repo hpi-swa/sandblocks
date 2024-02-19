@@ -32,12 +32,6 @@ SBPermutationGridsView >> currentClusterClass [
 		ifFalse: [SBPermutationCluster]
 ]
 
-{ #category : #updating }
-SBPermutationGridsView >> gridSize [
-
-	^ self multiverse universes size
-]
-
 { #category : #initialization }
 SBPermutationGridsView >> initialize [ 
 

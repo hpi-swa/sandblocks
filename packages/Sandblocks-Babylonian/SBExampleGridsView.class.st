@@ -36,12 +36,6 @@ SBExampleGridsView >> currentClusterClass [
 		ifFalse: [SBExampleCluster]
 ]
 
-{ #category : #updating }
-SBExampleGridsView >> gridSize [
-
-	^ self multiverse activeExamples size
-]
-
 { #category : #initialization }
 SBExampleGridsView >> initialize [ 
 

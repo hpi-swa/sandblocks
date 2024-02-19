@@ -44,7 +44,7 @@ SBVariantsView >> initialize [
 { #category : #copying }
 SBVariantsView >> snapshot [
 
-	^ {ImageMorph new newForm: contents imageForm}
+	^ ImageMorph new newForm: contents imageForm
 ]
 
 { #category : #actions }

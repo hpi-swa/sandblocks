@@ -20,16 +20,32 @@ SBHistoryView >> buildEpoche [
 	^ row
 		cellGap: 0@10; 
 		listDirection: #topToBottom;
-		addMorphBack: (self containerRow
-							cellGap: 5@0;
-							addMorphBack: (self deleteEpocheButton: row); 
-							addMorphBack: TimeStamp current asMorph);
-		addMorphBack: (self containerRow
-							layoutInset: 0;
-							cellGap: 0;
-							cellInset: 0; 
-							addAllMorphsBack:  self collectSnapshots)
+		addAllMorphsBack: {self buildMetaUsageIn: row. self buildSnapshotTabView}
 	
+	
+]
+
+{ #category : #building }
+SBHistoryView >> buildMetaUsageIn: aRow [
+
+	^ self containerRow
+		cellGap: 5@0;
+		addAllMorphsBack: {self deleteEpocheButton: aRow. 
+								TextMorph new contents: (Text fromString: TimeStamp current asStringOrText) allBold}
+	
+	
+]
+
+{ #category : #building }
+SBHistoryView >> buildSnapshotTabView [
+
+	^ SBTabView 
+		namedBlocks: (SBExploriants uniqueInstance namedBlocks 
+							select: #wantsHistory 
+							thenCollect: [:aTab | SBNamedBlock block: aTab snapshot named: aTab name]) 
+		activeIndex: (SBExploriants uniqueInstance active wantsHistory
+							ifTrue: [SBExploriants uniqueInstance activeIndex] 
+							 ifFalse: [1])
 	
 ]
 
@@ -83,14 +99,14 @@ SBHistoryView >> maxEpoches [
 	^ 100
 ]
 
-{ #category : #copying }
-SBHistoryView >> snapshot [ 
-
-	^ {}
-]
-
 { #category : #actions }
 SBHistoryView >> visualize [ 
 
 	self addEpoche
+]
+
+{ #category : #copying }
+SBHistoryView >> wantsHistory [
+	
+	^ false
 ]
