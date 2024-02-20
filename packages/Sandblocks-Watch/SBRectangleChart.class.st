@@ -13,7 +13,7 @@ SBRectangleChart class >> newWithValues: traceValues havingHeight: aNumber [
 	| biggestCoordinate absolutePoints coordinateSystemSize |
 	absolutePoints := traceValues collect: [:aPoint | aPoint abs].
 	biggestCoordinate := {absolutePoints max x. absolutePoints max y} max.
-	coordinateSystemSize := aNumber - self heightMargin.
+	coordinateSystemSize := aNumber.
 	^ self new
 		targetHeight: aNumber;
 		traceValues: traceValues;
@@ -55,7 +55,17 @@ SBRectangleChart >> borderStyleFor: scaledValues [
 { #category : #'visualization - constants' }
 SBRectangleChart >> coordinateSystemSize [
 	
-	^ self canvasHeight @ self canvasHeight
+	^ self targetHeight @ self targetHeight
+]
+
+{ #category : #geometry }
+SBRectangleChart >> extent: aPoint [
+
+	super extent: aPoint.
+	self targetHeight: aPoint y.
+	self scaleY range: (aPoint y / 2 negated to: aPoint y / 2).
+	self scaleX range: (aPoint y / 2 negated to: aPoint y / 2).
+	self visualize
 ]
 
 { #category : #visualization }
@@ -97,13 +107,12 @@ SBRectangleChart >> newRectangleFor: aValue at: positionIndex [
 	scaledWidth := self scaleX scaledValueOf: aValue x.
 	scaledHeight := self scaleY scaledValueOf: aValue y.
 	left := ((positionIndex - 0.5) * self spaceBetweenPoints) rounded.
-	
 	^ Morph new
-		extent: scaledWidth abs@scaledHeight abs;
+		extent: {scaledWidth abs. 1} max@{scaledHeight abs. 1} max;
 		color: (self rectangleColorForValue: aValue);
 		borderStyle: (self borderStyleFor: (scaledWidth @ scaledHeight));
-		left:  (scaledWidth / 2) + left;
-		top: (self coordinateSystemSize y / 2) - (scaledHeight abs / 2) - (scaledHeight/2) ;
+		left:  ({scaledWidth. 0} min )+ left;
+		top: (self coordinateSystemSize y / 2) - {scaledHeight. 0} max;
 		yourself
 	
 ]

@@ -6,29 +6,46 @@ Class {
 	#superclass : #SBBlock,
 	#instVars : [
 		'watchValues',
-		'numSavedValues',
-		'dark',
 		'count',
-		'clear',
+		'shouldUpdateDisplay',
+		'selectedDisplayIndex',
+		'displayOptionsCache',
 		'fallbackResizer',
-		'updateScheduled',
-		'shouldUpdateDisplay'
+		'clear',
+		'updateScheduled'
 	],
 	#category : #'Sandblocks-Watch'
 }
 
-{ #category : #'as yet unclassified' }
-SBWatchView class >> saving: anInteger [
-	"Any value < 1 will result in saving all reported values"
-	
-	^ self new numSavedValues: anInteger
-]
-
 { #category : #accessing }
 SBWatchView >> addValue: aWatchValue sized: aSBMorphResizer [
 
-	(watchValues size >= numSavedValues and: [numSavedValues > 0]) ifTrue: [watchValues removeFirst].
+	(watchValues size >= self savingCount and: [self savingCount > 0]) ifTrue: [watchValues removeFirst].
 	^ watchValues addLast: (aWatchValue morphResizer: aSBMorphResizer)
+]
+
+{ #category : #display }
+SBWatchView >> buildCustomDisplay [
+
+	^ self watchValuesContainer 
+		addMorphBack: (self displayOptionsCache at: selectedDisplayIndex) second
+]
+
+{ #category : #display }
+SBWatchView >> buildDefaultDisplay [
+
+	^ self watchValuesContainer addAllMorphsBack: (watchValues collect: #asValueMorph)
+]
+
+{ #category : #display }
+SBWatchView >> buildDisplayOptions [
+
+	| options |
+	options := Array streamContents: [:stream | 
+		self values allConversionsFor: SBInterfaces topLevel do: [:pair | stream nextPut: pair]]. 
+	options := options do: [:aPair | aPair at: 2 put: (self watchValuesContainer addMorphBack: (self fallbackResizer applyOn: aPair second))].
+	options := options, {{'default'. self buildDefaultDisplay}}.
+	^ options
 ]
 
 { #category : #'insert/delete' }
@@ -43,19 +60,19 @@ SBWatchView >> canDeleteChild: aBlock [
 	^ false
 ]
 
-{ #category : #display }
+{ #category : #actions }
 SBWatchView >> changeDisplay [
 	<action>
 
-	| index options |
-	options := Array streamContents: [:stream | 
-		self values allConversionsFor: SBInterfaces topLevel do: [:pair | stream nextPut: pair]]. 
-	options := options do: [:aPair | aPair at: 2 put: (self watchValuesContainer addMorphBack: (self fallbackResizer applyOn: aPair second))].
-	options := options, {{'default'. self watchValuesContainer addAllMorphsBack: (watchValues collect: #asValueMorph)}}.
-	index := UIManager default chooseFrom: (options collect: #first).
+	| index |
+	index := UIManager default chooseFrom: (self displayOptionsCache collect: #first).
 	index = 0 ifTrue: [^ self].
 	
-	self displayOnScrollPane: (options at: index) second.
+	(displayOptionsCache at: index) first = 'default' 
+		ifTrue: [selectedDisplayIndex := 0]
+		ifFalse: [selectedDisplayIndex := index].
+		
+	self displayOnScrollPane: (displayOptionsCache at: index) second.
 ]
 
 { #category : #actions }
@@ -127,12 +144,19 @@ SBWatchView >> displayOnScrollPane: aMorph [
 		ifFalse: [self maxWidth])
 ]
 
+{ #category : #accessing }
+SBWatchView >> displayOptionsCache [
+
+	^ displayOptionsCache ifNil: [displayOptionsCache := self buildDisplayOptions]
+]
+
 { #category : #display }
 SBWatchView >> displayWatchValues [
 
 	| valuesMorph |
-	valuesMorph := self watchValuesContainer.
-	valuesMorph addAllMorphsBack: (watchValues collect: #asValueMorph).
+	valuesMorph := self isDisplayingWatchValues
+		ifTrue: [self buildDefaultDisplay]  
+		ifFalse: [self buildCustomDisplay].
 	"Will sometimes not update size otherwise when rushing through runs"
 	valuesMorph doLayoutSafely.
 	self displayOnScrollPane: valuesMorph.
@@ -191,9 +215,8 @@ SBWatchView >> initialize [
 
 	super initialize.
 	
-	dark := true.
+	selectedDisplayIndex := 0.
 	updateScheduled := false.
-	numSavedValues := 1.
 	watchValues := LinkedList new.
 	fallbackResizer := SBMorphResizer newSmall.
 	shouldUpdateDisplay := true.
@@ -218,6 +241,12 @@ SBWatchView >> initialize [
 ]
 
 { #category : #accessing }
+SBWatchView >> isDisplayingWatchValues [
+
+	^ selectedDisplayIndex = 0
+]
+
+{ #category : #accessing }
 SBWatchView >> lastValue [
 
 	^ watchValues last watchedValue
@@ -235,13 +264,6 @@ SBWatchView >> layoutCommands [
 SBWatchView >> maxWidth [
 
 	^ 350
-]
-
-{ #category : #accessing }
-SBWatchView >> numSavedValues: anInteger [
-	"Private"
-
-	numSavedValues := anInteger
 ]
 
 { #category : #'object interface' }
@@ -289,6 +311,7 @@ SBWatchView >> resetOnlyValues [
 
 	count contents: '0'.
 	watchValues := LinkedList new.
+	
 ]
 
 { #category : #actions }
@@ -303,6 +326,14 @@ SBWatchView >> resizeThrough: aMorphResizer [
 
 	self displayOnScrollPane: valuesMorph.
 	self fallbackResizer: aMorphResizer.
+]
+
+{ #category : #accessing }
+SBWatchView >> savingCount [
+
+	"Any value < 1 will result in saving all reported values"
+	"Only save the last recent one"
+	^ 1
 ]
 
 { #category : #layout }
@@ -321,6 +352,25 @@ SBWatchView >> scrollPane [
 SBWatchView >> scroller [
 
 	^ self scrollPane scroller
+]
+
+{ #category : #display }
+SBWatchView >> selectedDisplay [
+
+	^ (self displayOptionsCache atWrap: selectedDisplayIndex) second lastSubmorph
+]
+
+{ #category : #accessing }
+SBWatchView >> selectedDisplayIndex [
+
+	^ selectedDisplayIndex
+]
+
+{ #category : #accessing }
+SBWatchView >> selectedDisplayIndex: aNumber [
+	
+	"Private, no side effects! Call updateDisplay if an update is desired"
+	selectedDisplayIndex := aNumber
 ]
 
 { #category : #accessing }
@@ -346,6 +396,13 @@ SBWatchView >> storeAsExample [
 	self sandblockEditor open: class >> name asSymbol
 ]
 
+{ #category : #accessing }
+SBWatchView >> updateCache [
+
+	self isDisplayingWatchValues ifTrue: [^ self].
+	displayOptionsCache := self buildDisplayOptions
+]
+
 { #category : #display }
 SBWatchView >> updateDisplay [
 
@@ -359,13 +416,13 @@ SBWatchView >> updateDisplay [
 			disableLayout: false;
 			visible: true].
 		
+	self updateCache.	
 	self displayWatchValues
 ]
 
 { #category : #accessing }
 SBWatchView >> values [
 
-	watchValues ifEmpty: [^{}].
 	^ watchValues collect: [:value | value watchedValue]
 ]
 

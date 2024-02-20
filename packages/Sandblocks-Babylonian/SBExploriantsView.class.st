@@ -17,7 +17,7 @@ SBExploriantsView class >> block: aSBBlock named: aString [
 { #category : #'instance creation' }
 SBExploriantsView class >> getTabsInMultiverse: aSBMultiverse [
 
-	^ {SBPermutationGridsView. SBExampleGridsView. SBPlainResultsView. SBLiveView. SBVariantsView}
+	^ {SBPermutationGridsView. SBExampleGridsView. SBLiveView. SBPlainResultsView. SBVariantsView. SBHistoryView}
 		collect: [:mySubclass | mySubclass newMultiverse: aSBMultiverse]
 ]
 
@@ -60,9 +60,9 @@ SBExploriantsView >> containerRow [
 		cellPositioning: #topLeft;
 		changeTableLayout;
 		listDirection: #leftToRight;
-		layoutInset: 8;
-		cellGap: 3;
-		cellInset: 3;
+		layoutInset: 2;
+		cellGap: 1;
+		cellInset: 2;
 		borderWidth: 0
 ]
 
@@ -115,6 +115,12 @@ SBExploriantsView >> resolveButton [
 		cornerStyle: #squared
 ]
 
+{ #category : #copying }
+SBExploriantsView >> snapshot [
+
+	^ ImageMorph new newForm: self block imageForm
+]
+
 { #category : #building }
 SBExploriantsView >> updateButton [
 
@@ -131,4 +137,11 @@ SBExploriantsView >> visualize [
 	self clean.
 
 	self buildButtonRow
+]
+
+{ #category : #copying }
+SBExploriantsView >> wantsHistory [
+	
+	"If returning true, will be automatically collected for an epoche in the history view"
+	^ true
 ]

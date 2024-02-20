@@ -25,5 +25,11 @@ SBPlainResultsView >> initialize [
 
 	super initialize.
 	
-	self name: 'Plain View'
+	self name: 'Watches'
+]
+
+{ #category : #copying }
+SBPlainResultsView >> wantsHistory [
+	
+	^ false
 ]

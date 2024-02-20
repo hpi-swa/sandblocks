@@ -38,6 +38,15 @@ SBLineChart >> datapointExtent [
 	^ 4@4
 ]
 
+{ #category : #geometry }
+SBLineChart >> extent: aPoint [
+
+	super extent: aPoint.
+	self targetHeight: aPoint y- 6.
+	self scaleY range: (self scaleY range start to: aPoint y).
+	self visualize
+]
+
 { #category : #visualization }
 SBLineChart >> lineColorFrom: aDataPoint1 to: aDataPoint2 [
 	
@@ -82,13 +91,12 @@ SBLineChart >> newDatapointFor: aValue at: positionIndex [
 			color: self datapointDefaultColor;
 			borderWidth: 0;
 			left: positionIndex * self spaceBetweenPoints;
-			top: self canvasHeight - (self scaleY scaledValueOf: aValue);
+			top: ((self targetHeight - (self scaleY scaledValueOf: aValue)) 
+				clampLow: 0 
+				high: (targetHeight - (self datapointExtent y / 2)));
 			setProperty: #chartValue toValue: (self scaleY scaledValueOf: aValue); 
 			yourself);
-		yourself
-	
-		
-	
+		yourself 
 ]
 
 { #category : #visualization }
@@ -136,10 +144,9 @@ SBLineChart >> newScaleLineHeight: height length: length [
 SBLineChart >> newScaleLinesOn: aMorph [
 	
 	| section |
-	section := self canvasHeight / (self numberScaleLines - 1).
-	
+	section := self targetHeight / (self numberScaleLines - 1).
 	^ (0 to: (self numberScaleLines - 1)) collect: [:i | 
-		self newScaleLineHeight: (section * i) + self scaleYOffset length: aMorph width]
+		self newScaleLineHeight: (section * i) length: aMorph width]
 		
 	
 ]
@@ -154,12 +161,6 @@ SBLineChart >> numberScaleLines [
 SBLineChart >> positiveGradientColor [
 	
 	^ Color green
-]
-
-{ #category : #'visualization - constants' }
-SBLineChart >> scaleYOffset [
-	
-	^ self datapointExtent y / 2
 ]
 
 { #category : #'visualization - constants' }

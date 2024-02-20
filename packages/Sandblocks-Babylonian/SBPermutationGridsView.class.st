@@ -21,10 +21,7 @@ SBPermutationGridsView >> buildPermutationFor: aSBUniverse [
 					SBButton newApplyPermutationFor: aSBUniverse activePermutation. 
 					(self currentClusterClass 
 						newForSize: self selectedResizer
-						havingWatches: aSBUniverse watches)}.
-		LineMorph from: 0@0 to: 0@50 color: Color black width: 2}).
-		
-	self updateContainerWidth.
+						havingWatches: aSBUniverse watches)}})
 ]
 
 { #category : #building }
@@ -35,16 +32,10 @@ SBPermutationGridsView >> currentClusterClass [
 		ifFalse: [SBPermutationCluster]
 ]
 
-{ #category : #updating }
-SBPermutationGridsView >> gridSize [
-
-	^ self multiverse universes size
-]
-
 { #category : #initialization }
 SBPermutationGridsView >> initialize [ 
 
 	super initialize.
 	
-	self name: 'Permutation Grid View'.
+	self name: 'Permutation Focused'.
 ]

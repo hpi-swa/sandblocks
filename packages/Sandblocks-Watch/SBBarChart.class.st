@@ -40,7 +40,7 @@ SBBarChart >> newBarFor: aValue at: positionIndex [
 			color: self datapointDefaultColor;
 			width: self barWidth;
 			height: {(self scaleY scaledValueOf: aValue). 1} max;
-			bottom: self canvasHeight + self class heightMargin;
+			bottom: self targetHeight;
 			left: positionIndex * self spaceBetweenPoints;
 			setProperty: #chartValue toValue: (self scaleY scaledValueOf: aValue);
 			yourself);
@@ -66,4 +66,10 @@ SBBarChart >> newLineFrom: aDataPointMorph1 to: aDataPointMorph2 [
 		width: self lineWidth
 		
 	
+]
+
+{ #category : #'visualization - constants' }
+SBBarChart >> scaleYOffset [ 
+
+	^ 0 
 ]

@@ -131,13 +131,32 @@ SBExampleWatch >> asInactiveCopy [
 				modifyExpression: self modifyExpression veryDeepCopy;
 				dimensionOptions: self dimensionOptions veryDeepCopy. 
 				
-	exampleToValues keys do: [:anExample |	copy exampleStarting: anExample;
-													   reportValues: (self valuesForExample: anExample) for: anExample;
-													   exampleFinished: anExample ].
+	exampleToValues keys do: [:anExample |	
+			copy exampleStarting: anExample;
+			reportValues: (self valuesForExample: anExample) for: anExample].
+												
+	"Keep switched views consistent"
+	exampleToDisplay keys do: [:anExample | 
+		(copy exampleToDisplay at: anExample) display 
+			selectedDisplayIndex: (exampleToDisplay at: anExample) display selectedDisplayIndex].		
+			
+	exampleToValues keys do: [:anExample |	copy exampleFinished: anExample].							
+	
 												
 	^ copy 
 		saveObjectsActivePermutations;
 		yourself
+]
+
+{ #category : #initialization }
+SBExampleWatch >> buildDefaultDisplayFor: anExample [
+
+	| valueDisplay |
+	valueDisplay := SBExampleValueDisplay new.
+	valueDisplay display fallbackResizer: self selectedMorphResizer.
+	self addMorph: (exampleToDisplay at: anExample put: valueDisplay) atIndex: 2.
+	anExample when: #outOfWorld send: #exampleStopped: to: self with: anExample.
+	^ valueDisplay
 ]
 
 { #category : #accessing }
@@ -167,6 +186,14 @@ SBExampleWatch >> cleanedExpression [
 SBExampleWatch >> color [
 
 	^ self parentSandblock color
+]
+
+{ #category : #copying }
+SBExampleWatch >> copySelectedDisplayIndicesFrom: other [
+
+	other exampleToDisplay associationsDo: [:exampleToDisplayAss | 
+		(exampleToDisplay at: exampleToDisplayAss key ifAbsentPut: [self buildDefaultDisplayFor: exampleToDisplayAss key])
+			display selectedDisplayIndex: exampleToDisplayAss value display selectedDisplayIndex]
 ]
 
 { #category : #'insert/delete' }
@@ -220,12 +247,7 @@ SBExampleWatch >> exampleStarting: anExample [
 
 	exampleToValues at: anExample put: OrderedCollection new.
 
-	(exampleToDisplay at: anExample ifAbsentPut: [ | valueDisplay |
-		valueDisplay := SBExampleValueDisplay new.
-		valueDisplay display fallbackResizer: self selectedMorphResizer.
-		self addMorph: (exampleToDisplay at: anExample put: valueDisplay) atIndex: 2.
-		anExample when: #outOfWorld send: #exampleStopped: to: self with: anExample.
-		valueDisplay])
+	(exampleToDisplay at: anExample ifAbsentPut: [self buildDefaultDisplayFor: anExample])
 		exampleStarting: anExample;
 		name: anExample label
 ]
@@ -248,6 +270,12 @@ SBExampleWatch >> exampleToDisplay [
 SBExampleWatch >> exampleToDisplay: anExampleToDisplayDict [
 
 	exampleToDisplay := anExampleToDisplayDict
+]
+
+{ #category : #accessing }
+SBExampleWatch >> exampleToValues [
+
+	^ exampleToValues
 ]
 
 { #category : #accessing }

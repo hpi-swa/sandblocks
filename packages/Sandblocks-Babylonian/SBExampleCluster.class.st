@@ -55,8 +55,8 @@ SBExampleCluster >> displayedIndex: aNumber [
 { #category : #visualisation }
 SBExampleCluster >> extractRowsFrom: aUniverse [
 
-	^ aUniverse watches collect: [:anExample | | display | 
-		display := (anExample exampleToDisplay associations at: self displayedIndex) value display.
+	^ aUniverse watches collect: [:aWatch | | display | 
+		display := (aWatch exampleToDisplay associations at: self displayedIndex) value display.
 		self compressedMorphsForDisplay: display]
 ]
 

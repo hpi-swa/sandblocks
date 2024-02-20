@@ -17,9 +17,15 @@ SBGridResultsView >> clean [
 ]
 
 { #category : #updating }
-SBGridResultsView >> gridSize [
-
-	self subclassResponsibility 
+SBGridResultsView >> concludeContainerWidth [
+	
+	| widthTillWrap |
+	widthTillWrap := self multiverse sandblockEditor width * 0.95.
+	gridContainer fullBounds width < widthTillWrap ifTrue: [^ self]. 
+	
+	gridContainer hResizing: #rigid; wrapDirection: #topToBottom.
+	gridContainer width: widthTillWrap.
+	gridContainer hResizing: #shrinkWrap.
 ]
 
 { #category : #initialization }
@@ -37,22 +43,16 @@ SBGridResultsView >> newGridContainer [
 		changeTableLayout;
 		color: Color white;
 		listDirection: #leftToRight;
-		wrapDirection: #topToBottom;
 		wrapCentering: #topLeft;
-		hResizing: #rigid;
-		width: 50;
 		cellInset: 0;
 		vResizing: #shrinkWrap;
+		hResizing: #shrinkWrap;
 		yourself
 ]
 
-{ #category : #updating }
-SBGridResultsView >> updateContainerWidth [
+{ #category : #actions }
+SBGridResultsView >> visualize [ 
 
-	gridContainer width: 
-		(self gridSize safeSquareRoot ceiling + 1)
-			* (gridContainer lastSubmorph fullBounds width 
-				+ (2 * gridContainer cellInset) 
-				+ (2 * gridContainer cellGap) 
-				+ 10)
+	super visualize.
+	self concludeContainerWidth
 ]

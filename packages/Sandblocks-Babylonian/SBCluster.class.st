@@ -11,9 +11,7 @@ Class {
 SBCluster >> compressedMorphsForDisplay: aSBWatchView [
 
 	| displayedMorphs |
-	displayedMorphs := aSBWatchView watchValues collect: [:aWatchValue | 
-			aWatchValue morphResizer: self morphResizer. 
-			aWatchValue asValueMorph].
+	displayedMorphs  := self gatherMorphsToCompressFrom: aSBWatchView.
 	^ (displayedMorphs size = 1) 
 		ifTrue: [displayedMorphs first]
 		ifFalse: [self newCellMorph 
@@ -22,6 +20,16 @@ SBCluster >> compressedMorphsForDisplay: aSBWatchView [
 					listDirection: #leftToRight;
 					wrapDirection: #topToBottom;
 					addAllMorphsBack: displayedMorphs]
+]
+
+{ #category : #visualisation }
+SBCluster >> gatherMorphsToCompressFrom: aSBWatchView [
+
+	^ aSBWatchView isDisplayingWatchValues 
+		ifTrue: [aSBWatchView watchValues collect: [:aWatchValue | 
+					aWatchValue morphResizer: self morphResizer. 
+					aWatchValue asValueMorph]]
+		ifFalse: [{self morphResizer applyOn: aSBWatchView selectedDisplay sbSnapshot }]
 ]
 
 { #category : #initialization }
@@ -177,7 +185,7 @@ SBCluster >> wrapInCell: aMorph flexVertically: aVBoolean flexHorizontally: aHBo
 	
 	self flag: #todo. "Another way besides turning into an image to keep interactions.-jb"
 	cell addMorph: (ImageMorph new 
-		newForm: (aMorph iconOrThumbnailOfSize: targetExtent);
+		newForm: (aMorph imageForm scaledIntoFormOfSize: targetExtent);
 		when: #clicked send: #triggerEvent: to: aMorph with: #clicked).
 	cell on: #click send: #value to: [cell submorphs first triggerEvent: #clicked].
 	^ cell

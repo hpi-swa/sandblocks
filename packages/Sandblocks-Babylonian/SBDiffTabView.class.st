@@ -103,6 +103,7 @@ SBDiffTabView >> initialize [
 	super initialize.
 	
 	isShowingDiff := false.
+	self hResizing: #spaceFill.
 ]
 
 { #category : #accessing }
