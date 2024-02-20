@@ -11,13 +11,7 @@ Class {
 SBCluster >> compressedMorphsForDisplay: aSBWatchView [
 
 	| displayedMorphs |
-	aSBWatchView isDisplayingWatchValues 
-		ifTrue: [displayedMorphs := self gatherAndCopyWatchValuesFrom: aSBWatchView]
-		ifFalse: [ | display |
-			display := aSBWatchView selectedDisplay submorphs 
-				ifEmpty: [aSBWatchView selectedDisplay]  
-				ifNotEmpty: [:submorphs | submorphs last].
-			displayedMorphs := {self morphResizer applyOn: display}].
+	displayedMorphs  := self gatherMorphsToCompressFrom: aSBWatchView.
 	^ (displayedMorphs size = 1) 
 		ifTrue: [displayedMorphs first]
 		ifFalse: [self newCellMorph 
@@ -29,11 +23,13 @@ SBCluster >> compressedMorphsForDisplay: aSBWatchView [
 ]
 
 { #category : #visualisation }
-SBCluster >> gatherAndCopyWatchValuesFrom: aSBWatchView [
+SBCluster >> gatherMorphsToCompressFrom: aSBWatchView [
 
-	^ aSBWatchView watchValues collect: [:aWatchValue | 
-			aWatchValue morphResizer: self morphResizer. 
-			aWatchValue asValueMorph]
+	^ aSBWatchView isDisplayingWatchValues 
+		ifTrue: [aSBWatchView watchValues collect: [:aWatchValue | 
+					aWatchValue morphResizer: self morphResizer. 
+					aWatchValue asValueMorph]]
+		ifFalse: [{self morphResizer applyOn: aSBWatchView selectedDisplay sbSnapshot }]
 ]
 
 { #category : #initialization }

@@ -357,7 +357,7 @@ SBWatchView >> scroller [
 { #category : #display }
 SBWatchView >> selectedDisplay [
 
-	^ (self displayOptionsCache atWrap: selectedDisplayIndex) second
+	^ (self displayOptionsCache atWrap: selectedDisplayIndex) second lastSubmorph
 ]
 
 { #category : #accessing }

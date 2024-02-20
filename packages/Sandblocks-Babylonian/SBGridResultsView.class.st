@@ -20,7 +20,7 @@ SBGridResultsView >> clean [
 SBGridResultsView >> concludeContainerWidth [
 	
 	| widthTillWrap |
-	widthTillWrap := self multiverse sandblockEditor width * 0.9.
+	widthTillWrap := self multiverse sandblockEditor width * 0.95.
 	gridContainer fullBounds width < widthTillWrap ifTrue: [^ self]. 
 	
 	gridContainer hResizing: #rigid; wrapDirection: #topToBottom.
