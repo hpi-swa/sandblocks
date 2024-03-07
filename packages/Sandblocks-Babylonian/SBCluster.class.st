@@ -110,7 +110,7 @@ SBCluster >> newTopRowFrom: aCollectionOfMorphs [
 	^ self newContainerMorph 
 		listDirection: #leftToRight;
 		listCentering: #bottomRight;
-		cellPositioning: #bottomCenter;
+		cellPositioning: #topCenter;
 		hResizing: #spaceFill;
 		addAllMorphsBack: (aCollectionOfMorphs collect: [:aMorph | 
 			aMorph rotationDegrees: 90.

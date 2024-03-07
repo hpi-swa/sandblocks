@@ -81,19 +81,19 @@ SBVariant class >> named: aString associations: aCollectionOfAssociations active
 
 	| defaultBehavior requestor requiredPermutation |
 	aNumber <= 0 ifTrue: [^ nil].
-	defaultBehavior := (aCollectionOfAssociations at: aNumber) value value.
+	defaultBehavior := (aCollectionOfAssociations at: aNumber) value.
 	"Inactive variants ignore any active or dynamic permutation shenanigans"
-	aBoolean ifFalse: [^ defaultBehavior].
+	aBoolean ifFalse: [^ defaultBehavior value].
 	
 	"Always prioritize the permutation which is marked as active"
 	SBActiveVariantPermutation value ifNotNil: [^ (aCollectionOfAssociations at: (SBActiveVariantPermutation value at: uuid)) value value].
 	
 	"The requesting object does not require dynamic update behavior in which it needs to know a certain alternative"
-	SBExploriants objectToPermutation at: (requestor := thisContext sender receiver) ifAbsent: [^ defaultBehavior].
+	SBExploriants objectToPermutation at: (requestor := thisContext sender receiver) ifAbsent: [^ defaultBehavior value].
 	"The permutation is outdated and does not know this variant"
-	(requiredPermutation := SBExploriants objectToPermutation at: requestor) at: uuid ifAbsent: [^ defaultBehavior].
+	(requiredPermutation := SBExploriants objectToPermutation at: requestor) at: uuid ifAbsent: [^ defaultBehavior value].
 	"An outdated permutation in which an alternative with a higher index than current has been deleted"
-	aCollectionOfAssociations at: (requiredPermutation at: uuid) ifAbsent: [^ defaultBehavior].
+	aCollectionOfAssociations at: (requiredPermutation at: uuid) ifAbsent: [^ defaultBehavior value].
 	
 	^ (aCollectionOfAssociations at: (requiredPermutation at: uuid)) value value
 ]
@@ -157,6 +157,38 @@ SBVariant >> activeMutateCommandWithNewValue: aBoolean [
 		oldValue: self isActive
 ]
 
+{ #category : #converting }
+SBVariant >> allPermutations [
+
+	| allPermutations |
+	allPermutations := OrderedCollection new.
+	self allPermutations: allPermutations currentPath: (SBPermutation new referencedVariants: OrderedCollection new). 
+	^ allPermutations
+]
+
+{ #category : #converting }
+SBVariant >> allPermutations: allPermutations currentPath: aPermutation [
+
+	"Private helper function"
+	self flag: #todo. "A bit of a mess. - jb"
+ 	^ self namedBlocks withIndexCollect: [:aNamedBlock :i | 
+		| topLevelVariants currentPath |
+		topLevelVariants := aNamedBlock block topLevelVariants.
+		currentPath := aPermutation copyWith: (self id -> i).
+		currentPath referencedVariants: (aPermutation referencedVariants copyWith: self).
+		topLevelVariants 
+			ifEmpty: [allPermutations add: currentPath]
+			ifNotEmpty: [:childVariants | | permutations nestedPermutations | 
+				nestedPermutations := childVariants collect: [:child | child allPermutations: OrderedCollection new currentPath: currentPath].
+				permutations := nestedPermutations first. 
+				(2 to: topLevelVariants size) do: [:index | | nestedPermutation |
+					nestedPermutation := nestedPermutations at: index.
+					permutations := permutations gather: [:aNestedPermutation | 
+						nestedPermutation collect: [:aNestedNestedPermutation | SBPermutation newCombinedOf: aNestedPermutation and: aNestedNestedPermutation]]].
+				allPermutations addAll: permutations.
+				permutations ]]
+]
+
 { #category : #accessing }
 SBVariant >> alternatives [
 
@@ -180,29 +212,6 @@ SBVariant >> alternativesEqual: otherAlternatives [
 		(1 to: self alternatives size) do: [:index | 
 			areSame := areSame and: [(self alternatives at: index) = (otherAlternatives at: index)]]. 
 			areSame]
-]
-
-{ #category : #converting }
-SBVariant >> asNestedPaths [
-
-	| allPaths |
-	allPaths := OrderedCollection new.
-	self asNestedPaths: allPaths currentPath: (SBPermutation new referencedVariants: OrderedCollection new). 
-	^ allPaths
-]
-
-{ #category : #converting }
-SBVariant >> asNestedPaths: allPaths currentPath: aPermutation [
-
-	"Private helper function"
- 	self namedBlocks withIndexCollect: [:aNamedBlock :i | | nestedVariants currentPath |
-		nestedVariants := aNamedBlock block childSandblocks select: #isVariant. 
-		currentPath := aPermutation copyWith: (self id -> i).
-		currentPath referencedVariants: (aPermutation referencedVariants copyWith: self).
-		nestedVariants 
-			ifEmpty: [allPaths add: currentPath]
-			ifNotEmpty: [:children | children do: [:child | 
-					child asNestedPaths: allPaths currentPath: currentPath]]]
 ]
 
 { #category : #converting }

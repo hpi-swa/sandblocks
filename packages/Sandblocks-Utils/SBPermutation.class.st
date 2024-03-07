@@ -17,7 +17,7 @@ SBPermutation class >> allPermutationsOf: aCollectionOfVariants [
 	| permutations topLevelVariants nestedPermutations |
 	aCollectionOfVariants ifEmpty:[^{SBNilPermutation new referencedVariants: {}}].
 	topLevelVariants := aCollectionOfVariants select: [:aVariant | aVariant parentVariant isNil].
-	nestedPermutations := topLevelVariants collect: #asNestedPaths.
+	nestedPermutations := topLevelVariants collect: #allPermutations.
 	permutations := nestedPermutations first.
 	
 	(2 to: topLevelVariants size) do: [:i | | nestedPermutation |
@@ -33,7 +33,9 @@ SBPermutation class >> allPermutationsOf: aCollectionOfVariants [
 SBPermutation class >> newCombinedOf: onePermutation and: anotherPermutation [
 
 	| result |
-	result := self new referencedVariants: (onePermutation referencedVariants, anotherPermutation referencedVariants).
+	result := self new referencedVariants: 
+		((onePermutation referencedVariants, anotherPermutation referencedVariants) asSet 
+			sorted: [:a :b | a name <= b name]).
 	result addAll: onePermutation.
 	result addAll: anotherPermutation.
 	^ result
@@ -64,7 +66,7 @@ SBPermutation >> asString [
 	as one variant only will not return a string but a variant"
 	^ (self referencedVariants collect: [:aVariant | 
 			aVariant name, ': ', (aVariant blockAt: (self at: aVariant id)) name]) 
-			fold: [:a :b | a, ', ', b ]
+			fold: [:a :b | a, ', ', Character cr, b ]
 
 	
 ]
