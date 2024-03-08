@@ -65,7 +65,7 @@ SBPermutation >> asString [
 	"collecting instead of calling (a active name), ', ', (b active name) in fold
 	as one variant only will not return a string but a variant"
 	^ (self referencedVariants collect: [:aVariant | 
-			aVariant name, ': ', (aVariant blockAt: (self at: aVariant id)) name]) 
+			aVariant name, ': ', (aVariant blockAt: (self at: aVariant id)) nameToDisplay ]) 
 			fold: [:a :b | a, ', ', Character cr, b ]
 
 	

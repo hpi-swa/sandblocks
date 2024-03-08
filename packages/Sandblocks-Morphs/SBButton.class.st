@@ -15,7 +15,7 @@ SBButton class >> newApplyPermutationFor: aPermutation [
 
 	^ self new
 		icon: (SBIcon iconArrowDown
-				size: 8.0 sbScaled;
+				size: 12.0 sbScaled;
 				color: (Color r: 0.0 g: 1 b: 0.0))
 			label: 'Apply'
 			do: [aPermutation apply];
@@ -265,6 +265,21 @@ SBButton >> makeSmall [
 		widget
 			clearEmphasis;
 			small]
+]
+
+{ #category : #'visual properties' }
+SBButton >> makeTiny [
+
+	| widget |
+	self
+		cellGap: 0.0;
+		layoutInset: 0.0.
+	
+	widget := self widgetMorph.
+	widget ifNotNil: [
+		widget
+			clearEmphasis;
+			tiny]
 ]
 
 { #category : #'event handling' }

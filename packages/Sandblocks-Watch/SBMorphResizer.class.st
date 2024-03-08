@@ -20,7 +20,7 @@ SBMorphResizer class >> newBig [
 { #category : #'initialize-release' }
 SBMorphResizer class >> newIdentity [
 
-	^ self newLabeled: 'original' transforming: [:anObject | "Do nothing"] 
+	^ self newLabeled: 'original' transforming: [:anObject | "Do nothing" anObject] 
 ]
 
 { #category : #'initialize-release' }

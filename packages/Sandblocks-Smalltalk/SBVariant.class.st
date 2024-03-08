@@ -173,7 +173,7 @@ SBVariant >> allPermutations: allPermutations currentPath: aPermutation [
 	self flag: #todo. "A bit of a mess. - jb"
  	^ self namedBlocks withIndexCollect: [:aNamedBlock :i | 
 		| topLevelVariants currentPath |
-		topLevelVariants := aNamedBlock block topLevelVariants.
+		topLevelVariants := aNamedBlock block topLevelVariants select: #isActive.
 		currentPath := aPermutation copyWith: (self id -> i).
 		currentPath referencedVariants: (aPermutation referencedVariants copyWith: self).
 		topLevelVariants 
@@ -224,12 +224,13 @@ SBVariant >> asProxy [
 SBVariant >> beActive [
 	<action>
 
-	| command |
-	command := self activeMutateCommandWithNewValue: true.
+	| commands |
+	commands := OrderedCollection new. 
+	self nestedActiveCommands: commands.
 	
 	self sandblockEditor 
-		ifNil: [command do] 
-		ifNotNil:[:theEditor | theEditor do: command].
+		ifNil: [commands do: #do] 
+		ifNotNil:[:theEditor | commands do: [:aCommand | theEditor do: aCommand]].
 		
 	self containingArtefact sandblockEditor save: self containingArtefact tryFixing: true quick: false.
 ]
@@ -238,12 +239,13 @@ SBVariant >> beActive [
 SBVariant >> beInactive [
 	<action>
 
-	| command |
-	command := self activeMutateCommandWithNewValue: false.
+	| commands |
+	commands := OrderedCollection new. 
+	self nestedInactiveCommands: commands.
 	
 	self sandblockEditor 
-		ifNil: [command do] 
-		ifNotNil:[:theEditor | theEditor do: command].
+		ifNil: [commands do: #do] 
+		ifNotNil:[:theEditor | commands do: [:aCommand | theEditor do: aCommand]].
 		
 	self containingArtefact sandblockEditor save: self containingArtefact tryFixing: true quick: false.
 ]
@@ -374,6 +376,24 @@ SBVariant >> namedBlocks [
 ]
 
 { #category : #actions }
+SBVariant >> nestedActiveCommands: allCommands [
+
+	allCommands add: (self activeMutateCommandWithNewValue: true).
+	self namedBlocks do: [:aNamedBlock | 
+		aNamedBlock block topLevelVariants do: [:aVariant | 
+			aVariant nestedActiveCommands: allCommands]] 
+]
+
+{ #category : #actions }
+SBVariant >> nestedInactiveCommands: allCommands [
+
+	allCommands add: (self activeMutateCommandWithNewValue: false).
+	self namedBlocks do: [:aNamedBlock | 
+		aNamedBlock block topLevelVariants do: [:aVariant | 
+			aVariant nestedInactiveCommands: allCommands]] 
+]
+
+{ #category : #actions }
 SBVariant >> replaceSelfWithBlock: aNamedBlock [
 	
 	| command |
@@ -426,6 +446,13 @@ SBVariant >> replaceSelfWithLabel [
 SBVariant >> replaceValuesFrom: anotherVariant [
 
 	self named: anotherVariant name alternatives: anotherVariant alternatives activeIndex: anotherVariant activeIndex  
+]
+
+{ #category : #actions }
+SBVariant >> resolveAllLiveElements [
+
+	<action>
+	SBMultiverse resolveIn: self sandblockEditor
 ]
 
 { #category : #accessing }

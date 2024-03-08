@@ -505,6 +505,13 @@ SBExampleWatch >> resetOnlyValuesFor: anExample [
 	
 ]
 
+{ #category : #actions }
+SBExampleWatch >> resolveAllLiveElements [
+
+	<action>
+	SBMultiverse resolveIn: self sandblockEditor
+]
+
 { #category : #testing }
 SBExampleWatch >> resumeGraphicalUpdates [
 

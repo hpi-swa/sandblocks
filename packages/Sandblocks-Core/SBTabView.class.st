@@ -406,6 +406,12 @@ SBTabView >> setActive: aNamedBlock [
 	
 ]
 
+{ #category : #accessing }
+SBTabView >> suggestedNameLimit [
+
+	^ 15
+]
+
 { #category : #commands }
 SBTabView >> switchCommandFor: aNumber [
 

@@ -81,7 +81,7 @@ SBNamedBlock >> name: aString [
 { #category : #accessing }
 SBNamedBlock >> nameToDisplay [
 
-	^ self hasBeenRenamed
+	^ self hasBeenRenamed 
 		ifTrue: [self name] 
 		ifFalse: [self suggestedName]
 ]
@@ -95,8 +95,8 @@ SBNamedBlock >> suggestedName [
 		String streamContents: [:aStream | 
 			aStream nextPutAll: ((self block statements collect: #suggestedAlternationName) 
 															fold: [:a :b | a, ' ', b])] 
-		limitedTo: 15.
-	limitedString size < 15 ifTrue: [^ limitedString].
+		limitedTo: 20.
+	limitedString size < 20 ifTrue: [^ limitedString].
 	^ limitedString , '...'
 ]
 

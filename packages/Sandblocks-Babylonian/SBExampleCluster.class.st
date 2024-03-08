@@ -70,14 +70,7 @@ SBExampleCluster >> extractedLeftHeadingsFrom: aSBMultiverse [
 SBExampleCluster >> extractedTopHeadingsFrom: aSBMultiverse [
 
 	^ (aSBMultiverse universes collect: [:aUniverse | 
-		self newContainerMorph 
-			listDirection: #bottomToTop;
-			cellPositioning: #topLeft;
-			cellGap: 3;
-			cellInset: 3;
-			addAllMorphsBack: {
-				SBButton newApplyPermutationFor: aUniverse activePermutation.
-				SBPermutationLabel newDisplaying: aUniverse activePermutation}])
+			SBPermutationLabel newDisplaying: aUniverse activePermutation])
 ]
 
 { #category : #accessing }
@@ -90,4 +83,31 @@ SBExampleCluster >> multiverse [
 SBExampleCluster >> multiverse: aSBMultiverse [
 
 	multiverse := aSBMultiverse
+]
+
+{ #category : #visualisation }
+SBExampleCluster >> newTopRowFrom: aCollectionOfPermutationLabels [
+	
+	"Width should be set, but height can vary"
+	^ self newContainerMorph 
+		listDirection: #leftToRight;
+		listCentering: #bottomRight;
+		cellPositioning: #topCenter;
+		hResizing: #spaceFill;
+		addAllMorphsBack: (aCollectionOfPermutationLabels collect: [:aLabel | 
+			| wrappedLabel button |
+			aLabel rotationDegrees: 90.
+			wrappedLabel := (self wrapInCell: aLabel owner 
+										flexVertically: true 
+										flexHorizontally: false) borderWidth: 0.
+			button := SBButton newApplyPermutationFor: aLabel permutation.
+			button addFlexShell clipSubmorphs: false.
+			button rotationDegrees: 90.
+			button owner width > wrappedLabel width ifTrue: [button makeTiny].
+			
+			self newContainerMorph 
+				cellPositioning: #bottomToTop;
+				cellPositioning: #topCenter;
+				cellInset: 0@2;
+				addAllMorphsBack: {button owner. wrappedLabel}])
 ]

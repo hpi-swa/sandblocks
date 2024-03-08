@@ -25,6 +25,7 @@ SBExploriantsView class >> getTabsInMultiverse: aSBMultiverse [
 SBExploriantsView class >> newMultiverse: aSBMultiverse [
 
 	^ self new
+		hasBeenRenamed: true;
 		multiverse: aSBMultiverse;
 		yourself
 ]
@@ -89,7 +90,7 @@ SBExploriantsView >> initialize [
 		cellGap: 4;
 		cellInset: 2;
 		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap)
+		vResizing: #shrinkWrap).
 ]
 
 { #category : #accessing }
