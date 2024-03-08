@@ -68,6 +68,17 @@ SBExploriants >> binding: aString for: block class: aClass ifPresent: aBlock [
 ]
 
 { #category : #ui }
+SBExploriants >> buildTabs [
+
+	self addMorphBack: (SBRow new
+		addAllMorphsBack: (self namedBlocks collect: [:block | self asTabButton: block]);
+		name: #tabs;
+		changeTableLayout;
+		listDirection: #leftToRight;
+		hResizing: #shrinkWrap)
+]
+
+{ #category : #ui }
 SBExploriants >> buildView [
 
 	self addMorphBack: (self activeBlock hResizing: #shrinkWrap)
@@ -138,6 +149,12 @@ SBExploriants >> selector [
 	" if this node represents any selector, return it here "
 
 	^ nil
+]
+
+{ #category : #accessing }
+SBExploriants >> tabs [
+
+	^ (self submorphNamed: #tabs) submorphs
 ]
 
 { #category : #actions }

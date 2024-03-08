@@ -86,7 +86,7 @@ SBVariant class >> named: aString associations: aCollectionOfAssociations active
 	aBoolean ifFalse: [^ defaultBehavior value].
 	
 	"Always prioritize the permutation which is marked as active"
-	SBActiveVariantPermutation value ifNotNil: [^ (aCollectionOfAssociations at: (SBActiveVariantPermutation value at: uuid)) value value].
+	SBActiveVariantPermutation value ifNotNil: [^ (aCollectionOfAssociations at: (SBActiveVariantPermutation value at: uuid) ifAbsent: [^ defaultBehavior value]) value value].
 	
 	"The requesting object does not require dynamic update behavior in which it needs to know a certain alternative"
 	SBExploriants objectToPermutation at: (requestor := thisContext sender receiver) ifAbsent: [^ defaultBehavior value].
@@ -95,7 +95,7 @@ SBVariant class >> named: aString associations: aCollectionOfAssociations active
 	"An outdated permutation in which an alternative with a higher index than current has been deleted"
 	aCollectionOfAssociations at: (requiredPermutation at: uuid) ifAbsent: [^ defaultBehavior value].
 	
-	^ (aCollectionOfAssociations at: (requiredPermutation at: uuid)) value value
+	^ (aCollectionOfAssociations at: (requiredPermutation at: uuid) ifAbsent: [^defaultBehavior value]) value value
 ]
 
 { #category : #'instance creation' }
@@ -146,7 +146,7 @@ SBVariant >> activeIndex [
 	^ self widget activeIndex
 ]
 
-{ #category : #actions }
+{ #category : #accessing }
 SBVariant >> activeMutateCommandWithNewValue: aBoolean [
 
 	^ SBMutatePropertyCommand new
@@ -375,7 +375,7 @@ SBVariant >> namedBlocks [
 	^ self widget namedBlocks 
 ]
 
-{ #category : #actions }
+{ #category : #callbacks }
 SBVariant >> nestedActiveCommands: allCommands [
 
 	allCommands add: (self activeMutateCommandWithNewValue: true).
@@ -384,7 +384,7 @@ SBVariant >> nestedActiveCommands: allCommands [
 			aVariant nestedActiveCommands: allCommands]] 
 ]
 
-{ #category : #actions }
+{ #category : #callbacks }
 SBVariant >> nestedInactiveCommands: allCommands [
 
 	allCommands add: (self activeMutateCommandWithNewValue: false).

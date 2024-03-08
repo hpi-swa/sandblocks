@@ -5,7 +5,8 @@ Class {
 		'broadcaster',
 		'errorDecorator',
 		'errorIcon',
-		'reportedError'
+		'reportedError',
+		'lastSave'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
@@ -64,7 +65,7 @@ SBLiveView >> buildSetUpRow [
 { #category : #building }
 SBLiveView >> buttons [
 
-	^ super buttons, {self rebuildButton}
+	^ super buttons, {self rebuildButton. self reloadLastSaveButton}
 ]
 
 { #category : #actions }
@@ -96,6 +97,16 @@ SBLiveView >> initialize [
 	self buildSetUpRow.
 	
 	
+]
+
+{ #category : #building }
+SBLiveView >> jumpToLastSave [
+
+	lastSave ifNil: [^ self].
+	broadcaster containers do: [:otherContainer |
+			self privateRegisterListener: lastSave veryDeepCopy 
+				for: (SBExploriants objectToPermutation at: (otherContainer  valueOfProperty: #sbListener)) 
+				in: otherContainer ]
 ]
 
 { #category : #accessing }
@@ -172,6 +183,16 @@ SBLiveView >> rebuildRegisteredListenerFor: aPermutation in: aContainer [
 	
 ]
 
+{ #category : #building }
+SBLiveView >> reloadLastSaveButton [
+
+	^ SBButton new
+		icon: SBIcon iconRotateRight
+			label: 'Reset To Last Synch'
+			do: [self jumpToLastSave ];
+		cornerStyle: #squared
+]
+
 { #category : #actions }
 SBLiveView >> reportError: anError [
 
@@ -223,6 +244,7 @@ SBLiveView >> synchronizePreviewsWith: aContainer [
 
 	| replacingListener |
 	replacingListener := (aContainer valueOfProperty: #sbListener).
+	lastSave := replacingListener veryDeepCopy.
 	(broadcaster containers reject: [:someContainer | aContainer == someContainer])
 		do: [:otherContainer |
 			self privateRegisterListener: replacingListener veryDeepCopy 
