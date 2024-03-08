@@ -26,6 +26,8 @@ SBDiffTabView >> addButton [
 { #category : #callbacks }
 SBDiffTabView >> artefactSaved: aMethodBlock [
 
+	aMethodBlock = self containingArtefact ifTrue: [self updateTabNames].
+
 	(aMethodBlock = self containingArtefact and: [self isShowingDiff]) 
 		ifTrue: [self updateSelectedTab]
 ]
@@ -141,7 +143,8 @@ SBDiffTabView >> sourceStringFor: aNamedBlock [
 	^ aNamedBlock block isBlockBody
 		ifFalse: [aNamedBlock block sourceString]
 		ifTrue: [ (aNamedBlock block statements collect: #sourceString)
-				fold: [:a :b | a, Character cr, b]]
+				ifEmpty: ['']
+				ifNotEmpty: [:theStatements | theStatements fold: [:a :b | a, Character cr, b]]]
 ]
 
 { #category : #accessing }

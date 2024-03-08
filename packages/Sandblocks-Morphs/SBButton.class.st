@@ -46,6 +46,13 @@ SBButton >> applyUserInterfaceTheme [
 ]
 
 { #category : #accessing }
+SBButton >> basicLabel: aString [
+
+	(self submorphs detect: [:m | m isKindOf: self widgetClass] ifNone: [
+		^ self addMorphFront: (self textMorphFor: aString)]) basicContents: aString
+]
+
+{ #category : #accessing }
 SBButton >> borderStyle [
 
 	^ BorderStyle width: 1 color: (self colorPolicy ifNotNil: [:c | c borderColorForButton: self] ifNil: [Color gray alpha: 0.3])

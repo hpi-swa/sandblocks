@@ -17,6 +17,12 @@ SBStringMorph >> applyUserInterfaceTheme [
 ]
 
 { #category : #accessing }
+SBStringMorph >> basicContents: newContents [
+
+	contents := newContents.
+]
+
+{ #category : #accessing }
 SBStringMorph >> bold [
 
 	self emphasis: TextEmphasis bold emphasisCode

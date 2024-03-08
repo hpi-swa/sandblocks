@@ -40,6 +40,42 @@ SBStGrammarHandler >> browseSenders [
 		self block sandblockEditor open: calls first compiledMethod]
 ]
 
+{ #category : #'action helpers' }
+SBStGrammarHandler >> buildEachCommandForSelected: aBlock callingAlternativesBuilder: aSelector [
+
+	| parent variant before |
+	parent := aBlock parentSandblock.
+	before := aBlock  submorphBefore.
+	variant := SBVariant new.
+	^ SBWrapCommand new
+		outer: variant;
+		inner: aBlock;
+		wrap:  [:outer :inner |
+			variant 
+				named: (self variantNameFor: {inner} in: parent preceedingBlock: before)
+				alternatives: (self perform: aSelector with: {inner})
+				activeIndex: 2];
+		yourself
+]
+
+{ #category : #'action helpers' }
+SBStGrammarHandler >> buildMultiselectCommandOnVariant: aVariant selected: aCollectionOfBlocks callingAlternativesBuilder: aSelector [
+
+	| parent before |
+	parent := aCollectionOfBlocks first parentSandblock. 
+	before := aCollectionOfBlocks first submorphBefore.
+	^ SBWrapConsecutiveCommand new
+		selectAfter: #block;
+		outer: aVariant;
+		targets: aCollectionOfBlocks;
+		wrap:  [:outer :inner |
+			aVariant 
+				named: (self variantNameFor: inner in: parent preceedingBlock: before)
+				alternatives: (self perform: aSelector with: inner)
+				activeIndex: 2];
+		yourself
+]
+
 { #category : #'callback helpers' }
 SBStGrammarHandler >> changeToBlockView: aWindow [
 
@@ -87,8 +123,8 @@ SBStGrammarHandler >> debugExpression [
 SBStGrammarHandler >> defaultAlternativesForBlocks: aCollectionOfBlocks [
 
 	^ {
-		SBNamedBlock block: (SBStBlockBody new statements: aCollectionOfBlocks) named: 'original'.
-		SBNamedBlock block: (SBStBlockBody new statements: aCollectionOfBlocks veryDeepCopy) named: 'alternative'. } 
+		SBNamedBlock block: (SBStBlockBody new statements: aCollectionOfBlocks).
+		SBNamedBlock block: (SBStBlockBody new statements: aCollectionOfBlocks veryDeepCopy). } 
 ]
 
 { #category : #'action helpers' }
@@ -426,6 +462,36 @@ SBStGrammarHandler >> useThirdArgument [
 	self useArgument: 3
 ]
 
+{ #category : #'action helpers' }
+SBStGrammarHandler >> variantNameFor: aCollectionOfBlocks in: aParentBlock [
+	
+	aParentBlock sandblockEditor = aParentBlock ifTrue: [^ aCollectionOfBlocks printString].
+	
+	aParentBlock isTopLevel ifTrue: [^ aParentBlock printString].
+
+	aParentBlock isMessageSend ifTrue: [^ aCollectionOfBlocks first submorphBefore printString].
+	(aParentBlock isAssignment and: [aParentBlock receiver isVariant not]) ifTrue: [^ aParentBlock receiver sourceString, ' := '].
+	
+	aCollectionOfBlocks size = 1 ifTrue: [^ aCollectionOfBlocks first sourceString].
+	
+	^ '{1}' format: {(aCollectionOfBlocks collect: [:aBlock | aBlock sourceString]) 
+			fold: [:a :b | a, ', ', Character cr, b ]}
+]
+
+{ #category : #'action helpers' }
+SBStGrammarHandler >> variantNameFor: aCollectionOfBlocks in: aParentBlock preceedingBlock: aNeighbor [
+	
+	aParentBlock isMessageSend 
+		ifTrue: [^ aNeighbor ifNil: [aParentBlock suggestedAlternationName] ifNotNil: [aNeighbor suggestedAlternationName]]. 
+	
+	(aParentBlock isAssignment and: [aParentBlock receiver isVariant not]) ifTrue: [^ aParentBlock suggestedAlternationName].
+	
+	aCollectionOfBlocks size = 1 ifTrue: [^ aCollectionOfBlocks first suggestedAlternationName].
+	
+	^ '{1}' format: {(aCollectionOfBlocks collect: [:aBlock | aBlock suggestedAlternationName]) 
+			fold: [:a :b | a, ', ', Character cr, b ]}
+]
+
 { #category : #actions }
 SBStGrammarHandler >> wrapAsArgument [
 	<action>
@@ -449,17 +515,10 @@ SBStGrammarHandler >> wrapEachInOptionalVariant [
 	<actionValidIf: #isSandblock>
 
 	self assert: self block isSelected.
-	self block sandblockEditor doMultiSelectionEach: [:selected | | variant |
-		variant := SBVariant new.
-		SBWrapCommand new
-			outer: variant;
-			inner: selected;
-			wrap:  [:outer :inner |
-				variant 
-					named: inner printString 
-					alternatives: (self defaultOptionalAlternativesForBlocks: {inner})
-					activeIndex: 2];
-			yourself]
+	self block sandblockEditor doMultiSelectionEach: [:selected | 
+		self 
+			buildEachCommandForSelected: selected 
+			callingAlternativesBuilder: #defaultOptionalAlternativesForBlocks:]
 ]
 
 { #category : #actions }
@@ -468,17 +527,10 @@ SBStGrammarHandler >> wrapEachInVariant [
 	<actionValidIf: #isSandblock>
 
 	self assert: self block isSelected.
-	self block sandblockEditor doMultiSelectionEach: [:selected | | variant |
-		variant := SBVariant new.
-		SBWrapCommand new
-			outer: variant;
-			inner: selected;
-			wrap:  [:outer :inner |
-				variant 
-					named: inner printString 
-					alternatives: (self defaultAlternativesForBlocks: {inner})
-					activeIndex: 2];
-			yourself]
+	self block sandblockEditor doMultiSelectionEach: [:selected | 
+		self 
+			buildEachCommandForSelected: selected 
+			callingAlternativesBuilder: #defaultAlternativesForBlocks:]
 ]
 
 { #category : #'action helpers' }
@@ -603,16 +655,10 @@ SBStGrammarHandler >> wrapInOptionalVariant [
 	variant := SBVariant new.
 	self block sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
 	self block sandblockEditor doMultiSelection: [:selected |
-		SBWrapConsecutiveCommand new
-			selectAfter: #block;
-			outer: variant;
-			targets: selected;
-			wrap:  [:outer :inner |
-				variant 
-					named: inner printString 
-					alternatives: (self defaultOptionalAlternativesForBlocks: inner)
-					activeIndex: 2];
-			yourself].
+		self 
+			buildMultiselectCommandOnVariant: variant
+			selected: selected
+			callingAlternativesBuilder: #defaultOptionalAlternativesForBlocks:].
 		
 	variant sandblockEditor select: variant nameBlock.
 	variant sandblockEditor save: variant containingArtefact tryFixing: true quick: false.
@@ -660,16 +706,10 @@ SBStGrammarHandler >> wrapInVariant [
 	variant := SBVariant new.
 	self block sandblockEditor multiSelectionIsConsecutive ifFalse: [^ self].
 	self block sandblockEditor doMultiSelection: [:selected |
-		SBWrapConsecutiveCommand new
-			selectAfter: #block;
-			outer: variant;
-			targets: selected;
-			wrap:  [:outer :inner |
-				variant 
-					named: inner printString 
-					alternatives: (self defaultAlternativesForBlocks: inner)
-					activeIndex: 2];
-			yourself].
+		self 
+			buildMultiselectCommandOnVariant: variant
+			selected: selected
+			callingAlternativesBuilder: #defaultAlternativesForBlocks:].
 		
 	variant sandblockEditor select: variant nameBlock.
 	variant sandblockEditor save: variant containingArtefact tryFixing: true quick: false.

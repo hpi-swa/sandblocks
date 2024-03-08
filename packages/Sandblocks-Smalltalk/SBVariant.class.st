@@ -482,10 +482,7 @@ SBVariant >> writeSourceOn: aStream [
 	self name storeOn: aStream.
 	aStream nextPutAll: ' associations: {'.
 	self alternatives
-		do: [:aNamedBlock |
-			aNamedBlock name storeOn: aStream.
-			aStream nextPutAll: ' -> '.
-			aNamedBlock block writeSourceOn: aStream]
+		do: [:aNamedBlock | aNamedBlock writeSourceOn: aStream]
 		separatedBy: [aStream nextPut: $.].
 	aStream nextPutAll: '} activeIndex: '.
 	self activeIndex storeOn: aStream.
