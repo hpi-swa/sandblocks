@@ -52,6 +52,23 @@ SBExploriants >> artefactSaved: aMethodBlock [
 	(aMethodBlock isMethod and: [self isInEditor]) ifTrue: [self tryToUpdateInBackgroundAfterChangeIn: aMethodBlock]
 ]
 
+{ #category : #ui }
+SBExploriants >> asTabButton: aNamedBlock [
+
+	| button |
+	button := SBButton new
+		label: aNamedBlock nameToDisplay do: [self setActive: aNamedBlock];
+		cornerStyle: #squared;
+		hResizing: #spaceFill;
+		changeTableLayout;
+		makeSmall;
+		listDirection: #leftToRight.
+	
+	aNamedBlock = self active ifTrue: [button makeBold].
+	
+	^ button
+]
+
 { #category : #'ast helpers' }
 SBExploriants >> binding: aString for: block class: aClass ifPresent: aBlock [
 
