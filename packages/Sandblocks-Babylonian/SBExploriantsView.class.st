@@ -17,7 +17,7 @@ SBExploriantsView class >> block: aSBBlock named: aString [
 { #category : #'instance creation' }
 SBExploriantsView class >> getTabsInMultiverse: aSBMultiverse [
 
-	^ {SBPermutationGridsView. SBExampleGridsView. SBLiveView. SBPlainResultsView. SBVariantsView. SBHistoryView}
+	^ {SBCustomView. SBPlainResultsView. SBVariantsView. SBHistoryView}
 		collect: [:mySubclass | mySubclass newMultiverse: aSBMultiverse]
 ]
 
@@ -94,6 +94,12 @@ SBExploriantsView >> initialize [
 ]
 
 { #category : #accessing }
+SBExploriantsView >> isOverview [
+
+	^false
+]
+
+{ #category : #accessing }
 SBExploriantsView >> multiverse [
 
 	^ multiverse ifNil: [self multiverse: (SBMultiverse bigbangInEditor: SBEditor current)]
@@ -111,7 +117,7 @@ SBExploriantsView >> resolveButton [
 
 	^ SBButton new
 		icon: SBIcon iconTrash
-			label: 'Resolve All From Code'
+			label: 'Clean in Code'
 			do: [self multiverse resolve];
 		cornerStyle: #squared
 ]
@@ -127,7 +133,7 @@ SBExploriantsView >> updateButton [
 
 	^ SBButton new
 		icon: SBIcon iconRotateLeft
-			label: 'Re-Generate Multiverse'
+			label: 'Re-Generate'
 			do: [self multiverse gatherElements; asyncKaboom];
 		cornerStyle: #squared
 ]
@@ -140,9 +146,9 @@ SBExploriantsView >> visualize [
 	self buildButtonRow
 ]
 
-{ #category : #copying }
-SBExploriantsView >> wantsHistory [
-	
-	"If returning true, will be automatically collected for an epoche in the history view"
-	^ true
+{ #category : #accessing }
+SBExploriantsView >> wantsReloadOnSaveWhenOpen [
+
+	"If true, reload contents on a method save"
+	^ false
 ]

@@ -19,7 +19,7 @@ SBHistoryView >> buildEpoche [
 	row := self containerRow.
 	^ row
 		cellGap: 0@10; 
-		listDirection: #topToBottom;
+		listDirection: #topToBottom; 
 		addAllMorphsBack: {self buildMetaUsageIn: row. self buildSnapshotTabView}
 	
 	
@@ -43,9 +43,7 @@ SBHistoryView >> buildSnapshotTabView [
 	^ SBTabView 
 		namedBlocks: (self tabsToSnapshot
 							collect: [:aTab | SBNamedBlock block: aTab snapshot named: aTab name]) 
-		activeIndex: (SBExploriants uniqueInstance active wantsHistory
-							ifTrue: [SBExploriants uniqueInstance activeIndex] 
-							 ifFalse: [1])
+		activeIndex: (SBExploriants uniqueInstance namedBlocks detect: #isOverview) activeIndex
 	
 ]
 
@@ -127,17 +125,11 @@ SBHistoryView >> saveButton [
 { #category : #accessing }
 SBHistoryView >> tabsToSnapshot [
 
-	^ SBExploriants uniqueInstance namedBlocks select: #wantsHistory
+	^ (SBExploriants uniqueInstance namedBlocks detect: #isOverview) views 
 ]
 
 { #category : #actions }
 SBHistoryView >> visualize [ 
 
 	self addEpoche
-]
-
-{ #category : #copying }
-SBHistoryView >> wantsHistory [
-	
-	^ false
 ]

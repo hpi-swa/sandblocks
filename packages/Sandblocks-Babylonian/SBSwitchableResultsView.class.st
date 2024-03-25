@@ -25,7 +25,7 @@ SBSwitchableResultsView >> buildDimensionOptions [
 	options := SBMorphResizer standardOptions.
 
 	^ SBComboBox new
-		prefix: 'Morph Dimensions: ';
+		prefix: 'Image Dimensions: ';
 		labels: (options collect: #label);
 		values: options;
 		object: options third;
@@ -59,7 +59,7 @@ SBSwitchableResultsView >> selectedResizer [
 	^ dimensionOptions object
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #copying }
 SBSwitchableResultsView >> snapshot [
 
 	^ ImageMorph new newForm: gridContainer imageForm
@@ -102,4 +102,10 @@ SBSwitchableResultsView >> visualize [
 	
 	self buildAllPossibleResults .
 	self concludeContainerWidth.
+]
+
+{ #category : #accessing }
+SBSwitchableResultsView >> wantsReloadOnSaveWhenOpen [
+
+	^ true
 ]

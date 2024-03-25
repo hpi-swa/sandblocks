@@ -179,6 +179,8 @@ SBExploriants >> tryToUpdateInBackgroundAfterChangeIn: aMethodBlock [
 
 	| multiverse |
 	multiverse := self active multiverse.
+	self active wantsReloadOnSaveWhenOpen ifFalse: [^self].
+	
 	self ignoreUpdate 
 		ifFalse: [self updateInBackgroundOnTimeoutRevertTo: multiverse]
 		ifTrue: [
