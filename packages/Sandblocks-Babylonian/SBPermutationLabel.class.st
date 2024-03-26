@@ -7,7 +7,7 @@ Class {
 	#category : #'Sandblocks-Babylonian'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBPermutationLabel class >> newDisplaying: aSBPermutation [
 
 	^ self new

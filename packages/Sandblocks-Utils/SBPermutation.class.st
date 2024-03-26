@@ -60,16 +60,6 @@ SBPermutation >> apply [
 ]
 
 { #category : #converting }
-SBPermutation >> asAlternativesString [
-	
-	^ (self referencedVariants collect: [:aVariant | 
-			(aVariant blockAt: (self at: aVariant id)) nameToDisplay ])
-			fold: [:a :b | a, ', ', Character cr, b ]
-
-	
-]
-
-{ #category : #converting }
 SBPermutation >> asString [
 	
 	"collecting instead of calling (a active name), ', ', (b active name) in fold
@@ -112,17 +102,32 @@ SBPermutation >> contains: anotherPermutation [
 ]
 
 { #category : #'initialize-release' }
-SBPermutation >> copyRemoving: aCollectionOfPermutations [
+SBPermutation >> copyRemovingPermutation: aPermutation [
 
 	 | copy |
 	copy := self veryDeepCopy.
 	copy referencedVariants: (copy referencedVariants reject: [:aVariant | 
-		aCollectionOfPermutations anySatisfy: [:aPermutation | aPermutation keys anySatisfy: [:id | id = aVariant id ]]]).
+		aPermutation includesKey: aVariant id]).
 		
-	aCollectionOfPermutations do: [:aPermutation | 
-		aPermutation associationsDo: [:idToNum | 
-			copy at: idToNum key ifPresent: [:theValue | theValue = idToNum value 
-						ifTrue: [copy removeKey: idToNum key]]]].
+	aPermutation associationsDo: [:idToNum | 
+		copy at: idToNum key ifPresent: [:theValue | theValue = idToNum value 
+					ifTrue: [copy removeKey: idToNum key]]].
+	^ copy
+		
+]
+
+{ #category : #'initialize-release' }
+SBPermutation >> copyRemovingVariants: aCollectionOfVariants [
+
+	 | copy |
+	copy := self class new.
+	copy referencedVariants: (self referencedVariants reject: [:aVariant | aCollectionOfVariants includes: aVariant]).
+	copy referencedVariants ifEmpty: [^ SBNilPermutation new referencedVariants: {}]. 
+	"copy := self veryDeepCopy.
+	copy referencedVariants: (copy referencedVariants difference: aCollectionOfVariants)."
+	
+	self associationsDo: [:anAssc | copy add: anAssc].
+	aCollectionOfVariants do: [:aVariant | copy removeKey: aVariant id ifAbsent: []].
 	^ copy
 		
 ]

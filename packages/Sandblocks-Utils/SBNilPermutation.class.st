@@ -17,6 +17,12 @@ SBNilPermutation >> asString [
 	^ 'No Variation'
 ]
 
+{ #category : #converting }
+SBNilPermutation >> asVariantString [
+	
+	^ 'No Variation'
+]
+
 { #category : #accessing }
 SBNilPermutation >> isActive [
 

@@ -42,7 +42,7 @@ SBExploriantsView >> buildButtonRow [
 { #category : #accessing }
 SBExploriantsView >> buttons [
 
-	^ {self updateButton. self resolveButton}
+	^ {self updateButton. self resolveButton. self saveButton}
 ]
 
 { #category : #actions }
@@ -110,6 +110,7 @@ SBExploriantsView >> multiverse: aSBMultiverse [
 
 	multiverse := aSBMultiverse.
 	multiverse when: #updated send: #visualize to: self.
+	^ multiverse
 ]
 
 { #category : #building }
@@ -119,6 +120,16 @@ SBExploriantsView >> resolveButton [
 		icon: SBIcon iconTrash
 			label: 'Clean in Code'
 			do: [self multiverse resolve];
+		cornerStyle: #squared
+]
+
+{ #category : #building }
+SBExploriantsView >> saveButton [
+
+	^ SBButton new
+		icon: SBIcon iconSave
+			label: 'Save As PNG'
+			do: [self block exportAsPNG];
 		cornerStyle: #squared
 ]
 

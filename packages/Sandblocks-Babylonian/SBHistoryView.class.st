@@ -50,7 +50,7 @@ SBHistoryView >> buildSnapshotTabView [
 { #category : #building }
 SBHistoryView >> buttons [
 
-	^ super buttons, {self clearButton. self changeTabsButton. self saveButton }
+	^ super buttons, {self clearButton. self changeTabsButton. }
 ]
 
 { #category : #building }

@@ -2,34 +2,23 @@ Class {
 	#name : #SBCorrelationView,
 	#superclass : #SBResizableResultsView,
 	#instVars : [
-		'basePermutations'
+		'variantSelection',
+		'selectedVariants',
+		'basePermutations',
+		'groupedUniverses'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
 
-{ #category : #accessing }
-SBCorrelationView >> basePermutations [
-	^ basePermutations
-]
-
-{ #category : #accessing }
-SBCorrelationView >> basePermutations: anObject [
-	basePermutations := anObject
-]
-
 { #category : #building }
 SBCorrelationView >> buildAllPossibleResults [
 	
-	| base thisVariant |
 	self multiverse activeExamples 
 		ifEmpty: [gridContainer addMorph: (TextMorph new contents: 'No examples active').
 				  gridContainer width: gridContainer firstSubmorph width + 5 "a bit of margin"].
 	
-	thisVariant := self multiverse universes first activePermutation referencedVariants third.
-	base := SBPermutation new referencedVariants: (self multiverse universes first activePermutation referencedVariants select: [:var | var = thisVariant]).
-	self multiverse universes first activePermutation associationsDo: [:idToNum | idToNum key = thisVariant id ifTrue: [base add: idToNum]].
-	self halt.
-	self basePermutations: {base}.
+	groupedUniverses := self groupUniversesContainingAllVariantsIn: selectedVariants.
+	basePermutations := self collectAllPermutationsOfSelectedVariants asOrderedCollection.
 
 	self multiverse activeExamples do: [:anExample |
 		self multiverse watches do: [:aWatch | 
@@ -51,42 +40,142 @@ SBCorrelationView >> buildForExample: anExample watching: aWatch [
 
 { #category : #building }
 SBCorrelationView >> buildGridsFor: anExample watching: aWatch [
-
-	^ (self basePermutations collect: [:aBasePermutation | | split |
-		split := self getAllUniversesContainingPermutation: aBasePermutation.
-		{SBCorrelationCluster 
+	
+	^ (basePermutations collect: [:aBasePermutation |
+		SBCorrelationCluster 
 			newForSize: self selectedResizer 
-			multiverse: self multiverse 
 			example: anExample 
 			watch: aWatch 
-			basePermutation: aBasePermutation 
-			opponentPermutations: split first },
-		(split second collect: [:nonContainingPermutation | 
-			SBCorrelationCluster 
-				newForSize: self selectedResizer 
-				multiverse: self multiverse 
-				example: anExample 
-				watch: aWatch 
-				basePermutation: nonContainingPermutation 
-				opponentPermutations: {SBNilPermutation new referencedVariants: {}}])	
-		]) flatten
+			basePermutation: aBasePermutation
+			correlating: (self getUniversesContainingPermutation: aBasePermutation)]),
+		 (groupedUniverses second collect: [:aNonCorrelatingUniverse | 
+				SBCorrelationCluster 
+					newForSize: self selectedResizer 
+					example: anExample 
+					watch: aWatch 
+					basePermutation: aNonCorrelatingUniverse activePermutation 
+					correlating: {aNonCorrelatingUniverse}]) 
+]
+
+{ #category : #building }
+SBCorrelationView >> buildSelectionRow [
+
+	| container selectedString |
+	container := self containerRow.
+	self ensureVariantSelectionIn: container.
+	selectedString := 'Selected: '.
+	selectedVariants 
+		ifEmpty: [ selectedString := selectedString, 'None' ]
+		ifNotEmpty: [ selectedString := selectedString, ((selectedVariants collect: #name) fold: [:a :b | a, ', ', Character cr, b ])]. 
+	container addMorphBack: selectedString asMorph.
+	self block addMorph: container.
 	
 ]
 
 { #category : #building }
-SBCorrelationView >> getAllUniversesContainingPermutation: aPermutation [
+SBCorrelationView >> buildVariantSelection [
 
-	| containsBase rest |
-	containsBase := OrderedCollection new.
-	rest := OrderedCollection new.
+	| options topLevelVariant |
+	options := self multiverse variants.
+	topLevelVariant := options detect: [:aVariant | aVariant parentVariant isNil] ifNone: [options first].
+
+	^ SBComboBox new
+		prefix: 'Add or Remove';
+		labels: (options collect: #name);
+		values: options;
+		object: topLevelVariant;
+		when: #selectionChanged send: #changeVariants to: self;
+		displayPrefixOnly 
+]
+
+{ #category : #accessing }
+SBCorrelationView >> buttons [
+
+	^ {}
+]
+
+{ #category : #building }
+SBCorrelationView >> changeVariants [
+
+	(selectedVariants includes: variantSelection object)
+		ifTrue: [selectedVariants remove: variantSelection object] 
+		ifFalse: [selectedVariants add: variantSelection object].
+		
+	self visualize
+]
+
+{ #category : #building }
+SBCorrelationView >> collectAllPermutationsOfSelectedVariants [
 	
-	 self multiverse universes do: [:aUniverse | 
-		((aUniverse activePermutation contains: aPermutation))
-			ifTrue: [containsBase add: (aUniverse activePermutation copyRemoving: {aPermutation}) ]
-			ifFalse: [rest add: aUniverse activePermutation]].
+	| allPermutations |
+	selectedVariants ifEmpty: [^ {SBNilPermutation new referencedVariants: {}} asSet].
+	allPermutations := Set new.
+	groupedUniverses first do: [:aUniverseContainingSelected | | base |
+		base := SBPermutation new referencedVariants: selectedVariants.
+		selectedVariants do: [:aVariant | base at: aVariant id put: (aUniverseContainingSelected activePermutation at: aVariant id)].
+		allPermutations add: base].
+	^ allPermutations
+]
+
+{ #category : #building }
+SBCorrelationView >> ensureVariantSelection [ 
+
+	self multiverse variants ifEmpty: [selectedVariants := OrderedCollection new. ^ self].
+	variantSelection := self buildVariantSelection.
+	self block addMorph: variantSelection.
 	
-	^ {containsBase reject: [:aContainingPermutation | aContainingPermutation = aPermutation].
-		rest ifEmpty: [{SBNilPermutation new referencedVariants: {}}]}
+	selectedVariants 
+		ifNil: [selectedVariants := {variantSelection object} asOrderedCollection]
+		ifNotNil: [selectedVariants := selectedVariants select: [:aVariant | self multiverse variants includes: aVariant]].
+	
+]
+
+{ #category : #building }
+SBCorrelationView >> ensureVariantSelectionIn: aMorph [
+
+	self multiverse variants ifEmpty: [selectedVariants := OrderedCollection new. ^ self].
+	variantSelection := self buildVariantSelection.
+	aMorph addMorph: variantSelection.
+	
+	selectedVariants 
+		ifNil: [selectedVariants := {variantSelection object} asOrderedCollection]
+		ifNotNil: [selectedVariants := selectedVariants select: [:aVariant | self multiverse variants includes: aVariant]].
+	
+]
+
+{ #category : #building }
+SBCorrelationView >> getUniversesContainingPermutation: aPermutation [
+		
+	^ groupedUniverses first select: [:aUniverse | 
+		aUniverse activePermutation contains: aPermutation]
+]
+
+{ #category : #building }
+SBCorrelationView >> groupUniversesContainingAllVariantsIn: aCollectionOfVariants [
+	
+	| contains omits |
+	contains := OrderedCollection new.
+	omits := OrderedCollection new.
+	self multiverse universes do: [:aUniverse | 
+		(aCollectionOfVariants allSatisfy: [:aVariant | aUniverse activePermutation referencedVariants includes: aVariant])
+			ifTrue: [contains add: aUniverse] 
+			ifFalse: [omits add: aUniverse]].
+	
+	^ {contains. omits.}
+]
+
+{ #category : #building }
+SBCorrelationView >> groupUniversesContainingPermutation: aPermutation [
+		
+	| contains omits |
+	contains := OrderedCollection new.
+	omits := OrderedCollection new.
+	groupedUniverses first do: [:aUniverse | 
+		(aUniverse activePermutation contains: aPermutation)
+			ifTrue: [contains add: aUniverse] 
+			ifFalse: [omits add: aUniverse]].
+	
+	^ {contains. omits.}
 ]
 
 { #category : #initialization }
@@ -96,4 +185,18 @@ SBCorrelationView >> initialize [
 	
 	self name: 'Correlation'.
 	
+]
+
+{ #category : #actions }
+SBCorrelationView >> visualize [ 
+
+	self clean.
+
+	self buildSelectionRow.
+	self block addMorph: dimensionOptions.
+	
+	self buildButtonRow.
+	
+	self buildAllPossibleResults .
+	self concludeContainerWidth.
 ]

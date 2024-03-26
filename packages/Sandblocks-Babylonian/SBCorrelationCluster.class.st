@@ -2,39 +2,48 @@ Class {
 	#name : #SBCorrelationCluster,
 	#superclass : #SBCluster,
 	#instVars : [
-		'multiverse',
 		'displayedExample',
 		'displayedWatch',
-		'opponentPermutations',
-		'basePermutation'
+		'baseUniverse',
+		'basePermutation',
+		'correlatingUniverses'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
 
 { #category : #'instance creation' }
-SBCorrelationCluster class >> newForSize: aSBMorphResizer multiverse: aMultiverse example: anExample watch: aWatch basePermutation: base opponentPermutations: opponent [
+SBCorrelationCluster class >> newForSize: aSBMorphResizer example: anExample watch: aWatch basePermutation: aPermutation correlating: aCollectionOfUniverses [
 
 	^ self new 
 		morphResizer: aSBMorphResizer;
-		multiverse: aMultiverse;
 		displayedExample: anExample;
 		displayedWatch: aWatch;
-		basePermutation: base;
-		opponentPermutations: opponent;
+		basePermutation: aPermutation;
+		correlatingUniverses: aCollectionOfUniverses;
 		visualize;
 		yourself 
 ]
 
 { #category : #accessing }
 SBCorrelationCluster >> basePermutation [
-
 	^ basePermutation
 ]
 
 { #category : #accessing }
-SBCorrelationCluster >> basePermutation: aSBPermutation [
+SBCorrelationCluster >> basePermutation: anObject [
+	basePermutation := anObject
+]
 
-	basePermutation := aSBPermutation
+{ #category : #accessing }
+SBCorrelationCluster >> baseUniverse [
+
+	^ baseUniverse
+]
+
+{ #category : #accessing }
+SBCorrelationCluster >> baseUniverse: aUniverse [
+
+	baseUniverse := aUniverse
 ]
 
 { #category : #building }
@@ -44,16 +53,28 @@ SBCorrelationCluster >> buildDisplayMatrix [
 	
 	matrix := Matrix 
 		rows: 2
-		columns: self opponentPermutations size + 1.
+		columns: self correlatingUniverses size + 1.
 		
 	matrix atRow: 1 put: ({TextMorph new contents: self basePermutation asVariantString}, 
-	(self extractedTopHeadingsFrom: self opponentPermutations)).
+	(self extractedTopHeadingsFrom: self correlatingUniverses)).
 	
 	matrix at: 2 at: 1 put: (SBPermutationLabel newDisplaying: self basePermutation).
 
 	self extractRow withIndexDo: [:aCellMorph :column | matrix at: 2 at: column+1 put: aCellMorph].
 
 	^ matrix
+]
+
+{ #category : #accessing }
+SBCorrelationCluster >> correlatingUniverses [
+
+	^ correlatingUniverses
+]
+
+{ #category : #accessing }
+SBCorrelationCluster >> correlatingUniverses: aCollectionOfUniverses [
+
+	correlatingUniverses := aCollectionOfUniverses
 ]
 
 { #category : #accessing }
@@ -83,49 +104,37 @@ SBCorrelationCluster >> displayedWatch: anSBExampleWatch [
 { #category : #building }
 SBCorrelationCluster >> extractRow [
 
-	^ self multiverse universes 
-		select: [:aUniverse | (aUniverse activePermutation contains: self basePermutation)]
-		thenCollect: [:aUniverse | | display | 
+	^ self correlatingUniverses 
+		collect: [:aUniverse | | display | 
 		display := ((aUniverse watches detect: [:aWatch | aWatch originalIdentifier = self displayedWatch identifier]) 
 					exampleToDisplay at: self displayedExample) value display.
 		self compressedMorphsForDisplay: display]
 ]
 
 { #category : #building }
-SBCorrelationCluster >> extractedLeftHeadingsFrom: aCollectionOfPermutations [
+SBCorrelationCluster >> extractedTopHeadingsFrom: aCollectionOfCorrelatingUniverses [
 
-	^ aCollectionOfPermutations collect: [:aPermutation | SBPermutationLabel newDisplaying: aPermutation]
+	^ aCollectionOfCorrelatingUniverses collect: [:aCorrelatingUniverse |  
+		SBPartialPermutationLabel 
+			newDisplaying: (aCorrelatingUniverse activePermutation copyRemovingVariants: self basePermutation referencedVariants)
+			referingTo: aCorrelatingUniverse]
 ]
 
-{ #category : #building }
-SBCorrelationCluster >> extractedTopHeadingsFrom: aCollectionOfPermutations [
-
-	^ aCollectionOfPermutations collect: [:aPermutation | 
-		aPermutation isNilPermutation 
-			ifTrue: [StringMorph new contents: ' / '] 
-			ifFalse: [SBPermutationLabel newDisplaying: aPermutation]]
-]
-
-{ #category : #accessing }
-SBCorrelationCluster >> multiverse [
-
-	^ multiverse
-]
-
-{ #category : #accessing }
-SBCorrelationCluster >> multiverse: aSBMultiverse [
-
-	multiverse := aSBMultiverse
-]
-
-{ #category : #accessing }
-SBCorrelationCluster >> opponentPermutations [
-
-	^ opponentPermutations
-]
-
-{ #category : #accessing }
-SBCorrelationCluster >> opponentPermutations: aCollectionOfSBPermutations [
-
-	opponentPermutations := aCollectionOfSBPermutations
+{ #category : #visualisation }
+SBCorrelationCluster >> newTopRowFrom: aCollectionOfPermutationLabels [
+	
+	"Width should be set, but height can vary"
+	^ self newContainerMorph 
+		listDirection: #leftToRight;
+		listCentering: #bottomRight;
+		cellPositioning: #topCenter;
+		hResizing: #spaceFill;
+		addAllMorphsBack: (aCollectionOfPermutationLabels collect: [:aLabel | 
+			self newContainerMorph 
+				addAllMorphsBack: {
+					(self 
+						wrapInCell: aLabel 
+						flexVertically: true 
+						flexHorizontally: false)  borderWidth: 0.
+					SBButton newApplyPermutationFor: (aLabel universe activePermutation).}])
 ]

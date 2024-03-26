@@ -35,7 +35,9 @@ SBCustomView >> initialize [
 	viewOptions := self buildViewOptions.
 	self name: 'Results'.
 	
-	self block addMorphFront: viewOptions.
+	self buildButtonRow.
+	
+	self block addMorphBack: viewOptions.
 	self block addMorphBack: self selectedView
 	
 ]

@@ -65,7 +65,7 @@ SBLiveView >> buildSetUpRow [
 { #category : #building }
 SBLiveView >> buttons [
 
-	^ super buttons, {self rebuildButton. self reloadLastSaveButton}
+	^ {self rebuildButton. self reloadLastSaveButton}
 ]
 
 { #category : #actions }
