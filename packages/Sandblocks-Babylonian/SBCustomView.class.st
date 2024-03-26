@@ -73,6 +73,7 @@ SBCustomView >> viewClasses [
 
 	^ {SBPermutationGridsView. 
 		SBExampleGridsView. 
+		SBCorrelationView.
 		SBLiveView.}
 ]
 

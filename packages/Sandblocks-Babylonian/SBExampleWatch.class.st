@@ -127,6 +127,7 @@ SBExampleWatch >> asInactiveCopy [
 	| copy |
 	copy := SBInactiveExampleWatch new 
 				newIdentifier;
+				originalIdentifier: self identifier;
 				expression: (SBTextBubble new contents: self cleanedExpression sourceString);
 				modifyExpression: self modifyExpression veryDeepCopy;
 				dimensionOptions: self dimensionOptions veryDeepCopy. 

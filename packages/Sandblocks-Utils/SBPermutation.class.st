@@ -60,6 +60,16 @@ SBPermutation >> apply [
 ]
 
 { #category : #converting }
+SBPermutation >> asAlternativesString [
+	
+	^ (self referencedVariants collect: [:aVariant | 
+			(aVariant blockAt: (self at: aVariant id)) nameToDisplay ])
+			fold: [:a :b | a, ', ', Character cr, b ]
+
+	
+]
+
+{ #category : #converting }
 SBPermutation >> asString [
 	
 	"collecting instead of calling (a active name), ', ', (b active name) in fold
@@ -83,10 +93,58 @@ SBPermutation >> asStylizedText [
 	
 ]
 
+{ #category : #converting }
+SBPermutation >> asVariantString [
+	
+	^ (self referencedVariants collect: [:aVariant | aVariant name]) fold: [:a :b | a, ', ', Character cr, b ]
+
+	
+]
+
+{ #category : #accessing }
+SBPermutation >> contains: anotherPermutation [
+
+	anotherPermutation associationsDo: [:idToNum |
+		(self includesKey: idToNum key) ifFalse: [^false].
+		(self at: idToNum key) ~= idToNum value ifTrue: [^false]].
+	
+	^ true
+]
+
+{ #category : #'initialize-release' }
+SBPermutation >> copyRemoving: aCollectionOfPermutations [
+
+	 | copy |
+	copy := self veryDeepCopy.
+	copy referencedVariants: (copy referencedVariants reject: [:aVariant | 
+		aCollectionOfPermutations anySatisfy: [:aPermutation | aPermutation keys anySatisfy: [:id | id = aVariant id ]]]).
+		
+	aCollectionOfPermutations do: [:aPermutation | 
+		aPermutation associationsDo: [:idToNum | 
+			copy at: idToNum key ifPresent: [:theValue | theValue = idToNum value 
+						ifTrue: [copy removeKey: idToNum key]]]].
+	^ copy
+		
+]
+
+{ #category : #'initialize-release' }
+SBPermutation >> initialize [ 
+
+	super initialize.
+	
+	self referencedVariants: OrderedCollection new.
+]
+
 { #category : #accessing }
 SBPermutation >> isActive [
 
 	^ self activeScore = self referencedVariants size
+]
+
+{ #category : #accessing }
+SBPermutation >> isNilPermutation [
+
+	^ false
 ]
 
 { #category : #accessing }

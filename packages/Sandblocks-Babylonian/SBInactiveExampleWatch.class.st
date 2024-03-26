@@ -4,6 +4,9 @@ Does not update its results anymore. Applying modification expressions is still 
 Class {
 	#name : #SBInactiveExampleWatch,
 	#superclass : #SBExampleWatch,
+	#instVars : [
+		'originalIdentifier'
+	],
 	#category : #'Sandblocks-Babylonian'
 }
 
@@ -51,6 +54,18 @@ SBInactiveExampleWatch >> isActive [
 SBInactiveExampleWatch >> listensToExamples [
 
 	^ false
+]
+
+{ #category : #accessing }
+SBInactiveExampleWatch >> originalIdentifier [
+
+	^ originalIdentifier
+]
+
+{ #category : #accessing }
+SBInactiveExampleWatch >> originalIdentifier: aNumber [
+
+	originalIdentifier := aNumber
 ]
 
 { #category : #'*Sandblocks-Babylonian' }
