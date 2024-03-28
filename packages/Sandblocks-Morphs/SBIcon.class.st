@@ -6081,6 +6081,7 @@ SBIcon >> extent: aPoint [
 			[#large] -> [1.2].
 			[#veryLarge] -> [2].
 			[#small] -> [2 / 3].
+			[#tiny] -> [1 / 3].
 			[#regular] -> [1]})) rounded]
 ]
 
@@ -6175,6 +6176,13 @@ SBIcon >> svgColor: aColor [
 	cachedForm := nil.
 	self svg allMorphsDo: [:morph | morph style at: 'fill' put: aColor].
 	self svg changed
+]
+
+{ #category : #drawing }
+SBIcon >> tiny [
+
+	size := #tiny.
+	self extent: 0 @ 0
 ]
 
 { #category : #drawing }

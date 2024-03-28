@@ -35,7 +35,7 @@ SBLineChart >> datapointDefaultColor [
 { #category : #'visualization - constants' }
 SBLineChart >> datapointExtent [
 	
-	^ 4@4
+	^ 2@2
 ]
 
 { #category : #geometry }
@@ -82,7 +82,7 @@ SBLineChart >> newDatapointFor: aValue at: positionIndex [
 	"There is an extra Morph containing the datapoint itself so the tooltip is far easier to activate through more area"
 	^ Morph new
 		height: self targetHeight;
-		left: ((positionIndex - 0.5) * self spaceBetweenPoints) rounded;
+		left: ((positionIndex - 0.5)  * self spaceBetweenPoints ) rounded;
 		width: self spaceBetweenPoints;
 		color: Color transparent;
 		balloonText: aValue printString;
@@ -166,7 +166,7 @@ SBLineChart >> positiveGradientColor [
 { #category : #'visualization - constants' }
 SBLineChart >> spaceBetweenPoints [
 	
-	^ 10
+	^ 6
 ]
 
 { #category : #visualization }

@@ -31,6 +31,12 @@ SBTextBubble >> absorbsInput: anEvent [
 ]
 
 { #category : #'as yet unclassified' }
+SBTextBubble >> basicContents: aString [
+
+	text basicContents: aString
+]
+
+{ #category : #'as yet unclassified' }
 SBTextBubble >> bordered [
 
 	^ bordered

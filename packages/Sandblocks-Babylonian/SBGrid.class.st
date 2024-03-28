@@ -48,13 +48,6 @@ SBGrid >> initialize [
 		vResizing: #shrinkWrap.
 ]
 
-{ #category : #'as yet unclassified' }
-SBGrid >> resizeContents: aSBMorphResizer [
-
-	self submorphsDo: [:aSubmorph | aSBMorphResizer applyOn: aSubmorph].
-	self updateWidthToPersistColumns.
-]
-
 { #category : #visualisation }
 SBGrid >> updateWidthToPersistColumns [
 

@@ -17,7 +17,7 @@ SBPermutation class >> allPermutationsOf: aCollectionOfVariants [
 	| permutations topLevelVariants nestedPermutations |
 	aCollectionOfVariants ifEmpty:[^{SBNilPermutation new referencedVariants: {}}].
 	topLevelVariants := aCollectionOfVariants select: [:aVariant | aVariant parentVariant isNil].
-	nestedPermutations := topLevelVariants collect: #asNestedPaths.
+	nestedPermutations := topLevelVariants collect: #allPermutations.
 	permutations := nestedPermutations first.
 	
 	(2 to: topLevelVariants size) do: [:i | | nestedPermutation |
@@ -33,7 +33,9 @@ SBPermutation class >> allPermutationsOf: aCollectionOfVariants [
 SBPermutation class >> newCombinedOf: onePermutation and: anotherPermutation [
 
 	| result |
-	result := self new referencedVariants: (onePermutation referencedVariants, anotherPermutation referencedVariants).
+	result := self new referencedVariants: 
+		((onePermutation referencedVariants, anotherPermutation referencedVariants) asSet 
+			sorted: [:a :b | a name <= b name]).
 	result addAll: onePermutation.
 	result addAll: anotherPermutation.
 	^ result
@@ -63,8 +65,8 @@ SBPermutation >> asString [
 	"collecting instead of calling (a active name), ', ', (b active name) in fold
 	as one variant only will not return a string but a variant"
 	^ (self referencedVariants collect: [:aVariant | 
-			aVariant name, ': ', (aVariant blockAt: (self at: aVariant id)) name]) 
-			fold: [:a :b | a, ', ', b ]
+			aVariant name, ': ', (aVariant blockAt: (self at: aVariant id)) nameToDisplay ]) 
+			fold: [:a :b | a, ', ', Character cr, b ]
 
 	
 ]
@@ -81,10 +83,73 @@ SBPermutation >> asStylizedText [
 	
 ]
 
+{ #category : #converting }
+SBPermutation >> asVariantString [
+	
+	^ (self referencedVariants collect: [:aVariant | aVariant name]) fold: [:a :b | a, ', ', Character cr, b ]
+
+	
+]
+
+{ #category : #accessing }
+SBPermutation >> contains: anotherPermutation [
+
+	anotherPermutation associationsDo: [:idToNum |
+		(self includesKey: idToNum key) ifFalse: [^false].
+		(self at: idToNum key) ~= idToNum value ifTrue: [^false]].
+	
+	^ true
+]
+
+{ #category : #'initialize-release' }
+SBPermutation >> copyRemovingPermutation: aPermutation [
+
+	 | copy |
+	copy := self veryDeepCopy.
+	copy referencedVariants: (copy referencedVariants reject: [:aVariant | 
+		aPermutation includesKey: aVariant id]).
+		
+	aPermutation associationsDo: [:idToNum | 
+		copy at: idToNum key ifPresent: [:theValue | theValue = idToNum value 
+					ifTrue: [copy removeKey: idToNum key]]].
+	^ copy
+		
+]
+
+{ #category : #'initialize-release' }
+SBPermutation >> copyRemovingVariants: aCollectionOfVariants [
+
+	 | copy |
+	copy := self class new.
+	copy referencedVariants: (self referencedVariants reject: [:aVariant | aCollectionOfVariants includes: aVariant]).
+	copy referencedVariants ifEmpty: [^ SBNilPermutation new referencedVariants: {}]. 
+	"copy := self veryDeepCopy.
+	copy referencedVariants: (copy referencedVariants difference: aCollectionOfVariants)."
+	
+	self associationsDo: [:anAssc | copy add: anAssc].
+	aCollectionOfVariants do: [:aVariant | copy removeKey: aVariant id ifAbsent: []].
+	^ copy
+		
+]
+
+{ #category : #'initialize-release' }
+SBPermutation >> initialize [ 
+
+	super initialize.
+	
+	self referencedVariants: OrderedCollection new.
+]
+
 { #category : #accessing }
 SBPermutation >> isActive [
 
 	^ self activeScore = self referencedVariants size
+]
+
+{ #category : #accessing }
+SBPermutation >> isNilPermutation [
+
+	^ false
 ]
 
 { #category : #accessing }

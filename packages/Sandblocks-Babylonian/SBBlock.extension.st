@@ -23,3 +23,9 @@ SBBlock >> listensToExamples [
 
 	^ false
 ]
+
+{ #category : #'*Sandblocks-Babylonian' }
+SBBlock >> suggestedAlternationName [
+
+	^ self printString
+]

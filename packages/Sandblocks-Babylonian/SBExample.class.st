@@ -323,7 +323,7 @@ SBExample >> lastError: anError [
 				"ToolSet debugException: anError"
 				^ reportedError := self sandblockEditor
 					reportError: anError
-					process: ((Process forContext: anError signalerContext copyStack priority: Processor activeProcess priority)
+					process: ((Process forContext: anError signal copyStack priority: Processor activeProcess priority)
 						shouldResumeFromDebugger: false;
 						yourself)
 					source: self].

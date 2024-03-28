@@ -50,6 +50,12 @@ SBComboBox >> display: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBComboBox >> displayPrefixOnly [
+
+	self contents: ''
+]
+
+{ #category : #'as yet unclassified' }
 SBComboBox >> doubleClick: evt [
 
 	self promptChangeValue

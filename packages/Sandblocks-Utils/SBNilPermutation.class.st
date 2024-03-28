@@ -14,5 +14,23 @@ SBNilPermutation >> apply [
 { #category : #converting }
 SBNilPermutation >> asString [
 	
-	^ 'Current setting without any variants'
+	^ 'No Variation'
+]
+
+{ #category : #converting }
+SBNilPermutation >> asVariantString [
+	
+	^ 'No Variation'
+]
+
+{ #category : #accessing }
+SBNilPermutation >> isActive [
+
+	^ false
+]
+
+{ #category : #accessing }
+SBNilPermutation >> isNilPermutation [
+
+	^ true
 ]

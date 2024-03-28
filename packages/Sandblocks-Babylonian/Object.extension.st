@@ -1,6 +1,12 @@
 Extension { #name : #Object }
 
 { #category : #'*Sandblocks-Babylonian' }
+Object >> applyResize: aPoint [
+
+	"Nothing"
+]
+
+{ #category : #'*Sandblocks-Babylonian' }
 Object >> asSBWatchValue [
 
 	^ SBWatchValue 

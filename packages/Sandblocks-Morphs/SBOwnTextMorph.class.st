@@ -543,6 +543,12 @@ SBOwnTextMorph >> suffix: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> tiny [
+
+	self font: (TextStyle default fontOfSize: 6)
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> userString [
 
 	^ self contentsForEdit

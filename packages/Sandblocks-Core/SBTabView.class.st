@@ -155,7 +155,7 @@ SBTabView >> asTabButton: aNamedBlock [
 
 	| button |
 	button := SBEditableButton new
-		label: aNamedBlock name do: [self setActive: aNamedBlock];
+		label: aNamedBlock nameToDisplay do: [self setActive: aNamedBlock];
 		cornerStyle: #squared;
 		makeSmall;
 		hResizing: #spaceFill;
@@ -406,6 +406,12 @@ SBTabView >> setActive: aNamedBlock [
 	
 ]
 
+{ #category : #accessing }
+SBTabView >> suggestedNameLimit [
+
+	^ 15
+]
+
 { #category : #commands }
 SBTabView >> switchCommandFor: aNumber [
 
@@ -443,6 +449,7 @@ SBTabView >> tabs [
 SBTabView >> updateNameFor: aNamedBlock on: aSBButton [
 
 	aNamedBlock name: aSBButton label.
+	aNamedBlock hasBeenRenamed: true.
 	
 	"Changing the extent of a tab should not affect other tabs, 
 	e.g. making a tab smaller should not make the left neighbor larger"
@@ -458,6 +465,14 @@ SBTabView >> updateSelectedTab [
 	(self tabs at: self activeIndex) makeBold.
 	"so that bold text does not go over its borders"
 	self tabs do: [:aButton | aButton widgetMorph hResizing: self hResizing]
+]
+
+{ #category : #ui }
+SBTabView >> updateTabNames [
+	
+	self tabs withIndexDo: [:aTab :i | 
+		aTab basicLabel: (self namedBlocks at: i) nameToDisplay.
+		aTab hResizing: #shrinkWrap.]
 ]
 
 { #category : #accessing }

@@ -17,6 +17,12 @@ SBStringMorph >> applyUserInterfaceTheme [
 ]
 
 { #category : #accessing }
+SBStringMorph >> basicContents: newContents [
+
+	contents := newContents.
+]
+
+{ #category : #accessing }
 SBStringMorph >> bold [
 
 	self emphasis: TextEmphasis bold emphasisCode
@@ -107,7 +113,13 @@ SBStringMorph >> reportValue: anObject [
 { #category : #'as yet unclassified' }
 SBStringMorph >> small [
 
-	self font: (TextStyle default fontOfSize: 10 sbScaled)
+	self font: (TextStyle default fontOfSize: 10)
+]
+
+{ #category : #'as yet unclassified' }
+SBStringMorph >> tiny [
+
+	self font: (TextStyle default fontOfSize: 6)
 ]
 
 { #category : #accessing }

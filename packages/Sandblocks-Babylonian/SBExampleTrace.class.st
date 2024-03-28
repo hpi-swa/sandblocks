@@ -11,7 +11,7 @@ SBExampleTrace >> buildDisplayMatrix [
 	matrix := Matrix 
 		rows: 2
 		columns: self multiverse universes size.
-	displayedExample := self multiverse watches first examples at: self displayedIndex. 
+	displayedExample := self multiverse activeExamples at: self displayedIndex. 
 		
 	matrix atRow: 1 put: (self extractedTopHeadingsFrom: self multiverse).
 	self multiverse universes withIndexDo: [:aUniverse :column | 

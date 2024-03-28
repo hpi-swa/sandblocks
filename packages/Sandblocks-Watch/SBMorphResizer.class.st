@@ -14,13 +14,13 @@ Class {
 { #category : #'initialize-release' }
 SBMorphResizer class >> newBig [
 
-	^ self newLabeled: 'big' transforming: [:aMorph | aMorph extent: 350@350]
+	^ self newLabeled: 'big' transforming: [:anObject | anObject applyResize: 350@350]
 ]
 
 { #category : #'initialize-release' }
 SBMorphResizer class >> newIdentity [
 
-	^ self newLabeled: 'original' transforming: [:aMorph | "Do nothing"] 
+	^ self newLabeled: 'original' transforming: [:anObject | "Do nothing" anObject] 
 ]
 
 { #category : #'initialize-release' }
@@ -35,25 +35,25 @@ SBMorphResizer class >> newLabeled: aName transforming: aBlockTakingASingleParam
 { #category : #'initialize-release' }
 SBMorphResizer class >> newMedium [
 
-	^ self newLabeled: 'medium' transforming: [:aMorph | aMorph extent: 150@150]
+	^ self newLabeled: 'medium' transforming: [:anObject | anObject applyResize: 150@150]
 ]
 
 { #category : #'initialize-release' }
 SBMorphResizer class >> newSmall [
 
-	^ self newLabeled: 'small' transforming: [:aMorph | aMorph extent: 100@100]
+	^ self newLabeled: 'small' transforming: [:anObject | anObject applyResize: 100@100]
 ]
 
 { #category : #'initialize-release' }
 SBMorphResizer class >> newThumbmail [
 
-	^ self newLabeled: 'thumbmail' transforming: [:aMorph | aMorph extent: 40@40]
+	^ self newLabeled: 'thumbmail' transforming: [:anObject | anObject applyResize: 40@40]
 ]
 
 { #category : #'initialize-release' }
 SBMorphResizer class >> newTiny [
 
-	^ self newLabeled: 'tiny' transforming: [:aMorph | aMorph extent: 15@15]
+	^ self newLabeled: 'tiny' transforming: [:anObject | anObject applyResize: 15@15]
 ]
 
 { #category : #'initialize-release' }
@@ -70,8 +70,8 @@ SBMorphResizer class >> standardOptions [
 { #category : #actions }
 SBMorphResizer >> applyOn: aMorph [
 
-	self transformFunction value: aMorph.
-	^ aMorph
+	^ self transformFunction value: aMorph.
+	
 ]
 
 { #category : #'initialize-release' }

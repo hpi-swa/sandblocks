@@ -138,6 +138,12 @@ SBStLiteral >> startInputCommand [
 ]
 
 { #category : #'as yet unclassified' }
+SBStLiteral >> suggestedAlternationName [
+
+	^ self sourceString
+]
+
+{ #category : #'as yet unclassified' }
 SBStLiteral >> textMorphClass [
 
 	^ SBOwnTextMorph

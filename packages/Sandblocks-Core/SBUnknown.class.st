@@ -237,6 +237,12 @@ SBUnknown >> startInputAt: aNumber replacingContents: aBoolean [
 	^ cmd
 ]
 
+{ #category : #'as yet unclassified' }
+SBUnknown >> suggestedAlternationName [
+
+	^ 'empty'
+]
+
 { #category : #accessing }
 SBUnknown >> symbols [
 

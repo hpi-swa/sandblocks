@@ -42,6 +42,12 @@ SBMultiverse class >> new [
 	self shouldNotImplement 
 ]
 
+{ #category : #cleanup }
+SBMultiverse class >> resolveIn: aSandblockEditor [
+
+	(self bigbangInEditorWithoutKaboom: aSandblockEditor) resolve
+]
+
 { #category : #accessing }
 SBMultiverse >> activeExamples [
 
