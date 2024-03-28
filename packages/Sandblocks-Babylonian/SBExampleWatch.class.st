@@ -335,11 +335,11 @@ SBExampleWatch >> initialize [
 	exampleToValues := IdentityDictionary new.
 	watchedExpression := SBStMessageSend new.
 	dimensionOptions := SBComboBox new
-			prefix: 'Morph Dimensions: ';
-			labels: (options collect: #label);
-			values: options;
-			object: options third;
-			when: #selectionChanged send: #applyResizerOnValues to: self.
+		prefix: 'Preview sizes: ';
+		labels: (options collect: #label);
+		values: options;
+		object: options third;
+		when: #selectionChanged send: #applyResizerOnValues to: self.
 	modifyExpression := SBStBlockBody identityNamed: 'each'.
 	
 	self
@@ -349,14 +349,19 @@ SBExampleWatch >> initialize [
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		addAllMorphsBack: {
-			watchedExpression. 
-			 SBRow new
+			watchedExpression.
+			SBRow new
 				hResizing: #spaceFill;
 				listCentering: #bottomRight;
 				addMorphBack: dimensionOptions;
-				yourself. 
-			modifyExpression};
-		yourself 
+				yourself.
+			SBVariant
+				named: 'modifyExpression'
+				associations: {'with' -> [modifyExpression]. 'without' -> []}
+				activeIndex: 2
+				id: '90d7c718-89b8-7e48-8262-467d07d56880'
+				isActive: false};
+		yourself
 ]
 
 { #category : #initialization }

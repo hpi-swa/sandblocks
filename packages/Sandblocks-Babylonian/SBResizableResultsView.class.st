@@ -21,7 +21,7 @@ SBResizableResultsView >> buildDimensionOptions [
 	options := SBMorphResizer standardOptions.
 
 	^ SBComboBox new
-		prefix: 'Image Dimensions: ';
+		prefix: 'Preview sizes: ';
 		labels: (options collect: #label);
 		values: options;
 		object: options third;

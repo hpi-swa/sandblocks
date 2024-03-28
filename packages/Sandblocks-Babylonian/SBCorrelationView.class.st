@@ -200,3 +200,9 @@ SBCorrelationView >> visualize [
 	self buildAllPossibleResults .
 	self concludeContainerWidth.
 ]
+
+{ #category : #accessing }
+SBCorrelationView >> wantsReloadOnSaveWhenOpen [
+
+	^ true
+]
