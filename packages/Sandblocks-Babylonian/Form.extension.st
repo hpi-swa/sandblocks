@@ -1,6 +1,12 @@
 Extension { #name : #Form }
 
 { #category : #'*Sandblocks-Babylonian' }
+Form >> applyResize: aPoint [
+	
+	^ self scaledToSize: aPoint
+]
+
+{ #category : #'*Sandblocks-Babylonian' }
 Form class >> exampleBlock [
 
 	^ 'Form squeakLogo' parseAsSandblock

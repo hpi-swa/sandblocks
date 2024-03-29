@@ -41,5 +41,5 @@ SBExampleGridsView >> initialize [
 
 	super initialize.
 	
-	self name: 'Example Focused'.
+	self name: 'Example Grouped'
 ]

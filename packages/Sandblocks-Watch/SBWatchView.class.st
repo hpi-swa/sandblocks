@@ -320,9 +320,9 @@ SBWatchView >> resizeThrough: aMorphResizer [
 	"Clearing everything here as Morphs get distorted when resized multiple times."
 	| valuesMorph |
 	valuesMorph := self watchValuesContainer.
-	valuesMorph addAllMorphsBack: (self displayedMorphs  
-		collect: #sbSnapshot   
-		thenDo: [:aMorph | aMorphResizer applyOn: aMorph]).
+	valuesMorph addAllMorphsBack: (watchValues  
+		collect: #asValueMorph   
+		thenDo: [:aMorph | (aMorphResizer applyOn: aMorph)]).
 
 	self displayOnScrollPane: valuesMorph.
 	self fallbackResizer: aMorphResizer.

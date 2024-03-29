@@ -3,39 +3,17 @@ Offer to switch between trace based and a grid based view
 "
 Class {
 	#name : #SBSwitchableResultsView,
-	#superclass : #SBGridResultsView,
+	#superclass : #SBResizableResultsView,
 	#instVars : [
-		'isDisplayingTrace',
-		'dimensionOptions'
+		'isDisplayingTrace'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
 
-{ #category : #actions }
-SBSwitchableResultsView >> applyResizer [
-
-	self visualize.
-	self multiverse sandblockEditor markSaved: SBExploriants uniqueInstance 
-]
-
-{ #category : #building }
-SBSwitchableResultsView >> buildDimensionOptions [
-
-	| options |
-	options := SBMorphResizer standardOptions.
-
-	^ SBComboBox new
-		prefix: 'Morph Dimensions: ';
-		labels: (options collect: #label);
-		values: options;
-		object: options third;
-		when: #selectionChanged send: #applyResizer to: self
-]
-
 { #category : #accessing }
 SBSwitchableResultsView >> buttons [
 
-	^ super buttons, {self toggleViewButton}
+	^ {self toggleViewButton}
 ]
 
 { #category : #accessing }
@@ -50,16 +28,9 @@ SBSwitchableResultsView >> initialize [
 	super initialize.
 	
 	isDisplayingTrace := false.
-	dimensionOptions := self buildDimensionOptions
 ]
 
-{ #category : #accessing }
-SBSwitchableResultsView >> selectedResizer [
-
-	^ dimensionOptions object
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #copying }
 SBSwitchableResultsView >> snapshot [
 
 	^ ImageMorph new newForm: gridContainer imageForm
@@ -92,14 +63,8 @@ SBSwitchableResultsView >> toggleViewButton [
 		cornerStyle: #squared
 ]
 
-{ #category : #actions }
-SBSwitchableResultsView >> visualize [ 
+{ #category : #accessing }
+SBSwitchableResultsView >> wantsReloadOnSaveWhenOpen [
 
-	self clean.
-
-	self block addMorph: dimensionOptions.
-	self buildButtonRow.
-	
-	self buildAllPossibleResults .
-	self concludeContainerWidth.
+	^ true
 ]

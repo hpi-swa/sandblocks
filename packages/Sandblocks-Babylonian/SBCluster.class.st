@@ -110,7 +110,7 @@ SBCluster >> newTopRowFrom: aCollectionOfMorphs [
 	^ self newContainerMorph 
 		listDirection: #leftToRight;
 		listCentering: #bottomRight;
-		cellPositioning: #bottomCenter;
+		cellPositioning: #topCenter;
 		hResizing: #spaceFill;
 		addAllMorphsBack: (aCollectionOfMorphs collect: [:aMorph | 
 			aMorph rotationDegrees: 90.
@@ -160,7 +160,9 @@ SBCluster >> visualizeNothingToDisplay [
 { #category : #helper }
 SBCluster >> wrapInCell: aMorph [
 
-	^ self wrapInCell: aMorph flexVertically: false flexHorizontally: false 
+	^ self morphResizer label = SBMorphResizer newIdentity label
+		ifTrue: [self wrapInCell: aMorph flexVertically: true flexHorizontally: true] 
+		ifFalse: [self wrapInCell: aMorph flexVertically: false flexHorizontally: false]
 	
 ]
 

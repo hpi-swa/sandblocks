@@ -37,5 +37,5 @@ SBPermutationGridsView >> initialize [
 
 	super initialize.
 	
-	self name: 'Permutation Focused'.
+	self name: 'Permutation Grouped'
 ]

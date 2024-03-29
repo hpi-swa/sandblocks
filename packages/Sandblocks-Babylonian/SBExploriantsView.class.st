@@ -17,7 +17,7 @@ SBExploriantsView class >> block: aSBBlock named: aString [
 { #category : #'instance creation' }
 SBExploriantsView class >> getTabsInMultiverse: aSBMultiverse [
 
-	^ {SBPermutationGridsView. SBExampleGridsView. SBLiveView. SBPlainResultsView. SBVariantsView. SBHistoryView}
+	^ {SBCustomView. SBPlainResultsView. SBVariantsView. SBHistoryView}
 		collect: [:mySubclass | mySubclass newMultiverse: aSBMultiverse]
 ]
 
@@ -25,6 +25,7 @@ SBExploriantsView class >> getTabsInMultiverse: aSBMultiverse [
 SBExploriantsView class >> newMultiverse: aSBMultiverse [
 
 	^ self new
+		hasBeenRenamed: true;
 		multiverse: aSBMultiverse;
 		yourself
 ]
@@ -41,7 +42,7 @@ SBExploriantsView >> buildButtonRow [
 { #category : #accessing }
 SBExploriantsView >> buttons [
 
-	^ {self updateButton. self resolveButton}
+	^ {self updateButton. self resolveButton. self saveButton}
 ]
 
 { #category : #actions }
@@ -89,7 +90,13 @@ SBExploriantsView >> initialize [
 		cellGap: 4;
 		cellInset: 2;
 		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap)
+		vResizing: #shrinkWrap).
+]
+
+{ #category : #accessing }
+SBExploriantsView >> isOverview [
+
+	^false
 ]
 
 { #category : #accessing }
@@ -103,6 +110,7 @@ SBExploriantsView >> multiverse: aSBMultiverse [
 
 	multiverse := aSBMultiverse.
 	multiverse when: #updated send: #visualize to: self.
+	^ multiverse
 ]
 
 { #category : #building }
@@ -110,8 +118,18 @@ SBExploriantsView >> resolveButton [
 
 	^ SBButton new
 		icon: SBIcon iconTrash
-			label: 'Resolve All From Code'
+			label: 'Clean in Code'
 			do: [self multiverse resolve];
+		cornerStyle: #squared
+]
+
+{ #category : #building }
+SBExploriantsView >> saveButton [
+
+	^ SBButton new
+		icon: SBIcon iconSave
+			label: 'Save As PNG'
+			do: [self block exportAsPNG];
 		cornerStyle: #squared
 ]
 
@@ -126,7 +144,7 @@ SBExploriantsView >> updateButton [
 
 	^ SBButton new
 		icon: SBIcon iconRotateLeft
-			label: 'Re-Generate Multiverse'
+			label: 'Re-Generate'
 			do: [self multiverse gatherElements; asyncKaboom];
 		cornerStyle: #squared
 ]
@@ -139,9 +157,9 @@ SBExploriantsView >> visualize [
 	self buildButtonRow
 ]
 
-{ #category : #copying }
-SBExploriantsView >> wantsHistory [
-	
-	"If returning true, will be automatically collected for an epoche in the history view"
-	^ true
+{ #category : #accessing }
+SBExploriantsView >> wantsReloadOnSaveWhenOpen [
+
+	"If true, reload contents on a method save"
+	^ false
 ]

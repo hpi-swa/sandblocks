@@ -19,11 +19,5 @@ SBLabel >> asToggledCode: converter [
 ]
 
 { #category : #'*Sandblocks-Smalltalk' }
-SBLabel >> isSmalltalk [
-
-	^ true
-]
-
-{ #category : #'*Sandblocks-Smalltalk' }
 SBLabel >> updatePCFrom: anObject [
 ]

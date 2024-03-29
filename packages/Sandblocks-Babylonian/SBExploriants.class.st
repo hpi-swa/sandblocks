@@ -52,6 +52,23 @@ SBExploriants >> artefactSaved: aMethodBlock [
 	(aMethodBlock isMethod and: [self isInEditor]) ifTrue: [self tryToUpdateInBackgroundAfterChangeIn: aMethodBlock]
 ]
 
+{ #category : #ui }
+SBExploriants >> asTabButton: aNamedBlock [
+
+	| button |
+	button := SBButton new
+		label: aNamedBlock nameToDisplay do: [self setActive: aNamedBlock];
+		cornerStyle: #squared;
+		hResizing: #spaceFill;
+		changeTableLayout;
+		makeSmall;
+		listDirection: #leftToRight.
+	
+	aNamedBlock = self active ifTrue: [button makeBold].
+	
+	^ button
+]
+
 { #category : #'ast helpers' }
 SBExploriants >> binding: aString for: block class: aClass ifPresent: aBlock [
 
@@ -65,6 +82,17 @@ SBExploriants >> binding: aString for: block class: aClass ifPresent: aBlock [
 	(outer notNil and: [outer isSmalltalk]) ifTrue: [^ self outerArtefact binding: aString for: block class: aClass ifPresent: aBlock].
 	
 	^ nil
+]
+
+{ #category : #ui }
+SBExploriants >> buildTabs [
+
+	self addMorphBack: (SBRow new
+		addAllMorphsBack: (self namedBlocks collect: [:block | self asTabButton: block]);
+		name: #tabs;
+		changeTableLayout;
+		listDirection: #leftToRight;
+		hResizing: #shrinkWrap)
 ]
 
 { #category : #ui }
@@ -140,11 +168,19 @@ SBExploriants >> selector [
 	^ nil
 ]
 
+{ #category : #accessing }
+SBExploriants >> tabs [
+
+	^ (self submorphNamed: #tabs) submorphs
+]
+
 { #category : #actions }
 SBExploriants >> tryToUpdateInBackgroundAfterChangeIn: aMethodBlock [
 
 	| multiverse |
 	multiverse := self active multiverse.
+	self active wantsReloadOnSaveWhenOpen ifFalse: [^self].
+	
 	self ignoreUpdate 
 		ifFalse: [self updateInBackgroundOnTimeoutRevertTo: multiverse]
 		ifTrue: [

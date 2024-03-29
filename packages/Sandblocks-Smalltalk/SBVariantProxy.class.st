@@ -17,7 +17,8 @@ SBVariantProxy class >> for: aVariant [
 { #category : #callbacks }
 SBVariantProxy >> artefactChanged: anArtefact [
 
-	anArtefact = self ifTrue: [ self updateOriginalWithOwnValues ].
+	
+	anArtefact = self ifTrue: [self updateOriginalWithOwnValues ].
 		
 	(anArtefact = self containedMethod)
 		ifTrue: [ self updateSelfAfterMethodUpdate: anArtefact ]
@@ -101,10 +102,16 @@ SBVariantProxy >> updateOriginalWithOwnValues [
 	variantThatNeedsChanging ifNil: [^self delete].
 	
 	original replaceBy: (original := self firstSubmorph copyBlock).
-	original isVariant ifFalse: [^ self delete].
+	original isVariant 
+		ifFalse: [
+			self containedMethod save.
+			^ self delete].
 	
 	variantThatNeedsChanging replaceValuesFrom: original copyBlock.
-	self sandblockEditor markChanged: self containedMethod
+	self containedMethod isInEditor
+		ifTrue: [self sandblockEditor markChanged: self containedMethod] 
+		ifFalse: [self containedMethod save].
+	
 ]
 
 { #category : #callbacks }

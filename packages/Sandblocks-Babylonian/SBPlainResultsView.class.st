@@ -27,9 +27,3 @@ SBPlainResultsView >> initialize [
 	
 	self name: 'Watches'
 ]
-
-{ #category : #copying }
-SBPlainResultsView >> wantsHistory [
-	
-	^ false
-]
