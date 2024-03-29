@@ -33,9 +33,12 @@ SBCorrelationView >> buildForExample: anExample watching: aWatch [
 			self containerRow listDirection: #topToBottom;
 				addAllMorphsBack: { 
 					SBOwnTextMorph new contents: (
-						'{1}, {2}' format: {anExample label.
+						'{1}{2}' format: {"anExample label" ''.
 											 (aWatch cleanedExpression sourceString)}).
-					self buildGridsFor: anExample watching: aWatch} flatten})
+					self containerRow 
+						listDirection: #topToBottom;
+						cellPositioning:  #rightCenter;
+						addAllMorphsBack: ((self buildGridsFor: anExample watching: aWatch) flatten)}})
 ]
 
 { #category : #building }
@@ -63,7 +66,7 @@ SBCorrelationView >> buildSelectionRow [
 	| container selectedString |
 	container := self containerRow.
 	self ensureVariantSelectionIn: container.
-	selectedString := 'Selected: '.
+	selectedString := ''.
 	selectedVariants 
 		ifEmpty: [ selectedString := selectedString, 'None' ]
 		ifNotEmpty: [ selectedString := selectedString, ((selectedVariants collect: #name) fold: [:a :b | a, ', ', Character cr, b ])]. 
@@ -80,7 +83,7 @@ SBCorrelationView >> buildVariantSelection [
 	topLevelVariant := options detect: [:aVariant | aVariant parentVariant isNil] ifNone: [options first].
 
 	^ SBComboBox new
-		prefix: 'Add or Remove';
+		prefix: 'Configure Y Axis';
 		labels: (options collect: #name);
 		values: options;
 		object: topLevelVariant;

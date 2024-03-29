@@ -42,7 +42,8 @@ SBCluster >> initialize [
 		changeTableLayout;
 		listDirection: #topToBottom;
 		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap
+		hResizing: #shrinkWrap;
+		cellInset: 0@10
 ]
 
 { #category : #accessing }
@@ -113,8 +114,7 @@ SBCluster >> newTopRowFrom: aCollectionOfMorphs [
 		cellPositioning: #topCenter;
 		hResizing: #spaceFill;
 		addAllMorphsBack: (aCollectionOfMorphs collect: [:aMorph | 
-			aMorph rotationDegrees: 90.
-			(self wrapInCell: aMorph owner flexVertically: true flexHorizontally: false) borderWidth: 0])
+			self morphResizer applyOn: aMorph])
 ]
 
 { #category : #visualisation }
@@ -138,16 +138,19 @@ SBCluster >> visualize [
 	(matrix rowCount < 2 or: [matrix columnCount < 2]) 
 		ifTrue:[self visualizeNothingToDisplay. ^ self].
 	
-	self addAllMorphsBack: {
-		self newTopRowFrom: (matrix atRow: 1) allButFirst. "ignore placeholder morph"
+	self addMorphBack: (
 		self newContainerMorph 
-			listDirection: #leftToRight;
-			cellInset: 0;
-			addAllMorphsBack: {
-				self newLeftColumnFrom: (matrix atColumn: 1) allButFirst. "ignore placeholder morph"
-				SBGrid newDisplaying: 
-					((matrix atRows: 2 to: matrix rowCount columns: 2 to: matrix columnCount)
-						collect: [:aMorph | self wrapInCell: aMorph])}}
+			cellInset: 0@0;
+			addAllMorphsBack:  {
+				self newTopRowFrom: (matrix atRow: 1) allButFirst. "ignore placeholder morph"
+				self newContainerMorph 
+					listDirection: #leftToRight;
+					cellInset: 5@(-10);
+					addAllMorphsBack: {
+						self newLeftColumnFrom: (matrix atColumn: 1) allButFirst. "ignore placeholder morph"
+						SBGrid newDisplaying: 
+							((matrix atRows: 2 to: matrix rowCount columns: 2 to: matrix columnCount)
+								collect: [:aMorph | self wrapInCell: aMorph])}})
 ]
 
 { #category : #visualisation }
@@ -171,6 +174,7 @@ SBCluster >> wrapInCell: aMorph flexVertically: aVBoolean flexHorizontally: aHBo
 
 	| cell targetExtent|
 	cell := self newCellMorph.
+	cell on: #click send: #value to: [aMorph triggerEvent: #clicked].
 	
 	aVBoolean ifTrue: [cell vResizing: #shrinkWrap].
 	aHBoolean ifTrue: [cell hResizing: #shrinkWrap].
@@ -189,6 +193,6 @@ SBCluster >> wrapInCell: aMorph flexVertically: aVBoolean flexHorizontally: aHBo
 	cell addMorph: (ImageMorph new 
 		newForm: (aMorph imageForm scaledIntoFormOfSize: targetExtent);
 		when: #clicked send: #triggerEvent: to: aMorph with: #clicked).
-	cell on: #click send: #value to: [cell submorphs first triggerEvent: #clicked].
+	
 	^ cell
 ]

@@ -113,15 +113,13 @@ SBTabView >> addButton [
 
 	^ SBButton new
 		icon: (SBIcon iconPlus
-				size: 7.0 sbScaled;
+				size: 10;
 				color: (Color green))
 			do: [self addTab];
 		makeSmall;
 		cornerStyle: #squared;
 		vResizing: #spaceFill;
-		balloonText: 'Add';
-		cellGap: -1.0 sbScaled;
-		layoutInset: (4.0 @ 4.0) sbScaled
+		balloonText: 'Add'
 ]
 
 { #category : #commands }
@@ -395,6 +393,8 @@ SBTabView >> removeCurrentTab [
 { #category : #tabs }
 SBTabView >> setActive: aNamedBlock [
 
+	self containingArtefact ifNil: [^ self activeIndex: (self namedBlocks indexOf: aNamedBlock ifAbsent: 1)].
+
 	self containingArtefact isMethod ifFalse: [self basicSetActive: aNamedBlock. ^ self].
 	
 	self containingArtefact hasUnsavedChanges
@@ -402,7 +402,7 @@ SBTabView >> setActive: aNamedBlock [
 		ifFalse: ["changing tabs is latest change"
 			self basicSetActive: aNamedBlock.
 			SBExploriants uniqueInstance ignoreUpdate: true.
-			self sandblockEditor save: self containingArtefact  tryFixing: false quick: true.].
+			self sandblockEditor save: self containingArtefact tryFixing: false quick: false.].
 	
 ]
 

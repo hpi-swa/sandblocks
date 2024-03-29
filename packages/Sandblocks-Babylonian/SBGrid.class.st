@@ -51,5 +51,5 @@ SBGrid >> initialize [
 { #category : #visualisation }
 SBGrid >> updateWidthToPersistColumns [
 
-	 self width: (columnCount * (self submorphs first width + (2 * self cellInset)))
+	self width: (columnCount * (self submorphs first width + (2 * self cellInset)))
 ]

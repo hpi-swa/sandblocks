@@ -95,21 +95,5 @@ SBExampleCluster >> newTopRowFrom: aCollectionOfPermutationLabels [
 		cellPositioning: #topCenter;
 		hResizing: #spaceFill;
 		addAllMorphsBack: (aCollectionOfPermutationLabels collect: [:aLabel | 
-			| wrappedLabel button |
-			aLabel rotationDegrees: 90.
-			wrappedLabel := (self wrapInCell: aLabel owner 
-										flexVertically: true 
-										flexHorizontally: false) borderWidth: 0.
-			"Rotating morphs somehow clips their right border, so dirty hack so container gets clipped 1px"
-			button := self newContainerMorph 
-				cellInset: 1;
-				addMorphBack: (SBButton newApplyPermutationFor: aLabel permutation);
-				rotationDegrees: 90.
-			button owner width > wrappedLabel width ifTrue: [button firstSubmorph makeTiny].
-			
-			self newContainerMorph 
-				cellPositioning: #bottomToTop;
-				cellPositioning: #topCenter;
-				cellInset: 0@2;
-				addAllMorphsBack: {button owner. wrappedLabel}])
+			self morphResizer applyOn: aLabel])
 ]

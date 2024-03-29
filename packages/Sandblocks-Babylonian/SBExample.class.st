@@ -386,8 +386,7 @@ SBExample >> run [
 	self sendStartNotification.
 	
 	processRunning := true.
-	currentProcess := [
-		| returned |
+	currentProcess := [ | returned |
 		SBExecutionEnvironment value: self.
 		
 		[returned := self evaluate] on: Error do: [:e |
@@ -397,12 +396,19 @@ SBExample >> run [
 		self scheduleLastError: nil.
 		currentProcess := nil.
 		processRunning := false.
-		Project current addDeferredUIMessage: [
-			returnValue reportValues: {returned asSBWatchValue} sized: SBMorphResizer newThumbmail.
-			returnValue updateDisplay.
-			self sendFinishNotification]
-	] forkAt: Processor userBackgroundPriority.
-
+		SBVariant
+			named: 'addDeferredUIMessage:'
+			associations: {
+				'with' -> [
+					Project current addDeferredUIMessage: [
+						returnValue reportValues: {returned asSBWatchValue} sized: SBMorphResizer newThumbmail.
+						returnValue updateDisplay.
+						self sendFinishNotification]].
+				'without' -> [Project current addDeferredUIMessage: [self sendFinishNotification]]}
+			activeIndex: 2
+			id: '60c08640-321a-fb4c-90f8-8d2bd5ab0bcc'
+			isActive: false] forkAt: Processor userBackgroundPriority.
+	
 	^ currentProcess
 ]
 
@@ -424,7 +430,12 @@ SBExample >> runSetup [
 	errorDecorator ifNotNil: #detach.
 	errorDecorator := nil.
 	traceSize := 0.
-	returnValue clear.
+	SBVariant
+		named: 'clear'
+		associations: {'with' -> [returnValue clear]. 'without' -> []}
+		activeIndex: 2
+		id: '62643a5a-1d80-7f43-a32f-f23665e98f83'
+		isActive: false
 ]
 
 { #category : #execution }
@@ -449,19 +460,39 @@ SBExample >> scheduleLastError: anError [
 { #category : #initialization }
 SBExample >> self: aBlock args: aCollectionBlock label: aString [
 
-	self
-		removeAllMorphs;
-		addMorphBack: (icon := SBIcon iconPause
-			small;
-			color: Color white;
-			on: #click send: #toggleRunning to: self);
-		addMorphBack: (nameInput := SBTextBubble new contents: aString);
-		addMorphBack: (SBStringMorph new contents: 'self:');
-		addMorphBack: aBlock;
-		addMorphBack: (SBStringMorph new contents: 'args:');
-		addMorphBack: aCollectionBlock;
-		addMorphBack: (returnValue := SBExampleWatchView new);
-		updateIcon
+	SBVariant
+		named: 'remove returnValue'
+		associations: {
+			'with' -> [
+				self
+					removeAllMorphs;
+					addMorphBack: (icon := SBIcon iconPause
+						small;
+						color: (Color r: 1 g: 1 b: 1);
+						on: #click send: #toggleRunning to: self);
+					addMorphBack: (nameInput := SBTextBubble new contents: aString);
+					addMorphBack: (SBStringMorph new contents: 'self:');
+					addMorphBack: aBlock;
+					addMorphBack: (SBStringMorph new contents: 'args:');
+					addMorphBack: aCollectionBlock;
+					addMorphBack: (returnValue := SBExampleWatchView new);
+					updateIcon].
+			'w/o' -> [
+				self
+					removeAllMorphs;
+					addMorphBack: (icon := SBIcon iconPause
+						small;
+						color: (Color r: 1 g: 1 b: 1);
+						on: #click send: #toggleRunning to: self);
+					addMorphBack: (nameInput := SBTextBubble new contents: aString);
+					addMorphBack: (SBStringMorph new contents: 'self:');
+					addMorphBack: aBlock;
+					addMorphBack: (SBStringMorph new contents: 'args:');
+					addMorphBack: aCollectionBlock;
+					updateIcon]}
+		activeIndex: 2
+		id: '769c6446-2026-6547-a0ff-101e54bf3665'
+		isActive: false
 ]
 
 { #category : #initialization }
@@ -527,11 +558,15 @@ SBExample >> stopRunning [
 	
 	self stopSteppingSelector: #run.
 	active := false.
-	returnValue clear.
+	SBVariant
+		named: 'clear'
+		associations: {'with' -> [returnValue clear]. 'without' -> []}
+		activeIndex: 2
+		id: 'f319a83a-f7aa-9a40-b959-f56ad3c4cfbc'
+		isActive: false.
 	self updateIcon.
 	
-	self sandblockEditor allMorphsDo: [:morph |
-		(morph isSandblock and: [morph listensToExamples]) ifTrue: [morph exampleStopped: self]]
+	self sandblockEditor allMorphsDo: [:morph | (morph isSandblock and: [morph listensToExamples]) ifTrue: [morph exampleStopped: self]]
 ]
 
 { #category : #actions }
