@@ -63,7 +63,7 @@ Object >> sbWatchValueMorphFor: aSBWatchValue sized: aSBMorphResizer [
 	"Objects can choose if they want to apply a changed extent" 
 		
 	^ (SBWatchValue newContainerMorphFor: aSBWatchValue) 
-		addMorphBack: (SBIcon iconFor: aSBWatchValue watchedValueIdentityHash) asMorph;
+		"addMorphBack: (SBIcon iconFor: aSBWatchValue watchedValueIdentityHash) asMorph;"
 		addMorphBack: self asMorph;
 		yourself
 ]

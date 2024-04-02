@@ -28,6 +28,12 @@ SBResizableResultsView >> buildDimensionOptions [
 		when: #selectionChanged send: #applyResizer to: self
 ]
 
+{ #category : #accessing }
+SBResizableResultsView >> buttons [
+
+	^ {dimensionOptions}
+]
+
 { #category : #initialization }
 SBResizableResultsView >> initialize [ 
 
@@ -40,16 +46,4 @@ SBResizableResultsView >> initialize [
 SBResizableResultsView >> selectedResizer [
 
 	^ dimensionOptions object
-]
-
-{ #category : #'as yet unclassified' }
-SBResizableResultsView >> visualize [ 
-
-	self clean.
-
-	self block addMorph: dimensionOptions.
-	self buildButtonRow.
-	
-	self buildAllPossibleResults .
-	self concludeContainerWidth.
 ]

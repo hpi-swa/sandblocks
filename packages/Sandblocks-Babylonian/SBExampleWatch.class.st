@@ -325,20 +325,37 @@ SBExampleWatch >> identifier: aSymbol [
 ]
 
 { #category : #initialization }
-SBExampleWatch >> initialize [ | options |
-(super initialize).
-(options := (SBMorphResizer standardOptions)).
+SBExampleWatch >> initialize [
 
-(exampleToDisplay := (IdentityDictionary new)).
-(exampleToValues := (IdentityDictionary new)).
-(watchedExpression := (SBStMessageSend new)).
-(dimensionOptions := ((SBComboBox new) prefix: 'Preview size: '; labels: (options collect: #'label'); values: options; object: (options third); when: #'selectionChanged' send: #'applyResizerOnValues' to: self)).
-(modifyExpression := (SBStBlockBody identityNamed: 'each')).
-
-(SBVariant named: 'remove modify' associations: {'with' -> [(self changeTableLayout; cellGap: 4; layoutInset: 2; vResizing: #'shrinkWrap'; hResizing: #'shrinkWrap'; addAllMorphsBack: {watchedExpression. ((SBRow new) hResizing: #'spaceFill'; listCentering: #'bottomRight'; addMorphBack: dimensionOptions; yourself). modifyExpression}; yourself).
-].'w/o' -> [(self changeTableLayout; cellGap: 4; layoutInset: 2; vResizing: #'shrinkWrap'; hResizing: #'shrinkWrap'; addAllMorphsBack: {watchedExpression. ((SBRow new) hResizing: #'spaceFill'; listCentering: #'bottomRight'; addMorphBack: dimensionOptions; yourself)}; yourself).
-]} activeIndex: 2 id: 'f771db53-c26a-2c40-a3f6-5c31ec7aeb44' isActive: false).
-
+	| options |
+	super initialize.
+	options := SBMorphResizer standardOptions.
+	
+	exampleToDisplay := IdentityDictionary new.
+	exampleToValues := IdentityDictionary new.
+	watchedExpression := SBStMessageSend new.
+	dimensionOptions := SBComboBox new
+		prefix: 'Preview size: ';
+		labels: (options collect: #label);
+		values: options;
+		object: options third;
+		when: #selectionChanged send: #applyResizerOnValues to: self.
+	modifyExpression := SBStBlockBody identityNamed: 'each'.
+	
+	self
+		changeTableLayout;
+		cellGap: 4;
+		layoutInset: 2;
+		vResizing: #shrinkWrap;
+		hResizing: #shrinkWrap;
+		addAllMorphsBack: {
+			watchedExpression.
+			SBRow new
+				hResizing: #spaceFill;
+				listCentering: #bottomRight;
+				addMorphBack: dimensionOptions;
+				yourself};
+		yourself
 ]
 
 { #category : #initialization }
@@ -415,13 +432,7 @@ SBExampleWatch >> modifyExpression [
 SBExampleWatch >> modifyExpression: aBlock [
 
 	modifyExpression ifNotNil: #delete.
-	modifyExpression := aBlock.
-	SBVariant
-		named: 'addMorphBack:'
-		associations: {'with' -> [self addMorphBack: modifyExpression]. 'without' -> []}
-		activeIndex: 2
-		id: 'c3b856eb-2899-cd44-b45c-3b099b02aad6'
-		isActive: false
+	modifyExpression := aBlock
 ]
 
 { #category : #accessing }

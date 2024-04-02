@@ -27,6 +27,12 @@ SBCustomView >> buildViewOptions [
 		when: #selectionChanged send: #switchView to: self
 ]
 
+{ #category : #accessing }
+SBCustomView >> buttons [
+
+	^ {viewOptions}, super buttons
+]
+
 { #category : #initialization }
 SBCustomView >> initialize [ 
 
@@ -36,8 +42,6 @@ SBCustomView >> initialize [
 	self name: 'Results'.
 	
 	self buildButtonRow.
-	
-	self block addMorphBack: viewOptions.
 	self block addMorphBack: self selectedView
 	
 ]

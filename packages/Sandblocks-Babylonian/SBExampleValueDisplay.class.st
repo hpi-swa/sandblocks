@@ -136,12 +136,7 @@ SBExampleValueDisplay >> reportValues: aCollectionOfWatchValues name: aString si
 
 	display reportValues: aCollectionOfWatchValues sized: aSBMorphResizer.
 	label contents: aString.
-	label visible: (SBVariant
-		named: 'visible:'
-		associations: {'with' -> [aString notEmpty]. 'without' -> [false]}
-		activeIndex: 2
-		id: '15acb8c3-94a2-9348-8d02-0c6fa11e9f7c'
-		isActive: false).
+	label visible: false.
 	hadValue := true
 ]
 

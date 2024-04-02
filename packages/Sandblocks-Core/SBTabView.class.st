@@ -117,6 +117,7 @@ SBTabView >> addButton [
 				color: (Color green))
 			do: [self addTab];
 		makeSmall;
+		cellPositioning: #center;
 		cornerStyle: #squared;
 		vResizing: #spaceFill;
 		balloonText: 'Add'

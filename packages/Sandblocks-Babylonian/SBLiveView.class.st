@@ -39,7 +39,7 @@ SBLiveView >> buildPreviewFor: aPermutation [
 		addAllMorphsBack: {
 			self containerRow listDirection: #topToBottom;
 				 addAllMorphsBack: { 
-					SBPermutationLabel newDisplaying: aPermutation.
+					(SBPermutationLabel newDisplaying: aPermutation) wrapFlag: false.
 					self newPermutationButtonRowFor: aPermutation showing: preview.
 					preview}}).
 ]

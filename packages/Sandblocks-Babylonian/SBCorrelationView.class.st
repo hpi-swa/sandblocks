@@ -13,10 +13,6 @@ Class {
 { #category : #building }
 SBCorrelationView >> buildAllPossibleResults [
 	
-	self multiverse activeExamples 
-		ifEmpty: [gridContainer addMorph: (TextMorph new contents: 'No examples active').
-				  gridContainer width: gridContainer firstSubmorph width + 5 "a bit of margin"].
-	
 	groupedUniverses := self groupUniversesContainingAllVariantsIn: selectedVariants.
 	basePermutations := self collectAllPermutationsOfSelectedVariants asOrderedCollection.
 
@@ -61,17 +57,22 @@ SBCorrelationView >> buildGridsFor: anExample watching: aWatch [
 ]
 
 { #category : #building }
-SBCorrelationView >> buildSelectionRow [
+SBCorrelationView >> buildSelectionOptions [
 
 	| container selectedString |
-	container := self containerRow.
+	container := Morph new
+					color: Color transparent;
+					changeTableLayout;
+					vResizing: #shrinkWrap;
+					hResizing: #shrinkWrap;
+					listDirection: #leftToRight.
 	self ensureVariantSelectionIn: container.
 	selectedString := ''.
 	selectedVariants 
 		ifEmpty: [ selectedString := selectedString, 'None' ]
 		ifNotEmpty: [ selectedString := selectedString, ((selectedVariants collect: #name) fold: [:a :b | a, ', ', Character cr, b ])]. 
 	container addMorphBack: selectedString asMorph.
-	self block addMorph: container.
+	^ container
 	
 ]
 
@@ -91,10 +92,10 @@ SBCorrelationView >> buildVariantSelection [
 		displayPrefixOnly 
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 SBCorrelationView >> buttons [
-
-	^ {}
+		
+	^ super buttons, {self buildSelectionOptions}
 ]
 
 { #category : #building }
@@ -188,20 +189,6 @@ SBCorrelationView >> initialize [
 	
 	self name: 'Correlation'.
 	
-]
-
-{ #category : #actions }
-SBCorrelationView >> visualize [ 
-
-	self clean.
-
-	self buildSelectionRow.
-	self block addMorph: dimensionOptions.
-	
-	self buildButtonRow.
-	
-	self buildAllPossibleResults .
-	self concludeContainerWidth.
 ]
 
 { #category : #accessing }

@@ -13,7 +13,7 @@ Class {
 { #category : #accessing }
 SBSwitchableResultsView >> buttons [
 
-	^ {self toggleViewButton}
+	^ super buttons, {self toggleViewButton}
 ]
 
 { #category : #accessing }
