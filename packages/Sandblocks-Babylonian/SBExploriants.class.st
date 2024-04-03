@@ -120,7 +120,7 @@ SBExploriants >> evaluationReceiver [
 { #category : #accessing }
 SBExploriants >> ignoreUpdate [
 
-	^ ignoreUpdate
+	^ ignoreUpdate ifNil: [false]
 ]
 
 { #category : #accessing }
@@ -143,16 +143,38 @@ SBExploriants >> initialize [
 		vResizing: #shrinkWrap
 ]
 
+{ #category : #initialization }
+SBExploriants >> intoWorld: aWorld [
+
+	super intoWorld: aWorld.
+	SystemChangeNotifier uniqueInstance
+		noMoreNotificationsFor: self;
+		notify: self ofSystemChangesOfItem: #method using: #methodChanged:
+]
+
 { #category : #testing }
 SBExploriants >> isArtefact [ 
 
 	^ true
 ]
 
+{ #category : #initialization }
+SBExploriants >> methodChanged: anEvent [
+
+	anEvent isModified ifTrue: [namedBlocks last addCodeSnapshot: anEvent]
+]
+
 { #category : #accessing }
 SBExploriants >> objectToPermutation [
 
 	^ objectToPermutation
+]
+
+{ #category : #initialization }
+SBExploriants >> outOfWorld: aWorld [
+
+	SystemChangeNotifier uniqueInstance noMoreNotificationsFor: self.
+	super outOfWorld: aWorld
 ]
 
 { #category : #'artefact protocol' }
