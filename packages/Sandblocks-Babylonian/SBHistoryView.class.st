@@ -184,7 +184,8 @@ SBHistoryView >> offerChangeTabMenu [
 	index := UIManager default chooseFrom: options.
 	index = 0 ifTrue: [^ self].
 	
-	self scroller submorphs do: [:anEpoche | anEpoche lastSubmorph activeIndex: index].
+	self scroller submorphs do: [:anEpoche | 
+		(anEpoche lastSubmorph isKindOf: SBTabView) ifTrue: [anEpoche lastSubmorph activeIndex: index]].
 ]
 
 { #category : #building }
