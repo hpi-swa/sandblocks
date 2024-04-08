@@ -369,8 +369,8 @@ SBExampleWatch >> initialize [
 				hResizing: #spaceFill;
 				listCentering: #bottomRight;
 				addMorphBack: dimensionOptions;
-				addMorphBack: modifyExpression
-				yourself};
+				yourself.
+			modifyExpression};
 		yourself
 ]
 
