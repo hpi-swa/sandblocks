@@ -167,20 +167,20 @@ SBLiveView >> rebuildButton [
 ]
 
 { #category : #building }
-SBLiveView >> rebuildButtonIn: aContainer applying: aUniverse [
+SBLiveView >> rebuildButtonIn: aContainer applying: aPermutation [
 
 	^ SBButton new
 		icon: (SBIcon iconRotateRight size: 8.0 sbScaled)
 			label: 'Re-Build This'
-			do: [self rebuildRegisteredListenerFor: aUniverse in: aContainer];
+			do: [self rebuildRegisteredListenerFor: aPermutation in: aContainer];
 		makeSmall;
 		cornerStyle: #squared
 ]
 
 { #category : #initialization }
-SBLiveView >> rebuildRegisteredListenerFor: aUniverse in: aContainer [ 
+SBLiveView >> rebuildRegisteredListenerFor: aPermutation in: aContainer [ 
 
-	self privateRegisterListener: (aUniverse watches first exampleToValues values first first watchedValue veryDeepCopy) for: aUniverse activePermutation in: aContainer 
+	self privateRegisterListener: self evaluateSetUp for: aPermutation in: aContainer 
 	
 ]
 
