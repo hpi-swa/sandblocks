@@ -93,7 +93,7 @@ SBCorrelationView >> buildVariantSelection [
 		displayPrefixOnly 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBCorrelationView >> buttons [
 		
 	^ super buttons, {self buildSelectionOptions}
@@ -130,7 +130,7 @@ SBCorrelationView >> ensureVariantSelectionIn: aMorph [
 	aMorph addMorph: variantSelection.
 	
 	selectedVariants 
-		ifNil: [selectedVariants := {} asOrderedCollection]
+		ifNil: [selectedVariants := {variantSelection object} asOrderedCollection]
 		ifNotNil: [selectedVariants := selectedVariants select: [:aVariant | self multiverse variants includes: aVariant]].
 	
 ]

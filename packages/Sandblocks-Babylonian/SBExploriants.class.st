@@ -56,15 +56,8 @@ SBExploriants >> artefactSaved: aMethodBlock [
 SBExploriants >> asTabButton: aNamedBlock [
 
 	| button |
-	button := SBButton new
-		label: aNamedBlock nameToDisplay do: [self setActive: aNamedBlock];
-		cornerStyle: #squared;
-		hResizing: #spaceFill;
-		changeTableLayout;
-		makeSmall;
-		listDirection: #leftToRight.
-	
-	aNamedBlock = self active ifTrue: [button makeBold].
+	button := super asTabButton: aNamedBlock.
+	button when: #doubleClicked send: #value to: [].
 	
 	^ button
 ]
@@ -85,20 +78,15 @@ SBExploriants >> binding: aString for: block class: aClass ifPresent: aBlock [
 ]
 
 { #category : #ui }
-SBExploriants >> buildTabs [
-
-	self addMorphBack: (SBRow new
-		addAllMorphsBack: (self namedBlocks collect: [:block | self asTabButton: block]);
-		name: #tabs;
-		changeTableLayout;
-		listDirection: #leftToRight;
-		hResizing: #shrinkWrap)
-]
-
-{ #category : #ui }
 SBExploriants >> buildView [
 
 	self addMorphBack: (self activeBlock hResizing: #shrinkWrap)
+]
+
+{ #category : #accessing }
+SBExploriants >> buttonClass [
+
+	^ SBButton 
 ]
 
 { #category : #testing }
@@ -193,12 +181,6 @@ SBExploriants >> selector [
 	" if this node represents any selector, return it here "
 
 	^ nil
-]
-
-{ #category : #accessing }
-SBExploriants >> tabs [
-
-	^ (self submorphNamed: #tabs) submorphs
 ]
 
 { #category : #actions }

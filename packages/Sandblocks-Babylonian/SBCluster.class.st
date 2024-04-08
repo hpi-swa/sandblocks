@@ -145,7 +145,7 @@ SBCluster >> visualize [
 				self newTopRowFrom: (matrix atRow: 1) allButFirst. "ignore placeholder morph"
 				self newContainerMorph 
 					listDirection: #leftToRight;
-					cellInset: 5@(-30);
+					cellInset: 3@3;
 					addAllMorphsBack: {
 						self newLeftColumnFrom: (matrix atColumn: 1) allButFirst. "ignore placeholder morph"
 						SBGrid newDisplaying: 

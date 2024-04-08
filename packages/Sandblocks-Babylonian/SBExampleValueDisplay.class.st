@@ -79,7 +79,7 @@ SBExampleValueDisplay >> initialize [
 							cellGap: 2;
 							layoutInset: 2@3;
 							addAllMorphsBack: {
-							label := SBStringMorph new visible: false. 
+							label := SBStringMorph new. 
 							statusLabel := SBStringMorph new contents: ''.
 							self newChangeVizButton};
 							yourself);
@@ -136,7 +136,7 @@ SBExampleValueDisplay >> reportValues: aCollectionOfWatchValues name: aString si
 
 	display reportValues: aCollectionOfWatchValues sized: aSBMorphResizer.
 	label contents: aString.
-	label visible: false.
+	label visible: aString notEmpty.
 	hadValue := true
 ]
 

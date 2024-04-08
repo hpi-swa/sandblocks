@@ -86,6 +86,7 @@ SBDiffTabView >> initialize [
 
 	super initialize.
 	
+	wantsTabCountChanges := true.
 	isShowingDiff := false.
 	self hResizing: #spaceFill.
 ]

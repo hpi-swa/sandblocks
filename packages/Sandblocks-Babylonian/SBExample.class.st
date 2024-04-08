@@ -393,7 +393,11 @@ SBExample >> run [
 		self scheduleLastError: nil.
 		currentProcess := nil.
 		processRunning := false.
-		Project current addDeferredUIMessage: [self sendFinishNotification]] forkAt: Processor userBackgroundPriority.
+		Project current addDeferredUIMessage: [
+			returnValue reportValues: {returned asSBWatchValue} sized: SBMorphResizer newThumbmail.
+			returnValue updateDisplay.
+			self sendFinishNotification]
+		] forkAt: Processor userBackgroundPriority.
 	
 	^ currentProcess
 ]
@@ -415,7 +419,8 @@ SBExample >> runSetup [
 	
 	errorDecorator ifNotNil: #detach.
 	errorDecorator := nil.
-	traceSize := 0
+	traceSize := 0.
+	returnValue clear.
 ]
 
 { #category : #execution }
@@ -444,13 +449,14 @@ SBExample >> self: aBlock args: aCollectionBlock label: aString [
 		removeAllMorphs;
 		addMorphBack: (icon := SBIcon iconPause
 			small;
-			color: (Color r: 1 g: 1 b: 1);
+			color: (Color white);
 			on: #click send: #toggleRunning to: self);
 		addMorphBack: (nameInput := SBTextBubble new contents: aString);
 		addMorphBack: (SBStringMorph new contents: 'self:');
 		addMorphBack: aBlock;
 		addMorphBack: (SBStringMorph new contents: 'args:');
 		addMorphBack: aCollectionBlock;
+		addMorphBack: (returnValue := SBExampleWatchView new);
 		updateIcon
 ]
 
@@ -517,6 +523,7 @@ SBExample >> stopRunning [
 	
 	self stopSteppingSelector: #run.
 	active := false.
+	returnValue clear.
 	self updateIcon.
 	
 	self sandblockEditor allMorphsDo: [:morph | (morph isSandblock and: [morph listensToExamples]) ifTrue: [morph exampleStopped: self]]

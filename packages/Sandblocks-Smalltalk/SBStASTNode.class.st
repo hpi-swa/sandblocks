@@ -164,6 +164,7 @@ SBStASTNode >> grammarHandler [
 { #category : #accessing }
 SBStASTNode >> guessClassExpensive [
 
+	self flag: #fixme. "new sandbox interface, tobe"
 	^ self guessedClass ifNil: [
 		self valueOfProperty: #guessedClassExpensive ifAbsentPut: [
 			nil]]

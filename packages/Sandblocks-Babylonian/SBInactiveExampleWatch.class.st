@@ -85,12 +85,6 @@ SBInactiveExampleWatch >> originalIdentifier: aNumber [
 SBInactiveExampleWatch >> saveObjectsActivePermutations [
 
 	"Force morphs to persist their permutation even when on the UI process"
-	"exampleToValues associationsDo: [:anExampleValuesPair | 
-		anExampleValuesPair value do: [:aWatchValue |
-			aWatchValue watchedValue allMorphsDo: [:aSubMorph | 
-				SBExploriants objectToPermutation 
-					at: aSubMorph 
-					put: SBActiveVariantPermutation value]]]."
 	exampleToDisplay associationsDo: [:anExampleDisplayPair |
 		anExampleDisplayPair value displayedWatchValueBlocks do: [:aValueMorph | 
 			aValueMorph lastSubmorph allMorphsDo: [:aSubMorph | 

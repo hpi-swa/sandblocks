@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBBlock,
 	#instVars : [
 		'namedBlocks',
-		'activeIndex'
+		'activeIndex',
+		'wantsTabCountChanges'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -153,15 +154,16 @@ SBTabView >> allMorphsDepthFirstDo: aBlock [
 SBTabView >> asTabButton: aNamedBlock [
 
 	| button |
-	button := SBEditableButton new
+	button := self buttonClass new
 		label: aNamedBlock nameToDisplay do: [self setActive: aNamedBlock];
 		cornerStyle: #squared;
 		makeSmall;
 		hResizing: #spaceFill;
 		changeTableLayout;
-		listDirection: #leftToRight;
-		addMorphBack: (self deleteButtonFor: aNamedBlock).
-	
+		listDirection: #leftToRight.
+		
+	self wantsTabCountChanges ifTrue: [button addMorphBack: (self deleteButtonFor: aNamedBlock)].
+		
 	aNamedBlock = self active ifTrue: [button makeBold].
 	button when: #contentsChanged send: #updateNameFor:on: to: self withArguments: {aNamedBlock. button}.
 	button when: #doubleClicked send: #triggerEvent: to: self with: #doubleClicked.
@@ -186,19 +188,27 @@ SBTabView >> blockAt: anIndex [
 { #category : #ui }
 SBTabView >> buildTabs [
 
-	self addMorphBack: (SBRow new
+	| tabs |
+	tabs := SBRow new
 		addAllMorphsBack: (self namedBlocks collect: [:block | self asTabButton: block]);
 		name: #tabs;
-		addMorphBack: self addButton;
 		changeTableLayout;
 		listDirection: #leftToRight;
-		hResizing: #shrinkWrap)
+		hResizing: #shrinkWrap.
+	self wantsTabCountChanges ifTrue: [tabs addMorphBack: self addButton].
+	self addMorphBack: tabs.
 ]
 
 { #category : #ui }
 SBTabView >> buildView [
 
 	self addMorphBack: (self activeBlock hResizing: #spaceFill)
+]
+
+{ #category : #accessing }
+SBTabView >> buttonClass [
+
+	^ SBEditableButton
 ]
 
 { #category : #ui }
@@ -225,6 +235,7 @@ SBTabView >> initialize [
 	
 	namedBlocks := {SBNamedBlock new} asOrderedCollection.
 	activeIndex := 1.
+	wantsTabCountChanges := false.
 	
 	self
 		changeTableLayout;
@@ -450,7 +461,9 @@ SBTabView >> tabCount [
 { #category : #accessing }
 SBTabView >> tabs [
 
-	^ (self submorphNamed: #tabs) submorphs allButLast
+	^ self wantsTabCountChanges 
+		ifTrue: [(self submorphNamed: #tabs) submorphs allButLast]
+		ifFalse: [(self submorphNamed: #tabs) submorphs]
 ]
 
 { #category : #ui }
@@ -487,4 +500,16 @@ SBTabView >> updateTabNames [
 SBTabView >> view [
 
 	^ self lastSubmorph
+]
+
+{ #category : #accessing }
+SBTabView >> wantsTabCountChanges [
+
+	^ wantsTabCountChanges
+]
+
+{ #category : #accessing }
+SBTabView >> wantsTabCountChanges: aBoolean [ 
+
+	wantsTabCountChanges := aBoolean
 ]

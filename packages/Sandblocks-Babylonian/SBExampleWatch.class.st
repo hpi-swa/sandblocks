@@ -369,6 +369,7 @@ SBExampleWatch >> initialize [
 				hResizing: #spaceFill;
 				listCentering: #bottomRight;
 				addMorphBack: dimensionOptions;
+				addMorphBack: modifyExpression
 				yourself};
 		yourself
 ]
@@ -447,7 +448,8 @@ SBExampleWatch >> modifyExpression [
 SBExampleWatch >> modifyExpression: aBlock [
 
 	modifyExpression ifNotNil: #delete.
-	modifyExpression := aBlock
+	modifyExpression := aBlock.
+	self addMorphBack: modifyExpression.
 ]
 
 { #category : #accessing }
@@ -464,7 +466,7 @@ SBExampleWatch >> outOfWorld: aWorld [
 	self class unregisterWatch: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBExampleWatch >> preventOcclusion [
 
 	^ false

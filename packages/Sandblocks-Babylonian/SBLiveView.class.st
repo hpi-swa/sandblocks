@@ -14,8 +14,7 @@ Class {
 { #category : #building }
 SBLiveView >> buildAllPossibleResults [
 	
-	self multiverse watches ifEmpty: [^ self].
-	self multiverse universes do: [:aUniverse | self buildPreviewFor: aUniverse]
+	self multiverse universes do: [:aUniverse | self buildPreviewFor: aUniverse activePermutation]
 ]
 
 { #category : #building }
@@ -32,17 +31,35 @@ SBLiveView >> buildBrodcaster [
 ]
 
 { #category : #building }
-SBLiveView >> buildPreviewFor: aUniverse [
+SBLiveView >> buildPreviewFor: aPermutation [
 	
 	| preview |	
-	preview := self newRegisteredListenerFor: aUniverse.
+	preview := self newRegisteredListenerFor: aPermutation.
 	gridContainer addMorphBack: (self containerRow cellPositioning: #center;
 		addAllMorphsBack: {
 			self containerRow listDirection: #topToBottom;
 				 addAllMorphsBack: { 
-					(SBPermutationLabel newDisplaying: aUniverse activePermutation) wrapFlag: false.
-					self newPermutationButtonRowFor: aUniverse showing: preview.
+					(SBPermutationLabel newDisplaying: aPermutation) wrapFlag: false.
+					self newPermutationButtonRowFor: aPermutation showing: preview.
 					preview}}).
+]
+
+{ #category : #building }
+SBLiveView >> buildSetUpRow [ 
+
+	self block addMorphBack: (SBRow new
+			changeTableLayout;
+			hResizing: #spaceFill;
+			wrapCentering: #center;
+			listCentering: #center;
+			cellPositioning: #center;
+			name: #setup;
+			cellGap: 8 * self scalingFactor;
+			addMorphBack: (SBIcon iconSpinner
+				balloonText: 'Toggle stepping';
+				on: #click send: #toggleStepping to: self);
+			addMorphBack: (SBStringMorph new contents: 'Setup:');
+			addMorphBack: ([Morph new] asSandblock width: 200))
 ]
 
 { #category : #building }
@@ -77,6 +94,7 @@ SBLiveView >> initialize [
 	super initialize.
 	
 	self name: 'Playground'.
+	self buildSetUpRow.
 	
 	
 ]
@@ -98,30 +116,28 @@ SBLiveView >> listeners [
 ]
 
 { #category : #building }
-SBLiveView >> newPermutationButtonRowFor: aUniverse showing: aPreview [
+SBLiveView >> newPermutationButtonRowFor: aPermutation showing: aPreview [
 
 	^ self containerRow
 		layoutInset: 0;
 		cellInset: 0;
 		addAllMorphsBack: {
-			SBButton newApplyPermutationFor: aUniverse activePermutation. 
-			self rebuildButtonIn: aPreview applying: aUniverse. 
+			self rebuildButtonIn: aPreview applying: aPermutation. 
 			self synchronizeButtonIn: aPreview}
 ]
 
 { #category : #initialization }
-SBLiveView >> newRegisteredListenerFor: aUniverse [ 
+SBLiveView >> newRegisteredListenerFor: aPermutation [ 
 
-	| listener value container watch |
-	self flag: #todo. "for multiple watch values"
-	watch := aUniverse watches first.
-	value := watch exampleToValues values first first watchedValue.
-	listener := value veryDeepCopy asMorph.
+	| listener container |
+	SBActiveVariantPermutation value: aPermutation.
+	listener := self evaluateSetUp.
 	container := broadcaster addListener: listener.
 	
 	listener allMorphsDo: [:aSubMorph | 
-		SBExploriants objectToPermutation at: aSubMorph put: watch createdWithPermutation].
+		SBExploriants objectToPermutation at: aSubMorph put: aPermutation].
 	
+	SBActiveVariantPermutation value: nil.
 	^ container
 	
 ]
@@ -209,6 +225,7 @@ SBLiveView >> snapshot [
 	^ self containerRow 
 				listDirection: #topToBottom;
 				addAllMorphsBack: {
+					ImageMorph new newForm: (self block submorphNamed: 'setup') imageForm.
 					ImageMorph new newForm: gridContainer imageForm}
 ]
 
@@ -246,14 +263,13 @@ SBLiveView >> toggleStepping [
 { #category : #actions }
 SBLiveView >> visualize [ 
 
-	^ self.
-	"self clean.
+	self clean.
 	
 	self buildBrodcaster.
 	self buildButtonRow.
 	self block addMorphBack: gridContainer.
 	self buildAllPossibleResults.
 	
-	self listeners ifNotEmpty: [broadcaster extent: self listeners last extent. ].
-	self concludeContainerWidth.	"
+	broadcaster extent: self listeners last extent. 
+	self concludeContainerWidth.	
 ]
