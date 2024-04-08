@@ -43,7 +43,7 @@ SBCluster >> initialize [
 		listDirection: #topToBottom;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		cellInset: 0@10
+		cellInset: 0@2
 ]
 
 { #category : #accessing }
@@ -145,7 +145,7 @@ SBCluster >> visualize [
 				self newTopRowFrom: (matrix atRow: 1) allButFirst. "ignore placeholder morph"
 				self newContainerMorph 
 					listDirection: #leftToRight;
-					cellInset: 5@(-10);
+					cellInset: 5@(-30);
 					addAllMorphsBack: {
 						self newLeftColumnFrom: (matrix atColumn: 1) allButFirst. "ignore placeholder morph"
 						SBGrid newDisplaying: 

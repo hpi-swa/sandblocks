@@ -53,7 +53,11 @@ SBPermutation >> activeScore [
 { #category : #actions }
 SBPermutation >> apply [
 
-	self referencedVariants do: [:aVariant | aVariant switchToAlternative: (self at: aVariant id)].
+	self referencedVariants do: [:aVariant | aVariant switchToAlternativeWithoutSaving: (self at: aVariant id)].
+	SBExploriants uniqueInstance ignoreUpdate: true.
+	((self referencedVariants collect: #containingArtefact) asSet) do: [:aMethod | 
+		self referencedVariants first sandblockEditor save: aMethod tryFixing: false quick: false].
+	
 	((Set newFrom: (referencedVariants collect: #sandblockEditor))
 		reject: #isNil)
 		do: #sendNewPermutationNotification

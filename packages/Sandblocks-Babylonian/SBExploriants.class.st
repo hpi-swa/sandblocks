@@ -120,7 +120,7 @@ SBExploriants >> evaluationReceiver [
 { #category : #accessing }
 SBExploriants >> ignoreUpdate [
 
-	^ ignoreUpdate ifNil: [false]
+	^ ignoreUpdate
 ]
 
 { #category : #accessing }
@@ -136,6 +136,8 @@ SBExploriants >> initialize [
 	
 	objectToPermutation := WeakKeyDictionary new.
 	updateProcessRunning := false.
+	ignoreUpdate := false.
+	namedBlocks := {SBExploriantsView new} asOrderedCollection.
 	
 	self
 		attachDecorator: SBMoveDecorator new;
@@ -161,7 +163,10 @@ SBExploriants >> isArtefact [
 { #category : #initialization }
 SBExploriants >> methodChanged: anEvent [
 
-	anEvent isModified ifTrue: [namedBlocks last addCodeSnapshot: anEvent]
+	anEvent isModified 
+		ifTrue: [
+			namedBlocks detect: #isHistory
+			ifFound: [:history | history addCodeSnapshot: anEvent]]
 ]
 
 { #category : #accessing }
@@ -227,7 +232,7 @@ SBExploriants >> updateInBackgroundOnTimeoutRevertTo: theOldMultiverse [
 		newMultiverse := SBMultiverse bigbangInEditorWithoutKaboom: self sandblockEditor.
 		self namedBlocks do: [:aTab | aTab multiverse: newMultiverse].
 		[newMultiverse kaboom] 
-			valueWithin: 7 seconds 
+			valueWithin: 20 seconds 
 			onTimeout: [newMultiverse cleanUp. 
 						  self namedBlocks do: [:aTab | aTab multiverse: theOldMultiverse]]. 
 		updateProcess := nil. updateProcessRunning := false.
@@ -236,9 +241,10 @@ SBExploriants >> updateInBackgroundOnTimeoutRevertTo: theOldMultiverse [
 
 { #category : #actions }
 SBExploriants >> visualize [
-
-	| tabs |
+	
+	|tabs|
 	self width: 0.
+	ignoreUpdate := false.
 	"tabs will visualize as soon as multiverse is finished"
 	tabs := SBExploriantsView getTabsInMultiverse: (SBMultiverse bigbangInEditor: self sandblockEditor).
 	

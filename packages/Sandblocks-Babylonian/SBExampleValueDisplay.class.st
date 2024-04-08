@@ -79,7 +79,7 @@ SBExampleValueDisplay >> initialize [
 							cellGap: 2;
 							layoutInset: 2@3;
 							addAllMorphsBack: {
-							label := SBStringMorph new. 
+							label := SBStringMorph new visible: false. 
 							statusLabel := SBStringMorph new contents: ''.
 							self newChangeVizButton};
 							yourself);

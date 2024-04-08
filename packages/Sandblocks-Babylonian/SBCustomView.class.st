@@ -23,7 +23,7 @@ SBCustomView >> buildViewOptions [
 		prefix: 'Current Grid View: ';
 		labels: (options collect: #name);
 		values: options ;
-		object: options first;
+		object: options third;
 		when: #selectionChanged send: #switchView to: self
 ]
 

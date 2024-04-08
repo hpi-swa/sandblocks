@@ -320,6 +320,13 @@ SBTabView >> jumpToTab: anIndex [
 	
 ]
 
+{ #category : #tabs }
+SBTabView >> jumpToTabWithoutSaving: anIndex [
+
+	self namedBlocks at: anIndex ifPresent: [:block | self basicSetActive: block]
+	
+]
+
 { #category : #'shortcut-utility' }
 SBTabView >> jumpToThirdTab [
 

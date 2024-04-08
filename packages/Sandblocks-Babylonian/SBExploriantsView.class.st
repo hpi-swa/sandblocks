@@ -86,11 +86,17 @@ SBExploriantsView >> initialize [
 		changeTableLayout;
 		color: Color white;
 		listDirection: #topToBottom;
-		layoutInset: 3;
-		cellGap: 4;
+		layoutInset: 1;
+		cellGap: 2;
 		cellInset: 2;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap).
+]
+
+{ #category : #accessing }
+SBExploriantsView >> isHistory [
+
+	^ false
 ]
 
 { #category : #accessing }

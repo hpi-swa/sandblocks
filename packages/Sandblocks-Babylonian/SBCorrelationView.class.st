@@ -30,10 +30,11 @@ SBCorrelationView >> buildForExample: anExample watching: aWatch [
 				addAllMorphsBack: { 
 					SBOwnTextMorph new contents: (
 						'{1}{2}' format: {"anExample label" ''.
-											 (aWatch cleanedExpression sourceString)}).
+											 (aWatch cleanedExpression sourceString withoutLineEndings)}).
 					self containerRow 
 						listDirection: #topToBottom;
 						cellPositioning:  #rightCenter;
+						cellInset: 0@10;
 						addAllMorphsBack: ((self buildGridsFor: anExample watching: aWatch) flatten)}})
 ]
 
@@ -71,7 +72,7 @@ SBCorrelationView >> buildSelectionOptions [
 	selectedVariants 
 		ifEmpty: [ selectedString := selectedString, 'None' ]
 		ifNotEmpty: [ selectedString := selectedString, ((selectedVariants collect: #name) fold: [:a :b | a, ', ', Character cr, b ])]. 
-	container addMorphBack: selectedString asMorph.
+	container addMorphBack: selectedString withoutLineEndings asMorph.
 	^ container
 	
 ]
@@ -122,19 +123,6 @@ SBCorrelationView >> collectAllPermutationsOfSelectedVariants [
 ]
 
 { #category : #building }
-SBCorrelationView >> ensureVariantSelection [ 
-
-	self multiverse variants ifEmpty: [selectedVariants := OrderedCollection new. ^ self].
-	variantSelection := self buildVariantSelection.
-	self block addMorph: variantSelection.
-	
-	selectedVariants 
-		ifNil: [selectedVariants := {variantSelection object} asOrderedCollection]
-		ifNotNil: [selectedVariants := selectedVariants select: [:aVariant | self multiverse variants includes: aVariant]].
-	
-]
-
-{ #category : #building }
 SBCorrelationView >> ensureVariantSelectionIn: aMorph [
 
 	self multiverse variants ifEmpty: [selectedVariants := OrderedCollection new. ^ self].
@@ -142,7 +130,7 @@ SBCorrelationView >> ensureVariantSelectionIn: aMorph [
 	aMorph addMorph: variantSelection.
 	
 	selectedVariants 
-		ifNil: [selectedVariants := {variantSelection object} asOrderedCollection]
+		ifNil: [selectedVariants := {} asOrderedCollection]
 		ifNotNil: [selectedVariants := selectedVariants select: [:aVariant | self multiverse variants includes: aVariant]].
 	
 ]

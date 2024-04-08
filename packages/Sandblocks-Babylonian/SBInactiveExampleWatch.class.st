@@ -5,7 +5,8 @@ Class {
 	#name : #SBInactiveExampleWatch,
 	#superclass : #SBExampleWatch,
 	#instVars : [
-		'originalIdentifier'
+		'originalIdentifier',
+		'createdWithPermutation'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
@@ -29,6 +30,18 @@ SBInactiveExampleWatch >> artefactSaved: aBlock [
 	Otherwise, we would reset by examples starting" 
 	(aBlock = self containingArtefact) 
 		ifTrue: [self applyModifyExpressionOnValues. self saveObjectsActivePermutations.]
+]
+
+{ #category : #accessing }
+SBInactiveExampleWatch >> createdWithPermutation [
+
+	^ createdWithPermutation
+]
+
+{ #category : #accessing }
+SBInactiveExampleWatch >> createdWithPermutation: aPermutation [
+
+	createdWithPermutation := aPermutation
 ]
 
 { #category : #'event handling' }
@@ -72,10 +85,16 @@ SBInactiveExampleWatch >> originalIdentifier: aNumber [
 SBInactiveExampleWatch >> saveObjectsActivePermutations [
 
 	"Force morphs to persist their permutation even when on the UI process"
+	"exampleToValues associationsDo: [:anExampleValuesPair | 
+		anExampleValuesPair value do: [:aWatchValue |
+			aWatchValue watchedValue allMorphsDo: [:aSubMorph | 
+				SBExploriants objectToPermutation 
+					at: aSubMorph 
+					put: SBActiveVariantPermutation value]]]."
 	exampleToDisplay associationsDo: [:anExampleDisplayPair |
 		anExampleDisplayPair value displayedWatchValueBlocks do: [:aValueMorph | 
 			aValueMorph lastSubmorph allMorphsDo: [:aSubMorph | 
 				SBExploriants objectToPermutation 
 					at: aSubMorph 
-					put: SBActiveVariantPermutation value]]].
+					put: self createdWithPermutation]]].
 ]

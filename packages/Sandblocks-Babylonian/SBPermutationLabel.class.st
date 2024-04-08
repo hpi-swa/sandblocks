@@ -22,12 +22,6 @@ SBPermutationLabel >> applyResize: aPoint [
 	^ self extent: aPoint
 ]
 
-{ #category : #'event handling' }
-SBPermutationLabel >> click: evt [
-
-	self permutation apply
-]
-
 { #category : #initialization }
 SBPermutationLabel >> initialize [ 
 
