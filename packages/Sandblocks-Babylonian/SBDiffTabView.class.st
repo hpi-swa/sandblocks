@@ -7,22 +7,6 @@ Class {
 	#category : #'Sandblocks-Babylonian'
 }
 
-{ #category : #nil }
-SBDiffTabView >> addButton [
-
-	^ SBButton new
-		icon: (SBIcon iconPlus
-				size: 7.0 sbScaled;
-				color: (Color green))
-			do: [self addTab];
-		makeSmall;
-		cornerStyle: #squared;
-		vResizing: #spaceFill;
-		balloonText: 'Add';
-		cellGap: -1.0 sbScaled;
-		layoutInset: (4.0 @ 4.0) sbScaled
-]
-
 { #category : #callbacks }
 SBDiffTabView >> artefactSaved: aMethodBlock [
 
@@ -72,14 +56,12 @@ SBDiffTabView >> buildView [
 SBDiffTabView >> diffButton [
 
 	^ SBButton new
-		icon: (SBIcon iconCodeFork size: 12.0)
+		icon: (SBIcon iconCodeFork size: 10)
 			do: [self toggleDiffView];
 		makeSmall;
 		balloonText: 'Toggle diff to others';
 		vResizing: #spaceFill;
-		cornerStyle: #squared;
-		cellGap: -1.0 sbScaled;
-		layoutInset: (4.0 @ 3.0) 
+		cornerStyle: #squared
 ]
 
 { #category : #diffing }
@@ -104,6 +86,7 @@ SBDiffTabView >> initialize [
 
 	super initialize.
 	
+	wantsTabCountChanges := true.
 	isShowingDiff := false.
 	self hResizing: #spaceFill.
 ]

@@ -17,8 +17,8 @@ SBPermutationGridsView >> buildPermutationFor: aSBUniverse [
 		addAllMorphsBack: {
 			self containerRow listDirection: #topToBottom;
 				addAllMorphsBack: { 
-					SBPermutationLabel newDisplaying: aSBUniverse activePermutation.
-					SBButton newApplyPermutationFor: aSBUniverse activePermutation. 
+					(SBPermutationLabel newDisplaying: aSBUniverse activePermutation)
+						wrapFlag: false.
 					(self currentClusterClass 
 						newForSize: self selectedResizer
 						havingWatches: aSBUniverse watches)}})

@@ -88,6 +88,7 @@ SBVariant class >> named: aString associations: aCollectionOfAssociations active
 	"Always prioritize the permutation which is marked as active"
 	SBActiveVariantPermutation value ifNotNil: [^ (aCollectionOfAssociations at: (SBActiveVariantPermutation value at: uuid) ifAbsent: [^ defaultBehavior value]) value value].
 	
+	requestor := thisContext sender receiver.
 	"The requesting object does not require dynamic update behavior in which it needs to know a certain alternative"
 	SBExploriants objectToPermutation at: (requestor := thisContext sender receiver) ifAbsent: [^ defaultBehavior value].
 	"The permutation is outdated and does not know this variant"
@@ -467,6 +468,12 @@ SBVariant >> statementsFor: aNamedBlock [
 SBVariant >> switchToAlternative: anIndex [
 
 	self widget jumpToTab: anIndex
+]
+
+{ #category : #actions }
+SBVariant >> switchToAlternativeWithoutSaving: anIndex [
+
+	self widget jumpToTabWithoutSaving: anIndex
 ]
 
 { #category : #accessing }

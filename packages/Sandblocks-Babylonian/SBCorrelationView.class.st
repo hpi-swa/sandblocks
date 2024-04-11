@@ -13,10 +13,6 @@ Class {
 { #category : #building }
 SBCorrelationView >> buildAllPossibleResults [
 	
-	self multiverse activeExamples 
-		ifEmpty: [gridContainer addMorph: (TextMorph new contents: 'No examples active').
-				  gridContainer width: gridContainer firstSubmorph width + 5 "a bit of margin"].
-	
 	groupedUniverses := self groupUniversesContainingAllVariantsIn: selectedVariants.
 	basePermutations := self collectAllPermutationsOfSelectedVariants asOrderedCollection.
 
@@ -33,9 +29,13 @@ SBCorrelationView >> buildForExample: anExample watching: aWatch [
 			self containerRow listDirection: #topToBottom;
 				addAllMorphsBack: { 
 					SBOwnTextMorph new contents: (
-						'{1}, {2}' format: {anExample label.
-											 (aWatch cleanedExpression sourceString)}).
-					self buildGridsFor: anExample watching: aWatch} flatten})
+						'{1}{2}' format: {"anExample label" ''.
+											 (aWatch cleanedExpression sourceString withoutLineEndings)}).
+					self containerRow 
+						listDirection: #topToBottom;
+						cellPositioning:  #rightCenter;
+						cellInset: 0@10;
+						addAllMorphsBack: ((self buildGridsFor: anExample watching: aWatch) flatten)}})
 ]
 
 { #category : #building }
@@ -58,17 +58,22 @@ SBCorrelationView >> buildGridsFor: anExample watching: aWatch [
 ]
 
 { #category : #building }
-SBCorrelationView >> buildSelectionRow [
+SBCorrelationView >> buildSelectionOptions [
 
 	| container selectedString |
-	container := self containerRow.
+	container := Morph new
+					color: Color transparent;
+					changeTableLayout;
+					vResizing: #shrinkWrap;
+					hResizing: #shrinkWrap;
+					listDirection: #leftToRight.
 	self ensureVariantSelectionIn: container.
-	selectedString := 'Selected: '.
+	selectedString := ''.
 	selectedVariants 
 		ifEmpty: [ selectedString := selectedString, 'None' ]
 		ifNotEmpty: [ selectedString := selectedString, ((selectedVariants collect: #name) fold: [:a :b | a, ', ', Character cr, b ])]. 
-	container addMorphBack: selectedString asMorph.
-	self block addMorph: container.
+	container addMorphBack: selectedString withoutLineEndings asMorph.
+	^ container
 	
 ]
 
@@ -80,7 +85,7 @@ SBCorrelationView >> buildVariantSelection [
 	topLevelVariant := options detect: [:aVariant | aVariant parentVariant isNil] ifNone: [options first].
 
 	^ SBComboBox new
-		prefix: 'Add or Remove';
+		prefix: 'Configure Y Axis';
 		labels: (options collect: #name);
 		values: options;
 		object: topLevelVariant;
@@ -90,8 +95,8 @@ SBCorrelationView >> buildVariantSelection [
 
 { #category : #accessing }
 SBCorrelationView >> buttons [
-
-	^ {}
+		
+	^ super buttons, {self buildSelectionOptions}
 ]
 
 { #category : #building }
@@ -115,19 +120,6 @@ SBCorrelationView >> collectAllPermutationsOfSelectedVariants [
 		selectedVariants do: [:aVariant | base at: aVariant id put: (aUniverseContainingSelected activePermutation at: aVariant id)].
 		allPermutations add: base].
 	^ allPermutations
-]
-
-{ #category : #building }
-SBCorrelationView >> ensureVariantSelection [ 
-
-	self multiverse variants ifEmpty: [selectedVariants := OrderedCollection new. ^ self].
-	variantSelection := self buildVariantSelection.
-	self block addMorph: variantSelection.
-	
-	selectedVariants 
-		ifNil: [selectedVariants := {variantSelection object} asOrderedCollection]
-		ifNotNil: [selectedVariants := selectedVariants select: [:aVariant | self multiverse variants includes: aVariant]].
-	
 ]
 
 { #category : #building }
@@ -185,20 +177,6 @@ SBCorrelationView >> initialize [
 	
 	self name: 'Correlation'.
 	
-]
-
-{ #category : #actions }
-SBCorrelationView >> visualize [ 
-
-	self clean.
-
-	self buildSelectionRow.
-	self block addMorph: dimensionOptions.
-	
-	self buildButtonRow.
-	
-	self buildAllPossibleResults .
-	self concludeContainerWidth.
 ]
 
 { #category : #accessing }

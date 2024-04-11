@@ -20,11 +20,17 @@ SBCustomView >> buildViewOptions [
 	options := self viewClasses collect: [:aClass | aClass new hasBeenRenamed: true].
 
 	^ SBComboBox new
-		prefix: 'Current View: ';
+		prefix: 'Current Grid View: ';
 		labels: (options collect: #name);
 		values: options ;
-		object: options first;
+		object: options third;
 		when: #selectionChanged send: #switchView to: self
+]
+
+{ #category : #accessing }
+SBCustomView >> buttons [
+
+	^ {viewOptions}, super buttons
 ]
 
 { #category : #initialization }
@@ -36,8 +42,6 @@ SBCustomView >> initialize [
 	self name: 'Results'.
 	
 	self buildButtonRow.
-	
-	self block addMorphBack: viewOptions.
 	self block addMorphBack: self selectedView
 	
 ]

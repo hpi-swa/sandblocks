@@ -712,7 +712,6 @@ SBStGrammarHandler >> wrapInVariant [
 			callingAlternativesBuilder: #defaultAlternativesForBlocks:].
 		
 	variant sandblockEditor select: variant nameBlock.
-	variant sandblockEditor save: variant containingArtefact tryFixing: true quick: false.
 ]
 
 { #category : #actions }

@@ -10,19 +10,6 @@ Class {
 	#category : #'Sandblocks-Morphs'
 }
 
-{ #category : #'instance creation' }
-SBButton class >> newApplyPermutationFor: aPermutation [ 
-
-	^ self new
-		icon: (SBIcon iconArrowDown
-				size: 10.0 sbScaled;
-				color: (Color r: 0.0 g: 1 b: 0.0))
-			label: 'Apply'
-			do: [aPermutation apply];
-		makeSmall;
-		cornerStyle: #squared
-]
-
 { #category : #accessing }
 SBButton >> active [
 

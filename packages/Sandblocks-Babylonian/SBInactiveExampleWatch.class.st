@@ -5,7 +5,8 @@ Class {
 	#name : #SBInactiveExampleWatch,
 	#superclass : #SBExampleWatch,
 	#instVars : [
-		'originalIdentifier'
+		'originalIdentifier',
+		'createdWithPermutation'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
@@ -29,6 +30,18 @@ SBInactiveExampleWatch >> artefactSaved: aBlock [
 	Otherwise, we would reset by examples starting" 
 	(aBlock = self containingArtefact) 
 		ifTrue: [self applyModifyExpressionOnValues. self saveObjectsActivePermutations.]
+]
+
+{ #category : #accessing }
+SBInactiveExampleWatch >> createdWithPermutation [
+
+	^ createdWithPermutation
+]
+
+{ #category : #accessing }
+SBInactiveExampleWatch >> createdWithPermutation: aPermutation [
+
+	createdWithPermutation := aPermutation
 ]
 
 { #category : #'event handling' }
@@ -77,5 +90,5 @@ SBInactiveExampleWatch >> saveObjectsActivePermutations [
 			aValueMorph lastSubmorph allMorphsDo: [:aSubMorph | 
 				SBExploriants objectToPermutation 
 					at: aSubMorph 
-					put: SBActiveVariantPermutation value]]].
+					put: self createdWithPermutation]]].
 ]

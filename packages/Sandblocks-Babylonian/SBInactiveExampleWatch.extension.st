@@ -15,5 +15,5 @@ SBInactiveExampleWatch >> saveObjectsActivePermutations [
 			aValueMorph lastSubmorph allMorphsDo: [:aSubMorph | 
 				SBExploriants objectToPermutation 
 					at: aSubMorph 
-					put: SBActiveVariantPermutation value]]].
+					put: self createdWithPermutation]]].
 ]

@@ -118,6 +118,8 @@ SBMultiverse >> cleanUp [
 	watches do: #resumeGraphicalUpdates.
 	(watches select: [:anOpenWatch | anOpenWatch containingArtefact isNil]) copy do: #delete.
 	watches select: #isInEditor thenDo: [:aWatch | aWatch exampleToDisplay values do: #updateDisplay].
+	allMethodBlocksContainingWatches do: [:aMethodBlock | 
+		(aMethodBlock valueOfProperty: #originals) do: [:aWatch| aWatch ignoreReports: true]].
 ]
 
 { #category : #collecting }
@@ -162,6 +164,8 @@ SBMultiverse >> gatherElements [
 	
 	watches := (allMethodBlocksContainingWatches collect: [:aMethodBlock | | copies |
 		copies := aMethodBlock containedExampleWatches.
+		"Because the watches share the id, values would be reported to original too. Stop that"
+		(aMethodBlock valueOfProperty: #originals) do: [:aWatch| aWatch ignoreReports: true].
 		(aMethodBlock valueOfProperty: #originals) withIndexDo: [:original :i |  (copies at: i) copySelectedDisplayIndicesFrom: original].
 		copies ]) flatten.
 	watches do: [:aWatch | activeExamples do: [:anExample | aWatch exampleStarting: anExample]].

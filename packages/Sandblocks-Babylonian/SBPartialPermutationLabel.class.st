@@ -1,8 +1,7 @@
 Class {
 	#name : #SBPartialPermutationLabel,
-	#superclass : #TextMorph,
+	#superclass : #SBPermutationLabel,
 	#instVars : [
-		'permutation',
 		'universe'
 	],
 	#category : #'Sandblocks-Babylonian'
@@ -18,22 +17,10 @@ SBPartialPermutationLabel class >> newDisplaying: aSBPermutation referingTo: aUn
 		yourself
 ]
 
-{ #category : #'*Sandblocks-Babylonian' }
-SBPartialPermutationLabel >> listensToPermutations [ 
-
-	^ true
-]
-
-{ #category : #accessing }
-SBPartialPermutationLabel >> permutation [
-
-	^ permutation
-]
-
-{ #category : #accessing }
-SBPartialPermutationLabel >> permutation: aPermutation [ 
-
-	permutation := aPermutation
+{ #category : #'event handling' }
+SBPartialPermutationLabel >> mouseDown: evt [ 
+	
+	self universe activePermutation apply
 ]
 
 { #category : #accessing }

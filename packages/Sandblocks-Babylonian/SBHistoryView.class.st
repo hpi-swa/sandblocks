@@ -1,15 +1,48 @@
 Class {
 	#name : #SBHistoryView,
 	#superclass : #SBExploriantsView,
+	#instVars : [
+		'scrollPane'
+	],
 	#category : #'Sandblocks-Babylonian'
 }
 
 { #category : #building }
+SBHistoryView >> addCodeSnapshot: aChange [
+
+	self ensureStackSize.
+	
+	self scroller addMorphFront: (self buildCodeSnapshot: aChange)
+]
+
+{ #category : #building }
 SBHistoryView >> addEpoche [
 
-	self submorphs size - 1 "buttonRow" > self maxEpoches ifTrue: [self lastSubmorph delete]. 
+	self ensureStackSize.
 	
-	self block addMorph: self buildEpoche atIndex: 2
+	self scroller addMorphFront: self buildEpoche
+]
+
+{ #category : #building }
+SBHistoryView >> buildCodeSnapshot: aChange [
+
+	| row lastVersion |
+	row := self containerRow.
+	
+	lastVersion := (VersionsBrowser new
+		scanVersionsOf: aChange item class: aChange item methodClass meta: false
+		category: aChange item methodReference category selector: aChange item selector) changeList at: 2 ifAbsent: [nil].
+	
+	^ row
+		cellGap: 0@10; 
+		listDirection: #topToBottom; 
+		addAllMorphsBack: {
+			self buildMetaUsageIn: row. 
+			(lastVersion ifNotNil: [
+			(TextDiffBuilder buildDisplayPatchFrom: lastVersion text to: aChange item getSource inClass: aChange item methodClass prettyDiffs: false)] ifNil: [aChange item getSource]) asMorph
+		}
+	
+	
 ]
 
 { #category : #building }
@@ -38,6 +71,28 @@ SBHistoryView >> buildMetaUsageIn: aRow [
 ]
 
 { #category : #building }
+SBHistoryView >> buildScrollPane [
+
+	| scrollPane |
+	scrollPane := ScrollPane new
+		color: Color transparent;
+		borderWidth: 0;
+		hResizing: #spaceFill;
+		scrollBarThickness: 7 sbScaled;
+		showHScrollBarOnlyWhenNeeded;
+		showVScrollBarOnlyWhenNeeded;
+		height: 600 sbScaled.
+	scrollPane scroller 
+		changeTableLayout;
+		listDirection: #topToBottom;
+		cellPositioning: #topLeft;
+		layoutInset: 1;
+		cellGap: 2;
+		cellInset: 2.
+	^ scrollPane
+]
+
+{ #category : #building }
 SBHistoryView >> buildSnapshotTabView [
 
 	^ SBTabView 
@@ -63,13 +118,19 @@ SBHistoryView >> changeTabsButton [
 		cornerStyle: #squared
 ]
 
+{ #category : #actions }
+SBHistoryView >> clean [
+
+	self scroller submorphs copy do: #delete
+]
+
 { #category : #building }
 SBHistoryView >> clearButton [
 
 	^ SBButton new
 		icon: SBIcon iconClockO
 			label: 'Clear History'
-			do: [self clean. self block addMorphBack: self buildButtonRow];
+			do: [self clean];
 		cornerStyle: #squared
 ]
 
@@ -86,6 +147,12 @@ SBHistoryView >> deleteEpocheButton: theRow [
 	
 ]
 
+{ #category : #building }
+SBHistoryView >> ensureStackSize [
+
+	self scroller submorphs size > self maxEpoches ifTrue: [self scroller lastSubmorph delete]. 
+]
+
 { #category : #initialization }
 SBHistoryView >> initialize [ 
 
@@ -93,6 +160,14 @@ SBHistoryView >> initialize [
 	
 	self name: 'History'.
 	self buildButtonRow.
+	scrollPane := self buildScrollPane.
+	self block addMorphBack: scrollPane.
+]
+
+{ #category : #accessing }
+SBHistoryView >> isHistory [ 
+
+	^ true
 ]
 
 { #category : #accessing }
@@ -109,7 +184,8 @@ SBHistoryView >> offerChangeTabMenu [
 	index := UIManager default chooseFrom: options.
 	index = 0 ifTrue: [^ self].
 	
-	self block submorphs allButFirst do: [:anEpoche | anEpoche lastSubmorph activeIndex: index].
+	self scroller submorphs do: [:anEpoche | 
+		(anEpoche lastSubmorph isKindOf: SBTabView) ifTrue: [anEpoche lastSubmorph activeIndex: index]].
 ]
 
 { #category : #building }
@@ -118,8 +194,14 @@ SBHistoryView >> saveButton [
 	^ SBButton new
 		icon: SBIcon iconSave
 			label: 'Save As PNG'
-			do: [self block exportAsPNG];
+			do: [self scroller exportAsPNG];
 		cornerStyle: #squared
+]
+
+{ #category : #accessing }
+SBHistoryView >> scroller [
+
+	^ scrollPane scroller
 ]
 
 { #category : #accessing }

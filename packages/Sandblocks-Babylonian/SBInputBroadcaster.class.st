@@ -53,6 +53,7 @@ SBInputBroadcaster >> eventProcessMouse: aMouse goingTo: aPosition in: aMorph [
 { #category : #events }
 SBInputBroadcaster >> filterEvent: anEvent for: aMorph [
 
+
 	self listeners withIndexDo: [:aListener :i | 
 		| localTarget newEvent delta |
 		localTarget := self translatedPositionOf: anEvent from: aMorph to: aListener.

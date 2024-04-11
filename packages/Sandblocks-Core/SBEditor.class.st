@@ -294,6 +294,11 @@ SBEditor >> buildCommandBar [
 				shortcut: (self class anyShortcutForAction: #openRepl)
 				do: [self openRepl];
 			balloonText: 'Add artifact...');
+		addMorphBack: (SBButton new
+			icon: SBIcon iconObjectGroup
+				shortcut: (self class anyShortcutForAction: #openExploriants)
+				do: [self openExploriants];
+			balloonText: 'Open Exploriants');
 		addMorphBack: (Morph new
 			height: 0;
 			color: Color transparent;

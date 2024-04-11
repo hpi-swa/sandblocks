@@ -53,7 +53,11 @@ SBPermutation >> activeScore [
 { #category : #actions }
 SBPermutation >> apply [
 
-	self referencedVariants do: [:aVariant | aVariant switchToAlternative: (self at: aVariant id)].
+	self referencedVariants do: [:aVariant | aVariant switchToAlternativeWithoutSaving: (self at: aVariant id)].
+	SBExploriants uniqueInstance ignoreUpdate: true.
+	((self referencedVariants collect: #containingArtefact) asSet) do: [:aMethod | 
+		self referencedVariants first sandblockEditor save: aMethod tryFixing: false quick: false].
+	
 	((Set newFrom: (referencedVariants collect: #sandblockEditor))
 		reject: #isNil)
 		do: #sendNewPermutationNotification
@@ -65,7 +69,8 @@ SBPermutation >> asString [
 	"collecting instead of calling (a active name), ', ', (b active name) in fold
 	as one variant only will not return a string but a variant"
 	^ (self referencedVariants collect: [:aVariant | 
-			aVariant name, ': ', (aVariant blockAt: (self at: aVariant id)) nameToDisplay ]) 
+			((aVariant name endsWith: ':') ifTrue: [aVariant name, ' '] ifFalse: [aVariant name, ': ']), 
+			(aVariant blockAt: (self at: aVariant id)) nameToDisplay ]) 
 			fold: [:a :b | a, ', ', Character cr, b ]
 
 	
