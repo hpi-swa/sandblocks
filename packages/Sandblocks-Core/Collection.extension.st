@@ -5,7 +5,7 @@ Collection >> asBarChart: converter [
 	<convert>
 	
 	converter
-		if: [self isString not and: [self isDictionary not and: [self allSatisfy: SBBarChart supportedInterface]]]
+		if: [self isString not and: [self allSatisfy: SBBarChart supportedInterface]]
 		do: [SBBarChart newWithValues: self]
 ]
 
@@ -23,7 +23,7 @@ Collection >> asLineChart: converter [
 	<convert>
 	
 	converter
-		if: [self isString not and: [self isDictionary not and: [self allSatisfy: SBLineChart supportedInterface]]]
+		if: [self isString not and: [self allSatisfy: SBLineChart supportedInterface]]
 		do: [SBLineChart newWithValues: self]
 ]
 

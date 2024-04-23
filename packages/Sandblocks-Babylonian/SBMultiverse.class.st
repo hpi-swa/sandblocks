@@ -119,7 +119,7 @@ SBMultiverse >> cleanUp [
 	(watches select: [:anOpenWatch | anOpenWatch containingArtefact isNil]) copy do: #delete.
 	watches select: #isInEditor thenDo: [:aWatch | aWatch exampleToDisplay values do: #updateDisplay].
 	allMethodBlocksContainingWatches do: [:aMethodBlock | 
-		(aMethodBlock valueOfProperty: #originals) do: [:aWatch| aWatch ignoreReports: true]].
+		(aMethodBlock valueOfProperty: #originals) do: [:aWatch| aWatch ignoreReports: false]].
 ]
 
 { #category : #collecting }

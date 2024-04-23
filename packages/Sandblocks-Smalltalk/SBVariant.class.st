@@ -90,7 +90,7 @@ SBVariant class >> named: aString associations: aCollectionOfAssociations active
 	
 	requestor := thisContext sender receiver.
 	"The requesting object does not require dynamic update behavior in which it needs to know a certain alternative"
-	SBExploriants objectToPermutation at: (requestor := thisContext sender receiver) ifAbsent: [^ defaultBehavior value].
+	SBExploriants objectToPermutation at: requestor ifAbsent: [^ defaultBehavior value].
 	"The permutation is outdated and does not know this variant"
 	(requiredPermutation := SBExploriants objectToPermutation at: requestor) at: uuid ifAbsent: [^ defaultBehavior value].
 	"An outdated permutation in which an alternative with a higher index than current has been deleted"
