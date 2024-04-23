@@ -52,15 +52,39 @@ SBPermutation >> activeScore [
 
 { #category : #actions }
 SBPermutation >> apply [
+	
+	self flag: #todo. "outdated references, jb" 
+	(self referencedVariants anySatisfy: [:aVariant | aVariant sandblockEditor isNil])
+		ifTrue: [ self applyWithOutdatedReferences ]
+		ifFalse: [ self applyOnOriginals ].
+	
+	
+]
 
+{ #category : #private }
+SBPermutation >> applyOnOriginals [
+	
 	self referencedVariants do: [:aVariant | aVariant switchToAlternativeWithoutSaving: (self at: aVariant id)].
 	SBExploriants uniqueInstance ignoreUpdate: true.
 	((self referencedVariants collect: #containingArtefact) asSet) do: [:aMethod | 
-		self referencedVariants first sandblockEditor save: aMethod tryFixing: false quick: false].
+		aMethod sandblockEditor save: aMethod tryFixing: false quick: false].
+	(self referencedVariants collect: #sandblockEditor) do: #sendNewPermutationNotification
 	
-	((Set newFrom: (referencedVariants collect: #sandblockEditor))
-		reject: #isNil)
-		do: #sendNewPermutationNotification
+	
+]
+
+{ #category : #private }
+SBPermutation >> applyWithOutdatedReferences [
+	
+	| newVariants |
+	self keys do: [:anId | SBExploriants uniqueInstance changeIndexOf: anId to: (self at: anId)].
+	newVariants := SBExploriants uniqueInstance variantsView proxies collect: #original.
+	self referencedVariants do: [:aVariant | 
+		newVariants detect: [:new | new id = aVariant id] 
+			ifFound: [:theVariant | aVariant becomeForward: theVariant]].
+	SBEditor current sendNewPermutationNotification
+	
+	
 ]
 
 { #category : #converting }

@@ -16,7 +16,6 @@ SBVariantProxy class >> for: aVariant [
 
 { #category : #callbacks }
 SBVariantProxy >> artefactChanged: anArtefact [
-
 	
 	anArtefact = self ifTrue: [self updateOriginalWithOwnValues ].
 		
@@ -34,6 +33,15 @@ SBVariantProxy >> artefactSaved: anArtefact [
 SBVariantProxy >> binding: aString for: block class: aClass ifPresent: aBlock [
 	
 	^ original binding: aString for: block class: aClass ifPresent: aBlock
+]
+
+{ #category : #accessing }
+SBVariantProxy >> changeActiveIndexTo: aNewIndex [
+
+	self firstSubmorph switchToAlternativeWithoutSaving: aNewIndex.
+	self updateOriginalWithOwnValues
+	
+	
 ]
 
 { #category : #accessing }

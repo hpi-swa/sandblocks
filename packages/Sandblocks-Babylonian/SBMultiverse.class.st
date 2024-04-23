@@ -149,18 +149,32 @@ SBMultiverse >> findExistingOrConvertToBlocksMaintainingWatches: aCollectionOfCo
 { #category : #'initialize-release' }
 SBMultiverse >> gatherElements [
 
+	universes := OrderedCollection new.
+	activeExamples := self allActiveExamples.
+	
+	self gatherVariants.
+	
+	self gatherWatches
+	
+]
+
+{ #category : #'initialize-release' }
+SBMultiverse >> gatherVariants [
+
 	"We are looking for already opened methods so that we can assign the
 	variant there as the original in SBVariantProxy. That way, we immediately
 	have consistency between changes."
 	allMethodBlocksContainingVariants := self findExistingOrConvertToBlocks: self allCompiledMethodsContainingVariants.
 	
-	allMethodBlocksContainingWatches := self findExistingOrConvertToBlocksMaintainingWatches: self allCompiledMethodsContainingExampleWatches.
-	
-	universes := OrderedCollection new.
-	activeExamples := self allActiveExamples.
-	
 	variants := (allMethodBlocksContainingVariants collect: #containedVariants) flatten.
 	variants := variants select: #isActive.
+	
+]
+
+{ #category : #'initialize-release' }
+SBMultiverse >> gatherWatches [
+	
+	allMethodBlocksContainingWatches := self findExistingOrConvertToBlocksMaintainingWatches: self allCompiledMethodsContainingExampleWatches.
 	
 	watches := (allMethodBlocksContainingWatches collect: [:aMethodBlock | | copies |
 		copies := aMethodBlock containedExampleWatches.

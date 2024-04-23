@@ -93,6 +93,13 @@ SBExploriants >> buttonClass [
 SBExploriants >> cacheType: aClass for: aBlock [
 ]
 
+{ #category : #actions }
+SBExploriants >> changeIndexOf: aVariantId to: aNewIndex [
+
+	namedBlocks detect: #isVariantsView
+			ifFound: [:variantsView | variantsView changeIndexOf: aVariantId to: aNewIndex]
+]
+
 { #category : #testing }
 SBExploriants >> evaluationContext [
 
@@ -219,6 +226,12 @@ SBExploriants >> updateInBackgroundOnTimeoutRevertTo: theOldMultiverse [
 						  self namedBlocks do: [:aTab | aTab multiverse: theOldMultiverse]]. 
 		updateProcess := nil. updateProcessRunning := false.
 	] forkAt: Processor userBackgroundPriority.
+]
+
+{ #category : #actions }
+SBExploriants >> variantsView [
+
+	^ namedBlocks detect: #isVariantsView
 ]
 
 { #category : #actions }
