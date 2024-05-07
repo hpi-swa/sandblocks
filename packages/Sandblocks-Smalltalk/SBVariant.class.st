@@ -181,11 +181,7 @@ SBVariant >> allPermutations: allPermutations currentPath: aPermutation [
 			ifEmpty: [allPermutations add: currentPath]
 			ifNotEmpty: [:childVariants | | permutations nestedPermutations | 
 				nestedPermutations := childVariants collect: [:child | child allPermutations: OrderedCollection new currentPath: currentPath].
-				permutations := nestedPermutations first. 
-				(2 to: topLevelVariants size) do: [:index | | nestedPermutation |
-					nestedPermutation := nestedPermutations at: index.
-					permutations := permutations gather: [:aNestedPermutation | 
-						nestedPermutation collect: [:aNestedNestedPermutation | SBPermutation newCombinedOf: aNestedPermutation and: aNestedNestedPermutation]]].
+				permutations := SBPermutation combineAllIn: nestedPermutations.
 				allPermutations addAll: permutations.
 				permutations ]]
 ]
@@ -261,6 +257,12 @@ SBVariant >> blockAt: anIndex [
 SBVariant >> color [
 
 	^ Color transparent
+]
+
+{ #category : #accessing }
+SBVariant >> hasParent [
+
+	^ self parentVariant isNil not
 ]
 
 { #category : #accessing }

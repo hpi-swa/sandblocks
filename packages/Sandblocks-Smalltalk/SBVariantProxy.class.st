@@ -14,6 +14,12 @@ SBVariantProxy class >> for: aVariant [
 	^ self new for: aVariant
 ]
 
+{ #category : #accessing }
+SBVariantProxy >> activeIndex [
+
+	^ original activeIndex
+]
+
 { #category : #callbacks }
 SBVariantProxy >> artefactChanged: anArtefact [
 	
@@ -60,6 +66,12 @@ SBVariantProxy >> for: aVariant [
 	self addMorphBack: original copyBlock.
 ]
 
+{ #category : #accessing }
+SBVariantProxy >> id [
+
+	^ original id
+]
+
 { #category : #initialization }
 SBVariantProxy >> initialize [
 
@@ -75,6 +87,12 @@ SBVariantProxy >> initialize [
 
 { #category : #testing }
 SBVariantProxy >> isArtefact [
+
+	^ true
+]
+
+{ #category : #testing }
+SBVariantProxy >> isVariantProxy [
 
 	^ true
 ]
@@ -106,12 +124,11 @@ SBVariantProxy >> updateOriginalWithOwnValues [
 
 	| variantThatNeedsChanging |
 	variantThatNeedsChanging := self containedMethod detectVariant: original.
-	
 	variantThatNeedsChanging ifNil: [^self delete].
 	
 	original replaceBy: (original := self firstSubmorph copyBlock).
-	original isVariant 
-		ifFalse: [
+	"If a double click on the widget occured and it replaced itself with code or text"
+	original isVariant ifFalse: [
 			self containedMethod save.
 			^ self delete].
 	

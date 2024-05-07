@@ -14,19 +14,32 @@ Class {
 { #category : #utils }
 SBPermutation class >> allPermutationsOf: aCollectionOfVariants [
 
-	| permutations topLevelVariants nestedPermutations |
-	aCollectionOfVariants ifEmpty:[^{SBNilPermutation new referencedVariants: {}}].
-	topLevelVariants := aCollectionOfVariants select: [:aVariant | aVariant parentVariant isNil].
+	| topLevelVariants nestedPermutations |
+	aCollectionOfVariants ifEmpty:[^{SBPermutation singularity}].
+	topLevelVariants := aCollectionOfVariants reject: #hasParent.
 	nestedPermutations := topLevelVariants collect: #allPermutations.
-	permutations := nestedPermutations first.
 	
-	(2 to: topLevelVariants size) do: [:i | | nestedPermutation |
-		nestedPermutation := (nestedPermutations at: i).
-		permutations := permutations gather: [:aPermutation | 
-			nestedPermutation collect: [:aNestedPermutation | self newCombinedOf: aPermutation and: aNestedPermutation]]].
-	
-	^ permutations 
-		
+	^ SBPermutation combineAllIn: nestedPermutations.
+]
+
+{ #category : #utils }
+SBPermutation class >> combine: aPermutation withAll: aCollectionOfPermutations [
+ 
+	^ aCollectionOfPermutations collect: [:anotherPermutation | 
+			self newCombinedOf: aPermutation and: anotherPermutation]
+]
+
+{ #category : #utils }
+SBPermutation class >> combineAllIn: aCollectionOfNestedPermutations [ 
+
+	| combinedPermutations |
+	combinedPermutations := aCollectionOfNestedPermutations first. 
+	(2 to: aCollectionOfNestedPermutations size) do: [:index | | aCollectionOfPermutations |
+		aCollectionOfPermutations := aCollectionOfNestedPermutations at: index.
+		combinedPermutations := combinedPermutations gather: [:aPermutation | 
+			SBPermutation combine: aPermutation withAll: aCollectionOfPermutations]].
+			
+	^ combinedPermutations
 ]
 
 { #category : #utils }
@@ -40,6 +53,12 @@ SBPermutation class >> newCombinedOf: onePermutation and: anotherPermutation [
 	result addAll: anotherPermutation.
 	^ result
 	
+]
+
+{ #category : #utils }
+SBPermutation class >> singularity [ 
+
+	^ SBNilPermutation new referencedVariants: {}
 ]
 
 { #category : #accessing }
@@ -151,7 +170,7 @@ SBPermutation >> copyRemovingVariants: aCollectionOfVariants [
 	 | copy |
 	copy := self class new.
 	copy referencedVariants: (self referencedVariants reject: [:aVariant | aCollectionOfVariants includes: aVariant]).
-	copy referencedVariants ifEmpty: [^ SBNilPermutation new referencedVariants: {}]. 
+	copy referencedVariants ifEmpty: [^ SBPermutation singularity]. 
 	"copy := self veryDeepCopy.
 	copy referencedVariants: (copy referencedVariants difference: aCollectionOfVariants)."
 	

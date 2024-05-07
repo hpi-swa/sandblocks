@@ -113,6 +113,12 @@ SBExploriants >> evaluationReceiver [
 ]
 
 { #category : #accessing }
+SBExploriants >> generationTimeout [
+
+	^ 20 seconds
+]
+
+{ #category : #accessing }
 SBExploriants >> ignoreUpdate [
 
 	^ ignoreUpdate
@@ -221,7 +227,7 @@ SBExploriants >> updateInBackgroundOnTimeoutRevertTo: theOldMultiverse [
 		newMultiverse := SBMultiverse bigbangInEditorWithoutKaboom: self sandblockEditor.
 		self namedBlocks do: [:aTab | aTab multiverse: newMultiverse].
 		[newMultiverse kaboom] 
-			valueWithin: 20 seconds 
+			valueWithin: self generationTimeout
 			onTimeout: [newMultiverse cleanUp. 
 						  self namedBlocks do: [:aTab | aTab multiverse: theOldMultiverse]]. 
 		updateProcess := nil. updateProcessRunning := false.

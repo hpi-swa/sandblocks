@@ -29,7 +29,7 @@ SBCorrelationView >> buildForExample: anExample watching: aWatch [
 			self containerRow listDirection: #topToBottom;
 				addAllMorphsBack: { 
 					SBOwnTextMorph new contents: (
-						'{1}{2}' format: {"anExample label" ''.
+						'{1}{2}' format: {anExample label.
 											 (aWatch cleanedExpression sourceString withoutLineEndings)}).
 					self containerRow 
 						listDirection: #topToBottom;
@@ -113,7 +113,7 @@ SBCorrelationView >> changeVariants [
 SBCorrelationView >> collectAllPermutationsOfSelectedVariants [
 	
 	| allPermutations |
-	selectedVariants ifEmpty: [^ {SBNilPermutation new referencedVariants: {}} asSet].
+	selectedVariants ifEmpty: [^ {SBPermutation singularity} asSet].
 	allPermutations := Set new.
 	groupedUniverses first do: [:aUniverseContainingSelected | | base |
 		base := SBPermutation new referencedVariants: selectedVariants.

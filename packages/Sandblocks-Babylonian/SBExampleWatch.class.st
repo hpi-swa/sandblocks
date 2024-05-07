@@ -82,7 +82,6 @@ SBExampleWatch class >> report: aValue for: aSymbol modifying: aBlock [
 	example := SBExecutionEnvironment value ifNil: [^ aValue].
 	watchers := self registry select: [:watcher | watcher notNil 
 		and: [watcher identifier = aSymbol]
-		and: [watcher ignoreReports not]
 		and: [watcher isActive]].
 	watchers do: [:watcher | watcher reportValue: aValue asSBWatchValue for: example].
 	
@@ -248,7 +247,6 @@ SBExampleWatch >> exampleFinished: anExample [
 SBExampleWatch >> exampleStarting: anExample [
 
 	exampleToValues at: anExample put: OrderedCollection new.
-	self ignoreReports: false. 
 
 	(exampleToDisplay at: anExample ifAbsentPut: [self buildDefaultDisplayFor: anExample])
 		exampleStarting: anExample;
@@ -324,18 +322,6 @@ SBExampleWatch >> identifier: aSymbol [
 
 	identifier := aSymbol.
 	self world ifNotNil: [self class registerWatch: self]
-]
-
-{ #category : #accessing }
-SBExampleWatch >> ignoreReports [
-
-	^ ignoreReports
-]
-
-{ #category : #accessing }
-SBExampleWatch >> ignoreReports: aBoolean [
-
-	ignoreReports := aBoolean
 ]
 
 { #category : #initialization }
