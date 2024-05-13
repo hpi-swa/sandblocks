@@ -29,7 +29,7 @@ SBCorrelationView >> buildForExample: anExample watching: aWatch [
 			self containerRow listDirection: #topToBottom;
 				addAllMorphsBack: { 
 					SBOwnTextMorph new contents: (
-						'{1}{2}' format: {anExample label.
+						'{1} {2}' format: {anExample label.
 											 (aWatch cleanedExpression sourceString withoutLineEndings)}).
 					self containerRow 
 						listDirection: #topToBottom;
