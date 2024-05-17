@@ -47,6 +47,12 @@ SBCustomView >> initialize [
 ]
 
 { #category : #accessing }
+SBCustomView >> isCustomView [
+
+ 	^ true
+]
+
+{ #category : #accessing }
 SBCustomView >> isOverview [
 
 	^ true

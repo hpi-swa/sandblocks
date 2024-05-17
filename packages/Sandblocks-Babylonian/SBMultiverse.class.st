@@ -27,6 +27,16 @@ SBMultiverse class >> bigbangInEditor: aSandblockEditor [
 ]
 
 { #category : #'instance creation' }
+SBMultiverse class >> bigbangInEditorSynchKaboom: aSandblockEditor [
+
+	^ self basicNew
+		sandblockEditor: aSandblockEditor;
+		initialize;
+		kaboom;
+		yourself 
+]
+
+{ #category : #'instance creation' }
 SBMultiverse class >> bigbangInEditorWithoutKaboom: aSandblockEditor [ 
 
 	^ self basicNew

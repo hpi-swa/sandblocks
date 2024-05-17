@@ -21,5 +21,6 @@ OrderedDictionary {
 	'packages/Sandblocks-Graph' : #SquotTonelSerializer,
 	'packages/Sandblocks-RatPack' : #SquotTonelSerializer,
 	'packages/Sandblocks-Plugin-StLivePreview' : #SquotTonelSerializer,
-	'packages/Sandblocks-Git' : #SquotTonelSerializer
+	'packages/Sandblocks-Git' : #SquotTonelSerializer,
+	'Joana-Core' : #SquotTonelSerializer
 }

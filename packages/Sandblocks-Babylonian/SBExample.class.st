@@ -424,6 +424,28 @@ SBExample >> runSetup [
 ]
 
 { #category : #execution }
+SBExample >> runSynch [
+	
+	| returned |
+	self runSetup.
+	"self sendStartNotification."
+	
+	processRunning := true.
+	SBExecutionEnvironment value: self.
+	
+	[returned := self evaluate] on: Error do: [:e |
+		processRunning := false.
+		self scheduleLastError: e.
+		Processor activeProcess suspend].
+	self scheduleLastError: nil.
+	currentProcess := nil.
+	processRunning := false.
+	returnValue reportValues: {returned asSBWatchValue} 
+		sized: SBMorphResizer newThumbmail.
+	returnValue updateDisplay.
+]
+
+{ #category : #execution }
 SBExample >> runSynchUpdatingOnlyValuesOf: aCollectionOfSBWatches [
 
 	| returned |

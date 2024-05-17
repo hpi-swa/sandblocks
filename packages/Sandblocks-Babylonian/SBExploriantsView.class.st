@@ -94,6 +94,12 @@ SBExploriantsView >> initialize [
 ]
 
 { #category : #accessing }
+SBExploriantsView >> isCustomView [
+
+ 	^ true
+]
+
+{ #category : #accessing }
 SBExploriantsView >> isHistory [
 
 	^ false

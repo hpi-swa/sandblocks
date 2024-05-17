@@ -170,6 +170,19 @@ SBExploriants >> methodChanged: anEvent [
 			ifFound: [:history | history addCodeSnapshot: anEvent]]
 ]
 
+{ #category : #actions }
+SBExploriants >> multiverse: aSBMultiverse [
+	
+	|tabs|
+	self width: 0.
+	ignoreUpdate := false.
+	"tabs will visualize as soon as multiverse is finished"
+	tabs := SBExploriantsView getTabsInMultiverse: aSBMultiverse.
+	
+	self namedBlocks: tabs activeIndex: 1.
+	
+]
+
 { #category : #accessing }
 SBExploriants >> objectToPermutation [
 
