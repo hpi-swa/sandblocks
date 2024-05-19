@@ -10,16 +10,25 @@ Class {
 { #category : #building }
 SBVariantsView >> buildMethodSectionFor: aSBStMethod [
 	
+	| newProxy |
+	newProxy := aSBStMethod containedVariants collect: #asProxy.
 	contents addAllMorphsBack: {aSBStMethod methodDefinition.
-									self containerRow 
-										addAllMorphsBack: (aSBStMethod containedVariants collect: #asProxy).
+									self containerRow addAllMorphsBack: newProxy.
 									LineMorph from: 0@0 to: 50@0 color: Color black width: 2}
 ]
 
 { #category : #building }
 SBVariantsView >> buildNoVariantsText [
 	
-	contents addMorphBack: (SBOwnTextMorph new contents: 'No variants exist.')
+	contents addMorphBack: (SBOwnTextMorph new contents: 'No variation points exist.')
+]
+
+{ #category : #actions }
+SBVariantsView >> changeIndexOf: aVariantId to: aNewIndex [
+
+	self proxies
+		detect: [:aProxy | aProxy original id = aVariantId] 
+		ifFound: [:theProxy | theProxy changeActiveIndexTo: aNewIndex ]
 ]
 
 { #category : #actions }
@@ -27,7 +36,7 @@ SBVariantsView >> clean [
 
 	super clean.
 	
-	contents submorphs copy do: #delete
+	contents submorphs copy do: #delete.
 	
 ]
 
@@ -38,7 +47,19 @@ SBVariantsView >> initialize [
 	
 	contents := self containerRow listDirection: #topToBottom.
 	
-	self name: 'Variants'.
+	self name: 'Variation Points'.
+]
+
+{ #category : #accessing }
+SBVariantsView >> isVariantsView [
+
+	^ true
+]
+
+{ #category : #actions }
+SBVariantsView >> proxies [
+
+	^ (contents allMorphs select: [:aMorph | aMorph isKindOf: SBVariantProxy])
 ]
 
 { #category : #copying }

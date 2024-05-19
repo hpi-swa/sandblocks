@@ -13,6 +13,12 @@ Morph class >> exampleObject [
 ]
 
 { #category : #'*Sandblocks-Babylonian' }
+Morph >> isVariantProxy [
+
+	^ false
+]
+
+{ #category : #'*Sandblocks-Babylonian' }
 Morph >> listensToPermutations [ 
 
 	^ false

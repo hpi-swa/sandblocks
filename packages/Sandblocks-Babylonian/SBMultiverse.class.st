@@ -116,10 +116,7 @@ SBMultiverse >> asyncKaboom [
 SBMultiverse >> cleanUp [
 	
 	watches do: #resumeGraphicalUpdates.
-	(watches select: [:anOpenWatch | anOpenWatch containingArtefact isNil]) copy do: #delete.
-	watches select: #isInEditor thenDo: [:aWatch | aWatch exampleToDisplay values do: #updateDisplay].
-	allMethodBlocksContainingWatches do: [:aMethodBlock | 
-		(aMethodBlock valueOfProperty: #originals) do: [:aWatch| aWatch ignoreReports: true]].
+	watches reject: #isInEditor thenDo: [:aWatch | SBExampleWatch unregisterWatch: aWatch].
 ]
 
 { #category : #collecting }
@@ -149,27 +146,34 @@ SBMultiverse >> findExistingOrConvertToBlocksMaintainingWatches: aCollectionOfCo
 { #category : #'initialize-release' }
 SBMultiverse >> gatherElements [
 
+	universes := OrderedCollection new.
+	activeExamples := self allActiveExamples.
+	
+	self gatherVariants.
+	
+	self gatherWatches
+	
+]
+
+{ #category : #'initialize-release' }
+SBMultiverse >> gatherVariants [
+
 	"We are looking for already opened methods so that we can assign the
 	variant there as the original in SBVariantProxy. That way, we immediately
 	have consistency between changes."
 	allMethodBlocksContainingVariants := self findExistingOrConvertToBlocks: self allCompiledMethodsContainingVariants.
 	
-	allMethodBlocksContainingWatches := self findExistingOrConvertToBlocksMaintainingWatches: self allCompiledMethodsContainingExampleWatches.
-	
-	universes := OrderedCollection new.
-	activeExamples := self allActiveExamples.
-	
 	variants := (allMethodBlocksContainingVariants collect: #containedVariants) flatten.
 	variants := variants select: #isActive.
 	
-	watches := (allMethodBlocksContainingWatches collect: [:aMethodBlock | | copies |
-		copies := aMethodBlock containedExampleWatches.
-		"Because the watches share the id, values would be reported to original too. Stop that"
-		(aMethodBlock valueOfProperty: #originals) do: [:aWatch| aWatch ignoreReports: true].
-		(aMethodBlock valueOfProperty: #originals) withIndexDo: [:original :i |  (copies at: i) copySelectedDisplayIndicesFrom: original].
-		copies ]) flatten.
-	watches do: [:aWatch | activeExamples do: [:anExample | aWatch exampleStarting: anExample]].
-	watches reject: #isInEditor thenDo: [:aWatch | aWatch hide. aWatch extent: 1@1]
+]
+
+{ #category : #'initialize-release' }
+SBMultiverse >> gatherWatches [
+	
+	allMethodBlocksContainingWatches := self findExistingOrConvertToBlocks: self allCompiledMethodsContainingExampleWatches.
+	
+	watches := (allMethodBlocksContainingWatches collect: #containedExampleWatches) flatten.
 	
 ]
 
@@ -184,15 +188,16 @@ SBMultiverse >> initialize [
 { #category : #actions }
 SBMultiverse >> kaboom [
 	
-	| outOfWorldWatches permutations |
-	"Only open watches display values when examples are run. We want to show them too"
-	(outOfWorldWatches := watches reject: #isInEditor) do: [:aWatch | self sandblockEditor openMorph: aWatch].
-	permutations := (SBPermutation allPermutationsOf: variants).
+	| permutations |
 	watches do: #stopGraphicalUpdates.
+	watches reject: #isInEditor thenDo: [:aWatch | 
+		SBExampleWatch registerWatch: aWatch.
+		activeExamples do: [:anExample | aWatch exampleStarting: anExample]].
+	permutations := (SBPermutation allPermutationsOf: variants).
 	
 	"Running the active one last"
 	(permutations sorted: [:a :b | a activeScore  <= b activeScore ] ) do: [:aPermutation | 
-		self runPermutation: aPermutation copyingWatches: watches ].
+		self runPermutation: aPermutation copyingWatches: watches].
 	
 	"but stay consistent of the permutation sequences for alignment in clusters" 
 	"sorting this is cheaper than running a permutation twice just to reset to prior state"

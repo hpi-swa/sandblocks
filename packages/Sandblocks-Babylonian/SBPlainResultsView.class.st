@@ -24,5 +24,5 @@ SBPlainResultsView >> initialize [
 
 	super initialize.
 	
-	self name: 'Watches'
+	self name: 'Probes'
 ]

@@ -174,6 +174,8 @@ SBTabView >> asTabButton: aNamedBlock [
 { #category : #tabs }
 SBTabView >> basicSetActive: aNamedBlock [
 
+	self sandblockEditor ifNil: [^ self activeIndex: (self namedBlocks indexOf: aNamedBlock ifAbsent: 1)].
+
 	self sandblockEditor do: 
 		(self switchCommandFor: (self namedBlocks indexOf: aNamedBlock ifAbsent: 1)).
 	

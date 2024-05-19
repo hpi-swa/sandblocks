@@ -93,6 +93,13 @@ SBExploriants >> buttonClass [
 SBExploriants >> cacheType: aClass for: aBlock [
 ]
 
+{ #category : #actions }
+SBExploriants >> changeIndexOf: aVariantId to: aNewIndex [
+
+	namedBlocks detect: #isVariantsView
+			ifFound: [:variantsView | variantsView changeIndexOf: aVariantId to: aNewIndex]
+]
+
 { #category : #testing }
 SBExploriants >> evaluationContext [
 
@@ -103,6 +110,12 @@ SBExploriants >> evaluationContext [
 SBExploriants >> evaluationReceiver [
 
 	^ self object
+]
+
+{ #category : #accessing }
+SBExploriants >> generationTimeout [
+
+	^ 20 seconds
 ]
 
 { #category : #accessing }
@@ -214,11 +227,17 @@ SBExploriants >> updateInBackgroundOnTimeoutRevertTo: theOldMultiverse [
 		newMultiverse := SBMultiverse bigbangInEditorWithoutKaboom: self sandblockEditor.
 		self namedBlocks do: [:aTab | aTab multiverse: newMultiverse].
 		[newMultiverse kaboom] 
-			valueWithin: 20 seconds 
+			valueWithin: self generationTimeout
 			onTimeout: [newMultiverse cleanUp. 
 						  self namedBlocks do: [:aTab | aTab multiverse: theOldMultiverse]]. 
 		updateProcess := nil. updateProcessRunning := false.
 	] forkAt: Processor userBackgroundPriority.
+]
+
+{ #category : #actions }
+SBExploriants >> variantsView [
+
+	^ namedBlocks detect: #isVariantsView
 ]
 
 { #category : #actions }

@@ -106,6 +106,12 @@ SBExploriantsView >> isOverview [
 ]
 
 { #category : #accessing }
+SBExploriantsView >> isVariantsView [
+
+	^ false
+]
+
+{ #category : #accessing }
 SBExploriantsView >> multiverse [
 
 	^ multiverse ifNil: [self multiverse: (SBMultiverse bigbangInEditor: SBEditor current)]

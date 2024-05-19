@@ -35,7 +35,7 @@ SBLineChart >> datapointDefaultColor [
 { #category : #'visualization - constants' }
 SBLineChart >> datapointExtent [
 	
-	^ 2@2
+	^ 3@3 sbScaled 
 ]
 
 { #category : #geometry }
@@ -60,7 +60,7 @@ SBLineChart >> lineColorFrom: aDataPoint1 to: aDataPoint2 [
 { #category : #'visualization - constants' }
 SBLineChart >> lineWidth [
 	
-	^ 2
+	^ 2 sbScaled 
 ]
 
 { #category : #'visualization - constants' }
@@ -166,7 +166,7 @@ SBLineChart >> positiveGradientColor [
 { #category : #'visualization - constants' }
 SBLineChart >> spaceBetweenPoints [
 	
-	^ 6
+	^ 6 sbScaled
 ]
 
 { #category : #visualization }

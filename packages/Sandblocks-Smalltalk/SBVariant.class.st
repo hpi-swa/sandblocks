@@ -90,7 +90,7 @@ SBVariant class >> named: aString associations: aCollectionOfAssociations active
 	
 	requestor := thisContext sender receiver.
 	"The requesting object does not require dynamic update behavior in which it needs to know a certain alternative"
-	SBExploriants objectToPermutation at: (requestor := thisContext sender receiver) ifAbsent: [^ defaultBehavior value].
+	SBExploriants objectToPermutation at: requestor ifAbsent: [^ defaultBehavior value].
 	"The permutation is outdated and does not know this variant"
 	(requiredPermutation := SBExploriants objectToPermutation at: requestor) at: uuid ifAbsent: [^ defaultBehavior value].
 	"An outdated permutation in which an alternative with a higher index than current has been deleted"
@@ -181,11 +181,7 @@ SBVariant >> allPermutations: allPermutations currentPath: aPermutation [
 			ifEmpty: [allPermutations add: currentPath]
 			ifNotEmpty: [:childVariants | | permutations nestedPermutations | 
 				nestedPermutations := childVariants collect: [:child | child allPermutations: OrderedCollection new currentPath: currentPath].
-				permutations := nestedPermutations first. 
-				(2 to: topLevelVariants size) do: [:index | | nestedPermutation |
-					nestedPermutation := nestedPermutations at: index.
-					permutations := permutations gather: [:aNestedPermutation | 
-						nestedPermutation collect: [:aNestedNestedPermutation | SBPermutation newCombinedOf: aNestedPermutation and: aNestedNestedPermutation]]].
+				permutations := SBPermutation combineAllIn: nestedPermutations.
 				allPermutations addAll: permutations.
 				permutations ]]
 ]
@@ -261,6 +257,12 @@ SBVariant >> blockAt: anIndex [
 SBVariant >> color [
 
 	^ Color transparent
+]
+
+{ #category : #accessing }
+SBVariant >> hasParent [
+
+	^ self parentVariant isNil not
 ]
 
 { #category : #accessing }

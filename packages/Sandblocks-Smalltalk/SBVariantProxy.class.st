@@ -14,9 +14,14 @@ SBVariantProxy class >> for: aVariant [
 	^ self new for: aVariant
 ]
 
+{ #category : #accessing }
+SBVariantProxy >> activeIndex [
+
+	^ original activeIndex
+]
+
 { #category : #callbacks }
 SBVariantProxy >> artefactChanged: anArtefact [
-
 	
 	anArtefact = self ifTrue: [self updateOriginalWithOwnValues ].
 		
@@ -37,6 +42,15 @@ SBVariantProxy >> binding: aString for: block class: aClass ifPresent: aBlock [
 ]
 
 { #category : #accessing }
+SBVariantProxy >> changeActiveIndexTo: aNewIndex [
+
+	self firstSubmorph switchToAlternativeWithoutSaving: aNewIndex.
+	self updateOriginalWithOwnValues
+	
+	
+]
+
+{ #category : #accessing }
 SBVariantProxy >> containedMethod [
 
 	^ containedMethod
@@ -50,6 +64,12 @@ SBVariantProxy >> for: aVariant [
 	
 	original := aVariant.
 	self addMorphBack: original copyBlock.
+]
+
+{ #category : #accessing }
+SBVariantProxy >> id [
+
+	^ original id
 ]
 
 { #category : #initialization }
@@ -67,6 +87,12 @@ SBVariantProxy >> initialize [
 
 { #category : #testing }
 SBVariantProxy >> isArtefact [
+
+	^ true
+]
+
+{ #category : #testing }
+SBVariantProxy >> isVariantProxy [
 
 	^ true
 ]
@@ -98,12 +124,11 @@ SBVariantProxy >> updateOriginalWithOwnValues [
 
 	| variantThatNeedsChanging |
 	variantThatNeedsChanging := self containedMethod detectVariant: original.
-	
 	variantThatNeedsChanging ifNil: [^self delete].
 	
 	original replaceBy: (original := self firstSubmorph copyBlock).
-	original isVariant 
-		ifFalse: [
+	"If a double click on the widget occured and it replaced itself with code or text"
+	original isVariant ifFalse: [
 			self containedMethod save.
 			^ self delete].
 	

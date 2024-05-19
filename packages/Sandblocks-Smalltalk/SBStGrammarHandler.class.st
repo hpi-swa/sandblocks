@@ -463,22 +463,6 @@ SBStGrammarHandler >> useThirdArgument [
 ]
 
 { #category : #'action helpers' }
-SBStGrammarHandler >> variantNameFor: aCollectionOfBlocks in: aParentBlock [
-	
-	aParentBlock sandblockEditor = aParentBlock ifTrue: [^ aCollectionOfBlocks printString].
-	
-	aParentBlock isTopLevel ifTrue: [^ aParentBlock printString].
-
-	aParentBlock isMessageSend ifTrue: [^ aCollectionOfBlocks first submorphBefore printString].
-	(aParentBlock isAssignment and: [aParentBlock receiver isVariant not]) ifTrue: [^ aParentBlock receiver sourceString, ' := '].
-	
-	aCollectionOfBlocks size = 1 ifTrue: [^ aCollectionOfBlocks first sourceString].
-	
-	^ '{1}' format: {(aCollectionOfBlocks collect: [:aBlock | aBlock sourceString]) 
-			fold: [:a :b | a, ', ', Character cr, b ]}
-]
-
-{ #category : #'action helpers' }
 SBStGrammarHandler >> variantNameFor: aCollectionOfBlocks in: aParentBlock preceedingBlock: aNeighbor [
 	
 	aParentBlock isMessageSend 
