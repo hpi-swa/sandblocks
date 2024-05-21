@@ -1155,7 +1155,7 @@ Measurements >> filterExampleWatchExample [
 ]
 
 { #category : #'with sandblocks - filters' }
-Measurements >> filterGenerateMultiverse [
+Measurements >> filterGatherWidgets [
 
 	| sandblock example result editor |
 
@@ -1205,10 +1205,77 @@ Measurements >> filterGenerateMultiverse [
 
 	"warmup"
 	1 to: self runs do: [:i | 
-		SBMultiverse bigbangInEditorSynchKaboom: editor].
+		SBMultiverse bigbangInEditorWithoutKaboom: editor].
 	
 	result:= (([1 to: self runs do: [:i | 
-		SBMultiverse bigbangInEditorSynchKaboom: editor]] timeToRun) / self runs) asFloat.
+		SBMultiverse bigbangInEditorWithoutKaboom: editor]] timeToRun) / self runs) asFloat.
+	
+	"teardown"
+	editor close.
+	
+	^ result
+	
+	
+
+
+]
+
+{ #category : #'with sandblocks - filters' }
+Measurements >> filterGenerateMultiverse [
+
+	| sandblock example result editor multiverse |
+
+	editor := SBEditor open.
+	SBMultiverse resolveIn: editor. "NO OTHER WIDGETS!"
+
+	MyImageFilter compile: 'main
+
+	| original filtered |
+	self example: [MyImageFilter new] args: [{}] label: ''example''.
+	original := SBVariant
+		named: ''original''
+		associations: {'''' -> [Images cat]. '''' -> [Images berries]}
+		activeIndex: 1
+		id: ''a126c416-5581-6145-9e64-a990e19e22a5''
+		isActive: true.
+	filtered := SBVariant
+		named: ''filtered''
+		associations: {
+			''emboss'' -> [
+				ImageOperations
+					emboss: original
+					factor: (SBVariant
+						named: ''factor:''
+						associations: {'''' -> [1]. '''' -> [0.3]. '''' -> [2.2]}
+						activeIndex: 1
+						id: ''0e40aa63-5c5b-8c42-9182-f34f73fed9b5''
+						isActive: true)
+					bias: (SBVariant
+						named: ''bias:''
+						associations: {'''' -> [0]. '''' -> [1]}
+						activeIndex: 1
+						id: ''67e9b295-d0aa-2340-ab34-1091e70c12a1''
+						isActive: true)].
+			''dimmed'' -> [ImageOperations dimmed: original].
+			''as8Bit'' -> [ImageOperations as8Bit: original]}
+		activeIndex: 1
+		id: ''b647d310-06e1-d947-b154-42e0edaa948a''
+		isActive: true.
+	^ SBExampleWatch report: filtered for: 391394467 modifying: [:each | each]'.
+
+	"get sandblock"
+	sandblock := (MyImageFilter compiledMethodAt: #main) asSandblock. 
+	example := sandblock containedExamples first.
+	editor openMorph: sandblock.
+	example startRunning.
+	multiverse := SBMultiverse bigbangInEditorWithoutKaboom: editor.
+
+	"warmup"
+	1 to: self runs do: [:i | 
+		multiverse kaboom].
+	
+	result:= (([1 to: self runs do: [:i | 
+		multiverse kaboom]] timeToRun) / self runs) asFloat.
 	
 	"teardown"
 	editor close.
@@ -2034,7 +2101,7 @@ Measurements >> runtimeExampleWatchExample [
 ]
 
 { #category : #'with sandblocks' }
-Measurements >> runtimeGenerateMultiverse [
+Measurements >> runtimeGatherWidgets [
 
 	| sandblock example result editor |
 
@@ -2079,10 +2146,72 @@ Measurements >> runtimeGenerateMultiverse [
 
 	"warmup"
 	1 to: self runs do: [:i | 
-		SBMultiverse bigbangInEditorSynchKaboom: editor].
+		SBMultiverse bigbangInEditorWithoutKaboom: editor].
 	
 	result:= (([1 to: self runs do: [:i | 
-		SBMultiverse bigbangInEditorSynchKaboom: editor]] timeToRun) / self runs) asFloat.
+		SBMultiverse bigbangInEditorWithoutKaboom: editor]] timeToRun) / self runs) asFloat.
+	
+	"teardown"
+	editor close.
+	
+	^ result
+	
+	
+
+
+]
+
+{ #category : #'with sandblocks' }
+Measurements >> runtimeGenerateMultiverse [
+
+	| sandblock example result editor multiverse |
+
+	editor := SBEditor open.
+	SBMultiverse resolveIn: editor. "NO OTHER WIDGETS!"
+
+	RuntimeComparisons compile: 'main
+	| workload set |
+	self example: [RuntimeComparisons new] args: [{}] label: ''example''.
+	workload := SBVariant
+		named: ''workload''
+		associations: {
+			''ordered'' -> [(1 to: 1000000) collect: [:aNumber | aNumber]].
+			''random'' -> [(1 to: 1000000) collect: [:aNumber | Random new next]]}
+		activeIndex: 1
+		id: ''6e1ceaf8-c636-2a48-9a38-d0f1b5aa9179''
+		isActive: true.
+	set := SBVariant
+		named: ''set''
+		associations: {
+			'''' -> [HashSet new].
+			'''' -> [
+				CustomHashSet reserve: (SBVariant
+					named: ''reserve:''
+					associations: {'''' -> [100]. '''' -> [1000]. '''' -> [10000]}
+					activeIndex: 1
+					id: ''3c9b78de-a961-1b40-9629-2c9db7d9c24f''
+					isActive: true)]}
+		activeIndex: 1
+		id: ''ad068d8c-76f1-6347-81f6-55d1300ca3d3''
+		isActive: true.
+	SBExampleWatch
+		report: [workload do: [:aNumber | set add: aNumber]] timeToRun
+		for: 653165203
+		modifying: [:each | each]'.
+
+	"get sandblock"
+	sandblock := (RuntimeComparisons compiledMethodAt: #main) asSandblock. 
+	example := sandblock containedExamples first.
+	editor openMorph: sandblock.
+	example startRunning.
+	multiverse := SBMultiverse bigbangInEditorWithoutKaboom: editor.
+
+	"warmup"
+	1 to: self runs do: [:i | 
+		multiverse kaboom].
+	
+	result:= (([1 to: self runs do: [:i | 
+		multiverse kaboom]] timeToRun) / self runs) asFloat.
 	
 	"teardown"
 	editor close.

@@ -24,13 +24,13 @@ MyImageFilter >> main [
 					factor: (SBVariant
 						named: 'factor:'
 						associations: {'' -> [1]. '' -> [0.3]. '' -> [2.2]}
-						activeIndex: 3
+						activeIndex: 1
 						id: '0e40aa63-5c5b-8c42-9182-f34f73fed9b5'
 						isActive: true)
 					bias: (SBVariant
 						named: 'bias:'
 						associations: {'' -> [0]. '' -> [1]}
-						activeIndex: 2
+						activeIndex: 1
 						id: '67e9b295-d0aa-2340-ab34-1091e70c12a1'
 						isActive: true)].
 			'dimmed' -> [ImageOperations dimmed: original].
