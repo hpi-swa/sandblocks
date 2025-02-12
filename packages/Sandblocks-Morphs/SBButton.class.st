@@ -37,7 +37,7 @@ SBButton >> active: aBoolean [
 	self changed
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #updating }
 SBButton >> applyUserInterfaceTheme [
 
 	super applyUserInterfaceTheme.

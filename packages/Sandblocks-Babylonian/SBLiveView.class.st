@@ -35,7 +35,9 @@ SBLiveView >> buildPreviewFor: aPermutation [
 	
 	| preview |	
 	preview := self newRegisteredListenerFor: aPermutation.
-	gridContainer addMorphBack: (self containerRow cellPositioning: #center;
+	gridContainer addMorphBack: (self containerRow 
+		cellPositioning: #center;
+		tag: (SBTag newFromPermutation: aPermutation);
 		addAllMorphsBack: {
 			self containerRow listDirection: #topToBottom;
 				 addAllMorphsBack: { 
@@ -219,13 +221,13 @@ SBLiveView >> setUpMorph [
 ]
 
 { #category : #copying }
-SBLiveView >> snapshot [
+SBLiveView >> snapshotSatisfying: aCollectionOfSBTags [
 						
 	^ self containerRow 
 				listDirection: #topToBottom;
 				addAllMorphsBack: {
 					ImageMorph new newForm: (self block submorphNamed: 'setup') imageForm.
-					ImageMorph new newForm: gridContainer imageForm}
+					gridContainer snapshotSatisfying: aCollectionOfSBTags}
 ]
 
 { #category : #building }

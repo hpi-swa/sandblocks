@@ -10,12 +10,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBMultilineOwnTextMorph >> adjustTextAnchor: aMorph [
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBMultilineOwnTextMorph >> applyUserInterfaceTheme [
 
 	super applyUserInterfaceTheme.

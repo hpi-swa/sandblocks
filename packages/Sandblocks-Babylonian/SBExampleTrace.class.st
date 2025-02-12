@@ -10,11 +10,11 @@ SBExampleTrace >> buildDisplayMatrix [
 	| matrix displayedExample |
 	matrix := Matrix 
 		rows: 2
-		columns: self multiverse universes size.
-	displayedExample := self multiverse activeExamples at: self displayedIndex. 
+		columns: self universes size.
+	displayedExample := self examples at: self displayedIndex. 
 		
-	matrix atRow: 1 put: (self extractedTopHeadingsFrom: self multiverse).
-	self multiverse universes withIndexDo: [:aUniverse :column | 
+	matrix atRow: 1 put: (self extractedTopHeadingsFrom: self universes).
+	self universes withIndexDo: [:aUniverse :column | 
 		matrix 
 			at: 2 
 			at: column 
@@ -31,7 +31,7 @@ SBExampleTrace >> visualize [
 
 	| matrix |
 	self submorphs copy do: #delete.
-	self multiverse watches ifEmpty: [self visualizeNothingToDisplay. ^ self].
+	self universes first watches ifEmpty: [self visualizeNothingToDisplay. ^ self].
 	
 	matrix := self buildDisplayMatrix.
 	self addAllMorphsBack: {self newContainerMorph 
@@ -44,7 +44,8 @@ SBExampleTrace >> visualize [
 						self newContainerMorph
 							wrapCentering: #center;
 							hResizing: #spaceFill;
-							addMorphBack: (matrix at: 1 at: i)))
+							addMorphBack: (matrix at: 1 at: i);
+							tag: (SBTag newFromPermutation: ((self universes at: i) activePermutation))))
 					flexVertically: true 
 					flexHorizontally: true ])}
 ]

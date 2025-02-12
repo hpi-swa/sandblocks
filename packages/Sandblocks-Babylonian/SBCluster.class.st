@@ -169,7 +169,7 @@ SBCluster >> wrapInCell: aMorph [
 { #category : #helper }
 SBCluster >> wrapInCell: aMorph flexVertically: aVBoolean flexHorizontally: aHBoolean [
 
-	| cell targetExtent|
+	| cell targetExtent |
 	cell := self newCellMorph.
 	
 	aVBoolean ifTrue: [cell vResizing: #shrinkWrap].
@@ -188,7 +188,8 @@ SBCluster >> wrapInCell: aMorph flexVertically: aVBoolean flexHorizontally: aHBo
 	self flag: #todo. "Another way besides turning into an image to keep interactions.-jb"
 	cell addMorph: (ImageMorph new 
 		newForm: (aMorph imageForm scaledIntoFormOfSize: targetExtent);
-		when: #clicked send: #triggerEvent: to: aMorph with: #clicked).
+		when: #clicked send: #triggerEvent: to: aMorph with: #clicked;
+		tag: aMorph tag)..
 	cell on: #click send: #value to: [cell submorphs first triggerEvent: #clicked].
 	^ cell
 ]

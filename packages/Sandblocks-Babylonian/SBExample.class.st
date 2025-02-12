@@ -126,6 +126,19 @@ SBExample >> assertionBlock [
 	^ self submorphCount > 7 ifTrue: [self submorphs ninth] ifFalse: [nil]
 ]
 
+{ #category : #actions }
+SBExample >> backtrack [
+	<action>
+	
+	SBExploriants uniqueInstance isInEditor 
+		ifTrue: [
+			self sandblockEditor openMorphInView: 
+				(SBExploriants uniqueInstance historyView backtrackForExample: self)] 
+
+	
+	
+]
+
 { #category : #'event handling' }
 SBExample >> click: anEvent [
 

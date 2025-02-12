@@ -40,22 +40,45 @@ SBPermutationCluster >> buildDisplayMatrix [
 ]
 
 { #category : #visualisation }
-SBPermutationCluster >> extractColumnsFrom: aCollectionOfSBExampleWatches [
+SBPermutationCluster >> extractColumnsFrom: aSBExampleWatch [
 
-	^ aCollectionOfSBExampleWatches exampleToDisplay collect: [:anExampleValueDisplay | 
-		self compressedMorphsForDisplay: anExampleValueDisplay display]
+	^ aSBExampleWatch exampleToDisplay collect: [:anExampleValueDisplay | 
+		(self compressedMorphsForDisplay: anExampleValueDisplay display)
+			tag: ((SBTag 
+				newFromExample: (aSBExampleWatch exampleToDisplay keyAtValue: anExampleValueDisplay))
+				addFromWatch: aSBExampleWatch)]
 ]
 
 { #category : #visualisation }
 SBPermutationCluster >> extractedLeftHeadingsFrom: aCollectionOfSBExampleWatches [
 
-	^ (aCollectionOfSBExampleWatches collect: [:aWatch | aWatch expression copy])
+	^ (aCollectionOfSBExampleWatches collect: [:aWatch | 
+			aWatch expression copy 
+				tag: (SBTag newFromWatch: aWatch)])
 ]
 
 { #category : #visualisation }
 SBPermutationCluster >> extractedTopHeadingsFrom: aCollectionOfSBExampleWatches [
 
-	^ (aCollectionOfSBExampleWatches first exampleToDisplay values collect: [:aDisplay | aDisplay labelMorph copy])
+	^ (aCollectionOfSBExampleWatches first exampleToDisplay values collect: [:aDisplay | 
+		aDisplay labelMorph copy
+			tag: (SBTag new exampleLabel: aDisplay labelMorph contents)])
+]
+
+{ #category : #visualisation }
+SBPermutationCluster >> newTopRowFrom: aCollectionOfExampleLabels [
+	
+	"Width should be set, but height can vary"
+	^ self newContainerMorph 
+		listDirection: #leftToRight;
+		listCentering: #bottomRight;
+		cellPositioning: #topCenter;
+		hResizing: #spaceFill;
+		addAllMorphsBack: (aCollectionOfExampleLabels collect: [:aLabel | 
+			aLabel rotationDegrees: 90.
+			(self wrapInCell: aLabel owner 
+				flexVertically: true 
+				flexHorizontally: false) borderWidth: 0])
 ]
 
 { #category : #accessing }

@@ -55,10 +55,16 @@ SBCorrelationCluster >> buildDisplayMatrix [
 		rows: 2
 		columns: self correlatingUniverses size + 1.
 		
-	matrix atRow: 1 put: ({TextMorph new contents: self basePermutation asVariantString}, 
+	matrix atRow: 1 put: ({TextMorph new
+								tag: (SBTag newFromPermutation: self basePermutation); 
+								contents: self basePermutation asVariantString;
+								yourself}, 
 	(self extractedTopHeadingsFrom: self correlatingUniverses)).
 	
-	matrix at: 2 at: 1 put: (SBPermutationLabel newDisplaying: self basePermutation).
+	matrix at: 2 at: 1 put: ((SBPermutationLabel 
+								newDisplaying: self basePermutation)
+								tag: (SBTag newFromPermutation: self basePermutation);
+								yourself).
 
 	self extractRow withIndexDo: [:aCellMorph :column | matrix at: 2 at: column+1 put: aCellMorph].
 
@@ -105,19 +111,24 @@ SBCorrelationCluster >> displayedWatch: anSBExampleWatch [
 SBCorrelationCluster >> extractRow [
 
 	^ self correlatingUniverses 
-		collect: [:aUniverse | | display | 
-		display := ((aUniverse watches detect: [:aWatch | aWatch originalIdentifier = self displayedWatch identifier]) 
-					exampleToDisplay at: self displayedExample) value display.
-		self compressedMorphsForDisplay: display]
+		collect: [:aUniverse | | display watchMorph |
+		watchMorph :=  aUniverse watches detect: [:aWatch | aWatch originalIdentifier = self displayedWatch identifier].
+		display := (watchMorph exampleToDisplay at: self displayedExample) value display.
+		(self compressedMorphsForDisplay: display)
+			tag: (SBTag new
+				addFromExample: self displayedExample;
+				addFromWatch: self displayedWatch;
+				addFromPermutation: aUniverse activePermutation )]
 ]
 
 { #category : #building }
 SBCorrelationCluster >> extractedTopHeadingsFrom: aCollectionOfCorrelatingUniverses [
 
-	^ aCollectionOfCorrelatingUniverses collect: [:aCorrelatingUniverse |  
-		SBPartialPermutationLabel 
-			newDisplaying: (aCorrelatingUniverse activePermutation copyRemovingVariants: self basePermutation referencedVariants)
-			referingTo: aCorrelatingUniverse]
+	^ aCollectionOfCorrelatingUniverses collect: [:aCorrelatingUniverse | | partialPermutation |
+		partialPermutation :=  (aCorrelatingUniverse activePermutation copyRemovingVariants: self basePermutation referencedVariants).
+		(SBPartialPermutationLabel 
+			newDisplaying: partialPermutation
+			referingTo: aCorrelatingUniverse)]
 ]
 
 { #category : #visualisation }
@@ -131,6 +142,7 @@ SBCorrelationCluster >> newTopRowFrom: aCollectionOfPermutationLabels [
 		hResizing: #spaceFill;
 		addAllMorphsBack: (aCollectionOfPermutationLabels collect: [:aLabel | 
 			self newContainerMorph 
+				tag: (SBTag newFromPermutation: aLabel universe activePermutation);
 				addAllMorphsBack: {
 					(self 
 						wrapInCell: aLabel 

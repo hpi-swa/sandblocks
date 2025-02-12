@@ -38,7 +38,7 @@ SBCustomView >> initialize [
 	self buildButtonRow.
 	
 	self block addMorphBack: viewOptions.
-	self block addMorphBack: self selectedView
+	self block addMorphBack: self selectedView block
 	
 ]
 

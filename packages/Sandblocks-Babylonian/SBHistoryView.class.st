@@ -12,38 +12,29 @@ SBHistoryView >> addEpoche [
 	self block addMorph: self buildEpoche atIndex: 2
 ]
 
+{ #category : #accessing }
+SBHistoryView >> backtrackForExample: aSBExample [
+
+	^ self copySatisfying: {SBTag newFromExample: aSBExample}
+]
+
+{ #category : #accessing }
+SBHistoryView >> backtrackForPermutationName: aString [
+
+	^ self copySatisfying: {SBTag new permutationName: aString}
+]
+
+{ #category : #accessing }
+SBHistoryView >> backtrackForWatch: aSBWatch [
+
+	^ self copySatisfying: {SBTag newFromWatch: aSBWatch}
+]
+
 { #category : #building }
 SBHistoryView >> buildEpoche [
 
-	| row |
-	row := self containerRow.
-	^ row
-		cellGap: 0@10; 
-		listDirection: #topToBottom; 
-		addAllMorphsBack: {self buildMetaUsageIn: row. self buildSnapshotTabView}
+	^ SBHistoryEpoche new
 	
-	
-]
-
-{ #category : #building }
-SBHistoryView >> buildMetaUsageIn: aRow [
-
-	^ self containerRow
-		cellGap: 5@0;
-		addAllMorphsBack: {self deleteEpocheButton: aRow. 
-								TextMorph new contents: (Text fromString: TimeStamp current asStringOrText) allBold.
-								SBLabel new contents: 'Notes'}
-	
-	
-]
-
-{ #category : #building }
-SBHistoryView >> buildSnapshotTabView [
-
-	^ SBTabView 
-		namedBlocks: (self tabsToSnapshot
-							collect: [:aTab | SBNamedBlock block: aTab snapshot named: aTab name]) 
-		activeIndex: (SBExploriants uniqueInstance namedBlocks detect: #isOverview) activeIndex
 	
 ]
 
@@ -73,17 +64,20 @@ SBHistoryView >> clearButton [
 		cornerStyle: #squared
 ]
 
-{ #category : #building }
-SBHistoryView >> deleteEpocheButton: theRow [
+{ #category : #accessing }
+SBHistoryView >> copySatisfying: aCollectionOfSBTags [
 
-	^ SBButton new
-		icon: SBIcon iconTrash
-			do: [theRow delete];
-		balloonText: 'Delete this row';
-		cornerStyle: #squared;
-		makeSmall
-	
-	
+	| interactiveCopy |
+	interactiveCopy := self buildBlock.
+	self block submorphs allButFirstDo: [:anEpoche |
+		interactiveCopy addMorphBack: (anEpoche snapshotSatisfying: aCollectionOfSBTags)].
+	^ interactiveCopy
+]
+
+{ #category : #accessing }
+SBHistoryView >> epoches [
+
+	^ self block submorphs allButFirst
 ]
 
 { #category : #initialization }
@@ -93,6 +87,12 @@ SBHistoryView >> initialize [
 	
 	self name: 'History'.
 	self buildButtonRow.
+]
+
+{ #category : #accessing }
+SBHistoryView >> isHistoryView [
+
+	^ true
 ]
 
 { #category : #accessing }
@@ -109,7 +109,7 @@ SBHistoryView >> offerChangeTabMenu [
 	index := UIManager default chooseFrom: options.
 	index = 0 ifTrue: [^ self].
 	
-	self block submorphs allButFirst do: [:anEpoche | anEpoche lastSubmorph activeIndex: index].
+	self epoches do: [:anEpoche | anEpoche setIndexTo: index].
 ]
 
 { #category : #building }

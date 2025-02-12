@@ -149,6 +149,17 @@ SBExampleWatch >> asInactiveCopy [
 		yourself
 ]
 
+{ #category : #actions }
+SBExampleWatch >> backtrack [
+	<action>
+
+	SBExploriants uniqueInstance isInEditor 
+		ifTrue: [
+			self sandblockEditor openMorphInView: 
+				(SBExploriants uniqueInstance historyView backtrackForWatch: self)] 
+
+]
+
 { #category : #initialization }
 SBExampleWatch >> buildDefaultDisplayFor: anExample [
 
@@ -355,12 +366,7 @@ SBExampleWatch >> initialize [
 				listCentering: #bottomRight;
 				addMorphBack: dimensionOptions;
 				yourself.
-			SBVariant
-				named: 'modifyExpression'
-				associations: {'with' -> [modifyExpression]. 'without' -> []}
-				activeIndex: 2
-				id: '90d7c718-89b8-7e48-8262-467d07d56880'
-				isActive: false};
+			modifyExpression}
 		yourself
 ]
 

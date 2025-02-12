@@ -14,6 +14,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBOwnTextMorph >> adjustTextAnchor: aMorph [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> basicContents: aString [
 
 	contents ~= aString ifTrue: [
@@ -62,7 +68,7 @@ SBOwnTextMorph >> clearEmphasis [
 	self emphasis: TextEmphasis normal
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBOwnTextMorph >> color [
 
 	^ self sandblockForegroundColor alpha: colorAlpha
@@ -119,13 +125,13 @@ SBOwnTextMorph >> contentsToDisplay [
 	^ self contents size = 0 ifTrue: [self placeholderText] ifFalse: [self contents]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'e-toy support' }
 SBOwnTextMorph >> cursor [
 
 	^ cursor
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'e-toy support' }
 SBOwnTextMorph >> cursor: aNumber [
 
 	self basicCursor: aNumber.
@@ -223,7 +229,7 @@ SBOwnTextMorph >> displaySimpleCursorOn: aCanvas at: cursorX color: aColor [
 		line: cursorX + 1 @ self top to: cursorX + 1 @ self bottom color: (aColor alpha: 0.3)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 SBOwnTextMorph >> drawOn: aCanvas [
 
 	| font cursorX colorToUse |
@@ -314,24 +320,18 @@ SBOwnTextMorph >> font: aFont [
 ]
 
 { #category : #'as yet unclassified' }
-SBOwnTextMorph >> fontToUse [
-
-	^ (font ifNil: [TextStyle defaultFont]) emphasized: self effectiveEmphasis emphasisCode
-]
-
-{ #category : #'as yet unclassified' }
 SBOwnTextMorph >> fullContents [
 
 	^ contents, suffix
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBOwnTextMorph >> handlesKeyboard: anEvent [
 
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBOwnTextMorph >> handlesMouseDown: anEvent [
 
 	^ false
@@ -343,7 +343,7 @@ SBOwnTextMorph >> hasCursor [
 	^ cursor > 0
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBOwnTextMorph >> initialize [
 
 	super initialize.
@@ -377,7 +377,7 @@ SBOwnTextMorph >> insertString: aString [
 	self moveCursorTo: self cursor + aString size
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'change reporting' }
 SBOwnTextMorph >> invalidRect: aRectangle [
 
 	^ super invalidRect: (aRectangle expandBy: 2)
@@ -395,7 +395,7 @@ SBOwnTextMorph >> isCursorAtStart [
 	^ self cursor = 1
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #classification }
 SBOwnTextMorph >> isTextMorph [
 
 	^ true
@@ -407,7 +407,7 @@ SBOwnTextMorph >> italic [
 	self emphasis: TextEmphasis italic
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBOwnTextMorph >> keyStroke: anEvent [
 
 	| char |
@@ -424,7 +424,7 @@ SBOwnTextMorph >> keyStroke: anEvent [
 	(anEvent commandKeyPressed not and: [char isPrintable]) ifTrue: [self insertString: char asString]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBOwnTextMorph >> keyboardFocusChange: weHaveFocus [
 
 	self changed
@@ -436,7 +436,7 @@ SBOwnTextMorph >> maxWidth: aNumber [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBOwnTextMorph >> minExtent [
 
 	| font |
@@ -444,7 +444,7 @@ SBOwnTextMorph >> minExtent [
 	^ (font widthOfString: self contentsToDisplay) @ font height max: 4 @ font height
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBOwnTextMorph >> mouseDown: anEvent [
 
 	anEvent hand newKeyboardFocus: self
@@ -548,7 +548,7 @@ SBOwnTextMorph >> tiny [
 	self font: (TextStyle default fontOfSize: 6)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBOwnTextMorph >> userString [
 
 	^ self contentsForEdit
@@ -560,13 +560,13 @@ SBOwnTextMorph >> verySmall [
 	self font: (TextStyle default fontOfSize: 6 sbScaled)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBOwnTextMorph >> wantsKeyboardFocus [
 
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #menu }
 SBOwnTextMorph >> wantsMetaMenu [
 
 	^ false

@@ -118,6 +118,12 @@ SBExploriants >> evaluationReceiver [
 ]
 
 { #category : #accessing }
+SBExploriants >> historyView [ 
+
+	^ self namedBlocks detect: #isHistoryView 
+]
+
+{ #category : #accessing }
 SBExploriants >> ignoreUpdate [
 
 	^ ignoreUpdate

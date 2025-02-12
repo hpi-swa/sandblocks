@@ -395,7 +395,8 @@ SBTabView >> removeCurrentTab [
 { #category : #tabs }
 SBTabView >> setActive: aNamedBlock [
 
-	self containingArtefact isMethod ifFalse: [self basicSetActive: aNamedBlock. ^ self].
+	(self containingArtefact isNil or: [self containingArtefact isMethod not]) 
+		ifTrue: [self basicSetActive: aNamedBlock. ^ self].
 	
 	self containingArtefact hasUnsavedChanges
 		ifTrue: [self basicSetActive: aNamedBlock] 
@@ -404,6 +405,17 @@ SBTabView >> setActive: aNamedBlock [
 			SBExploriants uniqueInstance ignoreUpdate: true.
 			self sandblockEditor save: self containingArtefact  tryFixing: false quick: true.].
 	
+]
+
+{ #category : #ui }
+SBTabView >> snapshotSatisfying: aCollectionOfSBTags [
+
+	^ SBTabView
+		namedBlocks: (self namedBlocks collect: [:aTab | 
+			SBNamedBlock 
+				block: (aTab block snapshotSatisfying: aCollectionOfSBTags)
+				named: aTab name])
+		activeIndex: self activeIndex
 ]
 
 { #category : #accessing }

@@ -221,6 +221,18 @@ SBVariant >> asProxy [
 ]
 
 { #category : #actions }
+SBVariant >> backtrack [
+	<action>
+
+	SBExploriants uniqueInstance isInEditor 
+		ifTrue: [
+			self sandblockEditor openMorphInView: 
+				(SBExploriants uniqueInstance historyView 
+					backtrackForPermutationName: (self name, ': ', (self alternatives at: self activeIndex) nameToDisplay))] 
+
+]
+
+{ #category : #actions }
 SBVariant >> beActive [
 	<action>
 
