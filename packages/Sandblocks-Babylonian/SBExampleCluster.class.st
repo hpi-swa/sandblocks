@@ -92,7 +92,7 @@ SBExampleCluster >> extractedTopHeadingsFrom: aCollectionOfSBUniverses [
 ]
 
 { #category : #visualisation }
-SBExampleCluster >> newTopRowFrom: aCollectionOfTaggedLabels [
+SBExampleCluster >> newTopRowFrom: aCollectionOfPermutationLabels [
 	
 	"Width should be set, but height can vary"
 	^ self newContainerMorph 
@@ -100,17 +100,17 @@ SBExampleCluster >> newTopRowFrom: aCollectionOfTaggedLabels [
 		listCentering: #bottomRight;
 		cellPositioning: #topCenter;
 		hResizing: #spaceFill;
-		addAllMorphsBack: (aCollectionOfTaggedLabels collect: [:aTaggedLabel | 
+		addAllMorphsBack: (aCollectionOfPermutationLabels collect: [:aLabel | 
 			| wrappedLabel button |
-			aTaggedLabel rotationDegrees: 90.
-			wrappedLabel := (self wrapInCell: aTaggedLabel owner 
+			aLabel rotationDegrees: 90.
+			wrappedLabel := (self wrapInCell: aLabel owner 
 										flexVertically: true 
 										flexHorizontally: false) borderWidth: 0.
 			"Rotating morphs somehow clips their right border, so dirty hack so container gets clipped 1px"
 			button := self newContainerMorph 
-				tag:  (SBTag newFromPermutation: aTaggedLabel permutation);
+				tag:  (SBTag newFromPermutation: aLabel permutation);
 				cellInset: 1;
-				addMorphBack: (SBButton newApplyPermutationFor: aTaggedLabel permutation);
+				addMorphBack: (SBButton newApplyPermutationFor: aLabel permutation);
 				rotationDegrees: 90.
 			button owner width > wrappedLabel width ifTrue: [button firstSubmorph makeTiny].
 			

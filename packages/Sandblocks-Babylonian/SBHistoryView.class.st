@@ -67,11 +67,11 @@ SBHistoryView >> clearButton [
 { #category : #accessing }
 SBHistoryView >> copySatisfying: aCollectionOfSBTags [
 
-	| interactiveCopy |
-	interactiveCopy := self buildBlock.
-	self block submorphs allButFirstDo: [:anEpoche |
-		interactiveCopy addMorphBack: (anEpoche snapshotSatisfying: aCollectionOfSBTags)].
-	^ interactiveCopy
+	^ self buildBlock
+		addAllMorphsBack: (
+			self epoches 
+				collect: [:anEpoche | anEpoche snapshotSatisfying: aCollectionOfSBTags]);
+		yourself 
 ]
 
 { #category : #accessing }

@@ -153,10 +153,7 @@ SBExampleWatch >> asInactiveCopy [
 SBExampleWatch >> backtrack [
 	<action>
 
-	SBExploriants uniqueInstance isInEditor 
-		ifTrue: [
-			self sandblockEditor openMorphInView: 
-				(SBExploriants uniqueInstance historyView backtrackForWatch: self)] 
+	SBExploriants backtrack: #backtrackForWatch: withArguments: {self}
 
 ]
 

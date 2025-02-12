@@ -65,22 +65,6 @@ SBPermutationCluster >> extractedTopHeadingsFrom: aCollectionOfSBExampleWatches 
 			tag: (SBTag new exampleLabel: aDisplay labelMorph contents)])
 ]
 
-{ #category : #visualisation }
-SBPermutationCluster >> newTopRowFrom: aCollectionOfExampleLabels [
-	
-	"Width should be set, but height can vary"
-	^ self newContainerMorph 
-		listDirection: #leftToRight;
-		listCentering: #bottomRight;
-		cellPositioning: #topCenter;
-		hResizing: #spaceFill;
-		addAllMorphsBack: (aCollectionOfExampleLabels collect: [:aLabel | 
-			aLabel rotationDegrees: 90.
-			(self wrapInCell: aLabel owner 
-				flexVertically: true 
-				flexHorizontally: false) borderWidth: 0])
-]
-
 { #category : #accessing }
 SBPermutationCluster >> watches [
 

@@ -17,6 +17,16 @@ Class {
 }
 
 { #category : #accessing }
+SBExploriants class >> backtrack: aSymbol withArguments: argArray [
+
+	self uniqueInstance isInEditor 
+		ifTrue: [
+			self uniqueInstance sandblockEditor openMorphInView:
+				(self uniqueInstance historyView perform: aSymbol withArguments: argArray)] 
+
+]
+
+{ #category : #accessing }
 SBExploriants class >> deleteUniqueInstance [ 
 
 	uniqueInstance := nil

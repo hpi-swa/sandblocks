@@ -34,8 +34,9 @@ SBHistoryEpoche >> buildMetaUsage [
 SBHistoryEpoche >> buildSnapshotTabView [
 
 	^ SBTabView 
-		namedBlocks: (self tabsToSnapshot
-							collect: [:aTab | SBNamedBlock block: aTab snapshot named: aTab name]) 
+		namedBlocks: (
+			self tabsToSnapshot
+				collect: [:aTab | SBNamedBlock block: aTab snapshot named: aTab name]) 
 		activeIndex: (SBExploriants uniqueInstance namedBlocks detect: #isOverview) activeIndex
 	
 ]
@@ -80,7 +81,7 @@ SBHistoryEpoche >> initialize [
 		
 	self addAllMorphsBack: {
 		self buildMetaUsage. 
-		tabview := self buildSnapshotTabView.}
+		tabview := self buildSnapshotTabView}
 ]
 
 { #category : #accessing }

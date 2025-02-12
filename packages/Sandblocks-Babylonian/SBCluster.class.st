@@ -189,7 +189,7 @@ SBCluster >> wrapInCell: aMorph flexVertically: aVBoolean flexHorizontally: aHBo
 	cell addMorph: (ImageMorph new 
 		newForm: (aMorph imageForm scaledIntoFormOfSize: targetExtent);
 		when: #clicked send: #triggerEvent: to: aMorph with: #clicked;
-		tag: aMorph tag)..
+		tag: aMorph tag).
 	cell on: #click send: #value to: [cell submorphs first triggerEvent: #clicked].
 	^ cell
 ]

@@ -136,10 +136,7 @@ SBExample >> assertionBlock [
 SBExample >> backtrack [
 	<action>
 	
-	SBExploriants uniqueInstance isInEditor 
-		ifTrue: [
-			self sandblockEditor openMorphInView: 
-				(SBExploriants uniqueInstance historyView backtrackForExample: self)] 
+	SBExploriants backtrack: #backtrackForExample: withArguments: {self}
 
 	
 	

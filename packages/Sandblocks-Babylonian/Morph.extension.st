@@ -7,14 +7,6 @@ Morph >> applyResize: aPoint [
 ]
 
 { #category : #'*Sandblocks-Babylonian' }
-Morph >> childrenFormCollection [
-	
-	^ (self isTextMorph or: [self isStringMorph])
-		ifTrue: [{}]
-		ifFalse: [{ImageMorph new newForm: self imageForm}]
-]
-
-{ #category : #'*Sandblocks-Babylonian' }
 Morph class >> exampleObject [
 
 	^ self new
