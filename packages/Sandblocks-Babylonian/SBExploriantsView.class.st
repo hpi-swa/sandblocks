@@ -32,16 +32,16 @@ SBExploriantsView class >> newMultiverse: aSBMultiverse [
 
 { #category : #building }
 SBExploriantsView >> buildBlock [
-
-	^ SBBlock new
+    
+  ^ SBBlock new
 		changeTableLayout;
 		color: Color white;
 		listDirection: #topToBottom;
-		layoutInset: 3;
-		cellGap: 4;
+		layoutInset: 1;
+		cellGap: 2;
 		cellInset: 2;
 		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap
+		vResizing: #shrinkWrap.
 ]
 
 { #category : #building }
@@ -100,6 +100,12 @@ SBExploriantsView >> initialize [
 ]
 
 { #category : #accessing }
+SBExploriantsView >> isHistory [
+  self flag: #todo. "redundant to isHistoryView"
+	^ false
+]
+
+{ #category : #accessing }
 SBExploriantsView >> isHistoryView [
 
 	^ false
@@ -109,6 +115,12 @@ SBExploriantsView >> isHistoryView [
 SBExploriantsView >> isOverview [
 
 	^false
+]
+
+{ #category : #accessing }
+SBExploriantsView >> isVariantsView [
+
+	^ false
 ]
 
 { #category : #accessing }

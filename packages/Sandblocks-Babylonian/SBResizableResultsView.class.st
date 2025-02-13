@@ -21,11 +21,17 @@ SBResizableResultsView >> buildDimensionOptions [
 	options := SBMorphResizer standardOptions.
 
 	^ SBComboBox new
-		prefix: 'Preview sizes: ';
+		prefix: 'Preview size: ';
 		labels: (options collect: #label);
 		values: options;
 		object: options third;
 		when: #selectionChanged send: #applyResizer to: self
+]
+
+{ #category : #accessing }
+SBResizableResultsView >> buttons [
+
+	^ {dimensionOptions}
 ]
 
 { #category : #initialization }
@@ -40,16 +46,4 @@ SBResizableResultsView >> initialize [
 SBResizableResultsView >> selectedResizer [
 
 	^ dimensionOptions object
-]
-
-{ #category : #'as yet unclassified' }
-SBResizableResultsView >> visualize [ 
-
-	self clean.
-
-	self block addMorph: dimensionOptions.
-	self buildButtonRow.
-	
-	self buildAllPossibleResults .
-	self concludeContainerWidth.
 ]

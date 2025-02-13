@@ -14,19 +14,32 @@ Class {
 { #category : #utils }
 SBPermutation class >> allPermutationsOf: aCollectionOfVariants [
 
-	| permutations topLevelVariants nestedPermutations |
-	aCollectionOfVariants ifEmpty:[^{SBNilPermutation new referencedVariants: {}}].
-	topLevelVariants := aCollectionOfVariants select: [:aVariant | aVariant parentVariant isNil].
+	| topLevelVariants nestedPermutations |
+	aCollectionOfVariants ifEmpty:[^{SBPermutation singularity}].
+	topLevelVariants := aCollectionOfVariants reject: #hasParent.
 	nestedPermutations := topLevelVariants collect: #allPermutations.
-	permutations := nestedPermutations first.
 	
-	(2 to: topLevelVariants size) do: [:i | | nestedPermutation |
-		nestedPermutation := (nestedPermutations at: i).
-		permutations := permutations gather: [:aPermutation | 
-			nestedPermutation collect: [:aNestedPermutation | self newCombinedOf: aPermutation and: aNestedPermutation]]].
-	
-	^ permutations 
-		
+	^ SBPermutation combineAllIn: nestedPermutations.
+]
+
+{ #category : #utils }
+SBPermutation class >> combine: aPermutation withAll: aCollectionOfPermutations [
+ 
+	^ aCollectionOfPermutations collect: [:anotherPermutation | 
+			self newCombinedOf: aPermutation and: anotherPermutation]
+]
+
+{ #category : #utils }
+SBPermutation class >> combineAllIn: aCollectionOfNestedPermutations [ 
+
+	| combinedPermutations |
+	combinedPermutations := aCollectionOfNestedPermutations first. 
+	(2 to: aCollectionOfNestedPermutations size) do: [:index | | aCollectionOfPermutations |
+		aCollectionOfPermutations := aCollectionOfNestedPermutations at: index.
+		combinedPermutations := combinedPermutations gather: [:aPermutation | 
+			SBPermutation combine: aPermutation withAll: aCollectionOfPermutations]].
+			
+	^ combinedPermutations
 ]
 
 { #category : #utils }
@@ -42,6 +55,12 @@ SBPermutation class >> newCombinedOf: onePermutation and: anotherPermutation [
 	
 ]
 
+{ #category : #utils }
+SBPermutation class >> singularity [ 
+
+	^ SBNilPermutation new referencedVariants: {}
+]
+
 { #category : #accessing }
 SBPermutation >> activeScore [
 
@@ -52,11 +71,39 @@ SBPermutation >> activeScore [
 
 { #category : #actions }
 SBPermutation >> apply [
+	
+	self flag: #todo. "outdated references, jb" 
+	(self referencedVariants anySatisfy: [:aVariant | aVariant sandblockEditor isNil])
+		ifTrue: [ self applyWithOutdatedReferences ]
+		ifFalse: [ self applyOnOriginals ].
+	
+	
+]
 
-	self referencedVariants do: [:aVariant | aVariant switchToAlternative: (self at: aVariant id)].
-	((Set newFrom: (referencedVariants collect: #sandblockEditor))
-		reject: #isNil)
-		do: #sendNewPermutationNotification
+{ #category : #private }
+SBPermutation >> applyOnOriginals [
+	
+	self referencedVariants do: [:aVariant | aVariant switchToAlternativeWithoutSaving: (self at: aVariant id)].
+	SBExploriants uniqueInstance ignoreUpdate: true.
+	((self referencedVariants collect: #containingArtefact) asSet) do: [:aMethod | 
+		aMethod sandblockEditor save: aMethod tryFixing: false quick: false].
+	(self referencedVariants collect: #sandblockEditor) do: #sendNewPermutationNotification
+	
+	
+]
+
+{ #category : #private }
+SBPermutation >> applyWithOutdatedReferences [
+	
+	| newVariants |
+	self keys do: [:anId | SBExploriants uniqueInstance changeIndexOf: anId to: (self at: anId)].
+	newVariants := SBExploriants uniqueInstance variantsView proxies collect: #original.
+	self referencedVariants do: [:aVariant | 
+		newVariants detect: [:new | new id = aVariant id] 
+			ifFound: [:theVariant | aVariant becomeForward: theVariant]].
+	SBEditor current sendNewPermutationNotification
+	
+	
 ]
 
 { #category : #converting }
@@ -65,7 +112,8 @@ SBPermutation >> asString [
 	"collecting instead of calling (a active name), ', ', (b active name) in fold
 	as one variant only will not return a string but a variant"
 	^ (self referencedVariants collect: [:aVariant | 
-			aVariant name, ': ', (aVariant blockAt: (self at: aVariant id)) nameToDisplay ]) 
+			((aVariant name endsWith: ':') ifTrue: [aVariant name, ' '] ifFalse: [aVariant name, ': ']), 
+			(aVariant blockAt: (self at: aVariant id)) nameToDisplay ]) 
 			fold: [:a :b | a, ', ', Character cr, b ]
 
 	
@@ -122,7 +170,7 @@ SBPermutation >> copyRemovingVariants: aCollectionOfVariants [
 	 | copy |
 	copy := self class new.
 	copy referencedVariants: (self referencedVariants reject: [:aVariant | aCollectionOfVariants includes: aVariant]).
-	copy referencedVariants ifEmpty: [^ SBNilPermutation new referencedVariants: {}]. 
+	copy referencedVariants ifEmpty: [^ SBPermutation singularity]. 
 	"copy := self veryDeepCopy.
 	copy referencedVariants: (copy referencedVariants difference: aCollectionOfVariants)."
 	

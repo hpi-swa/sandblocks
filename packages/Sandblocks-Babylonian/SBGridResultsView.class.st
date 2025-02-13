@@ -54,5 +54,6 @@ SBGridResultsView >> newGridContainer [
 SBGridResultsView >> visualize [ 
 
 	super visualize.
-	self concludeContainerWidth
+	self concludeContainerWidth.
+
 ]

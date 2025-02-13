@@ -95,8 +95,8 @@ SBNamedBlock >> suggestedName [
 		String streamContents: [:aStream | 
 			aStream nextPutAll: ((self block statements collect: #suggestedAlternationName) 
 															fold: [:a :b | a, ' ', b])] 
-		limitedTo: 20.
-	limitedString size < 20 ifTrue: [^ limitedString].
+		limitedTo: 14.
+	limitedString size < 14 ifTrue: [^ limitedString].
 	^ limitedString , '...'
 ]
 

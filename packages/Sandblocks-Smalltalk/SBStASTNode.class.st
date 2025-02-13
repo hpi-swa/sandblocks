@@ -164,19 +164,10 @@ SBStASTNode >> grammarHandler [
 { #category : #accessing }
 SBStASTNode >> guessClassExpensive [
 
+	self flag: #fixme. "new sandbox interface, tobe"
 	^ self guessedClass ifNil: [
 		self valueOfProperty: #guessedClassExpensive ifAbsentPut: [
-			Smalltalk at: #Sandbox ifPresent: [:sandboxClass |
-				[
-					sandboxClass new
-						stepLimit: 100000;
-						evaluate: [
-								self evaluate ifNotNil: [:result |
-									[result class] on: MessageNotUnderstood do: ["might be ProtoObject"
-									thisContext objectClass: result]]]
-							ifFailed: [nil]]
-					on: (Smalltalk at: #SandboxError)
-					do: [:err | nil]]]]
+			nil]]
 ]
 
 { #category : #accessing }

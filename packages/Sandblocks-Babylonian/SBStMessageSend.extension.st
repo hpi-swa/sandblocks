@@ -4,6 +4,6 @@ Extension { #name : #SBStMessageSend }
 SBStMessageSend >> suggestedAlternationName [
 
 	^ self isAssignment
-		ifTrue: ['{2}{1}' format: {self selector. self receiver suggestedAlternationName}]
+		ifTrue: [self receiver suggestedAlternationName]
 		ifFalse: ['{1}' format: {self selector}]
 ]

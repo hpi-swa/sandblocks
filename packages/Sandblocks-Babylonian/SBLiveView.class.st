@@ -41,13 +41,13 @@ SBLiveView >> buildPreviewFor: aPermutation [
 		addAllMorphsBack: {
 			self containerRow listDirection: #topToBottom;
 				 addAllMorphsBack: { 
-					SBPermutationLabel newDisplaying: aPermutation.
+					(SBPermutationLabel newDisplaying: aPermutation) wrapFlag: false.
 					self newPermutationButtonRowFor: aPermutation showing: preview.
 					preview}}).
 ]
 
 { #category : #building }
-SBLiveView >> buildSetUpRow [
+SBLiveView >> buildSetUpRow [ 
 
 	self block addMorphBack: (SBRow new
 			changeTableLayout;
@@ -124,7 +124,6 @@ SBLiveView >> newPermutationButtonRowFor: aPermutation showing: aPreview [
 		layoutInset: 0;
 		cellInset: 0;
 		addAllMorphsBack: {
-			SBButton newApplyPermutationFor: aPermutation. 
 			self rebuildButtonIn: aPreview applying: aPermutation. 
 			self synchronizeButtonIn: aPreview}
 ]
@@ -133,12 +132,14 @@ SBLiveView >> newPermutationButtonRowFor: aPermutation showing: aPreview [
 SBLiveView >> newRegisteredListenerFor: aPermutation [ 
 
 	| listener container |
+	SBActiveVariantPermutation value: aPermutation.
 	listener := self evaluateSetUp.
 	container := broadcaster addListener: listener.
 	
 	listener allMorphsDo: [:aSubMorph | 
 		SBExploriants objectToPermutation at: aSubMorph put: aPermutation].
 	
+	SBActiveVariantPermutation value: nil.
 	^ container
 	
 ]

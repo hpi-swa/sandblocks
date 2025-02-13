@@ -10,7 +10,8 @@ Class {
 		'dimensionOptions',
 		'modifyExpression',
 		'exampleToDisplay',
-		'exampleToValues'
+		'exampleToValues',
+		'ignoreReports'
 	],
 	#classVars : [
 		'Registry'
@@ -79,7 +80,6 @@ SBExampleWatch class >> report: aValue for: aSymbol modifying: aBlock [
 
 	| watchers example |
 	example := SBExecutionEnvironment value ifNil: [^ aValue].
-	
 	watchers := self registry select: [:watcher | watcher notNil 
 		and: [watcher identifier = aSymbol]
 		and: [watcher isActive]].
@@ -130,7 +130,8 @@ SBExampleWatch >> asInactiveCopy [
 				originalIdentifier: self identifier;
 				expression: (SBTextBubble new contents: self cleanedExpression sourceString);
 				modifyExpression: self modifyExpression veryDeepCopy;
-				dimensionOptions: self dimensionOptions veryDeepCopy. 
+				dimensionOptions: self dimensionOptions veryDeepCopy;
+				createdWithPermutation: SBActiveVariantPermutation value. 
 				
 	exampleToValues keys do: [:anExample |	
 			copy exampleStarting: anExample;
@@ -141,8 +142,7 @@ SBExampleWatch >> asInactiveCopy [
 		(copy exampleToDisplay at: anExample) display 
 			selectedDisplayIndex: (exampleToDisplay at: anExample) display selectedDisplayIndex].		
 			
-	exampleToValues keys do: [:anExample |	copy exampleFinished: anExample].							
-	
+	exampleToValues keys do: [:anExample | copy exampleFinished: anExample].							
 												
 	^ copy 
 		saveObjectsActivePermutations;
@@ -342,8 +342,9 @@ SBExampleWatch >> initialize [
 	exampleToDisplay := IdentityDictionary new.
 	exampleToValues := IdentityDictionary new.
 	watchedExpression := SBStMessageSend new.
+	ignoreReports := false.
 	dimensionOptions := SBComboBox new
-		prefix: 'Preview sizes: ';
+		prefix: 'Preview size: ';
 		labels: (options collect: #label);
 		values: options;
 		object: options third;
@@ -363,7 +364,7 @@ SBExampleWatch >> initialize [
 				listCentering: #bottomRight;
 				addMorphBack: dimensionOptions;
 				yourself.
-			modifyExpression}
+			modifyExpression};
 		yourself
 ]
 
@@ -457,6 +458,12 @@ SBExampleWatch >> outOfWorld: aWorld [
 	super outOfWorld: aWorld.
 	
 	self class unregisterWatch: self
+]
+
+{ #category : #testing }
+SBExampleWatch >> preventOcclusion [
+
+	^ false
 ]
 
 { #category : #printing }

@@ -132,21 +132,35 @@ SBCorrelationCluster >> extractedTopHeadingsFrom: aCollectionOfCorrelatingUniver
 ]
 
 { #category : #visualisation }
+SBCorrelationCluster >> newLeftColumnFrom: aCollectionOfMorphs [
+	
+	"Height should be set, but width can vary"
+	^ self newContainerMorph 
+		cellPositioning: #rightCenter;
+		addAllMorphsBack: (aCollectionOfMorphs collect: [:aMorph | 
+			aMorph wrapFlag: false.
+			(self wrapInCell: aMorph flexVertically: false flexHorizontally: true)
+				listDirection: #rightToLeft;
+				borderWidth: 0])
+]
+
+{ #category : #visualisation }
 SBCorrelationCluster >> newTopRowFrom: aCollectionOfPermutationLabels [
 	
 	"Width should be set, but height can vary"
 	^ self newContainerMorph 
 		listDirection: #leftToRight;
 		listCentering: #bottomRight;
-		cellPositioning: #topCenter;
+		cellPositioning: #bottomCenter;
 		hResizing: #spaceFill;
 		addAllMorphsBack: (aCollectionOfPermutationLabels collect: [:aLabel | 
-			self newContainerMorph 
-				tag: (SBTag newFromPermutation: aLabel universe activePermutation);
-				addAllMorphsBack: {
-					(self 
-						wrapInCell: aLabel 
-						flexVertically: true 
-						flexHorizontally: false)  borderWidth: 0.
-					SBButton newApplyPermutationFor: (aLabel universe activePermutation).}])
+			self morphResizer applyOn: aLabel])
+]
+
+{ #category : #helper }
+SBCorrelationCluster >> wrapInCell: aMorph [
+
+	^ self morphResizer label = SBMorphResizer newIdentity label
+		ifTrue: [self wrapInCell: aMorph flexVertically: true flexHorizontally: true] 
+		ifFalse: [self wrapInCell: aMorph flexVertically: true flexHorizontally: false]
 ]

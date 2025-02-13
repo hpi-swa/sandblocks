@@ -263,7 +263,7 @@ SBWatchView >> layoutCommands [
 { #category : #layout }
 SBWatchView >> maxWidth [
 
-	^ 350
+	^ 350 sbScaled 
 ]
 
 { #category : #'object interface' }
@@ -309,7 +309,7 @@ SBWatchView >> reportValues: aCollectionOfWatchValues sized: aMorphResizer [
 SBWatchView >> resetOnlyValues [
 	"Private"
 
-	count contents: '0'.
+	shouldUpdateDisplay ifTrue: [count contents: '0'].
 	watchValues := LinkedList new.
 	
 ]

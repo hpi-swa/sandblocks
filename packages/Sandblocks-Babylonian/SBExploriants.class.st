@@ -66,15 +66,8 @@ SBExploriants >> artefactSaved: aMethodBlock [
 SBExploriants >> asTabButton: aNamedBlock [
 
 	| button |
-	button := SBButton new
-		label: aNamedBlock nameToDisplay do: [self setActive: aNamedBlock];
-		cornerStyle: #squared;
-		hResizing: #spaceFill;
-		changeTableLayout;
-		makeSmall;
-		listDirection: #leftToRight.
-	
-	aNamedBlock = self active ifTrue: [button makeBold].
+	button := super asTabButton: aNamedBlock.
+	button when: #doubleClicked send: #value to: [].
 	
 	^ button
 ]
@@ -95,24 +88,26 @@ SBExploriants >> binding: aString for: block class: aClass ifPresent: aBlock [
 ]
 
 { #category : #ui }
-SBExploriants >> buildTabs [
-
-	self addMorphBack: (SBRow new
-		addAllMorphsBack: (self namedBlocks collect: [:block | self asTabButton: block]);
-		name: #tabs;
-		changeTableLayout;
-		listDirection: #leftToRight;
-		hResizing: #shrinkWrap)
-]
-
-{ #category : #ui }
 SBExploriants >> buildView [
 
 	self addMorphBack: (self activeBlock hResizing: #shrinkWrap)
 ]
 
+{ #category : #accessing }
+SBExploriants >> buttonClass [
+
+	^ SBButton 
+]
+
 { #category : #testing }
 SBExploriants >> cacheType: aClass for: aBlock [
+]
+
+{ #category : #actions }
+SBExploriants >> changeIndexOf: aVariantId to: aNewIndex [
+
+	namedBlocks detect: #isVariantsView
+			ifFound: [:variantsView | variantsView changeIndexOf: aVariantId to: aNewIndex]
 ]
 
 { #category : #testing }
@@ -125,6 +120,12 @@ SBExploriants >> evaluationContext [
 SBExploriants >> evaluationReceiver [
 
 	^ self object
+]
+
+{ #category : #accessing }
+SBExploriants >> generationTimeout [
+
+	^ 20 seconds
 ]
 
 { #category : #accessing }
@@ -152,11 +153,22 @@ SBExploriants >> initialize [
 	
 	objectToPermutation := WeakKeyDictionary new.
 	updateProcessRunning := false.
+	ignoreUpdate := false.
+	namedBlocks := {SBExploriantsView new} asOrderedCollection.
 	
 	self
 		attachDecorator: SBMoveDecorator new;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap
+]
+
+{ #category : #initialization }
+SBExploriants >> intoWorld: aWorld [
+
+	super intoWorld: aWorld.
+	SystemChangeNotifier uniqueInstance
+		noMoreNotificationsFor: self;
+		notify: self ofSystemChangesOfItem: #method using: #methodChanged:
 ]
 
 { #category : #testing }
@@ -165,10 +177,27 @@ SBExploriants >> isArtefact [
 	^ true
 ]
 
+{ #category : #initialization }
+SBExploriants >> methodChanged: anEvent [
+  
+  self flag: #todo. "change with historyview api"
+	anEvent isModified 
+		ifTrue: [
+			namedBlocks detect: #isHistory
+			ifFound: [:history | history addCodeSnapshot: anEvent]]
+]
+
 { #category : #accessing }
 SBExploriants >> objectToPermutation [
 
 	^ objectToPermutation
+]
+
+{ #category : #initialization }
+SBExploriants >> outOfWorld: aWorld [
+
+	SystemChangeNotifier uniqueInstance noMoreNotificationsFor: self.
+	super outOfWorld: aWorld
 ]
 
 { #category : #'artefact protocol' }
@@ -182,12 +211,6 @@ SBExploriants >> selector [
 	" if this node represents any selector, return it here "
 
 	^ nil
-]
-
-{ #category : #accessing }
-SBExploriants >> tabs [
-
-	^ (self submorphNamed: #tabs) submorphs
 ]
 
 { #category : #actions }
@@ -221,7 +244,7 @@ SBExploriants >> updateInBackgroundOnTimeoutRevertTo: theOldMultiverse [
 		newMultiverse := SBMultiverse bigbangInEditorWithoutKaboom: self sandblockEditor.
 		self namedBlocks do: [:aTab | aTab multiverse: newMultiverse].
 		[newMultiverse kaboom] 
-			valueWithin: 7 seconds 
+			valueWithin: self generationTimeout
 			onTimeout: [newMultiverse cleanUp. 
 						  self namedBlocks do: [:aTab | aTab multiverse: theOldMultiverse]]. 
 		updateProcess := nil. updateProcessRunning := false.
@@ -229,10 +252,17 @@ SBExploriants >> updateInBackgroundOnTimeoutRevertTo: theOldMultiverse [
 ]
 
 { #category : #actions }
-SBExploriants >> visualize [
+SBExploriants >> variantsView [
 
-	| tabs |
+	^ namedBlocks detect: #isVariantsView
+]
+
+{ #category : #actions }
+SBExploriants >> visualize [
+	
+	|tabs|
 	self width: 0.
+	ignoreUpdate := false.
 	"tabs will visualize as soon as multiverse is finished"
 	tabs := SBExploriantsView getTabsInMultiverse: (SBMultiverse bigbangInEditor: self sandblockEditor).
 	

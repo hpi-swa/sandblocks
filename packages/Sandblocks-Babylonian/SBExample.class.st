@@ -336,12 +336,9 @@ SBExample >> lastError: anError [
 	anError
 		ifNotNil: [
 			true ifTrue: [
-				"ToolSet debugException: anError"
 				^ reportedError := self sandblockEditor
 					reportError: anError
-					process: ((Process forContext: anError signal copyStack priority: Processor activeProcess priority)
-						shouldResumeFromDebugger: false;
-						yourself)
+					process: currentProcess
 					source: self].
 			
 			errorIndicator ifNil: [
@@ -402,8 +399,7 @@ SBExample >> run [
 	self sendStartNotification.
 	
 	processRunning := true.
-	currentProcess := [
-		| returned |
+	currentProcess := [ | returned |
 		SBExecutionEnvironment value: self.
 		
 		[returned := self evaluate] on: Error do: [:e |
@@ -417,8 +413,8 @@ SBExample >> run [
 			returnValue reportValues: {returned asSBWatchValue} sized: SBMorphResizer newThumbmail.
 			returnValue updateDisplay.
 			self sendFinishNotification]
-	] forkAt: Processor userBackgroundPriority.
-
+		] forkAt: Processor userBackgroundPriority.
+	
 	^ currentProcess
 ]
 
@@ -469,7 +465,7 @@ SBExample >> self: aBlock args: aCollectionBlock label: aString [
 		removeAllMorphs;
 		addMorphBack: (icon := SBIcon iconPause
 			small;
-			color: Color white;
+			color: (Color white);
 			on: #click send: #toggleRunning to: self);
 		addMorphBack: (nameInput := SBTextBubble new contents: aString);
 		addMorphBack: (SBStringMorph new contents: 'self:');
@@ -546,8 +542,7 @@ SBExample >> stopRunning [
 	returnValue clear.
 	self updateIcon.
 	
-	self sandblockEditor allMorphsDo: [:morph |
-		(morph isSandblock and: [morph listensToExamples]) ifTrue: [morph exampleStopped: self]]
+	self sandblockEditor allMorphsDo: [:morph | (morph isSandblock and: [morph listensToExamples]) ifTrue: [morph exampleStopped: self]]
 ]
 
 { #category : #actions }

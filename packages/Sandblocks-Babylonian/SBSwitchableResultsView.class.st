@@ -13,7 +13,7 @@ Class {
 { #category : #accessing }
 SBSwitchableResultsView >> buttons [
 
-	^ {self toggleViewButton}
+	^ super buttons, {self toggleViewButton}
 ]
 
 { #category : #accessing }
@@ -58,7 +58,7 @@ SBSwitchableResultsView >> toggleViewButton [
 
 	^ SBButton new
 		icon: self toggleIcon
-			label: 'Group By Watches <> In Execution Order'
+			label: 'Group By Probes <> In Execution Order'
 			do: [self toggleView];
 		cornerStyle: #squared
 ]

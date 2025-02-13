@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBBlock,
 	#instVars : [
 		'namedBlocks',
-		'activeIndex'
+		'activeIndex',
+		'wantsTabCountChanges'
 	],
 	#category : #'Sandblocks-Core'
 }
@@ -113,15 +114,14 @@ SBTabView >> addButton [
 
 	^ SBButton new
 		icon: (SBIcon iconPlus
-				size: 7.0 sbScaled;
+				size: 10;
 				color: (Color green))
 			do: [self addTab];
 		makeSmall;
+		cellPositioning: #center;
 		cornerStyle: #squared;
 		vResizing: #spaceFill;
-		balloonText: 'Add';
-		cellGap: -1.0 sbScaled;
-		layoutInset: (4.0 @ 4.0) sbScaled
+		balloonText: 'Add'
 ]
 
 { #category : #commands }
@@ -154,15 +154,16 @@ SBTabView >> allMorphsDepthFirstDo: aBlock [
 SBTabView >> asTabButton: aNamedBlock [
 
 	| button |
-	button := SBEditableButton new
+	button := self buttonClass new
 		label: aNamedBlock nameToDisplay do: [self setActive: aNamedBlock];
 		cornerStyle: #squared;
 		makeSmall;
 		hResizing: #spaceFill;
 		changeTableLayout;
-		listDirection: #leftToRight;
-		addMorphBack: (self deleteButtonFor: aNamedBlock).
-	
+		listDirection: #leftToRight.
+		
+	self wantsTabCountChanges ifTrue: [button addMorphBack: (self deleteButtonFor: aNamedBlock)].
+		
 	aNamedBlock = self active ifTrue: [button makeBold].
 	button when: #contentsChanged send: #updateNameFor:on: to: self withArguments: {aNamedBlock. button}.
 	button when: #doubleClicked send: #triggerEvent: to: self with: #doubleClicked.
@@ -172,6 +173,8 @@ SBTabView >> asTabButton: aNamedBlock [
 
 { #category : #tabs }
 SBTabView >> basicSetActive: aNamedBlock [
+
+	self sandblockEditor ifNil: [^ self activeIndex: (self namedBlocks indexOf: aNamedBlock ifAbsent: 1)].
 
 	self sandblockEditor do: 
 		(self switchCommandFor: (self namedBlocks indexOf: aNamedBlock ifAbsent: 1)).
@@ -187,19 +190,27 @@ SBTabView >> blockAt: anIndex [
 { #category : #ui }
 SBTabView >> buildTabs [
 
-	self addMorphBack: (SBRow new
+	| tabs |
+	tabs := SBRow new
 		addAllMorphsBack: (self namedBlocks collect: [:block | self asTabButton: block]);
 		name: #tabs;
-		addMorphBack: self addButton;
 		changeTableLayout;
 		listDirection: #leftToRight;
-		hResizing: #shrinkWrap)
+		hResizing: #shrinkWrap.
+	self wantsTabCountChanges ifTrue: [tabs addMorphBack: self addButton].
+	self addMorphBack: tabs.
 ]
 
 { #category : #ui }
 SBTabView >> buildView [
 
 	self addMorphBack: (self activeBlock hResizing: #spaceFill)
+]
+
+{ #category : #accessing }
+SBTabView >> buttonClass [
+
+	^ SBEditableButton
 ]
 
 { #category : #ui }
@@ -226,6 +237,7 @@ SBTabView >> initialize [
 	
 	namedBlocks := {SBNamedBlock new} asOrderedCollection.
 	activeIndex := 1.
+	wantsTabCountChanges := false.
 	
 	self
 		changeTableLayout;
@@ -321,6 +333,13 @@ SBTabView >> jumpToTab: anIndex [
 	
 ]
 
+{ #category : #tabs }
+SBTabView >> jumpToTabWithoutSaving: anIndex [
+
+	self namedBlocks at: anIndex ifPresent: [:block | self basicSetActive: block]
+	
+]
+
 { #category : #'shortcut-utility' }
 SBTabView >> jumpToThirdTab [
 
@@ -403,7 +422,7 @@ SBTabView >> setActive: aNamedBlock [
 		ifFalse: ["changing tabs is latest change"
 			self basicSetActive: aNamedBlock.
 			SBExploriants uniqueInstance ignoreUpdate: true.
-			self sandblockEditor save: self containingArtefact  tryFixing: false quick: true.].
+			self sandblockEditor save: self containingArtefact tryFixing: false quick: false.].
 	
 ]
 
@@ -454,7 +473,9 @@ SBTabView >> tabCount [
 { #category : #accessing }
 SBTabView >> tabs [
 
-	^ (self submorphNamed: #tabs) submorphs allButLast
+	^ self wantsTabCountChanges 
+		ifTrue: [(self submorphNamed: #tabs) submorphs allButLast]
+		ifFalse: [(self submorphNamed: #tabs) submorphs]
 ]
 
 { #category : #ui }
@@ -491,4 +512,16 @@ SBTabView >> updateTabNames [
 SBTabView >> view [
 
 	^ self lastSubmorph
+]
+
+{ #category : #accessing }
+SBTabView >> wantsTabCountChanges [
+
+	^ wantsTabCountChanges
+]
+
+{ #category : #accessing }
+SBTabView >> wantsTabCountChanges: aBoolean [ 
+
+	wantsTabCountChanges := aBoolean
 ]

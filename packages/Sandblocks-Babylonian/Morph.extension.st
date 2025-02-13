@@ -19,6 +19,12 @@ Morph >> hasBeenTagged [
 ]
 
 { #category : #'*Sandblocks-Babylonian' }
+Morph >> isVariantProxy [
+
+	^ false
+]
+
+{ #category : #'*Sandblocks-Babylonian' }
 Morph >> layoutedTaggedCopy [
 
 	^ self class new
@@ -29,8 +35,6 @@ Morph >> layoutedTaggedCopy [
 		borderStyle: self borderStyle;
 		tag: self tag;
 		yourself 
-				
-		
 ]
 
 { #category : #'*Sandblocks-Babylonian' }
