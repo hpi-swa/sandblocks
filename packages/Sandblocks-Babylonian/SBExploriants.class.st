@@ -131,7 +131,10 @@ SBExploriants >> generationTimeout [
 { #category : #accessing }
 SBExploriants >> historyView [ 
 
-	^ self namedBlocks detect: #isHistoryView 
+	^ self namedBlocks 
+		detect: #isHistoryView 
+		ifFound: [:theHistory | theHistory]
+		ifNone: [nil]
 ]
 
 { #category : #accessing }
@@ -179,12 +182,10 @@ SBExploriants >> isArtefact [
 
 { #category : #initialization }
 SBExploriants >> methodChanged: anEvent [
-  
-  self flag: #todo. "change with historyview api"
+ 
 	anEvent isModified 
 		ifTrue: [
-			namedBlocks detect: #isHistory
-			ifFound: [:history | history addCodeSnapshot: anEvent]]
+			self historyView ifNotNil: [:history | history addCodeSnapshot: anEvent]]
 ]
 
 { #category : #accessing }

@@ -79,9 +79,7 @@ SBHistoryEpoche >> initialize [
 		cellInset: 2;
 		borderWidth: 0.
 		
-	self addAllMorphsBack: {
-		self buildMetaUsage. 
-		tabview := self buildSnapshotTabView}
+	self visualize
 ]
 
 { #category : #accessing }
@@ -96,7 +94,7 @@ SBHistoryEpoche >> privateSnapshotSatisfying: aCollectionOfSBTags from: original
 	self removeAllMorphs.
 	self addAllMorphsBack: {
 		self snapshotMetaUsageTimeStamp: originalEpoche timestamp notes: originalEpoche notes.
-		tabview snapshotSatisfying: aCollectionOfSBTags}
+		tabview := originalEpoche tabview snapshotSatisfying: aCollectionOfSBTags}
 ]
 
 { #category : #accessing }
@@ -119,7 +117,6 @@ SBHistoryEpoche >> snapshotMetaUsageTimeStamp: oldStamp notes: oldNotes [
 SBHistoryEpoche >> snapshotSatisfying: aCollectionOfSBTags [
 
 	^ self class new
-		setIndexTo: tabview activeIndex; 
 		privateSnapshotSatisfying: aCollectionOfSBTags from: self
 ]
 
@@ -130,7 +127,21 @@ SBHistoryEpoche >> tabsToSnapshot [
 ]
 
 { #category : #accessing }
+SBHistoryEpoche >> tabview [
+
+	^ tabview
+]
+
+{ #category : #accessing }
 SBHistoryEpoche >> timestamp [
 
 	^ timestamp
+]
+
+{ #category : #building }
+SBHistoryEpoche >> visualize [
+
+	self addAllMorphsBack: {
+		self buildMetaUsage. 
+		tabview := self buildSnapshotTabView}
 ]

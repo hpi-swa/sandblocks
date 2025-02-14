@@ -6,7 +6,7 @@ SBHistoryEpoche >> privateSnapshotSatisfying: aCollectionOfSBTags from: original
 	self removeAllMorphs.
 	self addAllMorphsBack: {
 		self snapshotMetaUsageTimeStamp: originalEpoche timestamp notes: originalEpoche notes.
-		tabview snapshotSatisfying: aCollectionOfSBTags}
+		tabview := originalEpoche tabview snapshotSatisfying: aCollectionOfSBTags}
 ]
 
 { #category : #'*Sandblocks-Babylonian' }
@@ -23,6 +23,5 @@ SBHistoryEpoche >> snapshotMetaUsageTimeStamp: oldStamp notes: oldNotes [
 SBHistoryEpoche >> snapshotSatisfying: aCollectionOfSBTags [
 
 	^ self class new
-		setIndexTo: tabview activeIndex; 
 		privateSnapshotSatisfying: aCollectionOfSBTags from: self
 ]

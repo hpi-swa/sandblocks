@@ -100,12 +100,6 @@ SBExploriantsView >> initialize [
 ]
 
 { #category : #accessing }
-SBExploriantsView >> isHistory [
-  self flag: #todo. "redundant to isHistoryView"
-	^ false
-]
-
-{ #category : #accessing }
 SBExploriantsView >> isHistoryView [
 
 	^ false

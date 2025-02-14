@@ -114,7 +114,7 @@ SBCluster >> newTopRowFrom: aCollectionOfMorphs [
 		cellPositioning: #topCenter;
 		hResizing: #spaceFill;
 		addAllMorphsBack: (aCollectionOfMorphs collect: [:aMorph | 
-			self morphResizer applyOn: aMorph])
+			self newContainerMorph addMorphBack: (self morphResizer applyOn: aMorph)])
 ]
 
 { #category : #visualisation }

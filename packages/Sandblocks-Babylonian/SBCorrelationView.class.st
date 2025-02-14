@@ -37,7 +37,7 @@ SBCorrelationView >> buildForExample: anExample watching: aWatch [
           listDirection: #topToBottom;
           cellPositioning:  #rightCenter;
           cellInset: 0@10;
-          addAllMorphsBack: ((self buildGridsFor: anExample watching: aWatch) flatten)}})
+          addAllMorphsBack: ((self buildGridsFor: anExample watching: aWatch) flatten)})
 ]
 
 { #category : #building }

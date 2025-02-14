@@ -154,7 +154,7 @@ SBCorrelationCluster >> newTopRowFrom: aCollectionOfPermutationLabels [
 		cellPositioning: #bottomCenter;
 		hResizing: #spaceFill;
 		addAllMorphsBack: (aCollectionOfPermutationLabels collect: [:aLabel | 
-			self morphResizer applyOn: aLabel])
+				self newContainerMorph addMorphBack: (self morphResizer applyOn: aLabel)])
 ]
 
 { #category : #helper }

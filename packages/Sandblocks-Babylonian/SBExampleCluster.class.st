@@ -91,19 +91,6 @@ SBExampleCluster >> extractedTopHeadingsFrom: aCollectionOfSBUniverses [
 			tag:  (SBTag newFromPermutation: aUniverse activePermutation)]
 ]
 
-{ #category : #visualisation }
-SBExampleCluster >> newTopRowFrom: aCollectionOfPermutationLabels [
-	
-	"Width should be set, but height can vary"
-	^ self newContainerMorph 
-		listDirection: #leftToRight;
-		listCentering: #bottomRight;
-		cellPositioning: #topCenter;
-		hResizing: #spaceFill;
-		addAllMorphsBack: (aCollectionOfPermutationLabels collect: [:aLabel | 
-			self morphResizer applyOn: aLabel])
-]
-
 { #category : #accessing }
 SBExampleCluster >> universes [
 

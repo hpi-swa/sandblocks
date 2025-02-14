@@ -12,7 +12,7 @@ SBHistoryView >> addCodeSnapshot: aChange [
 
 	self ensureStackSize.
 	
-	self scroller addMorphFront: (self buildCodeSnapshot: aChange)
+	self scroller addMorphFront: (SBHistoryCodeEpoche new change: aChange)
 ]
 
 { #category : #building }
@@ -20,7 +20,7 @@ SBHistoryView >> addEpoche [
 
 	self ensureStackSize.
 	
-	self scroller addMorphFront: self buildEpoche
+	self scroller addMorphFront: SBHistoryEpoche new
 ]
 
 { #category : #accessing }
@@ -39,33 +39,6 @@ SBHistoryView >> backtrackForPermutationName: aString [
 SBHistoryView >> backtrackForWatch: aSBWatch [
 
 	^ self copySatisfying: {SBTag newFromWatch: aSBWatch}
-]
-
-{ #category : #building }
-SBHistoryView >> buildCodeSnapshot: aChange [
-
-	| row lastVersion |
-	row := self containerRow.
-	
-	lastVersion := (VersionsBrowser new
-		scanVersionsOf: aChange item class: aChange item methodClass meta: false
-		category: aChange item methodReference category selector: aChange item selector) changeList at: 2 ifAbsent: [nil].
-	
-	^ row
-		cellGap: 0@10; 
-		listDirection: #topToBottom; 
-		addAllMorphsBack: {
-			self buildMetaUsageIn: row. 
-			(lastVersion ifNotNil: [
-			(TextDiffBuilder buildDisplayPatchFrom: lastVersion text to: aChange item getSource inClass: aChange item methodClass prettyDiffs: false)] ifNil: [aChange item getSource]) asMorph
-		}
-	
-	
-]
-
-{ #category : #building }
-SBHistoryView >> buildEpoche [
-  ^ SBHistoryEpoche new
 ]
 
 { #category : #building }
@@ -125,11 +98,16 @@ SBHistoryView >> clearButton [
 { #category : #accessing }
 SBHistoryView >> copySatisfying: aCollectionOfSBTags [
 
-	^ self buildBlock
-		addAllMorphsBack: (
-			self epoches 
-				collect: [:anEpoche | anEpoche snapshotSatisfying: aCollectionOfSBTags]);
-		yourself 
+	| newScrollPane block |
+	newScrollPane := self buildScrollPane.
+	block := self buildBlock.
+	block addMorphBack: newScrollPane.
+	newScrollPane 
+		hResizing: #shrinkWrap;
+		width: scrollPane width.
+	newScrollPane scroller addAllMorphsBack: (self epoches 
+				collect: [:anEpoche | anEpoche snapshotSatisfying: aCollectionOfSBTags]).
+	^ block
 ]
 
 { #category : #building }
@@ -156,12 +134,6 @@ SBHistoryView >> initialize [
 ]
 
 { #category : #accessing }
-SBHistoryView >> isHistory [ 
-
-	^ true
-]
-
-{ #category : #accessing }
 SBHistoryView >> isHistoryView [
 
 	^ true
@@ -181,7 +153,6 @@ SBHistoryView >> offerChangeTabMenu [
 	index := UIManager default chooseFrom: options.
 	index = 0 ifTrue: [^ self].
 	
-  self flag: #todo. "epoches for code snapshots should respond to same api and do nothing"
 	self epoches do: [:anEpoche | anEpoche setIndexTo: index].
 ]
 
