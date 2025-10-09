@@ -53,7 +53,7 @@ BaselineOfSandblocks >> baseline: spec [
 			baseline: 'Ohm' with: [spec repository: 'github://hpi-swa/Ohm-S:master/packages'];
 			baseline: 'SimulationStudio' with: [
 				spec
-					repository: 'github://LinqLover/SimulationStudio/packages';
+					repository: 'github://LinqLover/SimulationStudio:squeak60/packages';
 					loads: #('SimulationStudio-Base' 'SimulationStudio-Sandbox')];
 			package: 'SVG-Morphic' with: [spec repository: 'http://www.squeaksource.com/SVGMorph'];
 			package: 'PoppyPrint-Core' with: [spec repository: 'github://tom95/poppy-print/packages'].
