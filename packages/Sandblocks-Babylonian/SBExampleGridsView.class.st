@@ -17,15 +17,19 @@ SBExampleGridsView >> buildAllPossibleResults [
 { #category : #building }
 SBExampleGridsView >> buildExampleFor: aNumber [
 		
-	gridContainer addMorphBack: (self containerRow cellPositioning: #center;
-		addAllMorphsBack: {
-			self containerRow listDirection: #topToBottom;
-				addAllMorphsBack: { 
-					SBOwnTextMorph new contents: 'example: ', (self multiverse activeExamples at: aNumber) label.
-					self currentClusterClass
-						newForSize: self selectedResizer
-						multiverse: self multiverse 
-						displaying: aNumber}})
+	gridContainer addMorphBack: (
+		self containerRow 
+			cellPositioning: #center;
+			tag: (SBTag newFromExample: (self multiverse activeExamples at: aNumber));
+			addAllMorphsBack: {
+				self containerRow 
+					listDirection: #topToBottom;
+					addAllMorphsBack: { 
+						SBOwnTextMorph new contents: 'example: ', (self multiverse activeExamples at: aNumber) label.
+						self currentClusterClass
+							newForSize: self selectedResizer
+							multiverse: self multiverse 
+							displaying: aNumber}})
 ]
 
 { #category : #accessing }

@@ -12,7 +12,7 @@ SBHistoryView >> addCodeSnapshot: aChange [
 
 	self ensureStackSize.
 	
-	self scroller addMorphFront: (self buildCodeSnapshot: aChange)
+	self scroller addMorphFront: (SBHistoryCodeEpoche new change: aChange)
 ]
 
 { #category : #building }
@@ -20,54 +20,25 @@ SBHistoryView >> addEpoche [
 
 	self ensureStackSize.
 	
-	self scroller addMorphFront: self buildEpoche
+	self scroller addMorphFront: SBHistoryEpoche new
 ]
 
-{ #category : #building }
-SBHistoryView >> buildCodeSnapshot: aChange [
+{ #category : #accessing }
+SBHistoryView >> backtrackForExample: aSBExample [
 
-	| row lastVersion |
-	row := self containerRow.
-	
-	lastVersion := (VersionsBrowser new
-		scanVersionsOf: aChange item class: aChange item methodClass meta: false
-		category: aChange item methodReference category selector: aChange item selector) changeList at: 2 ifAbsent: [nil].
-	
-	^ row
-		cellGap: 0@10; 
-		listDirection: #topToBottom; 
-		addAllMorphsBack: {
-			self buildMetaUsageIn: row. 
-			(lastVersion ifNotNil: [
-			(TextDiffBuilder buildDisplayPatchFrom: lastVersion text to: aChange item getSource inClass: aChange item methodClass prettyDiffs: false)] ifNil: [aChange item getSource]) asMorph
-		}
-	
-	
+	^ self copySatisfying: {SBTag newFromExample: aSBExample}
 ]
 
-{ #category : #building }
-SBHistoryView >> buildEpoche [
+{ #category : #accessing }
+SBHistoryView >> backtrackForPermutationName: aString [
 
-	| row |
-	row := self containerRow.
-	^ row
-		cellGap: 0@10; 
-		listDirection: #topToBottom; 
-		addAllMorphsBack: {self buildMetaUsageIn: row. self buildSnapshotTabView}
-	
-	
+	^ self copySatisfying: {SBTag new permutationName: aString}
 ]
 
-{ #category : #building }
-SBHistoryView >> buildMetaUsageIn: aRow [
+{ #category : #accessing }
+SBHistoryView >> backtrackForWatch: aSBWatch [
 
-	^ self containerRow
-		cellGap: 5@0;
-		addAllMorphsBack: {self deleteEpocheButton: aRow. 
-								TextMorph new contents: (Text fromString: TimeStamp current asStringOrText) allBold.
-								SBLabel new contents: 'Notes'}
-	
-	
+	^ self copySatisfying: {SBTag newFromWatch: aSBWatch}
 ]
 
 { #category : #building }
@@ -90,16 +61,6 @@ SBHistoryView >> buildScrollPane [
 		cellGap: 2;
 		cellInset: 2.
 	^ scrollPane
-]
-
-{ #category : #building }
-SBHistoryView >> buildSnapshotTabView [
-
-	^ SBTabView 
-		namedBlocks: (self tabsToSnapshot
-							collect: [:aTab | SBNamedBlock block: aTab snapshot named: aTab name]) 
-		activeIndex: (SBExploriants uniqueInstance namedBlocks detect: #isOverview) activeIndex
-	
 ]
 
 { #category : #building }
@@ -134,23 +95,31 @@ SBHistoryView >> clearButton [
 		cornerStyle: #squared
 ]
 
-{ #category : #building }
-SBHistoryView >> deleteEpocheButton: theRow [
+{ #category : #accessing }
+SBHistoryView >> copySatisfying: aCollectionOfSBTags [
 
-	^ SBButton new
-		icon: SBIcon iconTrash
-			do: [theRow delete];
-		balloonText: 'Delete this row';
-		cornerStyle: #squared;
-		makeSmall
-	
-	
+	| newScrollPane block |
+	newScrollPane := self buildScrollPane.
+	block := self buildBlock.
+	block addMorphBack: newScrollPane.
+	newScrollPane 
+		hResizing: #shrinkWrap;
+		width: scrollPane width.
+	newScrollPane scroller addAllMorphsBack: (self epoches 
+				collect: [:anEpoche | anEpoche snapshotSatisfying: aCollectionOfSBTags]).
+	^ block
 ]
 
 { #category : #building }
 SBHistoryView >> ensureStackSize [
 
 	self scroller submorphs size > self maxEpoches ifTrue: [self scroller lastSubmorph delete]. 
+]
+
+{ #category : #accessing }
+SBHistoryView >> epoches [
+
+	^ self scroller submorphs
 ]
 
 { #category : #initialization }
@@ -165,7 +134,7 @@ SBHistoryView >> initialize [
 ]
 
 { #category : #accessing }
-SBHistoryView >> isHistory [ 
+SBHistoryView >> isHistoryView [
 
 	^ true
 ]
@@ -184,8 +153,7 @@ SBHistoryView >> offerChangeTabMenu [
 	index := UIManager default chooseFrom: options.
 	index = 0 ifTrue: [^ self].
 	
-	self scroller submorphs do: [:anEpoche | 
-		(anEpoche lastSubmorph isKindOf: SBTabView) ifTrue: [anEpoche lastSubmorph activeIndex: index]].
+	self epoches do: [:anEpoche | anEpoche setIndexTo: index].
 ]
 
 { #category : #building }

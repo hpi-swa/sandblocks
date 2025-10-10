@@ -149,6 +149,14 @@ SBExampleWatch >> asInactiveCopy [
 		yourself
 ]
 
+{ #category : #actions }
+SBExampleWatch >> backtrack [
+	<action>
+
+	SBExploriants backtrack: #backtrackForWatch: withArguments: {self}
+
+]
+
 { #category : #initialization }
 SBExampleWatch >> buildDefaultDisplayFor: anExample [
 

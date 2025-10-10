@@ -17,6 +17,16 @@ Class {
 }
 
 { #category : #accessing }
+SBExploriants class >> backtrack: aSymbol withArguments: argArray [
+
+	self uniqueInstance isInEditor 
+		ifTrue: [
+			self uniqueInstance sandblockEditor openMorphInView:
+				(self uniqueInstance historyView perform: aSymbol withArguments: argArray)] 
+
+]
+
+{ #category : #accessing }
 SBExploriants class >> deleteUniqueInstance [ 
 
 	uniqueInstance := nil
@@ -119,6 +129,15 @@ SBExploriants >> generationTimeout [
 ]
 
 { #category : #accessing }
+SBExploriants >> historyView [ 
+
+	^ self namedBlocks 
+		detect: #isHistoryView 
+		ifFound: [:theHistory | theHistory]
+		ifNone: [nil]
+]
+
+{ #category : #accessing }
 SBExploriants >> ignoreUpdate [
 
 	^ ignoreUpdate
@@ -163,11 +182,10 @@ SBExploriants >> isArtefact [
 
 { #category : #initialization }
 SBExploriants >> methodChanged: anEvent [
-
+ 
 	anEvent isModified 
 		ifTrue: [
-			namedBlocks detect: #isHistory
-			ifFound: [:history | history addCodeSnapshot: anEvent]]
+			self historyView ifNotNil: [:history | history addCodeSnapshot: anEvent]]
 ]
 
 { #category : #accessing }

@@ -42,8 +42,7 @@ SBCustomView >> initialize [
 	self name: 'Results'.
 	
 	self buildButtonRow.
-	self block addMorphBack: self selectedView
-	
+	self block addMorphBack: self selectedView block.
 ]
 
 { #category : #accessing }

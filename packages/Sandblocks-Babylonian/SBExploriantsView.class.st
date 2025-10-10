@@ -31,6 +31,20 @@ SBExploriantsView class >> newMultiverse: aSBMultiverse [
 ]
 
 { #category : #building }
+SBExploriantsView >> buildBlock [
+    
+  ^ SBBlock new
+		changeTableLayout;
+		color: Color white;
+		listDirection: #topToBottom;
+		layoutInset: 1;
+		cellGap: 2;
+		cellInset: 2;
+		hResizing: #shrinkWrap;
+		vResizing: #shrinkWrap.
+]
+
+{ #category : #building }
 SBExploriantsView >> buildButtonRow [ 
 
 	self block addMorphFront: (SBRow new
@@ -82,19 +96,11 @@ SBExploriantsView >> initialize [
 
 	super initialize.
 	
-	self block: (SBBlock new
-		changeTableLayout;
-		color: Color white;
-		listDirection: #topToBottom;
-		layoutInset: 1;
-		cellGap: 2;
-		cellInset: 2;
-		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap).
+	self block: self buildBlock.
 ]
 
 { #category : #accessing }
-SBExploriantsView >> isHistory [
+SBExploriantsView >> isHistoryView [
 
 	^ false
 ]
@@ -146,9 +152,9 @@ SBExploriantsView >> saveButton [
 ]
 
 { #category : #copying }
-SBExploriantsView >> snapshot [
+SBExploriantsView >> snapshotSatisfying: aCollectionOfSBTags [
 
-	^ ImageMorph new newForm: self block imageForm
+	^ self block snapshotSatisfying: aCollectionOfSBTags
 ]
 
 { #category : #building }

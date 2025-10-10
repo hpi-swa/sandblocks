@@ -23,19 +23,21 @@ SBCorrelationView >> buildAllPossibleResults [
 
 { #category : #building }
 SBCorrelationView >> buildForExample: anExample watching: aWatch [
-
-	gridContainer addMorphBack: (self containerRow cellPositioning: #center;
-		addAllMorphsBack: {
-			self containerRow listDirection: #topToBottom;
-				addAllMorphsBack: { 
-					SBOwnTextMorph new contents: (
+	gridContainer addMorphBack: (
+		self containerRow 
+			cellPositioning: #center;
+			tag: (SBTag new 
+					addFromExample: anExample;
+					addFromWatch: aWatch);
+			addAllMorphsBack: {
+        SBOwnTextMorph new contents: (
 						'{1} {2}' format: {anExample label.
 											 (aWatch cleanedExpression sourceString withoutLineEndings)}).
-					self containerRow 
-						listDirection: #topToBottom;
-						cellPositioning:  #rightCenter;
-						cellInset: 0@10;
-						addAllMorphsBack: ((self buildGridsFor: anExample watching: aWatch) flatten)}})
+        self containerRow 
+          listDirection: #topToBottom;
+          cellPositioning:  #rightCenter;
+          cellInset: 0@10;
+          addAllMorphsBack: ((self buildGridsFor: anExample watching: aWatch) flatten)})
 ]
 
 { #category : #building }

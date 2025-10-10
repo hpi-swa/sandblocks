@@ -45,7 +45,7 @@ SBStMessageSend >> asExample [
 			args: (SBStArray new
 				type: #dynamic
 				contents: self arguments veryDeepCopy)
-			label: 'example'
+			label: SBExample nameSuggestion
 ]
 
 { #category : #converting }

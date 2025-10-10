@@ -15,7 +15,9 @@ SBPermutationGridsView >> buildPermutationFor: aSBUniverse [
 		
 	gridContainer addMorphBack: (self containerRow cellPositioning: #center;
 		addAllMorphsBack: {
-			self containerRow listDirection: #topToBottom;
+			self containerRow 
+				listDirection: #topToBottom;
+				tag: (SBTag newFromPermutation: aSBUniverse activePermutation);
 				addAllMorphsBack: { 
 					(SBPermutationLabel newDisplaying: aSBUniverse activePermutation)
 						wrapFlag: false.

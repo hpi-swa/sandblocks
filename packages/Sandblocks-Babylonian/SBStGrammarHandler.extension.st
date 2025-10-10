@@ -41,7 +41,7 @@ SBStGrammarHandler >> createExampleIn: aMethod classed: aClass [
 				type: #dynamic
 				contents: (aMethod arguments collect: [:anArgument | 
 					self extractBlockFromArgumentName: anArgument contents]))
-			label: 'example'.
+			label: SBExample nameSuggestion
 ]
 
 { #category : #'*Sandblocks-Babylonian' }

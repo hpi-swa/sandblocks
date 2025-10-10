@@ -12,10 +12,13 @@ SBTrace class >> newForSize: aMorphResizer example: anExample watches: aCollecti
 ]
 
 { #category : #visualization }
-SBTrace >> addSectionFor: aWatchValue resizer: aMorphResizer [
+SBTrace >> addSectionFor: aWatchValue resizer: aMorphResizer example: anExample [
 
 	self addMorphBack: (
 		self placeHolderMorph
+			tag: ((SBTag 
+				newFromWatch: aWatchValue occuringWatch)
+				addFromExample: anExample);
 			addMorphBack: (TextMorph new contents: (aWatchValue expressionString asText
 									addAttribute: (TextColor color: Color gray);
 									yourself));
@@ -70,5 +73,9 @@ SBTrace >> sortedWatchValuesFor: anExample givenWatches: aCollectionOfWatches [
 SBTrace >> visualizeFor: anExample withWatches: aCollectionOfWatches resizer: aMorphResizer [
 
 	(self sortedWatchValuesFor: anExample givenWatches: aCollectionOfWatches)
-		 do: [:aWatchValue | self addSectionFor: aWatchValue resizer: aMorphResizer]
+		 do: [:aWatchValue | 
+			self 
+				addSectionFor: aWatchValue 
+				resizer: aMorphResizer 
+				example: anExample]
 ]

@@ -31,9 +31,9 @@ SBSwitchableResultsView >> initialize [
 ]
 
 { #category : #copying }
-SBSwitchableResultsView >> snapshot [
+SBSwitchableResultsView >> snapshotSatisfying: aCollectionOfSBTags [
 
-	^ ImageMorph new newForm: gridContainer imageForm
+	^ gridContainer snapshotSatisfying: aCollectionOfSBTags
 	
 ]
 

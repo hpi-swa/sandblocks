@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBCluster,
 	#instVars : [
 		'displayedIndex',
-		'multiverse'
+		'examples',
+		'universes'
 	],
 	#category : #'Sandblocks-Babylonian'
 }
@@ -13,7 +14,8 @@ SBExampleCluster class >> newForSize: aSBMorphResizer multiverse: aSBMultiverse 
 
 	^ self new 
 		morphResizer: aSBMorphResizer;
-		multiverse: aSBMultiverse;
+		universes: aSBMultiverse universes;
+		examples: aSBMultiverse activeExamples; 
 		displayedIndex: aNumber;
 		visualize;
 		yourself 
@@ -25,15 +27,15 @@ SBExampleCluster >> buildDisplayMatrix [
 
 	| matrix |
 	matrix := Matrix 
-		rows: (self multiverse universes first watches size) + 1
-		columns: self multiverse universes size + 1.
+		rows: self universes first watches size + 1
+		columns: self universes size + 1.
 		
 	matrix atRow: 1 put: ({self newTopLeftCornerPlaceholder}, 
-		(self extractedTopHeadingsFrom: self multiverse)).
+		(self extractedTopHeadingsFrom: self universes)).
 	matrix atColumn: 1 put: ({self newTopLeftCornerPlaceholder}, 
-		(self extractedLeftHeadingsFrom: self multiverse)).
+		(self extractedLeftHeadingsFrom: self universes first watches)).
 	
-	self multiverse universes withIndexDo: [:aUniverse :column | 
+	self universes withIndexDo: [:aUniverse :column | 
 		(self extractRowsFrom: aUniverse) withIndexDo: [:aCellMorph :row| 
 			matrix at: row+1 at: column+1 put: aCellMorph]].
 
@@ -52,48 +54,51 @@ SBExampleCluster >> displayedIndex: aNumber [
 	displayedIndex := aNumber
 ]
 
+{ #category : #accessing }
+SBExampleCluster >> examples [
+
+	^ examples
+]
+
+{ #category : #accessing }
+SBExampleCluster >> examples: aCollectionOfSBExamples [
+	
+	examples := aCollectionOfSBExamples
+]
+
 { #category : #visualisation }
 SBExampleCluster >> extractRowsFrom: aUniverse [
 
 	^ aUniverse watches collect: [:aWatch | | display | 
-		display := (aWatch exampleToDisplay at: (self multiverse activeExamples at: self displayedIndex)) value display.
-		self compressedMorphsForDisplay: display]
+		display := (aWatch exampleToDisplay at: (self examples at: self displayedIndex)) value display.
+		(self compressedMorphsForDisplay: display) 
+			tag: ((SBTag newFromWatch: aWatch) addFromPermutation: aUniverse activePermutation)]
 ]
 
 { #category : #visualisation }
-SBExampleCluster >> extractedLeftHeadingsFrom: aSBMultiverse [
+SBExampleCluster >> extractedLeftHeadingsFrom: aCollectionOfSBExampleWatches [
 
-	^ (aSBMultiverse universes first watches collect: [:aWatch | aWatch expression copy])
+	^ (aCollectionOfSBExampleWatches collect: [:aWatch | 
+		aWatch expression copy
+			tag: (SBTag newFromWatch: aWatch)])
 ]
 
 { #category : #visualisation }
-SBExampleCluster >> extractedTopHeadingsFrom: aSBMultiverse [
+SBExampleCluster >> extractedTopHeadingsFrom: aCollectionOfSBUniverses [
 
-	^ (aSBMultiverse universes collect: [:aUniverse | 
-			SBPermutationLabel newDisplaying: aUniverse activePermutation])
+	^ aCollectionOfSBUniverses collect: [:aUniverse | 
+		(SBPermutationLabel newDisplaying: aUniverse activePermutation)
+			tag:  (SBTag newFromPermutation: aUniverse activePermutation)]
 ]
 
 { #category : #accessing }
-SBExampleCluster >> multiverse [
+SBExampleCluster >> universes [
 
-	^ multiverse
+	^ universes
 ]
 
 { #category : #accessing }
-SBExampleCluster >> multiverse: aSBMultiverse [
+SBExampleCluster >> universes: aCollectionOfSBUniverses [
 
-	multiverse := aSBMultiverse
-]
-
-{ #category : #visualisation }
-SBExampleCluster >> newTopRowFrom: aCollectionOfPermutationLabels [
-	
-	"Width should be set, but height can vary"
-	^ self newContainerMorph 
-		listDirection: #leftToRight;
-		listCentering: #bottomRight;
-		cellPositioning: #topCenter;
-		hResizing: #spaceFill;
-		addAllMorphsBack: (aCollectionOfPermutationLabels collect: [:aLabel | 
-			self morphResizer applyOn: aLabel])
+	universes := aCollectionOfSBUniverses
 ]

@@ -114,7 +114,7 @@ SBCluster >> newTopRowFrom: aCollectionOfMorphs [
 		cellPositioning: #topCenter;
 		hResizing: #spaceFill;
 		addAllMorphsBack: (aCollectionOfMorphs collect: [:aMorph | 
-			self morphResizer applyOn: aMorph])
+			self newContainerMorph addMorphBack: (self morphResizer applyOn: aMorph)])
 ]
 
 { #category : #visualisation }
@@ -172,7 +172,7 @@ SBCluster >> wrapInCell: aMorph [
 { #category : #helper }
 SBCluster >> wrapInCell: aMorph flexVertically: aVBoolean flexHorizontally: aHBoolean [
 
-	| cell targetExtent|
+	| cell targetExtent |
 	cell := self newCellMorph.
 	cell on: #click send: #value to: [aMorph triggerEvent: #clicked].
 	
@@ -192,7 +192,8 @@ SBCluster >> wrapInCell: aMorph flexVertically: aVBoolean flexHorizontally: aHBo
 	self flag: #todo. "Another way besides turning into an image to keep interactions.-jb"
 	cell addMorph: (ImageMorph new 
 		newForm: (aMorph imageForm scaledIntoFormOfSize: targetExtent);
-		when: #clicked send: #triggerEvent: to: aMorph with: #clicked).
-	
+		when: #clicked send: #triggerEvent: to: aMorph with: #clicked;
+		tag: aMorph tag).
+    
 	^ cell
 ]

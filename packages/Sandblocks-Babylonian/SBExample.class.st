@@ -25,7 +25,7 @@ SBExample class >> instanceSuggestion [
 		self new
 			self: SBStGrammarHandler new newNullBlock
 			args: (SBStArray new type: #dynamic)
-			label: 'example']
+			label: self nameSuggestion]
 ]
 
 { #category : #'as yet unclassified' }
@@ -45,6 +45,12 @@ SBExample class >> matches: aMessage [
 SBExample class >> matchingSelectors [
 
 	^ #(#self:args:label: #self:args:label:assert: #example:args:label: #example:args:label:assert:)
+]
+
+{ #category : #'as yet unclassified' }
+SBExample class >> nameSuggestion [
+
+	^ 'example {1}' format: {Random generateInteger}
 ]
 
 { #category : #'as yet unclassified' }
@@ -124,6 +130,16 @@ SBExample >> artefactSaved: aMethod [
 SBExample >> assertionBlock [
 
 	^ self submorphCount > 7 ifTrue: [self submorphs ninth] ifFalse: [nil]
+]
+
+{ #category : #actions }
+SBExample >> backtrack [
+	<action>
+	
+	SBExploriants backtrack: #backtrackForExample: withArguments: {self}
+
+	
+	
 ]
 
 { #category : #'event handling' }
