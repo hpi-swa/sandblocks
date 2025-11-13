@@ -34,7 +34,7 @@ To cite this work, please use the [workshop paper presented at PX'20](https://do
 
 #### 2020
 * Tom Beckmann, Stefan Ramson, Patrick Rein, and Robert Hirschfeld. 2020. Visual design for a tree-oriented projectional editor. In Conference Companion of the 4th International Conference on Art, Science, and Engineering of Programming (‹Programming› '20). Association for Computing Machinery, New York, NY, USA, 113–119. [![doi][px20_doi]][px20_paper] [![Preprint][preprint]][px20_pdf]
-* Tom Beckmann. 2020. Efficient editing in a tree-oriented projectional editor. In Conference Companion of the 4th International Conference on Art, Science, and Engineering of Programming (‹Programming› '20). Association for Computing Machinery, New York, NY, USA, 215–216. [![doi][px20_doi]][px20_paper]
+* Tom Beckmann. 2020. Efficient editing in a tree-oriented projectional editor. In Conference Companion of the 4th International Conference on Art, Science, and Engineering of Programming (‹Programming› '20). Association for Computing Machinery, New York, NY, USA, 215–216. [![doi][px20_src_doi]][px20_src_paper]
 
 [preprint]: https://img.shields.io/badge/preprint-download-blue.svg
 [px20_doi]: https://img.shields.io/badge/doi-10.1145/3397537.3397560-blue.svg
