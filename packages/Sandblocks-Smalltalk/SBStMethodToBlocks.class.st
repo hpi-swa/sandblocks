@@ -211,3 +211,12 @@ SBStMethodToBlocks >> visitVariableNode: aNode [
 
 	^ SBStName contents: aNode name
 ]
+
+{
+	#category : #'as yet unclassified',
+	#'squeak_changestamp' : 'tobe 11/19/2025 16:34'
+}
+SBStMethodToBlocks >> visitVariableUsageNode: aVariableUsageNode [
+
+	^ self visitVariableNode: aVariableUsageNode realNode
+]

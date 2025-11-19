@@ -1,1 +1,4 @@
-Package { #name : #'Sandblocks-Smalltalk' }
+Package {
+	#'squeak_changestamp' : true,
+	#name : #'Sandblocks-Smalltalk'
+}
